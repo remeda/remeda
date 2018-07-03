@@ -49,10 +49,14 @@ const ret = data.children
     if (!signatures.length) {
       return null;
     }
+    const comment = signatures[0].comment;
     return {
       name: target.name,
       category: '',
-      description: marked(signatures[0].comment.shortText),
+      description: marked(
+        (comment.shortText + '\n' + (comment.text || '')).trim(),
+        { breaks: true }
+      ),
       methods: signatures.map(signature => {
         const tags = signature.comment.tags || [];
         const isDataFirst = tags.find(item => item.tag === 'data_first');
@@ -62,15 +66,26 @@ const ret = data.children
             .filter(item => item.tag === name)
             .map(item => item.text.trim())
             .join('\n');
+        function getExample() {
+          let str = getTag('example');
+          if (str) {
+            return prettier.format(str, {
+              semi: false,
+              singleQuote: true,
+              parser: 'babylon',
+            });
+          }
+          str = getTag('example-raw');
+          return str
+            .split('\n')
+            .map(str => str.replace(/^   /, ''))
+            .join('\n');
+        }
         return {
           tag: isDataFirst ? 'Data First' : isDataLast ? 'Data Last' : null,
           signature: getTag('signature'),
           category: getTag('category'),
-          example: prettier.format(getTag('example'), {
-            semi: false,
-            singleQuote: true,
-            parser: 'babylon',
-          }),
+          example: getExample(),
           args: signature.parameters.map((item: any) => ({
             name: item.name,
             description: item.comment && item.comment.text,

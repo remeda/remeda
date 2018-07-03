@@ -22,7 +22,7 @@ export function chunk<T>(array: T[], size: number): T[][];
  * @example
  *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
- * @data_first
+ * @data_last
  * @category Array
  */
 export function chunk<T>(size: number): (array: T[]) => T[][];

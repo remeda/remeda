@@ -1,3 +1,5 @@
+import { purry } from './purry';
+
 export function reduce<T, K>(
   items: T[],
   fn: (acc: K, item: T) => K,
@@ -8,11 +10,8 @@ export function reduce<T, K>(
   initialValue: K
 ): (items: T[]) => K;
 
-export function reduce(arg1: any, arg2: any, arg3?: any): any {
-  if (arguments.length === 2) {
-    return (data: any) => _reduce(data, arg1, arg2);
-  }
-  return _reduce(arg1, arg2, arg3);
+export function reduce() {
+  return purry(_reduce, arguments);
 }
 
 function _reduce<T, K>(

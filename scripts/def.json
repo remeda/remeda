@@ -119,7 +119,7 @@
         }
       },
       {
-        "tag": "Data First",
+        "tag": "Data Last",
         "signature": "R.chunk(size)(array)",
         "category": "Array",
         "example": "R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]\nR.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]\n",
@@ -182,13 +182,13 @@
   {
     "name": "clone",
     "category": "Object",
-    "description": "<p>Creates a deep copy of the value which may contain (nested) <code>Array</code>s and <code>Object</code>s, <code>Number</code>s, <code>String</code>s, <code>Boolean</code>s and <code>Date</code>s. Functions are assigned by reference rather than copied</p>\n",
+    "description": "<p>Creates a deep copy of the value. Supported types: <code>Array</code>, <code>Object</code>, <code>Number</code>, <code>String</code>, <code>Boolean</code>, <code>Date</code>, <code>RegExp</code>. Functions are assigned by reference rather than copied.</p>\n",
     "methods": [
       {
         "tag": null,
-        "signature": "",
+        "signature": "R.clone(value)",
         "category": "Object",
-        "example": "",
+        "example": "R.clone({ foo: 'bar' }) // {foo: 'bar'}\n",
         "args": [
           {
             "name": "value",
@@ -379,7 +379,7 @@
   {
     "name": "equals",
     "category": "Array",
-    "description": "<p>Returns true if its arguments are equivalent, false otherwise.\nNOTE: Doesn&#39;t handle cyclical data structures.</p>\n",
+    "description": "<p>Returns true if its arguments are equivalent, false otherwise.<br>NOTE: Doesn&#39;t handle cyclical data structures.</p>\n",
     "methods": [
       {
         "tag": "Data First",
@@ -590,6 +590,52 @@
     ]
   },
   {
+    "name": "flatten",
+    "category": "Array",
+    "description": "<p>Flattens <code>array</code> a single level deep.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.flatten(array)",
+        "category": "Array",
+        "example": "flatten([[1, 2], [3], [4, 5]]) // => [1, 2, 3, 4, 5]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the target array"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "flattenDeep",
+    "category": "Array",
+    "description": "<p>Recursively flattens <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.flattenDeep(array)",
+        "category": "Array",
+        "example": "R.flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the target array"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
     "name": "map",
     "category": "Array",
     "description": "<p>Map each element of an array using a defined callback function.</p>\n",
@@ -616,7 +662,7 @@
       },
       {
         "tag": "Data Last",
-        "signature": "",
+        "signature": "R.map(fn)(array)",
         "category": "Array",
         "example": "R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }\n",
         "args": [
@@ -633,18 +679,113 @@
     ]
   },
   {
+    "name": "pathOr",
+    "category": "Object",
+    "description": "<p>Gets the value at <code>path</code> of <code>object</code>. If the resolved value is <code>undefined</code>, the <code>defaultValue</code> is returned in its place.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.pathOr(object, [propName], defaultValue)",
+        "category": "Object",
+        "example": "pathOr({ x: 10 }, ['y'], 2) // 2\npathOr({ y: 10 }, ['y'], 2) // 10\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "path",
+            "description": "the path of the property to get"
+          },
+          {
+            "name": "defaultValue",
+            "description": "the default value"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.pathOr([propName], defaultValue)(object)",
+        "category": "Object",
+        "example": "pipe(\n  { x: 10 },\n  pathOr(['y'], 2)\n) // 2\npipe(\n  { y: 10 },\n  pathOr(['y'], 2)\n) // 10\n",
+        "args": [
+          {
+            "name": "path",
+            "description": "the path of the property to get"
+          },
+          {
+            "name": "defaultValue",
+            "description": "the default value"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "pick",
+    "category": "Object",
+    "description": "<p>Creates an object composed of the picked <code>object</code> properties.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.pick(object, [prop1, prop2])",
+        "category": "Object",
+        "example": "R.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "names",
+            "description": "the properties names"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.pick([prop1, prop2])(object)",
+        "category": "Object",
+        "example": "R.pipe(\n  { a: 1, b: 2, c: 3, d: 4 },\n  R.pick(['a', 'd'])\n) // => { a: 1, d: 4 }\n",
+        "args": [
+          {
+            "name": "names",
+            "description": "the properties names"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
     "name": "pipe",
-    "category": "",
+    "category": "Function",
     "description": "<p>Perform left-to-right function composition.</p>\n",
     "methods": [
       {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
+        "tag": "Data First",
+        "signature": "R.pipe(data, op1, op2, op3)",
+        "category": "Function",
+        "example": "R.pipe(\n  [1, 2, 3, 4],\n  R.map(x => x * 2),\n  arr => [arr[0] + arr[1], arr[2] + arr[3]]\n) // => [6, 14]\n",
         "args": [
           {
-            "name": "value"
+            "name": "value",
+            "description": "The initial value."
           },
           {
             "name": "op1"
@@ -654,175 +795,54 @@
           "name": "Object",
           "description": ""
         }
-      },
+      }
+    ]
+  },
+  {
+    "name": "prop",
+    "category": "Object",
+    "description": "<p>Gets the value of the given property.</p>\n",
+    "methods": [
       {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
+        "tag": "Data Last",
+        "signature": "R.prop(prop)(object)",
+        "category": "Object",
+        "example": "R.pipe(\n  { foo: 'bar' },\n  R.prop('foo')\n) // => 'bar'\n",
         "args": [
           {
-            "name": "value"
-          },
-          {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
+            "name": "name",
+            "description": "the property name"
           }
         ],
         "returns": {
           "name": "Object",
           "description": ""
         }
-      },
+      }
+    ]
+  },
+  {
+    "name": "purry",
+    "category": "Function",
+    "description": "<p>Creates a function with <code>data-first</code> and <code>data-last</code> signatures.<br><code>purry</code> is a dynamic function and it&#39;s not type safe. It should be wrapped by a function that have proper typings.<br>Refer the the example below to see usage a correct usage.</p>\n",
+    "methods": [
       {
         "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
+        "signature": "R.purry(fn, arguments);",
+        "category": "Function",
+        "example": "function _findIndex(array, fn) {\n  for (let i = 0; i < array.length; i++) {\n    if (fn(array[i])) {\n      return i;\n    }\n  }\n  return -1;\n}\n\n// data-first\nfunction findIndex<T>(array: T[], fn: (item: T) => boolean): number;\n\n// data-last\nfunction findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;\n\nfunction findIndex() {\n  return R.purry(_findIndex, arguments);\n}",
         "args": [
           {
-            "name": "value"
+            "name": "fn",
+            "description": "the function to purry."
           },
           {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
-          },
-          {
-            "name": "op3"
+            "name": "args",
+            "description": "the arguments"
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
-        }
-      },
-      {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
-        "args": [
-          {
-            "name": "value"
-          },
-          {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
-          },
-          {
-            "name": "op3"
-          },
-          {
-            "name": "op4"
-          }
-        ],
-        "returns": {
-          "name": "Object",
-          "description": ""
-        }
-      },
-      {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
-        "args": [
-          {
-            "name": "value"
-          },
-          {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
-          },
-          {
-            "name": "op3"
-          },
-          {
-            "name": "op4"
-          },
-          {
-            "name": "op5"
-          }
-        ],
-        "returns": {
-          "name": "Object",
-          "description": ""
-        }
-      },
-      {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
-        "args": [
-          {
-            "name": "value"
-          },
-          {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
-          },
-          {
-            "name": "op3"
-          },
-          {
-            "name": "op4"
-          },
-          {
-            "name": "op5"
-          },
-          {
-            "name": "op6"
-          }
-        ],
-        "returns": {
-          "name": "Object",
-          "description": ""
-        }
-      },
-      {
-        "tag": null,
-        "signature": "",
-        "category": "",
-        "example": "",
-        "args": [
-          {
-            "name": "value"
-          },
-          {
-            "name": "op1"
-          },
-          {
-            "name": "op2"
-          },
-          {
-            "name": "op3"
-          },
-          {
-            "name": "op4"
-          },
-          {
-            "name": "op5"
-          },
-          {
-            "name": "op6"
-          },
-          {
-            "name": "op7"
-          }
-        ],
-        "returns": {
-          "name": "Object",
+          "name": "any",
           "description": ""
         }
       }

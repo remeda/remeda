@@ -1,3 +1,19 @@
+/**
+ * Perform left-to-right function composition.
+ * @param value The initial value.
+ * @param operations the list of operations to apply.
+ * @signature R.pipe(data, op1, op2, op3)
+ * @example
+ *    R.pipe(
+ *      [1, 2, 3, 4],
+ *      R.map(x => x * 2),
+ *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
+ *    ) // => [6, 14]
+ *
+ *
+ * @data_first
+ * @category Function
+ */
 export function pipe<A, B>(value: A, op1: (input: A) => B): B;
 export function pipe<A, B, C>(
   value: A,
@@ -50,20 +66,6 @@ export function pipe<A, B, C, D, E, F, G, H>(
   op7: (input: G) => H
 ): H;
 
-/**
- * Perform left-to-right function composition.
- * @param value The initial value.
- * @param operations the list of operations to apply.
- * @example
- *    R.pipe(
- *      [1, 2, 3, 4],
- *      R.map(x => x * 2),
- *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
- *    ) // [6, 14]
- *
- *
- * @data_first
- */
 export function pipe(
   value: any,
   ...operations: Array<(input: any) => any>

@@ -1,4 +1,4 @@
-import { getOr } from './getOr';
+import { pathOr } from './pathOr';
 import { pipe } from './pipe';
 
 interface SampleType {
@@ -24,27 +24,27 @@ const obj: SampleType = {
 
 describe('data first', () => {
   test('should return default value (input undefined)', () => {
-    expect(getOr(undefined as SampleType, ['x'], 2)).toEqual(2);
+    expect(pathOr(undefined as SampleType, ['x'], 2)).toEqual(2);
   });
 
   test('should return value', () => {
-    expect(getOr(obj, ['y'], 2)).toEqual(10);
+    expect(pathOr(obj, ['y'], 2)).toEqual(10);
   });
 
   test('should return default value', () => {
-    expect(getOr(obj, ['x'], 2)).toEqual(2);
+    expect(pathOr(obj, ['x'], 2)).toEqual(2);
   });
 
   test('should return value (2 level deep)', () => {
-    expect(getOr(obj, ['a', 'b'], null)).toEqual({ c: 1 });
+    expect(pathOr(obj, ['a', 'b'], null)).toEqual({ c: 1 });
   });
 
   test('should return default value (2 level deep)', () => {
-    expect(getOr(obj, ['a', 'z'], 3)).toEqual(3);
+    expect(pathOr(obj, ['a', 'z'], 3)).toEqual(3);
   });
 
   test('should return value (3 level deep)', () => {
-    expect(getOr(obj, ['a', 'b', 'c'], null)).toEqual(1);
+    expect(pathOr(obj, ['a', 'b', 'c'], null)).toEqual(1);
   });
 });
 
@@ -53,7 +53,7 @@ describe('data last', () => {
     expect(
       pipe(
         obj,
-        getOr(['x'], 1)
+        pathOr(['x'], 1)
       )
     ).toEqual(1);
   });
@@ -61,7 +61,7 @@ describe('data last', () => {
     expect(
       pipe(
         obj,
-        getOr(['a', 'z'], 1)
+        pathOr(['a', 'z'], 1)
       )
     ).toEqual(1);
   });
@@ -69,7 +69,7 @@ describe('data last', () => {
     expect(
       pipe(
         obj,
-        getOr(['a', 'b', 'd'], 1)
+        pathOr(['a', 'b', 'd'], 1)
       )
     ).toEqual(1);
   });

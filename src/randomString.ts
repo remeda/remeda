@@ -1,5 +1,12 @@
 import { range } from './range';
 
+/**
+ * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * @param length the length of the random string
+ * @signature randomString(length)
+ * @example
+ *    randomString(5) // => aB92J
+ */
 export function randomString(length: number) {
   const characterSet =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

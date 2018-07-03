@@ -15,6 +15,8 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
 /**
  * Map each value of an object using a defined callback function.
  * @param fn the function mapper
+ * @signature
+ *    R.map(fn)(array)
  * @example
  *    R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }
  * @data_last

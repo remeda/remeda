@@ -48,9 +48,11 @@ function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
 }
 
 /**
- * Creates a deep copy of the value which may contain (nested) `Array`s and `Object`s, `Number`s, `String`s, `Boolean`s and `Date`s. Functions are assigned by reference rather than copied
+ * Creates a deep copy of the value. Supported types: `Array`, `Object`, `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by reference rather than copied.
  * @param value the object to clone
  * @category Object
+ * @signature R.clone(value)
+ * @example R.clone({foo: 'bar'}) // {foo: 'bar'}
  */
 export function clone(value: any) {
   return value != null && typeof value.clone === 'function'
