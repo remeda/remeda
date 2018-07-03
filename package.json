@@ -1,0 +1,40 @@
+{
+  "name": "remeda",
+  "version": "0.0.1",
+  "description": "A utility library for JavaScript and Typescript.",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.5",
+    "typedoc": "^0.11.1"
+  },
+  "dependencies": {
+    "ramda": "^0.25.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "docs": "typedoc --json out.json --excludeNotExported src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remeda/remeda.git"
+  },
+  "keywords": ["utils", "fp", "functional", "programming", "typescript"],
+  "author": "Łukasz Sentkiewicz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/remeda/remeda/issues"
+  },
+  "homepage": "https://github.com/remeda/remeda#readme",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+  }
+}

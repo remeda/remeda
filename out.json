@@ -1,0 +1,3016 @@
+{
+	"id": 0,
+	"name": "remeda",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 1,
+			"name": "\"createPipe\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/createPipe.ts",
+			"sources": [
+				{
+					"fileName": "createPipe.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "\"filter\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/filter.ts",
+			"children": [
+				{
+					"id": 3,
+					"name": "filter",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 4,
+							"name": "filter",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Filter the elements of an array that meet the condition specified in a callback function.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.filter(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]"
+									},
+									{
+										"tag": "data_first",
+										"text": "\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 5,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 6,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 7,
+									"name": "items",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The array to filter."
+									},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									}
+								},
+								{
+									"id": 8,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the callback function."
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 9,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 10,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 11,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "filter.ts",
+													"line": 13,
+													"character": 44
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "typeParameter",
+									"name": "K"
+								}
+							}
+						},
+						{
+							"id": 12,
+							"name": "filter",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Filter the elements of an array that meet the condition specified in a callback function.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.filter(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.filter(x => x % 2 === 1)([1, 2, 3]) // => [1, 3]"
+									},
+									{
+										"tag": "data_last",
+										"text": "\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 13,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 14,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 15,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 16,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 17,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 18,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "filter.ts",
+													"line": 24,
+													"character": 32
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 19,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 20,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 21,
+													"name": "items",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"comment": {
+														"text": "The array to filter."
+													},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "typeParameter",
+													"name": "K"
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "filter.ts",
+											"line": 24,
+											"character": 50
+										}
+									]
+								}
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "filter.ts",
+							"line": 13,
+							"character": 22
+						},
+						{
+							"fileName": "filter.ts",
+							"line": 24,
+							"character": 22
+						},
+						{
+							"fileName": "filter.ts",
+							"line": 26,
+							"character": 22
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						3
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "filter.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 22,
+			"name": "\"map\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/map.ts",
+			"children": [
+				{
+					"id": 23,
+					"name": "map",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 24,
+							"name": "map",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Map each element of an array using a defined callback function.",
+								"returns": "The new mapped array.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.map(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.map([1, 2, 3], x => x * 10) // => [10, 20, 30]"
+									},
+									{
+										"tag": "tag",
+										"text": "Array"
+									},
+									{
+										"tag": "data_first",
+										"text": "\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 25,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 26,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 27,
+									"name": "array",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The array to map."
+									},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									}
+								},
+								{
+									"id": 28,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The function mapper."
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 29,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 30,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 31,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "map.ts",
+													"line": 13,
+													"character": 41
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "typeParameter",
+									"name": "K"
+								}
+							}
+						},
+						{
+							"id": 32,
+							"name": "map",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Map each value of an object using a defined callback function.",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n   R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }"
+									},
+									{
+										"tag": "tag",
+										"text": "Data Last"
+									},
+									{
+										"tag": "tag",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 33,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 34,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 35,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the function mapper"
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 36,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 37,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 38,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "unknown",
+																"name": "T[keyof T]"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "map.ts",
+													"line": 24,
+													"character": 5
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 39,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 40,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 41,
+													"name": "object",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "typeParameter",
+														"name": "T"
+													}
+												}
+											],
+											"type": {
+												"type": "reflection",
+												"declaration": {
+													"id": 42,
+													"name": "__type",
+													"kind": 65536,
+													"kindString": "Type literal",
+													"flags": {},
+													"sources": [
+														{
+															"fileName": "map.ts",
+															"line": 25,
+															"character": 17
+														}
+													]
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "map.ts",
+											"line": 25,
+											"character": 2
+										}
+									]
+								}
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "map.ts",
+							"line": 13,
+							"character": 19
+						},
+						{
+							"fileName": "map.ts",
+							"line": 23,
+							"character": 19
+						},
+						{
+							"fileName": "map.ts",
+							"line": 27,
+							"character": 19
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						23
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "map.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 43,
+			"name": "\"mapValues\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/mapValues.ts",
+			"sources": [
+				{
+					"fileName": "mapValues.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 44,
+			"name": "\"pipe\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/pipe.ts",
+			"children": [
+				{
+					"id": 45,
+					"name": "pipe",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isExported": true
+					},
+					"comment": {
+						"shortText": "Perform left-to-right function composition.",
+						"tags": [
+							{
+								"tag": "example",
+								"text": "\n   R.pipe(\n     [1, 2, 3, 4],\n     R.map(x => x * 2),\n     arr => [arr[0] + arr[1], arr[2] + arr[3]],\n   ) // [6, 14]\n\n"
+							},
+							{
+								"tag": "data_first",
+								"text": "\n"
+							}
+						]
+					},
+					"signatures": [
+						{
+							"id": 46,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 47,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 48,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 49,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 50,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 51,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 52,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 53,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 1,
+													"character": 41
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "B"
+							}
+						},
+						{
+							"id": 54,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 55,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 56,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 57,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 58,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 59,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 60,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 61,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 62,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 4,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 63,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 64,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 65,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 66,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 5,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "C"
+							}
+						},
+						{
+							"id": 67,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 68,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 69,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 70,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 71,
+									"name": "D",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 72,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 73,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 74,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 75,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 76,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 10,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 77,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 78,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 79,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 80,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 11,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 81,
+									"name": "op3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 82,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 83,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 84,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "C"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "D"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 12,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "D"
+							}
+						},
+						{
+							"id": 85,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 86,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 87,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 88,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 89,
+									"name": "D",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 90,
+									"name": "E",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 91,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 92,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 93,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 94,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 95,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 17,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 96,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 97,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 98,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 99,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 18,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 100,
+									"name": "op3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 101,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 102,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 103,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "C"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "D"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 19,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 104,
+									"name": "op4",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 105,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 106,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 107,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "D"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "E"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 20,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "E"
+							}
+						},
+						{
+							"id": 108,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 109,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 110,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 111,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 112,
+									"name": "D",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 113,
+									"name": "E",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 114,
+									"name": "F",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 115,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 116,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 117,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 118,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 119,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 25,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 120,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 121,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 122,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 123,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 26,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 124,
+									"name": "op3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 125,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 126,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 127,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "C"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "D"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 27,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 128,
+									"name": "op4",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 129,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 130,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 131,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "D"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "E"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 28,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 132,
+									"name": "op5",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 133,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 134,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 135,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "E"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "F"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 29,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "F"
+							}
+						},
+						{
+							"id": 136,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 137,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 138,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 139,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 140,
+									"name": "D",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 141,
+									"name": "E",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 142,
+									"name": "F",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 143,
+									"name": "G",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 144,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 145,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 146,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 147,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 148,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 34,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 149,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 150,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 151,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 152,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 35,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 153,
+									"name": "op3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 154,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 155,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 156,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "C"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "D"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 36,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 157,
+									"name": "op4",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 158,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 159,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 160,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "D"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "E"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 37,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 161,
+									"name": "op5",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 162,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 163,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 164,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "E"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "F"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 38,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 165,
+									"name": "op6",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 166,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 167,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 168,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "F"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "G"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 39,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "G"
+							}
+						},
+						{
+							"id": 169,
+							"name": "pipe",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Perform left-to-right function composition."
+							},
+							"typeParameter": [
+								{
+									"id": 170,
+									"name": "A",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 171,
+									"name": "B",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 172,
+									"name": "C",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 173,
+									"name": "D",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 174,
+									"name": "E",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 175,
+									"name": "F",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 176,
+									"name": "G",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 177,
+									"name": "H",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 178,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"shortText": "The initial value."
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "A"
+									}
+								},
+								{
+									"id": 179,
+									"name": "op1",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 180,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 181,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 182,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "A"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "B"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 44,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 183,
+									"name": "op2",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 184,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 185,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 186,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "B"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "C"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 45,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 187,
+									"name": "op3",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 188,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 189,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 190,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "C"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "D"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 46,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 191,
+									"name": "op4",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 192,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 193,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 194,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "D"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "E"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 47,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 195,
+									"name": "op5",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 196,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 197,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 198,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "E"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "F"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 48,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 199,
+									"name": "op6",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 200,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 201,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 202,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "F"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "G"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 49,
+													"character": 6
+												}
+											]
+										}
+									}
+								},
+								{
+									"id": 203,
+									"name": "op7",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 204,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 205,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 206,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "G"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "H"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "pipe.ts",
+													"line": 50,
+													"character": 6
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "typeParameter",
+								"name": "H"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "pipe.ts",
+							"line": 1,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 2,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 8,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 15,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 23,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 32,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 42,
+							"character": 20
+						},
+						{
+							"fileName": "pipe.ts",
+							"line": 67,
+							"character": 20
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						45
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "pipe.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 207,
+			"name": "\"prop\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/prop.ts",
+			"sources": [
+				{
+					"fileName": "prop.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 208,
+			"name": "\"reject\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/reject.ts",
+			"children": [
+				{
+					"id": 209,
+					"name": "reject",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 210,
+							"name": "reject",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Reject the elements of an array that meet the condition specified in a callback function.",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n   R.reject([1, 2, 3], x => x % 2 === 1) // => [2]"
+									},
+									{
+										"tag": "data_first",
+										"text": "\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 211,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 212,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 213,
+									"name": "items",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "The array to reject."
+									},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									}
+								},
+								{
+									"id": 214,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the callback function."
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 215,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 216,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 217,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "reject.ts",
+													"line": 11,
+													"character": 44
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "typeParameter",
+									"name": "K"
+								}
+							}
+						},
+						{
+							"id": 218,
+							"name": "reject",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Reject the elements of an array that meet the condition specified in a callback function.",
+								"tags": [
+									{
+										"tag": "example",
+										"text": "\n   R.reject(x => x % 2 === 1)([1, 2, 3]) // => [2]"
+									},
+									{
+										"tag": "data_last",
+										"text": "\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 219,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 220,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 221,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 222,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 223,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 224,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "reject.ts",
+													"line": 20,
+													"character": 32
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 225,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 226,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 227,
+													"name": "items",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"comment": {
+														"text": "The array to reject."
+													},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "typeParameter",
+													"name": "K"
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "reject.ts",
+											"line": 20,
+											"character": 50
+										}
+									]
+								}
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "reject.ts",
+							"line": 11,
+							"character": 22
+						},
+						{
+							"fileName": "reject.ts",
+							"line": 20,
+							"character": 22
+						},
+						{
+							"fileName": "reject.ts",
+							"line": 22,
+							"character": 22
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						209
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "reject.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 228,
+			"name": "\"tmp\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/tmp.ts",
+			"sources": [
+				{
+					"fileName": "tmp.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "External modules",
+			"kind": 1,
+			"children": [
+				1,
+				2,
+				22,
+				43,
+				44,
+				207,
+				208,
+				228
+			]
+		}
+	]
+}
