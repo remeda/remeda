@@ -10,7 +10,8 @@
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.5",
-    "typedoc": "^0.11.1"
+    "typedoc": "^0.11.1",
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "ramda": "^0.25.0"
@@ -23,7 +24,13 @@
     "type": "git",
     "url": "git+https://github.com/remeda/remeda.git"
   },
-  "keywords": ["utils", "fp", "functional", "programming", "typescript"],
+  "keywords": [
+    "utils",
+    "fp",
+    "functional",
+    "programming",
+    "typescript"
+  ],
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "bugs": {
@@ -34,7 +41,14 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "testRegex": "/src/.*.test.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

@@ -1,75 +1,60 @@
-// export function createPipe<A>(): <B>(op1: (input: A) => B) => (value: A) => B;
-// export function createPipe<A>(): <B, C>(
-//   op1: (input: A) => B,
-//   op2: (input: B) => C
-// ) => (value: A) => C;
-// export function createPipe<A>(): <B, C, D>(
-//   op1: (input: A) => B,
-//   op2: (input: B) => C,
-//   op3: (input: C) => D
-// ) => (value: A) => D;
+/**
+ * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
+ * @signature
+ *    R.createPipe(op1, op2, op3)(data);
+ * @example
+ *    R.createPipe(
+ *      (x: number) => x * 2,
+ *      x => x * 3
+ *    )(1) // => 6
+ */
+export function createPipe<A, B>(op1: (input: A) => B): (value: A) => B;
 
-// // export function pipe<A, B, C>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C
-// // ): C;
+export function createPipe<A, B, C>(
+  op1: (input: A) => B,
+  op2: (input: B) => C
+): (value: A) => C;
 
-// // export function pipe<A, B, C, D>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C,
-// //   op3: (input: C) => D
-// // ): D;
+export function createPipe<A, B, C, D>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D
+): (value: A) => D;
 
-// // export function pipe<A, B, C, D, E>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C,
-// //   op3: (input: C) => D,
-// //   op4: (input: D) => E
-// // ): E;
+export function createPipe<A, B, C, D, E>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E
+): (value: A) => E;
 
-// // export function pipe<A, B, C, D, E, F>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C,
-// //   op3: (input: C) => D,
-// //   op4: (input: D) => E,
-// //   op5: (input: E) => F
-// // ): F;
+export function createPipe<A, B, C, D, E, F>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F
+): (value: A) => F;
 
-// // export function pipe<A, B, C, D, E, F, G>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C,
-// //   op3: (input: C) => D,
-// //   op4: (input: D) => E,
-// //   op5: (input: E) => F,
-// //   op6: (input: F) => G
-// // ): G;
+export function createPipe<A, B, C, D, E, F, G>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F,
+  op6: (input: F) => G
+): (value: A) => G;
 
-// // export function pipe<A, B, C, D, E, F, G, H>(
-// //   value: A,
-// //   op1: (input: A) => B,
-// //   op2: (input: B) => C,
-// //   op3: (input: C) => D,
-// //   op4: (input: D) => E,
-// //   op5: (input: E) => F,
-// //   op6: (input: F) => G,
-// //   op7: (input: G) => H
-// // ): H;
+export function createPipe<A, B, C, D, E, F, G, H>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F,
+  op6: (input: F) => G,
+  op7: (input: G) => H
+): (value: A) => H;
 
-// /**
-//  * Perform left-to-right function composition.
-//  */
-// // export function createPipe(
-// //   value: any,
-// //   ...operations: Array<(input: any) => any>
-// // ): any {
-// //   return null as any;
-// // }
-
-// export function createPipe() {
-//   return (...operations: Array<(input: any) => any>) => (value: any): any => {};
-// }
+export function createPipe(...operations: Array<(input: any) => any>) {
+  return (value: any) => operations.reduce((acc, fn) => fn(acc), value);
+}

@@ -1,4 +1,4 @@
-type FilterFN<T> = (input: T) => boolean;
+import { purry } from './purry';
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
@@ -10,27 +10,21 @@ type FilterFN<T> = (input: T) => boolean;
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @data_first
  */
-export function filter<T, K>(items: T[], fn: (input: T) => K): K[];
+export function filter<T>(items: T[], fn: (input: T) => boolean): T[];
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
- * @param items The array to filter.
+ * @param fn the callback function.
  * @signature
  *    R.filter(fn)(array)
  * @example
  *    R.filter(x => x % 2 === 1)([1, 2, 3]) // => [1, 3]
  * @data_last
  */
-export function filter<T, K>(fn: (input: T) => K): (items: T[]) => K[];
+export function filter<T>(fn: (input: T) => boolean): (items: T[]) => T[];
 
-export function filter<T>(
-  arg1: T[] | FilterFN<T>,
-  arg2?: T[] | FilterFN<T>
-): T[] | ((items: T[]) => T[]) {
-  if (arguments.length === 1) {
-    return (items: T[]) => _filter(items, arg1 as FilterFN<T>);
-  }
-  return _filter(arg1 as T[], arg2 as FilterFN<T>);
+export function filter() {
+  return purry(_filter, arguments);
 }
 
 function _filter<T>(items: T[], fn: (input: T) => boolean) {

@@ -1,7 +1,3 @@
-// export const prop = <T>(name: keyof T) => (obj: T): T[keyof T] => {
-//   return obj[name];
-// };
-
-// export const prop2 = <T>(name: keyof T, obj: T): T[keyof T] => {
-//   return obj[name];
-// };
+export function prop<T, K extends keyof T>(name: K) {
+  return (obj: T) => obj[name];
+}

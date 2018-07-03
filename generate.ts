@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const data = require('./out.json');
+import data from './out.json';
 
 export interface MethodDoc {
   tag: string;

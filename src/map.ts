@@ -20,9 +20,7 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
  * @tag Data Last
  * @tag Array
  */
-export function map<T, K>(
-  fn: (input: T[keyof T]) => K
-): (object: T) => { [k in keyof T]: K };
+export function map<T, K>(fn: (input: T) => K): (array: T[]) => K[];
 
 export function map(arg1: any, arg2?: any): any {
   if (arguments.length === 1) {
