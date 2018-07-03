@@ -11,6 +11,7 @@ import { purry } from './purry';
  *    clamp(10, { max: 5 }) // => 5
  *    clamp(10, { max: 20, min: 5 }) // => 10
  * @data_first
+ * @category Number
  */
 export function clamp(
   value: number,
@@ -28,6 +29,7 @@ export function clamp(
  *    clamp({ max: 5 })(10) // => 5
  *    clamp({ max: 20, min: 5 })(10) // => 10
  * @data_last
+ * @category Number
  */
 export function clamp(limits: {
   min?: number;

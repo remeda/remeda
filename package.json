@@ -9,6 +9,8 @@
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",
+    "marked": "^0.4.0",
+    "prettier": "^1.13.7",
     "ts-jest": "^22.4.5",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2"
@@ -18,7 +20,8 @@
   },
   "scripts": {
     "test": "jest",
-    "docs": "typedoc --json out.json --excludeNotExported src"
+    "docs": "typedoc --json out.json --excludeNotExported src",
+    "fix-ts-docs": "rm -rf node_modules/typedoc/node_modules/typescript"
   },
   "repository": {
     "type": "git",

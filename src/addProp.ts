@@ -10,6 +10,7 @@ import { purry } from './purry';
  * @example
  *    R.addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
  * @data_first
+ * @category Object
  */
 export function addProp<T, K extends string, V>(
   obj: T,
@@ -26,6 +27,7 @@ export function addProp<T, K extends string, V>(
  * @example
  *    R.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
  * @data_last
+ * @category Object
  */
 export function addProp<T, K extends string, V>(
   prop: K,

@@ -50,6 +50,7 @@ function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
 /**
  * Creates a deep copy of the value which may contain (nested) `Array`s and `Object`s, `Number`s, `String`s, `Boolean`s and `Date`s. Functions are assigned by reference rather than copied
  * @param value the object to clone
+ * @category Object
  */
 export function clone(value: any) {
   return value != null && typeof value.clone === 'function'

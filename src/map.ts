@@ -7,8 +7,8 @@
  *    R.map(array, fn)
  * @example
  *    R.map([1, 2, 3], x => x * 10) // => [10, 20, 30]
- * @tag Array
  * @data_first
+ * @category Array
  */
 export function map<T, K>(array: T[], fn: (input: T) => K): K[];
 
@@ -17,8 +17,8 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
  * @param fn the function mapper
  * @example
  *    R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }
- * @tag Data Last
- * @tag Array
+ * @data_last
+ * @category Array
  */
 export function map<T, K>(fn: (input: T) => K): (array: T[]) => K[];
 

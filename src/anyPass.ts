@@ -13,6 +13,7 @@ import { purry } from './purry';
  *    R.anyPass(8, fns) // => true
  *    R.anyPass(11, fns) // => false
  * @data_first
+ * @category Array
  */
 export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
 
@@ -28,6 +29,7 @@ export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
  *    R.anyPass(fns)(8) // => true
  *    R.anyPass(fns)(11) // => false
  * @data_last
+ * @category Array
  */
 export function anyPass<T>(
   fns: Array<(data: T) => boolean>

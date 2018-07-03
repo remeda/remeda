@@ -7,6 +7,7 @@
  *      (x: number) => x * 2,
  *      x => x * 3
  *    )(1) // => 6
+ * @category Function
  */
 export function createPipe<A, B>(op1: (input: A) => B): (value: A) => B;
 

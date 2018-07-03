@@ -1,13 +1,32 @@
+import { purry } from './purry';
+
+/**
+ * Excludes the values from `other` array.
+ * @param array the source array
+ * @param other the values to exclude
+ * @signature
+ *    R.difference(array, other)
+ * @example
+ *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
+ * @data_first
+ * @category Array
+ */
 export function difference<T>(array: T[], other: T[]): T[];
+
+/**
+ * Excludes the values from `other` array.
+ * @param other the values to exclude
+ * @signature
+ *    R.difference(other)(array)
+ * @example
+ *    R.difference([2, 5, 3])([1, 2, 3, 4]) // => [1, 4]
+ * @data_last
+ * @category Array
+ */
 export function difference<T>(other: T[]): (array: T[]) => T[];
 
-export function difference(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (array: any) => {
-      return _difference(array, arg1);
-    };
-  }
-  return _difference(arg1, arg2);
+export function difference() {
+  return purry(_difference, arguments);
 }
 
 function _difference<T>(array: T[], other: T[]) {

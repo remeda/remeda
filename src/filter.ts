@@ -9,6 +9,7 @@ import { purry } from './purry';
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @data_first
+ * @category Array
  */
 export function filter<T>(items: T[], fn: (input: T) => boolean): T[];
 
@@ -20,6 +21,7 @@ export function filter<T>(items: T[], fn: (input: T) => boolean): T[];
  * @example
  *    R.filter(x => x % 2 === 1)([1, 2, 3]) // => [1, 3]
  * @data_last
+ * @category Array
  */
 export function filter<T>(fn: (input: T) => boolean): (items: T[]) => T[];
 

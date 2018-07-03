@@ -1,0 +1,831 @@
+[
+  {
+    "name": "addProp",
+    "category": "Object",
+    "description": "<p>Add a new property to an object.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.addProp(obj, prop, value)",
+        "category": "Object",
+        "example": "R.addProp({ firstName: 'john' }, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}\n",
+        "args": [
+          {
+            "name": "obj",
+            "description": "the target object"
+          },
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the property value"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.addProp(obj, prop, value)",
+        "category": "Object",
+        "example": "R.addProp('lastName', 'doe')({ firstName: 'john' }) // => {firstName: 'john', lastName: 'doe'}\n",
+        "args": [
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the property value"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "anyPass",
+    "category": "Array",
+    "description": "<p>Determines whether any predicate returns true for the input data.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.anyPass(data, fns)",
+        "category": "Array",
+        "example": "const isDivisibleBy3 = (x: number = x % 3 === 0)\nconst isDivisibleBy4 = (x: number = x % 4 === 0)\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nR.anyPass(8, fns) // => true\nR.anyPass(11, fns) // => false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "The input data for predicates."
+          },
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.anyPass(fns)(data)",
+        "category": "Array",
+        "example": "const isDivisibleBy3 = (x: number = x % 3 === 0)\nconst isDivisibleBy4 = (x: number = x % 4 === 0)\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nR.anyPass(fns)(8) // => true\nR.anyPass(fns)(11) // => false\n",
+        "args": [
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "chunk",
+    "category": "Array",
+    "description": "<p>Split an array into groups the length of <code>size</code>. If <code>array</code> can&#39;t be split evenly, the final chunk will be the remaining elements.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.chunk(array, size)",
+        "category": "Array",
+        "example": "R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]\nR.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "size",
+            "description": "the length of the chunk"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "R.chunk(size)(array)",
+        "category": "Array",
+        "example": "R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]\nR.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]\n",
+        "args": [
+          {
+            "name": "size",
+            "description": "the length of the chunk"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "clamp",
+    "category": "Number",
+    "description": "<p>Clamp the given value within the inclusive min and max bounds.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.clamp(value, { min, max });",
+        "category": "Number",
+        "example": "clamp(10, { min: 20 }) // => 20\nclamp(10, { max: 5 }) // => 5\nclamp(10, { max: 20, min: 5 }) // => 10\n",
+        "args": [
+          {
+            "name": "value",
+            "description": "the number"
+          },
+          {
+            "name": "limits",
+            "description": "the bounds limits"
+          }
+        ],
+        "returns": {
+          "name": "number",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.clamp({ min, max })(value);",
+        "category": "Number",
+        "example": "clamp({ min: 20 })(10) // => 20\nclamp({ max: 5 })(10) // => 5\nclamp({ max: 20, min: 5 })(10) // => 10\n",
+        "args": [
+          {
+            "name": "limits",
+            "description": "the bounds limits"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "clone",
+    "category": "Object",
+    "description": "<p>Creates a deep copy of the value which may contain (nested) <code>Array</code>s and <code>Object</code>s, <code>Number</code>s, <code>String</code>s, <code>Boolean</code>s and <code>Date</code>s. Functions are assigned by reference rather than copied</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "",
+        "category": "Object",
+        "example": "",
+        "args": [
+          {
+            "name": "value",
+            "description": "the object to clone"
+          }
+        ],
+        "returns": {
+          "name": "any",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "compact",
+    "category": "Array",
+    "description": "<p>Filter out all falsey values. The values <code>false</code>, <code>null</code>, <code>0</code>, <code>&quot;&quot;</code>, <code>undefined</code>, and <code>NaN</code> are falsey.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.compact(array)",
+        "category": "Array",
+        "example": "R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array to compact"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "concat",
+    "category": "Array",
+    "description": "<p>Combines two arrays.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.concat(arr1, arr2);",
+        "category": "Array",
+        "example": "R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']\n",
+        "args": [
+          {
+            "name": "arr1",
+            "description": "the first array"
+          },
+          {
+            "name": "arr2",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.concat(arr2)(arr1);",
+        "category": "Array",
+        "example": "R.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']\n",
+        "args": [
+          {
+            "name": "arr2",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "createPipe",
+    "category": "Function",
+    "description": "<p>Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.createPipe(op1, op2, op3)(data);",
+        "category": "Function",
+        "example": "R.createPipe((x: number) => x * 2, x => x * 3)(1) // => 6\n",
+        "args": [
+          {
+            "name": "op1"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "difference",
+    "category": "Array",
+    "description": "<p>Excludes the values from <code>other</code> array.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.difference(array, other)",
+        "category": "Array",
+        "example": "R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the source array"
+          },
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.difference(other)(array)",
+        "category": "Array",
+        "example": "R.difference([2, 5, 3])([1, 2, 3, 4]) // => [1, 4]\n",
+        "args": [
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "dropLast",
+    "category": "Array",
+    "description": "<p>Removes last <code>n</code> elements from the <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.dropLast(array, n)",
+        "category": "Array",
+        "example": "R.dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the target array"
+          },
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.dropLast(n)(array)",
+        "category": "Array",
+        "example": "R.dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "equals",
+    "category": "Array",
+    "description": "<p>Returns true if its arguments are equivalent, false otherwise.\nNOTE: Doesn&#39;t handle cyclical data structures.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.equals(a, b)",
+        "category": "Array",
+        "example": "R.equals(1, 1) //=> true\nR.equals(1, '1') //=> false\nR.equals([1, 2, 3], [1, 2, 3]) //=> true\n",
+        "args": [
+          {
+            "name": "a",
+            "description": "the first object to compare"
+          },
+          {
+            "name": "b",
+            "description": "the second object to compare"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.equals(b)(a)",
+        "category": "Array",
+        "example": "R.equals(1)(1) //=> true\nR.equals('1')(1) //=> false\nR.equals([1, 2, 3])([1, 2, 3]) //=> true\n",
+        "args": [
+          {
+            "name": "a",
+            "description": "the first object to compare"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "filter",
+    "category": "Array",
+    "description": "<p>Filter the elements of an array that meet the condition specified in a callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.filter(array, fn)",
+        "category": "Array",
+        "example": "R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "The array to filter."
+          },
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.filter(fn)(array)",
+        "category": "Array",
+        "example": "R.filter(x => x % 2 === 1)([1, 2, 3]) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "find",
+    "category": "Array",
+    "description": "<p>Returns the value of the first element in the array where predicate is true, and undefined otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.find(items, fn)",
+        "category": "Array",
+        "example": "R.find([1, 3, 4, 6], n => n % 2 === 0) // => 4\n",
+        "args": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.find(fn)(items)",
+        "category": "Array",
+        "example": "R.pipe(\n  [1, 3, 4, 6],\n  R.find(n => n % 2 === 0)\n) // => 4\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "findIndex",
+    "category": "Array",
+    "description": "<p>Returns the index of the first element in the array where predicate is true, and -1 otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.findIndex(items, fn)",
+        "category": "Array",
+        "example": "R.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2\n",
+        "args": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "number",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.findIndex(fn)(items)",
+        "category": "Array",
+        "example": "R.pipe(\n  [1, 3, 4, 6],\n  R.findIndex(n => n % 2 === 0)\n) // => 4\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "flatMap",
+    "category": "Array",
+    "description": "<p>Map each element of an array using a defined callback function and flatten the mapped result.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.flatMap(array, fn)",
+        "category": "Array",
+        "example": "R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.flatMap(fn)(array)",
+        "category": "Array",
+        "example": "R.flatMap(x => [x, x * 10])([1, 2, 3]) // => [1, 10, 2, 20, 3, 30]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "map",
+    "category": "Array",
+    "description": "<p>Map each element of an array using a defined callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.map(array, fn)",
+        "category": "Array",
+        "example": "R.map([1, 2, 3], x => x * 10) // => [10, 20, 30]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "",
+        "category": "Array",
+        "example": "R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function mapper"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "pipe",
+    "category": "",
+    "description": "<p>Perform left-to-right function composition.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          },
+          {
+            "name": "op3"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          },
+          {
+            "name": "op3"
+          },
+          {
+            "name": "op4"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          },
+          {
+            "name": "op3"
+          },
+          {
+            "name": "op4"
+          },
+          {
+            "name": "op5"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          },
+          {
+            "name": "op3"
+          },
+          {
+            "name": "op4"
+          },
+          {
+            "name": "op5"
+          },
+          {
+            "name": "op6"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": null,
+        "signature": "",
+        "category": "",
+        "example": "",
+        "args": [
+          {
+            "name": "value"
+          },
+          {
+            "name": "op1"
+          },
+          {
+            "name": "op2"
+          },
+          {
+            "name": "op3"
+          },
+          {
+            "name": "op4"
+          },
+          {
+            "name": "op5"
+          },
+          {
+            "name": "op6"
+          },
+          {
+            "name": "op7"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  }
+]

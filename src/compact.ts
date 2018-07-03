@@ -5,6 +5,7 @@
  *    R.compact(array)
  * @example
  *    R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]
+ * @category Array
  */
 export function compact<T>(items: T[]) {
   return items.filter(x => !!x);

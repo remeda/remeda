@@ -1,19 +1,47 @@
+import { purry } from './purry';
+
 // from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
 const isArray = Array.isArray;
 const keyList = Object.keys;
 const hasProp = Object.prototype.hasOwnProperty;
 
+/**
+ * Returns true if its arguments are equivalent, false otherwise.
+ * NOTE: Doesn't handle cyclical data structures.
+ * @param a the first object to compare
+ * @param b the second object to compare
+ * @signature
+ *    R.equals(a, b)
+ * @example
+ *    R.equals(1, 1) //=> true
+ *    R.equals(1, '1') //=> false
+ *    R.equals([1, 2, 3], [1, 2, 3]) //=> true
+ * @data_first
+ * @category Array
+ */
 export function equals(a: any, b: any): boolean;
+
+/**
+ * Returns true if its arguments are equivalent, false otherwise.
+ * NOTE: Doesn't handle cyclical data structures.
+ * @param a the first object to compare
+ * @param b the second object to compare
+ * @signature
+ *    R.equals(b)(a)
+ * @example
+ *    R.equals(1)(1) //=> true
+ *    R.equals('1')(1) //=> false
+ *    R.equals([1, 2, 3])([1, 2, 3]) //=> true
+ * @data_last
+ * @category Array
+ */
 export function equals(a: any): (b: any) => boolean;
 
-export function equals(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (data: any) => _equals(data, arg1);
-  }
-  return _equals(arg1, arg2);
+export function equals() {
+  return purry(_equals, arguments);
 }
 
-export function _equals(a: any, b: any) {
+function _equals(a: any, b: any) {
   if (a === b) {
     return true;
   }

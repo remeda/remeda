@@ -10,6 +10,7 @@ import { purry } from './purry';
  *    R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
  * @data_first
+ * @category Array
  */
 export function chunk<T>(array: T[], size: number): T[][];
 
@@ -22,6 +23,7 @@ export function chunk<T>(array: T[], size: number): T[][];
  *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
  * @data_first
+ * @category Array
  */
 export function chunk<T>(size: number): (array: T[]) => T[][];
 
