@@ -15,7 +15,7 @@ describe('data_first', () => {
 describe('data_last', () => {
   it('map', () => {
     const result = pipe(
-      [0, 1, 2],
+      [1, 2, 3],
       map(x => x * 2)
     );
     expect(result).toEqual([2, 4, 6]);
