@@ -1,3 +1,5 @@
+import { _reduceLazy } from './_reduceLazy';
+
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
@@ -9,21 +11,25 @@
  * @category Array
  */
 export function uniq<T>(array: T[]) {
-  const set = new Set<T>();
-  return array.filter(item => {
-    if (set.has(item)) {
-      return false;
-    }
-    set.add(item);
-    return true;
-  });
+  return _reduceLazy(array, uniq.lazy());
 }
 
-// function transducer() {
-//   return (value: any) => {
-//     return {
-//       hasNext: true,
-//       done: false,
-//     };
-//   };
-// }
+export namespace uniq {
+  export function lazy() {
+    const set = new Set<any>();
+    return (value: any) => {
+      if (set.has(value)) {
+        return {
+          done: false,
+          hasNext: false,
+        };
+      }
+      set.add(value);
+      return {
+        done: false,
+        hasNext: true,
+        next: value,
+      };
+    };
+  }
+}

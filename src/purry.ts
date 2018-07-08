@@ -28,14 +28,19 @@
  *    }
  * @category Function
  */
-export function purry(fn: any, args: IArguments | any[]) {
+export function purry(fn: any, args: IArguments | any[], lazy?: any) {
   const diff = fn.length - args.length;
   const arrayArgs = Array.from(args);
   if (diff === 0) {
     return fn(...arrayArgs);
   }
   if (diff === 1) {
-    return (data: any) => fn(data, ...arrayArgs);
+    const ret: any = (data: any) => fn(data, ...arrayArgs);
+    if (lazy || fn.lazy) {
+      ret.lazy = lazy || fn.lazy;
+      ret.lazyArgs = args;
+    }
+    return ret;
   }
   throw new Error('Wrong number of arguments');
 }

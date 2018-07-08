@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { _reduceLazy } from './_reduceLazy';
 
 /**
  * Map each element of an array using a defined callback function.
@@ -33,27 +34,52 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
 export function map<T, K>(fn: (input: T) => K): (array: T[]) => K[];
 
 export function map() {
-  return purry(_map(false), arguments);
+  return purry(_map(false), arguments, map.lazy);
 }
-
-map.indexed = function mapIndexed() {
-  return purry(_map(true), arguments);
-};
 
 const _map = (indexed: boolean) => <T, K>(
   array: T[],
   fn: (input: T, index?: number, array?: T[]) => K
 ) => {
-  return array.map(
-    (item, i, array) => (indexed ? fn(item, i, array) : fn(item))
+  return _reduceLazy(
+    array,
+    indexed ? map.lazyIndexed(fn) : map.lazy(fn),
+    indexed
   );
 };
 
-interface MapIndexed {
-  <T, K>(array: T[], fn: (input: T, idx: number, array: T[]) => K): K[];
-  <T, K>(fn: (input: T, idx: number, array: T[]) => K): (array: T[]) => K[];
-}
-
 export namespace map {
-  export var indexed: MapIndexed;
+  export function indexed<T, K>(
+    array: T[],
+    fn: (input: T, idx: number, array: T[]) => K
+  ): K[];
+  export function indexed<T, K>(
+    fn: (input: T, idx: number, array: T[]) => K
+  ): (array: T[]) => K[];
+  export function indexed() {
+    return purry(_map(true), arguments, map.lazyIndexed);
+  }
+  export function lazy<T, K>(fn: (input: T) => K) {
+    return (value: T) => {
+      return {
+        done: false,
+        hasNext: true,
+        next: fn(value),
+      };
+    };
+  }
+  export function lazyIndexed<T, K>(
+    fn: (input: T, index?: number, array?: T[]) => K
+  ) {
+    return (value: T, index: number, array: T[]) => {
+      return {
+        done: false,
+        hasNext: true,
+        next: fn(value, index, array),
+      };
+    };
+  }
+  export namespace lazyIndexed {
+    export const indexed = true;
+  }
 }

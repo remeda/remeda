@@ -1,3 +1,5 @@
+import { LazyResult } from './_reduceLazy';
+
 /**
  * Perform left-to-right function composition.
  * @param value The initial value.
@@ -68,7 +70,67 @@ export function pipe<A, B, C, D, E, F, G, H>(
 
 export function pipe(
   value: any,
-  ...operations: Array<(input: any) => any>
+  ...operations: Array<(value: any) => any>
 ): any {
-  return operations.reduce((acc, fn) => fn(acc), value);
+  let ret = value;
+  const lazyOps = operations.map(op => {
+    const { lazy, lazyArgs } = op as LazyOp;
+    if (lazy) {
+      const fn: any = lazy(...lazyArgs);
+      fn.indexed = lazy.indexed;
+      return fn;
+    }
+    return null;
+  });
+  let opIdx = 0;
+  while (opIdx < operations.length) {
+    const op = operations[opIdx];
+    const lazyOp = lazyOps[opIdx];
+    if (!lazyOp) {
+      ret = op(ret);
+      opIdx++;
+      continue;
+    }
+    const lazySeq: LazyFn[] = [];
+    for (let j = opIdx; j < operations.length; j++) {
+      if (lazyOps[j]) {
+        lazySeq.push(lazyOps[j]);
+      } else {
+        break;
+      }
+    }
+    let acc = [];
+    for (let j = 0; j < ret.length; j++) {
+      let item = ret[j];
+      let lazyResult: LazyResult<any>;
+      for (const lazyFn of lazySeq) {
+        const indexed = (lazyFn as any).indexed;
+        lazyResult = indexed ? lazyFn(item, j, acc) : lazyFn(item);
+        if (lazyResult.hasNext) {
+          item = lazyResult.next;
+        }
+        if (!lazyResult.hasNext || lazyResult.done) {
+          break;
+        }
+      }
+      if (lazyResult.hasNext) {
+        acc.push(item);
+      }
+      if (lazyResult.done) {
+        break;
+      }
+    }
+    opIdx += lazySeq.length;
+    ret = acc;
+  }
+  return ret;
 }
+
+type LazyFn = ((value: any, index?: number, items?: any) => LazyResult<any>);
+
+type LazyOp = ((input: any) => any) & {
+  lazy: ((...args: any[]) => LazyFn) & {
+    indexed: boolean;
+  };
+  lazyArgs: any[];
+};
