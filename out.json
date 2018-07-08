@@ -14937,6 +14937,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Sorts the list according to the supplied function in ascending order.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.sortBy(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.sortBy(\n     [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],\n     x => x.a\n   )\n   // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 939,
@@ -14949,10 +14970,13 @@
 							"parameters": [
 								{
 									"id": 940,
-									"name": "items",
+									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array to sort"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -14967,6 +14991,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the mapping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -15004,7 +15031,7 @@
 											"sources": [
 												{
 													"fileName": "sortBy.ts",
-													"line": 1,
+													"line": 18,
 													"character": 41
 												}
 											]
@@ -15026,6 +15053,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Sorts the list according to the supplied function in ascending order.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.sortBy(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe(\n     [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],\n     R.sortBy(x => x.a)\n   ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 946,
@@ -15042,6 +15090,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the mapping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -15079,7 +15130,7 @@
 											"sources": [
 												{
 													"fileName": "sortBy.ts",
-													"line": 2,
+													"line": 33,
 													"character": 29
 												}
 											]
@@ -15105,7 +15156,7 @@
 											"parameters": [
 												{
 													"id": 953,
-													"name": "items",
+													"name": "array",
 													"kind": 32768,
 													"kindString": "Parameter",
 													"flags": {},
@@ -15130,7 +15181,7 @@
 									"sources": [
 										{
 											"fileName": "sortBy.ts",
-											"line": 2,
+											"line": 33,
 											"character": 48
 										}
 									]
@@ -15141,17 +15192,17 @@
 					"sources": [
 						{
 							"fileName": "sortBy.ts",
-							"line": 1,
+							"line": 18,
 							"character": 22
 						},
 						{
 							"fileName": "sortBy.ts",
-							"line": 2,
+							"line": 33,
 							"character": 22
 						},
 						{
 							"fileName": "sortBy.ts",
-							"line": 4,
+							"line": 35,
 							"character": 22
 						}
 					]
@@ -15216,6 +15267,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Splits a given array at a given index.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.splitAt(array, index)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]\n   R.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 958,
@@ -15228,10 +15300,13 @@
 							"parameters": [
 								{
 									"id": 959,
-									"name": "items",
+									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array to split"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -15246,6 +15321,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the index to split at"
+									},
 									"type": {
 										"type": "intrinsic",
 										"name": "number"
@@ -15253,13 +15331,139 @@
 								}
 							],
 							"type": {
-								"type": "array",
-								"elementType": {
-									"type": "array",
-									"elementType": {
-										"type": "unknown",
-										"name": "T"
+								"type": "tuple",
+								"elements": [
+									{
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									},
+									{
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
 									}
+								]
+							}
+						},
+						{
+							"id": 961,
+							"name": "splitAt",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Splits a given array at a given index.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.splitAt(index)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]\n   R.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 962,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 963,
+									"name": "index",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the index to split at"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 964,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 965,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 966,
+													"name": "array",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"comment": {
+														"text": "the array to split"
+													},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "tuple",
+												"elements": [
+													{
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													},
+													{
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												]
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "splitAt.ts",
+											"line": 29,
+											"character": 42
+										}
+									]
 								}
 							}
 						}
@@ -15267,7 +15471,17 @@
 					"sources": [
 						{
 							"fileName": "splitAt.ts",
-							"line": 1,
+							"line": 15,
+							"character": 23
+						},
+						{
+							"fileName": "splitAt.ts",
+							"line": 29,
+							"character": 23
+						},
+						{
+							"fileName": "splitAt.ts",
+							"line": 31,
 							"character": 23
 						}
 					]
@@ -15291,7 +15505,7 @@
 			]
 		},
 		{
-			"id": 961,
+			"id": 967,
 			"name": "\"splitAt.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15308,7 +15522,7 @@
 			]
 		},
 		{
-			"id": 962,
+			"id": 968,
 			"name": "\"splitWhen\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15318,7 +15532,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/splitWhen.ts",
 			"children": [
 				{
-					"id": 963,
+					"id": 969,
 					"name": "splitWhen",
 					"kind": 64,
 					"kindString": "Function",
@@ -15327,14 +15541,35 @@
 					},
 					"signatures": [
 						{
-							"id": 964,
+							"id": 970,
 							"name": "splitWhen",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Splits a given array at an index where the given predicate returns true.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.splitWhen(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 965,
+									"id": 971,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -15343,11 +15578,14 @@
 							],
 							"parameters": [
 								{
-									"id": 966,
+									"id": 972,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array to split"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -15357,29 +15595,32 @@
 									}
 								},
 								{
-									"id": 967,
+									"id": 973,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the predicate"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 968,
+											"id": 974,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 969,
+													"id": 975,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 970,
+															"id": 976,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -15399,7 +15640,7 @@
 											"sources": [
 												{
 													"fileName": "splitWhen.ts",
-													"line": 3,
+													"line": 15,
 													"character": 44
 												}
 											]
@@ -15408,13 +15649,175 @@
 								}
 							],
 							"type": {
-								"type": "array",
-								"elementType": {
-									"type": "array",
-									"elementType": {
-										"type": "unknown",
-										"name": "T"
+								"type": "tuple",
+								"elements": [
+									{
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									},
+									{
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
 									}
+								]
+							}
+						},
+						{
+							"id": 977,
+							"name": "splitWhen",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Splits a given array at an index where the given predicate returns true.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.splitWhen(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 978,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 979,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the predicate"
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 980,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 981,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 982,
+															"name": "item",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "intrinsic",
+														"name": "boolean"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "splitWhen.ts",
+													"line": 28,
+													"character": 5
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 983,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 984,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 985,
+													"name": "array",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "tuple",
+												"elements": [
+													{
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													},
+													{
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												]
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "splitWhen.ts",
+											"line": 29,
+											"character": 2
+										}
+									]
 								}
 							}
 						}
@@ -15422,7 +15825,17 @@
 					"sources": [
 						{
 							"fileName": "splitWhen.ts",
-							"line": 3,
+							"line": 15,
+							"character": 25
+						},
+						{
+							"fileName": "splitWhen.ts",
+							"line": 27,
+							"character": 25
+						},
+						{
+							"fileName": "splitWhen.ts",
+							"line": 31,
 							"character": 25
 						}
 					]
@@ -15433,7 +15846,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						963
+						969
 					]
 				}
 			],
@@ -15446,7 +15859,7 @@
 			]
 		},
 		{
-			"id": 971,
+			"id": 986,
 			"name": "\"splitWhen.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15463,18 +15876,18 @@
 			]
 		},
 		{
-			"id": 972,
-			"name": "\"takeWhile\"",
+			"id": 987,
+			"name": "\"take\"",
 			"kind": 1,
 			"kindString": "External module",
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "/Users/sky/work/npm/remeda/src/takeWhile.ts",
+			"originalName": "/Users/sky/work/npm/remeda/src/take.ts",
 			"children": [
 				{
-					"id": 973,
-					"name": "takeWhile",
+					"id": 988,
+					"name": "take",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {
@@ -15482,14 +15895,35 @@
 					},
 					"signatures": [
 						{
-							"id": 974,
-							"name": "takeWhile",
+							"id": 989,
+							"name": "take",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns the first `n` elements of `array`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.take(array, n)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 975,
+									"id": 990,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -15498,11 +15932,14 @@
 							],
 							"parameters": [
 								{
-									"id": 976,
-									"name": "items",
+									"id": 991,
+									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -15512,29 +15949,284 @@
 									}
 								},
 								{
-									"id": 977,
+									"id": 992,
+									"name": "n",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the number of elements to take"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "typeParameter",
+									"name": "T"
+								}
+							}
+						},
+						{
+							"id": 993,
+							"name": "take",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns the first `n` elements of `array`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.take(n)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe([1, 2, 3, 4, 3, 2, 1], R.take(n)) // => [1, 2, 3]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 994,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 995,
+									"name": "n",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the number of elements to take"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 996,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 997,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 998,
+													"name": "array",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "typeParameter",
+													"name": "T"
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "take.ts",
+											"line": 26,
+											"character": 35
+										}
+									]
+								}
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "take.ts",
+							"line": 14,
+							"character": 20
+						},
+						{
+							"fileName": "take.ts",
+							"line": 26,
+							"character": 20
+						},
+						{
+							"fileName": "take.ts",
+							"line": 28,
+							"character": 20
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Functions",
+					"kind": 64,
+					"children": [
+						988
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "take.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 999,
+			"name": "\"take.test\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/take.test.ts",
+			"sources": [
+				{
+					"fileName": "take.test.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 1000,
+			"name": "\"takeWhile\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/takeWhile.ts",
+			"children": [
+				{
+					"id": 1001,
+					"name": "takeWhile",
+					"kind": 64,
+					"kindString": "Function",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 1002,
+							"name": "takeWhile",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns elements from the array until predicate returns false.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.takeWhile(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 1003,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 1004,
+									"name": "array",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the array"
+									},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "typeParameter",
+											"name": "T"
+										}
+									}
+								},
+								{
+									"id": 1005,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the predicate"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 978,
+											"id": 1006,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 979,
+													"id": 1007,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 980,
+															"id": 1008,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -15554,7 +16246,7 @@
 											"sources": [
 												{
 													"fileName": "takeWhile.ts",
-													"line": 1,
+													"line": 14,
 													"character": 44
 												}
 											]
@@ -15565,8 +16257,149 @@
 							"type": {
 								"type": "array",
 								"elementType": {
-									"type": "unknown",
+									"type": "typeParameter",
 									"name": "T"
+								}
+							}
+						},
+						{
+							"id": 1009,
+							"name": "takeWhile",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns elements from the array until predicate returns false.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.takeWhile(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe([1, 2, 3, 4, 3, 2, 1], R.takeWhile(x => x !== 4))  // => [1, 2, 3]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 1010,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 1011,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the predicate"
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 1012,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 1013,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 1014,
+															"name": "item",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "intrinsic",
+														"name": "boolean"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "takeWhile.ts",
+													"line": 26,
+													"character": 32
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 1015,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 1016,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 1017,
+													"name": "array",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "array",
+														"elementType": {
+															"type": "typeParameter",
+															"name": "T"
+														}
+													}
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "typeParameter",
+													"name": "T"
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "takeWhile.ts",
+											"line": 26,
+											"character": 55
+										}
+									]
 								}
 							}
 						}
@@ -15574,7 +16407,17 @@
 					"sources": [
 						{
 							"fileName": "takeWhile.ts",
-							"line": 1,
+							"line": 14,
+							"character": 25
+						},
+						{
+							"fileName": "takeWhile.ts",
+							"line": 26,
+							"character": 25
+						},
+						{
+							"fileName": "takeWhile.ts",
+							"line": 28,
 							"character": 25
 						}
 					]
@@ -15585,7 +16428,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						973
+						1001
 					]
 				}
 			],
@@ -15598,7 +16441,7 @@
 			]
 		},
 		{
-			"id": 981,
+			"id": 1018,
 			"name": "\"takeWhile.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15615,7 +16458,7 @@
 			]
 		},
 		{
-			"id": 982,
+			"id": 1019,
 			"name": "\"toPairs\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15625,7 +16468,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/toPairs.ts",
 			"children": [
 				{
-					"id": 983,
+					"id": 1020,
 					"name": "toPairs",
 					"kind": 64,
 					"kindString": "Function",
@@ -15634,14 +16477,31 @@
 					},
 					"signatures": [
 						{
-							"id": 984,
+							"id": 1021,
 							"name": "toPairs",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns an array of key/values of the enumerable properties of an object.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.toPairs(object)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]"
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 985,
+									"id": 1022,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -15650,28 +16510,29 @@
 							],
 							"parameters": [
 								{
-									"id": 986,
+									"id": 1023,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 987,
+											"id": 1024,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"indexSignature": {
-												"id": 988,
+												"id": 1025,
 												"name": "__index",
 												"kind": 8192,
 												"kindString": "Index signature",
 												"flags": {},
 												"parameters": [
 													{
-														"id": 989,
+														"id": 1026,
 														"name": "s",
 														"kind": 32768,
 														"kindString": "Parameter",
@@ -15690,7 +16551,7 @@
 											"sources": [
 												{
 													"fileName": "toPairs.ts",
-													"line": 1,
+													"line": 10,
 													"character": 34
 												}
 											]
@@ -15722,7 +16583,7 @@
 					"sources": [
 						{
 							"fileName": "toPairs.ts",
-							"line": 1,
+							"line": 10,
 							"character": 23
 						}
 					]
@@ -15733,7 +16594,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						983
+						1020
 					]
 				}
 			],
@@ -15746,7 +16607,7 @@
 			]
 		},
 		{
-			"id": 990,
+			"id": 1027,
 			"name": "\"toPairs.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15787,6 +16648,23 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Gives a single-word string description of the (native) type of a value, returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not attempt to distinguish user Object types any further, reporting them all as 'Object'.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.type(obj)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.type({}); //=> \"Object\"\n   R.type(1); //=> \"Number\"\n   R.type(false); //=> \"Boolean\"\n   R.type('s'); //=> \"String\"\n   R.type(null); //=> \"Null\"\n   R.type([]); //=> \"Array\"\n   R.type(/[A-z]/); //=> \"RegExp\"\n   R.type(() => {}); //=> \"Function\"\n   R.type(undefined); //=> \"Undefined\""
+									},
+									{
+										"tag": "category",
+										"text": "Type\n"
+									}
+								]
+							},
 							"parameters": [
 								{
 									"id": 238,
@@ -15794,6 +16672,7 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {},
 									"type": {
 										"type": "intrinsic",
 										"name": "any"
@@ -15809,7 +16688,7 @@
 					"sources": [
 						{
 							"fileName": "type.ts",
-							"line": 3,
+							"line": 19,
 							"character": 20
 						}
 					]
@@ -15833,7 +16712,7 @@
 			]
 		},
 		{
-			"id": 991,
+			"id": 1028,
 			"name": "\"type.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15850,7 +16729,7 @@
 			]
 		},
 		{
-			"id": 992,
+			"id": 1029,
 			"name": "\"uniq\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -15860,7 +16739,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/uniq.ts",
 			"children": [
 				{
-					"id": 993,
+					"id": 1030,
 					"name": "uniq",
 					"kind": 64,
 					"kindString": "Function",
@@ -15869,14 +16748,31 @@
 					},
 					"signatures": [
 						{
-							"id": 994,
+							"id": 1031,
 							"name": "uniq",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns a new array containing only one copy of each element in the original list.\nElements are compared by reference using Set.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.uniq(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]"
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 995,
+									"id": 1032,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -15885,11 +16781,12 @@
 							],
 							"parameters": [
 								{
-									"id": 996,
+									"id": 1033,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -15911,7 +16808,7 @@
 					"sources": [
 						{
 							"fileName": "uniq.ts",
-							"line": 1,
+							"line": 11,
 							"character": 20
 						}
 					]
@@ -15922,7 +16819,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						993
+						1030
 					]
 				}
 			],
@@ -15935,7 +16832,7 @@
 			]
 		},
 		{
-			"id": 997,
+			"id": 1034,
 			"name": "\"uniq.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -16039,17 +16936,19 @@
 				936,
 				954,
 				955,
-				961,
-				962,
-				971,
-				972,
-				981,
-				982,
-				990,
+				967,
+				968,
+				986,
+				987,
+				999,
+				1000,
+				1018,
+				1019,
+				1027,
 				235,
-				991,
-				992,
-				997
+				1028,
+				1029,
+				1034
 			]
 		}
 	]

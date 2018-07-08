@@ -1470,5 +1470,286 @@
         }
       }
     ]
+  },
+  {
+    "name": "sortBy",
+    "category": "Array",
+    "description": "<p>Sorts the list according to the supplied function in ascending order.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.sortBy(array, fn)\n",
+        "category": "Array",
+        "example": "R.sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], x => x.a)\n// => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to sort"
+          },
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.sortBy(fn)(array)\n",
+        "category": "Array",
+        "example": "R.pipe(\n  [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],\n  R.sortBy(x => x.a)\n) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "splitAt",
+    "category": "Array",
+    "description": "<p>Splits a given array at a given index.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.splitAt(array, index)\n",
+        "category": "Array",
+        "example": "R.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]\nR.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to split"
+          },
+          {
+            "name": "index",
+            "description": "the index to split at"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.splitAt(index)(array)\n",
+        "category": "Array",
+        "example": "R.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]\nR.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]\n",
+        "args": [
+          {
+            "name": "index",
+            "description": "the index to split at"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "splitWhen",
+    "category": "Array",
+    "description": "<p>Splits a given array at an index where the given predicate returns true.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.splitWhen(array, fn)\n",
+        "category": "Array",
+        "example": "R.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to split"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.splitWhen(fn)(array)\n",
+        "category": "Array",
+        "example": "R.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "take",
+    "category": "Array",
+    "description": "<p>Returns the first <code>n</code> elements of <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.take(array, n)\n",
+        "category": "Array",
+        "example": "R.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "n",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.take(n)(array)\n",
+        "category": "Array",
+        "example": "R.pipe(\n  [1, 2, 3, 4, 3, 2, 1],\n  R.take(n)\n) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "n",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "takeWhile",
+    "category": "Array",
+    "description": "<p>Returns elements from the array until predicate returns false.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "R.takeWhile(array, fn)\n",
+        "category": "Array",
+        "example": "R.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": ""
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "R.takeWhile(fn)(array)\n",
+        "category": "Array",
+        "example": "R.pipe(\n  [1, 2, 3, 4, 3, 2, 1],\n  R.takeWhile(x => x !== 4)\n) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "toPairs",
+    "category": "Object",
+    "description": "<p>Returns an array of key/values of the enumerable properties of an object.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.toPairs(object)\n",
+        "category": "Object",
+        "example": "R.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]\n",
+        "args": [
+          {
+            "name": "object"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "type",
+    "category": "Type",
+    "description": "<p>Gives a single-word string description of the (native) type of a value, returning such answers as &#39;Object&#39;, &#39;Number&#39;, &#39;Array&#39;, or &#39;Null&#39;. Does not attempt to distinguish user Object types any further, reporting them all as &#39;Object&#39;.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.type(obj)\n",
+        "category": "Type",
+        "example": "R.type({}) //=> \"Object\"\nR.type(1) //=> \"Number\"\nR.type(false) //=> \"Boolean\"\nR.type('s') //=> \"String\"\nR.type(null) //=> \"Null\"\nR.type([]) //=> \"Array\"\nR.type(/[A-z]/) //=> \"RegExp\"\nR.type(() => {}) //=> \"Function\"\nR.type(undefined) //=> \"Undefined\"\n",
+        "args": [
+          {
+            "name": "val"
+          }
+        ],
+        "returns": {
+          "name": "any",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "uniq",
+    "category": "Array",
+    "description": "<p>Returns a new array containing only one copy of each element in the original list.<br>Elements are compared by reference using Set.</p>\n",
+    "methods": [
+      {
+        "tag": null,
+        "signature": "R.uniq(array)\n",
+        "category": "Array",
+        "example": "R.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]\n",
+        "args": [
+          {
+            "name": "array"
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": ""
+        }
+      }
+    ]
   }
 ]
