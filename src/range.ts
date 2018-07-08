@@ -6,7 +6,7 @@ import { purry } from './purry';
  * @param end the end number
  * @signature range(start, end)
  * @example
- *    R.range(1, 5) => [1, 2, 3, 4]
+ *    R.range(1, 5) // => [1, 2, 3, 4]
  * @data_first
  * @category Array
  */
@@ -17,7 +17,7 @@ export function range(start: number, end: number): number[];
  * @param end the end number
  * @signature range(end)(start)
  * @example
- *    R.range(5)(1) => [1, 2, 3, 4]
+ *    R.range(5)(1) // => [1, 2, 3, 4]
  * @data_first
  * @category Array
  */

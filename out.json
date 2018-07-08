@@ -6247,6 +6247,27 @@
 					"flags": {
 						"isExported": true
 					},
+					"comment": {
+						"shortText": "Splits a collection into sets, grouped by the result of running each value through `fn`.",
+						"tags": [
+							{
+								"tag": "signature",
+								"text": "\n   R.groupBy(array, fn)"
+							},
+							{
+								"tag": "example",
+								"text": "\n   R.pipe(['one', 'two', 'three'], R.groupBy(x => x.length)) // => {3: ['one', 'two'], 5: ['three']}"
+							},
+							{
+								"tag": "data_last",
+								"text": ""
+							},
+							{
+								"tag": "category",
+								"text": "Array\n"
+							}
+						]
+					},
 					"signatures": [
 						{
 							"id": 572,
@@ -6254,6 +6275,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Splits a collection into sets, grouped by the result of running each value through `fn`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.groupBy(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.groupBy(['one', 'two', 'three'], x => x.length) // => {3: ['one', 'two'], 5: ['three']}"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 573,
@@ -6270,6 +6312,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the items to group"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -6284,6 +6329,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"shortText": "the grouping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -6321,7 +6369,7 @@
 											"sources": [
 												{
 													"fileName": "groupBy.ts",
-													"line": 3,
+													"line": 16,
 													"character": 5
 												}
 											]
@@ -6353,6 +6401,9 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Splits a collection into sets, grouped by the result of running each value through `fn`."
+							},
 							"typeParameter": [
 								{
 									"id": 580,
@@ -6369,6 +6420,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"shortText": "the grouping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -6406,7 +6460,7 @@
 											"sources": [
 												{
 													"fileName": "groupBy.ts",
-													"line": 6,
+													"line": 20,
 													"character": 5
 												}
 											]
@@ -6467,7 +6521,7 @@
 									"sources": [
 										{
 											"fileName": "groupBy.ts",
-											"line": 7,
+											"line": 21,
 											"character": 2
 										}
 									]
@@ -6478,17 +6532,17 @@
 					"sources": [
 						{
 							"fileName": "groupBy.ts",
-							"line": 1,
+							"line": 14,
 							"character": 23
 						},
 						{
 							"fileName": "groupBy.ts",
-							"line": 5,
+							"line": 19,
 							"character": 23
 						},
 						{
 							"fileName": "groupBy.ts",
-							"line": 9,
+							"line": 33,
 							"character": 23
 						}
 					]
@@ -6553,6 +6607,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Converts a list of objects into an object indexing the objects by the given key.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.indexBy(array, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.groupBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 592,
@@ -6569,6 +6644,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -6583,6 +6661,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the indexing function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -6620,7 +6701,7 @@
 											"sources": [
 												{
 													"fileName": "indexBy.ts",
-													"line": 1,
+													"line": 14,
 													"character": 42
 												}
 											]
@@ -6649,6 +6730,27 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Converts a list of objects into an object indexing the objects by the given key.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.indexBy(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe(\n     ['one', 'two', 'three'],\n     R.groupBy(x => x.length)\n   ) // => {3: 'two', 5: 'three'}"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 599,
@@ -6665,6 +6767,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the indexing function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
@@ -6702,7 +6807,7 @@
 											"sources": [
 												{
 													"fileName": "indexBy.ts",
-													"line": 3,
+													"line": 31,
 													"character": 5
 												}
 											]
@@ -6732,6 +6837,9 @@
 													"kind": 32768,
 													"kindString": "Parameter",
 													"flags": {},
+													"comment": {
+														"text": "the array"
+													},
 													"type": {
 														"type": "array",
 														"elementType": {
@@ -6760,7 +6868,7 @@
 									"sources": [
 										{
 											"fileName": "indexBy.ts",
-											"line": 4,
+											"line": 32,
 											"character": 2
 										}
 									]
@@ -6771,17 +6879,17 @@
 					"sources": [
 						{
 							"fileName": "indexBy.ts",
-							"line": 1,
+							"line": 14,
 							"character": 23
 						},
 						{
 							"fileName": "indexBy.ts",
-							"line": 2,
+							"line": 30,
 							"character": 23
 						},
 						{
 							"fileName": "indexBy.ts",
-							"line": 6,
+							"line": 34,
 							"character": 23
 						}
 					]
@@ -6823,17 +6931,17 @@
 		},
 		{
 			"id": 608,
-			"name": "\"indexByIdentity\"",
+			"name": "\"intersection\"",
 			"kind": 1,
 			"kindString": "External module",
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "/Users/sky/work/npm/remeda/src/indexByIdentity.ts",
+			"originalName": "/Users/sky/work/npm/remeda/src/intersection.ts",
 			"children": [
 				{
 					"id": 609,
-					"name": "indexByIdentity",
+					"name": "intersection",
 					"kind": 64,
 					"kindString": "Function",
 					"flags": {
@@ -6842,10 +6950,27 @@
 					"signatures": [
 						{
 							"id": 610,
-							"name": "indexByIdentity",
+							"name": "intersection",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns a list of elements that exist in both array.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.intersection(source, other)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]"
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 611,
@@ -6858,115 +6983,13 @@
 							"parameters": [
 								{
 									"id": 612,
-									"name": "items",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "array",
-										"elementType": {
-											"type": "typeParameter",
-											"name": "T"
-										}
-									}
-								}
-							],
-							"type": {
-								"type": "reflection",
-								"declaration": {
-									"id": 613,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {}
-								}
-							}
-						}
-					],
-					"sources": [
-						{
-							"fileName": "indexByIdentity.ts",
-							"line": 1,
-							"character": 31
-						}
-					]
-				}
-			],
-			"groups": [
-				{
-					"title": "Functions",
-					"kind": 64,
-					"children": [
-						609
-					]
-				}
-			],
-			"sources": [
-				{
-					"fileName": "indexByIdentity.ts",
-					"line": 1,
-					"character": 0
-				}
-			]
-		},
-		{
-			"id": 614,
-			"name": "\"indexByIdentity.test\"",
-			"kind": 1,
-			"kindString": "External module",
-			"flags": {
-				"isExported": true
-			},
-			"originalName": "/Users/sky/work/npm/remeda/src/indexByIdentity.test.ts",
-			"sources": [
-				{
-					"fileName": "indexByIdentity.test.ts",
-					"line": 1,
-					"character": 0
-				}
-			]
-		},
-		{
-			"id": 615,
-			"name": "\"intersection\"",
-			"kind": 1,
-			"kindString": "External module",
-			"flags": {
-				"isExported": true
-			},
-			"originalName": "/Users/sky/work/npm/remeda/src/intersection.ts",
-			"children": [
-				{
-					"id": 616,
-					"name": "intersection",
-					"kind": 64,
-					"kindString": "Function",
-					"flags": {
-						"isExported": true
-					},
-					"signatures": [
-						{
-							"id": 617,
-							"name": "intersection",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"typeParameter": [
-								{
-									"id": 618,
-									"name": "T",
-									"kind": 131072,
-									"kindString": "Type parameter",
-									"flags": {}
-								}
-							],
-							"parameters": [
-								{
-									"id": 619,
 									"name": "source",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the first array"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -6976,11 +6999,14 @@
 									}
 								},
 								{
-									"id": 620,
+									"id": 613,
 									"name": "other",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the second array"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -7002,7 +7028,7 @@
 					"sources": [
 						{
 							"fileName": "intersection.ts",
-							"line": 1,
+							"line": 11,
 							"character": 28
 						}
 					]
@@ -7013,7 +7039,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						616
+						609
 					]
 				}
 			],
@@ -7026,7 +7052,7 @@
 			]
 		},
 		{
-			"id": 621,
+			"id": 614,
 			"name": "\"intersection.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7043,7 +7069,7 @@
 			]
 		},
 		{
-			"id": 622,
+			"id": 615,
 			"name": "\"last\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7053,7 +7079,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/last.ts",
 			"children": [
 				{
-					"id": 623,
+					"id": 616,
 					"name": "last",
 					"kind": 64,
 					"kindString": "Function",
@@ -7062,14 +7088,31 @@
 					},
 					"signatures": [
 						{
-							"id": 624,
+							"id": 617,
 							"name": "last",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Gets the last element of `array`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.last(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.last([1, 2, 3]) // => 3\n   R.last([]) // => undefined"
+									},
+									{
+										"tag": "category",
+										"text": "array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 625,
+									"id": 618,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7078,11 +7121,14 @@
 							],
 							"parameters": [
 								{
-									"id": 626,
+									"id": 619,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -7101,7 +7147,7 @@
 					"sources": [
 						{
 							"fileName": "last.ts",
-							"line": 1,
+							"line": 11,
 							"character": 20
 						}
 					]
@@ -7112,7 +7158,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						623
+						616
 					]
 				}
 			],
@@ -7125,7 +7171,7 @@
 			]
 		},
 		{
-			"id": 627,
+			"id": 620,
 			"name": "\"last.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7142,7 +7188,7 @@
 			]
 		},
 		{
-			"id": 628,
+			"id": 621,
 			"name": "\"map\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7152,31 +7198,31 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/map.ts",
 			"children": [
 				{
-					"id": 629,
+					"id": 622,
 					"name": "map",
-					"kind": 64,
-					"kindString": "Function",
+					"kind": 2,
+					"kindString": "Module",
 					"flags": {
 						"isExported": true
 					},
 					"signatures": [
 						{
-							"id": 630,
+							"id": 623,
 							"name": "map",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "Map each element of an array using a defined callback function.",
+								"shortText": "Map each element of an array using a defined callback function.\nIndexed version is supported.",
 								"returns": "The new mapped array.",
 								"tags": [
 									{
 										"tag": "signature",
-										"text": "\n   R.map(array, fn)"
+										"text": "\n   R.map(array, fn)\n   R.map.indexed(array, fn)"
 									},
 									{
 										"tag": "example",
-										"text": "\n   R.map([1, 2, 3], x => x * 10) // => [10, 20, 30]"
+										"text": "\n   R.map([1, 2, 3], x => x * 2) // => [2, 4, 6]\n   R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2]"
 									},
 									{
 										"tag": "data_first",
@@ -7190,14 +7236,14 @@
 							},
 							"typeParameter": [
 								{
-									"id": 631,
+									"id": 624,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 632,
+									"id": 625,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7206,7 +7252,7 @@
 							],
 							"parameters": [
 								{
-									"id": 633,
+									"id": 626,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -7223,13 +7269,119 @@
 									}
 								},
 								{
-									"id": 634,
+									"id": 627,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
 										"text": "The function mapper."
+									},
+									"type": {
+										"type": "reflection",
+										"declaration": {
+											"id": 628,
+											"name": "__type",
+											"kind": 65536,
+											"kindString": "Type literal",
+											"flags": {},
+											"signatures": [
+												{
+													"id": 629,
+													"name": "__call",
+													"kind": 4096,
+													"kindString": "Call signature",
+													"flags": {},
+													"parameters": [
+														{
+															"id": 630,
+															"name": "input",
+															"kind": 32768,
+															"kindString": "Parameter",
+															"flags": {},
+															"type": {
+																"type": "typeParameter",
+																"name": "T"
+															}
+														}
+													],
+													"type": {
+														"type": "typeParameter",
+														"name": "K"
+													}
+												}
+											],
+											"sources": [
+												{
+													"fileName": "map.ts",
+													"line": 18,
+													"character": 41
+												}
+											]
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "typeParameter",
+									"name": "K"
+								}
+							}
+						},
+						{
+							"id": 631,
+							"name": "map",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Map each value of an object using a defined callback function.\nIndexed version is supported.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.map(fn)(array)\n   R.map.indexed(fn)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe([0, 1, 2], R.map(x => x * 2)) // => [2, 4, 6]\n   R.pipe([0, 0, 0], R.map.indexed((x, i) => i)) // => [0, 1, 2]"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 632,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 633,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
+							"parameters": [
+								{
+									"id": 634,
+									"name": "fn",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the function mapper"
 									},
 									"type": {
 										"type": "reflection",
@@ -7268,113 +7420,7 @@
 											"sources": [
 												{
 													"fileName": "map.ts",
-													"line": 13,
-													"character": 41
-												}
-											]
-										}
-									}
-								}
-							],
-							"type": {
-								"type": "array",
-								"elementType": {
-									"type": "typeParameter",
-									"name": "K"
-								}
-							}
-						},
-						{
-							"id": 638,
-							"name": "map",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"comment": {
-								"shortText": "Map each value of an object using a defined callback function.",
-								"tags": [
-									{
-										"tag": "signature",
-										"text": "\n   R.map(fn)(array)"
-									},
-									{
-										"tag": "example",
-										"text": "\n   R.map(x => x * 10)({ a: 1, b: 2, c: 3 }) // => { a: 2, b: 4, c: 6 }"
-									},
-									{
-										"tag": "data_last",
-										"text": ""
-									},
-									{
-										"tag": "category",
-										"text": "Array\n"
-									}
-								]
-							},
-							"typeParameter": [
-								{
-									"id": 639,
-									"name": "T",
-									"kind": 131072,
-									"kindString": "Type parameter",
-									"flags": {}
-								},
-								{
-									"id": 640,
-									"name": "K",
-									"kind": 131072,
-									"kindString": "Type parameter",
-									"flags": {}
-								}
-							],
-							"parameters": [
-								{
-									"id": 641,
-									"name": "fn",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"comment": {
-										"text": "the function mapper"
-									},
-									"type": {
-										"type": "reflection",
-										"declaration": {
-											"id": 642,
-											"name": "__type",
-											"kind": 65536,
-											"kindString": "Type literal",
-											"flags": {},
-											"signatures": [
-												{
-													"id": 643,
-													"name": "__call",
-													"kind": 4096,
-													"kindString": "Call signature",
-													"flags": {},
-													"parameters": [
-														{
-															"id": 644,
-															"name": "input",
-															"kind": 32768,
-															"kindString": "Parameter",
-															"flags": {},
-															"type": {
-																"type": "typeParameter",
-																"name": "T"
-															}
-														}
-													],
-													"type": {
-														"type": "typeParameter",
-														"name": "K"
-													}
-												}
-											],
-											"sources": [
-												{
-													"fileName": "map.ts",
-													"line": 25,
+													"line": 33,
 													"character": 29
 												}
 											]
@@ -7385,21 +7431,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 645,
+									"id": 638,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 646,
+											"id": 639,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 647,
+													"id": 640,
 													"name": "array",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -7425,7 +7471,7 @@
 									"sources": [
 										{
 											"fileName": "map.ts",
-											"line": 25,
+											"line": 33,
 											"character": 47
 										}
 									]
@@ -7433,31 +7479,67 @@
 							}
 						}
 					],
+					"children": [
+						{
+							"id": 641,
+							"name": "indexed",
+							"kind": 32,
+							"kindString": "Variable",
+							"flags": {
+								"isExported": true
+							},
+							"sources": [
+								{
+									"fileName": "map.ts",
+									"line": 58,
+									"character": 20
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "MapIndexed"
+							}
+						}
+					],
+					"groups": [
+						{
+							"title": "Variables",
+							"kind": 32,
+							"children": [
+								641
+							]
+						}
+					],
 					"sources": [
 						{
 							"fileName": "map.ts",
-							"line": 13,
+							"line": 18,
 							"character": 19
 						},
 						{
 							"fileName": "map.ts",
-							"line": 25,
+							"line": 33,
 							"character": 19
 						},
 						{
 							"fileName": "map.ts",
-							"line": 27,
+							"line": 35,
 							"character": 19
+						},
+						{
+							"fileName": "map.ts",
+							"line": 57,
+							"character": 20
 						}
 					]
 				}
 			],
 			"groups": [
 				{
-					"title": "Functions",
-					"kind": 64,
+					"title": "Modules",
+					"kind": 2,
 					"children": [
-						629
+						622
 					]
 				}
 			],
@@ -7470,7 +7552,7 @@
 			]
 		},
 		{
-			"id": 648,
+			"id": 642,
 			"name": "\"map.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7487,7 +7569,7 @@
 			]
 		},
 		{
-			"id": 649,
+			"id": 643,
 			"name": "\"mapKeys\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7497,7 +7579,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/mapKeys.ts",
 			"children": [
 				{
-					"id": 650,
+					"id": 644,
 					"name": "mapKeys",
 					"kind": 64,
 					"kindString": "Function",
@@ -7506,21 +7588,42 @@
 					},
 					"signatures": [
 						{
-							"id": 651,
+							"id": 645,
 							"name": "mapKeys",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Maps keys of `object` and keeps the same values.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.mapKeys(object, fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.mapKeys({a: 1, b: 2}, (key, value) => key + value) // => { a1: 1, b2: 2 }"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 652,
+									"id": 646,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 653,
+									"id": 647,
 									"name": "S",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7529,40 +7632,46 @@
 							],
 							"parameters": [
 								{
-									"id": 654,
+									"id": 648,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the object to map"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "T"
 									}
 								},
 								{
-									"id": 655,
+									"id": 649,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the mapping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 656,
+											"id": 650,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 657,
+													"id": 651,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 658,
+															"id": 652,
 															"name": "key",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -7577,7 +7686,7 @@
 															}
 														},
 														{
-															"id": 659,
+															"id": 653,
 															"name": "value",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -7597,7 +7706,7 @@
 											"sources": [
 												{
 													"fileName": "mapKeys.ts",
-													"line": 3,
+													"line": 14,
 													"character": 5
 												}
 											]
@@ -7608,20 +7717,20 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 660,
+									"id": 654,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"indexSignature": {
-										"id": 661,
+										"id": 655,
 										"name": "__index",
 										"kind": 8192,
 										"kindString": "Index signature",
 										"flags": {},
 										"parameters": [
 											{
-												"id": 662,
+												"id": 656,
 												"name": "x",
 												"kind": 32768,
 												"kindString": "Parameter",
@@ -7640,7 +7749,7 @@
 									"sources": [
 										{
 											"fileName": "mapKeys.ts",
-											"line": 4,
+											"line": 15,
 											"character": 2
 										}
 									]
@@ -7648,21 +7757,42 @@
 							}
 						},
 						{
-							"id": 663,
+							"id": 657,
 							"name": "mapKeys",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Maps keys of `object` and keeps the same values.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.mapKeys(fn)(object)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe({a: 1, b: 2}, R.mapKeys((key, value) => key + value)) // => { a1: 1, b2: 2 }"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 664,
+									"id": 658,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 665,
+									"id": 659,
 									"name": "S",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7671,29 +7801,32 @@
 							],
 							"parameters": [
 								{
-									"id": 666,
+									"id": 660,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the mapping function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 667,
+											"id": 661,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 668,
+													"id": 662,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 669,
+															"id": 663,
 															"name": "key",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -7708,7 +7841,7 @@
 															}
 														},
 														{
-															"id": 670,
+															"id": 664,
 															"name": "value",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -7728,7 +7861,7 @@
 											"sources": [
 												{
 													"fileName": "mapKeys.ts",
-													"line": 7,
+													"line": 28,
 													"character": 5
 												}
 											]
@@ -7739,21 +7872,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 671,
+									"id": 665,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 672,
+											"id": 666,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 673,
+													"id": 667,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -7767,20 +7900,20 @@
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 674,
+													"id": 668,
 													"name": "__type",
 													"kind": 65536,
 													"kindString": "Type literal",
 													"flags": {},
 													"indexSignature": {
-														"id": 675,
+														"id": 669,
 														"name": "__index",
 														"kind": 8192,
 														"kindString": "Index signature",
 														"flags": {},
 														"parameters": [
 															{
-																"id": 676,
+																"id": 670,
 																"name": "x",
 																"kind": 32768,
 																"kindString": "Parameter",
@@ -7799,7 +7932,7 @@
 													"sources": [
 														{
 															"fileName": "mapKeys.ts",
-															"line": 8,
+															"line": 29,
 															"character": 17
 														}
 													]
@@ -7810,7 +7943,7 @@
 									"sources": [
 										{
 											"fileName": "mapKeys.ts",
-											"line": 8,
+											"line": 29,
 											"character": 2
 										}
 									]
@@ -7821,17 +7954,17 @@
 					"sources": [
 						{
 							"fileName": "mapKeys.ts",
-							"line": 1,
+							"line": 12,
 							"character": 23
 						},
 						{
 							"fileName": "mapKeys.ts",
-							"line": 6,
+							"line": 27,
 							"character": 23
 						},
 						{
 							"fileName": "mapKeys.ts",
-							"line": 10,
+							"line": 31,
 							"character": 23
 						}
 					]
@@ -7842,7 +7975,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						650
+						644
 					]
 				}
 			],
@@ -7855,7 +7988,7 @@
 			]
 		},
 		{
-			"id": 677,
+			"id": 671,
 			"name": "\"mapKeys.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7872,7 +8005,7 @@
 			]
 		},
 		{
-			"id": 678,
+			"id": 672,
 			"name": "\"merge\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -7882,7 +8015,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/merge.ts",
 			"children": [
 				{
-					"id": 679,
+					"id": 673,
 					"name": "merge",
 					"kind": 64,
 					"kindString": "Function",
@@ -7891,21 +8024,42 @@
 					},
 					"signatures": [
 						{
-							"id": 680,
+							"id": 674,
 							"name": "merge",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Merges two objects. The same as `Object.assign`.\n`b` object will override properties of `a`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.merge(a, b)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 681,
+									"id": 675,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 682,
+									"id": 676,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7914,22 +8068,28 @@
 							],
 							"parameters": [
 								{
-									"id": 683,
+									"id": 677,
 									"name": "a",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the first object"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "A"
 									}
 								},
 								{
-									"id": 684,
+									"id": 678,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the second object"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "B"
@@ -7951,21 +8111,42 @@
 							}
 						},
 						{
-							"id": 685,
+							"id": 679,
 							"name": "merge",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Merges two objects. The same as `Object.assign`. `b` object will override properties of `a`.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.merge(b)(a)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.merge({ y: 10, z: 2 })({ x: 1, y: 2 }) // => { x: 1, y: 10, z: 2 }"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 686,
+									"id": 680,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 687,
+									"id": 681,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -7974,11 +8155,14 @@
 							],
 							"parameters": [
 								{
-									"id": 688,
+									"id": 682,
 									"name": "b",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the second object"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "B"
@@ -7988,21 +8172,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 689,
+									"id": 683,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 690,
+											"id": 684,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 691,
+													"id": 685,
 													"name": "a",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -8031,7 +8215,7 @@
 									"sources": [
 										{
 											"fileName": "merge.ts",
-											"line": 2,
+											"line": 27,
 											"character": 34
 										}
 									]
@@ -8042,17 +8226,17 @@
 					"sources": [
 						{
 							"fileName": "merge.ts",
-							"line": 1,
+							"line": 15,
 							"character": 21
 						},
 						{
 							"fileName": "merge.ts",
-							"line": 2,
+							"line": 27,
 							"character": 21
 						},
 						{
 							"fileName": "merge.ts",
-							"line": 4,
+							"line": 29,
 							"character": 21
 						}
 					]
@@ -8063,7 +8247,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						679
+						673
 					]
 				}
 			],
@@ -8076,7 +8260,7 @@
 			]
 		},
 		{
-			"id": 692,
+			"id": 686,
 			"name": "\"merge.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8093,7 +8277,7 @@
 			]
 		},
 		{
-			"id": 693,
+			"id": 687,
 			"name": "\"mergeAll\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8103,7 +8287,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/mergeAll.ts",
 			"children": [
 				{
-					"id": 694,
+					"id": 688,
 					"name": "mergeAll",
 					"kind": 64,
 					"kindString": "Function",
@@ -8112,14 +8296,31 @@
 					},
 					"signatures": [
 						{
-							"id": 695,
+							"id": 689,
 							"name": "mergeAll",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Merges a list of objects into a single object.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.mergeAll(objects)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }"
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 696,
+									"id": 690,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8128,11 +8329,14 @@
 							],
 							"parameters": [
 								{
-									"id": 697,
+									"id": 691,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the array of objects"
+									},
 									"type": {
 										"type": "tuple",
 										"elements": [
@@ -8150,21 +8354,21 @@
 							}
 						},
 						{
-							"id": 698,
+							"id": 692,
 							"name": "mergeAll",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 699,
+									"id": 693,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 700,
+									"id": 694,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8173,7 +8377,7 @@
 							],
 							"parameters": [
 								{
-									"id": 701,
+									"id": 695,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8208,28 +8412,28 @@
 							}
 						},
 						{
-							"id": 702,
+							"id": 696,
 							"name": "mergeAll",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 703,
+									"id": 697,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 704,
+									"id": 698,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 705,
+									"id": 699,
 									"name": "C",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8238,7 +8442,7 @@
 							],
 							"parameters": [
 								{
-									"id": 706,
+									"id": 700,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8281,35 +8485,35 @@
 							}
 						},
 						{
-							"id": 707,
+							"id": 701,
 							"name": "mergeAll",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 708,
+									"id": 702,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 709,
+									"id": 703,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 710,
+									"id": 704,
 									"name": "C",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 711,
+									"id": 705,
 									"name": "D",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8318,7 +8522,7 @@
 							],
 							"parameters": [
 								{
-									"id": 712,
+									"id": 706,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8369,42 +8573,42 @@
 							}
 						},
 						{
-							"id": 713,
+							"id": 707,
 							"name": "mergeAll",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 714,
+									"id": 708,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 715,
+									"id": 709,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 716,
+									"id": 710,
 									"name": "C",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 717,
+									"id": 711,
 									"name": "D",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 718,
+									"id": 712,
 									"name": "E",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8413,7 +8617,7 @@
 							],
 							"parameters": [
 								{
-									"id": 719,
+									"id": 713,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -8475,32 +8679,32 @@
 					"sources": [
 						{
 							"fileName": "mergeAll.ts",
-							"line": 1,
+							"line": 10,
 							"character": 24
 						},
 						{
 							"fileName": "mergeAll.ts",
-							"line": 2,
+							"line": 11,
 							"character": 24
 						},
 						{
 							"fileName": "mergeAll.ts",
-							"line": 3,
+							"line": 12,
 							"character": 24
 						},
 						{
 							"fileName": "mergeAll.ts",
-							"line": 4,
+							"line": 13,
 							"character": 24
 						},
 						{
 							"fileName": "mergeAll.ts",
-							"line": 5,
+							"line": 14,
 							"character": 24
 						},
 						{
 							"fileName": "mergeAll.ts",
-							"line": 9,
+							"line": 18,
 							"character": 24
 						}
 					]
@@ -8511,7 +8715,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						694
+						688
 					]
 				}
 			],
@@ -8524,7 +8728,7 @@
 			]
 		},
 		{
-			"id": 720,
+			"id": 714,
 			"name": "\"mergeAll.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8541,7 +8745,7 @@
 			]
 		},
 		{
-			"id": 721,
+			"id": 715,
 			"name": "\"noop\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8551,7 +8755,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/noop.ts",
 			"children": [
 				{
-					"id": 722,
+					"id": 716,
 					"name": "noop",
 					"kind": 64,
 					"kindString": "Function",
@@ -8559,13 +8763,33 @@
 						"isExported": true,
 						"isConst": true
 					},
+					"comment": {
+						"shortText": "A function that returns always `undefined`.",
+						"tags": [
+							{
+								"tag": "signature",
+								"text": "\n   R.noop()"
+							},
+							{
+								"tag": "example",
+								"text": "\n   onSomething(R.noop)"
+							},
+							{
+								"tag": "category",
+								"text": "Function\n"
+							}
+						]
+					},
 					"signatures": [
 						{
-							"id": 723,
+							"id": 717,
 							"name": "noop",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "A function that returns always `undefined`."
+							},
 							"type": {
 								"type": "intrinsic",
 								"name": "any"
@@ -8575,7 +8799,7 @@
 					"sources": [
 						{
 							"fileName": "noop.ts",
-							"line": 1,
+							"line": 9,
 							"character": 17
 						}
 					]
@@ -8586,7 +8810,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						722
+						716
 					]
 				}
 			],
@@ -8599,7 +8823,7 @@
 			]
 		},
 		{
-			"id": 724,
+			"id": 718,
 			"name": "\"objOf\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8609,7 +8833,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/objOf.ts",
 			"children": [
 				{
-					"id": 725,
+					"id": 719,
 					"name": "objOf",
 					"kind": 64,
 					"kindString": "Function",
@@ -8618,11 +8842,123 @@
 					},
 					"signatures": [
 						{
+							"id": 720,
+							"name": "objOf",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Creates an object containing a single `key:value` pair.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.objOf(value, key)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.objOf(10, 'a') // => { a: 10 }"
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 721,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								},
+								{
+									"id": 722,
+									"name": "K",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"parameters": [
+								{
+									"id": 723,
+									"name": "value",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the object value"
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "T"
+									}
+								},
+								{
+									"id": 724,
+									"name": "key",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the property name"
+									},
+									"type": {
+										"type": "typeParameter",
+										"name": "K",
+										"constraint": {
+											"type": "intrinsic",
+											"name": "string"
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
+									"id": 725,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "objOf.ts",
+											"line": 13,
+											"character": 61
+										}
+									]
+								}
+							}
+						},
+						{
 							"id": 726,
 							"name": "objOf",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Creates an object containing a single `key:value` pair.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.objOf(key)(value)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe(10, R.objOf('a')) // => { a: 10 }"
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
 									"id": 727,
@@ -8646,110 +8982,41 @@
 							"parameters": [
 								{
 									"id": 729,
-									"name": "value",
+									"name": "key",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the property name"
+									},
 									"type": {
 										"type": "typeParameter",
-										"name": "T"
+										"name": "K",
+										"constraint": {
+											"type": "intrinsic",
+											"name": "string"
+										}
 									}
-								},
-								{
+								}
+							],
+							"type": {
+								"type": "reflection",
+								"declaration": {
 									"id": 730,
-									"name": "prop",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "typeParameter",
-										"name": "K",
-										"constraint": {
-											"type": "intrinsic",
-											"name": "string"
-										}
-									}
-								}
-							],
-							"type": {
-								"type": "reflection",
-								"declaration": {
-									"id": 731,
-									"name": "__type",
-									"kind": 65536,
-									"kindString": "Type literal",
-									"flags": {},
-									"sources": [
-										{
-											"fileName": "objOf.ts",
-											"line": 1,
-											"character": 62
-										}
-									]
-								}
-							}
-						},
-						{
-							"id": 732,
-							"name": "objOf",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"typeParameter": [
-								{
-									"id": 733,
-									"name": "T",
-									"kind": 131072,
-									"kindString": "Type parameter",
-									"flags": {}
-								},
-								{
-									"id": 734,
-									"name": "K",
-									"kind": 131072,
-									"kindString": "Type parameter",
-									"flags": {},
-									"type": {
-										"type": "intrinsic",
-										"name": "string"
-									}
-								}
-							],
-							"parameters": [
-								{
-									"id": 735,
-									"name": "prop",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "typeParameter",
-										"name": "K",
-										"constraint": {
-											"type": "intrinsic",
-											"name": "string"
-										}
-									}
-								}
-							],
-							"type": {
-								"type": "reflection",
-								"declaration": {
-									"id": 736,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 737,
+											"id": 731,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 738,
+													"id": 732,
 													"name": "value",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -8763,7 +9030,7 @@
 											"type": {
 												"type": "reflection",
 												"declaration": {
-													"id": 739,
+													"id": 733,
 													"name": "__type",
 													"kind": 65536,
 													"kindString": "Type literal",
@@ -8771,7 +9038,7 @@
 													"sources": [
 														{
 															"fileName": "objOf.ts",
-															"line": 4,
+															"line": 26,
 															"character": 16
 														}
 													]
@@ -8782,7 +9049,7 @@
 									"sources": [
 										{
 											"fileName": "objOf.ts",
-											"line": 4,
+											"line": 26,
 											"character": 2
 										}
 									]
@@ -8793,17 +9060,17 @@
 					"sources": [
 						{
 							"fileName": "objOf.ts",
-							"line": 1,
+							"line": 13,
 							"character": 21
 						},
 						{
 							"fileName": "objOf.ts",
-							"line": 2,
+							"line": 24,
 							"character": 21
 						},
 						{
 							"fileName": "objOf.ts",
-							"line": 6,
+							"line": 28,
 							"character": 21
 						}
 					]
@@ -8814,7 +9081,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						725
+						719
 					]
 				}
 			],
@@ -8827,7 +9094,7 @@
 			]
 		},
 		{
-			"id": 740,
+			"id": 734,
 			"name": "\"objOf.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8844,7 +9111,7 @@
 			]
 		},
 		{
-			"id": 741,
+			"id": 735,
 			"name": "\"omit\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -8854,7 +9121,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/omit.ts",
 			"children": [
 				{
-					"id": 742,
+					"id": 736,
 					"name": "Omit",
 					"kind": 4194304,
 					"kindString": "Type alias",
@@ -8863,14 +9130,14 @@
 					},
 					"typeParameter": [
 						{
-							"id": 743,
+							"id": 737,
 							"name": "T",
 							"kind": 131072,
 							"kindString": "Type parameter",
 							"flags": {}
 						},
 						{
-							"id": 744,
+							"id": 738,
 							"name": "K",
 							"kind": 131072,
 							"kindString": "Type parameter",
@@ -8888,7 +9155,7 @@
 					"sources": [
 						{
 							"fileName": "omit.ts",
-							"line": 1,
+							"line": 3,
 							"character": 16
 						}
 					],
@@ -8930,7 +9197,7 @@
 					}
 				},
 				{
-					"id": 745,
+					"id": 739,
 					"name": "omit",
 					"kind": 64,
 					"kindString": "Function",
@@ -8939,14 +9206,35 @@
 					},
 					"signatures": [
 						{
-							"id": 746,
+							"id": 740,
 							"name": "omit",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns a partial copy of an object omitting the keys specified.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.omit(obj, names);"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 747,
+									"id": 741,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8957,7 +9245,7 @@
 									}
 								},
 								{
-									"id": 748,
+									"id": 742,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -8974,11 +9262,14 @@
 							],
 							"parameters": [
 								{
-									"id": 749,
+									"id": 743,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the object"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "T",
@@ -8989,11 +9280,14 @@
 									}
 								},
 								{
-									"id": 750,
+									"id": 744,
 									"name": "names",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the property names"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -9014,7 +9308,7 @@
 							"type": {
 								"type": "reference",
 								"name": "Omit",
-								"id": 742,
+								"id": 736,
 								"typeArguments": [
 									{
 										"type": "typeParameter",
@@ -9040,14 +9334,35 @@
 							}
 						},
 						{
-							"id": 751,
+							"id": 745,
 							"name": "omit",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns a partial copy of an object omitting the keys specified.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.omit(names)(obj);"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Object\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 752,
+									"id": 746,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9058,7 +9373,7 @@
 									}
 								},
 								{
-									"id": 753,
+									"id": 747,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9075,11 +9390,14 @@
 							],
 							"parameters": [
 								{
-									"id": 754,
+									"id": 748,
 									"name": "names",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the property names"
+									},
 									"type": {
 										"type": "array",
 										"elementType": {
@@ -9100,25 +9418,28 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 755,
+									"id": 749,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 756,
+											"id": 750,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 757,
+													"id": 751,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
 													"flags": {},
+													"comment": {
+														"text": "the object"
+													},
 													"type": {
 														"type": "typeParameter",
 														"name": "T",
@@ -9132,7 +9453,7 @@
 											"type": {
 												"type": "reference",
 												"name": "Omit",
-												"id": 742,
+												"id": 736,
 												"typeArguments": [
 													{
 														"type": "typeParameter",
@@ -9161,7 +9482,7 @@
 									"sources": [
 										{
 											"fileName": "omit.ts",
-											"line": 10,
+											"line": 34,
 											"character": 2
 										}
 									]
@@ -9172,17 +9493,17 @@
 					"sources": [
 						{
 							"fileName": "omit.ts",
-							"line": 3,
+							"line": 16,
 							"character": 20
 						},
 						{
 							"fileName": "omit.ts",
-							"line": 8,
+							"line": 32,
 							"character": 20
 						},
 						{
 							"fileName": "omit.ts",
-							"line": 12,
+							"line": 36,
 							"character": 20
 						}
 					]
@@ -9193,14 +9514,14 @@
 					"title": "Type aliases",
 					"kind": 4194304,
 					"children": [
-						742
+						736
 					]
 				},
 				{
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						745
+						739
 					]
 				}
 			],
@@ -9213,7 +9534,7 @@
 			]
 		},
 		{
-			"id": 758,
+			"id": 752,
 			"name": "\"omit.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -9230,7 +9551,7 @@
 			]
 		},
 		{
-			"id": 759,
+			"id": 753,
 			"name": "\"once\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -9240,7 +9561,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/once.ts",
 			"children": [
 				{
-					"id": 760,
+					"id": 754,
 					"name": "once",
 					"kind": 64,
 					"kindString": "Function",
@@ -9249,44 +9570,73 @@
 					},
 					"signatures": [
 						{
-							"id": 761,
+							"id": 755,
 							"name": "once",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Creates a function that is restricted to invoking `func` once. Repeat calls to the function return the value of the first invocation.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "R.once(fn)"
+									},
+									{
+										"tag": "example",
+										"text": "\nconst initialize = _.once(createApplication);\ninitialize();\ninitialize();\n// => `createApplication` is invoked once"
+									},
+									{
+										"tag": "category",
+										"text": "Function\n"
+									}
+								]
+							},
+							"typeParameter": [
+								{
+									"id": 756,
+									"name": "T",
+									"kind": 131072,
+									"kindString": "Type parameter",
+									"flags": {}
+								}
+							],
 							"parameters": [
 								{
-									"id": 762,
+									"id": 757,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the function to wrap"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 763,
+											"id": 758,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 764,
+													"id": 759,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"type": {
-														"type": "intrinsic",
-														"name": "void"
+														"type": "typeParameter",
+														"name": "T"
 													}
 												}
 											],
 											"sources": [
 												{
 													"fileName": "once.ts",
-													"line": 1,
-													"character": 24
+													"line": 12,
+													"character": 27
 												}
 											]
 										}
@@ -9294,15 +9644,41 @@
 								}
 							],
 							"type": {
-								"type": "reference",
-								"name": "(Anonymous function)"
+								"type": "reflection",
+								"declaration": {
+									"id": 760,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
+									"flags": {},
+									"signatures": [
+										{
+											"id": 761,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"type": {
+												"type": "typeParameter",
+												"name": "T"
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "once.ts",
+											"line": 12,
+											"character": 37
+										}
+									]
+								}
 							}
 						}
 					],
 					"sources": [
 						{
 							"fileName": "once.ts",
-							"line": 1,
+							"line": 12,
 							"character": 20
 						}
 					]
@@ -9313,7 +9689,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						760
+						754
 					]
 				}
 			],
@@ -9326,7 +9702,7 @@
 			]
 		},
 		{
-			"id": 765,
+			"id": 762,
 			"name": "\"once.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -9343,7 +9719,7 @@
 			]
 		},
 		{
-			"id": 766,
+			"id": 763,
 			"name": "\"pathOr\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -9353,7 +9729,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/pathOr.ts",
 			"children": [
 				{
-					"id": 767,
+					"id": 764,
 					"name": "pathOr",
 					"kind": 64,
 					"kindString": "Function",
@@ -9362,7 +9738,7 @@
 					},
 					"signatures": [
 						{
-							"id": 768,
+							"id": 765,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9390,14 +9766,14 @@
 							},
 							"typeParameter": [
 								{
-									"id": 769,
+									"id": 766,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 770,
+									"id": 767,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9414,7 +9790,7 @@
 							],
 							"parameters": [
 								{
-									"id": 771,
+									"id": 768,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9428,7 +9804,7 @@
 									}
 								},
 								{
-									"id": 772,
+									"id": 769,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9455,7 +9831,7 @@
 									}
 								},
 								{
-									"id": 773,
+									"id": 770,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9475,21 +9851,21 @@
 							}
 						},
 						{
-							"id": 774,
+							"id": 771,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 775,
+									"id": 772,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 776,
+									"id": 773,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9504,7 +9880,7 @@
 									}
 								},
 								{
-									"id": 777,
+									"id": 774,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9521,7 +9897,7 @@
 							],
 							"parameters": [
 								{
-									"id": 778,
+									"id": 775,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9532,7 +9908,7 @@
 									}
 								},
 								{
-									"id": 779,
+									"id": 776,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9568,7 +9944,7 @@
 									}
 								},
 								{
-									"id": 780,
+									"id": 777,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9585,21 +9961,21 @@
 							}
 						},
 						{
-							"id": 781,
+							"id": 778,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 782,
+									"id": 779,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 783,
+									"id": 780,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9614,7 +9990,7 @@
 									}
 								},
 								{
-									"id": 784,
+									"id": 781,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9629,7 +10005,7 @@
 									}
 								},
 								{
-									"id": 785,
+									"id": 782,
 									"name": "C",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9646,7 +10022,7 @@
 							],
 							"parameters": [
 								{
-									"id": 786,
+									"id": 783,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9657,7 +10033,7 @@
 									}
 								},
 								{
-									"id": 787,
+									"id": 784,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9705,7 +10081,7 @@
 									}
 								},
 								{
-									"id": 788,
+									"id": 785,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9722,7 +10098,7 @@
 							}
 						},
 						{
-							"id": 789,
+							"id": 786,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -9750,14 +10126,14 @@
 							},
 							"typeParameter": [
 								{
-									"id": 790,
+									"id": 787,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 791,
+									"id": 788,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9774,7 +10150,7 @@
 							],
 							"parameters": [
 								{
-									"id": 792,
+									"id": 789,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9801,7 +10177,7 @@
 									}
 								},
 								{
-									"id": 793,
+									"id": 790,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9818,21 +10194,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 794,
+									"id": 791,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 795,
+											"id": 792,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 796,
+													"id": 793,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -9863,21 +10239,21 @@
 							}
 						},
 						{
-							"id": 797,
+							"id": 794,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 798,
+									"id": 795,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 799,
+									"id": 796,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9892,7 +10268,7 @@
 									}
 								},
 								{
-									"id": 800,
+									"id": 797,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -9909,7 +10285,7 @@
 							],
 							"parameters": [
 								{
-									"id": 801,
+									"id": 798,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9945,7 +10321,7 @@
 									}
 								},
 								{
-									"id": 802,
+									"id": 799,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -9959,21 +10335,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 803,
+									"id": 800,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 804,
+											"id": 801,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 805,
+													"id": 802,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -10001,21 +10377,21 @@
 							}
 						},
 						{
-							"id": 806,
+							"id": 803,
 							"name": "pathOr",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 807,
+									"id": 804,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 808,
+									"id": 805,
 									"name": "A",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10030,7 +10406,7 @@
 									}
 								},
 								{
-									"id": 809,
+									"id": 806,
 									"name": "B",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10045,7 +10421,7 @@
 									}
 								},
 								{
-									"id": 810,
+									"id": 807,
 									"name": "C",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10062,7 +10438,7 @@
 							],
 							"parameters": [
 								{
-									"id": 811,
+									"id": 808,
 									"name": "path",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10110,7 +10486,7 @@
 									}
 								},
 								{
-									"id": 812,
+									"id": 809,
 									"name": "defaultValue",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10124,21 +10500,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 813,
+									"id": 810,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 814,
+											"id": 811,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 815,
+													"id": 812,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -10210,7 +10586,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						767
+						764
 					]
 				}
 			],
@@ -10223,7 +10599,7 @@
 			]
 		},
 		{
-			"id": 816,
+			"id": 813,
 			"name": "\"pathOr.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -10240,7 +10616,7 @@
 			]
 		},
 		{
-			"id": 817,
+			"id": 814,
 			"name": "\"pick\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -10250,7 +10626,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/pick.ts",
 			"children": [
 				{
-					"id": 818,
+					"id": 815,
 					"name": "pick",
 					"kind": 64,
 					"kindString": "Function",
@@ -10259,7 +10635,7 @@
 					},
 					"signatures": [
 						{
-							"id": 819,
+							"id": 816,
 							"name": "pick",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10287,7 +10663,7 @@
 							},
 							"typeParameter": [
 								{
-									"id": 820,
+									"id": 817,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10298,7 +10674,7 @@
 									}
 								},
 								{
-									"id": 821,
+									"id": 818,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10315,7 +10691,7 @@
 							],
 							"parameters": [
 								{
-									"id": 822,
+									"id": 819,
 									"name": "object",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10333,7 +10709,7 @@
 									}
 								},
 								{
-									"id": 823,
+									"id": 820,
 									"name": "names",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10386,7 +10762,7 @@
 							}
 						},
 						{
-							"id": 824,
+							"id": 821,
 							"name": "pick",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -10414,7 +10790,7 @@
 							},
 							"typeParameter": [
 								{
-									"id": 825,
+									"id": 822,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10425,7 +10801,7 @@
 									}
 								},
 								{
-									"id": 826,
+									"id": 823,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -10442,7 +10818,7 @@
 							],
 							"parameters": [
 								{
-									"id": 827,
+									"id": 824,
 									"name": "names",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -10470,21 +10846,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 828,
+									"id": 825,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 829,
+											"id": 826,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 830,
+													"id": 827,
 													"name": "object",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -10562,7 +10938,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						818
+						815
 					]
 				}
 			],
@@ -10575,7 +10951,7 @@
 			]
 		},
 		{
-			"id": 831,
+			"id": 828,
 			"name": "\"pick.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12524,7 +12900,7 @@
 			]
 		},
 		{
-			"id": 832,
+			"id": 829,
 			"name": "\"pipe.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12541,7 +12917,7 @@
 			]
 		},
 		{
-			"id": 833,
+			"id": 830,
 			"name": "\"prop\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12551,7 +12927,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/prop.ts",
 			"children": [
 				{
-					"id": 834,
+					"id": 831,
 					"name": "prop",
 					"kind": 64,
 					"kindString": "Function",
@@ -12560,7 +12936,7 @@
 					},
 					"signatures": [
 						{
-							"id": 835,
+							"id": 832,
 							"name": "prop",
 							"kind": 4096,
 							"kindString": "Call signature",
@@ -12588,14 +12964,14 @@
 							},
 							"typeParameter": [
 								{
-									"id": 836,
+									"id": 833,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 837,
+									"id": 834,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -12612,7 +12988,7 @@
 							],
 							"parameters": [
 								{
-									"id": 838,
+									"id": 835,
 									"name": "name",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -12654,7 +13030,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						834
+						831
 					]
 				}
 			],
@@ -12667,7 +13043,7 @@
 			]
 		},
 		{
-			"id": 839,
+			"id": 836,
 			"name": "\"prop.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12710,7 +13086,7 @@
 							"flags": {},
 							"comment": {
 								"shortText": "Creates a function with `data-first` and `data-last` signatures.",
-								"text": "`purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.\nRefer the the example below to see usage a correct usage.\n",
+								"text": "`purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.\nRefer to the example below to see usage a correct usage.\n",
 								"tags": [
 									{
 										"tag": "signature",
@@ -12801,7 +13177,7 @@
 			]
 		},
 		{
-			"id": 840,
+			"id": 837,
 			"name": "\"purry.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12842,6 +13218,23 @@
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Random a non-cryptographic random string from characters a-zA-Z0-9.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "randomString(length)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   randomString(5) // => aB92J"
+									},
+									{
+										"tag": "category",
+										"text": "String\n"
+									}
+								]
+							},
 							"parameters": [
 								{
 									"id": 851,
@@ -12849,6 +13242,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the length of the random string"
+									},
 									"type": {
 										"type": "intrinsic",
 										"name": "number"
@@ -12864,7 +13260,7 @@
 					"sources": [
 						{
 							"fileName": "randomString.ts",
-							"line": 3,
+							"line": 11,
 							"character": 28
 						}
 					]
@@ -12888,7 +13284,24 @@
 			]
 		},
 		{
-			"id": 841,
+			"id": 852,
+			"name": "\"randomString.test\"",
+			"kind": 1,
+			"kindString": "External module",
+			"flags": {
+				"isExported": true
+			},
+			"originalName": "/Users/sky/work/npm/remeda/src/randomString.test.ts",
+			"sources": [
+				{
+					"fileName": "randomString.test.ts",
+					"line": 1,
+					"character": 0
+				}
+			]
+		},
+		{
+			"id": 838,
 			"name": "\"range\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -12898,7 +13311,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/range.ts",
 			"children": [
 				{
-					"id": 842,
+					"id": 839,
 					"name": "range",
 					"kind": 64,
 					"kindString": "Function",
@@ -12907,11 +13320,97 @@
 					},
 					"signatures": [
 						{
+							"id": 840,
+							"name": "range",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"comment": {
+								"shortText": "Returns a list of numbers from `start` (inclusive) to `end` (exclusive).",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "range(start, end)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.range(1, 5) // => [1, 2, 3, 4]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
+							"parameters": [
+								{
+									"id": 841,
+									"name": "start",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the start number"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								},
+								{
+									"id": 842,
+									"name": "end",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"comment": {
+										"text": "the end number"
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "number"
+									}
+								}
+							],
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "number"
+								}
+							}
+						},
+						{
 							"id": 843,
 							"name": "range",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Returns a list of numbers from `start` (inclusive) to `end` (exclusive).",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "range(end)(start)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.range(5)(1) // => [1, 2, 3, 4]"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"parameters": [
 								{
 									"id": 844,
@@ -12919,6 +13418,9 @@
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the end number"
+									},
 									"type": {
 										"type": "intrinsic",
 										"name": "number"
@@ -12926,48 +13428,49 @@
 								}
 							],
 							"type": {
-								"type": "array",
-								"elementType": {
-									"type": "intrinsic",
-									"name": "number"
-								}
-							}
-						},
-						{
-							"id": 845,
-							"name": "range",
-							"kind": 4096,
-							"kindString": "Call signature",
-							"flags": {},
-							"parameters": [
-								{
-									"id": 846,
-									"name": "start",
-									"kind": 32768,
-									"kindString": "Parameter",
+								"type": "reflection",
+								"declaration": {
+									"id": 845,
+									"name": "__type",
+									"kind": 65536,
+									"kindString": "Type literal",
 									"flags": {},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								},
-								{
-									"id": 847,
-									"name": "end",
-									"kind": 32768,
-									"kindString": "Parameter",
-									"flags": {},
-									"type": {
-										"type": "intrinsic",
-										"name": "number"
-									}
-								}
-							],
-							"type": {
-								"type": "array",
-								"elementType": {
-									"type": "intrinsic",
-									"name": "number"
+									"signatures": [
+										{
+											"id": 846,
+											"name": "__call",
+											"kind": 4096,
+											"kindString": "Call signature",
+											"flags": {},
+											"parameters": [
+												{
+													"id": 847,
+													"name": "start",
+													"kind": 32768,
+													"kindString": "Parameter",
+													"flags": {},
+													"type": {
+														"type": "intrinsic",
+														"name": "number"
+													}
+												}
+											],
+											"type": {
+												"type": "array",
+												"elementType": {
+													"type": "intrinsic",
+													"name": "number"
+												}
+											}
+										}
+									],
+									"sources": [
+										{
+											"fileName": "range.ts",
+											"line": 24,
+											"character": 35
+										}
+									]
 								}
 							}
 						}
@@ -12975,17 +13478,17 @@
 					"sources": [
 						{
 							"fileName": "range.ts",
-							"line": 1,
+							"line": 13,
 							"character": 21
 						},
 						{
 							"fileName": "range.ts",
-							"line": 3,
+							"line": 24,
 							"character": 21
 						},
 						{
 							"fileName": "range.ts",
-							"line": 5,
+							"line": 26,
 							"character": 21
 						}
 					]
@@ -12996,7 +13499,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						842
+						839
 					]
 				}
 			],
@@ -13009,7 +13512,7 @@
 			]
 		},
 		{
-			"id": 852,
+			"id": 853,
 			"name": "\"range.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13026,7 +13529,7 @@
 			]
 		},
 		{
-			"id": 853,
+			"id": 854,
 			"name": "\"reduce\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13036,7 +13539,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/reduce.ts",
 			"children": [
 				{
-					"id": 854,
+					"id": 855,
 					"name": "reduce",
 					"kind": 64,
 					"kindString": "Function",
@@ -13045,21 +13548,42 @@
 					},
 					"signatures": [
 						{
-							"id": 855,
+							"id": 856,
 							"name": "reduce",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.reduce(items, fn, initialValue)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115"
+									},
+									{
+										"tag": "data_first",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 856,
+									"id": 857,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 857,
+									"id": 858,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13068,7 +13592,7 @@
 							],
 							"parameters": [
 								{
-									"id": 858,
+									"id": 859,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13082,29 +13606,32 @@
 									}
 								},
 								{
-									"id": 859,
+									"id": 860,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the callback function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 860,
+											"id": 861,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 861,
+													"id": 862,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 862,
+															"id": 863,
 															"name": "acc",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13115,7 +13642,7 @@
 															}
 														},
 														{
-															"id": 863,
+															"id": 864,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13135,7 +13662,7 @@
 											"sources": [
 												{
 													"fileName": "reduce.ts",
-													"line": 3,
+													"line": 17,
 													"character": 5
 												}
 											]
@@ -13143,11 +13670,14 @@
 									}
 								},
 								{
-									"id": 864,
+									"id": 865,
 									"name": "initialValue",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the initial value to use as an accumulator value in the callback function"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "K"
@@ -13160,21 +13690,42 @@
 							}
 						},
 						{
-							"id": 865,
+							"id": 866,
 							"name": "reduce",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
+							"comment": {
+								"shortText": "Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
+								"tags": [
+									{
+										"tag": "signature",
+										"text": "\n   R.reduce(fn, initialValue)(array)"
+									},
+									{
+										"tag": "example",
+										"text": "\n   R.pipe([1, 2, 3, 4, 5], R.reduce((acc, x) => acc + x, 100)) // => 115"
+									},
+									{
+										"tag": "data_last",
+										"text": ""
+									},
+									{
+										"tag": "category",
+										"text": "Array\n"
+									}
+								]
+							},
 							"typeParameter": [
 								{
-									"id": 866,
+									"id": 867,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 867,
+									"id": 868,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13183,29 +13734,32 @@
 							],
 							"parameters": [
 								{
-									"id": 868,
+									"id": 869,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the callback function"
+									},
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 869,
+											"id": 870,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 870,
+													"id": 871,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 871,
+															"id": 872,
 															"name": "acc",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13216,7 +13770,7 @@
 															}
 														},
 														{
-															"id": 872,
+															"id": 873,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13236,7 +13790,7 @@
 											"sources": [
 												{
 													"fileName": "reduce.ts",
-													"line": 7,
+													"line": 33,
 													"character": 5
 												}
 											]
@@ -13244,11 +13798,14 @@
 									}
 								},
 								{
-									"id": 873,
+									"id": 874,
 									"name": "initialValue",
 									"kind": 32768,
 									"kindString": "Parameter",
 									"flags": {},
+									"comment": {
+										"text": "the initial value to use as an accumulator value in the callback function"
+									},
 									"type": {
 										"type": "typeParameter",
 										"name": "K"
@@ -13258,21 +13815,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 874,
+									"id": 875,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 875,
+											"id": 876,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 876,
+													"id": 877,
 													"name": "items",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -13295,7 +13852,7 @@
 									"sources": [
 										{
 											"fileName": "reduce.ts",
-											"line": 9,
+											"line": 35,
 											"character": 2
 										}
 									]
@@ -13306,17 +13863,17 @@
 					"sources": [
 						{
 							"fileName": "reduce.ts",
-							"line": 1,
+							"line": 15,
 							"character": 22
 						},
 						{
 							"fileName": "reduce.ts",
-							"line": 6,
+							"line": 32,
 							"character": 22
 						},
 						{
 							"fileName": "reduce.ts",
-							"line": 11,
+							"line": 37,
 							"character": 22
 						}
 					]
@@ -13327,7 +13884,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						854
+						855
 					]
 				}
 			],
@@ -13340,7 +13897,7 @@
 			]
 		},
 		{
-			"id": 877,
+			"id": 878,
 			"name": "\"reduce.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13357,7 +13914,7 @@
 			]
 		},
 		{
-			"id": 878,
+			"id": 879,
 			"name": "\"reject\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13367,7 +13924,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/reject.ts",
 			"children": [
 				{
-					"id": 879,
+					"id": 880,
 					"name": "reject",
 					"kind": 64,
 					"kindString": "Function",
@@ -13376,14 +13933,14 @@
 					},
 					"signatures": [
 						{
-							"id": 880,
+							"id": 881,
 							"name": "reject",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 881,
+									"id": 882,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13392,7 +13949,7 @@
 							],
 							"parameters": [
 								{
-									"id": 882,
+									"id": 883,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13406,7 +13963,7 @@
 									}
 								},
 								{
-									"id": 883,
+									"id": 884,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13414,21 +13971,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 884,
+											"id": 885,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 885,
+													"id": 886,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 886,
+															"id": 887,
 															"name": "input",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13465,14 +14022,14 @@
 							}
 						},
 						{
-							"id": 887,
+							"id": 888,
 							"name": "reject",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 888,
+									"id": 889,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13481,7 +14038,7 @@
 							],
 							"parameters": [
 								{
-									"id": 889,
+									"id": 890,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13489,21 +14046,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 890,
+											"id": 891,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 891,
+													"id": 892,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 892,
+															"id": 893,
 															"name": "input",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13534,21 +14091,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 893,
+									"id": 894,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 894,
+											"id": 895,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 895,
+													"id": 896,
 													"name": "items",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -13606,7 +14163,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						879
+						880
 					]
 				}
 			],
@@ -13619,7 +14176,7 @@
 			]
 		},
 		{
-			"id": 896,
+			"id": 897,
 			"name": "\"reject.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13636,7 +14193,7 @@
 			]
 		},
 		{
-			"id": 897,
+			"id": 898,
 			"name": "\"set\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13646,7 +14203,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/set.ts",
 			"children": [
 				{
-					"id": 898,
+					"id": 899,
 					"name": "set",
 					"kind": 64,
 					"kindString": "Function",
@@ -13655,21 +14212,21 @@
 					},
 					"signatures": [
 						{
-							"id": 899,
+							"id": 900,
 							"name": "set",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 900,
+									"id": 901,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 901,
+									"id": 902,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13686,7 +14243,7 @@
 							],
 							"parameters": [
 								{
-									"id": 902,
+									"id": 903,
 									"name": "obj",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13697,7 +14254,7 @@
 									}
 								},
 								{
-									"id": 903,
+									"id": 904,
 									"name": "prop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13716,7 +14273,7 @@
 									}
 								},
 								{
-									"id": 904,
+									"id": 905,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13733,21 +14290,21 @@
 							}
 						},
 						{
-							"id": 905,
+							"id": 906,
 							"name": "set",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 906,
+									"id": 907,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
 									"flags": {}
 								},
 								{
-									"id": 907,
+									"id": 908,
 									"name": "K",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13764,7 +14321,7 @@
 							],
 							"parameters": [
 								{
-									"id": 908,
+									"id": 909,
 									"name": "prop",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13783,7 +14340,7 @@
 									}
 								},
 								{
-									"id": 909,
+									"id": 910,
 									"name": "value",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13797,21 +14354,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 910,
+									"id": 911,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 911,
+											"id": 912,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 912,
+													"id": 913,
 													"name": "obj",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -13863,7 +14420,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						898
+						899
 					]
 				}
 			],
@@ -13876,7 +14433,7 @@
 			]
 		},
 		{
-			"id": 913,
+			"id": 914,
 			"name": "\"set.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13893,7 +14450,7 @@
 			]
 		},
 		{
-			"id": 914,
+			"id": 915,
 			"name": "\"sort\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -13903,7 +14460,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/sort.ts",
 			"children": [
 				{
-					"id": 915,
+					"id": 916,
 					"name": "sort",
 					"kind": 64,
 					"kindString": "Function",
@@ -13912,14 +14469,14 @@
 					},
 					"signatures": [
 						{
-							"id": 916,
+							"id": 917,
 							"name": "sort",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 917,
+									"id": 918,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -13928,7 +14485,7 @@
 							],
 							"parameters": [
 								{
-									"id": 918,
+									"id": 919,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13942,7 +14499,7 @@
 									}
 								},
 								{
-									"id": 919,
+									"id": 920,
 									"name": "cmp",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -13950,21 +14507,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 920,
+											"id": 921,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 921,
+													"id": 922,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 922,
+															"id": 923,
 															"name": "a",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -13975,7 +14532,7 @@
 															}
 														},
 														{
-															"id": 923,
+															"id": 924,
 															"name": "b",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -14026,7 +14583,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						915
+						916
 					]
 				}
 			],
@@ -14039,7 +14596,7 @@
 			]
 		},
 		{
-			"id": 924,
+			"id": 925,
 			"name": "\"sort.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14056,7 +14613,7 @@
 			]
 		},
 		{
-			"id": 925,
+			"id": 926,
 			"name": "\"sortBy\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14066,7 +14623,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/sortBy.ts",
 			"children": [
 				{
-					"id": 926,
+					"id": 927,
 					"name": "sortBy",
 					"kind": 64,
 					"kindString": "Function",
@@ -14075,14 +14632,14 @@
 					},
 					"signatures": [
 						{
-							"id": 927,
+							"id": 928,
 							"name": "sortBy",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 928,
+									"id": 929,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -14091,7 +14648,7 @@
 							],
 							"parameters": [
 								{
-									"id": 929,
+									"id": 930,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14105,7 +14662,7 @@
 									}
 								},
 								{
-									"id": 930,
+									"id": 931,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14113,21 +14670,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 931,
+											"id": 932,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 932,
+													"id": 933,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 933,
+															"id": 934,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -14164,14 +14721,14 @@
 							}
 						},
 						{
-							"id": 934,
+							"id": 935,
 							"name": "sortBy",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 935,
+									"id": 936,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -14180,7 +14737,7 @@
 							],
 							"parameters": [
 								{
-									"id": 936,
+									"id": 937,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14188,21 +14745,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 937,
+											"id": 938,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 938,
+													"id": 939,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 939,
+															"id": 940,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -14233,21 +14790,21 @@
 							"type": {
 								"type": "reflection",
 								"declaration": {
-									"id": 940,
+									"id": 941,
 									"name": "__type",
 									"kind": 65536,
 									"kindString": "Type literal",
 									"flags": {},
 									"signatures": [
 										{
-											"id": 941,
+											"id": 942,
 											"name": "__call",
 											"kind": 4096,
 											"kindString": "Call signature",
 											"flags": {},
 											"parameters": [
 												{
-													"id": 942,
+													"id": 943,
 													"name": "items",
 													"kind": 32768,
 													"kindString": "Parameter",
@@ -14305,7 +14862,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						926
+						927
 					]
 				}
 			],
@@ -14318,7 +14875,7 @@
 			]
 		},
 		{
-			"id": 943,
+			"id": 944,
 			"name": "\"sortBy.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14335,7 +14892,7 @@
 			]
 		},
 		{
-			"id": 944,
+			"id": 945,
 			"name": "\"splitAt\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14345,7 +14902,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/splitAt.ts",
 			"children": [
 				{
-					"id": 945,
+					"id": 946,
 					"name": "splitAt",
 					"kind": 64,
 					"kindString": "Function",
@@ -14354,14 +14911,14 @@
 					},
 					"signatures": [
 						{
-							"id": 946,
+							"id": 947,
 							"name": "splitAt",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 947,
+									"id": 948,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -14370,7 +14927,7 @@
 							],
 							"parameters": [
 								{
-									"id": 948,
+									"id": 949,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14384,7 +14941,7 @@
 									}
 								},
 								{
-									"id": 949,
+									"id": 950,
 									"name": "index",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14421,7 +14978,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						945
+						946
 					]
 				}
 			],
@@ -14434,7 +14991,7 @@
 			]
 		},
 		{
-			"id": 950,
+			"id": 951,
 			"name": "\"splitAt.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14451,7 +15008,7 @@
 			]
 		},
 		{
-			"id": 951,
+			"id": 952,
 			"name": "\"splitWhen\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14461,7 +15018,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/splitWhen.ts",
 			"children": [
 				{
-					"id": 952,
+					"id": 953,
 					"name": "splitWhen",
 					"kind": 64,
 					"kindString": "Function",
@@ -14470,14 +15027,14 @@
 					},
 					"signatures": [
 						{
-							"id": 953,
+							"id": 954,
 							"name": "splitWhen",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 954,
+									"id": 955,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -14486,7 +15043,7 @@
 							],
 							"parameters": [
 								{
-									"id": 955,
+									"id": 956,
 									"name": "array",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14500,7 +15057,7 @@
 									}
 								},
 								{
-									"id": 956,
+									"id": 957,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14508,21 +15065,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 957,
+											"id": 958,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 958,
+													"id": 959,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 959,
+															"id": 960,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -14576,7 +15133,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						952
+						953
 					]
 				}
 			],
@@ -14589,7 +15146,7 @@
 			]
 		},
 		{
-			"id": 960,
+			"id": 961,
 			"name": "\"splitWhen.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14606,7 +15163,7 @@
 			]
 		},
 		{
-			"id": 961,
+			"id": 962,
 			"name": "\"takeWhile\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14616,7 +15173,7 @@
 			"originalName": "/Users/sky/work/npm/remeda/src/takeWhile.ts",
 			"children": [
 				{
-					"id": 962,
+					"id": 963,
 					"name": "takeWhile",
 					"kind": 64,
 					"kindString": "Function",
@@ -14625,14 +15182,14 @@
 					},
 					"signatures": [
 						{
-							"id": 963,
+							"id": 964,
 							"name": "takeWhile",
 							"kind": 4096,
 							"kindString": "Call signature",
 							"flags": {},
 							"typeParameter": [
 								{
-									"id": 964,
+									"id": 965,
 									"name": "T",
 									"kind": 131072,
 									"kindString": "Type parameter",
@@ -14641,7 +15198,7 @@
 							],
 							"parameters": [
 								{
-									"id": 965,
+									"id": 966,
 									"name": "items",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14655,7 +15212,7 @@
 									}
 								},
 								{
-									"id": 966,
+									"id": 967,
 									"name": "fn",
 									"kind": 32768,
 									"kindString": "Parameter",
@@ -14663,21 +15220,21 @@
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 967,
+											"id": 968,
 											"name": "__type",
 											"kind": 65536,
 											"kindString": "Type literal",
 											"flags": {},
 											"signatures": [
 												{
-													"id": 968,
+													"id": 969,
 													"name": "__call",
 													"kind": 4096,
 													"kindString": "Call signature",
 													"flags": {},
 													"parameters": [
 														{
-															"id": 969,
+															"id": 970,
 															"name": "item",
 															"kind": 32768,
 															"kindString": "Parameter",
@@ -14728,7 +15285,7 @@
 					"title": "Functions",
 					"kind": 64,
 					"children": [
-						962
+						963
 					]
 				}
 			],
@@ -14741,7 +15298,7 @@
 			]
 		},
 		{
-			"id": 970,
+			"id": 971,
 			"name": "\"takeWhile.test\"",
 			"kind": 1,
 			"kindString": "External module",
@@ -14752,23 +15309,6 @@
 			"sources": [
 				{
 					"fileName": "takeWhile.test.ts",
-					"line": 1,
-					"character": 0
-				}
-			]
-		},
-		{
-			"id": 971,
-			"name": "\"test\"",
-			"kind": 1,
-			"kindString": "External module",
-			"flags": {
-				"isExported": true
-			},
-			"originalName": "/Users/sky/work/npm/remeda/src/test.ts",
-			"sources": [
-				{
-					"fileName": "test.ts",
 					"line": 1,
 					"character": 0
 				}
@@ -15158,53 +15698,51 @@
 				608,
 				614,
 				615,
+				620,
 				621,
-				622,
-				627,
-				628,
-				648,
-				649,
-				677,
-				678,
-				692,
-				693,
-				720,
-				721,
-				724,
-				740,
-				741,
-				758,
-				759,
-				765,
-				766,
-				816,
-				817,
-				831,
+				642,
+				643,
+				671,
+				672,
+				686,
+				687,
+				714,
+				715,
+				718,
+				734,
+				735,
+				752,
+				753,
+				762,
+				763,
+				813,
+				814,
+				828,
 				26,
-				832,
-				833,
-				839,
+				829,
+				830,
+				836,
 				1,
-				840,
+				837,
 				848,
-				841,
 				852,
+				838,
 				853,
-				877,
+				854,
 				878,
-				896,
+				879,
 				897,
-				913,
+				898,
 				914,
-				924,
+				915,
 				925,
-				943,
+				926,
 				944,
-				950,
+				945,
 				951,
-				960,
+				952,
 				961,
-				970,
+				962,
 				971,
 				972,
 				980,

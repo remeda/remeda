@@ -1,19 +1,40 @@
+import { purry } from './purry';
+
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
+/**
+ * Returns a partial copy of an object omitting the keys specified.
+ * @param object the object
+ * @param names the property names
+ * @signature
+ *    R.omit(obj, names);
+ * @example
+ *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
+ * @data_first
+ * @category Object
+ */
 export function omit<T extends {}, K extends keyof T>(
   object: T,
   names: K[]
 ): Omit<T, K>;
 
+/**
+ * Returns a partial copy of an object omitting the keys specified.
+ * @param object the object
+ * @param names the property names
+ * @signature
+ *    R.omit(names)(obj);
+ * @example
+ *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }
+ * @data_last
+ * @category Object
+ */
 export function omit<T extends {}, K extends keyof T>(
   names: K[]
 ): (object: T) => Omit<T, K>;
 
-export function omit(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (object: any) => _omit(object, arg1);
-  }
-  return _omit(arg1, arg2);
+export function omit() {
+  return purry(_omit, arguments);
 }
 
 function _omit<T extends {}, K extends keyof T>(

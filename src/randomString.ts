@@ -6,6 +6,7 @@ import { range } from './range';
  * @signature randomString(length)
  * @example
  *    randomString(5) // => aB92J
+ * @category String
  */
 export function randomString(length: number) {
   const characterSet =

@@ -1,19 +1,46 @@
+import { purry } from './purry';
+
+/**
+ * Converts a list of objects into an object indexing the objects by the given key.
+ * @param array the array
+ * @param fn the indexing function
+ * @signature
+ *    R.indexBy(array, fn)
+ * @example
+ *    R.groupBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
+ * @data_first
+ * @category Array
+ */
 export function indexBy<T>(array: T[], fn: (item: T) => any): Record<string, T>;
+
+/**
+ * Converts a list of objects into an object indexing the objects by the given key.
+ * @param array the array
+ * @param fn the indexing function
+ * @signature
+ *    R.indexBy(fn)(array)
+ * @example
+ *    R.pipe(
+ *      ['one', 'two', 'three'],
+ *      R.groupBy(x => x.length)
+ *    ) // => {3: 'two', 5: 'three'}
+ * @data_last
+ * @category Array
+ */
 export function indexBy<T>(
   fn: (item: T) => any
 ): (array: T[]) => Record<string, T>;
 
-export function indexBy(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (data: any) => _indexBy(data, arg1);
-  }
-  return _indexBy(arg1, arg2);
+export function indexBy() {
+  return purry(_indexBy, arguments);
 }
 
 function _indexBy<T>(array: T[], fn: (item: T) => any) {
-  const ret: Record<string, T> = {};
-  array.forEach(item => {
-    ret[fn(item).toString()] = item;
-  });
-  return ret;
+  return array.reduce(
+    (ret, item) => {
+      ret[fn(item).toString()] = item;
+      return ret;
+    },
+    {} as Record<string, T>
+  );
 }

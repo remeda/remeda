@@ -1,8 +1,29 @@
+/**
+ * Maps keys of `object` and keeps the same values.
+ * @param object the object to map
+ * @param fn the mapping function
+ * @signature
+ *    R.mapKeys(object, fn)
+ * @example
+ *    R.mapKeys({a: 1, b: 2}, (key, value) => key + value) // => { a1: 1, b2: 2 }
+ * @data_first
+ * @category Object
+ */
 export function mapKeys<T, S>(
   object: T,
   fn: (key: keyof T, value: T[keyof T]) => any
 ): { [x: string]: any };
 
+/**
+ * Maps keys of `object` and keeps the same values.
+ * @param fn the mapping function
+ * @signature
+ *    R.mapKeys(fn)(object)
+ * @example
+ *    R.pipe({a: 1, b: 2}, R.mapKeys((key, value) => key + value)) // => { a1: 1, b2: 2 }
+ * @data_last
+ * @category Object
+ */
 export function mapKeys<T, S>(
   fn: (key: keyof T, value: T[keyof T]) => any
 ): (object: T) => { [x: string]: any };

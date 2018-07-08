@@ -7,7 +7,7 @@ import { purry } from './purry';
  * @signature
  *    R.groupBy(array, fn)
  * @example
- *    R.groupBy(['one', 'two', 'three'], x => x.length) => {3: ['one', 'two'], 5: ['three']}
+ *    R.groupBy(['one', 'two', 'three'], x => x.length) // => {3: ['one', 'two'], 5: ['three']}
  * @data_first
  * @category Array
  */
@@ -26,7 +26,7 @@ export function groupBy<T>(
  * @signature
  *    R.groupBy(array, fn)
  * @example
- *    R.pipe(['one', 'two', 'three'], R.groupBy(x => x.length)) => {3: ['one', 'two'], 5: ['three']}
+ *    R.pipe(['one', 'two', 'three'], R.groupBy(x => x.length)) // => {3: ['one', 'two'], 5: ['three']}
  * @data_last
  * @category Array
  */
@@ -44,8 +44,4 @@ function _groupBy<T>(array: T[], fn: (item: T) => any) {
     ret[key].push(item);
   });
   return ret;
-}
-
-declare module './groupBy' {
-  namespace groupBy { export var indexed: () => 1; }
 }

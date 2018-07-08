@@ -8,13 +8,13 @@ const expected = {
 };
 
 describe('data first', () => {
-  test('groupBy correctly', () => {
+  test('groupBy', () => {
     expect(groupBy(array, x => x.a)).toEqual(expected);
   });
 });
 
 describe('data last', () => {
-  test('indexBy correctly', () => {
+  test('groupBy', () => {
     expect(
       pipe(
         array,
@@ -23,9 +23,3 @@ describe('data last', () => {
     ).toEqual(expected);
   });
 });
-
-declare module './groupBy' {
-  export interface groupBy {
-    indexed: () => string;
-  }
-}

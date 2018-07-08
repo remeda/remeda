@@ -25,8 +25,12 @@ export interface JsTagProps {
 }
 
 function getReturnType(signature) {
-  if (signature.type.type === 'intrinsic') {
+  const type = signature.type.type;
+  if (type === 'intrinsic') {
     return signature.type.name;
+  }
+  if (type === 'array') {
+    return 'Array';
   }
   return 'Object';
 }
@@ -37,7 +41,7 @@ const ret = data.children
       method.children &&
       method.children.filter(
         (item: any) =>
-          item.kindString === 'Function' &&
+          (item.kindString === 'Function' || item.kindString === 'Module') &&
           item.signatures &&
           item.flags.isExported
       )[0];
@@ -58,7 +62,7 @@ const ret = data.children
         { breaks: true }
       ),
       methods: signatures.map(signature => {
-        const tags = signature.comment.tags || [];
+        const tags = signature.comment.tags || target.comment.tags || [];
         const isDataFirst = tags.find(item => item.tag === 'data_first');
         const isDataLast = tags.find(item => item.tag === 'data_last');
         const getTag = name =>
@@ -81,12 +85,17 @@ const ret = data.children
             .map(str => str.replace(/^   /, ''))
             .join('\n');
         }
+        const parameters = signature.parameters || [];
         return {
           tag: isDataFirst ? 'Data First' : isDataLast ? 'Data Last' : null,
-          signature: getTag('signature'),
+          signature: prettier.format(getTag('signature'), {
+            semi: false,
+            singleQuote: true,
+            parser: 'babylon',
+          }),
           category: getTag('category'),
           example: getExample(),
-          args: signature.parameters.map((item: any) => ({
+          args: parameters.map((item: any) => ({
             name: item.name,
             description: item.comment && item.comment.text,
           })),
