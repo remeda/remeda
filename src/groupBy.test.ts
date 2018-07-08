@@ -23,3 +23,9 @@ describe('data last', () => {
     ).toEqual(expected);
   });
 });
+
+declare module './groupBy' {
+  export interface groupBy {
+    indexed: () => string;
+  }
+}
