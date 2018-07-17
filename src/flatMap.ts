@@ -34,3 +34,24 @@ export function flatMap() {
 function _flatMap<T, K>(array: T[], fn: (input: T) => K[]): K[] {
   return flatten(array.map(item => fn(item)));
 }
+
+export namespace flatMap {
+  export function lazy<T, K>(fn: (input: T) => K | K[]) {
+    return (value: T) => {
+      const next = fn(value);
+      if (Array.isArray(next)) {
+        return {
+          done: false,
+          hasNext: true,
+          hasMany: true,
+          next: next,
+        };
+      }
+      return {
+        done: false,
+        hasNext: true,
+        next,
+      };
+    };
+  }
+}

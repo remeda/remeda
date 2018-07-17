@@ -96,10 +96,14 @@ export function pipe(
     for (let j = opIdx; j < operations.length; j++) {
       if (lazyOps[j]) {
         lazySeq.push(lazyOps[j]);
+        if (lazyOps[j].single) {
+          break;
+        }
       } else {
         break;
       }
     }
+
     let acc = [];
     for (let j = 0; j < ret.length; j++) {
       let item = ret[j];
@@ -108,7 +112,10 @@ export function pipe(
         const indexed = (lazyFn as any).indexed;
         lazyResult = indexed ? lazyFn(item, j, acc) : lazyFn(item);
         if (lazyResult.hasNext) {
-          item = lazyResult.next;
+          if (lazyResult.hasMany) {
+          } else {
+            item = lazyResult.next;
+          }
         }
         if (!lazyResult.hasNext || lazyResult.done) {
           break;
@@ -141,3 +148,36 @@ type LazyOp = ((input: any) => any) & {
   };
   lazyArgs: any[];
 };
+
+function _processItem({
+  item,
+  index,
+  lazySeq,
+  acc,
+}: {
+  item: any;
+  index: number;
+  lazySeq: any[];
+  acc: any[];
+}) {
+  let lazyResult: LazyResult<any>;
+  for (const lazyFn of lazySeq) {
+    const indexed = (lazyFn as any).indexed;
+    lazyResult = indexed ? lazyFn(item, index, acc) : lazyFn(item);
+    if (lazyResult.hasNext) {
+      if (lazyResult.hasMany) {
+      } else {
+        item = lazyResult.next;
+      }
+    }
+    if (!lazyResult.hasNext || lazyResult.done) {
+      break;
+    }
+  }
+  if (lazyResult.hasNext) {
+    acc.push(item);
+  }
+  if (lazyResult.done) {
+    return;
+  }
+}
