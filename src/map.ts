@@ -14,6 +14,8 @@ import { _reduceLazy } from './_reduceLazy';
  *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6]
  *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2]
  * @data_first
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function map<T, K>(array: T[], fn: (input: T) => K): K[];
@@ -29,6 +31,8 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
  *    R.pipe([0, 1, 2], R.map(x => x * 2)) // => [2, 4, 6]
  *    R.pipe([0, 0, 0], R.map.indexed((x, i) => i)) // => [0, 1, 2]
  * @data_last
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function map<T, K>(fn: (input: T) => K): (array: T[]) => K[];

@@ -78,6 +78,7 @@ export function pipe(
     if (lazy) {
       const fn: any = lazy(...lazyArgs);
       fn.indexed = lazy.indexed;
+      fn.single = lazy.single;
       return fn;
     }
     return null;
@@ -120,8 +121,13 @@ export function pipe(
         break;
       }
     }
+    const lastLazySeq = lazySeq[lazySeq.length - 1];
+    if ((lastLazySeq as any).single) {
+      ret = acc[0];
+    } else {
+      ret = acc;
+    }
     opIdx += lazySeq.length;
-    ret = acc;
   }
   return ret;
 }
@@ -131,6 +137,7 @@ type LazyFn = ((value: any, index?: number, items?: any) => LazyResult<any>);
 type LazyOp = ((input: any) => any) & {
   lazy: ((...args: any[]) => LazyFn) & {
     indexed: boolean;
+    single: boolean;
   };
   lazyArgs: any[];
 };

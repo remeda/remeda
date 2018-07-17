@@ -7,9 +7,13 @@ import { _reduceLazy } from './_reduceLazy';
  * @param fn the callback function.
  * @signature
  *    R.filter(array, fn)
+ *    R.filter.indexed(array, fn)
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
+ *    R.filter.indexed([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @data_first
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function filter<T>(array: T[], fn: (input: T) => boolean): T[];
@@ -22,6 +26,8 @@ export function filter<T>(array: T[], fn: (input: T) => boolean): T[];
  * @example
  *    R.filter(x => x % 2 === 1)([1, 2, 3]) // => [1, 3]
  * @data_last
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function filter<T>(fn: (input: T) => boolean): (array: T[]) => T[];

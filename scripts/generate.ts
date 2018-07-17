@@ -70,6 +70,7 @@ const ret = data.children
             .filter(item => item.tag === name)
             .map(item => item.text.trim())
             .join('\n');
+        const hasTag = name => !!tags.find(item => item.tag === name);
         function getExample() {
           let str = getTag('example');
           if (str) {
@@ -94,6 +95,8 @@ const ret = data.children
             parser: 'babylon',
           }),
           category: getTag('category'),
+          indexed: hasTag('indexed'),
+          pipeable: hasTag('pipeable'),
           example: getExample(),
           args: parameters.map((item: any) => ({
             name: item.name,

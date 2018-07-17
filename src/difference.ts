@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { _reduceLazy } from './_reduceLazy';
 
 /**
  * Excludes the values from `other` array.
@@ -10,6 +11,7 @@ import { purry } from './purry';
  *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
  * @data_first
  * @category Array
+ * @pipeable
  */
 export function difference<T>(array: T[], other: T[]): T[];
 
@@ -20,16 +22,41 @@ export function difference<T>(array: T[], other: T[]): T[];
  *    R.difference(other)(array)
  * @example
  *    R.difference([2, 5, 3])([1, 2, 3, 4]) // => [1, 4]
+ *    R.pipe(
+ *      [1, 2, 3, 4, 5, 6], // only 4 iterations
+ *      R.difference([2, 3]),
+ *      R.take(2)
+ *    ) // => [1, 4]
  * @data_last
  * @category Array
+ * @pipeable
  */
 export function difference<T>(other: T[]): (array: T[]) => T[];
 
 export function difference() {
-  return purry(_difference, arguments);
+  return purry(_difference, arguments, difference.lazy);
 }
 
 function _difference<T>(array: T[], other: T[]) {
-  const set = new Set(other);
-  return array.filter(x => !set.has(x));
+  const lazy = difference.lazy(other);
+  return _reduceLazy(array, lazy);
+}
+
+export namespace difference {
+  export function lazy<T>(other: T[]) {
+    return (value: T) => {
+      const set = new Set(other);
+      if (!set.has(value)) {
+        return {
+          done: false,
+          hasNext: true,
+          next: value,
+        };
+      }
+      return {
+        done: false,
+        hasNext: false,
+      };
+    };
+  }
 }
