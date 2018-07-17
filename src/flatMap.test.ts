@@ -17,7 +17,7 @@ describe('data_last', () => {
   });
 
   describe('pipe', () => {
-    test.only('with find', () => {
+    test('with find', () => {
       const counter1 = createCounter();
       const counter2 = createCounter();
       const result = pipe(
@@ -29,7 +29,7 @@ describe('data_last', () => {
       );
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(7);
-      expect(result).toEqual(1);
+      expect(result).toEqual(22);
     });
   });
 });

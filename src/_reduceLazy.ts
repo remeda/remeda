@@ -1,6 +1,7 @@
 export interface LazyResult<T> {
   done: boolean;
   hasNext: boolean;
+  hasMany?: boolean;
   next?: T;
 }
 

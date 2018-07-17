@@ -10,6 +10,7 @@ import { purry } from './purry';
  * @example
  *    R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @data_first
+ * @pipeable
  * @category Array
  */
 export function flatMap<T, K>(array: T[], fn: (input: T) => K | K[]): K[];
@@ -21,14 +22,15 @@ export function flatMap<T, K>(array: T[], fn: (input: T) => K | K[]): K[];
  * @signature
  *    R.flatMap(fn)(array)
  * @example
- *    R.flatMap(x => [x, x * 10])([1, 2, 3]) // => [1, 10, 2, 20, 3, 30]
+ *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @data_last
+ * @pipeable
  * @category Array
  */
 export function flatMap<T, K>(fn: (input: T) => K | K[]): (array: T[]) => K[];
 
 export function flatMap() {
-  return purry(_flatMap, arguments);
+  return purry(_flatMap, arguments, flatMap.lazy);
 }
 
 function _flatMap<T, K>(array: T[], fn: (input: T) => K[]): K[] {

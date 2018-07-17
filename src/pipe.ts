@@ -79,6 +79,8 @@ export function pipe(
       const fn: any = lazy(...lazyArgs);
       fn.indexed = lazy.indexed;
       fn.single = lazy.single;
+      fn.index = 0;
+      fn.items = [];
       return fn;
     }
     return null;
@@ -104,29 +106,33 @@ export function pipe(
       }
     }
 
-    let acc = [];
+    let acc: any[] = [];
+
     for (let j = 0; j < ret.length; j++) {
       let item = ret[j];
-      let lazyResult: LazyResult<any>;
-      for (const lazyFn of lazySeq) {
-        const indexed = (lazyFn as any).indexed;
-        lazyResult = indexed ? lazyFn(item, j, acc) : lazyFn(item);
-        if (lazyResult.hasNext) {
-          if (lazyResult.hasMany) {
-          } else {
-            item = lazyResult.next;
-          }
-        }
-        if (!lazyResult.hasNext || lazyResult.done) {
-          break;
-        }
-      }
-      if (lazyResult.hasNext) {
-        acc.push(item);
-      }
-      if (lazyResult.done) {
+      if (_processItem({ item, acc, lazySeq })) {
         break;
       }
+      // let lazyResult: LazyResult<any>;
+      // for (const lazyFn of lazySeq) {
+      //   const indexed = (lazyFn as any).indexed;
+      //   lazyResult = indexed ? lazyFn(item, j, acc) : lazyFn(item);
+      //   if (lazyResult.hasNext) {
+      //     if (lazyResult.hasMany) {
+      //     } else {
+      //       item = lazyResult.next;
+      //     }
+      //   }
+      //   if (!lazyResult.hasNext || lazyResult.done) {
+      //     break;
+      //   }
+      // }
+      // if (lazyResult.hasNext) {
+      //   acc.push(item);
+      // }
+      // if (lazyResult.done) {
+      //   break;
+      // }
     }
     const lastLazySeq = lazySeq[lazySeq.length - 1];
     if ((lastLazySeq as any).single) {
@@ -151,21 +157,36 @@ type LazyOp = ((input: any) => any) & {
 
 function _processItem({
   item,
-  index,
   lazySeq,
   acc,
 }: {
   item: any;
-  index: number;
   lazySeq: any[];
   acc: any[];
-}) {
+}): boolean {
   let lazyResult: LazyResult<any>;
-  for (const lazyFn of lazySeq) {
-    const indexed = (lazyFn as any).indexed;
-    lazyResult = indexed ? lazyFn(item, index, acc) : lazyFn(item);
+  for (let i = 0; i < lazySeq.length; i++) {
+    const lazyFn = lazySeq[i];
+    const indexed = lazyFn.indexed;
+    const index = lazyFn.index;
+    const items = lazyFn.items;
+    items.push(item);
+    lazyResult = indexed ? lazyFn(item, index, items) : lazyFn(item);
+    lazyFn.index++;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany) {
+        const nextValues: any[] = lazyResult.next;
+        for (const subItem of nextValues) {
+          const subResult = _processItem({
+            item: subItem,
+            acc,
+            lazySeq: lazySeq.slice(i + 1),
+          });
+          if (subResult) {
+            return true;
+          }
+        }
+        return false;
       } else {
         item = lazyResult.next;
       }
@@ -178,6 +199,7 @@ function _processItem({
     acc.push(item);
   }
   if (lazyResult.done) {
-    return;
+    return true;
   }
+  return false;
 }

@@ -1,5 +1,7 @@
 import { purry } from './purry';
 import { _reduceLazy } from './_reduceLazy';
+import { _toLazyIndexed } from './_toLazyIndexed';
+import { Pred, PredIndexedOptional, PredIndexed, LazyIndexed } from './_types';
 
 /**
  * Map each element of an array using a defined callback function.
@@ -18,7 +20,7 @@ import { _reduceLazy } from './_reduceLazy';
  * @pipeable
  * @category Array
  */
-export function map<T, K>(array: T[], fn: (input: T) => K): K[];
+export function map<T, K>(array: T[], fn: Pred<T, K>): K[];
 
 /**
  * Map each value of an object using a defined callback function.
@@ -35,7 +37,7 @@ export function map<T, K>(array: T[], fn: (input: T) => K): K[];
  * @pipeable
  * @category Array
  */
-export function map<T, K>(fn: (input: T) => K): (array: T[]) => K[];
+export function map<T, K>(fn: Pred<T, K>): (array: T[]) => K[];
 
 export function map() {
   return purry(_map(false), arguments, map.lazy);
@@ -43,7 +45,7 @@ export function map() {
 
 const _map = (indexed: boolean) => <T, K>(
   array: T[],
-  fn: (input: T, index?: number, array?: T[]) => K
+  fn: PredIndexedOptional<T, K>
 ) => {
   return _reduceLazy(
     array,
@@ -52,38 +54,32 @@ const _map = (indexed: boolean) => <T, K>(
   );
 };
 
+// const _lazy = (indexed: boolean) => <T, K>(fn: PredIndexedOptional<T, K>) => {
+//   return (value: T, index?: number, array?: T[]) => {
+//     return {
+//       done: false,
+//       hasNext: true,
+//       next: indexed ? fn(value, index, array) : fn(value),
+//     };
+//   };
+// };
+
+const _lazy: LazyIndexed = (indexed: boolean) => fn => {
+  return (value, index?, array?) => {
+    return {
+      done: false,
+      hasNext: true,
+      next: indexed ? fn(value, index, array) : fn(value),
+    };
+  };
+};
+
 export namespace map {
-  export function indexed<T, K>(
-    array: T[],
-    fn: (input: T, idx: number, array: T[]) => K
-  ): K[];
-  export function indexed<T, K>(
-    fn: (input: T, idx: number, array: T[]) => K
-  ): (array: T[]) => K[];
+  export function indexed<T, K>(array: T[], fn: PredIndexed<T, K>): K[];
+  export function indexed<T, K>(fn: PredIndexed<T, K>): (array: T[]) => K[];
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);
   }
-  export function lazy<T, K>(fn: (input: T) => K) {
-    return (value: T) => {
-      return {
-        done: false,
-        hasNext: true,
-        next: fn(value),
-      };
-    };
-  }
-  export function lazyIndexed<T, K>(
-    fn: (input: T, index?: number, array?: T[]) => K
-  ) {
-    return (value: T, index: number, array: T[]) => {
-      return {
-        done: false,
-        hasNext: true,
-        next: fn(value, index, array),
-      };
-    };
-  }
-  export namespace lazyIndexed {
-    export const indexed = true;
-  }
+  export const lazy = _lazy(false);
+  export const lazyIndexed = _toLazyIndexed(_lazy(true));
 }
