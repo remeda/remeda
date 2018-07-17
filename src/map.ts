@@ -1,7 +1,7 @@
 import { purry } from './purry';
 import { _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import { Pred, PredIndexedOptional, PredIndexed, LazyIndexed } from './_types';
+import { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Map each element of an array using a defined callback function.
@@ -54,18 +54,8 @@ const _map = (indexed: boolean) => <T, K>(
   );
 };
 
-// const _lazy = (indexed: boolean) => <T, K>(fn: PredIndexedOptional<T, K>) => {
-//   return (value: T, index?: number, array?: T[]) => {
-//     return {
-//       done: false,
-//       hasNext: true,
-//       next: indexed ? fn(value, index, array) : fn(value),
-//     };
-//   };
-// };
-
-const _lazy: LazyIndexed = (indexed: boolean) => fn => {
-  return (value, index?, array?) => {
+const _lazy = (indexed: boolean) => <T, K>(fn: PredIndexedOptional<T, K>) => {
+  return (value: T, index?: number, array?: T[]) => {
     return {
       done: false,
       hasNext: true,

@@ -22,7 +22,7 @@ export function flatMap<T, K>(array: T[], fn: (input: T) => K | K[]): K[];
  * @signature
  *    R.flatMap(fn)(array)
  * @example
- *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
+ *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @data_last
  * @pipeable
  * @category Array
