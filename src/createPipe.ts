@@ -1,3 +1,5 @@
+import { pipe } from './pipe';
+
 /**
  * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
  * @signature
@@ -57,5 +59,5 @@ export function createPipe<A, B, C, D, E, F, G, H>(
 ): (value: A) => H;
 
 export function createPipe(...operations: Array<(input: any) => any>) {
-  return (value: any) => operations.reduce((acc, fn) => fn(acc), value);
+  return (value: any) => (pipe as any)(value, ...operations);
 }

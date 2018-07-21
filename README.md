@@ -50,7 +50,6 @@ R.pipe(
   R.groupBy(x => x.age),
 );
 
-
 // Ramda
 R.pipe(
   R.filter(x => x.gender === 'f'),
@@ -79,7 +78,7 @@ The "data-last" version must always have one argument less than the "data-first"
 R.pick(obj, ['firstName', 'lastName']); // data-first
 R.pipe(obj, R.pick(['firstName', 'lastName'])); // data-last
 
-R.pick(['firstName', 'lastName'], obj); // this won't work!
+R.pick(['firstName', 'lastName'], obj); // error, this won't work!
 R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred
 
 ```
@@ -87,8 +86,47 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
 
 Lazy evaluation
 ----------
+Many functions support lazy evaluation when using `pipe` or `createPipe`. These functions have a `pipeable` tag in the documentation.  
+Lazy evaluation is not supported in Ramda and only partially supported in lodash.
+
+```js
+// Get first 3 unique values
+const arr = [1, 2, 2, 3, 3, 4, 5, 6];
+
+const result = R.pipe(
+  arr,
+  R.map(x => {
+    console.log('iterate', x);
+    return x;
+  }),
+  R.uniq(),
+  R.take(3)
+); // => [1, 2, 3]
+
+/**
+ * Console output:
+ * iterate 1
+ * iterate 2
+ * iterate 2
+ * iterate 3
+ * /
+
+```
 
 
+Indexed version
+----------
+Iterable functions have an extra property `indexed` which is the same function with iterator `(element, index, array)`.
+
+```js
+const arr = [10, 12, 13, 3];
+
+// filter even values
+R.filter(arr, x => x % 2 === 0); // => [10, 12]
+
+// filter even indexes
+R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
+```
 
 Remeda Design Goals
 ----------
@@ -97,3 +135,7 @@ Remeda Design Goals
 3. E6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.
 4. The implementation of each function should be as minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
 5. All functions are immutable, and there are no side-effects.
+6. Fixed number of arguments.
+
+
+MIT
