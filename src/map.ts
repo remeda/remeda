@@ -5,7 +5,6 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Map each element of an array using a defined callback function.
- * Indexed version is supported.
  * @param array The array to map.
  * @param fn The function mapper.
  * @returns The new mapped array.
@@ -24,7 +23,6 @@ export function map<T, K>(array: T[], fn: Pred<T, K>): K[];
 
 /**
  * Map each value of an object using a defined callback function.
- * Indexed version is supported.
  * @param fn the function mapper
  * @signature
  *    R.map(fn)(array)
