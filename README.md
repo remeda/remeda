@@ -7,6 +7,18 @@ The first "data-first" and "data-last" utility library designed especially for T
 [![npm module](https://badge.fury.io/js/remeda.svg)](https://www.npmjs.org/package/remeda)
 [![dependencies](https://david-dm.org/remeda/remeda.svg)](https://david-dm.org/remeda/remeda)
 
+Installation
+----------
+```bash
+npm i remeda
+yarn add remeda
+```
+Then in .js or .ts
+
+```js
+import * as R from 'remeda'; // tree-shaking supported!
+```
+
 
 Why Remeda?
 ----------
@@ -136,6 +148,5 @@ Remeda Design Goals
 4. The implementation of each function should be as minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
 5. All functions are immutable, and there are no side-effects.
 6. Fixed number of arguments.
-
 
 MIT
