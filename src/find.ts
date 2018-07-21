@@ -1,4 +1,7 @@
 import { purry } from './purry';
+import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import { _toLazyIndexed } from './_toLazyIndexed';
+import { _toSingle } from './_toSingle';
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
@@ -15,7 +18,7 @@ import { purry } from './purry';
  * @pipeable
  * @category Array
  */
-export function find<T>(array: T[], fn: (value: T) => boolean): T | undefined;
+export function find<T>(array: T[], fn: Pred<T, boolean>): T | undefined;
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
@@ -38,7 +41,7 @@ export function find<T>(array: T[], fn: (value: T) => boolean): T | undefined;
  * @category Array
  */
 export function find<T = never>(
-  fn: (value: T) => boolean
+  fn: Pred<T, boolean>
 ): (array: T[]) => T | undefined;
 
 export function find() {
@@ -47,7 +50,7 @@ export function find() {
 
 const _find = (indexed: boolean) => <T>(
   array: T[],
-  fn: (input: T, index?: number, array?: T[]) => any
+  fn: PredIndexedOptional<T, boolean>
 ) => {
   if (indexed) {
     return array.find(fn);
@@ -56,55 +59,32 @@ const _find = (indexed: boolean) => <T>(
   return array.find(x => fn(x));
 };
 
+const _lazy = (indexed: boolean) => <T>(
+  fn: PredIndexedOptional<T, boolean>
+) => {
+  return (value: T, index?: number, array?: T[]) => {
+    const valid = indexed ? fn(value, index, array) : fn(value);
+    return {
+      done: valid,
+      hasNext: valid,
+      next: value,
+    };
+  };
+};
+
 export namespace find {
   export function indexed<T>(
     array: T[],
-    fn: (input: T, idx: number, array: T[]) => boolean
+    fn: PredIndexed<T, boolean>
   ): T | undefined;
   export function indexed<T>(
-    fn: (input: T, idx: number, array: T[]) => boolean
+    fn: PredIndexed<T, boolean>
   ): (array: T[]) => T | undefined;
   export function indexed() {
     return purry(_find(true), arguments, find.lazyIndexed);
   }
 
-  export function lazy<T, K>(fn: (input: T) => boolean) {
-    return (value: T) => {
-      if (fn(value)) {
-        return {
-          done: true,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
-  }
-  export namespace lazy {
-    export const single = true;
-  }
-  export function lazyIndexed<T>(
-    fn: (input: T, index?: number, array?: T[]) => any
-  ) {
-    return (value: T, index: number, array: T[]) => {
-      if (fn(value, index, array)) {
-        return {
-          done: true,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
-  }
-  export namespace lazyIndexed {
-    export const indexed = true;
-    export const single = true;
-  }
+  export const lazy = _toSingle(_lazy(false));
+
+  export const lazyIndexed = _toSingle(_toLazyIndexed(_lazy(true)));
 }

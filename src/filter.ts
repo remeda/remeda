@@ -12,7 +12,7 @@ import { _toLazyIndexed } from './_toLazyIndexed';
  *    R.filter.indexed(array, fn)
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
- *    R.filter.indexed([1, 2, 3], (x, i) => x % 2 === 1) // => [1, 3]
+ *    R.filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1) // => [1, 3]
  * @data_first
  * @indexed
  * @pipeable

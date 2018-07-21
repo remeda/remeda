@@ -10,6 +10,7 @@ import { _reduceLazy } from './_reduceLazy';
  * @example
  *    R.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @data_first
+ * @pipeable
  * @category Array
  */
 export function take<T>(array: T[], n: number): T[];
@@ -22,6 +23,7 @@ export function take<T>(array: T[], n: number): T[];
  * @example
  *    R.pipe([1, 2, 3, 4, 3, 2, 1], R.take(n)) // => [1, 2, 3]
  * @data_last
+ * @pipeable
  * @category Array
  */
 export function take<T>(n: number): (array: T[]) => T[];
