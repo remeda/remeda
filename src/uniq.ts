@@ -26,7 +26,7 @@ export function uniq() {
   return purry(_uniq, arguments, uniq.lazy);
 }
 
-export function _uniq<T>(array: T[]) {
+function _uniq<T>(array: T[]) {
   return _reduceLazy(array, uniq.lazy());
 }
 

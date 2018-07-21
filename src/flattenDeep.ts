@@ -32,9 +32,7 @@ function _flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>> {
   return _reduceLazy(items, flattenDeep.lazy());
 }
 
-export function _flattenDeepValue<T>(
-  value: T | Array<T>
-): T | Array<FlattenDeep<T>> {
+function _flattenDeepValue<T>(value: T | Array<T>): T | Array<FlattenDeep<T>> {
   if (!Array.isArray(value)) {
     return value;
   }
