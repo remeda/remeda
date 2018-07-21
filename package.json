@@ -16,7 +16,7 @@
     "typescript": "^2.9.2"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "docs": "typedoc --json out.json --excludeNotExported src",
     "fix-ts-docs": "rm -rf node_modules/typedoc/node_modules/typescript",
     "update-docs": "yarn run docs && cd scripts && ts-node generate && cp def.json ../../remeda-docs/remeda-docs/src/data.json"
@@ -43,6 +43,13 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "/src/.*.test.(jsx?|tsx?)$",
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.tsx",
+      "src/**/*.ts"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
