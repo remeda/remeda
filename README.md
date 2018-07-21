@@ -70,9 +70,9 @@ _.flow(
 )(users)// broken typings in TS :(
 ```
 
-Mixing paradigms can be cumbersome in Lodash because you must import two different methods.  
-Remeda provides all methods in two versions, and the correct overload is picked based on the number of provided arguments.  
-The "data-last" version must have always one argument less then the "data-first" version.
+Mixing paradigms can be cumbersome in Lodash because it requires importing two different methods.  
+Remeda implements all methods in two versions, and the correct overload is picked based on the number of provided arguments.  
+The "data-last" version must always have one argument less than the "data-first" version.
 
 ```js
 // Remeda
@@ -92,8 +92,8 @@ Lazy evaluation
 
 Remeda Design Goals
 ----------
-1. The usage must be programmer friendly and that's more important then following XYZ paradigm strictly.
-2. Manual annotation should be never required, and everything should be inferred by proper typings. The only exception is the first function is `createPipe`.
-3. E6 polyfill is required. Core methods are reused and data structure (like Map/Set) are not re-implemented.
-4. The implementation of each function should minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
+1. The usage must be programmer friendly, and that's more important than following XYZ paradigm strictly.
+2. Manual annotation should never be required, and proper typings should infer everything. The only exception is the first function in `createPipe`.
+3. E6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.
+4. The implementation of each function should be as minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
 5. All functions are immutable, and there are no side-effects.
