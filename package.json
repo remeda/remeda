@@ -5,6 +5,7 @@
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "sideEffects": false,
   "directories": {
     "doc": "docs"
   },
@@ -13,8 +14,6 @@
     "jest": "^22.4.3",
     "marked": "^0.4.0",
     "prettier": "^1.13.7",
-    "rollup": "^0.63.4",
-    "rollup-plugin-typescript2": "^0.16.1",
     "ts-jest": "^22.4.5",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2"
