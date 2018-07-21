@@ -1,27 +1,38 @@
 import { indexBy } from './indexBy';
 import { pipe } from './pipe';
 
+const array = [{ dir: 'left', code: 97 }, { dir: 'right', code: 100 }];
+const expected = {
+  left: { dir: 'left', code: 97 },
+  right: { dir: 'right', code: 100 },
+};
+
 describe('data first', () => {
-  test('indexBy correctly', () => {
-    const array = [{ dir: 'left', code: 97 }, { dir: 'right', code: 100 }];
-    expect(indexBy(array, x => x.dir)).toEqual({
-      left: { dir: 'left', code: 97 },
-      right: { dir: 'right', code: 100 },
-    });
+  test('indexBy', () => {
+    expect(indexBy(array, x => x.dir)).toEqual(expected);
+  });
+
+  test('indexBy.indexed', () => {
+    expect(indexBy.indexed(array, x => x.dir)).toEqual(expected);
   });
 });
 
 describe('data last', () => {
-  test('indexBy correctly', () => {
-    const array = [{ dir: 'left', code: 97 }, { dir: 'right', code: 100 }];
+  test('indexBy', () => {
     expect(
       pipe(
         array,
         indexBy(x => x.dir)
       )
-    ).toEqual({
-      left: { dir: 'left', code: 97 },
-      right: { dir: 'right', code: 100 },
-    });
+    ).toEqual(expected);
+  });
+
+  test('indexBy.indexed', () => {
+    expect(
+      pipe(
+        array,
+        indexBy.indexed(x => x.dir)
+      )
+    ).toEqual(expected);
   });
 });

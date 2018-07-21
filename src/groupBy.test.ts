@@ -11,6 +11,9 @@ describe('data first', () => {
   test('groupBy', () => {
     expect(groupBy(array, x => x.a)).toEqual(expected);
   });
+  test('groupBy.indexed', () => {
+    expect(groupBy.indexed(array, x => x.a)).toEqual(expected);
+  });
 });
 
 describe('data last', () => {
@@ -19,6 +22,14 @@ describe('data last', () => {
       pipe(
         array,
         groupBy(x => x.a)
+      )
+    ).toEqual(expected);
+  });
+  test('groupBy.indexed', () => {
+    expect(
+      pipe(
+        array,
+        groupBy.indexed(x => x.a)
       )
     ).toEqual(expected);
   });

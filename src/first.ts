@@ -2,7 +2,7 @@ import { purry } from './purry';
 
 /**
  * Gets the first element of `array`.
- * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, inferred type is lost.
+ * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.
  * @param array the array
  * @signature
  *    R.first(array)
@@ -11,8 +11,8 @@ import { purry } from './purry';
  *    R.first([]) // => undefined
  *    R.pipe(
  *      [1, 2, 4, 8, 16],
- *      filter(x => x > 3),
- *      first(),
+ *      R.filter(x => x > 3),
+ *      R.first(),
  *      x => x + 1
  *    ); // => 5
  *

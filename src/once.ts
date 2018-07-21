@@ -3,7 +3,7 @@
  * @param fn the function to wrap
  * @signature R.once(fn)
  * @example
- * const initialize = _.once(createApplication);
+ * const initialize = R.once(createApplication);
  * initialize();
  * initialize();
  * // => `createApplication` is invoked once

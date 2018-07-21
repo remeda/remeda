@@ -35,13 +35,30 @@ export function reduce<T, K>(
 ): (items: T[]) => K;
 
 export function reduce() {
-  return purry(_reduce, arguments);
+  return purry(_reduce(false), arguments);
 }
 
-function _reduce<T, K>(
+const _reduce = (indexed: boolean) => <T, K>(
   items: T[],
-  fn: (acc: K, item: T) => K,
+  fn: (acc: K, item: T, index?: number, items?: T[]) => K,
   initialValue: K
-): K {
-  return items.reduce((acc, item) => fn(acc, item), initialValue);
+): K => {
+  return items.reduce(
+    (acc, item, index, items) =>
+      indexed ? fn(acc, item, index, items) : fn(acc, item),
+    initialValue
+  );
+};
+
+export namespace reduce {
+  export function indexed<T, K>(
+    array: T[],
+    fn: (acc: K, item: T, index: number, items: T[]) => K
+  ): Record<string, T>;
+  export function indexed<T, K>(
+    fn: (acc: K, item: T, index: number, items: T[]) => K
+  ): (array: T[]) => Record<string, T>;
+  export function indexed() {
+    return purry(_reduce(true), arguments);
+  }
 }

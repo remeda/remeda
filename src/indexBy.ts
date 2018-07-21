@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key.
@@ -7,8 +8,9 @@ import { purry } from './purry';
  * @signature
  *    R.indexBy(array, fn)
  * @example
- *    R.groupBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
+ *    R.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @data_first
+ * @indexed
  * @category Array
  */
 export function indexBy<T>(array: T[], fn: (item: T) => any): Record<string, T>;
@@ -22,9 +24,10 @@ export function indexBy<T>(array: T[], fn: (item: T) => any): Record<string, T>;
  * @example
  *    R.pipe(
  *      ['one', 'two', 'three'],
- *      R.groupBy(x => x.length)
+ *      R.indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
  * @data_last
+ * @indexed
  * @category Array
  */
 export function indexBy<T>(
@@ -32,15 +35,33 @@ export function indexBy<T>(
 ): (array: T[]) => Record<string, T>;
 
 export function indexBy() {
-  return purry(_indexBy, arguments);
+  return purry(_indexBy(false), arguments);
 }
 
-function _indexBy<T>(array: T[], fn: (item: T) => any) {
+const _indexBy = (indexed: boolean) => <T>(
+  array: T[],
+  fn: PredIndexedOptional<T, any>
+) => {
   return array.reduce(
-    (ret, item) => {
-      ret[fn(item).toString()] = item;
+    (ret, item, index) => {
+      const value = indexed ? fn(item, index, array) : fn(item);
+      const key = String(value);
+      ret[key] = item;
       return ret;
     },
     {} as Record<string, T>
   );
+};
+
+export namespace indexBy {
+  export function indexed<T, K>(
+    array: T[],
+    fn: PredIndexed<T, any>
+  ): Record<string, T>;
+  export function indexed<T, K>(
+    fn: PredIndexed<T, any>
+  ): (array: T[]) => Record<string, T>;
+  export function indexed() {
+    return purry(_indexBy(true), arguments);
+  }
 }

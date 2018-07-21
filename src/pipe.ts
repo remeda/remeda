@@ -113,26 +113,6 @@ export function pipe(
       if (_processItem({ item, acc, lazySeq })) {
         break;
       }
-      // let lazyResult: LazyResult<any>;
-      // for (const lazyFn of lazySeq) {
-      //   const indexed = (lazyFn as any).indexed;
-      //   lazyResult = indexed ? lazyFn(item, j, acc) : lazyFn(item);
-      //   if (lazyResult.hasNext) {
-      //     if (lazyResult.hasMany) {
-      //     } else {
-      //       item = lazyResult.next;
-      //     }
-      //   }
-      //   if (!lazyResult.hasNext || lazyResult.done) {
-      //     break;
-      //   }
-      // }
-      // if (lazyResult.hasNext) {
-      //   acc.push(item);
-      // }
-      // if (lazyResult.done) {
-      //   break;
-      // }
     }
     const lastLazySeq = lazySeq[lazySeq.length - 1];
     if ((lastLazySeq as any).single) {

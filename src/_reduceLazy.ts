@@ -2,7 +2,7 @@ export interface LazyResult<T> {
   done: boolean;
   hasNext: boolean;
   hasMany?: boolean;
-  next?: T;
+  next?: T | T[];
 }
 
 export function _reduceLazy<T, K>(
@@ -12,7 +12,9 @@ export function _reduceLazy<T, K>(
 ) {
   return array.reduce((acc, item, index) => {
     const result = indexed ? lazy(item, index, array) : lazy(item);
-    if (result.hasNext) {
+    if (result.hasMany) {
+      acc.push(...(result.next as K[]));
+    } else if (result.hasNext) {
       acc.push(result.next);
     }
     return acc;

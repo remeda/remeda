@@ -5,10 +5,10 @@ import { purry } from './purry';
  * @param object the target object
  * @param path the path of the property to get
  * @param defaultValue the default value
- * @signature R.pathOr(object, [propName], defaultValue)
+ * @signature R.pathOr(object, array, defaultValue)
  * @example
- *    pathOr({x: 10}, ['y'], 2) // 2
- *    pathOr({y: 10}, ['y'], 2) // 10
+ *    R.pathOr({x: 10}, ['y'], 2) // 2
+ *    R.pathOr({y: 10}, ['y'], 2) // 10
  * @data_first
  * @category Object
  */
@@ -36,10 +36,10 @@ export function pathOr<
  * @param object the target object
  * @param path the path of the property to get
  * @param defaultValue the default value
- * @signature R.pathOr([propName], defaultValue)(object)
+ * @signature R.pathOr(array, defaultValue)(object)
  * @example
- *    pipe({x: 10}, pathOr(['y'], 2)) // 2
- *    pipe({y: 10}, pathOr(['y'], 2)) // 10
+ *    R.pipe({x: 10}, R.pathOr(['y'], 2)) // 2
+ *    R.pipe({y: 10}, R.pathOr(['y'], 2)) // 10
  * @data_last
  * @category Object
  */

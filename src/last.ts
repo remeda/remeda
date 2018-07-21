@@ -6,7 +6,7 @@
  * @example
  *    R.last([1, 2, 3]) // => 3
  *    R.last([]) // => undefined
- * @category array
+ * @category Array
  */
 export function last<T>(array: T[]) {
   return array[array.length - 1];
