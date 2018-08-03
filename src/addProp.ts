@@ -23,7 +23,7 @@ export function addProp<T, K extends string, V>(
  * @param prop the property name
  * @param value the property value
  * @signature
- *    R.addProp(obj, prop, value)
+ *    R.addProp(prop, value)(obj)
  * @example
  *    R.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
  * @data_last
