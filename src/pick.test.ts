@@ -6,6 +6,10 @@ describe('data first', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toEqual({ a: 1, d: 4 });
   });
+  test('allow undefined or null', () => {
+    expect(pick(undefined, ['foo'])).toEqual({});
+    expect(pick(null, ['foo'])).toEqual({});
+  });
 });
 
 describe('data last', () => {

@@ -33,6 +33,9 @@ export function pick() {
 }
 
 function _pick(object: any, names: string[]) {
+  if (object == null) {
+    return {};
+  }
   return names.reduce(
     (acc, name) => {
       acc[name] = object[name];
