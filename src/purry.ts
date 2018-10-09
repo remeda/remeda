@@ -2,7 +2,7 @@
  * Creates a function with `data-first` and `data-last` signatures.
  *
  * `purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.
- * Refer to the example below to see usage a correct usage.
+ * Refer to the example below for correct usage.
  *
  * @param fn the function to purry.
  * @param args the arguments
