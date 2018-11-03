@@ -12,6 +12,22 @@ test('nested', () => {
 });
 
 describe('pipe', () => {
+  test('flatten multiple values', () => {
+    const result = pipe(
+      [[1, 2], 3, [4, 5]],
+      flatten()
+    );
+    expect(result).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  test('flatten single value', () => {
+    const result = pipe(
+      [[1]],
+      flatten()
+    );
+    expect(result).toEqual([1]);
+  });
+
   test('with find', () => {
     const counter1 = createCounter();
     const counter2 = createCounter();

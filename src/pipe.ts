@@ -144,6 +144,10 @@ function _processItem({
   lazySeq: any[];
   acc: any[];
 }): boolean {
+  if (lazySeq.length === 0) {
+    acc.push(item);
+    return false;
+  }
   let lazyResult: LazyResult<any>;
   for (let i = 0; i < lazySeq.length; i++) {
     const lazyFn = lazySeq[i];
