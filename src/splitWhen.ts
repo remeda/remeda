@@ -2,7 +2,7 @@ import { splitAt } from './splitAt';
 import { purry } from './purry';
 
 /**
- * Splits a given array at an index where the given predicate returns true.
+ * Splits a given array at the first index where the given predicate returns true.
  * @param array the array to split
  * @param fn the predicate
  * @signature
