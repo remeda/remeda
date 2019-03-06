@@ -148,7 +148,7 @@ function _processItem({
     acc.push(item);
     return false;
   }
-  let lazyResult: LazyResult<any>;
+  let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   for (let i = 0; i < lazySeq.length; i++) {
     const lazyFn = lazySeq[i];
     const indexed = lazyFn.indexed;
