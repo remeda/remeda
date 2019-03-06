@@ -37,7 +37,7 @@ describe('data first', () => {
   });
 
   test('should return value (2 level deep)', () => {
-    expect(pathOr(obj, ['a', 'b'], null)).toEqual({ c: 1 });
+    expect(pathOr(obj, ['a', 'b'], { c: 0 })).toEqual({ c: 1 });
   });
 
   test('should return default value (2 level deep)', () => {
@@ -45,7 +45,7 @@ describe('data first', () => {
   });
 
   test('should return value (3 level deep)', () => {
-    expect(pathOr(obj, ['a', 'b', 'c'], null)).toEqual(1);
+    expect(pathOr(obj, ['a', 'b', 'c'], 0)).toEqual(1);
   });
 });
 
