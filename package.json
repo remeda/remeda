@@ -44,7 +44,7 @@
     },
     "testRegex": "/src/.*.test.(jsx?|tsx?)$",
     "testPathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/", "/dist/"
     ],
     "collectCoverageFrom": [
       "src/**/*.tsx",
