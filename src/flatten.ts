@@ -1,4 +1,4 @@
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 
 type Flatten<T> = T extends Array<infer K> ? K : T;
@@ -32,7 +32,7 @@ function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
 
 export namespace flatten {
   export function lazy<T>() {
-    return (next: T) => {
+    return (next: T): LazyResult<any> => {
       if (Array.isArray(next)) {
         return {
           done: false,

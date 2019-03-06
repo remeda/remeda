@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Removes first `n` elements from the `array`.
@@ -40,7 +40,7 @@ function _drop<T>(array: T[], n: number) {
 export namespace drop {
   export function lazy<T>(n: number) {
     let left = n;
-    return (value: T) => {
+    return (value: T): LazyResult<T> => {
       if (left > 0) {
         left--;
         return {

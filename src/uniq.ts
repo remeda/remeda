@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
@@ -33,7 +33,7 @@ function _uniq<T>(array: T[]) {
 export namespace uniq {
   export function lazy() {
     const set = new Set<any>();
-    return (value: any) => {
+    return (value: any): LazyResult<any> => {
       if (set.has(value)) {
         return {
           done: false,

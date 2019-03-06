@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
 import { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
@@ -67,7 +67,7 @@ const _forEach = (indexed: boolean) => <T, K>(
 };
 
 const _lazy = (indexed: boolean) => <T>(fn: PredIndexedOptional<T, void>) => {
-  return (value: T, index?: number, array?: T[]) => {
+  return (value: T, index?: number, array?: T[]): LazyResult<T> => {
     if (indexed) {
       fn(value, index, array);
     } else {
