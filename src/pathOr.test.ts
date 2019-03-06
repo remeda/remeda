@@ -24,7 +24,8 @@ const obj: SampleType = {
 
 describe('data first', () => {
   test('should return default value (input undefined)', () => {
-    expect(pathOr(undefined as SampleType, ['x'], 2)).toEqual(2);
+    type MaybeSampleType = SampleType | undefined;
+    expect(pathOr(undefined as MaybeSampleType, ['x'], 2)).toEqual(2);
   });
 
   test('should return value', () => {

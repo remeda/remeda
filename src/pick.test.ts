@@ -7,8 +7,8 @@ describe('data first', () => {
     expect(result).toEqual({ a: 1, d: 4 });
   });
   test('allow undefined or null', () => {
-    expect(pick(undefined, ['foo'])).toEqual({});
-    expect(pick(null, ['foo'])).toEqual({});
+    expect(pick(undefined as any, ['foo'])).toEqual({});
+    expect(pick(null as any, ['foo'])).toEqual({});
   });
 });
 

@@ -33,7 +33,7 @@ export function chunk() {
 
 function _chunk<T>(array: T[], size: number) {
   const ret: T[][] = [];
-  let current: T[] = null;
+  let current: T[] | null = null;
   array.forEach(x => {
     if (!current) {
       current = [];
