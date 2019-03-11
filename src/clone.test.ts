@@ -37,7 +37,7 @@ describe('deep clone objects', () => {
   it('clones deep object', () => {
     const obj = { a: { b: { c: 'foo' } } };
     const cloned = clone(obj);
-    obj.a.b.c = null;
+    obj.a.b.c = 'bar';
     eq(cloned, { a: { b: { c: 'foo' } } });
   });
 
@@ -155,7 +155,7 @@ describe('deep clone deep nested mixed objects', () => {
   });
 
   it('clones array with arrays', () => {
-    const list = [[1], [[3]]];
+    const list: any[][] = [[1], [[3]]];
     const cloned = clone(list);
     list[1][0] = null;
     eq(cloned, [[1], [[3]]]);

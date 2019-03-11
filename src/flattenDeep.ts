@@ -1,4 +1,4 @@
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 
 type FlattenDeep<T> = T extends Array<infer K> ? FlattenDeep2<K> : T;
@@ -49,7 +49,7 @@ function _flattenDeepValue<T>(value: T | Array<T>): T | Array<FlattenDeep<T>> {
 
 export namespace flattenDeep {
   export function lazy() {
-    return (value: any) => {
+    return (value: any): LazyResult<any> => {
       const next = _flattenDeepValue(value);
       if (Array.isArray(next)) {
         return {

@@ -24,7 +24,8 @@ const obj: SampleType = {
 
 describe('data first', () => {
   test('should return default value (input undefined)', () => {
-    expect(pathOr(undefined as SampleType, ['x'], 2)).toEqual(2);
+    type MaybeSampleType = SampleType | undefined;
+    expect(pathOr(undefined as MaybeSampleType, ['x'], 2)).toEqual(2);
   });
 
   test('should return value', () => {
@@ -36,7 +37,7 @@ describe('data first', () => {
   });
 
   test('should return value (2 level deep)', () => {
-    expect(pathOr(obj, ['a', 'b'], null)).toEqual({ c: 1 });
+    expect(pathOr(obj, ['a', 'b'], { c: 0 })).toEqual({ c: 1 });
   });
 
   test('should return default value (2 level deep)', () => {
@@ -44,7 +45,7 @@ describe('data first', () => {
   });
 
   test('should return value (3 level deep)', () => {
-    expect(pathOr(obj, ['a', 'b', 'c'], null)).toEqual(1);
+    expect(pathOr(obj, ['a', 'b', 'c'], 0)).toEqual(1);
   });
 });
 

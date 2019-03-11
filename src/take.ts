@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Returns the first `n` elements of `array`.
@@ -38,7 +38,7 @@ function _take<T>(array: T[], n: number) {
 
 export namespace take {
   export function lazy<T>(n: number) {
-    return (value: T) => {
+    return (value: T): LazyResult<T> => {
       if (n === 0) {
         return {
           done: true,

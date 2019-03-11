@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Excludes the values from `other` array.
@@ -44,7 +44,7 @@ function _difference<T>(array: T[], other: T[]) {
 
 export namespace difference {
   export function lazy<T>(other: T[]) {
-    return (value: T) => {
+    return (value: T): LazyResult<T> => {
       const set = new Set(other);
       if (!set.has(value)) {
         return {

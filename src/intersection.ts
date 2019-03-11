@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { _reduceLazy } from './_reduceLazy';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Returns a list of elements that exist in both array.
@@ -40,7 +40,7 @@ function _intersection<T>(array: T[], other: T[]) {
 
 export namespace intersection {
   export function lazy<T>(other: T[]) {
-    return (value: T) => {
+    return (value: T): LazyResult<T> => {
       const set = new Set(other);
       if (set.has(value)) {
         return {
