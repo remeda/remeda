@@ -149,6 +149,7 @@ function _processItem({
     return false;
   }
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
+  let isDone = false;
   for (let i = 0; i < lazySeq.length; i++) {
     const lazyFn = lazySeq[i];
     const indexed = lazyFn.indexed;
@@ -175,14 +176,19 @@ function _processItem({
         item = lazyResult.next;
       }
     }
-    if (!lazyResult.hasNext || lazyResult.done) {
+    if (!lazyResult.hasNext) {
       break;
+    }
+    // process remaining functions in the pipe
+    // but don't process remaining elements in the input array
+    if (lazyResult.done) {
+      isDone = true;
     }
   }
   if (lazyResult.hasNext) {
     acc.push(item);
   }
-  if (lazyResult.done) {
+  if (isDone) {
     return true;
   }
   return false;
