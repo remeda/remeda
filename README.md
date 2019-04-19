@@ -106,7 +106,7 @@ Lazy evaluation is not supported in Ramda and only partially supported in lodash
 const arr = [1, 2, 2, 3, 3, 4, 5, 6];
 
 const result = R.pipe(
-  arr,
+  arr,                    // only four iterations instead of eight (array.length)
   R.map(x => {
     console.log('iterate', x);
     return x;
