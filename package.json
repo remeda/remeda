@@ -12,6 +12,7 @@
     "marked": "^0.4.0",
     "prettier": "^1.13.7",
     "ts-jest": "^22.4.5",
+    "ts-node": "^8.4.1",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2"
   },
