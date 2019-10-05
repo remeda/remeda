@@ -2,6 +2,7 @@ import { purry } from './purry';
 
 /**
  * Sorts the list according to the supplied function in ascending order.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  * @param array the array to sort
  * @param fn the mapping function
  * @signature
@@ -19,6 +20,7 @@ export function sortBy<T>(array: T[], fn: (item: T) => any): T[];
 
 /**
  * Sorts the list according to the supplied function in ascending order.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  * @param fn the mapping function
  * @signature
  *    R.sortBy(fn)(array)

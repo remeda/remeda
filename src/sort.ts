@@ -2,6 +2,7 @@ import { purry } from './purry';
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  * @param items the array to sort
  * @param cmp the comparator function
  * @signature
@@ -15,6 +16,7 @@ export function sort<T>(items: T[], cmp: (a: T, b: T) => number): T[];
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  * @param cmp the comparator function
  * @signature
  *    R.sort(cmp)(items)
