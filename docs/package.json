@@ -1,0 +1,33 @@
+{
+  "name": "remeda-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:remeda/docs.git",
+  "author": "Łukasz Sentkiewicz",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index",
+    "watch": "parcel serve index.html",
+    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./  --out-file index.html && cp _redirects dist/_redirects"
+  },
+  "dependencies": {
+    "@types/react-router-dom": "^4.3.0",
+    "compression": "^1.7.2",
+    "connect-history-api-fallback": "^1.5.0",
+    "express": "^4.15.4",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-syntax-highlighter": "^7.0.4"
+  },
+  "devDependencies": {
+    "@types/react": "^16.3.14",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-syntax-highlighter": "^0.0.5",
+    "cross-env": "^5.1.5",
+    "node-sass": "^4.9.0",
+    "parcel": "^1.9.4",
+    "typescript": "^2.8.3"
+  }
+}
