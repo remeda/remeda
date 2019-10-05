@@ -17,9 +17,11 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "docs": "typedoc --json out.json --excludeNotExported src",
-    "fix-ts-docs": "rm -rf node_modules/typedoc/node_modules/typescript",
-    "update-docs": "yarn run docs && cd scripts && ts-node generate && cp def.json ./docs/src/data.json"
+    "docs:install": "cd docs && yarn",
+    "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
+    "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",
+    "docs:generate-json": "yarn run docs:generate-ts && cd scripts && ts-node generate && cp def.json ../docs/src/data.json",
+    "docs:build": "yarn run docs:install && yarn run docs:fix && yarn run docs:generate-json && cd docs && yarn run build"
   },
   "repository": {
     "type": "git",

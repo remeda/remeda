@@ -7,7 +7,6 @@
   "license": "MIT",
   "scripts": {
     "start": "node index",
-    "postinstall": "yarn run build",
     "watch": "parcel serve index.html",
     "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./  --out-file index.html && cp _redirects dist/_redirects"
   },
