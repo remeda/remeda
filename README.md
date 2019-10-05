@@ -140,6 +140,11 @@ R.filter(arr, x => x % 2 === 0); // => [10, 12]
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
 ```
 
+For Lodash and Ramda users
+----------
+Please check function mapping in [mapping.md](./mapping.md).
+
+
 Remeda Design Goals
 ----------
 1. The usage must be programmer friendly, and that's more important than following XYZ paradigm strictly.
