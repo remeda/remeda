@@ -53,6 +53,7 @@
 | `splitWhen`    | `-`            | `splitWhen`         |
 | `take`         | `take`         | `take`              |
 | `takeWhile`    | `takeWhile`    | `takeWhile`         |
+| `times`        | `times`        | `times`             |
 | `toPairs`      | `toPairs`      | `toPairs`           |
 | `type`         | `-`            | `type`              |
 | `uniq`         | `uniq`         | `uniq`              |
