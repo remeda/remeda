@@ -1,6 +1,6 @@
 {
   "name": "remeda",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "A utility library for JavaScript and Typescript.",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
