@@ -3,6 +3,12 @@ import { pipe } from './pipe';
 import { createCounter } from './_counter';
 import { filter } from './filter';
 
+function defaultTo<T>(d: T) {
+  return function (v: T | undefined | null) {
+    return v == null ? d : v;
+  }
+}
+
 test('should return last', () => {
   expect(first([1, 2, 3])).toEqual(1);
 });
@@ -42,6 +48,7 @@ describe('pipe', () => {
       counter.fn(),
       filter(x => x > 3),
       first(),
+      defaultTo(0),
       x => x + 1
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
@@ -65,6 +72,7 @@ describe('pipe', () => {
       [[1, 2, 3], [4, 5], [6]],
       counter.fn(),
       first(),
+      defaultTo<number[]>([]),
       first()
     );
     expect(counter.count).toHaveBeenCalledTimes(1);
@@ -79,6 +87,7 @@ describe('pipe', () => {
       counter1.fn(),
       filter(arr => arr.length === 4),
       first(),
+      defaultTo<number[]>([]),
       counter2.fn(),
       filter(x => x % 2 === 1),
       first()
