@@ -16,7 +16,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
 export function drop<T>(array: T[], n: number): T[];
 
 /**
- * Removes last `n` elements from the `array`.
+ * Removes first `n` elements from the `array`.
  * @param array the target array
  * @param n the number of elements to skip
  * @signature
