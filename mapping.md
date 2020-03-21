@@ -25,6 +25,7 @@
 | `forEach`      | `forEach`      | `forEach`           |
 | `forEachObj`   | `forEach`      | `forEachObjIndexed` |
 | `groupBy`      | `groupBy`      | `groupBy`           |
+| `includes`     | `includes`     | `includes`          |
 | `indexBy`      | `keyBy`        | `indexBy`           |
 | `intersection` | `intersection` | `intersection`      |
 | `last`         | `last`         | `last`              |
