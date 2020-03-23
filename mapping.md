@@ -1,6 +1,5 @@
 ### Mapping for Lodash and Ramda
 
-
 | Remeda         | Lodash         | Ramda               |
 | -------------- | -------------- | ------------------- |
 | `addProp`      | `set`          | `set`               |
@@ -57,3 +56,4 @@
 | `toPairs`      | `toPairs`      | `toPairs`           |
 | `type`         | `-`            | `type`              |
 | `uniq`         | `uniq`         | `uniq`              |
+| `uniqBy`       | `uniqBy`       | `uniqBy`            |
