@@ -14,6 +14,7 @@ export function mergeAll<A, B, C, D>(array: [A, B, C, D]): A & B & C & D;
 export function mergeAll<A, B, C, D, E>(
   array: [A, B, C, D, E]
 ): A & B & C & D & E;
+export function mergeAll(array: object[]): object;
 
 export function mergeAll(items: any[]) {
   return items.reduce((acc, x) => ({ ...acc, ...x }), {});
