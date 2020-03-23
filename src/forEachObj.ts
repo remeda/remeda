@@ -9,7 +9,7 @@ type UnindexedIteratee<T extends object> = (value: T[keyof T]) => void;
  * @param fn The callback function.
  * @returns The original object
  * @signature
- *    R.forEachforEachObj(object, fn)
+ *    R.forEachObj(object, fn)
  * @example
  *    R.forEachObj({a: 1}, (val) => {
  *      console.log(`${val}`)
@@ -29,7 +29,7 @@ export function forEachObj<T extends object>(
  * Iterate an object using a defined callback function. The original object is returned.
  * @param fn The callback function.
  * @signature
- *    R.forEachforEachObj(fn)(object)
+ *    R.forEachObj(fn)(object)
  * @example
  *  R.pipe(
  *      {a: 1},
