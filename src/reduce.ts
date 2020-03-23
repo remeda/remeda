@@ -16,7 +16,7 @@ import { purry } from './purry';
  * @category Array
  */
 export function reduce<T, K>(
-  items: T[],
+  items: readonly T[],
   fn: (acc: K, item: T) => K,
   initialValue: K
 ): K;
@@ -37,7 +37,7 @@ export function reduce<T, K>(
 export function reduce<T, K>(
   fn: (acc: K, item: T) => K,
   initialValue: K
-): (items: T[]) => K;
+): (items: readonly T[]) => K;
 
 export function reduce() {
   return purry(_reduce(false), arguments);
@@ -57,14 +57,14 @@ const _reduce = (indexed: boolean) => <T, K>(
 
 export namespace reduce {
   export function indexed<T, K>(
-    array: T[],
+    array: readonly T[],
     fn: (acc: K, item: T, index: number, items: T[]) => K,
     initialValue: K
   ): Record<string, T>;
   export function indexed<T, K>(
     fn: (acc: K, item: T, index: number, items: T[]) => K,
     initialValue: K
-  ): (array: T[]) => Record<string, T>;
+  ): (array: readonly T[]) => Record<string, T>;
   export function indexed() {
     return purry(_reduce(true), arguments);
   }

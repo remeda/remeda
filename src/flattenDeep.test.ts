@@ -4,11 +4,16 @@ import { find } from './find';
 import { createCounter } from './_counter';
 
 test('flatten', () => {
-  expect(flattenDeep([[1, 2], 3, [4, 5]])).toEqual([1, 2, 3, 4, 5]);
+  expect(flattenDeep([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);
 });
 
 test('nested', () => {
-  expect(flattenDeep([[1, 2], [[3], [4, 5]]])).toEqual([1, 2, 3, 4, 5]);
+  expect(
+    flattenDeep([
+      [1, 2],
+      [[3], [4, 5]],
+    ] as const)
+  ).toEqual([1, 2, 3, 4, 5]);
 });
 
 describe('pipe', () => {
@@ -16,7 +21,7 @@ describe('pipe', () => {
     const counter1 = createCounter();
     const counter2 = createCounter();
     const result = pipe(
-      [[1, 2], [[3]], [[4, 5]]],
+      [[1, 2], [[3]], [[4, 5]]] as const,
       counter1.fn(),
       flattenDeep(),
       counter2.fn(),

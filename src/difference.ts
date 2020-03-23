@@ -13,7 +13,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  * @pipeable
  */
-export function difference<T>(array: T[], other: T[]): T[];
+export function difference<T>(array: readonly T[], other: readonly T[]): T[];
 
 /**
  * Excludes the values from `other` array.
@@ -31,7 +31,9 @@ export function difference<T>(array: T[], other: T[]): T[];
  * @category Array
  * @pipeable
  */
-export function difference<T>(other: T[]): (array: T[]) => T[];
+export function difference<T, K>(
+  other: readonly T[]
+): (array: readonly K[]) => T[];
 
 export function difference() {
   return purry(_difference, arguments, difference.lazy);

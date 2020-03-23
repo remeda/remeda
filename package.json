@@ -10,14 +10,15 @@
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",
     "marked": "^0.4.0",
-    "prettier": "^1.13.7",
+    "prettier": "^2.0.1",
     "ts-jest": "^22.4.5",
     "ts-node": "^8.4.1",
     "typedoc": "^0.11.1",
-    "typescript": "^2.9.2"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "test": "jest --coverage",
+    "prettier": "prettier 'src/**/*.ts' --write",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
     "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",

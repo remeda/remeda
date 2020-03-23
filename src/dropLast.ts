@@ -11,7 +11,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function dropLast<T>(array: T[], n: number): T[];
+export function dropLast<T>(array: readonly T[], n: number): T[];
 
 /**
  * Removes last `n` elements from the `array`.
@@ -24,7 +24,7 @@ export function dropLast<T>(array: T[], n: number): T[];
  * @data_last
  * @category Array
  */
-export function dropLast<T>(n: number): (array: T[]) => T[];
+export function dropLast<T>(n: number): (array: readonly T[]) => T[];
 
 export function dropLast() {
   return purry(_dropLast, arguments);

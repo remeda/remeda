@@ -28,7 +28,9 @@ type Pathable<T> = { [K in AllKeys<T>]: TypesForKey<T, K> };
 
 type AllKeys<T> = T extends infer I ? keyof I : never;
 type TypesForKey<T, K extends Key> = T extends infer I
-  ? K extends keyof I ? I[K] : never
+  ? K extends keyof I
+    ? I[K]
+    : never
   : never;
 
 /**
@@ -75,7 +77,7 @@ type PathValue3<
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   object: T,
-  path: [A],
+  path: readonly [A],
   defaultValue: PathValue1<T, A>
 ): PathValue1<T, A>;
 
@@ -85,7 +87,7 @@ export function pathOr<
   B extends keyof Pathable1<T, A>
 >(
   object: T,
-  path: [A, B],
+  path: readonly [A, B],
   defaultValue: PathValue2<T, A, B>
 ): PathValue2<T, A, B>;
 
@@ -96,7 +98,7 @@ export function pathOr<
   C extends keyof Pathable2<T, A, B>
 >(
   object: T,
-  path: [A, B, C],
+  path: readonly [A, B, C],
   defaultValue: PathValue3<T, A, B, C>
 ): PathValue3<T, A, B, C>;
 
@@ -113,7 +115,7 @@ export function pathOr<
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
-  path: [A],
+  path: readonly [A],
   defaultValue: PathValue1<T, A>
 ): (object: T) => PathValue1<T, A>;
 
@@ -122,7 +124,7 @@ export function pathOr<
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>
 >(
-  path: [A, B],
+  path: readonly [A, B],
   defaultValue: PathValue2<T, A, B>
 ): (object: T) => PathValue2<T, A, B>;
 
@@ -132,7 +134,7 @@ export function pathOr<
   B extends keyof Pathable1<T, A>,
   C extends keyof Pathable2<T, A, B>
 >(
-  path: [A, B, C],
+  path: readonly [A, B, C],
   defaultValue: PathValue3<T, A, B, C>
 ): (object: T) => PathValue3<T, A, B, C>;
 

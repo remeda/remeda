@@ -18,7 +18,7 @@ import { _toSingle } from './_toSingle';
  * @pipeable
  * @category Array
  */
-export function findIndex<T>(array: T[], fn: Pred<T, boolean>): number;
+export function findIndex<T>(array: readonly T[], fn: Pred<T, boolean>): number;
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
@@ -41,7 +41,9 @@ export function findIndex<T>(array: T[], fn: Pred<T, boolean>): number;
  * @pipeable
  * @category Array
  */
-export function findIndex<T>(fn: Pred<T, boolean>): (array: T[]) => number;
+export function findIndex<T>(
+  fn: Pred<T, boolean>
+): (array: readonly T[]) => number;
 
 export function findIndex() {
   return purry(_findIndex(false), arguments, findIndex.lazy);
@@ -81,12 +83,12 @@ const _lazy = (indexed: boolean) => <T>(
 
 export namespace findIndex {
   export function indexed<T>(
-    array: T[],
+    array: readonly T[],
     fn: PredIndexed<T, boolean>
   ): T | undefined;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
-  ): (array: T[]) => T | undefined;
+  ): (array: readonly T[]) => T | undefined;
   export function indexed() {
     return purry(_findIndex(true), arguments, findIndex.lazyIndexed);
   }

@@ -1,7 +1,10 @@
 import { indexBy } from './indexBy';
 import { pipe } from './pipe';
 
-const array = [{ dir: 'left', code: 97 }, { dir: 'right', code: 100 }];
+const array = [
+  { dir: 'left', code: 97 },
+  { dir: 'right', code: 100 },
+] as const;
 const expected = {
   left: { dir: 'left', code: 97 },
   right: { dir: 'right', code: 100 },

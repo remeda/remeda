@@ -10,10 +10,7 @@ describe('data first', () => {
 
 describe('data last', () => {
   test('addProp', () => {
-    const actual = pipe(
-      { a: 1 },
-      addProp('b', 2)
-    );
+    const actual = pipe({ a: 1 }, addProp('b', 2));
     expect(actual).toEqual({ a: 1, b: 2 });
   });
 });

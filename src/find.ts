@@ -18,7 +18,10 @@ import { _toSingle } from './_toSingle';
  * @pipeable
  * @category Array
  */
-export function find<T>(array: T[], fn: Pred<T, boolean>): T | undefined;
+export function find<T>(
+  array: readonly T[],
+  fn: Pred<T, boolean>
+): T | undefined;
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
@@ -42,7 +45,7 @@ export function find<T>(array: T[], fn: Pred<T, boolean>): T | undefined;
  */
 export function find<T = never>(
   fn: Pred<T, boolean>
-): (array: T[]) => T | undefined;
+): (array: readonly T[]) => T | undefined;
 
 export function find() {
   return purry(_find(false), arguments, find.lazy);
@@ -74,12 +77,12 @@ const _lazy = (indexed: boolean) => <T>(
 
 export namespace find {
   export function indexed<T>(
-    array: T[],
+    array: readonly T[],
     fn: PredIndexed<T, boolean>
   ): T | undefined;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
-  ): (array: T[]) => T | undefined;
+  ): (array: readonly T[]) => T | undefined;
   export function indexed() {
     return purry(_find(true), arguments, find.lazyIndexed);
   }

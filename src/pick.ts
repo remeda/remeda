@@ -12,7 +12,7 @@ import { purry } from './purry';
  */
 export function pick<T extends {}, K extends keyof T>(
   object: T,
-  names: K[]
+  names: readonly K[]
 ): Pick<T, K>;
 
 /**
@@ -25,7 +25,7 @@ export function pick<T extends {}, K extends keyof T>(
  * @category Object
  */
 export function pick<T extends {}, K extends keyof T>(
-  names: K[]
+  names: readonly K[]
 ): (object: T) => Pick<T, K>;
 
 export function pick() {
@@ -36,11 +36,8 @@ function _pick(object: any, names: string[]) {
   if (object == null) {
     return {};
   }
-  return names.reduce(
-    (acc, name) => {
-      acc[name] = object[name];
-      return acc;
-    },
-    {} as any
-  );
+  return names.reduce((acc, name) => {
+    acc[name] = object[name];
+    return acc;
+  }, {} as any);
 }
