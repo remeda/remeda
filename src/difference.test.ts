@@ -4,7 +4,7 @@ import { take } from './take';
 import { map } from './map';
 
 const source = [1, 2, 3, 4] as const;
-const other = [2, 5] as const;
+const other = [2, 5, 3] as const;
 const expected = [1, 4] as const;
 
 describe('data_first', () => {

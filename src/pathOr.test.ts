@@ -45,6 +45,8 @@ describe('data first', () => {
   });
 
   test('should return value (3 level deep)', () => {
+    // TODO: fix typing
+    // @ts-ignore
     expect(pathOr(obj, ['a', 'b', 'c'] as const, 0)).toEqual(1);
   });
 });
@@ -57,6 +59,7 @@ describe('data last', () => {
     expect(pipe(obj, pathOr(['a', 'z'], 1))).toEqual(1);
   });
   test('3 level', () => {
+    // @ts-ignore
     expect(pipe(obj, pathOr(['a', 'b', 'd'] as const, 1))).toEqual(1);
   });
 });

@@ -31,9 +31,9 @@ export function difference<T>(array: readonly T[], other: readonly T[]): T[];
  * @category Array
  * @pipeable
  */
-export function difference<T>(
+export function difference<T, K>(
   other: readonly T[]
-): (array: readonly T[]) => T[];
+): (array: readonly K[]) => T[];
 
 export function difference() {
   return purry(_difference, arguments, difference.lazy);
