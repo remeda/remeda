@@ -14,7 +14,7 @@ describe('uniqBy', () => {
     { name: 'Sarah', age: 38 },
     { name: 'John', age: 33 },
     { name: 'Emily', age: 42 },
-  ];
+  ] as const;
 
   it('handles uniq by identity', () => {
     expect(uniqBy(identity, [1, 2, 2, 5, 1, 6, 7])).toEqual([1, 2, 5, 6, 7]);

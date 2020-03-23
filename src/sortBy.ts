@@ -16,7 +16,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function sortBy<T>(array: T[], fn: (item: T) => any): T[];
+export function sortBy<T>(array: readonly T[], fn: (item: T) => any): T[];
 
 /**
  * Sorts the list according to the supplied function in ascending order.
@@ -32,7 +32,7 @@ export function sortBy<T>(array: T[], fn: (item: T) => any): T[];
  * @data_last
  * @category Array
  */
-export function sortBy<T>(fn: (item: T) => any): (array: T[]) => T[];
+export function sortBy<T>(fn: (item: T) => any): (array: readonly T[]) => T[];
 
 export function sortBy() {
   return purry(_sortBy, arguments);

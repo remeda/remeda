@@ -1,6 +1,6 @@
 import { anyPass } from './anyPass';
 
-const fns = [(x: number) => x === 3, (x: number) => x === 4];
+const fns = [(x: number) => x === 3, (x: number) => x === 4] as const;
 
 describe('data first', () => {
   test('anyPass', () => {

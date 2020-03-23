@@ -1,7 +1,7 @@
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 
-type Flatten<T> = T extends Array<infer K> ? K : T;
+type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 
 /**
  * Flattens `array` a single level deep.
@@ -18,15 +18,15 @@ type Flatten<T> = T extends Array<infer K> ? K : T;
  * @category Array
  * @pipeable
  */
-export function flatten<T>(items: Array<T>): Array<Flatten<T>>;
+export function flatten<T>(items: readonly T[]): Array<Flatten<T>>;
 
-export function flatten<T>(): (items: Array<T>) => Array<Flatten<T>>;
+export function flatten<T>(): (items: readonly T[]) => Array<Flatten<T>>;
 
 export function flatten() {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
+function _flatten<T>(items: T[]): Array<Flatten<T>> {
   return _reduceLazy(items, flatten.lazy());
 }
 

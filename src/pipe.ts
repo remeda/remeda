@@ -125,7 +125,7 @@ export function pipe(
   return ret;
 }
 
-type LazyFn = ((value: any, index?: number, items?: any) => LazyResult<any>);
+type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
 
 type LazyOp = ((input: any) => any) & {
   lazy: ((...args: any[]) => LazyFn) & {

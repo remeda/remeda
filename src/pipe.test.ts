@@ -6,10 +6,7 @@ import { filter } from './filter';
 import { identity } from './identity';
 
 it('should pipe a single operation', () => {
-  const result = pipe(
-    1,
-    x => x * 2
-  );
+  const result = pipe(1, x => x * 2);
   expect(result).toEqual(2);
 });
 

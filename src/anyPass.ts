@@ -15,7 +15,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
+export function anyPass<T>(
+  data: T,
+  fns: ReadonlyArray<(data: T) => boolean>
+): boolean;
 
 /**
  * Determines whether any predicate returns true for the input data.
@@ -32,7 +35,7 @@ export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
  * @category Array
  */
 export function anyPass<T>(
-  fns: Array<(data: T) => boolean>
+  fns: ReadonlyArray<(data: T) => boolean>
 ): (data: T) => boolean;
 
 export function anyPass() {

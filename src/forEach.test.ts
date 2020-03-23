@@ -2,7 +2,7 @@ import { forEach } from './forEach';
 import { pipe } from './pipe';
 import { take } from './take';
 
-const array = [1, 2, 3];
+const array = [1, 2, 3] as const;
 
 describe('data_first', () => {
   it('forEach', () => {
@@ -26,19 +26,13 @@ describe('data_first', () => {
 describe('data_last', () => {
   it('forEach', () => {
     const cb = jest.fn();
-    const result = pipe(
-      array,
-      forEach(cb)
-    );
+    const result = pipe(array, forEach(cb));
     expect(cb.mock.calls).toEqual([[1], [2], [3]]);
     expect(result).toEqual(array);
   });
   it('forEach.indexed', () => {
     const cb = jest.fn();
-    const result = pipe(
-      array,
-      forEach.indexed(cb)
-    );
+    const result = pipe(array, forEach.indexed(cb));
     expect(cb.mock.calls).toEqual([
       [1, 0, array],
       [2, 1, array],

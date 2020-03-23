@@ -5,11 +5,11 @@ import { filter } from './filter';
 
 describe('data_first', () => {
   it('map', () => {
-    const result = map([1, 2, 3], x => x * 2);
+    const result = map([1, 2, 3] as const, x => x * 2);
     expect(result).toEqual([2, 4, 6]);
   });
   it('map.indexed', () => {
-    const result = map.indexed([0, 0, 0], (x, i) => i);
+    const result = map.indexed([0, 0, 0] as const, (x, i) => i);
     expect(result).toEqual([0, 1, 2]);
   });
 });
@@ -17,14 +17,14 @@ describe('data_first', () => {
 describe('data_last', () => {
   it('map', () => {
     const result = pipe(
-      [1, 2, 3],
+      [1, 2, 3] as const,
       map(x => x * 2)
     );
     expect(result).toEqual([2, 4, 6]);
   });
   it('map.indexed', () => {
     const result = pipe(
-      [0, 0, 0],
+      [0, 0, 0] as const,
       map.indexed((x, i) => i)
     );
     expect(result).toEqual([0, 1, 2]);
@@ -35,7 +35,7 @@ describe('pipe', () => {
   it('with take', () => {
     const count = jest.fn();
     const result = pipe(
-      [1, 2, 3],
+      [1, 2, 3] as const,
       map(x => {
         count();
         return x * 10;
@@ -49,7 +49,7 @@ describe('pipe', () => {
   it('indexed', () => {
     const count = jest.fn();
     const result = pipe(
-      [0, 0, 0],
+      [0, 0, 0] as const,
       map.indexed((x, i) => {
         count();
         return i;
@@ -66,7 +66,7 @@ describe('pipe', () => {
     const anyItems1: number[][] = [];
     const anyItems2: number[][] = [];
     const result = pipe(
-      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5] as const,
       map.indexed((x, i, items) => {
         anyItems1.push([...items]);
         indexes1.push(i);

@@ -11,7 +11,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function takeWhile<T>(array: T[], fn: (item: T) => boolean): T[];
+export function takeWhile<T>(
+  array: readonly T[],
+  fn: (item: T) => boolean
+): T[];
 
 /**
  * Returns elements from the array until predicate returns false.
@@ -23,7 +26,9 @@ export function takeWhile<T>(array: T[], fn: (item: T) => boolean): T[];
  * @data_last
  * @category Array
  */
-export function takeWhile<T>(fn: (item: T) => boolean): (array: T[]) => T[];
+export function takeWhile<T>(
+  fn: (item: T) => boolean
+): (array: readonly T[]) => T[];
 
 export function takeWhile() {
   return purry(_takeWhile, arguments);

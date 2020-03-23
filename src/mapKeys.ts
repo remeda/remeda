@@ -36,11 +36,8 @@ export function mapKeys(arg1: any, arg2?: any): any {
 }
 
 function _mapKeys(obj: any, fn: (key: string, value: any) => any) {
-  return Object.keys(obj).reduce(
-    (acc, key) => {
-      acc[fn(key, obj[key])] = obj[key];
-      return acc;
-    },
-    {} as any
-  );
+  return Object.keys(obj).reduce((acc, key) => {
+    acc[fn(key, obj[key])] = obj[key];
+    return acc;
+  }, {} as any);
 }

@@ -14,13 +14,13 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @category Array
  */
 export function groupBy<T>(
-  items: T[],
+  items: readonly T[],
   fn: (item: T) => any
 ): Record<string, T[]>;
 
 export function groupBy<T>(
   fn: (item: T) => any
-): (array: T[]) => Record<string, T[]>;
+): (array: readonly T[]) => Record<string, T[]>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -55,12 +55,12 @@ const _groupBy = (indexed: boolean) => <T>(
 
 export namespace groupBy {
   export function indexed<T, K>(
-    array: T[],
+    array: readonly T[],
     fn: PredIndexed<T, any>
   ): Record<string, T[]>;
   export function indexed<T, K>(
     fn: PredIndexed<T, any>
-  ): (array: T[]) => Record<string, T[]>;
+  ): (array: readonly T[]) => Record<string, T[]>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }

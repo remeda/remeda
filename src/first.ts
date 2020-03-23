@@ -19,8 +19,8 @@ import { purry } from './purry';
  * @category array
  * @pipeable
  */
-export function first<T>(array: T[]): T | undefined;
-export function first<T>(): (array: T[]) => T | undefined;
+export function first<T>(array: readonly T[]): T | undefined;
+export function first<T>(): (array: readonly T[]) => T | undefined;
 
 export function first() {
   return purry(_first, arguments, first.lazy);

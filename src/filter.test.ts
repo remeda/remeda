@@ -4,12 +4,15 @@ import { createCounter } from './_counter';
 
 describe('data_first', () => {
   it('filter', () => {
-    const result = filter([1, 2, 3], x => x % 2 === 1);
+    const result = filter([1, 2, 3] as const, x => x % 2 === 1);
     expect(result).toEqual([1, 3]);
   });
 
   it('filter.indexed', () => {
-    const result = filter.indexed([1, 2, 3], (x, i) => x % 2 === 1 && i !== 1);
+    const result = filter.indexed(
+      [1, 2, 3] as const,
+      (x, i) => x % 2 === 1 && i !== 1
+    );
     expect(result).toEqual([1, 3]);
   });
 });
@@ -18,7 +21,7 @@ describe('data_last', () => {
   it('filter', () => {
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 3],
+      [1, 2, 3] as const,
       filter(x => x % 2 === 1),
       counter.fn()
     );
@@ -28,7 +31,7 @@ describe('data_last', () => {
   it('filter.indexed', () => {
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 3],
+      [1, 2, 3] as const,
       filter.indexed((x, i) => x % 2 === 1 && i !== 1),
       counter.fn()
     );

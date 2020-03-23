@@ -12,7 +12,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function splitWhen<T>(array: T[], fn: (item: T) => boolean): [T[], T[]];
+export function splitWhen<T>(
+  array: readonly T[],
+  fn: (item: T) => boolean
+): [T[], T[]];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
@@ -26,7 +29,7 @@ export function splitWhen<T>(array: T[], fn: (item: T) => boolean): [T[], T[]];
  */
 export function splitWhen<T>(
   fn: (item: T) => boolean
-): (array: T[]) => [T[], T[]];
+): (array: readonly T[]) => [T[], T[]];
 
 export function splitWhen() {
   return purry(_splitWhen, arguments);

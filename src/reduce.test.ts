@@ -1,6 +1,7 @@
 import { reduce } from './reduce';
 import { pipe } from './pipe';
-const array = [1, 2, 3, 4, 5];
+
+const array = [1, 2, 3, 4, 5] as const;
 
 describe('data first', () => {
   test('reduce', () => {

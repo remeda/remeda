@@ -19,8 +19,8 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  */
 
-export function uniq<T>(array: T[]): T[];
-export function uniq<T>(): (array: T[]) => T[];
+export function uniq<T>(array: readonly T[]): T[];
+export function uniq<T>(): (array: readonly T[]) => T[];
 
 export function uniq() {
   return purry(_uniq, arguments, uniq.lazy);

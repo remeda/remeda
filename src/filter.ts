@@ -18,7 +18,7 @@ import { _toLazyIndexed } from './_toLazyIndexed';
  * @pipeable
  * @category Array
  */
-export function filter<T>(array: T[], fn: Pred<T, boolean>): T[];
+export function filter<T>(array: readonly T[], fn: Pred<T, boolean>): T[];
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
@@ -34,7 +34,7 @@ export function filter<T>(array: T[], fn: Pred<T, boolean>): T[];
  * @pipeable
  * @category Array
  */
-export function filter<T>(fn: Pred<T, boolean>): (array: T[]) => T[];
+export function filter<T>(fn: Pred<T, boolean>): (array: readonly T[]) => T[];
 
 export function filter() {
   return purry(_filter(false), arguments, filter.lazy);
@@ -71,10 +71,13 @@ const _lazy = (indexed: boolean) => <T>(
 };
 
 export namespace filter {
-  export function indexed<T, K>(array: T[], fn: PredIndexed<T, boolean>): K[];
+  export function indexed<T, K>(
+    array: readonly T[],
+    fn: PredIndexed<T, boolean>
+  ): K[];
   export function indexed<T, K>(
     fn: PredIndexed<T, boolean>
-  ): (array: T[]) => K[];
+  ): (array: readonly T[]) => K[];
   export function indexed() {
     return purry(_filter(true), arguments, filter.lazyIndexed);
   }

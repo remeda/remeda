@@ -58,6 +58,6 @@ export function createPipe<A, B, C, D, E, F, G, H>(
   op7: (input: G) => H
 ): (value: A) => H;
 
-export function createPipe(...operations: Array<(input: any) => any>) {
+export function createPipe(...operations: ReadonlyArray<(input: any) => any>) {
   return (value: any) => (pipe as any)(value, ...operations);
 }

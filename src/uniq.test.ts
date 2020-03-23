@@ -4,14 +4,14 @@ import { createCounter } from './_counter';
 import { take } from './take';
 
 it('uniq', () => {
-  expect(uniq([1, 2, 2, 5, 1, 6, 7])).toEqual([1, 2, 5, 6, 7]);
+  expect(uniq([1, 2, 2, 5, 1, 6, 7] as const)).toEqual([1, 2, 5, 6, 7]);
 });
 
 describe('pipe', () => {
   it('uniq', () => {
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 2, 5, 1, 6, 7],
+      [1, 2, 2, 5, 1, 6, 7] as const,
       counter.fn(),
       uniq(),
       take(3)
@@ -24,7 +24,7 @@ describe('pipe', () => {
     // bug from https://github.com/remeda/remeda/issues/14
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 2, 5, 1, 6, 7],
+      [1, 2, 2, 5, 1, 6, 7] as const,
       counter.fn(),
       take(3),
       uniq()

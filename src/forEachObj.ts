@@ -1,6 +1,10 @@
 import { purry } from './purry';
 
-type IndexedIteratee<T extends object, K extends keyof T> = (value: T[K], key: K, obj: T) => void;
+type IndexedIteratee<T extends object, K extends keyof T> = (
+  value: T[K],
+  key: K,
+  obj: T
+) => void;
 type UnindexedIteratee<T extends object> = (value: T[keyof T]) => void;
 
 /**
@@ -19,11 +23,11 @@ type UnindexedIteratee<T extends object> = (value: T[keyof T]) => void;
  *    }) // "a: 1"
  * @data_first
  * @category Object
-*/
+ */
 export function forEachObj<T extends object>(
   object: T,
   fn: UnindexedIteratee<T>
-) : T;
+): T;
 
 /**
  * Iterate an object using a defined callback function. The original object is returned.
@@ -41,10 +45,10 @@ export function forEachObj<T extends object>(
  *    ) // "a: 1"
  * @data_last
  * @category Object
-*/
+ */
 export function forEachObj<T extends object>(
   fn: UnindexedIteratee<T>
-) : (object: T) => T;
+): (object: T) => T;
 
 export function forEachObj() {
   return purry(_forEachObj(false), arguments);
@@ -62,11 +66,16 @@ const _forEachObj = (indexed: boolean) => (
     }
   }
   return object;
-}
+};
 
 export namespace forEachObj {
-  export function indexed<T extends object>(object: T, fn: IndexedIteratee<T, keyof T>): T;
-  export function indexed<T extends object>(fn: IndexedIteratee<T, keyof T>): (object: T) => T;
+  export function indexed<T extends object>(
+    object: T,
+    fn: IndexedIteratee<T, keyof T>
+  ): T;
+  export function indexed<T extends object>(
+    fn: IndexedIteratee<T, keyof T>
+  ): (object: T) => T;
   export function indexed() {
     return purry(_forEachObj(true), arguments);
   }

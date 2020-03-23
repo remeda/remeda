@@ -13,7 +13,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @pipeable
  * @category Array
  */
-export function take<T>(array: T[], n: number): T[];
+export function take<T>(array: readonly T[], n: number): T[];
 
 /**
  * Returns the first `n` elements of `array`.
@@ -26,7 +26,7 @@ export function take<T>(array: T[], n: number): T[];
  * @pipeable
  * @category Array
  */
-export function take<T>(n: number): (array: T[]) => T[];
+export function take<T>(n: number): (array: readonly T[]) => T[];
 
 export function take() {
   return purry(_take, arguments, take.lazy);
