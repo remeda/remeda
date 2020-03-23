@@ -7,8 +7,8 @@ import { purry } from './purry';
  * @signature
  *    R.anyPass(data, fns)
  * @example
- *    const isDivisibleBy3 = (x: number) = x % 3 === 0
- *    const isDivisibleBy4 = (x: number) = x % 4 === 0
+ *    const isDivisibleBy3 = (x: number) => x % 3 === 0
+ *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(8, fns) // => true
  *    R.anyPass(11, fns) // => false
@@ -26,8 +26,8 @@ export function anyPass<T>(
  * @signature
  *    R.anyPass(fns)(data)
  * @example
- *    const isDivisibleBy3 = (x: number) = x % 3 === 0
- *    const isDivisibleBy4 = (x: number) = x % 4 === 0
+ *    const isDivisibleBy3 = (x: number) => x % 3 === 0
+ *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(fns)(8) // => true
  *    R.anyPass(fns)(11) // => false

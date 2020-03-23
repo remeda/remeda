@@ -77,7 +77,7 @@ const ret = data.children
             return prettier.format(str, {
               semi: false,
               singleQuote: true,
-              parser: 'babylon',
+              parser: 'typescript',
             });
           }
           str = getTag('example-raw');
@@ -92,7 +92,7 @@ const ret = data.children
           signature: prettier.format(getTag('signature'), {
             semi: false,
             singleQuote: true,
-            parser: 'babylon',
+            parser: 'typescript',
           }),
           category: getTag('category'),
           indexed: hasTag('indexed'),

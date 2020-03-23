@@ -28,6 +28,6 @@
     "cross-env": "^5.1.5",
     "node-sass": "^4.9.0",
     "parcel": "^1.9.4",
-    "typescript": "^2.8.3"
+    "typescript": "^3.8.3"
   }
 }
