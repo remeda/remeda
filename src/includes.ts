@@ -2,7 +2,7 @@ import { purry } from './purry';
 import { _reduceLazy } from './_reduceLazy';
 import { equals } from './equals';
 
-export type Includable<T> = T[] | Object | string;
+export type Includable<T> = T[] | string;
 
 /**
  * Returns true for:
@@ -32,29 +32,17 @@ export function includes() {
 function _includes<T>(source: Includable<T>, item: T): boolean {
   if (Array.isArray(source)) {
     return _arrayIncludes(item, source);
+  } else if(typeof item === 'string') {
+    return _stringIncludes(item, source);
   } else {
-    return _otherIncludes(item, source);
+    return false;
   }
 }
 
 function _arrayIncludes<T>(item: T, arr: T[]) {
-  return arr.some(a => equals(a, item));
+  return arr?.some(a => equals(a, item)) ?? false;
 }
 
-function _otherIncludes(item: any, source: any) {
-  switch (typeof source) {
-    case 'object': {
-      const keys = Object.values(source);
-      return keys.some(k => k === item);
-    }
-
-    case 'string': {
-      const regex = new RegExp(item);
-      return regex.test(source);
-    }
-
-    default: {
-      return false;
-    }
-  }
+function _stringIncludes(item: string, source: string) {
+  return source?.includes(item) ?? false;
 }
