@@ -17,7 +17,7 @@
 | `equals`       | `isEqual`      | `equals`            |
 | `filter`       | `filter`       | `filter`            |
 | `find`         | `find`         | `find`              |
-| `findIndex`    | `findIndex`    | findIndex`          |
+| `findIndex`    | `findIndex`    | `findIndex`         |
 | `first`        | `head`         | `head`              |
 | `flatMap`      | `flatMap`      | `-`                 |
 | `flatten`      | `flatten`      | `flatten`           |
@@ -57,3 +57,18 @@
 | `type`         | `-`            | `type`              |
 | `uniq`         | `uniq`         | `uniq`              |
 | `uniqBy`       | `uniqBy`       | `uniqBy`            |
+
+### Helpful one-liners
+
+Some lodash and ramda functions don't have a Remeda equivalent, but can be
+easily replaced with a one-liner in TypeScript. Some of the most common
+are listed below.
+
+| Lodash         | Ramda               | TypeScript                          |
+| -------------- | ------------------- | ----------------------------------- |
+| `isNil`        | `isNil`             | `x => x == null`                    |
+| `-`            | `path`              | `a?.b?.c`                           |
+| `property`     | `prop`              | `x => x.a` or `x => x[n]`           |
+| `-`            | `propOr`            | `x => x.a ?? defaultValue`          |
+| `-`            | `propEq`            | `x => x.a === value`                |
+| `nth`          | `nth`               | `n => a[n]`                         |
