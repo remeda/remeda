@@ -29,5 +29,5 @@ export function reverse() {
 }
 
 function _reverse(array: any[]) {
-  return array.slice(0).reverse();
+  return array.slice().reverse();
 }

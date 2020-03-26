@@ -1,6 +1,5 @@
 ### Mapping for Lodash and Ramda
 
-
 | Remeda         | Lodash         | Ramda               |
 | -------------- | -------------- | ------------------- |
 | `addProp`      | `set`          | `set`               |
@@ -46,6 +45,7 @@
 | `range`        | `range`        | `range`             |
 | `reduce`       | `reduce`       | `reduce`            |
 | `reject`       | `reject`       | `reject`            |
+| `reverse`      | `reverse`      | `reverse`           |
 | `set`          | `set`          | `set`               |
 | `sort`         | `-`            | `sort`              |
 | `sortBy`       | `sortBy`       | `sortBy`            |
