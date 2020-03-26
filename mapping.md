@@ -64,11 +64,11 @@ Some lodash and ramda functions don't have a Remeda equivalent, but can be
 easily replaced with a one-liner in TypeScript. Some of the most common
 are listed below.
 
-| Lodash         | Ramda               | TypeScript                          |
-| -------------- | ------------------- | ----------------------------------- |
-| `isNil`        | `isNil`             | `x => x == null`                    |
-| `-`            | `path`              | `a?.b?.c`                           |
-| `property`     | `prop`              | `x => x.a` or `x => x[n]`           |
-| `-`            | `propOr`            | `x => x.a ?? defaultValue`          |
-| `-`            | `propEq`            | `x => x.a === value`                |
-| `nth`          | `nth`               | `n => a[n]`                         |
+| Lodash         | Ramda          | TypeScript                                 |
+| -------------- | -------------- | ------------------------------------------ |
+| `add`          | `add`          | `(x, y) => x + y`                          |
+| `isNil`        | `isNil`        | `x => x == null`                           |
+| `nth`          | `nth`          | `n => a[n]`                                |
+| `-`            | `path`         | `a?.b?.c`                                  |
+| `-`            | `propEq`       | `x => x[a] === value`                      |
+| `-`            | `propOr`       | `x => x[a] ?? defaultValue`                |
