@@ -1,4 +1,4 @@
-import { purry } from "./purry";
+import { purry } from './purry';
 
 /**
  * Reverses array.
