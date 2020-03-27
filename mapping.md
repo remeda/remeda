@@ -70,5 +70,5 @@ are listed below.
 | `isNil`        | `isNil`        | `x => x == null`                           |
 | `nth`          | `nth`          | `n => a[n]`                                |
 | `-`            | `path`         | `a?.b?.c`                                  |
-| `-`            | `propEq`       | `x => x[a] === value`                      |
-| `-`            | `propOr`       | `x => x[a] ?? defaultValue`                |
+| `-`            | `propEq`       | `x => x.a === value`                      |
+| `-`            | `propOr`       | `x => x.a ?? defaultValue`                |
