@@ -1,10 +1,10 @@
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 
-type FlattenDeep<T> = T extends Array<infer K> ? FlattenDeep2<K> : T;
-type FlattenDeep2<T> = T extends Array<infer K> ? FlattenDeep3<K> : T;
-type FlattenDeep3<T> = T extends Array<infer K> ? FlattenDeep4<K> : T;
-type FlattenDeep4<T> = T extends Array<infer K> ? K : T;
+type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
+type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;
+type FlattenDeep3<T> = T extends ReadonlyArray<infer K> ? FlattenDeep4<K> : T;
+type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
 
 /**
  * Recursively flattens `array`.
@@ -20,9 +20,11 @@ type FlattenDeep4<T> = T extends Array<infer K> ? K : T;
  * @category Array
  * @pipeable
  */
-export function flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>>;
+export function flattenDeep<T>(items: readonly T[]): Array<FlattenDeep<T>>;
 
-export function flattenDeep<T>(): (items: Array<T>) => Array<FlattenDeep<T>>;
+export function flattenDeep<T>(): (
+  items: readonly T[]
+) => Array<FlattenDeep<T>>;
 
 export function flattenDeep() {
   return purry(_flattenDeep, arguments, flattenDeep.lazy);

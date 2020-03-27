@@ -18,6 +18,7 @@ export * from './flatMap';
 export * from './flatten';
 export * from './flattenDeep';
 export * from './forEach';
+export * from './forEachObj';
 export * from './groupBy';
 export * from './identity';
 export * from './indexBy';

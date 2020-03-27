@@ -2,7 +2,12 @@ import { find } from './find';
 import { pipe } from './pipe';
 import { createCounter } from './_counter';
 
-const array = [{ a: 1, b: 1 }, { a: 1, b: 2 }, { a: 2, b: 1 }, { a: 1, b: 3 }];
+const array = [
+  { a: 1, b: 1 },
+  { a: 1, b: 2 },
+  { a: 2, b: 1 },
+  { a: 1, b: 3 },
+] as const;
 const expected = { a: 1, b: 2 };
 
 describe('data first', () => {

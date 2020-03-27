@@ -7,15 +7,18 @@ import { purry } from './purry';
  * @signature
  *    R.anyPass(data, fns)
  * @example
- *    const isDivisibleBy3 = (x: number) = x % 3 === 0
- *    const isDivisibleBy4 = (x: number) = x % 4 === 0
+ *    const isDivisibleBy3 = (x: number) => x % 3 === 0
+ *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(8, fns) // => true
  *    R.anyPass(11, fns) // => false
  * @data_first
  * @category Array
  */
-export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
+export function anyPass<T>(
+  data: T,
+  fns: ReadonlyArray<(data: T) => boolean>
+): boolean;
 
 /**
  * Determines whether any predicate returns true for the input data.
@@ -23,8 +26,8 @@ export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
  * @signature
  *    R.anyPass(fns)(data)
  * @example
- *    const isDivisibleBy3 = (x: number) = x % 3 === 0
- *    const isDivisibleBy4 = (x: number) = x % 4 === 0
+ *    const isDivisibleBy3 = (x: number) => x % 3 === 0
+ *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(fns)(8) // => true
  *    R.anyPass(fns)(11) // => false
@@ -32,7 +35,7 @@ export function anyPass<T>(data: T, fns: Array<(data: T) => boolean>): boolean;
  * @category Array
  */
 export function anyPass<T>(
-  fns: Array<(data: T) => boolean>
+  fns: ReadonlyArray<(data: T) => boolean>
 ): (data: T) => boolean;
 
 export function anyPass() {

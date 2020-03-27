@@ -13,10 +13,10 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @pipeable
  * @category Array
  */
-export function drop<T>(array: T[], n: number): T[];
+export function drop<T>(array: readonly T[], n: number): T[];
 
 /**
- * Removes last `n` elements from the `array`.
+ * Removes first `n` elements from the `array`.
  * @param array the target array
  * @param n the number of elements to skip
  * @signature
@@ -27,7 +27,7 @@ export function drop<T>(array: T[], n: number): T[];
  * @pipeable
  * @category Array
  */
-export function drop<T>(n: number): (array: T[]) => T[];
+export function drop<T>(n: number): (array: readonly T[]) => T[];
 
 export function drop() {
   return purry(_drop, arguments, drop.lazy);

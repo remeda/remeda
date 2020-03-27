@@ -13,7 +13,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  * @pipeable
  */
-export function intersection<T>(source: T[], other: T[]): T[];
+export function intersection<T>(source: readonly T[], other: readonly T[]): T[];
 
 /**
  * Returns a list of elements that exist in both array.
@@ -27,7 +27,9 @@ export function intersection<T>(source: T[], other: T[]): T[];
  * @category Array
  * @pipeable
  */
-export function intersection<T>(other: T[]): (source: T[]) => T[];
+export function intersection<T, K>(
+  other: readonly T[]
+): (source: readonly K[]) => T[];
 
 export function intersection() {
   return purry(_intersection, arguments, intersection.lazy);

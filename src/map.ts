@@ -19,7 +19,7 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  * @pipeable
  * @category Array
  */
-export function map<T, K>(array: T[], fn: Pred<T, K>): K[];
+export function map<T, K>(array: readonly T[], fn: Pred<T, K>): K[];
 
 /**
  * Map each value of an object using a defined callback function.
@@ -35,7 +35,7 @@ export function map<T, K>(array: T[], fn: Pred<T, K>): K[];
  * @pipeable
  * @category Array
  */
-export function map<T, K>(fn: Pred<T, K>): (array: T[]) => K[];
+export function map<T, K>(fn: Pred<T, K>): (array: readonly T[]) => K[];
 
 export function map() {
   return purry(_map(false), arguments, map.lazy);
@@ -63,8 +63,13 @@ const _lazy = (indexed: boolean) => <T, K>(fn: PredIndexedOptional<T, K>) => {
 };
 
 export namespace map {
-  export function indexed<T, K>(array: T[], fn: PredIndexed<T, K>): K[];
-  export function indexed<T, K>(fn: PredIndexed<T, K>): (array: T[]) => K[];
+  export function indexed<T, K>(
+    array: readonly T[],
+    fn: PredIndexed<T, K>
+  ): K[];
+  export function indexed<T, K>(
+    fn: PredIndexed<T, K>
+  ): (array: readonly T[]) => K[];
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);
   }

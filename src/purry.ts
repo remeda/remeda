@@ -28,7 +28,7 @@
  *    }
  * @category Function
  */
-export function purry(fn: any, args: IArguments | any[], lazy?: any) {
+export function purry(fn: any, args: IArguments | readonly any[], lazy?: any) {
   const diff = fn.length - args.length;
   const arrayArgs = Array.from(args);
   if (diff === 0) {

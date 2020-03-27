@@ -1,9 +1,18 @@
 import { groupBy } from './groupBy';
 import { pipe } from './pipe';
 
-const array = [{ a: 1, b: 1 }, { a: 1, b: 2 }, { a: 2, b: 1 }, { a: 1, b: 3 }];
+const array = [
+  { a: 1, b: 1 },
+  { a: 1, b: 2 },
+  { a: 2, b: 1 },
+  { a: 1, b: 3 },
+] as const;
 const expected = {
-  1: [{ a: 1, b: 1 }, { a: 1, b: 2 }, { a: 1, b: 3 }],
+  1: [
+    { a: 1, b: 1 },
+    { a: 1, b: 2 },
+    { a: 1, b: 3 },
+  ],
   2: [{ a: 2, b: 1 }],
 };
 

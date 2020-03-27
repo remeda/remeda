@@ -8,6 +8,7 @@
  * @category Array
  * @pipeable
  */
-export function compact<T>(items: T[]) {
+export function compact<T>(items: readonly T[]) {
+  // TODO: Make lazy version
   return items.filter(x => !!x);
 }

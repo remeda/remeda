@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function chunk<T>(array: T[], size: number): T[][];
+export function chunk<T>(array: readonly T[], size: number): T[][];
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -25,7 +25,7 @@ export function chunk<T>(array: T[], size: number): T[][];
  * @data_last
  * @category Array
  */
-export function chunk<T>(size: number): (array: T[]) => T[][];
+export function chunk<T>(size: number): (array: readonly T[]) => T[][];
 
 export function chunk() {
   return purry(_chunk, arguments);

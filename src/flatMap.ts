@@ -13,7 +13,10 @@ import { purry } from './purry';
  * @pipeable
  * @category Array
  */
-export function flatMap<T, K>(array: T[], fn: (input: T) => K | K[]): K[];
+export function flatMap<T, K>(
+  array: readonly T[],
+  fn: (input: T) => K | K[]
+): K[];
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
@@ -27,7 +30,9 @@ export function flatMap<T, K>(array: T[], fn: (input: T) => K | K[]): K[];
  * @pipeable
  * @category Array
  */
-export function flatMap<T, K>(fn: (input: T) => K | K[]): (array: T[]) => K[];
+export function flatMap<T, K>(
+  fn: (input: T) => K | K[]
+): (array: readonly T[]) => K[];
 
 export function flatMap() {
   return purry(_flatMap, arguments, flatMap.lazy);

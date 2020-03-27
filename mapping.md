@@ -57,3 +57,4 @@
 | `toPairs`      | `toPairs`      | `toPairs`           |
 | `type`         | `-`            | `type`              |
 | `uniq`         | `uniq`         | `uniq`              |
+| `uniqBy`       | `uniqBy`       | `uniqBy`            |

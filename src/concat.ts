@@ -11,7 +11,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function concat<T, K>(arr1: T[], arr2: K[]): Array<T | K>;
+export function concat<T, K>(
+  arr1: readonly T[],
+  arr2: readonly K[]
+): Array<T | K>;
 
 /**
  * Combines two arrays.
@@ -23,7 +26,9 @@ export function concat<T, K>(arr1: T[], arr2: K[]): Array<T | K>;
  * @data_last
  * @category Array
  */
-export function concat<T, K>(arr2: K[]): (arr1: T[]) => Array<T | K>;
+export function concat<T, K>(
+  arr2: readonly K[]
+): (arr1: readonly T[]) => Array<T | K>;
 
 export function concat() {
   return purry(_concat, arguments);

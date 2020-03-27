@@ -5,7 +5,7 @@ import { createCounter } from './_counter';
 
 describe('data_first', () => {
   it('flatMap', () => {
-    const result = flatMap([1, 2], x => [x * 2, x * 3]);
+    const result = flatMap([1, 2] as const, x => [x * 2, x * 3]);
     expect(result).toEqual([2, 3, 4, 6]);
   });
 });
@@ -21,7 +21,7 @@ describe('data_last', () => {
       const counter1 = createCounter();
       const counter2 = createCounter();
       const result = pipe(
-        [10, 20, 30, 40],
+        [10, 20, 30, 40] as const,
         counter1.fn(),
         flatMap(x => [x, x + 1, x + 2, x + 3]),
         counter2.fn(),
