@@ -1,5 +1,11 @@
 ### Mapping for Lodash and Ramda
 
+_Remeda functions are not necessarily drop-in replacements for the
+listed Lodash and Ramda functions. Just as the Lodash function may behave
+differently than the Ramda equivalent, the Remeda function may also
+behave differently from either or both. Be sure to consult each library's
+documentation when migrating._
+
 | Remeda         | Lodash         | Ramda               |
 | -------------- | -------------- | ------------------- |
 | `addProp`      | `set`          | `set`               |
@@ -64,21 +70,23 @@ Some lodash and ramda functions don't have a Remeda equivalent, but can be
 easily replaced with a one-liner in TypeScript. Some of the most common
 are listed below.
 
+_TypeScript one-liners are not necessarily drop-in replacements that
+provide the exact functionality of the listed Lodash and Ramda functions.
+Be sure to consult each library's documentation and to check what features
+you are relying on when migrating._
+
 | Lodash         | Ramda          | TypeScript                                 |
 | -------------- | -------------- | ------------------------------------------ |
 | `add`          | `add`          | `(x, y) => x + y`                          |
 | `-`            | `append`       | `(arr, val) => [...arr, val]`              |
-| `concat`       | `concat`       | `(arr1, arr2) => arr1.concat(arr2)`<sup id="a1">[1](#f1)</sup>  |
 | `constant`     | `always`       | `x => () => x`                             |
-| `filter`       | `filter`       | `(arr, pred) => arr.filter(pred)`<sup id="a2">[2](#f2)</sup> |
 | `identity`     | `identity`     | `x => x`                                   |
 | `isNil`        | `isNil`        | `x => x == null`                           |
 | `nth`          | `nth`          | `n => a[n]`                                |
 | `-`            | `path`         | `a?.b?.c`                                  |
 | `-`            | `propEq`       | `x => x.a === value`                       |
 | `-`            | `propOr`       | `x => x.a ?? defaultValue`                 |
+| `reverse`      | `reverse`      | `(arr : Array<any>) => [...arr].reverse()` |
+| `words`        | `-`            | `str => str.split(/\s+/)`                  |
 
-#### Footnotes
 
-1. <small id="f1">Incomplete replacement for Lodash `concat`. Lodash `concat` accepts multiple values to concatenate, including values that are not within an array. </small> [↩](#a1)
-2. <small id="f2">To filter objects instead of arrays, use `(obj, pred) => Object.fromEntries(Object.entries(obj).filter(pred));` </small> [↩](#a2)
