@@ -17,7 +17,7 @@ const hasProp = Object.prototype.hasOwnProperty;
  *    R.equals(1, '1') //=> false
  *    R.equals([1, 2, 3], [1, 2, 3]) //=> true
  * @data_first
- * @category Array
+ * @category Object
  */
 export function equals(a: any, b: any): boolean;
 
@@ -33,7 +33,7 @@ export function equals(a: any, b: any): boolean;
  *    R.equals('1')(1) //=> false
  *    R.equals([1, 2, 3])([1, 2, 3]) //=> true
  * @data_last
- * @category Array
+ * @category Object
  */
 export function equals(a: any): (b: any) => boolean;
 
