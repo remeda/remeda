@@ -2,8 +2,8 @@ import { purry } from './purry';
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 export function uniqBy<T, K>(
-  transformer: (item: T) => K,
-  array: readonly T[]
+  array: readonly T[],
+  transformer: (item: T) => K
 ): T[];
 
 /**
@@ -31,7 +31,7 @@ export function uniqBy() {
   return purry(_uniqBy, arguments, lazyUniqBy);
 }
 
-function _uniqBy<T, K>(transformer: (item: T) => K, array: T[]) {
+function _uniqBy<T, K>(array: T[], transformer: (item: T) => K) {
   return _reduceLazy(array, lazyUniqBy(transformer));
 }
 

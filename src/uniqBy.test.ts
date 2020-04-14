@@ -17,11 +17,11 @@ describe('uniqBy', () => {
   ] as const;
 
   it('handles uniq by identity', () => {
-    expect(uniqBy(identity, [1, 2, 2, 5, 1, 6, 7])).toEqual([1, 2, 5, 6, 7]);
+    expect(uniqBy([1, 2, 2, 5, 1, 6, 7], identity)).toEqual([1, 2, 5, 6, 7]);
   });
 
   it('returns people with uniq names', () => {
-    expect(uniqBy(p => p.name, people)).toEqual([
+    expect(uniqBy(people, p => p.name)).toEqual([
       { name: 'John', age: 42 },
       { name: 'Jörn', age: 30 },
       { name: 'Sarah', age: 33 },
@@ -31,7 +31,7 @@ describe('uniqBy', () => {
   });
 
   it('returns people with uniq ages', () => {
-    expect(uniqBy(p => p.age, people)).toEqual([
+    expect(uniqBy(people, p => p.age)).toEqual([
       { name: 'John', age: 42 },
       { name: 'Jörn', age: 30 },
       { name: 'Sarah', age: 33 },
@@ -41,7 +41,7 @@ describe('uniqBy', () => {
   });
 
   it('returns people with uniq first letter of name', () => {
-    expect(uniqBy(p => p.name.substring(0, 1), people)).toEqual([
+    expect(uniqBy(people, p => p.name.substring(0, 1))).toEqual([
       { name: 'John', age: 42 },
       { name: 'Sarah', age: 33 },
       { name: 'Kim', age: 22 },
