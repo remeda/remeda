@@ -53,3 +53,4 @@ export * from './times';
 export * from './toPairs';
 export * from './type';
 export * from './uniq';
+export * from './uniqBy';
