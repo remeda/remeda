@@ -1,4 +1,4 @@
-function notNil<T>(value: T | null | undefined | false | '' | 0): value is T {
+function isTruthy<T>(value: T | null | undefined | false | '' | 0): value is T {
   return !!value;
 }
 
@@ -16,5 +16,5 @@ export function compact<T>(
   items: readonly (T | null | undefined | false | '' | 0)[]
 ): T[] {
   // TODO: Make lazy version
-  return items.filter(notNil);
+  return items.filter(isTruthy);
 }
