@@ -1,3 +1,7 @@
+function isTruthy<T>(value: T | null | undefined | false | '' | 0): value is T {
+  return !!value;
+}
+
 /**
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.
  * @param items the array to compact
@@ -8,7 +12,9 @@
  * @category Array
  * @pipeable
  */
-export function compact<T>(items: readonly T[]) {
+export function compact<T>(
+  items: readonly (T | null | undefined | false | '' | 0)[]
+): T[] {
   // TODO: Make lazy version
-  return items.filter(x => !!x);
+  return items.filter(isTruthy);
 }
