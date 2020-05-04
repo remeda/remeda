@@ -1,4 +1,5 @@
 export * from './addProp';
+export * from './allPass';
 export * from './anyPass';
 export * from './chunk';
 export * from './clamp';
