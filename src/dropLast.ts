@@ -32,6 +32,8 @@ export function dropLast() {
 
 function _dropLast<T>(array: T[], n: number) {
   const copy = [...array];
-  copy.splice(-n);
+  if (n !== 0) {
+    copy.splice(-n)
+  }
   return copy;
 }
