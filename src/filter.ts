@@ -73,7 +73,6 @@ const _lazy = (indexed: boolean) => <T>(
 };
 
 export namespace filter {
-  // I don't understand why you need additional generic?
   export function indexed<T, S extends T>(
     array: readonly T[],
     fn: (input: T, index: number, array: T[]) => input is S
