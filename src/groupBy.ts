@@ -13,14 +13,14 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @indexed
  * @category Array
  */
-export function groupBy<T>(
+export function groupBy<T, K extends keyof any>(
   items: readonly T[],
-  fn: (item: T) => any
-): Record<string, T[]>;
+  fn: (item: T) => K | ReadonlyArray<K>
+): Record<K, T[]>;
 
-export function groupBy<T>(
-  fn: (item: T) => any
-): (array: readonly T[]) => Record<string, T[]>;
+export function groupBy<T, K extends keyof any>(
+  fn: (item: T) => K | ReadonlyArray<K>
+): (array: readonly T[]) => Record<K, T[]>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -37,30 +37,42 @@ export function groupBy() {
   return purry(_groupBy(false), arguments);
 }
 
-const _groupBy = (indexed: boolean) => <T>(
+function isArray<T>(data: T): data is Extract<T, Array<any> | ReadonlyArray<any>> {
+  return Array.isArray(data)
+}
+
+const _groupBy = (indexed: boolean) => <T, K extends keyof any>(
   array: T[],
-  fn: PredIndexedOptional<T, any>
+  fn: PredIndexedOptional<T, K | ReadonlyArray<K>>
 ) => {
-  const ret: Record<string, T[]> = {};
+  const ret: Record<keyof any, T[]> = {};
   array.forEach((item, index) => {
     const value = indexed ? fn(item, index, array) : fn(item);
-    const key = String(value);
-    if (!ret[key]) {
-      ret[key] = [];
+    const addToGroup = (key: K, value: T) => {
+      if (!ret[key]) {
+        ret[key] = [];
+      }
+      ret[key].push(value);
     }
-    ret[key].push(item);
+    if (isArray(value)) {
+      value.forEach((key) => {
+        addToGroup(key, item)
+      })
+      return
+    }
+    addToGroup(value, item)
   });
   return ret;
 };
 
 export namespace groupBy {
-  export function indexed<T, K>(
+  export function indexed<T, K extends keyof any>(
     array: readonly T[],
-    fn: PredIndexed<T, any>
-  ): Record<string, T[]>;
-  export function indexed<T, K>(
-    fn: PredIndexed<T, any>
-  ): (array: readonly T[]) => Record<string, T[]>;
+    fn: PredIndexed<T, K | ReadonlyArray<K>>
+  ): Record<K, T[]>;
+  export function indexed<T, K extends keyof any>(
+    fn: PredIndexed<T, K | ReadonlyArray<K>>
+  ): (array: readonly T[]) => Record<K, T[]>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
