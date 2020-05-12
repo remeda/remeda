@@ -1,4 +1,4 @@
-import { isString, isBoolean, isArray, isDate, isDefined, isNil, isFunction, isError, isNumber, isObject, isPromise, isTruthy, not } from "./guards";
+import { isString, isBoolean, isArray, isDate, isDefined, isNil, isFunction, isError, isNumber, isObject, isPromise, isTruthy, isNot } from "./guards";
 
 type TestObj = boolean | string | { a: string } | (() => void) | number[] | Date | undefined | null | Error | number | Promise<number>
 
@@ -177,18 +177,18 @@ describe('Describe guards behavior', () => {
       assertType<{ a: string }>(data)
     }
   });
-  test('not: should work as type guard', () => {
+  test('isNot: should work as type guard', () => {
     const data = dataProvider('promise')
-    if (not(isString)(data)) {
+    if (isNot(isString)(data)) {
       assertType<number | boolean | {
         a: string;
       } | (() => void) | number[] | Date | Error | Promise<number> | null | undefined>(data)
       expect(data instanceof Promise).toEqual(true)
     }
   })
-  test('not: should work as type guard in filter', () => {
+  test('isNot: should work as type guard in filter', () => {
     const data = [dataProvider('promise'), dataProvider('array'), dataProvider('boolean'), dataProvider('function')]
-    const result = data.filter(not(isPromise))
+    const result = data.filter(isNot(isPromise))
     expect(result.some((c) => c instanceof Promise)).toEqual(false)
     assertType<(boolean | string | { a: string } | (() => void) | number[] | Date | undefined | null | Error | number)[]>(result)
   })
