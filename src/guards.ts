@@ -18,11 +18,13 @@ export function isPromise<T>(data: T): data is Extract<T, Promise<any>> {
     return data instanceof Promise
 }
 
-export function isArray<T>(data: T): data is Extract<T, ReadonlyArray<any> | Array<any>> {
+// @ts-ignore
+export function isArray<T>(data: T): data is T extends ReadonlyArray<any> | Array<any> ? T : any[] {
     return Array.isArray(data)
 }
 
-export function isObject<T extends unknown>(data: T | object): data is T extends { [k: string]: unknown } ? T : never {
+// @ts-ignore
+export function isObject<T extends unknown>(data: T): data is T extends { [k: string]: unknown } ? T : { [k: string]: unknown } {
     return !!data && !Array.isArray(data) && typeof data === 'object'
 }
 
