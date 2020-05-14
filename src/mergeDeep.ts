@@ -2,7 +2,15 @@ import { isDefined, isArray, isObject } from "./guards"
 import { uniq } from "./uniq"
 import { clone } from "./clone";
 
-
+export interface DeepPartialArray<T> extends Array<DeepPartial<T>> { }
+export type DeepPartial<T> = T extends Function
+    ? T
+    : T extends Array<infer U>
+    ? DeepPartialArray<U>
+    : T extends object
+    ? DeepPartialObject<T>
+    : T | undefined
+export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> }
 
 function isCyclic(object: unknown) {
     const seenObjects = new WeakMap(); // use to keep track of which objects have been seen.
@@ -92,7 +100,7 @@ function recursiveMerge(a: unknown, b: unknown): unknown {
  * Handles circular references
  * @returns {T}
  */
-export function mergeDeepLeft<T extends any>(target: T, ...sources: Partial<T>[]): T {
+export function mergeDeepLeft<T extends object>(target: T, ...sources: DeepPartialObject<T>[]): T {
     let output = { ...target } as unknown
     for (const source of sources) {
         output = recursiveMerge(output, source)
@@ -116,7 +124,7 @@ export function mergeDeepLeft<T extends any>(target: T, ...sources: Partial<T>[]
  * Handles circular references
  * @returns {T}
  */
-export function mergeDeepRight<T extends any>(target: T, ...sources: T[]): T {
+export function mergeDeepRight<T extends object>(target: T, ...sources: DeepPartialObject<T>[]): T {
     let output = clone(target) as unknown
     for (const source of sources) {
         // Only difference from mergeDeepLeft
