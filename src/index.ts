@@ -27,6 +27,7 @@ export * from './intersection';
 export * from './last';
 export * from './map';
 export * from './mapKeys';
+export * from './mapValues';
 export * from './merge';
 export * from './mergeAll';
 export * from './noop';
