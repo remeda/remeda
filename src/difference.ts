@@ -46,8 +46,8 @@ function _difference<T>(array: T[], other: T[]) {
 
 export namespace difference {
   export function lazy<T>(other: T[]) {
+    const set = new Set(other);
     return (value: T): LazyResult<T> => {
-      const set = new Set(other);
       if (!set.has(value)) {
         return {
           done: false,
