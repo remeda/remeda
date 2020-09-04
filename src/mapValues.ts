@@ -5,7 +5,7 @@
  * @signature
  *    R.mapValues(object, fn)
  * @example
- *    R.mapValues({a: 1, b: 2}, (value, key) => value + key) // => { a: 1a, b: 2b }
+ *    R.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
  * @data_first
  * @category Object
  */
@@ -20,7 +20,7 @@ export function mapValues<T extends object, S>(
  * @signature
  *    R.mapKeys(fn)(object)
  * @example
- *    R.pipe({a: 1, b: 2}, R.mapValues((value, key) => value + key)) // => { a: 1a, b: 2b }
+ *    R.pipe({a: 1, b: 2}, R.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
  * @data_last
  * @category Object
  */
