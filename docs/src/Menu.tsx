@@ -33,7 +33,7 @@ export class Menu extends React.PureComponent<
         </div>
         <div className="fn-scroll">
           {items
-            .filter(item => item.name.indexOf(searchTermLowered) !== -1)
+            .filter(item => item.name.toLowerCase().indexOf(searchTermLowered) !== -1)
             .map(item => (
               <a href={'#' + item.name} key={item.name} className="menu-link">
                 <span>{item.name}</span>
