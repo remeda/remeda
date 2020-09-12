@@ -1,5 +1,5 @@
-import { PredIndexedOptional } from './_types'
-import { purry } from './purry'
+import { PredIndexedOptional } from './_types';
+import { purry } from './purry';
 
 /**
  * Map each element of an array into an object using a defined callback function.
@@ -19,7 +19,7 @@ import { purry } from './purry'
 export function mapToObj<T, K extends string | number | symbol, V>(
   array: readonly T[],
   fn: (element: T) => [K, V]
-): Record<K, V>
+): Record<K, V>;
 
 /**
  * Map each element of an array into an object using a defined callback function.
@@ -35,7 +35,7 @@ export function mapToObj<T, K extends string | number | symbol, V>(
  * @indexed
  * @category Array
  */
-export function mapToObj <T, K extends string | number | symbol, V>(
+export function mapToObj<T, K extends string | number | symbol, V>(
   fn: (element: T) => [K, V]
 ): (array: readonly T[]) => Record<K, V>;
 
@@ -48,11 +48,11 @@ const _mapToObj = (indexed: boolean) => <T>(
   fn: PredIndexedOptional<any, any>
 ) => {
   return array.reduce((result, element, index) => {
-    const [key, value] = indexed ? fn(element, index, array) : fn(element)
-    result[key] = value
-    return result
-  }, {})
-}
+    const [key, value] = indexed ? fn(element, index, array) : fn(element);
+    result[key] = value;
+    return result;
+  }, {});
+};
 
 export namespace mapToObj {
   export function indexed<T, K extends string | number | symbol, V>(
