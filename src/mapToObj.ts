@@ -1,3 +1,6 @@
+import { PredIndexedOptional } from './_types'
+import { purry } from './purry'
+
 /**
  * Map each element of an array into an object using a defined callback function.
  * @param array The array to map.
@@ -13,15 +16,13 @@
  * @indexed
  * @category Array
  */
-
-export function mapToObj <T, K extends string | number | symbol, V>(
-    array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+export function mapToObj<T, K extends string | number | symbol, V>(
+  array: readonly T[],
+  fn: (element: T) => [K, V]
 ): Record<K, V>
 
 /**
  * Map each element of an array into an object using a defined callback function.
- * @param array The array to map.
  * @param fn The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries
  * @returns The new mapped object.
  * @signature
@@ -34,26 +35,34 @@ export function mapToObj <T, K extends string | number | symbol, V>(
  * @indexed
  * @category Array
  */
-
 export function mapToObj <T, K extends string | number | symbol, V>(
-    array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
-): Record<K, V>
+  fn: (element: T) => [K, V]
+): (array: readonly T[]) => Record<K, V>;
 
-export function mapToObj(arg1: any, arg2?: any): any {
-    if (arguments.length === 1) {
-        return (data: any) => _mapToObj(data, arg1);
-    }
-    return _mapToObj(arg1, arg2);
+export function mapToObj() {
+  return purry(_mapToObj(false), arguments);
 }
 
-function _mapToObj(
-    array: Array<any>,
-    fn: (element: any, index: number, array: Array<any>) => any
-) {
-    return array.reduce((result, element, index) => {
-        const [key, value] = fn(element, index, array)
-        result[key] = value
-        return result
-    }, {})
+const _mapToObj = (indexed: boolean) => <T>(
+  array: any[],
+  fn: PredIndexedOptional<any, any>
+) => {
+  return array.reduce((result, element, index) => {
+    const [key, value] = indexed ? fn(element, index, array) : fn(element)
+    result[key] = value
+    return result
+  }, {})
+}
+
+export namespace mapToObj {
+  export function indexed<T, K extends string | number | symbol, V>(
+    array: readonly T[],
+    fn: (element: T, index: number, array: readonly T[]) => [K, V]
+  ): Record<K, V>;
+  export function indexed<T, K extends string | number | symbol, V>(
+    fn: (element: T, index: number, array: readonly T[]) => [K, V]
+  ): (array: readonly T[]) => Record<K, V>;
+  export function indexed() {
+    return purry(_mapToObj(true), arguments);
+  }
 }
