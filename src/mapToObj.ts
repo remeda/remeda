@@ -29,8 +29,14 @@ export function mapToObj<T, K extends string | number | symbol, V>(
  *    R.mapToObj(fn)(array)
  *    R.mapToObj.indexed(fn)(array)
  * @example
- *    R.pipe([0, 1, 2], R.mapToObj(x => [String(x), x * 2])) // => {1: 2, 2: 4, 3: 6}
- *    R.pipe([0, 0, 0], R.mapToObj.indexed((x, i) => [i, i])) // => {0: 0, 1: 1, 2: 2}
+ *    R.pipe(
+ *      [1, 2, 3],
+ *      R.mapToObj(x => [String(x), x * 2])
+ *    ) // => {1: 2, 2: 4, 3: 6}
+ *    R.pipe(
+ *      [0, 0, 0],
+ *      R.mapToObj.indexed((x, i) => [i, i])
+ *    ) // => {0: 0, 1: 1, 2: 2}
  * @data_last
  * @indexed
  * @category Array
