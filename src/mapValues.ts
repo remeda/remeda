@@ -25,7 +25,7 @@ export function mapValues<T extends object, S>(
  * @category Object
  */
 export function mapValues<T extends object, S>(
-  fn: (key: keyof T, value: T[keyof T]) => S
+  fn: (value: T[keyof T], key: keyof T) => S
 ): (object: T) => Record<keyof T, S>;
 
 export function mapValues(arg1: any, arg2?: any): any {
