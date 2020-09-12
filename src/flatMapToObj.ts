@@ -16,7 +16,7 @@ import { purry } from './purry';
  *  R.flatMapToObj.indexed(['a', 'b'], (x, i) => [
  *    [x, i],
  *    [x + x, i + i],
- *  ]) => {a: 0, aa: 0, b: 1, bb: 2}
+ *  ]) // => {a: 0, aa: 0, b: 1, bb: 2}
  * @data_first
  * @indexed
  * @category Array
