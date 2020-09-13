@@ -1,13 +1,13 @@
 import { purry } from './purry';
 
-export type Prepend<Tuple extends readonly any[], Added> = ((
+type Prepend<Tuple extends readonly any[], Added> = ((
   _: Added,
   ..._1: Tuple
 ) => any) extends (..._: infer Result) => any
   ? Result
   : never;
 
-export type Reverse<
+type Reverse<
   Tuple extends readonly any[],
   Prefix extends readonly any[] = []
 > = {
