@@ -17,7 +17,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage && yarn run compile",
+    "compile": "tsc -p ./tsconfig.json --noEmit",
     "prettier": "prettier 'src/**/*.ts' --write",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",

@@ -11,3 +11,9 @@ export type Key = string | number | symbol;
 
 /** Mapped type to remove optional, null, and undefined from all props */
 export type NonNull<T> = { [K in keyof T]-?: Exclude<T[K], null | undefined> };
+
+export type AssertEqual<Type, Expected> = Type extends Expected
+  ? Expected extends Type
+    ? true
+    : never
+  : never;
