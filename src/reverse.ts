@@ -1,23 +1,26 @@
 import { purry } from './purry';
 
-type Prepend<Tuple extends readonly any[], Added> = ((
+type Prepend<Tuple extends readonly unknown[], Added> = ((
   _: Added,
   ..._1: Tuple
-) => any) extends (..._: infer Result) => any
+) => unknown) extends (..._: infer Result) => unknown
   ? Result
   : never;
 
 type Reverse<
-  Tuple extends readonly any[],
-  Prefix extends readonly any[] = []
+  Tuple extends readonly unknown[],
+  Prefix extends readonly unknown[] = []
 > = {
   0: Prefix;
-  1: ((..._: Tuple) => any) extends (_: infer First, ..._1: infer Next) => any
+  1: ((..._: Tuple) => unknown) extends (
+    _: infer First,
+    ..._1: infer Next
+  ) => unknown
     ? Reverse<Next, Prepend<Prefix, First>>
     : never;
-}[Tuple extends readonly [any, ...any[]] ? 1 : 0];
+}[Tuple extends readonly [unknown, ...unknown[]] ? 1 : 0];
 
-type IsTuple<T> = T extends readonly [any, ...any[]] ? T : never;
+type IsTuple<T> = T extends readonly [unknown, ...unknown[]] ? T : never;
 
 /**
  * Reverses array.
@@ -29,7 +32,7 @@ type IsTuple<T> = T extends readonly [any, ...any[]] ? T : never;
  * @data_first
  * @category Array
  */
-export function reverse<T extends readonly any[]>(
+export function reverse<T extends readonly unknown[]>(
   array: T
 ): T extends IsTuple<T> ? Reverse<T> : T;
 
@@ -43,7 +46,7 @@ export function reverse<T extends readonly any[]>(
  * @data_last
  * @category Array
  */
-export function reverse<T extends readonly any[]>(): (
+export function reverse<T extends readonly unknown[]>(): (
   array: T
 ) => T extends IsTuple<T> ? Reverse<T> : T;
 
