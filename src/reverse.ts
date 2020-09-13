@@ -1,7 +1,7 @@
 import { purry } from './purry';
 
-export type Prepend<Tuple extends readonly any[], Addend> = ((
-  _: Addend,
+export type Prepend<Tuple extends readonly any[], Added> = ((
+  _: Added,
   ..._1: Tuple
 ) => any) extends (..._: infer Result) => any
   ? Result
