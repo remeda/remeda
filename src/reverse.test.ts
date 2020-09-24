@@ -14,8 +14,18 @@ describe('data first', () => {
       expect(result).toEqual(true);
     });
     test('tuples', () => {
-      const actual = reverse([1, 2, 3] as const);
-      const result: AssertEqual<typeof actual, [3, 2, 1]> = true;
+      const actual = reverse([1, 2, [true], 'a'] as const);
+      const result: AssertEqual<
+        typeof actual,
+        ['a', readonly [true], 2, 1]
+      > = true;
+      expect(result).toEqual(true);
+    });
+
+    test('variadic tuples', () => {
+      const input: [number, ...Array<string>] = [1, 'two', 'three'];
+      const actual = reverse(input);
+      const result: AssertEqual<typeof actual, (string | number)[]> = true;
       expect(result).toEqual(true);
     });
   });
@@ -33,8 +43,18 @@ describe('data last', () => {
       expect(result).toEqual(true);
     });
     test('tuples', () => {
-      const actual = pipe([1, 2, 3] as const, reverse());
-      const result: AssertEqual<typeof actual, [3, 2, 1]> = true;
+      const actual = pipe([1, 2, [true], 'a'] as const, reverse());
+      const result: AssertEqual<
+        typeof actual,
+        ['a', readonly [true], 2, 1]
+      > = true;
+      expect(result).toEqual(true);
+    });
+
+    test('variadic tuples', () => {
+      const input: [number, ...Array<string>] = [1, 'two', 'three'];
+      const actual = pipe(input, reverse());
+      const result: AssertEqual<typeof actual, (string | number)[]> = true;
       expect(result).toEqual(true);
     });
   });
