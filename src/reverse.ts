@@ -1,6 +1,5 @@
 import { purry } from './purry';
 
-// prettier-ignore
 type Reverse<
   T extends readonly unknown[],
   R extends readonly unknown[] = []

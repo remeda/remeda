@@ -18,7 +18,10 @@ import { _toLazyIndexed } from './_toLazyIndexed';
  * @pipeable
  * @category Array
  */
-export function filter<T, S extends T>(array: readonly T[], fn: (value: T) => value is S): S[];
+export function filter<T, S extends T>(
+  array: readonly T[],
+  fn: (value: T) => value is S
+): S[];
 export function filter<T>(array: readonly T[], fn: Pred<T, boolean>): T[];
 
 /**
@@ -35,7 +38,9 @@ export function filter<T>(array: readonly T[], fn: Pred<T, boolean>): T[];
  * @pipeable
  * @category Array
  */
-export function filter<T, S extends T>(fn: (input: T) => input is S): (array: readonly T[]) => S[];
+export function filter<T, S extends T>(
+  fn: (input: T) => input is S
+): (array: readonly T[]) => S[];
 export function filter<T>(fn: Pred<T, boolean>): (array: readonly T[]) => T[];
 
 export function filter() {
