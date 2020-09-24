@@ -1,24 +1,9 @@
 import { purry } from './purry';
 
-type Prepend<Tuple extends readonly unknown[], Added> = ((
-  _: Added,
-  ..._1: Tuple
-) => unknown) extends (..._: infer Result) => unknown
-  ? Result
-  : never;
-
-type Reverse<
-  Tuple extends readonly unknown[],
-  Prefix extends readonly unknown[] = []
-> = {
-  0: Prefix;
-  1: ((..._: Tuple) => unknown) extends (
-    _: infer First,
-    ..._1: infer Next
-  ) => unknown
-    ? Reverse<Next, Prepend<Prefix, First>>
-    : never;
-}[Tuple extends readonly [unknown, ...unknown[]] ? 1 : 0];
+// prettier-ignore
+type ReverseTuple<T extends readonly unknown[], R extends readonly unknown[] = []> = ReturnType<
+  T extends readonly [infer F, ...infer L] ? () => ReverseTuple<L, [F, ...R]> : () => R
+>;
 
 type IsTuple<T> = T extends readonly [unknown, ...unknown[]] ? T : never;
 
@@ -34,7 +19,7 @@ type IsTuple<T> = T extends readonly [unknown, ...unknown[]] ? T : never;
  */
 export function reverse<T extends readonly unknown[]>(
   array: T
-): T extends IsTuple<T> ? Reverse<T> : T;
+): T extends IsTuple<T> ? ReverseTuple<T> : T;
 
 /**
  * Reverses array.
@@ -48,7 +33,7 @@ export function reverse<T extends readonly unknown[]>(
  */
 export function reverse<T extends readonly unknown[]>(): (
   array: T
-) => T extends IsTuple<T> ? Reverse<T> : T;
+) => T extends IsTuple<T> ? ReverseTuple<T> : T;
 
 export function reverse() {
   return purry(_reverse, arguments);
