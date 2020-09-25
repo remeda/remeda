@@ -55,7 +55,7 @@ function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
  * @example R.clone({foo: 'bar'}) // {foo: 'bar'}
  */
 export function clone<T extends any>(value: T): T {
-  return value != null && typeof value.clone === 'function'
-    ? value.clone()
+  return value != null && typeof (value as any).clone === 'function'
+    ? (value as any).clone()
     : _clone(value, [], [], true);
 }
