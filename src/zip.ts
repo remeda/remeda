@@ -8,7 +8,7 @@ import { purry } from './purry'
  * @signature
  *   R.zip(first, second)
  * @example
- *   R.zip([1, 2], ['c', 'd']) // => [[1, 'c'], [2, 'd']
+ *   R.zip([1, 2], ['a', 'b']) // => [1, 'a'], [2, 'b']
  * @data_first
  * @category Array
  */
@@ -21,11 +21,11 @@ export function zip<F extends Array<unknown>, S extends Array<unknown>>(first: F
  * @signature
  *   R.zip(second)(first)
  * @example
- *   R.zip(['c', 'd'])([1, 2]) // => [[1, 'c'], [2, 'd']
+ *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']
  * @data_last
  * @category Array
  */
-export function zip<F extends Array<unknown>, S extends Array<unknown>>(first: F): (second: S) => Array<[F, S]>
+export function zip<F extends Array<unknown>, S extends Array<unknown>>(second: S): (first: F) => Array<[F, S]>
 
 export function zip() {
   return purry(_zip, arguments)
