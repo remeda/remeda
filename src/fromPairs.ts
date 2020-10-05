@@ -9,12 +9,14 @@
  *   R.fromPairs([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'}
  * @category Object
  */
-export function fromPairs<K extends string | number | symbol, V>(tuples: Array<[K, V]>): Record<K, V>
+export function fromPairs<K extends string | number, V>(tuples: Array<[K, V]>): Record<K, V>
 
 
-export function fromPairs(tuples: Array<[string | number | symbol, unknown]>) {
-  return tuples.reduce((acc, curr) => curr && curr.length === 2 ? ({
-      ...acc,
-      [curr[0]]: curr[1]
-  }) : acc, {})
+export function fromPairs(tuples: Array<[string | number, unknown]>) {
+  return tuples.reduce<Record<string | number, unknown>>((acc, curr) => {
+    if (curr && curr.length === 2) {
+      acc[curr[0]] = curr[1];
+    }
+    return acc;
+  }, {})
 }
