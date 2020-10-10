@@ -12,7 +12,7 @@ import { purry } from './purry'
  * @data_first
  * @category Array
  */
-export function zip<F extends Array<unknown>, S extends Array<unknown>>(first: F, second: S): Array<[F, S]>
+export function zip<F extends unknown, S extends unknown>(first: Array<F>, second: Array<S>): Array<[F, S]>
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -25,7 +25,7 @@ export function zip<F extends Array<unknown>, S extends Array<unknown>>(first: F
  * @data_last
  * @category Array
  */
-export function zip<F extends Array<unknown>, S extends Array<unknown>>(second: S): (first: F) => Array<[F, S]>
+export function zip<F extends unknown, S extends unknown>(second: Array<S>): (first: Array<F>) => Array<[F, S]>
 
 export function zip() {
   return purry(_zip, arguments)
