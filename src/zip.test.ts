@@ -76,7 +76,7 @@ describe('data second', () => {
   });
 });
 
-describe('data first typings', () => {
+describe('data second typings', () => {
   test('arrays', () => {
     const actual = zip(second)(first);
     const result: AssertEqual<typeof actual, [number, string][]> = true;
