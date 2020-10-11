@@ -1,4 +1,4 @@
-import { purry } from './purry'
+import { purry } from './purry';
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -12,7 +12,10 @@ import { purry } from './purry'
  * @data_first
  * @category Array
  */
-export function zip<F extends unknown, S extends unknown>(first: Array<F>, second: Array<S>): Array<[F, S]>
+export function zip<F extends unknown, S extends unknown>(
+  first: ReadonlyArray<F>,
+  second: ReadonlyArray<S>
+): Array<[F, S]>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -25,14 +28,17 @@ export function zip<F extends unknown, S extends unknown>(first: Array<F>, secon
  * @data_last
  * @category Array
  */
-export function zip<F extends unknown, S extends unknown>(second: Array<S>): (first: Array<F>) => Array<[F, S]>
+export function zip<S extends unknown>(
+  second: ReadonlyArray<S>
+): <F extends unknown>(first: ReadonlyArray<F>) => Array<[F, S]>;
 
 export function zip() {
-  return purry(_zip, arguments)
+  return purry(_zip, arguments);
 }
 
 function _zip(first: Array<unknown>, second: Array<unknown>) {
-  const resultLength = first.length > second.length ? second.length : first.length;
+  const resultLength =
+    first.length > second.length ? second.length : first.length;
   const result = [];
   for (let i = 0; i < resultLength; i++) {
     result.push([first[i], second[i]]);
