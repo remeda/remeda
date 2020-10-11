@@ -1,6 +1,10 @@
 import { fromPairs } from './fromPairs';
 
-const tuples: [string, number][] = [['a', 1], ['b', 2], ['c', 3]]
+const tuples: [string, number][] = [
+  ['a', 1],
+  ['b', 2],
+  ['c', 3],
+];
 
 describe('fromPairs', () => {
   test('generates object from pairs', () => {
@@ -8,8 +12,8 @@ describe('fromPairs', () => {
       a: 1,
       b: 2,
       c: 3,
-    })
-  })
+    });
+  });
 
   test('ignores non-tuples', () => {
     const badInput = [...tuples, undefined, [], [2]];
@@ -17,6 +21,6 @@ describe('fromPairs', () => {
       a: 1,
       b: 2,
       c: 3,
-    })
-  })
-})
+    });
+  });
+});
