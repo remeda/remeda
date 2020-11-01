@@ -1,6 +1,6 @@
 {
   "name": "remeda",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A utility library for JavaScript and Typescript.",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
@@ -10,14 +10,15 @@
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",
     "marked": "^0.4.0",
-    "prettier": "^2.0.1",
+    "prettier": "^2.1.2",
     "ts-jest": "^22.4.5",
     "ts-node": "^8.4.1",
     "typedoc": "^0.11.1",
-    "typescript": "^3.8.3"
+    "typescript": "^4.0.3"
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage && yarn run compile",
+    "compile": "tsc -p ./tsconfig.json --noEmit",
     "prettier": "prettier 'src/**/*.ts' --write",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
