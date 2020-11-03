@@ -30,7 +30,7 @@ const _maxBy = (indexed: boolean) => <T>(
  *    R.pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      R.maxBy(x => x.a)
- *    ) // { a: 1 }
+ *    ) // { a: 5 }
  * @data_last
  * @indexed
  * @category Array
@@ -50,7 +50,7 @@ export function maxBy<T>(
  *    R.maxBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
- *    ) // { a: 1 }
+ *    ) // { a: 5 }
  * @data_first
  * @indexed
  * @category Array
