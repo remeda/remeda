@@ -1,20 +1,20 @@
 import { minBy } from './minBy';
 import { pipe } from './pipe';
 
-const array = [{ a: 2 }, { a: 5 }, { a: 1 }, { a: 3 }] as const;
-const expected = { a: 1 };
+const array = [{ a: 2 }, { a: 5 }, { a: 1 }, { a: 4 }] as const;
+const expected = { a: 5 };
 
 describe('data first', () => {
-  test('minBy', () => {
+  test('maxBy', () => {
     expect(minBy(array, x => x.a)).toEqual(expected);
   });
-  test('minBy.indexed', () => {
-    expect(minBy.indexed(array, (x, idx) => x.a + idx)).toEqual({ a: 2 });
+  test('maxBy.indexed', () => {
+    expect(minBy.indexed(array, (x, idx) => x.a + idx)).toEqual({ a: 4 });
   });
 });
 
 describe('data last', () => {
-  test('minBy', () => {
+  test('maxBy', () => {
     const actual = pipe(
       array,
       minBy(x => x.a)
@@ -22,11 +22,11 @@ describe('data last', () => {
     expect(actual).toEqual(expected);
   });
 
-  test('minBy.indexed', () => {
+  test('maxBy.indexed', () => {
     const actual = pipe(
       array,
       minBy.indexed((x, idx) => x.a + idx)
     );
-    expect(actual).toEqual({ a: 2 });
+    expect(actual).toEqual({ a: 4 });
   });
 });
