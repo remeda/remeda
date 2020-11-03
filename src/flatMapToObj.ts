@@ -21,7 +21,7 @@ import { purry } from './purry';
  * @indexed
  * @category Array
  */
-export function flatMapToObj<T, K extends string | number | symbol, V>(
+export function flatMapToObj<T, K extends keyof any, V>(
   array: readonly T[],
   fn: (element: T) => [K, V][]
 ): Record<K, V>;
@@ -49,7 +49,7 @@ export function flatMapToObj<T, K extends string | number | symbol, V>(
  * @indexed
  * @category Array
  */
-export function flatMapToObj<T, K extends string | number | symbol, V>(
+export function flatMapToObj<T, K extends keyof any, V>(
   fn: (element: T) => [K, V][]
 ): (array: readonly T[]) => Record<K, V>;
 
@@ -71,11 +71,11 @@ const _flatMapToObj = (indexed: boolean) => <T>(
 };
 
 export namespace flatMapToObj {
-  export function indexed<T, K extends string | number | symbol, V>(
+  export function indexed<T, K extends keyof any, V>(
     array: readonly T[],
     fn: (element: T, index: number, array: readonly T[]) => [K, V][]
   ): Record<K, V>;
-  export function indexed<T, K extends string | number | symbol, V>(
+  export function indexed<T, K extends keyof any, V>(
     fn: (element: T, index: number, array: readonly T[]) => [K, V][]
   ): (array: readonly T[]) => Record<K, V>;
   export function indexed() {
