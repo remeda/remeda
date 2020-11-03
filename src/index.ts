@@ -62,3 +62,4 @@ export * from './uniqBy';
 export * from './zipWith';
 export * from './zip';
 export * from './minBy';
+export * from './maxBy';
