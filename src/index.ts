@@ -21,6 +21,7 @@ export * from './flatten';
 export * from './flattenDeep';
 export * from './forEach';
 export * from './forEachObj';
+export * from './fromPairs';
 export * from './groupBy';
 export * from './identity';
 export * from './indexBy';
