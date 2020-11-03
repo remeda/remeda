@@ -58,4 +58,5 @@ export * from './toPairs';
 export * from './type';
 export * from './uniq';
 export * from './uniqBy';
+export * from './zipWith';
 export * from './zip';
