@@ -37,7 +37,7 @@ function _pick(object: any, names: string[]) {
     return {};
   }
   return names.reduce((acc, name) => {
-    if (object.hasOwnProperty(name)) {
+    if (name in object) {
       acc[name] = object[name];
     }
     return acc;
