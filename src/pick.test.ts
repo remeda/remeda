@@ -11,6 +11,14 @@ describe('data first', () => {
     expect(pick(undefined as any, ['foo'])).toEqual({});
     expect(pick(null as any, ['foo'])).toEqual({});
   });
+  test('support inherited properties', () => {
+    class BaseClass {
+      testProp() {return 'abc'};
+    }
+    class TestClass extends BaseClass { }
+    const testClass = new TestClass();
+    expect(pick(testClass, ['testProp'])).toEqual({ testProp: expect.any(Function) })
+  });
 });
 
 describe('data last', () => {
