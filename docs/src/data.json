@@ -2201,7 +2201,7 @@
         "category": "Array",
         "indexed": false,
         "pipeable": true,
-        "example": "R.uniq((obj) => obj.n, [\n  { n: 1 },\n  { n: 2 },\n  { n: 2 },\n  { n: 5 },\n  { n: 1 },\n  { n: 6 },\n  { n: 7 },\n]) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]\nR.pipe(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }], // only 4 iterations\n  R.uniq((obj) => obj.n),\n  R.take(3)\n) // => [{n: 1}, {n: 2}, {n: 5}]\n",
+        "example": "R.uniqBy(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],\n  (obj) => obj.n,\n) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]\nR.pipe(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }], // only 4 iterations\n  R.uniqBy((obj) => obj.n),\n  R.take(3)\n) // => [{n: 1}, {n: 2}, {n: 5}]\n",
         "args": [
           {
             "name": "transformer"
