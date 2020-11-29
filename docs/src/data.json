@@ -2197,7 +2197,7 @@
     "methods": [
       {
         "tag": null,
-        "signature": "R.uniqBy(fn, array)\n",
+        "signature": "R.uniqBy(array, fn)\n",
         "category": "Array",
         "indexed": false,
         "pipeable": true,
