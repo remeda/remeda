@@ -11,12 +11,15 @@ export function uniqBy<T, K>(
  * Elements are compared by reference using Set.
  * @param array
  * @signature
- *    R.uniqBy(fn, array)
+ *    R.uniqBy(array, fn)
  * @example
- *    R.uniq(obj => obj.n, [{n: 1}, {n: 2}, {n: 2}, {n: 5}, {n: 1}, {n: 6}, {n: 7}]) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
+ *    R.uniqBy(
+ *     [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],
+ *     (obj) => obj.n,
+ *    ) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
  *    R.pipe(
  *      [{n: 1}, {n: 2}, {n: 2}, {n: 5}, {n: 1}, {n: 6}, {n: 7}], // only 4 iterations
- *      R.uniq(obj => obj.n),
+ *      R.uniqBy(obj => obj.n),
  *      R.take(3)
  *    ) // => [{n: 1}, {n: 2}, {n: 5}]
  * @pipeable
