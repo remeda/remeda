@@ -18,7 +18,7 @@ export function mapValues<T extends object, S>(
  * Maps values of `object` and keeps the same keys.
  * @param fn the mapping function
  * @signature
- *    R.mapKeys(fn)(object)
+ *    R.mapValues(fn)(object)
  * @example
  *    R.pipe({a: 1, b: 2}, R.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
  * @data_last
