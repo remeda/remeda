@@ -57,6 +57,7 @@ export * from './splitAt';
 export * from './splitWhen';
 export * from './take';
 export * from './takeWhile';
+export * from './tap';
 export * from './times';
 export * from './toPairs';
 export * from './type';
