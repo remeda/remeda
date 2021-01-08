@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Runs the given function with the supplied object, then returns the object.
@@ -24,10 +25,23 @@ export function tap<T>(x: T, fn: (x: T) => void): T;
 export function tap<T>(fn: (x: T) => void): (x: T) => T;
 
 export function tap() {
-  return purry(_tap, arguments);
+  return purry(_tap, arguments, tap.lazy);
 }
 
-export function _tap<T>(x: T, fn: (x: T) => void): T {
+export function _tap<T>(x: any, fn: (x: T) => void) {
   fn(x);
   return x;
+}
+
+export namespace tap {
+  export function lazy(fn: (value: any) => any) {
+    return (value: any): LazyResult<any> => {
+      fn(value);
+      return {
+        done: false,
+        hasNext: true,
+        next: value,
+      };
+    };
+  }
 }
