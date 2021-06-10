@@ -22,12 +22,12 @@ type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
  *    // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
  *
  *    R.sortBy(
- *     const objects = [
+ *     [
  *       {color: 'red', weight: 2},
  *       {color: 'blue', weight: 3},
  *       {color: 'green', weight: 1},
  *       {color: 'purple', weight: 1},
- *     ];
+ *     ],
  *      x => x.weight, 'asc', x.color, 'desc'
  *    )
  *    // =>
