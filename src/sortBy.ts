@@ -4,6 +4,8 @@ type Direction = 'asc' | 'desc';
 type SortProjection<T> = (x: T) => Sortable;
 type SortablePrimitive = number | string;
 type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
+type SortPair<T> = [SortProjection<T>, Direction];
+type SortRule<T> = SortProjection<T> | SortPair<T>;
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -11,9 +13,9 @@ type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
  *
  * Directions are applied to functions in order and default to ascending if not specified.
  * @param array the array to sort
- * @param fnDirs a list of mapping functions and directions
+ * @param sorts a list of mapping functions and optional directions
  * @signature
- *    R.sortBy(array, ...fnDirs)
+ *    R.sortBy(array, ...sorts)
  * @example
  *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -28,7 +30,7 @@ type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
  *       {color: 'green', weight: 1},
  *       {color: 'purple', weight: 1},
  *     ],
- *      x => x.weight, 'asc', x.color, 'desc'
+ *      [x => x.weight, 'asc'], x => x.color
  *    )
  *    // =>
  *    //   {color: 'purple', weight: 1},
@@ -39,8 +41,8 @@ type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
  * @category Array
  */
 export function sortBy<T>(
-  array: readonly T[],
-  ...fnDirs: (SortProjection<T> | Direction)[]
+    array: readonly T[],
+    ...sorts: SortRule<T>[]
 ): T[];
 
 /**
@@ -48,10 +50,10 @@ export function sortBy<T>(
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
- * @param fnDir first mapping function or direction
- * @param fnDirs additional mapping function
+ * @param sort first sort rule
+ * @param sorts additional sort rules
  * @signature
- *    R.sortBy(...fnDirs)(array)
+ *    R.sortBy(...sorts)(array)
  * @example
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -61,35 +63,46 @@ export function sortBy<T>(
  * @category Array
  */
 export function sortBy<T>(
-  fnDir: SortProjection<T> | Direction,
-  ...fnDirs: (SortProjection<T> | Direction)[]
+    sort: SortRule<T>,
+    ...sorts: SortRule<T>[]
 ): (array: readonly T[]) => T[];
 
-export function sortBy() {
-  if (Array.isArray(arguments[0])) {
-    return purry(_sortBy, [arguments[0], Array.from(arguments).slice(1)]);
+export function sortBy<T>(
+    arrayOrSort: readonly T[] | SortRule<T>,
+    ...sorts: SortRule<T>[]
+): any {
+  if (!isSortRule(arrayOrSort)) {
+    const array: readonly T[] = arrayOrSort as unknown as readonly T[];
+    return purry(_sortBy, [array, sorts]) as T[];
   }
-  return purry(_sortBy, [Array.from(arguments)]);
+  const sort = arrayOrSort as SortRule<T>;
+  return purry(_sortBy, [[sort, ...sorts]]) as (arr: readonly T[]) => T[];
+}
+
+function isSortRule<T> (x: readonly T[] | SortRule<T>): boolean {
+  if (typeof(x) == 'function') return true; // must be a SortProjection
+  if (x.length != 2) return false; // cannot be a SortRule
+  return (typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc'));
 }
 
 function _sortBy<T>(
   array: T[],
-  fnDirs: (SortProjection<T> | Direction)[]
+  sorts: SortRule<T>[]
 ): T[] {
-  let _fns: SortProjection<T>[] = fnDirs.filter(
-    x => x instanceof Function
-  ) as SortProjection<T>[];
-  const _directions: Direction[] = fnDirs.filter(
-    x => !(x instanceof Function)
-  ) as Direction[];
   const sort = (
     a: T,
     b: T,
-    fn: SortProjection<T>,
-    fns: SortProjection<T>[],
-    direction: Direction,
-    directions: Direction[]
+    sortRule: SortRule<T>,
+    sortRules: SortRule<T>[]
   ): number => {
+    let fn: SortProjection<T>;
+    let direction: Direction;
+    if(Array.isArray(sortRule)) {
+      [fn, direction] = (sortRule as SortPair<T>);
+    } else {
+      direction = 'asc';
+      fn = sortRule as SortProjection<T>;
+    }
     const dir: (x: Sortable, y: Sortable) => boolean =
       direction !== 'desc' ? (x, y) => x > y : (x, y) => x < y;
     if (!fn) {
@@ -101,10 +114,10 @@ function _sortBy<T>(
     if (dir(fn(b), fn(a))) {
       return -1;
     }
-    return sort(a, b, fns[0], fns.slice(1), directions[0], directions.slice(1));
+    return sort(a, b, sortRules[0], sortRules.slice(1));
   };
   const copied = [...array];
   return copied.sort((a: T, b: T) =>
-    sort(a, b, _fns[0], _fns.slice(1), _directions[0], _directions.slice(1))
+    sort(a, b, sorts[0], sorts.slice(1))
   );
 }
