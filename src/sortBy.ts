@@ -1,9 +1,9 @@
 import { purry } from './purry';
 
 type Direction = 'asc' | 'desc';
-type SortProjection<T> = (x: T) => Sortable;
-type SortablePrimitive = number | string;
-type Sortable = SortablePrimitive | { valueOf(): SortablePrimitive };
+type SortProjection<T> = (x: T) => Comparable;
+type ComparablePrimitive = number | string | boolean;
+type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
 type SortPair<T> = [SortProjection<T>, Direction];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
 
@@ -72,14 +72,12 @@ export function sortBy<T>(
     ...sorts: SortRule<T>[]
 ): any {
   if (!isSortRule(arrayOrSort)) {
-    const array: readonly T[] = arrayOrSort as unknown as readonly T[];
-    return purry(_sortBy, [array, sorts]) as T[];
+    return purry(_sortBy, [arrayOrSort, sorts]) as T[];
   }
-  const sort = arrayOrSort as SortRule<T>;
-  return purry(_sortBy, [[sort, ...sorts]]) as (arr: readonly T[]) => T[];
+  return purry(_sortBy, [[arrayOrSort, ...sorts]]) as (arr: readonly T[]) => T[];
 }
 
-function isSortRule<T> (x: readonly T[] | SortRule<T>): boolean {
+function isSortRule<T> (x: readonly T[] | SortRule<T>): x is SortRule<T> {
   if (typeof(x) == 'function') return true; // must be a SortProjection
   if (x.length != 2) return false; // cannot be a SortRule
   return (typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc'));
@@ -103,7 +101,7 @@ function _sortBy<T>(
       direction = 'asc';
       fn = sortRule as SortProjection<T>;
     }
-    const dir: (x: Sortable, y: Sortable) => boolean =
+    const dir: (x: Comparable, y: Comparable) => boolean =
       direction !== 'desc' ? (x, y) => x > y : (x, y) => x < y;
     if (!fn) {
       return 0;
