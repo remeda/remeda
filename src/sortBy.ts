@@ -4,7 +4,7 @@ type Direction = 'asc' | 'desc';
 type SortProjection<T> = (x: T) => Comparable;
 type ComparablePrimitive = number | string | boolean;
 type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
-type SortPair<T> = [SortProjection<T>, Direction];
+type SortPair<T> = readonly [SortProjection<T>, Direction];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
 
 /**
