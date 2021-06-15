@@ -21,6 +21,7 @@ export * from './flattenDeep';
 export * from './forEach';
 export * from './forEachObj';
 export * from './groupBy';
+export * from './guards';
 export * from './identity';
 export * from './indexBy';
 export * from './intersection';
