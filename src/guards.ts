@@ -83,8 +83,8 @@ export function isPromise<T>(data: T): data is Extract<T, Promise<any>> {
  *    R.isArray(data)
  * @returns true if the passed input is an Array, false otherwise
  * @example
- *    R.isArray([5])) //=> true
- *    R.isArray([])) //=> true
+ *    R.isArray([5]) //=> true
+ *    R.isArray([]) //=> true
  *    R.isArray('somethingElse') //=> false
  * @category Guard
  */
@@ -101,7 +101,7 @@ export function isArray<T>(
  *    R.isObject(data)
  * @returns true if the passed input is an Object, false otherwise
  * @example
- *    R.isObject({})) //=> true
+ *    R.isObject({}) //=> true
  *    R.isObject('somethingElse') //=> false
  * @category Guard
  */
