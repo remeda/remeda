@@ -11,7 +11,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function omit<T extends {}, K extends keyof T>(
+export function omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   object: T,
   names: readonly K[]
 ): Omit<T, K>;
@@ -27,7 +27,7 @@ export function omit<T extends {}, K extends keyof T>(
  * @data_last
  * @category Object
  */
-export function omit<T extends {}, K extends keyof T>(
+export function omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   names: readonly K[]
 ): (object: T) => Omit<T, K>;
 
@@ -35,7 +35,7 @@ export function omit() {
   return purry(_omit, arguments);
 }
 
-function _omit<T extends {}, K extends keyof T>(
+function _omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   object: T,
   names: K[]
 ): Omit<T, K> {

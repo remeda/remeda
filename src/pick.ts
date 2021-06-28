@@ -10,7 +10,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function pick<T extends {}, K extends keyof T>(
+export function pick<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   object: T,
   names: readonly K[]
 ): Pick<T, K>;
@@ -24,7 +24,7 @@ export function pick<T extends {}, K extends keyof T>(
  * @data_last
  * @category Object
  */
-export function pick<T extends {}, K extends keyof T>(
+export function pick<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   names: readonly K[]
 ): (object: T) => Pick<T, K>;
 
