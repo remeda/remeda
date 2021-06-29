@@ -9,7 +9,7 @@
  * @data_first
  * @category Object
  */
-export function mapKeys<T, S extends string | number | symbol>(
+export function mapKeys<T, S extends keyof any>(
   object: T,
   fn: (key: keyof T, value: T[keyof T]) => S
 ): Record<S, T[keyof T]>;
@@ -24,7 +24,7 @@ export function mapKeys<T, S extends string | number | symbol>(
  * @data_last
  * @category Object
  */
-export function mapKeys<T, S extends string | number | symbol>(
+export function mapKeys<T, S extends keyof any>(
   fn: (key: keyof T, value: T[keyof T]) => S
 ): (object: T) => Record<S, T[keyof T]>;
 

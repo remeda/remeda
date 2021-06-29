@@ -37,7 +37,9 @@ function _pick(object: any, names: string[]) {
     return {};
   }
   return names.reduce((acc, name) => {
-    acc[name] = object[name];
+    if (name in object) {
+      acc[name] = object[name];
+    }
     return acc;
   }, {} as any);
 }
