@@ -1,6 +1,4 @@
-function isTruthy<T>(value: T | null | undefined | false | '' | 0): value is T {
-  return !!value;
-}
+import { isTruthy } from './guards';
 
 /**
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.
