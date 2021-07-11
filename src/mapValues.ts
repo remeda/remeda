@@ -9,7 +9,7 @@
  * @data_first
  * @category Object
  */
-export function mapValues<T extends object, S>(
+export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   object: T,
   fn: (value: T[keyof T], key: keyof T) => S
 ): Record<keyof T, S>;
@@ -24,7 +24,7 @@ export function mapValues<T extends object, S>(
  * @data_last
  * @category Object
  */
-export function mapValues<T extends object, S>(
+export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   fn: (value: T[keyof T], key: keyof T) => S
 ): (object: T) => Record<keyof T, S>;
 
