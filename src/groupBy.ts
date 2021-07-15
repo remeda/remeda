@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { PredIndexedOptional, PredIndexed } from './_types';
+import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -16,11 +16,11 @@ import { PredIndexedOptional, PredIndexed } from './_types';
 export function groupBy<T>(
   items: readonly T[],
   fn: (item: T) => any
-): Record<string, T[]>;
+): Record<string, NonEmptyArray<T>>;
 
 export function groupBy<T>(
   fn: (item: T) => any
-): (array: readonly T[]) => Record<string, T[]>;
+): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -57,10 +57,10 @@ export namespace groupBy {
   export function indexed<T, K>(
     array: readonly T[],
     fn: PredIndexed<T, any>
-  ): Record<string, T[]>;
+  ): Record<string, NonEmptyArray<T>>;
   export function indexed<T, K>(
     fn: PredIndexed<T, any>
-  ): (array: readonly T[]) => Record<string, T[]>;
+  ): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
