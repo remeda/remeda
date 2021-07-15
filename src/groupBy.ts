@@ -15,12 +15,12 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
  */
 export function groupBy<T>(
   items: readonly T[],
-  fn: (item: T) => any
-): Record<string, NonEmptyArray<T>>;
+  fn: (item: T) => PropertyKey
+): Record<PropertyKey, NonEmptyArray<T>>;
 
 export function groupBy<T>(
-  fn: (item: T) => any
-): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
+  fn: (item: T) => PropertyKey
+): (array: readonly T[]) => Record<PropertyKey, NonEmptyArray<T>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -56,10 +56,10 @@ const _groupBy = (indexed: boolean) => <T>(
 export namespace groupBy {
   export function indexed<T, K>(
     array: readonly T[],
-    fn: PredIndexed<T, any>
+    fn: PredIndexed<T, PropertyKey>
   ): Record<string, NonEmptyArray<T>>;
   export function indexed<T, K>(
-    fn: PredIndexed<T, any>
+    fn: PredIndexed<T, PropertyKey>
   ): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
