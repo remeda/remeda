@@ -17,3 +17,5 @@ export type AssertEqual<Type, Expected> = Type extends Expected
     ? true
     : never
   : never;
+
+export type NonEmptyArray<T> = [T, ...T[]];
