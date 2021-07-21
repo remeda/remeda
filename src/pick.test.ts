@@ -13,11 +13,15 @@ describe('data first', () => {
   });
   test('support inherited properties', () => {
     class BaseClass {
-      testProp() {return 'abc'};
+      testProp() {
+        return 'abc';
+      }
     }
-    class TestClass extends BaseClass { }
+    class TestClass extends BaseClass {}
     const testClass = new TestClass();
-    expect(pick(testClass, ['testProp'])).toEqual({ testProp: expect.any(Function) })
+    expect(pick(testClass, ['testProp'])).toEqual({
+      testProp: expect.any(Function),
+    });
   });
 });
 
