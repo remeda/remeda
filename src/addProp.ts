@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function addProp<T extends Record<PropertyKey, unknown>, K extends string, V>(
+export function addProp<T extends Record<PropertyKey, any>, K extends string, V>(
   obj: T,
   prop: K,
   value: V
@@ -29,7 +29,7 @@ export function addProp<T extends Record<PropertyKey, unknown>, K extends string
  * @data_last
  * @category Object
  */
-export function addProp<T extends Record<PropertyKey, unknown>, K extends string, V>(
+export function addProp<T extends Record<PropertyKey, any>, K extends string, V>(
   prop: K,
   value: V
 ): (obj: T) => T & { [x in K]: V };
