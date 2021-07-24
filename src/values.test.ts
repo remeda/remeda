@@ -1,6 +1,6 @@
 import { values } from './values';
 
-describe('Test for values', () => {
+describe('Test for values as data first', () => {
   it('should return values of array', () => {
     expect(values(['x', 'y', 'z'])).toEqual(['x', 'y', 'z']);
   });

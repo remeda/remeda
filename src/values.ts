@@ -23,11 +23,6 @@ function _values<T>(object: { [key: string]: T } | ArrayLike<T>) {
 // data-first
 export function values<T>(object: { [key: string]: T } | ArrayLike<T>): T[];
 
-// data-last
-export function values<T>(): (
-  object: { [key: string]: T } | ArrayLike<T>
-) => T[];
-
 export function values() {
   return purry(_values, arguments);
 }
