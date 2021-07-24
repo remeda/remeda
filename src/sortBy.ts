@@ -40,7 +40,10 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * @data_first
  * @category Array
  */
-export function sortBy<T>(array: readonly T[], ...sorts: SortRule<T>[]): T[];
+export function sortBy<T>(
+    array: readonly T[],
+    ...sorts: SortRule<T>[]
+): T[];
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -60,29 +63,30 @@ export function sortBy<T>(array: readonly T[], ...sorts: SortRule<T>[]): T[];
  * @category Array
  */
 export function sortBy<T>(
-  sort: SortRule<T>,
-  ...sorts: SortRule<T>[]
+    sort: SortRule<T>,
+    ...sorts: SortRule<T>[]
 ): (array: readonly T[]) => T[];
 
 export function sortBy<T>(
-  arrayOrSort: readonly T[] | SortRule<T>,
-  ...sorts: SortRule<T>[]
+    arrayOrSort: readonly T[] | SortRule<T>,
+    ...sorts: SortRule<T>[]
 ): any {
   if (!isSortRule(arrayOrSort)) {
     return purry(_sortBy, [arrayOrSort, sorts]) as T[];
   }
-  return purry(_sortBy, [[arrayOrSort, ...sorts]]) as (
-    arr: readonly T[]
-  ) => T[];
+  return purry(_sortBy, [[arrayOrSort, ...sorts]]) as (arr: readonly T[]) => T[];
 }
 
-function isSortRule<T>(x: readonly T[] | SortRule<T>): x is SortRule<T> {
-  if (typeof x == 'function') return true; // must be a SortProjection
+function isSortRule<T> (x: readonly T[] | SortRule<T>): x is SortRule<T> {
+  if (typeof(x) == 'function') return true; // must be a SortProjection
   if (x.length != 2) return false; // cannot be a SortRule
-  return typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc');
+  return (typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc'));
 }
 
-function _sortBy<T>(array: T[], sorts: SortRule<T>[]): T[] {
+function _sortBy<T>(
+  array: T[],
+  sorts: SortRule<T>[]
+): T[] {
   const sort = (
     a: T,
     b: T,
@@ -91,8 +95,8 @@ function _sortBy<T>(array: T[], sorts: SortRule<T>[]): T[] {
   ): number => {
     let fn: SortProjection<T>;
     let direction: Direction;
-    if (Array.isArray(sortRule)) {
-      [fn, direction] = sortRule as SortPair<T>;
+    if(Array.isArray(sortRule)) {
+      [fn, direction] = (sortRule as SortPair<T>);
     } else {
       direction = 'asc';
       fn = sortRule as SortProjection<T>;
@@ -111,5 +115,7 @@ function _sortBy<T>(array: T[], sorts: SortRule<T>[]): T[] {
     return sort(a, b, sortRules[0], sortRules.slice(1));
   };
   const copied = [...array];
-  return copied.sort((a: T, b: T) => sort(a, b, sorts[0], sorts.slice(1)));
+  return copied.sort((a: T, b: T) =>
+    sort(a, b, sorts[0], sorts.slice(1))
+  );
 }

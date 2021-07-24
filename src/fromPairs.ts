@@ -9,12 +9,8 @@
  *   R.fromPairs([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'}
  * @category Object
  */
-export function fromPairs<V>(
-  tuples: ReadonlyArray<[number, V]>
-): Record<number, V>;
-export function fromPairs<V>(
-  tuples: ReadonlyArray<[string, V]>
-): Record<string, V>;
+export function fromPairs<V>(tuples: ReadonlyArray<[number, V]>): Record<number, V>;
+export function fromPairs<V>(tuples: ReadonlyArray<[string, V]>): Record<string, V>;
 
 export function fromPairs(tuples: ReadonlyArray<[string | number, unknown]>) {
   return tuples.reduce<Record<string | number, unknown>>((acc, curr) => {

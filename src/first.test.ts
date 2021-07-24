@@ -9,7 +9,7 @@ function defaultTo<T>(d: T) {
   };
 }
 
-test('should return first item', () => {
+test('should return last', () => {
   expect(first([1, 2, 3] as const)).toEqual(1);
 });
 
