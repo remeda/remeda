@@ -13,7 +13,7 @@ function _keys<T>(object: { [key: string]: T } | ArrayLike<T>) {
  *    R.keys(['x', 'y', 'z']) // => ['1', '2', '3']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.pipe(
- *      { a: 'x', b: 'y', c: 'z' }, // only 4 iterations
+ *      { a: 'x', b: 'y', c: 'z' },
  *      R.values,
  *      R.first
  *    ) // => 'a'
