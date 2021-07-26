@@ -1,14 +1,8 @@
-import { purry } from './purry';
-
-function _keys<T>(object: { [key: string]: T } | ArrayLike<T>) {
-  return Object.keys(object) as string[];
-}
-
 /**
  * Returns a new array containing the keys of the array or object.
- * @param object
+ * @param source Either an array or an object
  * @signature
- *    R.keys(object)
+ *    R.keys(source)
  * @example
  *    R.keys(['x', 'y', 'z']) // => ['1', '2', '3']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
@@ -20,9 +14,7 @@ function _keys<T>(object: { [key: string]: T } | ArrayLike<T>) {
  * @pipeable
  * @category Object
  */
-// data-first
-export function keys<T>(object: { [key: string]: T } | ArrayLike<T>): string[];
 
-export function keys() {
-  return purry(_keys, arguments);
+export function keys<T>(source: Record<PropertyKey, T> | ArrayLike<T>) {
+  return Object.keys(source) as string[];
 }
