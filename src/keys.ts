@@ -8,7 +8,7 @@
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.pipe(
  *      { a: 'x', b: 'y', c: 'z' },
- *      R.values,
+ *      R.keys,
  *      R.first
  *    ) // => 'a'
  * @pipeable
