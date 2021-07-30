@@ -421,7 +421,7 @@
         "category": "Array",
         "indexed": false,
         "pipeable": true,
-        "example": "R.drop([1, 2, 3, 4, 5], 2) // => [1, 2, 3]\n",
+        "example": "R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]\n",
         "args": [
           {
             "name": "array",
@@ -443,7 +443,7 @@
         "category": "Array",
         "indexed": false,
         "pipeable": true,
-        "example": "R.drop(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]\n",
+        "example": "R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]\n",
         "args": [
           {
             "name": "n",
