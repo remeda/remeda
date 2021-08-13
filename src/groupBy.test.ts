@@ -1,3 +1,4 @@
+import { AssertEqual } from 'src/_types';
 import { groupBy } from './groupBy';
 import { pipe } from './pipe';
 
@@ -41,5 +42,26 @@ describe('data last', () => {
         groupBy.indexed(x => x.a)
       )
     ).toEqual(expected);
+  });
+});
+
+describe('groupBy typings', () => {
+  test('keys should be strictly inferred', () => {
+    const actual = groupBy(array, x => x.a);
+    const result: AssertEqual<keyof typeof actual, 1 | 2> = true;
+    expect(result).toEqual(true);
+  });
+  test('keys should be strictly inferred for indexed version', () => {
+    const actual = groupBy.indexed(array, x => x.a);
+    const result: AssertEqual<keyof typeof actual, 1 | 2> = true;
+    expect(result).toEqual(true);
+  });
+  test('keys should be strictly inferred for data last version', () => {
+    const actual = pipe(
+      array,
+      groupBy(x => x.a)
+    );
+    const result: AssertEqual<keyof typeof actual, 1 | 2> = true;
+    expect(result).toEqual(true);
   });
 });
