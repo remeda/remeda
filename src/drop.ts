@@ -8,7 +8,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @signature
  *    R.drop(array, n)
  * @example
- *    R.drop([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
+ *    R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @data_first
  * @pipeable
  * @category Array
@@ -22,7 +22,7 @@ export function drop<T>(array: readonly T[], n: number): T[];
  * @signature
  *    R.drop(n)(array)
  * @example
- *    R.drop(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
+ *    R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @data_last
  * @pipeable
  * @category Array
