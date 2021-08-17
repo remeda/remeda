@@ -1,3 +1,4 @@
+import { AssertEqual } from 'src/_types';
 import {
   isString,
   isBoolean,
@@ -26,10 +27,6 @@ type TestObj =
   | Error
   | number
   | Promise<number>;
-
-function assertType<T>(data: T): T {
-  return data;
-}
 
 const dataProvider = (
   t:
@@ -70,12 +67,33 @@ const dataProvider = (
   return 'text';
 };
 
-describe('Describe guards behavior', () => {
+describe('isString', () => {
   test('isString: should work as type guard', () => {
     const data = dataProvider('string');
     if (isString(data)) {
       expect(typeof data).toEqual('string');
-      assertType<string>(data);
+      const result: AssertEqual<typeof data, string> = true;
+      expect(result).toEqual(true);
+    }
+  });
+  test('isString: should work even if data type is unknown', () => {
+    const data: unknown = dataProvider('string');
+    if (isString(data)) {
+      expect(typeof data).toEqual('string');
+      const result: AssertEqual<typeof data, string> = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('isString: should work with literal types', () => {
+    const data = (): 'a' | 'b' | 'c' | number => {
+      return 'a';
+    };
+    const x = data();
+    if (isString(x)) {
+      expect(typeof x).toEqual('string');
+      const result: AssertEqual<typeof x, 'a' | 'b' | 'c'> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isString: should work as type guard in array', () => {
@@ -88,13 +106,32 @@ describe('Describe guards behavior', () => {
       dataProvider('boolean'),
     ].filter(isString);
     expect(data.every(c => typeof c === 'string')).toEqual(true);
-    assertType<string[]>(data);
+    const result: AssertEqual<typeof data, string[]> = true;
+    expect(result).toEqual(true);
   });
+});
+
+describe('isBoolean', () => {
   test('isBoolean: should work as type guard', () => {
     const data = dataProvider('boolean');
     if (isBoolean(data)) {
       expect(typeof data).toEqual('boolean');
-      assertType<boolean>(data);
+      const result: AssertEqual<typeof data, boolean> = true;
+      expect(result).toEqual(true);
+    }
+
+    const data1: unknown = dataProvider('boolean');
+    if (isBoolean(data1)) {
+      expect(typeof data1).toEqual('boolean');
+      const result: AssertEqual<typeof data1, boolean> = true;
+      expect(result).toEqual(true);
+    }
+
+    const data2: any = dataProvider('boolean');
+    if (isBoolean(data2)) {
+      expect(typeof data2).toEqual('boolean');
+      const result: AssertEqual<typeof data2, boolean> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isBoolean: should work as type guard in filter', () => {
@@ -107,13 +144,24 @@ describe('Describe guards behavior', () => {
       dataProvider('boolean'),
     ].filter(isBoolean);
     expect(data.every(c => typeof c === 'boolean')).toEqual(true);
-    assertType<boolean[]>(data);
+    const result: AssertEqual<typeof data, boolean[]> = true;
+    expect(result).toEqual(true);
   });
+});
+
+describe('isArray', () => {
   test('isArray: should work as type guard', () => {
     const data = dataProvider('array');
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
-      assertType<number[]>(data);
+      const result: AssertEqual<typeof data, number[]> = true;
+      expect(result).toEqual(true);
+    }
+
+    const data1: unknown = dataProvider('array');
+    if (isArray(data1)) {
+      const result: AssertEqual<typeof data1, readonly unknown[]> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isArray: should work as type guard in filter', () => {
@@ -126,13 +174,24 @@ describe('Describe guards behavior', () => {
       dataProvider('date'),
     ].filter(isArray);
     expect(data.every(c => Array.isArray(c))).toEqual(true);
-    assertType<number[][]>(data);
+    const result: AssertEqual<typeof data, number[][]> = true;
+    expect(result).toEqual(true);
   });
+});
+
+describe('isDate', () => {
   test('isDate: should work as type guard', () => {
     const data = dataProvider('date');
     if (isDate(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<Date>(data);
+      const result: AssertEqual<typeof data, Date> = true;
+      expect(result).toEqual(true);
+    }
+
+    const data1: unknown = dataProvider('date');
+    if (isDate(data1)) {
+      const result: AssertEqual<typeof data1, Date> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isDate: should work as type guard in filter', () => {
@@ -145,13 +204,17 @@ describe('Describe guards behavior', () => {
       dataProvider('date'),
     ].filter(isDate);
     expect(data.every(c => c instanceof Date)).toEqual(true);
-    assertType<Date[]>(data);
+    const result: AssertEqual<typeof data, Date[]> = true;
+    expect(result).toEqual(true);
   });
+});
+describe('isDefined', () => {
   test('isDefined": should work as type guard', () => {
     const data = dataProvider('date');
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<
+      const result: AssertEqual<
+        typeof data,
         | boolean
         | string
         | { a: string }
@@ -161,7 +224,8 @@ describe('Describe guards behavior', () => {
         | Error
         | number
         | Promise<number>
-      >(data);
+      > = true;
+      expect(result).toEqual(true);
     }
   });
   test('isDefined: should work as type guard in filter', () => {
@@ -173,7 +237,8 @@ describe('Describe guards behavior', () => {
       dataProvider('number'),
     ].filter(isDefined);
     expect(data.length === 4).toEqual(true);
-    assertType<
+    const result: AssertEqual<
+      typeof data,
       (
         | string
         | number
@@ -187,13 +252,18 @@ describe('Describe guards behavior', () => {
         | Error
         | Promise<number>
       )[]
-    >(data);
+    > = true;
+    expect(result).toEqual(true);
   });
+});
+
+describe('isNil', () => {
   test('isNil: should work as type guard', () => {
     const data = dataProvider('null');
     if (isNil(data)) {
       expect(data).toEqual(null);
-      assertType<undefined | null>(data);
+      const result: AssertEqual<typeof data, undefined | null> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isNil: should work as type guard in filter', () => {
@@ -206,13 +276,28 @@ describe('Describe guards behavior', () => {
       dataProvider('number'),
     ].filter(isNil);
     expect(data.every(c => c == null)).toEqual(true);
-    assertType<(null | undefined)[]>(data);
+    const result: AssertEqual<typeof data, (undefined | null)[]> = true;
+    expect(result).toEqual(true);
   });
+});
+
+describe('isFunction', () => {
   test('isFunction: should work as type guard', () => {
     const data = dataProvider('null');
     if (isFunction(data)) {
       expect(data).toEqual(null);
-      assertType<() => void>(data);
+      const result: AssertEqual<typeof data, () => void> = true;
+      expect(result).toEqual(true);
+    }
+
+    let maybeFunction: string | ((a: number) => string) | undefined;
+    if (isFunction(maybeFunction)) {
+      maybeFunction(1);
+      const result1: AssertEqual<
+        typeof maybeFunction,
+        (a: number) => string
+      > = true;
+      expect(result1).toEqual(true);
     }
   });
   test('isFunction: should work as type guard in filter', () => {
@@ -225,13 +310,25 @@ describe('Describe guards behavior', () => {
       dataProvider('number'),
     ].filter(isFunction);
     expect(data.every(c => typeof c === 'function')).toEqual(true);
-    assertType<(() => void)[]>(data);
+    const result: AssertEqual<typeof data, (() => void)[]> = true;
+    expect(result).toEqual(true);
   });
+});
+describe('isError', () => {
   test('isError: should work as type guard', () => {
     const data = dataProvider('error');
     if (isError(data)) {
       expect(data instanceof Error).toEqual(true);
-      assertType<Error>(data);
+      const result: AssertEqual<typeof data, Error> = true;
+      expect(result).toEqual(true);
+    }
+
+    class MyError extends Error {}
+
+    let maybeError: MyError | undefined;
+    if (isError(maybeError)) {
+      const result1: AssertEqual<typeof maybeError, MyError> = true;
+      expect(result1).toEqual(true);
     }
   });
   test('isError: should work as type guard in filter', () => {
@@ -244,13 +341,17 @@ describe('Describe guards behavior', () => {
       dataProvider('number'),
     ].filter(isError);
     expect(data.every(c => c instanceof Error)).toEqual(true);
-    assertType<Error[]>(data);
+    const result: AssertEqual<typeof data, Error[]> = true;
+    expect(result).toEqual(true);
   });
+});
+describe('isNumber', () => {
   test('isNumber: should work as type guard', () => {
     const data = dataProvider('number');
     if (isNumber(data)) {
       expect(typeof data).toEqual('number');
-      assertType<number>(data);
+      const result: AssertEqual<typeof data, number> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isNumber: should work as type guard in filter', () => {
@@ -263,16 +364,82 @@ describe('Describe guards behavior', () => {
       dataProvider('number'),
     ].filter(isNumber);
     expect(data.every(c => typeof c === 'number')).toEqual(true);
-    assertType<number[]>(data);
+    const result: AssertEqual<typeof data, number[]> = true;
+    expect(result).toEqual(true);
   });
+  test('should work even if data type is unknown', () => {
+    const data: unknown = dataProvider('number');
+    if (isNumber(data)) {
+      expect(typeof data).toEqual('number');
+      const result: AssertEqual<typeof data, number> = true;
+      expect(result).toEqual(true);
+    }
+  });
+  test('should work with literal types', () => {
+    const data = (): 1 | 2 | 3 | string => {
+      return 1;
+    };
+    const x = data();
+    if (isNumber(x)) {
+      expect(typeof x).toEqual('number');
+      const result: AssertEqual<typeof x, 1 | 2 | 3> = true;
+      expect(result).toEqual(true);
+    }
+  });
+});
 
+describe('isObject', () => {
   test('isObject: should work as type guard', () => {
     const data = dataProvider('object');
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
-      assertType<{ a: string }>(data);
+      const result: AssertEqual<
+        typeof data,
+        {
+          a: string;
+        }
+      > = true;
+      expect(result).toEqual(true);
     }
   });
+
+  test('isObject: should work as type guard', () => {
+    const data = { data: 5 } as ReadonlyArray<number> | { data: 5 };
+    if (isObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<
+        typeof data,
+        {
+          data: 5;
+        }
+      > = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('isObject: should work as type guard', () => {
+    const data = { data: 5 } as Array<number> | { data: number };
+    if (isObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<
+        typeof data,
+        {
+          data: number;
+        }
+      > = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('should work even if data type is unknown', () => {
+    const data: unknown = dataProvider('object');
+    if (isObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<typeof data, Record<string, unknown>> = true;
+      expect(result).toEqual(true);
+    }
+  });
+
   test('isObject: should work as type guard in filter', () => {
     const data = [
       dataProvider('promise'),
@@ -284,14 +451,22 @@ describe('Describe guards behavior', () => {
     expect(data.every(c => typeof c === 'object' && !Array.isArray(c))).toEqual(
       true
     );
-    assertType<{ a: string }[]>(data);
+    const result: AssertEqual<
+      typeof data,
+      {
+        a: string;
+      }[]
+    > = true;
+    expect(result).toEqual(true);
   });
-
+});
+describe('isPromise', () => {
   test('isPromise: should work as type guard', () => {
     const data = dataProvider('promise');
     if (isPromise(data)) {
       expect(data instanceof Promise).toEqual(true);
-      assertType<Promise<number>>(data);
+      const result: AssertEqual<typeof data, Promise<number>> = true;
+      expect(result).toEqual(true);
     }
   });
   test('isPromise: should work as type guard in filter', () => {
@@ -302,20 +477,27 @@ describe('Describe guards behavior', () => {
       dataProvider('function'),
     ].filter(isPromise);
     expect(data.every(c => c instanceof Promise)).toEqual(true);
-    assertType<Promise<number>[]>(data);
+    const result: AssertEqual<typeof data, Promise<number>[]> = true;
+    expect(result).toEqual(true);
   });
-
+});
+describe('isTruthy', () => {
   test('isTruthy', () => {
     const data: false | '' | 0 | { a: string } = { a: 'asd' };
     if (isTruthy(data)) {
       expect(data).toEqual({ a: 'asd' });
-      assertType<{ a: string }>(data);
+      const result: AssertEqual<typeof data, { a: string }> = true;
+      expect(result).toEqual(true);
     }
   });
+});
+describe('isNot', () => {
   test('isNot: should work as type guard', () => {
     const data = dataProvider('promise');
     if (isNot(isString)(data)) {
-      assertType<
+      expect(data instanceof Promise).toEqual(true);
+      const result: AssertEqual<
+        typeof data,
         | number
         | boolean
         | {
@@ -328,8 +510,8 @@ describe('Describe guards behavior', () => {
         | Promise<number>
         | null
         | undefined
-      >(data);
-      expect(data instanceof Promise).toEqual(true);
+      > = true;
+      expect(result).toEqual(true);
     }
   });
   test('isNot: should work as type guard in filter', () => {
@@ -341,7 +523,9 @@ describe('Describe guards behavior', () => {
     ];
     const result = data.filter(isNot(isPromise));
     expect(result.some(c => c instanceof Promise)).toEqual(false);
-    assertType<
+
+    const resultType: AssertEqual<
+      typeof result,
       (
         | boolean
         | string
@@ -354,6 +538,7 @@ describe('Describe guards behavior', () => {
         | Error
         | number
       )[]
-    >(result);
+    > = true;
+    expect(resultType).toEqual(true);
   });
 });

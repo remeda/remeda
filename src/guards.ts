@@ -1,3 +1,9 @@
+type DefinitelyString<T> = Extract<T, string> extends never
+  ? string
+  : Extract<T, string> extends any
+  ? string
+  : Extract<T, string>;
+
 /**
  * A function that checks if the passed parameter is a string and narrows it's type accordingly
  * @param data the variable to check
@@ -9,9 +15,15 @@
  *    R.iString(1) //=> false
  * @category Guard
  */
-export function isString<T>(data: T): data is Extract<T, string> {
+export function isString<T>(data: T | string): data is DefinitelyString<T> {
   return typeof data === 'string';
 }
+
+type DefinitelyNumber<T> = Extract<T, number> extends never
+  ? number
+  : Extract<T, number> extends any
+  ? number
+  : Extract<T, number>;
 
 /**
  * A function that checks if the passed parameter is a number and narrows it's type accordingly
@@ -24,7 +36,7 @@ export function isString<T>(data: T): data is Extract<T, string> {
  *    R.isNumber('notANumber') //=> false
  * @category Guard
  */
-export function isNumber<T>(data: T): data is Extract<T, number> {
+export function isNumber<T>(data: T | number): data is DefinitelyNumber<T> {
   return typeof data === 'number' && !isNaN(data);
 }
 
@@ -44,6 +56,12 @@ export function isDefined<T>(data: T): data is NonNullable<T> {
   return typeof data !== 'undefined' && data !== null;
 }
 
+type DefinitelyBoolean<T> = Extract<T, boolean> extends never
+  ? boolean
+  : Extract<T, boolean> extends any
+  ? boolean
+  : Extract<T, number>;
+
 /**
  * A function that checks if the passed parameter is a boolean and narrows it's type accordingly
  * @param data the variable to check
@@ -56,10 +74,17 @@ export function isDefined<T>(data: T): data is NonNullable<T> {
  *    R.isBoolean('somethingElse') //=> false
  * @category Guard
  */
-export function isBoolean<T>(data: T): data is Extract<T, boolean> {
+
+export function isBoolean<T>(data: T | boolean): data is DefinitelyBoolean<T> {
   return typeof data === 'boolean';
 }
 
+type DefinitelyPromise<T extends unknown> = Extract<
+  T,
+  Promise<any>
+> extends never
+  ? Promise<unknown>
+  : Extract<T, Promise<any>>;
 /**
  * A function that checks if the passed parameter is a Promise and narrows it's type accordingly
  * @param data the variable to check
@@ -72,10 +97,17 @@ export function isBoolean<T>(data: T): data is Extract<T, boolean> {
  *    R.isPromise('somethingElse') //=> false
  * @category Guard
  */
-export function isPromise<T>(data: T): data is Extract<T, Promise<any>> {
+// @ts-expect-error
+export function isPromise<T>(data: T): data is DefinitelyPromise<T> {
   return data instanceof Promise;
 }
 
+type DefinitelyArray<T extends unknown> = Extract<
+  T,
+  Array<any> | ReadonlyArray<any>
+> extends never
+  ? ReadonlyArray<unknown>
+  : Extract<T, Array<any> | ReadonlyArray<any>>;
 /**
  * A function that checks if the passed parameter is an Array and narrows it's type accordingly
  * @param data the variable to check
@@ -89,11 +121,20 @@ export function isPromise<T>(data: T): data is Extract<T, Promise<any>> {
  * @category Guard
  */
 export function isArray<T>(
-  data: T
-): data is Extract<T, ReadonlyArray<any> | Array<any>> {
+  data: T | ReadonlyArray<unknown>
+): data is DefinitelyArray<T> {
   return Array.isArray(data);
 }
 
+type DefinitelyObject<T extends unknown> = Exclude<
+  Extract<T, object>,
+  Array<any> | Function | ReadonlyArray<any>
+> extends never
+  ? { [k: string]: unknown }
+  : Exclude<
+      Extract<T, object>,
+      Array<any> | Function | ReadonlyArray<any> | Date | Promise<any> | Error
+    >;
 /**
  * A function that checks if the passed parameter is an Object and narrows it's type accordingly
  * @param data the variable to check
@@ -107,10 +148,20 @@ export function isArray<T>(
  */
 export function isObject<T extends unknown>(
   data: T | object
-): data is T extends Record<string, unknown> ? T : never {
-  return !!data && !Array.isArray(data) && typeof data === 'object';
+): data is DefinitelyObject<T> {
+  return (
+    !!data &&
+    !Array.isArray(data) &&
+    !isPromise(data) &&
+    !isDate(data) &&
+    !isError(data) &&
+    typeof data === 'object'
+  );
 }
 
+type DefinitelyFunction<T> = Extract<T, Function> extends never
+  ? Function
+  : Extract<T, Function>;
 /**
  * A function that checks if the passed parameter is a Function and narrows it's type accordingly
  * @param data the variable to check
@@ -122,7 +173,9 @@ export function isObject<T extends unknown>(
  *    R.isFunction('somethingElse') //=> false
  * @category Guard
  */
-export function isFunction<T>(data: T): data is Extract<T, Function> {
+export function isFunction<T>(
+  data: T | Function
+): data is DefinitelyFunction<T> {
   return typeof data === 'function';
 }
 
@@ -142,6 +195,9 @@ export function isNil<T>(data: T): data is Extract<T, null | undefined> {
   return data == null;
 }
 
+type DefinitelyError<T> = Extract<T, Error> extends never
+  ? Error
+  : Extract<T, Error>;
 /**
  * A function that checks if the passed parameter is an Error and narrows it's type accordingly
  * @param data the variable to check
@@ -153,7 +209,7 @@ export function isNil<T>(data: T): data is Extract<T, null | undefined> {
  *    R.isError('somethingElse') //=> false
  * @category Guard
  */
-export function isError<T>(data: T): data is Extract<T, Error> {
+export function isError<T>(data: T | Error): data is DefinitelyError<T> {
   return data instanceof Error;
 }
 
@@ -168,7 +224,7 @@ export function isError<T>(data: T): data is Extract<T, Error> {
  *    R.isDate('somethingElse') //=> false
  * @category Guard
  */
-export function isDate<T>(data: T): data is Extract<T, Date> {
+export function isDate(data: unknown): data is Date {
   return data instanceof Date;
 }
 
