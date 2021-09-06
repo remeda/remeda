@@ -1,4 +1,4 @@
-import { AssertEqual } from 'src/_types';
+import { AssertEqual } from './_types';
 import {
   isString,
   isBoolean,
@@ -13,6 +13,7 @@ import {
   isPromise,
   isTruthy,
   isNot,
+  isPlainObject,
 } from './guards';
 
 type TestObj =
@@ -395,9 +396,12 @@ describe('isObject', () => {
       expect(typeof data).toEqual('object');
       const result: AssertEqual<
         typeof data,
-        {
-          a: string;
-        }
+        | {
+            a: string;
+          }
+        | Date
+        | Error
+        | Promise<number>
       > = true;
       expect(result).toEqual(true);
     }
@@ -417,7 +421,7 @@ describe('isObject', () => {
     }
   });
 
-  test('isObject: should work as type guard', () => {
+  test('isObject: should work as type guard for more narrow types', () => {
     const data = { data: 5 } as Array<number> | { data: number };
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
@@ -453,6 +457,84 @@ describe('isObject', () => {
     );
     const result: AssertEqual<
       typeof data,
+      (
+        | {
+            a: string;
+          }
+        | Date
+        | Error
+        | Promise<number>
+      )[]
+    > = true;
+    expect(result).toEqual(true);
+  });
+});
+
+describe('isPlainObject', () => {
+  test('isPlainObject: should work as type guard', () => {
+    const data = dataProvider('object');
+    if (isPlainObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<
+        typeof data,
+        {
+          a: string;
+        }
+      > = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('isPlainObject: should work as type guard for more narrow types', () => {
+    const data = { data: 5 } as ReadonlyArray<number> | { data: 5 };
+    if (isPlainObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<
+        typeof data,
+        {
+          data: 5;
+        }
+      > = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('isPlainObject: should work as type guard', () => {
+    const data = { data: 5 } as Array<number> | { data: number };
+    if (isPlainObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<
+        typeof data,
+        {
+          data: number;
+        }
+      > = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('should work even if data type is unknown', () => {
+    const data: unknown = dataProvider('object');
+    if (isPlainObject(data)) {
+      expect(typeof data).toEqual('object');
+      const result: AssertEqual<typeof data, Record<string, unknown>> = true;
+      expect(result).toEqual(true);
+    }
+  });
+
+  test('isPlainObject: should work as type guard in filter', () => {
+    const data = [
+      dataProvider('promise'),
+      dataProvider('array'),
+      dataProvider('boolean'),
+      dataProvider('function'),
+      dataProvider('object'),
+    ].filter(isPlainObject);
+    expect(data.every(c => typeof c === 'object' && !Array.isArray(c))).toEqual(
+      true
+    );
+    const result: AssertEqual<
+      typeof data,
       {
         a: string;
       }[]
@@ -460,6 +542,7 @@ describe('isObject', () => {
     expect(result).toEqual(true);
   });
 });
+
 describe('isPromise', () => {
   test('isPromise: should work as type guard', () => {
     const data = dataProvider('promise');
