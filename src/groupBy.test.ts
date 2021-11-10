@@ -75,6 +75,8 @@ describe('groupBy typings', () => {
 
     // @ts-expect-error we can't access keys unconditionally
     expect(() => grouped.wrong.length).toThrow();
+    // @ts-expect-error other values are not allowed by typings
+    expect(grouped.notexists).toBeUndefined();
     expect(grouped.wrong?.length).toBeUndefined();
     expect(grouped.right?.length).toBe(1);
   });
