@@ -16,11 +16,11 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 export function groupBy<Item, Key extends PropertyKey>(
   items: readonly Item[],
   fn: (item: Item) => Key
-): Record<Key, NonEmptyArray<Item>>;
+): Partial<Record<Key, NonEmptyArray<Item>>>;
 
 export function groupBy<Item, Key extends PropertyKey>(
   fn: (item: Item) => Key
-): (array: readonly Item[]) => Record<Key, NonEmptyArray<Item>>;
+): (array: readonly Item[]) => Partial<Record<Key, NonEmptyArray<Item>>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.

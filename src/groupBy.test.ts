@@ -1,4 +1,4 @@
-import { AssertEqual } from 'src/_types';
+import { AssertEqual } from './_types';
 import { groupBy } from './groupBy';
 import { pipe } from './pipe';
 
@@ -63,5 +63,19 @@ describe('groupBy typings', () => {
     );
     const result: AssertEqual<keyof typeof actual, 1 | 2> = true;
     expect(result).toEqual(true);
+  });
+  test('keys of union types should not be directly accessible', () => {
+    interface MyType {
+      type: 'right' | 'wrong';
+    }
+
+    const myTypes: MyType[] = [{ type: 'right' }];
+
+    const grouped = groupBy(myTypes, item => item.type);
+
+    // @ts-expect-error we can't access keys unconditionally
+    expect(() => grouped.wrong.length).toThrow();
+    expect(grouped.wrong?.length).toBeUndefined();
+    expect(grouped.right?.length).toBe(1);
   });
 });
