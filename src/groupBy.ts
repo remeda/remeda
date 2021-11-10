@@ -57,10 +57,10 @@ export namespace groupBy {
   export function indexed<Item, Key extends PropertyKey>(
     array: readonly Item[],
     fn: PredIndexed<Item, Key>
-  ): Record<Key, NonEmptyArray<Item>>;
+  ): Partial<Record<Key, NonEmptyArray<Item>>>;
   export function indexed<Item, Key extends PropertyKey>(
     fn: PredIndexed<Item, Key>
-  ): (array: readonly Item[]) => Record<Key, NonEmptyArray<Item>>;
+  ): (array: readonly Item[]) => Partial<Record<Key, NonEmptyArray<Item>>>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
