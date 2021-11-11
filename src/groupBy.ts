@@ -13,14 +13,14 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
  * @indexed
  * @category Array
  */
-export function groupBy<T>(
-  items: readonly T[],
-  fn: (item: T) => PropertyKey
-): Record<PropertyKey, NonEmptyArray<T>>;
+export function groupBy<Item, Key extends PropertyKey>(
+  items: readonly Item[],
+  fn: (item: Item) => Key
+): Partial<Record<Key, NonEmptyArray<Item>>>;
 
-export function groupBy<T>(
-  fn: (item: T) => PropertyKey
-): (array: readonly T[]) => Record<PropertyKey, NonEmptyArray<T>>;
+export function groupBy<Item, Key extends PropertyKey>(
+  fn: (item: Item) => Key
+): (array: readonly Item[]) => Partial<Record<Key, NonEmptyArray<Item>>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -54,13 +54,13 @@ const _groupBy = (indexed: boolean) => <T>(
 };
 
 export namespace groupBy {
-  export function indexed<T, K>(
-    array: readonly T[],
-    fn: PredIndexed<T, PropertyKey>
-  ): Record<string, NonEmptyArray<T>>;
-  export function indexed<T, K>(
-    fn: PredIndexed<T, PropertyKey>
-  ): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
+  export function indexed<Item, Key extends PropertyKey>(
+    array: readonly Item[],
+    fn: PredIndexed<Item, Key>
+  ): Partial<Record<Key, NonEmptyArray<Item>>>;
+  export function indexed<Item, Key extends PropertyKey>(
+    fn: PredIndexed<Item, Key>
+  ): (array: readonly Item[]) => Partial<Record<Key, NonEmptyArray<Item>>>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
