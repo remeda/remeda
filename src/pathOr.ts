@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { NonNull, Key } from './_types';
+import { NonNull } from './_types';
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
@@ -27,7 +27,7 @@ import { NonNull, Key } from './_types';
 type Pathable<T> = { [K in AllKeys<T>]: TypesForKey<T, K> };
 
 type AllKeys<T> = T extends infer I ? keyof I : never;
-type TypesForKey<T, K extends Key> = T extends infer I
+type TypesForKey<T, K extends PropertyKey> = T extends infer I
   ? K extends keyof I
     ? I[K]
     : never
