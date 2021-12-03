@@ -60,11 +60,11 @@ export namespace reduce {
     array: readonly T[],
     fn: (acc: K, item: T, index: number, items: T[]) => K,
     initialValue: K
-  ): Record<string, T>;
+  ): K;
   export function indexed<T, K>(
     fn: (acc: K, item: T, index: number, items: T[]) => K,
     initialValue: K
-  ): (array: readonly T[]) => Record<string, T>;
+  ): (array: readonly T[]) => K;
   export function indexed() {
     return purry(_reduce(true), arguments);
   }
