@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
+export function set<T, K extends keyof T, A extends T[K]>(obj: T, prop: K, value: A): Omit<T, K> & { [key in K]: A };
 
 /**
  * Sets the `value` at `prop` of `object`.
@@ -25,7 +25,7 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
  * @data_last
  * @category Object
  */
-export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
+export function set<T, K extends keyof T, A extends T[K]>(prop: K, value: A): (obj: T) => Omit<T, K> & { [key in K]: A };
 
 export function set() {
   return purry(_set, arguments);
