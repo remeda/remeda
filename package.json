@@ -9,7 +9,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
-    "marked": "^0.4.0",
+    "marked": "^4.0.10",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.1",
     "ts-node": "^8.4.1",
