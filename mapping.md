@@ -7,7 +7,7 @@ behave differently from either or both. Be sure to consult each library's
 documentation when migrating._
 
 | Remeda         | Lodash         | Ramda               |
-| -------------- | -------------- | ------------------- |
+|----------------|----------------| ------------------- |
 | `addProp`      | `set`          | `set`               |
 | `allPass`      | `-`            | `allPass`           |
 | `anyPass`      | `-`            | `anyPass`           |
@@ -42,6 +42,7 @@ documentation when migrating._
 | `objOf`        | `-`            | `objOf`             |
 | `omit`         | `omit`         | `omit`              |
 | `once`         | `once`         | `once`              |
+| `partition`    | `partition`    | `partition`         |
 | `pathOr`       | `get`          | `pathOr`            |
 | `pick`         | `pick`         | `pick`              |
 | `pipe`         | `flow`         | `pipe`              |
