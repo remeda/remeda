@@ -9,7 +9,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @signature
  *    R.partition(array, fn)
  * @example
- *    R.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], [['forty two']]
+ *    R.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
  * @data_first
  * @indexed
  * @category Array
@@ -26,7 +26,7 @@ export function partition<T>(
  * @signature
  *    R.partition(fn)(array)
  * @example
- *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], [['forty two']]
+ *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
  * @data_last
  * @indexed
  * @category Array
