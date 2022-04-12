@@ -2,9 +2,9 @@ import { purry } from './purry';
 import { PredIndexedOptional, PredIndexed } from './_types';
 
 /**
- * Splits a collection into two groups, the first of which contains elements `fn` returns `true` for, the second of which contains elements `fn` returns `false` for.
+ * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
  * @param items the items to split
- * @param fn the function invoked per iteration
+ * @param predicate the function invoked per iteration
  * @returns the array of grouped elements.
  * @signature
  *    R.partition(array, fn)
@@ -16,12 +16,12 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  */
 export function partition<T>(
   items: readonly T[],
-  fn: (item: T) => boolean
+  predicate: (item: T) => boolean
 ): [T[], T[]];
 
 /**
- * Splits a collection into two groups, the first of which contains elements `fn` returns `true` for, the second of which contains elements `fn` returns `false` for.
- * @param fn the grouping function
+ * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
+ * @param predicate the grouping function
  * @returns the array of grouped elements.
  * @signature
  *    R.partition(fn)(array)
@@ -32,7 +32,7 @@ export function partition<T>(
  * @category Array
  */
 export function partition<T>(
-  fn: (item: T) => boolean
+  predicate: (item: T) => boolean
 ): (array: readonly T[]) => [T[], T[]];
 
 export function partition() {
@@ -54,10 +54,10 @@ const _partition = (indexed: boolean) => <T>(
 export namespace partition {
   export function indexed<T, K>(
     array: readonly T[],
-    fn: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>
   ): [T[], T[]];
   export function indexed<T, K>(
-    fn: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>
   ): (array: readonly T[]) => [T[], T[]];
   export function indexed() {
     return purry(_partition(true), arguments);
