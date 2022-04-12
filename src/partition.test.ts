@@ -21,7 +21,9 @@ describe('data first', () => {
     expect(partition(array, x => x.a === 1)).toEqual(expected);
   });
   test('partition.indexed', () => {
-    expect(partition.indexed(array, x => x.a === 1)).toEqual(expected);
+    expect(partition.indexed(array, (_, index) => index !== 2)).toEqual(
+      expected
+    );
   });
 });
 
@@ -38,7 +40,7 @@ describe('data last', () => {
     expect(
       pipe(
         array,
-        partition.indexed(x => x.a === 1)
+        partition.indexed((_, index) => index !== 2)
       )
     ).toEqual(expected);
   });
