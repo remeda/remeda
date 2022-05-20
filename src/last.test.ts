@@ -1,5 +1,5 @@
 import { last } from './last';
-import { AssertEqual, NonEmptyArray } from 'src/_types';
+import { AssertEqual, NonEmptyArray } from './_types';
 
 describe('last', () => {
   test('should return last', () => {
