@@ -42,6 +42,7 @@ export * from './noop';
 export * from './objOf';
 export * from './omit';
 export * from './once';
+export * from './partition';
 export * from './pathOr';
 export * from './pick';
 export * from './pipe';
