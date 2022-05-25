@@ -25,7 +25,10 @@ describe('data first', () => {
     test('variadic tuples', () => {
       const input: [number, ...Array<string>] = [1, 'two', 'three'];
       const actual = reverse(input);
-      const result: AssertEqual<typeof actual, (string | number)[]> = true;
+      const result: AssertEqual<
+        typeof actual,
+        [...Array<string>, number]
+      > = true;
       expect(result).toEqual(true);
     });
   });
@@ -54,7 +57,10 @@ describe('data last', () => {
     test('variadic tuples', () => {
       const input: [number, ...Array<string>] = [1, 'two', 'three'];
       const actual = pipe(input, reverse());
-      const result: AssertEqual<typeof actual, (string | number)[]> = true;
+      const result: AssertEqual<
+        typeof actual,
+        [...Array<string>, number]
+      > = true;
       expect(result).toEqual(true);
     });
   });
