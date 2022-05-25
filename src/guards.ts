@@ -5,7 +5,7 @@ type DefinitelyString<T> = Extract<T, string> extends never
   : Extract<T, string>;
 
 /**
- * A function that checks if the passed parameter is a string and narrows it's type accordingly
+ * A function that checks if the passed parameter is a string and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isString(data)
@@ -26,7 +26,7 @@ type DefinitelyNumber<T> = Extract<T, number> extends never
   : Extract<T, number>;
 
 /**
- * A function that checks if the passed parameter is a number and narrows it's type accordingly
+ * A function that checks if the passed parameter is a number and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isNumber(data)
@@ -41,7 +41,7 @@ export function isNumber<T>(data: T | number): data is DefinitelyNumber<T> {
 }
 
 /**
- * A function that checks if the passed parameter is defined and narrows it's type accordingly
+ * A function that checks if the passed parameter is defined and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isDefined(data)
@@ -63,7 +63,7 @@ type DefinitelyBoolean<T> = Extract<T, boolean> extends never
   : Extract<T, number>;
 
 /**
- * A function that checks if the passed parameter is a boolean and narrows it's type accordingly
+ * A function that checks if the passed parameter is a boolean and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isBoolean(data)
@@ -79,14 +79,8 @@ export function isBoolean<T>(data: T | boolean): data is DefinitelyBoolean<T> {
   return typeof data === 'boolean';
 }
 
-type DefinitelyPromise<T extends unknown> = Extract<
-  T,
-  Promise<any>
-> extends never
-  ? Promise<unknown>
-  : Extract<T, Promise<any>>;
 /**
- * A function that checks if the passed parameter is a Promise and narrows it's type accordingly
+ * A function that checks if the passed parameter is a Promise and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isPromise(data)
@@ -97,8 +91,7 @@ type DefinitelyPromise<T extends unknown> = Extract<
  *    R.isPromise('somethingElse') //=> false
  * @category Guard
  */
-// @ts-expect-error
-export function isPromise<T>(data: T): data is DefinitelyPromise<T> {
+export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {
   return data instanceof Promise;
 }
 
@@ -109,7 +102,7 @@ type DefinitelyArray<T extends unknown> = Extract<
   ? ReadonlyArray<unknown>
   : Extract<T, Array<any> | ReadonlyArray<any>>;
 /**
- * A function that checks if the passed parameter is an Array and narrows it's type accordingly
+ * A function that checks if the passed parameter is an Array and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isArray(data)
@@ -133,7 +126,7 @@ type DefinitelyObject<T extends unknown> = Exclude<
   ? { [k: string]: unknown }
   : Exclude<Extract<T, object>, Array<any> | Function | ReadonlyArray<any>>;
 /**
- * A function that checks if the passed parameter is of type Object and narrows it's type accordingly
+ * A function that checks if the passed parameter is of type Object and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isObject(data)
@@ -156,7 +149,7 @@ type DefinitelyFunction<T> = Extract<T, Function> extends never
   ? Function
   : Extract<T, Function>;
 /**
- * A function that checks if the passed parameter is a Function and narrows it's type accordingly
+ * A function that checks if the passed parameter is a Function and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isFunction(data)
@@ -173,7 +166,7 @@ export function isFunction<T>(
 }
 
 /**
- * A function that checks if the passed parameter is Nil (null or undefined) and narrows it's type accordingly
+ * A function that checks if the passed parameter is Nil (null or undefined) and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isNil(data)
@@ -192,7 +185,7 @@ type DefinitelyError<T> = Extract<T, Error> extends never
   ? Error
   : Extract<T, Error>;
 /**
- * A function that checks if the passed parameter is an Error and narrows it's type accordingly
+ * A function that checks if the passed parameter is an Error and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isError(data)
@@ -207,7 +200,7 @@ export function isError<T>(data: T | Error): data is DefinitelyError<T> {
 }
 
 /**
- * A function that checks if the passed parameter is a Date and narrows it's type accordingly
+ * A function that checks if the passed parameter is a Date and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isDate(data)
@@ -222,7 +215,7 @@ export function isDate(data: unknown): data is Date {
 }
 
 /**
- * A function that checks if the passed parameter is truthy and narrows it's type accordingly
+ * A function that checks if the passed parameter is truthy and narrows its type accordingly
  * @param data the variable to check
  * @signature
  *    R.isTruthy(data)
