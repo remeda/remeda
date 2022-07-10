@@ -45,6 +45,7 @@ documentation when migrating._
 | `partition`    | `partition`    | `partition`         |
 | `pathOr`       | `get`          | `pathOr`            |
 | `pick`         | `pick`         | `pick`              |
+| `pickBy`       | `pickBy`       | `pickBy`            |
 | `pipe`         | `flow`         | `pipe`              |
 | `prop`         | `get`          | `prop`              |
 | `purry`        | `-`            | `-`                 |
@@ -90,5 +91,3 @@ you are relying on when migrating._
 | `-`            | `propOr`       | `x => x.a ?? defaultValue`                 |
 | `reverse`      | `reverse`      | `(arr : Array<any>) => [...arr].reverse()` |
 | `words`        | `-`            | `str => str.split(/\s+/)`                  |
-
-
