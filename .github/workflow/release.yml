@@ -1,0 +1,31 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    name: 'Publish Module to NPM'
+    if: github.repository == 'remeda/remeda' # do not trigger on forks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: ./scripts/build.sh
+      - name: Release
+        run: npx semantic-release@19
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
