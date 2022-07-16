@@ -1,5 +1,7 @@
 > Replace this quote with a description of your changes
 
+---
+
 Make sure that you:
 
 - [ ] Typedoc added for new methods and updated for changed
