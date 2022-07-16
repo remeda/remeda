@@ -67,6 +67,7 @@ documentation when migrating._
 | `type`           | `-`              | `type`              |
 | `uniq`           | `uniq`           | `uniq`              |
 | `uniqBy`         | `uniqBy`         | `uniqBy`            |
+| `uniqWith`       | `uniqWith`       | `uniqWith`          |
 
 ### Helpful one-liners
 
