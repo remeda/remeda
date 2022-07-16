@@ -45,6 +45,7 @@ export * from './once';
 export * from './partition';
 export * from './pathOr';
 export * from './pick';
+export * from './pickBy';
 export * from './pipe';
 export * from './prop';
 export * from './purry';
