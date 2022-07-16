@@ -1,12 +1,12 @@
 import { differenceWith } from './differenceWith';
 import { equals } from './equals';
-import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
+import { createCounter } from './_counter';
 
-const source = [1, 2, 3, 4] as const;
-const other = [2, 5, 3] as const;
-const expected = [1, 4] as const;
+const source = [{a: 1}, {a: 2}, {a: 3}, {a: 4}];
+const other = [{a: 2}, {a: 5}, {a: 3}];
+const expected = [{a: 1}, {a: 4}];
 
 describe('data_first', () => {
   test('should return difference', () => {
@@ -20,17 +20,14 @@ describe('data_last', () => {
   });
 
   test('lazy', () => {
-    const count = jest.fn();
+    const counter = createCounter();
     const result = pipe(
-      [1, 2, 3, 4, 5, 6],
-      map(x => {
-        count();
-        return x;
-      }),
-      differenceWith([2, 3], equals),
-      take(2)
+      [{a: 1}, {a: 2}, {a: 3}, {a: 4}, {a: 5}, {a: 6}],
+      counter.fn(),
+      differenceWith([{a: 2}, {a: 3}], equals),
+      take(2),
     );
-    expect(count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([1, 4]);
+    expect(counter.count).toHaveBeenCalledTimes(4);
+    expect(result).toEqual([{a: 1}, {a: 4}]);
   });
 });
