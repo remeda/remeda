@@ -1,0 +1,45 @@
+import { equals } from './equals';
+import { pipe } from './pipe';
+import { take } from './take';
+import { uniqWith } from './uniqWith';
+import { createCounter } from './_counter';
+
+const source = [1, 2, 2, 5, 1, 6, 7];
+const expected = [1, 2, 5, 6, 7];
+
+describe('data_first', () => {
+  test('should return uniq', () => {
+    expect(uniqWith(source, equals)).toEqual(expected);
+  });
+});
+
+describe('data_last', () => {
+  test('should return uniq', () => {
+    expect(uniqWith(equals)(source)).toEqual(expected);
+  });
+
+  it('lazy', () => {
+    const counter = createCounter();
+    const result = pipe(
+      [1, 2, 2, 5, 1, 6, 7] as const,
+      counter.fn(),
+      uniqWith(equals),
+      take(3)
+    );
+    expect(counter.count).toHaveBeenCalledTimes(4);
+    expect(result).toEqual([1, 2, 5]);
+  });
+
+  it('take before uniq', () => {
+    // bug from https://github.com/remeda/remeda/issues/14
+    const counter = createCounter();
+    const result = pipe(
+      [1, 2, 2, 5, 1, 6, 7] as const,
+      counter.fn(),
+      take(3),
+      uniqWith(equals)
+    );
+    expect(counter.count).toHaveBeenCalledTimes(3);
+    expect(result).toEqual([1, 2]);
+  });
+});
