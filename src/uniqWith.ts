@@ -6,12 +6,16 @@ type IsEquals<T> = (a: T, b: T) => boolean;
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
+ * Elements are compared by custom comparator isEquals.
  * @param array
  * @param isEquals the comparator
  * @signature
  *    R.uniqWith(array, isEquals)
  * @example
- *    R.uniqWith([1, 2, 2, 5, 1, 6, 7], R.equals) // => [1, 2, 5, 6, 7]
+ *    R.uniqWith(
+ *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
+ *      R.equals,
+ *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @data_first
  * @category Array
  */
@@ -19,15 +23,18 @@ export function uniqWith<T>(array: readonly T[], isEquals: IsEquals<T>): T[];
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
+ * Elements are compared by custom comparator isEquals.
  * @param isEquals the comparator
  * @signature R.uniqWith(isEquals)(array)
  * @example
- *    R.uniqWith([2, 5, 3], R.equals)([1, 2, 3, 4]) // => [1, 4]
+ *    R.uniqWith(R.equals)(
+ *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
+ *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  *    R.pipe(
- *      [1, 2, 2, 5, 1, 6, 7], // only 4 iterations
+ *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}], // only 4 iterations
  *      R.uniqWith(R.equals),
  *      R.take(3)
- *    ) // => [1, 2, 5]
+ *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @data_last
  * @category Object
  */

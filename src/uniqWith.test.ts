@@ -4,8 +4,8 @@ import { take } from './take';
 import { uniqWith } from './uniqWith';
 import { createCounter } from './_counter';
 
-const source = [1, 2, 2, 5, 1, 6, 7];
-const expected = [1, 2, 5, 6, 7];
+const source = [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}];
+const expected = [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}];
 
 describe('data_first', () => {
   test('should return uniq', () => {
@@ -21,25 +21,25 @@ describe('data_last', () => {
   it('lazy', () => {
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 2, 5, 1, 6, 7] as const,
+      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
       counter.fn(),
       uniqWith(equals),
       take(3)
     );
     expect(counter.count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([1, 2, 5]);
+    expect(result).toEqual([{a: 1}, {a: 2}, {a: 5}]);
   });
 
   it('take before uniq', () => {
     // bug from https://github.com/remeda/remeda/issues/14
     const counter = createCounter();
     const result = pipe(
-      [1, 2, 2, 5, 1, 6, 7] as const,
+      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
       counter.fn(),
       take(3),
       uniqWith(equals)
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([1, 2]);
+    expect(result).toEqual([{a: 1}, {a: 2}]);
   });
 });
