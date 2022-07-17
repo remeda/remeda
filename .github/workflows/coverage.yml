@@ -10,5 +10,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Coverage
         uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          skip-step: install
