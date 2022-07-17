@@ -43,6 +43,9 @@ jobs:
         run: yarn test:ci
 
   publish:
+    needs:
+      - compile
+      - test
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
