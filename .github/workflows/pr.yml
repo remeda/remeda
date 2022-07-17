@@ -36,10 +36,7 @@ jobs:
       - name: Compile
         run: yarn compile
   coverage:
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
