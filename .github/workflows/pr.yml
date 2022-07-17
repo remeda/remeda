@@ -35,3 +35,17 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Compile
         run: yarn compile
+  coverage:
+    name: 'coverage [node 18]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          package-manager: yarn
