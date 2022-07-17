@@ -7,7 +7,7 @@ on:
 
 jobs:
   compile:
-    name: 'compile [node ${{ matrix.node }}]'
+    name: compile [node ${{ matrix.node }}]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
         run: yarn compile
 
   test:
-    name: 'test [node ${{ matrix.node }}]'
+    name: test [node ${{ matrix.node }}]
     runs-on: ubuntu-latest
     strategy:
       matrix:
