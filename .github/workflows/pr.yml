@@ -2,7 +2,7 @@ name: PR Checks
 on: [pull_request]
 jobs:
   test:
-    name: 'PR checks node ${{ matrix.node }}'
+    name: 'test [node ${{ matrix.node }}]'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,4 +17,21 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Run tests
-        run: yarn test
+        run: yarn test:ci
+  compile:
+    name: 'compile [node ${{ matrix.node }}]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Compile
+        run: yarn compile
