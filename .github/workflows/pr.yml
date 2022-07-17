@@ -2,7 +2,7 @@ name: PR Checks
 on: [pull_request]
 jobs:
   test:
-    name: 'PR checks test node ${{ matrix.node }}'
+    name: 'Run tests in node ${{ matrix.node }}'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,7 +19,7 @@ jobs:
       - name: Run tests
         run: yarn test:ci
   compile:
-    name: 'PR checks compile node ${{ matrix.node }}'
+    name: 'Compile in node ${{ matrix.node }}'
     runs-on: ubuntu-latest
     strategy:
       matrix:
