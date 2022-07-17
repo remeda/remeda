@@ -1,6 +1,8 @@
 Remeda
 =============
 
+![CI master](https://github.com/remeda/remeda/actions/workflows/ci.yml/badge.svg?branch=master)
+
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
 [![Build Status](https://travis-ci.org/remeda/remeda.svg?branch=master)](https://travis-ci.org/remeda/remeda)
@@ -22,14 +24,14 @@ import * as R from 'remeda'; // tree-shaking supported!
 
 Why Remeda?
 ----------
-There are no good utility libraries that work well with TypeScript. When working with Lodash or Ramda you must sometimes annotate types manually.  
+There are no good utility libraries that work well with TypeScript. When working with Lodash or Ramda you must sometimes annotate types manually.
 Remeda is written and tested in TypeScript and that means there won't be any problems with custom typings.
 
 
 
 What's "data-first" and "data-last"?
 ----------
-Functional programming is nice, and it makes the code more readable. However there are situations where you don't need "pipes", and you want to call just a single function.  
+Functional programming is nice, and it makes the code more readable. However there are situations where you don't need "pipes", and you want to call just a single function.
 
 ```js
 // Remeda
@@ -81,8 +83,8 @@ _.flow(
 )(users)// broken typings in TS :(
 ```
 
-Mixing paradigms can be cumbersome in Lodash because it requires importing two different methods.  
-Remeda implements all methods in two versions, and the correct overload is picked based on the number of provided arguments.  
+Mixing paradigms can be cumbersome in Lodash because it requires importing two different methods.
+Remeda implements all methods in two versions, and the correct overload is picked based on the number of provided arguments.
 The "data-last" version must always have one argument less than the "data-first" version.
 
 ```js
@@ -98,7 +100,7 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
 
 Lazy evaluation
 ----------
-Many functions support lazy evaluation when using `pipe` or `createPipe`. These functions have a `pipeable` tag in the documentation.  
+Many functions support lazy evaluation when using `pipe` or `createPipe`. These functions have a `pipeable` tag in the documentation.
 Lazy evaluation is not supported in Ramda and only partially supported in lodash.
 
 ```js
