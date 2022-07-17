@@ -2,7 +2,7 @@ name: PR Checks
 on: [pull_request]
 jobs:
   test:
-    name: 'run tests [node ${{ matrix.node }}]'
+    name: 'test [node ${{ matrix.node }}]'
     runs-on: ubuntu-latest
     strategy:
       matrix:
