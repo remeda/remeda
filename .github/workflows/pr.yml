@@ -1,17 +1,13 @@
 ---
 name: PR Checks
 
-on:
-  pull_request:
-
+on: [pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version:
-          - 10
-          - 12
           - 14
           - 16
           - 18
