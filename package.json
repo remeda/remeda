@@ -18,6 +18,7 @@
   },
   "scripts": {
     "test": "jest --coverage && yarn run compile",
+    "test:ci": "jest",
     "compile": "tsc -p ./tsconfig.json --noEmit",
     "prettier": "prettier 'src/**/*.ts' --write",
     "docs:install": "cd docs && yarn",
