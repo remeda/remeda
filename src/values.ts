@@ -15,7 +15,6 @@
  * @category Object
  */
 
-export function values<T>(source: Record<PropertyKey, T> | ArrayLike<T>) {
-  return Object.values(source) as T[];
+export function values<T>(source: Record<PropertyKey, T> | ArrayLike<T>): T[] {
+  return Object.values(source);
 }
-

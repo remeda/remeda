@@ -15,6 +15,16 @@
  * @category Object
  */
 
-export function keys<T>(source: Record<PropertyKey, T> | ArrayLike<T>) {
-  return Object.keys(source) as string[];
+export function keys(
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+): Array<string> {
+  return Object.keys(source);
+}
+
+export namespace keys {
+  export function strict<T extends Record<PropertyKey, unknown>>(
+    source: T
+  ): Array<keyof T> {
+    return keys(source) as any;
+  }
 }
