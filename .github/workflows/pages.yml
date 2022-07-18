@@ -1,0 +1,24 @@
+name: GH pages
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10 # we'll upgrade it later
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build docs
+        run: yarn docs:build
+      - name: Deploy pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs/dist
