@@ -38,7 +38,7 @@ export function FnDoc(props: FnDocProps) {
             <small>
               <div className=" badge pipeable-color">pipeable</div>
             </small>
-          )}
+          )}{' '}
           {methods[0].strict && (
             <small>
               <div className=" badge strict-color">strict</div>
