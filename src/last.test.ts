@@ -3,7 +3,7 @@ import { pipe } from './pipe';
 import { AssertEqual, NonEmptyArray } from './_types';
 
 describe('last', () => {
-  describe('data last', () => {
+  describe('data first', () => {
     test('should return last', () => {
       expect(last([1, 2, 3] as const)).toEqual(3);
     });
@@ -11,11 +11,16 @@ describe('last', () => {
     test('empty array', () => {
       expect(last([] as const)).toEqual(undefined);
     });
+  });
+  
+  describe('data last', () => {
+    test('should return last', () => {
+      expect(pipe([1, 2, 3] as const, last())).toEqual(3);
+    });
 
-    test('should work in pipe', () => {
-      const result = pipe([1, 2, 3] as const, last);
-      expect(result).toEqual(3);
-    })
+    test('empty array', () => {
+      expect(pipe([] as const, last())).toEqual(undefined);
+    });
   });
 
   describe('types', () => {
