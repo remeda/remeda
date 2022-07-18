@@ -1,5 +1,5 @@
 import { keys } from './keys';
-import { AssertEqual } from 'src/_types';
+import { AssertEqual } from './_types';
 
 describe('Test for keys', () => {
   it('should return keys of array', () => {

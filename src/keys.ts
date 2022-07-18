@@ -3,6 +3,7 @@
  * @param source Either an array or an object
  * @signature
  *    R.keys(source)
+ *    R.keys.strict(source)
  * @example
  *    R.keys(['x', 'y', 'z']) // => ['1', '2', '3']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
@@ -11,7 +12,9 @@
  *      R.keys,
  *      R.first
  *    ) // => 'a'
+ *    R.keys.strict({ a: 'x', b: 'y', c: 'z' } as const ) // => ['a', 'b', 'c'], typed Array<'a' | 'b' | 'c'>
  * @pipeable
+ * @strict
  * @category Object
  */
 
