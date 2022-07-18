@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index",
     "watch": "parcel serve index.html",
-    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./  --out-file index.html && cp _redirects dist/_redirects"
+    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./  --out-file index.html && cp _redirects dist/_redirects && cp dist/index.html dist/404.html"
   },
   "dependencies": {
     "@types/react-router-dom": "^4.3.0",
