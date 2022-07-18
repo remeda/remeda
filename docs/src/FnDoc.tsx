@@ -12,6 +12,7 @@ export interface MethodDoc {
   returns: JsTagProps;
   indexed: boolean;
   pipeable: boolean;
+  strict: boolean;
 }
 
 export interface FnDocProps {
@@ -36,6 +37,11 @@ export function FnDoc(props: FnDocProps) {
           {methods[0].pipeable && (
             <small>
               <div className=" badge pipeable-color">pipeable</div>
+            </small>
+          )}
+          {methods[0].strict && (
+            <small>
+              <div className=" badge strict-color">strict</div>
             </small>
           )}
         </h3>
