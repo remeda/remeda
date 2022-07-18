@@ -46,7 +46,7 @@ export class Menu extends React.PureComponent<
                 {item.methods[0].pipeable && (
                   <div className=" badge pipeable-color ">P</div>
                 )}
-                {item.methods[0].pipeable && (
+                {item.methods[0].strict && (
                   <div className=" badge strict-color ">S</div>
                 )}
               </a>
