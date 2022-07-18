@@ -207,10 +207,7 @@ const result = R.keys(input)
 // ^? Array<string>
   
 const resultStrict = R.keys.strict(input)
-// ^? Array<'a' | 'b' | 'c'>
-
-// filter even indexes
-R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
+// ^? Array<'a' | 'b' | 'c'>`}
           />
           <h2 id="remeda-design-goals">Remeda Design Goals</h2>
           <ol>
