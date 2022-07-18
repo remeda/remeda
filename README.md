@@ -1,13 +1,12 @@
 Remeda
 =============
 
-![CI master](https://github.com/remeda/remeda/actions/workflows/ci.yml/badge.svg?branch=master)
-
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
-[![Build Status](https://travis-ci.org/remeda/remeda.svg?branch=master)](https://travis-ci.org/remeda/remeda)
-[![npm module](https://badge.fury.io/js/remeda.svg)](https://www.npmjs.org/package/remeda)
-[![dependencies](https://david-dm.org/remeda/remeda.svg)](https://david-dm.org/remeda/remeda)
+![GitHub CI](https://img.shields.io/github/workflow/status/remeda/remeda/CI/master?label=github-ci)
+[![Travis CI](https://img.shields.io/travis/remeda/remeda/master?label=travis-ci)](https://travis-ci.org/remeda/remeda)
+[![NPM](https://img.shields.io/npm/v/remeda)](https://www.npmjs.org/package/remeda)
+![Dependencies](https://img.shields.io/librariesio/release/npm/remeda)
 
 Installation
 ----------
