@@ -7,7 +7,6 @@ The first "data-first" and "data-last" utility library designed especially for T
 
 [![Build Status](https://travis-ci.org/remeda/remeda.svg?branch=master)](https://travis-ci.org/remeda/remeda)
 [![npm module](https://badge.fury.io/js/remeda.svg)](https://www.npmjs.org/package/remeda)
-[![dependencies](https://david-dm.org/remeda/remeda.svg)](https://david-dm.org/remeda/remeda)
 
 Installation
 ----------
