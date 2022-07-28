@@ -47,6 +47,9 @@
   "bugs": {
     "url": "https://github.com/remeda/remeda/issues"
   },
+  "files": [
+    "dist/*"
+  ],
   "homepage": "https://github.com/remeda/remeda#readme",
   "jest": {
     "transform": {
