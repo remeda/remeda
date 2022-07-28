@@ -62,7 +62,7 @@ jobs:
       - name: Build
         run: ./scripts/build.sh
       - name: Release
-        run: npx semantic-release@19 --dry-run
+        run: npx semantic-release@19
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
