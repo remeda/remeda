@@ -60,7 +60,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
-        run: ./scripts/build.sh
+        run: yarn run build
       - name: Release
         run: npx semantic-release@19
         env:
