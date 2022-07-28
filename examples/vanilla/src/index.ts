@@ -5,6 +5,6 @@ const result = R.map( [1, 2, 3], x => x * 2 )
 
 document.getElementById("app")!.innerHTML = `
 <h1>Hello Remeda 👋</h1>
-<div>
+<code>
   ${JSON.stringify(result)}
-</div>`;
+</code>`;
