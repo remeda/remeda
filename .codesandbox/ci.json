@@ -1,0 +1,4 @@
+{
+  "sandboxes": ["/examples/simple"],
+  "node": "16"
+}
