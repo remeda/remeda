@@ -104,6 +104,7 @@ const ret = flatMap(data.children, (method: any) =>
                 category: getTag('category'),
                 indexed: hasTag('indexed'),
                 pipeable: hasTag('pipeable'),
+                strict: hasTag('strict'),
                 example: getExample(),
                 args: parameters.map((item: any) => ({
                   name: item.name,
