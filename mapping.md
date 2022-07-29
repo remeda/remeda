@@ -61,6 +61,7 @@ documentation when migrating._
 | `splitAt`        | `-`              | `splitAt`           |
 | `splitWhen`      | `-`              | `splitWhen`         |
 | `take`           | `take`           | `take`              |
+| `tap`            | `tap`            | `tap`               |
 | `takeWhile`      | `takeWhile`      | `takeWhile`         |
 | `times`          | `times`          | `times`             |
 | `toPairs`        | `toPairs`        | `toPairs`           |
