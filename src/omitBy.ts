@@ -34,9 +34,6 @@ export function omitBy() {
 }
 
 function _omitBy(object: any, fn: (value: any, key: any) => boolean) {
-  if (object == null) {
-    return {};
-  }
   return Object.keys(object).reduce((acc, key) => {
     if (!fn(object[key], key)) {
       acc[key] = object[key];
