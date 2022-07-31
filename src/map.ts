@@ -28,7 +28,7 @@ export function map<T, K>(array: readonly T[], fn: Pred<T, K>): K[];
  *    R.map(fn)(array)
  *    R.map.indexed(fn)(array)
  * @example
- *    R.pipe([0, 1, 2], R.map(x => x * 2)) // => [2, 4, 6]
+ *    R.pipe([0, 1, 2], R.map(x => x * 2)) // => [0, 2, 4]
  *    R.pipe([0, 0, 0], R.map.indexed((x, i) => i)) // => [0, 1, 2]
  * @data_last
  * @indexed
