@@ -1,5 +1,4 @@
 import { purry } from './purry';
-import { Key } from './_types';
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -11,10 +10,10 @@ import { Key } from './_types';
  * @data_first
  * @category Object
  */
-export function omitBy<K extends Key, V>(
-  object: Record<K, V>,
-  fn: (value: V, key: K) => boolean
-): Record<K, V>;
+export function omitBy<T>(
+  object: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): T extends Record<any, any> ? T : Partial<T>;
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -25,9 +24,9 @@ export function omitBy<K extends Key, V>(
  * @data_last
  * @category Object
  */
-export function omitBy<K extends Key, V>(
-  fn: (value: V, key: K) => boolean
-): (object: Record<K, V>) => Record<K, V>;
+export function omitBy<T>(
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): (object: T) => T extends Record<any, any> ? T : Partial<T>;
 
 export function omitBy() {
   return purry(_omitBy, arguments);

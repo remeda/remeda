@@ -9,6 +9,13 @@ describe('data first', () => {
     );
     expect(result).toStrictEqual({ a: 1, b: 2 });
   });
+  test('allow partial type', () => {
+    const result = omitBy(
+      {} as { a?: string; b?: number },
+      (val, key) => key === 'a'
+    );
+    expect(result).toEqual({});
+  });
 });
 
 describe('data last', () => {
@@ -18,5 +25,12 @@ describe('data last', () => {
       omitBy((val, key) => key.toUpperCase() === key)
     );
     expect(result).toEqual({ a: 1, b: 2 });
+  });
+  test('allow partial type', () => {
+    const result = pipe(
+      {} as { a?: string; b?: number },
+      omitBy((val, key) => key.toUpperCase() === key)
+    );
+    expect(result).toEqual({});
   });
 });
