@@ -13,7 +13,7 @@ import { purry } from './purry';
 export function omitBy<T>(
   object: T,
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
-): T extends Record<any, any> ? T : Partial<T>;
+): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -26,7 +26,7 @@ export function omitBy<T>(
  */
 export function omitBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
-): (object: T) => T extends Record<any, any> ? T : Partial<T>;
+): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function omitBy() {
   return purry(_omitBy, arguments);
