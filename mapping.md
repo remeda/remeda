@@ -32,6 +32,8 @@ documentation when migrating._
 | `forEach`        | `forEach`        | `forEach`           |
 | `forEachObj`     | `forEach`        | `forEachObjIndexed` |
 | `groupBy`        | `groupBy`        | `groupBy`           |
+| `identity`       | `identity`       | `identity`          |
+| `isNil`          | `isNil`          | `isNil`             |
 | `indexBy`        | `keyBy`          | `indexBy`           |
 | `intersection`   | `intersection`   | `intersection`      |
 | `last`           | `last`           | `last`              |
@@ -85,11 +87,8 @@ you are relying on when migrating._
 | `add`          | `add`          | `(x, y) => x + y`                          |
 | `-`            | `append`       | `(arr, val) => [...arr, val]`              |
 | `constant`     | `always`       | `x => () => x`                             |
-| `identity`     | `identity`     | `x => x`                                   |
-| `isNil`        | `isNil`        | `x => x == null`                           |
 | `nth`          | `nth`          | `n => a[n]`                                |
 | `-`            | `path`         | `a?.b?.c`                                  |
 | `-`            | `propEq`       | `x => x.a === value`                       |
 | `-`            | `propOr`       | `x => x.a ?? defaultValue`                 |
-| `reverse`      | `reverse`      | `(arr : Array<any>) => [...arr].reverse()` |
 | `words`        | `-`            | `str => str.split(/\s+/)`                  |
