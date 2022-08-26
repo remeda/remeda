@@ -44,6 +44,7 @@ documentation when migrating._
 | `noop`           | `noop`           | `-`                 |
 | `objOf`          | `-`              | `objOf`             |
 | `omit`           | `omit`           | `omit`              |
+| `omitBy`         | `omitBy`         | `-`                 |
 | `once`           | `once`           | `once`              |
 | `partition`      | `partition`      | `partition`         |
 | `pathOr`         | `get`            | `pathOr`            |

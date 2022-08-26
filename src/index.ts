@@ -42,6 +42,7 @@ export * from './minBy';
 export * from './noop';
 export * from './objOf';
 export * from './omit';
+export * from './omitBy';
 export * from './once';
 export * from './partition';
 export * from './pathOr';
