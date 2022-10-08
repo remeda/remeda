@@ -61,6 +61,7 @@ documentation when migrating._
 | `set`            | `set`            | `set`               |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
+| `sortBy`         | `orderBy`        | `-`                 |
 | `splitAt`        | `-`              | `splitAt`           |
 | `splitWhen`      | `-`              | `splitWhen`         |
 | `take`           | `take`           | `take`              |
