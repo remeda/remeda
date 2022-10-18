@@ -15,16 +15,39 @@ const _sumBy =
 /**
  * Returns the sum of the elements of an array using the provided predicate.
  * @param fn predicate function
- * @signiture
+ * @signature
  *   R.sumBy(fn)(array)
  *   R.sumBy.indexed(fn)(array)
  * @example
- *    R.
+ *    R.pipe(
+ *      [{a: 5}, {a: 1}, {a: 3}],
+ *      R.sumBy(x => x.a)
+ *    ) // 9
+ * @data_last
+ * @indexed
+ * @category Array
  */
 
 export function sumBy<T>(
   fn: (item: T) => number
 ): (items: readonly T[]) => number;
+
+/**
+ * Returns the sum of the elements of an array using the provided predicate.
+ * @param items the array
+ * @param fn predicate function
+ * @signature
+ *   R.sumBy(array, fn)
+ *   R.sumBy.indexed(array, fn)
+ * @example
+ *    R.sumBy(
+ *      [{a: 5}, {a: 1}, {a: 3}],
+ *      x => x.a
+ *    ) // 9
+ * @data_first
+ * @indexed
+ * @category Array
+ */
 
 export function sumBy<T>(items: readonly T[], fn: (item: T) => number): number;
 
