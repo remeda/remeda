@@ -51,6 +51,7 @@ export * from './pickBy';
 export * from './pipe';
 export * from './prop';
 export * from './purry';
+export * from './randomInteger';
 export * from './randomString';
 export * from './range';
 export * from './reduce';

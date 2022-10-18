@@ -53,6 +53,7 @@ documentation when migrating._
 | `pipe`           | `flow`           | `pipe`              |
 | `prop`           | `get`            | `prop`              |
 | `purry`          | `-`              | `-`                 |
+| `randomInteger`  | `-`              | `-`                 |
 | `randomString`   | `-`              | `-`                 |
 | `range`          | `range`          | `range`             |
 | `reduce`         | `reduce`         | `reduce`            |
