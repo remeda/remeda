@@ -64,6 +64,7 @@ documentation when migrating._
 | `sortBy`         | `orderBy`        | `-`                 |
 | `splitAt`        | `-`              | `splitAt`           |
 | `splitWhen`      | `-`              | `splitWhen`         |
+| `sumBy`          | `sumBy`          | `-`                 |
 | `take`           | `take`           | `take`              |
 | `takeWhile`      | `takeWhile`      | `takeWhile`         |
 | `times`          | `times`          | `times`             |

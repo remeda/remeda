@@ -61,6 +61,7 @@ export * from './sort';
 export * from './sortBy';
 export * from './splitAt';
 export * from './splitWhen';
+export * from './sumBy';
 export * from './take';
 export * from './takeWhile';
 export * from './times';
