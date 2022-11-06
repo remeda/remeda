@@ -59,6 +59,7 @@ documentation when migrating._
 | `reject`         | `reject`         | `reject`            |
 | `reverse`        | `reverse`        | `reverse`           |
 | `set`            | `set`            | `set`               |
+| `setPath`        | `set`            | `set`               |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
 | `sortBy`         | `orderBy`        | `-`                 |
