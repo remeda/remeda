@@ -1,16 +1,17 @@
 import { purry } from './purry';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
-const _sumBy =
-  (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
-    let sum = 0;
-    array.forEach((item, i) => {
-      const summand = indexed ? fn(item, i, array) : fn(item);
-      sum += summand;
-    });
-    return sum;
-  };
+const _sumBy = (indexed: boolean) => <T>(
+  array: T[],
+  fn: PredIndexedOptional<T, number>
+) => {
+  let sum = 0;
+  array.forEach((item, i) => {
+    const summand = indexed ? fn(item, i, array) : fn(item);
+    sum += summand;
+  });
+  return sum;
+};
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.

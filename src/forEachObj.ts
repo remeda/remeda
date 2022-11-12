@@ -5,7 +5,9 @@ type IndexedIteratee<T extends Record<PropertyKey, any>, K extends keyof T> = (
   key: K,
   obj: T
 ) => void;
-type UnindexedIteratee<T extends Record<PropertyKey, any>> = (value: T[keyof T]) => void;
+type UnindexedIteratee<T extends Record<PropertyKey, any>> = (
+  value: T[keyof T]
+) => void;
 
 /**
  * Iterate an object using a defined callback function. The original object is returned.

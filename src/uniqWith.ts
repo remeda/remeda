@@ -38,20 +38,25 @@ export function uniqWith<T>(array: readonly T[], isEquals: IsEquals<T>): T[];
  * @data_last
  * @category Object
  */
-export function uniqWith<T>(isEquals: IsEquals<T>): (array: readonly T[]) => T[];
+export function uniqWith<T>(
+  isEquals: IsEquals<T>
+): (array: readonly T[]) => T[];
 
 export function uniqWith() {
   return purry(_uniqWith, arguments, uniqWith.lazy);
 }
 
 function _uniqWith<T>(array: T[], isEquals: IsEquals<T>) {
-  const lazy = uniqWith.lazy(isEquals)
+  const lazy = uniqWith.lazy(isEquals);
   return _reduceLazy(array, lazy, true);
 }
 
 function _lazy<T>(isEquals: IsEquals<T>) {
   return (value: T, index?: number, array?: T[]): LazyResult<T> => {
-    if (array && array.findIndex((otherValue) => isEquals(value, otherValue)) === index) {
+    if (
+      array &&
+      array.findIndex(otherValue => isEquals(value, otherValue)) === index
+    ) {
       return {
         done: false,
         hasNext: true,
@@ -66,5 +71,5 @@ function _lazy<T>(isEquals: IsEquals<T>) {
 }
 
 export namespace uniqWith {
-  export const lazy = _toLazyIndexed(_lazy)
+  export const lazy = _toLazyIndexed(_lazy);
 }

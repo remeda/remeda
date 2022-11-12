@@ -12,7 +12,7 @@ describe('last', () => {
       expect(last([] as const)).toEqual(undefined);
     });
   });
-  
+
   describe('data last', () => {
     test('should return last', () => {
       expect(pipe([1, 2, 3] as const, last())).toEqual(3);
