@@ -23,14 +23,14 @@ describe('data first', () => {
   });
   test('partition with type guard', () => {
     const isNumber = function (value: any): value is number {
-      return typeof value === "number"
+      return typeof value === 'number';
     };
-    const actual = partition([1, "a", 2, "b"], isNumber);
-    expect(actual).toEqual([[1, 2], ["a", "b"]]);
-    const result: AssertEqual<
-      typeof actual,
-      [number[], string[]]
-    > = true;
+    const actual = partition([1, 'a', 2, 'b'], isNumber);
+    expect(actual).toEqual([
+      [1, 2],
+      ['a', 'b'],
+    ]);
+    const result: AssertEqual<typeof actual, [number[], string[]]> = true;
     expect(result).toBe(true);
   });
   test('partition.indexed', () => {
