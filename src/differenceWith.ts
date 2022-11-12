@@ -65,7 +65,7 @@ function _differenceWith<T>(array: T[], other: T[], isEquals: IsEquals<T>) {
 export namespace differenceWith {
   export function lazy<T>(other: T[], isEquals: IsEquals<T>) {
     return (value: T): LazyResult<T> => {
-      if (other.every((otherValue) => !isEquals(value, otherValue))) {
+      if (other.every(otherValue => !isEquals(value, otherValue))) {
         return {
           done: false,
           hasNext: true,

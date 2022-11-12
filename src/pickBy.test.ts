@@ -8,7 +8,10 @@ describe('data first', () => {
       { a: 1, b: 2, A: 3, B: 4 },
       (val, key) => key.toUpperCase() === key
     );
-    const resultType: AssertEqual<typeof result, Record<'a' | 'b' | 'A' | 'B', number>> = true
+    const resultType: AssertEqual<
+      typeof result,
+      Record<'a' | 'b' | 'A' | 'B', number>
+    > = true;
     expect(result).toStrictEqual({ A: 3, B: 4 });
     expect(resultType).toStrictEqual(true);
   });
@@ -21,7 +24,10 @@ describe('data first', () => {
       {} as { a?: string; b?: number },
       (val, key) => key === 'a'
     );
-    const resultType: AssertEqual<typeof result, Partial<{ a: string, b: number }>> = true
+    const resultType: AssertEqual<
+      typeof result,
+      Partial<{ a: string; b: number }>
+    > = true;
     expect(result).toEqual({});
     expect(resultType).toStrictEqual(true);
   });
@@ -33,7 +39,10 @@ describe('data last', () => {
       { a: 1, b: 2, A: 3, B: 4 },
       pickBy((val, key) => key.toUpperCase() === key)
     );
-    const resultType: AssertEqual<typeof result, Record<'a' | 'b' | 'A' | 'B', number>> = true
+    const resultType: AssertEqual<
+      typeof result,
+      Record<'a' | 'b' | 'A' | 'B', number>
+    > = true;
     expect(result).toStrictEqual({ A: 3, B: 4 });
     expect(resultType).toStrictEqual(true);
   });
@@ -42,7 +51,10 @@ describe('data last', () => {
       {} as { a?: string; b?: number },
       pickBy((val, key) => key.toUpperCase() === key)
     );
-    const resultType: AssertEqual<typeof result, Partial<{ a: string, b: number }>> = true
+    const resultType: AssertEqual<
+      typeof result,
+      Partial<{ a: string; b: number }>
+    > = true;
     expect(result).toEqual({});
     expect(resultType).toStrictEqual(true);
   });
