@@ -1,20 +1,21 @@
 import { purry } from './purry';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
-const _meanBy =
-    (indexed: boolean) =>
-        <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
-            if (array.length === 0){
-                return NaN
-            }
+const _meanBy = (indexed: boolean) => <T>(
+  array: T[],
+  fn: PredIndexedOptional<T, number>
+) => {
+  if (array.length === 0) {
+    return NaN;
+  }
 
-            let sum = 0
-            array.forEach((item, i) => {
-                sum += (indexed ? fn(item, i, array) : fn(item))
-            });
+  let sum = 0;
+  array.forEach((item, i) => {
+    sum += indexed ? fn(item, i, array) : fn(item);
+  });
 
-            return sum / array.length
-        };
+  return sum / array.length;
+};
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -33,7 +34,7 @@ const _meanBy =
  */
 
 export function meanBy<T>(
-    fn: (item: T) => number
+  fn: (item: T) => number
 ): (items: readonly T[]) => number;
 
 /**
@@ -56,20 +57,20 @@ export function meanBy<T>(
 export function meanBy<T>(items: readonly T[], fn: (item: T) => number): number;
 
 export function meanBy() {
-    return purry(_meanBy(false), arguments);
+  return purry(_meanBy(false), arguments);
 }
 
 export namespace meanBy {
-    export function indexed<T>(
-        array: readonly T[],
-        fn: PredIndexed<T, number>
-    ): number;
+  export function indexed<T>(
+    array: readonly T[],
+    fn: PredIndexed<T, number>
+  ): number;
 
-    export function indexed<T>(
-        fn: PredIndexed<T, number>
-    ): (array: readonly T[]) => number;
+  export function indexed<T>(
+    fn: PredIndexed<T, number>
+  ): (array: readonly T[]) => number;
 
-    export function indexed() {
-        return purry(_meanBy(true), arguments);
-    }
+  export function indexed() {
+    return purry(_meanBy(true), arguments);
+  }
 }
