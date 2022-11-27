@@ -12,7 +12,7 @@
  *      R.keys,
  *      R.first
  *    ) // => 'a'
- *    R.keys.strict({ a: 'x', b: 'y', c: 'z' } as const ) // => ['a', 'b', 'c'], typed Array<'a' | 'b' | 'c'>
+ *    R.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
@@ -27,7 +27,7 @@ export function keys(
 export namespace keys {
   export function strict<T extends Record<PropertyKey, unknown>>(
     source: T
-  ): Array<keyof T> {
+  ): Array<{ [K in keyof T]: K extends string | number ? `${K}` : never }[keyof T]> {
     return keys(source) as any;
   }
 }
