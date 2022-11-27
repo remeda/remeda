@@ -3,22 +3,21 @@ import { _toLazyIndexed } from './_toLazyIndexed';
 import { _toSingle } from './_toSingle';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
-const _minBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, number>
-) => {
-  let ret: T | undefined = undefined;
-  let retMin: number | undefined = undefined;
-  array.forEach((item, i) => {
-    const min = indexed ? fn(item, i, array) : fn(item);
-    if (retMin === undefined || min < retMin) {
-      ret = item;
-      retMin = min;
-    }
-  });
+const _minBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+    let ret: T | undefined = undefined;
+    let retMin: number | undefined = undefined;
+    array.forEach((item, i) => {
+      const min = indexed ? fn(item, i, array) : fn(item);
+      if (retMin === undefined || min < retMin) {
+        ret = item;
+        retMin = min;
+      }
+    });
 
-  return ret;
-};
+    return ret;
+  };
 
 /**
  * Returns the min element using the provided predicate.

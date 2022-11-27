@@ -293,10 +293,8 @@ describe('isFunction', () => {
     let maybeFunction: string | ((a: number) => string) | undefined;
     if (isFunction(maybeFunction)) {
       maybeFunction(1);
-      const result1: AssertEqual<
-        typeof maybeFunction,
-        (a: number) => string
-      > = true;
+      const result1: AssertEqual<typeof maybeFunction, (a: number) => string> =
+        true;
       expect(result1).toEqual(true);
     }
   });

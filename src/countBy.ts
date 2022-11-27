@@ -1,15 +1,14 @@
 import { purry } from './purry';
 import { Pred, PredIndexed, PredIndexedOptional } from './_types';
 
-const _countBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return array.reduce((ret, item, index) => {
-    const value = indexed ? fn(item, index, array) : fn(item);
-    return ret + (value ? 1 : 0);
-  }, 0);
-};
+const _countBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    return array.reduce((ret, item, index) => {
+      const value = indexed ? fn(item, index, array) : fn(item);
+      return ret + (value ? 1 : 0);
+    }, 0);
+  };
 
 /**
  * Counts how many values of the collection pass the specified predicate.

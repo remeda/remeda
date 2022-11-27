@@ -49,37 +49,36 @@ export function findIndex() {
   return purry(_findIndex(false), arguments, findIndex.lazy);
 }
 
-const _findIndex = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  if (indexed) {
-    return array.findIndex(fn);
-  }
-
-  return array.findIndex(x => fn(x));
-};
-
-const _lazy = (indexed: boolean) => <T>(
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  let i = 0;
-  return (value: T, index?: number, array?: T[]) => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    if (valid) {
-      return {
-        done: true,
-        hasNext: true,
-        next: i,
-      };
+const _findIndex =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    if (indexed) {
+      return array.findIndex(fn);
     }
-    i++;
-    return {
-      done: false,
-      hasNext: false,
+
+    return array.findIndex(x => fn(x));
+  };
+
+const _lazy =
+  (indexed: boolean) =>
+  <T>(fn: PredIndexedOptional<T, boolean>) => {
+    let i = 0;
+    return (value: T, index?: number, array?: T[]) => {
+      const valid = indexed ? fn(value, index, array) : fn(value);
+      if (valid) {
+        return {
+          done: true,
+          hasNext: true,
+          next: i,
+        };
+      }
+      i++;
+      return {
+        done: false,
+        hasNext: false,
+      };
     };
   };
-};
 
 export namespace findIndex {
   export function indexed<T>(

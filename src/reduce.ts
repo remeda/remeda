@@ -43,17 +43,19 @@ export function reduce() {
   return purry(_reduce(false), arguments);
 }
 
-const _reduce = (indexed: boolean) => <T, K>(
-  items: T[],
-  fn: (acc: K, item: T, index?: number, items?: T[]) => K,
-  initialValue: K
-): K => {
-  return items.reduce(
-    (acc, item, index) =>
-      indexed ? fn(acc, item, index, items) : fn(acc, item),
-    initialValue
-  );
-};
+const _reduce =
+  (indexed: boolean) =>
+  <T, K>(
+    items: T[],
+    fn: (acc: K, item: T, index?: number, items?: T[]) => K,
+    initialValue: K
+  ): K => {
+    return items.reduce(
+      (acc, item, index) =>
+        indexed ? fn(acc, item, index, items) : fn(acc, item),
+      initialValue
+    );
+  };
 
 export namespace reduce {
   export function indexed<T, K>(
