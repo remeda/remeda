@@ -12,11 +12,26 @@ describe('data_first', () => {
   test('should return difference', () => {
     expect(differenceWith(source, other, equals)).toEqual(expected);
   });
+
+  test('should allow differencing different data types', () => {
+    expect(
+      differenceWith([1, 2, 3, 4], ['2', '3'], (a, b) => a.toString() === b)
+    ).toEqual([1, 4]);
+  });
 });
 
 describe('data_last', () => {
   test('should return difference', () => {
     expect(differenceWith(other, equals)(source)).toEqual(expected);
+  });
+
+  test('should allow differencing different data types', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4],
+        differenceWith(['2', '3'], (a, b) => a.toString() === b)
+      )
+    ).toEqual([1, 4]);
   });
 
   test('lazy', () => {
