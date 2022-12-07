@@ -43,6 +43,8 @@ R.pick(['firstName', 'lastName'], obj);
 _.pick(obj, ['firstName', 'lastName']);
 ```
 
+> For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
+
 In the above example, "data-first" approach is more natural and more programmer friendly because when you type the second argument, you get the auto-complete from IDE. It's not possible to get the auto-complete in Ramda because the data argument is not provided.
 
 "data-last" approach is helpful when writing data transformations aka pipes.

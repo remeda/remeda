@@ -79,6 +79,9 @@ R.pick(['firstName', 'lastName'], obj);
 // Lodash
 _.pick(obj, ['firstName', 'lastName']);`}
           />
+          <blockquote>
+            For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
+          </blockquote>
           <p>
             In the above example, &quot;data-first&quot; approach is more
             natural and more programmer friendly because when you type the
@@ -112,7 +115,7 @@ R.pipe(
   R.filter(x => x.gender === 'f'),
   R.groupBy(x => x.age),
 )(users) // broken typings in TS :(
-  
+
 // Lodash
 _(users)
   .filter(x => x.gender === 'f')
@@ -168,7 +171,7 @@ const result = R.pipe(
   R.uniq(),
   R.take(3)
 ); // => [1, 2, 3]
-  
+
 /**
  * Console output:
  * iterate 1
@@ -187,7 +190,7 @@ const result = R.pipe(
           <CodeBlock
             type="dark"
             code={`const arr = [10, 12, 13, 3];
-  
+
 // filter even values
 R.filter(arr, x => x % 2 === 0); // => [10, 12]
 
@@ -205,7 +208,7 @@ R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
 
 const result = R.keys(input)
 // ^? Array<string>
-  
+
 const resultStrict = R.keys.strict(input)
 // ^? Array<'a' | 'b' | 'c'>`}
           />
