@@ -36,6 +36,7 @@ documentation when migrating._
 | `isNil`          | `isNil`          | `isNil`             |
 | `indexBy`        | `keyBy`          | `indexBy`           |
 | `intersection`   | `intersection`   | `intersection`      |
+| `invert`         | `invert`         | `invertObj`         |
 | `last`           | `last`           | `last`              |
 | `map`            | `map`            | `map`               |
 | `mapKeys`        | `mapKeys`        | `-`                 |

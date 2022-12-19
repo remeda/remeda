@@ -29,6 +29,7 @@ export * from './guards';
 export * from './identity';
 export * from './indexBy';
 export * from './intersection';
+export * from './invert';
 export * from './keys';
 export * from './last';
 export * from './map';
