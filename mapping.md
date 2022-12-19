@@ -39,6 +39,7 @@ documentation when migrating._
 | `isNil`            | `isNil`            | `isNil`             |
 | `join`             | `join`             | `join`              |
 | `indexBy`          | `keyBy`            | `indexBy`           |
+| `invert`           | `invert`           | `invertObj`         |
 | `intersection`     | `intersection`     | `intersection`      |
 | `intersectionWith` | `intersectionWith` | `innerJoin`         |
 | `last`             | `last`             | `last`              |
