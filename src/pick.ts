@@ -24,9 +24,9 @@ export function pick<T extends object, K extends keyof T>(
  * @data_last
  * @category Object
  */
-export function pick<T extends object, K extends keyof T>(
+export function pick<K extends string | number | symbol>(
   names: readonly K[]
-): (object: T) => Pick<T, K>;
+): <T extends Record<string | number | symbol, any>>(object: T) => Pick<T, K>;
 
 export function pick() {
   return purry(_pick, arguments);
