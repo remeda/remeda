@@ -31,5 +31,5 @@ function _invert(object: Invertable): Inverted {
   return Object.entries(object).reduce((accumulator, [key, value]) => {
     accumulator[value] = key;
     return accumulator;
-  }, {} as Inverted)
+  }, {} as Inverted);
 }
