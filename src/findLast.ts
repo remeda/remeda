@@ -17,7 +17,10 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  * @pipeable
  * @category Array
  */
-export function findLast<T>(array: readonly T[], fn: Pred<T, boolean>): T | undefined;
+export function findLast<T>(
+  array: readonly T[],
+  fn: Pred<T, boolean>
+): T | undefined;
 
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined
@@ -40,23 +43,33 @@ export function findLast<T>(array: readonly T[], fn: Pred<T, boolean>): T | unde
  * @pipeable
  * @category Array
  */
-export function findLast<T = never>(fn: Pred<T, boolean>): (array: readonly T[]) => T | undefined;
+export function findLast<T = never>(
+  fn: Pred<T, boolean>
+): (array: readonly T[]) => T | undefined;
 
 export function findLast() {
   return purry(_findLast(false), arguments);
 }
 
-const _findLast = (indexed: boolean) => <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+const _findLast = (indexed: boolean) => <T>(
+  array: T[],
+  fn: PredIndexedOptional<T, boolean>
+) => {
   for (let i = array.length - 1; i >= 0; i--) {
     if (indexed ? fn(array[i], i, array) : fn(array[i])) {
-      return array[i]
+      return array[i];
     }
   }
 };
 
 export namespace findLast {
-  export function indexed<T>(array: readonly T[], fn: PredIndexed<T, boolean>): T | undefined;
-  export function indexed<T>(fn: PredIndexed<T, boolean>): (array: readonly T[]) => T | undefined;
+  export function indexed<T>(
+    array: readonly T[],
+    fn: PredIndexed<T, boolean>
+  ): T | undefined;
+  export function indexed<T>(
+    fn: PredIndexed<T, boolean>
+  ): (array: readonly T[]) => T | undefined;
 
   export function indexed() {
     return purry(_findLast(true), arguments);
