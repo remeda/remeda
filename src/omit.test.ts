@@ -1,3 +1,5 @@
+import { expectType } from 'ts-expect';
+
 import { omit } from './omit';
 import { pipe } from './pipe';
 
@@ -13,4 +15,12 @@ describe('data last', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'] as const));
     expect(result).toEqual({ b: 2, c: 3 });
   });
+});
+
+test('type for curried form', () => {
+  const omitFoo = omit(['foo']);
+
+  const result = omitFoo({ foo: 1, bar: 'potato' });
+
+  expectType<{ bar: string }>(result);
 });
