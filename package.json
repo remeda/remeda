@@ -8,6 +8,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@types/jest": "^26.0.14",
+    "assert": "^2.0.0",
     "jest": "^26.4.2",
     "marked": "^0.4.0",
     "prettier": "^2.8.0",
