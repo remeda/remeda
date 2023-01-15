@@ -38,6 +38,7 @@ export * from './mapKeys';
 export * from './mapToObj';
 export * from './mapValues';
 export * from './maxBy';
+export * from './meanBy';
 export * from './merge';
 export * from './mergeAll';
 export * from './minBy';

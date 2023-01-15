@@ -41,6 +41,7 @@ documentation when migrating._
 | `last`           | `last`           | `last`              |
 | `map`            | `map`            | `map`               |
 | `mapKeys`        | `mapKeys`        | `-`                 |
+| `meanBy`         | `meanBy`         | `-`                 |
 | `merge`          | `assign`         | `merge`             |
 | `mergeAll`       | `assign`         | `mergeAll`          |
 | `noop`           | `noop`           | `-`                 |
