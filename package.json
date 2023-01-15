@@ -25,6 +25,7 @@
     "build:es": "yarn run tsc --declaration true --declarationMap true --module esnext --outDir \"./dist/es\"",
     "build:cjs": "yarn run tsc --declaration true --declarationMap true --module commonjs --outDir \"./dist/commonjs\"",
     "prettier": "prettier 'src/**/*.ts' --write",
+    "prettier:check": "prettier 'src/**/*.ts' --check",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
     "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",

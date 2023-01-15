@@ -42,6 +42,21 @@ jobs:
       - name: Run tests
         run: yarn test:ci
 
+  prettier:
+    name: prettier check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Prettier
+        run: yarn prettier:check
+
   publish:
     needs:
       - compile
