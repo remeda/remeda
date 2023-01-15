@@ -2,6 +2,24 @@ import { purry } from './purry';
 import { PredIndexedOptional, PredIndexed } from './_types';
 
 /**
+ * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
+ * @param items the items to split
+ * @param predicate a type guard function to invoke on every item
+ * @returns the array of grouped elements.
+ * @signature
+ *    R.partition(array, fn)
+ * @example
+ *    R.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
+ * @data_first
+ * @indexed
+ * @category Array
+ */
+export function partition<T, S extends T>(
+  items: readonly T[],
+  predicate: (item: T) => item is S
+): [S[], Exclude<T, S>[]];
+
+/**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
  * @param items the items to split
  * @param predicate the function invoked per iteration

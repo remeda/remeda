@@ -44,6 +44,8 @@ R.pick(['firstName', 'lastName'], obj);
 _.pick(obj, ['firstName', 'lastName']);
 ```
 
+> For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
+
 In the above example, "data-first" approach is more natural and more programmer friendly because when you type the second argument, you get the auto-complete from IDE. It's not possible to get the auto-complete in Ramda because the data argument is not provided.
 
 "data-last" approach is helpful when writing data transformations aka pipes.
@@ -151,7 +153,7 @@ Remeda Design Goals
 ----------
 1. The usage must be programmer friendly, and that's more important than following XYZ paradigm strictly.
 2. Manual annotation should never be required, and proper typings should infer everything. The only exception is the first function in `createPipe`.
-3. E6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.
+3. ES6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.
 4. The implementation of each function should be as minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
 5. All functions are immutable, and there are no side-effects.
 6. Fixed number of arguments.

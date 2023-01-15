@@ -1,5 +1,4 @@
 import { purry } from './purry';
-import { Key } from './_types';
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -11,10 +10,10 @@ import { Key } from './_types';
  * @data_first
  * @category Object
  */
-export function pickBy<K extends Key, V>(
-  object: Record<K, V>,
-  fn: (value: V, key: K) => boolean
-): Record<K, V>;
+export function pickBy<T>(
+  object: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -25,9 +24,9 @@ export function pickBy<K extends Key, V>(
  * @data_last
  * @category Object
  */
-export function pickBy<K extends Key, V>(
-  fn: (value: V, key: K) => boolean
-): (object: Record<K, V>) => Record<K, V>;
+export function pickBy<T>(
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function pickBy() {
   return purry(_pickBy, arguments);

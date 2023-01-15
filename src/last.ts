@@ -24,24 +24,9 @@ export function last<T>(array: NonEmptyArray<T>): T;
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 export function last() {
-  return purry(_last, arguments, last.lazy);
+  return purry(_last, arguments);
 }
 
 function _last<T>(array: T[]) {
   return array[array.length - 1];
-}
-
-export namespace last {
-  export function lazy<T>() {
-    return (value: T) => {
-      return {
-        done: true,
-        hasNext: true,
-        next: value,
-      };
-    };
-  }
-  export namespace lazy {
-    export const single = true;
-  }
 }

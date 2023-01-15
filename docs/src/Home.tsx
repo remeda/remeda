@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Readme } from './Readme';
 import { CodeBlock } from './CodeBlock';
 
 export function Home() {
@@ -39,7 +38,9 @@ export function Home() {
               }}
             >
               <code>
-                npm i remeda<br />yarn add remeda
+                npm i remeda
+                <br />
+                yarn add remeda
               </code>
             </pre>
           </div>
@@ -54,8 +55,10 @@ export function Home() {
           <p>
             There are no good utility libraries that work well with TypeScript.
             When working with Lodash or Ramda you must sometimes annotate types
-            manually.<br />Remeda is written and tested in TypeScript and that
-            means there won't be any problems with custom typings.
+            manually.
+            <br />
+            Remeda is written and tested in TypeScript and that means there
+            won't be any problems with custom typings.
           </p>
           <h2 id="what-s-data-first-and-data-last-">
             What's &quot;data-first&quot; and &quot;data-last&quot;?
@@ -76,6 +79,9 @@ R.pick(['firstName', 'lastName'], obj);
 // Lodash
 _.pick(obj, ['firstName', 'lastName']);`}
           />
+          <blockquote>
+            For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
+          </blockquote>
           <p>
             In the above example, &quot;data-first&quot; approach is more
             natural and more programmer friendly because when you type the
@@ -109,7 +115,7 @@ R.pipe(
   R.filter(x => x.gender === 'f'),
   R.groupBy(x => x.age),
 )(users) // broken typings in TS :(
-  
+
 // Lodash
 _(users)
   .filter(x => x.gender === 'f')
@@ -124,11 +130,13 @@ _.flow(
           />
           <p>
             Mixing paradigms can be cumbersome in Lodash because it requires
-            importing two different methods.<br />Remeda implements all methods
-            in two versions, and the correct overload is picked based on the
-            number of provided arguments.<br />The &quot;data-last&quot; version
-            must always have one argument less than the &quot;data-first&quot;
-            version.
+            importing two different methods.
+            <br />
+            Remeda implements all methods in two versions, and the correct
+            overload is picked based on the number of provided arguments.
+            <br />
+            The &quot;data-last&quot; version must always have one argument less
+            than the &quot;data-first&quot; version.
           </p>
           <CodeBlock
             type="dark"
@@ -144,8 +152,10 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
           <p>
             Many functions support lazy evaluation when using <code>pipe</code>{' '}
             or <code>createPipe</code>. These functions have a{' '}
-            <code>pipeable</code> tag in the documentation.<br />Lazy evaluation
-            is not supported in Ramda and only partially supported in lodash.
+            <code>pipeable</code> tag in the documentation.
+            <br />
+            Lazy evaluation is not supported in Ramda and only partially
+            supported in lodash.
           </p>
           <CodeBlock
             type="dark"
@@ -161,7 +171,7 @@ const result = R.pipe(
   R.uniq(),
   R.take(3)
 ); // => [1, 2, 3]
-  
+
 /**
  * Console output:
  * iterate 1
@@ -180,12 +190,27 @@ const result = R.pipe(
           <CodeBlock
             type="dark"
             code={`const arr = [10, 12, 13, 3];
-  
+
 // filter even values
 R.filter(arr, x => x % 2 === 0); // => [10, 12]
 
 // filter even indexes
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
+          />
+          <h2 id="strict-version">Strict version</h2>
+          <p>
+            Some functions have an extra property <code>strict</code> which is
+            the same function with stricter types.
+          </p>
+          <CodeBlock
+            type="dark"
+            code={`const input = { a: 'x', b: 'y', c: 'z' } as const
+
+const result = R.keys(input)
+// ^? Array<string>
+
+const resultStrict = R.keys.strict(input)
+// ^? Array<'a' | 'b' | 'c'>`}
           />
           <h2 id="remeda-design-goals">Remeda Design Goals</h2>
           <ol>

@@ -1,10 +1,10 @@
-import { pickBy } from './pickBy';
+import { omitBy } from './omitBy';
 import { pipe } from './pipe';
 import { AssertEqual } from './_types';
 
 describe('data first', () => {
-  test('it should pick props', () => {
-    const result = pickBy(
+  test('it should omit props', () => {
+    const result = omitBy(
       { a: 1, b: 2, A: 3, B: 4 },
       (val, key) => key.toUpperCase() === key
     );
@@ -12,16 +12,12 @@ describe('data first', () => {
       typeof result,
       Record<'a' | 'b' | 'A' | 'B', number>
     > = true;
-    expect(result).toStrictEqual({ A: 3, B: 4 });
+    expect(result).toStrictEqual({ a: 1, b: 2 });
     expect(resultType).toStrictEqual(true);
   });
-  test('allow undefined or null', () => {
-    expect(pickBy(undefined as any, (val, key) => key === 'foo')).toEqual({});
-    expect(pickBy(null as any, (val, key) => key === 'foo')).toEqual({});
-  });
   test('allow partial type', () => {
-    const result = pickBy(
-      {} as { a?: string; b?: number },
+    const result = omitBy(
+      {} as Partial<{ a: string; b: number }>,
       (val, key) => key === 'a'
     );
     const resultType: AssertEqual<
@@ -34,22 +30,22 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('it should pick props', () => {
+  test('it should omit props', () => {
     const result = pipe(
       { a: 1, b: 2, A: 3, B: 4 },
-      pickBy((val, key) => key.toUpperCase() === key)
+      omitBy((val, key) => key.toUpperCase() === key)
     );
     const resultType: AssertEqual<
       typeof result,
       Record<'a' | 'b' | 'A' | 'B', number>
     > = true;
-    expect(result).toStrictEqual({ A: 3, B: 4 });
+    expect(result).toStrictEqual({ a: 1, b: 2 });
     expect(resultType).toStrictEqual(true);
   });
   test('allow partial type', () => {
     const result = pipe(
-      {} as { a?: string; b?: number },
-      pickBy((val, key) => key.toUpperCase() === key)
+      {} as Partial<{ a: string; b: number }>,
+      omitBy((val, key) => key.toUpperCase() === key)
     );
     const resultType: AssertEqual<
       typeof result,

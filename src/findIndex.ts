@@ -85,10 +85,10 @@ export namespace findIndex {
   export function indexed<T>(
     array: readonly T[],
     fn: PredIndexed<T, boolean>
-  ): T | undefined;
+  ): number;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
-  ): (array: readonly T[]) => T | undefined;
+  ): (array: readonly T[]) => number;
   export function indexed() {
     return purry(_findIndex(true), arguments, findIndex.lazyIndexed);
   }

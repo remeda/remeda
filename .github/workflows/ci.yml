@@ -41,3 +41,43 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: yarn test:ci
+
+  prettier:
+    name: prettier check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Prettier
+        run: yarn prettier:check
+
+  publish:
+    needs:
+      - compile
+      - test
+    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn run build
+      - name: Release
+        run: npx semantic-release@19
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
