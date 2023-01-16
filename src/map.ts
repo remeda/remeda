@@ -41,26 +41,27 @@ export function map() {
   return purry(_map(false), arguments, map.lazy);
 }
 
-const _map = (indexed: boolean) => <T, K>(
-  array: T[],
-  fn: PredIndexedOptional<T, K>
-) => {
-  return _reduceLazy(
-    array,
-    indexed ? map.lazyIndexed(fn) : map.lazy(fn),
-    indexed
-  );
-};
+const _map =
+  (indexed: boolean) =>
+  <T, K>(array: T[], fn: PredIndexedOptional<T, K>) => {
+    return _reduceLazy(
+      array,
+      indexed ? map.lazyIndexed(fn) : map.lazy(fn),
+      indexed
+    );
+  };
 
-const _lazy = (indexed: boolean) => <T, K>(fn: PredIndexedOptional<T, K>) => {
-  return (value: T, index?: number, array?: T[]): LazyResult<K> => {
-    return {
-      done: false,
-      hasNext: true,
-      next: indexed ? fn(value, index, array) : fn(value),
+const _lazy =
+  (indexed: boolean) =>
+  <T, K>(fn: PredIndexedOptional<T, K>) => {
+    return (value: T, index?: number, array?: T[]): LazyResult<K> => {
+      return {
+        done: false,
+        hasNext: true,
+        next: indexed ? fn(value, index, array) : fn(value),
+      };
     };
   };
-};
 
 export namespace map {
   export function indexed<T, K>(

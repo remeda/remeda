@@ -1,7 +1,7 @@
 import { purry } from './purry';
 import { LazyResult, _reduceLazy } from './_reduceLazy';
 
-type IsEquals<T> = (a: T, b: T) => boolean;
+type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
 /**
  * Excludes the values from `other` array.
@@ -21,11 +21,11 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @category Array
  * @pipeable
  */
-export function differenceWith<T>(
-  array: readonly T[],
-  other: readonly T[],
-  isEquals: IsEquals<T>
-): T[];
+export function differenceWith<TFirst, TSecond>(
+  array: readonly TFirst[],
+  other: readonly TSecond[],
+  isEquals: IsEquals<TFirst, TSecond>
+): TFirst[];
 
 /**
  * Excludes the values from `other` array.
@@ -48,24 +48,31 @@ export function differenceWith<T>(
  * @category Array
  * @pipeable
  */
-export function differenceWith<T, K>(
-  other: readonly T[],
-  isEquals: IsEquals<T>
-): (array: readonly K[]) => T[];
+export function differenceWith<TFirst, TSecond>(
+  other: readonly TSecond[],
+  isEquals: IsEquals<TFirst, TSecond>
+): (array: readonly TFirst[]) => TFirst[];
 
 export function differenceWith() {
   return purry(_differenceWith, arguments, differenceWith.lazy);
 }
 
-function _differenceWith<T>(array: T[], other: T[], isEquals: IsEquals<T>) {
+function _differenceWith<TFirst, TSecond>(
+  array: TFirst[],
+  other: TSecond[],
+  isEquals: IsEquals<TFirst, TSecond>
+) {
   const lazy = differenceWith.lazy(other, isEquals);
   return _reduceLazy(array, lazy);
 }
 
 export namespace differenceWith {
-  export function lazy<T>(other: T[], isEquals: IsEquals<T>) {
-    return (value: T): LazyResult<T> => {
-      if (other.every((otherValue) => !isEquals(value, otherValue))) {
+  export function lazy<TFirst, TSecond>(
+    other: TSecond[],
+    isEquals: IsEquals<TFirst, TSecond>
+  ) {
+    return (value: TFirst): LazyResult<TFirst> => {
+      if (other.every(otherValue => !isEquals(value, otherValue))) {
         return {
           done: false,
           hasNext: true,
