@@ -1,21 +1,20 @@
 import { purry } from './purry';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
-const _meanBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, number>
-) => {
-  if (array.length === 0) {
-    return NaN;
-  }
+const _meanBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+    if (array.length === 0) {
+      return NaN;
+    }
 
-  let sum = 0;
-  array.forEach((item, i) => {
-    sum += indexed ? fn(item, i, array) : fn(item);
-  });
+    let sum = 0;
+    array.forEach((item, i) => {
+      sum += indexed ? fn(item, i, array) : fn(item);
+    });
 
-  return sum / array.length;
-};
+    return sum / array.length;
+  };
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
