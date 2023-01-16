@@ -12,9 +12,11 @@ type PathsOfObject<Obj, Prefix extends Key[]> = {
 
 export type ValueAtPath<Obj, ObjPath extends Key[] = []> = ObjPath extends []
   ? Obj
-  : ObjPath extends [infer Head, ...infer Tail extends Key[]]
-  ? Head extends keyof Obj
-    ? ValueAtPath<Obj[Head], Tail>
+  : ObjPath extends [infer Head, ...infer Tail]
+  ? Tail extends Key[]
+    ? Head extends keyof Obj
+      ? ValueAtPath<Obj[Head], Tail>
+      : never
     : never
   : never;
 
