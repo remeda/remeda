@@ -1,6 +1,3 @@
-import { Path } from './_paths';
-import { Key } from './_types';
-
 /**
  * Converts a path string to an array of keys.
  * @param path a string path
@@ -27,21 +24,6 @@ function _stringToPath(path: string): string[] {
   return [path];
 }
 
-export type PathToString<
-  T extends Key[],
-  Prefix extends string = ''
-> = T extends []
-  ? Prefix
-  : T extends [infer Head extends string, ...infer Tail extends string[]]
-  ? Prefix extends ''
-    ? Head extends number
-      ? PathToString<Tail, `${Head}` | `[${Head}]`>
-      : PathToString<Tail, `${Head}`>
-    : Head extends number
-    ? PathToString<Tail, `${Prefix}[${Head}]` | `${Prefix}.${Head}`>
-    : PathToString<Tail, `${Prefix}.${Head}`>
-  : never;
-
 export type StringToPath<T extends string> = T extends ''
   ? []
   : T extends `[${infer Head}].${infer Tail}`
@@ -51,5 +33,3 @@ export type StringToPath<T extends string> = T extends ''
   : T extends `${infer Head}${infer Tail}`
   ? [Head, ...StringToPath<Tail>]
   : [T];
-
-export type PathString<Obj> = PathToString<Path<Obj>>;
