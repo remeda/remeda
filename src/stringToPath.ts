@@ -9,17 +9,23 @@ import { Key } from './_types';
  * @data_first
  * @category String
  */
-export const stringToPath = <T extends string>(path: T): StringPathKey[] => {
+export function stringToPath<Path extends string>(
+  path: Path
+): StringToPath<Path> {
+  return _stringToPath(path) as any;
+}
+
+function _stringToPath(path: string): StringPathKey[] {
   if (path.length === 0) return [];
 
   let match =
     path.match(/^\[(.+?)\](.*)$/) || path.match(/^\.?([^\.\[\]]+)(.*)$/);
   if (match) {
     const [_, key, rest] = match;
-    return [/^\d+$/.test(key) ? Number(key) : key, ...stringToPath(rest)];
+    return [/^\d+$/.test(key) ? Number(key) : key, ..._stringToPath(rest)];
   }
   return [path];
-};
+}
 
 // Can't represent a symbol in a string path
 type StringPathKey = string | number;
