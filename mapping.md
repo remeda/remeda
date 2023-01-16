@@ -76,6 +76,7 @@ documentation when migrating._
 | `uniq`           | `uniq`           | `uniq`              |
 | `uniqBy`         | `uniqBy`         | `uniqBy`            |
 | `uniqWith`       | `uniqWith`       | `uniqWith`          |
+| `zipObj`         | `zipObj`         | `zipObj`            |
 
 ### Helpful one-liners
 
