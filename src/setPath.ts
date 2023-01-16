@@ -1,4 +1,3 @@
-import { F } from 'ts-toolbelt';
 import { purry } from './purry';
 import {
   Path,
@@ -9,6 +8,7 @@ import {
   ValueAtPath,
 } from './_paths';
 import { Key } from './_types';
+import { Narrow } from './_narrow';
 
 /**
  * Sets the value at `path` of `object`. `path` can be an array or a path string.
@@ -24,7 +24,7 @@ import { Key } from './_types';
  */
 export function setPath<T, TPath extends Key[] & Path<T>>(
   object: T,
-  path: F.Narrow<TPath>,
+  path: Narrow<TPath>,
   value: ValueAtPath<T, TPath>
 ): T;
 
@@ -59,7 +59,7 @@ export function setPath<T, TPath extends PathString<T>>(
  * @category Object
  */
 export function setPath<TPath extends Key[], Value>(
-  path: F.Narrow<TPath>,
+  path: Narrow<TPath>,
   value: Value
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
@@ -76,7 +76,7 @@ export function setPath<TPath extends Key[], Value>(
  * @category Object
  */
 export function setPath<TPath extends string, Value>(
-  path: F.Narrow<TPath>,
+  path: Narrow<TPath>,
   value: Value
 ): <Obj>(object: SupportsValueAtPath<Obj, StringToPath<TPath>, Value>) => Obj;
 
