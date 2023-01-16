@@ -55,31 +55,32 @@ export function forEach() {
   return purry(_forEach(false), arguments, forEach.lazy);
 }
 
-const _forEach = (indexed: boolean) => <T, K>(
-  array: T[],
-  fn: PredIndexedOptional<T, K>
-) => {
-  return _reduceLazy(
-    array,
-    indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
-    indexed
-  );
-};
+const _forEach =
+  (indexed: boolean) =>
+  <T, K>(array: T[], fn: PredIndexedOptional<T, K>) => {
+    return _reduceLazy(
+      array,
+      indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
+      indexed
+    );
+  };
 
-const _lazy = (indexed: boolean) => <T>(fn: PredIndexedOptional<T, void>) => {
-  return (value: T, index?: number, array?: T[]): LazyResult<T> => {
-    if (indexed) {
-      fn(value, index, array);
-    } else {
-      fn(value);
-    }
-    return {
-      done: false,
-      hasNext: true,
-      next: value,
+const _lazy =
+  (indexed: boolean) =>
+  <T>(fn: PredIndexedOptional<T, void>) => {
+    return (value: T, index?: number, array?: T[]): LazyResult<T> => {
+      if (indexed) {
+        fn(value, index, array);
+      } else {
+        fn(value);
+      }
+      return {
+        done: false,
+        hasNext: true,
+        next: value,
+      };
     };
   };
-};
 
 export namespace forEach {
   export function indexed<T>(

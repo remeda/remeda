@@ -41,35 +41,34 @@ export function reject() {
   return purry(_reject(false), arguments, reject.lazy);
 }
 
-const _reject = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return _reduceLazy(
-    array,
-    indexed ? reject.lazyIndexed(fn) : reject.lazy(fn),
-    indexed
-  );
-};
+const _reject =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    return _reduceLazy(
+      array,
+      indexed ? reject.lazyIndexed(fn) : reject.lazy(fn),
+      indexed
+    );
+  };
 
-const _lazy = (indexed: boolean) => <T>(
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return (value: T, index?: number, array?: T[]): LazyResult<T> => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    if (!valid === true) {
+const _lazy =
+  (indexed: boolean) =>
+  <T>(fn: PredIndexedOptional<T, boolean>) => {
+    return (value: T, index?: number, array?: T[]): LazyResult<T> => {
+      const valid = indexed ? fn(value, index, array) : fn(value);
+      if (!valid === true) {
+        return {
+          done: false,
+          hasNext: true,
+          next: value,
+        };
+      }
       return {
         done: false,
-        hasNext: true,
-        next: value,
+        hasNext: false,
       };
-    }
-    return {
-      done: false,
-      hasNext: false,
     };
   };
-};
 
 export namespace reject {
   export function indexed<T, K>(

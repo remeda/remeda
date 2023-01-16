@@ -51,29 +51,28 @@ export function find() {
   return purry(_find(false), arguments, find.lazy);
 }
 
-const _find = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  if (indexed) {
-    return array.find(fn);
-  }
+const _find =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    if (indexed) {
+      return array.find(fn);
+    }
 
-  return array.find(x => fn(x));
-};
+    return array.find(x => fn(x));
+  };
 
-const _lazy = (indexed: boolean) => <T>(
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return (value: T, index?: number, array?: T[]) => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    return {
-      done: valid,
-      hasNext: valid,
-      next: value,
+const _lazy =
+  (indexed: boolean) =>
+  <T>(fn: PredIndexedOptional<T, boolean>) => {
+    return (value: T, index?: number, array?: T[]) => {
+      const valid = indexed ? fn(value, index, array) : fn(value);
+      return {
+        done: valid,
+        hasNext: valid,
+        next: value,
+      };
     };
   };
-};
 
 export namespace find {
   export function indexed<T>(

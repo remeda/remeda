@@ -5,7 +5,9 @@ type IndexedIteratee<T extends Record<PropertyKey, any>, K extends keyof T> = (
   key: K,
   obj: T
 ) => void;
-type UnindexedIteratee<T extends Record<PropertyKey, any>> = (value: T[keyof T]) => void;
+type UnindexedIteratee<T extends Record<PropertyKey, any>> = (
+  value: T[keyof T]
+) => void;
 
 /**
  * Iterate an object using a defined callback function. The original object is returned.
@@ -54,19 +56,18 @@ export function forEachObj() {
   return purry(_forEachObj(false), arguments);
 }
 
-const _forEachObj = (indexed: boolean) => (
-  object: any,
-  fn: (value: any, key?: any, obj?: any) => void
-) => {
-  for (const key in object) {
-    if (object.hasOwnProperty(key)) {
-      const val = object[key];
-      if (indexed) fn(val, key, object);
-      else fn(val);
+const _forEachObj =
+  (indexed: boolean) =>
+  (object: any, fn: (value: any, key?: any, obj?: any) => void) => {
+    for (const key in object) {
+      if (object.hasOwnProperty(key)) {
+        const val = object[key];
+        if (indexed) fn(val, key, object);
+        else fn(val);
+      }
     }
-  }
-  return object;
-};
+    return object;
+  };
 
 export namespace forEachObj {
   export function indexed<T extends Record<PropertyKey, any>>(

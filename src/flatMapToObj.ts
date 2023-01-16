@@ -57,18 +57,17 @@ export function flatMapToObj() {
   return purry(_flatMapToObj(false), arguments);
 }
 
-const _flatMapToObj = (indexed: boolean) => <T>(
-  array: any[],
-  fn: PredIndexedOptional<any, any>
-) => {
-  return array.reduce((result, element, index) => {
-    const items = indexed ? fn(element, index, array) : fn(element);
-    items.forEach(([key, value]: [any, any]) => {
-      result[key] = value;
-    });
-    return result;
-  }, {});
-};
+const _flatMapToObj =
+  (indexed: boolean) =>
+  <T>(array: any[], fn: PredIndexedOptional<any, any>) => {
+    return array.reduce((result, element, index) => {
+      const items = indexed ? fn(element, index, array) : fn(element);
+      items.forEach(([key, value]: [any, any]) => {
+        result[key] = value;
+      });
+      return result;
+    }, {});
+  };
 
 export namespace flatMapToObj {
   export function indexed<T, K extends keyof any, V>(
