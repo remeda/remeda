@@ -37,21 +37,20 @@ export function groupBy() {
   return purry(_groupBy(false), arguments);
 }
 
-const _groupBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, any>
-) => {
-  const ret: Record<string, T[]> = {};
-  array.forEach((item, index) => {
-    const value = indexed ? fn(item, index, array) : fn(item);
-    const key = String(value);
-    if (!ret[key]) {
-      ret[key] = [];
-    }
-    ret[key].push(item);
-  });
-  return ret;
-};
+const _groupBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
+    const ret: Record<string, T[]> = {};
+    array.forEach((item, index) => {
+      const value = indexed ? fn(item, index, array) : fn(item);
+      const key = String(value);
+      if (!ret[key]) {
+        ret[key] = [];
+      }
+      ret[key].push(item);
+    });
+    return ret;
+  };
 
 export namespace groupBy {
   export function indexed<T, K>(

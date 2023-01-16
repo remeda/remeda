@@ -3,22 +3,21 @@ import { _toLazyIndexed } from './_toLazyIndexed';
 import { _toSingle } from './_toSingle';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
-const _maxBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, number>
-) => {
-  let ret: T | undefined = undefined;
-  let retMax: number | undefined = undefined;
-  array.forEach((item, i) => {
-    const max = indexed ? fn(item, i, array) : fn(item);
-    if (retMax === undefined || max > retMax) {
-      ret = item;
-      retMax = max;
-    }
-  });
+const _maxBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+    let ret: T | undefined = undefined;
+    let retMax: number | undefined = undefined;
+    array.forEach((item, i) => {
+      const max = indexed ? fn(item, i, array) : fn(item);
+      if (retMax === undefined || max > retMax) {
+        ret = item;
+        retMax = max;
+      }
+    });
 
-  return ret;
-};
+    return ret;
+  };
 
 /**
  * Returns the max element using the provided predicate.

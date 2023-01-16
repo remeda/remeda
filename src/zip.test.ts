@@ -36,10 +36,8 @@ describe('data first typings', () => {
   });
   test('tuples', () => {
     const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
-    const result: AssertEqual<
-      typeof actual,
-      [1 | 2 | 3, 'a' | 'b' | 'c'][]
-    > = true;
+    const result: AssertEqual<typeof actual, [1 | 2 | 3, 'a' | 'b' | 'c'][]> =
+      true;
     expect(result).toBe(true);
   });
   test('variadic tuples', () => {
@@ -84,10 +82,8 @@ describe('data second typings', () => {
   });
   test('tuples', () => {
     const actual = zip(second as ['a', 'b', 'c'])(first as [1, 2, 3]);
-    const result: AssertEqual<
-      typeof actual,
-      [1 | 2 | 3, 'a' | 'b' | 'c'][]
-    > = true;
+    const result: AssertEqual<typeof actual, [1 | 2 | 3, 'a' | 'b' | 'c'][]> =
+      true;
     expect(result).toBe(true);
   });
   test('variadic tuples', () => {
