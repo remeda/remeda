@@ -11,10 +11,10 @@ describe('Test for keys', () => {
   });
 
   describe('strict', () => {
-    const actual = keys.strict({ a: 'x', b: 'y', c: 'z' } as const);
-    expect(actual).toEqual(['a', 'b', 'c']);
+    const actual = keys.strict({ 5: 'x', b: 'y', c: 'z' } as const);
+    expect(actual).toEqual(['5', 'b', 'c']);
 
-    const result: AssertEqual<typeof actual, Array<'a' | 'b' | 'c'>> = true;
+    const result: AssertEqual<typeof actual, Array<'5' | 'b' | 'c'>> = true;
 
     expect(result).toEqual(true);
   });

@@ -47,35 +47,34 @@ export function filter() {
   return purry(_filter(false), arguments, filter.lazy);
 }
 
-const _filter = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return _reduceLazy(
-    array,
-    indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
-    indexed
-  );
-};
+const _filter =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    return _reduceLazy(
+      array,
+      indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
+      indexed
+    );
+  };
 
-const _lazy = (indexed: boolean) => <T>(
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  return (value: T, index?: number, array?: T[]): LazyResult<T> => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    if (!!valid === true) {
+const _lazy =
+  (indexed: boolean) =>
+  <T>(fn: PredIndexedOptional<T, boolean>) => {
+    return (value: T, index?: number, array?: T[]): LazyResult<T> => {
+      const valid = indexed ? fn(value, index, array) : fn(value);
+      if (!!valid === true) {
+        return {
+          done: false,
+          hasNext: true,
+          next: value,
+        };
+      }
       return {
         done: false,
-        hasNext: true,
-        next: value,
+        hasNext: false,
       };
-    }
-    return {
-      done: false,
-      hasNext: false,
     };
   };
-};
 
 export namespace filter {
   export function indexed<T, S extends T>(
