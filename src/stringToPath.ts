@@ -15,30 +15,24 @@ export function stringToPath<Path extends string>(
   return _stringToPath(path) as any;
 }
 
-function _stringToPath(path: string): StringPathKey[] {
+function _stringToPath(path: string): string[] {
   if (path.length === 0) return [];
 
   let match =
     path.match(/^\[(.+?)\](.*)$/) || path.match(/^\.?([^\.\[\]]+)(.*)$/);
   if (match) {
     const [_, key, rest] = match;
-    return [/^\d+$/.test(key) ? Number(key) : key, ..._stringToPath(rest)];
+    return [key, ..._stringToPath(rest)];
   }
   return [path];
 }
-
-// Can't represent a symbol in a string path
-type StringPathKey = string | number;
 
 export type PathToString<
   T extends Key[],
   Prefix extends string = ''
 > = T extends []
   ? Prefix
-  : T extends [
-      infer Head extends StringPathKey,
-      ...infer Tail extends StringPathKey[]
-    ]
+  : T extends [infer Head extends string, ...infer Tail extends string[]]
   ? Prefix extends ''
     ? Head extends number
       ? PathToString<Tail, `${Head}` | `[${Head}]`>
@@ -48,18 +42,14 @@ export type PathToString<
     : PathToString<Tail, `${Prefix}.${Head}`>
   : never;
 
-type WithNumbers<T extends string> = T extends `${infer Num extends number}`
-  ? Num
-  : T;
-
 export type StringToPath<T extends string> = T extends ''
   ? []
   : T extends `[${infer Head}].${infer Tail}`
-  ? [WithNumbers<Head>, ...StringToPath<Tail>]
+  ? [Head, ...StringToPath<Tail>]
   : T extends `.${infer Head}${infer Tail}`
-  ? [WithNumbers<Head>, ...StringToPath<Tail>]
+  ? [Head, ...StringToPath<Tail>]
   : T extends `${infer Head}${infer Tail}`
-  ? [WithNumbers<Head>, ...StringToPath<Tail>]
-  : [WithNumbers<T>];
+  ? [Head, ...StringToPath<Tail>]
+  : [T];
 
 export type PathString<Obj> = PathToString<Path<Obj>>;
