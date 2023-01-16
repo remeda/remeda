@@ -51,16 +51,15 @@ export function findLast() {
   return purry(_findLast(false), arguments);
 }
 
-const _findLast = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  for (let i = array.length - 1; i >= 0; i--) {
-    if (indexed ? fn(array[i], i, array) : fn(array[i])) {
-      return array[i];
+const _findLast =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (indexed ? fn(array[i], i, array) : fn(array[i])) {
+        return array[i];
+      }
     }
-  }
-};
+  };
 
 export namespace findLast {
   export function indexed<T>(

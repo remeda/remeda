@@ -34,16 +34,13 @@ describe('data first', () => {
     expect(sortBy(items, x => x.a)).toEqual(sorted);
   });
   test('sort booleans correctly', () => {
-    expect(
-      sortBy(objects, [x => x.active, 'desc']).map(x => x.active)
-    ).toEqual([true, true, false, false]);
+    expect(sortBy(objects, [x => x.active, 'desc']).map(x => x.active)).toEqual(
+      [true, true, false, false]
+    );
   });
   test('sort dates correctly', () => {
     expect(sortBy(objects, [x => x.date, 'desc']).map(x => x.id)).toEqual([
-      4,
-      3,
-      2,
-      1,
+      4, 3, 2, 1,
     ]);
   });
   test('sort objects correctly', () => {
@@ -61,9 +58,9 @@ describe('data first', () => {
     ).toEqual([1, 1, 2, 3]);
   });
   test('sort objects descending correctly', () => {
-    expect(
-      sortBy(objects, [x => x.weight, 'desc']).map(x => x.weight)
-    ).toEqual([3, 2, 1, 1]);
+    expect(sortBy(objects, [x => x.weight, 'desc']).map(x => x.weight)).toEqual(
+      [3, 2, 1, 1]
+    );
   });
 });
 

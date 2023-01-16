@@ -41,17 +41,16 @@ export function indexBy() {
   return purry(_indexBy(false), arguments);
 }
 
-const _indexBy = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, any>
-) => {
-  return array.reduce((ret, item, index) => {
-    const value = indexed ? fn(item, index, array) : fn(item);
-    const key = String(value);
-    ret[key] = item;
-    return ret;
-  }, {} as Record<string, T>);
-};
+const _indexBy =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
+    return array.reduce((ret, item, index) => {
+      const value = indexed ? fn(item, index, array) : fn(item);
+      const key = String(value);
+      ret[key] = item;
+      return ret;
+    }, {} as Record<string, T>);
+  };
 
 export namespace indexBy {
   export function indexed<T, K>(

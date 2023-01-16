@@ -57,17 +57,16 @@ export function partition() {
   return purry(_partition(false), arguments);
 }
 
-const _partition = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, any>
-) => {
-  const ret: [T[], T[]] = [[], []];
-  array.forEach((item, index) => {
-    const matches = indexed ? fn(item, index, array) : fn(item);
-    ret[matches ? 0 : 1].push(item);
-  });
-  return ret;
-};
+const _partition =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
+    const ret: [T[], T[]] = [[], []];
+    array.forEach((item, index) => {
+      const matches = indexed ? fn(item, index, array) : fn(item);
+      ret[matches ? 0 : 1].push(item);
+    });
+    return ret;
+  };
 
 export namespace partition {
   export function indexed<T, K>(

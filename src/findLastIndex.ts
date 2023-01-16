@@ -50,18 +50,17 @@ export function findLastIndex() {
   return purry(_findLastIndex(false), arguments);
 }
 
-const _findLastIndex = (indexed: boolean) => <T>(
-  array: T[],
-  fn: PredIndexedOptional<T, boolean>
-) => {
-  for (let i = array.length - 1; i >= 0; i--) {
-    if (indexed ? fn(array[i], i, array) : fn(array[i])) {
-      return i;
+const _findLastIndex =
+  (indexed: boolean) =>
+  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (indexed ? fn(array[i], i, array) : fn(array[i])) {
+        return i;
+      }
     }
-  }
 
-  return -1;
-};
+    return -1;
+  };
 
 export namespace findLastIndex {
   export function indexed<T>(
