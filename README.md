@@ -5,6 +5,7 @@ The first "data-first" and "data-last" utility library designed especially for T
 
 ![GitHub CI](https://img.shields.io/github/workflow/status/remeda/remeda/CI/master?label=github-ci)
 [![Travis CI](https://img.shields.io/travis/remeda/remeda/master?label=travis-ci)](https://travis-ci.org/remeda/remeda)
+[![Codecov](https://img.shields.io/codecov/c/github/remeda/remeda/master)](https://codecov.io/gh/remeda/remeda)
 [![NPM](https://img.shields.io/npm/v/remeda)](https://www.npmjs.org/package/remeda)
 ![Dependencies](https://img.shields.io/librariesio/release/npm/remeda)
 
