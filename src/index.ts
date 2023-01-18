@@ -71,6 +71,7 @@ export * from './range';
 export * from './reduce';
 export * from './reject';
 export * from './reverse';
+export * from './sample';
 export * from './set';
 export * from './sort';
 export * from './sortBy';
