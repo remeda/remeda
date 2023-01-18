@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from 'vitest';
 import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
@@ -33,7 +34,7 @@ describe('data_last', () => {
 
 describe('pipe', () => {
   it('with take', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3] as const,
       map(x => {
@@ -47,7 +48,7 @@ describe('pipe', () => {
   });
 
   it('indexed', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [0, 0, 0] as const,
       map.indexed((x, i) => {

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { merge } from './merge';
 
 const a = {

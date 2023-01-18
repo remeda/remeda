@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { equals } from './equals';
 
 const tests: any = [

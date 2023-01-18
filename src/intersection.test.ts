@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { intersection } from './intersection';
 
 describe('data_first', () => {

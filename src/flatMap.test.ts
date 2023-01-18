@@ -1,3 +1,4 @@
+import { describe, test, it, expect } from 'vitest';
 import { flatMap } from './flatMap';
 import { pipe } from './pipe';
 import { find } from './find';

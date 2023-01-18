@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { pipe } from './pipe';
 import { reject } from './reject';
 import { createCounter } from './_counter';

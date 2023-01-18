@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { zip } from './zip';
 import { AssertEqual } from './_types';
 

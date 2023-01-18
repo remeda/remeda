@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { omitBy } from './omitBy';
 import { pipe } from './pipe';
 import { AssertEqual } from './_types';

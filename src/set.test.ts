@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { set } from './set';
 import { pipe } from './pipe';
 

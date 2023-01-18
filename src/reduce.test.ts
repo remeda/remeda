@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { reduce } from './reduce';
 import { pipe } from './pipe';
 

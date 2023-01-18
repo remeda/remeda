@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { fromPairs } from './fromPairs';
 import { AssertEqual } from './_types';
 

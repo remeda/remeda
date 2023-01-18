@@ -1,3 +1,4 @@
+import { describe, test, it, expect } from 'vitest';
 import { equals } from './equals';
 import { pipe } from './pipe';
 import { take } from './take';

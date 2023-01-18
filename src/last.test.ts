@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { last } from './last';
 import { pipe } from './pipe';
 import { AssertEqual, NonEmptyArray } from './_types';

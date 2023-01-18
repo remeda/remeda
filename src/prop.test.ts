@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import { pipe } from './pipe';
 import { prop } from './prop';
 

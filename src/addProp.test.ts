@@ -1,3 +1,5 @@
+import { describe, test, expect } from 'vitest';
+
 import { addProp } from './addProp';
 import { pipe } from './pipe';
 

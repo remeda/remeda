@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { AssertEqual } from './_types';
 import { reverse } from './reverse';
 import { pipe } from './pipe';

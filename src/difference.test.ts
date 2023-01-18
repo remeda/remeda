@@ -1,3 +1,4 @@
+import { describe, test, expect, vi } from 'vitest';
 import { difference } from './difference';
 import { pipe } from './pipe';
 import { take } from './take';
@@ -19,7 +20,7 @@ describe('data_last', () => {
   });
 
   test('lazy', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3, 4, 5, 6],
       map(x => {

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { partition } from './partition';
 import { pipe } from './pipe';
 import { AssertEqual } from './_types';

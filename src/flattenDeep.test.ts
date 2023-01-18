@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { flattenDeep } from './flattenDeep';
 import { pipe } from './pipe';
 import { find } from './find';

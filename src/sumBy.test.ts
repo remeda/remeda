@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { sumBy } from './sumBy';
 import { pipe } from './pipe';
 

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { mapKeys } from './mapKeys';
 import { pipe } from './pipe';
 
