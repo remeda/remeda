@@ -75,4 +75,5 @@ export * from './uniqBy';
 export * from './uniqWith';
 export * from './values';
 export * from './zip';
+export * from './zipObj';
 export * from './zipWith';
