@@ -1530,6 +1530,64 @@
     ]
   },
   {
+    "name": "propEq",
+    "category": "Object",
+    "description": "<p>Compares an expected value to the value at the given prop.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "R.prop(prop, expected)(object)\n",
+        "category": "Object",
+        "indexed": false,
+        "pipeable": false,
+        "example": "R.filter([{firstName: 'john', lastName: 'doe'}, {firstName: 'jane', lastName: 'doe'}], R.propEq('firstName', 'jane')) // => [{firstName: 'jane', lastName: 'doe'}]\n",
+        "args": [
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "expected",
+            "description": "the expected value"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "propSatisfies",
+    "category": "Object",
+    "description": "<p>Applies predicate to the value at the given prop.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "R.prop(prop, pred)(object)\n",
+        "category": "Object",
+        "indexed": false,
+        "pipeable": false,
+        "example": "R.filter([{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}], R.propSatisfies('value', (v) => v % 2 === 0)) // => [0, 2, 4]\n",
+        "args": [
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "pred",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": ""
+        }
+      }
+    ]
+  },
+  {
     "name": "purry",
     "category": "Function",
     "description": "<p>Creates a function with <code>data-first</code> and <code>data-last</code> signatures.<br><code>purry</code> is a dynamic function and it&#39;s not type safe. It should be wrapped by a function that have proper typings.<br>Refer to the example below for correct usage.</p>\n",
