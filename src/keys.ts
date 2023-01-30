@@ -28,7 +28,7 @@ export namespace keys {
   export function strict<T extends Record<PropertyKey, unknown>>(
     source: T
   ): Array<
-    { [K in keyof T]: K extends string | number ? `${K}` : never }[keyof T]
+    { [K in keyof T]-?: K extends string | number ? `${K}` : never }[keyof T]
   > {
     return keys(source) as any;
   }
