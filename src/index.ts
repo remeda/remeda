@@ -53,6 +53,8 @@ export * from './pick';
 export * from './pickBy';
 export * from './pipe';
 export * from './prop';
+export * from './propEq';
+export * from './propSatisfies';
 export * from './purry';
 export * from './randomString';
 export * from './range';
