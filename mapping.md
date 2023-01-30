@@ -7,7 +7,7 @@ behave differently from either or both. Be sure to consult each library's
 documentation when migrating._
 
 | Remeda           | Lodash           | Ramda               |
-|------------------|------------------| ------------------- |
+|------------------|------------------|---------------------|
 | `addProp`        | `set`            | `set`               |
 | `allPass`        | `-`              | `allPass`           |
 | `anyPass`        | `-`              | `anyPass`           |
@@ -55,6 +55,8 @@ documentation when migrating._
 | `pickBy`         | `pickBy`         | `pickBy`            |
 | `pipe`           | `flow`           | `pipe`              |
 | `prop`           | `get`            | `prop`              |
+| `propEq`         | `-`              | `propEq`            |
+| `propSatisfies`  | `-`              | `propSatisfies`     |
 | `purry`          | `-`              | `-`                 |
 | `randomString`   | `-`              | `-`                 |
 | `range`          | `range`          | `range`             |
@@ -95,6 +97,5 @@ you are relying on when migrating._
 | `constant`     | `always`       | `x => () => x`                             |
 | `nth`          | `nth`          | `n => a[n]`                                |
 | `-`            | `path`         | `a?.b?.c`                                  |
-| `-`            | `propEq`       | `x => x.a === value`                       |
 | `-`            | `propOr`       | `x => x.a ?? defaultValue`                 |
 | `words`        | `-`            | `str => str.split(/\s+/)`                  |
