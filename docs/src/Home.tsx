@@ -54,8 +54,8 @@ export function Home() {
           <h2 id="why-remeda-">Why Remeda?</h2>
           <p>
             There are no good utility libraries that work well with TypeScript.
-            When working with Lodash or Ramda you must sometimes annotate types
-            manually.
+            When working with Lodash or Ramda you must of the time annotate
+            types manually.
             <br />
             Remeda is written and tested in TypeScript and that means there
             won't be any problems with custom typings.
@@ -80,12 +80,13 @@ R.pick(['firstName', 'lastName'], obj);
 _.pick(obj, ['firstName', 'lastName']);`}
           />
           <blockquote>
-            For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
+            For readers looking for data-last forms like `R.filter(fn)(array)`,
+            Remeda supports it. Keep reading along!
           </blockquote>
           <p>
             In the above example, &quot;data-first&quot; approach is more
             natural and more programmer friendly because when you type the
-            second argument, you get the auto-complete from IDE. It's not
+            second argument, you get the auto-complete from the IDE. It's not
             possible to get the auto-complete in Ramda because the data argument
             is not provided.
           </p>
