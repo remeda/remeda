@@ -54,8 +54,8 @@ export function Home() {
           <h2 id="why-remeda-">Why Remeda?</h2>
           <p>
             There are no good utility libraries that work well with TypeScript.
-            When working with Lodash or Ramda you must of the time annotate
-            types manually.
+            When working with Lodash or Ramda you have to annotate types
+            manually most of the time.
             <br />
             Remeda is written and tested in TypeScript and that means there
             won't be any problems with custom typings.
