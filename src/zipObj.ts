@@ -16,7 +16,7 @@ import { zip } from './zip';
  * @data_first
  * @category Object
  */
-export function zipObj<K extends any, V extends any>(
+export function zipObj<K extends string | number | symbol, V extends any>(
   keys: ReadonlyArray<K>,
   values: ReadonlyArray<V>
 ): Record<K, V>;
@@ -37,7 +37,7 @@ export function zipObj<K extends any, V extends any>(
  */
 export function zipObj<V extends any>(
   values: ReadonlyArray<V>
-): <K extends any>(keys: ReadonlyArray<K>) => Record<K, V>;
+): <K extends string | number | symbol>(keys: ReadonlyArray<K>) => Record<K, V>;
 
 export function zipObj() {
   return purry(_zipObj, arguments);

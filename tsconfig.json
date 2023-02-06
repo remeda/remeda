@@ -8,7 +8,8 @@
 
     "lib": [
       "es6",
-      "es2017.object"
+      "es2017.object",
+      "es2019"
     ] /* Specify library files to be included in the compilation. */,
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
