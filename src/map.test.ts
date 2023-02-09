@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { filter } from './filter';
 import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
-import { filter } from './filter';
 
 describe('data_first', () => {
   it('map', () => {

@@ -1,6 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { set } from './set';
 import { pipe } from './pipe';
+import { set } from './set';
 
 describe('data first', () => {
   test('set', () => {

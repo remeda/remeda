@@ -1,10 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import { pipe } from './pipe';
-import { map } from './map';
-import { take } from './take';
-import { prop } from './prop';
 import { filter } from './filter';
 import { identity } from './identity';
+import { map } from './map';
+import { pipe } from './pipe';
+import { prop } from './prop';
+import { take } from './take';
 
 it('should pipe a single operation', () => {
   const result = pipe(1, x => x * 2);

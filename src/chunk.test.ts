@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { chunk } from './chunk';
 
 describe('data first', () => {

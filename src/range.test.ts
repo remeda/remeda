@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { range } from './range';
 
 describe('data first', () => {

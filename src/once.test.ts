@@ -1,4 +1,3 @@
-import { test, expect, vi } from 'vitest';
 import { once } from './once';
 
 test('should call only once', () => {

@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { minBy } from './minBy';
 import { pipe } from './pipe';
 

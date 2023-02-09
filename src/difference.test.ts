@@ -1,8 +1,7 @@
-import { describe, test, expect, vi } from 'vitest';
 import { difference } from './difference';
+import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
-import { map } from './map';
 
 const source = [1, 2, 3, 4] as const;
 const other = [2, 5, 3] as const;

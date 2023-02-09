@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { omit } from './omit';
 import { pipe } from './pipe';
 

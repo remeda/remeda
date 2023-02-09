@@ -1,4 +1,3 @@
-import { test, expect } from 'vitest';
 import { compact } from './compact';
 // import { pipe } from './pipe';
 // import { map } from './map';

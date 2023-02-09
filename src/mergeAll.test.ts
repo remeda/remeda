@@ -1,4 +1,3 @@
-import { test, expect } from 'vitest';
 import { mergeAll } from './mergeAll';
 
 test('merge objects', () => {

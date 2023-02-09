@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { allPass } from './allPass';
 
 const fns = [(x: number) => x % 3 === 0, (x: number) => x % 4 === 0] as const;

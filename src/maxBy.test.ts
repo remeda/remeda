@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { maxBy } from './maxBy';
 import { pipe } from './pipe';
 

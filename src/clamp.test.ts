@@ -1,4 +1,3 @@
-import { it, expect } from 'vitest';
 import { clamp } from './clamp';
 
 it('min value', () => {

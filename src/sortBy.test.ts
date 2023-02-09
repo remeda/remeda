@@ -1,7 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { sortBy } from './sortBy';
 import { pipe } from './pipe';
-import { AssertEqual } from './_types';
+import { sortBy } from './sortBy';
 
 const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
 const sorted = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }];

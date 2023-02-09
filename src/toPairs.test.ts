@@ -1,4 +1,3 @@
-import { test, expect } from 'vitest';
 import { toPairs } from './toPairs';
 
 test('should return pairs', () => {

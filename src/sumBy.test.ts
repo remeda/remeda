@@ -1,6 +1,5 @@
-import { describe, test, expect } from 'vitest';
-import { sumBy } from './sumBy';
 import { pipe } from './pipe';
+import { sumBy } from './sumBy';
 
 const array = [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }] as const;
 const expected = 15;

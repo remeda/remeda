@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { pipe } from './pipe';
 import { filter } from './filter';
+import { pipe } from './pipe';
 import { createCounter } from './_counter';
 
 function assertType<T>(data: T): T {

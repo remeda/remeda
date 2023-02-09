@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { splitAt } from './splitAt';
 
 describe('data_first', () => {

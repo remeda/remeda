@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { values } from './values';
 
 describe('Test for values as data first', () => {

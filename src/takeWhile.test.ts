@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { takeWhile } from './takeWhile';
 import { pipe } from './pipe';
+import { takeWhile } from './takeWhile';
 
 describe('data_first', () => {
   it('takeWhile', () => {

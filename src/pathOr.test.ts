@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { pathOr } from './pathOr';
 import { pipe } from './pipe';
 

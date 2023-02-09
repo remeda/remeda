@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { uniq } from './uniq';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 import { take } from './take';
+import { uniq } from './uniq';
+import { createCounter } from './_counter';
 
 it('uniq', () => {
   expect(uniq([1, 2, 2, 5, 1, 6, 7] as const)).toEqual([1, 2, 5, 6, 7]);

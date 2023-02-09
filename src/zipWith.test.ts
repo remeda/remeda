@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { zipWith } from './zipWith';
 import { AssertEqual } from './_types';
 

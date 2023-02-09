@@ -1,4 +1,3 @@
-import { describe, test, expect } from 'vitest';
 import { differenceWith } from './differenceWith';
 import { equals } from './equals';
 import { pipe } from './pipe';

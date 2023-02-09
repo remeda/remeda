@@ -1,10 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { identity } from './identity';
+import { createCounter } from './_counter';
 // import { uniq } from './uniq';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 import { take } from './take';
 import { uniqBy } from './uniqBy';
-import { identity } from './identity';
 
 describe('uniqBy', () => {
   const people = [

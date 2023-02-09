@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { map } from './map';
 
 export const createCounter = () => {

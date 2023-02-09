@@ -1,20 +1,19 @@
-import { describe, test, expect } from 'vitest';
-import { AssertEqual } from './_types';
 import {
-  isString,
-  isBoolean,
   isArray,
+  isBoolean,
   isDate,
   isDefined,
-  isNil,
-  isFunction,
   isError,
+  isFunction,
+  isNil,
+  isNot,
   isNumber,
   isObject,
   isPromise,
+  isString,
   isTruthy,
-  isNot,
 } from './guards';
+import { AssertEqual } from './_types';
 
 type TestObj =
   | boolean
