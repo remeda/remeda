@@ -73,6 +73,11 @@ describe('data last', () => {
       )
     ).toEqual(sorted);
   });
+  test('sort correctly using pipe and "desc"', () => {
+    expect(pipe(items, sortBy([x => x.a, 'desc']))).toEqual(
+      [...sorted].reverse()
+    );
+  });
   test('sort objects correctly', () => {
     const sortFn = sortBy<{ weight: number; color: string }>(
       x => x.weight,
