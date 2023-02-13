@@ -1,6 +1,27 @@
 import { purry } from './purry';
 import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 
+// Records keyed with generic `string` and `number` have different semantics
+// to those with a a union of literal values (e.g. 'cat' | 'dog') when using
+// 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
+// the latter are implicitly `Required`. Because groupBy returns a partial
+// record by definition, we need to make sure the result is properly partial
+// when using it with a refined key.
+type Out<Value, Key extends PropertyKey = PropertyKey> =
+  // Key === string
+  string extends Key
+    ? Record<string, NonEmptyArray<Value>>
+    : // Key === number
+    number extends Key
+    ? Record<number, NonEmptyArray<Value>>
+    : // Key === symbol (do we need this case? can symbols be generic?)
+    symbol extends Key
+    ? Record<symbol, NonEmptyArray<Value>>
+    : // If the key is specific, e.g. 'cat' | 'dog', the result is partial because
+      // we can't statically know what values the mapper would return on a
+      // specific input
+      Partial<Record<Key, NonEmptyArray<Value>>>;
+
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
  * @param items the items to group
@@ -13,14 +34,14 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
  * @indexed
  * @category Array
  */
-export function groupBy<T>(
-  items: readonly T[],
-  fn: (item: T) => PropertyKey
-): Record<PropertyKey, NonEmptyArray<T>>;
+export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
+  items: readonly Value[],
+  fn: (item: Value) => Key
+): Out<Value, Key>;
 
-export function groupBy<T>(
-  fn: (item: T) => PropertyKey
-): (array: readonly T[]) => Record<PropertyKey, NonEmptyArray<T>>;
+export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
+  fn: (item: Value) => Key
+): (array: readonly Value[]) => Out<Value, Key>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -53,13 +74,13 @@ const _groupBy =
   };
 
 export namespace groupBy {
-  export function indexed<T, K>(
-    array: readonly T[],
-    fn: PredIndexed<T, PropertyKey>
-  ): Record<string, NonEmptyArray<T>>;
-  export function indexed<T, K>(
-    fn: PredIndexed<T, PropertyKey>
-  ): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
+  export function indexed<Value, Key extends PropertyKey = PropertyKey>(
+    array: readonly Value[],
+    fn: PredIndexed<Value, Key>
+  ): Out<Value, Key>;
+  export function indexed<Value, Key extends PropertyKey = PropertyKey>(
+    fn: PredIndexed<Value, Key>
+  ): (array: readonly Value[]) => Out<Value, Key>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
