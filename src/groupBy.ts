@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
+import { NonEmptyArray, PredIndexed, PredIndexedOptional } from './_types';
 
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using
@@ -8,18 +8,17 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 // record by definition, we need to make sure the result is properly partial
 // when using it with a refined key.
 type Out<Value, Key extends PropertyKey = PropertyKey> =
-  // Key === string
+  // If either string, number or symbol extend Key it means that Key is at least
+  // as wide as them, so we don't need to wrap the returned record with Partial.
   string extends Key
-    ? Record<string, NonEmptyArray<Value>>
-    : // Key === number
-    number extends Key
-    ? Record<number, NonEmptyArray<Value>>
-    : // Key === symbol (do we need this case? can symbols be generic?)
-    symbol extends Key
-    ? Record<symbol, NonEmptyArray<Value>>
-    : // If the key is specific, e.g. 'cat' | 'dog', the result is partial because
-      // we can't statically know what values the mapper would return on a
-      // specific input
+    ? Record<Key, NonEmptyArray<Value>>
+    : number extends Key
+    ? Record<Key, NonEmptyArray<Value>>
+    : symbol extends Key
+    ? Record<Key, NonEmptyArray<Value>>
+    : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+      // because we can't statically know what values the mapper would return on
+      // a specific input
       Partial<Record<Key, NonEmptyArray<Value>>>;
 
 /**

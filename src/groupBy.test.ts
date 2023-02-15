@@ -84,4 +84,13 @@ describe('Result key types', () => {
     > = true;
     expect(result).toEqual(true);
   });
+  test('string | number', () => {
+    const data = groupBy(array2, (x):  string | number => x.b);
+    const result: AssertEqual<
+      typeof data,
+      Record<string | number, NonEmptyArray<Array2Item>>
+    > = true;
+    expect(result).toEqual(true);
+  });
 });
+
