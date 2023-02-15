@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { NonEmptyArray, PredIndexed, PredIndexedOptional } from './_types';
+import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using
