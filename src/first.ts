@@ -40,9 +40,6 @@ export namespace first {
       };
     };
   }
-
-  export const lazyArgs = [];
-
   export namespace lazy {
     export const single = true;
   }
