@@ -4,6 +4,10 @@ import { sortBy } from './sortBy';
 const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
 const sorted = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }];
 
+function assertType<T>(data: T): T {
+  return data;
+}
+
 const objects = [
   { id: 1, color: 'red', weight: 2, active: true, date: new Date(2021, 1, 1) },
   {
@@ -67,14 +71,12 @@ describe('data first', () => {
     test('SortProjection', () => {
       const actual = sortBy(items, x => x.a);
       type T = typeof items[number];
-      const result: AssertEqual<typeof actual, T[]> = true;
-      expect(result).toEqual(true);
+      assertType<T[]>(actual);
     });
     test('SortPair', () => {
       const actual = sortBy(objects, [x => x.active, 'desc']);
       type T = typeof objects[number];
-      const result: AssertEqual<typeof actual, T[]> = true;
-      expect(result).toEqual(true);
+      assertType<T[]>(actual);
     });
   });
 });
@@ -121,8 +123,7 @@ describe('data last', () => {
         sortBy(x => x.a)
       );
       type T = typeof items[number];
-      const result: AssertEqual<typeof actual, T[]> = true;
-      expect(result).toEqual(true);
+      assertType<T[]>(actual);
     });
     test('SortPair', () => {
       const actual = pipe(
@@ -130,8 +131,7 @@ describe('data last', () => {
         sortBy([x => x.weight, 'asc'], [x => x.color, 'desc'])
       );
       type T = typeof objects[number];
-      const result: AssertEqual<typeof actual, T[]> = true;
-      expect(result).toEqual(true);
+      assertType<T[]>(actual);
     });
   });
 });
