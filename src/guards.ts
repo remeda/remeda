@@ -12,7 +12,7 @@ type DefinitelyString<T> = Extract<T, string> extends never
  * @returns true if the passed input is a string, false otherwise
  * @example
  *    R.isString('string') //=> true
- *    R.iString(1) //=> false
+ *    R.isString(1) //=> false
  * @category Guard
  */
 export function isString<T>(data: T | string): data is DefinitelyString<T> {

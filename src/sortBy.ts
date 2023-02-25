@@ -12,6 +12,28 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
+ * @param sort first sort rule
+ * @param sorts additional sort rules
+ * @signature
+ *    R.sortBy(...sorts)(array)
+ * @example
+ *    R.pipe(
+ *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *      R.sortBy(x => x.a)
+ *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
+ * @data_last
+ * @category Array
+ */
+export function sortBy<T>(
+  sort: SortRule<T>,
+  ...sorts: SortRule<T>[]
+): (array: readonly T[]) => T[];
+
+/**
+ * Sorts the list according to the supplied functions and directions.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ *
+ * Directions are applied to functions in order and default to ascending if not specified.
  * @param array the array to sort
  * @param sorts a list of mapping functions and optional directions
  * @signature
@@ -41,28 +63,6 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * @category Array
  */
 export function sortBy<T>(array: readonly T[], ...sorts: SortRule<T>[]): T[];
-
-/**
- * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
- *
- * Directions are applied to functions in order and default to ascending if not specified.
- * @param sort first sort rule
- * @param sorts additional sort rules
- * @signature
- *    R.sortBy(...sorts)(array)
- * @example
- *    R.pipe(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      R.sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
- * @data_last
- * @category Array
- */
-export function sortBy<T>(
-  sort: SortRule<T>,
-  ...sorts: SortRule<T>[]
-): (array: readonly T[]) => T[];
 
 export function sortBy<T>(
   arrayOrSort: readonly T[] | SortRule<T>,
