@@ -1,5 +1,6 @@
 import { sortBy } from './sortBy';
 import { pipe } from './pipe';
+import { AssertEqual } from './_types';
 
 const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
 const sorted = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }];
@@ -62,6 +63,21 @@ describe('data first', () => {
       [3, 2, 1, 1]
     );
   });
+
+  describe('sortBy typings', () => {
+    test('SortProjection', () => {
+      const actual = sortBy(items, x => x.a);
+      type T = typeof items[number];
+      const result: AssertEqual<typeof actual, T[]> = true;
+      expect(result).toEqual(true);
+    });
+    test('SortPair', () => {
+      const actual = sortBy(objects, [x => x.active, 'desc']);
+      type T = typeof objects[number];
+      const result: AssertEqual<typeof actual, T[]> = true;
+      expect(result).toEqual(true);
+    });
+  });
 });
 
 describe('data last', () => {
@@ -72,6 +88,11 @@ describe('data last', () => {
         sortBy(x => x.a)
       )
     ).toEqual(sorted);
+  });
+  test('sort correctly using pipe and "desc"', () => {
+    expect(pipe(items, sortBy([x => x.a, 'desc']))).toEqual(
+      [...sorted].reverse()
+    );
   });
   test('sort objects correctly', () => {
     const sortFn = sortBy<{ weight: number; color: string }>(
@@ -92,5 +113,26 @@ describe('data last', () => {
         [x => x.color, 'desc']
       )(objects).map(x => x.color)
     ).toEqual(['purple', 'green', 'red', 'blue']);
+  });
+
+  describe('sortBy typings', () => {
+    test('SortProjection', () => {
+      const actual = pipe(
+        items,
+        sortBy(x => x.a)
+      );
+      type T = typeof items[number];
+      const result: AssertEqual<typeof actual, T[]> = true;
+      expect(result).toEqual(true);
+    });
+    test('SortPair', () => {
+      const actual = pipe(
+        objects,
+        sortBy([x => x.weight, 'asc'], [x => x.color, 'desc'])
+      );
+      type T = typeof objects[number];
+      const result: AssertEqual<typeof actual, T[]> = true;
+      expect(result).toEqual(true);
+    });
   });
 });
