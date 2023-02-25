@@ -53,7 +53,7 @@ describe('data last', () => {
 
 describe('Result key types', () => {
   test('Union of string literals', () => {
-    const data = groupBy(array2, x => x.a);
+    const data = groupBy.strict(array2, x => x.a);
     const result: AssertEqual<
       typeof data,
       Partial<Record<'cat' | 'dog', NonEmptyArray<Array2Item>>>
@@ -61,7 +61,7 @@ describe('Result key types', () => {
     expect(result).toEqual(true);
   });
   test('Union of number literals', () => {
-    const data = groupBy(array2, x => x.b);
+    const data = groupBy.strict(array2, x => x.b);
     const result: AssertEqual<
       typeof data,
       Partial<Record<123 | 456, NonEmptyArray<Array2Item>>>
@@ -69,7 +69,7 @@ describe('Result key types', () => {
     expect(result).toEqual(true);
   });
   test('string', () => {
-    const data = groupBy(array2, (x): string => x.a);
+    const data = groupBy.strict(array2, (x): string => x.a);
     const result: AssertEqual<
       typeof data,
       Record<string, NonEmptyArray<Array2Item>>
@@ -77,7 +77,7 @@ describe('Result key types', () => {
     expect(result).toEqual(true);
   });
   test('number', () => {
-    const data = groupBy(array2, (x): number => x.b);
+    const data = groupBy.strict(array2, (x): number => x.b);
     const result: AssertEqual<
       typeof data,
       Record<number, NonEmptyArray<Array2Item>>
@@ -85,7 +85,7 @@ describe('Result key types', () => {
     expect(result).toEqual(true);
   });
   test('string | number', () => {
-    const data = groupBy(array2, (x): string | number => x.b);
+    const data = groupBy.strict(array2, (x): string | number => x.b);
     const result: AssertEqual<
       typeof data,
       Record<string | number, NonEmptyArray<Array2Item>>
