@@ -6,7 +6,7 @@
  *    R.toPairs.strict(object)
  * @example
  *    R.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
- *    R.toPairs.strict({ a: 1 } as { a?: number }) // => [['a', 1]] typed Array<['a', number]>
+ *    R.toPairs.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
  * @strict
  * @category Object
  */
