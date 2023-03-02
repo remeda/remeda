@@ -1,4 +1,4 @@
-import { expectType } from 'ts-expect';
+import { expectType } from './_expectType';
 
 import { pick } from './pick';
 import { pipe } from './pipe';

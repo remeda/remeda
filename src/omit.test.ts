@@ -1,4 +1,4 @@
-import { expectType } from 'ts-expect';
+import { expectType } from './_expectType';
 
 import { omit } from './omit';
 import { pipe } from './pipe';
