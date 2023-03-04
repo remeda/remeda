@@ -1,6 +1,6 @@
-import { AssertEqual } from './_types';
-import { reverse } from './reverse';
 import { pipe } from './pipe';
+import { reverse } from './reverse';
+import { AssertEqual } from './_types';
 
 describe('data first', () => {
   test('reverse', () => {

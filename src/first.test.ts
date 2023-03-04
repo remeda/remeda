@@ -1,7 +1,7 @@
+import { filter } from './filter';
 import { first } from './first';
 import { pipe } from './pipe';
 import { createCounter } from './_counter';
-import { filter } from './filter';
 
 function defaultTo<T>(d: T) {
   return function (v: T | undefined | null) {

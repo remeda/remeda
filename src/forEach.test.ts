@@ -6,13 +6,13 @@ const array = [1, 2, 3] as const;
 
 describe('data_first', () => {
   it('forEach', () => {
-    const cb = jest.fn();
+    const cb = vi.fn();
     const result = forEach(array, cb);
     expect(cb.mock.calls).toEqual([[1], [2], [3]]);
     expect(result).toEqual(array);
   });
   it('forEach.indexed', () => {
-    const cb = jest.fn();
+    const cb = vi.fn();
     const result = forEach.indexed(array, cb);
     expect(cb.mock.calls).toEqual([
       [1, 0, array],
@@ -25,13 +25,13 @@ describe('data_first', () => {
 
 describe('data_last', () => {
   it('forEach', () => {
-    const cb = jest.fn();
+    const cb = vi.fn();
     const result = pipe(array, forEach(cb));
     expect(cb.mock.calls).toEqual([[1], [2], [3]]);
     expect(result).toEqual(array);
   });
   it('forEach.indexed', () => {
-    const cb = jest.fn();
+    const cb = vi.fn();
     const result = pipe(array, forEach.indexed(cb));
     expect(cb.mock.calls).toEqual([
       [1, 0, array],
@@ -44,7 +44,7 @@ describe('data_last', () => {
 
 describe('pipe', () => {
   it('with take', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
       forEach(x => {
@@ -57,7 +57,7 @@ describe('pipe', () => {
   });
 
   it('indexed', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
       forEach.indexed(() => {

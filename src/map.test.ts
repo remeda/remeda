@@ -1,7 +1,7 @@
+import { filter } from './filter';
 import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
-import { filter } from './filter';
 
 describe('data_first', () => {
   it('map', () => {
@@ -33,7 +33,7 @@ describe('data_last', () => {
 
 describe('pipe', () => {
   it('with take', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3] as const,
       map(x => {
@@ -47,7 +47,7 @@ describe('pipe', () => {
   });
 
   it('indexed', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [0, 0, 0] as const,
       map.indexed((x, i) => {

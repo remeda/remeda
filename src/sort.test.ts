@@ -1,5 +1,5 @@
-import { sort } from './sort';
 import { pipe } from './pipe';
+import { sort } from './sort';
 
 describe('data_first', () => {
   test('sort', () => {

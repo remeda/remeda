@@ -76,7 +76,7 @@ export function pipe(
   const lazyOps = operations.map(op => {
     const { lazy, lazyArgs } = op as LazyOp;
     if (lazy) {
-      const fn: any = lazy(...lazyArgs);
+      const fn: any = lazy(...(lazyArgs || []));
       fn.indexed = lazy.indexed;
       fn.single = lazy.single;
       fn.index = 0;

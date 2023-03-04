@@ -22,7 +22,7 @@ describe('times', () => {
     });
 
     it('passes idx to fn', () => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       times(5, fn);
       expect(fn).toHaveBeenCalledWith(0);
       expect(fn).toHaveBeenCalledWith(1);
@@ -63,7 +63,7 @@ describe('times', () => {
     });
 
     it('passes idx to fn', () => {
-      const fn = jest.fn();
+      const fn = vi.fn();
       times(fn)(5);
       expect(fn).toHaveBeenCalledWith(0);
       expect(fn).toHaveBeenCalledWith(1);
