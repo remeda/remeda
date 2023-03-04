@@ -38,6 +38,22 @@ export function partition<T>(
 ): [T[], T[]];
 
 /**
+ * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
+ * @param predicate the grouping function
+ * @returns the array of grouped elements.
+ * @signature
+ *    R.partition(fn)(array)
+ * @example
+ *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
+ * @data_last
+ * @indexed
+ * @category Array
+ */
+export function partition<T, S extends T>(
+  predicate: (item: T) => item is S
+): (array: readonly T[]) => [S[], Exclude<T, S>[]];
+
+/**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
  * @param predicate the grouping function
  * @returns the array of grouped elements.
