@@ -106,10 +106,10 @@ export function pipe(
       }
     }
 
-    let acc: any[] = [];
+    const acc: any[] = [];
 
     for (let j = 0; j < ret.length; j++) {
-      let item = ret[j];
+      const item = ret[j];
       if (_processItem({ item, acc, lazySeq })) {
         break;
       }

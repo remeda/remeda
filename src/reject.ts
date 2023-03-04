@@ -56,7 +56,7 @@ const _lazy =
   <T>(fn: PredIndexedOptional<T, boolean>) => {
     return (value: T, index?: number, array?: T[]): LazyResult<T> => {
       const valid = indexed ? fn(value, index, array) : fn(value);
-      if (!valid === true) {
+      if (!valid) {
         return {
           done: false,
           hasNext: true,

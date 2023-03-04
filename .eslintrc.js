@@ -50,13 +50,6 @@ module.exports = {
 
     // TODO: These all have autofixers
     '@typescript-eslint/array-type': 'off',
-    '@typescript-eslint/ban-tslint-comment': 'off',
-    '@typescript-eslint/consistent-indexed-object-style': 'off',
-    '@typescript-eslint/no-inferrable-types': 'off',
-    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
-    '@typescript-eslint/prefer-reduce-type-parameter': 'off',
-    '@typescript-eslint/prefer-ts-expect-error': 'off',
-    'prefer-const': 'off',
 
     // TODO: These have trivial manual fixes
     '@typescript-eslint/ban-ts-comment': 'off',

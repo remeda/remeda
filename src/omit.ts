@@ -40,10 +40,10 @@ function _omit<T extends Record<PropertyKey, any>, K extends keyof T>(
   names: K[]
 ): Omit<T, K> {
   const set = new Set(names as string[]);
-  return Object.entries(object).reduce((acc, [name, value]) => {
+  return Object.entries(object).reduce<any>((acc, [name, value]) => {
     if (!set.has(name)) {
       acc[name] = value;
     }
     return acc;
-  }, {} as any) as Omit<T, K>;
+  }, {}) as Omit<T, K>;
 }

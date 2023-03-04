@@ -33,10 +33,10 @@ export function omitBy() {
 }
 
 function _omitBy(object: any, fn: (value: any, key: any) => boolean) {
-  return Object.keys(object).reduce((acc, key) => {
+  return Object.keys(object).reduce<any>((acc, key) => {
     if (!fn(object[key], key)) {
       acc[key] = object[key];
     }
     return acc;
-  }, {} as any);
+  }, {});
 }

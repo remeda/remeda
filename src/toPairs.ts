@@ -10,7 +10,7 @@
  * @strict
  * @category Object
  */
-export function toPairs<T>(object: { [s: string]: T }): Array<[string, T]> {
+export function toPairs<T>(object: Record<string, T>): Array<[string, T]> {
   return Object.entries(object);
 }
 

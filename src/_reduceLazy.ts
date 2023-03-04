@@ -30,7 +30,7 @@ export function _reduceLazy<T, K>(
     const result = indexed ? lazy(item, index, array) : lazy(item);
     if (result.hasMany === true) {
       acc.push(...result.next);
-    } else if (result.hasNext === true) {
+    } else if (result.hasNext) {
       acc.push(result.next);
     }
     return acc;

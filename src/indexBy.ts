@@ -44,12 +44,12 @@ export function indexBy() {
 const _indexBy =
   (indexed: boolean) =>
   <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
-    return array.reduce((ret, item, index) => {
+    return array.reduce<Record<string, T>>((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
       ret[key] = item;
       return ret;
-    }, {} as Record<string, T>);
+    }, {});
   };
 
 export namespace indexBy {
