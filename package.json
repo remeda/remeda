@@ -30,7 +30,7 @@
     "prettier": "prettier 'src/**/*.ts' --write",
     "prettier:check": "prettier 'src/**/*.ts' --check",
     "lint": "eslint src/**/*.ts --fix",
-    "lint:check": "eslint 'src/**/*.ts'",
+    "lint:check": "eslint src/**/*.ts",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
     "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",
