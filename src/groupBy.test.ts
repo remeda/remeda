@@ -21,7 +21,7 @@ const array2 = [
   { a: 'cat', b: 123 },
   { a: 'dog', b: 456 },
 ] as const;
-type Array2Item = typeof array2[number];
+type Array2Item = (typeof array2)[number];
 
 describe('data first', () => {
   test('groupBy', () => {
