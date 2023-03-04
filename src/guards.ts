@@ -97,10 +97,10 @@ export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {
 
 type DefinitelyArray<T extends unknown> = Extract<
   T,
-  Array<any> | ReadonlyArray<any>
+  any[] | readonly any[]
 > extends never
-  ? ReadonlyArray<unknown>
-  : Extract<T, Array<any> | ReadonlyArray<any>>;
+  ? readonly unknown[]
+  : Extract<T, any[] | readonly any[]>;
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly
  * @param data the variable to check
@@ -114,17 +114,17 @@ type DefinitelyArray<T extends unknown> = Extract<
  * @category Guard
  */
 export function isArray<T>(
-  data: T | ReadonlyArray<unknown>
+  data: T | readonly unknown[]
 ): data is DefinitelyArray<T> {
   return Array.isArray(data);
 }
 
 type DefinitelyObject<T extends unknown> = Exclude<
   Extract<T, object>,
-  Array<any> | Function | ReadonlyArray<any>
+  any[] | Function | readonly any[]
 > extends never
-  ? { [k: string]: unknown }
-  : Exclude<Extract<T, object>, Array<any> | Function | ReadonlyArray<any>>;
+  ? Record<string, unknown>
+  : Exclude<Extract<T, object>, any[] | Function | readonly any[]>;
 /**
  * A function that checks if the passed parameter is of type Object and narrows its type accordingly
  * @param data the variable to check

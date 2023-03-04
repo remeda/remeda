@@ -12,10 +12,10 @@
  * @category Array
  */
 export function zipWith<F, S, R>(
-  first: Array<F>,
-  second: Array<S>,
+  first: F[],
+  second: S[],
   fn: (f: F, s: S) => R
-): Array<R>;
+): R[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -30,7 +30,7 @@ export function zipWith<F, S, R>(
  */
 export function zipWith<F, S, R>(
   fn: (f: F, s: S) => R
-): (first: Array<F>, second: Array<S>) => Array<R>;
+): (first: F[], second: S[]) => R[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -46,8 +46,8 @@ export function zipWith<F, S, R>(
  */
 export function zipWith<F, S, R>(
   fn: (f: F, s: S) => R,
-  second: Array<S>
-): (first: Array<F>) => Array<R>;
+  second: S[]
+): (first: F[]) => R[];
 
 export function zipWith() {
   const args = Array.from(arguments);
@@ -68,11 +68,7 @@ export function zipWith() {
   }
 }
 
-function _zipWith<F, S, R>(
-  first: Array<F>,
-  second: Array<S>,
-  fn: (f: F, s: S) => R
-) {
+function _zipWith<F, S, R>(first: F[], second: S[], fn: (f: F, s: S) => R) {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];

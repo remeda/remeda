@@ -21,8 +21,8 @@ import { purry } from './purry';
  * @pipeable
  */
 export function last<T>(array: NonEmptyArray<T>): T;
-export function last<T>(array: ReadonlyArray<T>): T | undefined;
-export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
+export function last<T>(array: readonly T[]): T | undefined;
+export function last<T>(): (array: readonly T[]) => T | undefined;
 export function last() {
   return purry(_last, arguments);
 }

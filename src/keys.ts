@@ -20,16 +20,16 @@
 
 export function keys(
   source: Record<PropertyKey, unknown> | ArrayLike<unknown>
-): Array<string> {
+): string[] {
   return Object.keys(source);
 }
 
 export namespace keys {
   export function strict<T extends Record<PropertyKey, unknown>>(
     source: T
-  ): Array<
-    { [K in keyof T]-?: K extends string | number ? `${K}` : never }[keyof T]
-  > {
+  ): {
+    [K in keyof T]-?: K extends string | number ? `${K}` : never;
+  }[keyof T][] {
     return keys(source) as any;
   }
 }

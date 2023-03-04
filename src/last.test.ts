@@ -25,7 +25,7 @@ describe('last', () => {
 
   describe('types', () => {
     test('should return T | undefined for Array input', () => {
-      const input: Array<number> = [1, 2, 3];
+      const input: number[] = [1, 2, 3];
       const actual = last(input);
       const result: AssertEqual<typeof actual, number | undefined> = true;
       expect(result).toEqual(true);

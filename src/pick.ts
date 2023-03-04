@@ -36,10 +36,10 @@ function _pick(object: any, names: string[]) {
   if (object == null) {
     return {};
   }
-  return names.reduce((acc, name) => {
+  return names.reduce<any>((acc, name) => {
     if (name in object) {
       acc[name] = object[name];
     }
     return acc;
-  }, {} as any);
+  }, {});
 }

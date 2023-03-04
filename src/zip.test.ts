@@ -41,8 +41,8 @@ describe('data first typings', () => {
     expect(result).toBe(true);
   });
   test('variadic tuples', () => {
-    const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
-    const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, 'b', 'c'];
+    const secondVariadic: [string, ...number[]] = ['a', 2, 3];
     const actual = zip(firstVariadic, secondVariadic);
     const result: AssertEqual<
       typeof actual,
@@ -87,8 +87,8 @@ describe('data second typings', () => {
     expect(result).toBe(true);
   });
   test('variadic tuples', () => {
-    const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
-    const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, 'b', 'c'];
+    const secondVariadic: [string, ...number[]] = ['a', 2, 3];
     const actual = zip(secondVariadic)(firstVariadic);
     const result: AssertEqual<
       typeof actual,

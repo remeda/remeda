@@ -17,7 +17,7 @@ import { purry } from './purry';
  */
 export function allPass<T>(
   data: T,
-  fns: ReadonlyArray<(data: T) => boolean>
+  fns: readonly ((data: T) => boolean)[]
 ): boolean;
 
 /**
@@ -35,13 +35,13 @@ export function allPass<T>(
  * @category Array
  */
 export function allPass<T>(
-  fns: ReadonlyArray<(data: T) => boolean>
+  fns: readonly ((data: T) => boolean)[]
 ): (data: T) => boolean;
 
 export function allPass() {
   return purry(_allPass, arguments);
 }
 
-function _allPass(data: any, fns: Array<(data: any) => boolean>) {
+function _allPass(data: any, fns: ((data: any) => boolean)[]) {
   return fns.every(fn => fn(data));
 }

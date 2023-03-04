@@ -10,7 +10,7 @@
  * @strict
  * @category Object
  */
-export function toPairs<T>(object: { [s: string]: T }): Array<[string, T]> {
+export function toPairs<T>(object: Record<string, T>): [string, T][] {
   return Object.entries(object);
 }
 
@@ -24,9 +24,7 @@ type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
   ObjectKeys<T>,
   ObjectValues<T>
 ];
-type ObjectEntries<T extends Record<PropertyKey, unknown>> = Array<
-  ObjectEntry<T>
->;
+type ObjectEntries<T extends Record<PropertyKey, unknown>> = ObjectEntry<T>[];
 
 export namespace toPairs {
   export function strict<T extends Record<PropertyKey, unknown>>(

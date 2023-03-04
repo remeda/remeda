@@ -21,25 +21,20 @@ test('should return pairs, strict', () => {
 
 test('stricter typing', () => {
   const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as const);
-  const isEqual: AssertEqual<
-    typeof actual,
-    Array<['a' | 'b' | 'c', 1 | 2 | 3]>
-  > = true;
+  const isEqual: AssertEqual<typeof actual, ['a' | 'b' | 'c', 1 | 2 | 3][]> =
+    true;
   expect(isEqual).toEqual(true);
 });
 
 test('stricter typing with optional', () => {
   const actual = toPairs.strict({} as { a?: string });
-  const isEqual: AssertEqual<typeof actual, Array<['a', string]>> = true;
+  const isEqual: AssertEqual<typeof actual, ['a', string][]> = true;
   expect(isEqual).toEqual(true);
 });
 
 test('stricter typing with undefined', () => {
   const actual = toPairs.strict({ a: undefined } as { a: string | undefined });
-  const isEqual: AssertEqual<
-    typeof actual,
-    Array<['a', string | undefined]>
-  > = true;
+  const isEqual: AssertEqual<typeof actual, ['a', string | undefined][]> = true;
   expect(isEqual).toEqual(true);
 });
 
@@ -48,6 +43,6 @@ test('stricter with a broad type', () => {
     string,
     unknown
   >);
-  const isEqual: AssertEqual<typeof actual, Array<[string, unknown]>> = true;
+  const isEqual: AssertEqual<typeof actual, [string, unknown][]> = true;
   expect(isEqual).toEqual(true);
 });

@@ -16,7 +16,7 @@ describe('Test for keys', () => {
       const actual = keys.strict({ 5: 'x', b: 'y', c: 'z' } as const);
       expect(actual).toEqual(['5', 'b', 'c']);
 
-      const result: AssertEqual<typeof actual, Array<'5' | 'b' | 'c'>> = true;
+      const result: AssertEqual<typeof actual, ('5' | 'b' | 'c')[]> = true;
 
       expect(result).toEqual(true);
     });
@@ -29,7 +29,7 @@ describe('Test for keys', () => {
       const actual = pipe(data, keys.strict);
       expect(actual).toEqual(['foo', 'bar']);
 
-      const result: AssertEqual<typeof actual, Array<'foo' | 'bar'>> = true;
+      const result: AssertEqual<typeof actual, ('foo' | 'bar')[]> = true;
 
       expect(result).toEqual(true);
     });

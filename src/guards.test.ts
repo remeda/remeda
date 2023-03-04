@@ -405,7 +405,7 @@ describe('isObject', () => {
   });
 
   test('isObject: should work as type guard', () => {
-    const data = { data: 5 } as ReadonlyArray<number> | { data: 5 };
+    const data = { data: 5 } as readonly number[] | { data: 5 };
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       const result: AssertEqual<
@@ -419,7 +419,7 @@ describe('isObject', () => {
   });
 
   test('isObject: should work as type guard for more narrow types', () => {
-    const data = { data: 5 } as Array<number> | { data: number };
+    const data = { data: 5 } as number[] | { data: number };
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       const result: AssertEqual<

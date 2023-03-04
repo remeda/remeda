@@ -13,9 +13,9 @@ import { purry } from './purry';
  * @category Array
  */
 export function zip<F extends unknown, S extends unknown>(
-  first: ReadonlyArray<F>,
-  second: ReadonlyArray<S>
-): Array<[F, S]>;
+  first: readonly F[],
+  second: readonly S[]
+): [F, S][];
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -29,14 +29,14 @@ export function zip<F extends unknown, S extends unknown>(
  * @category Array
  */
 export function zip<S extends unknown>(
-  second: ReadonlyArray<S>
-): <F extends unknown>(first: ReadonlyArray<F>) => Array<[F, S]>;
+  second: readonly S[]
+): <F extends unknown>(first: readonly F[]) => [F, S][];
 
 export function zip() {
   return purry(_zip, arguments);
 }
 
-function _zip(first: Array<unknown>, second: Array<unknown>) {
+function _zip(first: unknown[], second: unknown[]) {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];

@@ -68,10 +68,7 @@ export function pipe<A, B, C, D, E, F, G, H>(
   op7: (input: G) => H
 ): H;
 
-export function pipe(
-  value: any,
-  ...operations: Array<(value: any) => any>
-): any {
+export function pipe(value: any, ...operations: ((value: any) => any)[]): any {
   let ret = value;
   const lazyOps = operations.map(op => {
     const { lazy, lazyArgs } = op as LazyOp;
@@ -106,10 +103,10 @@ export function pipe(
       }
     }
 
-    let acc: any[] = [];
+    const acc: any[] = [];
 
     for (let j = 0; j < ret.length; j++) {
-      let item = ret[j];
+      const item = ret[j];
       if (_processItem({ item, acc, lazySeq })) {
         break;
       }
