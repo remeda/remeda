@@ -13,7 +13,12 @@ function _cloneRegExp(pattern: RegExp) {
   );
 }
 
-function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
+function _clone(
+  value: any,
+  refFrom: Array<any>,
+  refTo: Array<any>,
+  deep: boolean
+) {
   function copy(copiedValue: any) {
     const len = refFrom.length;
     let idx = 0;

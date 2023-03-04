@@ -14,9 +14,9 @@ import { purry } from './purry';
  * @category Array
  */
 export function flatMap<T, K>(
-  array: readonly T[],
-  fn: (input: T) => K | K[]
-): K[];
+  array: ReadonlyArray<T>,
+  fn: (input: T) => K | Array<K>
+): Array<K>;
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
@@ -31,19 +31,19 @@ export function flatMap<T, K>(
  * @category Array
  */
 export function flatMap<T, K>(
-  fn: (input: T) => K | K[]
-): (array: readonly T[]) => K[];
+  fn: (input: T) => K | Array<K>
+): (array: ReadonlyArray<T>) => Array<K>;
 
 export function flatMap() {
   return purry(_flatMap, arguments, flatMap.lazy);
 }
 
-function _flatMap<T, K>(array: T[], fn: (input: T) => K[]): K[] {
+function _flatMap<T, K>(array: Array<T>, fn: (input: T) => Array<K>): Array<K> {
   return flatten(array.map(item => fn(item)));
 }
 
 export namespace flatMap {
-  export function lazy<T, K>(fn: (input: T) => K | K[]) {
+  export function lazy<T, K>(fn: (input: T) => K | Array<K>) {
     return (value: T) => {
       const next = fn(value);
       if (Array.isArray(next)) {

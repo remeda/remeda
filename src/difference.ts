@@ -13,7 +13,10 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  * @pipeable
  */
-export function difference<T>(array: readonly T[], other: readonly T[]): T[];
+export function difference<T>(
+  array: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
+): Array<T>;
 
 /**
  * Excludes the values from `other` array.
@@ -32,20 +35,20 @@ export function difference<T>(array: readonly T[], other: readonly T[]): T[];
  * @pipeable
  */
 export function difference<T, K>(
-  other: readonly T[]
-): (array: readonly K[]) => T[];
+  other: ReadonlyArray<T>
+): (array: ReadonlyArray<K>) => Array<T>;
 
 export function difference() {
   return purry(_difference, arguments, difference.lazy);
 }
 
-function _difference<T>(array: T[], other: T[]) {
+function _difference<T>(array: Array<T>, other: Array<T>) {
   const lazy = difference.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace difference {
-  export function lazy<T>(other: T[]) {
+  export function lazy<T>(other: Array<T>) {
     const set = new Set(other);
     return (value: T): LazyResult<T> => {
       if (!set.has(value)) {

@@ -12,7 +12,7 @@ import { purry } from './purry';
  */
 export function pick<T extends object, K extends keyof T>(
   object: T,
-  names: readonly K[]
+  names: ReadonlyArray<K>
 ): Pick<T, K>;
 
 /**
@@ -25,14 +25,14 @@ export function pick<T extends object, K extends keyof T>(
  * @category Object
  */
 export function pick<T extends object, K extends keyof T>(
-  names: readonly K[]
+  names: ReadonlyArray<K>
 ): (object: T) => Pick<T, K>;
 
 export function pick() {
   return purry(_pick, arguments);
 }
 
-function _pick(object: any, names: string[]) {
+function _pick(object: any, names: Array<string>) {
   if (object == null) {
     return {};
   }

@@ -13,9 +13,9 @@ import { purry } from './purry';
  * @category Array
  */
 export function splitWhen<T>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: (item: T) => boolean
-): [T[], T[]];
+): [Array<T>, Array<T>];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
@@ -29,13 +29,13 @@ export function splitWhen<T>(
  */
 export function splitWhen<T>(
   fn: (item: T) => boolean
-): (array: readonly T[]) => [T[], T[]];
+): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function splitWhen() {
   return purry(_splitWhen, arguments);
 }
 
-function _splitWhen<T>(array: T[], fn: (item: T) => boolean) {
+function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
   for (let i = 0; i < array.length; i++) {
     if (fn(array[i])) {
       return splitAt(array, i);

@@ -61,10 +61,10 @@ describe('pipe', () => {
   });
 
   it('indexed: check index and items', () => {
-    const indexes1: number[] = [];
-    const indexes2: number[] = [];
-    const anyItems1: number[][] = [];
-    const anyItems2: number[][] = [];
+    const indexes1: Array<number> = [];
+    const indexes2: Array<number> = [];
+    const anyItems1: Array<Array<number>> = [];
+    const anyItems2: Array<Array<number>> = [];
     const result = pipe(
       [1, 2, 3, 4, 5] as const,
       map.indexed((x, i, items) => {

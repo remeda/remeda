@@ -19,14 +19,14 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  */
 
-export function uniq<T>(array: readonly T[]): T[];
-export function uniq<T>(): (array: readonly T[]) => T[];
+export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
+export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniq() {
   return purry(_uniq, arguments, uniq.lazy);
 }
 
-function _uniq<T>(array: T[]) {
+function _uniq<T>(array: Array<T>) {
   return _reduceLazy(array, uniq.lazy());
 }
 

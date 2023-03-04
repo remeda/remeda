@@ -71,12 +71,12 @@ describe('data first', () => {
     test('SortProjection', () => {
       const actual = sortBy(items, x => x.a);
       type T = (typeof items)[number];
-      assertType<T[]>(actual);
+      assertType<Array<T>>(actual);
     });
     test('SortPair', () => {
       const actual = sortBy(objects, [x => x.active, 'desc']);
       type T = (typeof objects)[number];
-      assertType<T[]>(actual);
+      assertType<Array<T>>(actual);
     });
   });
 });
@@ -123,7 +123,7 @@ describe('data last', () => {
         sortBy(x => x.a)
       );
       type T = (typeof items)[number];
-      assertType<T[]>(actual);
+      assertType<Array<T>>(actual);
     });
     test('SortPair', () => {
       const actual = pipe(
@@ -131,7 +131,7 @@ describe('data last', () => {
         sortBy([x => x.weight, 'asc'], [x => x.color, 'desc'])
       );
       type T = (typeof objects)[number];
-      assertType<T[]>(actual);
+      assertType<Array<T>>(actual);
     });
   });
 });

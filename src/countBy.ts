@@ -3,7 +3,7 @@ import { Pred, PredIndexed, PredIndexedOptional } from './_types';
 
 const _countBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     return array.reduce((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       return ret + (value ? 1 : 0);
@@ -22,11 +22,14 @@ const _countBy =
  * @indexed
  * @category Array
  */
-export function countBy<T>(items: readonly T[], fn: Pred<T, boolean>): number;
+export function countBy<T>(
+  items: ReadonlyArray<T>,
+  fn: Pred<T, boolean>
+): number;
 
 export function countBy<T>(
   fn: Pred<T, boolean>
-): (array: readonly T[]) => number;
+): (array: ReadonlyArray<T>) => number;
 
 /**
  * Counts how many values of the collection pass the specified predicate.
@@ -45,12 +48,12 @@ export function countBy() {
 
 export namespace countBy {
   export function indexed<T, K>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>
   ): number;
   export function indexed<T, K>(
     fn: PredIndexed<T, boolean>
-  ): (array: readonly T[]) => number;
+  ): (array: ReadonlyArray<T>) => number;
   export function indexed() {
     return purry(_countBy(true), arguments);
   }
