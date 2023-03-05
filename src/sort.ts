@@ -32,7 +32,7 @@ export function sort<T>(
   cmp: (a: T, b: T) => number
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort<T>() {
+export function sort() {
   return purry(_sort, arguments);
 }
 

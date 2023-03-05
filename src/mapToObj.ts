@@ -51,7 +51,7 @@ export function mapToObj() {
 
 const _mapToObj =
   (indexed: boolean) =>
-  <T>(array: Array<any>, fn: PredIndexedOptional<any, any>) => {
+  (array: Array<any>, fn: PredIndexedOptional<any, any>) => {
     return array.reduce((result, element, index) => {
       const [key, value] = indexed ? fn(element, index, array) : fn(element);
       result[key] = value;

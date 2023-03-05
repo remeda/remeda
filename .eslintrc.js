@@ -55,17 +55,6 @@ module.exports = {
     // reserved keyword, but it's recommended to use a variadic instead (e.g.
     // `function foo(...args: readonly unknown[])`)
     'prefer-rest-params': 'off',
-
-    // TODO: These have trivial manual fixes
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
-    '@typescript-eslint/no-unnecessary-type-constraint': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/prefer-for-of': 'off',
-    '@typescript-eslint/restrict-plus-operands': 'off',
-    '@typescript-eslint/unbound-method': 'off',
-    'no-prototype-builtins': 'off',
   },
 
   overrides: [

@@ -52,7 +52,9 @@ const dataProvider = (
     case 'date':
       return new Date();
     case 'function':
-      return () => {};
+      return () => {
+        /* (intentionally empty) */
+      };
     case 'null':
       return null;
     case 'promise':

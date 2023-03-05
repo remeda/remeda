@@ -108,8 +108,7 @@ export function pipe(
 
     const acc: Array<any> = [];
 
-    for (let j = 0; j < ret.length; j++) {
-      const item = ret[j];
+    for (const item of ret) {
       if (_processItem({ item, acc, lazySeq })) {
         break;
       }

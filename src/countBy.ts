@@ -47,11 +47,11 @@ export function countBy() {
 }
 
 export namespace countBy {
-  export function indexed<T, K>(
+  export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>
   ): number;
-  export function indexed<T, K>(
+  export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
   export function indexed() {

@@ -9,7 +9,7 @@ describe('data first', () => {
           a: 1,
           b: 2,
         },
-        (value, key) => value + key
+        (value, key) => `${value}${key}`
       )
     ).toEqual({
       a: '1a',
@@ -26,7 +26,7 @@ describe('data last', () => {
           a: 1,
           b: 2,
         },
-        mapValues((value, key) => value + key)
+        mapValues((value, key) => `${value}${key}`)
       )
     ).toEqual({
       a: '1a',

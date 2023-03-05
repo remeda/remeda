@@ -59,7 +59,7 @@ export function flatMapToObj() {
 
 const _flatMapToObj =
   (indexed: boolean) =>
-  <T>(array: Array<any>, fn: PredIndexedOptional<any, any>) => {
+  (array: Array<any>, fn: PredIndexedOptional<any, any>) => {
     return array.reduce((result, element, index) => {
       const items = indexed ? fn(element, index, array) : fn(element);
       items.forEach(([key, value]: [any, any]) => {
