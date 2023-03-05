@@ -55,9 +55,6 @@ module.exports = {
     // reserved keyword, but it's recommended to use a variadic instead (e.g.
     // `function foo(...args: readonly unknown[])`)
     'prefer-rest-params': 'off',
-
-    // TODO: These have trivial manual fixes
-    'no-prototype-builtins': 'off',
   },
 
   overrides: [
