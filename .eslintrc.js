@@ -57,7 +57,6 @@ module.exports = {
     'prefer-rest-params': 'off',
 
     // TODO: These have trivial manual fixes
-    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-unnecessary-type-constraint': 'off',
     '@typescript-eslint/no-unused-vars': 'off',

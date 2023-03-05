@@ -1,3 +1,8 @@
+/* eslint @typescript-eslint/ban-types: ["error",{types:{Function: false},extendDefaults:true}] --
+ * Function is used generically in this file to define any type of function, so
+ * this lint error is not relevant for it.
+ */
+
 type DefinitelyString<T> = Extract<T, string> extends never
   ? string
   : Extract<T, string> extends any
