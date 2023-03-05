@@ -27,7 +27,7 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'off',
 
     '@typescript-eslint/array-type': [
-      'warn',
+      'error',
       {
         // We like it this way...
         default: 'generic',
