@@ -100,7 +100,7 @@ export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {
   return data instanceof Promise;
 }
 
-type DefinitelyArray<T extends unknown> = Extract<
+type DefinitelyArray<T> = Extract<
   T,
   Array<any> | ReadonlyArray<any>
 > extends never
@@ -124,7 +124,7 @@ export function isArray<T>(
   return Array.isArray(data);
 }
 
-type DefinitelyObject<T extends unknown> = Exclude<
+type DefinitelyObject<T> = Exclude<
   Extract<T, object>,
   Array<any> | Function | ReadonlyArray<any>
 > extends never
@@ -144,9 +144,7 @@ type DefinitelyObject<T extends unknown> = Exclude<
  *    R.isObject('somethingElse') //=> false
  * @category Guard
  */
-export function isObject<T extends unknown>(
-  data: T | object
-): data is DefinitelyObject<T> {
+export function isObject<T>(data: T | object): data is DefinitelyObject<T> {
   return !!data && !Array.isArray(data) && typeof data === 'object';
 }
 
