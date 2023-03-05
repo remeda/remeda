@@ -25,7 +25,6 @@ it('"String" if given a String literal', () => {
 });
 
 it('"String" if given a String object', () => {
-  // tslint:disable-next-line:no-construct
   expect(type(new String('I am a String object'))).toEqual('String');
 });
 

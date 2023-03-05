@@ -26,6 +26,14 @@ module.exports = {
     // etc...) via namespaces by design.
     '@typescript-eslint/no-namespace': 'off',
 
+    '@typescript-eslint/array-type': [
+      'error',
+      {
+        // We like it this way...
+        default: 'generic',
+      },
+    ],
+
     // TODO: There are a ton of `any` throughout the codebase, they should be
     // replaced by `unknown` or better types.
     '@typescript-eslint/no-explicit-any': 'off',
@@ -47,16 +55,6 @@ module.exports = {
     // reserved keyword, but it's recommended to use a variadic instead (e.g.
     // `function foo(...args: readonly unknown[])`)
     'prefer-rest-params': 'off',
-
-    // TODO: These all have autofixers
-    '@typescript-eslint/array-type': 'off',
-    '@typescript-eslint/ban-tslint-comment': 'off',
-    '@typescript-eslint/consistent-indexed-object-style': 'off',
-    '@typescript-eslint/no-inferrable-types': 'off',
-    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
-    '@typescript-eslint/prefer-reduce-type-parameter': 'off',
-    '@typescript-eslint/prefer-ts-expect-error': 'off',
-    'prefer-const': 'off',
 
     // TODO: These have trivial manual fixes
     '@typescript-eslint/ban-ts-comment': 'off',

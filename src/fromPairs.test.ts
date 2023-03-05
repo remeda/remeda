@@ -1,7 +1,7 @@
 import { fromPairs } from './fromPairs';
 import { AssertEqual } from './_types';
 
-const tuples: [string, number][] = [
+const tuples: Array<[string, number]> = [
   ['a', 1],
   ['b', 2],
   ['c', 3],

@@ -13,7 +13,12 @@ function _cloneRegExp(pattern: RegExp) {
   );
 }
 
-function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
+function _clone(
+  value: any,
+  refFrom: Array<any>,
+  refTo: Array<any>,
+  deep: boolean
+) {
   function copy(copiedValue: any) {
     const len = refFrom.length;
     let idx = 0;
@@ -25,7 +30,6 @@ function _clone(value: any, refFrom: any[], refTo: any[], deep: boolean) {
     }
     refFrom[idx + 1] = value;
     refTo[idx + 1] = copiedValue;
-    // tslint:disable-next-line:forin
     for (const key in value) {
       copiedValue[key] = deep
         ? _clone(value[key], refFrom, refTo, true)

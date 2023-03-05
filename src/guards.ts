@@ -123,7 +123,7 @@ type DefinitelyObject<T extends unknown> = Exclude<
   Extract<T, object>,
   Array<any> | Function | ReadonlyArray<any>
 > extends never
-  ? { [k: string]: unknown }
+  ? Record<string, unknown>
   : Exclude<Extract<T, object>, Array<any> | Function | ReadonlyArray<any>>;
 /**
  * A function that checks if the passed parameter is of type Object and narrows its type accordingly

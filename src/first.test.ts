@@ -64,7 +64,7 @@ describe('pipe', () => {
       [[1, 2, 3], [4, 5], [6]] as const,
       counter.fn(),
       first(),
-      defaultTo<readonly number[]>([]),
+      defaultTo<ReadonlyArray<number>>([]),
       first()
     );
     expect(counter.count).toHaveBeenCalledTimes(1);
@@ -79,7 +79,7 @@ describe('pipe', () => {
       counter1.fn(),
       filter(arr => arr.length === 4),
       first(),
-      defaultTo<readonly number[]>([]),
+      defaultTo<ReadonlyArray<number>>([]),
       counter2.fn(),
       filter(x => x % 2 === 1),
       first()

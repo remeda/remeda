@@ -14,7 +14,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @category Array
  */
 export function indexBy<T>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: (item: T) => any
 ): Record<string, T>;
 
@@ -35,7 +35,7 @@ export function indexBy<T>(
  */
 export function indexBy<T>(
   fn: (item: T) => any
-): (array: readonly T[]) => Record<string, T>;
+): (array: ReadonlyArray<T>) => Record<string, T>;
 
 export function indexBy() {
   return purry(_indexBy(false), arguments);
@@ -43,23 +43,23 @@ export function indexBy() {
 
 const _indexBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
-    return array.reduce((ret, item, index) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+    return array.reduce<Record<string, T>>((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
       ret[key] = item;
       return ret;
-    }, {} as Record<string, T>);
+    }, {});
   };
 
 export namespace indexBy {
   export function indexed<T, K>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, any>
   ): Record<string, T>;
   export function indexed<T, K>(
     fn: PredIndexed<T, any>
-  ): (array: readonly T[]) => Record<string, T>;
+  ): (array: ReadonlyArray<T>) => Record<string, T>;
   export function indexed() {
     return purry(_indexBy(true), arguments);
   }

@@ -94,7 +94,7 @@ export function pipe(
       opIdx++;
       continue;
     }
-    const lazySeq: LazyFn[] = [];
+    const lazySeq: Array<LazyFn> = [];
     for (let j = opIdx; j < operations.length; j++) {
       if (lazyOps[j]) {
         lazySeq.push(lazyOps[j]);
@@ -106,10 +106,10 @@ export function pipe(
       }
     }
 
-    let acc: any[] = [];
+    const acc: Array<any> = [];
 
     for (let j = 0; j < ret.length; j++) {
-      let item = ret[j];
+      const item = ret[j];
       if (_processItem({ item, acc, lazySeq })) {
         break;
       }
@@ -128,11 +128,11 @@ export function pipe(
 type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
 
 type LazyOp = ((input: any) => any) & {
-  lazy: ((...args: any[]) => LazyFn) & {
+  lazy: ((...args: Array<any>) => LazyFn) & {
     indexed: boolean;
     single: boolean;
   };
-  lazyArgs: any[];
+  lazyArgs: Array<any>;
 };
 
 function _processItem({
@@ -141,8 +141,8 @@ function _processItem({
   acc,
 }: {
   item: any;
-  lazySeq: any[];
-  acc: any[];
+  lazySeq: Array<any>;
+  acc: Array<any>;
 }): boolean {
   if (lazySeq.length === 0) {
     acc.push(item);
@@ -160,7 +160,7 @@ function _processItem({
     lazyFn.index++;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany) {
-        const nextValues: any[] = lazyResult.next;
+        const nextValues: Array<any> = lazyResult.next;
         for (const subItem of nextValues) {
           const subResult = _processItem({
             item: subItem,

@@ -12,7 +12,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function sort<T>(items: readonly T[], cmp: (a: T, b: T) => number): T[];
+export function sort<T>(
+  items: ReadonlyArray<T>,
+  cmp: (a: T, b: T) => number
+): Array<T>;
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
@@ -27,13 +30,13 @@ export function sort<T>(items: readonly T[], cmp: (a: T, b: T) => number): T[];
  */
 export function sort<T>(
   cmp: (a: T, b: T) => number
-): (items: readonly T[]) => T[];
+): (items: ReadonlyArray<T>) => Array<T>;
 
 export function sort<T>() {
   return purry(_sort, arguments);
 }
 
-function _sort<T>(items: T[], cmp: (a: T, b: T) => number) {
+function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
   const ret = [...items];
   ret.sort(cmp);
   return ret;

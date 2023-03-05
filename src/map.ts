@@ -19,7 +19,7 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  * @pipeable
  * @category Array
  */
-export function map<T, K>(array: readonly T[], fn: Pred<T, K>): K[];
+export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
 
 /**
  * Map each value of an object using a defined callback function.
@@ -35,7 +35,9 @@ export function map<T, K>(array: readonly T[], fn: Pred<T, K>): K[];
  * @pipeable
  * @category Array
  */
-export function map<T, K>(fn: Pred<T, K>): (array: readonly T[]) => K[];
+export function map<T, K>(
+  fn: Pred<T, K>
+): (array: ReadonlyArray<T>) => Array<K>;
 
 export function map() {
   return purry(_map(false), arguments, map.lazy);
@@ -43,7 +45,7 @@ export function map() {
 
 const _map =
   (indexed: boolean) =>
-  <T, K>(array: T[], fn: PredIndexedOptional<T, K>) => {
+  <T, K>(array: Array<T>, fn: PredIndexedOptional<T, K>) => {
     return _reduceLazy(
       array,
       indexed ? map.lazyIndexed(fn) : map.lazy(fn),
@@ -54,7 +56,7 @@ const _map =
 const _lazy =
   (indexed: boolean) =>
   <T, K>(fn: PredIndexedOptional<T, K>) => {
-    return (value: T, index?: number, array?: T[]): LazyResult<K> => {
+    return (value: T, index?: number, array?: Array<T>): LazyResult<K> => {
       return {
         done: false,
         hasNext: true,
@@ -65,12 +67,12 @@ const _lazy =
 
 export namespace map {
   export function indexed<T, K>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, K>
-  ): K[];
+  ): Array<K>;
   export function indexed<T, K>(
     fn: PredIndexed<T, K>
-  ): (array: readonly T[]) => K[];
+  ): (array: ReadonlyArray<T>) => Array<K>;
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);
   }

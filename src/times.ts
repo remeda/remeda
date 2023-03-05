@@ -13,7 +13,7 @@ import { purry } from './purry';
  * @example times(identity, 5); //=> [0, 1, 2, 3, 4]
  * @data_first
  */
-export function times<T>(count: number, fn: (n: number) => T): T[];
+export function times<T>(count: number, fn: (n: number) => T): Array<T>;
 
 /**
  * Calls an input function `n` times, returning an array containing the results
@@ -28,13 +28,13 @@ export function times<T>(count: number, fn: (n: number) => T): T[];
  * @example times(5)(identity); //=> [0, 1, 2, 3, 4]
  * @data_last
  */
-export function times<T>(fn: (n: number) => T): (count: number) => T[];
+export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
 export function times() {
   return purry(_times, arguments);
 }
 
-function _times<T>(count: number, fn: (n: number) => T): T[] {
+function _times<T>(count: number, fn: (n: number) => T): Array<T> {
   if (count < 0) {
     throw new RangeError('n must be a non-negative number');
   }
