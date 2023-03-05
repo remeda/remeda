@@ -53,11 +53,11 @@ const _indexBy =
   };
 
 export namespace indexBy {
-  export function indexed<T, K>(
+  export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, any>
   ): Record<string, T>;
-  export function indexed<T, K>(
+  export function indexed<T>(
     fn: PredIndexed<T, any>
   ): (array: ReadonlyArray<T>) => Record<string, T>;
   export function indexed() {

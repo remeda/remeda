@@ -47,7 +47,7 @@ describe('pipe', () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
-      forEach(x => {
+      forEach(() => {
         count();
       }),
       take(2)

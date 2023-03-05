@@ -85,11 +85,11 @@ const _partition =
   };
 
 export namespace partition {
-  export function indexed<T, K>(
+  export function indexed<T>(
     array: ReadonlyArray<T>,
     predicate: PredIndexed<T, boolean>
   ): [Array<T>, Array<T>];
-  export function indexed<T, K>(
+  export function indexed<T>(
     predicate: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
   export function indexed() {

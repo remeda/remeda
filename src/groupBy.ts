@@ -76,11 +76,11 @@ type Out<Value, Key extends PropertyKey = PropertyKey> =
       Partial<Record<Key, NonEmptyArray<Value>>>;
 
 export namespace groupBy {
-  export function indexed<T, K>(
+  export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, PropertyKey>
   ): Record<string, NonEmptyArray<T>>;
-  export function indexed<T, K>(
+  export function indexed<T>(
     fn: PredIndexed<T, PropertyKey>
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
   export function indexed() {

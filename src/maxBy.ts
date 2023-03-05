@@ -1,6 +1,4 @@
 import { purry } from './purry';
-import { _toLazyIndexed } from './_toLazyIndexed';
-import { _toSingle } from './_toSingle';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
 const _maxBy =
