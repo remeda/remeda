@@ -68,6 +68,130 @@ export function pipe<A, B, C, D, E, F, G, H>(
   op7: (input: G) => H
 ): H;
 
+export function pipe<A, B, C, D, E, F, G, H, I>(
+  value: A,
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F,
+  op6: (input: F) => G,
+  op7: (input: G) => H,
+  op8: (input: H) => I
+): I;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J>(
+  value: A,
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F,
+  op6: (input: F) => G,
+  op7: (input: G) => H,
+  op8: (input: H) => I,
+  op9: (input: I) => J
+): J;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K
+): K;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K,
+  op11: (input: K) => L
+): L;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K,
+  op11: (input: K) => L,
+  op12: (input: L) => M
+): M;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K,
+  op11: (input: K) => L,
+  op12: (input: L) => M,
+  op13: (input: M) => N
+): N;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K,
+  op11: (input: K) => L,
+  op12: (input: L) => M,
+  op13: (input: M) => N,
+  op14: (input: N) => O
+): O;
+
+export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
+  value: A,
+  op01: (input: A) => B,
+  op02: (input: B) => C,
+  op03: (input: C) => D,
+  op04: (input: D) => E,
+  op05: (input: E) => F,
+  op06: (input: F) => G,
+  op07: (input: G) => H,
+  op08: (input: H) => I,
+  op09: (input: I) => J,
+  op10: (input: J) => K,
+  op11: (input: K) => L,
+  op12: (input: L) => M,
+  op13: (input: M) => N,
+  op14: (input: N) => O,
+  op15: (input: O) => P
+): P;
+
 export function pipe(
   value: any,
   ...operations: Array<(value: any) => any>
