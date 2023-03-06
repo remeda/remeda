@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 10 # we'll upgrade it later
+          node-version-file: .nvmrc
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build docs

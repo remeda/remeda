@@ -22,10 +22,10 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @pipeable
  */
 export function differenceWith<TFirst, TSecond>(
-  array: readonly TFirst[],
-  other: readonly TSecond[],
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>
-): TFirst[];
+): Array<TFirst>;
 
 /**
  * Excludes the values from `other` array.
@@ -49,17 +49,17 @@ export function differenceWith<TFirst, TSecond>(
  * @pipeable
  */
 export function differenceWith<TFirst, TSecond>(
-  other: readonly TSecond[],
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>
-): (array: readonly TFirst[]) => TFirst[];
+): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function differenceWith() {
   return purry(_differenceWith, arguments, differenceWith.lazy);
 }
 
 function _differenceWith<TFirst, TSecond>(
-  array: TFirst[],
-  other: TSecond[],
+  array: Array<TFirst>,
+  other: Array<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>
 ) {
   const lazy = differenceWith.lazy(other, isEquals);
@@ -68,7 +68,7 @@ function _differenceWith<TFirst, TSecond>(
 
 export namespace differenceWith {
   export function lazy<TFirst, TSecond>(
-    other: TSecond[],
+    other: Array<TSecond>,
     isEquals: IsEquals<TFirst, TSecond>
   ) {
     return (value: TFirst): LazyResult<TFirst> => {

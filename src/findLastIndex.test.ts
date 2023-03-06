@@ -9,7 +9,7 @@ describe('data first', () => {
   });
 
   test('findLastIndex.indexed', () => {
-    expect(findLastIndex.indexed(array, (x, _i) => x % 2 === 1)).toBe(2);
+    expect(findLastIndex.indexed(array, x => x % 2 === 1)).toBe(2);
   });
 
   test('findLast first value', () => {

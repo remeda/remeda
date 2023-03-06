@@ -19,7 +19,7 @@ import { _toSingle } from './_toSingle';
  * @category Array
  */
 export function find<T>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: Pred<T, boolean>
 ): T | undefined;
 
@@ -45,7 +45,7 @@ export function find<T>(
  */
 export function find<T = never>(
   fn: Pred<T, boolean>
-): (array: readonly T[]) => T | undefined;
+): (array: ReadonlyArray<T>) => T | undefined;
 
 export function find() {
   return purry(_find(false), arguments, find.lazy);
@@ -53,7 +53,7 @@ export function find() {
 
 const _find =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     if (indexed) {
       return array.find(fn);
     }
@@ -64,7 +64,7 @@ const _find =
 const _lazy =
   (indexed: boolean) =>
   <T>(fn: PredIndexedOptional<T, boolean>) => {
-    return (value: T, index?: number, array?: T[]) => {
+    return (value: T, index?: number, array?: Array<T>) => {
       const valid = indexed ? fn(value, index, array) : fn(value);
       return {
         done: valid,
@@ -76,12 +76,12 @@ const _lazy =
 
 export namespace find {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>
   ): T | undefined;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
-  ): (array: readonly T[]) => T | undefined;
+  ): (array: ReadonlyArray<T>) => T | undefined;
   export function indexed() {
     return purry(_find(true), arguments, find.lazyIndexed);
   }

@@ -17,7 +17,7 @@ import { purry } from './purry';
  * @category Array
  */
 export function mapToObj<T, K extends keyof any, V>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: (element: T) => [K, V]
 ): Record<K, V>;
 
@@ -43,7 +43,7 @@ export function mapToObj<T, K extends keyof any, V>(
  */
 export function mapToObj<T, K extends keyof any, V>(
   fn: (element: T) => [K, V]
-): (array: readonly T[]) => Record<K, V>;
+): (array: ReadonlyArray<T>) => Record<K, V>;
 
 export function mapToObj() {
   return purry(_mapToObj(false), arguments);
@@ -51,7 +51,7 @@ export function mapToObj() {
 
 const _mapToObj =
   (indexed: boolean) =>
-  <T>(array: any[], fn: PredIndexedOptional<any, any>) => {
+  (array: Array<any>, fn: PredIndexedOptional<any, any>) => {
     return array.reduce((result, element, index) => {
       const [key, value] = indexed ? fn(element, index, array) : fn(element);
       result[key] = value;
@@ -61,12 +61,12 @@ const _mapToObj =
 
 export namespace mapToObj {
   export function indexed<T, K extends keyof any, V>(
-    array: readonly T[],
-    fn: (element: T, index: number, array: readonly T[]) => [K, V]
+    array: ReadonlyArray<T>,
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
   ): Record<K, V>;
   export function indexed<T, K extends keyof any, V>(
-    fn: (element: T, index: number, array: readonly T[]) => [K, V]
-  ): (array: readonly T[]) => Record<K, V>;
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  ): (array: ReadonlyArray<T>) => Record<K, V>;
   export function indexed() {
     return purry(_mapToObj(true), arguments);
   }

@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function zip<F extends unknown, S extends unknown>(
+export function zip<F, S>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>
 ): Array<[F, S]>;
@@ -28,9 +28,9 @@ export function zip<F extends unknown, S extends unknown>(
  * @data_last
  * @category Array
  */
-export function zip<S extends unknown>(
+export function zip<S>(
   second: ReadonlyArray<S>
-): <F extends unknown>(first: ReadonlyArray<F>) => Array<[F, S]>;
+): <F>(first: ReadonlyArray<F>) => Array<[F, S]>;
 
 export function zip() {
   return purry(_zip, arguments);

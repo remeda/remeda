@@ -1,7 +1,7 @@
-import { pipe } from './pipe';
 import { drop } from './drop';
-import { createCounter } from './_counter';
+import { pipe } from './pipe';
 import { take } from './take';
+import { createCounter } from './_counter';
 
 const array = [1, 2, 3, 4, 5] as const;
 const expected = [3, 4, 5];

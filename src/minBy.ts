@@ -1,11 +1,9 @@
 import { purry } from './purry';
-import { _toLazyIndexed } from './_toLazyIndexed';
-import { _toSingle } from './_toSingle';
 import { PredIndexed, PredIndexedOptional } from './_types';
 
 const _minBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
     let ret: T | undefined = undefined;
     let retMin: number | undefined = undefined;
     array.forEach((item, i) => {
@@ -36,7 +34,7 @@ const _minBy =
  */
 export function minBy<T>(
   fn: (item: T) => number
-): (items: readonly T[]) => T | undefined;
+): (items: ReadonlyArray<T>) => T | undefined;
 
 /**
  * Returns the min element using the provided predicate.
@@ -55,7 +53,7 @@ export function minBy<T>(
  * @category Array
  */
 export function minBy<T>(
-  items: readonly T[],
+  items: ReadonlyArray<T>,
   fn: (item: T) => number
 ): T | undefined;
 
@@ -65,12 +63,12 @@ export function minBy() {
 
 export namespace minBy {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, number>
   ): T | undefined;
   export function indexed<T>(
     fn: PredIndexed<T, number>
-  ): (array: readonly T[]) => T | undefined;
+  ): (array: ReadonlyArray<T>) => T | undefined;
   export function indexed() {
     return purry(_minBy(true), arguments);
   }

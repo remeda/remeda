@@ -1,7 +1,7 @@
 import { difference } from './difference';
+import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
-import { map } from './map';
 
 const source = [1, 2, 3, 4] as const;
 const other = [2, 5, 3] as const;
@@ -19,7 +19,7 @@ describe('data_last', () => {
   });
 
   test('lazy', () => {
-    const count = jest.fn();
+    const count = vi.fn();
     const result = pipe(
       [1, 2, 3, 4, 5, 6],
       map(x => {

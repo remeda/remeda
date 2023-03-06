@@ -1,6 +1,6 @@
+import { find } from './find';
 import { flatten } from './flatten';
 import { pipe } from './pipe';
-import { find } from './find';
 import { createCounter } from './_counter';
 
 test('flatten', () => {

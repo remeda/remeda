@@ -20,10 +20,10 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
  * @category Array
  * @pipeable
  */
-export function flattenDeep<T>(items: readonly T[]): Array<FlattenDeep<T>>;
+export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
 
 export function flattenDeep<T>(): (
-  items: readonly T[]
+  items: ReadonlyArray<T>
 ) => Array<FlattenDeep<T>>;
 
 export function flattenDeep() {
@@ -38,7 +38,7 @@ function _flattenDeepValue<T>(value: T | Array<T>): T | Array<FlattenDeep<T>> {
   if (!Array.isArray(value)) {
     return value;
   }
-  const ret: any[] = [];
+  const ret: Array<any> = [];
   value.forEach(item => {
     if (Array.isArray(item)) {
       ret.push(...flattenDeep(item));

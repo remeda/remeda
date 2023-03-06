@@ -7,25 +7,30 @@
   "jsnext:main": "dist/es/index.js",
   "sideEffects": false,
   "devDependencies": {
-    "@types/jest": "^26.0.14",
-    "jest": "^26.4.2",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "@vitest/coverage-c8": "^0.27.2",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
     "marked": "^0.4.0",
     "prettier": "^2.8.0",
-    "ts-jest": "^26.4.1",
     "ts-node": "^8.4.1",
     "typedoc": "^0.11.1",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.2",
+    "vitest": "^0.28.4"
   },
   "scripts": {
     "clean": "rm -rf ./dist && mkdir dist",
-    "test": "jest --coverage && yarn run compile",
-    "test:ci": "jest",
+    "test": "vitest run --coverage && yarn run compile",
+    "test:ci": "vitest run",
     "compile": "tsc -p ./tsconfig.json --noEmit",
     "build": "yarn run clean && yarn run build:es && yarn run build:cjs",
-    "build:es": "yarn run tsc --declaration true --declarationMap true --module esnext --outDir \"./dist/es\"",
-    "build:cjs": "yarn run tsc --declaration true --declarationMap true --module commonjs --outDir \"./dist/commonjs\"",
+    "build:es": "yarn run tsc --removeComments true --declaration true --declarationMap true --module esnext --outDir \"./dist/es\"",
+    "build:cjs": "yarn run tsc  --removeComments true --declaration true --declarationMap true --module commonjs --outDir \"./dist/commonjs\"",
     "prettier": "prettier 'src/**/*.ts' --write",
     "prettier:check": "prettier 'src/**/*.ts' --check",
+    "lint": "eslint src/**/*.ts --fix",
+    "lint:check": "eslint src/**/*.ts",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
     "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",
@@ -51,27 +56,5 @@
   "files": [
     "dist/*"
   ],
-  "homepage": "https://github.com/remeda/remeda#readme",
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "/src/.*.test.(jsx?|tsx?)$",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.tsx",
-      "src/**/*.ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  }
+  "homepage": "https://github.com/remeda/remeda#readme"
 }

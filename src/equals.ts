@@ -3,7 +3,6 @@ import { purry } from './purry';
 // from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
 const isArray = Array.isArray;
 const keyList = Object.keys;
-const hasProp = Object.prototype.hasOwnProperty;
 
 /**
  * Returns true if its arguments are equivalent, false otherwise.
@@ -96,7 +95,7 @@ function _equals(a: any, b: any) {
     }
 
     for (i = length; i-- !== 0; ) {
-      if (!hasProp.call(b, keys[i])) {
+      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
         return false;
       }
     }

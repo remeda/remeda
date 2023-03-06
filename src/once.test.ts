@@ -1,7 +1,7 @@
 import { once } from './once';
 
 test('should call only once', () => {
-  const mock = jest.fn(() => ({}));
+  const mock = vi.fn(() => ({}));
   const wrapped = once(mock as () => object);
   const ret1 = wrapped();
   expect(mock).toHaveBeenCalledTimes(1);

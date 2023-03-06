@@ -1,4 +1,5 @@
 import { keys } from './keys';
+import { pipe } from './pipe';
 import { AssertEqual } from './_types';
 
 describe('Test for keys', () => {
@@ -11,11 +12,26 @@ describe('Test for keys', () => {
   });
 
   describe('strict', () => {
-    const actual = keys.strict({ 5: 'x', b: 'y', c: 'z' } as const);
-    expect(actual).toEqual(['5', 'b', 'c']);
+    it('should return strict types', () => {
+      const actual = keys.strict({ 5: 'x', b: 'y', c: 'z' } as const);
+      expect(actual).toEqual(['5', 'b', 'c']);
 
-    const result: AssertEqual<typeof actual, Array<'5' | 'b' | 'c'>> = true;
+      const result: AssertEqual<typeof actual, Array<'5' | 'b' | 'c'>> = true;
 
-    expect(result).toEqual(true);
+      expect(result).toEqual(true);
+    });
+
+    it('should work with Partial in pipe', () => {
+      const data: Partial<{ foo: string; bar?: number }> = {
+        foo: '1',
+        bar: 7,
+      };
+      const actual = pipe(data, keys.strict);
+      expect(actual).toEqual(['foo', 'bar']);
+
+      const result: AssertEqual<typeof actual, Array<'foo' | 'bar'>> = true;
+
+      expect(result).toEqual(true);
+    });
   });
 });
