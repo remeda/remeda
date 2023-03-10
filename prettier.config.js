@@ -1,3 +1,4 @@
+/** @type {import('prettier').Config} */
 module.exports = {
   // write: true,
   semi: true,
