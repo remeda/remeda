@@ -19,12 +19,5 @@ module.exports = {
    * alone on the next line
    */
   jsxBracketSameLine: false,
-  /**
-   * Specify which parse to use.
-   * Valid options:
-   *   - "flow"
-   *   - "babylon"
-   */
-  parser: 'typescript',
   arrowParens: 'avoid',
 };
