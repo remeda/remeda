@@ -93,3 +93,47 @@ describe('Result key types', () => {
     expect(result).toEqual(true);
   });
 });
+
+describe('Filtering on undefined grouper result', () => {
+  // These tests use a contrived example that is basically a simple filter. The
+  // goal of these tests is to make sure that all flavours of the function
+  // accept an undefined return value for the grouper function, and that it
+  // works in all the cases, including the typing.
+
+  test('regular', () => {
+    const result = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], x =>
+      x % 2 === 0 ? 'even' : undefined
+    );
+    expect(Object.values(result)).toHaveLength(1);
+    expect(result).toHaveProperty('even');
+    expect(result.even).toEqual([0, 2, 4, 6, 8]);
+  });
+
+  test('regular indexed', () => {
+    const result = groupBy.indexed(
+      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
+      (_, index) => (index % 2 === 0 ? 'even' : undefined)
+    );
+    expect(Object.values(result)).toHaveLength(1);
+    expect(result).toHaveProperty('even');
+    expect(result.even).toEqual(['a', 'c', 'e', 'g', 'i']);
+  });
+
+  test('strict', () => {
+    const { even, ...rest } = groupBy.strict(
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      x => (x % 2 === 0 ? 'even' : undefined)
+    );
+    expectTypeOf(rest).toEqualTypeOf({} as const);
+    expect(even).toEqual([0, 2, 4, 6, 8]);
+  });
+
+  test('strict indexed', () => {
+    const { even, ...rest } = groupBy.strict.indexed(
+      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
+      (_, index) => (index % 2 === 0 ? 'even' : undefined)
+    );
+    expectTypeOf(rest).toEqualTypeOf({} as const);
+    expect(even).toEqual(['a', 'c', 'e', 'g', 'i']);
+  });
+});
