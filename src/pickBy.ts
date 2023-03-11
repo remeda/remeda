@@ -36,10 +36,10 @@ function _pickBy(object: any, fn: (value: any, key: any) => boolean) {
   if (object == null) {
     return {};
   }
-  return Object.keys(object).reduce((acc, key) => {
+  return Object.keys(object).reduce<any>((acc, key) => {
     if (fn(object[key], key)) {
       acc[key] = object[key];
     }
     return acc;
-  }, {} as any);
+  }, {});
 }

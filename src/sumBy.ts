@@ -3,7 +3,7 @@ import { PredIndexed, PredIndexedOptional } from './_types';
 
 const _sumBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
     let sum = 0;
     array.forEach((item, i) => {
       const summand = indexed ? fn(item, i, array) : fn(item);
@@ -30,7 +30,7 @@ const _sumBy =
 
 export function sumBy<T>(
   fn: (item: T) => number
-): (items: readonly T[]) => number;
+): (items: ReadonlyArray<T>) => number;
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
@@ -49,7 +49,10 @@ export function sumBy<T>(
  * @category Array
  */
 
-export function sumBy<T>(items: readonly T[], fn: (item: T) => number): number;
+export function sumBy<T>(
+  items: ReadonlyArray<T>,
+  fn: (item: T) => number
+): number;
 
 export function sumBy() {
   return purry(_sumBy(false), arguments);
@@ -57,13 +60,13 @@ export function sumBy() {
 
 export namespace sumBy {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, number>
   ): number;
 
   export function indexed<T>(
     fn: PredIndexed<T, number>
-  ): (array: readonly T[]) => number;
+  ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {
     return purry(_sumBy(true), arguments);

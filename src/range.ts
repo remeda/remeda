@@ -10,7 +10,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function range(start: number, end: number): number[];
+export function range(start: number, end: number): Array<number>;
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
@@ -21,14 +21,14 @@ export function range(start: number, end: number): number[];
  * @data_first
  * @category Array
  */
-export function range(end: number): (start: number) => number[];
+export function range(end: number): (start: number) => Array<number>;
 
 export function range() {
   return purry(_range, arguments);
 }
 
 function _range(start: number, end: number) {
-  const ret: number[] = [];
+  const ret: Array<number> = [];
   for (let i = start; i < end; i++) {
     ret.push(i);
   }

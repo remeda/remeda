@@ -12,6 +12,28 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
+ * @param sort first sort rule
+ * @param sorts additional sort rules
+ * @signature
+ *    R.sortBy(...sorts)(array)
+ * @example
+ *    R.pipe(
+ *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *      R.sortBy(x => x.a)
+ *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
+ * @data_last
+ * @category Array
+ */
+export function sortBy<T>(
+  sort: SortRule<T>,
+  ...sorts: Array<SortRule<T>>
+): (array: ReadonlyArray<T>) => Array<T>;
+
+/**
+ * Sorts the list according to the supplied functions and directions.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ *
+ * Directions are applied to functions in order and default to ascending if not specified.
  * @param array the array to sort
  * @param sorts a list of mapping functions and optional directions
  * @signature
@@ -40,54 +62,35 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * @data_first
  * @category Array
  */
-export function sortBy<T>(array: readonly T[], ...sorts: SortRule<T>[]): T[];
-
-/**
- * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
- *
- * Directions are applied to functions in order and default to ascending if not specified.
- * @param sort first sort rule
- * @param sorts additional sort rules
- * @signature
- *    R.sortBy(...sorts)(array)
- * @example
- *    R.pipe(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      R.sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
- * @data_last
- * @category Array
- */
 export function sortBy<T>(
-  sort: SortRule<T>,
-  ...sorts: SortRule<T>[]
-): (array: readonly T[]) => T[];
+  array: ReadonlyArray<T>,
+  ...sorts: Array<SortRule<T>>
+): Array<T>;
 
 export function sortBy<T>(
-  arrayOrSort: readonly T[] | SortRule<T>,
-  ...sorts: SortRule<T>[]
+  arrayOrSort: ReadonlyArray<T> | SortRule<T>,
+  ...sorts: Array<SortRule<T>>
 ): any {
   if (!isSortRule(arrayOrSort)) {
-    return purry(_sortBy, [arrayOrSort, sorts]) as T[];
+    return purry(_sortBy, [arrayOrSort, sorts]) as Array<T>;
   }
   return purry(_sortBy, [[arrayOrSort, ...sorts]]) as (
-    arr: readonly T[]
-  ) => T[];
+    arr: ReadonlyArray<T>
+  ) => Array<T>;
 }
 
-function isSortRule<T>(x: readonly T[] | SortRule<T>): x is SortRule<T> {
+function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
   if (typeof x == 'function') return true; // must be a SortProjection
   if (x.length != 2) return false; // cannot be a SortRule
   return typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc');
 }
 
-function _sortBy<T>(array: T[], sorts: SortRule<T>[]): T[] {
+function _sortBy<T>(array: Array<T>, sorts: Array<SortRule<T>>): Array<T> {
   const sort = (
     a: T,
     b: T,
     sortRule: SortRule<T>,
-    sortRules: SortRule<T>[]
+    sortRules: Array<SortRule<T>>
   ): number => {
     let fn: SortProjection<T>;
     let direction: Direction;

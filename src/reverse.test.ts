@@ -1,6 +1,6 @@
-import { AssertEqual } from './_types';
-import { reverse } from './reverse';
 import { pipe } from './pipe';
+import { reverse } from './reverse';
+import { AssertEqual } from './_types';
 
 describe('data first', () => {
   test('reverse', () => {
@@ -10,7 +10,7 @@ describe('data first', () => {
   describe('reverse typings', () => {
     test('arrays', () => {
       const actual = reverse([1, 2, 3]);
-      const result: AssertEqual<typeof actual, number[]> = true;
+      const result: AssertEqual<typeof actual, Array<number>> = true;
       expect(result).toEqual(true);
     });
     test('tuples', () => {
@@ -38,7 +38,7 @@ describe('data last', () => {
   describe('reverse typings', () => {
     test('arrays', () => {
       const actual = pipe([1, 2, 3], reverse());
-      const result: AssertEqual<typeof actual, number[]> = true;
+      const result: AssertEqual<typeof actual, Array<number>> = true;
       expect(result).toEqual(true);
     });
     test('tuples', () => {

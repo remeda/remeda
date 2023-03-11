@@ -16,7 +16,7 @@ import { purry } from './purry';
  * @category Array
  */
 export function reduce<T, K>(
-  items: readonly T[],
+  items: ReadonlyArray<T>,
   fn: (acc: K, item: T) => K,
   initialValue: K
 ): K;
@@ -37,7 +37,7 @@ export function reduce<T, K>(
 export function reduce<T, K>(
   fn: (acc: K, item: T) => K,
   initialValue: K
-): (items: readonly T[]) => K;
+): (items: ReadonlyArray<T>) => K;
 
 export function reduce() {
   return purry(_reduce(false), arguments);
@@ -46,8 +46,8 @@ export function reduce() {
 const _reduce =
   (indexed: boolean) =>
   <T, K>(
-    items: T[],
-    fn: (acc: K, item: T, index?: number, items?: T[]) => K,
+    items: Array<T>,
+    fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
     initialValue: K
   ): K => {
     return items.reduce(
@@ -59,14 +59,14 @@ const _reduce =
 
 export namespace reduce {
   export function indexed<T, K>(
-    array: readonly T[],
-    fn: (acc: K, item: T, index: number, items: T[]) => K,
+    array: ReadonlyArray<T>,
+    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
     initialValue: K
   ): K;
   export function indexed<T, K>(
-    fn: (acc: K, item: T, index: number, items: T[]) => K,
+    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
     initialValue: K
-  ): (array: readonly T[]) => K;
+  ): (array: ReadonlyArray<T>) => K;
   export function indexed() {
     return purry(_reduce(true), arguments);
   }

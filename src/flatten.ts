@@ -18,15 +18,15 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
  * @category Array
  * @pipeable
  */
-export function flatten<T>(items: readonly T[]): Array<Flatten<T>>;
+export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
-export function flatten<T>(): (items: readonly T[]) => Array<Flatten<T>>;
+export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
 export function flatten() {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: T[]): Array<Flatten<T>> {
+function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
   return _reduceLazy(items, flatten.lazy());
 }
 

@@ -1,26 +1,26 @@
-import { AssertEqual } from './_types';
 import {
-  isString,
-  isBoolean,
   isArray,
+  isBoolean,
   isDate,
   isDefined,
-  isNil,
-  isFunction,
   isError,
+  isFunction,
+  isNil,
+  isNot,
   isNumber,
   isObject,
   isPromise,
+  isString,
   isTruthy,
-  isNot,
 } from './guards';
+import { AssertEqual } from './_types';
 
 type TestObj =
   | boolean
   | string
   | { a: string }
   | (() => void)
-  | number[]
+  | Array<number>
   | Date
   | undefined
   | null
@@ -52,7 +52,9 @@ const dataProvider = (
     case 'date':
       return new Date();
     case 'function':
-      return () => {};
+      return () => {
+        /* (intentionally empty) */
+      };
     case 'null':
       return null;
     case 'promise':
@@ -106,7 +108,7 @@ describe('isString', () => {
       dataProvider('boolean'),
     ].filter(isString);
     expect(data.every(c => typeof c === 'string')).toEqual(true);
-    const result: AssertEqual<typeof data, string[]> = true;
+    const result: AssertEqual<typeof data, Array<string>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -144,7 +146,7 @@ describe('isBoolean', () => {
       dataProvider('boolean'),
     ].filter(isBoolean);
     expect(data.every(c => typeof c === 'boolean')).toEqual(true);
-    const result: AssertEqual<typeof data, boolean[]> = true;
+    const result: AssertEqual<typeof data, Array<boolean>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -154,13 +156,13 @@ describe('isArray', () => {
     const data = dataProvider('array');
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
-      const result: AssertEqual<typeof data, number[]> = true;
+      const result: AssertEqual<typeof data, Array<number>> = true;
       expect(result).toEqual(true);
     }
 
     const data1: unknown = dataProvider('array');
     if (isArray(data1)) {
-      const result: AssertEqual<typeof data1, readonly unknown[]> = true;
+      const result: AssertEqual<typeof data1, ReadonlyArray<unknown>> = true;
       expect(result).toEqual(true);
     }
   });
@@ -174,7 +176,7 @@ describe('isArray', () => {
       dataProvider('date'),
     ].filter(isArray);
     expect(data.every(c => Array.isArray(c))).toEqual(true);
-    const result: AssertEqual<typeof data, number[][]> = true;
+    const result: AssertEqual<typeof data, Array<Array<number>>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -204,7 +206,7 @@ describe('isDate', () => {
       dataProvider('date'),
     ].filter(isDate);
     expect(data.every(c => c instanceof Date)).toEqual(true);
-    const result: AssertEqual<typeof data, Date[]> = true;
+    const result: AssertEqual<typeof data, Array<Date>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -219,7 +221,7 @@ describe('isDefined', () => {
         | string
         | { a: string }
         | (() => void)
-        | number[]
+        | Array<number>
         | Date
         | Error
         | number
@@ -239,7 +241,7 @@ describe('isDefined', () => {
     expect(data.length === 4).toEqual(true);
     const result: AssertEqual<
       typeof data,
-      (
+      Array<
         | string
         | number
         | boolean
@@ -247,11 +249,11 @@ describe('isDefined', () => {
             a: string;
           }
         | (() => void)
-        | number[]
+        | Array<number>
         | Date
         | Error
         | Promise<number>
-      )[]
+      >
     > = true;
     expect(result).toEqual(true);
   });
@@ -276,7 +278,7 @@ describe('isNil', () => {
       dataProvider('number'),
     ].filter(isNil);
     expect(data.every(c => c == null)).toEqual(true);
-    const result: AssertEqual<typeof data, (undefined | null)[]> = true;
+    const result: AssertEqual<typeof data, Array<undefined | null>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -308,7 +310,7 @@ describe('isFunction', () => {
       dataProvider('number'),
     ].filter(isFunction);
     expect(data.every(c => typeof c === 'function')).toEqual(true);
-    const result: AssertEqual<typeof data, (() => void)[]> = true;
+    const result: AssertEqual<typeof data, Array<() => void>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -339,7 +341,7 @@ describe('isError', () => {
       dataProvider('number'),
     ].filter(isError);
     expect(data.every(c => c instanceof Error)).toEqual(true);
-    const result: AssertEqual<typeof data, Error[]> = true;
+    const result: AssertEqual<typeof data, Array<Error>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -362,7 +364,7 @@ describe('isNumber', () => {
       dataProvider('number'),
     ].filter(isNumber);
     expect(data.every(c => typeof c === 'number')).toEqual(true);
-    const result: AssertEqual<typeof data, number[]> = true;
+    const result: AssertEqual<typeof data, Array<number>> = true;
     expect(result).toEqual(true);
   });
   test('should work even if data type is unknown', () => {
@@ -454,14 +456,14 @@ describe('isObject', () => {
     );
     const result: AssertEqual<
       typeof data,
-      (
+      Array<
         | {
             a: string;
           }
         | Date
         | Error
         | Promise<number>
-      )[]
+      >
     > = true;
     expect(result).toEqual(true);
   });
@@ -484,7 +486,7 @@ describe('isPromise', () => {
       dataProvider('function'),
     ].filter(isPromise);
     expect(data.every(c => c instanceof Promise)).toEqual(true);
-    const result: AssertEqual<typeof data, Promise<number>[]> = true;
+    const result: AssertEqual<typeof data, Array<Promise<number>>> = true;
     expect(result).toEqual(true);
   });
 });
@@ -511,7 +513,7 @@ describe('isNot', () => {
             a: string;
           }
         | (() => void)
-        | number[]
+        | Array<number>
         | Date
         | Error
         | Promise<number>
@@ -533,18 +535,18 @@ describe('isNot', () => {
 
     const resultType: AssertEqual<
       typeof result,
-      (
+      Array<
         | boolean
         | string
         | { a: string }
         | (() => void)
-        | number[]
+        | Array<number>
         | Date
         | undefined
         | null
         | Error
         | number
-      )[]
+      >
     > = true;
     expect(resultType).toEqual(true);
   });

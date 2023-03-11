@@ -12,7 +12,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
+export function splitAt<T>(
+  array: ReadonlyArray<T>,
+  index: number
+): [Array<T>, Array<T>];
 
 /**
  * Splits a given array at a given index.
@@ -26,13 +29,15 @@ export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
  * @data_last
  * @category Array
  */
-export function splitAt<T>(index: number): (array: readonly T[]) => [T[], T[]];
+export function splitAt<T>(
+  index: number
+): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function splitAt() {
   return purry(_splitAt, arguments);
 }
 
-function _splitAt<T>(array: T[], index: number) {
+function _splitAt<T>(array: Array<T>, index: number) {
   const copy = [...array];
   const tail = copy.splice(index);
   return [copy, tail];

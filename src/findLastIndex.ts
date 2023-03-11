@@ -17,7 +17,7 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  * @category Array
  */
 export function findLastIndex<T>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: Pred<T, boolean>
 ): number;
 
@@ -44,7 +44,7 @@ export function findLastIndex<T>(
  */
 export function findLastIndex<T>(
   fn: Pred<T, boolean>
-): (array: readonly T[]) => number;
+): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex() {
   return purry(_findLastIndex(false), arguments);
@@ -52,7 +52,7 @@ export function findLastIndex() {
 
 const _findLastIndex =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
       if (indexed ? fn(array[i], i, array) : fn(array[i])) {
         return i;
@@ -64,12 +64,12 @@ const _findLastIndex =
 
 export namespace findLastIndex {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>
   ): number;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
-  ): (array: readonly T[]) => number;
+  ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {
     return purry(_findLastIndex(true), arguments);
