@@ -1,3 +1,7 @@
+/* eslint @typescript-eslint/ban-types: ["error",{types:{Function: false},extendDefaults:true}] --
+ * Function is used generically in this file to define any type of function, so
+ * this lint error is not relevant for it.
+ */
 type DefinitelyObject<T> = Exclude<
   Extract<T, object>,
   Array<any> | Function | ReadonlyArray<any>
