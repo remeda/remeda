@@ -13,6 +13,7 @@
 
     // MODULES
     "module": "ESNext",
+    "moduleResolution": "node",
     "types": ["vitest/globals"],
 
     // EMIT
