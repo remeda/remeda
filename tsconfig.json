@@ -16,8 +16,7 @@
     "types": ["vitest/globals"],
 
     // EMIT
-    "declaration": true,
-    "outDir": "./dist",
+    "noEmit": true,
 
     // LANGUAGE and ENVIRONMENT
     "lib": ["ES6", "ES2017.Object"],
