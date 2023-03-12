@@ -11,7 +11,7 @@
     "strict": true,
 
     // MODULES
-    "module": "esnext",
+    "module": "ESNext",
     "types": ["vitest/globals"],
 
     // EMIT
@@ -24,8 +24,8 @@
     "esModuleInterop": true,
 
     // LANGUAGE and ENVIRONMENT
-    "lib": ["es6", "es2017.object"],
-    "target": "es5",
+    "lib": ["ES6", "ES2017.Object"],
+    "target": "ES5",
 
     // COMPLETENESS
     "skipLibCheck": true
