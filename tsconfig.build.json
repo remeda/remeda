@@ -7,7 +7,7 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false, // Enabled in the base config
+    "noEmit": false /* Enabled in the base config */,
     "removeComments": true
   }
 }
