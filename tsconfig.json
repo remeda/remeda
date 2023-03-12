@@ -6,15 +6,12 @@
   "compilerOptions": {
     // TYPE CHECKING
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "strict": true,
-    "strictNullChecks": true,
 
     // MODULES
     "module": "esnext",
-    "moduleResolution": "node",
     "types": ["vitest/globals"],
 
     // EMIT
