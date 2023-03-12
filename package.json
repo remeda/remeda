@@ -24,7 +24,7 @@
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "vitest run --coverage && yarn run compile",
     "test:ci": "vitest run",
-    "compile": "tsc -p ./tsconfig.json --noEmit",
+    "compile": "tsc --noEmit",
     "build": "yarn run clean && yarn run build:es && yarn run build:cjs",
     "build:es": "tsc -p tsconfig.build.json --removeComments true --declarationMap true --module esnext --outDir \"./dist/es\"",
     "build:cjs": "tsc -p tsconfig.build.json --removeComments true --declarationMap true --module commonjs --outDir \"./dist/commonjs\"",
