@@ -1,6 +1,8 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
+  "extends": "@tsconfig/recommended/tsconfig.json",
+
   "include": ["src", "**/.eslintrc.js", "*.config.js", "*.config.ts"],
 
   "compilerOptions": {
@@ -8,7 +10,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "strict": true,
 
     // MODULES
     "module": "ESNext",
@@ -20,14 +21,8 @@
     "noEmit": false,
     "outDir": "./dist",
 
-    // INTEROP CONSTRAINTS
-    "esModuleInterop": true,
-
     // LANGUAGE and ENVIRONMENT
     "lib": ["ES6", "ES2017.Object"],
-    "target": "ES5",
-
-    // COMPLETENESS
-    "skipLibCheck": true
+    "target": "ES5"
   }
 }

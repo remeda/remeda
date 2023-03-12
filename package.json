@@ -7,6 +7,7 @@
   "jsnext:main": "dist/es/index.js",
   "sideEffects": false,
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "@vitest/coverage-c8": "^0.27.2",
