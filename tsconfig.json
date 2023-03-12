@@ -9,7 +9,6 @@
     // TYPE CHECKING
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": false,
 
     // MODULES
     "module": "ESNext",
@@ -18,8 +17,6 @@
 
     // EMIT
     "declaration": true,
-    "declarationMap": false,
-    "noEmit": false,
     "outDir": "./dist",
 
     // LANGUAGE and ENVIRONMENT
