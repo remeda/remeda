@@ -27,7 +27,7 @@
     "compile": "tsc",
     "build": "yarn run clean && yarn run build:es && yarn run build:cjs",
     "build:es": "tsc -p tsconfig.build.json --module esnext --outDir \"./dist/es\"",
-    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
+    "build:cjs": "tsc -p tsconfig.build.json --outDir \"./dist/commonjs\"",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
