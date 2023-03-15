@@ -25,14 +25,16 @@ export function _reduceLazy<T, K>(
   array: Array<T>,
   lazy: (item: T, index?: number, array?: Array<T>) => LazyResult<K>,
   indexed?: boolean
-) {
-  return array.reduce((acc: Array<K>, item, index) => {
+): Array<K> {
+  const newArray: Array<K> = [];
+  for (let index = 0; index < array.length; index++) {
+    const item = array[index];
     const result = indexed ? lazy(item, index, array) : lazy(item);
     if (result.hasMany === true) {
-      acc.push(...result.next);
+      newArray.push(...result.next);
     } else if (result.hasNext) {
-      acc.push(result.next);
+      newArray.push(result.next);
     }
-    return acc;
-  }, []);
+  }
+  return newArray;
 }
