@@ -3,6 +3,11 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
 import { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
+// Used by the strict variant
+type Mapped<T extends ReadonlyArray<unknown> | [], K> = {
+  -readonly [P in keyof T]: K;
+};
+
 /**
  * Map each element of an array using a defined callback function.
  * @param array The array to map.
@@ -76,6 +81,31 @@ export namespace map {
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);
   }
+
   export const lazy = _lazy(false);
   export const lazyIndexed = _toLazyIndexed(_lazy(true));
+
+  export function strict<T extends ReadonlyArray<unknown> | [], K>(
+    array: Readonly<T>,
+    fn: Pred<T[number], K>
+  ): Mapped<T, K>;
+  export function strict<T extends ReadonlyArray<unknown> | [], K>(
+    fn: Pred<T[number], K>
+  ): (array: Readonly<T>) => Mapped<T, K>;
+  export function strict(...args: ReadonlyArray<unknown>): unknown {
+    return purry(_map(false), args, map.lazy);
+  }
+
+  export namespace strict {
+    export function indexed<T extends ReadonlyArray<unknown> | [], K>(
+      array: Readonly<T>,
+      fn: PredIndexed<T[number], K>
+    ): Mapped<T, K>;
+    export function indexed<T extends ReadonlyArray<unknown> | [], K>(
+      fn: PredIndexed<T[number], K>
+    ): (array: Readonly<T>) => Mapped<T, K>;
+    export function indexed() {
+      return purry(_map(true), arguments, map.lazyIndexed);
+    }
+  }
 }
