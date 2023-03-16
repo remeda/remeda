@@ -9,19 +9,25 @@ type Mapped<T extends ReadonlyArray<unknown> | [], K> = {
 };
 
 /**
- * Map each element of an array using a defined callback function.
+ * Map each element of an array using a defined callback function. If the input
+ * array is a tuple use the `strict` variant to maintain it's shape.
  * @param array The array to map.
  * @param fn The function mapper.
  * @returns The new mapped array.
  * @signature
  *    R.map(array, fn)
  *    R.map.indexed(array, fn)
+ *    R.map.strict(array, fn)
+ *    R.map.strict.indexed(array, fn)
  * @example
- *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6]
- *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2]
+ *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6], typed number[]
+ *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
+ *    R.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
+ *    R.map.strict.index([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
  * @data_first
  * @indexed
  * @pipeable
+ * @strict
  * @category Array
  */
 export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
