@@ -113,8 +113,11 @@ export namespace map {
     export function indexed<T extends ReadonlyArray<unknown> | [], K>(
       fn: PredIndexed<T[number], K>
     ): (array: Readonly<T>) => Mapped<T, K>;
-    export function indexed() {
-      return purry(_map(true), arguments, map.lazyIndexed);
+    export function indexed(...args: ReadonlyArray<unknown>): unknown {
+      // @ts-expect-error [ts2556] - Strict is just an alias for map, we only
+      // care about the typing here, but it's not easy to tell typescript that
+      // that's all we are doing.
+      return map.indexed(...args);
     }
   }
 }
