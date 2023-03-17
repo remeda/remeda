@@ -47,8 +47,21 @@ describe('strict typing', () => {
     expect(result).toEqual([]);
   });
 
-  test('non empty array', () => {
-    const input: NonEmptyArray<number> = [1];
+  test('non empty start array', () => {
+    const input: [number, ...Array<number>] = [1];
+    const result = chunk(input, 2);
+    const [first, ...rest] = result;
+    const [firstValue, ...otherValues] = first;
+    expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
+    expectTypeOf(first).toEqualTypeOf<NonEmptyArray<number>>();
+    expectTypeOf(rest).toEqualTypeOf<Array<NonEmptyArray<number>>>();
+    expectTypeOf(firstValue).toEqualTypeOf<number>();
+    expectTypeOf(otherValues).toEqualTypeOf<Array<number>>();
+    expect(result).toEqual([[1]]);
+  });
+
+  test('non empty end array', () => {
+    const input: [...Array<number>, number] = [1];
     const result = chunk(input, 2);
     const [first, ...rest] = result;
     const [firstValue, ...otherValues] = first;
@@ -60,3 +73,4 @@ describe('strict typing', () => {
     expect(result).toEqual([[1]]);
   });
 });
+

@@ -2,7 +2,11 @@ import { purry } from './purry';
 import { NonEmptyArray } from './_types';
 
 type ChunkOut<T extends ReadonlyArray<unknown> | []> =
-  | (T extends NonEmptyArray<unknown> ? never : [])
+  | (T extends
+      | readonly [unknown, ...Array<unknown>]
+      | readonly [...Array<unknown>, unknown]
+      ? never
+      : [])
   | NonEmptyArray<NonEmptyArray<T[number]>>;
 
 /**
