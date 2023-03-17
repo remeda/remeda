@@ -73,4 +73,3 @@ describe('strict typing', () => {
     expect(result).toEqual([[1]]);
   });
 });
-
