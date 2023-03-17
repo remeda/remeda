@@ -99,7 +99,10 @@ export namespace map {
     fn: Pred<T[number], K>
   ): (array: Readonly<T>) => Mapped<T, K>;
   export function strict(...args: ReadonlyArray<unknown>): unknown {
-    return purry(_map(false), args, map.lazy);
+    // @ts-expect-error [ts2556] - Strict is just an alias for map, we only care
+    // about the typing here, but it's not easy to tell typescript that that's
+    // all we are doing.
+    return map(...args);
   }
 
   export namespace strict {
