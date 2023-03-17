@@ -23,7 +23,7 @@ type Mapped<T extends ReadonlyArray<unknown> | [], K> = {
  *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6], typed number[]
  *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
  *    R.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
- *    R.map.strict.index([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
+ *    R.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
  * @data_first
  * @indexed
  * @pipeable
