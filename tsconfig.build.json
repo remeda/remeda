@@ -1,4 +1,13 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["src/**/*.test.ts"]
+
+  "include": ["src"],
+  "exclude": ["**/*.test.ts"],
+
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false /* Enabled in the base config */,
+    "removeComments": true
+  }
 }

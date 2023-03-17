@@ -1,19 +1,17 @@
-import {
-  isArray,
-  isBoolean,
-  isDate,
-  isDefined,
-  isError,
-  isFunction,
-  isNil,
-  isNot,
-  isNumber,
-  isObject,
-  isPromise,
-  isString,
-  isTruthy,
-} from './guards';
-import { AssertEqual } from './_types';
+import { isArray } from './isArray';
+import { isBoolean } from './isBoolean';
+import { isDate } from './isDate';
+import { isDefined } from './isDefined';
+import { isError } from './isError';
+import { isFunction } from './isFunction';
+import { isNil } from './isNil';
+import { isNot } from './isNot';
+import { isNumber } from './isNumber';
+import { isObject } from './isObject';
+import { isPromise } from './isPromise';
+import { isTruthy } from './isTruthy';
+import { isString } from './isString';
+import { AssertEqual } from '../src/_types';
 
 type TestObj =
   | boolean
