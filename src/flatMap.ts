@@ -38,16 +38,8 @@ export function flatMap() {
   return purry(_flatMap, arguments, flatMap.lazy);
 }
 
-function _map<T, K>(array: Array<T>, mapFn: (value: T) => K): Array<K> {
-  const newArray = new Array<K>(array.length);
-  for (let i = 0; i < array.length; i++) {
-    newArray[i] = mapFn(array[i]);
-  }
-  return newArray;
-}
-
 function _flatMap<T, K>(array: Array<T>, fn: (input: T) => Array<K>): Array<K> {
-  return flatten(_map(array, item => fn(item)));
+  return flatten(array.map(item => fn(item)));
 }
 
 export namespace flatMap {
