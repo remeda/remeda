@@ -1,4 +1,5 @@
 import { chunk } from './chunk';
+import { NonEmptyArray } from './_types';
 
 describe('data first', () => {
   test('equal size', () => {
@@ -30,5 +31,32 @@ describe('data last', () => {
       ['a', 'b'],
       ['c', 'd'],
     ]);
+  });
+});
+
+describe('strict typing', () => {
+  test('array', () => {
+    const input: Array<number> = [];
+    const result = chunk(input, 2);
+    const [first, ...rest] = result;
+    expectTypeOf(result).toEqualTypeOf<
+      [] | NonEmptyArray<NonEmptyArray<number>>
+    >();
+    expectTypeOf(first).toEqualTypeOf<NonEmptyArray<number> | undefined>();
+    expectTypeOf(rest).toEqualTypeOf<Array<NonEmptyArray<number>>>();
+    expect(result).toEqual([]);
+  });
+
+  test('non empty array', () => {
+    const input: NonEmptyArray<number> = [1];
+    const result = chunk(input, 2);
+    const [first, ...rest] = result;
+    const [firstValue, ...otherValues] = first;
+    expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
+    expectTypeOf(first).toEqualTypeOf<NonEmptyArray<number>>();
+    expectTypeOf(rest).toEqualTypeOf<Array<NonEmptyArray<number>>>();
+    expectTypeOf(firstValue).toEqualTypeOf<number>();
+    expectTypeOf(otherValues).toEqualTypeOf<Array<number>>();
+    expect(result).toEqual([[1]]);
   });
 });
