@@ -102,8 +102,11 @@ export namespace groupBy {
     fn: (item: Value) => Key | undefined
   ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
 
-  export function strict() {
-    return purry(_groupBy(false), arguments);
+  export function strict(...args: ReadonlyArray<unknown>): unknown {
+    // @ts-expect-error [ts2556] - Strict is just an alias for groupBy, we only
+    // care about the typing here, but it's not easy to tell typescript that
+    // that's all we are doing.
+    return groupBy(...args);
   }
 
   export namespace strict {
@@ -114,8 +117,11 @@ export namespace groupBy {
     export function indexed<Value, Key extends PropertyKey = PropertyKey>(
       fn: PredIndexed<Value, Key | undefined>
     ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
-    export function indexed() {
-      return purry(_groupBy(true), arguments);
+    export function indexed(...args: ReadonlyArray<unknown>): unknown {
+      // @ts-expect-error [ts2556] - Strict is just an alias for groupBy, we
+      // only care about the typing here, but it's not easy to tell typescript
+      // that that's all we are doing.
+      return groupBy.indexed(...args);
     }
   }
 }
