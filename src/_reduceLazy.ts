@@ -27,6 +27,7 @@ export function _reduceLazy<T, K>(
   indexed?: boolean
 ): Array<K> {
   const newArray: Array<K> = [];
+  // We intentionally use a for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info
   for (let index = 0; index < array.length; index++) {
     const item = array[index];
     const result = indexed ? lazy(item, index, array) : lazy(item);
