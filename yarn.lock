@@ -200,6 +200,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@tsconfig/recommended@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@tsconfig/recommended/-/recommended-1.0.2.tgz#1e198237225933e319718f082e78366e9f159d71"
+  integrity sha512-dbHBtbWBOjq0/otpopAE02NT2Cm05Qe2JsEKeCf/wjSYbI2hz8nCqnpnOJWHATgjDz4fd3dchs3Wy1gQGjfN6w==
+
 "@types/chai-subset@^1.3.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@types/chai-subset/-/chai-subset-1.3.3.tgz#97893814e92abd2c534de422cb377e0e0bdaac94"
