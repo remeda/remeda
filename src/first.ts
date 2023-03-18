@@ -1,8 +1,12 @@
 import { purry } from './purry';
-import { NonEmptyArray } from './_types';
 
-type FirstOut<T extends ReadonlyArray<unknown> | []> =
-  T extends Readonly<NonEmptyArray<unknown>> ? T[0] : T[0] | undefined;
+type FirstOut<T extends ReadonlyArray<unknown> | []> = T extends []
+  ? undefined
+  : T extends readonly [unknown, ...Array<unknown>]
+  ? T[0]
+  : T extends readonly [...infer Pre, infer Last]
+  ? Pre[0] | Last
+  : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.

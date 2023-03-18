@@ -133,6 +133,20 @@ describe('strict typing', () => {
     expect(result).toEqual(undefined);
   });
 
+  test('array with last', () => {
+    const arr: [...Array<number>, number] = [1];
+    const result = first(arr);
+    expectTypeOf(result).toEqualTypeOf<number>();
+    expect(result).toEqual(1);
+  });
+
+  test('tuple with last', () => {
+    const arr: [...Array<string>, number] = ['a', 1];
+    const result = first(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expect(result).toEqual('a');
+  });
+
   test('simple empty readonly array', () => {
     const arr: ReadonlyArray<number> = [];
     const result = first(arr);
@@ -173,5 +187,19 @@ describe('strict typing', () => {
     const result = first(arr);
     expectTypeOf(result).toEqualTypeOf(undefined);
     expect(result).toEqual(undefined);
+  });
+
+  test('readonly array with last', () => {
+    const arr: readonly [...Array<number>, number] = [1];
+    const result = first(arr);
+    expectTypeOf(result).toEqualTypeOf<number>();
+    expect(result).toEqual(1);
+  });
+
+  test('readonly tuple with last', () => {
+    const arr: readonly [...Array<string>, number] = ['a', 1];
+    const result = first(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expect(result).toEqual('a');
   });
 });
