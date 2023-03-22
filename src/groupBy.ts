@@ -62,13 +62,41 @@ const _groupBy =
     return ret;
   };
 
+// Redefining the groupBy API with a stricter return type. This API is accessed
+// via `groupBy.strict`
+interface Strict {
+  // Data-First
+  <Value, Key extends PropertyKey = PropertyKey>(
+    items: ReadonlyArray<Value>,
+    fn: (item: Value) => Key | undefined
+  ): StrictOut<Value, Key>;
+  
+  // Data-Last
+  <Value, Key extends PropertyKey = PropertyKey>(
+    fn: (item: Value) => Key | undefined
+  ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
+
+  readonly indexed: {
+    // Data-First
+    <Value, Key extends PropertyKey = PropertyKey>(
+      items: ReadonlyArray<Value>,
+      fn: PredIndexed<Value, Key | undefined>
+    ): StrictOut<Value, Key>;
+    
+    // Data-Last
+    <Value, Key extends PropertyKey = PropertyKey>(
+      fn: PredIndexed<Value, Key | undefined>
+    ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
+  };
+}
+
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using
 // 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
 // the latter are implicitly `Required`. Because groupBy returns a partial
 // record by definition, we need to make sure the result is properly partial
 // when using it with a refined key.
-type Out<Value, Key extends PropertyKey = PropertyKey> =
+type StrictOut<Value, Key extends PropertyKey = PropertyKey> =
   // If either string, number or symbol extend Key it means that Key is at least
   // as wide as them, so we don't need to wrap the returned record with Partial.
   string extends Key
@@ -93,35 +121,6 @@ export namespace groupBy {
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
-  export function strict<Value, Key extends PropertyKey = PropertyKey>(
-    items: ReadonlyArray<Value>,
-    fn: (item: Value) => Key | undefined
-  ): Out<Value, Key>;
 
-  export function strict<Value, Key extends PropertyKey = PropertyKey>(
-    fn: (item: Value) => Key | undefined
-  ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
-
-  export function strict(...args: ReadonlyArray<unknown>): unknown {
-    // @ts-expect-error [ts2556] - Strict is just an alias for groupBy, we only
-    // care about the typing here, but it's not easy to tell typescript that
-    // that's all we are doing.
-    return groupBy(...args);
-  }
-
-  export namespace strict {
-    export function indexed<Value, Key extends PropertyKey = PropertyKey>(
-      array: ReadonlyArray<Value>,
-      fn: PredIndexed<Value, Key | undefined>
-    ): Out<Value, Key>;
-    export function indexed<Value, Key extends PropertyKey = PropertyKey>(
-      fn: PredIndexed<Value, Key | undefined>
-    ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
-    export function indexed(...args: ReadonlyArray<unknown>): unknown {
-      // @ts-expect-error [ts2556] - Strict is just an alias for groupBy, we
-      // only care about the typing here, but it's not easy to tell typescript
-      // that that's all we are doing.
-      return groupBy.indexed(...args);
-    }
-  }
+  export const strict: Strict = groupBy;
 }
