@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './_types';
 
 type Direction = 'asc' | 'desc';
 type SortProjection<T> = (x: T) => Comparable;

@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
+import type { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.

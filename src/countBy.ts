@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { Pred, PredIndexed, PredIndexedOptional } from './_types';
+import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
 
 const _countBy =
   (indexed: boolean) =>

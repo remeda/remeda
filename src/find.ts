@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import type { Pred, PredIndexedOptional, PredIndexed } from './_types';
 import { _toLazyIndexed } from './_toLazyIndexed';
 import { _toSingle } from './_toSingle';
 

@@ -1,4 +1,4 @@
-import { LazyResult } from './_reduceLazy';
+import type { LazyResult } from './_reduceLazy';
 
 /**
  * Perform left-to-right function composition.

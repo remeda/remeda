@@ -1,6 +1,6 @@
 import { groupBy } from './groupBy';
 import { pipe } from './pipe';
-import { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './_types';
 
 const array = [
   { a: 1, b: 1 },

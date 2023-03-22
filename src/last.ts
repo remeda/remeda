@@ -1,4 +1,4 @@
-import { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './_types';
 import { purry } from './purry';
 
 /**

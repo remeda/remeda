@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import type { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.

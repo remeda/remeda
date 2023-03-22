@@ -1,7 +1,7 @@
 import { purry } from './purry';
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import type { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.

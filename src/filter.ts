@@ -1,6 +1,6 @@
 import { purry } from './purry';
 import { _reduceLazy, LazyResult } from './_reduceLazy';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import type { Pred, PredIndexedOptional, PredIndexed } from './_types';
 import { _toLazyIndexed } from './_toLazyIndexed';
 
 /**

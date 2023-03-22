@@ -1,6 +1,6 @@
 import { last } from './last';
 import { pipe } from './pipe';
-import { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './_types';
 
 describe('last', () => {
   describe('data first', () => {

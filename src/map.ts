@@ -1,7 +1,7 @@
 import { purry } from './purry';
 import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import {
+import type {
   IterableContainer,
   Pred,
   PredIndexed,
