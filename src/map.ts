@@ -1,7 +1,12 @@
 import { purry } from './purry';
 import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import { ArrayLike, Pred, PredIndexed, PredIndexedOptional } from './_types';
+import {
+  IterableContainer,
+  Pred,
+  PredIndexed,
+  PredIndexedOptional,
+} from './_types';
 
 /**
  * Map each element of an array using a defined callback function. If the input
@@ -74,28 +79,28 @@ const _lazy =
 // Redefining the map API with a stricter return type. This API is accessed via
 // `map.strict`
 interface Strict {
-  <T extends ArrayLike, K>(items: T, mapper: Pred<T[number], K>): StrictOut<
-    T,
-    K
-  >;
+  <T extends IterableContainer, K>(
+    items: T,
+    mapper: Pred<T[number], K>
+  ): StrictOut<T, K>;
 
-  <T extends ArrayLike, K>(mapper: Pred<T[number], K>): (
+  <T extends IterableContainer, K>(mapper: Pred<T[number], K>): (
     items: T
   ) => StrictOut<T, K>;
 
   readonly indexed: {
-    <T extends ArrayLike, K>(
+    <T extends IterableContainer, K>(
       items: T,
       mapper: PredIndexed<T[number], K>
     ): StrictOut<T, K>;
 
-    <T extends ArrayLike, K>(mapper: PredIndexed<T[number], K>): (
+    <T extends IterableContainer, K>(mapper: PredIndexed<T[number], K>): (
       items: T
     ) => StrictOut<T, K>;
   };
 }
 
-type StrictOut<T extends ArrayLike, K> = {
+type StrictOut<T extends IterableContainer, K> = {
   -readonly [P in keyof T]: K;
 };
 
