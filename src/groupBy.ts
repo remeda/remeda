@@ -70,7 +70,7 @@ interface Strict {
     items: ReadonlyArray<Value>,
     fn: (item: Value) => Key | undefined
   ): StrictOut<Value, Key>;
-  
+
   // Data-Last
   <Value, Key extends PropertyKey = PropertyKey>(
     fn: (item: Value) => Key | undefined
@@ -82,7 +82,7 @@ interface Strict {
       items: ReadonlyArray<Value>,
       fn: PredIndexed<Value, Key | undefined>
     ): StrictOut<Value, Key>;
-    
+
     // Data-Last
     <Value, Key extends PropertyKey = PropertyKey>(
       fn: PredIndexed<Value, Key | undefined>
