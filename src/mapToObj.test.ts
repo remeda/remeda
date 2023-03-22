@@ -7,7 +7,7 @@ describe('data_first', () => {
     expect(result).toEqual({ 1: 2, 2: 4, 3: 6 });
   });
   it('mapToObj.indexed', () => {
-    const result = mapToObj.indexed([0, 0, 0] as const, (x, i) => [i, i]);
+    const result = mapToObj.indexed([0, 0, 0] as const, (_, i) => [i, i]);
     expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
   });
 });
@@ -23,7 +23,7 @@ describe('data_last', () => {
   it('mapToObj.indexed', () => {
     const result = pipe(
       [0, 0, 0] as const,
-      mapToObj.indexed((x, i) => [i, i])
+      mapToObj.indexed((_, i) => [i, i])
     );
     expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
   });
