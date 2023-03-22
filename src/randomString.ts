@@ -11,8 +11,9 @@ import { range } from './range';
 export function randomString(length: number) {
   const characterSet =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const randomChar = () =>
+  const randomChar = (): string =>
+    // @ts-expect-error [ts2322] - We know the index will be in-range
     characterSet[Math.floor(Math.random() * characterSet.length)];
 
-  return range(0, length).reduce(text => `${text}${randomChar() ?? ''}`, '');
+  return range(0, length).reduce(text => text + randomChar(), '');
 }
