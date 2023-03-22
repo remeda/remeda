@@ -1,7 +1,7 @@
 import { purry } from './purry';
 import { NonEmptyArray } from './_types';
 
-type ChunkOut<T extends ReadonlyArray<unknown> | []> =
+type Chunked<T extends ReadonlyArray<unknown> | []> =
   | (T extends
       | readonly [unknown, ...Array<unknown>]
       | readonly [...Array<unknown>, unknown]
@@ -22,9 +22,9 @@ type ChunkOut<T extends ReadonlyArray<unknown> | []> =
  * @category Array
  */
 export function chunk<T extends ReadonlyArray<unknown> | []>(
-  array: Readonly<T>,
+  array: T,
   size: number
-): ChunkOut<T>;
+): Chunked<T>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -39,7 +39,7 @@ export function chunk<T extends ReadonlyArray<unknown> | []>(
  */
 export function chunk<T extends ReadonlyArray<unknown> | []>(
   size: number
-): (array: Readonly<T>) => ChunkOut<T>;
+): (array: T) => Chunked<T>;
 
 export function chunk() {
   return purry(_chunk, arguments);
