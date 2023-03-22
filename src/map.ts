@@ -1,12 +1,7 @@
 import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
-
-// Used by the strict variant
-type Mapped<T extends ReadonlyArray<unknown> | [], K> = {
-  -readonly [P in keyof T]: K;
-};
+import { ArrayLike, Pred, PredIndexed, PredIndexedOptional } from './_types';
 
 /**
  * Map each element of an array using a defined callback function. If the input
@@ -76,6 +71,34 @@ const _lazy =
     };
   };
 
+// Redefining the map API with a stricter return type. This API is accessed via
+// `map.strict`
+interface Strict {
+  <T extends ArrayLike, K>(items: T, mapper: Pred<T[number], K>): StrictOut<
+    T,
+    K
+  >;
+
+  <T extends ArrayLike, K>(mapper: Pred<T[number], K>): (
+    items: T
+  ) => StrictOut<T, K>;
+
+  readonly indexed: {
+    <T extends ArrayLike, K>(
+      items: T,
+      mapper: PredIndexed<T[number], K>
+    ): StrictOut<T, K>;
+
+    <T extends ArrayLike, K>(mapper: PredIndexed<T[number], K>): (
+      items: T
+    ) => StrictOut<T, K>;
+  };
+}
+
+type StrictOut<T extends ArrayLike, K> = {
+  -readonly [P in keyof T]: K;
+};
+
 export namespace map {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
@@ -91,33 +114,5 @@ export namespace map {
   export const lazy = _lazy(false);
   export const lazyIndexed = _toLazyIndexed(_lazy(true));
 
-  export function strict<T extends ReadonlyArray<unknown> | [], K>(
-    array: Readonly<T>,
-    fn: Pred<T[number], K>
-  ): Mapped<T, K>;
-  export function strict<T extends ReadonlyArray<unknown> | [], K>(
-    fn: Pred<T[number], K>
-  ): (array: Readonly<T>) => Mapped<T, K>;
-  export function strict(...args: ReadonlyArray<unknown>): unknown {
-    // @ts-expect-error [ts2556] - Strict is just an alias for map, we only care
-    // about the typing here, but it's not easy to tell typescript that that's
-    // all we are doing.
-    return map(...args);
-  }
-
-  export namespace strict {
-    export function indexed<T extends ReadonlyArray<unknown> | [], K>(
-      array: Readonly<T>,
-      fn: PredIndexed<T[number], K>
-    ): Mapped<T, K>;
-    export function indexed<T extends ReadonlyArray<unknown> | [], K>(
-      fn: PredIndexed<T[number], K>
-    ): (array: Readonly<T>) => Mapped<T, K>;
-    export function indexed(...args: ReadonlyArray<unknown>): unknown {
-      // @ts-expect-error [ts2556] - Strict is just an alias for map, we only
-      // care about the typing here, but it's not easy to tell typescript that
-      // that's all we are doing.
-      return map.indexed(...args);
-    }
-  }
+  export const strict: Strict = map;
 }
