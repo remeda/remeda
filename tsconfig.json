@@ -25,6 +25,9 @@
     "importsNotUsedAsValues": "error",
     "noEmit": true,
 
+    // Javascript Support
+    "checkJs": true,
+
     // LANGUAGE and ENVIRONMENT
     "lib": ["ES6", "ES2017.Object"],
     // TODO: The recommended target is ES2015 (ES6). Node10 supports es2018 and
