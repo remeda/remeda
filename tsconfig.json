@@ -35,10 +35,5 @@
     // most likely safe to up this value, and it would probably result in a
     // smaller package size.
     "target": "ES5"
-
-    // "strict": true,
-    // "esModuleInterop": true,
-    // "skipLibCheck": true,
-    // "forceConsistentCasingInFileNames": true
   }
 }
