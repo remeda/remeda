@@ -54,6 +54,8 @@ const _findLastIndex =
   (indexed: boolean) =>
   <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
+      // @ts-expect-error [ts2345] - This is safe, we are simply iterating over
+      // indexes of the array
       if (indexed ? fn(array[i], i, array) : fn(array[i])) {
         return i;
       }

@@ -214,6 +214,8 @@ export function pipe(
     const op = operations[opIdx];
     const lazyOp = lazyOps[opIdx];
     if (!lazyOp) {
+      // @ts-expect-error [ts2722] - opIdx is within range of operations so we
+      // know this is safe...
       ret = op(ret);
       opIdx++;
       continue;

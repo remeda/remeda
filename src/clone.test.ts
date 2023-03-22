@@ -116,8 +116,9 @@ describe('deep clone functions', () => {
 
     const cloned = clone(list);
 
-    eq(cloned[0].a(10), 20);
-    eq(list[0].a, cloned[0].a);
+    expect(cloned).length.greaterThanOrEqual(1);
+    eq(cloned[0]?.a(10), 20);
+    eq(list[0]?.a, cloned[0]?.a);
   });
 });
 
@@ -157,6 +158,7 @@ describe('deep clone deep nested mixed objects', () => {
   it('clones array with arrays', () => {
     const list: Array<Array<any>> = [[1], [[3]]];
     const cloned = clone(list);
+    // @ts-expect-error (ts2532) - We know this is safe
     list[1][0] = null;
     eq(cloned, [[1], [[3]]]);
   });
@@ -166,17 +168,18 @@ describe('deep clone deep nested mixed objects', () => {
     const list = [{ b: obj }, { b: obj }];
     const cloned = clone(list);
 
-    assert.strictEqual(list[0].b, list[1].b);
-    assert.strictEqual(cloned[0].b, cloned[1].b);
-    assert.notStrictEqual(cloned[0].b, list[0].b);
-    assert.notStrictEqual(cloned[1].b, list[1].b);
+    expect(cloned).length.greaterThanOrEqual(2);
+    assert.strictEqual(list[0]?.b, list[1]?.b);
+    assert.strictEqual(cloned[0]?.b, cloned[1]?.b);
+    assert.notStrictEqual(cloned[0]?.b, list[0]?.b);
+    assert.notStrictEqual(cloned[1]?.b, list[1]?.b);
 
-    eq(cloned[0].b, { a: 1 });
-    eq(cloned[1].b, { a: 1 });
+    eq(cloned[0]?.b, { a: 1 });
+    eq(cloned[1]?.b, { a: 1 });
 
     obj.a = 2;
-    eq(cloned[0].b, { a: 1 });
-    eq(cloned[1].b, { a: 1 });
+    eq(cloned[0]?.b, { a: 1 });
+    eq(cloned[1]?.b, { a: 1 });
   });
 });
 

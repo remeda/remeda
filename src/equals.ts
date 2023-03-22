@@ -50,7 +50,6 @@ function _equals(a: any, b: any) {
     const arrB = isArray(b);
     let i;
     let length;
-    let key;
 
     if (arrA && arrB) {
       length = a.length;
@@ -94,14 +93,13 @@ function _equals(a: any, b: any) {
       return false;
     }
 
-    for (i = length; i-- !== 0; ) {
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
+    for (const key of keys) {
+      if (!Object.prototype.hasOwnProperty.call(b, key)) {
         return false;
       }
     }
 
-    for (i = length; i-- !== 0; ) {
-      key = keys[i];
+    for (const key of keys) {
       if (!equals(a[key], b[key])) {
         return false;
       }

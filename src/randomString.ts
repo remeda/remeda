@@ -14,5 +14,5 @@ export function randomString(length: number) {
   const randomChar = () =>
     characterSet[Math.floor(Math.random() * characterSet.length)];
 
-  return range(0, length).reduce(text => text + randomChar(), '');
+  return range(0, length).reduce(text => `${text}${randomChar() ?? ''}`, '');
 }

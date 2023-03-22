@@ -37,7 +37,13 @@ export function splitWhen() {
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
   for (let i = 0; i < array.length; i++) {
-    if (fn(array[i])) {
+    if (
+      fn(
+        // @ts-expect-error [ts2345] - We are iterating over the array so we know
+        // this is safe.
+        array[i]
+      )
+    ) {
       return splitAt(array, i);
     }
   }

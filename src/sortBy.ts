@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { NonEmptyArray } from './_types';
 
 type Direction = 'asc' | 'desc';
 type SortProjection<T> = (x: T) => Comparable;
@@ -6,6 +7,9 @@ type ComparablePrimitive = number | string | boolean;
 type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
 type SortPair<T> = readonly [SortProjection<T>, Direction];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
+
+const ASCENDING_COMPARATOR = <T>(x: T, y: T) => x > y;
+const DESCENDING_COMPARATOR = <T>(x: T, y: T) => x < y;
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -85,34 +89,41 @@ function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
   return typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc');
 }
 
-function _sortBy<T>(array: Array<T>, sorts: Array<SortRule<T>>): Array<T> {
-  const sort = (
-    a: T,
-    b: T,
-    sortRule: SortRule<T>,
-    sortRules: Array<SortRule<T>>
-  ): number => {
-    let fn: SortProjection<T>;
-    let direction: Direction;
-    if (Array.isArray(sortRule)) {
-      [fn, direction] = sortRule as SortPair<T>;
-    } else {
-      direction = 'asc';
-      fn = sortRule as SortProjection<T>;
-    }
-    const dir: (x: Comparable, y: Comparable) => boolean =
-      direction !== 'desc' ? (x, y) => x > y : (x, y) => x < y;
-    if (!fn) {
-      return 0;
-    }
-    if (dir(fn(a), fn(b))) {
-      return 1;
-    }
-    if (dir(fn(b), fn(a))) {
-      return -1;
-    }
-    return sort(a, b, sortRules[0], sortRules.slice(1));
-  };
+function _sortBy<T>(
+  array: Array<T>,
+  sorts: NonEmptyArray<SortRule<T>>
+): Array<T> {
   const copied = [...array];
-  return copied.sort((a: T, b: T) => sort(a, b, sorts[0], sorts.slice(1)));
+  return copied.sort((a, b) => sortInternal(a, b, sorts[0], sorts.slice(1)));
+}
+
+function sortInternal<T>(
+  a: T,
+  b: T,
+  sortRule: SortRule<T>,
+  sortRules: Array<SortRule<T>>
+): number {
+  const [projector, direction] =
+    typeof sortRule === 'function' ? [sortRule, 'asc' as const] : sortRule;
+
+  const projectedA = projector(a);
+  const projectedB = projector(b);
+
+  const comparator =
+    direction === 'asc' ? ASCENDING_COMPARATOR : DESCENDING_COMPARATOR;
+
+  if (comparator(projectedA, projectedB)) {
+    return 1;
+  }
+
+  if (comparator(projectedB, projectedA)) {
+    return -1;
+  }
+
+  const [nextRule, ...remaining] = sortRules;
+  return nextRule === undefined
+    ? // We have no more rules to sort by so we have to consider the values as
+      // equal
+      0
+    : sortInternal(a, b, nextRule, remaining);
 }

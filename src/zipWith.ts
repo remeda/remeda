@@ -75,11 +75,16 @@ function _zipWith<F, S, R>(
   second: Array<S>,
   fn: (f: F, s: S) => R
 ) {
-  const resultLength =
-    first.length > second.length ? second.length : first.length;
-  const result = [];
-  for (let i = 0; i < resultLength; i++) {
-    result.push(fn(first[i], second[i]));
+  const result: Array<R> = Array.from({
+    length: Math.min(first.length, second.length),
+  });
+  for (let i = 0; i < result.length; i++) {
+    result[i] = fn(
+      // @ts-expect-error [ts2345] - our index will only ever iterate over the
+      // shortest array, so these are always defined...
+      first[i],
+      second[i]
+    );
   }
 
   return result;
