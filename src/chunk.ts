@@ -45,8 +45,8 @@ export function chunk() {
   return purry(_chunk, arguments);
 }
 
-function _chunk<T>(array: Array<T>, size: number) {
-  const ret: Array<Array<T>> = Array.from({
+function _chunk<T>(array: ReadonlyArray<T>, size: number) {
+  const ret: Array<ReadonlyArray<T>> = Array.from({
     length: Math.ceil(array.length / size),
   });
   for (let index = 0; index < ret.length; index += 1) {
