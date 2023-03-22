@@ -12,6 +12,7 @@
     "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
+    "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
 

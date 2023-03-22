@@ -66,6 +66,8 @@ export function zipWith() {
   if (args.length === 3) {
     return _zipWith(args[0], args[1], args[2]);
   }
+
+  throw new TypeError('Unsupported invocation params');
 }
 
 function _zipWith<F, S, R>(
