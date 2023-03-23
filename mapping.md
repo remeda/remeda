@@ -46,6 +46,7 @@ documentation when migrating._
 | `length`           | `size`             | `length`            |
 | `map`              | `map`              | `map`               |
 | `mapKeys`          | `mapKeys`          | `-`                 |
+| `matches`          | `matches`          | `_`                 |
 | `meanBy`           | `meanBy`           | `-`                 |
 | `merge`            | `assign`           | `merge`             |
 | `mergeAll`         | `assign`           | `mergeAll`          |

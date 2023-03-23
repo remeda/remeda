@@ -55,6 +55,7 @@ export * from './map';
 export * from './mapKeys';
 export * from './mapToObj';
 export * from './mapValues';
+export * from './matches';
 export * from './maxBy';
 export * from './meanBy';
 export * from './merge';
