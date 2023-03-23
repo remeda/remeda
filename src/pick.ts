@@ -25,7 +25,7 @@ export function pick<T extends object, K extends keyof T>(
  * @category Object
  */
 export function pick<K extends PropertyKey>(
-  names: readonly K[]
+  names: ReadonlyArray<K>
 ): <T extends Record<PropertyKey, any>>(object: T) => Pick<T, K>;
 
 export function pick() {

@@ -28,7 +28,7 @@ export function omit<T extends Record<PropertyKey, any>, K extends keyof T>(
  * @category Object
  */
 export function omit<K extends PropertyKey>(
-  names: readonly K[]
+  names: ReadonlyArray<K>
 ): <T extends Record<PropertyKey, any>>(object: T) => Omit<T, K>;
 
 export function omit() {
