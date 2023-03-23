@@ -31,6 +31,5 @@ export function merge() {
 }
 
 function _merge<A, B>(a: A, b: B) {
-  // tslint:disable-next-line:prefer-object-spread
   return Object.assign({}, a, b);
 }

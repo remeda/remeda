@@ -17,13 +17,13 @@ import { NonEmptyArray, PredIndexedOptional, PredIndexed } from './_types';
  * @category Array
  */
 export function groupBy<T>(
-  items: readonly T[],
+  items: ReadonlyArray<T>,
   fn: (item: T) => PropertyKey
 ): Record<PropertyKey, NonEmptyArray<T>>;
 
 export function groupBy<T>(
   fn: (item: T) => PropertyKey
-): (array: readonly T[]) => Record<PropertyKey, NonEmptyArray<T>>;
+): (array: ReadonlyArray<T>) => Record<PropertyKey, NonEmptyArray<T>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -42,8 +42,8 @@ export function groupBy() {
 
 const _groupBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
-    const ret: Record<string, T[]> = {};
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+    const ret: Record<string, Array<T>> = {};
     array.forEach((item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
@@ -76,24 +76,24 @@ type Out<Value, Key extends PropertyKey = PropertyKey> =
       Partial<Record<Key, NonEmptyArray<Value>>>;
 
 export namespace groupBy {
-  export function indexed<T, K>(
-    array: readonly T[],
+  export function indexed<T>(
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, PropertyKey>
   ): Record<string, NonEmptyArray<T>>;
-  export function indexed<T, K>(
+  export function indexed<T>(
     fn: PredIndexed<T, PropertyKey>
-  ): (array: readonly T[]) => Record<string, NonEmptyArray<T>>;
+  ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
   export function indexed() {
     return purry(_groupBy(true), arguments);
   }
   export function strict<Value, Key extends PropertyKey = PropertyKey>(
-    items: readonly Value[],
+    items: ReadonlyArray<Value>,
     fn: (item: Value) => Key
   ): Out<Value, Key>;
 
   export function strict<Value, Key extends PropertyKey = PropertyKey>(
     fn: (item: Value) => Key
-  ): (array: readonly Value[]) => Out<Value, Key>;
+  ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
 
   export function strict() {
     return purry(_groupBy(false), arguments);
@@ -101,12 +101,12 @@ export namespace groupBy {
 
   export namespace strict {
     export function indexed<Value, Key extends PropertyKey = PropertyKey>(
-      array: readonly Value[],
+      array: ReadonlyArray<Value>,
       fn: PredIndexed<Value, Key>
     ): Out<Value, Key>;
     export function indexed<Value, Key extends PropertyKey = PropertyKey>(
       fn: PredIndexed<Value, Key>
-    ): (array: readonly Value[]) => Out<Value, Key>;
+    ): (array: ReadonlyArray<Value>) => Out<Value, Key>;
     export function indexed() {
       return purry(_groupBy(true), arguments);
     }

@@ -1,8 +1,7 @@
 import { expectType } from './_expectType';
-
+import { concat } from './concat';
 import { pick } from './pick';
 import { pipe } from './pipe';
-import { concat } from './concat';
 
 describe('data first', () => {
   test('it should pick props', () => {

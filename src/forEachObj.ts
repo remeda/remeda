@@ -60,7 +60,7 @@ const _forEachObj =
   (indexed: boolean) =>
   (object: any, fn: (value: any, key?: any, obj?: any) => void) => {
     for (const key in object) {
-      if (object.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(object, key)) {
         const val = object[key];
         if (indexed) fn(val, key, object);
         else fn(val);

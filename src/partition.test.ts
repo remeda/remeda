@@ -30,7 +30,8 @@ describe('data first', () => {
       [1, 2],
       ['a', 'b'],
     ]);
-    const result: AssertEqual<typeof actual, [number[], string[]]> = true;
+    const result: AssertEqual<typeof actual, [Array<number>, Array<string>]> =
+      true;
     expect(result).toBe(true);
   });
   test('partition with type guard in pipe', () => {
@@ -44,7 +45,8 @@ describe('data first', () => {
       [1, 2],
       ['a', 'b'],
     ]);
-    const result: AssertEqual<typeof actual, [number[], string[]]> = true;
+    const result: AssertEqual<typeof actual, [Array<number>, Array<string>]> =
+      true;
     expect(result).toBe(true);
   });
   test('partition.indexed', () => {

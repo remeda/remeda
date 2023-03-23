@@ -12,8 +12,8 @@ import { purry } from './purry';
  * @category Array
  */
 export function concat<T, K>(
-  arr1: readonly T[],
-  arr2: readonly K[]
+  arr1: ReadonlyArray<T>,
+  arr2: ReadonlyArray<K>
 ): Array<T | K>;
 
 /**
@@ -27,13 +27,13 @@ export function concat<T, K>(
  * @category Array
  */
 export function concat<T, K>(
-  arr2: readonly K[]
-): (arr1: readonly T[]) => Array<T | K>;
+  arr2: ReadonlyArray<K>
+): (arr1: ReadonlyArray<T>) => Array<T | K>;
 
 export function concat() {
   return purry(_concat, arguments);
 }
 
-function _concat(arr1: any[], arr2: any[]) {
+function _concat(arr1: Array<any>, arr2: Array<any>) {
   return arr1.concat(arr2);
 }

@@ -8,8 +8,8 @@ it('should split array', () => {
 });
 
 it('should with no matches', () => {
-  const n: number = 1232;
-  expect(splitWhen([1, 2, 3, 1, 2, 3] as const, x => x === n)).toEqual([
+  const n = 1232;
+  expect(splitWhen([1, 2, 3, 1, 2, 3], x => x === n)).toEqual([
     [1, 2, 3, 1, 2, 3],
     [],
   ]);

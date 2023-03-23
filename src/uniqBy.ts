@@ -2,9 +2,9 @@ import { purry } from './purry';
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 export function uniqBy<T, K>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   transformer: (item: T) => K
-): T[];
+): Array<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original list transformed by a function.
@@ -28,13 +28,13 @@ export function uniqBy<T, K>(
 
 export function uniqBy<T, K>(
   transformer: (item: T) => K
-): (array: readonly T[]) => T[];
+): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniqBy() {
   return purry(_uniqBy, arguments, lazyUniqBy);
 }
 
-function _uniqBy<T, K>(array: T[], transformer: (item: T) => K) {
+function _uniqBy<T, K>(array: Array<T>, transformer: (item: T) => K) {
   return _reduceLazy(array, lazyUniqBy(transformer));
 }
 

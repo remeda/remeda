@@ -16,8 +16,8 @@ export function mergeAll<A, B, C, D>(
 export function mergeAll<A, B, C, D, E>(
   array: [A, B, C, D, E]
 ): A & B & C & D & E;
-export function mergeAll(array: readonly object[]): object;
+export function mergeAll(array: ReadonlyArray<object>): object;
 
-export function mergeAll(items: readonly any[]) {
+export function mergeAll(items: ReadonlyArray<any>) {
   return items.reduce((acc, x) => ({ ...acc, ...x }), {});
 }

@@ -13,7 +13,10 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  * @category Array
  * @pipeable
  */
-export function intersection<T>(source: readonly T[], other: readonly T[]): T[];
+export function intersection<T>(
+  source: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
+): Array<T>;
 
 /**
  * Returns a list of elements that exist in both array.
@@ -28,20 +31,20 @@ export function intersection<T>(source: readonly T[], other: readonly T[]): T[];
  * @pipeable
  */
 export function intersection<T, K>(
-  other: readonly T[]
-): (source: readonly K[]) => T[];
+  other: ReadonlyArray<T>
+): (source: ReadonlyArray<K>) => Array<T>;
 
 export function intersection() {
   return purry(_intersection, arguments, intersection.lazy);
 }
 
-function _intersection<T>(array: T[], other: T[]) {
+function _intersection<T>(array: Array<T>, other: Array<T>) {
   const lazy = intersection.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace intersection {
-  export function lazy<T>(other: T[]) {
+  export function lazy<T>(other: Array<T>) {
     return (value: T): LazyResult<T> => {
       const set = new Set(other);
       if (set.has(value)) {

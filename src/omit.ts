@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function omit<T extends Record<PropertyKey, any>, K extends keyof T>(
   object: T,
-  names: readonly K[]
+  names: ReadonlyArray<K>
 ): Omit<T, K>;
 
 /**
@@ -37,13 +37,13 @@ export function omit() {
 
 function _omit<T extends Record<PropertyKey, any>, K extends keyof T>(
   object: T,
-  names: K[]
+  names: Array<K>
 ): Omit<T, K> {
-  const set = new Set(names as string[]);
-  return Object.entries(object).reduce((acc, [name, value]) => {
+  const set = new Set(names as Array<string>);
+  return Object.entries(object).reduce<any>((acc, [name, value]) => {
     if (!set.has(name)) {
       acc[name] = value;
     }
     return acc;
-  }, {} as any) as Omit<T, K>;
+  }, {}) as Omit<T, K>;
 }

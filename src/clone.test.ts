@@ -109,7 +109,7 @@ describe('deep clone arrays', () => {
 
 describe('deep clone functions', () => {
   it('keep reference to function', () => {
-    const fn = (x: any) => {
+    const fn = (x: number) => {
       return x + x;
     };
     const list = [{ a: fn }];
@@ -155,7 +155,7 @@ describe('deep clone deep nested mixed objects', () => {
   });
 
   it('clones array with arrays', () => {
-    const list: any[][] = [[1], [[3]]];
+    const list: Array<Array<any>> = [[1], [[3]]];
     const cloned = clone(list);
     list[1][0] = null;
     eq(cloned, [[1], [[3]]]);

@@ -1,8 +1,8 @@
 import { purry } from './purry';
 
 type Reverse<
-  T extends readonly unknown[],
-  R extends readonly unknown[] = []
+  T extends ReadonlyArray<unknown>,
+  R extends ReadonlyArray<unknown> = []
 > = ReturnType<
   T extends IsNoTuple<T>
     ? () => [...T, ...R]
@@ -11,7 +11,7 @@ type Reverse<
     : () => R
 >;
 
-type IsNoTuple<T> = T extends readonly [unknown, ...unknown[]] ? never : T;
+type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
 
 /**
  * Reverses array.
@@ -23,7 +23,7 @@ type IsNoTuple<T> = T extends readonly [unknown, ...unknown[]] ? never : T;
  * @data_first
  * @category Array
  */
-export function reverse<T extends readonly unknown[]>(array: T): Reverse<T>;
+export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
 
 /**
  * Reverses array.
@@ -35,7 +35,7 @@ export function reverse<T extends readonly unknown[]>(array: T): Reverse<T>;
  * @data_last
  * @category Array
  */
-export function reverse<T extends readonly unknown[]>(): (
+export function reverse<T extends ReadonlyArray<unknown>>(): (
   array: T
 ) => Reverse<T>;
 
@@ -43,6 +43,6 @@ export function reverse() {
   return purry(_reverse, arguments);
 }
 
-function _reverse(array: any[]) {
+function _reverse(array: Array<any>) {
   return array.slice().reverse();
 }

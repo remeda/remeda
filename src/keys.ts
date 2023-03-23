@@ -5,7 +5,7 @@
  *    R.keys(source)
  *    R.keys.strict(source)
  * @example
- *    R.keys(['x', 'y', 'z']) // => ['1', '2', '3']
+ *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.pipe(
  *      { a: 'x', b: 'y', c: 'z' },

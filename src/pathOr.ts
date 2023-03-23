@@ -142,7 +142,7 @@ export function pathOr() {
   return purry(_pathOr, arguments);
 }
 
-function _pathOr(object: any, path: any[], defaultValue: any): any {
+function _pathOr(object: any, path: Array<any>, defaultValue: any): any {
   let current = object;
   for (const prop of path) {
     if (current == null || current[prop] == null) {

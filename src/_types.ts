@@ -1,9 +1,9 @@
 export type Pred<T, K> = (input: T) => K;
-export type PredIndexed<T, K> = (input: T, index: number, array: T[]) => K;
+export type PredIndexed<T, K> = (input: T, index: number, array: Array<T>) => K;
 export type PredIndexedOptional<T, K> = (
   input: T,
   index?: number,
-  array?: T[]
+  array?: Array<T>
 ) => K;
 
 /** types that may be returned by `keyof` */
@@ -18,4 +18,4 @@ export type AssertEqual<Type, Expected> = Array<Type> extends Array<Expected>
     : never
   : never;
 
-export type NonEmptyArray<T> = [T, ...T[]];
+export type NonEmptyArray<T> = [T, ...Array<T>] | [...Array<T>, T];
