@@ -9,13 +9,9 @@
  * @category Array
  */
 export function shuffle<T>(items: ReadonlyArray<T>): Array<T> {
-  const length = items.length
-  
-  let index = -1
-  const lastIndex = length - 1
   const result = items.slice()
-  while (++index < length) {
-    const rand = index + Math.floor(Math.random() * (lastIndex - index + 1))
+  for (let index = 0; index < items.length; index += 1) {
+    const rand = index + Math.floor(Math.random() * (items.length - index))
     const value = result[rand]
     result[rand] = result[index]
     result[index] = value
