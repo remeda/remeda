@@ -42,5 +42,3 @@ function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {
   }
   return result
 }
-
-
