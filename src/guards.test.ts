@@ -221,7 +221,8 @@ describe('isDefined', () => {
     ].filter(isDefined);
     expect(data.length === 4).toEqual(true);
     assertType<
-      Array<| string
+      Array<
+        | string
         | number
         | boolean
         | {
@@ -231,7 +232,8 @@ describe('isDefined', () => {
         | Array<number>
         | Date
         | Error
-        | Promise<number>>
+        | Promise<number>
+      >
     >(data);
   });
 });
@@ -408,12 +410,14 @@ describe('isObject', () => {
       true
     );
     assertType<
-      Array<| {
+      Array<
+        | {
             a: string;
           }
         | Date
         | Error
-        | Promise<number>>
+        | Promise<number>
+      >
     >(data);
   });
 });
@@ -478,7 +482,8 @@ describe('isNot', () => {
     expect(result.some(c => c instanceof Promise)).toEqual(false);
 
     assertType<
-      Array<| boolean
+      Array<
+        | boolean
         | string
         | { a: string }
         | (() => void)
@@ -487,7 +492,8 @@ describe('isNot', () => {
         | undefined
         | null
         | Error
-        | number>
+        | number
+      >
     >(result);
   });
 });
