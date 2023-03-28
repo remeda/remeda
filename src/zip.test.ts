@@ -30,7 +30,7 @@ describe('data first', () => {
 describe('data first typings', () => {
   test('arrays', () => {
     const actual = zip(first, second);
-    assertType<[number, string][]>(actual);
+    assertType<Array<[number, string]>>(actual);
   });
   test('tuples', () => {
     const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
@@ -38,13 +38,13 @@ describe('data first typings', () => {
   });
   test('tuples', () => {
     const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
-    assertType<[1 | 2 | 3, 'a' | 'b' | 'c'][]>(actual);
+    assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
   });
   test('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zip(firstVariadic, secondVariadic);
-    assertType<[string | number, string | number][]>(actual);
+    assertType<Array<[string | number, string | number]>>(actual);
   });
 });
 
@@ -73,16 +73,16 @@ describe('data second', () => {
 describe('data second typings', () => {
   test('arrays', () => {
     const actual = zip(second)(first);
-    assertType<[number, string][]>(actual);
+    assertType<Array<[number, string]>>(actual);
   });
   test('tuples', () => {
     const actual = zip(second as ['a', 'b', 'c'])(first as [1, 2, 3]);
-    assertType<[1 | 2 | 3, 'a' | 'b' | 'c'][]>(actual);
+    assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
   });
   test('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zip(secondVariadic)(firstVariadic);
-    assertType<[string | number, string | number][]>(actual);
+    assertType<Array<[string | number, string | number]>>(actual);
   });
 });

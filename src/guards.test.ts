@@ -102,7 +102,7 @@ describe('isString', () => {
       dataProvider('boolean'),
     ].filter(isString);
     expect(data.every(c => typeof c === 'string')).toEqual(true);
-    assertType<string[]>(data);
+    assertType<Array<string>>(data);
   });
 });
 
@@ -136,7 +136,7 @@ describe('isBoolean', () => {
       dataProvider('boolean'),
     ].filter(isBoolean);
     expect(data.every(c => typeof c === 'boolean')).toEqual(true);
-    assertType<boolean[]>(data);
+    assertType<Array<boolean>>(data);
   });
 });
 
@@ -145,12 +145,12 @@ describe('isArray', () => {
     const data = dataProvider('array');
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
-      assertType<number[]>(data);
+      assertType<Array<number>>(data);
     }
 
     const data1: unknown = dataProvider('array');
     if (isArray(data1)) {
-      assertType<readonly unknown[]>(data1);
+      assertType<ReadonlyArray<unknown>>(data1);
     }
   });
   test('isArray: should work as type guard in filter', () => {
@@ -163,7 +163,7 @@ describe('isArray', () => {
       dataProvider('date'),
     ].filter(isArray);
     expect(data.every(c => Array.isArray(c))).toEqual(true);
-    assertType<number[][]>(data);
+    assertType<Array<Array<number>>>(data);
   });
 });
 
@@ -190,7 +190,7 @@ describe('isDate', () => {
       dataProvider('date'),
     ].filter(isDate);
     expect(data.every(c => c instanceof Date)).toEqual(true);
-    assertType<Date[]>(data);
+    assertType<Array<Date>>(data);
   });
 });
 describe('isDefined', () => {
@@ -221,8 +221,7 @@ describe('isDefined', () => {
     ].filter(isDefined);
     expect(data.length === 4).toEqual(true);
     assertType<
-      (
-        | string
+      Array<| string
         | number
         | boolean
         | {
@@ -232,8 +231,7 @@ describe('isDefined', () => {
         | Array<number>
         | Date
         | Error
-        | Promise<number>
-      )[]
+        | Promise<number>>
     >(data);
   });
 });
@@ -256,7 +254,7 @@ describe('isNil', () => {
       dataProvider('number'),
     ].filter(isNil);
     expect(data.every(c => c == null)).toEqual(true);
-    assertType<(undefined | null)[]>(data);
+    assertType<Array<undefined | null>>(data);
   });
 });
 
@@ -284,7 +282,7 @@ describe('isFunction', () => {
       dataProvider('number'),
     ].filter(isFunction);
     expect(data.every(c => typeof c === 'function')).toEqual(true);
-    assertType<(() => void)[]>(data);
+    assertType<Array<() => void>>(data);
   });
 });
 describe('isError', () => {
@@ -312,7 +310,7 @@ describe('isError', () => {
       dataProvider('number'),
     ].filter(isError);
     expect(data.every(c => c instanceof Error)).toEqual(true);
-    assertType<Error[]>(data);
+    assertType<Array<Error>>(data);
   });
 });
 describe('isNumber', () => {
@@ -333,7 +331,7 @@ describe('isNumber', () => {
       dataProvider('number'),
     ].filter(isNumber);
     expect(data.every(c => typeof c === 'number')).toEqual(true);
-    assertType<number[]>(data);
+    assertType<Array<number>>(data);
   });
   test('should work even if data type is unknown', () => {
     const data: unknown = dataProvider('number');
@@ -410,14 +408,12 @@ describe('isObject', () => {
       true
     );
     assertType<
-      (
-        | {
+      Array<| {
             a: string;
           }
         | Date
         | Error
-        | Promise<number>
-      )[]
+        | Promise<number>>
     >(data);
   });
 });
@@ -438,7 +434,7 @@ describe('isPromise', () => {
       dataProvider('function'),
     ].filter(isPromise);
     expect(data.every(c => c instanceof Promise)).toEqual(true);
-    assertType<Promise<number>[]>(data);
+    assertType<Array<Promise<number>>>(data);
   });
 });
 describe('isTruthy', () => {
@@ -482,8 +478,7 @@ describe('isNot', () => {
     expect(result.some(c => c instanceof Promise)).toEqual(false);
 
     assertType<
-      (
-        | boolean
+      Array<| boolean
         | string
         | { a: string }
         | (() => void)
@@ -492,8 +487,7 @@ describe('isNot', () => {
         | undefined
         | null
         | Error
-        | number
-      )[]
+        | number>
     >(result);
   });
 });

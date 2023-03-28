@@ -29,7 +29,7 @@ describe('data first', () => {
       [1, 2],
       ['a', 'b'],
     ]);
-    assertType<[number[], string[]]>(actual);
+    assertType<[Array<number>, Array<string>]>(actual);
   });
   test('partition with type guard in pipe', () => {
     const actual = pipe(

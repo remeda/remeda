@@ -9,7 +9,7 @@ describe('data first', () => {
   describe('reverse typings', () => {
     test('arrays', () => {
       const actual = reverse([1, 2, 3]);
-      assertType<number[]>(actual);
+      assertType<Array<number>>(actual);
     });
     test('tuples', () => {
       const actual = reverse([1, 2, [true], 'a'] as const);
@@ -32,7 +32,7 @@ describe('data last', () => {
   describe('reverse typings', () => {
     test('arrays', () => {
       const actual = pipe([1, 2, 3], reverse());
-      assertType<number[]>(actual);
+      assertType<Array<number>>(actual);
     });
     test('tuples', () => {
       const actual = pipe([1, 2, [true], 'a'] as const, reverse());

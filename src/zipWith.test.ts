@@ -22,7 +22,7 @@ describe('data first', () => {
 describe('data first typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(first, second, pred);
-    assertType<string[]>(actual);
+    assertType<Array<string>>(actual);
   });
 });
 
@@ -41,7 +41,7 @@ describe('data second', () => {
 describe('data second typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(pred)(first, second);
-    assertType<string[]>(actual);
+    assertType<Array<string>>(actual);
   });
 });
 
@@ -60,6 +60,6 @@ describe('data second with initial arg', () => {
 describe('data second with initial arg typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(pred, second)(first);
-    assertType<string[]>(actual);
+    assertType<Array<string>>(actual);
   });
 });
