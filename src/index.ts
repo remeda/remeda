@@ -72,6 +72,7 @@ export * from './reduce';
 export * from './reject';
 export * from './reverse';
 export * from './set';
+export * from './shuffle';
 export * from './sort';
 export * from './sortBy';
 export * from './splitAt';

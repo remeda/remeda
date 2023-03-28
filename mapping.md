@@ -62,6 +62,7 @@ documentation when migrating._
 | `reject`         | `reject`         | `reject`            |
 | `reverse`        | `reverse`        | `reverse`           |
 | `set`            | `set`            | `set`               |
+| `shuffle`        | `shuffle`        | `-`                 |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
 | `sortBy`         | `orderBy`        | `-`                 |
