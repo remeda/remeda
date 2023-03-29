@@ -1,11 +1,11 @@
 import { purry } from './purry';
 
-export type SampleType = {
+export interface SampleType {
   size: number;
   repeating: boolean;
-};
+}
 
-function _sample<T>(items: T[], options: number | SampleType) {
+function _sample<T>(items: Array<T>, options: number | SampleType) {
   let nbrSamples = typeof options === 'number' ? options : options.size;
   const repeating = typeof options === 'object' && options?.repeating;
 
@@ -50,8 +50,8 @@ function _sample<T>(items: T[], options: number | SampleType) {
  * @data_first
  * @category Array
  */
-export function sample<T>(items: readonly T[], size: number): T[];
-export function sample<T>(items: readonly T[], options: SampleType): T[];
+export function sample<T>(items: ReadonlyArray<T>, size: number): Array<T>;
+export function sample<T>(items: ReadonlyArray<T>, options: SampleType): Array<T>;
 
 /**
  * Returns random elements of the array.
@@ -69,8 +69,8 @@ export function sample<T>(items: readonly T[], options: SampleType): T[];
  * @data_last
  * @category Array
  */
-export function sample(size: number): <T>(items: T[]) => T[];
-export function sample(options: SampleType): <T>(items: T[]) => T[];
+export function sample(size: number): <T>(items: Array<T>) => Array<T>;
+export function sample(options: SampleType): <T>(items: Array<T>) => Array<T>;
 
 export function sample() {
   return purry(_sample, arguments);
