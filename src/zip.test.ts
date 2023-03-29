@@ -36,10 +36,6 @@ describe('data first typings', () => {
     const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
     assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
   });
-  test('tuples', () => {
-    const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
-    assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
-  });
   test('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
