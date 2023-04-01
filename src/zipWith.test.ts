@@ -1,5 +1,4 @@
 import { zipWith } from './zipWith';
-import { AssertEqual } from './_types';
 
 const pred = (a: string, b: string) => a + b;
 
@@ -23,8 +22,7 @@ describe('data first', () => {
 describe('data first typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(first, second, pred);
-    const result: AssertEqual<typeof actual, Array<string>> = true;
-    expect(result).toBe(true);
+    assertType<Array<string>>(actual);
   });
 });
 
@@ -43,8 +41,7 @@ describe('data second', () => {
 describe('data second typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(pred)(first, second);
-    const result: AssertEqual<typeof actual, Array<string>> = true;
-    expect(result).toBe(true);
+    assertType<Array<string>>(actual);
   });
 });
 
@@ -63,7 +60,6 @@ describe('data second with initial arg', () => {
 describe('data second with initial arg typings', () => {
   test('infers typing from predicate', () => {
     const actual = zipWith(pred, second)(first);
-    const result: AssertEqual<typeof actual, Array<string>> = true;
-    expect(result).toBe(true);
+    assertType<Array<string>>(actual);
   });
 });
