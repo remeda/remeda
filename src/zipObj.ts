@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function zipObj<F extends string | number | symbol, S extends unknown>(
+export function zipObj<F extends string | number | symbol, S>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>
 ): Record<F, S>;
@@ -28,7 +28,7 @@ export function zipObj<F extends string | number | symbol, S extends unknown>(
  * @data_last
  * @category Array
  */
-export function zipObj<S extends unknown>(
+export function zipObj<S>(
   second: ReadonlyArray<S>
 ): <F extends string | number | symbol>(
   first: ReadonlyArray<F>
