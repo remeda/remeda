@@ -1,5 +1,13 @@
 import { purry } from './purry';
 
+type FirstOut<T extends ReadonlyArray<unknown> | []> = T extends []
+  ? undefined
+  : T extends readonly [unknown, ...Array<unknown>]
+  ? T[0]
+  : T extends readonly [...infer Pre, infer Last]
+  ? Pre[0] | Last
+  : T[0] | undefined;
+
 /**
  * Gets the first element of `array`.
  * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.
@@ -19,15 +27,19 @@ import { purry } from './purry';
  * @category array
  * @pipeable
  */
-export function first<T>(array: readonly T[]): T | undefined;
-export function first<T>(): (array: readonly T[]) => T | undefined;
+export function first<T extends ReadonlyArray<unknown> | []>(
+  array: Readonly<T>
+): FirstOut<T>;
+export function first<T extends ReadonlyArray<unknown> | []>(): (
+  array: Readonly<T>
+) => FirstOut<T>;
 
 export function first() {
   return purry(_first, arguments, first.lazy);
 }
 
-function _first<T>(array: T[]) {
-  return array[0];
+function _first<T>([first]: ReadonlyArray<T>) {
+  return first;
 }
 
 export namespace first {

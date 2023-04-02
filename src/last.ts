@@ -27,6 +27,6 @@ export function last() {
   return purry(_last, arguments);
 }
 
-function _last<T>(array: T[]) {
+function _last<T>(array: Array<T>) {
   return array[array.length - 1];
 }

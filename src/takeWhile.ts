@@ -12,9 +12,9 @@ import { purry } from './purry';
  * @category Array
  */
 export function takeWhile<T>(
-  array: readonly T[],
+  array: ReadonlyArray<T>,
   fn: (item: T) => boolean
-): T[];
+): Array<T>;
 
 /**
  * Returns elements from the array until predicate returns false.
@@ -28,14 +28,14 @@ export function takeWhile<T>(
  */
 export function takeWhile<T>(
   fn: (item: T) => boolean
-): (array: readonly T[]) => T[];
+): (array: ReadonlyArray<T>) => Array<T>;
 
 export function takeWhile() {
   return purry(_takeWhile, arguments);
 }
 
-function _takeWhile<T>(array: T[], fn: (item: T) => boolean) {
-  const ret: T[] = [];
+function _takeWhile<T>(array: Array<T>, fn: (item: T) => boolean) {
+  const ret: Array<T> = [];
   for (const item of array) {
     if (!fn(item)) {
       break;

@@ -6,4 +6,4 @@
  *    onSomething(R.noop)
  * @category Function
  */
-export const noop = () => undefined as any;
+export const noop = () => undefined;

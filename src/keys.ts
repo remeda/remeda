@@ -5,7 +5,7 @@
  *    R.keys(source)
  *    R.keys.strict(source)
  * @example
- *    R.keys(['x', 'y', 'z']) // => ['1', '2', '3']
+ *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.pipe(
  *      { a: 'x', b: 'y', c: 'z' },
@@ -28,7 +28,7 @@ export namespace keys {
   export function strict<T extends Record<PropertyKey, unknown>>(
     source: T
   ): Array<
-    { [K in keyof T]: K extends string | number ? `${K}` : never }[keyof T]
+    { [K in keyof T]-?: K extends string | number ? `${K}` : never }[keyof T]
   > {
     return keys(source) as any;
   }

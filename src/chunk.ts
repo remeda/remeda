@@ -1,4 +1,13 @@
 import { purry } from './purry';
+import { NonEmptyArray } from './_types';
+
+type Chunked<T extends ReadonlyArray<unknown> | []> =
+  | (T extends
+      | readonly [unknown, ...Array<unknown>]
+      | readonly [...Array<unknown>, unknown]
+      ? never
+      : [])
+  | NonEmptyArray<NonEmptyArray<T[number]>>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -12,7 +21,10 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function chunk<T>(array: readonly T[], size: number): T[][];
+export function chunk<T extends ReadonlyArray<unknown> | []>(
+  array: T,
+  size: number
+): Chunked<T>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -25,24 +37,20 @@ export function chunk<T>(array: readonly T[], size: number): T[][];
  * @data_last
  * @category Array
  */
-export function chunk<T>(size: number): (array: readonly T[]) => T[][];
+export function chunk<T extends ReadonlyArray<unknown> | []>(
+  size: number
+): (array: T) => Chunked<T>;
 
 export function chunk() {
   return purry(_chunk, arguments);
 }
 
-function _chunk<T>(array: T[], size: number) {
-  const ret: T[][] = [];
-  let current: T[] | null = null;
-  array.forEach(x => {
-    if (!current) {
-      current = [];
-      ret.push(current);
-    }
-    current.push(x);
-    if (current.length === size) {
-      current = null;
-    }
+function _chunk<T>(array: ReadonlyArray<T>, size: number) {
+  const ret: Array<ReadonlyArray<T>> = Array.from({
+    length: Math.ceil(array.length / size),
   });
+  for (let index = 0; index < ret.length; index += 1) {
+    ret[index] = array.slice(index * size, (index + 1) * size);
+  }
   return ret;
 }

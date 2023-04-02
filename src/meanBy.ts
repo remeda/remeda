@@ -3,7 +3,7 @@ import { PredIndexed, PredIndexedOptional } from './_types';
 
 const _meanBy =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, number>) => {
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
     if (array.length === 0) {
       return NaN;
     }
@@ -34,7 +34,7 @@ const _meanBy =
 
 export function meanBy<T>(
   fn: (item: T) => number
-): (items: readonly T[]) => number;
+): (items: ReadonlyArray<T>) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -53,7 +53,10 @@ export function meanBy<T>(
  * @category Array
  */
 
-export function meanBy<T>(items: readonly T[], fn: (item: T) => number): number;
+export function meanBy<T>(
+  items: ReadonlyArray<T>,
+  fn: (item: T) => number
+): number;
 
 export function meanBy() {
   return purry(_meanBy(false), arguments);
@@ -61,13 +64,13 @@ export function meanBy() {
 
 export namespace meanBy {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, number>
   ): number;
 
   export function indexed<T>(
     fn: PredIndexed<T, number>
-  ): (array: readonly T[]) => number;
+  ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {
     return purry(_meanBy(true), arguments);

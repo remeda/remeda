@@ -1,36 +1,33 @@
-Remeda
-=============
+# Remeda
 
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
-![GitHub CI](https://img.shields.io/github/workflow/status/remeda/remeda/CI/master?label=github-ci)
+![GitHub CI](https://img.shields.io/github/actions/workflow/status/remeda/remeda/ci.yml?branch=master&label=github-ci)
 [![Travis CI](https://img.shields.io/travis/remeda/remeda/master?label=travis-ci)](https://travis-ci.org/remeda/remeda)
 [![Codecov](https://img.shields.io/codecov/c/github/remeda/remeda/master)](https://codecov.io/gh/remeda/remeda)
 [![NPM](https://img.shields.io/npm/v/remeda)](https://www.npmjs.org/package/remeda)
 ![Dependencies](https://img.shields.io/librariesio/release/npm/remeda)
 
-Installation
-----------
+## Installation
+
 ```bash
 npm i remeda
 yarn add remeda
 ```
+
 Then in .js or .ts
 
 ```js
 import * as R from 'remeda'; // tree-shaking supported!
 ```
 
+## Why Remeda?
 
-Why Remeda?
-----------
 There are no good utility libraries that work well with TypeScript. When working with Lodash or Ramda you must sometimes annotate types manually.
 Remeda is written and tested in TypeScript and that means there won't be any problems with custom typings.
 
+## What's "data-first" and "data-last"?
 
-
-What's "data-first" and "data-last"?
-----------
 Functional programming is nice, and it makes the code more readable. However there are situations where you don't need "pipes", and you want to call just a single function.
 
 ```js
@@ -52,37 +49,37 @@ In the above example, "data-first" approach is more natural and more programmer 
 
 ```js
 const users = [
-  {name: 'john', age: 20, gender: 'm'},
-  {name: 'marry', age: 22, gender: 'f'},
-  {name: 'samara', age: 24, gender: 'f'},
-  {name: 'paula', age: 24, gender: 'f'},
-  {name: 'bill', age: 33, gender: 'm'},
-]
+  { name: 'john', age: 20, gender: 'm' },
+  { name: 'marry', age: 22, gender: 'f' },
+  { name: 'samara', age: 24, gender: 'f' },
+  { name: 'paula', age: 24, gender: 'f' },
+  { name: 'bill', age: 33, gender: 'm' },
+];
 
 // Remeda
 R.pipe(
   users,
   R.filter(x => x.gender === 'f'),
-  R.groupBy(x => x.age),
+  R.groupBy(x => x.age)
 );
 
 // Ramda
 R.pipe(
   R.filter(x => x.gender === 'f'),
-  R.groupBy(x => x.age),
-)(users) // broken typings in TS :(
+  R.groupBy(x => x.age)
+)(users); // broken typings in TS :(
 
 // Lodash
 _(users)
   .filter(x => x.gender === 'f')
   .groupBy(x => x.age)
-  .value()
+  .value();
 
 // Lodash-fp
 _.flow(
   _.filter(x => x.gender === 'f'),
-  _.groupBy(x => x.age),
-)(users)// broken typings in TS :(
+  _.groupBy(x => x.age)
+)(users); // broken typings in TS :(
 ```
 
 Mixing paradigms can be cumbersome in Lodash because it requires importing two different methods.
@@ -96,12 +93,10 @@ R.pipe(obj, R.pick(['firstName', 'lastName'])); // data-last
 
 R.pick(['firstName', 'lastName'], obj); // error, this won't work!
 R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred
-
 ```
 
+## Lazy evaluation
 
-Lazy evaluation
-----------
 Many functions support lazy evaluation when using `pipe` or `createPipe`. These functions have a `pipeable` tag in the documentation.
 Lazy evaluation is not supported in Ramda and only partially supported in lodash.
 
@@ -129,9 +124,8 @@ const result = R.pipe(
 
 ```
 
+## Indexed version
 
-Indexed version
-----------
 Iterable functions have an extra property `indexed` which is the same function with iterator `(element, index, array)`.
 
 ```js
@@ -144,13 +138,12 @@ R.filter(arr, x => x % 2 === 0); // => [10, 12]
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
 ```
 
-For Lodash and Ramda users
-----------
+## For Lodash and Ramda users
+
 Please check function mapping in [mapping.md](./mapping.md).
 
+## Remeda Design Goals
 
-Remeda Design Goals
-----------
 1. The usage must be programmer friendly, and that's more important than following XYZ paradigm strictly.
 2. Manual annotation should never be required, and proper typings should infer everything. The only exception is the first function in `createPipe`.
 3. ES6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.

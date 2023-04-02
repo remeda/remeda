@@ -15,9 +15,9 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @category Array
  */
 export function partition<T, S extends T>(
-  items: readonly T[],
+  items: ReadonlyArray<T>,
   predicate: (item: T) => item is S
-): [S[], Exclude<T, S>[]];
+): [Array<S>, Array<Exclude<T, S>>];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
@@ -33,9 +33,25 @@ export function partition<T, S extends T>(
  * @category Array
  */
 export function partition<T>(
-  items: readonly T[],
+  items: ReadonlyArray<T>,
   predicate: (item: T) => boolean
-): [T[], T[]];
+): [Array<T>, Array<T>];
+
+/**
+ * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
+ * @param predicate the grouping function
+ * @returns the array of grouped elements.
+ * @signature
+ *    R.partition(fn)(array)
+ * @example
+ *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
+ * @data_last
+ * @indexed
+ * @category Array
+ */
+export function partition<T, S extends T>(
+  predicate: (item: T) => item is S
+): (array: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
@@ -51,7 +67,7 @@ export function partition<T>(
  */
 export function partition<T>(
   predicate: (item: T) => boolean
-): (array: readonly T[]) => [T[], T[]];
+): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function partition() {
   return purry(_partition(false), arguments);
@@ -59,8 +75,8 @@ export function partition() {
 
 const _partition =
   (indexed: boolean) =>
-  <T>(array: T[], fn: PredIndexedOptional<T, any>) => {
-    const ret: [T[], T[]] = [[], []];
+  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+    const ret: [Array<T>, Array<T>] = [[], []];
     array.forEach((item, index) => {
       const matches = indexed ? fn(item, index, array) : fn(item);
       ret[matches ? 0 : 1].push(item);
@@ -69,13 +85,13 @@ const _partition =
   };
 
 export namespace partition {
-  export function indexed<T, K>(
-    array: readonly T[],
+  export function indexed<T>(
+    array: ReadonlyArray<T>,
     predicate: PredIndexed<T, boolean>
-  ): [T[], T[]];
-  export function indexed<T, K>(
+  ): [Array<T>, Array<T>];
+  export function indexed<T>(
     predicate: PredIndexed<T, boolean>
-  ): (array: readonly T[]) => [T[], T[]];
+  ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
   export function indexed() {
     return purry(_partition(true), arguments);
   }

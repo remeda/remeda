@@ -1,7 +1,6 @@
 import { fromPairs } from './fromPairs';
-import { AssertEqual } from './_types';
 
-const tuples: [string, number][] = [
+const tuples: Array<[string, number]> = [
   ['a', 1],
   ['b', 2],
   ['c', 3],
@@ -29,18 +28,13 @@ describe('fromPairs', () => {
 describe('typings', () => {
   test('arrays', () => {
     const actual = fromPairs(tuples);
-    const result: AssertEqual<typeof actual, Record<string, number>> = true;
-    expect(result).toBe(true);
+    assertType<Record<string, number>>(actual);
   });
   test('arrays with mixed type value', () => {
     const actual = fromPairs<string | number>([
       ['a', 2],
       ['b', 'c'],
     ]);
-    const result: AssertEqual<
-      typeof actual,
-      Record<string, string | number>
-    > = true;
-    expect(result).toBe(true);
+    assertType<Record<string, string | number>>(actual);
   });
 });

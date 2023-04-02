@@ -36,8 +36,8 @@ export function mapValues(arg1: any, arg2?: any): any {
 }
 
 function _mapValues(obj: any, fn: (key: string, value: any) => any) {
-  return Object.keys(obj).reduce((acc, key) => {
+  return Object.keys(obj).reduce<any>((acc, key) => {
     acc[key] = fn(obj[key], key);
     return acc;
-  }, {} as any);
+  }, {});
 }

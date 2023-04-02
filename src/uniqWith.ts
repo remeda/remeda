@@ -19,7 +19,10 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @data_first
  * @category Array
  */
-export function uniqWith<T>(array: readonly T[], isEquals: IsEquals<T>): T[];
+export function uniqWith<T>(
+  array: ReadonlyArray<T>,
+  isEquals: IsEquals<T>
+): Array<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
@@ -40,19 +43,19 @@ export function uniqWith<T>(array: readonly T[], isEquals: IsEquals<T>): T[];
  */
 export function uniqWith<T>(
   isEquals: IsEquals<T>
-): (array: readonly T[]) => T[];
+): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniqWith() {
   return purry(_uniqWith, arguments, uniqWith.lazy);
 }
 
-function _uniqWith<T>(array: T[], isEquals: IsEquals<T>) {
+function _uniqWith<T>(array: Array<T>, isEquals: IsEquals<T>) {
   const lazy = uniqWith.lazy(isEquals);
   return _reduceLazy(array, lazy, true);
 }
 
 function _lazy<T>(isEquals: IsEquals<T>) {
-  return (value: T, index?: number, array?: T[]): LazyResult<T> => {
+  return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
     if (
       array &&
       array.findIndex(otherValue => isEquals(value, otherValue)) === index

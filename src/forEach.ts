@@ -23,7 +23,10 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  * @pipeable
  * @category Array
  */
-export function forEach<T>(array: readonly T[], fn: Pred<T, void>): T[];
+export function forEach<T>(
+  array: ReadonlyArray<T>,
+  fn: Pred<T, void>
+): Array<T>;
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
@@ -49,7 +52,9 @@ export function forEach<T>(array: readonly T[], fn: Pred<T, void>): T[];
  * @pipeable
  * @category Array
  */
-export function forEach<T>(fn: Pred<T, void>): (array: readonly T[]) => T[];
+export function forEach<T>(
+  fn: Pred<T, void>
+): (array: ReadonlyArray<T>) => Array<T>;
 
 export function forEach() {
   return purry(_forEach(false), arguments, forEach.lazy);
@@ -57,7 +62,7 @@ export function forEach() {
 
 const _forEach =
   (indexed: boolean) =>
-  <T, K>(array: T[], fn: PredIndexedOptional<T, K>) => {
+  <T, K>(array: Array<T>, fn: PredIndexedOptional<T, K>) => {
     return _reduceLazy(
       array,
       indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
@@ -68,7 +73,7 @@ const _forEach =
 const _lazy =
   (indexed: boolean) =>
   <T>(fn: PredIndexedOptional<T, void>) => {
-    return (value: T, index?: number, array?: T[]): LazyResult<T> => {
+    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
       if (indexed) {
         fn(value, index, array);
       } else {
@@ -84,12 +89,12 @@ const _lazy =
 
 export namespace forEach {
   export function indexed<T>(
-    array: readonly T[],
+    array: ReadonlyArray<T>,
     fn: PredIndexed<T, void>
-  ): T[];
+  ): Array<T>;
   export function indexed<T>(
     fn: PredIndexed<T, void>
-  ): (array: readonly T[]) => T[];
+  ): (array: ReadonlyArray<T>) => Array<T>;
   export function indexed() {
     return purry(_forEach(true), arguments, forEach.lazyIndexed);
   }
