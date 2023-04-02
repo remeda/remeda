@@ -47,25 +47,25 @@ describe('data first typings', () => {
   });
 });
 
-describe('data second', () => {
+describe('data last', () => {
   test('should zip', () => {
-    expect(zipObj(second)(first)).toEqual([
-      [1, 'a'],
-      [2, 'b'],
-      [3, 'c'],
-    ]);
+    expect(zipObj(second)(first)).toEqual({
+      a: 1,
+      b: 2,
+      c: 3,
+    });
   });
   test('should truncate to shorter second', () => {
-    expect(zipObj(shorterSecond)(first)).toEqual([
-      [1, 'a'],
-      [2, 'b'],
-    ]);
+    expect(zipObj(shorterSecond)(first)).toEqual({
+      a: 1,
+      b: 2,
+    });
   });
   test('should truncate to shorter first', () => {
-    expect(zipObj(second)(shorterFirst)).toEqual([
-      [1, 'a'],
-      [2, 'b'],
-    ]);
+    expect(zipObj(second)(shorterFirst)).toEqual({
+      a: 1,
+      b: 2,
+    });
   });
 });
 
