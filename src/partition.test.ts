@@ -1,6 +1,5 @@
 import { partition } from './partition';
 import { pipe } from './pipe';
-import { AssertEqual } from './_types';
 
 const array = [
   { a: 1, b: 1 },
@@ -30,9 +29,7 @@ describe('data first', () => {
       [1, 2],
       ['a', 'b'],
     ]);
-    const result: AssertEqual<typeof actual, [Array<number>, Array<string>]> =
-      true;
-    expect(result).toBe(true);
+    assertType<[Array<number>, Array<string>]>(actual);
   });
   test('partition with type guard in pipe', () => {
     const actual = pipe(
@@ -45,9 +42,7 @@ describe('data first', () => {
       [1, 2],
       ['a', 'b'],
     ]);
-    const result: AssertEqual<typeof actual, [Array<number>, Array<string>]> =
-      true;
-    expect(result).toBe(true);
+    assertType<[Array<number>, Array<string>]>(actual);
   });
   test('partition.indexed', () => {
     expect(partition.indexed(array, (_, index) => index !== 2)).toEqual(
