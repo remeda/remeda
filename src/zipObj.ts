@@ -30,13 +30,18 @@ export function zipObj<F extends string | number | symbol, S extends unknown>(
  */
 export function zipObj<S extends unknown>(
   second: ReadonlyArray<S>
-): <F extends string | number | symbol>(first: ReadonlyArray<F>) => Record<F, S>;
+): <F extends string | number | symbol>(
+  first: ReadonlyArray<F>
+) => Record<F, S>;
 
 export function zipObj() {
   return purry(_zipObj, arguments);
 }
 
-function _zipObj(first: Array<string | number | symbol>, second: Array<unknown>) {
+function _zipObj(
+  first: Array<string | number | symbol>,
+  second: Array<unknown>
+) {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result: Record<string | number | symbol, unknown> = {};
