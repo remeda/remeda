@@ -1,5 +1,5 @@
-import { splitAt } from './splitAt';
 import { purry } from './purry';
+import { splitAt } from './splitAt';
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -36,16 +36,6 @@ export function splitWhen() {
 }
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
-  for (let i = 0; i < array.length; i++) {
-    if (
-      fn(
-        // @ts-expect-error [ts2345] - We are iterating over the array so we know
-        // this is safe.
-        array[i]
-      )
-    ) {
-      return splitAt(array, i);
-    }
-  }
-  return [array, []];
+  const index = array.findIndex(fn);
+  return index >= 0 ? splitAt(array, index) : [array, []];
 }
