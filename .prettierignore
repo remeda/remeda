@@ -1,0 +1,10 @@
+node_modules/
+
+/coverage/
+/dist/
+/docs/
+/examples/
+
+.husky/
+
+yarn.lock
