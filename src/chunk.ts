@@ -1,4 +1,4 @@
-import { IterableContainer, NonEmptyArray } from './_types';
+import type { IterableContainer, NonEmptyArray } from './_types';
 import { purry } from './purry';
 
 type Chunked<T extends IterableContainer> =

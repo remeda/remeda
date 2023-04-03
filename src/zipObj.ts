@@ -39,14 +39,21 @@ export function zipObj() {
 }
 
 function _zipObj(
-  first: Array<string | number | symbol>,
-  second: Array<unknown>
+  keys: ReadonlyArray<string | number | symbol>,
+  values: ReadonlyArray<unknown>
 ) {
-  const resultLength =
-    first.length > second.length ? second.length : first.length;
   const result: Record<string | number | symbol, unknown> = {};
-  for (let i = 0; i < resultLength; i++) {
-    result[first[i]] = second[i];
+
+  let index = 0;
+  for (const key of keys) {
+    if (index >= values.length) {
+      break;
+    }
+
+    const value = values[index];
+    index += 1;
+
+    result[key] = value;
   }
 
   return result;

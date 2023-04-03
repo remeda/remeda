@@ -53,10 +53,12 @@ const _groupBy =
       const key = indexed ? fn(item, index, array) : fn(item);
       if (key !== undefined) {
         const actualKey = String(key);
-        if (!ret[actualKey]) {
-          ret[actualKey] = [];
+        let group = ret[actualKey];
+        if (group === undefined) {
+          group = [];
+          ret[actualKey] = group;
         }
-        ret[actualKey].push(item);
+        group.push(item);
       }
     });
     return ret;
