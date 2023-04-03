@@ -44,7 +44,10 @@ function _zipObj(
 ) {
   const result: Record<string | number | symbol, unknown> = {};
 
+  // TODO: If we use ES2015 (i think) we can use `Array.entries()` to iterate
+  // using for...of loops on both the item and the index.
   let index = 0;
+
   for (const key of keys) {
     if (index >= values.length) {
       break;
