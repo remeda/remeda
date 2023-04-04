@@ -51,7 +51,10 @@ function _sample<T>(items: Array<T>, options: number | SampleType) {
  * @category Array
  */
 export function sample<T>(items: ReadonlyArray<T>, size: number): Array<T>;
-export function sample<T>(items: ReadonlyArray<T>, options: SampleType): Array<T>;
+export function sample<T>(
+  items: ReadonlyArray<T>,
+  options: SampleType
+): Array<T>;
 
 /**
  * Returns random elements of the array.
