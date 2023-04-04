@@ -1,4 +1,4 @@
-import { IterableContainer } from './_types';
+import type { IterableContainer } from './_types';
 import { purry } from './purry';
 
 type FirstOut<T extends IterableContainer> = T extends []
