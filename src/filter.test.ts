@@ -1,6 +1,6 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { filter } from './filter';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 
 function assertType<T>(data: T): T {
   return data;
@@ -44,7 +44,7 @@ describe('data_first', () => {
 
 describe('data_last', () => {
   it('filter', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
       filter(x => x % 2 === 1),
@@ -56,7 +56,7 @@ describe('data_last', () => {
   });
 
   it('filter', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
       filter(x => x % 2 === 1),
@@ -68,7 +68,7 @@ describe('data_last', () => {
   });
 
   it('filter with typescript guard', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3, false, 'text'] as const, // Type (1 | 2 | 3 | false | "text")[]
       filter(isNumber),
@@ -79,7 +79,7 @@ describe('data_last', () => {
     expect(result).toEqual([1, 2, 3]);
   });
   it('filter.indexed with typescript guard', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3, false, 'text'] as const, // Type (1 | 2 | 3 | false | "text")[]
       filter.indexed(isNumber),
@@ -90,7 +90,7 @@ describe('data_last', () => {
     expect(result).toEqual([1, 2, 3]);
   });
   it('filter.indexed', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
       filter.indexed((x, i) => x % 2 === 1 && i !== 1),

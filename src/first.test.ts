@@ -1,7 +1,7 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { filter } from './filter';
 import { first } from './first';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 
 function defaultTo<T>(d: T) {
   return function (v: T | undefined | null) {
@@ -19,7 +19,7 @@ test('empty array', () => {
 
 describe('pipe', () => {
   test('as no-fn', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3, 4, 5, 6] as const,
       counter.fn(),
@@ -31,14 +31,14 @@ describe('pipe', () => {
   });
 
   test('as fn', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe([1, 2, 3, 4, 5, 6] as const, counter.fn(), first());
     expect(counter.count).toHaveBeenCalledTimes(1);
     expect(result).toEqual(1);
   });
 
   test('with filter', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 4, 8, 16] as const,
       counter.fn(),
@@ -52,14 +52,14 @@ describe('pipe', () => {
   });
 
   test('empty array', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe([] as const, counter.fn(), first());
     expect(counter.count).toHaveBeenCalledTimes(0);
     expect(result).toEqual(undefined);
   });
 
   test('2 x first()', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [[1, 2, 3], [4, 5], [6]] as const,
       counter.fn(),
@@ -72,8 +72,8 @@ describe('pipe', () => {
   });
 
   test('complex', () => {
-    const counter1 = createCounter();
-    const counter2 = createCounter();
+    const counter1 = createLazyInvocationCounter();
+    const counter2 = createLazyInvocationCounter();
     const result = pipe(
       [[1, 2, 3], [1], [4, 5, 6, 7], [1, 2, 3, 4]] as const,
       counter1.fn(),
