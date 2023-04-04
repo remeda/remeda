@@ -40,9 +40,9 @@ function _sample<T>(items: Array<T>, options: number | SampleType) {
  *    R.sample(array,size)
  *    R.sample(array, {size, repeating})
  * @example
- * R.repeat([1,2,3,4],2); // [3,1]
- * R.repeat([1,2,3,4],{size:5, repeating: true}); // [3,1,2,2,4]
- * R.repeat([1,2,3,4],{size:5, repeating: false}); // [3,1,2,4]
+ * R.sample([1,2,3,4],2); // [3,1]
+ * R.sample([1,2,3,4],{size:5, repeating: true}); // [3,1,2,2,4]
+ * R.sample([1,2,3,4],{size:5, repeating: false}); // [3,1,2,4]
  *    R.pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      R.sumBy(x => x.a)
@@ -66,9 +66,9 @@ export function sample<T>(
  *    R.sample(size)(array)
  *    R.sample({size, repeating})(array)
  * @example
- * R.repeat(2)([1,2,3,4]); // [3,1]
- * R.repeat({size:5, repeating: true},[1,2,3,4]); // [3,1,2,2,4]
- * R.repeat({size:5, repeating: false},[1,2,3,4]); // [3,1,2,4]
+ * R.sample(2)([1,2,3,4]); // [3,1]
+ * R.sample({size:5, repeating: true},[1,2,3,4]); // [3,1,2,2,4]
+ * R.sample({size:5, repeating: false},[1,2,3,4]); // [3,1,2,4]
  * @data_last
  * @category Array
  */
