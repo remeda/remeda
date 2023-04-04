@@ -3,8 +3,12 @@ import { sample } from './sample';
 const list = [1, 2, 3, 4, 5];
 
 describe('data first', () => {
-  beforeEach(() => vi.spyOn(global.Math, 'random').mockReturnValue(0.41));
-  afterEach(() => vi.spyOn(global.Math, 'random').mockRestore());
+  beforeEach(() => {
+    vi.spyOn(global.Math, 'random').mockReturnValue(0.41);
+  });
+  afterEach(() => {
+    vi.spyOn(global.Math, 'random').mockRestore();
+  });
 
   test('sample of 1', () => {
     expect(sample(list, 1)).toEqual([3]);
@@ -26,8 +30,12 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  beforeEach(() => vi.spyOn(global.Math, 'random').mockReturnValue(0.41));
-  afterEach(() => vi.spyOn(global.Math, 'random').mockRestore());
+  beforeEach(() => {
+    vi.spyOn(global.Math, 'random').mockReturnValue(0.41);
+  });
+  afterEach(() => {
+    vi.spyOn(global.Math, 'random').mockRestore();
+  });
   test('sample of 2', () => {
     expect(sample(2)(list)).toEqual([3, 2]);
   });
