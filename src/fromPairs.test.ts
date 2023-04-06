@@ -29,3 +29,119 @@ describe('typings', () => {
     assertType<Record<string, string | number>>(actual);
   });
 });
+
+describe('Strict', () => {
+  test('trivial empty case', () => {
+    const result = fromPairs.strict([] as const);
+    expectTypeOf(result).toEqualTypeOf({} as const);
+    expect(result).toStrictEqual({});
+  });
+
+  test('trivial single entry const case', () => {
+    const result = fromPairs.strict([['a', 1]] as const);
+    expectTypeOf(result).toEqualTypeOf<{ a: 1 }>();
+    expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('trivial multi entry const case', () => {
+    const result = fromPairs.strict([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ] as const);
+    expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 2; c: 3 }>();
+    expect(result).toStrictEqual({ a: 1, b: 2, c: 3 });
+  });
+
+  test('runtime empty well defined array', () => {
+    const arr: ReadonlyArray<['a', 1] | ['b', 2] | ['c', 3]> = [];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
+    expect(result).toStrictEqual({});
+  });
+
+  test('runtime single value well defined array', () => {
+    const arr: ReadonlyArray<['a', 1] | ['b', 2] | ['c', 3]> = [['a', 1]];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
+    expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('runtime multi-value well defined array', () => {
+    const arr: ReadonlyArray<['a', 1] | ['b', 2] | ['c', 3]> = [
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
+    expect(result).toStrictEqual({ a: 1, b: 2, c: 3 });
+  });
+
+  test('runtime mixed tuple with rest (first)', () => {
+    const arr: readonly [['a', 1], ...ReadonlyArray<['b', 2] | ['c', 3]>] = [
+      ['a', 1],
+    ];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('runtime mixed tuple with rest (last)', () => {
+    const arr: readonly [...ReadonlyArray<['b', 2] | ['c', 3]>, ['a', 1]] = [
+      ['a', 1],
+    ];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('runtime empty generic type', () => {
+    const arr: ReadonlyArray<readonly [string, boolean]> = [];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
+    expect(result).toStrictEqual({});
+  });
+
+  test('runtime single value generic type', () => {
+    const arr: ReadonlyArray<readonly [string, boolean]> = [['hello', true]];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
+    expect(result).toStrictEqual({ hello: true });
+  });
+
+  test('runtime multi-value generic type', () => {
+    const arr: ReadonlyArray<readonly [string, boolean]> = [
+      ['hello', true],
+      ['world', false],
+    ];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
+    expect(result).toStrictEqual({ hello: true, world: false });
+  });
+
+  test('mixed literals and generics', () => {
+    const arr: ReadonlyArray<
+      readonly ['a', 1] | readonly [`testing_${string}`, boolean]
+    > = [['a', 1]];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<
+      { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
+    >();
+    expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('backwards compatibility (number)', () => {
+    const arr: ReadonlyArray<readonly [number, 123]> = [[1, 123]];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Record<number, 123>>();
+    expect(result).toStrictEqual({ 1: 123 });
+  });
+
+  test('backwards compatibility (string)', () => {
+    const arr: ReadonlyArray<readonly [string, 123]> = [['a', 123]];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
+    expect(result).toStrictEqual({ a: 123 });
+  });
+});
