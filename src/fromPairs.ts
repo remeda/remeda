@@ -59,6 +59,13 @@ type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
   ? FromPairsArray<Entries>
   : 'ERROR: Entries array-like could not be infered';
 
+// For strict tuples we build the result by intersecting each pair as a record
+// between it's key and value, recursively. The recursion goes through our main
+// type so that we support tuples which also contain rest parts.
+type FromPairsTuple<E, Rest> = E extends Entry
+  ? Record<E[0], E[1]> & StrictOut<Rest>
+  : 'ERROR: Array-like contains a non-entry element';
+
 // For the array case we also need to handle what kind of keys it defines:
 // 1. If it defines a generic key (one that has an infinite set of values, like
 // number or even `myTemplate_${string}`) then the result is a simple record.
@@ -91,13 +98,6 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],
   Entry
 >[0];
-
-// For strict tuples we build the result by intersecting each pair as a record
-// between it's key and value, recursively. The recursion goes through our main
-// type so that we support tuples which also contain rest parts.
-type FromPairsTuple<E, Rest> = E extends Entry
-  ? Record<E[0], E[1]> & StrictOut<Rest>
-  : 'ERROR: Array-like contains a non-entry element';
 
 export namespace fromPairs {
   // Strict is simply a retyping of fromPairs, it runs the same runtime logic.
