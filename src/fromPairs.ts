@@ -45,12 +45,13 @@ type Strict = <Entries extends IterableContainer<Entry>>(
   entries: Entries
 ) => StrictOut<Entries>;
 
-// The 2 kinds of arrays we accept result in different kinds of output.
-// 1. If the input is a strict tuple, we know exactly what pairs it would hold,
-// and thus can type the result so that all keys are required.
-// 2. If the input is an array (or a tuple with a rest part) then any keys
-// defined in the array might not actually show up in runtime, and thus need to
-// be optional in order (e.g. if the input is an empty array).
+// The 2 kinds of arrays we accept result in different kinds of outputs:
+// 1. If the input is a *tuple*, we know exactly what pairs it would hold,
+// and thus can type the result so that the keys are required. We will then run
+// recusrisvely on the rest of the tuple.
+// 2. If the input is an *array* then any keys defined in the array might not
+// actually show up in runtime, and thus need to be optional. (e.g. if the input
+// is an empty array).
 type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
   ? FromPairsTuple<First, Tail>
   : Entries extends readonly [...infer Head, infer Last]
@@ -67,11 +68,11 @@ type FromPairsTuple<E, Rest> = E extends Entry
   : 'ERROR: Array-like contains a non-entry element';
 
 // For the array case we also need to handle what kind of keys it defines:
-// 1. If it defines a generic key (one that has an infinite set of values, like
-// number or even `myTemplate_${string}`) then the result is a simple record.
-// 2. But if the keys are literal types, then we need to make the record
-// partial (because those props are explicit), and we need to match each key
-// it's specific possible value, as defined by the pairs.
+// 1. If it defines a *broad* key (one that has an infinite set of values, like
+// number or string) then the result is a simple record.
+// 2. If the keys are *literals* then we need to make the record partial
+// (because those props are explicit), and we need to match each key it's
+// specific possible value, as defined by the pairs.
 //
 // Note that this destinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
