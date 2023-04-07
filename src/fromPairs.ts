@@ -78,14 +78,15 @@ type FromPairsArray<Entries extends IterableContainer<Entry>> =
     ? Record<symbol, Entries[number][1]>
     : FromPairsArrayWithLiteralKeys<Entries>;
 
-// This type is largely copied from ts-extra's objectFromEntries. The only
-// change I did was make the mapping optional because we only use this type for
-// the cases where the keys are literals.
+// This type is largely copied from `objectFromEntries` in the repo:
+// *sindresorhus/ts-extras*. I think that type had a bug where the results were
+// not optional though, so I fixed it and made all props mapped here optional.
+// Also, that type has a binding to a `Key` generic which I don't think is
+// needed as the type works fine without it.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
 type FromPairsArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> = {
   [K in AllKeys<Entries>]?: Extract<Entries[number], readonly [K, unknown]>[1];
 };
-
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],
   Entry
