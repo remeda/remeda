@@ -10,7 +10,9 @@ function _sample<T>(items: Array<T>, options: number | SampleType) {
   const repeating = typeof options === 'object' && options?.repeating;
 
   let size = items.length;
-  items = [...items];
+
+  // we only need a copy if we're in non-repeating mode
+  if (!repeating) items = [...items];
 
   if (nbrSamples > size && !repeating) nbrSamples = size;
 
@@ -18,8 +20,9 @@ function _sample<T>(items: Array<T>, options: number | SampleType) {
 
   for (let i = 0; i < nbrSamples; i++) {
     const index = Math.floor(Math.random() * size);
-    const value = items[index];
-    sample.push(value);
+
+    sample.push(items[index]);
+
     if (!repeating) {
       items[index] = items[size - 1];
       size--;
