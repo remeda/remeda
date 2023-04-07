@@ -54,14 +54,16 @@ type Strict = <
 // 2. If the input is an array (or a tuple with a rest part) then any keys
 // defined in the array might not actually show up in runtime, and thus need to
 // be optional in order (e.g. if the input is an empty array).
-type StrictOut<
-  Key extends PropertyKey,
-  Entries extends IterableContainer<Entry<Key>>
-> = Entries extends readonly [infer First, ...infer Rest]
+type StrictOut<Key extends PropertyKey, Entries> = Entries extends readonly [
+  infer First,
+  ...infer Rest
+]
   ? FromPairsTuple<Key, First, Rest>
   : Entries extends readonly [...infer Rest, infer Last]
   ? FromPairsTuple<Key, Last, Rest>
-  : FromPairsArray<Key, Entries>;
+  : Entries extends IterableContainer<Entry<Key>>
+  ? FromPairsArray<Key, Entries>
+  : 'ERROR: Entries array-like could not be infered';
 
 // For the array case we also need to handle what kind of keys it defines:
 // 1. If it defines a generic key (one that has an infinite set of values, like
@@ -76,11 +78,11 @@ type StrictOut<
 type FromPairsArray<
   Key extends PropertyKey,
   Entries extends IterableContainer<Entry<Key>>
-> = string extends Extract<Entries[number], readonly [Key, unknown]>[0]
+> = string extends AllKeys<Key, Entries>
   ? Record<string, Entries[number][1]>
-  : number extends Extract<Entries[number], readonly [Key, unknown]>[0]
+  : number extends AllKeys<Key, Entries>
   ? Record<number, Entries[number][1]>
-  : symbol extends Extract<Entries[number], readonly [Key, unknown]>[0]
+  : symbol extends AllKeys<Key, Entries>
   ? Record<symbol, Entries[number][1]>
   : FromPairsArrayWithLiteralKeys<Key, Entries>;
 
@@ -92,20 +94,23 @@ type FromPairsArrayWithLiteralKeys<
   Key extends PropertyKey,
   Entries extends IterableContainer<Entry<Key>>
 > = {
-  [K in Extract<Entries[number], readonly [Key, unknown]>[0]]?: Extract<
+  [K in AllKeys<Key, Entries>]?: Extract<
     Entries[number],
     readonly [K, unknown]
   >[1];
 };
 
+type AllKeys<
+  Key extends PropertyKey,
+  Entries extends IterableContainer<Entry<Key>>
+> = Extract<Entries[number], readonly [Key, unknown]>[0];
+
 // For strict tuples we build the result by intersecting each pair as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromPairsTuple<Key extends PropertyKey, E, Rest> = E extends Entry<Key>
-  ? Rest extends IterableContainer<Entry<Key>>
-    ? Record<E[0], E[1]> & StrictOut<Key, Rest>
-    : never
-  : never;
+  ? Record<E[0], E[1]> & StrictOut<Key, Rest>
+  : 'ERROR: Array-like contains a non-entry element';
 
 export namespace fromPairs {
   // Strict is simply a retyping of fromPairs, it runs the same runtime logic.
