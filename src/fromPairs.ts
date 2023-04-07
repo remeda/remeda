@@ -1,6 +1,6 @@
 import { IterableContainer } from './_types';
 
-type Pair<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
+type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
   value: Value
 ];
@@ -12,7 +12,7 @@ type Pair<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param tuples the list of input tuples
+ * @param pairs the list of input tuples
  * @signature
  *   R.fromPairs(tuples)
  *   R.fromPairs.strict(tuples)
@@ -23,17 +23,17 @@ type Pair<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @strict
  */
 export function fromPairs<V>(
-  tuples: ReadonlyArray<Pair<number, V>>
+  pairs: ReadonlyArray<Entry<number, V>>
 ): Record<number, V>;
 export function fromPairs<V>(
-  tuples: ReadonlyArray<Pair<string, V>>
+  pairs: ReadonlyArray<Entry<string, V>>
 ): Record<string, V>;
 
 export function fromPairs(
-  tuples: ReadonlyArray<Pair>
+  entries: ReadonlyArray<Entry>
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
-  for (const [key, value] of tuples) {
+  for (const [key, value] of entries) {
     out[key] = value;
   }
   return out;
@@ -43,9 +43,9 @@ export function fromPairs(
 // grained handling of partiality of the output.
 type Strict = <
   Key extends PropertyKey,
-  Entries extends ReadonlyArray<Pair<Key>>
+  Entries extends IterableContainer<Entry<Key>>
 >(
-  items: Entries
+  entries: Entries
 ) => StrictOut<Key, Entries>;
 
 // The 2 kinds of arrays we accept result in different kinds of output.
@@ -56,7 +56,7 @@ type Strict = <
 // be optional in order (e.g. if the input is an empty array).
 type StrictOut<
   Key extends PropertyKey,
-  Entries extends IterableContainer<Pair<Key>>
+  Entries extends IterableContainer<Entry<Key>>
 > = Entries extends readonly [infer First, ...infer Rest]
   ? FromPairsTuple<Key, First, Rest>
   : Entries extends readonly [...infer Rest, infer Last]
@@ -75,7 +75,7 @@ type StrictOut<
 // Record<"a", unknown> is not.
 type FromPairsArray<
   Key extends PropertyKey,
-  Entries extends IterableContainer<Pair<Key>>
+  Entries extends IterableContainer<Entry<Key>>
 > = string extends Extract<Entries[number], readonly [Key, unknown]>[0]
   ? Record<string, Entries[number][1]>
   : number extends Extract<Entries[number], readonly [Key, unknown]>[0]
@@ -90,7 +90,7 @@ type FromPairsArray<
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
 type FromPairsArrayWithLiteralKeys<
   Key extends PropertyKey,
-  Entries extends IterableContainer<Pair<Key>>
+  Entries extends IterableContainer<Entry<Key>>
 > = {
   [K in Extract<Entries[number], readonly [Key, unknown]>[0]]?: Extract<
     Entries[number],
@@ -101,13 +101,9 @@ type FromPairsArrayWithLiteralKeys<
 // For strict tuples we build the result by intersecting each pair as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
-type FromPairsTuple<
-  Key extends PropertyKey,
-  Entry,
-  OtherEntries
-> = Entry extends Pair<Key>
-  ? OtherEntries extends ReadonlyArray<Pair<Key>>
-    ? Record<Entry[0], Entry[1]> & StrictOut<Key, OtherEntries>
+type FromPairsTuple<Key extends PropertyKey, E, Rest> = E extends Entry<Key>
+  ? Rest extends IterableContainer<Entry<Key>>
+    ? Record<E[0], E[1]> & StrictOut<Key, Rest>
     : never
   : never;
 
