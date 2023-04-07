@@ -41,12 +41,9 @@ export function fromPairs(
 
 // Redefining the fromPairs function to allow stricter pairs arrays and fine-
 // grained handling of partiality of the output.
-type Strict = <
-  Key extends PropertyKey,
-  Entries extends IterableContainer<Entry<Key>>
->(
+type Strict = <Entries extends IterableContainer<Entry>>(
   entries: Entries
-) => StrictOut<Key, Entries>;
+) => StrictOut<Entries>;
 
 // The 2 kinds of arrays we accept result in different kinds of output.
 // 1. If the input is a strict tuple, we know exactly what pairs it would hold,
@@ -54,15 +51,12 @@ type Strict = <
 // 2. If the input is an array (or a tuple with a rest part) then any keys
 // defined in the array might not actually show up in runtime, and thus need to
 // be optional in order (e.g. if the input is an empty array).
-type StrictOut<Key extends PropertyKey, Entries> = Entries extends readonly [
-  infer First,
-  ...infer Rest
-]
-  ? FromPairsTuple<Key, First, Rest>
-  : Entries extends readonly [...infer Rest, infer Last]
-  ? FromPairsTuple<Key, Last, Rest>
-  : Entries extends IterableContainer<Entry<Key>>
-  ? FromPairsArray<Key, Entries>
+type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
+  ? FromPairsTuple<First, Tail>
+  : Entries extends readonly [...infer Head, infer Last]
+  ? FromPairsTuple<Last, Head>
+  : Entries extends IterableContainer<Entry>
+  ? FromPairsArray<Entries>
   : 'ERROR: Entries array-like could not be infered';
 
 // For the array case we also need to handle what kind of keys it defines:
@@ -75,41 +69,33 @@ type StrictOut<Key extends PropertyKey, Entries> = Entries extends readonly [
 // Note that this destinction between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
-type FromPairsArray<
-  Key extends PropertyKey,
-  Entries extends IterableContainer<Entry<Key>>
-> = string extends AllKeys<Key, Entries>
-  ? Record<string, Entries[number][1]>
-  : number extends AllKeys<Key, Entries>
-  ? Record<number, Entries[number][1]>
-  : symbol extends AllKeys<Key, Entries>
-  ? Record<symbol, Entries[number][1]>
-  : FromPairsArrayWithLiteralKeys<Key, Entries>;
+type FromPairsArray<Entries extends IterableContainer<Entry>> =
+  string extends AllKeys<Entries>
+    ? Record<string, Entries[number][1]>
+    : number extends AllKeys<Entries>
+    ? Record<number, Entries[number][1]>
+    : symbol extends AllKeys<Entries>
+    ? Record<symbol, Entries[number][1]>
+    : FromPairsArrayWithLiteralKeys<Entries>;
 
 // This type is largely copied from ts-extra's objectFromEntries. The only
 // change I did was make the mapping optional because we only use this type for
 // the cases where the keys are literals.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
-type FromPairsArrayWithLiteralKeys<
-  Key extends PropertyKey,
-  Entries extends IterableContainer<Entry<Key>>
-> = {
-  [K in AllKeys<Key, Entries>]?: Extract<
-    Entries[number],
-    readonly [K, unknown]
-  >[1];
+type FromPairsArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> = {
+  [K in AllKeys<Entries>]?: Extract<Entries[number], readonly [K, unknown]>[1];
 };
 
-type AllKeys<
-  Key extends PropertyKey,
-  Entries extends IterableContainer<Entry<Key>>
-> = Extract<Entries[number], readonly [Key, unknown]>[0];
+type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
+  Entries[number],
+  Entry
+>[0];
 
 // For strict tuples we build the result by intersecting each pair as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
-type FromPairsTuple<Key extends PropertyKey, E, Rest> = E extends Entry<Key>
-  ? Record<E[0], E[1]> & StrictOut<Key, Rest>
+type FromPairsTuple<E, Rest> = E extends Entry
+  ? Record<E[0], E[1]> & StrictOut<Rest>
   : 'ERROR: Array-like contains a non-entry element';
 
 export namespace fromPairs {
