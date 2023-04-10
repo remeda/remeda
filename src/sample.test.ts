@@ -1,32 +1,6 @@
 import { sample } from './sample';
 
 describe('at runtime', () => {
-  describe('identity', () => {
-    it('for full (=== n) sample size', () => {
-      const array = [1, 2, 3];
-      const result = sample(array, 3);
-      expect(result).toBe(array);
-    });
-
-    it('for large (> n) sample sizes', () => {
-      const array = [1, 2, 3];
-      const result = sample(array, 10);
-      expect(result).toBe(array);
-    });
-
-    it('on empty arrays', () => {
-      const array: Array<number> = [];
-      const result = sample(array, 1);
-      expect(result).toBe(array);
-    });
-
-    it('on empty arrays and sample size 0', () => {
-      const array: Array<number> = [];
-      const result = sample(array, 0);
-      expect(result).toBe(array);
-    });
-  });
-
   describe.each([[generateRandomArray()]])('mathy stuff', array => {
     it.each(allIndices(array))(
       'returns the right number of items',
@@ -80,10 +54,36 @@ describe('at runtime', () => {
     });
   });
 
+  describe('identity', () => {
+    it('for full (=== n) sample size', () => {
+      const array = [1, 2, 3];
+      const result = sample(array, 3);
+      expect(result).toBe(array);
+    });
+
+    it('for large (> n) sample sizes', () => {
+      const array = [1, 2, 3];
+      const result = sample(array, 10);
+      expect(result).toBe(array);
+    });
+
+    it('on empty arrays', () => {
+      const array: Array<number> = [];
+      const result = sample(array, 1);
+      expect(result).toBe(array);
+    });
+
+    it('on empty arrays and sample size 0', () => {
+      const array: Array<number> = [];
+      const result = sample(array, 0);
+      expect(result).toBe(array);
+    });
+  });
+
   describe('edge cases', () => {
     it('works on empty arrays', () => {
       const result = sample([], 1);
-      expect(result).toEqual([]);
+      expect(result).toStrictEqual([]);
     });
 
     it('throws on negative sample size', () => {
