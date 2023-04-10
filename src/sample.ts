@@ -46,10 +46,53 @@ type SampledLiteral<
       | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>]
         | SampledLiteral<T, N, [unknown, ...Iteration]>;
 
+/**
+ * Returns a random subset of size `sampleSize` from `array`.
+ *
+ * Maintains and infers most of the typing information that could be passed
+ * along to the output. This means that when using tuples, the output will be
+ * a tuple too, and when using literals, those literals would be preserved.
+ *
+ * The items in the result are kept in the same order as they are in the input.
+ * If you need to get a shuffled response you can pipe the shuffle function
+ * after this one.
+ *
+ * @param array the array
+ * @param sampleSize the number of elements to take
+ * @signature
+ *    R.sample(array, sampleSize)
+ * @example
+ *    R.take(["hello", "world"], 1); // => ["hello"] // typed ["hello" | "world"]
+ * @data_first
+ * @pipeable
+ * @category Array
+ */
 export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
   sampleSize: N
 ): Sampled<T, N>;
+
+/**
+ * Returns a random subset of size `sampleSize` from `array`.
+ *
+ * Maintains and infers most of the typing information that could be passed
+ * along to the output. This means that when using tuples, the output will be
+ * a tuple too, and when using literals, those literals would be preserved.
+ *
+ * The items in the result are kept in the same order as they are in the input.
+ * If you need to get a shuffled response you can pipe the shuffle function
+ * after this one.
+ *
+ * @param array the array
+ * @param sampleSize the number of elements to take
+ * @signature
+ *    R.sample(sampleSize)(array)
+ * @example
+ *    R.take(["hello", "world"], 1); // => ["hello"] // typed ["hello" | "world"]
+ * @data_last
+ * @pipeable
+ * @category Array
+ */
 export function sample<T extends IterableContainer, N extends number = number>(
   sampleSize: N
 ): (data: T) => Sampled<T, N>;
