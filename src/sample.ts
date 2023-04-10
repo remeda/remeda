@@ -1,19 +1,58 @@
 import { IterableContainer } from './_types';
 import { purry } from './purry';
 
-type Out<T extends IterableContainer, N extends number> = N extends 0
-  ? []
-  : T extends []
-  ? []
-  : Array<T[number]>;
+type Sampled<T extends IterableContainer, N extends number> =
+  // Check if N is generic (e.g. not '5' but 'number')
+  number extends N
+    ? SampledGeneric<T>
+    : // We check if the input tuple is shorter than N. We need to check this
+    // outside the recursive loop because T changes inside that loop
+    undefined extends T[N]
+    ? T
+    : SampledLiteral<T, N>;
+
+type SampledGeneric<T extends IterableContainer> =
+  // Stop the recursion when the array is empty
+  T[number] extends never
+    ? T
+    : // As long as the tuple has non-rest elements we continue expanding the type
+    // by both taking the item, and not taking it.
+    T extends readonly [infer First, ...infer Rest]
+    ? [First, ...SampledGeneric<Rest>] | SampledGeneric<Rest>
+    : // Stop the recursion also when we have an array, or the rest element of the
+      // tuple
+      Array<T[number]>;
+
+type SampledLiteral<
+  T extends IterableContainer,
+  N extends number,
+  Iteration extends Array<unknown> = []
+> =
+  // Stop the recursion when the Iteration "array" is full
+  Iteration['length'] extends N
+    ? []
+    : // If the tuple has a defined (non-rest) element, cut it and add it to the
+    // output tuple.
+    T extends readonly [infer First, ...infer Tail]
+    ? [
+        First | Tail[number],
+        ...SampledLiteral<Tail, N, [unknown, ...Iteration]>
+      ]
+    : T extends readonly [...infer Head, infer Last]
+    ? [...SampledLiteral<Head, N, [unknown, ...Iteration]>, Last]
+    : // If the input is an array, or a tuple's rest-element we need to split the
+      // recursion in 2, one type adds an element to the output, and the other
+      // skips it, just like the sample method itself.
+      | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>]
+        | SampledLiteral<T, N, [unknown, ...Iteration]>;
 
 export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
   sampleSize: N
-): Out<T, N>;
+): Sampled<T, N>;
 export function sample<T extends IterableContainer, N extends number = number>(
   sampleSize: N
-): (data: T) => Out<T, N>;
+): (data: T) => Sampled<T, N>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
