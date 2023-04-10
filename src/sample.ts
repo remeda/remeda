@@ -1,21 +1,19 @@
-import { IterableContainer, NonEmptyArray } from './_types';
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
-type Out<T extends IterableContainer> = T['length'] extends 0
+type Out<T extends IterableContainer, N extends number> = N extends 0
   ? []
-  : NonEmptyArray<T>;
+  : T extends []
+  ? []
+  : Array<T[number]>;
 
-export function sample<T extends IterableContainer>(data: T, sampleSize: 0): [];
-export function sample<T extends IterableContainer>(
+export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
-  sampleSize: number
-): Out<T>;
-export function sample<T extends IterableContainer>(
-  sampleSize: 0
-): (data: T) => [];
-export function sample<T extends IterableContainer>(
-  sampleSize: number
-): (data: T) => Out<T>;
+  sampleSize: N
+): Out<T, N>;
+export function sample<T extends IterableContainer, N extends number = number>(
+  sampleSize: N
+): (data: T) => Out<T, N>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
@@ -30,14 +28,14 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
     throw new Error(`sampleSize must be an integer: ${sampleSize}`);
   }
 
-  if (sampleSize === 0) {
-    // Trivial
-    return [];
-  }
-
   if (sampleSize >= data.length) {
     // Trivial
     return data;
+  }
+
+  if (sampleSize === 0) {
+    // Trivial
+    return [];
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.
