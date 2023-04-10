@@ -47,6 +47,21 @@ describe('at runtime', () => {
       }
     );
 
+    it('returns a random result', () => {
+      const collector = new Set<number>();
+      // We iterate because we might hit randomly on the same item several
+      // times. We took a large enough number so that it's unlikely to happen
+      // every time.
+      for (let iteration = 0; iteration < 100; iteration++) {
+        if (collector.size > 1) {
+          break;
+        }
+        const [item] = sample(array, 1);
+        collector.add(item);
+      }
+      expect(collector.size).toBeGreaterThan(1);
+    });
+
     it.each(allIndices(array))("doesn't return repetitions", sampleSize => {
       const result = sample(array, sampleSize);
       expect(result).toHaveLength(new Set(result).size);
