@@ -47,14 +47,14 @@ interface Strict {
   <T extends IterableContainer>(
     items: T,
     cmp: (a: T[number], b: T[number]) => number
-  ): StrictOut<T>;
+  ): Sorted<T>;
 
   <T extends IterableContainer>(cmp: (a: T[number], b: T[number]) => number): (
     items: T
-  ) => StrictOut<T>;
+  ) => Sorted<T>;
 }
 
-type StrictOut<T extends IterableContainer> = {
+type Sorted<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];
 };
 
