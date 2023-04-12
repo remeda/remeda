@@ -103,11 +103,11 @@ export function sample(...args: ReadonlyArray<unknown>): unknown {
 
 function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
   if (sampleSize < 0) {
-    throw new Error(`sampleSize must cannot be negative: ${sampleSize}`);
+    throw new RangeError(`sampleSize must cannot be negative: ${sampleSize}`);
   }
 
   if (!Number.isInteger(sampleSize)) {
-    throw new Error(`sampleSize must be an integer: ${sampleSize}`);
+    throw new RangeError(`sampleSize must be an integer: ${sampleSize}`);
   }
 
   if (sampleSize >= data.length) {
