@@ -130,4 +130,48 @@ describe('typing', () => {
     const result = join(array, ',');
     expectTypeOf(result).toEqualTypeOf<`${string},${'c' | 'd'}`>();
   });
+
+  describe('tuple item types', () => {
+    it('number', () => {
+      const array: [number, number] = [1, 2];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${number},${number}`>();
+    });
+
+    it('string', () => {
+      const array: [string, string] = ['a', 'b'];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${string},${string}`>();
+    });
+
+    it('bigint', () => {
+      const array: [bigint, bigint] = [BigInt(1), BigInt(2)];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${bigint},${bigint}`>();
+    });
+
+    it('boolean', () => {
+      const array: [boolean, boolean] = [true, false];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${boolean},${boolean}`>();
+    });
+
+    it('null', () => {
+      const array: [null, null] = [null, null];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<','>();
+    });
+
+    it('undefined', () => {
+      const array: [undefined, undefined] = [undefined, undefined];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<','>();
+    });
+
+    it('mixed', () => {
+      const array: [number, undefined, string] = [1, undefined, 'a'];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${number},,${string}`>();
+    });
+  });
 });
