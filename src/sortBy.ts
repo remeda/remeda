@@ -1,3 +1,4 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
 type Direction = 'asc' | 'desc';
@@ -115,4 +116,24 @@ function _sortBy<T>(array: Array<T>, sorts: Array<SortRule<T>>): Array<T> {
   };
   const copied = [...array];
   return copied.sort((a: T, b: T) => sort(a, b, sorts[0], sorts.slice(1)));
+}
+
+interface Strict {
+  <T extends IterableContainer>(
+    sort: SortRule<T[number]>,
+    ...sorts: Array<SortRule<T[number]>>
+  ): (data: T) => SortedBy<T>;
+
+  <T extends IterableContainer>(
+    data: T,
+    ...sorts: Array<SortRule<T[number]>>
+  ): SortedBy<T>;
+}
+
+type SortedBy<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};
+
+export namespace sortBy {
+  export const strict: Strict = sortBy;
 }
