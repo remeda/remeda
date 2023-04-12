@@ -107,7 +107,7 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
   }
 
   if (!Number.isInteger(sampleSize)) {
-    throw new RangeError(`sampleSize must be an integer: ${sampleSize}`);
+    throw new TypeError(`sampleSize must be an integer: ${sampleSize}`);
   }
 
   if (sampleSize >= data.length) {
