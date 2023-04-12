@@ -78,4 +78,16 @@ describe('strict', () => {
     const result = sort.strict(array, (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
+
+  it('on mixed types tuple', () => {
+    const array: [number, string, boolean] = [1, 'hello', true];
+    const result = sort.strict(array, () => 1);
+    expectTypeOf(result).toEqualTypeOf<
+      [
+        number | string | boolean,
+        number | string | boolean,
+        number | string | boolean
+      ]
+    >();
+  });
 });
