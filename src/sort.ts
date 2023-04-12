@@ -1,3 +1,4 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
 /**
@@ -40,4 +41,23 @@ function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
   const ret = [...items];
   ret.sort(cmp);
   return ret;
+}
+
+interface Strict {
+  <T extends IterableContainer>(
+    items: T,
+    cmp: (a: T[number], b: T[number]) => number
+  ): StrictOut<T>;
+
+  <T extends IterableContainer>(cmp: (a: T[number], b: T[number]) => number): (
+    items: T
+  ) => StrictOut<T>;
+}
+
+type StrictOut<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};
+
+export namespace sort {
+  export const strict: Strict = sort;
 }
