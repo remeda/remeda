@@ -17,6 +17,10 @@ jobs:
           - 'latest'
           - '~4.9.0'
           - '~4.8.0'
+          # We use features that were added in v4.4 of typescript, so that is
+          # lowest we can go. This also means this is the lowest version we
+          # support. When this value changes in the future it needs to be
+          # communicated to the users.
           - '~4.4.0'
     steps:
       - name: ⬇️ Checkout repo
