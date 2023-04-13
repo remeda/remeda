@@ -133,19 +133,24 @@ const _sortBy = <T>(
   sorts: Readonly<NonEmptyArray<SortRule<T>>>
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
-  [...array].sort(comparer(sorts[0], sorts.slice(1)));
+  [...array].sort(comparer(...sorts));
 
 function comparer<T>(
-  sortRule: SortRule<T>,
-  [nextRule, ...remaining]: Array<SortRule<T>>
+  primaryRule: SortRule<T>,
+  secondaryRule?: SortRule<T>,
+  ...otherRules: ReadonlyArray<SortRule<T>>
 ): (a: T, b: T) => number {
   const [projector, direction] =
-    typeof sortRule === 'function' ? [sortRule, 'asc' as const] : sortRule;
+    typeof primaryRule === 'function'
+      ? [primaryRule, 'asc' as const]
+      : primaryRule;
 
   const comparator = directionComparator(direction);
 
   const nextComparer =
-    nextRule === undefined ? undefined : comparer(nextRule, remaining);
+    secondaryRule === undefined
+      ? undefined
+      : comparer(secondaryRule, ...otherRules);
 
   return (a, b) => {
     const projectedA = projector(a);
