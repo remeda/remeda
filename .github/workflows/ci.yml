@@ -42,7 +42,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - uses: bahmutov/npm-install@v1
-      - run: yarn add typescript@${{ matrix.typescript-version }}
+      - run: yarn add --dev typescript@${{ matrix.typescript-version }}
       - run: yarn compile
 
   test:
