@@ -7,26 +7,8 @@ on:
   pull_request:
 
 jobs:
-  compile:
-    name: compile [node ${{ matrix.node }}]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [14, 16, 18, 19]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Compile
-        run: yarn compile
-
   typecheck:
-    name: TypeScript ${{ matrix.typescript-version }}
+    name: ʦ TypeScript ${{ matrix.typescript-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,13 +19,22 @@ jobs:
           - '~4.8.0'
           - '~4.4.0'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
-      - uses: bahmutov/npm-install@v1
-      - run: yarn add --dev typescript@${{ matrix.typescript-version }}
-      - run: yarn compile
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 📘 Install Typescript
+        run: yarn add --dev typescript@${{ matrix.typescript-version }}
+
+      - name: 🔎 Type check
+        run: yarn compile
 
   test:
     name: test [node ${{ matrix.node }}]
