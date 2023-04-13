@@ -30,3 +30,81 @@ describe('Test for keys', () => {
     });
   });
 });
+
+describe('strict tuple types', () => {
+  test('empty tuple', () => {
+    const array: [] = [];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<typeof array>();
+  });
+
+  test('empty readonly tuple', () => {
+    const array: readonly [] = [];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test('array', () => {
+    const array: Array<number> = [];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<Array<`${number}`>>();
+  });
+
+  test('readonly array', () => {
+    const array: ReadonlyArray<number> = [];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<Array<`${number}`>>();
+  });
+
+  test('tuple', () => {
+    const array: ['a', 1, true] = ['a', 1, true];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<['0', '1', '2']>();
+  });
+
+  test('readonly tuple', () => {
+    const array: readonly ['a', 1, true] = ['a', 1, true];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<['0', '1', '2']>();
+  });
+
+  test('tuple with rest tail', () => {
+    const array: ['a', ...Array<'b'>] = ['a'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<['0', ...Array<`${number}`>]>();
+  });
+
+  test('readonly tuple with rest tail', () => {
+    const array: readonly ['a', ...Array<'b'>] = ['a'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<['0', ...Array<`${number}`>]>();
+  });
+
+  test('tuple with rest head', () => {
+    const array: [...Array<'a'>, 'b'] = ['b'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<[...Array<`${number}`>, `${number}`]>();
+  });
+
+  test('readonly tuple with rest head', () => {
+    const array: readonly [...Array<'a'>, 'b'] = ['b'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<[...Array<`${number}`>, `${number}`]>();
+  });
+
+  test('tuple with rest middle', () => {
+    const array: ['a', ...Array<'b'>, 'c'] = ['a', 'c'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<
+      ['0', ...Array<`${number}`>, `${number}`]
+    >();
+  });
+
+  test('readonly tuple with rest middle', () => {
+    const array: readonly ['a', ...Array<'b'>, 'c'] = ['a', 'c'];
+    const result = keys.strict(array);
+    expectTypeOf(result).toEqualTypeOf<
+      ['0', ...Array<`${number}`>, `${number}`]
+    >();
+  });
+});
