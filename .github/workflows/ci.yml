@@ -33,10 +33,7 @@ jobs:
           - 'latest'
           - '~4.9.0'
           - '~4.8.0'
-          - '~4.0.0'
-          - '~3.0.0'
-          - '~2.0.0'
-          - '~1.0.0'
+          - '~4.4.0'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
