@@ -35,7 +35,7 @@ jobs:
           - 'latest'
           - '~4.9.0'
           - '~4.8.0'
-          - '~4.4.0'
+          - '~4.2.0'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
