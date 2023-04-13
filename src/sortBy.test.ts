@@ -286,13 +286,13 @@ describe('strict (maintains input shape)', () => {
 
   test('tuple with optional values', () => {
     const array: [number?, number?, number?] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy.strict(array, () => 0);
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   test('readonly tuple with optional values', () => {
     const array: readonly [number?, number?, number?] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy.strict(array, () => 0);
     expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
