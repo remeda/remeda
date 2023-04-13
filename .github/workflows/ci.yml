@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
-          - 'latest'
+          - '~5.0.0'
           - '~4.9.0'
           - '~4.8.0'
           # We use features that were added in v4.4 of typescript, so that is
