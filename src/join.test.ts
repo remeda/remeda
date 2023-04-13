@@ -173,5 +173,17 @@ describe('typing', () => {
       const result = join(array, ',');
       expectTypeOf(result).toEqualTypeOf<`${number},,${string}`>();
     });
+
+    it('nullish items', () => {
+      const array: [
+        'prefix' | undefined,
+        'midfix' | undefined,
+        'suffix' | undefined
+      ] = ['prefix', undefined, 'suffix'];
+      const result = join(array, ',');
+      expectTypeOf(result).toEqualTypeOf<`${'prefix' | ''},${'midfix' | ''},${
+        | 'suffix'
+        | ''}`>();
+    });
   });
 });

@@ -7,29 +7,25 @@ type Joined<T extends IterableContainer, Glue extends string> =
   // Empty tuple
   T[number] extends never
     ? ''
-    : // Single Item tuple
-    T extends readonly [infer Only]
-    ? JoinedValue<Only>
+    : // Single item tuple (could be optional too!)
+    T extends readonly [Joinable?]
+    ? `${NullishCoalesce<T[0], ''>}`
     : // Tuple with non-rest element (head)
-    T extends readonly [infer First, ...infer Tail]
-    ? `${JoinedValue<First>}${Glue}${Joined<Tail, Glue>}`
+    T extends readonly [infer First extends Joinable, ...infer Tail]
+    ? `${NullishCoalesce<First, ''>}${Glue}${Joined<Tail, Glue>}`
     : // Tuple with non-rest element (tail)
-    T extends readonly [...infer Head, infer Last]
-    ? `${Joined<Head, Glue>}${Glue}${JoinedValue<Last>}`
+    T extends readonly [...infer Head, infer Last extends Joinable]
+    ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, ''>}`
     : // Arrays and tuple rest-elements, we can't say anything about the output
       string;
 
-type JoinedValue<V> =
-  // `undefined` and `null` are special-cased by join, a regular cast to string
-  // would result in the strings 'undefined' and 'null', but join returns an
-  // empty strings instead.
-  undefined extends V
-    ? ''
-    : null extends V
-    ? ''
-    : V extends NonNullable<Joinable>
-    ? `${V}`
-    : "ERROR: Trying to join a value type that isn't castable to string";
+// `undefined` and `null` are special-cased by join. In typescript
+// `${undefined}` === 'undefined' (and similarly for null), but specifically in
+// the builtin `join` method, they should result in an empty string!
+// @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join#description
+type NullishCoalesce<T, Fallback> = T extends undefined | null
+  ? NonNullable<T> | Fallback
+  : T;
 
 /**
  * Joins the elements of the array by: casting them to a string and
