@@ -117,7 +117,7 @@ export function sortBy<T>(
 ): unknown {
   const args = isSortRule(arrayOrSortRule)
     ? // *data-last invocation*: put all sort rules into a single array to be
-      // past as the first param.
+      // passed as the first param.
       [[arrayOrSortRule, ...sortRules]]
     : // *data-first invocation*: put the arrayOrSort (which is array now) as
       // the first param, and all the sorts (as an array) into the second param.
