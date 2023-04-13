@@ -34,7 +34,9 @@ type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : Array<ObjectKey<T>>;
 // would maintain the shape, even including labels.
 type ArrayKeys<T extends IterableContainer> = {
   -readonly [Index in keyof T]: Index extends string | number
-    ? `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
+    ? // Notice that we coallesce the values as strings, this is because in JS,
+      // Object.keys always returns strings, even for arrays.
+      `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
     : // Index is typed as a symbol, this can't happen, but we need to guard
       // against it for typescript.
       never;
@@ -56,14 +58,16 @@ type IsIndexAfterSpread<
 // would return never.
 type IndicesAfterSpread<
   T extends ReadonlyArray<unknown> | [],
-  Iteration extends ReadonlyArray<unknown> = []
+  // We use this type to count how many items we consumed, it's just a pseudo-
+  // element that is used for its length.
+  Iterations extends ReadonlyArray<unknown> = []
 > = T[number] extends never
   ? never
   : T extends readonly [unknown, ...infer Tail]
-  ? IndicesAfterSpread<Tail, [unknown, ...Iteration]>
+  ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
   : T extends readonly [...infer Head, unknown]
-  ? IndicesAfterSpread<Head, [unknown, ...Iteration]> | Iteration['length']
-  : Iteration['length'];
+  ? IndicesAfterSpread<Head, [unknown, ...Iterations]> | Iterations['length']
+  : Iterations['length'];
 
 type ObjectKey<T> = {
   [K in keyof T]-?: K extends string | number ? `${K}` : never;
