@@ -2,26 +2,42 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
   pull_request:
 
 jobs:
-  compile:
-    name: compile [node ${{ matrix.node }}]
+  typecheck:
+    name: ʦ TypeScript ${{ matrix.typescript-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [14, 16, 18]
+        typescript-version:
+          - '~5.0.0'
+          - '~4.9.0'
+          - '~4.8.0'
+          # We use features that were added in v4.4 of typescript, so that is
+          # the lowest we can go here. This also means this is the lowest
+          # version we support. When this value changes in the future it needs
+          # to be communicated to the users.
+          - '~4.4.0'
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
-      - name: Setup Node.js
+
+      - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Compile
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 📘 Install Typescript
+        run: yarn add --dev typescript@${{ matrix.typescript-version }}
+
+      - name: 🔎 Type check
         run: yarn compile
 
   test:
@@ -29,7 +45,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node:
+          - 19
+          - 18
+          - 16
+          # Our testing infra (vitest) requires node 14 or higher, this
+          # effectively sets our guaranteed minimum supported version as we
+          # aren't testing on anything lower.
+          # When this value changes in the future it needs to be communicated
+          # to the users. (NOTE: because users can use remeda in client-only
+          # code too, this doesn't define the minimum ECMAScript version we
+          # support. That is defined by the tsconfig file.)
+          - 14
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -74,7 +101,7 @@ jobs:
 
   publish:
     needs:
-      - compile
+      - typecheck
       - test
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
