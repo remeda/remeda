@@ -1,6 +1,6 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { find } from './find';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 
 const array = [
   { a: 1, b: 1 },
@@ -23,7 +23,7 @@ describe('data first', () => {
 
 describe('data last', () => {
   test('find', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
       counter.fn(),
@@ -34,7 +34,7 @@ describe('data last', () => {
   });
 
   test('find.indexed', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
       counter.fn(),

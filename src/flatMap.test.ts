@@ -1,7 +1,7 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { find } from './find';
 import { flatMap } from './flatMap';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 
 describe('data_first', () => {
   it('flatMap', () => {
@@ -18,8 +18,8 @@ describe('data_last', () => {
 
   describe('pipe', () => {
     test('with find', () => {
-      const counter1 = createCounter();
-      const counter2 = createCounter();
+      const counter1 = createLazyInvocationCounter();
+      const counter2 = createLazyInvocationCounter();
       const result = pipe(
         [10, 20, 30, 40] as const,
         counter1.fn(),
