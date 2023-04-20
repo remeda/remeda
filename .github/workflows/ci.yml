@@ -24,6 +24,7 @@ jobs:
           - '~4.4.0'
           - '~4.3.0'
           - '~4.2.0'
+
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -35,6 +36,14 @@ jobs:
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
+
+      # Order is important here, we build with the typescript version defined
+      # in package.json, before we overrite it for the tests.
+      # TODO: We are rebuilding everything several times, our builds aren't very
+      # expensive, but we can easily optimize by caching the 'dist' directory
+      # once.
+      - name: Build
+        run: yarn run build
 
       - name: 📘 Install Typescript
         run: yarn add --dev typescript@${{ matrix.typescript-version }}
