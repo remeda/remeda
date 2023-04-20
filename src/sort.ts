@@ -38,7 +38,7 @@ export function sort<T>(
  *    R.sort.strict(cmp)(items)
  * @example
  *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
- *    R.pipe([4, 2] as [number, number], R.sort((a, b) => a - b)) // => [2, 4] typed [number, number]
+ *    R.pipe([4, 2] as [number, number], R.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
  * @data_last
  * @category Array
  * @strict

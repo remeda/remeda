@@ -29,7 +29,7 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }] as const,
- *      R.sortBy(x => x.a)
+ *      R.sortBy.strict(x => x.a)
  *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @data_last
  * @category Array
