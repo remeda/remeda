@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  typecheck:
-    name: ʦ TypeScript ${{ matrix.typescript-version }}
+  typecheck-outputs:
+    name: 🚚 Typecheck Outputs / ${{ matrix.typescript-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -17,11 +17,13 @@ jobs:
           - '~5.0.0'
           - '~4.9.0'
           - '~4.8.0'
-          # We use features that were added in v4.4 of typescript, so that is
+          # We use features that were added in v4.2 of typescript, so that is
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
           # to be communicated to the users.
           - '~4.4.0'
+          - '~4.3.0'
+          - '~4.2.0'
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -36,6 +38,24 @@ jobs:
 
       - name: 📘 Install Typescript
         run: yarn add --dev typescript@${{ matrix.typescript-version }}
+
+      - name: 🔎 Type check
+        run: yarn compile:dist
+
+  typecheck-source:
+    name: 👷 Typecheck Source
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
         run: yarn compile
@@ -101,7 +121,8 @@ jobs:
 
   publish:
     needs:
-      - typecheck
+      - typecheck-source
+      - typecheck-outputs
       - test
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
