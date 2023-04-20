@@ -70,12 +70,12 @@ jobs:
         run: yarn compile
 
   test:
-    name: test [node ${{ matrix.node }}]
+    name: 🧪 Test [Node ${{ matrix.node }}]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node:
-          - 19
+          - 20
           - 18
           - 16
           # Our testing infra (vitest) requires node 14 or higher, this
@@ -87,19 +87,22 @@ jobs:
           # support. That is defined by the tsconfig file.)
           - 14
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
-      - name: Setup Node.js
+
+      - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Run tests
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🧪 Run tests
         run: yarn test:ci
 
   lint:
-    name: lint check
+    name: 🧹 Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -114,7 +117,7 @@ jobs:
         run: yarn lint:check
 
   prettier:
-    name: prettier check
+    name: 💄 Formatting (prettier)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
