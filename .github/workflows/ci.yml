@@ -42,7 +42,7 @@ jobs:
       # TODO: We are rebuilding everything several times, our builds aren't very
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
-      - name: Build
+      - name: 🏗️ Build
         run: yarn run build
 
       - name: 📘 Install Typescript
