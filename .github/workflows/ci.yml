@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  typecheck:
-    name: ʦ TypeScript ${{ matrix.typescript-version }}
+  typecheck-outputs:
+    name: 🚚 Typecheck Outputs / ${{ matrix.typescript-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -17,11 +17,14 @@ jobs:
           - '~5.0.0'
           - '~4.9.0'
           - '~4.8.0'
-          # We use features that were added in v4.4 of typescript, so that is
+          # We use features that were added in v4.2 of typescript, so that is
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
           # to be communicated to the users.
           - '~4.4.0'
+          - '~4.3.0'
+          - '~4.2.0'
+
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -34,19 +37,45 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
+      # Order is important here, we build with the typescript version defined
+      # in package.json, before we overrite it for the tests.
+      # TODO: We are rebuilding everything several times, our builds aren't very
+      # expensive, but we can easily optimize by caching the 'dist' directory
+      # once.
+      - name: 🏗️ Build
+        run: yarn run build
+
       - name: 📘 Install Typescript
         run: yarn add --dev typescript@${{ matrix.typescript-version }}
+
+      - name: 🔎 Type check
+        run: yarn compile:dist
+
+  typecheck-source:
+    name: 👷 Typecheck Source
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
         run: yarn compile
 
   test:
-    name: test [node ${{ matrix.node }}]
+    name: 🧪 Test [Node ${{ matrix.node }}]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node:
-          - 19
+          - 20
           - 18
           - 16
           # Our testing infra (vitest) requires node 14 or higher, this
@@ -58,19 +87,22 @@ jobs:
           # support. That is defined by the tsconfig file.)
           - 14
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
-      - name: Setup Node.js
+
+      - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Run tests
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🧪 Run tests
         run: yarn test:ci
 
   lint:
-    name: lint check
+    name: 🧹 Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -85,7 +117,7 @@ jobs:
         run: yarn lint:check
 
   prettier:
-    name: prettier check
+    name: 💄 Formatting (prettier)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -101,7 +133,8 @@ jobs:
 
   publish:
     needs:
-      - typecheck
+      - typecheck-source
+      - typecheck-outputs
       - test
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
