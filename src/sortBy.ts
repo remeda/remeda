@@ -1,3 +1,4 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
 type Direction = 'asc' | 'desc';
@@ -12,17 +13,27 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
+ *
+ * If the input array is more complex (non-empty array, tuple, etc...) use the
+ * strict mode to maintain it's shape.
+ *
  * @param sort first sort rule
  * @param sorts additional sort rules
  * @signature
  *    R.sortBy(...sorts)(array)
+ *    R.sortBy.strict(...sorts)(array)
  * @example
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
  *      R.sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
+ *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
+ *    R.pipe(
+ *      [{ a: 1 }, { a: 3 }] as const,
+ *      R.sortBy.strict(x => x.a)
+ *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @data_last
  * @category Array
+ * @strict
  */
 export function sortBy<T>(
   sort: SortRule<T>,
@@ -34,16 +45,21 @@ export function sortBy<T>(
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
+ *
+ * If the input array is more complex (non-empty array, tuple, etc...) use the
+ * strict mode to maintain it's shape.
+ *
  * @param array the array to sort
  * @param sorts a list of mapping functions and optional directions
  * @signature
  *    R.sortBy(array, ...sorts)
+ *    R.sortBy.strict(array, ...sorts)
  * @example
  *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
  *      x => x.a
  *    )
- *    // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
+ *    // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
  *
  *    R.sortBy(
  *     [
@@ -59,8 +75,16 @@ export function sortBy<T>(
  *    //   {color: 'green', weight: 1},
  *    //   {color: 'red', weight: 2},
  *    //   {color: 'blue', weight: 3},
+ *    // typed Array<{color: string, weight: number}>
+ *
+ *    R.sortBy.strict(
+ *      [{ a: 1 }, { a: 3 }] as const,
+ *      x => x.a
+ *    )
+ *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @data_first
  * @category Array
+ * @strict
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,
@@ -115,4 +139,24 @@ function _sortBy<T>(array: Array<T>, sorts: Array<SortRule<T>>): Array<T> {
   };
   const copied = [...array];
   return copied.sort((a: T, b: T) => sort(a, b, sorts[0], sorts.slice(1)));
+}
+
+interface Strict {
+  <T extends IterableContainer>(
+    sort: SortRule<T[number]>,
+    ...sorts: Array<SortRule<T[number]>>
+  ): (data: T) => SortedBy<T>;
+
+  <T extends IterableContainer>(
+    data: T,
+    ...sorts: Array<SortRule<T[number]>>
+  ): SortedBy<T>;
+}
+
+type SortedBy<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};
+
+export namespace sortBy {
+  export const strict: Strict = sortBy;
 }

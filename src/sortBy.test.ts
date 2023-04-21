@@ -1,3 +1,4 @@
+import { identity } from './identity';
 import { pipe } from './pipe';
 import { sortBy } from './sortBy';
 
@@ -133,5 +134,79 @@ describe('data last', () => {
       type T = (typeof objects)[number];
       assertType<Array<T>>(actual);
     });
+  });
+});
+
+describe('strict', () => {
+  it('on empty tuple', () => {
+    const array: [] = [];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  it('on empty readonly tuple', () => {
+    const array: readonly [] = [];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  it('on array', () => {
+    const array: Array<number> = [];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  });
+
+  it('on readonly array', () => {
+    const array: ReadonlyArray<number> = [];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  });
+
+  it('on tuple', () => {
+    const array: [1, 2, 3] = [1, 2, 3];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
+  });
+
+  it('on readonly tuple', () => {
+    const array: readonly [1, 2, 3] = [1, 2, 3];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
+  });
+
+  it('on tuple with rest tail', () => {
+    const array: [number, ...Array<number>] = [1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  });
+
+  it('on readonly tuple with rest tail', () => {
+    const array: readonly [number, ...Array<number>] = [1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  });
+
+  it('on tuple with rest head', () => {
+    const array: [...Array<number>, number] = [1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  });
+
+  it('on readonly tuple with rest head', () => {
+    const array: readonly [...Array<number>, number] = [1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  });
+
+  it('on mixed types tuple', () => {
+    const array: [number, string, boolean] = [1, 'hello', true];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<
+      [
+        number | string | boolean,
+        number | string | boolean,
+        number | string | boolean
+      ]
+    >();
   });
 });
