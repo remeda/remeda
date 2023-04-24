@@ -1,6 +1,7 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
-type FirstOut<T extends ReadonlyArray<unknown> | []> = T extends []
+type FirstOut<T extends IterableContainer> = T extends []
   ? undefined
   : T extends readonly [unknown, ...Array<unknown>]
   ? T[0]
@@ -27,10 +28,10 @@ type FirstOut<T extends ReadonlyArray<unknown> | []> = T extends []
  * @category array
  * @pipeable
  */
-export function first<T extends ReadonlyArray<unknown> | []>(
+export function first<T extends IterableContainer>(
   array: Readonly<T>
 ): FirstOut<T>;
-export function first<T extends ReadonlyArray<unknown> | []>(): (
+export function first<T extends IterableContainer>(): (
   array: Readonly<T>
 ) => FirstOut<T>;
 

@@ -1,7 +1,7 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { find } from './find';
 import { flatten } from './flatten';
 import { pipe } from './pipe';
-import { createCounter } from './_counter';
 
 test('flatten', () => {
   expect(flatten([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);
@@ -28,8 +28,8 @@ describe('pipe', () => {
   });
 
   test('with find', () => {
-    const counter1 = createCounter();
-    const counter2 = createCounter();
+    const counter1 = createLazyInvocationCounter();
+    const counter2 = createLazyInvocationCounter();
     const result = pipe(
       [[1, 2], 3, [4, 5]] as const,
       counter1.fn(),
