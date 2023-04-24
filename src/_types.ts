@@ -20,4 +20,4 @@ export type NonEmptyArray<T> = [T, ...Array<T>];
  *
  * @see This was inspired by the type-definition of Promise.all (https://github.com/microsoft/TypeScript/blob/1df5717b120cddd325deab8b0f2b2c3eecaf2b01/src/lib/es2015.promise.d.ts#L21)
  */
-export type IterableContainer = ReadonlyArray<unknown> | [];
+export type IterableContainer<T = unknown> = ReadonlyArray<T> | [];
