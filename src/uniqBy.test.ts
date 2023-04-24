@@ -1,5 +1,5 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { identity } from './identity';
-import { createCounter } from './_counter';
 // import { uniq } from './uniq';
 import { pipe } from './pipe';
 import { take } from './take';
@@ -51,7 +51,7 @@ describe('uniqBy', () => {
 
   describe('pipe', () => {
     it('gets executed until target length is reached', () => {
-      const counter = createCounter();
+      const counter = createLazyInvocationCounter();
       const result = pipe(
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),
@@ -64,7 +64,7 @@ describe('uniqBy', () => {
     });
 
     it('get executed 3 times when take before uniqBy', () => {
-      const counter = createCounter();
+      const counter = createLazyInvocationCounter();
       const result = pipe(
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),

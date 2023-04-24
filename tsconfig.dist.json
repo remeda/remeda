@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "include": ["dist"],
+
+  "compilerOptions": {
+    "strict": true,
+
+    "noEmit": true,
+
+    "skipDefaultLibCheck": false,
+    "skipLibCheck": false
+  }
+}
