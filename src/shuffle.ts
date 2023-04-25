@@ -1,8 +1,7 @@
 import { purry } from './purry';
 
 /**
- * Creates an array of shuffled values, using the
- * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
+ * Shuffles the input array, returning a new array with the same elements in a random order.
  * @param items the array to shuffle
  * @signature
  *    R.shuffle(array)
@@ -14,8 +13,7 @@ import { purry } from './purry';
 export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 
 /**
- * Creates an array of shuffled values, using the
- * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
+ * Shuffles the input array, returning a new array with the same elements in a random order.
  * @signature
  *    R.shuffle()(array)
  * @example
