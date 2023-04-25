@@ -17,11 +17,9 @@
     "noEmit": true,
 
     // LANGUAGE and ENVIRONMENT
-    "lib": ["ES6", "ES2017.Object"],
-    // TODO: The recommended target is ES2015 (ES6). Node10 supports es2018 and
-    // the vast majority of browsers are probably above that too already. It's
-    // most likely safe to up this value, and it would probably result in a
-    // smaller package size.
-    "target": "ES5"
+    "lib": ["ES2015", "ES2017.Object"],
+    // TODO: If we already assume we use parts of ES2017 in the lib, it makes
+    // sense to simply use that as the baseline target for everything.
+    "target": "ES2015"
   }
 }
