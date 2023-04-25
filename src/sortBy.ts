@@ -1,6 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
 import type { IterableContainer, NonEmptyArray } from './_types';
+import { purry } from './purry';
 
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
 type Direction = (typeof ALL_DIRECTIONS)[number];
@@ -16,25 +15,18 @@ const DESCENDING_COMPARATOR = <T>(x: T, y: T) => x < y;
 
 /**
  * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be
- * stable.
- *
- * Directions are applied to functions in order and default to ascending if not
- * specified.
- *
- * To maintain the shape of the input (e.g. if the array is NonEmpty), and/or to
- * support more complex arrays and tuple types use the `strict` flavour.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
  *
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
  *
- * @param sort first sort rule
- * @param sortRules additional sort rules
+ * @param sortRule main sort rule
+ * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
  * @signature
- *    R.sortBy(sortRule, ...otherSortRules)(array)
- *    R.sortBy.strict(sortRule, ...otherSortRules)(array)
+ *    R.sortBy(sortRule, ...additionalSortRules)(array)
+ *    R.sortBy.strict(sortRule, ...additionalSortRules)(array)
  * @example
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -47,7 +39,6 @@ const DESCENDING_COMPARATOR = <T>(x: T, y: T) => x < y;
  * @data_last
  * @category Array
  * @strict
- * @strict
  */
 export function sortBy<T>(
   ...sortRules: Readonly<NonEmptyArray<SortRule<T>>>
@@ -55,14 +46,7 @@ export function sortBy<T>(
 
 /**
  * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be
- * stable.
- *
- * Directions are applied to functions in order and default to ascending if not
- * specified.
- *
- * To maintain the shape of the input (e.g. if the array is NonEmpty), and/or to
- * support more complex arrays and tuple types use the `strict` flavour.
+ * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * Directions are applied to functions in order and default to ascending if not specified.
  *
@@ -70,10 +54,11 @@ export function sortBy<T>(
  * strict mode to maintain it's shape.
  *
  * @param array the array to sort
- * @param sortRules a list of mapping functions and optional directions
+ * @param sortRule main sort rule
+ * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
  * @signature
- *    R.sortBy(array, sortRule, ...otherSortRules)
- *    R.sortBy.strict(array, sortRule, ...otherSortRules)
+ *    R.sortBy(array, sortRule, ...additionalSortRules)
+ *    R.sortBy.strict(array, sortRule, ...additionalSortRules)
  * @example
  *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -126,25 +111,6 @@ export function sortBy<T>(
       [arrayOrSortRule, sortRules];
 
   return purry(_sortBy, args);
-}
-
-interface Strict {
-  <T extends IterableContainer>(
-    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
-  ): (array: T) => SortedBy<T>;
-
-  <T extends IterableContainer>(
-    array: T,
-    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
-  ): SortedBy<T>;
-}
-
-type SortedBy<T extends IterableContainer> = {
-  -readonly [K in keyof T]: T[number];
-};
-
-export namespace sortBy {
-  export const strict: Strict = sortBy;
 }
 
 function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
@@ -223,13 +189,12 @@ function directionComparator(direction: Direction): <T>(a: T, b: T) => boolean {
 
 interface Strict {
   <T extends IterableContainer>(
-    sort: SortRule<T[number]>,
-    ...sorts: Array<SortRule<T[number]>>
-  ): (data: T) => SortedBy<T>;
+    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
+  ): (array: T) => SortedBy<T>;
 
   <T extends IterableContainer>(
-    data: T,
-    ...sorts: Array<SortRule<T[number]>>
+    array: T,
+    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
   ): SortedBy<T>;
 }
 
