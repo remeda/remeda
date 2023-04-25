@@ -11,10 +11,10 @@ type Joined<T extends IterableContainer, Glue extends string> =
     T extends readonly [Joinable?]
     ? `${NullishCoalesce<T[0], ''>}`
     : // Tuple with non-rest element (head)
-    T extends readonly [infer First extends Joinable, ...infer Tail]
+    T extends readonly [infer First, ...infer Tail]
     ? `${NullishCoalesce<First, ''>}${Glue}${Joined<Tail, Glue>}`
     : // Tuple with non-rest element (tail)
-    T extends readonly [...infer Head, infer Last extends Joinable]
+    T extends readonly [...infer Head, infer Last]
     ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, ''>}`
     : // Arrays and tuple rest-elements, we can't say anything about the output
       string;
@@ -23,9 +23,11 @@ type Joined<T extends IterableContainer, Glue extends string> =
 // `${undefined}` === 'undefined' (and similarly for null), but specifically in
 // the builtin `join` method, they should result in an empty string!
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join#description
-type NullishCoalesce<T, Fallback> = T extends undefined | null
-  ? NonNullable<T> | Fallback
-  : T;
+type NullishCoalesce<T, Fallback> = T extends Joinable
+  ? T extends undefined | null
+    ? NonNullable<T> | Fallback
+    : T
+  : never;
 
 /**
  * Joins the elements of the array by: casting them to a string and
