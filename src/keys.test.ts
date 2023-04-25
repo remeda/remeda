@@ -108,3 +108,63 @@ describe('strict tuple types', () => {
     >();
   });
 });
+
+describe('strict object types', () => {
+  test('empty record (string)', () => {
+    const obj: Record<string, never> = {};
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test('empty record (number)', () => {
+    const obj: Record<number, never> = {};
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test('empty record (const)', () => {
+    const obj = {} as const;
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test('simple (required) object', () => {
+    const obj: { a: string; b: number; c: boolean } = { a: 'a', b: 1, c: true };
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<Array<'a' | 'b' | 'c'>>();
+  });
+
+  test('simple partial object', () => {
+    const obj: { a?: string; b?: number; c?: boolean } = {
+      a: 'a',
+      b: 1,
+      c: true,
+    };
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<Array<'a' | 'b' | 'c'>>();
+  });
+
+  test('object with index signature', () => {
+    const obj: { [keys: string]: string; a: string } = {
+      hello: 'world',
+      a: 'goodbye',
+    };
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+
+  test('Record with literal union', () => {
+    const obj: Record<'a' | 'b', number> = { a: 1, b: 2 };
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<Array<'a' | 'b'>>();
+  });
+
+  test('Record with template string literal', () => {
+    const obj: Record<`param_${number}`, string> = {
+      param_123: 'hello',
+      param_456: 'world',
+    };
+    const result = keys.strict(obj);
+    expectTypeOf(result).toEqualTypeOf<Array<`param_${number}`>>();
+  });
+});
