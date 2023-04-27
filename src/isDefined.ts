@@ -13,3 +13,9 @@
 export function isDefined<T>(data: T): data is NonNullable<T> {
   return typeof data !== 'undefined' && data !== null;
 }
+
+export namespace isDefined {
+  export function strict<T>(data: T | undefined): data is T {
+    return data !== undefined;
+  }
+}

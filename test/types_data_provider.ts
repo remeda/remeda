@@ -48,6 +48,7 @@ export const typesDataProvider = (
       return { a: 'asd' };
     case 'error':
       return new Error('asd');
+    case 'undefined':
+      return undefined;
   }
-  return 'text';
 };
