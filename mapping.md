@@ -35,6 +35,7 @@ documentation when migrating._
 | `forEachObj`     | `forEach`        | `forEachObjIndexed` |
 | `groupBy`        | `groupBy`        | `groupBy`           |
 | `identity`       | `identity`       | `identity`          |
+| `isEmpty`        | `isEmpty`        | `isEmpty`           |
 | `isNil`          | `isNil`          | `isNil`             |
 | `indexBy`        | `keyBy`          | `indexBy`           |
 | `intersection`   | `intersection`   | `intersection`      |
