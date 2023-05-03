@@ -2,6 +2,13 @@ import { isArray } from './isArray';
 import { isObject } from './isObject';
 import { isString } from './isString';
 
+type Data =
+  | ReadonlySet<unknown>
+  | ReadonlyMap<unknown, unknown>
+  | ArrayLike<unknown>
+  | string
+  | Record<string, unknown>;
+
 /**
  * A function that checks if the passed parameter is empty
  * @param data the variable to check
@@ -16,12 +23,9 @@ import { isString } from './isString';
  *    R.isEmpty(new Map()) //=> true
  *    R.isEmpty([1, 2, 3]) //=> false
  *    R.isEmpty({ length: 0 }) //=> false
- *    R.isEmpty(null) //=> false
- *    R.isEmpty(1) //=> false
- *    R.isEmpty(true) //=> false
  * @category Function
  */
-export function isEmpty<T>(data: T) {
+export function isEmpty(data: Data): boolean {
   if (data instanceof Set || data instanceof Map) {
     return data.size === 0;
   }
