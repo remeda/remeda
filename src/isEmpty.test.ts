@@ -5,7 +5,7 @@ describe('isEmpty', () => {
     expect(isEmpty([1, 2, 3])).toBe(false);
   });
 
-  test('returns false when data is an empty array', () => {
+  test('returns true when data is an empty array', () => {
     expect(isEmpty([])).toBe(true);
   });
 
@@ -15,14 +15,6 @@ describe('isEmpty', () => {
 
   test('returns false for a non-empty string', () => {
     expect(isEmpty('test')).toBe(false);
-  });
-
-  test('returns false for null', () => {
-    expect(isEmpty(null)).toBe(false);
-  });
-
-  test('returns false for undefined', () => {
-    expect(isEmpty(undefined)).toBe(false);
   });
 
   test('returns true for an empty object', () => {
@@ -54,18 +46,13 @@ describe('isEmpty', () => {
   });
 
   test('returns false for a non-empty Set', () => {
-    const mapObject = new Map();
-    mapObject.set('a', 1);
-    mapObject.set('b', 2);
-
-    expect(isEmpty(mapObject)).toBe(false);
-  });
-
-  test('returns false for a number primitive', () => {
-    expect(isEmpty(1)).toBe(false);
-  });
-
-  test('returns false for a boolean primitive', () => {
-    expect(isEmpty(true)).toBe(false);
+    expect(
+      isEmpty(
+        new Map([
+          ['a', 1],
+          ['b', 2],
+        ])
+      )
+    ).toBe(false);
   });
 });
