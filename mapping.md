@@ -68,6 +68,7 @@ documentation when migrating._
 | `splitAt`        | `-`              | `splitAt`           |
 | `splitWhen`      | `-`              | `splitWhen`         |
 | `sumBy`          | `sumBy`          | `-`                 |
+| `switchCase`     | `-`              | `-`                 |
 | `take`           | `take`           | `take`              |
 | `takeWhile`      | `takeWhile`      | `takeWhile`         |
 | `times`          | `times`          | `times`             |
