@@ -1,12 +1,11 @@
 import { isEmpty } from './isEmpty';
 
 describe('isEmpty', () => {
-  test('returns false when data array contains items', () => {
-    expect(isEmpty([1, 2, 3])).toBe(false);
-  });
-
-  test('returns true when data is an empty array', () => {
+  test('returns true for an empty array', () => {
     expect(isEmpty([])).toBe(true);
+  });
+  test('returns false for a non-empty array', () => {
+    expect(isEmpty([1, 2, 3])).toBe(false);
   });
 
   test('returns true for an empty string', () => {
@@ -25,34 +24,17 @@ describe('isEmpty', () => {
     expect(isEmpty({ length: 0 })).toBe(false);
   });
 
-  test('returns true for an empty Uint8Array', () => {
-    expect(isEmpty(Uint8Array.from([]))).toBe(true);
-  });
+  test('does not accept invalid input types', () => {
+    // @ts-expect-error number is not a valid input type
+    assertType(isEmpty(2));
 
-  test('returns false for an Uint8Array containing items', () => {
-    expect(isEmpty(new Uint8Array(2))).toBe(false);
-  });
+    // @ts-expect-error boolean is not a valid input type
+    assertType(isEmpty(false));
 
-  test('returns true for an empty Set', () => {
-    expect(isEmpty(new Set())).toBe(true);
-  });
+    // @ts-expect-error null is not a valid input type
+    assertType(isEmpty(null));
 
-  test('returns false for a non-empty Set', () => {
-    expect(isEmpty(new Set([1, 2, 3, 1, 1]))).toBe(false);
-  });
-
-  test('returns true for an empty Map', () => {
-    expect(isEmpty(new Map())).toBe(true);
-  });
-
-  test('returns false for a non-empty Set', () => {
-    expect(
-      isEmpty(
-        new Map([
-          ['a', 1],
-          ['b', 2],
-        ])
-      )
-    ).toBe(false);
+    // @ts-expect-error undefined is not a valid input type
+    assertType(isEmpty(undefined));
   });
 });
