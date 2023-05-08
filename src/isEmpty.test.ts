@@ -26,15 +26,15 @@ describe('isEmpty', () => {
 
   test('does not accept invalid input types', () => {
     // @ts-expect-error number is not a valid input type
-    assertType(isEmpty(2));
+    isEmpty(2);
 
     // @ts-expect-error boolean is not a valid input type
-    assertType(isEmpty(false));
+    isEmpty(false);
 
     // @ts-expect-error null is not a valid input type
-    assertType(isEmpty(null));
+    isEmpty(null);
 
     // @ts-expect-error undefined is not a valid input type
-    assertType(isEmpty(undefined));
+    isEmpty(undefined);
   });
 });
