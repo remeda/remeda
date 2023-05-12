@@ -1,5 +1,4 @@
 import { purry } from './purry';
-import { NonNull, Key } from './_types';
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
@@ -27,18 +26,23 @@ import { NonNull, Key } from './_types';
 type Pathable<T> = { [K in AllKeys<T>]: TypesForKey<T, K> };
 
 type AllKeys<T> = T extends infer I ? keyof I : never;
-type TypesForKey<T, K extends Key> = T extends infer I
+type TypesForKey<T, K extends PropertyKey> = T extends infer I
   ? K extends keyof I
     ? I[K]
     : never
   : never;
+
+// Like Required<T>, but also removes explicit null and undefined typings */
+type StrictlyRequired<T> = { [K in keyof T]-?: NonNullable<T[K]> };
 
 /**
  * Given some `A` which is a key of at least one variant of `T`, derive
  * `T[A]` for the cases where `A` is present in `T`, and `T[A]` is not
  * null or undefined.
  */
-type PathValue1<T, A extends keyof Pathable<T>> = NonNull<Pathable<T>>[A];
+type PathValue1<T, A extends keyof Pathable<T>> = StrictlyRequired<
+  Pathable<T>
+>[A];
 /** All possible options after successfully reaching `T[A]` */
 type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
 
@@ -47,7 +51,7 @@ type PathValue2<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>
-> = NonNull<Pathable1<T, A>>[B];
+> = StrictlyRequired<Pathable1<T, A>>[B];
 /** As `Pathable1`, but for `T[A][B]` */
 type Pathable2<
   T,
@@ -61,7 +65,7 @@ type PathValue3<
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
   C extends keyof Pathable2<T, A, B>
-> = NonNull<Pathable2<T, A, B>>[C];
+> = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.

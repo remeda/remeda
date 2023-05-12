@@ -1,8 +1,8 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { differenceWith } from './differenceWith';
 import { equals } from './equals';
 import { pipe } from './pipe';
 import { take } from './take';
-import { createCounter } from './_counter';
 
 const source = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }];
 const other = [{ a: 2 }, { a: 5 }, { a: 3 }];
@@ -35,7 +35,7 @@ describe('data_last', () => {
   });
 
   test('lazy', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
       counter.fn(),

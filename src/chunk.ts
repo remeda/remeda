@@ -1,7 +1,7 @@
+import { IterableContainer, NonEmptyArray } from './_types';
 import { purry } from './purry';
-import { NonEmptyArray } from './_types';
 
-type Chunked<T extends ReadonlyArray<unknown> | []> =
+type Chunked<T extends IterableContainer> =
   | (T extends
       | readonly [unknown, ...Array<unknown>]
       | readonly [...Array<unknown>, unknown]
@@ -21,7 +21,7 @@ type Chunked<T extends ReadonlyArray<unknown> | []> =
  * @data_first
  * @category Array
  */
-export function chunk<T extends ReadonlyArray<unknown> | []>(
+export function chunk<T extends IterableContainer>(
   array: T,
   size: number
 ): Chunked<T>;
@@ -37,7 +37,7 @@ export function chunk<T extends ReadonlyArray<unknown> | []>(
  * @data_last
  * @category Array
  */
-export function chunk<T extends ReadonlyArray<unknown> | []>(
+export function chunk<T extends IterableContainer>(
   size: number
 ): (array: T) => Chunked<T>;
 
