@@ -1,8 +1,11 @@
-import { isDefined, isArray, isObject } from './guards';
+import { isDefined } from './isDefined';
+import { isArray } from './isArray';
+import { isObject } from './isObject';
 import { uniq } from './uniq';
 import { clone } from './clone';
 
-export interface DeepPartialArray<T> extends Array<DeepPartial<T>> {}
+export type DeepPartialArray<T> = Array<DeepPartial<T>>;
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type DeepPartial<T> = T extends Function
   ? T
   : T extends Array<infer U>
@@ -32,17 +35,17 @@ function isCyclic(object: unknown) {
       seenObjects.set(obj, undefined);
 
       // Recurse through the object, looking for more circular references.
-      for (var key in obj) {
+      for (const key in obj) {
         if (detectCycle(obj[key])) {
           return true;
         }
       }
 
-      // If 'obj' is an array, check if any of it's elements are
+      // If 'obj' is an array, check if any of its elements are
       // an object that has been seen already.
     } else if (Array.isArray(obj)) {
-      for (var i in obj) {
-        if (detectCycle(obj[i])) {
+      for (const item of obj) {
+        if (detectCycle(item)) {
           return true;
         }
       }
@@ -90,6 +93,7 @@ function recursiveMerge(a: unknown, b: unknown): unknown {
  *
  * @description
  * @param target value be preserved if possible.
+ * @param sources
  * Consider following
  *
  * array + obj = array
@@ -105,7 +109,7 @@ function recursiveMerge(a: unknown, b: unknown): unknown {
  */
 export function deepMergeLeft<T extends object>(
   target: T,
-  ...sources: DeepPartialObject<T>[]
+  ...sources: Array<DeepPartialObject<T>>
 ): T {
   let output = { ...target } as unknown;
   for (const source of sources) {
@@ -119,6 +123,7 @@ export function deepMergeLeft<T extends object>(
  *
  * @description
  * @param target value will be replaced if possible.
+ * @param sources
  * Consider following
  *
  * array + obj = obj
@@ -132,7 +137,7 @@ export function deepMergeLeft<T extends object>(
  */
 export function deepMergeRight<T extends object>(
   target: T,
-  ...sources: DeepPartialObject<T>[]
+  ...sources: Array<DeepPartialObject<T>>
 ): T {
   let output = clone(target) as unknown;
   for (const source of sources) {
