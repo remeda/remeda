@@ -24,6 +24,7 @@ documentation when migrating._
 | `equals`         | `isEqual`        | `equals`            |
 | `filter`         | `filter`         | `filter`            |
 | `find`           | `find`           | `find`              |
+| `findEntry`      | `-`              | `-`                 |
 | `findIndex`      | `findIndex`      | `findIndex`         |
 | `findLast`       | `findLast`       | `findLast`          |
 | `findLastIndex`  | `findLastIndex`  | `findLastIndex`     |

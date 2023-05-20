@@ -15,6 +15,7 @@ export * from './dropLast';
 export * from './equals';
 export * from './filter';
 export * from './find';
+export * from './findEntry';
 export * from './findIndex';
 export * from './findLast';
 export * from './findLastIndex';
