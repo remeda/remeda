@@ -19,9 +19,7 @@
  * type test1 = A.Try<'42', number, 'tried'> // 'tried'
  * ```
  */
-export type Try<A1 extends any, A2 extends any, Catch = never> = A1 extends A2
-  ? A1
-  : Catch;
+export type Try<A1, A2, Catch = never> = A1 extends A2 ? A1 : Catch;
 
 /**
  * Describes types that can be narrowed
@@ -35,7 +33,9 @@ type NarrowRaw<A> =
   | (A extends [] ? [] : never)
   | (A extends Narrowable ? A : never)
   | {
-      [K in keyof A]: A[K] extends Function ? A[K] : NarrowRaw<A[K]>;
+      [K in keyof A]: A[K] extends (...args: Array<any>) => any
+        ? A[K]
+        : NarrowRaw<A[K]>;
     };
 
 /**
@@ -56,4 +56,4 @@ type NarrowRaw<A> =
  * // `A` inferred : {a: 1, b: 'c', d: ['e', 2, true, {f: ['g']}]}
  * ```
  */
-export type Narrow<A extends any> = Try<A, [], NarrowRaw<A>>;
+export type Narrow<A> = Try<A, [], NarrowRaw<A>>;

@@ -12,13 +12,13 @@ export function stringToPath<Path extends string>(
   return _stringToPath(path) as any;
 }
 
-function _stringToPath(path: string): string[] {
+function _stringToPath(path: string): Array<string> {
   if (path.length === 0) return [];
 
-  let match =
-    path.match(/^\[(.+?)\](.*)$/) || path.match(/^\.?([^\.\[\]]+)(.*)$/);
+  const match =
+    path.match(/^\[(.+?)\](.*)$/) || path.match(/^\.?([^.[\]]+)(.*)$/);
   if (match) {
-    const [_, key, rest] = match;
+    const [, key, rest] = match;
     return [key, ..._stringToPath(rest)];
   }
   return [path];
