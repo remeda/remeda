@@ -61,6 +61,7 @@ documentation when migrating._
 | `reduce`         | `reduce`         | `reduce`            |
 | `reject`         | `reject`         | `reject`            |
 | `reverse`        | `reverse`        | `reverse`           |
+| `sample`         | `sampleSize`\*   |                     |
 | `set`            | `set`            | `set`               |
 | `setPath`        | `set`            | `set`               |
 | `stringToPath`   | `toPath`         | `-`                 |
