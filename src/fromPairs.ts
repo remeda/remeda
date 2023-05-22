@@ -87,18 +87,32 @@ type FromPairsArray<Entries extends IterableContainer<Entry>> =
     : FromPairsArrayWithLiteralKeys<Entries>;
 
 // This type is largely copied from `objectFromEntries` in the repo:
-// *sindresorhus/ts-extras*. I think that type had a bug where the results were
-// not optional though, so I fixed it and made all props mapped here optional.
-// Also, that type has a binding to a `Key` generic which I don't think is
-// needed as the type works fine without it.
+// *sindresorhus/ts-extras* but makes all properties of the output optional,
+// which is more correct because we can't assure that an entry will exist for
+// every possible prop/key of the input.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
 type FromPairsArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> = {
-  [K in AllKeys<Entries>]?: Extract<Entries[number], readonly [K, unknown]>[1];
+  [K in AllKeys<Entries>]?: ValueForKey<Entries, K>;
 };
+
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],
   Entry
 >[0];
+
+type ValueForKey<
+  Entries extends IterableContainer<Entry>,
+  K extends PropertyKey
+> =
+  // I tried and failed to simplify the type here! What the ternary does here is
+  // to support the cases where the entries are defined by a single type that
+  // defines all entries, but it defines the keys as a union of literals
+  // (`['a' | 'b', number]`); which is different from the output of toPairs
+  // which would define a separate tuple literal for each key (`['a', number] |
+  // ['b', number]`). We need to support both cases!
+  (Extract<Entries[number], Entry<K>> extends never
+    ? Entries[number]
+    : Extract<Entries[number], Entry<K>>)[1];
 
 export namespace fromPairs {
   // Strict is simply a retyping of fromPairs, it runs the same runtime logic.

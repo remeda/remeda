@@ -1,5 +1,4 @@
 import { zipObj } from './zipObj';
-import { expectTypeOf } from 'vitest';
 
 const first = ['a', 'b', 'c'];
 const second = [1, 2, 3];
