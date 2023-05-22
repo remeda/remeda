@@ -14,3 +14,11 @@ describe('data last', () => {
     expect(result).toEqual({ b: 2, c: 3 });
   });
 });
+
+test('type for curried form', () => {
+  const omitFoo = omit(['foo']);
+
+  const result = omitFoo({ foo: 1, bar: 'potato' });
+
+  expectTypeOf(result).toEqualTypeOf<{ bar: string }>();
+});

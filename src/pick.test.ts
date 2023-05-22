@@ -41,3 +41,15 @@ test('read only', () => {
   const props = ['prop1', 'prop2'] as const;
   pick(someObject, props); // TS2345 compilation error
 });
+
+test('type for curried form', () => {
+  const pickFoo = pick(['foo']);
+
+  expectTypeOf(true as any as ReturnType<typeof pickFoo>).toEqualTypeOf<
+    Record<'foo', any>
+  >();
+
+  const result = pickFoo({ foo: 1, bar: 'potato' });
+
+  expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
+});
