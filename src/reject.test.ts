@@ -1,6 +1,6 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { pipe } from './pipe';
 import { reject } from './reject';
-import { createCounter } from './_counter';
 
 describe('data_first', () => {
   it('reject', () => {
@@ -18,7 +18,7 @@ describe('data_first', () => {
 
 describe('data_last', () => {
   it('filter', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
       reject(x => x % 2 === 0),
@@ -28,7 +28,7 @@ describe('data_last', () => {
     expect(result).toEqual([1, 3]);
   });
   it('filter.indexed', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
       reject.indexed((x, i) => x % 2 === 0 && i === 1),
