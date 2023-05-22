@@ -1,4 +1,4 @@
-### Mapping for Lodash and Ramda
+# Mapping for Lodash and Ramda
 
 _Remeda functions are not necessarily drop-in replacements for the
 listed Lodash and Ramda functions. Just as the Lodash function may behave
@@ -37,6 +37,7 @@ documentation when migrating._
 | `identity`       | `identity`       | `identity`          |
 | `isEmpty`        | `isEmpty`        | `isEmpty`           |
 | `isNil`          | `isNil`          | `isNil`             |
+| `join`           | `join`           | `join`              |
 | `indexBy`        | `keyBy`          | `indexBy`           |
 | `intersection`   | `intersection`   | `intersection`      |
 | `last`           | `last`           | `last`              |
@@ -62,7 +63,10 @@ documentation when migrating._
 | `reduce`         | `reduce`         | `reduce`            |
 | `reject`         | `reject`         | `reject`            |
 | `reverse`        | `reverse`        | `reverse`           |
+| `sample`         | `sampleSize`\*   |                     |
 | `set`            | `set`            | `set`               |
+| `setPath`        | `set`            | `set`               |
+| `stringToPath`   | `toPath`         | `-`                 |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
 | `sortBy`         | `orderBy`        | `-`                 |
@@ -79,7 +83,7 @@ documentation when migrating._
 | `uniqWith`       | `uniqWith`       | `uniqWith`          |
 | `zipObj`         | `zipObj`         | `zipObj`            |
 
-### Helpful one-liners
+## Helpful one-liners
 
 Some lodash and ramda functions don't have a Remeda equivalent, but can be
 easily replaced with a one-liner in TypeScript. Some of the most common
