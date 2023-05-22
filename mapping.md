@@ -61,6 +61,7 @@ documentation when migrating._
 | `reduce`         | `reduce`         | `reduce`            |
 | `reject`         | `reject`         | `reject`            |
 | `reverse`        | `reverse`        | `reverse`           |
+| `sample`         | `sampleSize`\*   |                     |
 | `set`            | `set`            | `set`               |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
@@ -76,6 +77,7 @@ documentation when migrating._
 | `uniq`           | `uniq`           | `uniq`              |
 | `uniqBy`         | `uniqBy`         | `uniqBy`            |
 | `uniqWith`       | `uniqWith`       | `uniqWith`          |
+| `zipObj`         | `zipObj`         | `zipObj`            |
 
 ### Helpful one-liners
 

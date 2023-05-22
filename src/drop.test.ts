@@ -1,7 +1,7 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { drop } from './drop';
 import { pipe } from './pipe';
 import { take } from './take';
-import { createCounter } from './_counter';
 
 const array = [1, 2, 3, 4, 5] as const;
 const expected = [3, 4, 5];
@@ -18,7 +18,7 @@ describe('data last', () => {
     expect(result).toEqual(expected);
   });
   test('drop with take', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(array, counter.fn(), drop(2), take(2));
     expect(counter.count).toHaveBeenCalledTimes(4);
     expect(result).toEqual([3, 4]);

@@ -1,5 +1,4 @@
 import { zip } from './zip';
-import { AssertEqual } from './_types';
 
 const first = [1, 2, 3];
 const second = ['a', 'b', 'c'];
@@ -31,26 +30,17 @@ describe('data first', () => {
 describe('data first typings', () => {
   test('arrays', () => {
     const actual = zip(first, second);
-    const result: AssertEqual<typeof actual, Array<[number, string]>> = true;
-    expect(result).toBe(true);
+    assertType<Array<[number, string]>>(actual);
   });
   test('tuples', () => {
     const actual = zip(first as [1, 2, 3], second as ['a', 'b', 'c']);
-    const result: AssertEqual<
-      typeof actual,
-      Array<[1 | 2 | 3, 'a' | 'b' | 'c']>
-    > = true;
-    expect(result).toBe(true);
+    assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
   });
   test('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zip(firstVariadic, secondVariadic);
-    const result: AssertEqual<
-      typeof actual,
-      Array<[string | number, string | number]>
-    > = true;
-    expect(result).toBe(true);
+    assertType<Array<[string | number, string | number]>>(actual);
   });
 });
 
@@ -79,25 +69,16 @@ describe('data second', () => {
 describe('data second typings', () => {
   test('arrays', () => {
     const actual = zip(second)(first);
-    const result: AssertEqual<typeof actual, Array<[number, string]>> = true;
-    expect(result).toBe(true);
+    assertType<Array<[number, string]>>(actual);
   });
   test('tuples', () => {
     const actual = zip(second as ['a', 'b', 'c'])(first as [1, 2, 3]);
-    const result: AssertEqual<
-      typeof actual,
-      Array<[1 | 2 | 3, 'a' | 'b' | 'c']>
-    > = true;
-    expect(result).toBe(true);
+    assertType<Array<[1 | 2 | 3, 'a' | 'b' | 'c']>>(actual);
   });
   test('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zip(secondVariadic)(firstVariadic);
-    const result: AssertEqual<
-      typeof actual,
-      Array<[string | number, string | number]>
-    > = true;
-    expect(result).toBe(true);
+    assertType<Array<[string | number, string | number]>>(actual);
   });
 });

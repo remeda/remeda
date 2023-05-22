@@ -1,8 +1,8 @@
+import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { equals } from './equals';
 import { pipe } from './pipe';
 import { take } from './take';
 import { uniqWith } from './uniqWith';
-import { createCounter } from './_counter';
 
 const source = [
   { a: 1 },
@@ -27,7 +27,7 @@ describe('data_last', () => {
   });
 
   it('lazy', () => {
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
       counter.fn(),
@@ -40,7 +40,7 @@ describe('data_last', () => {
 
   it('take before uniq', () => {
     // bug from https://github.com/remeda/remeda/issues/14
-    const counter = createCounter();
+    const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
       counter.fn(),

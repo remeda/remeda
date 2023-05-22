@@ -1,4 +1,13 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
+
+type FirstOut<T extends IterableContainer> = T extends []
+  ? undefined
+  : T extends readonly [unknown, ...Array<unknown>]
+  ? T[0]
+  : T extends readonly [...infer Pre, infer Last]
+  ? Pre[0] | Last
+  : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.
@@ -19,15 +28,19 @@ import { purry } from './purry';
  * @category array
  * @pipeable
  */
-export function first<T>(array: ReadonlyArray<T>): T | undefined;
-export function first<T>(): (array: ReadonlyArray<T>) => T | undefined;
+export function first<T extends IterableContainer>(
+  array: Readonly<T>
+): FirstOut<T>;
+export function first<T extends IterableContainer>(): (
+  array: Readonly<T>
+) => FirstOut<T>;
 
 export function first() {
   return purry(_first, arguments, first.lazy);
 }
 
-function _first<T>(array: Array<T>) {
-  return array[0];
+function _first<T>([first]: ReadonlyArray<T>) {
+  return first;
 }
 
 export namespace first {

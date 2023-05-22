@@ -1,22 +1,33 @@
 import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import {
+  IterableContainer,
+  Pred,
+  PredIndexed,
+  PredIndexedOptional,
+} from './_types';
 
 /**
- * Map each element of an array using a defined callback function.
+ * Map each element of an array using a defined callback function. If the input
+ * array is a tuple use the `strict` variant to maintain it's shape.
  * @param array The array to map.
  * @param fn The function mapper.
  * @returns The new mapped array.
  * @signature
  *    R.map(array, fn)
  *    R.map.indexed(array, fn)
+ *    R.map.strict(array, fn)
+ *    R.map.strict.indexed(array, fn)
  * @example
- *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6]
- *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2]
+ *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6], typed number[]
+ *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
+ *    R.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
+ *    R.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
  * @data_first
  * @indexed
  * @pipeable
+ * @strict
  * @category Array
  */
 export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
@@ -65,6 +76,34 @@ const _lazy =
     };
   };
 
+// Redefining the map API with a stricter return type. This API is accessed via
+// `map.strict`
+interface Strict {
+  <T extends IterableContainer, K>(
+    items: T,
+    mapper: Pred<T[number], K>
+  ): StrictOut<T, K>;
+
+  <T extends IterableContainer, K>(mapper: Pred<T[number], K>): (
+    items: T
+  ) => StrictOut<T, K>;
+
+  readonly indexed: {
+    <T extends IterableContainer, K>(
+      items: T,
+      mapper: PredIndexed<T[number], K>
+    ): StrictOut<T, K>;
+
+    <T extends IterableContainer, K>(mapper: PredIndexed<T[number], K>): (
+      items: T
+    ) => StrictOut<T, K>;
+  };
+}
+
+type StrictOut<T extends IterableContainer, K> = {
+  -readonly [P in keyof T]: K;
+};
+
 export namespace map {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
@@ -76,6 +115,9 @@ export namespace map {
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);
   }
+
   export const lazy = _lazy(false);
   export const lazyIndexed = _toLazyIndexed(_lazy(true));
+
+  export const strict: Strict = map;
 }
