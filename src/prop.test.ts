@@ -1,6 +1,5 @@
 import { pipe } from './pipe';
 import { prop } from './prop';
-import { expectType } from './_expectType';
 
 test('prop', () => {
   const result = pipe({ foo: 'bar' }, prop('foo'));
@@ -10,11 +9,9 @@ test('prop', () => {
 test('type for curried form', () => {
   const propFoo = prop('foo');
 
-  expectType<(input: { foo: any }) => any>(true as any as typeof propFoo);
-
   const result = propFoo({ foo: 1, bar: 'potato' });
 
-  expectType<number>(result);
+  expectTypeOf(result).toEqualTypeOf<number>();
 
   expect(result).toBe(1);
 
@@ -25,5 +22,7 @@ test('type for curried form', () => {
   // can specify the target object type at creation
   const propBar = prop('bar')<{ bar: number; baz: boolean }>;
 
-  expectType<number>(true as any as ReturnType<typeof propBar>);
+  expectTypeOf(
+    true as any as ReturnType<typeof propBar>
+  ).toEqualTypeOf<number>();
 });

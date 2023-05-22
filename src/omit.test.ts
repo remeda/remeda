@@ -1,5 +1,3 @@
-import { expectType } from './_expectType';
-
 import { omit } from './omit';
 import { pipe } from './pipe';
 
@@ -22,5 +20,5 @@ test('type for curried form', () => {
 
   const result = omitFoo({ foo: 1, bar: 'potato' });
 
-  expectType<{ bar: string }>(result);
+  expectTypeOf(result).toEqualTypeOf<{ bar: string }>();
 });

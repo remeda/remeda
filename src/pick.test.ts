@@ -1,4 +1,3 @@
-import { expectType } from './_expectType';
 import { concat } from './concat';
 import { pick } from './pick';
 import { pipe } from './pipe';
@@ -46,9 +45,11 @@ test('read only', () => {
 test('type for curried form', () => {
   const pickFoo = pick(['foo']);
 
-  expectType<Record<'foo', any>>(true as any as ReturnType<typeof pickFoo>);
+  expectTypeOf(true as any as ReturnType<typeof pickFoo>).toEqualTypeOf<
+    Record<'foo', any>
+  >();
 
   const result = pickFoo({ foo: 1, bar: 'potato' });
 
-  expectType<{ foo: number }>(result);
+  expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
 });
