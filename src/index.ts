@@ -34,6 +34,7 @@ export * from './isArray';
 export * from './isBoolean';
 export * from './isDate';
 export * from './isDefined';
+export * from './isEmpty';
 export * from './isError';
 export * from './isFunction';
 export * from './isNil';
