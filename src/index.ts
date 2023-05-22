@@ -43,6 +43,7 @@ export * from './isObject';
 export * from './isPromise';
 export * from './isString';
 export * from './isTruthy';
+export * from './join';
 export * from './keys';
 export * from './last';
 export * from './map';
