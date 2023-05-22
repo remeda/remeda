@@ -7,6 +7,6 @@
  * @data_last
  * @category Object
  */
-export function prop<T, K extends keyof T>(name: K) {
-  return (obj: T) => obj[name];
+export function prop<K extends string = string>(name: K) {
+  return <T extends Record<any, any>>(obj: T) => obj[name];
 }
