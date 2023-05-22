@@ -64,6 +64,8 @@ documentation when migrating._
 | `reverse`        | `reverse`        | `reverse`           |
 | `sample`         | `sampleSize`\*   |                     |
 | `set`            | `set`            | `set`               |
+| `setPath`        | `set`            | `set`               |
+| `stringToPath`   | `toPath`         | `-`                 |
 | `sort`           | `-`              | `sort`              |
 | `sortBy`         | `sortBy`         | `sortBy`            |
 | `sortBy`         | `orderBy`        | `-`                 |
