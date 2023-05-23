@@ -8,6 +8,7 @@ export * from './compact';
 export * from './concat';
 export * from './countBy';
 export * from './createPipe';
+export * from './deepMege';
 export * from './difference';
 export * from './differenceWith';
 export * from './drop';
