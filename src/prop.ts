@@ -7,6 +7,13 @@
  * @data_last
  * @category Object
  */
-export function prop<K extends string = string>(name: K) {
-  return <T extends Record<any, any>>(obj: T) => obj[name];
+
+interface PropInterface {
+  <T, K extends keyof T>(name: K): (obj: T) => T[K];
+  <K extends string = string>(name: K): <T extends Record<any, any>>(
+    obj: T
+  ) => T[K];
 }
+
+export const prop: PropInterface = (name: string) => (obj: Record<any, any>) =>
+  obj[name];
