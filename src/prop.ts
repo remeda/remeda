@@ -1,19 +1,17 @@
 /**
  * Gets the value of the given property.
- * @param name the property name
+ * @param propName the property name
  * @signature R.prop(prop)(object)
  * @example
  *    R.pipe({foo: 'bar'}, R.prop('foo')) // => 'bar'
  * @data_last
  * @category Object
  */
+export function prop<T, K extends keyof T>(propName: K): (data: T) => T[K];
+export function prop<K extends string = string>(
+  propName: K
+): <T>(data: T) => K extends keyof T ? T[K] : undefined;
 
-interface PropInterface {
-  <T, K extends keyof T>(name: K): (obj: T) => T[K];
-  <K extends string = string>(name: K): <T extends Record<any, any>>(
-    obj: T
-  ) => T[K];
+export function prop<T, K extends keyof T>(propName: K): (data: T) => unknown {
+  return data => data[propName];
 }
-
-export const prop: PropInterface = (name: string) => (obj: Record<any, any>) =>
-  obj[name];
