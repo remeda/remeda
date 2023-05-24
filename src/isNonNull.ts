@@ -3,12 +3,12 @@
  * Notice that `undefined` is not null!
  * @param data the variable to check
  * @signature
- *    R.isDefined(data)
+ *    R.isNonNull(data)
  * @returns true if the passed input is defined, false otherwise
  * @example
- *    R.isDefined('string') //=> true
- *    R.isDefined(null) //=> false
- *    R.isDefined(undefined) //=> true
+ *    R.isNonNull('string') //=> true
+ *    R.isNonNull(null) //=> false
+ *    R.isNonNull(undefined) //=> true
  * @category Guard
  */
 export function isNonNull<T>(data: T | null): data is T {
