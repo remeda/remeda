@@ -1,7 +1,7 @@
 import { purry } from './purry';
 
-type Invertable = { [index: string]: string } | { [index: number]: string };
-type Inverted = { [index: string]: string };
+type Invertable = Record<PropertyKey, PropertyKey> | Array<PropertyKey>;
+type Inverted = Record<PropertyKey, PropertyKey>;
 
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
@@ -15,7 +15,7 @@ type Inverted = { [index: string]: string };
  * @category object
  * @pipeable
  */
-export function invert<T>(object: Invertable): Inverted;
+export function invert(object: Invertable): Inverted;
 
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
@@ -29,15 +29,18 @@ export function invert<T>(object: Invertable): Inverted;
  * @category object
  * @pipeable
  */
-export function invert<T>(): (object: Invertable) => Inverted;
+export function invert(): (object: Invertable) => Inverted;
 
 export function invert() {
   return purry(_invert, arguments);
 }
 
 function _invert(object: Invertable): Inverted {
-  return Object.entries(object).reduce((accumulator, [key, value]) => {
-    accumulator[value] = key;
-    return accumulator;
-  }, {} as Inverted)
+  return Object.entries(object).reduce<Inverted>(
+    (accumulator, [key, value]) => {
+      accumulator[value] = key;
+      return accumulator;
+    },
+    {}
+  );
 }
