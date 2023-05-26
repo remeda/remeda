@@ -38,6 +38,7 @@ export * from './isEmpty';
 export * from './isError';
 export * from './isFunction';
 export * from './isNil';
+export * from './isNonNull';
 export * from './isNot';
 export * from './isNumber';
 export * from './isObject';
