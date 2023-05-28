@@ -30,6 +30,7 @@ export * from './groupBy';
 export * from './identity';
 export * from './indexBy';
 export * from './intersection';
+export * from './intersectionWith';
 export * from './isArray';
 export * from './isBoolean';
 export * from './isDate';
