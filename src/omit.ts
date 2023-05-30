@@ -21,7 +21,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function omit<T extends object, K extends Extract<keyof T, string>>(
+export function omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
 ): Omit<T, K>;
