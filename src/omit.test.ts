@@ -6,6 +6,18 @@ describe('data first', () => {
     const result = omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd'] as const);
     expect(result).toEqual({ b: 2, c: 3 });
   });
+
+  test('identity on unchanged results', () => {
+    const obj: { a?: number } = {};
+    const result = omit(obj, ['a']);
+    expect(result).toBe(obj);
+  });
+
+  test('single removed prop works', () => {
+    const obj: { a: number } = { a: 1 };
+    const result = omit(obj, ['a']);
+    expect(result).toEqual({});
+  });
 });
 
 describe('data last', () => {
