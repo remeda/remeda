@@ -20,7 +20,7 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function omit<T, K extends keyof T>(
+export function omit<T extends object, K extends Extract<keyof T, string>>(
   data: T,
   propNames: ReadonlyArray<K>
 ): Omit<T, K>;
@@ -47,19 +47,19 @@ export function omit<T, K extends keyof T>(
  */
 export function omit<K extends PropertyKey>(
   propNames: ReadonlyArray<K>
-): <T>(data: T) => Omit<T, K>;
+): <T extends object>(data: T) => Omit<T, K>;
 
 export function omit() {
   return purry(_omit, arguments);
 }
 
-function _omit<T extends Record<PropertyKey, any>, K extends keyof T>(
-  object: T,
-  propNames: Array<K>
+function _omit<T extends object, K extends Extract<keyof T, string>>(
+  data: T,
+  propNames: ReadonlyArray<K>
 ): Omit<T, K> {
-  if (!propNames.some(propName => propName in object)) {
+  if (!propNames.some(propName => propName in data)) {
     // Avoid creating a clone of the input object when the output is unchanged.
-    return object;
+    return data;
   }
 
   if (propNames.length === 1) {
@@ -68,15 +68,16 @@ function _omit<T extends Record<PropertyKey, any>, K extends keyof T>(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars -- use destructuring to remove a single key, letting JS optimize here...
       [propName]: omitted,
       ...remaining
-    } = object;
+    } = data;
     return remaining;
   }
 
-  const set = new Set(propNames as Array<string>);
-  return Object.entries(object).reduce<any>((acc, [name, value]) => {
-    if (!set.has(name)) {
-      acc[name] = value;
+  const clone: Partial<T> = {};
+  for (const key in data) {
+    if (propNames.includes(key as K)) {
+      continue;
     }
-    return acc;
-  }, {}) as Omit<T, K>;
+    clone[key as K] = data[key as K];
+  }
+  return clone as Omit<T, K>;
 }
