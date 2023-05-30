@@ -1,3 +1,4 @@
+import { fromPairs } from './fromPairs';
 import { purry } from './purry';
 
 /**
@@ -53,7 +54,7 @@ export function omit() {
   return purry(_omit, arguments);
 }
 
-function _omit<T extends object, K extends Extract<keyof T, string>>(
+function _omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
 ): Omit<T, K> {
@@ -72,12 +73,8 @@ function _omit<T extends object, K extends Extract<keyof T, string>>(
     return remaining;
   }
 
-  const clone: Partial<T> = {};
-  for (const key in data) {
-    if (propNames.includes(key as K)) {
-      continue;
-    }
-    clone[key as K] = data[key as K];
-  }
-  return clone as Omit<T, K>;
+  const asSet = new Set(propNames);
+  return fromPairs(
+    Object.entries(data).filter(([key]) => !asSet.has(key as K))
+  ) as Omit<T, K>;
 }
