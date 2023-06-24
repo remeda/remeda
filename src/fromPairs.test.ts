@@ -131,6 +131,13 @@ describe('Strict (with readonly inputs)', () => {
     expect(result).toStrictEqual({ a: 1 });
   });
 
+  test('array with literal keys', () => {
+    const arr: ReadonlyArray<readonly ['a' | 'b' | 'c', 'd']> = [['a', 'd']];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Partial<Record<'a' | 'b' | 'c', 'd'>>>();
+    expect(result).toStrictEqual({ a: 'd' });
+  });
+
   test('backwards compatibility (number)', () => {
     const arr: ReadonlyArray<readonly [number, 123]> = [[1, 123]];
     const result = fromPairs.strict(arr);
@@ -239,6 +246,13 @@ describe('Strict (with non-readonly inputs)', () => {
       { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
     >();
     expect(result).toStrictEqual({ a: 1 });
+  });
+
+  test('array with literal keys', () => {
+    const arr: Array<readonly ['a' | 'b' | 'c', 'd']> = [['a', 'd']];
+    const result = fromPairs.strict(arr);
+    expectTypeOf(result).toEqualTypeOf<Partial<Record<'a' | 'b' | 'c', 'd'>>>();
+    expect(result).toStrictEqual({ a: 'd' });
   });
 
   test('backwards compatibility (number)', () => {
