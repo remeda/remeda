@@ -16,7 +16,7 @@ function _stringToPath(path: string): Array<string> {
   if (path.length === 0) return [];
 
   const match =
-    path.match(/^\[(.+?)\](.*)$/) || path.match(/^\.?([^.[\]]+)(.*)$/);
+    path.match(/^\[(.+?)\](.*)$/) ?? path.match(/^\.?([^.[\]]+)(.*)$/);
   if (match) {
     const [, key, rest] = match;
     return [key, ..._stringToPath(rest)];
