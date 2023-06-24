@@ -186,6 +186,18 @@ describe('strict', () => {
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
+  test('on tuple with rest middle', () => {
+    const array: [number, ...Array<number>, number] = [3, 2, 1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
+  });
+
+  test('on readonly tuple with rest middle', () => {
+    const array: readonly [number, ...Array<number>, number] = [3, 2, 1];
+    const result = sortBy.strict(array, identity);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
+  });
+
   it('on tuple with rest head', () => {
     const array: [...Array<number>, number] = [1];
     const result = sortBy.strict(array, identity);
@@ -196,6 +208,18 @@ describe('strict', () => {
     const array: readonly [...Array<number>, number] = [1];
     const result = sortBy.strict(array, identity);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  });
+
+  test('on tuple with optional values', () => {
+    const array: [number?, number?, number?] = [];
+    const result = sortBy.strict(array, () => 0);
+    expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
+  });
+
+  test('on readonly tuple with optional values', () => {
+    const array: readonly [number?, number?, number?] = [];
+    const result = sortBy.strict(array, () => 0);
+    expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
   it('on mixed types tuple', () => {

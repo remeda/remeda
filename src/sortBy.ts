@@ -1,12 +1,17 @@
-import { IterableContainer } from './_types';
+import type { IterableContainer, NonEmptyArray } from './_types';
 import { purry } from './purry';
 
-type Direction = 'asc' | 'desc';
-type SortProjection<T> = (x: T) => Comparable;
+const ALL_DIRECTIONS = ['asc', 'desc'] as const;
+type Direction = (typeof ALL_DIRECTIONS)[number];
+
 type ComparablePrimitive = number | string | boolean;
 type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
+type SortProjection<T> = (x: T) => Comparable;
 type SortPair<T> = readonly [SortProjection<T>, Direction];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
+
+const ASCENDING_COMPARATOR = <T>(x: T, y: T) => x > y;
+const DESCENDING_COMPARATOR = <T>(x: T, y: T) => x < y;
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -17,11 +22,11 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
  *
- * @param sort first sort rule
- * @param sorts additional sort rules
+ * @param sortRule main sort rule
+ * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
  * @signature
- *    R.sortBy(...sorts)(array)
- *    R.sortBy.strict(...sorts)(array)
+ *    R.sortBy(sortRule, ...additionalSortRules)(array)
+ *    R.sortBy.strict(sortRule, ...additionalSortRules)(array)
  * @example
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -36,8 +41,7 @@ type SortRule<T> = SortProjection<T> | SortPair<T>;
  * @strict
  */
 export function sortBy<T>(
-  sort: SortRule<T>,
-  ...sorts: Array<SortRule<T>>
+  ...sortRules: Readonly<NonEmptyArray<SortRule<T>>>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 /**
@@ -50,10 +54,11 @@ export function sortBy<T>(
  * strict mode to maintain it's shape.
  *
  * @param array the array to sort
- * @param sorts a list of mapping functions and optional directions
+ * @param sortRule main sort rule
+ * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
  * @signature
- *    R.sortBy(array, ...sorts)
- *    R.sortBy.strict(array, ...sorts)
+ *    R.sortBy(array, sortRule, ...additionalSortRules)
+ *    R.sortBy.strict(array, sortRule, ...additionalSortRules)
  * @example
  *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -88,68 +93,108 @@ export function sortBy<T>(
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,
-  ...sorts: Array<SortRule<T>>
+  ...sortRules: Readonly<NonEmptyArray<SortRule<T>>>
 ): Array<T>;
 
 export function sortBy<T>(
-  arrayOrSort: ReadonlyArray<T> | SortRule<T>,
-  ...sorts: Array<SortRule<T>>
-): any {
-  if (!isSortRule(arrayOrSort)) {
-    return purry(_sortBy, [arrayOrSort, sorts]) as Array<T>;
-  }
-  return purry(_sortBy, [[arrayOrSort, ...sorts]]) as (
-    arr: ReadonlyArray<T>
-  ) => Array<T>;
+  arrayOrSortRule: ReadonlyArray<T> | SortRule<T>,
+  ...sortRules: ReadonlyArray<SortRule<T>>
+): unknown {
+  const args = isSortRule(arrayOrSortRule)
+    ? // *data-last invocation*: put all sort rules into a single array to be
+      // passed as the first param.
+      [[arrayOrSortRule, ...sortRules]]
+    : // *data-first invocation*: put the arrayOrSort (which is array now) as
+      // the first param, and all the sorts (as an array) into the second param.
+      // `purry` would pick the right "flavour" based on the length of the
+      // params tuple.
+      [arrayOrSortRule, sortRules];
+
+  return purry(_sortBy, args);
 }
 
 function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
-  if (typeof x == 'function') return true; // must be a SortProjection
-  if (x.length != 2) return false; // cannot be a SortRule
-  return typeof x[0] == 'function' && (x[1] === 'asc' || x[1] === 'desc');
+  if (typeof x === 'function') {
+    // must be a SortProjection
+    return true;
+  }
+
+  const [maybeProjection, maybeDirection, ...rest] = x;
+
+  if (rest.length > 0) {
+    // Not a SortPair if we have more stuff in the array
+    return false;
+  }
+
+  return (
+    typeof maybeProjection === 'function' &&
+    // eslint-disable-next-line @typescript-eslint/prefer-includes -- we use an old lib
+    ALL_DIRECTIONS.indexOf(maybeDirection as Direction) !== -1
+  );
 }
 
-function _sortBy<T>(array: Array<T>, sorts: Array<SortRule<T>>): Array<T> {
-  const sort = (
-    a: T,
-    b: T,
-    sortRule: SortRule<T>,
-    sortRules: Array<SortRule<T>>
-  ): number => {
-    let fn: SortProjection<T>;
-    let direction: Direction;
-    if (Array.isArray(sortRule)) {
-      [fn, direction] = sortRule as SortPair<T>;
-    } else {
-      direction = 'asc';
-      fn = sortRule as SortProjection<T>;
-    }
-    const dir: (x: Comparable, y: Comparable) => boolean =
-      direction !== 'desc' ? (x, y) => x > y : (x, y) => x < y;
-    if (!fn) {
-      return 0;
-    }
-    if (dir(fn(a), fn(b))) {
+const _sortBy = <T>(
+  array: ReadonlyArray<T>,
+  sorts: Readonly<NonEmptyArray<SortRule<T>>>
+): Array<T> =>
+  // Sort is done in-place so we need to copy the array.
+  [...array].sort(comparer(...sorts));
+
+function comparer<T>(
+  primaryRule: SortRule<T>,
+  secondaryRule?: SortRule<T>,
+  ...otherRules: ReadonlyArray<SortRule<T>>
+): (a: T, b: T) => number {
+  const [projector, direction] =
+    typeof primaryRule === 'function'
+      ? [primaryRule, 'asc' as const]
+      : primaryRule;
+
+  const comparator = directionComparator(direction);
+
+  const nextComparer =
+    secondaryRule === undefined
+      ? undefined
+      : comparer(secondaryRule, ...otherRules);
+
+  return (a, b) => {
+    const projectedA = projector(a);
+    const projectedB = projector(b);
+
+    if (comparator(projectedA, projectedB)) {
       return 1;
     }
-    if (dir(fn(b), fn(a))) {
+
+    if (comparator(projectedB, projectedA)) {
       return -1;
     }
-    return sort(a, b, sortRules[0], sortRules.slice(1));
+
+    // The elements are equal base on the current comparator and projection. So
+    // we need to check the elements using the next comparer, if one exists,
+    // otherwise we consider them as true equal (returning 0).
+    return nextComparer?.(a, b) ?? 0;
   };
-  const copied = [...array];
-  return copied.sort((a: T, b: T) => sort(a, b, sorts[0], sorts.slice(1)));
+}
+
+function directionComparator(direction: Direction): <T>(a: T, b: T) => boolean {
+  // We use a switch here just to make sure we are tightly coupled with
+  // Direction
+  switch (direction) {
+    case 'asc':
+      return ASCENDING_COMPARATOR;
+    case 'desc':
+      return DESCENDING_COMPARATOR;
+  }
 }
 
 interface Strict {
   <T extends IterableContainer>(
-    sort: SortRule<T[number]>,
-    ...sorts: Array<SortRule<T[number]>>
-  ): (data: T) => SortedBy<T>;
+    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
+  ): (array: T) => SortedBy<T>;
 
   <T extends IterableContainer>(
-    data: T,
-    ...sorts: Array<SortRule<T[number]>>
+    array: T,
+    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
   ): SortedBy<T>;
 }
 
