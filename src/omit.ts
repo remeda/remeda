@@ -40,6 +40,10 @@ function _omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
 ): Omit<T, K> {
+  if (propNames.length === 0) {
+    return { ...data };
+  }
+
   if (!propNames.some(propName => propName in data)) {
     return { ...data };
   }
