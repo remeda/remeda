@@ -67,6 +67,7 @@ documentation when migrating._
 | `sample`           | `sampleSize`\*     |                     |
 | `set`              | `set`              | `set`               |
 | `setPath`          | `set`              | `set`               |
+| `shuffle`          | `shuffle`          | `-`                 |
 | `stringToPath`     | `toPath`           | `-`                 |
 | `sort`             | `-`                | `sort`              |
 | `sortBy`           | `sortBy`           | `sortBy`            |

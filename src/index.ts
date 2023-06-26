@@ -78,6 +78,7 @@ export * from './reverse';
 export * from './sample';
 export * from './set';
 export * from './setPath';
+export * from './shuffle';
 export * from './sliceString';
 export * from './sort';
 export * from './sortBy';
