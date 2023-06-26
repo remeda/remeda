@@ -1,7 +1,8 @@
 import { purry } from './purry';
 
-type Invertable = Record<PropertyKey, PropertyKey> | Array<PropertyKey>;
-type Inverted = Record<PropertyKey, PropertyKey>;
+type Inverted<T extends object> = T[keyof T] extends PropertyKey
+  ? Record<T[keyof T], keyof T>
+  : never;
 
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
@@ -15,7 +16,7 @@ type Inverted = Record<PropertyKey, PropertyKey>;
  * @category object
  * @pipeable
  */
-export function invert(object: Invertable): Inverted;
+export function invert<T extends object>(object: T): Inverted<T>;
 
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
@@ -29,18 +30,20 @@ export function invert(object: Invertable): Inverted;
  * @category object
  * @pipeable
  */
-export function invert(): (object: Invertable) => Inverted;
+export function invert<T extends object>(): (object: T) => Inverted<T>;
 
 export function invert() {
   return purry(_invert, arguments);
 }
 
-function _invert(object: Invertable): Inverted {
-  return Object.entries(object).reduce<Inverted>(
-    (accumulator, [key, value]) => {
-      accumulator[value] = key;
-      return accumulator;
-    },
-    {}
-  );
+function _invert<T extends object>(object: T): Inverted<T> {
+  const result: Record<PropertyKey, keyof T> = {};
+
+  for (const key in object) {
+    // @ts-expect-error We ensure that the value is a valid type in the definition of Invertable
+    // above.
+    result[object[key]] = key;
+  }
+
+  return result as Inverted<T>;
 }
