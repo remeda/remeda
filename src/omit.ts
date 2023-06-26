@@ -44,10 +44,6 @@ function _omit<T extends object, K extends keyof T>(
     return { ...data };
   }
 
-  if (!propNames.some(propName => propName in data)) {
-    return { ...data };
-  }
-
   if (propNames.length === 1) {
     const [propName] = propNames;
     const {
@@ -56,6 +52,10 @@ function _omit<T extends object, K extends keyof T>(
       ...remaining
     } = data;
     return remaining;
+  }
+
+  if (!propNames.some(propName => propName in data)) {
+    return { ...data };
   }
 
   const asSet = new Set(propNames);
