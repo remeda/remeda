@@ -7,11 +7,16 @@ type Direction = (typeof ALL_DIRECTIONS)[number];
 type ComparablePrimitive = number | string | boolean;
 type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
 type SortProjection<T> = (x: T) => Comparable;
-type SortPair<T> = readonly [SortProjection<T>, Direction];
+type SortPair<T> = readonly [
+  projector: SortProjection<T>,
+  direction: Direction
+];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
 
-const ASCENDING_COMPARATOR = <T>(x: T, y: T) => x > y;
-const DESCENDING_COMPARATOR = <T>(x: T, y: T) => x < y;
+const COMPARATOR = {
+  asc: <T>(x: T, y: T) => x > y,
+  desc: <T>(x: T, y: T) => x < y,
+} as const;
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -145,12 +150,11 @@ function comparer<T>(
   secondaryRule?: SortRule<T>,
   ...otherRules: ReadonlyArray<SortRule<T>>
 ): (a: T, b: T) => number {
-  const [projector, direction] =
-    typeof primaryRule === 'function'
-      ? [primaryRule, 'asc' as const]
-      : primaryRule;
+  const projector =
+    typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
 
-  const comparator = directionComparator(direction);
+  const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
+  const comparator = COMPARATOR[direction];
 
   const nextComparer =
     secondaryRule === undefined
@@ -174,17 +178,6 @@ function comparer<T>(
     // otherwise we consider them as true equal (returning 0).
     return nextComparer?.(a, b) ?? 0;
   };
-}
-
-function directionComparator(direction: Direction): <T>(a: T, b: T) => boolean {
-  // We use a switch here just to make sure we are tightly coupled with
-  // Direction
-  switch (direction) {
-    case 'asc':
-      return ASCENDING_COMPARATOR;
-    case 'desc':
-      return DESCENDING_COMPARATOR;
-  }
 }
 
 interface Strict {
