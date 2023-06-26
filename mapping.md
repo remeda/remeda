@@ -42,6 +42,7 @@ documentation when migrating._
 | `intersection`     | `intersection`     | `intersection`      |
 | `intersectionWith` | `intersectionWith` | `innerJoin`         |
 | `last`             | `last`             | `last`              |
+| `length`           | `size`             | `length`            |
 | `map`              | `map`              | `map`               |
 | `mapKeys`          | `mapKeys`          | `-`                 |
 | `meanBy`           | `meanBy`           | `-`                 |
