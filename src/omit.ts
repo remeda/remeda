@@ -3,18 +3,14 @@ import { purry } from './purry';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * 
- * If the properties are optional and they don't exist in the input object then
- * the same object is returned (unlike when using destructuring, which returns a
- * new clone of the object).
-
+ *
  * @param data the object
  * @param propNames the property names
  * @signature
  *    R.omit(obj, names);
  * @example
  *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
- * 
+ *
  *    const obj: { a?: number, b: number } = { b: 2 };
  *    const result = R.omit(obj, ['a']);
  *    result === obj // => true
@@ -28,10 +24,6 @@ export function omit<T extends object, K extends keyof T>(
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- *
- * If the properties are optional and they don't exist in the input object then
- * the same object is returned (unlike when using destructuring, which returns a
- * new clone of the object).
  *
  * @param data the object
  * @param propNames the property names
