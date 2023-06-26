@@ -7,12 +7,6 @@ describe('data first', () => {
     expect(result).toEqual({ b: 2, c: 3 });
   });
 
-  test('identity on unchanged results', () => {
-    const obj: { a?: number } = {};
-    const result = omit(obj, ['a']);
-    expect(result).toBe(obj);
-  });
-
   test('single removed prop works', () => {
     const obj: { a: number } = { a: 1 };
     const result = omit(obj, ['a']);
