@@ -3,17 +3,12 @@ import { purry } from './purry';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- *
  * @param data the object
  * @param propNames the property names
  * @signature
  *    R.omit(obj, names);
  * @example
  *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
- *
- *    const obj: { a?: number, b: number } = { b: 2 };
- *    const result = R.omit(obj, ['a']);
- *    result === obj // => true
  * @data_first
  * @category Object
  */
@@ -24,17 +19,12 @@ export function omit<T extends object, K extends keyof T>(
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- *
  * @param data the object
  * @param propNames the property names
  * @signature
  *    R.omit(names)(obj);
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }
- *
- *    const obj: { a?: number, b: number } = { b: 2 };
- *    const result = R.pipe(obj, R.omit(['a']));
- *    result === obj // => true
  * @data_last
  * @category Object
  */
