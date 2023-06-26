@@ -59,8 +59,7 @@ function _omit<T extends object, K extends keyof T>(
   propNames: ReadonlyArray<K>
 ): Omit<T, K> {
   if (!propNames.some(propName => propName in data)) {
-    // Avoid creating a clone of the input object when the output is unchanged.
-    return data;
+    return { ...data };
   }
 
   if (propNames.length === 1) {
