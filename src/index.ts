@@ -49,6 +49,7 @@ export * from './isTruthy';
 export * from './join';
 export * from './keys';
 export * from './last';
+export * from './length';
 export * from './map';
 export * from './mapKeys';
 export * from './mapToObj';
