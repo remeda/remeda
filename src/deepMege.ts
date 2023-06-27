@@ -3,6 +3,7 @@ import { isArray } from './isArray';
 import { isObject } from './isObject';
 import { uniq } from './uniq';
 import { clone } from './clone';
+import { isCyclic } from './_isCyclic';
 
 export type DeepPartialArray<T> = Array<DeepPartial<T>>;
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -14,48 +15,6 @@ export type DeepPartial<T> = T extends Function
   ? DeepPartialObject<T>
   : T | undefined;
 export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
-
-function isCyclic(object: unknown) {
-  const seenObjects = new WeakMap(); // use to keep track of which objects have been seen.
-  function detectCycle(obj: unknown) {
-    // If 'obj' is an actual object (i.e., has the form of '{}'), check
-    // if it's been seen already.
-    if (
-      isObject(obj) &&
-      Object.prototype.toString.call(obj) == '[object Object]'
-    ) {
-      if (seenObjects.has(obj)) {
-        return true;
-      }
-
-      // If 'obj' hasn't been seen, add it to 'seenObjects'.
-      // Since 'obj' is used as a key, the value of 'seenObjects[obj]'
-      // is irrelevant and can be set as literally anything you want. I
-      // just went with 'undefined'.
-      seenObjects.set(obj, undefined);
-
-      // Recurse through the object, looking for more circular references.
-      for (const key in obj) {
-        if (detectCycle(obj[key])) {
-          return true;
-        }
-      }
-
-      // If 'obj' is an array, check if any of its elements are
-      // an object that has been seen already.
-    } else if (Array.isArray(obj)) {
-      for (const item of obj) {
-        if (detectCycle(item)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
-  return detectCycle(object);
-}
 
 /**
  * Merging @param a and @param b recursively @param a is most important
