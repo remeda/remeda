@@ -1,6 +1,17 @@
 import { uniq } from './uniq';
 import { isCyclic } from './_isCyclic';
 
+export type DeepPartialArray<T> = ReadonlyArray<DeepPartial<T>>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type DeepPartial<T> = T extends Function
+  ? T
+  : T extends ReadonlyArray<infer U>
+  ? DeepPartialArray<U>
+  : T extends object
+  ? DeepPartialObject<T>
+  : unknown;
+export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
+
 /**
  * Recursively merges two values, `a` and `b`.
  *
@@ -8,18 +19,18 @@ import { isCyclic } from './_isCyclic';
  * @param {unknown} b - The second value to merge.
  * @returns {unknown} The result of the merge operation.
  */
-export function recursiveMerge(a: unknown, b: unknown): unknown {
+export function recursiveMerge<T>(a: T, b: unknown): T {
   if (
     typeof a !== 'object' ||
     typeof b !== 'object' ||
     a === null ||
     b === null
   ) {
-    return a ?? b;
+    return a ?? (b as T);
   }
   if (Array.isArray(a)) {
     if (Array.isArray(b)) {
-      return uniq(a.concat(b));
+      return uniq(a.concat(b)) as T;
     }
     return a;
   }

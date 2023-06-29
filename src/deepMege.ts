@@ -1,23 +1,11 @@
-import { clone } from './clone';
-import { recursiveMerge } from './_recursiveMerge';
-
-export type DeepPartialArray<T> = Array<DeepPartial<T>>;
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type DeepPartial<T> = T extends Function
-  ? T
-  : T extends Array<infer U>
-  ? DeepPartialArray<U>
-  : T extends object
-  ? DeepPartialObject<T>
-  : T | undefined;
-export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
+import { recursiveMerge, DeepPartialObject } from './_recursiveMerge';
 
 /**
  * Merging object from left to right
  *
  * @description
  * @param target value be preserved if possible.
- * @param sources
+ * @param source
  * Consider following
  *
  * array + obj = array
@@ -33,13 +21,9 @@ export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
  */
 export function deepMergeLeft<T extends object>(
   target: T,
-  ...sources: Array<DeepPartialObject<T>>
+  source: DeepPartialObject<T>
 ): T {
-  let output = { ...target } as unknown;
-  for (const source of sources) {
-    output = recursiveMerge(output, source);
-  }
-  return output as any;
+  return recursiveMerge(target, source);
 }
 
 /**
@@ -47,7 +31,7 @@ export function deepMergeLeft<T extends object>(
  *
  * @description
  * @param target value will be replaced if possible.
- * @param sources
+ * @param source
  * Consider following
  *
  * array + obj = obj
@@ -60,14 +44,8 @@ export function deepMergeLeft<T extends object>(
  * @returns {T}
  */
 export function deepMergeRight<T extends object>(
-  target: T,
-  ...sources: Array<DeepPartialObject<T>>
+  target: DeepPartialObject<T>,
+  source: T
 ): T {
-  let output = clone(target) as unknown;
-  for (const source of sources) {
-    // Only difference from mergeDeepLeft
-    // That source go first and output last
-    output = recursiveMerge(source, output);
-  }
-  return output as any;
+  return recursiveMerge(source, target);
 }
