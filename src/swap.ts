@@ -16,8 +16,7 @@ import { clone } from './clone';
  *
  * @example
  *   swap(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']
- *   swap(0, 1)('abc') // => 'bac'
- *   swap('a', 'b')({a: 1, b: 2}) // => {a: 2, b: 1}
+ *   swap(0, -1)('abc') // => 'cba'
  *
  * @category Array
  * @data_last
@@ -32,6 +31,13 @@ export function swap(
   : T extends ReadonlyArray<infer U>
   ? Array<U>
   : never;
+
+/**
+ * @signature
+ *   swap(key1, key2)(object)
+ * @example
+ *   swap('a', 'b')({a: 1, b: 2}) // => {a: 2, b: 1}
+ */
 export function swap(
   key1: PropertyKey,
   key2: PropertyKey
@@ -52,7 +58,6 @@ export function swap(
  * @example
  *   swap(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
  *   swap('abc', 0, 1) // => 'bac'
- *   swap({a: 1, b: 2}, 'a', 'b') // => {a: 2, b: 1}
  *
  * @category Array
  * @data_first
@@ -66,6 +71,13 @@ export function swap<T extends string | ReadonlyArray<any>>(
   : T extends ReadonlyArray<infer U>
   ? Array<U>
   : never;
+
+/**
+ * @signature
+ *   swap(object, key1, key2)
+ * @example
+ *   swap({a: 1, b: 2}, 'a', 'b') // => {a: 2, b: 1}
+ */
 export function swap<T>(
   item: { [K in PropertyKey]: T },
   key1: PropertyKey,
