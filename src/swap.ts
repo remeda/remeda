@@ -19,7 +19,7 @@ import { clone } from './clone';
  *   swap(0, 1)('abc') // => 'bac'
  *   swap('a', 'b')({a: 1, b: 2}) // => {a: 2, b: 1}
  *
- * @category Function
+ * @category Array
  * @data_last
  */
 export function swap(
@@ -54,7 +54,7 @@ export function swap(
  *   swap('abc', 0, 1) // => 'bac'
  *   swap({a: 1, b: 2}, 'a', 'b') // => {a: 2, b: 1}
  *
- * @category Function
+ * @category Array
  * @data_first
  */
 export function swap<T extends string | ReadonlyArray<any>>(
