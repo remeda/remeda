@@ -87,6 +87,7 @@ export * from './splitAt';
 export * from './splitWhen';
 export * from './stringToPath';
 export * from './sumBy';
+export * from './swap';
 export * from './take';
 export * from './takeWhile';
 export * from './times';
