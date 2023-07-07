@@ -36,14 +36,14 @@ export function invert() {
   return purry(_invert, arguments);
 }
 
-function _invert<T extends object>(object: T): Inverted<T> {
-  const result: Record<PropertyKey, keyof T> = {};
+function _invert(
+  object: Readonly<Record<PropertyKey, PropertyKey>>
+): Record<PropertyKey, PropertyKey> {
+  const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const key in object) {
-    // @ts-expect-error We ensure that the value is a valid type in the definition of Invertable
-    // above.
     result[object[key]] = key;
   }
 
-  return result as Inverted<T>;
+  return result;
 }
