@@ -120,9 +120,9 @@ type SafeIndex<
  * For strings, the keys represent the index positions of the characters to be swapped.
  * For objects, the keys represent the property keys of the properties to be swapped.
  *
- * @param data the item to be manipulated. This can be an object, an array, or a string.
- * @param key1 the first key/index
- * @param key2 the second key/index
+ * @param data the item to be manipulated. This can be an array, or a string.
+ * @param key1 the first index
+ * @param key2 the second index
  *
  * @signature
  *   swap(key1, key2)(data)
@@ -132,9 +132,16 @@ type SafeIndex<
  *   swap('abc', 0, 1) // => 'bac'
  *
  * @category Array
+ *
+ * @returns Returns the manipulated array or string.
+ *
  * @data_first
  */
-export function swap<T, K1 extends keyof T, K2 extends keyof T>(
+export function swap<
+  T extends ReadonlyArray<unknown> | string,
+  K1 extends keyof T & number,
+  K2 extends keyof T & number
+>(
   data: T,
   key1: K1,
   key2: K2
@@ -158,8 +165,8 @@ export function swap<T, K1 extends keyof T, K2 extends keyof T>(
               SafeIndex<StringToChars<T>, K2>
             >
           >
-      : never
-    : never
+      : T
+    : T
   : T extends ReadonlyArray<unknown> | []
   ? K1 extends number
     ? number extends K1
@@ -172,19 +179,31 @@ export function swap<T, K1 extends keyof T, K2 extends keyof T>(
         : SafeIndex<T, K2> extends never
         ? T
         : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
-      : never
-    : never
-  : T extends object
-  ? ObjectSwap<T, K1, K2>
+      : T
+    : T
   : never;
+/**
+ * @param data the object to be manipulated
+ * @param key1 the first property key
+ * @param key2 the second property key
+ *
+ * @signature
+ *   swap(key1, key2)(data)
+ *
+ * @returns Returns the manipulated object.
+ *
+ * @example
+ *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
+ */
+export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(
+  data: T,
+  key1: K1,
+  key2: K2
+): ObjectSwap<T, K1, K2>;
 
 /**
- * Swaps the positions of two elements in a list, string or an object based on the provided keys.
- * For strings, the keys represent the index positions of the characters to be swapped.
- * For objects, the keys represent the property keys of the properties to be swapped.
- *
- * @param key1 the first key/index
- * @param key2 the second key/index
+ * @param key1 the first index
+ * @param key2 the second index
  *
  * @signature
  *   swap(key1, key2)(data)
@@ -194,12 +213,13 @@ export function swap<T, K1 extends keyof T, K2 extends keyof T>(
  *   swap(0, -1)('abc') // => 'cba'
  *
  * @category Array
+ * @returns Returns the manipulated array or string.
  * @data_last
  */
-export function swap<K1 extends PropertyKey, K2 extends PropertyKey>(
+export function swap<K1 extends number, K2 extends number>(
   key1: K1,
   key2: K2
-): <T>(
+): <T extends ReadonlyArray<unknown> | string>(
   data: T
 ) => T extends string
   ? string extends T
@@ -221,8 +241,8 @@ export function swap<K1 extends PropertyKey, K2 extends PropertyKey>(
               SafeIndex<StringToChars<T>, K2>
             >
           >
-      : never
-    : never
+      : T
+    : T
   : T extends ReadonlyArray<unknown> | []
   ? K1 extends number
     ? number extends K1
@@ -235,15 +255,27 @@ export function swap<K1 extends PropertyKey, K2 extends PropertyKey>(
         : SafeIndex<T, K2> extends never
         ? T
         : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
-      : never
-    : never
-  : T extends object
-  ? K1 extends keyof T
-    ? K2 extends keyof T
-      ? ObjectSwap<T, K1, K2>
       : T
     : T
   : never;
+
+/**
+ * Swaps the positions of two properties in an object based on the provided keys.
+ * @param key1 the first property key
+ * @param key2 the second property key
+ *
+ * @signature
+ *   swap(key1, key2)(data)
+ *
+ * @example
+ *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
+ *
+ * @returns Returns the manipulated object.
+ */
+export function swap<K1 extends PropertyKey, K2 extends PropertyKey>(
+  key1: K1,
+  key2: K2
+): <T extends { [P in K1 | K2]: any }>(data: T) => ObjectSwap<T, K1, K2>;
 
 /**
  * Swaps the positions of two elements in a list, string, or object based on the provided keys.
@@ -271,6 +303,10 @@ function _swapList<T>(
 ): Array<T> {
   const length = item.length;
   let result = item.slice();
+
+  if (isNaN(index1) || isNaN(index2)) {
+    return result;
+  }
 
   const positiveIndexA = index1 < 0 ? length + index1 : index1;
   const positiveIndexB = index2 < 0 ? length + index2 : index2;
