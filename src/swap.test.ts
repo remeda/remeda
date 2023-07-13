@@ -14,7 +14,7 @@ describe('data_first', () => {
 
 describe('data_last', () => {
   it('swap array', () => {
-    expect(swap(-1, 4)([1, 2, 3, 4, 5])).toEqual([5, 2, 3, 4, 1]);
+    expect(swap(-1, 4)([1, 2, 3, 4, 5])).toEqual([1, 2, 3, 4, 5]);
   });
   it('swap string', () => {
     expect(swap(0, -1)('apple')).toEqual('eppla');
