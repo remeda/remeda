@@ -108,12 +108,54 @@ type SafeIndex<
   T extends ReadonlyArray<unknown> | [],
   Index extends number
 > = NonNegativeInteger<Index> extends never
-  ? SafeNegativeIndex<T, Index> extends never
-    ? never
-    : SafeNegativeIndex<T, Index>
-  : SafePositiveIndex<T, Index> extends never
-  ? never
+  ? SafeNegativeIndex<T, Index>
   : SafePositiveIndex<T, Index>;
+
+type SwapString<T extends string, K1, K2> = K1 extends number
+  ? number extends K1
+    ? string
+    : SafeIndex<StringToChars<T>, K1> extends never
+    ? T
+    : K2 extends number
+    ? number extends K2
+      ? string
+      : SafeIndex<StringToChars<T>, K2> extends never
+      ? T
+      : Join<
+          ArraySwap<
+            StringToChars<T>,
+            SafeIndex<StringToChars<T>, K1>,
+            SafeIndex<StringToChars<T>, K2>
+          >
+        >
+    : T
+  : T;
+
+type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
+  ? number extends K1
+    ? ReadonlyArray<T[number]>
+    : SafeIndex<T, K1> extends never
+    ? T
+    : K2 extends number
+    ? number extends K2
+      ? ReadonlyArray<T[number]>
+      : SafeIndex<T, K2> extends never
+      ? T
+      : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
+    : T
+  : T;
+
+type Swap<
+  T extends ReadonlyArray<unknown> | string,
+  K1 extends number,
+  K2 extends number
+> = T extends string
+  ? string extends T
+    ? string
+    : SwapString<T, K1, K2>
+  : T extends ReadonlyArray<unknown> | []
+  ? SwapArray<T, K1, K2>
+  : never;
 
 /**
  * Swaps the positions of two elements in a list, string or an object based on the provided keys.
@@ -141,47 +183,7 @@ export function swap<
   T extends ReadonlyArray<unknown> | string,
   K1 extends keyof T & number,
   K2 extends keyof T & number
->(
-  data: T,
-  key1: K1,
-  key2: K2
-): T extends string
-  ? string extends T
-    ? string
-    : K1 extends number
-    ? number extends K1
-      ? string
-      : SafeIndex<StringToChars<T>, K1> extends never
-      ? T
-      : K2 extends number
-      ? number extends K2
-        ? string
-        : SafeIndex<StringToChars<T>, K2> extends never
-        ? T
-        : Join<
-            ArraySwap<
-              StringToChars<T>,
-              SafeIndex<StringToChars<T>, K1>,
-              SafeIndex<StringToChars<T>, K2>
-            >
-          >
-      : T
-    : T
-  : T extends ReadonlyArray<unknown> | []
-  ? K1 extends number
-    ? number extends K1
-      ? ReadonlyArray<T[number]>
-      : SafeIndex<T, K1> extends never
-      ? T
-      : K2 extends number
-      ? number extends K2
-        ? ReadonlyArray<T[number]>
-        : SafeIndex<T, K2> extends never
-        ? T
-        : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
-      : T
-    : T
-  : never;
+>(data: T, key1: K1, key2: K2): Swap<T, K1, K2>;
 /**
  * @param data the object to be manipulated
  * @param key1 the first property key
@@ -219,45 +221,7 @@ export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(
 export function swap<K1 extends number, K2 extends number>(
   key1: K1,
   key2: K2
-): <T extends ReadonlyArray<unknown> | string>(
-  data: T
-) => T extends string
-  ? string extends T
-    ? string
-    : K1 extends number
-    ? number extends K1
-      ? string
-      : SafeIndex<StringToChars<T>, K1> extends never
-      ? T
-      : K2 extends number
-      ? number extends K2
-        ? string
-        : SafeIndex<StringToChars<T>, K2> extends never
-        ? T
-        : Join<
-            ArraySwap<
-              StringToChars<T>,
-              SafeIndex<StringToChars<T>, K1>,
-              SafeIndex<StringToChars<T>, K2>
-            >
-          >
-      : T
-    : T
-  : T extends ReadonlyArray<unknown> | []
-  ? K1 extends number
-    ? number extends K1
-      ? ReadonlyArray<T[number]>
-      : SafeIndex<T, K1> extends never
-      ? T
-      : K2 extends number
-      ? number extends K2
-        ? ReadonlyArray<T[number]>
-        : SafeIndex<T, K2> extends never
-        ? T
-        : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
-      : T
-    : T
-  : never;
+): <T extends ReadonlyArray<unknown> | string>(data: T) => Swap<T, K1, K2>;
 
 /**
  * Swaps the positions of two properties in an object based on the provided keys.
