@@ -4,8 +4,6 @@ import { isArray } from './isArray';
 import { clone } from './clone';
 import { IterableContainer } from './_types';
 
-type ParseInt<T> = T extends `${infer N extends number}` ? N : never;
-
 type isEqual<A, B> = A extends B ? (B extends A ? true : false) : false;
 
 type isEitherZero<A extends number, B extends number> = A extends 0
@@ -28,11 +26,7 @@ type isLessThan<A extends number, B extends number> = isEitherZero<
 type BuildTuple<
   L extends number,
   T extends ReadonlyArray<unknown> = []
-> = T extends {
-  length: L;
-}
-  ? T
-  : BuildTuple<L, [...T, unknown]>;
+> = T['length'] extends L ? T : BuildTuple<L, [...T, unknown]>;
 
 type Subtract<A extends number, B extends number> = BuildTuple<A> extends [
   ...infer U,
@@ -47,7 +41,11 @@ type NonNegativeInteger<T extends number> = number extends T
   ? never
   : T;
 
-type Absolute<T extends number> = `${T}` extends `-${infer R}` ? R : `${T}`;
+type Absolute<T extends number> = `${T}` extends `-${infer R}`
+  ? R extends `${infer N extends number}`
+    ? N
+    : never
+  : T;
 
 type StringToChars<T extends string> = string extends T
   ? Array<string>
@@ -99,9 +97,9 @@ type ArraySwap<
 type SafeNegativeIndex<
   T extends IterableContainer,
   Index extends number
-> = Subtract<T['length'], ParseInt<Absolute<Index>>> extends never
+> = Subtract<T['length'], Absolute<Index>> extends never
   ? never
-  : Subtract<T['length'], ParseInt<Absolute<Index>>>;
+  : Subtract<T['length'], Absolute<Index>>;
 
 type SafePositiveIndex<
   T extends IterableContainer,
