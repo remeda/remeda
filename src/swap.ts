@@ -1,16 +1,9 @@
 import { purry } from './purry';
 import { isString } from './isString';
 import { isArray } from './isArray';
-import { clone } from './clone';
 import { IterableContainer } from './_types';
 
 type isEqual<A, B> = A extends B ? (B extends A ? true : false) : false;
-
-type isEitherZero<A extends number, B extends number> = A extends 0
-  ? true
-  : B extends 0
-  ? true
-  : false;
 
 type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
   ? false
@@ -252,39 +245,25 @@ function _swapList<T>(
   index1: number,
   index2: number
 ): Array<T> {
-  const length = item.length;
-  let result = item.slice();
+  const result = item.slice();
 
   if (isNaN(index1) || isNaN(index2)) {
     return result;
   }
 
-  const positiveIndexA = index1 < 0 ? length + index1 : index1;
-  const positiveIndexB = index2 < 0 ? length + index2 : index2;
+  const positiveIndexA = index1 < 0 ? item.length + index1 : index1;
+  const positiveIndexB = index2 < 0 ? item.length + index2 : index2;
 
-  const positiveMin = Math.min(positiveIndexA, positiveIndexB);
-  const positiveMax = Math.max(positiveIndexA, positiveIndexB);
-
-  if (positiveIndexA < 0 || positiveIndexA > length) {
-    return result;
-  }
-  if (positiveIndexB < 0 || positiveIndexB > length) {
-    return result;
-  }
-  if (positiveIndexA === positiveIndexB) {
+  if (positiveIndexA < 0 || positiveIndexA > item.length) {
     return result;
   }
 
-  result = Array.prototype.concat.apply(
-    [],
-    [
-      result.slice(0, positiveMin),
-      [result[positiveMax]],
-      result.slice(positiveMin + 1, positiveMax),
-      [result[positiveMin]],
-      result.slice(positiveMax + 1, length),
-    ]
-  );
+  if (positiveIndexB < 0 || positiveIndexB > item.length) {
+    return result;
+  }
+
+  result[positiveIndexA] = item[positiveIndexB];
+  result[positiveIndexB] = item[positiveIndexA];
 
   return result;
 }
@@ -299,18 +278,14 @@ function _swapString<T extends string>(
 }
 
 function _swapObject(
-  item: { [K in PropertyKey]: any },
+  obj: { [K in PropertyKey]: any },
   key1: PropertyKey,
   key2: PropertyKey
 ): { [K in PropertyKey]: any } {
-  const copy = clone(item);
-  if (
-    Object.prototype.hasOwnProperty.call(copy, key1) &&
-    Object.prototype.hasOwnProperty.call(copy, key2)
-  ) {
-    const tmp = copy[key1];
-    copy[key1] = copy[key2];
-    copy[key2] = tmp;
-  }
-  return copy;
+  const { [key1]: value1, [key2]: value2 } = obj;
+  return {
+    ...obj,
+    [key1]: value2,
+    [key2]: value1,
+  };
 }
