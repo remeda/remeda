@@ -12,15 +12,12 @@ type isEitherZero<A extends number, B extends number> = A extends 0
   ? true
   : false;
 
-type isLessThan<A extends number, B extends number> = isEitherZero<
-  A,
-  B
-> extends true
-  ? isEqual<A, B> extends true
-    ? false
-    : A extends 0
-    ? true
-    : false
+type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
+  ? false
+  : 0 extends A
+  ? true
+  : 0 extends B
+  ? false
   : isLessThan<Subtract<A, 1>, Subtract<B, 1>>;
 
 type BuildTuple<
