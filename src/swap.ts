@@ -70,7 +70,7 @@ type ObjectSwap<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
 };
 
-type ArraySwap<
+type SwapArrayInternal<
   T extends IterableContainer,
   Index1 extends number,
   Index2 extends number,
@@ -87,7 +87,13 @@ type ArraySwap<
         : Position['length'] extends Index2
         ? Original[Index1]
         : AtPosition,
-      ...ArraySwap<Rest, Index1, Index2, [unknown, ...Position], Original>
+      ...SwapArrayInternal<
+        Rest,
+        Index1,
+        Index2,
+        [unknown, ...Position],
+        Original
+      >
     ]
   : T;
 
@@ -122,7 +128,7 @@ type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
       ? ReadonlyArray<T[number]>
       : SafeIndex<T, K2> extends never
       ? T
-      : ArraySwap<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
+      : SwapArrayInternal<T, SafeIndex<T, K1>, SafeIndex<T, K2>>
     : T
   : T;
 
