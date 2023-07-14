@@ -32,11 +32,11 @@ type Subtract<A extends number, B extends number> = BuildTuple<A> extends [
   ? U['length']
   : never;
 
-type NonNegativeInteger<T extends number> = number extends T
-  ? never
+type IsNonNegativeInteger<T extends number> = number extends T
+  ? false
   : `${T}` extends `-${string}` | `${string}.${string}`
-  ? never
-  : T;
+  ? false
+  : true;
 
 type Absolute<T extends number> = `${T}` extends `-${infer R}`
   ? R extends `${infer N extends number}`
@@ -94,9 +94,7 @@ type ArraySwap<
 type SafeNegativeIndex<
   T extends IterableContainer,
   Index extends number
-> = Subtract<T['length'], Absolute<Index>> extends never
-  ? never
-  : Subtract<T['length'], Absolute<Index>>;
+> = Subtract<T['length'], Absolute<Index>>;
 
 type SafePositiveIndex<
   T extends IterableContainer,
@@ -106,7 +104,7 @@ type SafePositiveIndex<
 type SafeIndex<
   T extends IterableContainer,
   Index extends number
-> = NonNegativeInteger<Index> extends never
+> = IsNonNegativeInteger<Index> extends false
   ? SafeNegativeIndex<T, Index>
   : SafePositiveIndex<T, Index>;
 
