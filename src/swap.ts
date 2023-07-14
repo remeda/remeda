@@ -232,7 +232,7 @@ export function swap() {
 
 function _swap(item: any, key1: any, key2: any): any {
   if (isArray(item)) {
-    return _swapList(item, key1, key2);
+    return _swapArray(item, key1, key2);
   } else if (isString(item)) {
     return _swapString(item, key1, key2);
   } else {
@@ -240,7 +240,7 @@ function _swap(item: any, key1: any, key2: any): any {
   }
 }
 
-function _swapList<T>(
+function _swapArray<T>(
   item: ReadonlyArray<T>,
   index1: number,
   index2: number
@@ -273,7 +273,7 @@ function _swapString<T extends string>(
   key1: number,
   key2: number
 ): string {
-  const result = _swapList(item.split(''), key1, key2);
+  const result = _swapArray(item.split(''), key1, key2);
   return result.join('');
 }
 
