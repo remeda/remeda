@@ -2,43 +2,43 @@ import { purry } from './purry';
 import { isString } from './isString';
 import { isArray } from './isArray';
 import { clone } from './clone';
+import { IterableContainer } from './_types';
 
 type ParseInt<T> = T extends `${infer N extends number}` ? N : never;
 
-type Length<T extends ReadonlyArray<any>> = T extends { length: infer L }
-  ? L
-  : never;
+type isEqual<A, B> = A extends B ? (B extends A ? true : false) : false;
 
-type EQ<A, B> = A extends B ? (B extends A ? true : false) : false;
-
-type AtTerminus<A extends number, B extends number> = A extends 0
+type isEitherZero<A extends number, B extends number> = A extends 0
   ? true
   : B extends 0
   ? true
   : false;
 
-type LT<A extends number, B extends number> = AtTerminus<A, B> extends true
-  ? EQ<A, B> extends true
+type isLessThan<A extends number, B extends number> = isEitherZero<
+  A,
+  B
+> extends true
+  ? isEqual<A, B> extends true
     ? false
     : A extends 0
     ? true
     : false
-  : LT<Subtract<A, 1>, Subtract<B, 1>>;
+  : isLessThan<Subtract<A, 1>, Subtract<B, 1>>;
 
 type BuildTuple<
   L extends number,
-  T extends ReadonlyArray<any> = []
+  T extends ReadonlyArray<unknown> = []
 > = T extends {
   length: L;
 }
   ? T
-  : BuildTuple<L, [...T, any]>;
+  : BuildTuple<L, [...T, unknown]>;
 
 type Subtract<A extends number, B extends number> = BuildTuple<A> extends [
   ...infer U,
   ...BuildTuple<B>
 ]
-  ? Length<U>
+  ? U['length']
   : never;
 
 type NonNegativeInteger<T extends number> = number extends T
@@ -57,25 +57,29 @@ type StringToChars<T extends string> = string extends T
 
 type Join<
   Strings extends ReadonlyArray<string>,
-  Acc extends string = ''
+  Accumulator extends string = ''
 > = Strings extends readonly [infer Head, ...infer Rest]
   ? Rest extends ReadonlyArray<string>
     ? Join<
         Rest,
-        Head extends string ? (Acc extends '' ? Head : `${Acc}${Head}`) : never
+        Head extends string
+          ? Accumulator extends ''
+            ? Head
+            : `${Accumulator}${Head}`
+          : never
       >
-    : Acc
-  : Acc;
+    : Accumulator
+  : Accumulator;
 
 type ObjectSwap<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
 };
 
 type ArraySwap<
-  T extends ReadonlyArray<unknown> | [],
+  T extends IterableContainer,
   Index1 extends number,
   Index2 extends number,
-  Position extends ReadonlyArray<unknown> | [] = [],
+  Position extends IterableContainer = [],
   Original extends ReadonlyArray<unknown> = T
 > = T extends readonly [infer AtPosition, ...infer Rest]
   ? number extends Index1
@@ -83,9 +87,9 @@ type ArraySwap<
     : number extends Index2
     ? T
     : [
-        Length<Position> extends Index1
+        Position['length'] extends Index1
           ? Original[Index2]
-          : Length<Position> extends Index2
+          : Position['length'] extends Index2
           ? Original[Index1]
           : AtPosition,
         ...ArraySwap<Rest, Index1, Index2, [unknown, ...Position], Original>
@@ -93,19 +97,19 @@ type ArraySwap<
   : T;
 
 type SafeNegativeIndex<
-  T extends ReadonlyArray<unknown> | [],
+  T extends IterableContainer,
   Index extends number
-> = Subtract<Length<T>, ParseInt<Absolute<Index>>> extends never
+> = Subtract<T['length'], ParseInt<Absolute<Index>>> extends never
   ? never
-  : Subtract<Length<T>, ParseInt<Absolute<Index>>>;
+  : Subtract<T['length'], ParseInt<Absolute<Index>>>;
 
 type SafePositiveIndex<
-  T extends ReadonlyArray<unknown> | [],
+  T extends IterableContainer,
   Index extends number
-> = LT<Index, Length<T>> extends true ? Index : never;
+> = isLessThan<Index, T['length']> extends true ? Index : never;
 
 type SafeIndex<
-  T extends ReadonlyArray<unknown> | [],
+  T extends IterableContainer,
   Index extends number
 > = NonNegativeInteger<Index> extends never
   ? SafeNegativeIndex<T, Index>
@@ -153,7 +157,7 @@ type Swap<
   ? string extends T
     ? string
     : SwapString<T, K1, K2>
-  : T extends ReadonlyArray<unknown> | []
+  : T extends IterableContainer
   ? SwapArray<T, K1, K2>
   : never;
 
