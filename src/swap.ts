@@ -76,19 +76,19 @@ type ArraySwap<
   Index2 extends number,
   Position extends IterableContainer = [],
   Original extends ReadonlyArray<unknown> = T
-> = T extends readonly [infer AtPosition, ...infer Rest]
-  ? number extends Index1
-    ? T
-    : number extends Index2
-    ? T
-    : [
-        Position['length'] extends Index1
-          ? Original[Index2]
-          : Position['length'] extends Index2
-          ? Original[Index1]
-          : AtPosition,
-        ...ArraySwap<Rest, Index1, Index2, [unknown, ...Position], Original>
-      ]
+> = number extends Index1
+  ? T
+  : number extends Index2
+  ? T
+  : T extends readonly [infer AtPosition, ...infer Rest]
+  ? [
+      Position['length'] extends Index1
+        ? Original[Index2]
+        : Position['length'] extends Index2
+        ? Original[Index1]
+        : AtPosition,
+      ...ArraySwap<Rest, Index1, Index2, [unknown, ...Position], Original>
+    ]
   : T;
 
 type SafeNegativeIndex<
