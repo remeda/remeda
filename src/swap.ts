@@ -108,25 +108,9 @@ type SafeIndex<
   ? SafeNegativeIndex<T, Index>
   : SafePositiveIndex<T, Index>;
 
-type SwapString<T extends string, K1, K2> = K1 extends number
-  ? number extends K1
-    ? string
-    : SafeIndex<StringToChars<T>, K1> extends never
-    ? T
-    : K2 extends number
-    ? number extends K2
-      ? string
-      : SafeIndex<StringToChars<T>, K2> extends never
-      ? T
-      : Join<
-          ArraySwap<
-            StringToChars<T>,
-            SafeIndex<StringToChars<T>, K1>,
-            SafeIndex<StringToChars<T>, K2>
-          >
-        >
-    : T
-  : T;
+type SwapString<T extends string, K1, K2> = Join<
+  SwapArray<StringToChars<T>, K1, K2>
+>;
 
 type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
   ? number extends K1
