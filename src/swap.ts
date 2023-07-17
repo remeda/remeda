@@ -35,7 +35,7 @@ type TupleOfLength<
 
 type IsNonNegativeInteger<T extends number> = number extends T
   ? false
-  : `${T}` extends `-${string}` | `${string}.${string}`
+  : `${T}` extends `-${string}`
   ? false
   : true;
 
@@ -95,9 +95,9 @@ type SafePositiveIndex<
 type SafeIndex<
   T extends IterableContainer,
   Index extends number
-> = IsNonNegativeInteger<Index> extends false
-  ? SafeNegativeIndex<T, Index>
-  : SafePositiveIndex<T, Index>;
+> = IsNonNegativeInteger<Index> extends true
+  ? SafePositiveIndex<T, Index>
+  : SafeNegativeIndex<T, Index>;
 
 type SwapString<T extends string, K1, K2> = Joined<
   SwapArray<CharactersTuple<T>, K1, K2>,
