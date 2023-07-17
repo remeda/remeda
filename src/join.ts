@@ -3,7 +3,7 @@ import { purry } from './purry';
 
 type Joinable = bigint | boolean | number | string | null | undefined;
 
-type Joined<T extends IterableContainer, Glue extends string> =
+export type Joined<T extends IterableContainer, Glue extends string> =
   // Empty tuple
   T[number] extends never
     ? ''

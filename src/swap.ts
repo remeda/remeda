@@ -2,6 +2,7 @@ import { purry } from './purry';
 import { isString } from './isString';
 import { isArray } from './isArray';
 import { IterableContainer } from './_types';
+import { Joined } from './join';
 
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
@@ -49,22 +50,6 @@ type CharactersTuple<T extends string> = string extends T
   : T extends `${infer C}${infer R}`
   ? [C, ...CharactersTuple<R>]
   : [];
-
-type Join<
-  Strings extends ReadonlyArray<string>,
-  Accumulator extends string = ''
-> = Strings extends readonly [infer Head, ...infer Rest]
-  ? Rest extends ReadonlyArray<string>
-    ? Join<
-        Rest,
-        Head extends string
-          ? Accumulator extends ''
-            ? Head
-            : `${Accumulator}${Head}`
-          : never
-      >
-    : Accumulator
-  : Accumulator;
 
 type ObjectSwap<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
@@ -114,8 +99,9 @@ type SafeIndex<
   ? SafeNegativeIndex<T, Index>
   : SafePositiveIndex<T, Index>;
 
-type SwapString<T extends string, K1, K2> = Join<
-  SwapArray<CharactersTuple<T>, K1, K2>
+type SwapString<T extends string, K1, K2> = Joined<
+  SwapArray<CharactersTuple<T>, K1, K2>,
+  ''
 >;
 
 type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
