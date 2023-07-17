@@ -3,7 +3,14 @@ import { isString } from './isString';
 import { isArray } from './isArray';
 import { IterableContainer } from './_types';
 
-type isEqual<A, B> = A extends B ? (B extends A ? true : false) : false;
+/**
+ * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
+ */
+type isEqual<A, B> = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B
+  ? 1
+  : 2
+  ? true
+  : false;
 
 type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
   ? false
