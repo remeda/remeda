@@ -12,25 +12,25 @@ type isEqual<A, B> = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B
   ? true
   : false;
 
+type Difference<A extends number, B extends number> = TupleOfLength<A> extends [
+  ...infer U,
+  ...TupleOfLength<B>
+]
+  ? U['length']
+  : never;
+
 type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
   ? false
   : 0 extends A
   ? true
   : 0 extends B
   ? false
-  : isLessThan<Subtract<A, 1>, Subtract<B, 1>>;
+  : isLessThan<Difference<A, 1>, Difference<B, 1>>;
 
-type BuildTuple<
+type TupleOfLength<
   L extends number,
   T extends ReadonlyArray<unknown> = []
-> = T['length'] extends L ? T : BuildTuple<L, [...T, unknown]>;
-
-type Subtract<A extends number, B extends number> = BuildTuple<A> extends [
-  ...infer U,
-  ...BuildTuple<B>
-]
-  ? U['length']
-  : never;
+> = T['length'] extends L ? T : TupleOfLength<L, [...T, unknown]>;
 
 type IsNonNegativeInteger<T extends number> = number extends T
   ? false
@@ -44,10 +44,10 @@ type Absolute<T extends number> = `${T}` extends `-${infer R}`
     : never
   : T;
 
-type StringToChars<T extends string> = string extends T
+type CharactersTuple<T extends string> = string extends T
   ? Array<string>
   : T extends `${infer C}${infer R}`
-  ? [C, ...StringToChars<R>]
+  ? [C, ...CharactersTuple<R>]
   : [];
 
 type Join<
@@ -100,7 +100,7 @@ type SwapArrayInternal<
 type SafeNegativeIndex<
   T extends IterableContainer,
   Index extends number
-> = Subtract<T['length'], Absolute<Index>>;
+> = Difference<T['length'], Absolute<Index>>;
 
 type SafePositiveIndex<
   T extends IterableContainer,
@@ -115,7 +115,7 @@ type SafeIndex<
   : SafePositiveIndex<T, Index>;
 
 type SwapString<T extends string, K1, K2> = Join<
-  SwapArray<StringToChars<T>, K1, K2>
+  SwapArray<CharactersTuple<T>, K1, K2>
 >;
 
 type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
