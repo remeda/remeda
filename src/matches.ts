@@ -1,7 +1,9 @@
 import { purry } from './purry';
 
 function _matches(target: any, condition: any) {
-  if (typeof condition === 'function') return condition(target);
+  if (typeof condition === 'function') {
+    return condition(target);
+  }
 
   if (typeof condition === 'object') {
     for (const key in condition) {
