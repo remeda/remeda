@@ -4,9 +4,12 @@ function _matches(target: any, condition: any) {
   if (typeof condition === 'function') return condition(target);
 
   if (typeof condition === 'object') {
-    return Object.entries(condition).every(([key, value]) =>
-      matches(target[key], value)
-    );
+    for (const key in condition) {
+      if (!_matches(target[key], condition[key])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   return target === condition;
