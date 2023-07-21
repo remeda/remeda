@@ -30,19 +30,17 @@ type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
 
 type TupleOfLength<
   L extends number,
-  T extends ReadonlyArray<unknown> = []
+  T extends IterableContainer = []
 > = T['length'] extends L ? T : TupleOfLength<L, [...T, unknown]>;
 
-type IsNonNegativeInteger<T extends number> = number extends T
+type IsNonNegative<T extends number> = number extends T
   ? false
   : `${T}` extends `-${string}`
   ? false
   : true;
 
-type Absolute<T extends number> = `${T}` extends `-${infer R}`
-  ? R extends `${infer N extends number}`
-    ? N
-    : never
+type Absolute<T extends number> = `${T}` extends `-${infer R extends number}`
+  ? R
   : T;
 
 type CharactersTuple<T extends string> = string extends T
@@ -59,8 +57,8 @@ type SwapArrayInternal<
   T extends IterableContainer,
   Index1 extends number,
   Index2 extends number,
-  Position extends IterableContainer = [],
-  Original extends ReadonlyArray<unknown> = T
+  Position extends ReadonlyArray<unknown> = [],
+  Original extends IterableContainer = T
 > = number extends Index1
   ? T
   : number extends Index2
@@ -95,7 +93,7 @@ type SafePositiveIndex<
 type SafeIndex<
   T extends IterableContainer,
   Index extends number
-> = IsNonNegativeInteger<Index> extends true
+> = IsNonNegative<Index> extends true
   ? SafePositiveIndex<T, Index>
   : SafeNegativeIndex<T, Index>;
 
@@ -104,7 +102,7 @@ type SwapString<T extends string, K1, K2> = Joined<
   ''
 >;
 
-type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
+type SwapArray<T extends IterableContainer, K1, K2> = K1 extends number
   ? number extends K1
     ? ReadonlyArray<T[number]>
     : SafeIndex<T, K1> extends never
@@ -119,13 +117,11 @@ type SwapArray<T extends ReadonlyArray<unknown>, K1, K2> = K1 extends number
   : T;
 
 type Swap<
-  T extends ReadonlyArray<unknown> | string,
+  T extends IterableContainer | string,
   K1 extends number,
   K2 extends number
 > = T extends string
-  ? string extends T
-    ? string
-    : SwapString<T, K1, K2>
+  ? SwapString<T, K1, K2>
   : T extends IterableContainer
   ? SwapArray<T, K1, K2>
   : never;
@@ -153,7 +149,7 @@ type Swap<
  * @data_first
  */
 export function swap<
-  T extends ReadonlyArray<unknown> | string,
+  T extends IterableContainer | string,
   K1 extends keyof T & number,
   K2 extends keyof T & number
 >(data: T, key1: K1, key2: K2): Swap<T, K1, K2>;
@@ -194,7 +190,7 @@ export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(
 export function swap<K1 extends number, K2 extends number>(
   key1: K1,
   key2: K2
-): <T extends ReadonlyArray<unknown> | string>(data: T) => Swap<T, K1, K2>;
+): <T extends IterableContainer | string>(data: T) => Swap<T, K1, K2>;
 
 /**
  * Swaps the positions of two properties in an object based on the provided keys.
@@ -209,10 +205,10 @@ export function swap<K1 extends number, K2 extends number>(
  *
  * @returns Returns the manipulated object.
  */
-export function swap<K1 extends PropertyKey, K2 extends PropertyKey>(
+export function swap<T extends object, K1 extends keyof T, K2 extends keyof T>(
   key1: K1,
   key2: K2
-): <T extends { [P in K1 | K2]: any }>(data: T) => ObjectSwap<T, K1, K2>;
+): (data: T) => ObjectSwap<T, K1, K2>;
 
 /**
  * Swaps the positions of two elements in a list, string, or object based on the provided keys.
