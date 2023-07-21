@@ -1,9 +1,10 @@
+import { fromPairs } from './fromPairs';
 import { purry } from './purry';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param object the object
- * @param names the property names
+ * @param data the object
+ * @param propNames the property names
  * @signature
  *    R.omit(obj, names);
  * @example
@@ -11,15 +12,15 @@ import { purry } from './purry';
  * @data_first
  * @category Object
  */
-export function omit<T extends Record<PropertyKey, any>, K extends keyof T>(
-  object: T,
-  names: ReadonlyArray<K>
+export function omit<T extends object, K extends keyof T>(
+  data: T,
+  propNames: ReadonlyArray<K>
 ): Omit<T, K>;
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param object the object
- * @param names the property names
+ * @param data the object
+ * @param propNames the property names
  * @signature
  *    R.omit(names)(obj);
  * @example
@@ -28,22 +29,37 @@ export function omit<T extends Record<PropertyKey, any>, K extends keyof T>(
  * @category Object
  */
 export function omit<K extends PropertyKey>(
-  names: ReadonlyArray<K>
-): <T extends Record<PropertyKey, any>>(object: T) => Omit<T, K>;
+  propNames: ReadonlyArray<K>
+): <T extends object>(data: T) => Omit<T, K>;
 
 export function omit() {
   return purry(_omit, arguments);
 }
 
-function _omit<T extends Record<PropertyKey, any>, K extends keyof T>(
-  object: T,
-  names: Array<K>
+function _omit<T extends object, K extends keyof T>(
+  data: T,
+  propNames: ReadonlyArray<K>
 ): Omit<T, K> {
-  const set = new Set(names as Array<string>);
-  return Object.entries(object).reduce<any>((acc, [name, value]) => {
-    if (!set.has(name)) {
-      acc[name] = value;
-    }
-    return acc;
-  }, {}) as Omit<T, K>;
+  if (propNames.length === 0) {
+    return { ...data };
+  }
+
+  if (propNames.length === 1) {
+    const [propName] = propNames;
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- use destructuring to remove a single key, letting JS optimize here...
+      [propName]: omitted,
+      ...remaining
+    } = data;
+    return remaining;
+  }
+
+  if (!propNames.some(propName => propName in data)) {
+    return { ...data };
+  }
+
+  const asSet = new Set(propNames);
+  return fromPairs(
+    Object.entries(data).filter(([key]) => !asSet.has(key as K))
+  ) as Omit<T, K>;
 }
