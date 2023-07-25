@@ -10,7 +10,7 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  * @param key2 the second property key
  *
  * @signature
- *   swap(key1, key2)(data)
+ *   swap(data, key1, key2)
  *
  * @returns Returns the manipulated object.
  *

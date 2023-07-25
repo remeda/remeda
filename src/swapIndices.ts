@@ -117,11 +117,11 @@ type SwappedIndices<
  * @param index2 the second index
  *
  * @signature
- *   swapIndices(index1, index2)(data)
+ *   swapIndices(data, index1, index2)
  *
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
- *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b' ,a']
+ *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
  *   swapIndices('abc', 0, 1) // => 'bac'
  *
  * @category Array
