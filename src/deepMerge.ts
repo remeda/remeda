@@ -1,25 +1,22 @@
+import type { MergeDeep } from 'type-fest';
 import { uniq } from './uniq';
 import { isCyclic } from './_isCyclic';
 
-export type DeepPartialArray<T> = ReadonlyArray<DeepPartial<T>>;
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type DeepPartial<T> = T extends Function
-  ? T
-  : T extends ReadonlyArray<infer U>
-  ? DeepPartialArray<U>
-  : T extends object
-  ? DeepPartialObject<T>
-  : unknown;
-export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
-
 /**
  * Recursively merges two values, `a` and `b`.
- *
- * @param {unknown} a - The first value to merge. This is the dominant parameter in the merge operation.
- * @param {unknown} b - The second value to merge.
- * @returns {unknown} The result of the merge operation.
+ * @param target - The first value to merge. This is the dominant parameter in the merge operation.
+ * @param source - The second value to merge.
  */
-export function deepMerge<T>(a: T, b: unknown): T {
+
+export function deepMerge<Target, Source>(
+  target: Target,
+  source: Source
+): MergeDeep<Target, Source> {
+  // @ts-expect-error temporarily disable type checking
+  return _deepMerge(target, source);
+}
+
+export function _deepMerge<T>(a: T, b: unknown): T {
   if (
     typeof a !== 'object' ||
     typeof b !== 'object' ||
