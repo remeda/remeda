@@ -32,6 +32,12 @@ describe('deepMerge', () => {
     expect(deepMerge(a, b)).toEqual({ foo: 'bar', x: 1, y: 2 });
   });
 
+  test('should merge objects using data_last approach', () => {
+    const a = { foo: 'bar', x: 1 };
+    const b = { foo: 'baz', y: 2 };
+    expect(deepMerge(b)(a)).toEqual({ foo: 'bar', x: 1, y: 2 });
+  });
+
   test('should not merge cyclic objects', () => {
     const a: any = {};
     a.foo = a;
