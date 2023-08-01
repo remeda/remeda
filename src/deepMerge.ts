@@ -19,7 +19,7 @@ export type DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> };
  * @param {unknown} b - The second value to merge.
  * @returns {unknown} The result of the merge operation.
  */
-export function recursiveMerge<T>(a: T, b: unknown): T {
+export function deepMerge<T>(a: T, b: unknown): T {
   if (
     typeof a !== 'object' ||
     typeof b !== 'object' ||
@@ -38,7 +38,7 @@ export function recursiveMerge<T>(a: T, b: unknown): T {
   const keys = uniq(Object.keys(a).concat(Object.keys(b)));
   for (const k of keys) {
     // @ts-expect-error We've already ensured that "a" and "b" are objects at runtime.
-    if (!isCyclic(a[k])) output[k] = recursiveMerge(a[k], b[k]);
+    if (!isCyclic(a[k])) output[k] = deepMerge(a[k], b[k]);
   }
   return output;
 }
