@@ -20,12 +20,6 @@ describe('deepMerge', () => {
     expect(deepMerge(undefined, 'bar')).toBe('bar');
   });
 
-  test('should merge arrays removing duplicates', () => {
-    const a = [1, 2, 3];
-    const b = [3, 4, 5];
-    expect(deepMerge(a, b)).toEqual([1, 2, 3, 4, 5]);
-  });
-
   test('should merge objects', () => {
     const a = { foo: 'bar', x: 1 };
     const b = { foo: 'baz', y: 2 };
@@ -46,8 +40,7 @@ describe('deepMerge', () => {
     expect(deepMerge(a, b)).toEqual({ foo: a, y: 2 });
   });
 
-  // Test fails with error "RangeError: Maximum call stack size exceeded" in "uniq()" function
-  test.skip('should not merge cyclic arrays', () => {
+  test('should not merge cyclic arrays', () => {
     const a: any = [];
     a.push(a); // Making 'a' a cyclic array.
     const b = [1, 2, 3];

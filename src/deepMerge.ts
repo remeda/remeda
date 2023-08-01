@@ -53,8 +53,8 @@ export function _deepMerge(a: unknown, b: unknown): unknown {
     return a ?? b;
   }
   if (Array.isArray(a)) {
-    if (Array.isArray(b)) {
-      return uniq(a.concat(b));
+    if (Array.isArray(b) && !isCyclic(a)) {
+      return a.concat(b);
     }
     return a;
   }
