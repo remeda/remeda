@@ -23,10 +23,10 @@ export function isCyclic(value: unknown) {
     if (Array.isArray(input)) {
       // If 'input' is an array, check if any of its elements are an object that has been seen already.
       return input.some(hasCycle);
-    } else {
-      // Recurse through the object, looking for more circular references.
-      return Object.values(input).some(hasCycle);
     }
+     
+    // Recurse through the object, looking for more circular references.
+    return Object.values(input).some(hasCycle);
   }
 
   return hasCycle(value);
