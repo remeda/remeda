@@ -1,8 +1,8 @@
-import { isCyclic } from './_isCyclic'; // replace 'yourFilePath' with the actual file path
+import { isCyclic } from './_isCyclic';
 
 describe('hasCycle', () => {
   test('should return false for non-objects', () => {
-    expect(isCyclic(123)).toBe(false);
+    expect(isCyclic(123)).toBeFalsy();
     expect(isCyclic('string')).toBeFalsy();
     expect(isCyclic(null)).toBeFalsy();
     expect(isCyclic(undefined)).toBeFalsy();

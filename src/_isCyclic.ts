@@ -4,7 +4,7 @@
  * @param {unknown} value - The value to check for cyclic references.
  * @returns {boolean} - Returns true if the value contains cyclic references, otherwise false.
  */
-export function isCyclic(value: unknown) {
+export function isCyclic(value: unknown): boolean {
   const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
 
   function hasCycle(input: unknown) {
@@ -24,7 +24,7 @@ export function isCyclic(value: unknown) {
       // If 'input' is an array, check if any of its elements are an object that has been seen already.
       return input.some(hasCycle);
     }
-     
+
     // Recurse through the object, looking for more circular references.
     return Object.values(input).some(hasCycle);
   }
