@@ -20,6 +20,12 @@ describe('deepMerge', () => {
     expect(deepMerge(undefined, 'bar')).toBe('bar');
   });
 
+  test('should merge arrays', () => {
+    const a = [1, 2, 3];
+    const b = [3, 4, 5];
+    expect(deepMerge(a, b)).toEqual([1, 2, 3, 3, 4, 5]);
+  });
+
   test('should merge objects', () => {
     const a = { foo: 'bar', x: 1 };
     const b = { foo: 'baz', y: 2 };
