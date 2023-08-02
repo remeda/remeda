@@ -29,7 +29,7 @@ export function deepMerge<Target, Source>(
  *    R.deepMerge({ foo: 'baz', y: 2 })({ foo: 'bar', x: 1 }) // => { foo: 'bar', x: 1, y: 2 }
  *    R.pipe(
  *      { foo: 'bar', x: 1 },
- *      R.difference({ foo: 'baz', y: 2 }),
+ *      R.deepMerge({ foo: 'baz', y: 2 }),
  *    ) // => { foo: 'bar', x: 1, y: 2 }
  * @data_last
  * @category Object
