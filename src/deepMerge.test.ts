@@ -32,6 +32,12 @@ describe('deepMerge', () => {
     expect(deepMerge(a, b)).toEqual({ foo: 'bar', x: 1, y: 2 });
   });
 
+  test('should merge nested objects', () => {
+    const a = { foo: { bar: 'baz' } };
+    const b = { foo: { qux: 'quux' } };
+    expect(deepMerge(a, b)).toEqual({ foo: { bar: 'baz', qux: 'quux' } });
+  });
+
   test('should merge objects using data_last approach', () => {
     const a = { foo: 'bar', x: 1 };
     const b = { foo: 'baz', y: 2 };
