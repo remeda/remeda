@@ -7,6 +7,7 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
+    "moduleResolution": "node",
     "noEmit": false /* Enabled in the base config */,
     "removeComments": true
   }
