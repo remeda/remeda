@@ -2,24 +2,6 @@ import { deepMerge } from './deepMerge';
 import { expect } from 'vitest';
 
 describe('deepMerge', () => {
-  test('should handle undefined inputs', () => {
-    expect(deepMerge(undefined, undefined)).toBeUndefined();
-    expect(deepMerge(undefined, 5)).toBe(5);
-    expect(deepMerge(5, undefined)).toBe(5);
-  });
-
-  test('should handle null inputs', () => {
-    expect(deepMerge(null, null)).toBeNull();
-    expect(deepMerge(null, 5)).toBe(5);
-    expect(deepMerge(5, null)).toBe(5);
-  });
-
-  test('should merge non-object and non-array primitives', () => {
-    expect(deepMerge('foo', 'bar')).toBe('foo');
-    expect(deepMerge('foo', undefined)).toBe('foo');
-    expect(deepMerge(undefined, 'bar')).toBe('bar');
-  });
-
   test('should merge arrays', () => {
     const a = [1, 2, 3];
     const b = [3, 4, 5];

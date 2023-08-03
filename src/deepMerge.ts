@@ -1,7 +1,12 @@
 import type { MergeDeep } from 'type-fest';
-import { uniq } from './uniq';
 import { isCyclic } from './_isCyclic';
 import { purry } from './purry';
+
+type UnknownRecordOrArray = Record<string, unknown> | Array<unknown>;
+
+function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
+  return typeof object === 'object' && object !== null;
+}
 
 /**
  * Recursively merges two values, `a` and `b`.
@@ -15,10 +20,10 @@ import { purry } from './purry';
  * @category Object
  * @pipeable
  */
-export function deepMerge<Target, Source>(
-  target: Target,
-  source: Source
-): MergeDeep<Target, Source>;
+export function deepMerge<
+  Target extends UnknownRecordOrArray,
+  Source extends UnknownRecordOrArray
+>(target: Target, source: Source): MergeDeep<Target, Source>;
 
 /**
  * Recursively merges two values, `a` and `b`.
@@ -35,15 +40,16 @@ export function deepMerge<Target, Source>(
  * @category Object
  * @pipeable
  */
-export function deepMerge<Target, Source>(
-  source: Source
-): (target: Target) => MergeDeep<Target, Source>;
+export function deepMerge<
+  Target extends UnknownRecordOrArray,
+  Source extends UnknownRecordOrArray
+>(source: Source): (target: Target) => MergeDeep<Target, Source>;
 
 export function deepMerge() {
   return purry(_deepMerge, arguments);
 }
 
-export function _deepMerge(a: unknown, b: unknown): unknown {
+export function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
   if (
     typeof a !== 'object' ||
     typeof b !== 'object' ||
@@ -61,11 +67,24 @@ export function _deepMerge(a: unknown, b: unknown): unknown {
   if (Array.isArray(b)) {
     return a;
   }
-  const output = { ...a };
-  const keys = uniq(Object.keys(a).concat(Object.keys(b)));
-  for (const k of keys) {
-    // @ts-expect-error We've already ensured that "a" and "b" are objects at runtime.
-    if (!isCyclic(a[k])) output[k] = deepMerge(a[k], b[k]);
+  if (Array.isArray(b)) {
+    return a;
+  }
+
+  // At this point the output is already merged, simply not deeply merged.
+  const output = { ...b, ...a };
+
+  // now just scan the output and look for values that should have been deep-merged
+  for (const k in b) {
+    const aValue = a[k];
+    const bValue = b[k];
+
+    if (isRecordOrArray(aValue) && !isCyclic(a[k]) && isRecordOrArray(bValue)) {
+      // These are the only keys that need recursive merging. At this point
+      // we already know that both of them are objects, so they match the type
+      // of _deepMerge.
+      output[k] = _deepMerge(aValue, bValue);
+    }
   }
   return output;
 }
