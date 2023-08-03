@@ -59,4 +59,16 @@ describe('deepMerge', () => {
 
     expect(deepMerge(a, b)).toEqual(a);
   });
+
+  test('should not merge object and array', () => {
+    const a = { foo: { bar: 'baz' } };
+    const b = { foo: ['qux'] };
+    expect(deepMerge(a, b)).toEqual({ foo: { bar: 'baz' } });
+  });
+
+  test('should not merge array and object', () => {
+    const a = { foo: ['qux'] };
+    const b = { foo: { bar: 'baz' } };
+    expect(deepMerge(a, b)).toEqual({ foo: ['qux'] });
+  });
 });

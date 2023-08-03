@@ -58,6 +58,9 @@ export function _deepMerge(a: unknown, b: unknown): unknown {
     }
     return a;
   }
+  if (Array.isArray(b)) {
+    return a;
+  }
   const output = { ...a };
   const keys = uniq(Object.keys(a).concat(Object.keys(b)));
   for (const k of keys) {
