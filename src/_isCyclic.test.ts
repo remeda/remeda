@@ -1,4 +1,5 @@
 import { isCyclic } from './_isCyclic';
+import { expect, test } from 'vitest';
 
 describe('hasCycle', () => {
   test('should return false for non-objects', () => {
@@ -62,4 +63,22 @@ describe('hasCycle', () => {
     cyclicSet.add(cyclicSet);
     expect(isCyclic(cyclicSet)).toBeTruthy();
   });
+
+  test('should handle extremely nested objects', () => {
+    const nestedObj = createNestedObject(100000);
+    // Expect to not throw error "RangeError: Maximum call stack size exceeded"
+    expect(isCyclic(nestedObj)).toBeFalsy();
+  });
 });
+
+function createNestedObject(depth: number) {
+  const nestedObject: any = {};
+  let current = nestedObject;
+
+  for (let i = 0; i < depth; i++) {
+    current[i] = {};
+    current = current[i];
+  }
+
+  return nestedObject;
+}

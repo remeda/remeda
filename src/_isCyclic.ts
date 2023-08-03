@@ -1,3 +1,5 @@
+const MAX_DEPTH = 1000;
+
 /**
  * Checks if the given value has any cyclic references.
  *
@@ -6,8 +8,17 @@
  */
 export function isCyclic(value: unknown): boolean {
   const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
+  let depth = 0;
 
   function hasCycle(input: unknown) {
+    depth++;
+
+    // If max depth is exceeded, return false
+    if (depth > MAX_DEPTH) {
+      depth = 0;
+      return false;
+    }
+
     // If 'input' is an actual object, check if it's been seen already.
     if (input === null || typeof input !== 'object') {
       return false;
