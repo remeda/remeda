@@ -69,6 +69,18 @@ describe('hasCycle', () => {
     // Expect to not throw error "RangeError: Maximum call stack size exceeded"
     expect(isCyclic(nestedObj)).toBeFalsy();
   });
+
+  test('should handle cycles across multiple objects', () => {
+    const objA: any = {};
+    const objB: any = {};
+    const objC: any = {};
+
+    objA.b = objB;
+    objB.c = objC;
+    objC.a = objA;
+
+    expect(isCyclic(objA)).toBeTruthy();
+  });
 });
 
 function createNestedObject(depth: number) {
