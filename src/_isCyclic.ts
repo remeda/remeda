@@ -3,8 +3,12 @@ const MAX_DEPTH = 1000;
 /**
  * Checks if the given value has any cyclic references.
  *
- * @param {unknown} value - The value to check for cyclic references.
- * @returns {boolean} - Returns true if the value contains cyclic references, otherwise false.
+ * @param value - The value to check for cyclic references.
+ * @returns boolean - Returns true if the value contains cyclic references, otherwise false.
+ * @example
+ * ```ts
+ * isCyclic(value)
+ * ```
  */
 export function isCyclic(value: unknown): boolean {
   const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
