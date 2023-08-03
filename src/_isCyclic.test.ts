@@ -36,4 +36,30 @@ describe('hasCycle', () => {
     complexCyclicObject.c.push(complexCyclicObject);
     expect(isCyclic(complexCyclicObject)).toBeTruthy();
   });
+
+  test('should return false for non-cyclic Map and Set', () => {
+    const nonCyclicMap = new Map([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ]);
+    expect(isCyclic(nonCyclicMap)).toBeFalsy();
+
+    const nonCyclicSet = new Set(['a', 1, 'b', 2, 'c', 3]);
+    expect(isCyclic(nonCyclicSet)).toBeFalsy();
+  });
+
+  test('should return true for cyclic Map and Set', () => {
+    const cyclicMap: any = new Map([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ]);
+    cyclicMap.set('a', cyclicMap);
+    expect(isCyclic(cyclicMap)).toBeTruthy();
+
+    const cyclicSet: any = new Set(['a', 1, 'b', 2, 'c', 3]);
+    cyclicSet.add(cyclicSet);
+    expect(isCyclic(cyclicSet)).toBeTruthy();
+  });
 });

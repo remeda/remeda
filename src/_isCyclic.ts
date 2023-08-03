@@ -25,6 +25,11 @@ export function isCyclic(value: unknown): boolean {
       return input.some(hasCycle);
     }
 
+    if (input instanceof Map || input instanceof Set) {
+      // Convert Map/Set values to an array
+      return Array.from(input.values()).some(hasCycle);
+    }
+
     // Recurse through the object, looking for more circular references.
     return Object.values(input).some(hasCycle);
   }
