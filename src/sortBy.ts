@@ -81,8 +81,8 @@ export function sortBy<T>(
  *      [x => x.weight, 'asc'], x => x.color
  *    )
  *    // =>
- *    //   {color: 'purple', weight: 1},
  *    //   {color: 'green', weight: 1},
+ *    //   {color: 'purple', weight: 1},
  *    //   {color: 'red', weight: 2},
  *    //   {color: 'blue', weight: 3},
  *    // typed Array<{color: string, weight: number}>
