@@ -1,5 +1,5 @@
 import { deepMerge } from './deepMerge';
-import { expect } from 'vitest';
+import { expect, test } from 'vitest';
 
 describe('deepMerge', () => {
   test('should merge arrays', () => {
@@ -34,12 +34,32 @@ describe('deepMerge', () => {
     expect(deepMerge(a, b)).toEqual({ foo: a, y: 2 });
   });
 
-  test('should not merge cyclic arrays', () => {
-    const a: any = [];
+  test('should not merge object with cycles across multiple objects', () => {
+    const a: any = {};
+    const b: any = {};
+    const c: any = {};
+
+    a.b = b;
+    b.c = c;
+    c.a = a;
+
+    expect(deepMerge(a, {})).toEqual(a);
+  });
+
+  test('should not merge left cyclic array', () => {
+    const a: any = ['foo'];
     a.push(a); // Making 'a' a cyclic array.
     const b = [1, 2, 3];
 
-    expect(deepMerge(a, b)).toEqual(a);
+    expect(deepMerge(a, b)).toEqual([1, 2, 3]);
+  });
+
+  test('should not merge right cyclic array', () => {
+    const a = [1, 2, 3];
+    const b: any = ['foo'];
+    b.push(b); // Making 'b' a cyclic array.
+
+    expect(deepMerge(a, b)).toEqual([1, 2, 3]);
   });
 
   test('should not merge object and array', () => {
