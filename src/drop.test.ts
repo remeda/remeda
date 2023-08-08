@@ -7,8 +7,19 @@ const array = [1, 2, 3, 4, 5] as const;
 const expected = [3, 4, 5];
 
 describe('data first', () => {
-  test('should drop last', () => {
+  test('should drop', () => {
     expect(drop(array, 2)).toEqual(expected);
+  });
+
+  test('should not drop', () => {
+    expect(drop(array, 0)).toEqual(array);
+    expect(drop(array, -0)).toEqual(array);
+    expect(drop(array, -1)).toEqual(array);
+    expect(drop(array, NaN)).toEqual(array);
+  });
+
+  test('should return a new array even if there was no drop', () => {
+    expect(drop(array, 0)).not.toBe(array);
   });
 });
 
