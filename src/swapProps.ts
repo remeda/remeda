@@ -5,6 +5,8 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
 };
 
 /**
+ * Swaps the positions of two properties in an object based on the provided keys.
+ *
  * @param data the object to be manipulated
  * @param key1 the first property key
  * @param key2 the second property key
@@ -17,6 +19,8 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  * @example
  *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
  *
+ * @category Object
+ *
  * @data_first
  */
 export function swapProps<
@@ -27,6 +31,7 @@ export function swapProps<
 
 /**
  * Swaps the positions of two properties in an object based on the provided keys.
+ *
  * @param key1 the first property key
  * @param key2 the second property key
  *
@@ -37,6 +42,8 @@ export function swapProps<
  *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
  *
  * @returns Returns the manipulated object.
+ *
+ * @category Object
  *
  * @data_last
  */
