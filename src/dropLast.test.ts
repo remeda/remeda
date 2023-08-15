@@ -9,4 +9,10 @@ test('should drop last', () => {
 test('should not drop last', () => {
   expect(dropLast(arr, 0)).toEqual(arr);
   expect(dropLast(arr, -0)).toEqual(arr);
+  expect(dropLast(arr, -1)).toEqual(arr);
+  expect(dropLast(arr, NaN)).toEqual(arr);
+});
+
+test('should return a new array even if there was no drop', () => {
+  expect(dropLast(arr, 0)).not.toBe(arr);
 });
