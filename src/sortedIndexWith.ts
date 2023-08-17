@@ -24,6 +24,7 @@ import { purry } from './purry';
  * @example
  *    R.sortedIndexWith(['a','ab','abc'], (item) => item.length > 2) // => 2
  * @data_first
+ * @indexed
  * @category Array
  *
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
@@ -57,6 +58,7 @@ export function sortedIndexWith<T>(
  * @example
  *    R.pipe(['a','ab','abc'], R.sortedIndexWith((item) => item.length > 2)) // => 2
  * @data_last
+ * @indexed
  * @category Array
  *
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy

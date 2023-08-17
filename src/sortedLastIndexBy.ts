@@ -24,6 +24,7 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
  * @example
  *    R.sortedLastIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @data_first
+ * @indexed
  * @category Array
  *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
@@ -57,6 +58,7 @@ export function sortedLastIndexBy<T>(
  * @example
  *    R.pipe([{age:20},{age:22}],sortedLastIndexBy({age:21},prop('age'))) // => 1
  * @data_last
+ * @indexed
  * @category Array
  *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
