@@ -2,14 +2,14 @@ import { purry } from './purry';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
- * switches from returning `false` to returning `true`. This function assumes
- * that the array is "sorted" in regards to the predicate, meaning that running
- * the predicate as a mapper on it would result in an array `[...false[], ...true[]]`.
+ * stops returning `true`. This function assumes that the array is "sorted" in
+ * regards to the predicate, meaning that running the predicate as a mapper on
+ * it would result in an array `[...true[], ...false[]]`.
  * This stricter requirement from the predicate provides us 2 benefits over
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
- * predicate returns `false` for all items).
+ * predicate returns `true` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
@@ -22,7 +22,7 @@ import { purry } from './purry';
  * @signature
  *    R.sortedIndexWith(data, predicate)
  * @example
- *    R.sortedIndexWith(['a','ab','abc'], (item) => item.length > 2) // => 2
+ *    R.sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
  * @data_first
  * @indexed
  * @category Array
@@ -36,9 +36,9 @@ export function sortedIndexWith<T>(
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
- * switches from returning `false` to returning `true`. This function assumes
- * that the array is "sorted" in regards to the predicate, meaning that running
- * the predicate as a mapper on it would result in an array `[...false[], ...true[]]`.
+ * stops returning `true`. This function assumes that the array is "sorted" in
+ * regards to the predicate, meaning that running the predicate as a mapper on
+ * it would result in an array `[...true[], ...false[]]`.
  * This stricter requirement from the predicate provides us 2 benefits over
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
@@ -56,7 +56,7 @@ export function sortedIndexWith<T>(
  * @signature
  *    R.sortedIndexWith(predicate)(data)
  * @example
- *    R.pipe(['a','ab','abc'], R.sortedIndexWith((item) => item.length > 2)) // => 2
+ *    R.pipe(['a','ab','abc'], R.sortedIndexWith((item) => item.length < 2)) // => 1
  * @data_last
  * @indexed
  * @category Array
