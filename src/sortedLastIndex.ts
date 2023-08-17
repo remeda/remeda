@@ -8,6 +8,8 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
  * If the item already exists in the array the index would be of the *last*
  * occurrence of the item.
  *
+ * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @return - Insertion index (In the range 0..array.length - 1)
@@ -29,6 +31,8 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  * maintaining the array's sort-ness. The array can contain duplicates.
  * If the item already exists in the array the index would be of the *last*
  * occurrence of the item.
+ *
+ * Runs in O(logN) time.
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.

@@ -9,6 +9,8 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
  * If the item already exists in the array the index would be of the *first*
  * occurrence of the item.
  *
+ * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
@@ -39,6 +41,8 @@ export function sortedIndexBy<T>(
  * duplicates.
  * If the item already exists in the array the index would be of the *first*
  * occurrence of the item.
+ *
+ * Runs in O(logN) time.
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
