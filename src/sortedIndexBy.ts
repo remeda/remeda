@@ -119,6 +119,6 @@ function sortedIndexByImplementation<T>(
   const value = valueFunction(item);
   return sortedIndexWithImplementation(
     array,
-    (otherItem, index) => value < valueFunction(otherItem, index)
+    (pivot, index) => valueFunction(pivot, index) < value
   );
 }

@@ -56,5 +56,4 @@ export function sortedLastIndex(): unknown {
 const sortedLastIndexImplementation = <T>(
   array: ReadonlyArray<T>,
   item: T
-): number =>
-  sortedIndexWithImplementation(array, otherItem => item <= otherItem);
+): number => sortedIndexWithImplementation(array, pivot => pivot <= item);

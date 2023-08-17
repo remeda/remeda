@@ -56,5 +56,4 @@ export function sortedIndex(): unknown {
 const sortedIndexImplementation = <T>(
   array: ReadonlyArray<T>,
   item: T
-): number =>
-  sortedIndexWithImplementation(array, otherItem => item < otherItem);
+): number => sortedIndexWithImplementation(array, pivot => pivot < item);
