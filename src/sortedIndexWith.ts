@@ -8,7 +8,7 @@ import { purry } from './purry';
  * This stricter requirement from the predicate provides us 2 benefits over
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
- * 2. It always returns a value (it would return `array.length - 1` if the
+ * 2. It always returns a value (it would return `data.length` if the
  * predicate returns `false` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
@@ -17,7 +17,7 @@ import { purry } from './purry';
  *
  * @param data - Array, "sorted" by `predicate`
  * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..array.length - 1)
+ * @return - Index (In the range 0..data.length)
  *
  * @signature
  *    R.sortedIndexWith(data, predicate)
@@ -41,7 +41,7 @@ export function sortedIndexWith<T>(
  * This stricter requirement from the predicate provides us 2 benefits over
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
- * 2. It always returns a value (it would return `array.length - 1` if the
+ * 2. It always returns a value (it would return `data.length` if the
  * predicate returns `false` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
@@ -50,7 +50,7 @@ export function sortedIndexWith<T>(
  *
  * @param data - Array, "sorted" by `predicate`
  * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..array.length - 1)
+ * @return - Index (In the range 0..data.length)
  *
  * @signature
  *    R.sortedIndexWith(predicate)(data)

@@ -12,7 +12,7 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
- * @return - Insertion index (In the range 0..array.length - 1)
+ * @return - Insertion index (In the range 0..array.length)
  *
  * @signature
  *    R.sortedIndex(data, item)
@@ -36,7 +36,7 @@ export function sortedIndex<T>(data: ReadonlyArray<T>, item: T): number;
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
- * @return - Insertion index (In the range 0..array.length - 1)
+ * @return - Insertion index (In the range 0..array.length)
  *
  * @signature
  *    R.sortedIndex(item)(data)

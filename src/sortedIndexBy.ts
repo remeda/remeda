@@ -17,7 +17,7 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..array.length - 1)
+ * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
@@ -50,7 +50,7 @@ export function sortedIndexBy<T>(
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..array.length - 1)
+ * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
