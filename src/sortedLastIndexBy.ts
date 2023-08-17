@@ -95,6 +95,9 @@ function sortedLastIndexByImplementation<T>(
   const value = valueFunction(item);
   return sortedIndexWithImplementation(
     array,
+    // The only difference between the regular implementation and the "last"
+    // variation is that we consider the pivot with equality too, so that we
+    // skip all equal values in addition to the lower ones.
     (pivot, index) => valueFunction(pivot, index) <= value
   );
 }
