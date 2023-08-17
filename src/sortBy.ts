@@ -4,7 +4,7 @@ import { purry } from './purry';
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
 type Direction = (typeof ALL_DIRECTIONS)[number];
 
-type ComparablePrimitive = number | string | boolean;
+type ComparablePrimitive = NonNullable<undefined>;
 type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
 type SortProjection<T> = (x: T) => Comparable;
 type SortPair<T> = readonly [
