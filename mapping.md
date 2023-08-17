@@ -35,13 +35,13 @@ documentation when migrating._
 | `forEachObj`        | `forEach`           | `forEachObjIndexed` |
 | `groupBy`           | `groupBy`           | `groupBy`           |
 | `identity`          | `identity`          | `identity`          |
+| `indexBy`           | `keyBy`             | `indexBy`           |
+| `intersection`      | `intersection`      | `intersection`      |
+| `intersectionWith`  | `intersectionWith`  | `innerJoin`         |
+| `invert`            | `invert`            | `invertObj`         |
 | `isEmpty`           | `isEmpty`           | `isEmpty`           |
 | `isNil`             | `isNil`             | `isNil`             |
 | `join`              | `join`              | `join`              |
-| `indexBy`           | `keyBy`             | `indexBy`           |
-| `invert`            | `invert`            | `invertObj`         |
-| `intersection`      | `intersection`      | `intersection`      |
-| `intersectionWith`  | `intersectionWith`  | `innerJoin`         |
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |
 | `map`               | `map`               | `map`               |
@@ -70,12 +70,16 @@ documentation when migrating._
 | `set`               | `set`               | `set`               |
 | `setPath`           | `set`               | `set`               |
 | `shuffle`           | `shuffle`           | `-`                 |
-| `stringToPath`      | `toPath`            | `-`                 |
 | `sort`              | `-`                 | `sort`              |
-| `sortBy`            | `sortBy`            | `sortBy`            |
 | `sortBy`            | `orderBy`           | `-`                 |
+| `sortBy`            | `sortBy`            | `sortBy`            |
+| `sortedIndex`       | `sortedIndex`       |                     |
+| `sortedIndexBy`     | `sortedIndexBy`     |                     |
+| `sortedLastIndex`   | `sortedLastIndex`   |                     |
+| `sortedLastIndexBy` | `sortedLastIndexBy` |                     |
 | `splitAt`           | `-`                 | `splitAt`           |
 | `splitWhen`         | `-`                 | `splitWhen`         |
+| `stringToPath`      | `toPath`            | `-`                 |
 | `sumBy`             | `sumBy`             | `-`                 |
 | `swapIndices`       | `-`                 | `swap`              |
 | `swapProps`         | `-`                 | `swap`              |
@@ -88,10 +92,6 @@ documentation when migrating._
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
 | `zipObj`            | `zipObj`            | `zipObj`            |
-| `sortedIndex`       | `sortedIndex`       |                     |
-| `sortedIndexBy`     | `sortedIndexBy`     |                     |
-| `sortedLastIndex`   | `sortedLastIndex`   |                     |
-| `sortedLastIndexBy` | `sortedLastIndexBy` |                     |
 
 ## Helpful one-liners
 
