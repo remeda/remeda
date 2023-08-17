@@ -2,9 +2,16 @@
   "name": "remeda",
   "version": "0.0.35",
   "description": "A utility library for JavaScript and Typescript.",
-  "main": "dist/commonjs/index.js",
-  "module": "dist/es/index.js",
-  "jsnext:main": "dist/es/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "jsnext:main": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "sideEffects": false,
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.2",
@@ -27,6 +34,7 @@
   "scripts": {
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "vitest run --coverage && yarn run compile",
+    "tsup:test": "vitest run --coverage && yarn run tsup:watch",
     "test:ci": "vitest run",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
