@@ -1,8 +1,50 @@
 import { purry } from './purry';
 import { sortedIndexWithImplementation } from './sortedIndexWith';
 
+/**
+ * Find the insertion position (index) of an item in an array with items sorted
+ * in ascending order; so that `splice(sortedIndex, 0, item)` would result in
+ * maintaining the array's sort-ness. The array can contain duplicates.
+ * If the item already exists in the array the index would be of the *last*
+ * occurrence of the item.
+ *
+ * @param data - The (ascending) sorted array.
+ * @param item - The item to insert.
+ * @return - Insertion index (In the range 0..array.length - 1)
+ *
+ * @signature
+ *    R.sortedLastIndex(data, item)
+ * @example
+ *    R.sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
+ * @data_first
+ * @category Array
+ *
+ * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
+ */
 export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
+
+/**
+ * Find the insertion position (index) of an item in an array with items sorted
+ * in ascending order; so that `splice(sortedIndex, 0, item)` would result in
+ * maintaining the array's sort-ness. The array can contain duplicates.
+ * If the item already exists in the array the index would be of the *last*
+ * occurrence of the item.
+ *
+ * @param data - The (ascending) sorted array.
+ * @param item - The item to insert.
+ * @return - Insertion index (In the range 0..array.length - 1)
+ *
+ * @signature
+ *    R.sortedLastIndex(item)(data)
+ * @example
+ *    R.pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
+ * @data_last
+ * @category Array
+ *
+ * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
+ */
 export function sortedLastIndex<T>(item: T): (data: ReadonlyArray<T>) => number;
+
 export function sortedLastIndex(): unknown {
   return purry(sortedLastIndexImplementation, arguments);
 }

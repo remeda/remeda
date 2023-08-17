@@ -4,9 +4,9 @@ import { sortedIndexWithImplementation } from './sortedIndexWith';
 /**
  * Find the insertion position (index) of an item in an array with items sorted
  * in ascending order; so that `splice(sortedIndex, 0, item)` would result in
- * maintaining the array's sort-ness. The array can contain duplicates. If the
- * item already exists in the array the index would be of the first occurrence
- * of the item.
+ * maintaining the array's sort-ness. The array can contain duplicates.
+ * If the item already exists in the array the index would be of the *first*
+ * occurrence of the item.
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
@@ -26,9 +26,9 @@ export function sortedIndex<T>(data: ReadonlyArray<T>, item: T): number;
 /**
  * Find the insertion position (index) of an item in an array with items sorted
  * in ascending order; so that `splice(sortedIndex, 0, item)` would result in
- * maintaining the array's sort-ness. The array can contain duplicates. If the
- * item already exists in the array the index would be of the first occurrence
- * of the item.
+ * maintaining the array's sort-ness. The array can contain duplicates.
+ * If the item already exists in the array the index would be of the *first*
+ * occurrence of the item.
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
