@@ -69,9 +69,22 @@ export function sortedIndexWith(): unknown {
   return purry(sortedIndexWithImplementation, arguments);
 }
 
+export namespace sortedIndexWith {
+  export function indexed<T>(
+    data: ReadonlyArray<T>,
+    predicate: (item: T, index: number) => NonNullable<unknown>
+  ): number;
+  export function indexed<T>(
+    predicate: (item: T, index: number) => NonNullable<unknown>
+  ): (data: ReadonlyArray<T>) => number;
+  export function indexed(): unknown {
+    return purry(sortedIndexWithImplementation, arguments);
+  }
+}
+
 export function sortedIndexWithImplementation<T>(
   array: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T, index: number) => boolean
 ): number {
   let lowIndex = 0;
   let highIndex = array.length;
@@ -82,7 +95,7 @@ export function sortedIndexWithImplementation<T>(
     const pivotIndex = (lowIndex + highIndex) >>> 1;
     const pivot = array[pivotIndex];
 
-    if (predicate(pivot)) {
+    if (predicate(pivot, pivotIndex)) {
       lowIndex = pivotIndex + 1;
     } else {
       highIndex = pivotIndex;

@@ -94,14 +94,29 @@ export function sortedIndexBy(): unknown {
   return purry(sortedIndexByImplementation, arguments);
 }
 
+export namespace sortedIndexBy {
+  export function indexed<T>(
+    data: ReadonlyArray<T>,
+    item: T,
+    valueFunction: (item: T, index?: number) => NonNullable<unknown>
+  ): number;
+  export function indexed<T>(
+    item: T,
+    valueFunction: (item: T, index?: number) => NonNullable<unknown>
+  ): (data: ReadonlyArray<T>) => number;
+  export function indexed(): unknown {
+    return purry(sortedIndexByImplementation, arguments);
+  }
+}
+
 function sortedIndexByImplementation<T>(
   array: ReadonlyArray<T>,
   item: T,
-  valueFunction: (item: T) => NonNullable<unknown>
+  valueFunction: (item: T, index?: number) => NonNullable<unknown>
 ): number {
   const value = valueFunction(item);
   return sortedIndexWithImplementation(
     array,
-    otherItem => value < valueFunction(otherItem)
+    (otherItem, index) => value < valueFunction(otherItem, index)
   );
 }

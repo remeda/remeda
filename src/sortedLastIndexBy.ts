@@ -70,14 +70,29 @@ export function sortedLastIndexBy(): unknown {
   return purry(sortedLastIndexByImplementation, arguments);
 }
 
+export namespace sortedLastIndexBy {
+  export function indexed<T>(
+    data: ReadonlyArray<T>,
+    item: T,
+    valueFunction: (item: T, index?: number) => NonNullable<unknown>
+  ): number;
+  export function indexed<T>(
+    item: T,
+    valueFunction: (item: T, index?: number) => NonNullable<unknown>
+  ): (data: ReadonlyArray<T>) => number;
+  export function indexed(): unknown {
+    return purry(sortedLastIndexByImplementation, arguments);
+  }
+}
+
 function sortedLastIndexByImplementation<T>(
   array: ReadonlyArray<T>,
   item: T,
-  valueFunction: (item: T) => NonNullable<unknown>
+  valueFunction: (item: T, index?: number) => NonNullable<unknown>
 ): number {
   const value = valueFunction(item);
   return sortedIndexWithImplementation(
     array,
-    otherItem => value <= valueFunction(otherItem)
+    (otherItem, index) => value <= valueFunction(otherItem, index)
   );
 }
