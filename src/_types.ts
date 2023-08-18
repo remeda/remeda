@@ -24,7 +24,4 @@ export type IterableContainer<T = unknown> = ReadonlyArray<T> | [];
 
 // Inspired and largely copied from `sindresorhus/ts-extras`:
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
-export type ObjectKeys<T extends Record<PropertyKey, unknown>> = `${Exclude<
-  keyof T,
-  symbol
->}`;
+export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
