@@ -1,24 +1,15 @@
-import * as React from 'react';
+import { useState } from "react";
 
 export interface MenuProps {
   items: Array<{
     name: string;
     category: string;
-    methods: any[];
+    methods: Array<any>;
   }>;
 }
 
-export class Menu extends React.PureComponent<
-  MenuProps,
-  { searchTerm: string }
-> {
-  state = {
-    searchTerm: '',
-  };
-
-  render() {
-    const { items } = this.props;
-    const { searchTerm } = this.state;
+export function Menu({items}:MenuProps) {
+    const [searchTerm, setSearchTerm] = useState('');
     const searchTermLowered = searchTerm.toLowerCase();
     return (
       <div className="col-12 col-md-3 col-xl-2 sidebar bg-white">
@@ -26,7 +17,7 @@ export class Menu extends React.PureComponent<
           <input
             type="search"
             value={searchTerm}
-            onChange={e => this.setState({ searchTerm: e.target.value })}
+            onChange={e => setSearchTerm( e.target.value)}
             className="form-control"
             placeholder="Search..."
           />
@@ -55,4 +46,4 @@ export class Menu extends React.PureComponent<
       </div>
     );
   }
-}
+

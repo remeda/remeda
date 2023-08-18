@@ -1,5 +1,4 @@
-import * as React from 'react';
-const exampleData = require('./data.json');
+import exampleData from './data.json';
 import { Menu } from './Menu';
 import { FnDoc } from './FnDoc';
 

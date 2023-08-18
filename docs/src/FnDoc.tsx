@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
 import { JsTagProps } from './JsTag';
