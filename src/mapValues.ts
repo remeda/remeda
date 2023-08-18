@@ -1,3 +1,5 @@
+import { ObjectKeys } from './_types';
+
 /**
  * Maps values of `object` and keeps the same keys.
  * @param object the object to map
@@ -11,8 +13,8 @@
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(
   object: T,
-  fn: (value: T[keyof T], key: keyof T) => S
-): Record<keyof T, S>;
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
+): Record<ObjectKeys<T>, S>;
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -25,8 +27,8 @@ export function mapValues<T extends Record<PropertyKey, any>, S>(
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(
-  fn: (value: T[keyof T], key: keyof T) => S
-): (object: T) => Record<keyof T, S>;
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
+): (object: T) => Record<ObjectKeys<T>, S>;
 
 export function mapValues(arg1: any, arg2?: any): any {
   if (arguments.length === 1) {
