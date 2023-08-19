@@ -2,6 +2,7 @@
  * This utility function simply delegates the call to `binarySearchCutoffIndex`,
  * so we test it mainly via the tests for that function.
  */
+
 import { sortedIndexWith } from './sortedIndexWith';
 
 describe('sanity', () => {
