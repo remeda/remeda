@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -68,7 +69,7 @@ export function sortedIndexWith<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexWith(): unknown {
-  return purry(sortedIndexWithImplementation, arguments);
+  return purry(binarySearchCutoffIndex, arguments);
 }
 
 export namespace sortedIndexWith {
@@ -80,29 +81,6 @@ export namespace sortedIndexWith {
     predicate: (item: T, index: number) => NonNullable<unknown>
   ): (data: ReadonlyArray<T>) => number;
   export function indexed(): unknown {
-    return purry(sortedIndexWithImplementation, arguments);
+    return purry(binarySearchCutoffIndex, arguments);
   }
-}
-
-export function sortedIndexWithImplementation<T>(
-  array: ReadonlyArray<T>,
-  predicate: (item: T, index: number) => boolean
-): number {
-  let lowIndex = 0;
-  let highIndex = array.length;
-
-  while (lowIndex < highIndex) {
-    // We use bitwise operator here as a way to find the mid-point and round it
-    // down using the same operation.
-    const pivotIndex = (lowIndex + highIndex) >>> 1;
-    const pivot = array[pivotIndex];
-
-    if (predicate(pivot, pivotIndex)) {
-      lowIndex = pivotIndex + 1;
-    } else {
-      highIndex = pivotIndex;
-    }
-  }
-
-  return highIndex;
 }

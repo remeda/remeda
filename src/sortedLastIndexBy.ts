@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { sortedIndexWithImplementation } from './sortedIndexWith';
+import { binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -93,7 +93,7 @@ function sortedLastIndexByImplementation<T>(
   valueFunction: (item: T, index?: number) => NonNullable<unknown>
 ): number {
   const value = valueFunction(item);
-  return sortedIndexWithImplementation(
+  return binarySearchCutoffIndex(
     array,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
