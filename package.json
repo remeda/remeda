@@ -2,9 +2,9 @@
   "name": "remeda",
   "version": "0.0.35",
   "description": "A utility library for JavaScript and Typescript.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "jsnext:main": "dist/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "jsnext:main": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -44,7 +44,6 @@
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
-    "publint": "publint",
     "lint:check": "eslint src/**/*.ts",
     "docs:install": "cd docs && yarn",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
