@@ -8,7 +8,6 @@ out.json
 scripts/def.json
 dist
 readme.html
-.vscode/
 # Runtime data
 pids
 *.pid
