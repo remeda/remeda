@@ -24,7 +24,6 @@
     "lint-staged": "^13.2.0",
     "marked": "^0.4.0",
     "prettier": "^2.8.4",
-    "publint": "^0.2.1",
     "ts-node": "^8.4.1",
     "tsup": "^7.2.0",
     "typedoc": "^0.11.1",
