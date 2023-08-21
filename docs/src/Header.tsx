@@ -8,12 +8,15 @@ export function Header() {
       </NavLink>
       <ul className="navbar-nav mr-auto">
         <li className="nav-item ">
-          <NavLink className="nav-link" to="/" >
+          <NavLink className="nav-link" to="/">
             Home
           </NavLink>
         </li>
         <li className="nav-item  ">
-          <NavLink className={({isActive}) => `${isActive ? "active": ""} nav-link`} to="/docs" >
+          <NavLink
+            className={({ isActive }) => `${isActive ? 'active' : ''} nav-link`}
+            to="/docs"
+          >
             Documentation
           </NavLink>
         </li>

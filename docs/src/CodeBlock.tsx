@@ -1,5 +1,8 @@
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { darcula, monoBlue } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  darcula,
+  monoBlue,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 export interface CodeBlockProps {
   code: string;

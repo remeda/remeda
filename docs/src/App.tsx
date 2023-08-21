@@ -8,12 +8,11 @@ export function App() {
     <Router>
       <div className="wrapper">
         <Header />
-      <Routes >
-        <Route path="/" element={<Home />} />
-        <Route path="/docs" element={<Docs />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/docs" element={<Docs />} />
+        </Routes>
       </div>
     </Router>
   );
 }
-
