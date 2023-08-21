@@ -1,6 +1,5 @@
 import { mapValues } from './mapValues';
 import { pipe } from './pipe';
-import { describe } from 'vitest';
 
 describe('data first', () => {
   test('mapValues', () => {
