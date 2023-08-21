@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "watch": "vite",
-    "build": "tsc && vite build && cp _redirects dist",
+    "build": "tsc && vite build && cp _redirects dist/_redirects && cp dist/index.html dist/404.html",
     "lint": "cd ../ && yarn docs:lint",
     "start": "vite preview"
   },
