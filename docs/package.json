@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "build": "tsc && vite build && cp _redirects dist",
+    "lint": "cd ../ && yarn docs:lint",
     "start": "vite preview"
   },
   "dependencies": {
@@ -23,11 +23,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-syntax-highlighter": "^15.5.7",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "sass": "^1.66.0",

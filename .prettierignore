@@ -2,7 +2,7 @@ node_modules/
 
 /coverage/
 /dist/
-/docs/
+/docs/dist/
 /examples/
 
 .husky/

@@ -36,6 +36,7 @@
     "lint": "eslint src/**/*.ts --fix",
     "lint:check": "eslint src/**/*.ts",
     "docs:install": "cd docs && yarn",
+    "docs:lint": "eslint -c docs/.eslintrc.cjs --ext .ts --ext .tsx docs ",
     "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
     "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",
     "docs:generate-json": "yarn run docs:generate-ts && cd scripts && ts-node generate && cp def.json ../docs/src/data.json",
