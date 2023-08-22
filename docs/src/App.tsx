@@ -12,7 +12,7 @@ export class App extends React.PureComponent {
   }
   render() {
     return (
-      <Router>
+      <Router basename={process.env.ROUTER_BASE_NAME}>
         <div className="wrapper">
           <Header />
           <Route exact path="/" component={Home} />

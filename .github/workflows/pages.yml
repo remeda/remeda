@@ -38,6 +38,8 @@ jobs:
 
       - name: Build docs
         run: yarn docs:build
+        env:
+          ROUTER_BASE_NAME: ${{ github.event.repository.name }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
