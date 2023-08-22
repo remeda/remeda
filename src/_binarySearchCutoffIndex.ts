@@ -2,6 +2,7 @@ export function _binarySearchCutoffIndex<T>(
   array: ReadonlyArray<T>,
   predicate: (item: T, index: number) => boolean
 ): number {
+  // !IMPORTANT: This docblock is not above the function because then the code that builds our docs site breaks. Please do not move it.
   /**
    * A binary search implementation that finds the index at which `predicate`
    * stops returning `true` and starts returning `false` (consistently) when run
