@@ -3,6 +3,11 @@ module.exports = {
   extends: ['plugin:react-hooks/recommended'],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json'],
+    sourceType: 'module',
+  },
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': [
