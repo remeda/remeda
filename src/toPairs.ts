@@ -1,3 +1,5 @@
+import { ObjectKeys } from './_types';
+
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  * @param object
@@ -15,9 +17,7 @@ export function toPairs<T>(object: Record<string, T>): Array<[string, T]> {
 }
 
 // Inspired and largely copied from `sindresorhus/ts-extras`:
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-entries.ts
-type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
 type ObjectValues<T extends Record<PropertyKey, unknown>> =
   Required<T>[ObjectKeys<T>];
 type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
