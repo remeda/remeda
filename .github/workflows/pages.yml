@@ -39,7 +39,10 @@ jobs:
       - name: Build docs
         run: yarn docs:build
         env:
-          ROUTER_BASE_NAME: ${{ github.event.repository.name }}
+          # The loops i'd go through to make this generic... :(
+          # We define the base name as '/remeda/', but this makes it more
+          # generic so it's future-proof if the project ever changes it's name
+          ROUTER_BASE_NAME: ${{ format('/{0}/', github.event.repository.name) }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
