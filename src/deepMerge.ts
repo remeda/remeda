@@ -4,7 +4,12 @@ import { purry } from './purry';
 type UnknownRecordOrArray = Record<PropertyKey, unknown> | ReadonlyArray<unknown>;
 
 function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
-  return typeof object === 'object' && object !== null;
+  return (
+    Array.isArray(object) ||
+    (typeof object === 'object' &&
+      object !== null &&
+      Object.getPrototypeOf(object) === Object.prototype)
+  );
 }
 
 /**
