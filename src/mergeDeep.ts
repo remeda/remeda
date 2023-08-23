@@ -19,14 +19,14 @@ function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
  * @param target - The first value to merge. This is the dominant parameter in the merge operation.
  * @param source - The second value to merge.
  * @signature
- *    R.deepMerge(a, b)
+ *    R.mergeDeep(a, b)
  * @example
- *    R.deepMerge({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'bar', x: 1, y: 2 }
+ *    R.mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'bar', x: 1, y: 2 }
  * @data_first
  * @category Object
  * @pipeable
  */
-export function deepMerge<
+export function mergeDeep<
   Target extends UnknownRecordOrArray,
   Source extends UnknownRecordOrArray
 >(
@@ -38,27 +38,27 @@ export function deepMerge<
  * Recursively merges two values, `a` and `b`.
  * @param source - The second value to merge.
  * @signature
- *    R.deepMerge(b)(a)
+ *    R.mergeDeep(b)(a)
  * @example
- *    R.deepMerge({ foo: 'baz', y: 2 })({ foo: 'bar', x: 1 }) // => { foo: 'bar', x: 1, y: 2 }
+ *    R.mergeDeep({ foo: 'baz', y: 2 })({ foo: 'bar', x: 1 }) // => { foo: 'bar', x: 1, y: 2 }
  *    R.pipe(
  *      { foo: 'bar', x: 1 },
- *      R.deepMerge({ foo: 'baz', y: 2 }),
+ *      R.mergeDeep({ foo: 'baz', y: 2 }),
  *    ) // => { foo: 'bar', x: 1, y: 2 }
  * @data_last
  * @category Object
  * @pipeable
  */
-export function deepMerge<
+export function mergeDeep<
   Target extends UnknownRecordOrArray,
   Source extends UnknownRecordOrArray
 >(source: Source): (target: Target) => MergeDeep<Target, Source>;
 
-export function deepMerge() {
-  return purry(_deepMerge, arguments);
+export function mergeDeep() {
+  return purry(_mergeDeep, arguments);
 }
 
-function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
+function _mergeDeep(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
   const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
 
   function isArrayCyclic(arr: ReadonlyArray<unknown>) {
@@ -107,8 +107,8 @@ function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
       ) {
         // These are the only keys that need recursive merging. At this point
         // we already know that both of them are objects, so they match the type
-        // of _deepMerge.
-        output[k] = _deepMerge(aValue, bValue);
+        // of _mergeDeep.
+        output[k] = _mergeDeep(aValue, bValue);
       }
     }
     return output;
