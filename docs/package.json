@@ -1,33 +1,31 @@
 {
   "name": "remeda-docs",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:remeda/docs.git",
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "watch": "parcel serve index.html",
-    "build": "cross-env NODE_ENV=production parcel build index.html --public-url ./  --out-file index.html && cp _redirects dist/_redirects"
+    "watch": "vite",
+    "build": "tsc && vite build && cp _redirects dist/_redirects",
+    "lint": "cd ../ && yarn docs:lint",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@types/react-router-dom": "^4.3.0",
-    "compression": "^1.7.2",
-    "connect-history-api-fallback": "^1.5.0",
-    "express": "^4.17.3",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "react-syntax-highlighter": "^7.0.4"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
-    "@types/react": "^16.3.14",
-    "@types/react-dom": "^16.0.5",
-    "@types/react-syntax-highlighter": "^0.0.5",
-    "cross-env": "^5.1.5",
-    "node-sass": "^8.0.0",
-    "parcel": "^1.9.4",
-    "typescript": "^3.8.3"
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "sass": "^1.66.0",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.5"
   }
 }

@@ -1,8 +1,7 @@
 node_modules/
 
 /coverage/
-/dist/
-/docs/
+dist/
 /examples/
 
 .husky/
