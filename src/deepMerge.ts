@@ -1,7 +1,9 @@
 import type { MergeDeep } from 'type-fest';
 import { purry } from './purry';
 
-type UnknownRecordOrArray = Record<PropertyKey, unknown> | ReadonlyArray<unknown>;
+type UnknownRecordOrArray =
+  | Record<PropertyKey, unknown>
+  | ReadonlyArray<unknown>;
 
 function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
   return (
@@ -27,7 +29,10 @@ function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
 export function deepMerge<
   Target extends UnknownRecordOrArray,
   Source extends UnknownRecordOrArray
->(target: Target, source: Source): MergeDeep<Target, Source, { arrayMergeMode: "spread" }>;
+>(
+  target: Target,
+  source: Source
+): MergeDeep<Target, Source, { arrayMergeMode: 'spread' }>;
 
 /**
  * Recursively merges two values, `a` and `b`.
@@ -61,10 +66,7 @@ function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
   }
 
   function merge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
-    if (
-      a === null ||
-      b === null
-    ) {
+    if (a === null || b === null) {
       return a ?? b;
     }
 
