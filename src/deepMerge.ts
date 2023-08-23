@@ -1,7 +1,7 @@
 import type { MergeDeep } from 'type-fest';
 import { purry } from './purry';
 
-type UnknownRecordOrArray = Record<string, unknown> | Array<unknown>;
+type UnknownRecordOrArray = Record<PropertyKey, unknown> | ReadonlyArray<unknown>;
 
 function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
   return typeof object === 'object' && object !== null;
@@ -22,7 +22,7 @@ function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
 export function deepMerge<
   Target extends UnknownRecordOrArray,
   Source extends UnknownRecordOrArray
->(target: Target, source: Source): MergeDeep<Target, Source>;
+>(target: Target, source: Source): MergeDeep<Target, Source, { arrayMergeMode: "spread" }>;
 
 /**
  * Recursively merges two values, `a` and `b`.
@@ -48,17 +48,15 @@ export function deepMerge() {
   return purry(_deepMerge, arguments);
 }
 
-export function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
+function _deepMerge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
   const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
 
-  function isArrayCyclic(arr: Array<unknown>) {
+  function isArrayCyclic(arr: ReadonlyArray<unknown>) {
     return arr.some(value => value && seenValues.has(value));
   }
 
   function merge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
     if (
-      typeof a !== 'object' ||
-      typeof b !== 'object' ||
       a === null ||
       b === null
     ) {
