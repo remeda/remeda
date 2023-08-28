@@ -3,12 +3,18 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Excludes the values from `other` array.
+ *
+ * This function uses *set semantics*, removing *all* items that appear in
+ * `other` (but not performing a unique filtering in the input array itself!).
+ * For multi-set semantics see `differenceMultiset`.
+ *
  * @param array the source array
  * @param other the values to exclude
  * @signature
  *    R.difference(array, other)
  * @example
- *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
+ *    R.difference([1,2,3,4], [2,5,3]) // => [1, 4]
+ *    R.difference([1,1,2,2], [1])  // => [2, 2]
  * @data_first
  * @category Array
  * @pipeable
@@ -20,6 +26,11 @@ export function difference<T>(
 
 /**
  * Excludes the values from `other` array.
+ *
+ * This function uses *set semantics*, removing *all* items that appear in
+ * `other` (but not performing a unique filtering in the input array itself!).
+ * For multi-set semantics see `differenceMultiset`.
+ *
  * @param other the values to exclude
  * @signature
  *    R.difference(other)(array)
@@ -30,6 +41,7 @@ export function difference<T>(
  *      R.difference([2, 3]),
  *      R.take(2)
  *    ) // => [1, 4]
+ *    R.pipe([1,1,2,2], R.difference([1]))  // => [2, 2]
  * @data_last
  * @category Array
  * @pipeable
