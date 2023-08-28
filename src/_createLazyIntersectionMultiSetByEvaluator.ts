@@ -10,6 +10,17 @@ const SKIP_VALUE = { done: false, hasNext: false } as const;
 export function createLazyIntersectionMultiSetByEvaluator<
   TData,
   TOther = TData
+>(other: ReadonlyArray<TOther>): LazyEvaluator<TData, TData & TOther>;
+export function createLazyIntersectionMultiSetByEvaluator<
+  TData,
+  TOther = TData
+>(
+  other: ReadonlyArray<TOther>,
+  scalarFunction: (item: TData | TOther) => unknown
+): LazyEvaluator<TData>;
+export function createLazyIntersectionMultiSetByEvaluator<
+  TData,
+  TOther = TData
 >(
   other: ReadonlyArray<TOther>,
   scalarFunction?: (item: TData | TOther) => unknown
