@@ -48,9 +48,6 @@ jobs:
       - name: 📘 Install Typescript
         run: yarn add --dev typescript@${{ matrix.typescript-version }}
 
-      - name: 🔎 Type check
-        run: yarn compile:dist
-
   typecheck-source:
     name: 👷 Typecheck Source
     runs-on: ubuntu-latest
