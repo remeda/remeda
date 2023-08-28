@@ -5,7 +5,7 @@
  */
 import type { LazyEvaluator } from './_reduceLazy';
 
-export const SKIP_VALUE = { done: false, hasNext: false } as const;
+const SKIP_VALUE = { done: false, hasNext: false } as const;
 
 export function createLazyIntersectionMultiSetByEvaluator<
   TData,
@@ -14,7 +14,7 @@ export function createLazyIntersectionMultiSetByEvaluator<
   other: ReadonlyArray<TOther>,
   scalarFunction?: (item: TData | TOther) => unknown
 ): LazyEvaluator<TData> {
-  // To perform a multi-set difference we need to "consume" a value from the
+  // To perform a multi-set intersection we need to "consume" a value from the
   // `other` array for each value in our source array. To keep track of this
   // we need to count how many "consumptions" we have for each value.
   const remaining = new Map<unknown, number>();
