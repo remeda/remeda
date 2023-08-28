@@ -32,16 +32,10 @@
     "vitest": "^0.28.4"
   },
   "scripts": {
-    "clean": "rm -rf ./dist && mkdir dist",
-    "test": "vitest run --coverage && yarn run compile",
-    "tsup:test": "vitest run --coverage && yarn run tsup:watch",
+    "test": "vitest run --coverage && yarn run tsup:watch",
     "test:ci": "vitest run",
-    "compile": "tsc",
-    "compile:dist": "tsc --project tsconfig.dist.json",
-    "tsup:watch": "tsup --watch",
+    "compile": "tsup --watch",
     "build": "tsup",
-    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
