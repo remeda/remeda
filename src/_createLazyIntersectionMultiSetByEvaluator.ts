@@ -7,7 +7,7 @@ import type { LazyEvaluator } from './_reduceLazy';
 
 export const SKIP_VALUE = { done: false, hasNext: false } as const;
 
-export function createLazyIntersectionMultisetByEvaluator<
+export function createLazyIntersectionMultiSetByEvaluator<
   TData,
   TOther = TData
 >(

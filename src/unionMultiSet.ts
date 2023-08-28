@@ -1,4 +1,4 @@
-import { createLazyDifferenceMultisetByEvaluator } from './_createLazyDifferenceMultisetByEvaluator';
+import { createLazyDifferenceMultiSetByEvaluator } from './_createLazyDifferenceMultiSetByEvaluator';
 import { _reduceLazy } from './_reduceLazy';
 import { purry } from './purry';
 
@@ -16,14 +16,14 @@ import { purry } from './purry';
  * @param data - The base array.
  * @param other - The array to union with.
  * @signature
- *    R.unionMultiset(data, other)
+ *    R.unionMultiSet(data, other)
  * @example
- *    R.unionMultiset([1, 2, 3], [2, 3, 4]) // => [1, 2, 3, 4]
- *    R.unionMultiset([1, 2, 3], [4, 2, 2, 2, 3]) // => [1, 2, 3, 4, 2, 2]
+ *    R.unionMultiSet([1, 2, 3], [2, 3, 4]) // => [1, 2, 3, 4]
+ *    R.unionMultiSet([1, 2, 3], [4, 2, 2, 2, 3]) // => [1, 2, 3, 4, 2, 2]
  * @data_first
  * @category Array
  */
-export function unionMultiset<TData, TOther = TData>(
+export function unionMultiSet<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>
 ): [...Array<TData>, ...Array<TOther>];
@@ -42,22 +42,22 @@ export function unionMultiset<TData, TOther = TData>(
  * @param data - The base array.
  * @param other - The array to union with.
  * @signature
- *    R.unionMultiset(other)(data)
+ *    R.unionMultiSet(other)(data)
  * @example
- *    R.pipe([1, 2, 3], R.unionMultiset([2, 3, 4])) // => [1, 2, 3, 4]
- *    R.pipe([1, 2, 3], R.unionMultiset([4, 2, 2, 2, 3])) // => [1, 2, 3, 4, 2, 2]
+ *    R.pipe([1, 2, 3], R.unionMultiSet([2, 3, 4])) // => [1, 2, 3, 4]
+ *    R.pipe([1, 2, 3], R.unionMultiSet([4, 2, 2, 2, 3])) // => [1, 2, 3, 4, 2, 2]
  * @data_last
  * @category Array
  */
-export function unionMultiset<TData, TOther = TData>(
+export function unionMultiSet<TData, TOther = TData>(
   other: ReadonlyArray<TOther>
 ): (data: ReadonlyArray<TData>) => [...Array<TData>, ...Array<TOther>];
 
-export function unionMultiset() {
-  return purry(unionMultisetImplementation, arguments);
+export function unionMultiSet() {
+  return purry(unionMultiSetImplementation, arguments);
 }
 
-const unionMultisetImplementation = <TData, TOther = TData>(
+const unionMultiSetImplementation = <TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>
 ): [...Array<TData>, ...Array<TOther>] => [
@@ -66,7 +66,7 @@ const unionMultisetImplementation = <TData, TOther = TData>(
   // we need to remove items that are already in the first array. This is a copy
   // of the same code that implements `differenceMutltiset` - We do this to
   // avoid exporting the non-purried implementation function from that file.
-  ..._reduceLazy(other, createLazyDifferenceMultisetByEvaluator(data)),
+  ..._reduceLazy(other, createLazyDifferenceMultiSetByEvaluator(data)),
 ];
 
 // TODO: Our `lazy` constructs currently don't support the notion of an "end"

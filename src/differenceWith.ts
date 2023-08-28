@@ -1,5 +1,5 @@
-import { purry } from './purry';
 import { LazyResult, _reduceLazy } from './_reduceLazy';
+import { purry } from './purry';
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -9,7 +9,7 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *
  * This function uses *set semantics*, removing *all* items that appear in
  * `other` (but not performing a unique filtering in the input array itself!).
- * For multi-set semantics see `differenceMultisetBy`.
+ * For multi-set semantics see `differenceMultiSetBy`.
  *
  * @param array the source array
  * @param other the values to exclude
@@ -38,7 +38,7 @@ export function differenceWith<TFirst, TSecond>(
  *
  * This function uses *set semantics*, removing *all* items that appear in
  * `other` (but not performing a unique filtering in the input array itself!).
- * For multi-set semantics see `differenceMultisetBy`.
+ * For multi-set semantics see `differenceMultiSetBy`.
  *
  * @param other the values to exclude
  * @param isEquals the comparator

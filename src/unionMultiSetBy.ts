@@ -1,4 +1,4 @@
-import { createLazyDifferenceMultisetByEvaluator } from './_createLazyDifferenceMultisetByEvaluator';
+import { createLazyDifferenceMultiSetByEvaluator } from './_createLazyDifferenceMultiSetByEvaluator';
 import { _reduceLazy } from './_reduceLazy';
 import { purry } from './purry';
 
@@ -21,13 +21,13 @@ import { purry } from './purry';
  * @param other - The array to union with.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.unionMultisetBy(data, other, scalarFunction)
+ *    R.unionMultiSetBy(data, other, scalarFunction)
  * @example
- *    R.unionMultisetBy([{id:1},{id:2}],[{id:1}],prop("id"));  // => [{id:1},{id:2}]
+ *    R.unionMultiSetBy([{id:1},{id:2}],[{id:1}],prop("id"));  // => [{id:1},{id:2}]
  * @data_first
  * @category Array
  */
-export function unionMultisetBy<
+export function unionMultiSetBy<
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -56,13 +56,13 @@ export function unionMultisetBy<
  * @param other - The array to union with.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.unionMultisetBy(other, scalarFunction)(data)
+ *    R.unionMultiSetBy(other, scalarFunction)(data)
  * @example
- *    R.pipe([{id:1},{id:2}], R.unionMultisetBy([{id:1}],prop("id")));  // => [{id:1},{id:2}]
+ *    R.pipe([{id:1},{id:2}], R.unionMultiSetBy([{id:1}],prop("id")));  // => [{id:1},{id:2}]
  * @data_last
  * @category Array
  */
-export function unionMultisetBy<
+export function unionMultiSetBy<
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -71,11 +71,11 @@ export function unionMultisetBy<
   scalarFunction: (item: TData | TOther) => TScalar
 ): (data: ReadonlyArray<TData>) => [...Array<TData>, ...Array<TOther>];
 
-export function unionMultisetBy() {
-  return purry(unionMultisetByImplementation, arguments);
+export function unionMultiSetBy() {
+  return purry(unionMultiSetByImplementation, arguments);
 }
 
-const unionMultisetByImplementation = <
+const unionMultiSetByImplementation = <
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -91,7 +91,7 @@ const unionMultisetByImplementation = <
   // avoid exporting the non-purried implementation function from that file.
   ..._reduceLazy(
     other,
-    createLazyDifferenceMultisetByEvaluator(data, scalarFunction)
+    createLazyDifferenceMultiSetByEvaluator(data, scalarFunction)
   ),
 ];
 

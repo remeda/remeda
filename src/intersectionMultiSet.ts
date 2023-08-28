@@ -1,4 +1,4 @@
-import { createLazyIntersectionMultisetByEvaluator } from './_createLazyIntersectionMultisetByEvaluator';
+import { createLazyIntersectionMultiSetByEvaluator } from './_createLazyIntersectionMultiSetByEvaluator';
 import type { LazyEvaluator } from './_reduceLazy';
 import { _reduceLazy } from './_reduceLazy';
 import { purry } from './purry';
@@ -16,17 +16,17 @@ import { purry } from './purry';
  * @param data - The base array.
  * @param other - The array that items would be compared against.
  * @signature
- *    R.intersectionMultiset(data, other)
+ *    R.intersectionMultiSet(data, other)
  * @example
- *    R.intersectionMultiset([1,2],[2,3]);  // => [2]
- *    R.intersectionMultiset([1,2,2],[2,3]);  // => [2]
- *    R.intersectionMultiset([1,1,1,2],[1,1,3]);  // => [1,1]
- *    R.intersectionMultiset([3,2,1],[2,3]);  // => [3,2]
+ *    R.intersectionMultiSet([1,2],[2,3]);  // => [2]
+ *    R.intersectionMultiSet([1,2,2],[2,3]);  // => [2]
+ *    R.intersectionMultiSet([1,1,1,2],[1,1,3]);  // => [1,1]
+ *    R.intersectionMultiSet([3,2,1],[2,3]);  // => [3,2]
  * @data_first
  * @category Array
  * @pipeable
  */
-export function intersectionMultiset<TData, TOther = TData>(
+export function intersectionMultiSet<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
@@ -45,39 +45,39 @@ export function intersectionMultiset<TData, TOther = TData>(
  * @param data - The base array.
  * @param other - The array that items would be compared against.
  * @signature
- *    R.intersectionMultiset(other)(data)
+ *    R.intersectionMultiSet(other)(data)
  * @example
- *    R.pipe([1,2], R.intersectionMultiset([2,3]);  // => [2]
- *    R.pipe([1,2,2], R.intersectionMultiset([2,3]);  // => [2]
- *    R.pipe([1,1,1,2], R.intersectionMultiset([1,1,3]);  // => [1,1]
- *    R.pipe([3,2,1], R.intersectionMultiset([2,3]);  // => [3,2]
+ *    R.pipe([1,2], R.intersectionMultiSet([2,3]);  // => [2]
+ *    R.pipe([1,2,2], R.intersectionMultiSet([2,3]);  // => [2]
+ *    R.pipe([1,1,1,2], R.intersectionMultiSet([1,1,3]);  // => [1,1]
+ *    R.pipe([3,2,1], R.intersectionMultiSet([2,3]);  // => [3,2]
  * @data_last
  * @category Array
  * @pipeable
  */
-export function intersectionMultiset<TData, TOther = TData>(
+export function intersectionMultiSet<TData, TOther = TData>(
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
 ): (data: ReadonlyArray<TData>) => Array<TData & TOther>;
 
-export function intersectionMultiset() {
+export function intersectionMultiSet() {
   return purry(
-    intersectionMultisetImplementation,
+    intersectionMultiSetImplementation,
     arguments,
-    intersectionMultiset.lazy
+    intersectionMultiSet.lazy
   );
 }
 
-const intersectionMultisetImplementation = <TData, TOther = TData>(
+const intersectionMultiSetImplementation = <TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>
 ): Array<TData> =>
-  _reduceLazy(data, createLazyIntersectionMultisetByEvaluator(other));
+  _reduceLazy(data, createLazyIntersectionMultiSetByEvaluator(other));
 
-export namespace intersectionMultiset {
+export namespace intersectionMultiSet {
   export function lazy<TData, TOther = TData>(
     other: ReadonlyArray<TOther>
   ): LazyEvaluator<TData> {
-    return createLazyIntersectionMultisetByEvaluator(other);
+    return createLazyIntersectionMultiSetByEvaluator(other);
   }
 }

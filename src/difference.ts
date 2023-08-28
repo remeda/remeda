@@ -1,12 +1,12 @@
-import { purry } from './purry';
 import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from './purry';
 
 /**
  * Excludes the values from `other` array.
  *
  * This function uses *set semantics*, removing *all* items that appear in
  * `other` (but not performing a unique filtering in the input array itself!).
- * For multi-set semantics see `differenceMultiset`.
+ * For multi-set semantics see `differenceMultiSet`.
  *
  * @param array the source array
  * @param other the values to exclude
@@ -29,7 +29,7 @@ export function difference<T>(
  *
  * This function uses *set semantics*, removing *all* items that appear in
  * `other` (but not performing a unique filtering in the input array itself!).
- * For multi-set semantics see `differenceMultiset`.
+ * For multi-set semantics see `differenceMultiSet`.
  *
  * @param other the values to exclude
  * @signature

@@ -8,7 +8,7 @@ import type { LazyEvaluator } from './_reduceLazy';
 
 const SKIP_VALUE = { done: false, hasNext: false } as const;
 
-export function createLazyDifferenceMultisetByEvaluator<
+export function createLazyDifferenceMultiSetByEvaluator<
   TData,
   TOther = TData,
   TScalar = TData | TOther

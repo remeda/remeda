@@ -1,4 +1,4 @@
-import { createLazyIntersectionMultisetByEvaluator } from './_createLazyIntersectionMultisetByEvaluator';
+import { createLazyIntersectionMultiSetByEvaluator } from './_createLazyIntersectionMultiSetByEvaluator';
 import type { LazyEvaluator } from './_reduceLazy';
 import { _reduceLazy } from './_reduceLazy';
 import { purry } from './purry';
@@ -21,14 +21,14 @@ import { purry } from './purry';
  * @param other - The array that items would be compared against.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.intersectionMultisetBy(data, other, scalarFunctions)
+ *    R.intersectionMultiSetBy(data, other, scalarFunctions)
  * @example
- *    R.intersectionMultisetBy([{id:1}, {id:2}],[{id:2},{id:3}],prop('id'));  // => [{id:2}]
+ *    R.intersectionMultiSetBy([{id:1}, {id:2}],[{id:2},{id:3}],prop('id'));  // => [{id:2}]
  * @data_first
  * @category Array
  * @pipeable
  */
-export function intersectionMultisetBy<TData, TOther = TData>(
+export function intersectionMultiSetBy<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
@@ -52,45 +52,45 @@ export function intersectionMultisetBy<TData, TOther = TData>(
  * @param other - The array that items would be compared against.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.intersectionMultisetBy(other, scalarFunctions)(data)
+ *    R.intersectionMultiSetBy(other, scalarFunctions)(data)
  * @example
- *    R.pipe([{id:1}, {id:2}], R.intersectionMultisetBy([{id:2},{id:3}],prop('id')));  // => [{id:2}]
+ *    R.pipe([{id:1}, {id:2}], R.intersectionMultiSetBy([{id:2},{id:3}],prop('id')));  // => [{id:2}]
  * @data_last
  * @category Array
  * @pipeable
  */
-export function intersectionMultisetBy<TData, TOther = TData>(
+export function intersectionMultiSetBy<TData, TOther = TData>(
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
 ): (data: ReadonlyArray<TData>) => Array<TData & TOther>;
 
-export function intersectionMultisetBy() {
+export function intersectionMultiSetBy() {
   return purry(
-    intersectionMultisetByImplementation,
+    intersectionMultiSetByImplementation,
     arguments,
-    intersectionMultisetBy.lazy
+    intersectionMultiSetBy.lazy
   );
 }
 
-const intersectionMultisetByImplementation = <TData, TOther = TData>(
+const intersectionMultiSetByImplementation = <TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
 ): Array<TData> =>
   _reduceLazy(
     data,
-    createLazyIntersectionMultisetByEvaluator<TData, TOther>(
+    createLazyIntersectionMultiSetByEvaluator<TData, TOther>(
       other,
       scalarFunction
     )
   );
 
-export namespace intersectionMultisetBy {
+export namespace intersectionMultiSetBy {
   export function lazy<TData, TOther = TData>(
     other: ReadonlyArray<TOther>,
     scalarFunction: (item: TData | TOther) => unknown
   ): LazyEvaluator<TData> {
-    return createLazyIntersectionMultisetByEvaluator<TData, TOther>(
+    return createLazyIntersectionMultiSetByEvaluator<TData, TOther>(
       other,
       scalarFunction
     );

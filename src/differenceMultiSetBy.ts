@@ -1,6 +1,6 @@
+import { createLazyDifferenceMultiSetByEvaluator } from './_createLazyDifferenceMultiSetByEvaluator';
 import type { LazyEvaluator } from './_reduceLazy';
 import { _reduceLazy } from './_reduceLazy';
-import { createLazyDifferenceMultisetByEvaluator } from './_createLazyDifferenceMultisetByEvaluator';
 import { purry } from './purry';
 
 /**
@@ -20,14 +20,14 @@ import { purry } from './purry';
  * @param other - The array whose elements will be subtracted.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.differenceMultisetBy(data, other, scalarFunction)
+ *    R.differenceMultiSetBy(data, other, scalarFunction)
  * @example
- *    R.differenceMultisetBy([{id:1},{id:2}],[{id:1}],prop("id"));  // => [{id:2}]
+ *    R.differenceMultiSetBy([{id:1},{id:2}],[{id:1}],prop("id"));  // => [{id:2}]
  * @data_first
  * @category Array
  * @pipeable
  */
-export function differenceMultisetBy<
+export function differenceMultiSetBy<
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -54,14 +54,14 @@ export function differenceMultisetBy<
  * @param other - The array whose elements will be subtracted.
  * @param scalarFunction - A function that extracts a value used as the item identity for comparisons.
  * @signature
- *    R.differenceMultiset(other, scalarFunction)(data)
+ *    R.differenceMultiSet(other, scalarFunction)(data)
  * @example
- *    R.pipe([{id:1},{id:2}], R.differenceMultisetBy([{id:1}],prop("id")));  // => [{id:2}]
+ *    R.pipe([{id:1},{id:2}], R.differenceMultiSetBy([{id:1}],prop("id")));  // => [{id:2}]
  * @data_last
  * @category Array
  * @pipeable
  */
-export function differenceMultisetBy<
+export function differenceMultiSetBy<
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -70,15 +70,15 @@ export function differenceMultisetBy<
   scalarFunction: (item: TData | TOther) => TScalar
 ): (data: ReadonlyArray<TData>) => Array<TData>;
 
-export function differenceMultisetBy() {
+export function differenceMultiSetBy() {
   return purry(
-    differenceMultisetByImplementation,
+    differenceMultiSetByImplementation,
     arguments,
-    differenceMultisetBy.lazy
+    differenceMultiSetBy.lazy
   );
 }
 
-const differenceMultisetByImplementation = <
+const differenceMultiSetByImplementation = <
   TData,
   TOther = TData,
   TScalar = TData | TOther
@@ -89,15 +89,15 @@ const differenceMultisetByImplementation = <
 ) =>
   _reduceLazy(
     data,
-    createLazyDifferenceMultisetByEvaluator(other, scalarFunction)
+    createLazyDifferenceMultiSetByEvaluator(other, scalarFunction)
   );
 
-export namespace differenceMultisetBy {
+export namespace differenceMultiSetBy {
   export function lazy<TData, TOther = TData, TScalar = TData | TOther>(
     other: ReadonlyArray<TOther>,
     scalarFunction: (item: TData | TOther) => TScalar
   ): LazyEvaluator<TData> {
-    return createLazyDifferenceMultisetByEvaluator<TData, TOther, TScalar>(
+    return createLazyDifferenceMultiSetByEvaluator<TData, TOther, TScalar>(
       other,
       scalarFunction
     );
