@@ -3,7 +3,7 @@ export type PredIndexed<T, K> = (input: T, index: number, array: Array<T>) => K;
 export type PredIndexedOptional<T, K> = (
   input: T,
   index?: number,
-  array?: Array<T>
+  array?: ReadonlyArray<T>
 ) => K;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
