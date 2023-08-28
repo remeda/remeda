@@ -17,9 +17,9 @@ import { purry } from './purry';
  * @data_first
  * @category Array
  */
-export function isContainsMultiSet(
-  data: ReadonlyArray<unknown>,
-  other: ReadonlyArray<unknown>
+export function isContainsMultiSet<T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
 ): boolean;
 
 /**
@@ -38,9 +38,9 @@ export function isContainsMultiSet(
  * @data_last
  * @category Array
  */
-export function isContainsMultiSet(
-  other: ReadonlyArray<unknown>
-): (data: ReadonlyArray<unknown>) => boolean;
+export function isContainsMultiSet<T>(
+  other: ReadonlyArray<T>
+): (data: ReadonlyArray<T>) => boolean;
 
 export function isContainsMultiSet() {
   return purry(isContainsMultiSetImplementation, arguments);
