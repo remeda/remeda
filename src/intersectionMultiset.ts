@@ -16,17 +16,17 @@ import { purry } from './purry';
  * @param data - The base array.
  * @param other - The array that items would be compared against.
  * @signature
- *    R.intersectionMutlisetBy(data, other)
+ *    R.intersectionMultiset(data, other)
  * @example
- *    R.intersectionMutlisetBy([1,2],[2,3]);  // => [2]
- *    R.intersectionMutlisetBy([1,2,2],[2,3]);  // => [2]
- *    R.intersectionMutlisetBy([1,1,1,2],[1,1,3]);  // => [1,1]
- *    R.intersectionMutlisetBy([3,2,1],[2,3]);  // => [3,2]
+ *    R.intersectionMultiset([1,2],[2,3]);  // => [2]
+ *    R.intersectionMultiset([1,2,2],[2,3]);  // => [2]
+ *    R.intersectionMultiset([1,1,1,2],[1,1,3]);  // => [1,1]
+ *    R.intersectionMultiset([3,2,1],[2,3]);  // => [3,2]
  * @data_first
  * @category Array
  * @pipeable
  */
-export function intersectionMutliset<TData, TOther = TData>(
+export function intersectionMultiset<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
@@ -45,36 +45,36 @@ export function intersectionMutliset<TData, TOther = TData>(
  * @param data - The base array.
  * @param other - The array that items would be compared against.
  * @signature
- *    R.intersectionMutlisetBy(other)(data)
+ *    R.intersectionMultiset(other)(data)
  * @example
- *    R.pipe([1,2], R.intersectionMutlisetBy([2,3]));  // => [2]
- *    R.pipe([1,2,2], R.intersectionMutlisetBy([2,3]));  // => [2]
- *    R.pipe([1,1,1,2], R.intersectionMutlisetBy([1,1,3]));  // => [1,1]
- *    R.pipe([3,2,1], R.intersectionMutlisetBy([2,3]));  // => [3,2]
+ *    R.pipe([1,2], R.intersectionMultiset([2,3]);  // => [2]
+ *    R.pipe([1,2,2], R.intersectionMultiset([2,3]);  // => [2]
+ *    R.pipe([1,1,1,2], R.intersectionMultiset([1,1,3]);  // => [1,1]
+ *    R.pipe([3,2,1], R.intersectionMultiset([2,3]);  // => [3,2]
  * @data_last
  * @category Array
  * @pipeable
  */
-export function intersectionMutliset<TData, TOther = TData>(
+export function intersectionMultiset<TData, TOther = TData>(
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => unknown
 ): (data: ReadonlyArray<TData>) => Array<TData & TOther>;
 
-export function intersectionMutliset() {
+export function intersectionMultiset() {
   return purry(
-    intersectionMutlisetImplementation,
+    intersectionMultisetImplementation,
     arguments,
-    intersectionMutliset.lazy
+    intersectionMultiset.lazy
   );
 }
 
-const intersectionMutlisetImplementation = <TData, TOther = TData>(
+const intersectionMultisetImplementation = <TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>
 ): Array<TData> =>
   _reduceLazy(data, createLazyIntersectionMultisetByEvaluator(other));
 
-export namespace intersectionMutliset {
+export namespace intersectionMultiset {
   export function lazy<TData, TOther = TData>(
     other: ReadonlyArray<TOther>
   ): LazyEvaluator<TData> {
