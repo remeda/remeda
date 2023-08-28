@@ -101,6 +101,8 @@ export * from './stringToPath';
 export * from './sumBy';
 export * from './swapIndices';
 export * from './swapProps';
+export * from './symmetricDifferenceMultiSet';
+export * from './symmetricDifferenceMultiSetBy';
 export * from './take';
 export * from './takeWhile';
 export * from './times';
