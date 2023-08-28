@@ -38,6 +38,8 @@ export * from './intersectionWith';
 export * from './invert';
 export * from './isArray';
 export * from './isBoolean';
+export * from './isContainsMultiSet';
+export * from './isContainsMultiSetBy';
 export * from './isDate';
 export * from './isDefined';
 export * from './isEmpty';
