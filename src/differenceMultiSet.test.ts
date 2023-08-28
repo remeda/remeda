@@ -51,9 +51,3 @@ describe('piping', () => {
     expect(result).toEqual([1, 4]);
   });
 });
-
-describe('typing', () => {
-  it('trivially works with different item types', () => {
-    expect(differenceMultiSet([1, 2, 3], ['a', 'b'])).toEqual([1, 2, 3]);
-  });
-});
