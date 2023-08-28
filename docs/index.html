@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-    crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="css/bootstrap.css" id="bscss"> -->
+    <!-- =============== APP STYLES ===============-->
+    <!-- <link rel="stylesheet" href="css/app.css" id="maincss"> -->
+    <link rel="stylesheet" href="css/app.scss" id="maincss" />
+    <title>Remeda</title>
+  </head>
 
-  <!-- <link rel="stylesheet" href="css/bootstrap.css" id="bscss"> -->
-  <!-- =============== APP STYLES ===============-->
-  <!-- <link rel="stylesheet" href="css/app.css" id="maincss"> -->
-  <link rel="stylesheet" href="css/app.scss" id="maincss">
-  <title>Remeda</title>
-</head>
-
-<body class="bg-light">
-  <div id="js-main" class="main">
-
-  </div>
-  <script src="./src/index.tsx"></script>
-</body>
-
+  <body class="bg-light">
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
 </html>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { JsTagProps, JsTag } from './JsTag';
 
 export interface ParametersProps {
-  args: JsTagProps[];
+  args: Array<JsTagProps>;
   returns: JsTagProps;
 }
 
@@ -32,7 +32,9 @@ export class Parameters extends React.Component<
           <div>
             <h6>Parameters</h6>
             <div className="mb-3">
-              {args.map(data => <JsTag key={data.name} {...data} />)}
+              {args.map(data => (
+                <JsTag key={data.name} {...data} />
+              ))}
             </div>
             <h6>Returns</h6>
             <div className="mb-3">

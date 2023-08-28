@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
 import { JsTagProps } from './JsTag';
@@ -8,7 +7,7 @@ export interface MethodDoc {
   tag: string;
   signature: string;
   example: string;
-  args: JsTagProps[];
+  args: Array<JsTagProps>;
   returns: JsTagProps;
   indexed: boolean;
   pipeable: boolean;
@@ -18,7 +17,7 @@ export interface MethodDoc {
 export interface FnDocProps {
   name: string;
   description: string;
-  methods: MethodDoc[];
+  methods: Array<MethodDoc>;
 }
 
 export function FnDoc(props: FnDocProps) {
