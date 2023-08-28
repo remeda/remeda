@@ -43,6 +43,8 @@ export * from './isContainsMultiSetBy';
 export * from './isDate';
 export * from './isDefined';
 export * from './isEmpty';
+export * from './isEqualMultiSet';
+export * from './isEqualMultiSetBy';
 export * from './isError';
 export * from './isFunction';
 export * from './isNil';
