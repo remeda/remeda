@@ -46,10 +46,10 @@ export function intersectionMultiSet<TData, TOther = TData>(
  * @signature
  *    R.intersectionMultiSet(other)(data)
  * @example
- *    R.pipe([1,2], R.intersectionMultiSet([2,3]);  // => [2]
- *    R.pipe([1,2,2], R.intersectionMultiSet([2,3]);  // => [2]
- *    R.pipe([1,1,1,2], R.intersectionMultiSet([1,1,3]);  // => [1,1]
- *    R.pipe([3,2,1], R.intersectionMultiSet([2,3]);  // => [3,2]
+ *    R.pipe([1,2], R.intersectionMultiSet([2,3]));  // => [2]
+ *    R.pipe([1,2,2], R.intersectionMultiSet([2,3]));  // => [2]
+ *    R.pipe([1,1,1,2], R.intersectionMultiSet([1,1,3]));  // => [1,1]
+ *    R.pipe([3,2,1], R.intersectionMultiSet([2,3]));  // => [3,2]
  * @data_last
  * @category Array
  * @pipeable
