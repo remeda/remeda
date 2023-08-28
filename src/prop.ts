@@ -8,6 +8,6 @@
  * @category Object
  */
 export const prop =
-  <T, K extends keyof T>(propName: K) =>
+  <T, K extends keyof T = keyof T>(propName: K) =>
   ({ [propName]: value }: T) =>
     value;

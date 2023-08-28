@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 
 export function Header() {
@@ -9,12 +8,15 @@ export function Header() {
       </NavLink>
       <ul className="navbar-nav mr-auto">
         <li className="nav-item ">
-          <NavLink className="nav-link" to="/" exact>
+          <NavLink className="nav-link" to="/">
             Home
           </NavLink>
         </li>
         <li className="nav-item  ">
-          <NavLink className="nav-link" to="/docs" activeClassName="active">
+          <NavLink
+            className={({ isActive }) => `${isActive ? 'active' : ''} nav-link`}
+            to="/docs"
+          >
             Documentation
           </NavLink>
         </li>

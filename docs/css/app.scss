@@ -1,39 +1,40 @@
 .menu-search {
   position: relative;
   padding: 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .menu-link {
   display: flex;
   align-items: center;
-  padding: .25rem 1.5rem;
+  padding: 0.25rem 1.5rem;
   font-weight: 500;
-  color: rgba(0, 0, 0, .65);
+  color: rgba(0, 0, 0, 0.65);
   &:hover {
     background: #f2f3f4;
-    text-decoration: none
+    text-decoration: none;
   }
   .badge {
     margin-left: auto;
-    &+.badge {
+    & + .badge {
       margin-left: 3px;
     }
   }
 }
 
-.main-content {}
+.main-content {
+}
 
 .code-wrapper {
   margin: 20px -20px;
   font-size: 16px;
-  &>pre {
+  & > pre {
     padding: 1em !important;
   }
 }
 
 .sidebar {
-  border-right: 1px solid rgba(0, 0, 0, .125);
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
   padding: 0;
 }
 
@@ -64,12 +65,12 @@ body {
 }
 
 .indexed-color {
-  background: #D49A6A;
+  background: #d49a6a;
   color: white;
 }
 
 .home {
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
   .code-wrapper {
     margin: 20px -1rem;
   }
