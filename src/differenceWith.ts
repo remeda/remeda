@@ -8,7 +8,7 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * Elements are compared by custom comparator isEquals.
  *
  * This function uses *set semantics*, removing *all* items that appear in
- * `other` (but not performing a unique filtering in the input array itself!).
+ * `other` (but not performing a unique filtering of the input array itself!).
  * For multi-set semantics see `differenceMultiSetBy`.
  *
  * @param array the source array

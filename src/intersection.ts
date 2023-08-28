@@ -3,6 +3,11 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
 
 /**
  * Returns a list of elements that exist in both array.
+ *
+ * This function uses *set semantics*, adding *all* items that appear in
+ * `other` (but not performing a unique filtering of the input array itself!).
+ * For multi-set semantics see `intersectionMultiSet`.
+ *
  * @param array the source array
  * @param other the second array
  * @signature

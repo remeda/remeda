@@ -5,7 +5,7 @@ import { purry } from './purry';
  * Excludes the values from `other` array.
  *
  * This function uses *set semantics*, removing *all* items that appear in
- * `other` (but not performing a unique filtering in the input array itself!).
+ * `other` (but not performing a unique filtering of the input array itself!).
  * For multi-set semantics see `differenceMultiSet`.
  *
  * @param array the source array
