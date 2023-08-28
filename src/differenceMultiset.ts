@@ -1,4 +1,5 @@
-import { _reduceLazy, type LazyEvaluator } from './_reduceLazy';
+import type { LazyEvaluator } from './_reduceLazy';
+import { _reduceLazy } from './_reduceLazy';
 import { purry } from './purry';
 
 const SKIP_VALUE = { done: false, hasNext: false } as const;
