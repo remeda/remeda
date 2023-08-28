@@ -8,18 +8,14 @@ import type { LazyEvaluator } from './_reduceLazy';
 
 const SKIP_VALUE = { done: false, hasNext: false } as const;
 
-export function createLazyDifferenceMultiSetByEvaluator<
-  TData,
-  TOther = TData,
-  TScalar = TData | TOther
->(
+export function createLazyDifferenceMultiSetByEvaluator<TData, TOther = TData>(
   other: ReadonlyArray<TOther>,
-  scalarFunction?: (item: TData | TOther) => TScalar
+  scalarFunction?: (item: TData | TOther) => unknown
 ): LazyEvaluator<TData> {
   // To perform a multi-set difference we need to "consume" a value from the
   // `other` array for each value in our source array. To keep track of this
   // we need to count how many "consumptions" we have for each value.
-  const remaining = new Map<TScalar | TOther | TData, number>();
+  const remaining = new Map<unknown, number>();
   for (const item of other) {
     const scalar = scalarFunction === undefined ? item : scalarFunction(item);
     const previousCount = remaining.get(scalar) ?? 0;

@@ -27,14 +27,10 @@ import { purry } from './purry';
  * @category Array
  * @pipeable
  */
-export function differenceMultiSetBy<
-  TData,
-  TOther = TData,
-  TScalar = TData | TOther
->(
+export function differenceMultiSetBy<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
-  scalarFunction: (item: TData | TOther) => TScalar
+  scalarFunction: (item: TData | TOther) => unknown
 ): Array<TData>;
 
 /**
@@ -61,13 +57,9 @@ export function differenceMultiSetBy<
  * @category Array
  * @pipeable
  */
-export function differenceMultiSetBy<
-  TData,
-  TOther = TData,
-  TScalar = TData | TOther
->(
+export function differenceMultiSetBy<TData, TOther = TData>(
   other: ReadonlyArray<TOther>,
-  scalarFunction: (item: TData | TOther) => TScalar
+  scalarFunction: (item: TData | TOther) => unknown
 ): (data: ReadonlyArray<TData>) => Array<TData>;
 
 export function differenceMultiSetBy() {
@@ -78,14 +70,10 @@ export function differenceMultiSetBy() {
   );
 }
 
-const differenceMultiSetByImplementation = <
-  TData,
-  TOther = TData,
-  TScalar = TData | TOther
->(
+const differenceMultiSetByImplementation = <TData, TOther = TData>(
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
-  scalarFunction: (item: TData | TOther) => TScalar
+  scalarFunction: (item: TData | TOther) => unknown
 ) =>
   _reduceLazy(
     data,
@@ -93,11 +81,11 @@ const differenceMultiSetByImplementation = <
   );
 
 export namespace differenceMultiSetBy {
-  export function lazy<TData, TOther = TData, TScalar = TData | TOther>(
+  export function lazy<TData, TOther = TData>(
     other: ReadonlyArray<TOther>,
-    scalarFunction: (item: TData | TOther) => TScalar
+    scalarFunction: (item: TData | TOther) => unknown
   ): LazyEvaluator<TData> {
-    return createLazyDifferenceMultiSetByEvaluator<TData, TOther, TScalar>(
+    return createLazyDifferenceMultiSetByEvaluator<TData, TOther>(
       other,
       scalarFunction
     );
