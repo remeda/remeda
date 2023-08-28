@@ -26,10 +26,10 @@ import { purry } from './purry';
  * @category Array
  * @pipeable
  */
-export function intersectionMultiSet<TData, TOther = TData>(
-  data: ReadonlyArray<TData>,
-  other: ReadonlyArray<TOther>
-): Array<TData>;
+export function intersectionMultiSet<T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
+): Array<T>;
 
 /**
  * Computes the intersection of two arrays using *multi-set* (or "bag")
@@ -54,9 +54,9 @@ export function intersectionMultiSet<TData, TOther = TData>(
  * @category Array
  * @pipeable
  */
-export function intersectionMultiSet<TData, TOther = TData>(
-  other: ReadonlyArray<TOther>
-): (data: ReadonlyArray<TData>) => Array<TData & TOther>;
+export function intersectionMultiSet<T>(
+  other: ReadonlyArray<T>
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function intersectionMultiSet() {
   return purry(
@@ -66,16 +66,14 @@ export function intersectionMultiSet() {
   );
 }
 
-const intersectionMultiSetImplementation = <TData, TOther = TData>(
-  data: ReadonlyArray<TData>,
-  other: ReadonlyArray<TOther>
-): Array<TData> =>
+const intersectionMultiSetImplementation = <T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
+): Array<T> =>
   _reduceLazy(data, createLazyIntersectionMultiSetByEvaluator(other));
 
 export namespace intersectionMultiSet {
-  export function lazy<TData, TOther = TData>(
-    other: ReadonlyArray<TOther>
-  ): LazyEvaluator<TData> {
+  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     return createLazyIntersectionMultiSetByEvaluator(other);
   }
 }

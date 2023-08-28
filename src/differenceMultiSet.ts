@@ -24,10 +24,10 @@ import { purry } from './purry';
  * @category Array
  * @pipeable
  */
-export function differenceMultiSet<TData, TOther = TData>(
-  data: ReadonlyArray<TData>,
-  other: ReadonlyArray<TOther>
-): Array<TData>;
+export function differenceMultiSet<T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
+): Array<T>;
 
 /**
  * Computes the difference of two arrays using *multi-set* (or "bag") semantics.
@@ -50,9 +50,9 @@ export function differenceMultiSet<TData, TOther = TData>(
  * @category Array
  * @pipeable
  */
-export function differenceMultiSet<TData, TOther = TData>(
-  other: ReadonlyArray<TOther>
-): (data: ReadonlyArray<TData>) => Array<TData>;
+export function differenceMultiSet<T>(
+  other: ReadonlyArray<T>
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function differenceMultiSet() {
   return purry(
@@ -62,15 +62,13 @@ export function differenceMultiSet() {
   );
 }
 
-const differenceMultiSetImplementation = <TData, TOther = TData>(
-  data: ReadonlyArray<TData>,
-  other: ReadonlyArray<TOther>
+const differenceMultiSetImplementation = <T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>
 ) => _reduceLazy(data, createLazyDifferenceMultiSetByEvaluator(other));
 
 export namespace differenceMultiSet {
-  export function lazy<TData, TOther = TData>(
-    other: ReadonlyArray<TOther>
-  ): LazyEvaluator<TData> {
+  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     return createLazyDifferenceMultiSetByEvaluator(other);
   }
 }
