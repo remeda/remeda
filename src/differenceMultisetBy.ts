@@ -1,8 +1,7 @@
 import type { LazyEvaluator } from './_reduceLazy';
 import { _reduceLazy } from './_reduceLazy';
+import { createLazyDifferenceMultisetByEvaluator } from './_createLazyDifferenceMultisetByEvaluator';
 import { purry } from './purry';
-
-const SKIP_VALUE = { done: false, hasNext: false } as const;
 
 /**
  * Computes the difference of two arrays using *multi-set* (or "bag") semantics.
@@ -87,35 +86,20 @@ const differenceMultisetByImplementation = <
   data: ReadonlyArray<TData>,
   other: ReadonlyArray<TOther>,
   scalarFunction: (item: TData | TOther) => TScalar
-) => _reduceLazy(data, differenceMultisetBy.lazy(other, scalarFunction));
+) =>
+  _reduceLazy(
+    data,
+    createLazyDifferenceMultisetByEvaluator(other, scalarFunction)
+  );
 
 export namespace differenceMultisetBy {
   export function lazy<TData, TOther = TData, TScalar = TData | TOther>(
     other: ReadonlyArray<TOther>,
     scalarFunction: (item: TData | TOther) => TScalar
   ): LazyEvaluator<TData> {
-    // To perform a multi-set difference we need to "consume" a value from the
-    // `other` array for each value in our source array. To keep track of this
-    // we need to count how many "consumptions" we have for each value.
-    const remaining = new Map<TScalar, number>();
-    for (const item of other) {
-      const scalar = scalarFunction(item);
-      const previousCount = remaining.get(scalar) ?? 0;
-      remaining.set(scalar, previousCount + 1);
-    }
-
-    return value => {
-      const scalar = scalarFunction(value);
-      const copies = remaining.get(scalar);
-      if (copies === undefined || copies === 0) {
-        // No more copies of the value left to "consume" so this item can be
-        // returned.
-        return { done: false, hasNext: true, next: value };
-      }
-
-      // We "consume" one copy of the value and then skip the item.
-      remaining.set(scalar, copies - 1);
-      return SKIP_VALUE;
-    };
+    return createLazyDifferenceMultisetByEvaluator<TData, TOther, TScalar>(
+      other,
+      scalarFunction
+    );
   }
 }
