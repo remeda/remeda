@@ -32,6 +32,8 @@ export * from './groupBy';
 export * from './identity';
 export * from './indexBy';
 export * from './intersection';
+export * from './intersectionMultiset';
+export * from './intersectionMultisetBy';
 export * from './intersectionWith';
 export * from './invert';
 export * from './isArray';
