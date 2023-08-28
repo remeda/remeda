@@ -88,8 +88,8 @@ documentation when migrating._
 | `times`             | `times`             | `times`             |
 | `toPairs`           | `toPairs`           | `toPairs`           |
 | `type`              | `-`                 | `type`              |
-| `union`             | `union`\*           | `union`             |
-| `unionBy`           | `unionBy`\*         |                     |
+| `unionMultiSet`     | `union`\*           | `union`             |
+| `unionMultiSetBy`   | `unionBy`\*         |                     |
 | `uniq`              | `uniq`              | `uniq`              |
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
