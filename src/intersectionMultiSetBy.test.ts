@@ -5,86 +5,187 @@ import { pipe } from './pipe';
 import { prop } from './prop';
 import { take } from './take';
 
-describe('with identity', () => {
+describe('runtime (identity)', () => {
+  it('returns empty array trivially', () => {
+    expect(intersectionMultiSetBy([], [], identity)).toEqual([]);
+  });
+
   it('returns empty array on empty input', () => {
     expect(intersectionMultiSetBy([], [1, 2, 3], identity)).toEqual([]);
+    expect(intersectionMultiSetBy([1, 2, 3], [], identity)).toEqual([]);
   });
 
-  it('removes nothing on empty other array', () => {
-    const data = [1, 2, 3];
-    expect(intersectionMultiSetBy(data, [], identity)).toEqual(data);
+  it('returns empty array on disjoint arrays', () => {
+    expect(intersectionMultiSetBy([1], [2], identity)).toEqual([]);
   });
 
-  it('removes an item that is in the input', () => {
-    expect(intersectionMultiSetBy([1], [1], identity)).toEqual([]);
+  it('works trivially on a single item', () => {
+    expect(intersectionMultiSetBy([1], [1], identity)).toEqual([1]);
   });
 
-  it('doesnt remove items that are not in the other array', () => {
-    expect(intersectionMultiSetBy([1], [2], identity)).toEqual([1]);
-  });
-
-  it('maintains multi-set semantics (removes only one copy)', () => {
+  it('maintains multi-set semantics (returns only one copy)', () => {
     expect(intersectionMultiSetBy([1, 1], [1], identity)).toEqual([1]);
+    expect(intersectionMultiSetBy([1], [1, 1], identity)).toEqual([1]);
   });
 
-  it('works if the other array has too many copies', () => {
-    expect(intersectionMultiSetBy([1], [1, 1], identity)).toEqual([]);
+  it('maintains multi-set semantics (returns as many copies as available)', () => {
+    expect(intersectionMultiSetBy([1, 1, 1, 1, 1], [1, 1], identity)).toEqual([
+      1, 1,
+    ]);
+    expect(intersectionMultiSetBy([1, 1], [1, 1, 1, 1, 1], identity)).toEqual([
+      1, 1,
+    ]);
   });
 
   it('preserves the original order in source array', () => {
-    const result = intersectionMultiSetBy([3, 1, 2, 2], [2], identity);
-    expect(result).toEqual([3, 1, 2]);
+    expect(intersectionMultiSetBy([3, 2, 1], [1, 2, 3], identity)).toEqual([
+      3, 2, 1,
+    ]);
+  });
+
+  it('maintains order for multiple copies', () => {
+    expect(
+      intersectionMultiSetBy([3, 2, 2, 2, 2, 2, 1], [1, 2, 3], identity)
+    ).toEqual([3, 2, 1]);
   });
 });
 
-describe('extract prop', () => {
+describe('runtime (prop)', () => {
   it('returns empty array on empty input', () => {
     expect(
       intersectionMultiSetBy([], [{ id: 1 }, { id: 2 }, { id: 3 }], prop('id'))
     ).toEqual([]);
-  });
-
-  it('removes nothing on empty other array', () => {
-    const data = [{ id: 1 }, { id: 2 }, { id: 3 }];
-    expect(intersectionMultiSetBy(data, [], prop('id'))).toEqual(data);
-  });
-
-  it('removes an item that is in the input', () => {
     expect(
-      intersectionMultiSetBy([{ id: 1 }], [{ id: 1 }], prop('id'))
+      intersectionMultiSetBy([{ id: 1 }, { id: 2 }, { id: 3 }], [], prop('id'))
     ).toEqual([]);
   });
 
-  it('doesnt remove items that are not in the other array', () => {
+  it('returns empty array on disjoint arrays', () => {
     expect(
       intersectionMultiSetBy([{ id: 1 }], [{ id: 2 }], prop('id'))
-    ).toEqual([{ id: 1 }]);
-  });
-
-  it('maintains multi-set semantics (removes only one copy)', () => {
-    expect(
-      intersectionMultiSetBy([{ id: 1 }, { id: 1 }], [{ id: 1 }], prop('id'))
-    ).toEqual([{ id: 1 }]);
-  });
-
-  it('works if the other array has too many copies', () => {
-    expect(
-      intersectionMultiSetBy([{ id: 1 }], [{ id: 1 }, { id: 1 }], prop('id'))
     ).toEqual([]);
+  });
+
+  it('works trivially on a single item', () => {
+    expect(
+      intersectionMultiSetBy(
+        [{ id: 1, subId: 1 }],
+        [{ id: 1, subId: 2 }],
+        prop('id')
+      )
+    ).toEqual([{ id: 1, subId: 1 }]);
+  });
+
+  it('maintains multi-set semantics (returns only one copy)', () => {
+    expect(
+      intersectionMultiSetBy(
+        [
+          { id: 1, subId: 1 },
+          { id: 1, subId: 2 },
+        ],
+        [{ id: 1, subId: 3 }],
+        prop('id')
+      )
+    ).toEqual([{ id: 1, subId: 1 }]);
+    expect(
+      intersectionMultiSetBy(
+        [{ id: 1, subId: 1 }],
+        [
+          { id: 1, subId: 2 },
+          { id: 1, subId: 3 },
+        ],
+        prop('id')
+      )
+    ).toEqual([{ id: 1, subId: 1 }]);
+  });
+
+  it('maintains multi-set semantics (returns as many copies as available)', () => {
+    expect(
+      intersectionMultiSetBy(
+        [
+          { id: 1, subId: 1 },
+          { id: 1, subId: 2 },
+          { id: 1, subId: 3 },
+          { id: 1, subId: 4 },
+          { id: 1, subId: 5 },
+        ],
+        [
+          { id: 1, subId: 6 },
+          { id: 1, subId: 7 },
+        ],
+        prop('id')
+      )
+    ).toEqual([
+      { id: 1, subId: 1 },
+      { id: 1, subId: 2 },
+    ]);
+    expect(
+      intersectionMultiSetBy(
+        [
+          { id: 1, subId: 1 },
+          { id: 1, subId: 2 },
+        ],
+        [
+          { id: 1, subId: 3 },
+          { id: 1, subId: 4 },
+          { id: 1, subId: 5 },
+          { id: 1, subId: 6 },
+          { id: 1, subId: 7 },
+        ],
+        prop('id')
+      )
+    ).toEqual([
+      { id: 1, subId: 1 },
+      { id: 1, subId: 2 },
+    ]);
   });
 
   it('preserves the original order in source array', () => {
-    const result = intersectionMultiSetBy(
-      [
-        { id: 3 },
-        { id: 1 },
-        { id: 2, subId: 'first' },
-        { id: 2, subId: 'second' },
-      ],
-      [{ id: 2 }],
-      prop('id')
-    );
-    expect(result).toEqual([{ id: 3 }, { id: 1 }, { id: 2, subId: 'second' }]);
+    expect(
+      intersectionMultiSetBy(
+        [
+          { id: 3, subId: 1 },
+          { id: 2, subId: 1 },
+          { id: 1, subId: 1 },
+        ],
+        [
+          { id: 1, subId: 2 },
+          { id: 2, subId: 2 },
+          { id: 3, subId: 2 },
+        ],
+        prop('id')
+      )
+    ).toEqual([
+      { id: 3, subId: 1 },
+      { id: 2, subId: 1 },
+      { id: 1, subId: 1 },
+    ]);
+  });
+
+  it('maintains order for multiple copies', () => {
+    expect(
+      intersectionMultiSetBy(
+        [
+          { id: 3, subId: 0 },
+          { id: 2, subId: 1 },
+          { id: 2, subId: 2 },
+          { id: 2, subId: 3 },
+          { id: 2, subId: 4 },
+          { id: 2, subId: 5 },
+          { id: 1, subId: 6 },
+        ],
+        [
+          { id: 1, subId: 7 },
+          { id: 2, subId: 8 },
+          { id: 3, subId: 9 },
+        ],
+        prop('id')
+      )
+    ).toEqual([
+      { id: 3, subId: 0 },
+      { id: 2, subId: 1 },
+      { id: 1, subId: 6 },
+    ]);
   });
 });
 
@@ -97,19 +198,17 @@ describe('piping', () => {
         count();
         return x;
       }),
-      intersectionMultiSetBy([2, 3], identity),
+      intersectionMultiSetBy([4, 2], identity),
       take(2)
     );
     expect(count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([1, 4]);
+    expect(result).toEqual([2, 4]);
   });
 });
 
 describe('typing', () => {
   it('trivially works with different item types', () => {
-    expect(intersectionMultiSetBy([1, 2, 3], ['a', 'b'], identity)).toEqual([
-      1, 2, 3,
-    ]);
+    expect(intersectionMultiSetBy([1, 2, 3], ['a', 'b'], identity)).toEqual([]);
   });
 
   it('provides scalar func the union of both types', () => {

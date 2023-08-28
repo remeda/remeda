@@ -28,8 +28,7 @@ import { purry } from './purry';
  */
 export function intersectionMultiSet<TData, TOther = TData>(
   data: ReadonlyArray<TData>,
-  other: ReadonlyArray<TOther>,
-  scalarFunction: (item: TData | TOther) => unknown
+  other: ReadonlyArray<TOther>
 ): Array<TData>;
 
 /**
@@ -56,8 +55,7 @@ export function intersectionMultiSet<TData, TOther = TData>(
  * @pipeable
  */
 export function intersectionMultiSet<TData, TOther = TData>(
-  other: ReadonlyArray<TOther>,
-  scalarFunction: (item: TData | TOther) => unknown
+  other: ReadonlyArray<TOther>
 ): (data: ReadonlyArray<TData>) => Array<TData & TOther>;
 
 export function intersectionMultiSet() {
