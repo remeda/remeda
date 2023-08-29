@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import marked from 'marked';
 import prettier from 'prettier';
 
 import data from '../out.json';
@@ -14,10 +13,11 @@ export interface MethodDoc {
 }
 
 export interface FnDocProps {
-  name: string;
-  description: string;
-  category: string;
-  methods: MethodDoc[];
+  readonly name: string;
+  readonly shortText: string;
+  readonly text?: string;
+  readonly category: string;
+  readonly methods: MethodDoc[];
 }
 
 export interface JsTagProps {
@@ -58,10 +58,8 @@ const ret = flatMap(data.children, (method: any) =>
           return {
             name: target.name,
             category: '',
-            description: marked(
-              (comment.shortText + '\n' + (comment.text || '')).trim(),
-              { breaks: true }
-            ),
+            shortText: comment.shortText,
+            text: comment.text,
             methods: signatures.map(signature => {
               const tags = signature.comment.tags || target.comment.tags || [];
               const isDataFirst = tags.find(item => item.tag === 'data_first');

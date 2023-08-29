@@ -1,7 +1,15 @@
+import { marked, type MarkedOptions } from 'marked';
+import { useMemo } from 'react';
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
 import { JsTagProps } from './JsTag';
 import { Parameters } from './Parameters';
+import DOMPurify from 'dompurify';
+
+const MARKED_OPTIONS: MarkedOptions = {
+  breaks: true,
+  gfm: true,
+} as const;
 
 export interface MethodDoc {
   tag: string;
@@ -15,13 +23,23 @@ export interface MethodDoc {
 }
 
 export interface FnDocProps {
-  name: string;
-  description: string;
-  methods: Array<MethodDoc>;
+  readonly name: string;
+  readonly shortText: string;
+  readonly text?: string;
+  readonly methods: ReadonlyArray<MethodDoc>;
 }
 
 export function FnDoc(props: FnDocProps) {
-  const { name, description, methods } = props;
+  const { name, text, shortText, methods } = props;
+
+  const descriptionHtml = useMemo(
+    () =>
+      DOMPurify.sanitize(
+        marked(`${shortText}\n${text ?? ''}`.trim(), MARKED_OPTIONS)
+      ),
+    [shortText, text]
+  );
+
   return (
     <div className="card mb-3">
       <a id={name} />
@@ -45,7 +63,7 @@ export function FnDoc(props: FnDocProps) {
           )}
         </h3>
         <div className="card-text">
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+          <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
           {methods.map((method, i) => {
             const { args, returns, tag, signature, example } = method;
             return (

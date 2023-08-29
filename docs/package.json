@@ -11,12 +11,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dompurify": "^3.0.5",
+    "marked": "^7.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.2",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@types/react-router-dom": "^5.3.3",
