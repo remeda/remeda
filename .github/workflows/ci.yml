@@ -74,6 +74,14 @@ jobs:
         node:
           - 20
           - 18
+          # Our testing infra (vitest) requires node 16 or higher, this
+          # effectively sets our guaranteed minimum supported version as we
+          # aren't testing on anything lower.
+          # tsup our (bundler) also only requires node 16 and higher.
+          # When this value changes in the future it needs to be communicated
+          # to the users. (NOTE: because users can use remeda in client-only
+          # code too, this doesn't define the minimum ECMAScript version we
+          # support. That is defined by the tsconfig file.)
           - 16
 
     steps:
