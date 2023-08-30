@@ -1,4 +1,5 @@
-node_modules
+node_modules/
 .cache
-dist
+dist/
 src/data.json
+build/

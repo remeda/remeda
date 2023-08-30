@@ -5,11 +5,11 @@
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf ./dist && rm -rf ./build",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "generate": "ts-node scripts/generate && cp def.json src/data.json",
-    "typedoc": "rm -rf node_modules/typedoc/node_modules/typescript && typedoc --json out.json --excludeNotExported src",
     "netlify-spa": "cp _redirects dist/_redirects",
     "build:netlify-ci": "yarn run typedoc && yarn run generate && yarn run build && yarn run netlify-spa"
   },

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+
+  "tsconfig": "../tsconfig.json",
+  "entryPoints": ["../src/index.ts"],
+  "exclude": ["**/*.test.ts"],
+
+  "json": "build/out.json"
+}
