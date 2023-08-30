@@ -1,5 +1,5 @@
 {
-  "include": ["."],
+  "files": ["transform.ts"],
   "compilerOptions": {
     "composite": true,
     "target": "ESNext",

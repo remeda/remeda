@@ -39,7 +39,7 @@ async function main([
   }
 
   const jsonData = await fs.readFile(dataFileName, 'utf8');
-  const data = JSON.parse(jsonData);
+  const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
   const output = await transformProject(data);
 
