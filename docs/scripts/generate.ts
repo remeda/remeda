@@ -1,15 +1,14 @@
 import * as fs from 'fs';
 import marked from 'marked';
 import prettier from 'prettier';
-
+import { flatMap } from '../../src/flatMap';
 import data from '../out.json';
-import { flatMap } from '../src/flatMap';
 
 export interface MethodDoc {
   tag: string;
   signature: string;
   example: string;
-  args: JsTagProps[];
+  args: Array<JsTagProps>;
   returns: JsTagProps;
 }
 
@@ -17,7 +16,7 @@ export interface FnDocProps {
   name: string;
   description: string;
   category: string;
-  methods: MethodDoc[];
+  methods: Array<MethodDoc>;
 }
 
 export interface JsTagProps {
@@ -43,7 +42,7 @@ const ret = flatMap(data.children, (method: any) =>
           (item: any) =>
             (item.kindString === 'Function' || item.kindString === 'Module') &&
             item.signatures &&
-            item.flags.isExported
+            item.flags.isExported,
         )
         .map(target => {
           if (!target) {
@@ -60,7 +59,7 @@ const ret = flatMap(data.children, (method: any) =>
             category: '',
             description: marked(
               (comment.shortText + '\n' + (comment.text || '')).trim(),
-              { breaks: true }
+              { breaks: true },
             ),
             methods: signatures.map(signature => {
               const tags = signature.comment.tags || target.comment.tags || [];
@@ -85,7 +84,7 @@ const ret = flatMap(data.children, (method: any) =>
                 str = getTag('example-raw');
                 return str
                   .split('\n')
-                  .map(str => str.replace(/^   /, ''))
+                  .map(str => str.replace(/^ {3}/, ''))
                   .join('\n');
               }
 
@@ -118,7 +117,7 @@ const ret = flatMap(data.children, (method: any) =>
             }),
           };
         })
-    : []
+    : [],
 )
   .filter(item => item)
   .map(item => {

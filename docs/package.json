@@ -5,10 +5,13 @@
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "scripts": {
-    "watch": "vite",
-    "build": "tsc && vite build && cp _redirects dist/_redirects",
-    "lint": "cd ../ && yarn docs:lint",
-    "preview": "vite preview"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "generate": "ts-node scripts/generate && cp def.json src/data.json",
+    "typedoc": "rm -rf node_modules/typedoc/node_modules/typescript && typedoc --json out.json --excludeNotExported src",
+    "netlify-spa": "cp _redirects dist/_redirects",
+    "build:netlify-ci": "yarn run typedoc && yarn run generate && yarn run build && yarn run netlify-spa"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -24,7 +27,11 @@
     "@vitejs/plugin-react": "^4.0.3",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "marked": "^7.0.5",
+    "prettier": "^3.0.3",
     "sass": "^1.66.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.25.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.5"
   }
