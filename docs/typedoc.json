@@ -5,19 +5,6 @@
   "entryPoints": ["../src/index.ts"],
   "exclude": ["**/*.test.ts"],
 
-  "blockTags": [
-    "@category",
-    "@dataFirst",
-    "@dataLast",
-    "@example",
-    "@exampleRaw",
-    "@indexed",
-    "@param",
-    "@pipeable",
-    "@signature",
-    "@strict"
-  ],
-
   "jsDocCompatibility": {
     "exampleTag": false
   },
