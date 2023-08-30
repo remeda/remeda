@@ -153,6 +153,8 @@ function getReturnType(type: JSONOutput.SomeType) {
     ? type.name
     : type.type === 'array'
     ? 'Array'
+    : type.type === 'predicate'
+    ? 'boolean'
     : 'Object';
 }
 

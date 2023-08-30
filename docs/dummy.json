@@ -1449,7 +1449,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1474,7 +1474,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1499,7 +1499,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1524,7 +1524,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1549,7 +1549,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1574,7 +1574,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1599,7 +1599,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1624,7 +1624,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1649,7 +1649,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1699,7 +1699,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1724,7 +1724,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1749,7 +1749,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1774,7 +1774,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
@@ -1799,7 +1799,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
+          "name": "boolean",
           "description": ""
         }
       }
