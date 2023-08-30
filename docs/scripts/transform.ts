@@ -9,6 +9,7 @@ import type { SetRequired } from 'type-fest';
 import { ReflectionKind, type JSONOutput } from 'typedoc';
 
 const MARKED_OPTIONS = {
+  gfm: true,
   breaks: true,
 } satisfies MarkedOptions;
 
@@ -21,10 +22,10 @@ const PRETTIER_OPTIONS = {
 
 main(process.argv.slice(1))
   .then(() => {
-    console.log('Done!');
+    console.log('✅ Done!');
   })
   .catch(e => {
-    console.log('Encountered Error', e);
+    console.log('💩 The process threw an error!', e);
   });
 
 async function main([
