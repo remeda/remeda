@@ -28,11 +28,9 @@ export function FnDoc(props: FunctionData) {
           )}
         </h3>
         <div className="card-text">
-          <div
-            dangerouslySetInnerHTML={
-              description === undefined ? undefined : { __html: description }
-            }
-          />
+          {description !== undefined && (
+            <div dangerouslySetInnerHTML={{ __html: description }} />
+          )}
           {methods.map((method, i) => {
             const { args, returns, tag, signature, example } = method;
             return (
