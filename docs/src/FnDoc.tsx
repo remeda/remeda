@@ -28,17 +28,27 @@ export function FnDoc(props: FunctionData) {
           )}
         </h3>
         <div className="card-text">
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+          <div
+            dangerouslySetInnerHTML={
+              description === undefined ? undefined : { __html: description }
+            }
+          />
           {methods.map((method, i) => {
             const { args, returns, tag, signature, example } = method;
             return (
               <div key={i}>
-                <div>
-                  <Badge>{tag}</Badge>
-                </div>
-                <CodeBlock type="light" code={signature} />
+                {tag !== undefined && (
+                  <div>
+                    <Badge>{tag}</Badge>
+                  </div>
+                )}
+                {signature !== undefined && (
+                  <CodeBlock type="light" code={signature} />
+                )}
                 <Parameters args={args} returns={returns} />
-                <CodeBlock type="dark" code={example} />
+                {example !== undefined && (
+                  <CodeBlock type="dark" code={example} />
+                )}
               </div>
             );
           })}

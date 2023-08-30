@@ -26,6 +26,7 @@ main(process.argv.slice(1))
   })
   .catch(e => {
     console.log('💩 The process threw an error!', e);
+    process.exit(1);
   });
 
 async function main([
@@ -110,11 +111,7 @@ async function transformSignature({
   type,
 }: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
   return {
-    tag: hasTag(comment, 'dataFirst')
-      ? ('Data First' as const)
-      : hasTag(comment, 'dataLast')
-      ? ('Data Last' as const)
-      : undefined,
+    tag: getFunctionCurriedVariant(comment),
     signature: await getFunctionSignature(comment),
     indexed: hasTag(comment, 'indexed'),
     pipeable: hasTag(comment, 'pipeable'),
@@ -134,6 +131,18 @@ function isDefined<T>(value: T | undefined): value is T {
 
 function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
   return value.length > 0;
+}
+
+function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
+  if (hasTag(comment, 'dataFirst')) {
+    return 'Data First';
+  }
+
+  if (hasTag(comment, 'dataLast')) {
+    return 'Data Last';
+  }
+
+  return undefined;
 }
 
 function hasComment(
