@@ -1,26 +1,9 @@
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
-import { JsTagProps } from './JsTag';
+import { type FunctionData } from './FunctionsData';
 import { Parameters } from './Parameters';
 
-export interface MethodDoc {
-  tag: string;
-  signature: string;
-  example: string;
-  args: Array<JsTagProps>;
-  returns: JsTagProps;
-  indexed: boolean;
-  pipeable: boolean;
-  strict: boolean;
-}
-
-export interface FnDocProps {
-  name: string;
-  description: string;
-  methods: Array<MethodDoc>;
-}
-
-export function FnDoc(props: FnDocProps) {
+export function FnDoc(props: FunctionData) {
   const { name, description, methods } = props;
   return (
     <div className="card mb-3">

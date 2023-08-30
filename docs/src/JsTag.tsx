@@ -1,9 +1,6 @@
-export interface JsTagProps {
-  name: string;
-  description: string;
-}
+import { type ParamData } from './FunctionsData';
 
-export function JsTag({ name, description }: JsTagProps) {
+export function JsTag({ name, description }: ParamData) {
   return (
     <div>
       <code>{name}</code> {description}
