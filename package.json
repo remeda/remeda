@@ -32,7 +32,7 @@
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
     "lint:check": "eslint src/**/*.ts",
-    "docs:build": "cd docs && yarn && yarn run build:netlify-ci",
+    "docs:build": "cd docs && yarn && yarn build:netlify-ci",
     "prepare": "husky install"
   },
   "repository": {
