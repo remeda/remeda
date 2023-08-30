@@ -8,7 +8,7 @@ import { purry } from './purry';
  *    R.takeWhile(array, fn)
  * @example
  *    R.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function takeWhile<T>(
@@ -23,7 +23,7 @@ export function takeWhile<T>(
  *    R.takeWhile(fn)(array)
  * @example
  *    R.pipe([1, 2, 3, 4, 3, 2, 1], R.takeWhile(x => x !== 4))  // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function takeWhile<T>(

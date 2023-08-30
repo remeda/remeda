@@ -128,7 +128,7 @@ type SwappedIndices<
  *
  * @returns Returns the manipulated array or string.
  *
- * @data_first
+ * @dataFirst
  */
 export function swapIndices<
   T extends IterableContainer | string,
@@ -149,7 +149,7 @@ export function swapIndices<
  *
  * @category Array
  * @returns Returns the manipulated array or string.
- * @data_last
+ * @dataLast
  */
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,

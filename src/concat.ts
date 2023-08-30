@@ -8,7 +8,7 @@ import { purry } from './purry';
  *    R.concat(arr1, arr2);
  * @example
  *    R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function concat<T, K>(
@@ -23,7 +23,7 @@ export function concat<T, K>(
  *    R.concat(arr2)(arr1);
  * @example
  *    R.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function concat<T, K>(

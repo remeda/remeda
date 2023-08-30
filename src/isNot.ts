@@ -7,7 +7,7 @@
  * @example
  *    R.isNot(R.isTruthy)(false) //=> true
  *    R.isNot(R.isTruthy)(true) //=> false
- * @data_last
+ * @dataLast
  * @category Guard
  */
 export function isNot<T, S extends T>(

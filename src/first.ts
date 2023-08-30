@@ -25,7 +25,7 @@ type FirstOut<T extends IterableContainer> = T extends []
  *      x => x + 1
  *    ); // => 5
  *
- * @category array
+ * @category Array
  * @pipeable
  */
 export function first<T extends IterableContainer>(

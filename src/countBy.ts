@@ -18,7 +18,7 @@ const _countBy =
  *    R.countBy(array, fn)
  * @example
  *    R.countBy([1, 2, 3, 4, 5], x => x % 2 === 0) // => 2
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -38,7 +38,7 @@ export function countBy<T>(
  *    R.countBy(fn)(array)
  * @example
  *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

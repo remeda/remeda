@@ -6,7 +6,7 @@
  *    R.mapKeys(object, fn)
  * @example
  *    R.mapKeys({a: 1, b: 2}, (key, value) => key + value) // => { a1: 1, b2: 2 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function mapKeys<T, S extends keyof any>(
@@ -21,7 +21,7 @@ export function mapKeys<T, S extends keyof any>(
  *    R.mapKeys(fn)(object)
  * @example
  *    R.pipe({a: 1, b: 2}, R.mapKeys((key, value) => key + value)) // => { a1: 1, b2: 2 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function mapKeys<T, S extends keyof any>(

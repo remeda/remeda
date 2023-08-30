@@ -18,7 +18,7 @@ import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
  *    R.sortedLastIndex(data, item)
  * @example
  *    R.sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
- * @data_first
+ * @dataFirst
  * @category Array
  *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
@@ -42,7 +42,7 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  *    R.sortedLastIndex(item)(data)
  * @example
  *    R.pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
- * @data_last
+ * @dataLast
  * @category Array
  *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy

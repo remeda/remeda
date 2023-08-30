@@ -28,7 +28,7 @@ const _maxBy =
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      R.maxBy(x => x.a)
  *    ) // { a: 5 }
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -48,7 +48,7 @@ export function maxBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // { a: 5 }
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */

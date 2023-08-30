@@ -17,7 +17,7 @@ import { purry } from './purry';
  *    [x, i],
  *    [x + x, i + i],
  *  ]) // => {a: 0, aa: 0, b: 1, bb: 2}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -45,7 +45,7 @@ export function flatMapToObj<T, K extends keyof any, V>(
  *        [x + x, i + i],
  *      ])
  *    ) // => {a: 0, aa: 0, b: 1, bb: 2}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

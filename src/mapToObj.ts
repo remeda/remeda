@@ -12,7 +12,7 @@ import { purry } from './purry';
  * @example
  *    R.mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  *    R.mapToObj.indexed([0, 0, 0], (x, i) => [i, i]) // => {0: 0, 1: 1, 2: 2}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -37,7 +37,7 @@ export function mapToObj<T, K extends keyof any, V>(
  *      [0, 0, 0],
  *      R.mapToObj.indexed((x, i) => [i, i])
  *    ) // => {0: 0, 1: 1, 2: 2}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

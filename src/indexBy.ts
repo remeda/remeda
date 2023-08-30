@@ -9,7 +9,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  *    R.indexBy(array, fn)
  * @example
  *    R.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -29,7 +29,7 @@ export function indexBy<T>(
  *      ['one', 'two', 'three'],
  *      R.indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

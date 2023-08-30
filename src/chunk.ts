@@ -18,7 +18,7 @@ type Chunked<T extends IterableContainer> = T[number] extends never
  * @example
  *    R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function chunk<T extends IterableContainer>(
@@ -34,7 +34,7 @@ export function chunk<T extends IterableContainer>(
  * @example
  *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function chunk<T extends IterableContainer>(

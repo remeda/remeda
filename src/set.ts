@@ -9,7 +9,7 @@ import { purry } from './purry';
  *    R.set(obj, prop, value)
  * @example
  *    R.set({ a: 1 }, 'a', 2) // => { a: 2 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
@@ -22,7 +22,7 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
  *    R.set(prop, value)(obj)
  * @example
  *    R.pipe({ a: 1 }, R.set('a', 2)) // => { a: 2 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;

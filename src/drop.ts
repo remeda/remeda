@@ -9,7 +9,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  *    R.drop(array, n)
  * @example
  *    R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -23,7 +23,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    R.drop(n)(array)
  * @example
  *    R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */

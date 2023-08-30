@@ -14,7 +14,7 @@
  * @example
  *    R.sliceString(1)(`abcdefghijkl`) // => `bcdefghijkl`
  *    R.sliceString(4, 7)(`abcdefghijkl`) // => `efg`
- * @data_last
+ * @dataLast
  * @category String
  * @strict
  */

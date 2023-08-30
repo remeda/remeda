@@ -15,7 +15,7 @@ const keyList = Object.keys;
  *    R.equals(1, 1) //=> true
  *    R.equals(1, '1') //=> false
  *    R.equals([1, 2, 3], [1, 2, 3]) //=> true
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function equals(a: any, b: any): boolean;
@@ -31,7 +31,7 @@ export function equals(a: any, b: any): boolean;
  *    R.equals(1)(1) //=> true
  *    R.equals('1')(1) //=> false
  *    R.equals([1, 2, 3])([1, 2, 3]) //=> true
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function equals(a: any): (b: any) => boolean;

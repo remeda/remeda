@@ -7,7 +7,7 @@ import { purry } from './purry';
  * @signature R.omitBy(object, fn)
  * @example
  *    R.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function omitBy<T>(
@@ -21,7 +21,7 @@ export function omitBy<T>(
  * @signature R.omitBy(fn)(object)
  * @example
  *    R.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function omitBy<T>(

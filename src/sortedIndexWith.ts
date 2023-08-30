@@ -24,7 +24,7 @@ import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
  *    R.sortedIndexWith(data, predicate)
  * @example
  *    R.sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  *
@@ -58,7 +58,7 @@ export function sortedIndexWith<T>(
  *    R.sortedIndexWith(predicate)(data)
  * @example
  *    R.pipe(['a','ab','abc'], R.sortedIndexWith((item) => item.length < 2)) // => 1
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  *
