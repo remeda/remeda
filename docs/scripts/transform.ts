@@ -1,9 +1,10 @@
-import fs from 'fs';
+import fs from 'node:fs/promises';
 import { parse as markedParse, type MarkedOptions } from 'marked';
-// import {
-//   format as prettierFormat,
-//   type Options as PrettierOptions,
-// } from 'prettier';
+import {
+  format as prettierFormat,
+  type Options as PrettierOptions,
+} from 'prettier';
+import invariant from 'tiny-invariant';
 import type { SetRequired } from 'type-fest';
 import { ReflectionKind, type JSONOutput } from 'typedoc';
 
@@ -11,60 +12,70 @@ const MARKED_OPTIONS = {
   breaks: true,
 } satisfies MarkedOptions;
 
-// const PRETTIER_OPTIONS = {
-//   parser: 'typescript',
-//   semi: false,
-//   singleQuote: true,
-// } satisfies PrettierOptions;
+const PRETTIER_OPTIONS = {
+  parser: 'typescript',
+  semi: false,
+  singleQuote: true,
+  trailingComma: 'es5',
+} satisfies PrettierOptions;
 
-main(process.argv.slice(1));
+main(process.argv.slice(1))
+  .then(() => {
+    console.log('Done!');
+  })
+  .catch(e => {
+    console.log('Encountered Error', e);
+  });
 
-function main([, dataFileName, outputFileName]: ReadonlyArray<string>): void {
+async function main([
+  ,
+  dataFileName,
+  outputFileName,
+]: ReadonlyArray<string>): Promise<void> {
   if (dataFileName === undefined || outputFileName === undefined) {
     console.log('Usage: script <inputFile> <outputFile>');
     process.exit(1);
   }
 
-  if (!fs.existsSync(dataFileName)) {
-    console.error(`Input file '${dataFileName}' does not exist.`);
-    process.exit(1);
-  }
-
-  if (fs.existsSync(outputFileName)) {
-    console.warn(
-      `Warning: Output file '${outputFileName}' already exists and will be overwritten.`
-    );
-  }
-
-  const jsonData = fs.readFileSync(dataFileName, 'utf8');
+  const jsonData = await fs.readFile(dataFileName, 'utf8');
   const data = JSON.parse(jsonData);
 
-  const output = transformProject(data);
+  const output = await transformProject(data);
 
   const jsonOutput = JSON.stringify(output, null, 2);
-  fs.writeFileSync(outputFileName, jsonOutput);
+  await fs.writeFile(outputFileName, jsonOutput);
 }
 
-function transformProject({ children }: JSONOutput.ProjectReflection) {
-  if (children === undefined) {
-    return [];
-  }
+async function transformProject({
+  children,
+  categories,
+}: JSONOutput.ProjectReflection) {
+  invariant(children !== undefined, 'The typedoc output is empty!');
+  invariant(
+    categories !== undefined,
+    'Category data is missing from typedoc output!'
+  );
 
-  return children
-    .filter(({ kind }) => kind === ReflectionKind.Function)
-    .flatMap(transformFunction)
-    .filter(isDefined)
-    .map(item => ({
-      ...item,
-      category: item.methods[0].category,
-    }));
+  const categoriesLookup = createCategoriesLookup(categories);
+
+  const functions = await Promise.all(
+    children
+      .filter(({ kind }) => kind === ReflectionKind.Function)
+      .map(transformFunction)
+  );
+
+  return functions.filter(isDefined).map(({ id, ...item }) => ({
+    ...item,
+    category: categoriesLookup.get(id),
+  }));
 }
 
-function transformFunction({
+async function transformFunction({
+  id,
   name,
   signatures,
 }: JSONOutput.DeclarationReflection) {
-  console.log('processing', name);
+  console.log('processing', name, id);
 
   if (signatures === undefined) {
     return;
@@ -76,25 +87,31 @@ function transformFunction({
   }
 
   const [{ comment: firstComment }] = signaturesWithComments;
-  const commentText = firstComment.summary.map(({ text }) => text).join();
+  const commentText = firstComment.summary.map(({ text }) => text).join('');
   const description = markedParse(commentText, MARKED_OPTIONS);
 
-  const methods = signaturesWithComments.map(transformSignature);
+  const methods = await Promise.all(
+    signaturesWithComments.map(transformSignature)
+  );
 
-  return { name, description, methods };
+  return { id, name, description, methods };
 }
 
-function transformSignature({
+async function transformSignature({
   comment,
   parameters = [],
   type,
 }: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
-  const isDataFirst = hasModifierTag(comment, 'data_first');
-  const isDataLast = hasModifierTag(comment, 'data_last');
+  const isDataFirst = hasTag(comment, 'dataFirst');
+  const isDataLast = hasTag(comment, 'dataLast');
 
   const tag = isDataFirst ? 'Data First' : isDataLast ? 'Data Last' : null;
 
-  const signature = tagContent(comment, 'signature') ?? '';
+  const signatureRaw = tagContent(comment, 'signature');
+  const signature =
+    signatureRaw === undefined
+      ? undefined
+      : await prettierFormat(signatureRaw, PRETTIER_OPTIONS);
 
   const args = parameters.map(({ name, comment }) => ({
     name,
@@ -105,10 +122,10 @@ function transformSignature({
     tag,
     signature,
     category: tagName(comment, 'category'),
-    indexed: hasModifierTag(comment, 'indexed'),
-    pipeable: hasModifierTag(comment, 'pipeable'),
-    strict: hasModifierTag(comment, 'strict'),
-    example: getExample(comment),
+    indexed: hasTag(comment, 'indexed'),
+    pipeable: hasTag(comment, 'pipeable'),
+    strict: hasTag(comment, 'strict'),
+    example: await getExample(comment),
     args,
     returns: {
       name: getReturnType(type),
@@ -131,55 +148,62 @@ function hasComment(
   return item.comment !== undefined;
 }
 
-function getReturnType(type: JSONOutput.SomeType | undefined) {
-  type === undefined
-    ? 'Object'
-    : type.type === 'intrinsic'
+function getReturnType(type: JSONOutput.SomeType) {
+  return type.type === 'intrinsic'
     ? type.name
     : type.type === 'array'
     ? 'Array'
     : 'Object';
 }
 
-function getExample(comment: JSONOutput.Comment) {
+async function getExample(comment: JSONOutput.Comment): Promise<string> {
   const example = tagContent(comment, 'example');
   if (example !== undefined) {
-    return example;
+    return prettierFormat(example, PRETTIER_OPTIONS);
   }
 
-  const exampleRaw = tagContent(comment, 'example-raw');
+  const exampleRaw = tagContent(comment, 'exampleRaw');
   return exampleRaw
     ?.split('\n')
     .map(str => str.replace(/^ {3}/, ''))
     .join('\n');
 }
 
-function hasModifierTag(
-  { modifierTags }: JSONOutput.Comment,
-  tagName: string
-): boolean {
-  return modifierTags === undefined
+function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
+  return blockTags === undefined
     ? false
-    : modifierTags.includes(`@${tagName}`);
+    : blockTags.some(({ tag }) => tag === `@${tagName}`);
 }
 
 function tagName(
   { blockTags }: JSONOutput.Comment,
   tagName: string
 ): string | undefined {
-  return blockTags === undefined
-    ? undefined
-    : blockTags.find(({ tag }) => tag === `@${tagName}`)?.name;
+  return blockTags.find(({ tag }) => tag === `@${tagName}`)?.name;
 }
 
 function tagContent(
   { blockTags }: JSONOutput.Comment,
   tagName: string
 ): string | undefined {
-  return blockTags === undefined
-    ? undefined
-    : blockTags
-        .find(({ tag }) => tag === `@${tagName}`)
-        ?.content.map(({ text }) => text)
-        .join();
+  return blockTags
+    .find(({ tag }) => tag === `@${tagName}`)
+    ?.content.map(({ text }) => text)
+    .join('');
+}
+
+function createCategoriesLookup(
+  categories: ReadonlyArray<JSONOutput.ReflectionCategory>
+): Map<number, string> {
+  const result = new Map<number, string>();
+
+  for (const { children, title } of categories) {
+    // TODO: We can enforce that only a predefined set of categories is
+    // acceptable and break the build on any unknown categories
+    for (const id of children) {
+      result.set(id, title);
+    }
+  }
+
+  return result;
 }
