@@ -5,7 +5,7 @@
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf ./dist && rm -rf ./build",
+    "clean": "rm -rf dist && rm -rf build && rm src/data.json",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
