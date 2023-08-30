@@ -3,5 +3,7 @@
 
   "tsconfig": "../tsconfig.json",
   "entryPoints": ["../src/index.ts"],
-  "exclude": ["**/*.test.ts"]
+  "exclude": ["**/*.test.ts"],
+
+  "excludeNotDocumented": true
 }

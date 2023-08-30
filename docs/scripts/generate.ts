@@ -1,26 +1,23 @@
 import fs from 'fs';
 import { parse as markedParse, type MarkedOptions } from 'marked';
-import {
-  format as prettierFormat,
-  type Options as PrettierOptions,
-} from 'prettier';
-import {
-  Comment,
-  ReflectionKind,
-  type DeclarationReflection,
-  type ProjectReflection,
-  type SignatureReflection,
-} from 'typedoc';
+// import {
+//   format as prettierFormat,
+//   type Options as PrettierOptions,
+// } from 'prettier';
+import type { SetRequired } from 'type-fest';
+import { ReflectionKind, type JSONOutput } from 'typedoc';
 
-const MARKED_OPTIONS: MarkedOptions = {
+const MARKED_OPTIONS = {
   breaks: true,
-} as const;
+} satisfies MarkedOptions;
 
-const PRETTIER_OPTIONS: PrettierOptions = {
-  semi: false,
-  singleQuote: true,
-  parser: 'typescript',
-} as const;
+// const PRETTIER_OPTIONS = {
+//   parser: 'typescript',
+//   semi: false,
+//   singleQuote: true,
+// } satisfies PrettierOptions;
+
+main(process.argv.slice(1));
 
 function main([, dataFileName, outputFileName]: ReadonlyArray<string>): void {
   if (dataFileName === undefined || outputFileName === undefined) {
@@ -48,13 +45,14 @@ function main([, dataFileName, outputFileName]: ReadonlyArray<string>): void {
   fs.writeFileSync(outputFileName, jsonOutput);
 }
 
-function transformProject({ children }: ProjectReflection) {
+function transformProject({ children }: JSONOutput.ProjectReflection) {
   if (children === undefined) {
     return [];
   }
 
   return children
-    .flatMap(transformModules)
+    .filter(({ kind }) => kind === ReflectionKind.Function)
+    .flatMap(transformFunction)
     .filter(isDefined)
     .map(item => ({
       ...item,
@@ -62,112 +60,126 @@ function transformProject({ children }: ProjectReflection) {
     }));
 }
 
-function transformModules({ children }: DeclarationReflection) {
-  if (children === undefined) {
-    return [];
+function transformFunction({
+  name,
+  signatures,
+}: JSONOutput.DeclarationReflection) {
+  console.log('processing', name);
+
+  if (signatures === undefined) {
+    return;
   }
 
-  return children
-    .filter(
-      ({ kind, signatures }) =>
-        (kind === ReflectionKind.Function || kind === ReflectionKind.Module) &&
-        signatures !== undefined
-    )
-    .map(transformMethod);
+  const signaturesWithComments = signatures.filter(hasComment);
+  if (!isNonEmpty(signaturesWithComments)) {
+    return;
+  }
+
+  const [{ comment: firstComment }] = signaturesWithComments;
+  const commentText = firstComment.summary.map(({ text }) => text).join();
+  const description = markedParse(commentText, MARKED_OPTIONS);
+
+  const methods = signaturesWithComments.map(transformSignature);
+
+  return { name, description, methods };
 }
 
-function transformMethod(target: DeclarationReflection) {
-  console.log('processing', target.name);
-  const signatures = target.signatures!.filter(
-    ({ comment }) => comment !== undefined
-  );
-  const [first] = signatures;
-  if (first === undefined) {
-    return;
-  }
-  const { comment } = first;
-  if (comment === undefined) {
-    return;
-  }
+function transformSignature({
+  comment,
+  parameters = [],
+  type,
+}: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
+  const isDataFirst = hasModifierTag(comment, 'data_first');
+  const isDataLast = hasModifierTag(comment, 'data_last');
+
+  const tag = isDataFirst ? 'Data First' : isDataLast ? 'Data Last' : null;
+
+  const signature = tagContent(comment, 'signature') ?? '';
+
+  const args = parameters.map(({ name, comment }) => ({
+    name,
+    description: comment?.summary.map(({ text }) => text).join(''),
+  }));
+
   return {
-    name: target.name,
-    category: '',
-    description: markedParse(
-      Comment.displayPartsToMarkdown(comment.summary, () => ''),
-      MARKED_OPTIONS
-    ),
-    methods: signatures.map(signature => {
-      const relevantComment = signature.comment ?? comment;
-
-      const isDataFirst = relevantComment.getTag('@data_first');
-      const isDataLast = relevantComment.getTag('@data_last');
-
-      function getExample() {
-        let tag = relevantComment.getTag('@example');
-        if (tag !== undefined) {
-          return prettierFormat(
-            tag.content.map(({ text }) => text).join('\n'),
-            PRETTIER_OPTIONS
-          );
-        }
-        tag = relevantComment.getTag('@example-raw');
-        return tag?.content
-          .map(({ text }) => text)
-          .map(str => str.replace(/^ {3}/, ''))
-          .join('\n');
-      }
-
-      const parameters = signature.parameters || [];
-      return {
-        tag:
-          isDataFirst !== undefined
-            ? 'Data First'
-            : isDataLast !== undefined
-            ? 'Data Last'
-            : null,
-        signature: prettierFormat(
-          relevantComment
-            .getTag('@signature')
-            ?.content.map(({ text }) => text)
-            .join('\n') ?? '',
-          PRETTIER_OPTIONS
-        ),
-        category: relevantComment
-          .getTag('@category')
-          ?.content.map(({ text }) => text)
-          .join('\n'),
-        indexed: relevantComment.getTag('@indexed') !== undefined,
-        pipeable: relevantComment.getTag('@pipeable') !== undefined,
-        strict: relevantComment.getTag('@strict') !== undefined,
-        example: getExample(),
-        args: parameters.map((item: any) => ({
-          name: item.name,
-          description: item.comment && item.comment.text,
-        })),
-        returns: {
-          name: getReturnType(signature),
-          description:
-            relevantComment
-              .getTag('@returns')
-              ?.content.map(({ text }) => text)
-              .join('\n') ?? '',
-        },
-      };
-    }),
+    tag,
+    signature,
+    category: tagName(comment, 'category'),
+    indexed: hasModifierTag(comment, 'indexed'),
+    pipeable: hasModifierTag(comment, 'pipeable'),
+    strict: hasModifierTag(comment, 'strict'),
+    example: getExample(comment),
+    args,
+    returns: {
+      name: getReturnType(type),
+      description: tagName(comment, 'returns') ?? '',
+    },
   };
 }
 
-function getReturnType(signature: SignatureReflection) {
-  const type = signature.type?.type;
-  if (type === 'intrinsic') {
-    return signature.type.name;
-  }
-  if (type === 'array') {
-    return 'Array';
-  }
-  return 'Object';
+function isDefined<T>(value: T | undefined): value is T {
+  return value !== undefined;
 }
 
-const isDefined = <T>(value: T | undefined): value is T => value !== undefined;
+function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
+  return value.length > 0;
+}
 
-main(process.argv.slice(1));
+function hasComment(
+  item: JSONOutput.SignatureReflection
+): item is SetRequired<JSONOutput.SignatureReflection, 'comment'> {
+  return item.comment !== undefined;
+}
+
+function getReturnType(type: JSONOutput.SomeType | undefined) {
+  type === undefined
+    ? 'Object'
+    : type.type === 'intrinsic'
+    ? type.name
+    : type.type === 'array'
+    ? 'Array'
+    : 'Object';
+}
+
+function getExample(comment: JSONOutput.Comment) {
+  const example = tagContent(comment, 'example');
+  if (example !== undefined) {
+    return example;
+  }
+
+  const exampleRaw = tagContent(comment, 'example-raw');
+  return exampleRaw
+    ?.split('\n')
+    .map(str => str.replace(/^ {3}/, ''))
+    .join('\n');
+}
+
+function hasModifierTag(
+  { modifierTags }: JSONOutput.Comment,
+  tagName: string
+): boolean {
+  return modifierTags === undefined
+    ? false
+    : modifierTags.includes(`@${tagName}`);
+}
+
+function tagName(
+  { blockTags }: JSONOutput.Comment,
+  tagName: string
+): string | undefined {
+  return blockTags === undefined
+    ? undefined
+    : blockTags.find(({ tag }) => tag === `@${tagName}`)?.name;
+}
+
+function tagContent(
+  { blockTags }: JSONOutput.Comment,
+  tagName: string
+): string | undefined {
+  return blockTags === undefined
+    ? undefined
+    : blockTags
+        .find(({ tag }) => tag === `@${tagName}`)
+        ?.content.map(({ text }) => text)
+        .join();
+}

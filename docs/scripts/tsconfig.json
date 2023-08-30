@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "NodeNext",
     "resolveJsonModule": true,
-    "lib": ["es6", "es2017.object"],
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
