@@ -75,7 +75,7 @@ async function transformFunction({
   name,
   signatures,
 }: JSONOutput.DeclarationReflection) {
-  console.log('processing', name, id);
+  console.log('processing', name);
 
   if (signatures === undefined) {
     return;
@@ -86,9 +86,15 @@ async function transformFunction({
     return;
   }
 
-  const [{ comment: firstComment }] = signaturesWithComments;
-  const commentText = firstComment.summary.map(({ text }) => text).join('');
-  const description = markedParse(commentText, MARKED_OPTIONS);
+  const [
+    {
+      comment: { summary },
+    },
+  ] = signaturesWithComments;
+  const description =
+    summary.length === 0
+      ? undefined
+      : markedParse(summary.map(({ text }) => text).join(''), MARKED_OPTIONS);
 
   const methods = await Promise.all(
     signaturesWithComments.map(transformSignature)
@@ -102,34 +108,22 @@ async function transformSignature({
   parameters = [],
   type,
 }: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
-  const isDataFirst = hasTag(comment, 'dataFirst');
-  const isDataLast = hasTag(comment, 'dataLast');
-
-  const tag = isDataFirst ? 'Data First' : isDataLast ? 'Data Last' : null;
-
-  const signatureRaw = tagContent(comment, 'signature');
-  const signature =
-    signatureRaw === undefined
-      ? undefined
-      : await prettierFormat(signatureRaw, PRETTIER_OPTIONS);
-
-  const args = parameters.map(({ name, comment }) => ({
-    name,
-    description: comment?.summary.map(({ text }) => text).join(''),
-  }));
-
   return {
-    tag,
-    signature,
+    tag: hasTag(comment, 'dataFirst')
+      ? 'Data First'
+      : hasTag(comment, 'dataLast')
+      ? 'Data Last'
+      : null,
+    signature: await getFunctionSignature(comment),
     category: tagName(comment, 'category'),
     indexed: hasTag(comment, 'indexed'),
     pipeable: hasTag(comment, 'pipeable'),
     strict: hasTag(comment, 'strict'),
     example: await getExample(comment),
-    args,
+    args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
-      description: tagName(comment, 'returns') ?? '',
+      description: tagName(comment, 'returns'),
     },
   };
 }
@@ -171,6 +165,27 @@ async function getExample(comment: JSONOutput.Comment): Promise<string> {
     .join('\n');
 }
 
+function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
+  const summarySegments = comment?.summary ?? [];
+  return {
+    name,
+    description:
+      summarySegments.length === 0
+        ? undefined
+        : summarySegments.map(({ text }) => text).join(''),
+  };
+}
+
+async function getFunctionSignature(comment: JSONOutput.Comment) {
+  const signatureRaw = tagContent(comment, 'signature');
+
+  if (signatureRaw === undefined) {
+    return;
+  }
+
+  return prettierFormat(signatureRaw, PRETTIER_OPTIONS);
+}
+
 function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
   return blockTags === undefined
     ? false
@@ -188,10 +203,18 @@ function tagContent(
   { blockTags }: JSONOutput.Comment,
   tagName: string
 ): string | undefined {
-  return blockTags
-    .find(({ tag }) => tag === `@${tagName}`)
-    ?.content.map(({ text }) => text)
-    .join('');
+  const tag = blockTags.find(({ tag }) => tag === `@${tagName}`);
+
+  if (tag === undefined) {
+    return;
+  }
+
+  const { content } = tag;
+  if (content.length === 0) {
+    return undefined;
+  }
+
+  return content.map(({ text }) => text).join('');
 }
 
 function createCategoriesLookup(

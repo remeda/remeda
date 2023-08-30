@@ -25,8 +25,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -47,8 +46,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -76,8 +74,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       },
       {
@@ -94,8 +91,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -123,8 +119,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       },
       {
@@ -141,8 +136,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -170,8 +164,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -188,8 +181,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -217,8 +209,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -235,8 +226,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -260,8 +250,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -285,8 +274,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -314,8 +302,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -332,8 +319,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -361,8 +347,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -379,8 +364,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -403,8 +387,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -432,8 +415,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -450,8 +432,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -483,8 +464,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -505,8 +485,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -534,8 +513,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -552,8 +530,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -581,8 +558,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -599,8 +575,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -628,8 +603,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       },
       {
@@ -646,8 +620,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -675,8 +648,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -693,8 +665,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -721,8 +692,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -739,8 +709,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -767,8 +736,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -785,8 +753,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -814,8 +781,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -832,8 +798,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -861,8 +826,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -879,8 +843,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -904,8 +867,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -933,8 +895,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -951,8 +912,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -980,8 +940,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -998,8 +957,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1023,8 +981,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -1048,8 +1005,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -1077,8 +1033,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -1095,8 +1050,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1124,8 +1078,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -1142,8 +1095,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1167,8 +1119,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1196,8 +1147,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -1214,8 +1164,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1238,8 +1187,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1267,8 +1215,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -1285,8 +1232,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1313,8 +1259,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -1331,8 +1276,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1364,8 +1308,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -1386,8 +1329,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1411,8 +1353,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -1424,8 +1365,7 @@
         "example": "R.pipe({ a: 'd', b: 'e', c: 'f' }, R.invert()) // => { d: \"a\", e: \"b\", f: \"c\" }\n",
         "args": [],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1449,8 +1389,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1474,8 +1413,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1499,8 +1437,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1524,8 +1461,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1549,8 +1485,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1574,8 +1509,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1599,8 +1533,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1624,8 +1557,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1649,8 +1581,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1674,8 +1605,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1699,8 +1629,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1724,8 +1653,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1749,8 +1677,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1774,8 +1701,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1799,8 +1725,7 @@
           }
         ],
         "returns": {
-          "name": "boolean",
-          "description": ""
+          "name": "boolean"
         }
       }
     ],
@@ -1828,8 +1753,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -1846,8 +1770,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1871,8 +1794,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1896,8 +1818,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -1909,8 +1830,7 @@
         "example": "R.pipe([1, 2, 3], R.length()) // => 3\n",
         "args": [],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1938,8 +1858,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -1956,8 +1875,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -1985,8 +1903,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2003,8 +1920,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2032,8 +1948,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2050,8 +1965,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2079,8 +1993,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2097,8 +2010,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2122,8 +2034,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2144,8 +2055,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2169,8 +2079,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2191,8 +2100,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       }
     ],
@@ -2220,8 +2128,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2238,8 +2145,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2263,8 +2169,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2288,8 +2193,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2310,8 +2214,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2330,8 +2233,7 @@
         "example": "onSomething(R.noop)\n",
         "args": [],
         "returns": {
-          "name": "undefined",
-          "description": ""
+          "name": "undefined"
         }
       }
     ],
@@ -2359,8 +2261,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2377,8 +2278,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2406,8 +2306,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2424,8 +2323,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2453,8 +2351,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2471,8 +2368,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2496,8 +2392,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2525,8 +2420,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2547,8 +2441,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2565,8 +2458,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2583,8 +2475,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2616,8 +2507,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2638,8 +2528,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2667,8 +2556,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2685,8 +2573,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2714,8 +2601,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2732,8 +2618,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2760,8 +2645,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2785,8 +2669,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2817,8 +2700,7 @@
           }
         ],
         "returns": {
-          "name": "any",
-          "description": ""
+          "name": "any"
         }
       }
     ],
@@ -2842,8 +2724,7 @@
           }
         ],
         "returns": {
-          "name": "string",
-          "description": ""
+          "name": "string"
         }
       }
     ],
@@ -2871,8 +2752,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -2889,8 +2769,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2921,8 +2800,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -2943,8 +2821,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -2972,8 +2849,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -2990,8 +2866,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3015,8 +2890,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3028,8 +2902,7 @@
         "example": "R.reverse()([1, 2, 3]) // [3, 2, 1]\n",
         "args": [],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3056,8 +2929,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3074,8 +2946,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3107,8 +2978,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3129,8 +2999,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3162,8 +3031,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3184,8 +3052,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3209,8 +3076,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -3222,8 +3088,7 @@
         "example": "R.pipe([4, 2, 7, 5], R.shuffle()) // => [7, 5, 4, 2]\n",
         "args": [],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3251,8 +3116,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3280,8 +3144,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -3298,8 +3161,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3322,8 +3184,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3343,8 +3204,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -3372,8 +3232,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -3390,8 +3249,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3423,8 +3281,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -3445,8 +3302,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3474,8 +3330,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -3492,8 +3347,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3521,8 +3375,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -3539,8 +3392,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3572,8 +3424,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       },
       {
@@ -3594,8 +3445,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3623,8 +3473,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3641,8 +3490,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3670,8 +3518,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3688,8 +3535,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3713,8 +3559,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3738,8 +3583,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3760,8 +3604,7 @@
           }
         ],
         "returns": {
-          "name": "number",
-          "description": ""
+          "name": "number"
         }
       }
     ],
@@ -3793,8 +3636,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3815,8 +3657,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3848,8 +3689,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -3870,8 +3710,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3899,8 +3738,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -3917,8 +3755,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3946,8 +3783,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -3964,8 +3800,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -3992,8 +3827,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -4009,8 +3843,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -4033,8 +3866,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -4057,8 +3889,7 @@
           }
         ],
         "returns": {
-          "name": "string",
-          "description": ""
+          "name": "string"
         }
       }
     ],
@@ -4081,8 +3912,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -4105,8 +3935,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -4133,8 +3962,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -4151,8 +3979,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -4176,8 +4003,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       }
     ],
@@ -4205,8 +4031,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -4223,8 +4048,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -4252,8 +4076,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -4270,8 +4093,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
@@ -4303,8 +4125,7 @@
           }
         ],
         "returns": {
-          "name": "Array",
-          "description": ""
+          "name": "Array"
         }
       },
       {
@@ -4321,8 +4142,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       },
       {
@@ -4343,8 +4163,7 @@
           }
         ],
         "returns": {
-          "name": "Object",
-          "description": ""
+          "name": "Object"
         }
       }
     ],
