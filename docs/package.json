@@ -11,8 +11,8 @@
     "preview": "vite preview",
     "typedoc": "typedoc --json build/out.json",
     "transform": "ts-node scripts/transform build/out.json src/data.json",
-    "netlify-spa": "cp _redirects dist/_redirects",
-    "build:netlify-ci": "yarn run typedoc && yarn run generate && yarn run build && yarn run netlify-spa"
+    "netlify-spa-fix": "cp _redirects dist/_redirects",
+    "build:netlify-ci": "yarn run typedoc && yarn run transform && yarn run build && yarn run netlify-spa-fix"
   },
   "dependencies": {
     "react": "^18.2.0",
