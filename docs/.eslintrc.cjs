@@ -69,8 +69,6 @@ module.exports = {
 
     // TODO: Temporarily disabled these rules so we can ship the main changes
     // in this PR more easily. We should fix each one and remove these:
-    '@typescript-eslint/no-unsafe-assignment': 'off',
-    '@typescript-eslint/no-unsafe-member-access': 'off',
     'react/no-unescaped-entities': 'off',
   },
 };
