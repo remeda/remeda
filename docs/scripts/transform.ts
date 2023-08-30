@@ -111,12 +111,11 @@ async function transformSignature({
 }: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
   return {
     tag: hasTag(comment, 'dataFirst')
-      ? 'Data First'
+      ? ('Data First' as const)
       : hasTag(comment, 'dataLast')
-      ? 'Data Last'
-      : null,
+      ? ('Data Last' as const)
+      : undefined,
     signature: await getFunctionSignature(comment),
-    category: tagName(comment, 'category'),
     indexed: hasTag(comment, 'indexed'),
     pipeable: hasTag(comment, 'pipeable'),
     strict: hasTag(comment, 'strict'),
@@ -124,7 +123,7 @@ async function transformSignature({
     args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
-      description: tagName(comment, 'returns'),
+      description: tagContent(comment, 'returns'),
     },
   };
 }
@@ -143,8 +142,10 @@ function hasComment(
   return item.comment !== undefined;
 }
 
-function getReturnType(type: JSONOutput.SomeType) {
-  return type.type === 'intrinsic'
+function getReturnType(type: JSONOutput.SomeType | undefined) {
+  return type === undefined
+    ? 'Object'
+    : type.type === 'intrinsic'
     ? type.name
     : type.type === 'array'
     ? 'Array'
@@ -153,7 +154,9 @@ function getReturnType(type: JSONOutput.SomeType) {
     : 'Object';
 }
 
-async function getExample(comment: JSONOutput.Comment): Promise<string> {
+async function getExample(
+  comment: JSONOutput.Comment
+): Promise<string | undefined> {
   const example = tagContent(comment, 'example');
   if (example !== undefined) {
     return prettierFormat(example, PRETTIER_OPTIONS);
@@ -177,7 +180,9 @@ function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
   };
 }
 
-async function getFunctionSignature(comment: JSONOutput.Comment) {
+async function getFunctionSignature(
+  comment: JSONOutput.Comment
+): Promise<string | undefined> {
   const signatureRaw = tagContent(comment, 'signature');
 
   if (signatureRaw === undefined) {
@@ -193,17 +198,14 @@ function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
     : blockTags.some(({ tag }) => tag === `@${tagName}`);
 }
 
-function tagName(
-  { blockTags }: JSONOutput.Comment,
-  tagName: string
-): string | undefined {
-  return blockTags.find(({ tag }) => tag === `@${tagName}`)?.name;
-}
-
 function tagContent(
   { blockTags }: JSONOutput.Comment,
   tagName: string
 ): string | undefined {
+  if (blockTags === undefined) {
+    return;
+  }
+
   const tag = blockTags.find(({ tag }) => tag === `@${tagName}`);
 
   if (tag === undefined) {
@@ -220,10 +222,14 @@ function tagContent(
 
 function createCategoriesLookup(
   categories: ReadonlyArray<JSONOutput.ReflectionCategory>
-): Map<number, string> {
+): ReadonlyMap<number, string> {
   const result = new Map<number, string>();
 
   for (const { children, title } of categories) {
+    if (children === undefined) {
+      continue;
+    }
+
     // TODO: We can enforce that only a predefined set of categories is
     // acceptable and break the build on any unknown categories
     for (const id of children) {
