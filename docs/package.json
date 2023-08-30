@@ -9,7 +9,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate": "ts-node scripts/generate && cp def.json src/data.json",
+    "typedoc": "typedoc --json build/out.json",
+    "generate": "ts-node scripts/generate build/out.json src/data.json",
     "netlify-spa": "cp _redirects dist/_redirects",
     "build:netlify-ci": "yarn run typedoc && yarn run generate && yarn run build && yarn run netlify-spa"
   },

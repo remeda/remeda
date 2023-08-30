@@ -3,7 +3,5 @@
 
   "tsconfig": "../tsconfig.json",
   "entryPoints": ["../src/index.ts"],
-  "exclude": ["**/*.test.ts"],
-
-  "json": "build/out.json"
+  "exclude": ["**/*.test.ts"]
 }

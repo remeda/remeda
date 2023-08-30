@@ -1,31 +1,164 @@
-import * as fs from 'fs';
-import marked from 'marked';
-import prettier from 'prettier';
-import { flatMap } from '../../src/flatMap';
-import data from '../out.json';
+import fs from 'fs';
+import { parse as markedParse, type MarkedOptions } from 'marked';
+import {
+  format as prettierFormat,
+  type Options as PrettierOptions,
+} from 'prettier';
+import {
+  Comment,
+  ReflectionKind,
+  type DeclarationReflection,
+  type ProjectReflection,
+  type SignatureReflection,
+} from 'typedoc';
 
-export interface MethodDoc {
-  tag: string;
-  signature: string;
-  example: string;
-  args: Array<JsTagProps>;
-  returns: JsTagProps;
+const MARKED_OPTIONS: MarkedOptions = {
+  breaks: true,
+} as const;
+
+const PRETTIER_OPTIONS: PrettierOptions = {
+  semi: false,
+  singleQuote: true,
+  parser: 'typescript',
+} as const;
+
+function main([, dataFileName, outputFileName]: ReadonlyArray<string>): void {
+  if (dataFileName === undefined || outputFileName === undefined) {
+    console.log('Usage: script <inputFile> <outputFile>');
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(dataFileName)) {
+    console.error(`Input file '${dataFileName}' does not exist.`);
+    process.exit(1);
+  }
+
+  if (fs.existsSync(outputFileName)) {
+    console.warn(
+      `Warning: Output file '${outputFileName}' already exists and will be overwritten.`
+    );
+  }
+
+  const jsonData = fs.readFileSync(dataFileName, 'utf8');
+  const data = JSON.parse(jsonData);
+
+  const output = transformProject(data);
+
+  const jsonOutput = JSON.stringify(output, null, 2);
+  fs.writeFileSync(outputFileName, jsonOutput);
 }
 
-export interface FnDocProps {
-  name: string;
-  description: string;
-  category: string;
-  methods: Array<MethodDoc>;
+function transformProject({ children }: ProjectReflection) {
+  if (children === undefined) {
+    return [];
+  }
+
+  return children
+    .flatMap(transformModules)
+    .filter(isDefined)
+    .map(item => ({
+      ...item,
+      category: item.methods[0].category,
+    }));
 }
 
-export interface JsTagProps {
-  name: string;
-  description: string;
+function transformModules({ children }: DeclarationReflection) {
+  if (children === undefined) {
+    return [];
+  }
+
+  return children
+    .filter(
+      ({ kind, signatures }) =>
+        (kind === ReflectionKind.Function || kind === ReflectionKind.Module) &&
+        signatures !== undefined
+    )
+    .map(transformMethod);
 }
 
-function getReturnType(signature) {
-  const type = signature.type.type;
+function transformMethod(target: DeclarationReflection) {
+  console.log('processing', target.name);
+  const signatures = target.signatures!.filter(
+    ({ comment }) => comment !== undefined
+  );
+  const [first] = signatures;
+  if (first === undefined) {
+    return;
+  }
+  const { comment } = first;
+  if (comment === undefined) {
+    return;
+  }
+  return {
+    name: target.name,
+    category: '',
+    description: markedParse(
+      Comment.displayPartsToMarkdown(comment.summary, () => ''),
+      MARKED_OPTIONS
+    ),
+    methods: signatures.map(signature => {
+      const relevantComment = signature.comment ?? comment;
+
+      const isDataFirst = relevantComment.getTag('@data_first');
+      const isDataLast = relevantComment.getTag('@data_last');
+
+      function getExample() {
+        let tag = relevantComment.getTag('@example');
+        if (tag !== undefined) {
+          return prettierFormat(
+            tag.content.map(({ text }) => text).join('\n'),
+            PRETTIER_OPTIONS
+          );
+        }
+        tag = relevantComment.getTag('@example-raw');
+        return tag?.content
+          .map(({ text }) => text)
+          .map(str => str.replace(/^ {3}/, ''))
+          .join('\n');
+      }
+
+      const parameters = signature.parameters || [];
+      return {
+        tag:
+          isDataFirst !== undefined
+            ? 'Data First'
+            : isDataLast !== undefined
+            ? 'Data Last'
+            : null,
+        signature: prettierFormat(
+          relevantComment
+            .getTag('@signature')
+            ?.content.map(({ text }) => text)
+            .join('\n') ?? '',
+          PRETTIER_OPTIONS
+        ),
+        category: relevantComment
+          .getTag('@category')
+          ?.content.map(({ text }) => text)
+          .join('\n'),
+        indexed: relevantComment.getTag('@indexed') !== undefined,
+        pipeable: relevantComment.getTag('@pipeable') !== undefined,
+        strict: relevantComment.getTag('@strict') !== undefined,
+        example: getExample(),
+        args: parameters.map((item: any) => ({
+          name: item.name,
+          description: item.comment && item.comment.text,
+        })),
+        returns: {
+          name: getReturnType(signature),
+          description:
+            relevantComment
+              .getTag('@returns')
+              ?.content.map(({ text }) => text)
+              .join('\n') ?? '',
+        },
+      };
+    }),
+  };
+}
+
+function getReturnType(signature: SignatureReflection) {
+  const type = signature.type?.type;
   if (type === 'intrinsic') {
     return signature.type.name;
   }
@@ -35,94 +168,6 @@ function getReturnType(signature) {
   return 'Object';
 }
 
-const ret = flatMap(data.children, (method: any) =>
-  method.children
-    ? method.children
-        .filter(
-          (item: any) =>
-            (item.kindString === 'Function' || item.kindString === 'Module') &&
-            item.signatures &&
-            item.flags.isExported,
-        )
-        .map(target => {
-          if (!target) {
-            return;
-          }
-          console.log('processing', target.name);
-          const signatures = target.signatures.filter(s => s.comment);
-          if (!signatures.length) {
-            return null;
-          }
-          const comment = signatures[0].comment;
-          return {
-            name: target.name,
-            category: '',
-            description: marked(
-              (comment.shortText + '\n' + (comment.text || '')).trim(),
-              { breaks: true },
-            ),
-            methods: signatures.map(signature => {
-              const tags = signature.comment.tags || target.comment.tags || [];
-              const isDataFirst = tags.find(item => item.tag === 'data_first');
-              const isDataLast = tags.find(item => item.tag === 'data_last');
-              const getTag = name =>
-                tags
-                  .filter(item => item.tag === name)
-                  .map(item => item.text.trim())
-                  .join('\n');
-              const hasTag = name => !!tags.find(item => item.tag === name);
+const isDefined = <T>(value: T | undefined): value is T => value !== undefined;
 
-              function getExample() {
-                let str = getTag('example');
-                if (str) {
-                  return prettier.format(str, {
-                    semi: false,
-                    singleQuote: true,
-                    parser: 'typescript',
-                  });
-                }
-                str = getTag('example-raw');
-                return str
-                  .split('\n')
-                  .map(str => str.replace(/^ {3}/, ''))
-                  .join('\n');
-              }
-
-              const parameters = signature.parameters || [];
-              return {
-                tag: isDataFirst
-                  ? 'Data First'
-                  : isDataLast
-                  ? 'Data Last'
-                  : null,
-                signature: prettier.format(getTag('signature'), {
-                  semi: false,
-                  singleQuote: true,
-                  parser: 'typescript',
-                }),
-                category: getTag('category'),
-                indexed: hasTag('indexed'),
-                pipeable: hasTag('pipeable'),
-                strict: hasTag('strict'),
-                example: getExample(),
-                args: parameters.map((item: any) => ({
-                  name: item.name,
-                  description: item.comment && item.comment.text,
-                })),
-                returns: {
-                  name: getReturnType(signature),
-                  description: getTag('returns'),
-                },
-              };
-            }),
-          };
-        })
-    : [],
-)
-  .filter(item => item)
-  .map(item => {
-    item.category = item.methods[0].category;
-    return item;
-  });
-
-fs.writeFileSync('./def.json', JSON.stringify(ret, null, 2));
+main(process.argv.slice(1));
