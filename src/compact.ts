@@ -1,9 +1,10 @@
 import { isTruthy } from './isTruthy';
 
 /**
- * @deprecated equivalent to `R.filter(R.isTruthy)` and will be removed in v2.
- *
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.
+ *
+ * **DEPRECATED: equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.**
+ *
  * @param items the array to compact
  * @signature
  *    R.compact(array)
@@ -11,6 +12,7 @@ import { isTruthy } from './isTruthy';
  *    R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]
  * @category Array
  * @pipeable
+ * @deprecated equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.
  */
 export function compact<T>(
   items: ReadonlyArray<T | null | undefined | false | '' | 0>
