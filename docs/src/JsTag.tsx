@@ -1,8 +1,8 @@
-import type { FunctionsData } from '../scripts/transform';
+import type { SignatureParams } from './Parameters';
 
-type Param = FunctionsData[number]['methods'][number]['args'][number];
+type JsTagProps = SignatureParams['args'][number] | SignatureParams['returns'];
 
-export function JsTag({ name, description }: Param) {
+export function JsTag({ name, description }: JsTagProps) {
   return (
     <div>
       <code>{name}</code> {description}
