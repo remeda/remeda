@@ -1,6 +1,8 @@
 import { isTruthy } from './isTruthy';
 
 /**
+ * @deprecated equivalent to `R.filter(R.isTruthy)` and will be removed in v2.
+ *
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.
  * @param items the array to compact
  * @signature
