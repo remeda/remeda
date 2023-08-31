@@ -27,6 +27,9 @@ import { ReflectionKind, type JSONOutput } from 'typedoc';
  *   const FUNCTIONS_DATA = data as unknown as FunctionsData;
  */
 export type FunctionsData = ReadonlyArray<
+  // We use PartialOnUndefinedDeep because the output goes through
+  // `JSON.stringify` which strips any object properties which have a value of
+  // `undefined`.
   PartialOnUndefinedDeep<
     // We had to "break" the array and rebuild it because type-fest's
     // `PartialOnUndefinedDeep` works on objects at the top level and not arrays
