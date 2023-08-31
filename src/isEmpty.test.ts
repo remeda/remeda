@@ -24,18 +24,25 @@ describe('isEmpty', () => {
     expect(isEmpty({ length: 0 })).toBe(false);
   });
 
+  test('returns true for undefined', () => {
+    expect(isEmpty(undefined)).toBe(true);
+  });
+
   test('does not accept invalid input types', () => {
-    // @ts-expect-error number is not a valid input type
+    // @ts-expect-error [ts2769] number is not a valid input type
     isEmpty(2);
 
-    // @ts-expect-error boolean is not a valid input type
+    // @ts-expect-error [ts2769] boolean is not a valid input type
     isEmpty(false);
 
-    // @ts-expect-error null is not a valid input type
+    // @ts-expect-error [ts2769] null is not a valid input type
     isEmpty(null);
 
     // @ts-expect-error [ts2769] undefined is only allowed with strings
     isEmpty([] as ReadonlyArray<string> | undefined);
+
+    // @ts-expect-error [ts2769] undefined is only allowed with strings
+    isEmpty({} as Record<string, string> | undefined);
   });
 });
 
