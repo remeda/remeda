@@ -1,5 +1,4 @@
 node_modules/
 .cache
 dist/
-src/data.json
 build/

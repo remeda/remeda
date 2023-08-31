@@ -5,13 +5,13 @@
   "author": "Łukasz Sentkiewicz",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf dist && rm -rf build && rm src/data.json",
+    "clean": "rm -rf dist && rm -rf build",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --max-warnings 0",
     "preview": "vite preview",
     "typedoc": "typedoc --json build/out.json",
-    "transform": "ts-node scripts/transform build/out.json src/data.json",
+    "transform": "ts-node scripts/transform build/out.json build/data.json",
     "netlify-spa-fix": "cp _redirects dist/_redirects",
     "build:netlify-ci": "yarn run typedoc && yarn run transform && yarn run build && yarn run netlify-spa-fix"
   },

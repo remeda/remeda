@@ -1,4 +1,4 @@
-import data from './data.json';
+import data from '../build/data.json';
 import { Menu } from './Menu';
 import { FnDoc } from './FnDoc';
 import type { FunctionsData } from '../scripts/transform';
