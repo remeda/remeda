@@ -11,7 +11,6 @@ import { isTruthy } from './isTruthy';
  * @example
  *    R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]
  * @category Array
- * @pipeable
  * @deprecated equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.
  */
 export function compact<T>(
