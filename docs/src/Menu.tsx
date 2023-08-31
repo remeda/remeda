@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type FunctionsData } from './FunctionsData';
+import type { FunctionsData } from '../scripts/transform';
 
 export function Menu({ items }: { readonly items: FunctionsData }) {
   const [searchTerm, setSearchTerm] = useState('');

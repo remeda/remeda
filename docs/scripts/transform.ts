@@ -1,3 +1,8 @@
+/**
+ * This script takes the JSON output of typedoc and reformats and transforms it
+ * to what our site needs in order to render the functions page.
+ */
+
 import fs from 'node:fs/promises';
 import { parse as markedParse, type MarkedOptions } from 'marked';
 import {
@@ -5,8 +10,31 @@ import {
   type Options as PrettierOptions,
 } from 'prettier';
 import invariant from 'tiny-invariant';
-import type { SetRequired } from 'type-fest';
+import type { SetRequired, PartialOnUndefinedDeep } from 'type-fest';
 import { ReflectionKind, type JSONOutput } from 'typedoc';
+
+/**
+ * Allows the site to "parse" the output of this script and use it's types as is
+ * without needing to use `any`, `unknown` or sync types manually. It is built
+ * dynamically from the return type of the main function so that the actual
+ * logic is the source of truth for the types so we don't get any type drifts.
+ *
+ * !IMPORTANT - Don't change this type if you have a typing issue! You most likely need to change one of the functions in this file to return something different.
+ *
+ * @example
+ *   import { type FunctionsData } from '../scripts/transform';
+ *   import data from '../build/data.json';
+ *   const FUNCTIONS_DATA = data as unknown as FunctionsData;
+ */
+export type FunctionsData = ReadonlyArray<
+  PartialOnUndefinedDeep<
+    // We had to "break" the array and rebuild it because type-fest's
+    // `PartialOnUndefinedDeep` works on objects at the top level and not arrays
+    // even while using the `recurseIntoArrays` option).
+    Awaited<ReturnType<typeof transformProject>>[number],
+    { recurseIntoArrays: true }
+  >
+>;
 
 const MARKED_OPTIONS = {
   gfm: true,
@@ -48,17 +76,9 @@ async function main([
   await fs.writeFile(outputFileName, jsonOutput);
 }
 
-async function transformProject({
-  children,
-  categories,
-}: JSONOutput.ProjectReflection) {
+async function transformProject(project: JSONOutput.ProjectReflection) {
+  const { children } = project;
   invariant(children !== undefined, 'The typedoc output is empty!');
-  invariant(
-    categories !== undefined,
-    'Category data is missing from typedoc output!'
-  );
-
-  const categoriesLookup = createCategoriesLookup(categories);
 
   const functions = await Promise.all(
     children
@@ -66,10 +86,7 @@ async function transformProject({
       .map(transformFunction)
   );
 
-  return functions.filter(isDefined).map(({ id, ...item }) => ({
-    ...item,
-    category: categoriesLookup.get(id),
-  }));
+  return addCategories(project, functions.filter(isDefined));
 }
 
 async function transformFunction({
@@ -227,6 +244,23 @@ function tagContent(
   }
 
   return content.map(({ text }) => text).join('');
+}
+
+function addCategories(
+  { categories }: JSONOutput.ProjectReflection,
+  functions: ReadonlyArray<
+    NonNullable<Awaited<ReturnType<typeof transformFunction>>>
+  >
+) {
+  invariant(
+    categories !== undefined,
+    'Category data is missing from typedoc output!'
+  );
+  const categoriesLookup = createCategoriesLookup(categories);
+  return functions.map(({ id, ...item }) => ({
+    ...item,
+    category: categoriesLookup.get(id),
+  }));
 }
 
 function createCategoriesLookup(

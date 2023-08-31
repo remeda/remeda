@@ -21,9 +21,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./scripts/tsconfig.json" }
-  ]
+  "include": ["src", "scripts/transform.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

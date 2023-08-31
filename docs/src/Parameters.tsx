@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { type SignatureData } from './FunctionsData';
+import type { FunctionsData } from '../scripts/transform';
 import { JsTag } from './JsTag';
 
 export class Parameters extends React.Component<
-  Pick<SignatureData, 'args' | 'returns'>,
+  Pick<FunctionsData[number]['methods'][number], 'args' | 'returns'>,
   { expanded: boolean }
 > {
   state = { expanded: false };

@@ -1,9 +1,9 @@
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
-import { type FunctionData } from './FunctionsData';
+import type { FunctionsData } from '../scripts/transform';
 import { Parameters } from './Parameters';
 
-export function FnDoc(props: FunctionData) {
+export function FnDoc(props: FunctionsData[number]) {
   const { name, description, methods } = props;
   return (
     <div className="card mb-3">
