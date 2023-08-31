@@ -12,6 +12,9 @@ const _countBy =
 
 /**
  * Counts how many values of the collection pass the specified predicate.
+ *
+ * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2.**
+ *
  * @param items The input data.
  * @param fn The predicate.
  * @signature
@@ -21,6 +24,7 @@ const _countBy =
  * @data_first
  * @indexed
  * @category Array
+ * @deprecated equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
 export function countBy<T>(
   items: ReadonlyArray<T>,
@@ -33,6 +37,9 @@ export function countBy<T>(
 
 /**
  * Counts how many values of the collection pass the specified predicate.
+ *
+ * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2.**
+ *
  * @param fn The predicate.
  * @signature
  *    R.countBy(fn)(array)
@@ -41,16 +48,23 @@ export function countBy<T>(
  * @data_last
  * @indexed
  * @category Array
+ * @deprecated equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
 export function countBy() {
   return purry(_countBy(false), arguments);
 }
 
 export namespace countBy {
+  /**
+   * @deprecated equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
+   */
   export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>
   ): number;
+  /**
+   * @deprecated equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
+   */
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
