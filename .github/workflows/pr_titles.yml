@@ -16,5 +16,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v5
+        with:
+          # We use the default types (as defined in:
+          # https://github.com/commitizen/conventional-commit-types), but we
+          # add "type" to categorize changes that only affect the type system,
+          # and not the runtime behaviour (function signatures, return types,
+          # etc...)
+          types: |
+            feat
+            fix
+            type
+            perf
+            refactor
+            test
+            docs
+            build
+            ci
+            style
+            chore
+            revert
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
