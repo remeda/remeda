@@ -21,9 +21,15 @@ interface LazyMany<T> {
   next: Array<T>;
 }
 
+export type LazyEvaluator<In, Out = In> = (
+  item: In,
+  index?: number,
+  array?: ReadonlyArray<In>
+) => LazyResult<Out>;
+
 export function _reduceLazy<T, K>(
-  array: Array<T>,
-  lazy: (item: T, index?: number, array?: Array<T>) => LazyResult<K>,
+  array: ReadonlyArray<T>,
+  lazy: LazyEvaluator<T, K>,
   indexed?: boolean
 ): Array<K> {
   const newArray: Array<K> = [];

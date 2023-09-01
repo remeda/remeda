@@ -6,6 +6,11 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
+ *
+ * This function uses *set semantics*, adding *all* items that appear in
+ * `other` (but not performing a unique filtering of the input array itself!).
+ * For multi-set semantics see `intersectionMultiSetBy`.
+ *
  * @param array the source array
  * @param other the second array
  * @param comparator the custom comparator

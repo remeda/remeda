@@ -73,7 +73,11 @@ const _forEach =
 const _lazy =
   (indexed: boolean) =>
   <T>(fn: PredIndexedOptional<T, void>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+    return (
+      value: T,
+      index?: number,
+      array?: ReadonlyArray<T>
+    ): LazyResult<T> => {
       if (indexed) {
         fn(value, index, array);
       } else {
