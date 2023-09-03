@@ -12,7 +12,7 @@ import { purry } from './purry';
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(8, fns) // => true
  *    R.anyPass(11, fns) // => false
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function anyPass<T>(
@@ -31,7 +31,7 @@ export function anyPass<T>(
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    R.anyPass(fns)(8) // => true
  *    R.anyPass(fns)(11) // => false
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function anyPass<T>(

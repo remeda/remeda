@@ -10,7 +10,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  *    R.partition(array, fn)
  * @example
  *    R.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -28,7 +28,7 @@ export function partition<T, S extends T>(
  *    R.partition(array, fn)
  * @example
  *    R.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -45,7 +45,7 @@ export function partition<T>(
  *    R.partition(fn)(array)
  * @example
  *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -61,7 +61,7 @@ export function partition<T, S extends T>(
  *    R.partition(fn)(array)
  * @example
  *    R.pipe(['one', 'two', 'forty two'], R.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

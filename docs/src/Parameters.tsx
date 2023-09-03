@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { JsTagProps, JsTag } from './JsTag';
+import type { FunctionsData } from '../scripts/transform';
+import { JsTag } from './JsTag';
 
-export interface ParametersProps {
-  args: Array<JsTagProps>;
-  returns: JsTagProps;
-}
+type FunctionSignature = FunctionsData[number]['methods'][number];
+export type SignatureParams = Pick<FunctionSignature, 'args' | 'returns'>;
 
 export class Parameters extends React.Component<
-  ParametersProps,
+  SignatureParams,
   { expanded: boolean }
 > {
   state = { expanded: false };

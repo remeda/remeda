@@ -8,7 +8,7 @@ import { purry } from './purry';
  *    R.dropLast(array, n)
  * @example
  *    R.dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
@@ -21,7 +21,7 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    R.dropLast(n)(array)
  * @example
  *    R.dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;

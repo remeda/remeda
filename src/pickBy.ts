@@ -7,7 +7,7 @@ import { purry } from './purry';
  * @signature R.pickBy(object, fn)
  * @example
  *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pickBy<T>(
@@ -21,7 +21,7 @@ export function pickBy<T>(
  * @signature R.pickBy(fn)(object)
  * @example
  *    R.pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pickBy<T>(

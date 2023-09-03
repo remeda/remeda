@@ -23,7 +23,7 @@ import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
  *    R.sortedLastIndexBy(data, item, valueFunction)
  * @example
  *    R.sortedLastIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  *
@@ -57,7 +57,7 @@ export function sortedLastIndexBy<T>(
  *    R.sortedLastIndexBy(item, valueFunction)(data)
  * @example
  *    R.pipe([{age:20},{age:22}],sortedLastIndexBy({age:21},prop('age'))) // => 1
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  *

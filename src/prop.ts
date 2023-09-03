@@ -4,7 +4,7 @@
  * @signature R.prop(prop)(object)
  * @example
  *    R.pipe({foo: 'bar'}, R.prop('foo')) // => 'bar'
- * @data_last
+ * @dataLast
  * @category Object
  */
 export const prop =

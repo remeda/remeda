@@ -21,7 +21,7 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  *
  * @category Object
  *
- * @data_first
+ * @dataFirst
  */
 export function swapProps<
   T extends object,
@@ -45,7 +45,7 @@ export function swapProps<
  *
  * @category Object
  *
- * @data_last
+ * @dataLast
  */
 export function swapProps<
   T extends object,

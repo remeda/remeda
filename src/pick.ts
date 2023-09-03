@@ -7,7 +7,7 @@ import { purry } from './purry';
  * @signature R.pick(object, [prop1, prop2])
  * @example
  *    R.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pick<T extends object, K extends keyof T>(
@@ -21,7 +21,7 @@ export function pick<T extends object, K extends keyof T>(
  * @signature R.pick([prop1, prop2])(object)
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.pick(['a', 'd'])) // => { a: 1, d: 4 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pick<K extends PropertyKey>(

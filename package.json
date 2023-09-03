@@ -15,10 +15,7 @@
     "eslint-config-prettier": "^8.6.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.0",
-    "marked": "^0.4.0",
     "prettier": "^2.8.4",
-    "ts-node": "^8.4.1",
-    "typedoc": "^0.11.1",
     "typescript": "^5.0.4",
     "vitest": "^0.28.4"
   },
@@ -35,12 +32,7 @@
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
     "lint:check": "eslint src/**/*.ts",
-    "docs:install": "cd docs && yarn",
-    "docs:lint": "eslint -c docs/.eslintrc.cjs --ext .ts --ext .tsx docs/src ",
-    "docs:fix": "rm -rf node_modules/typedoc/node_modules/typescript",
-    "docs:generate-ts": "typedoc --json out.json --excludeNotExported src",
-    "docs:generate-json": "yarn run docs:generate-ts && cd scripts && ts-node generate && cp def.json ../docs/src/data.json",
-    "docs:build": "yarn run docs:install && yarn run docs:fix && yarn run docs:generate-json && cd docs && yarn run build",
+    "docs:build": "cd docs && yarn && yarn build:netlify-ci",
     "prepare": "husky install"
   },
   "repository": {

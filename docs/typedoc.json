@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+
+  "tsconfig": "../tsconfig.json",
+  "entryPoints": ["../src/index.ts"],
+  "exclude": ["**/*.test.ts"],
+
+  "jsDocCompatibility": {
+    "exampleTag": false
+  },
+
+  "excludeNotDocumented": true
+}

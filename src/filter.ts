@@ -13,7 +13,7 @@ import { _toLazyIndexed } from './_toLazyIndexed';
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  *    R.filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1) // => [1, 3]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -36,7 +36,7 @@ export function filter<T>(
  * @example
  *    R.pipe([1, 2, 3], R.filter(x => x % 2 === 1)) // => [1, 3]
  *    R.pipe([1, 2, 3], R.filter.indexed((x, i) => x % 2 === 1)) // => [1, 3]
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array
@@ -91,7 +91,7 @@ export namespace filter {
     fn: PredIndexed<T, boolean>
   ): Array<T>;
   /**
-   * @data_last
+   * @dataLast
    */
   export function indexed<T, S extends T>(
     fn: (input: T, index: number, array: Array<T>) => input is S

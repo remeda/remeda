@@ -7,7 +7,7 @@
  * @param fn the function to purry.
  * @param args the arguments
  * @signature R.purry(fn, arguments);
- * @example-raw
+ * @exampleRaw
  *    function _findIndex(array, fn) {
  *      for (let i = 0; i < array.length; i++) {
  *        if (fn(array[i])) {

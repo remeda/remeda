@@ -9,7 +9,7 @@ import { purry } from './purry';
  * @example
  *    R.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
  *    R.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function splitAt<T>(
@@ -26,7 +26,7 @@ export function splitAt<T>(
  * @example
  *    R.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
  *    R.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function splitAt<T>(

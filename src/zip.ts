@@ -9,7 +9,7 @@ import { purry } from './purry';
  *   R.zip(first, second)
  * @example
  *   R.zip([1, 2], ['a', 'b']) // => [1, 'a'], [2, 'b']
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function zip<F, S>(
@@ -25,7 +25,7 @@ export function zip<F, S>(
  *   R.zip(second)(first)
  * @example
  *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zip<S>(
