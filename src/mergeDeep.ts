@@ -5,19 +5,18 @@ type UnknownRecordOrArray =
   | Record<PropertyKey, unknown>
   | ReadonlyArray<unknown>;
 
-function isRecordOrArray(object: unknown): object is UnknownRecordOrArray {
+function isRecord(object: unknown): object is UnknownRecordOrArray {
   return (
-    Array.isArray(object) ||
-    (typeof object === 'object' &&
-      object !== null &&
-      Object.getPrototypeOf(object) === Object.prototype)
+    typeof object === 'object' &&
+    object !== null &&
+    Object.getPrototypeOf(object) === Object.prototype
   );
 }
 
 /**
  * Recursively merges two values, `a` and `b`.
- * @param target - The first value to merge. This is the dominant parameter in the merge operation.
- * @param source - The second value to merge.
+ * @param target - The first value to merge.
+ * @param source - The second value to merge. This is the dominant parameter in the merge operation.
  * @signature
  *    R.mergeDeep(a, b)
  * @example
@@ -52,7 +51,9 @@ export function mergeDeep<
 export function mergeDeep<
   Target extends UnknownRecordOrArray,
   Source extends UnknownRecordOrArray
->(source: Source): (target: Target) => MergeDeep<Target, Source>;
+>(
+  source: Source
+): (target: Target) => MergeDeep<Target, Source, { arrayMergeMode: 'spread' }>;
 
 export function mergeDeep() {
   return purry(_mergeDeep, arguments);
@@ -86,14 +87,14 @@ function _mergeDeep(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
         }
         return a.concat(b);
       }
-      return a;
+      return b;
     }
     if (Array.isArray(b)) {
-      return a;
+      return b;
     }
 
     // At this point the output is already merged, simply not deeply merged.
-    const output = { ...b, ...a };
+    const output = { ...a, ...b };
 
     // now just scan the output and look for values that should have been deep-merged
     for (const k in b) {
@@ -101,9 +102,9 @@ function _mergeDeep(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
       const bValue = b[k];
 
       if (
-        isRecordOrArray(aValue) &&
+        isRecord(aValue) &&
         !seenValues.has(a[k] as object) &&
-        isRecordOrArray(bValue)
+        isRecord(bValue)
       ) {
         // These are the only keys that need recursive merging. At this point
         // we already know that both of them are objects, so they match the type
