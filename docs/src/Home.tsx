@@ -32,7 +32,7 @@ export function Home() {
           <h2 className="mb-2 text-3xl font-medium" id="installation">
             Installation
           </h2>
-          <div className="-mx-4 my-5">
+          <div className="!my-5 -mx-4">
             <pre className="bg-[rgb(43,43,43)] !p-2 text-[rgb(186,186,186)]">
               <code>
                 npm i remeda
