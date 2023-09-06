@@ -1,10 +1,10 @@
-import { CodeBlock } from "./CodeBlock";
+import { CodeBlock } from './CodeBlock';
 
 export function Home() {
   return (
-    <div className="home-wrapper">
+    <div className="h-[calc(100vh-56px)] overflow-auto py-7">
       <div className="container">
-        <div className="home rounded bg-white p-4 [&_p]:mb-4">
+        <div className="rounded bg-white p-4 shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.05)] [&_p]:mb-4">
           <h1 className="mb-2 text-4xl font-medium" id="remeda">
             Remeda
           </h1>
@@ -18,10 +18,10 @@ export function Home() {
                 src="https://travis-ci.org/remeda/remeda.svg?branch=master"
                 alt="Build Status"
               />
-            </a>{" "}
+            </a>{' '}
             <a href="https://www.npmjs.org/package/remeda">
               <img src="https://badge.fury.io/js/remeda.svg" alt="npm module" />
-            </a>{" "}
+            </a>{' '}
             <a href="https://david-dm.org/remeda/remeda">
               <img
                 src="https://david-dm.org/remeda/remeda.svg"
@@ -32,14 +32,8 @@ export function Home() {
           <h2 className="mb-2 text-3xl font-medium" id="installation">
             Installation
           </h2>
-          <div className="code-wrapper">
-            <pre
-              style={{
-                padding: "padding: 0.5em",
-                background: "rgb(43, 43, 43)",
-                color: "rgb(186, 186, 186)",
-              }}
-            >
+          <div className="-mx-4 my-5">
+            <pre className="bg-[rgb(43,43,43)] !p-2 text-[rgb(186,186,186)]">
               <code>
                 npm i remeda
                 <br />
@@ -51,6 +45,7 @@ export function Home() {
             Then in <code>.js</code> or <code>.ts</code>
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`import * as R from 'remeda'; // tree-shaking supported!`}
           />
@@ -74,9 +69,10 @@ export function Home() {
           <p>
             Functional programming is nice, and it makes the code more readable.
             However there are situations where you don't need &quot;pipes&quot;,
-            and you want to call just a single function.{" "}
+            and you want to call just a single function.{' '}
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Remeda
 R.pick(obj, ['firstName', 'lastName']);
@@ -103,6 +99,7 @@ _.pick(obj, ['firstName', 'lastName']);`}
             transformations aka pipes.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const users = [
   {name: 'john', age: 20, gender: 'm'},
@@ -148,6 +145,7 @@ _.flow(
             than the &quot;data-first&quot; version.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Remeda
 R.pick(obj, ['firstName', 'lastName']); // data-first
@@ -161,14 +159,15 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
             Lazy evaluation
           </h2>
           <p>
-            Many functions support lazy evaluation when using <code>pipe</code>{" "}
-            or <code>createPipe</code>. These functions have a{" "}
+            Many functions support lazy evaluation when using <code>pipe</code>{' '}
+            or <code>createPipe</code>. These functions have a{' '}
             <code>pipeable</code> tag in the documentation.
             <br />
             Lazy evaluation is not supported in Ramda and only partially
             supported in lodash.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Get first 3 unique values
 const arr = [1, 2, 2, 3, 3, 4, 5, 6];
@@ -197,10 +196,11 @@ const result = R.pipe(
           </h2>
           <p>
             Iterable functions have an extra property <code>indexed</code> which
-            is the same function with iterator{" "}
+            is the same function with iterator{' '}
             <code>(element, index, array)</code>.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const arr = [10, 12, 13, 3];
 
@@ -218,6 +218,7 @@ R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
             the same function with stricter types.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const input = { a: 'x', b: 'y', c: 'z' } as const
 
@@ -246,7 +247,7 @@ const resultStrict = R.keys.strict(input)
             </li>
             <li>
               The implementation of each function should be as minimal as
-              possible. Tree-shaking is supported by default. (Do you know that{" "}
+              possible. Tree-shaking is supported by default. (Do you know that{' '}
               <code>lodash.keyBy</code> has 14KB after minification?)
             </li>
             <li>All functions are immutable, and there are no side-effects.</li>

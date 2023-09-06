@@ -1,14 +1,14 @@
 module.exports = {
   // Code
-  "*.+(js|ts|jsx|tsx|mjs|cjs)": ["eslint --fix", "prettier --write"],
+  '*.+(js|ts|jsx|tsx|mjs|cjs)': ['eslint --fix', 'prettier --write'],
   // Configs
-  "*.+(json|json5|yaml|yml)": "prettier --write",
+  '*.+(json|json5|yaml|yml)': 'prettier --write',
   // CSS
-  "*.+(css|scss|less)": "prettier --write",
+  '*.+(css|scss|less)': 'prettier --write',
   // Web
-  "*.+(htm|html|svg)": "prettier --write",
+  '*.+(htm|html|svg)': 'prettier --write',
   // Markdown
-  "*.md": "prettier --write",
+  '*.md': 'prettier --write',
   // GraphQL
-  "*.graphql": "prettier --write",
+  '*.graphql': 'prettier --write',
 };
