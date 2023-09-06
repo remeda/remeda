@@ -8,12 +8,12 @@ const ROOT_ELEMENT_ID = 'root';
 const rootElement = document.getElementById(ROOT_ELEMENT_ID);
 invariant(
   rootElement !== null,
-  `element with id=${ROOT_ELEMENT_ID} not found. Please check index.html`,
+  `element with id=${ROOT_ELEMENT_ID} not found. Please check index.html`
 );
 
 const reactRoot = createRoot(rootElement);
 reactRoot.render(
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
