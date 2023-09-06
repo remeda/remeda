@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './App.tsx';
 import invariant from 'tiny-invariant';
+import { App } from './App.tsx';
 
 const ROOT_ELEMENT_ID = 'root';
 

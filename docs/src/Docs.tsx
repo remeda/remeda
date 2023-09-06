@@ -1,7 +1,7 @@
 import data from '../build/data.json';
-import { Menu } from './Menu';
-import { FnDoc } from './FnDoc';
 import type { FunctionsData } from '../scripts/transform';
+import { FnDoc } from './FnDoc';
+import { Menu } from './Menu';
 
 const FUNCTIONS_DATA = data as unknown as FunctionsData;
 

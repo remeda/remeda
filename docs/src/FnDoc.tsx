@@ -1,6 +1,6 @@
+import type { FunctionsData } from '../scripts/transform';
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
-import type { FunctionsData } from '../scripts/transform';
 import { Parameters } from './Parameters';
 
 export function FnDoc(props: FunctionsData[number]) {

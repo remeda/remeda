@@ -1,6 +1,6 @@
 import type { SignatureParams } from './Parameters';
 
-type JsTagProps = SignatureParams['args'][number] | SignatureParams['returns'];
+type JsTagProps = SignatureParams['args'][number];
 
 export function JsTag({ name, description }: JsTagProps) {
   return (
