@@ -1,25 +1,27 @@
-import { CodeBlock } from './CodeBlock';
+import { CodeBlock } from "./CodeBlock";
 
 export function Home() {
   return (
     <div className="home-wrapper">
       <div className="container">
-        <div className="home  p-3 bg-white rounded ">
-          <h1 id="remeda">Remeda</h1>
+        <div className="home rounded bg-white p-4 [&_p]:mb-4">
+          <h1 className="mb-2 text-4xl font-medium" id="remeda">
+            Remeda
+          </h1>
           <p>
             The first &quot;data-first&quot; and &quot;data-last&quot; utility
             library designed especially for TypeScript.
           </p>
-          <p>
+          <p className="flex gap-1">
             <a href="https://travis-ci.org/remeda/remeda">
               <img
                 src="https://travis-ci.org/remeda/remeda.svg?branch=master"
                 alt="Build Status"
               />
-            </a>{' '}
+            </a>{" "}
             <a href="https://www.npmjs.org/package/remeda">
               <img src="https://badge.fury.io/js/remeda.svg" alt="npm module" />
-            </a>{' '}
+            </a>{" "}
             <a href="https://david-dm.org/remeda/remeda">
               <img
                 src="https://david-dm.org/remeda/remeda.svg"
@@ -27,13 +29,15 @@ export function Home() {
               />
             </a>
           </p>
-          <h2 id="installation">Installation</h2>
+          <h2 className="mb-2 text-3xl font-medium" id="installation">
+            Installation
+          </h2>
           <div className="code-wrapper">
             <pre
               style={{
-                padding: 'padding: 0.5em',
-                background: 'rgb(43, 43, 43)',
-                color: 'rgb(186, 186, 186)',
+                padding: "padding: 0.5em",
+                background: "rgb(43, 43, 43)",
+                color: "rgb(186, 186, 186)",
               }}
             >
               <code>
@@ -50,7 +54,9 @@ export function Home() {
             type="dark"
             code={`import * as R from 'remeda'; // tree-shaking supported!`}
           />
-          <h2 id="why-remeda-">Why Remeda?</h2>
+          <h2 id="why-remeda-" className="mb-2 text-3xl font-medium">
+            Why Remeda?
+          </h2>
           <p>
             There are no good utility libraries that work well with TypeScript.
             When working with Lodash or Ramda you have to annotate types
@@ -59,13 +65,16 @@ export function Home() {
             Remeda is written and tested in TypeScript and that means there
             won't be any problems with custom typings.
           </p>
-          <h2 id="what-s-data-first-and-data-last-">
+          <h2
+            id="what-s-data-first-and-data-last-"
+            className="mb-2 text-3xl font-medium"
+          >
             What's &quot;data-first&quot; and &quot;data-last&quot;?
           </h2>
           <p>
             Functional programming is nice, and it makes the code more readable.
             However there are situations where you don't need &quot;pipes&quot;,
-            and you want to call just a single function.{' '}
+            and you want to call just a single function.{" "}
           </p>
           <CodeBlock
             type="dark"
@@ -148,10 +157,12 @@ R.pick(['firstName', 'lastName'], obj); // error, this won't work!
 R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred
   `}
           />
-          <h2 id="lazy-evaluation">Lazy evaluation</h2>
+          <h2 id="lazy-evaluation" className="mb-2 text-3xl font-medium">
+            Lazy evaluation
+          </h2>
           <p>
-            Many functions support lazy evaluation when using <code>pipe</code>{' '}
-            or <code>createPipe</code>. These functions have a{' '}
+            Many functions support lazy evaluation when using <code>pipe</code>{" "}
+            or <code>createPipe</code>. These functions have a{" "}
             <code>pipeable</code> tag in the documentation.
             <br />
             Lazy evaluation is not supported in Ramda and only partially
@@ -181,10 +192,12 @@ const result = R.pipe(
  * /
  `}
           />
-          <h2 id="indexed-version">Indexed version</h2>
+          <h2 id="indexed-version" className="mb-2 text-3xl font-medium">
+            Indexed version
+          </h2>
           <p>
             Iterable functions have an extra property <code>indexed</code> which
-            is the same function with iterator{' '}
+            is the same function with iterator{" "}
             <code>(element, index, array)</code>.
           </p>
           <CodeBlock
@@ -197,7 +210,9 @@ R.filter(arr, x => x % 2 === 0); // => [10, 12]
 // filter even indexes
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
           />
-          <h2 id="strict-version">Strict version</h2>
+          <h2 id="strict-version" className="mb-2 text-3xl font-medium">
+            Strict version
+          </h2>
           <p>
             Some functions have an extra property <code>strict</code> which is
             the same function with stricter types.
@@ -212,8 +227,10 @@ const result = R.keys(input)
 const resultStrict = R.keys.strict(input)
 // ^? Array<'a' | 'b' | 'c'>`}
           />
-          <h2 id="remeda-design-goals">Remeda Design Goals</h2>
-          <ol>
+          <h2 id="remeda-design-goals" className="mb-2 text-3xl font-medium">
+            Remeda Design Goals
+          </h2>
+          <ol className="my-4 list-decimal ps-10">
             <li>
               The usage must be programmer friendly, and that's more important
               than following XYZ paradigm strictly.
@@ -229,7 +246,7 @@ const resultStrict = R.keys.strict(input)
             </li>
             <li>
               The implementation of each function should be as minimal as
-              possible. Tree-shaking is supported by default. (Do you know that{' '}
+              possible. Tree-shaking is supported by default. (Do you know that{" "}
               <code>lodash.keyBy</code> has 14KB after minification?)
             </li>
             <li>All functions are immutable, and there are no side-effects.</li>

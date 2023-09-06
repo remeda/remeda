@@ -1,25 +1,25 @@
-import type { FunctionsData } from '../scripts/transform';
-import { Badge } from './Badge';
-import { CodeBlock } from './CodeBlock';
-import { Parameters } from './Parameters';
+import type { FunctionsData } from "../scripts/transform";
+import { Badge } from "./Badge";
+import { CodeBlock } from "./CodeBlock";
+import { Parameters } from "./Parameters";
 
 export function FnDoc({ name, description, methods }: FunctionsData[number]) {
   return (
     <div className="card mb-3">
       <a id={name} />
       <div className="card-body">
-        <h3 className="card-title">
-          {name}{' '}
+        <h3 className="card-title text-3xl font-medium">
+          {name}{" "}
           {methods[0].indexed && (
             <small>
               <div className=" badge indexed-color">indexed</div>
             </small>
-          )}{' '}
+          )}{" "}
           {methods[0].pipeable && (
             <small>
               <div className=" badge pipeable-color">pipeable</div>
             </small>
-          )}{' '}
+          )}{" "}
           {methods[0].strict && (
             <small>
               <div className=" badge strict-color">strict</div>
