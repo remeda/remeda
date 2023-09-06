@@ -11,17 +11,17 @@ export function FnDoc({ name, description, methods }: FunctionsData[number]) {
         <h3 className="card-title text-3xl font-medium">
           {name}{' '}
           {methods[0].indexed && (
-            <small className="text-xs">
+            <small>
               <div className=" badge bg-[#d49a6a] text-white">indexed</div>
             </small>
           )}{' '}
           {methods[0].pipeable && (
-            <small className="text-xs">
+            <small>
               <div className=" badge bg-[#565695] text-white">pipeable</div>
             </small>
           )}{' '}
           {methods[0].strict && (
-            <small className="text-xs">
+            <small>
               <div className=" badge bg-[#f44336] text-white">strict</div>
             </small>
           )}
