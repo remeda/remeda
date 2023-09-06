@@ -1,11 +1,11 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <NavLink className="navbar-brand" to="/">
+      <Link className="navbar-brand" to="/">
         Remeda
-      </NavLink>
+      </Link>
       <ul className="navbar-nav mr-auto">
         <li className="nav-item ">
           <NavLink className="nav-link" to="/">
@@ -13,10 +13,7 @@ export function Header() {
           </NavLink>
         </li>
         <li className="nav-item  ">
-          <NavLink
-            className={({ isActive }) => `${isActive ? 'active' : ''} nav-link`}
-            to="/docs"
-          >
+          <NavLink className="nav-link" to="/docs">
             Documentation
           </NavLink>
         </li>
