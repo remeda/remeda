@@ -1,10 +1,10 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import invariant from "tiny-invariant";
-import { App } from "./App.tsx";
-import "./index.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import invariant from 'tiny-invariant';
+import { App } from './App.tsx';
+import './index.css';
 
-const ROOT_ELEMENT_ID = "root";
+const ROOT_ELEMENT_ID = 'root';
 
 const rootElement = document.getElementById(ROOT_ELEMENT_ID);
 invariant(
