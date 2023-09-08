@@ -3,8 +3,7 @@ import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
 import { Parameters } from './Parameters';
 
-export function FnDoc(props: FunctionsData[number]) {
-  const { name, description, methods } = props;
+export function FnDoc({ name, description, methods }: FunctionsData[number]) {
   return (
     <div className="card mb-3">
       <a id={name} />

@@ -4,17 +4,18 @@ import {
   monoBlue,
 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-export interface CodeBlockProps {
-  code: string;
-  type: 'light' | 'dark';
-}
-
 const darculaCopy = {
   ...darcula,
   'hljs-comment': { color: '#de6' },
 };
 
-export function CodeBlock({ code, type }: CodeBlockProps) {
+export function CodeBlock({
+  code,
+  type,
+}: {
+  readonly code: string;
+  readonly type: 'light' | 'dark';
+}) {
   return (
     <div className="code-wrapper">
       <SyntaxHighlighter
