@@ -12,6 +12,7 @@ const darculaCopy = {
 export function CodeBlock({
   code,
   type,
+  className,
 }: {
   readonly code: string;
   readonly type: 'light' | 'dark';
