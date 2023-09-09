@@ -9,7 +9,7 @@ import { purry } from './purry';
  *    R.merge(a, b)
  * @example
  *    R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function merge<A, B>(a: A, b: B): A & B;
@@ -21,7 +21,7 @@ export function merge<A, B>(a: A, b: B): A & B;
  *    R.merge(b)(a)
  * @example
  *    R.merge({ y: 10, z: 2 })({ x: 1, y: 2 }) // => { x: 1, y: 10, z: 2 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function merge<A, B>(b: B): (a: A) => A & B;

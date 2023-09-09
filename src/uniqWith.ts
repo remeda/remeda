@@ -16,7 +16,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *      R.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function uniqWith<T>(
@@ -38,7 +38,7 @@ export function uniqWith<T>(
  *      R.uniqWith(R.equals),
  *      R.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function uniqWith<T>(

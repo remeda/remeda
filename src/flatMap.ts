@@ -9,7 +9,7 @@ import { purry } from './purry';
  *    R.flatMap(array, fn)
  * @example
  *    R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -26,7 +26,7 @@ export function flatMap<T, K>(
  *    R.flatMap(fn)(array)
  * @example
  *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */

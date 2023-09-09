@@ -18,7 +18,7 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  *    R.forEach.indexed([1, 2, 3], (x, i) => {
  *      console.log(x, i)
  *    }) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -47,7 +47,7 @@ export function forEach<T>(
  *        console.log(x, i)
  *      })
  *    ) // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array

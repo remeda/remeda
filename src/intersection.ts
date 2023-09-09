@@ -9,7 +9,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  *    R.intersection(array, other)
  * @example
  *    R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -26,7 +26,7 @@ export function intersection<T>(
  *    R.intersection(other)(array)
  * @example
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */

@@ -8,7 +8,7 @@ import { ObjectKeys } from './_types';
  *    R.mapValues(object, fn)
  * @example
  *    R.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(
@@ -23,7 +23,7 @@ export function mapValues<T extends Record<PropertyKey, any>, S>(
  *    R.mapValues(fn)(object)
  * @example
  *    R.pipe({a: 1, b: 2}, R.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(

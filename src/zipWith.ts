@@ -8,7 +8,7 @@
  *   R.zipWith(first, second, fn)
  * @example
  *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function zipWith<F, S, R>(
@@ -25,7 +25,7 @@ export function zipWith<F, S, R>(
  *   R.zipWith(fn)(first, second)
  * @example
  *   R.zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zipWith<F, S, R>(
@@ -41,7 +41,7 @@ export function zipWith<F, S, R>(
  *   R.zipWith(fn)(first, second)
  * @example
  *   R.zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']) // => ['1a', '2b', '3c']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zipWith<F, S, R>(

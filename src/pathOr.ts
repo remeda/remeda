@@ -76,7 +76,7 @@ type PathValue3<
  * @example
  *    R.pathOr({x: 10}, ['y'], 2) // 2
  *    R.pathOr({y: 10}, ['y'], 2) // 10
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
@@ -115,7 +115,7 @@ export function pathOr<
  * @example
  *    R.pipe({x: 10}, R.pathOr(['y'], 2)) // 2
  *    R.pipe({y: 10}, R.pathOr(['y'], 2)) // 10
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(

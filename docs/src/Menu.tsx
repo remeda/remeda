@@ -1,14 +1,7 @@
 import { useState } from 'react';
+import type { FunctionsData } from '../scripts/transform';
 
-export interface MenuProps {
-  items: Array<{
-    name: string;
-    category: string;
-    methods: Array<any>;
-  }>;
-}
-
-export function Menu({ items }: MenuProps) {
+export function Menu({ items }: { readonly items: FunctionsData }) {
   const [searchTerm, setSearchTerm] = useState('');
   const searchTermLowered = searchTerm.toLowerCase();
   return (

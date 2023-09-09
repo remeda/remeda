@@ -9,7 +9,7 @@ import { purry } from './purry';
  *    R.omit(obj, names);
  * @example
  *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function omit<T extends object, K extends keyof T>(
@@ -25,7 +25,7 @@ export function omit<T extends object, K extends keyof T>(
  *    R.omit(names)(obj);
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function omit<K extends PropertyKey>(

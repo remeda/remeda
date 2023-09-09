@@ -11,7 +11,7 @@ import { Narrow } from './_narrow';
  *    R.setPath(obj, path, value)
  * @example
  *    R.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
@@ -29,7 +29,7 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  *    R.setPath(obj, path, value)
  * @example
  *    R.pipe({ a: { b: 1 } }, R.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(

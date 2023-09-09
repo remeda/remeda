@@ -1,26 +1,9 @@
 import { Badge } from './Badge';
 import { CodeBlock } from './CodeBlock';
-import { JsTagProps } from './JsTag';
+import type { FunctionsData } from '../scripts/transform';
 import { Parameters } from './Parameters';
 
-export interface MethodDoc {
-  tag: string;
-  signature: string;
-  example: string;
-  args: Array<JsTagProps>;
-  returns: JsTagProps;
-  indexed: boolean;
-  pipeable: boolean;
-  strict: boolean;
-}
-
-export interface FnDocProps {
-  name: string;
-  description: string;
-  methods: Array<MethodDoc>;
-}
-
-export function FnDoc(props: FnDocProps) {
+export function FnDoc(props: FunctionsData[number]) {
   const { name, description, methods } = props;
   return (
     <div className="card mb-3">
@@ -45,17 +28,25 @@ export function FnDoc(props: FnDocProps) {
           )}
         </h3>
         <div className="card-text">
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+          {description !== undefined && (
+            <div dangerouslySetInnerHTML={{ __html: description }} />
+          )}
           {methods.map((method, i) => {
             const { args, returns, tag, signature, example } = method;
             return (
               <div key={i}>
-                <div>
-                  <Badge>{tag}</Badge>
-                </div>
-                <CodeBlock type="light" code={signature} />
+                {tag !== undefined && (
+                  <div>
+                    <Badge>{tag}</Badge>
+                  </div>
+                )}
+                {signature !== undefined && (
+                  <CodeBlock type="light" code={signature} />
+                )}
                 <Parameters args={args} returns={returns} />
-                <CodeBlock type="dark" code={example} />
+                {example !== undefined && (
+                  <CodeBlock type="dark" code={example} />
+                )}
               </div>
             );
           })}

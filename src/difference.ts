@@ -9,7 +9,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  *    R.difference(array, other)
  * @example
  *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -30,7 +30,7 @@ export function difference<T>(
  *      R.difference([2, 3]),
  *      R.take(2)
  *    ) // => [1, 4]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */
