@@ -8,6 +8,11 @@ import { isString } from './isString';
  * `undefined` is also considered empty, but only when it's in a union with a
  * `string` or string-like type.
  *
+ * This guard doesn't work negated because of typescript limitations! If you
+ * need to check that an array is *not* empty, use `R.hasAtLeast(data, 1)`
+ * and not `!R.isEmpty(data)`. For strings and objects there's no way in
+ * typescript to narrow the result to a non-empty type.
+ *
  * @param data the variable to check
  * @signature
  *    R.isEmpty(data)
@@ -20,7 +25,7 @@ import { isString } from './isString';
  *    R.isEmpty('test') //=> false
  *    R.isEmpty([1, 2, 3]) //=> false
  *    R.isEmpty({ length: 0 }) //=> false
- * @category Function
+ * @category Guard
  */
 export function isEmpty<T extends string | undefined>(
   data: T

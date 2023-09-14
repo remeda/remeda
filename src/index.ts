@@ -27,6 +27,7 @@ export * from './forEach';
 export * from './forEachObj';
 export * from './fromPairs';
 export * from './groupBy';
+export * from './hasAtLeast';
 export * from './identity';
 export * from './indexBy';
 export * from './intersection';
