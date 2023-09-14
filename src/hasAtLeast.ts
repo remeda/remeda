@@ -1,7 +1,7 @@
 import { ReadonlyTuple } from './_types';
 import { purry } from './purry';
 
-export type ArrayMinN<T, N extends number> = number extends N
+type ArrayMinN<T, N extends number> = number extends N
   ? // We can only compute the type for a literal number!
     never
   : // I don't know why we need to special-case the 0 case, but otherwise
