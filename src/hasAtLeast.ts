@@ -1,4 +1,4 @@
-import { ReadonlyTuple } from 'type-fest';
+import { ReadonlyTuple } from './_types';
 import { purry } from './purry';
 
 export type ArrayMinN<T, N extends number> = number extends N
