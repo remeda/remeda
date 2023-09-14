@@ -3,7 +3,7 @@ import { purry } from './purry';
 
 type ArrayMinN<T, N extends number> = number extends N
   ? // We can only compute the type for a literal number!
-    never
+    Array<T>
   : // I don't know why we need to special-case the 0 case, but otherwise
   // typescript complains we have a deep recursion.
   N extends 0

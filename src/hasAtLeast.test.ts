@@ -179,4 +179,11 @@ describe('typing', () => {
       }
     });
   });
+
+  it('doesnt narrow when minimum isnt literal', () => {
+    const array: Array<number> = [];
+    if (hasAtLeast(array, 5 as number)) {
+      expectTypeOf(array).toEqualTypeOf<Array<number>>();
+    }
+  });
 });
