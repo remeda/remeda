@@ -25,3 +25,23 @@ export type IterableContainer<T = unknown> = ReadonlyArray<T> | [];
 // Inspired and largely copied from `sindresorhus/ts-extras`:
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
 export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
+
+/**
+ * Copied verbatim from `sindresorhus/ts-extras` (MIT License).
+ * @see https://github.com/sindresorhus/type-fest/blob/main/source/readonly-tuple.d.ts
+ */
+export type ReadonlyTuple<
+  Element,
+  Length extends number
+> = number extends Length
+  ? // Because `Length extends number` and `number extends Length`, then `Length` is not a specific finite number.
+    ReadonlyArray<Element> // It's not fixed length.
+  : BuildTupleHelper<Element, Length, []>; // Otherwise it is a fixed length tuple.
+
+type BuildTupleHelper<
+  Element,
+  Length extends number,
+  Rest extends Array<Element>
+> = Rest['length'] extends Length
+  ? readonly [...Rest] // Terminate with readonly array (aka tuple)
+  : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
