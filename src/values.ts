@@ -15,8 +15,10 @@
  * @category Object
  */
 
-export function values<P extends PropertyKey, T>(
-  source: Record<P, T> | ArrayLike<T>
-): Array<T> {
-  return Object.values(source);
+type Values<T extends object> = T extends readonly unknown[] | []
+  ? Array<T[number]>
+  : Array<T[keyof T]>;
+
+export function values<T extends object>(source: T): Values<T> {
+  return Object.values(source) as Values<T>;
 }
