@@ -9,8 +9,9 @@ export function Parameters({ args, returns }: SignatureParams): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div>
-      <small>
+      <small className="text-xs">
         <a
+          className="text-[#007bff]"
           href="javascript:"
           onClick={() => {
             setIsExpanded(current => !current);
@@ -21,13 +22,13 @@ export function Parameters({ args, returns }: SignatureParams): JSX.Element {
       </small>
       {isExpanded && (
         <div>
-          <h6>Parameters</h6>
+          <h6 className="mb-2 text-base font-medium">Parameters</h6>
           <div className="mb-3">
             {args.map(data => (
               <JsTag key={data.name} {...data} />
             ))}
           </div>
-          <h6>Returns</h6>
+          <h6 className="mb-2 text-base font-medium">Returns</h6>
           <div className="mb-3">
             <JsTag {...returns} />
           </div>

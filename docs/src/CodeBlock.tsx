@@ -12,12 +12,14 @@ const darculaCopy = {
 export function CodeBlock({
   code,
   type,
+  className,
 }: {
   readonly code: string;
   readonly type: 'light' | 'dark';
+  readonly className?: string | undefined;
 }) {
   return (
-    <div className="code-wrapper">
+    <div className={`!my-5 [&>pre]:!p-4 ${className ?? ''}`}>
       <SyntaxHighlighter
         language="typescript"
         style={type === 'light' ? monoBlue : darculaCopy}

@@ -8,21 +8,21 @@ export function FnDoc({ name, description, methods }: FunctionsData[number]) {
     <div className="card mb-3">
       <a id={name} />
       <div className="card-body">
-        <h3 className="card-title">
+        <h3 className="card-title text-3xl font-medium">
           {name}{' '}
           {methods[0].indexed && (
             <small>
-              <div className=" badge indexed-color">indexed</div>
+              <div className=" badge bg-[#d49a6a] text-white">indexed</div>
             </small>
           )}{' '}
           {methods[0].pipeable && (
             <small>
-              <div className=" badge pipeable-color">pipeable</div>
+              <div className=" badge bg-[#565695] text-white">pipeable</div>
             </small>
           )}{' '}
           {methods[0].strict && (
             <small>
-              <div className=" badge strict-color">strict</div>
+              <div className=" badge bg-[#f44336] text-white">strict</div>
             </small>
           )}
         </h3>
@@ -40,11 +40,11 @@ export function FnDoc({ name, description, methods }: FunctionsData[number]) {
                   </div>
                 )}
                 {signature !== undefined && (
-                  <CodeBlock type="light" code={signature} />
+                  <CodeBlock type="light" code={signature} className="-mx-5" />
                 )}
                 <Parameters args={args} returns={returns} />
                 {example !== undefined && (
-                  <CodeBlock type="dark" code={example} />
+                  <CodeBlock type="dark" code={example} className="-mx-5" />
                 )}
               </div>
             );

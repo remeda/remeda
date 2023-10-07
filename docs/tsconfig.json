@@ -21,6 +21,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "lint-staged.config.js",
+    "postcss.config.js",
+    "prettier.config.js",
+    "tailwind.config.js"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
