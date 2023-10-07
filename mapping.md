@@ -14,7 +14,6 @@ documentation when migrating._
 | `chunk`             | `chunk`             | `-`                 |
 | `clamp`             | `clamp`             | `clamp`             |
 | `clone`             | `cloneDeep`         | `clone`             |
-| `compact`           | `compact`           | `-`                 |
 | `concat`            | `concat`            | `concat`            |
 | `createPipe`        | `-`                 | `-`                 |
 | `difference`        | `difference`        | `difference`        |
@@ -114,3 +113,4 @@ you are relying on when migrating._
 | `-`        | `propEq` | `x => x.a === value`          |
 | `-`        | `propOr` | `x => x.a ?? defaultValue`    |
 | `words`    | `-`      | `str => str.split(/\s+/)`     |
+| `compact`  | `-`      | `R.filter(R.isTruthy)`        |
