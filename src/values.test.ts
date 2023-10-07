@@ -38,7 +38,9 @@ describe('typing', () => {
   });
 
   it('should correctly type Records', () => {
-    expectTypeOf(values({ a: true })).toEqualTypeOf<Array<boolean>>();
+    expectTypeOf(values<Record<string, boolean>>({ a: true })).toEqualTypeOf<
+      Array<boolean>
+    >();
   });
 
   it('should correctly type typed objects', () => {
