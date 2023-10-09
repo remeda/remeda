@@ -15,7 +15,7 @@
  * @category Object
  */
 
-type Values<T extends object> = T extends readonly unknown[] | []
+type Values<T extends object> = T extends ReadonlyArray<unknown> | []
   ? Array<T[number]>
   : Array<T[keyof T]>;
 
