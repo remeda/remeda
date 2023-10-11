@@ -90,6 +90,8 @@ documentation when migrating._
 | `uniq`              | `uniq`              | `uniq`              |
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
+| `unset`             | `-`                 | `dissoc`            |
+| `-`                 | `unset`             | `dissocPath`        |
 | `zipObj`            | `zipObj`            | `zipObj`            |
 
 ## Helpful one-liners
