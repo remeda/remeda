@@ -3,9 +3,9 @@ import { Path, SupportsValueAtPath, ValueAtPath } from './_paths';
 import { Narrow } from './_narrow';
 
 /**
- * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ * Sets the value at `path` of `object`.
  * @param object the target method
- * @param path the property name
+ * @param path the array of properties
  * @param value the value to set
  * @signature
  *    R.setPath(obj, path, value)
@@ -21,15 +21,15 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
 ): T;
 
 /**
- * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ * Sets the value at `path` of `object`.
  * @param obj the target method
- * @param path the property name
+ * @param path the array of properties
  * @param value the value to set
  * @signature
- *    R.setPath(obj, path, value)
+ *    R.setPath(path, value)(obj)
  * @example
  *    R.pipe({ a: { b: 1 } }, R.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
- * @dataFirst
+ * @dataLast
  * @category Object
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(

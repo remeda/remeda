@@ -66,8 +66,8 @@ documentation when migrating._
 | `reject`            | `reject`            | `reject`            |
 | `reverse`           | `reverse`           | `reverse`           |
 | `sample`            | `sampleSize`\*      |                     |
-| `set`               | `set`               | `set`               |
-| `setPath`           | `set`               | `set`               |
+| `set`               | `set`               | `assoc`             |
+| `setPath`           | `set`               | `assocPath`         |
 | `shuffle`           | `shuffle`           | `-`                 |
 | `sort`              | `-`                 | `sort`              |
 | `sortBy`            | `orderBy`           | `-`                 |
