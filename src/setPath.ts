@@ -41,17 +41,13 @@ export function setPath() {
   return purry(_setPath, arguments);
 }
 
-export function _setPath(
-  object: any,
-  path: Array<any>,
-  defaultValue: any
-): any {
-  if (path.length === 0) return defaultValue;
+export function _setPath(object: any, path: Array<any>, value: any): any {
+  if (path.length === 0) return value;
 
   if (Array.isArray(object)) {
     return object.map((item, index) => {
       if (index === path[0]) {
-        return _setPath(item, path.slice(1), defaultValue);
+        return _setPath(item, path.slice(1), value);
       }
       return item;
     });
@@ -59,6 +55,6 @@ export function _setPath(
 
   return {
     ...object,
-    [path[0]]: _setPath(object[path[0]], path.slice(1), defaultValue),
+    [path[0]]: _setPath(object[path[0]], path.slice(1), value),
   };
 }
