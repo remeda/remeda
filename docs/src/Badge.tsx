@@ -1,9 +1,5 @@
-import * as React from 'react';
+import { PropsWithChildren } from 'react';
 
-export interface BadgeProps {
-  children: React.ReactChild;
-}
-
-export function Badge({ children }: BadgeProps) {
+export function Badge({ children }: PropsWithChildren) {
   return <div className="badge badge-dark">{children}</div>;
 }

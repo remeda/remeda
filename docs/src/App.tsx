@@ -1,18 +1,19 @@
-import { Header } from './Header';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Docs } from './Docs';
 import { Home } from './Home';
+import { Root } from './Root';
+
+const ROUTER = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'docs', element: <Docs /> },
+    ],
+  },
+]);
 
 export function App() {
-  return (
-    <Router>
-      <div className="wrapper">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/docs" element={<Docs />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+  return <RouterProvider router={ROUTER} />;
 }
