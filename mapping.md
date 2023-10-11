@@ -91,7 +91,6 @@ documentation when migrating._
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
 | `unset`             | `-`                 | `dissoc`            |
-| `-`                 | `unset`             | `dissocPath`        |
 | `zipObj`            | `zipObj`            | `zipObj`            |
 
 ## Helpful one-liners
