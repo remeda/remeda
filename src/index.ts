@@ -77,6 +77,7 @@ export * from './randomString';
 export * from './range';
 export * from './reduce';
 export * from './reject';
+export * from './remove';
 export * from './reverse';
 export * from './sample';
 export * from './set';
