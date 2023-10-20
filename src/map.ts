@@ -84,9 +84,9 @@ interface Strict {
     mapper: Pred<T[number], K>
   ): StrictOut<T, K>;
 
-  <T extends IterableContainer, K>(mapper: Pred<T[number], K>): (
-    items: T
-  ) => StrictOut<T, K>;
+  <T extends IterableContainer, K>(
+    mapper: Pred<T[number], K>
+  ): (items: T) => StrictOut<T, K>;
 
   readonly indexed: {
     <T extends IterableContainer, K>(
@@ -94,9 +94,9 @@ interface Strict {
       mapper: PredIndexed<T[number], K>
     ): StrictOut<T, K>;
 
-    <T extends IterableContainer, K>(mapper: PredIndexed<T[number], K>): (
-      items: T
-    ) => StrictOut<T, K>;
+    <T extends IterableContainer, K>(
+      mapper: PredIndexed<T[number], K>
+    ): (items: T) => StrictOut<T, K>;
   };
 }
 

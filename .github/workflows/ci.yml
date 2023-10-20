@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
+          - '~5.2.0'
           - '~5.1.0'
           - '~5.0.0'
-          - '~4.9.0'
           # We use features that were added in v4.2 of typescript, so that is
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
@@ -77,15 +77,12 @@ jobs:
         node:
           - 20
           - 18
+          # @typescript-eslint/eslint-plugin v6+ requires Node 16+ so it defines
+          # the lower limit to what we can support in our test job. This de-
+          # facto defines our minimum supported Node version as we can't run our
+          # tests on any older version.
+          # This should be fine as Node 14 has reached EOL!
           - 16
-          # Our testing infra (vitest) requires node 14 or higher, this
-          # effectively sets our guaranteed minimum supported version as we
-          # aren't testing on anything lower.
-          # When this value changes in the future it needs to be communicated
-          # to the users. (NOTE: because users can use remeda in client-only
-          # code too, this doesn't define the minimum ECMAScript version we
-          # support. That is defined by the tsconfig file.)
-          - 14
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -111,8 +108,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
       - name: Lint
         run: yarn lint:check
 
@@ -126,8 +123,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
       - name: Prettier
         run: yarn prettier:check
 
@@ -147,8 +144,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
       - name: Build
         run: yarn run build
       - name: Release

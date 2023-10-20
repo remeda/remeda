@@ -50,13 +50,13 @@ type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
 type PathValue2<
   T,
   A extends keyof Pathable<T>,
-  B extends keyof Pathable1<T, A>
+  B extends keyof Pathable1<T, A>,
 > = StrictlyRequired<Pathable1<T, A>>[B];
 /** As `Pathable1`, but for `T[A][B]` */
 type Pathable2<
   T,
   A extends keyof Pathable<T>,
-  B extends keyof Pathable1<T, A>
+  B extends keyof Pathable1<T, A>,
 > = Pathable<PathValue2<T, A, B>>;
 
 /** As `PathValue1`, but for `T[A][B][C]` */
@@ -64,7 +64,7 @@ type PathValue3<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
-  C extends keyof Pathable2<T, A, B>
+  C extends keyof Pathable2<T, A, B>,
 > = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
@@ -88,7 +88,7 @@ export function pathOr<T, A extends keyof Pathable<T>>(
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
-  B extends keyof Pathable1<T, A>
+  B extends keyof Pathable1<T, A>,
 >(
   object: T,
   path: readonly [A, B],
@@ -99,7 +99,7 @@ export function pathOr<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
-  C extends keyof Pathable2<T, A, B>
+  C extends keyof Pathable2<T, A, B>,
 >(
   object: T,
   path: readonly [A, B, C],
@@ -126,7 +126,7 @@ export function pathOr<T, A extends keyof Pathable<T>>(
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
-  B extends keyof Pathable1<T, A>
+  B extends keyof Pathable1<T, A>,
 >(
   path: readonly [A, B],
   defaultValue: PathValue2<T, A, B>
@@ -136,7 +136,7 @@ export function pathOr<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
-  C extends keyof Pathable2<T, A, B>
+  C extends keyof Pathable2<T, A, B>,
 >(
   path: readonly [A, B, C],
   defaultValue: PathValue3<T, A, B, C>

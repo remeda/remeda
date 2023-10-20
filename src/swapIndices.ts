@@ -13,7 +13,7 @@ type isEqual<A, B> = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B
 
 type Difference<A extends number, B extends number> = TupleOfLength<A> extends [
   ...infer U,
-  ...TupleOfLength<B>
+  ...TupleOfLength<B>,
 ]
   ? U['length']
   : never;
@@ -28,7 +28,7 @@ type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
 
 type TupleOfLength<
   L extends number,
-  T extends IterableContainer = []
+  T extends IterableContainer = [],
 > = T['length'] extends L ? T : TupleOfLength<L, [...T, unknown]>;
 
 type IsNonNegative<T extends number> = number extends T
@@ -48,7 +48,7 @@ type SwapArrayInternal<
   Index1 extends number,
   Index2 extends number,
   Position extends ReadonlyArray<unknown> = [],
-  Original extends IterableContainer = T
+  Original extends IterableContainer = T,
 > = T extends readonly [infer AtPosition, ...infer Rest]
   ? [
       Position['length'] extends Index1
@@ -62,20 +62,20 @@ type SwapArrayInternal<
         Index2,
         [unknown, ...Position],
         Original
-      >
+      >,
     ]
   : T;
 
 type SwapString<
   T extends string,
   K1 extends number,
-  K2 extends number
+  K2 extends number,
 > = Joined<SwapArray<CharactersTuple<T>, K1, K2>, ''>;
 
 type SwapArray<
   T extends IterableContainer,
   K1 extends number,
-  K2 extends number
+  K2 extends number,
 > =
   // TODO [typescript@>4.6]: Because of limitations on the typescript version
   // used in Remeda we can't build a proper Absolute number type so we can't
@@ -98,7 +98,7 @@ type SwapArray<
 type SwappedIndices<
   T extends IterableContainer | string,
   K1 extends number,
-  K2 extends number
+  K2 extends number,
 > = T extends string
   ? SwapString<T, K1, K2>
   : T extends IterableContainer
@@ -133,7 +133,7 @@ type SwappedIndices<
 export function swapIndices<
   T extends IterableContainer | string,
   K1 extends number,
-  K2 extends number
+  K2 extends number,
 >(data: T, index1: K1, index2: K2): SwappedIndices<T, K1, K2>;
 
 /**

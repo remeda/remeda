@@ -26,7 +26,7 @@ type SampledGeneric<T extends IterableContainer> =
 type SampledLiteral<
   T extends IterableContainer,
   N extends number,
-  Iteration extends Array<unknown> = []
+  Iteration extends Array<unknown> = [],
 > =
   // Stop the recursion when the Iteration "array" is full
   Iteration['length'] extends N
@@ -36,7 +36,7 @@ type SampledLiteral<
     T extends readonly [infer First, ...infer Tail]
     ? [
         First | Tail[number],
-        ...SampledLiteral<Tail, N, [unknown, ...Iteration]>
+        ...SampledLiteral<Tail, N, [unknown, ...Iteration]>,
       ]
     : T extends readonly [...infer Head, infer Last]
     ? [...SampledLiteral<Head, N, [unknown, ...Iteration]>, Last]
