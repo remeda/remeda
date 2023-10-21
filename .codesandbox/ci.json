@@ -1,3 +1,4 @@
 {
-  "sandboxes": ["/examples/vanilla"]
+  "sandboxes": ["/examples/vanilla"],
+  "node": "18"
 }
