@@ -75,14 +75,9 @@ jobs:
     strategy:
       matrix:
         node:
+          - 21
           - 20
           - 18
-          # @typescript-eslint/eslint-plugin v6+ requires Node 16+ so it defines
-          # the lower limit to what we can support in our test job. This de-
-          # facto defines our minimum supported Node version as we can't run our
-          # tests on any older version.
-          # This should be fine as Node 14 has reached EOL!
-          - 16
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
