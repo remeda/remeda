@@ -64,7 +64,7 @@ documentation when migrating._
 | `range`             | `range`             | `range`             |
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
-| `remove`            | `-`                 | `remove`            |
+| `splice`            | `-`                 | `remove`            |
 | `reverse`           | `reverse`           | `reverse`           |
 | `sample`            | `sampleSize`\*      |                     |
 | `set`               | `set`               | `set`               |
