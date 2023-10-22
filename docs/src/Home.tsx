@@ -2,15 +2,17 @@ import { CodeBlock } from './CodeBlock';
 
 export function Home() {
   return (
-    <div className="home-wrapper">
+    <div className="h-[calc(100vh-56px)] overflow-auto py-7">
       <div className="container">
-        <div className="home  p-3 bg-white rounded ">
-          <h1 id="remeda">Remeda</h1>
+        <div className="rounded bg-white p-4 shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.05)] [&_p]:mb-4">
+          <h1 className="mb-2 text-4xl font-medium" id="remeda">
+            Remeda
+          </h1>
           <p>
             The first &quot;data-first&quot; and &quot;data-last&quot; utility
             library designed especially for TypeScript.
           </p>
-          <p>
+          <p className="flex gap-1">
             <a href="https://travis-ci.org/remeda/remeda">
               <img
                 src="https://travis-ci.org/remeda/remeda.svg?branch=master"
@@ -27,15 +29,11 @@ export function Home() {
               />
             </a>
           </p>
-          <h2 id="installation">Installation</h2>
-          <div className="code-wrapper">
-            <pre
-              style={{
-                padding: 'padding: 0.5em',
-                background: 'rgb(43, 43, 43)',
-                color: 'rgb(186, 186, 186)',
-              }}
-            >
+          <h2 className="mb-2 text-3xl font-medium" id="installation">
+            Installation
+          </h2>
+          <div className="!my-5 -mx-4">
+            <pre className="bg-[rgb(43,43,43)] !p-2 text-[rgb(186,186,186)]">
               <code>
                 npm i remeda
                 <br />
@@ -47,10 +45,13 @@ export function Home() {
             Then in <code>.js</code> or <code>.ts</code>
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`import * as R from 'remeda'; // tree-shaking supported!`}
           />
-          <h2 id="why-remeda-">Why Remeda?</h2>
+          <h2 id="why-remeda-" className="mb-2 text-3xl font-medium">
+            Why Remeda?
+          </h2>
           <p>
             There are no good utility libraries that work well with TypeScript.
             When working with Lodash or Ramda you have to annotate types
@@ -59,7 +60,10 @@ export function Home() {
             Remeda is written and tested in TypeScript and that means there
             won't be any problems with custom typings.
           </p>
-          <h2 id="what-s-data-first-and-data-last-">
+          <h2
+            id="what-s-data-first-and-data-last-"
+            className="mb-2 text-3xl font-medium"
+          >
             What's &quot;data-first&quot; and &quot;data-last&quot;?
           </h2>
           <p>
@@ -68,6 +72,7 @@ export function Home() {
             and you want to call just a single function.{' '}
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Remeda
 R.pick(obj, ['firstName', 'lastName']);
@@ -94,6 +99,7 @@ _.pick(obj, ['firstName', 'lastName']);`}
             transformations aka pipes.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const users = [
   {name: 'john', age: 20, gender: 'm'},
@@ -139,6 +145,7 @@ _.flow(
             than the &quot;data-first&quot; version.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Remeda
 R.pick(obj, ['firstName', 'lastName']); // data-first
@@ -148,7 +155,9 @@ R.pick(['firstName', 'lastName'], obj); // error, this won't work!
 R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred
   `}
           />
-          <h2 id="lazy-evaluation">Lazy evaluation</h2>
+          <h2 id="lazy-evaluation" className="mb-2 text-3xl font-medium">
+            Lazy evaluation
+          </h2>
           <p>
             Many functions support lazy evaluation when using <code>pipe</code>{' '}
             or <code>createPipe</code>. These functions have a{' '}
@@ -158,6 +167,7 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
             supported in lodash.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`// Get first 3 unique values
 const arr = [1, 2, 2, 3, 3, 4, 5, 6];
@@ -181,13 +191,16 @@ const result = R.pipe(
  * /
  `}
           />
-          <h2 id="indexed-version">Indexed version</h2>
+          <h2 id="indexed-version" className="mb-2 text-3xl font-medium">
+            Indexed version
+          </h2>
           <p>
             Iterable functions have an extra property <code>indexed</code> which
             is the same function with iterator{' '}
             <code>(element, index, array)</code>.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const arr = [10, 12, 13, 3];
 
@@ -197,12 +210,15 @@ R.filter(arr, x => x % 2 === 0); // => [10, 12]
 // filter even indexes
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13] `}
           />
-          <h2 id="strict-version">Strict version</h2>
+          <h2 id="strict-version" className="mb-2 text-3xl font-medium">
+            Strict version
+          </h2>
           <p>
             Some functions have an extra property <code>strict</code> which is
             the same function with stricter types.
           </p>
           <CodeBlock
+            className="-mx-4"
             type="dark"
             code={`const input = { a: 'x', b: 'y', c: 'z' } as const
 
@@ -212,8 +228,10 @@ const result = R.keys(input)
 const resultStrict = R.keys.strict(input)
 // ^? Array<'a' | 'b' | 'c'>`}
           />
-          <h2 id="remeda-design-goals">Remeda Design Goals</h2>
-          <ol>
+          <h2 id="remeda-design-goals" className="mb-2 text-3xl font-medium">
+            Remeda Design Goals
+          </h2>
+          <ol className="my-4 list-decimal ps-10">
             <li>
               The usage must be programmer friendly, and that's more important
               than following XYZ paradigm strictly.
