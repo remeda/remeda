@@ -143,7 +143,7 @@ describe('strict typings', () => {
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const result = zip.strict(firstVariadic, secondVariadic);
     expectTypeOf(result).toEqualTypeOf<
-      Array<[string | number, string | number]>
+      [[number, string], ...Array<[string, number]>]
     >;
   });
 });

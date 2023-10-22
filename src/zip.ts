@@ -56,34 +56,27 @@ function _zip(first: Array<unknown>, second: Array<unknown>) {
 type Strict = <T extends IterableContainer, K extends IterableContainer>(
   first: T,
   second: K
-) => StrictOut<T, K>;
+) => Zip<T, K>;
 
-type JoinTuples<
-  Shorter extends IterableContainer,
-  Longer extends IterableContainer,
-  ShorterFirst extends 0 | 1
-> = {
-  -readonly [P in keyof Shorter]: P extends keyof Longer
-    ? ShorterFirst extends 1
-      ? [Shorter[P], Longer[P]]
-      : [Longer[P], Shorter[P]]
-    : never;
-};
-
-// The first two checks are to ensure that both tuples are finite (checking all
-// the edge cases and possible combinations of variadic tuples is nearly impossible),
-// while the last check is used to determine which tuple is smaller so that it can be
-// used to index the other one
-type StrictOut<
-  K extends IterableContainer,
-  T extends IterableContainer
-> = number extends K['length']
-  ? number extends T['length']
-    ? Array<[K[number], T[number]]>
-    : Array<[K[number], T[number]]>
-  : keyof K extends keyof T
-  ? JoinTuples<K, T, 1>
-  : JoinTuples<T, K, 0>;
+type Zip<Left extends IterableContainer, Right extends IterableContainer> =
+  // If the array is empty the output is empty, no surprises
+  Left extends readonly []
+    ? []
+    : Right extends readonly []
+    ? []
+    : // Are the two inputs both tuples with a non-rest first item?
+    Left extends readonly [infer LeftHead, ...infer LeftRest]
+    ? Right extends readonly [infer RightHead, ...infer RightRest]
+      ? // ...Then take that first item from both and recurse
+        [[LeftHead, RightHead], ...Zip<LeftRest, RightRest>]
+      : // Is only one of the inputs a tuple (with a non-rest first item)?
+        // Then take that item, and match it with whatever the type of the other *array's* items are.
+        [[LeftHead, Right[number]], ...Zip<LeftRest, Right>]
+    : Right extends readonly [infer RightHead, ...infer RightRest]
+    ? [[Left[number], RightHead], ...Zip<Left, RightRest>]
+    : // Both inputs are not tuples (with a non-rest first item, they might be tuples with non-rest last item(s))
+      // So the output is just the "trivial" zip result.
+      Array<[Left[number], Right[number]]>;
 
 export namespace zip {
   export const strict: Strict = zip;
