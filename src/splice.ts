@@ -3,14 +3,14 @@ import { purry } from './purry';
 /**
  * Removes elements from an array and, inserts new elements in their place.
  * @param items the array to splice.
- * @param start the zero-based location in the array from which to start removing elements.
+ * @param start the index from which to start removing elements.
  * @param deleteCount the number of elements to remove.
- * @param replacement the elements to insert into the items in place of the deleted elements.
+ * @param replacement the elements to insert into the array in place of the deleted elements.
  * @signature
  *    R.splice(items, start, deleteCount, replacement)
  * @example
- *    R.splice(2, 3, [1,2,3,4,5,6,7,8], []); //=> [1,2,6,7,8]
- *    R.splice(2, 3, [1,2,3,4,5,6,7,8], [9, 10]); //=> [1,2,9,10,6,7,8]
+ *    R.splice([1,2,3,4,5,6,7,8], 2, 3, []); //=> [1,2,6,7,8]
+ *    R.splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
  * @dataFirst
  * @category Array
  */
@@ -24,13 +24,13 @@ export function splice<T>(
 /**
  * Removes elements from an array and, inserts new elements in their place.
  * @param items the array to splice.
- * @param start the zero-based location in the array from which to start removing elements.
+ * @param start the index from which to start removing elements.
  * @param deleteCount the number of elements to remove.
- * @param replacement the elements to insert into the items in place of the deleted elements.
+ * @param replacement the elements to insert into the array in place of the deleted elements.
  * @signature
  *    R.splice(start, deleteCount, replacement)(items)
  * @example
- *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3)) // => [1,2,6,7,8]
+ *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3, [])) // => [1,2,6,7,8]
  *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
  * @dataLast
  * @category Array
