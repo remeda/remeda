@@ -15,7 +15,7 @@ import { purry } from './purry';
  */
 export function flatMap<T, K>(
   array: ReadonlyArray<T>,
-  fn: (input: T) => K | Array<K>
+  fn: (input: T) => K | ReadonlyArray<K>
 ): Array<K>;
 
 /**
@@ -38,12 +38,15 @@ export function flatMap() {
   return purry(_flatMap, arguments, flatMap.lazy);
 }
 
-function _flatMap<T, K>(array: Array<T>, fn: (input: T) => Array<K>): Array<K> {
+function _flatMap<T, K>(
+  array: Array<T>,
+  fn: (input: T) => ReadonlyArray<K>
+): Array<K> {
   return flatten(array.map(item => fn(item)));
 }
 
 export namespace flatMap {
-  export function lazy<T, K>(fn: (input: T) => K | Array<K>) {
+  export function lazy<T, K>(fn: (input: T) => K | ReadonlyArray<K>) {
     return (value: T) => {
       const next = fn(value);
       if (Array.isArray(next)) {
