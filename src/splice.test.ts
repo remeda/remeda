@@ -13,7 +13,7 @@ describe('data first', () => {
     const data = [1, 2, 3];
     const result = splice(data, 0, 0, []);
     expect(result).toEqual(data);
-    assert.notStrictEqual(result, data);
+    expect(result).not.toBe(data);
   });
 });
 
