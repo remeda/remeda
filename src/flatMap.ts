@@ -31,7 +31,7 @@ export function flatMap<T, K>(
  * @category Array
  */
 export function flatMap<T, K>(
-  fn: (input: T) => K | Array<K>
+  fn: (input: T) => K | ReadonlyArray<K>
 ): (array: ReadonlyArray<T>) => Array<K>;
 
 export function flatMap() {
