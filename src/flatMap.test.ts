@@ -6,7 +6,7 @@ import { pipe } from './pipe';
 it('should accept fn returning a readonly array', () => {
   const result = flatMap(
     [1, 2] as const,
-    x => [x * 2, x * 3] as ReadonlyArray<number>
+    x => [x * 2, x * 3] as const
   );
   expect(result).toEqual([2, 3, 4, 6]);
 });
