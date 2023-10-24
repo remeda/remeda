@@ -47,12 +47,12 @@ const _indexBy =
     array: Array<T>,
     fn: PredIndexedOptional<T, K>
   ) => {
-    const initialvalues: Partial<Record<K, T>> = {};
-    return array.reduce((ret, item, index) => {
+    const object = array.reduce<Partial<Record<K, T>>>((ret, item, index) => {
       const key = indexed ? fn(item, index, array) : fn(item);
       ret[key] = item;
       return ret;
-    }, initialvalues) as Record<K, T>;
+    }, {});
+    return object as Record<K, T>;
   };
 
 export namespace indexBy {
