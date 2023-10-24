@@ -13,10 +13,10 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  * @indexed
  * @category Array
  */
-export function indexBy<T>(
+export function indexBy<K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => any
-): Record<string, T>;
+  fn: (item: T) => K
+): Record<K, T>;
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key.
@@ -33,9 +33,9 @@ export function indexBy<T>(
  * @indexed
  * @category Array
  */
-export function indexBy<T>(
-  fn: (item: T) => any
-): (array: ReadonlyArray<T>) => Record<string, T>;
+export function indexBy<K extends PropertyKey, T>(
+  fn: (item: T) => K
+): (array: ReadonlyArray<T>) => Record<K, T>;
 
 export function indexBy() {
   return purry(_indexBy(false), arguments);
@@ -43,23 +43,25 @@ export function indexBy() {
 
 const _indexBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
-    return array.reduce<Record<string, T>>((ret, item, index) => {
-      const value = indexed ? fn(item, index, array) : fn(item);
-      const key = String(value);
+  <K extends PropertyKey, T>(
+    array: Array<T>,
+    fn: PredIndexedOptional<T, K>
+  ) => {
+    return array.reduce<Record<K, T>>((ret, item, index) => {
+      const key = indexed ? fn(item, index, array) : fn(item);
       ret[key] = item;
       return ret;
     }, {});
   };
 
 export namespace indexBy {
-  export function indexed<T>(
+  export function indexed<K extends PropertyKey, T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, any>
-  ): Record<string, T>;
-  export function indexed<T>(
-    fn: PredIndexed<T, any>
-  ): (array: ReadonlyArray<T>) => Record<string, T>;
+    fn: PredIndexed<T, K>
+  ): Record<K, T>;
+  export function indexed<K extends PropertyKey, T>(
+    fn: PredIndexed<T, K>
+  ): (array: ReadonlyArray<T>) => Record<K, T>;
   export function indexed() {
     return purry(_indexBy(true), arguments);
   }
