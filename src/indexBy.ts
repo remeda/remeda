@@ -47,11 +47,12 @@ const _indexBy =
     array: Array<T>,
     fn: PredIndexedOptional<T, K>
   ) => {
-    return array.reduce<Record<K, T>>((ret, item, index) => {
+    const initialvalues: Partial<Record<K, T>> = {};
+    return array.reduce((ret, item, index) => {
       const key = indexed ? fn(item, index, array) : fn(item);
       ret[key] = item;
       return ret;
-    }, {} as Record<K, T>); // eslint-disable-line @typescript-eslint/prefer-reduce-type-parameter
+    }, initialvalues) as Record<K, T>;
   };
 
 export namespace indexBy {
