@@ -51,7 +51,7 @@ const _indexBy =
       const key = indexed ? fn(item, index, array) : fn(item);
       ret[key] = item;
       return ret;
-    }, {});
+    }, {} as Record<K, T>); // eslint-disable-line @typescript-eslint/prefer-reduce-type-parameter
   };
 
 export namespace indexBy {
