@@ -53,10 +53,21 @@ function _zip(first: Array<unknown>, second: Array<unknown>) {
   return result;
 }
 
-type Strict = <T extends IterableContainer, K extends IterableContainer>(
-  first: T,
-  second: K
-) => Zip<T, K>;
+interface Strict {
+  <F extends IterableContainer, S extends IterableContainer>(
+    first: F,
+    second: S
+  ): Zip<F, S>;
+
+  <S extends IterableContainer>(second: S): <F extends IterableContainer>(
+    first: F
+  ) => Zip<F, S>;
+
+  // This doesn't work, TS cannot correctly infer type arguments
+  // <S extends IterableContainer, F extends IterableContainer>(second: S): (
+  //   first: F
+  // ) => Zip<F, S>;
+}
 
 type Zip<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises
@@ -79,5 +90,7 @@ type Zip<Left extends IterableContainer, Right extends IterableContainer> =
       Array<[Left[number], Right[number]]>;
 
 export namespace zip {
+  // @ts-expect-error - The data second strict version requires only 1 type argument
+  // while zip expects 2, so TS will complain that it's not assignable
   export const strict: Strict = zip;
 }
