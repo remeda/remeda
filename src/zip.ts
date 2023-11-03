@@ -89,7 +89,7 @@ type Zip<Left extends IterableContainer, Right extends IterableContainer> =
       Array<[Left[number], Right[number]]>;
 
 export namespace zip {
-  // @ts-expect-error ts[2322] - The data second strict version requires only 1 argument
+  // @ts-expect-error ts[2322] - The dataLast strict version requires only 1 argument
   // while zip expects 2, so TS will complain that it's not assignable
   export const strict: Strict = zip;
 }
