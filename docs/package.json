@@ -13,7 +13,7 @@
     "typedoc": "typedoc --json build/out.json",
     "transform": "ts-node scripts/transform build/out.json build/data.json",
     "netlify-spa-fix": "cp _redirects dist/_redirects",
-    "build:netlify-ci": "yarn run typedoc && yarn run transform && yarn run build && yarn run netlify-spa-fix"
+    "build:netlify-ci": "npm run typedoc && npm run transform && npm run build && npm run netlify-spa-fix"
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -6,6 +6,4 @@ dist/
 
 .husky/
 
-yarn.lock
-
 docs/

@@ -43,13 +43,13 @@ jobs:
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: yarn run build
+        run: npm run build
 
       - name: 📘 Install Typescript
-        run: yarn add --dev typescript@${{ matrix.typescript-version }}
+        run: npm install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🔎 Type check
-        run: yarn compile:dist
+        run: npm run compile:dist
 
   typecheck-source:
     name: 👷 Typecheck Source
@@ -67,7 +67,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
-        run: yarn compile
+        run: npm run compile
 
   test:
     name: 🧪 Test [Node ${{ matrix.node }}]
@@ -91,7 +91,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: yarn test:ci
+        run: npm run test:ci
 
   lint:
     name: 🧹 Lint
@@ -106,7 +106,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
       - name: Lint
-        run: yarn lint:check
+        run: npm run lint:check
 
   prettier:
     name: 💄 Formatting (prettier)
@@ -121,7 +121,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
       - name: Prettier
-        run: yarn prettier:check
+        run: npm run prettier:check
 
   publish:
     needs:
@@ -142,7 +142,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
       - name: Build
-        run: yarn run build
+        run: npm run build
       - name: Release
         run: npx semantic-release@19
         env:

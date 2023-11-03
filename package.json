@@ -21,18 +21,18 @@
   },
   "scripts": {
     "clean": "rm -rf ./dist && mkdir dist",
-    "test": "vitest run --coverage && yarn run compile",
+    "test": "vitest run --coverage && npm run compile",
     "test:ci": "vitest run",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
-    "build": "yarn run clean && yarn run build:es && yarn run build:cjs",
+    "build": "npm run clean && npm run build:es && npm run build:cjs",
     "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "eslint src/**/*.ts --fix",
     "lint:check": "eslint src/**/*.ts",
-    "docs:build": "cd docs && yarn && yarn build:netlify-ci",
+    "docs:build": "cd docs && npm ci && npm run build:netlify-ci",
     "prepare": "husky install"
   },
   "repository": {
