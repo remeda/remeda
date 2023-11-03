@@ -64,9 +64,9 @@ interface Strict {
     second: S
   ): Zip<F, S>;
 
-  <S extends IterableContainer>(second: S): <F extends IterableContainer>(
-    first: F
-  ) => Zip<F, S>;
+  <S extends IterableContainer>(
+    second: S
+  ): <F extends IterableContainer>(first: F) => Zip<F, S>;
 }
 
 type Zip<Left extends IterableContainer, Right extends IterableContainer> =
