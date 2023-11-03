@@ -5,8 +5,8 @@ import { purry } from './purry';
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
  * The length of the returned list will match the shortest of the two inputs.
  *
- * If the input array are non-variadic tuple, you can use the strict option
- * to get another tuple instead of an array type.
+ * If the input array are tuples, you can use the strict option
+ * to get another tuple instead of a generic array type.
  * @param first the first input list
  * @param second the second input list
  * @signature
@@ -26,6 +26,9 @@ export function zip<F, S>(
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
  * The length of the returned list will match the shortest of the two inputs.
+ *
+ * If the input array are tuples, you can use the strict option
+ * to get another tuple instead of a generic array type.
  * @param second the second input list
  * @signature
  *   R.zip(second)(first)
@@ -33,6 +36,7 @@ export function zip<F, S>(
  *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
  * @category Array
+ * @strict
  */
 export function zip<S>(
   second: ReadonlyArray<S>
@@ -62,11 +66,6 @@ interface Strict {
   <S extends IterableContainer>(second: S): <F extends IterableContainer>(
     first: F
   ) => Zip<F, S>;
-
-  // This doesn't work, TS cannot correctly infer type arguments
-  // <S extends IterableContainer, F extends IterableContainer>(second: S): (
-  //   first: F
-  // ) => Zip<F, S>;
 }
 
 type Zip<Left extends IterableContainer, Right extends IterableContainer> =
@@ -90,7 +89,7 @@ type Zip<Left extends IterableContainer, Right extends IterableContainer> =
       Array<[Left[number], Right[number]]>;
 
 export namespace zip {
-  // @ts-expect-error - The data second strict version requires only 1 type argument
+  // @ts-expect-error ts[2322] - The data second strict version requires only 1 argument
   // while zip expects 2, so TS will complain that it's not assignable
   export const strict: Strict = zip;
 }
