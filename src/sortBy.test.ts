@@ -229,7 +229,7 @@ describe('strict', () => {
       [
         number | string | boolean,
         number | string | boolean,
-        number | string | boolean
+        number | string | boolean,
       ]
     >();
   });

@@ -76,7 +76,6 @@ describe('mapValues key types', () => {
   });
 
   test('indexed signature', () => {
-    /* eslint-disable @typescript-eslint/consistent-indexed-object-style -- must be "indexed signature" */
     test('should work with string keys', () => {
       mapValues({} as { [key: string]: unknown }, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<string>();

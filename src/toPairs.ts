@@ -22,7 +22,7 @@ type ObjectValues<T extends Record<PropertyKey, unknown>> =
   Required<T>[ObjectKeys<T>];
 type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
   ObjectKeys<T>,
-  ObjectValues<T>
+  ObjectValues<T>,
 ];
 type ObjectEntries<T extends Record<PropertyKey, unknown>> = Array<
   ObjectEntry<T>

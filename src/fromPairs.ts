@@ -2,7 +2,7 @@ import { IterableContainer } from './_types';
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
-  value: Value
+  value: Value,
 ];
 
 /**
@@ -102,7 +102,7 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 
 type ValueForKey<
   Entries extends IterableContainer<Entry>,
-  K extends PropertyKey
+  K extends PropertyKey,
 > =
   // I tried and failed to simplify the type here! What the ternary does here is
   // to support the cases where the entries are defined by a single type that

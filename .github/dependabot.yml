@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      # We only group minor and patch updates so that its easy to review and
+      # accept without too much fuss. For major updates we still want a separate
+      # PR for each dependency so we can discuss and review it properly.
+      patches:
+        update-types:
+          - patch
+      minor:
+        update-types:
+          - minor
+    ignore:
+      # TODO: Something about expectTypeOf.toMatchTypeOf broke in version 0.32
+      # so we need to look into it before we can update any further.
+      - dependency-name: 'vitest'
+
+  - package-ecosystem: npm
+    directory: /docs
+    schedule:
+      interval: monthly
+    groups:
+      # We only group minor and patch updates so that its easy to review and
+      # accept without too much fuss. For major updates we still want a separate
+      # PR for each dependency so we can discuss and review it properly.
+      patches:
+        update-types:
+          - patch
+      minor:
+        update-types:
+          - minor
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns:
+          - '*'

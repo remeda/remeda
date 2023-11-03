@@ -44,7 +44,7 @@ type ArrayKeys<T extends IterableContainer> = {
 
 type IsIndexAfterSpread<
   T extends IterableContainer,
-  Index extends string | number
+  Index extends string | number,
 > = IndicesAfterSpread<T> extends never
   ? false
   : Index extends `${IndicesAfterSpread<T>}`
@@ -60,7 +60,7 @@ type IndicesAfterSpread<
   T extends ReadonlyArray<unknown> | [],
   // We use this type to count how many items we consumed, it's just a pseudo-
   // element that is used for its length.
-  Iterations extends ReadonlyArray<unknown> = []
+  Iterations extends ReadonlyArray<unknown> = [],
 > = T[number] extends never
   ? never
   : T extends readonly [unknown, ...infer Tail]

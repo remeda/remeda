@@ -63,9 +63,9 @@ interface Strict {
     cmp: (a: T[number], b: T[number]) => number
   ): Sorted<T>;
 
-  <T extends IterableContainer>(cmp: (a: T[number], b: T[number]) => number): (
-    items: T
-  ) => Sorted<T>;
+  <T extends IterableContainer>(
+    cmp: (a: T[number], b: T[number]) => number
+  ): (items: T) => Sorted<T>;
 }
 
 type Sorted<T extends IterableContainer> = {

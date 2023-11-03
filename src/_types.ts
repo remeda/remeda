@@ -32,7 +32,7 @@ export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
  */
 export type ReadonlyTuple<
   Element,
-  Length extends number
+  Length extends number,
 > = number extends Length
   ? // Because `Length extends number` and `number extends Length`, then `Length` is not a specific finite number.
     ReadonlyArray<Element> // It's not fixed length.
@@ -41,7 +41,7 @@ export type ReadonlyTuple<
 type BuildTupleHelper<
   Element,
   Length extends number,
-  Rest extends Array<Element>
+  Rest extends Array<Element>,
 > = Rest['length'] extends Length
   ? readonly [...Rest] // Terminate with readonly array (aka tuple)
   : BuildTupleHelper<Element, Length, [Element, ...Rest]>;

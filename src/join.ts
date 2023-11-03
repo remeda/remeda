@@ -50,7 +50,7 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],
-  Glue extends string
+  Glue extends string,
 >(data: T, glue: Glue): Joined<T, Glue>;
 
 /**
@@ -74,7 +74,7 @@ export function join<
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],
-  Glue extends string
+  Glue extends string,
 >(glue: Glue): (data: T) => Joined<T, Glue>;
 
 export function join(): unknown {

@@ -2,7 +2,7 @@ import { purry } from './purry';
 
 type Reverse<
   T extends ReadonlyArray<unknown>,
-  R extends ReadonlyArray<unknown> = []
+  R extends ReadonlyArray<unknown> = [],
 > = ReturnType<
   T extends IsNoTuple<T>
     ? () => [...T, ...R]

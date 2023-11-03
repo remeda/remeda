@@ -19,7 +19,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "paths": {
+      // TODO [react-syntax-highlighter@>15.5.0]: It is using an old version of
+      // the react types, causing typing errors when using the component in our
+      // project. Once they update their versions we can drop this.
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "include": [
     "src",
