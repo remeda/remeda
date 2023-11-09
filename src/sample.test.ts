@@ -437,7 +437,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            number
+            number,
           ]
         | [
             number,
@@ -449,7 +449,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            number
+            number,
           ]
       >();
     });
@@ -476,7 +476,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            number
+            number,
           ]
         | [
             number,
@@ -488,7 +488,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            number
+            number,
           ]
       >();
     });
@@ -531,16 +531,7 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
-          ]
-        | [
-            string | number | boolean,
-            string | boolean,
             string,
-            string,
-            string,
-            string,
-            string
           ]
         | [
             string | number | boolean,
@@ -550,7 +541,6 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
           ]
         | [
             string | number | boolean,
@@ -561,7 +551,6 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
           ]
         | [
             string | number | boolean,
@@ -573,7 +562,18 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
+          ]
+        | [
+            string | number | boolean,
+            string | boolean,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
           ]
       >();
     });
@@ -604,16 +604,7 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
-          ]
-        | [
-            string | number | boolean,
-            string | boolean,
             string,
-            string,
-            string,
-            string,
-            string
           ]
         | [
             string | number | boolean,
@@ -623,7 +614,6 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
           ]
         | [
             string | number | boolean,
@@ -634,7 +624,6 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
           ]
         | [
             string | number | boolean,
@@ -646,7 +635,18 @@ describe('typing', () => {
             string,
             string,
             string,
-            string
+          ]
+        | [
+            string | number | boolean,
+            string | boolean,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
           ]
       >();
     });
@@ -677,7 +677,7 @@ describe('typing', () => {
             string,
             string,
             boolean,
-            number
+            number,
           ]
         | [
             string,
@@ -689,7 +689,7 @@ describe('typing', () => {
             string,
             string,
             boolean,
-            number
+            number,
           ]
       >();
     });
@@ -720,7 +720,7 @@ describe('typing', () => {
             string,
             string,
             boolean,
-            number
+            number,
           ]
         | [
             string,
@@ -732,7 +732,7 @@ describe('typing', () => {
             string,
             string,
             boolean,
-            number
+            number,
           ]
       >();
     });

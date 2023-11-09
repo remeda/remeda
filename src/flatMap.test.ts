@@ -8,11 +8,23 @@ describe('data_first', () => {
     const result = flatMap([1, 2] as const, x => [x * 2, x * 3]);
     expect(result).toEqual([2, 3, 4, 6]);
   });
+
+  it('should accept fn returning a readonly array', () => {
+    const result = flatMap([1, 2] as const, x => [x * 2, x * 3] as const);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
 });
 
 describe('data_last', () => {
   it('flatMap', () => {
     const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
+
+  it('should accept fn returning a readonly array', () => {
+    const result = flatMap((x: number) => [x * 2, x * 3] as const)([
+      1, 2,
+    ] as const);
     expect(result).toEqual([2, 3, 4, 6]);
   });
 

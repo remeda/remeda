@@ -15,7 +15,7 @@ import { purry } from './purry';
 export function addProp<
   T extends Record<PropertyKey, any>,
   K extends string,
-  V
+  V,
 >(obj: T, prop: K, value: V): T & { [x in K]: V };
 
 /**
@@ -32,7 +32,7 @@ export function addProp<
 export function addProp<
   T extends Record<PropertyKey, any>,
   K extends string,
-  V
+  V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
 export function addProp(): any {

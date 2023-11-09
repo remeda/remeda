@@ -64,10 +64,11 @@ documentation when migrating._
 | `range`             | `range`             | `range`             |
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
+| `splice`            | `-`                 | `remove`            |
 | `reverse`           | `reverse`           | `reverse`           |
 | `sample`            | `sampleSize`\*      |                     |
-| `set`               | `set`               | `set`               |
-| `setPath`           | `set`               | `set`               |
+| `set`               | `set`               | `assoc`             |
+| `setPath`           | `set`               | `assocPath`         |
 | `shuffle`           | `shuffle`           | `-`                 |
 | `sort`              | `-`                 | `sort`              |
 | `sortBy`            | `orderBy`           | `-`                 |

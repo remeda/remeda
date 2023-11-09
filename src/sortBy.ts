@@ -9,7 +9,7 @@ type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
 type SortProjection<T> = (x: T) => Comparable;
 type SortPair<T> = readonly [
   projector: SortProjection<T>,
-  direction: Direction
+  direction: Direction,
 ];
 type SortRule<T> = SortProjection<T> | SortPair<T>;
 
@@ -133,7 +133,6 @@ function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
 
   return (
     typeof maybeProjection === 'function' &&
-    // eslint-disable-next-line @typescript-eslint/prefer-includes -- we use an old lib
     ALL_DIRECTIONS.indexOf(maybeDirection as Direction) !== -1
   );
 }

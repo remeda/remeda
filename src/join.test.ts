@@ -178,7 +178,7 @@ describe('typing', () => {
       const array: [
         'prefix' | undefined,
         'midfix' | undefined,
-        'suffix' | undefined
+        'suffix' | undefined,
       ] = ['prefix', undefined, 'suffix'];
       const result = join(array, ',');
       expectTypeOf(result).toEqualTypeOf<`${'prefix' | ''},${'midfix' | ''},${

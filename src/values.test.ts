@@ -12,14 +12,12 @@ describe('Test for values as data first', () => {
 
 describe('typing', () => {
   it('should correctly types indexed types', () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
     expectTypeOf(values<{ [index: string]: string }>({ a: 'b' })).toEqualTypeOf<
       Array<string>
     >();
   });
 
   it('should correctly type functions', () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     expectTypeOf(values(function namedFunction() {})).toEqualTypeOf<
       Array<never>
     >();

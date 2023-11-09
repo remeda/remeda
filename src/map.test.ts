@@ -188,7 +188,7 @@ describe('Strict', () => {
       ...Array<number>,
       string,
       ...Array<number>,
-      boolean
+      boolean,
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict(input, identity);
     expectTypeOf(result).toEqualTypeOf<
@@ -292,7 +292,7 @@ describe('Strict Indexed', () => {
       ...Array<number>,
       string,
       ...Array<number>,
-      boolean
+      boolean,
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict.indexed(input, identity);
     expectTypeOf(result).toEqualTypeOf<

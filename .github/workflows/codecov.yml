@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+          node-version-file: .nvmrc
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
       - name: Run tests
-        run: yarn test:ci -- --coverage
+        run: npm run test:ci -- --coverage
       - name: Upload coverage
         uses: codecov/codecov-action@v3

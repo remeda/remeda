@@ -91,7 +91,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            ...Array<number>
+            ...Array<number>,
           ]
         >();
       }
@@ -128,7 +128,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            ...Array<number>
+            ...Array<number>,
           ]
         >();
       }
@@ -152,7 +152,7 @@ describe('typing', () => {
             number,
             number,
             number,
-            ...Array<number>
+            ...Array<number>,
           ]
         >();
       }
@@ -173,7 +173,7 @@ describe('typing', () => {
             string,
             string,
             string,
-            ...Array<string>
+            ...Array<string>,
           ]
         >();
       }
