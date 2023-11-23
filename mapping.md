@@ -85,6 +85,7 @@ documentation when migrating._
 | `swapProps`         | `-`                 | `swap`              |
 | `take`              | `take`              | `take`              |
 | `takeWhile`         | `takeWhile`         | `takeWhile`         |
+| `tap`               | `tap`               | `tap`               |
 | `times`             | `times`             | `times`             |
 | `toPairs`           | `toPairs`           | `toPairs`           |
 | `type`              | `-`                 | `type`              |
