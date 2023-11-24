@@ -6,6 +6,10 @@ export type PredIndexedOptional<T, K> = (
   array?: Array<T>
 ) => K;
 
+export type Unwrap<T> = {
+  [K in keyof T]: T[K];
+} & NonNullable<unknown>;
+
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
 /**
