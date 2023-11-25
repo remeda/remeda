@@ -13,7 +13,6 @@ import { purry } from './purry';
  * @example
  *    R.tap("foo", console.log) // => "foo"
  * @dataFirst
- * @pipeable
  * @category Other
  */
 export function tap<T>(value: T, fn: (value: T) => void): T;
@@ -36,7 +35,6 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *      R.map(n => n * 2)
  *    ) // => [4]
  * @dataLast
- * @pipeable
  * @category Other
  */
 export function tap<T>(fn: (value: T) => void): (value: T) => T;
