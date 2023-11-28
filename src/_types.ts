@@ -6,6 +6,11 @@ export type PredIndexedOptional<T, K> = (
   array?: Array<T>
 ) => K;
 
+/**
+ * This helper type is useful to unwrap complex types exposing the underlying
+ * bare type. For example `Omit<{a: number, b: string}, 'a'>` becomes
+ * `{b: string}` directly.
+ */
 export type Unwrap<T> = {
   [K in keyof T]: T[K];
 } & NonNullable<unknown>;

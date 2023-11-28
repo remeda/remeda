@@ -30,6 +30,15 @@ describe('data last', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd']));
     expect(result).toEqual({ a: 1, d: 4 });
   });
+
+  test('non existing prop', () => {
+    const result = pipe(
+      { a: 1, b: 2, c: 3, d: 4 },
+      // @ts-expect-error -- should not allow non existing props
+      pick(['not', 'in'])
+    );
+    expect(result).toEqual({});
+  });
 });
 
 test('read only', () => {
@@ -45,9 +54,9 @@ test('read only', () => {
 test('type for curried form', () => {
   const pickFoo = pick(['foo']);
 
-  expectTypeOf(true as any as ReturnType<typeof pickFoo>).toEqualTypeOf<
-    Record<'foo', any>
-  >();
+  expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
+    foo: unknown;
+  }>();
 
   const result = pickFoo({ foo: 1, bar: 'potato' });
 
