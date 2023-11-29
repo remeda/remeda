@@ -12,7 +12,9 @@ import { ObjectKeys } from './_types';
  * @strict
  * @category Object
  */
-export function toPairs<T>(object: Record<string, T>): Array<[string, T]> {
+export function toPairs<T extends object>(
+  object: T
+): Array<[string, Required<T>[keyof T]]> {
   return Object.entries(object);
 }
 
@@ -22,7 +24,7 @@ type ObjectValues<T extends Record<PropertyKey, unknown>> =
   Required<T>[ObjectKeys<T>];
 type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
   ObjectKeys<T>,
-  ObjectValues<T>,
+  ObjectValues<T>
 ];
 type ObjectEntries<T extends Record<PropertyKey, unknown>> = Array<
   ObjectEntry<T>
