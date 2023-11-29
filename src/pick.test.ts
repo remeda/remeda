@@ -7,6 +7,11 @@ describe('data first', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
+  test('not existing props', () => {
+    // @ts-expect-error -- should not allow non existing props
+    const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
+    expect(result).toStrictEqual({});
+  });
   test('allow undefined or null', () => {
     expect(pick(undefined as any, ['foo'])).toEqual({});
     expect(pick(null as any, ['foo'])).toEqual({});
@@ -51,14 +56,29 @@ test('read only', () => {
   pick(someObject, props); // TS2345 compilation error
 });
 
-test('type for curried form', () => {
-  const pickFoo = pick(['foo']);
+describe('curried form', () => {
+  test('it should pick props', () => {
+    const pickFoo = pick(['foo']);
 
-  expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
-    foo: unknown;
-  }>();
+    expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
+      foo: unknown;
+    }>();
 
-  const result = pickFoo({ foo: 1, bar: 'potato' });
+    const result = pickFoo({ foo: 1, bar: 'potato' });
 
-  expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
+    expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
+    expect(result).toEqual({ foo: 1 });
+  });
+  test('warns on non existing props', () => {
+    const pickFoo = pick(['foo']);
+
+    expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
+      foo: unknown;
+    }>();
+
+    // @ts-expect-error -- should not allow non existing props
+    const result = pickFoo({ bar: 'potato', baz: 123 });
+
+    expect(result).toEqual({});
+  });
 });
