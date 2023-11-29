@@ -1,3 +1,5 @@
+type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;
+
 type DefinitelyArray<T> = Extract<
   T,
   Array<any> | ReadonlyArray<any>
@@ -18,6 +20,7 @@ type DefinitelyArray<T> = Extract<
  */
 export function isArray<T>(
   data: T | ReadonlyArray<unknown>
-): data is DefinitelyArray<T> {
+): data is (IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>>) {
   return Array.isArray(data);
 }
+
