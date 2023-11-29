@@ -7,7 +7,7 @@ describe('data first', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
-  test('not existing props', () => {
+  test('warns on non existing props', () => {
     // @ts-expect-error -- should not allow non existing props
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
     expect(result).toStrictEqual({});
@@ -36,7 +36,7 @@ describe('data last', () => {
     expect(result).toEqual({ a: 1, d: 4 });
   });
 
-  test('non existing prop', () => {
+  test('warns on non existing props', () => {
     const result = pipe(
       { a: 1, b: 2, c: 3, d: 4 },
       // @ts-expect-error -- should not allow non existing props
