@@ -20,7 +20,6 @@ type DefinitelyArray<T> = Extract<
  */
 export function isArray<T>(
   data: T | ReadonlyArray<unknown>
-): data is (IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>>) {
+): data is IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>> {
   return Array.isArray(data);
 }
-
