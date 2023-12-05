@@ -1,8 +1,36 @@
 type Debounced<F extends (...args: any) => unknown> = {
+  /**
+   * Invoke the debounced function.
+   * @param args - same as the args for the debounced function.
+   * @returns - the last computed value of the debounced function with the
+   * latest args provided to it. If `timing` does not include `leading` then the
+   * the function would return `undefined` until the first cool-down period is
+   * over, otherwise the function would always return the return type of the
+   * debounced function.
+   */
   readonly call: (...args: Parameters<F>) => ReturnType<F> | undefined;
+
+  /**
+   * Cancels any debounced functions without calling them, effectively resetting
+   * the debouncer to the same state it is when initially created.
+   */
   readonly cancel: () => void;
+
+  /**
+   * Similar to `cancel`, but would also trigger the `trailing` invocation if
+   * the debouncer would run one at the end of the cool-down period.
+   */
   readonly flush: () => ReturnType<F> | undefined;
+
+  /**
+   * Is `true` when there is an active cool-down period currently debouncing
+   * invocations.
+   */
   readonly isPending: boolean;
+
+  /**
+   * The last computed value of the debounced function.
+   */
   readonly cachedValue: ReturnType<F> | undefined;
 };
 
@@ -12,6 +40,47 @@ type DebounceOptions = {
 
 const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
 
+/**
+ * Creates a debouncer object with a `call` function that delays invoking `func`
+ * until after the cool-down period has elapsed since the last time the
+ * debounced function was invoked.
+ * Important: The cool-down period defines the minimum between two invocations,
+ * and not the maximum. The period is extended while more calls are made until
+ * a full cool-down period has elapsed without any additional calls.
+ * Subsequent calls to the debounced function return the result of the last
+ * `func` invocation.
+ * @param func The function to debounce, the returned `call` function will have
+ * the exact same signature.
+ * @param waitMs The length in milliseconds of the cool-down period.
+ * @param options An object allowing further customization of the debouncer. It
+ * has a single optional property `timing` which can be either `'leading'`,
+ * `'trailing'` or `'both'`. The default is `'trailing'`. `leading` would result
+ * in the function being invoked at the start of the cool-down period;
+ * `trailing` would result in the function being invoked at the end of the cool-
+ * down period (using the args from the last call to the debouncer). When `both`
+ * is selected the `trailing` invocation would only take place if there were
+ * more than one call to the debouncer during the cool-down period.
+ * @returns a debouncer object. The main function is `call`. In addition to it
+ * the debouncer comes with the following additional functions and properties:
+ * - `cancel` method to cancel delayed `func` invocations
+ * - `flush` method to invoke them immediately
+ * - `cachedValue` readonly property that returns the latest return value of an
+ * invocation (if one occured).
+ * - `isPending` flag to check if there are currently functions being debounced.
+ * @signature
+ *   R.debounce(func, waitMs, options);
+ * @example
+ *   const sum = (a: number, b: number) => a + b;
+ *   const oneSumPerSecond = debounce(foo, 1000, { timing: 'trailing' });
+ *   const debouncedSum = sumPerSecond.call(1, 2); // => undefined
+ *   const debouncedSum2 = sumPerSecond.call(3, 4); // => undefined
+ *   // after 1 second
+ *   const debouncedSum3 = sumPerSecond.call(5, 6); // => 7
+ *   // after 1 second
+ *   sumPerSecond.cachedValue; // => 11
+ * @dataFirst
+ * @category Function
+ */
 export function debounce<F extends (...args: any) => any>(
   func: F,
   waitMs: number = 0,
