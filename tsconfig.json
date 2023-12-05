@@ -17,7 +17,7 @@
     "noEmit": true,
 
     // LANGUAGE and ENVIRONMENT
-    "lib": ["ES6", "ES2017.Object"],
+    "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
     // TODO: The recommended target is ES2015 (ES6). Node10 supports es2018 and
     // the vast majority of browsers are probably above that too already. It's
     // most likely safe to up this value, and it would probably result in a
