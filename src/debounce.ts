@@ -1,29 +1,41 @@
-type SimplifiedFunction<Params extends ReadonlyArray<any>, Return> = (
-  ...args: Params
-) => Return;
-
-type Debounced<Params extends ReadonlyArray<any>, Return> = {
-  readonly call: SimplifiedFunction<Params, Return | undefined>;
+type Debounced<F extends (...args: any) => unknown> = {
+  readonly call: (...args: Parameters<F>) => ReturnType<F> | undefined;
   readonly cancel: () => void;
-  readonly flush: () => Return | undefined;
+  readonly flush: () => ReturnType<F> | undefined;
   readonly isPending: boolean;
+  readonly cachedValue: ReturnType<F> | undefined;
 };
 
 type DebounceOptions = {
-  readonly timing?: 'leading' | 'trailing';
+  readonly timing?: 'leading' | 'trailing' | 'both';
 };
 
 const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
 
-export function debounce<Params extends ReadonlyArray<any>, Return>(
-  func: SimplifiedFunction<Params, Return>,
+export function debounce<F extends (...args: any) => any>(
+  func: F,
   waitMs: number = 0,
   { timing = DEFAULT_TIMING }: DebounceOptions = {}
-): Debounced<Params, Return> {
-  let invocationArgs: Params | undefined;
-  let lastCallTimeMs: number | undefined;
+): Debounced<F> {
+  // All these are part of the debouncer runtime state:
+
+  // The timeout is the main object we use to tell if there's an active cool-
+  // down period or not.
   let timeoutId: NodeJS.Timeout | undefined;
-  let result: Return | undefined;
+
+  // JS doesn't provide a way to ask a timeout how much time is left so we need
+  // to maintain this state ourselves. We use this to extend the timeout until
+  // we reach the actual cool-down period end.
+  let lastCallTimeMs: number | undefined;
+
+  // For 'trailing' invocations we need to keep the args around until we
+  // actually invoke the function.
+  let invocationArgs: Parameters<F> | undefined;
+
+  // To make any value of the debounced function we need to be able to return a
+  // value. For any invocation except the first one when 'leading' is enabled we
+  // will return this cached value.
+  let result: ReturnType<F> | undefined;
 
   const handleCoolDownPeriodEnd = () => {
     if (timeoutId === undefined) {
@@ -36,19 +48,17 @@ export function debounce<Params extends ReadonlyArray<any>, Return>(
     clearTimeout(timeoutId);
     timeoutId = undefined;
 
-    if (timing !== 'trailing') {
+    if (timing === 'leading') {
+      // When our invocation timing is 'leading' we don't invoke the function
+      // again at the end of our cool-down period.
       return;
     }
 
-    // When our invocation timing is 'trailing' we want to invoke the function
-    // at the end of our cool-down period, otherwise we simply do cleanup at
-    // the end of the cool-down period to allow subsequent calls to start a
-    // new cool-down period.
-
     if (invocationArgs === undefined) {
-      throw new Error(
-        "Something went wrong! we don't have arguments to invoke the debounced call with"
-      );
+      // We already called the function at the start of the cool-down, and since
+      // then we haven't received any new calls that got debounced, so there's
+      // nothing to do here.
+      return;
     }
 
     // Call the function and store the results locally.
@@ -84,22 +94,22 @@ export function debounce<Params extends ReadonlyArray<any>, Return>(
     call: (...args) => {
       lastCallTimeMs = Date.now();
 
-      if (timing === 'trailing') {
-        // For trailing invocations we want to use the last args that we got
-        // before invocation.
-        invocationArgs = args;
-      }
-
       if (timeoutId === undefined) {
-        // This is the first call (since the previous cool-down period) so we
-        // start a new one.
+        // This call is starting a new cool-down window!
 
-        if (timing === 'leading') {
-          // If we're leading we invoke the function immediately.
+        if (timing !== 'trailing') {
+          // If we aren't only invoking the function at the end of the cool-down
+          // period we now need to invoke it.
           result = func(...args);
         }
 
         timeoutId = setTimeout(handleTimeout, waitMs);
+      } else if (timing !== 'leading') {
+        // This call is being debounced and would need to be called at the end
+        // of the cool-down period so it's args need to be stored. Because we
+        // might have several calls during the cool-down period we only store
+        // the last call's args.
+        invocationArgs = args;
       }
 
       // Return the last computed result while we "debounce" further calls.
@@ -126,6 +136,10 @@ export function debounce<Params extends ReadonlyArray<any>, Return>(
 
     get isPending() {
       return timeoutId !== undefined;
+    },
+
+    get cachedValue() {
+      return result;
     },
   };
 }
