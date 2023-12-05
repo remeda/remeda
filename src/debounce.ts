@@ -1,4 +1,4 @@
-type Debounced<F extends (...args: any) => unknown> = {
+type Debouncer<F extends (...args: any) => unknown> = {
   /**
    * Invoke the debounced function.
    * @param args - same as the args for the debounced function.
@@ -85,7 +85,7 @@ export function debounce<F extends (...args: any) => any>(
   func: F,
   waitMs: number = 0,
   { timing = DEFAULT_TIMING }: DebounceOptions = {}
-): Debounced<F> {
+): Debouncer<F> {
   // All these are part of the debouncer runtime state:
 
   // The timeout is the main object we use to tell if there's an active cool-
@@ -166,9 +166,13 @@ export function debounce<F extends (...args: any) => any>(
       if (timeoutId === undefined) {
         // This call is starting a new cool-down window!
 
-        if (timing !== 'trailing') {
-          // If we aren't only invoking the function at the end of the cool-down
-          // period we now need to invoke it.
+        if (timing === 'trailing') {
+          // If we aren't invoking the function at the start of the cool-down
+          // period we need to store the args for later.
+          invocationArgs = args;
+        } else {
+          // We invoke the function directly at the start of the cool-down
+          // period.
           result = func(...args);
         }
 
