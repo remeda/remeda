@@ -90,7 +90,7 @@ export function debounce<F extends (...args: any) => any>(
 
   // The timeout is the main object we use to tell if there's an active cool-
   // down period or not.
-  let timeoutId: number | undefined;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
   // JS doesn't provide a way to ask a timeout how much time is left so we need
   // to maintain this state ourselves. We use this to extend the timeout until
@@ -152,7 +152,6 @@ export function debounce<F extends (...args: any) => any>(
       // There were additional calls during the cool-down period so we need to
       // extend the timer further until we know that no calls have occurred
       // during the cool-down period.
-      // @ts-expect-error [ts2322] - I don't know why we get this error? :(
       timeoutId = setTimeout(handleTimeout, remainingWaitMs);
     } else {
       // We can now call the actual invocation logic.
@@ -177,7 +176,6 @@ export function debounce<F extends (...args: any) => any>(
           result = func(...args);
         }
 
-        // @ts-expect-error [ts2322] - I don't know why we get this error? :(
         timeoutId = setTimeout(handleTimeout, waitMs);
       } else if (timing !== 'leading') {
         // This call is being debounced and would need to be called at the end
