@@ -189,11 +189,12 @@ describe('typing', () => {
     debouncer.call('a', 1, true);
   });
 
-  test('argument typing to be good (with rest param)', () => {
+  test('argument typing to be good (with rest param)', async () => {
     const debouncer = debounce(
       (a: string, ...flags: ReadonlyArray<boolean>) =>
         `${a}${flags.map(flag => (flag ? 'y' : 'n')).join()}`,
-      32
+      32,
+      { timing: 'leading' }
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
     debouncer.call();
@@ -211,9 +212,12 @@ describe('typing', () => {
     debouncer.call('a');
     debouncer.call('a', true);
     debouncer.call('a', true, false);
+
+    await sleep(64);
+
     expect(
       debouncer.call('a', true, true, false, false, true, false, true)
-    ).toEqual('ay,n,n,n,y,n,y');
+    ).toEqual('ay,y,n,n,y,n,y');
   });
 });
 
