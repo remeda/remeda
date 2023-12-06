@@ -45,14 +45,8 @@ type DebounceOptions = {
 };
 
 /**
- * Creates a debouncer object with a `call` function that delays invoking `func`
- * until after the cool-down period has elapsed since the last time the
- * debounced function was invoked.
- * Important: The cool-down period defines the minimum between two invocations,
- * and not the maximum. The period is extended while more calls are made until
- * a full cool-down period has elapsed without any additional calls.
- * Subsequent calls to the debounced function return the result of the last
- * `func` invocation.
+ * Wraps `func` with a debouncer object that "debounces" (delays) invocations of the function during a defined cool-down period. The debouncer can be configured to invoke the function either at the start of the cool-down period, the end of it, or at both ends. It can also be configured to allow invocations during the cool-down period if it taking too long. In case where the debouncer delays the execution of several calls, it would only maintain the arguments provided to the last call and use them when the time is right.
+ * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period is extended while more calls are made until a full cool-down period has elapsed without any additional calls. Subsequent calls to the debounced function return the result of the last `func` invocation.
  * @param func The function to debounce, the returned `call` function will have
  * the exact same signature.
  * @param options An object allowing further customization of the debouncer:
