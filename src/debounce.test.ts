@@ -132,6 +132,106 @@ describe('runtime', () => {
     await sleep(64);
     expect(withCount).toBe(1);
   });
+
+  it('should support a `maxWait` option', async () => {
+    let callCount = 0;
+
+    const debouncer = debounce(
+      value => {
+        ++callCount;
+        return value;
+      },
+      { waitMs: 32, maxWaitMs: 64 }
+    );
+
+    debouncer.call('a');
+    debouncer.call('b');
+    expect(callCount).toBe(0);
+
+    await sleep(128);
+    expect(callCount).toBe(1);
+    debouncer.call('c');
+    debouncer.call('d');
+    expect(callCount).toBe(1);
+
+    await sleep(256);
+    expect(callCount).toBe(2);
+  });
+
+  it('should support `maxWait` in a tight loop', async () => {
+    let withCount = 0;
+    let withoutCount = 0;
+
+    const withMaxWait = debounce(
+      () => {
+        withCount++;
+      },
+      { waitMs: 32, maxWaitMs: 128 }
+    );
+
+    const withoutMaxWait = debounce(
+      () => {
+        withoutCount++;
+      },
+      { waitMs: 96 }
+    );
+
+    const start = Date.now();
+    while (Date.now() - start < 320) {
+      withMaxWait.call();
+      withoutMaxWait.call();
+    }
+
+    await sleep(1);
+    expect(withoutCount).toBe(0);
+    expect(withCount).toBeGreaterThan(0);
+  });
+
+  it('should queue a trailing call for subsequent debounced calls after `maxWait`', async () => {
+    let callCount = 0;
+
+    const debouncer = debounce(
+      () => {
+        ++callCount;
+      },
+      { waitMs: 200, maxWaitMs: 200 }
+    );
+
+    debouncer.call();
+
+    setTimeout(() => {
+      debouncer.call();
+    }, 190);
+    setTimeout(() => {
+      debouncer.call();
+    }, 200);
+    setTimeout(() => {
+      debouncer.call();
+    }, 210);
+
+    await sleep(500);
+    expect(callCount).toBe(2);
+  });
+
+  it('should cancel `maxDelayed` when `delayed` is invoked', async () => {
+    let callCount = 0;
+
+    const debouncer = debounce(
+      () => {
+        callCount++;
+      },
+      { waitMs: 32, maxWaitMs: 64 }
+    );
+
+    debouncer.call();
+
+    await sleep(128);
+    debouncer.call();
+    expect(callCount).toBe(1);
+
+    await sleep(192);
+    expect(callCount).toBe(2);
+  });
 });
 
 describe('typing', () => {
