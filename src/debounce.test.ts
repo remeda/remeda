@@ -283,6 +283,17 @@ describe('Additional functionality', () => {
     expect(() => debouncer.cancel()).not.toThrow();
   });
 
+  it('can cancel maxWait timer', async () => {
+    const debouncer = debounce(identity, { waitMs: 16, maxWaitMs: 32 });
+    expect(debouncer.call('hello')).toBeUndefined();
+
+    await sleep(1);
+    debouncer.cancel();
+
+    await sleep(32);
+    expect(debouncer.call('world')).toBeUndefined();
+  });
+
   it('can return a cached value', () => {
     const debouncer = debounce(identity, { timing: 'leading', waitMs: 32 });
     expect(debouncer.cachedValue).toBeUndefined();
@@ -345,6 +356,12 @@ describe('Additional functionality', () => {
 
     await sleep(32);
     expect(debouncer.flush()).toEqual('hello');
+  });
+});
+
+describe('errors', () => {
+  it('prevents maxWaitMs to be less then waitMs', () => {
+    expect(() => debounce(identity, { waitMs: 32, maxWaitMs: 16 })).toThrow();
   });
 });
 
