@@ -2,10 +2,46 @@
   "name": "remeda",
   "version": "0.0.35",
   "description": "A utility library for JavaScript and Typescript.",
+  "keywords": [
+    "utils",
+    "fp",
+    "functional",
+    "programming",
+    "typescript"
+  ],
+  "homepage": "https://github.com/remeda/remeda#readme",
+  "bugs": {
+    "url": "https://github.com/remeda/remeda/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remeda/remeda.git"
+  },
+  "license": "MIT",
+  "author": "Łukasz Sentkiewicz",
+  "sideEffects": false,
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
-  "sideEffects": false,
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build:es && npm run build:cjs",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
+    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
+    "clean": "rm -rf ./dist && mkdir dist",
+    "compile": "tsc",
+    "compile:dist": "tsc --project tsconfig.dist.json",
+    "docs:build": "cd docs && npm ci && npm run build:netlify-ci",
+    "lint": "eslint src/**/*.ts --fix",
+    "lint:check": "eslint src/**/*.ts",
+    "prepare": "husky install",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "test": "vitest run --coverage && npm run compile",
+    "test:ci": "vitest run"
+  },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
@@ -18,41 +54,5 @@
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
     "vitest": "^0.31.4"
-  },
-  "scripts": {
-    "clean": "rm -rf ./dist && mkdir dist",
-    "test": "vitest run --coverage && npm run compile",
-    "test:ci": "vitest run",
-    "compile": "tsc",
-    "compile:dist": "tsc --project tsconfig.dist.json",
-    "build": "npm run clean && npm run build:es && npm run build:cjs",
-    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
-    "prettier": "prettier . --write",
-    "prettier:check": "prettier . --check",
-    "lint": "eslint src/**/*.ts --fix",
-    "lint:check": "eslint src/**/*.ts",
-    "docs:build": "cd docs && npm ci && npm run build:netlify-ci",
-    "prepare": "husky install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remeda/remeda.git"
-  },
-  "keywords": [
-    "utils",
-    "fp",
-    "functional",
-    "programming",
-    "typescript"
-  ],
-  "author": "Łukasz Sentkiewicz",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/remeda/remeda/issues"
-  },
-  "files": [
-    "dist/*"
-  ],
-  "homepage": "https://github.com/remeda/remeda#readme"
+  }
 }

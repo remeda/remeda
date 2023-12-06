@@ -2,18 +2,18 @@
   "name": "remeda-docs",
   "version": "1.0.0",
   "repository": "git@github.com:remeda/docs.git",
-  "author": "Łukasz Sentkiewicz",
   "license": "MIT",
+  "author": "Łukasz Sentkiewicz",
   "scripts": {
+    "build": "tsc && vite build",
+    "build:netlify-ci": "npm run typedoc && npm run transform && npm run build && npm run netlify-spa-fix",
     "clean": "rm -rf dist && rm -rf build",
     "dev": "vite",
-    "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --max-warnings 0",
-    "preview": "vite preview",
-    "typedoc": "typedoc --json build/out.json",
-    "transform": "ts-node scripts/transform build/out.json build/data.json",
     "netlify-spa-fix": "cp _redirects dist/_redirects",
-    "build:netlify-ci": "npm run typedoc && npm run transform && npm run build && npm run netlify-spa-fix"
+    "preview": "vite preview",
+    "transform": "ts-node scripts/transform build/out.json build/data.json",
+    "typedoc": "typedoc --json build/out.json"
   },
   "dependencies": {
     "react": "^18.2.0",
