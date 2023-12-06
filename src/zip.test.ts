@@ -207,7 +207,7 @@ describe('strict dataLast typings', () => {
   test('on variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
-    const result = pipe(secondVariadic, zip.strict(firstVariadic));
+    const result = pipe(firstVariadic, zip.strict(secondVariadic));
     expectTypeOf(result).toEqualTypeOf<
       [[number, string], ...Array<[string, number]>]
     >;
