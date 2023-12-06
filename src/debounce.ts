@@ -1,17 +1,6 @@
-type DebounceOptions = {
-  readonly timing?: 'leading' | 'trailing' | 'both';
-  readonly waitMs?: number;
-  readonly maxWaitMs?: number;
-};
-
-const DEFAULT_OPTIONS = {
-  timing: 'trailing',
-  waitMs: 0,
-} satisfies DebounceOptions;
-
 type Debouncer<
   F extends (...args: any) => unknown,
-  Options extends DebounceOptions = typeof DEFAULT_OPTIONS,
+  IsNullable extends boolean = true,
 > = {
   /**
    * Invoke the debounced function.
@@ -24,9 +13,7 @@ type Debouncer<
    */
   readonly call: (
     ...args: Parameters<F>
-  ) =>
-    | ReturnType<F>
-    | (Options['timing'] extends 'leading' | 'both' ? never : undefined);
+  ) => ReturnType<F> | (true extends IsNullable ? undefined : never);
 
   /**
    * Cancels any debounced functions without calling them, effectively resetting
@@ -52,6 +39,11 @@ type Debouncer<
   readonly cachedValue: ReturnType<F> | undefined;
 };
 
+type DebounceOptions = {
+  readonly waitMs?: number;
+  readonly maxWaitMs?: number;
+};
+
 /**
  * Creates a debouncer object with a `call` function that delays invoking `func`
  * until after the cool-down period has elapsed since the last time the
@@ -63,21 +55,31 @@ type Debouncer<
  * `func` invocation.
  * @param func The function to debounce, the returned `call` function will have
  * the exact same signature.
- * @param waitMs The length in milliseconds of the cool-down period.
- * @param options An object allowing further customization of the debouncer. It
- * has a single optional property `timing` which can be either `'leading'`,
- * `'trailing'` or `'both'`. The default is `'trailing'`. `leading` would result
- * in the function being invoked at the start of the cool-down period;
- * `trailing` would result in the function being invoked at the end of the cool-
- * down period (using the args from the last call to the debouncer). When `both`
- * is selected the `trailing` invocation would only take place if there were
- * more than one call to the debouncer during the cool-down period.
+ * @param options An object allowing further customization of the debouncer:
+ * - `timing?: 'leading' | 'trailing' |'both'`. The default is `'trailing'`.
+ *   `leading` would result in the function being invoked at the start of the
+ *   cool-down period; `trailing` would result in the function being invoked at
+ *   the end of the cool-down period (using the args from the last call to the
+ *   debouncer). When `both` is selected the `trailing` invocation would only
+ *   take place if there were more than one call to the debouncer during the
+ *   cool-down period. **DEFAULT: 'trailing'**
+ * - `waitMs?: number`. The length of the cool-down period in milliseconds. The
+ *   debouncer would wait until this amount of time has passed without **any**
+ *   additional calls to the debouncer before triggering the end-of-cool-down-
+ *   period event. When this happens, the function would be invoked (if `timing`
+ *   isn't `'leading'`) and the debouncer state would be reset. **DEFAULT: 0**
+ * - `maxWaitMs?: number`. The length of time since a debounced call (a call
+ *   that the debouncer prevented from being invoked) was made until it would be
+ *   invoked. Because the debouncer can be continually triggered and thus never
+ *   reaching the end of the cool-down period, this allows the function to still
+ *   be invoked occasionally. IMPORTANT: This param is ignored when `timing` is
+ *   `'leading'`.
  * @returns a debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
  * - `flush` method to invoke them immediately
  * - `cachedValue` readonly property that returns the latest return value of an
- * invocation (if one occured).
+ * invocation (if one occurred).
  * - `isPending` flag to check if there are currently functions being debounced.
  * @signature
  *   R.debounce(func, waitMs, options);
@@ -94,19 +96,28 @@ type Debouncer<
  * @category Function
  */
 export function debounce<F extends (...args: any) => any>(
-  func: F
-): Debouncer<F>;
-export function debounce<
-  F extends (...args: any) => any,
-  Options extends DebounceOptions,
->(func: F, options: Options): Debouncer<F, Options>;
+  func: F,
+  options?: DebounceOptions & {
+    readonly timing?: 'trailing';
+  }
+): Debouncer<F, true /* call can return null */>;
+
+export function debounce<F extends (...args: any) => any>(
+  func: F,
+  options: DebounceOptions & {
+    readonly timing: 'leading' | 'both';
+  }
+): Debouncer<F, false /* call can't return null */>;
+
 export function debounce<F extends (...args: any) => any>(
   func: F,
   {
-    waitMs = DEFAULT_OPTIONS['waitMs'],
-    timing = DEFAULT_OPTIONS['timing'],
+    waitMs = 0,
+    timing = 'trailing',
     maxWaitMs,
-  }: DebounceOptions = {}
+  }: DebounceOptions & {
+    readonly timing?: 'leading' | 'both' | 'trailing';
+  } = {}
 ): Debouncer<F> {
   if (maxWaitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
