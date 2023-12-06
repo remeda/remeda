@@ -92,14 +92,9 @@ export function debounce<F extends (...args: any) => any>(
   // down period or not.
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-  // JS doesn't provide a way to ask a timeout how much time is left so we need
-  // to maintain this state ourselves. We use this to extend the timeout until
-  // we reach the actual cool-down period end.
-  let lastCallTimeMs: number | undefined;
-
   // For 'trailing' invocations we need to keep the args around until we
   // actually invoke the function.
-  let invocationArgs: Parameters<F> | undefined;
+  let latestCallArgs: Parameters<F> | undefined;
 
   // To make any value of the debounced function we need to be able to return a
   // value. For any invocation except the first one when 'leading' is enabled we
@@ -123,7 +118,7 @@ export function debounce<F extends (...args: any) => any>(
       return;
     }
 
-    if (invocationArgs === undefined) {
+    if (latestCallArgs === undefined) {
       // We already called the function at the start of the cool-down, and since
       // then we haven't received any new calls that got debounced, so there's
       // nothing to do here.
@@ -131,59 +126,44 @@ export function debounce<F extends (...args: any) => any>(
     }
 
     // Call the function and store the results locally.
-    result = func(...invocationArgs);
+    result = func(...latestCallArgs);
 
     // Make sure the args aren't accidentally used again, this is mainly
     // relevant for the check above where we'll fail a subsequent call to
     // 'trailingEdge'.
-    invocationArgs = undefined;
-  };
-
-  const handleTimeout = () => {
-    if (lastCallTimeMs === undefined) {
-      throw new Error(
-        'Something went wrong! we have a live timer without any calls to the debounced function'
-      );
-    }
-
-    const remainingWaitMs = waitMs - (Date.now() - lastCallTimeMs);
-
-    if (remainingWaitMs > 0) {
-      // There were additional calls during the cool-down period so we need to
-      // extend the timer further until we know that no calls have occurred
-      // during the cool-down period.
-      timeoutId = setTimeout(handleTimeout, remainingWaitMs);
-    } else {
-      // We can now call the actual invocation logic.
-      handleCoolDownPeriodEnd();
-    }
+    latestCallArgs = undefined;
   };
 
   return {
     call: (...args) => {
-      lastCallTimeMs = Date.now();
-
       if (timeoutId === undefined) {
         // This call is starting a new cool-down window!
 
         if (timing === 'trailing') {
           // If we aren't invoking the function at the start of the cool-down
           // period we need to store the args for later.
-          invocationArgs = args;
+          latestCallArgs = args;
         } else {
           // We invoke the function directly at the start of the cool-down
           // period.
           result = func(...args);
         }
+      } else {
+        // There's an inflight cool-down window.
 
-        timeoutId = setTimeout(handleTimeout, waitMs);
-      } else if (timing !== 'leading') {
-        // This call is being debounced and would need to be called at the end
-        // of the cool-down period so it's args need to be stored. Because we
-        // might have several calls during the cool-down period we only store
-        // the last call's args.
-        invocationArgs = args;
+        // The current timeout is no longer relevant because we need to wait the
+        // full `waitMs` time from this call.
+        clearTimeout(timeoutId);
+        timeoutId = undefined;
+
+        if (timing !== 'leading') {
+          // We are debouncing a call that would need to be called at the end of
+          // the cool-down window. We need to store the args for that event.
+          latestCallArgs = args;
+        }
       }
+
+      timeoutId = setTimeout(handleCoolDownPeriodEnd, waitMs);
 
       // Return the last computed result while we "debounce" further calls.
       return result;
@@ -196,10 +176,8 @@ export function debounce<F extends (...args: any) => any>(
       }
 
       if (timing === 'trailing') {
-        invocationArgs = undefined;
+        latestCallArgs = undefined;
       }
-
-      lastCallTimeMs = undefined;
     },
 
     flush: () => {
