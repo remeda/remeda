@@ -1,4 +1,11 @@
-type Debouncer<F extends (...args: any) => unknown> = {
+type DebounceOptions = {
+  readonly timing?: 'leading' | 'trailing' | 'both';
+};
+
+type Debouncer<
+  F extends (...args: any) => unknown,
+  Options extends DebounceOptions = DebounceOptions,
+> = {
   /**
    * Invoke the debounced function.
    * @param args - same as the args for the debounced function.
@@ -8,7 +15,11 @@ type Debouncer<F extends (...args: any) => unknown> = {
    * over, otherwise the function would always return the return type of the
    * debounced function.
    */
-  readonly call: (...args: Parameters<F>) => ReturnType<F> | undefined;
+  readonly call: (
+    ...args: Parameters<F>
+  ) =>
+    | ReturnType<F>
+    | (Options['timing'] extends 'leading' ? never : undefined);
 
   /**
    * Cancels any debounced functions without calling them, effectively resetting
@@ -32,10 +43,6 @@ type Debouncer<F extends (...args: any) => unknown> = {
    * The last computed value of the debounced function.
    */
   readonly cachedValue: ReturnType<F> | undefined;
-};
-
-type DebounceOptions = {
-  readonly timing?: 'leading' | 'trailing' | 'both';
 };
 
 const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
@@ -83,6 +90,14 @@ const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
+  waitMs?: number
+): Debouncer<F, { timing: typeof DEFAULT_TIMING }>;
+export function debounce<
+  F extends (...args: any) => any,
+  Options extends DebounceOptions,
+>(func: F, waitMs: number, options: Options): Debouncer<F, Options>;
+export function debounce<F extends (...args: any) => any>(
+  func: F,
   waitMs: number = 0,
   { timing = DEFAULT_TIMING }: DebounceOptions = {}
 ): Debouncer<F> {
@@ -90,7 +105,7 @@ export function debounce<F extends (...args: any) => any>(
 
   // The timeout is the main object we use to tell if there's an active cool-
   // down period or not.
-  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  let timeoutId: number | undefined;
 
   // For 'trailing' invocations we need to keep the args around until we
   // actually invoke the function.
