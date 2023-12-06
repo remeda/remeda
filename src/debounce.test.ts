@@ -1,7 +1,7 @@
 import { debounce } from './debounce';
 import { identity } from './identity';
 
-describe('runtime', () => {
+describe('Main functionality', () => {
   it('should debounce a function', async () => {
     let callCount = 0;
 
@@ -132,7 +132,9 @@ describe('runtime', () => {
     await sleep(64);
     expect(withCount).toBe(1);
   });
+});
 
+describe('Optional param maxWaitMs', () => {
   it('should support a `maxWait` option', async () => {
     let callCount = 0;
 
@@ -231,6 +233,118 @@ describe('runtime', () => {
 
     await sleep(192);
     expect(callCount).toBe(2);
+  });
+});
+
+describe('Additional functionality', () => {
+  it('can cancel before the timer starts', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(() => debouncer.cancel()).not.toThrow();
+
+    expect(debouncer.call('hello')).toBeUndefined();
+    await sleep(32);
+
+    expect(debouncer.call('world')).toEqual('hello');
+  });
+
+  it('can cancel the timer', async () => {
+    let count = 0;
+    const debouncer = debounce(
+      () => {
+        count += 1;
+        return 'hello World';
+      },
+      { waitMs: 32 }
+    );
+
+    expect(debouncer.call()).toBeUndefined();
+    expect(count).toEqual(0);
+
+    await sleep(1);
+    expect(debouncer.call()).toBeUndefined();
+    expect(count).toEqual(0);
+    debouncer.cancel();
+
+    await sleep(32);
+    expect(debouncer.call()).toBeUndefined();
+    expect(count).toEqual(0);
+
+    await sleep(32);
+    expect(debouncer.call()).toEqual('hello World');
+    expect(count).toEqual(1);
+  });
+
+  it('can cancel after the timer ends', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(debouncer.call('hello')).toBeUndefined();
+    await sleep(32);
+
+    expect(debouncer.call('world')).toEqual('hello');
+    expect(() => debouncer.cancel()).not.toThrow();
+  });
+
+  it('can return a cached value', () => {
+    const debouncer = debounce(identity, { timing: 'leading', waitMs: 32 });
+    expect(debouncer.cachedValue).toBeUndefined();
+    expect(debouncer.call('hello')).toEqual('hello');
+    expect(debouncer.cachedValue).toEqual('hello');
+  });
+
+  it('can check for inflight timers (trailing)', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(debouncer.isPending).toEqual(false);
+
+    expect(debouncer.call('hello')).toBeUndefined();
+    expect(debouncer.isPending).toEqual(true);
+
+    await sleep(1);
+    expect(debouncer.isPending).toEqual(true);
+
+    await sleep(32);
+    expect(debouncer.isPending).toEqual(false);
+  });
+
+  it('can check for inflight timers (trailing)', async () => {
+    const debouncer = debounce(identity, { timing: 'leading', waitMs: 32 });
+    expect(debouncer.isPending).toEqual(false);
+
+    expect(debouncer.call('hello')).toEqual('hello');
+    expect(debouncer.isPending).toEqual(true);
+
+    await sleep(1);
+    expect(debouncer.isPending).toEqual(true);
+
+    await sleep(32);
+    expect(debouncer.isPending).toEqual(false);
+  });
+
+  it('can flush before a cool-down', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(debouncer.flush()).toBeUndefined();
+
+    expect(debouncer.call('hello')).toBeUndefined();
+    await sleep(32);
+
+    expect(debouncer.call('world')).toEqual('hello');
+  });
+
+  it('can flush during a cool-down', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(debouncer.call('hello')).toBeUndefined();
+
+    await sleep(1);
+    expect(debouncer.call('world')).toBeUndefined();
+
+    await sleep(1);
+    expect(debouncer.flush()).toEqual('world');
+  });
+
+  it('can flush after a cool-down', async () => {
+    const debouncer = debounce(identity, { waitMs: 32 });
+    expect(debouncer.call('hello')).toBeUndefined();
+
+    await sleep(32);
+    expect(debouncer.flush()).toEqual('hello');
   });
 });
 
