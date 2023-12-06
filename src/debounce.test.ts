@@ -136,6 +136,30 @@ describe('runtime', () => {
 });
 
 describe('typing', () => {
+  it("returns undefined on 'trailing' timing", () => {
+    const debouncer = debounce(() => 'Hello, World!', 32, {
+      timing: 'trailing',
+    });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string | undefined>();
+  });
+
+  it("doesn't return undefined on 'leading' timing", () => {
+    const debouncer = debounce(() => 'Hello, World!', 32, {
+      timing: 'leading',
+    });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string>();
+  });
+
+  it("doesn't return undefined on 'both' timing", () => {
+    const debouncer = debounce(() => 'Hello, World!', 32, {
+      timing: 'both',
+    });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string>();
+  });
+
   test('argument typing to be good (all required)', () => {
     const debouncer = debounce(
       (a: string, b: number, c: boolean) => `${a}${b}${c}`,

@@ -19,7 +19,7 @@ type Debouncer<
     ...args: Parameters<F>
   ) =>
     | ReturnType<F>
-    | (Options['timing'] extends 'leading' ? never : undefined);
+    | (Options['timing'] extends 'leading' | 'both' ? never : undefined);
 
   /**
    * Cancels any debounced functions without calling them, effectively resetting
