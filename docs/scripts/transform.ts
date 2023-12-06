@@ -116,7 +116,11 @@ async function transformFunction({
   const description =
     summary.length === 0
       ? undefined
-      : (markedParse(
+      : // Marked can't tell when it's called if an async plugin is being used
+        // or not, so it can't type it's result accordingly. We know that we
+        // don't use any plugins so we cast the return type explicitly. This is
+        // how the marked team suggests for handling this typing ambiguity :(
+        (markedParse(
           summary.map(({ text }) => text).join(''),
           MARKED_OPTIONS
         ) as string);
