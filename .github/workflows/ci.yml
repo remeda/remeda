@@ -91,7 +91,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: npm run test:ci
+        run: npm run test
 
   lint:
     name: 🧹 Lint

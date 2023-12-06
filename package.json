@@ -40,8 +40,7 @@
     "prepare": "husky install",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
-    "test": "vitest",
-    "test:ci": "vitest run"
+    "test": "vitest"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
