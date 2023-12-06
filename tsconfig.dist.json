@@ -8,6 +8,9 @@
 
     "noEmit": true,
 
+    "target": "ES5",
+    "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
+
     "skipDefaultLibCheck": false,
     "skipLibCheck": false
   }

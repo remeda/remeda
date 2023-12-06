@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import { clone } from './clone';
 
 const eq = (a: any, b: any) => {
