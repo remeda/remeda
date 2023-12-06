@@ -4,10 +4,10 @@ import { purry } from './purry';
 type Chunked<T extends IterableContainer> = T[number] extends never
   ? []
   : T extends
-      | readonly [unknown, ...Array<unknown>]
-      | readonly [...Array<unknown>, unknown]
-  ? NonEmptyArray<NonEmptyArray<T[number]>>
-  : Array<NonEmptyArray<T[number]>>;
+        | readonly [unknown, ...Array<unknown>]
+        | readonly [...Array<unknown>, unknown]
+    ? NonEmptyArray<NonEmptyArray<T[number]>>
+    : Array<NonEmptyArray<T[number]>>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
