@@ -5,10 +5,13 @@ describe('runtime', () => {
   it('should debounce a function', async () => {
     let callCount = 0;
 
-    const debouncer = debounce(value => {
-      callCount += 1;
-      return value;
-    }, 32);
+    const debouncer = debounce(
+      value => {
+        callCount += 1;
+        return value;
+      },
+      { waitMs: 32 }
+    );
 
     expect([
       debouncer.call('a'),
@@ -33,7 +36,7 @@ describe('runtime', () => {
   });
 
   it('subsequent debounced calls return the last `func` result', async () => {
-    const debouncer = debounce(identity, 32);
+    const debouncer = debounce(identity, { waitMs: 32 });
     debouncer.call('a');
 
     await sleep(64);
@@ -47,7 +50,7 @@ describe('runtime', () => {
     let callCount = 0;
     const debouncer = debounce(() => {
       ++callCount;
-    }, 0);
+    });
 
     debouncer.call();
     debouncer.call();
@@ -63,8 +66,7 @@ describe('runtime', () => {
       () => {
         callCount++;
       },
-      32,
-      {}
+      { waitMs: 32 }
     );
 
     debouncer.call();
@@ -81,8 +83,7 @@ describe('runtime', () => {
       () => {
         callCounts.leading++;
       },
-      32,
-      { timing: 'leading' }
+      { waitMs: 32, timing: 'leading' }
     );
 
     withLeading.call();
@@ -92,8 +93,7 @@ describe('runtime', () => {
       () => {
         callCounts.both++;
       },
-      32,
-      { timing: 'both' }
+      { waitMs: 32, timing: 'both' }
     );
 
     withLeadingAndTrailing.call();
@@ -108,7 +108,7 @@ describe('runtime', () => {
   });
 
   it('subsequent leading debounced calls return the last `func` result', async () => {
-    const debouncer = debounce(identity, 32, { timing: 'leading' });
+    const debouncer = debounce(identity, { waitMs: 32, timing: 'leading' });
 
     expect([debouncer.call('a'), debouncer.call('b')]).toEqual(['a', 'a']);
 
@@ -123,8 +123,7 @@ describe('runtime', () => {
       () => {
         withCount++;
       },
-      32,
-      { timing: 'trailing' }
+      { waitMs: 32, timing: 'trailing' }
     );
 
     withTrailing.call();
@@ -137,7 +136,8 @@ describe('runtime', () => {
 
 describe('typing', () => {
   it("returns undefined on 'trailing' timing", () => {
-    const debouncer = debounce(() => 'Hello, World!', 32, {
+    const debouncer = debounce(() => 'Hello, World!', {
+      waitMs: 32,
       timing: 'trailing',
     });
     const result = debouncer.call();
@@ -145,7 +145,8 @@ describe('typing', () => {
   });
 
   it("doesn't return undefined on 'leading' timing", () => {
-    const debouncer = debounce(() => 'Hello, World!', 32, {
+    const debouncer = debounce(() => 'Hello, World!', {
+      waitMs: 32,
       timing: 'leading',
     });
     const result = debouncer.call();
@@ -153,7 +154,8 @@ describe('typing', () => {
   });
 
   it("doesn't return undefined on 'both' timing", () => {
-    const debouncer = debounce(() => 'Hello, World!', 32, {
+    const debouncer = debounce(() => 'Hello, World!', {
+      waitMs: 32,
       timing: 'both',
     });
     const result = debouncer.call();
@@ -162,8 +164,7 @@ describe('typing', () => {
 
   test('argument typing to be good (all required)', () => {
     const debouncer = debounce(
-      (a: string, b: number, c: boolean) => `${a}${b}${c}`,
-      32
+      (a: string, b: number, c: boolean) => `${a}${b}${c}`
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 0.
     debouncer.call();
@@ -181,8 +182,7 @@ describe('typing', () => {
 
   test('argument typing to be good (with optional)', () => {
     const debouncer = debounce(
-      (a: string, b?: number, c?: boolean) => `${a}${b}${c}`,
-      32
+      (a: string, b?: number, c?: boolean) => `${a}${b}${c}`
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
     debouncer.call();
@@ -198,8 +198,7 @@ describe('typing', () => {
 
   test('argument typing to be good (with defaults)', () => {
     const debouncer = debounce(
-      (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c}`,
-      32
+      (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c}`
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
     debouncer.call();
@@ -217,7 +216,6 @@ describe('typing', () => {
     const debouncer = debounce(
       (a: string, ...flags: ReadonlyArray<boolean>) =>
         `${a}${flags.map(flag => (flag ? 'y' : 'n')).join()}`,
-      32,
       { timing: 'leading' }
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.

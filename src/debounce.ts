@@ -1,10 +1,17 @@
 type DebounceOptions = {
   readonly timing?: 'leading' | 'trailing' | 'both';
+  readonly waitMs?: number;
+  readonly maxWaitMs?: number;
 };
+
+const DEFAULT_OPTIONS = {
+  timing: 'trailing',
+  waitMs: 0,
+} satisfies DebounceOptions;
 
 type Debouncer<
   F extends (...args: any) => unknown,
-  Options extends DebounceOptions = DebounceOptions,
+  Options extends DebounceOptions = typeof DEFAULT_OPTIONS,
 > = {
   /**
    * Invoke the debounced function.
@@ -44,8 +51,6 @@ type Debouncer<
    */
   readonly cachedValue: ReturnType<F> | undefined;
 };
-
-const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
 
 /**
  * Creates a debouncer object with a `call` function that delays invoking `func`
@@ -89,23 +94,35 @@ const DEFAULT_TIMING: NonNullable<DebounceOptions['timing']> = 'trailing';
  * @category Function
  */
 export function debounce<F extends (...args: any) => any>(
-  func: F,
-  waitMs?: number
-): Debouncer<F, { timing: typeof DEFAULT_TIMING }>;
+  func: F
+): Debouncer<F>;
 export function debounce<
   F extends (...args: any) => any,
   Options extends DebounceOptions,
->(func: F, waitMs: number, options: Options): Debouncer<F, Options>;
+>(func: F, options: Options): Debouncer<F, Options>;
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  waitMs: number = 0,
-  { timing = DEFAULT_TIMING }: DebounceOptions = {}
+  {
+    waitMs = DEFAULT_OPTIONS['waitMs'],
+    timing = DEFAULT_OPTIONS['timing'],
+    maxWaitMs,
+  }: DebounceOptions = {}
 ): Debouncer<F> {
+  if (maxWaitMs !== undefined && maxWaitMs < waitMs) {
+    throw new Error(
+      `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`
+    );
+  }
+
   // All these are part of the debouncer runtime state:
 
   // The timeout is the main object we use to tell if there's an active cool-
   // down period or not.
-  let timeoutId: number | undefined;
+  let coolDownTimeoutId: number | undefined;
+
+  // We use an additional timeout to track how long the last debounced call is
+  // waiting.
+  let maxWaitTimeoutId: number | undefined;
 
   // For 'trailing' invocations we need to keep the args around until we
   // actually invoke the function.
@@ -116,92 +133,120 @@ export function debounce<F extends (...args: any) => any>(
   // will return this cached value.
   let result: ReturnType<F> | undefined;
 
-  const handleCoolDownPeriodEnd = () => {
-    if (timeoutId === undefined) {
-      // If there's no active timeout it means there's no pending invocations.
-      return;
-    }
-
-    // We are starting an invocation event, we first make sure there are no
-    // future timers that would run.
-    clearTimeout(timeoutId);
-    timeoutId = undefined;
-
-    if (timing === 'leading') {
-      // When our invocation timing is 'leading' we don't invoke the function
-      // again at the end of our cool-down period.
-      return;
-    }
-
+  const handleInvoke = () => {
     if (latestCallArgs === undefined) {
-      // We already called the function at the start of the cool-down, and since
-      // then we haven't received any new calls that got debounced, so there's
-      // nothing to do here.
-      return;
+      throw new Error(
+        'debounce: unexpected state, missing arguments to invoke the function'
+      );
     }
 
-    // Call the function and store the results locally.
-    result = func(...latestCallArgs);
+    if (maxWaitTimeoutId !== undefined) {
+      // We are invoking the function so the wait is over...
+      clearTimeout(maxWaitTimeoutId);
+      maxWaitTimeoutId = undefined;
+    }
 
+    const args = latestCallArgs;
     // Make sure the args aren't accidentally used again, this is mainly
     // relevant for the check above where we'll fail a subsequent call to
     // 'trailingEdge'.
     latestCallArgs = undefined;
+
+    // Invoke the function and store the results locally.
+    result = func(...args);
+  };
+
+  const handleCoolDownEnd = () => {
+    if (coolDownTimeoutId === undefined) {
+      // It's rare to get here, it should only happen when `flush` is called
+      // when the cool-down window isn't active.
+      return;
+    }
+
+    // Make sure there are no more timers running.
+    clearTimeout(coolDownTimeoutId);
+    // Then reset state so a new cool-down window can begin on the next call.
+    coolDownTimeoutId = undefined;
+
+    if (latestCallArgs !== undefined) {
+      // If we have a debounced call waiting to be invoked at the end of the
+      // cool-down period we need to invoke it now.
+      handleInvoke();
+    }
+  };
+
+  const handleDebouncedCall = (args: Parameters<F>) => {
+    // We save the latest call args so that (if and) when we invoke the function
+    // in the future, we have args to invoke it with.
+    latestCallArgs = args;
+
+    if (maxWaitMs !== undefined && maxWaitTimeoutId === undefined) {
+      // We only need to start the maxWait timeout once, on the first debounced
+      // call that is now being delayed.
+      maxWaitTimeoutId = setTimeout(handleInvoke, maxWaitMs);
+    }
   };
 
   return {
     call: (...args) => {
-      if (timeoutId === undefined) {
+      if (coolDownTimeoutId === undefined) {
         // This call is starting a new cool-down window!
 
         if (timing === 'trailing') {
-          // If we aren't invoking the function at the start of the cool-down
-          // period we need to store the args for later.
-          latestCallArgs = args;
+          // Only when the timing is "trailing" is the first call "debounced".
+          handleDebouncedCall(args);
         } else {
-          // We invoke the function directly at the start of the cool-down
-          // period.
+          // Otherwise for "leading" and "both" the first call is actually
+          // called directly and not via a timeout.
           result = func(...args);
         }
       } else {
         // There's an inflight cool-down window.
 
+        if (timing !== 'leading') {
+          // When the timing is 'leading' all following calls are just ignored
+          // until the cool-down period ends. But for the other timings the call
+          // is "debounced".
+          handleDebouncedCall(args);
+        }
+
         // The current timeout is no longer relevant because we need to wait the
         // full `waitMs` time from this call.
-        clearTimeout(timeoutId);
-        timeoutId = undefined;
-
-        if (timing !== 'leading') {
-          // We are debouncing a call that would need to be called at the end of
-          // the cool-down window. We need to store the args for that event.
-          latestCallArgs = args;
-        }
+        clearTimeout(coolDownTimeoutId);
+        coolDownTimeoutId = undefined;
       }
 
-      timeoutId = setTimeout(handleCoolDownPeriodEnd, waitMs);
+      coolDownTimeoutId = setTimeout(handleCoolDownEnd, waitMs);
 
       // Return the last computed result while we "debounce" further calls.
       return result;
     },
 
     cancel: () => {
-      if (timeoutId !== undefined) {
-        clearTimeout(timeoutId);
-        timeoutId = undefined;
+      // Reset all "in-flight" state of the debouncer. Notice that we keep the
+      // cached value!
+
+      if (coolDownTimeoutId !== undefined) {
+        clearTimeout(coolDownTimeoutId);
+        coolDownTimeoutId = undefined;
       }
 
-      if (timing === 'trailing') {
-        latestCallArgs = undefined;
+      if (maxWaitTimeoutId !== undefined) {
+        clearTimeout(maxWaitTimeoutId);
+        maxWaitTimeoutId = undefined;
       }
+
+      latestCallArgs = undefined;
     },
 
     flush: () => {
-      handleCoolDownPeriodEnd();
+      // Flush is just a manual way to trigger the end of the cool-down window.
+      handleCoolDownEnd();
       return result;
     },
 
     get isPending() {
-      return timeoutId !== undefined;
+      return coolDownTimeoutId !== undefined;
     },
 
     get cachedValue() {
