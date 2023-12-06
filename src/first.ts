@@ -4,10 +4,10 @@ import { purry } from './purry';
 type FirstOut<T extends IterableContainer> = T extends []
   ? undefined
   : T extends readonly [unknown, ...Array<unknown>]
-  ? T[0]
-  : T extends readonly [...infer Pre, infer Last]
-  ? Pre[0] | Last
-  : T[0] | undefined;
+    ? T[0]
+    : T extends readonly [...infer Pre, infer Last]
+      ? Pre[0] | Last
+      : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.

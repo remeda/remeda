@@ -1,8 +1,8 @@
 type DefinitelyString<T> = Extract<T, string> extends never
   ? string
   : Extract<T, string> extends any
-  ? string
-  : Extract<T, string>;
+    ? string
+    : Extract<T, string>;
 
 /**
  * A function that checks if the passed parameter is a string and narrows its type accordingly
