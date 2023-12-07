@@ -9,15 +9,19 @@ jobs:
   codecov:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout
         uses: actions/checkout@v4
-      - name: Setup Node.js
+
+      - name: ⎔ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
-      - name: Run tests
-        run: npm run test:ci -- --coverage
-      - name: Upload coverage
+
+      - name: ☔ Collect coverage
+        run: npm run coverage
+
+      - name: 🗺️ Upload coverage
         uses: codecov/codecov-action@v3

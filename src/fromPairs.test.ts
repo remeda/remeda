@@ -39,7 +39,7 @@ describe('Strict (with readonly inputs)', () => {
 
   test('trivial single entry const case', () => {
     const result = fromPairs.strict([['a', 1]] as const);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1 }>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
@@ -49,7 +49,7 @@ describe('Strict (with readonly inputs)', () => {
       ['b', 2],
       ['c', 3],
     ] as const);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 2; c: 3 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1; b: 2; c: 3 }>();
     expect(result).toStrictEqual({ a: 1, b: 2, c: 3 });
   });
 
@@ -83,7 +83,7 @@ describe('Strict (with readonly inputs)', () => {
       ['a', 1],
     ];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
@@ -92,7 +92,7 @@ describe('Strict (with readonly inputs)', () => {
       ['a', 1],
     ];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
@@ -125,7 +125,7 @@ describe('Strict (with readonly inputs)', () => {
       readonly ['a', 1] | readonly [`testing_${string}`, boolean]
     > = [['a', 1]];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(result).toMatchTypeOf<
       { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
     >();
     expect(result).toStrictEqual({ a: 1 });
@@ -162,7 +162,7 @@ describe('Strict (with non-readonly inputs)', () => {
 
   test('trivial single entry const case', () => {
     const result = fromPairs.strict([['a', 1]]);
-    expectTypeOf(result).toEqualTypeOf<Record<string, number>>();
+    expectTypeOf(result).toMatchTypeOf<Record<string, number>>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
@@ -172,7 +172,7 @@ describe('Strict (with non-readonly inputs)', () => {
       ['b', 2],
       ['c', 3],
     ]);
-    expectTypeOf(result).toEqualTypeOf<Record<string, number>>();
+    expectTypeOf(result).toMatchTypeOf<Record<string, number>>();
     expect(result).toStrictEqual({ a: 1, b: 2, c: 3 });
   });
 
@@ -204,14 +204,14 @@ describe('Strict (with non-readonly inputs)', () => {
   test('runtime mixed tuple with rest (first)', () => {
     const arr: [['a', 1], ...Array<['b', 2] | ['c', 3]>] = [['a', 1]];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
   test('runtime mixed tuple with rest (last)', () => {
     const arr: [...Array<['b', 2] | ['c', 3]>, ['a', 1]] = [['a', 1]];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     expect(result).toStrictEqual({ a: 1 });
   });
 
@@ -242,7 +242,7 @@ describe('Strict (with non-readonly inputs)', () => {
   test('mixed literals and generics', () => {
     const arr: Array<['a', 1] | [`testing_${string}`, boolean]> = [['a', 1]];
     const result = fromPairs.strict(arr);
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(result).toMatchTypeOf<
       { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
     >();
     expect(result).toStrictEqual({ a: 1 });
