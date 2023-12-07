@@ -48,8 +48,8 @@ type IsIndexAfterSpread<
 > = IndicesAfterSpread<T> extends never
   ? false
   : Index extends `${IndicesAfterSpread<T>}`
-  ? true
-  : false;
+    ? true
+    : false;
 
 // Find the index of the tuple where a spread item is located, and return all
 // indices in the tuple which are located after it. The tuple could be prefixed
@@ -64,10 +64,12 @@ type IndicesAfterSpread<
 > = T[number] extends never
   ? never
   : T extends readonly [unknown, ...infer Tail]
-  ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
-  : T extends readonly [...infer Head, unknown]
-  ? IndicesAfterSpread<Head, [unknown, ...Iterations]> | Iterations['length']
-  : Iterations['length'];
+    ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
+    : T extends readonly [...infer Head, unknown]
+      ?
+          | IndicesAfterSpread<Head, [unknown, ...Iterations]>
+          | Iterations['length']
+      : Iterations['length'];
 
 type ObjectKeys<T> = T extends Record<PropertyKey, never>
   ? []

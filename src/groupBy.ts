@@ -102,13 +102,13 @@ type StrictOut<Value, Key extends PropertyKey = PropertyKey> =
   string extends Key
     ? Record<Key, NonEmptyArray<Value>>
     : number extends Key
-    ? Record<Key, NonEmptyArray<Value>>
-    : symbol extends Key
-    ? Record<Key, NonEmptyArray<Value>>
-    : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-      // because we can't statically know what values the mapper would return on
-      // a specific input
-      Partial<Record<Key, NonEmptyArray<Value>>>;
+      ? Record<Key, NonEmptyArray<Value>>
+      : symbol extends Key
+        ? Record<Key, NonEmptyArray<Value>>
+        : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+          // because we can't statically know what values the mapper would return on
+          // a specific input
+          Partial<Record<Key, NonEmptyArray<Value>>>;
 
 export namespace groupBy {
   export function indexed<T>(
