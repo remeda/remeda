@@ -1,5 +1,5 @@
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isDefined } from './isDefined';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isDefined', () => {
   test('isDefined": should work as type guard', () => {
@@ -16,6 +16,12 @@ describe('isDefined', () => {
         | Error
         | number
         | Promise<number>
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >(data);
     }
   });
@@ -41,6 +47,12 @@ describe('isDefined', () => {
         | Date
         | Error
         | Promise<number>
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >
     >(data);
   });
@@ -62,6 +74,12 @@ describe('strict', () => {
         | number
         | Promise<number>
         | null
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >(data);
     }
   });
@@ -89,6 +107,12 @@ describe('strict', () => {
         | Error
         | Promise<number>
         | null
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >
     >(data);
   });

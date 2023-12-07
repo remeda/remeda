@@ -1,7 +1,7 @@
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isNot } from './isNot';
 import { isPromise } from './isPromise';
 import { isString } from './isString';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isNot', () => {
   test('isNot: should work as type guard', () => {
@@ -21,6 +21,12 @@ describe('isNot', () => {
         | Promise<number>
         | null
         | undefined
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >(data);
     }
   });
@@ -46,6 +52,12 @@ describe('isNot', () => {
         | null
         | Error
         | number
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >
     >(result);
   });

@@ -1,4 +1,4 @@
-import { typesDataProvider } from '../test/types_data_provider';
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isNonNull } from './isNonNull';
 
 describe('isNonNull', () => {
@@ -17,6 +17,12 @@ describe('isNonNull', () => {
         | number
         | Promise<number>
         | undefined
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >(data);
     }
   });
@@ -44,6 +50,12 @@ describe('isNonNull', () => {
         | Error
         | Promise<number>
         | undefined
+        | RegExp
+        | TestClass
+        | Set<string>
+        | Map<string, string>
+        | [number, number, number]
+        | Uint8Array
       >
     >(data);
   });
