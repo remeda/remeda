@@ -1,4 +1,4 @@
-import { type NarrowedTo } from './_types';
+import type { NarrowedTo } from './_types';
 import { isObjectType } from './isObjectType';
 
 /**

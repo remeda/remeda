@@ -1,4 +1,4 @@
-import { type NarrowedTo } from './_types';
+import type { NarrowedTo } from './_types';
 
 /**
  * Checks if the runtime `typeof` of the param is `object` and not null.
