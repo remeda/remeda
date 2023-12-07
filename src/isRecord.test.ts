@@ -56,7 +56,7 @@ describe('typing', () => {
     }
   });
 
-  test('isPlainObject: should work as type guard', () => {
+  test('should work as type guard', () => {
     const data = typesDataProvider('object');
     if (isRecord(data)) {
       expectTypeOf(data).toEqualTypeOf<{ a: string }>();
@@ -70,7 +70,7 @@ describe('typing', () => {
     }
   });
 
-  test('isPlainObject: should work as type guard in filter', () => {
+  test('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isRecord);
     expectTypeOf(data).toEqualTypeOf<Array<{ a: string }>>();
   });

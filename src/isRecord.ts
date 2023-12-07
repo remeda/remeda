@@ -11,16 +11,16 @@ import { isObjectType } from './isObjectType';
  *
  * @param data the variable to check
  * @signature
- *    R.isPlainObject(data)
+ *    R.isRecord(data)
  * @returns true if the passed input is an Object, Promise, Date or Error, false otherwise
  * @example
- *    R.isPlainObject({}) //=> true
- *    R.isPlainObject({ a: 123 }) //=> true
- *    R.isPlainObject([]) //=> false
- *    R.isPlainObject(Promise.resolve("something")) //=> false
- *    R.isPlainObject(new Date()) //=> false
- *    R.isPlainObject(new Error("error")) //=> false
- *    R.isPlainObject('somethingElse') //=> false
+ *    R.isRecord({}) //=> true
+ *    R.isRecord({ a: 123 }) //=> true
+ *    R.isRecord([]) //=> false
+ *    R.isRecord(Promise.resolve("something")) //=> false
+ *    R.isRecord(new Date()) //=> false
+ *    R.isRecord(new Error("error")) //=> false
+ *    R.isRecord('somethingElse') //=> false
  * @category Guard
  */
 export function isRecord<T>(
