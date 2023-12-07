@@ -91,16 +91,13 @@ type DebounceOptions = {
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options?: DebounceOptions & {
-    readonly timing?: 'trailing';
-  }
+  options?: { readonly timing?: 'trailing' } & DebounceOptions
 ): Debouncer<F, true /* call can return null */>;
-
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options: DebounceOptions & {
-    readonly timing: 'leading' | 'both';
-  }
+  options:
+    | ({ readonly timing: 'leading' } & Omit<DebounceOptions, 'maxWaitMs'>)
+    | ({ readonly timing: 'both' } & DebounceOptions)
 ): Debouncer<F, false /* call can't return null */>;
 
 export function debounce<F extends (...args: any) => any>(
@@ -140,15 +137,15 @@ export function debounce<F extends (...args: any) => any>(
 
   const handleInvoke = () => {
     if (latestCallArgs === undefined) {
-      throw new Error(
-        'debounce: unexpected state, missing arguments to invoke the function'
-      );
+      // This should never happen! It means we forgot to clear a timeout!
+      return;
     }
 
     if (maxWaitTimeoutId !== undefined) {
       // We are invoking the function so the wait is over...
-      clearTimeout(maxWaitTimeoutId);
+      const timeoutId = maxWaitTimeoutId;
       maxWaitTimeoutId = undefined;
+      clearTimeout(timeoutId);
     }
 
     const args = latestCallArgs;
@@ -169,9 +166,10 @@ export function debounce<F extends (...args: any) => any>(
     }
 
     // Make sure there are no more timers running.
-    clearTimeout(coolDownTimeoutId);
-    // Then reset state so a new cool-down window can begin on the next call.
+    const timeoutId = coolDownTimeoutId;
     coolDownTimeoutId = undefined;
+    clearTimeout(timeoutId);
+    // Then reset state so a new cool-down window can begin on the next call.
 
     if (latestCallArgs !== undefined) {
       // If we have a debounced call waiting to be invoked at the end of the
@@ -217,8 +215,9 @@ export function debounce<F extends (...args: any) => any>(
 
         // The current timeout is no longer relevant because we need to wait the
         // full `waitMs` time from this call.
-        clearTimeout(coolDownTimeoutId);
+        const timeoutId = coolDownTimeoutId;
         coolDownTimeoutId = undefined;
+        clearTimeout(timeoutId);
       }
 
       coolDownTimeoutId = setTimeout(handleCoolDownEnd, waitMs);
@@ -232,13 +231,15 @@ export function debounce<F extends (...args: any) => any>(
       // cached value!
 
       if (coolDownTimeoutId !== undefined) {
-        clearTimeout(coolDownTimeoutId);
+        const timeoutId = coolDownTimeoutId;
         coolDownTimeoutId = undefined;
+        clearTimeout(timeoutId);
       }
 
       if (maxWaitTimeoutId !== undefined) {
-        clearTimeout(maxWaitTimeoutId);
+        const timeoutId = maxWaitTimeoutId;
         maxWaitTimeoutId = undefined;
+        clearTimeout(timeoutId);
       }
 
       latestCallArgs = undefined;

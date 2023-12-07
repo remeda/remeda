@@ -472,6 +472,13 @@ describe('typing', () => {
       debouncer.call('a', true, true, false, false, true, false, true)
     ).toEqual('ay,y,n,n,y,n,y');
   });
+
+  it("doesn't accept maxWaitMs when timing is 'leading'", () => {
+    debounce(identity, { timing: 'trailing', maxWaitMs: 32 });
+    debounce(identity, { timing: 'both', maxWaitMs: 32 });
+    // @ts-expect-error [ts2769]: maxWaitMs not supported!
+    debounce(identity, { timing: 'leading', maxWaitMs: 32 });
+  });
 });
 
 async function sleep(ms: number): Promise<void> {
