@@ -27,9 +27,9 @@ function _stringToPath(path: string): Array<string> {
 export type StringToPath<T extends string> = T extends ''
   ? []
   : T extends `[${infer Head}].${infer Tail}`
-  ? [Head, ...StringToPath<Tail>]
-  : T extends `.${infer Head}${infer Tail}`
-  ? [Head, ...StringToPath<Tail>]
-  : T extends `${infer Head}${infer Tail}`
-  ? [Head, ...StringToPath<Tail>]
-  : [T];
+    ? [Head, ...StringToPath<Tail>]
+    : T extends `.${infer Head}${infer Tail}`
+      ? [Head, ...StringToPath<Tail>]
+      : T extends `${infer Head}${infer Tail}`
+        ? [Head, ...StringToPath<Tail>]
+        : [T];

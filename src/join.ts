@@ -8,16 +8,16 @@ export type Joined<T extends IterableContainer, Glue extends string> =
   T[number] extends never
     ? ''
     : // Single item tuple (could be optional too!)
-    T extends readonly [Joinable?]
-    ? `${NullishCoalesce<T[0], ''>}`
-    : // Tuple with non-rest element (head)
-    T extends readonly [infer First, ...infer Tail]
-    ? `${NullishCoalesce<First, ''>}${Glue}${Joined<Tail, Glue>}`
-    : // Tuple with non-rest element (tail)
-    T extends readonly [...infer Head, infer Last]
-    ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, ''>}`
-    : // Arrays and tuple rest-elements, we can't say anything about the output
-      string;
+      T extends readonly [Joinable?]
+      ? `${NullishCoalesce<T[0], ''>}`
+      : // Tuple with non-rest element (head)
+        T extends readonly [infer First, ...infer Tail]
+        ? `${NullishCoalesce<First, ''>}${Glue}${Joined<Tail, Glue>}`
+        : // Tuple with non-rest element (tail)
+          T extends readonly [...infer Head, infer Last]
+          ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, ''>}`
+          : // Arrays and tuple rest-elements, we can't say anything about the output
+            string;
 
 // `undefined` and `null` are special-cased by join. In typescript
 // `${undefined}` === 'undefined' (and similarly for null), but specifically in

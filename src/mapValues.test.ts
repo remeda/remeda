@@ -75,7 +75,7 @@ describe('mapValues key types', () => {
     });
   });
 
-  test('indexed signature', () => {
+  describe('indexed signature', () => {
     test('should work with string keys', () => {
       mapValues({} as { [key: string]: unknown }, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<string>();
@@ -96,6 +96,5 @@ describe('mapValues key types', () => {
         expectTypeOf(key).toEqualTypeOf<never>();
       });
     });
-    /* eslint-enable @typescript-eslint/consistent-indexed-object-style */
   });
 });

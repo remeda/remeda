@@ -74,20 +74,20 @@ type Zip<Left extends IterableContainer, Right extends IterableContainer> =
   Left extends readonly []
     ? []
     : Right extends readonly []
-    ? []
-    : // Are the two inputs both tuples with a non-rest first item?
-    Left extends readonly [infer LeftHead, ...infer LeftRest]
-    ? Right extends readonly [infer RightHead, ...infer RightRest]
-      ? // ...Then take that first item from both and recurse
-        [[LeftHead, RightHead], ...Zip<LeftRest, RightRest>]
-      : // Is only one of the inputs a tuple (with a non-rest first item)?
-        // Then take that item, and match it with whatever the type of the other *array's* items are.
-        [[LeftHead, Right[number]], ...Zip<LeftRest, Right>]
-    : Right extends readonly [infer RightHead, ...infer RightRest]
-    ? [[Left[number], RightHead], ...Zip<Left, RightRest>]
-    : // Both inputs are not tuples (with a non-rest first item, they might be tuples with non-rest last item(s))
-      // So the output is just the "trivial" zip result.
-      Array<[Left[number], Right[number]]>;
+      ? []
+      : // Are the two inputs both tuples with a non-rest first item?
+        Left extends readonly [infer LeftHead, ...infer LeftRest]
+        ? Right extends readonly [infer RightHead, ...infer RightRest]
+          ? // ...Then take that first item from both and recurse
+            [[LeftHead, RightHead], ...Zip<LeftRest, RightRest>]
+          : // Is only one of the inputs a tuple (with a non-rest first item)?
+            // Then take that item, and match it with whatever the type of the other *array's* items are.
+            [[LeftHead, Right[number]], ...Zip<LeftRest, Right>]
+        : Right extends readonly [infer RightHead, ...infer RightRest]
+          ? [[Left[number], RightHead], ...Zip<Left, RightRest>]
+          : // Both inputs are not tuples (with a non-rest first item, they might be tuples with non-rest last item(s))
+            // So the output is just the "trivial" zip result.
+            Array<[Left[number], Right[number]]>;
 
 export namespace zip {
   // @ts-expect-error ts[2322] - The dataLast strict version requires only 1 argument
