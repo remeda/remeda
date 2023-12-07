@@ -48,7 +48,7 @@ type DebounceOptions = {
  * Wraps `func` with a debouncer object that "debounces" (delays) invocations of the function during a defined cool-down period (`waitMs`). It can be configured to invoke the function either at the start of the cool-down period, the end of it, or at both ends (`timing`).
  * It can also be configured to allow invocations during the cool-down period (`maxWaitMs`).
  * It stores the latest call's arguments so they could be used at the end of the cool-down period when invoking `func` (if configured to invoke the function at the end of the cool-down period).
- * It stores the value returned by `func` whenever it's invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. It's important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it's a cached value from a previous invocation.
+ * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
  * @param func The function to debounce, the returned `call` function will have
  * the exact same signature.
@@ -68,29 +68,28 @@ type DebounceOptions = {
  * - `maxWaitMs?: number`. The length of time since a debounced call (a call
  *   that the debouncer prevented from being invoked) was made until it would be
  *   invoked. Because the debouncer can be continually triggered and thus never
- *   reaching the end of the cool-down period, this allows the function to still
+ *   reach the end of the cool-down period, this allows the function to still
  *   be invoked occasionally. IMPORTANT: This param is ignored when `timing` is
  *   `'leading'`.
  * @returns a debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
- * - `flush` method to invoke them immediately
- * - `cachedValue` readonly property that returns the latest return value of an
- * invocation (if one occurred).
- * - `isPending` flag to check if there are currently functions being debounced.
+ * - `flush` method to end the cool-down period immediately.
+ * - `cachedValue` the latest return value of an invocation (if one occurred).
+ * - `isPending` flag to check if there is an inflight cool-down window.
  * @signature
- *   R.debounce(func, waitMs, options);
+ *   R.debounce(func, options);
  * @example
- *   const sum = (a: number, b: number) => a + b;
- *   const oneSumPerSecond = debounce(foo, 1000, { timing: 'trailing' });
- *   const debouncedSum = sumPerSecond.call(1, 2); // => undefined
- *   const debouncedSum2 = sumPerSecond.call(3, 4); // => undefined
+ *   const debouncer = debounce(identity, { timing: 'trailing', waitMs: 1000 });
+ *   const result1 = debouncer.call(1); // => undefined
+ *   const result2 = debouncer.call(2); // => undefined
  *   // after 1 second
- *   const debouncedSum3 = sumPerSecond.call(5, 6); // => 7
+ *   const result3 = debouncer.call(3); // => 2
  *   // after 1 second
- *   sumPerSecond.cachedValue; // => 11
+ *   debouncer.cachedValue; // => 3
  * @dataFirst
  * @category Function
+ * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
