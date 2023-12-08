@@ -7,8 +7,8 @@ type Reverse<
   T extends IsNoTuple<T>
     ? () => [...T, ...R]
     : T extends readonly [infer F, ...infer L]
-    ? () => Reverse<L, [F, ...R]>
-    : () => R
+      ? () => Reverse<L, [F, ...R]>
+      : () => R
 >;
 
 type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;

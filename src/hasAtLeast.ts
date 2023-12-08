@@ -5,10 +5,10 @@ type ArrayMinN<T, N extends number> = number extends N
   ? // We can only compute the type for a literal number!
     Array<T>
   : // I don't know why we need to special-case the 0 case, but otherwise
-  // typescript complains we have a deep recursion.
-  N extends 0
-  ? Array<T>
-  : [...ReadonlyTuple<T, N>, ...Array<T>];
+    // typescript complains we have a deep recursion.
+    N extends 0
+    ? Array<T>
+    : [...ReadonlyTuple<T, N>, ...Array<T>];
 
 /**
  * Checks if the given array has at least the defined number of elements, and
