@@ -12,7 +12,7 @@ type DefinitelyObject<T> = Exclude<
 /**
  * A function that checks if the passed parameter is of type Object and narrows its type accordingly
  *
- * @deprecated this guard is confusing because it rejects arrays but doesn't reject classes or built-in objects. Instead, use `isObjectType` for a broader check for anything "object", or `isRecord` for simple struct/shape/record-like objects. You can also achieve the same logic with `(x) => isObjectType(x) && !isArray(x)`.
+ * @deprecated this guard is confusing because it rejects arrays but doesn't reject classes or built-in objects. Instead, use `isObjectType` for a broader check for anything "object", or `isPlainObject` for simple struct/shape/record-like objects. You can also achieve the same logic with `(x) => isObjectType(x) && !isArray(x)`.
  *
  * @param data the variable to check
  * @signature

@@ -41,7 +41,7 @@ documentation when migrating._
 | `isEmpty`           | `isEmpty`           | `isEmpty`           |
 | `isNil`             | `isNil`             | `isNil`             |
 | `isObjectType`      | `isObjectLike`      |                     |
-| `isRecord`          | `isPlainObject`     |                     |
+| `isPlainObject`     | `isPlainObject`     |                     |
 | `join`              | `join`              | `join`              |
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |

@@ -3,12 +3,9 @@ import type { NarrowedTo } from './_types';
 /**
  * Checks if the runtime `typeof` of the param is `object` and not null.
  *
- * Notice that a lot of things in JS are objects, pretty much anything that
- * isn't a primitive type. This includes Arrays, Classes, RegExps, Maps, Sets,
- * Dates, URLs, Errors, etc...
+ * Notice that a lot of things in JS are objects, pretty much anything that isn't a primitive type This includes Arrays, Classes, RegExps, Maps, Sets, Dates, URLs, Errors, etc...
  *
- * Use `isRecord` for a narrower check that only accepts simple struct/shape/
- * record-like objects.
+ * Use `isPlainObject` for a narrower check that only accepts simple struct/shape/record-like objects.
  *
  * @param data the variable to check
  * @signature
