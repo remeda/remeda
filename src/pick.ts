@@ -1,4 +1,3 @@
-import { Unwrap } from './_types';
 import { purry } from './purry';
 
 /**
@@ -14,7 +13,7 @@ import { purry } from './purry';
 export function pick<T extends object, K extends keyof T>(
   object: T,
   names: ReadonlyArray<K>
-): Unwrap<Pick<T, K>>;
+): Pick<T, K>;
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -27,17 +26,20 @@ export function pick<T extends object, K extends keyof T>(
  */
 export function pick<K extends PropertyKey>(
   names: ReadonlyArray<K>
-): <T extends Record<K, unknown>>(object: T) => Unwrap<Pick<T, K>>;
+): <T extends Record<K, unknown>>(object: T) => Pick<T, K>;
 
 export function pick() {
   return purry(_pick, arguments);
 }
 
-function _pick(object: Record<string, unknown>, names: Array<string>) {
+function _pick(
+  object: Readonly<Record<PropertyKey, unknown>>,
+  names: ReadonlyArray<PropertyKey>
+) {
   if (object == null) {
     return {};
   }
-  return names.reduce<Record<string, unknown>>((acc, name) => {
+  return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
     if (name in object) {
       acc[name] = object[name];
     }
