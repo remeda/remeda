@@ -25,7 +25,7 @@ test('stricter typing', () => {
 
 test('stricter typing with optional', () => {
   const actual = toPairs.strict({} as { a?: string });
-  assertType<Array<['a', string | undefined]>>(actual);
+  assertType<Array<['a', string]>>(actual);
 });
 
 test('stricter typing with undefined', () => {
