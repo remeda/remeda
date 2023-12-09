@@ -46,4 +46,13 @@ describe('typing', () => {
       );
     });
   });
+
+  describe('curried form', () => {
+    test('non existing prop', () => {
+      const omitFoo = omit(['foo'] as const);
+
+      // @ts-expect-error [ts2353] -- should not allow non existing props
+      omitFoo({ bar: 'potato' });
+    });
+  });
 });

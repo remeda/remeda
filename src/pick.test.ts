@@ -7,11 +7,6 @@ describe('data first', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
-  test('warns on non existing props', () => {
-    // @ts-expect-error -- should not allow non existing props
-    const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
-    expect(result).toStrictEqual({});
-  });
   test('allow undefined or null', () => {
     expect(pick(undefined as any, ['foo'])).toEqual({});
     expect(pick(null as any, ['foo'])).toEqual({});
@@ -34,15 +29,6 @@ describe('data last', () => {
   test('it should pick props', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd']));
     expect(result).toEqual({ a: 1, d: 4 });
-  });
-
-  test('warns on non existing props', () => {
-    const result = pipe(
-      { a: 1, b: 2, c: 3, d: 4 },
-      // @ts-expect-error -- should not allow non existing props
-      pick(['not', 'in'])
-    );
-    expect(result).toEqual({});
   });
 });
 
@@ -69,16 +55,32 @@ describe('curried form', () => {
     expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
     expect(result).toEqual({ foo: 1 });
   });
-  test('warns on non existing props', () => {
-    const pickFoo = pick(['foo']);
+});
 
-    expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
-      foo: unknown;
-    }>();
+describe('typing', () => {
+  describe('data first', () => {
+    test('non existing prop', () => {
+      // @ts-expect-error [ts2322] -- should not allow non existing props
+      pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
+    });
+  });
 
-    // @ts-expect-error -- should not allow non existing props
-    const result = pickFoo({ bar: 'potato', baz: 123 });
+  describe('data last', () => {
+    test('non existing prop', () => {
+      pipe(
+        { a: 1, b: 2, c: 3, d: 4 },
+        // @ts-expect-error [ts2345] -- should not allow non existing props
+        pick(['not', 'in'])
+      );
+    });
+  });
 
-    expect(result).toEqual({});
+  describe('curried form', () => {
+    test('non existing prop', () => {
+      const pickFoo = pick(['foo']);
+
+      // @ts-expect-error [ts2353] -- should not allow non existing props
+      pickFoo({ bar: 'potato', baz: 123 });
+    });
   });
 });
