@@ -1,4 +1,3 @@
-import { Unwrap } from './_types';
 import { fromPairs } from './fromPairs';
 import { purry } from './purry';
 
@@ -13,10 +12,10 @@ import { purry } from './purry';
  * @dataFirst
  * @category Object
  */
-export function omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
+export function omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
-): Unwrap<Omit<T, K>>;
+): Omit<T, K>;
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
@@ -31,7 +30,7 @@ export function omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
  */
 export function omit<K extends PropertyKey>(
   propNames: ReadonlyArray<K>
-): <T extends Record<K, unknown>>(data: T) => Unwrap<Omit<T, K>>;
+): <T extends Record<K, unknown>>(data: T) => Omit<T, K>;
 
 export function omit() {
   return purry(_omit, arguments);
@@ -40,7 +39,7 @@ export function omit() {
 function _omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
-): Unwrap<Omit<T, K>> {
+): Omit<T, K> {
   if (propNames.length === 0) {
     return { ...data };
   }
@@ -62,5 +61,5 @@ function _omit<T extends Record<PropertyKey, unknown>, K extends keyof T>(
   const asSet = new Set(propNames);
   return fromPairs(
     Object.entries(data).filter(([key]) => !asSet.has(key as K))
-  ) as Unwrap<Omit<T, K>>;
+  ) as Omit<T, K>;
 }
