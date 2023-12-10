@@ -10,11 +10,71 @@ type FirstBy<T extends IterableContainer> =
         ? never
         : undefined);
 
+/**
+ * Find the first element in a that adheres to the order rules provided.
+ *
+ * This allows using more complex ordering definitions for `maxBy` and `minBy` style operations, with the ability to define "tie-breakers" for equal values and to define order by more than just numbers.
+ *
+ * If you just need the index where the first element would be found use `firstIndexBy`.
+ *
+ * This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
+ * O(n) instead of O(nlogn).
+ *
+ * @param data an array of items
+ * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @returns the first element by the order criteria, or `undefined` if the array
+ * is empty. The function provides strong typing if the input type assures the
+ * array isn't empty.
+ * @signature
+ *   R.firstBy(data, ...rules);
+ * @example
+ *   const max = R.firstBy([1,2,3], [R.identity, "desc"]); // => 3;
+ *   const min = R.firstBy([1,2,3], R.identity); // => 1;
+ *
+ *   const data = [{ a: "a" }, { a: "aa" }, { a: "aaa" }] as const;
+ *   const maxBy = R.firstBy(data, [(item) => item.a.length, "desc"]); // => { a: "aaa" };
+ *   const minBy = R.firstBy(data, (item) => item.a.length); // => { a: "a" };
+ *
+ *   const data = [{type: "cat", size: 1}, {type: "cat", size: 2}, {type: "dog", size: 3}] as const;
+ *   const multi = R.firstBy(data, R.prop('type'), [R.prop('size'), 'desc']); // => {type: "cat", size: 2}
+ * @dataFirst
+ * @category Array
+ */
 export function firstBy<T extends IterableContainer>(
   data: T,
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): FirstBy<T>;
 
+/**
+ * Find the first element in a that adheres to the order rules provided.
+ *
+ * This allows using more complex ordering definitions for `maxBy` and `minBy` style operations, with the ability to define "tie-breakers" for equal values and to define order by more than just numbers.
+ *
+ * If you just need the index where the first element would be found use `firstIndexBy`.
+ *
+ * This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
+ * O(n) instead of O(nlogn).
+ *
+ * @param data an array of items
+ * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @returns the first element by the order criteria, or `undefined` if the array
+ * is empty. The function provides strong typing if the input type assures the
+ * array isn't empty.
+ * @signature
+ *   R.firstBy(...rules)(data);
+ * @example
+ *   const max = R.pipe([1,2,3], R.firstBy([R.identity, "desc"])); // => 3;
+ *   const min = R.pipe([1,2,3], R.firstBy([1,2,3])); // => 1;
+ *
+ *   const data = [{ a: "a" }, { a: "aa" }, { a: "aaa" }] as const;
+ *   const maxBy = R.pipe(data, R.firstBy([(item) => item.a.length, "desc"])); // => { a: "aaa" };
+ *   const minBy = R.pipe(data, R.firstBy((item) => item.a.length)); // => { a: "a" };
+ *
+ *   const data = [{type: "cat", size: 1}, {type: "cat", size: 2}, {type: "dog", size: 3}] as const;
+ *   const multi = R.pipe(data, R.firstBy(R.prop('type'), [R.prop('size'), 'desc'])); // => {type: "cat", size: 2}
+ * @dataLast
+ * @category Array
+ */
 export function firstBy<T extends IterableContainer>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): (data: T) => FirstBy<T>;
