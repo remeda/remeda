@@ -19,7 +19,7 @@ type Pairs<T> = Array<
 >;
 
 export namespace toPairs {
-  export function strict<T extends Record<PropertyKey, unknown>>(
+  export function strict<const T extends Record<PropertyKey, unknown>>(
     object: T
   ): Pairs<T> {
     // @ts-expect-error [ts2322] - This is deliberately stricter than what TS

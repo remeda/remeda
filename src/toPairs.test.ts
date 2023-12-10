@@ -1,43 +1,73 @@
 import { toPairs } from './toPairs';
 
-test('should return pairs', () => {
-  const actual = toPairs({ a: 1, b: 2, c: 3 });
-  expect(actual).toEqual([
-    ['a', 1],
-    ['b', 2],
-    ['c', 3],
-  ]);
+describe('toPairs', () => {
+  test('should return pairs', () => {
+    const actual = toPairs({ a: 1, b: 2, c: 3 });
+    expect(actual).toEqual([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ]);
+  });
+
+  describe('typing', () => {
+    test('with known properties', () => {
+      const actual = toPairs({ a: 1, b: 2, c: 3 });
+      expectTypeOf(actual).toEqualTypeOf<Array<[string, number]>>();
+    });
+
+    test('with optional properties', () => {
+      const actual = toPairs({} as { a?: string });
+      expectTypeOf(actual).toEqualTypeOf<Array<[string, string]>>();
+    });
+
+    test('with undefined properties', () => {
+      const actual = toPairs({ a: undefined } as {
+        a: string | undefined;
+      });
+      expectTypeOf(actual).toEqualTypeOf<Array<[string, string | undefined]>>();
+    });
+
+    test('with unknown properties', () => {
+      const actual = toPairs({} as Record<string, unknown>);
+      expectTypeOf(actual).toEqualTypeOf<Array<[string, unknown]>>();
+    });
+  });
 });
 
-test('should return pairs, strict', () => {
-  const actual = toPairs.strict({ a: 1, b: 2, c: 3 });
-  expect(actual).toEqual([
-    ['a', 1],
-    ['b', 2],
-    ['c', 3],
-  ]);
-});
+describe('toPairs.strict', () => {
+  test('should return pairs', () => {
+    const actual = toPairs.strict({ a: 1, b: 2, c: 3 });
+    expect(actual).toEqual([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ]);
+  });
 
-test('stricter typing', () => {
-  const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as const);
-  assertType<Array<['a' | 'b' | 'c', 1 | 2 | 3]>>(actual);
-});
+  describe('typing', () => {
+    test('with known properties', () => {
+      const actual = toPairs.strict({ a: 1, b: 2, c: 3 });
+      expectTypeOf(actual).toEqualTypeOf<
+        Array<['a', 1] | ['b', 2] | ['c', 3]>
+      >();
+    });
 
-test('stricter typing with optional', () => {
-  const actual = toPairs.strict({} as { a?: string });
-  assertType<Array<['a', string]>>(actual);
-});
+    test('with optional properties', () => {
+      const actual = toPairs.strict({} as { a?: string });
+      expectTypeOf(actual).toEqualTypeOf<Array<['a', string]>>();
+    });
 
-test('stricter typing with undefined', () => {
-  const actual = toPairs.strict({ a: undefined } as { a: string | undefined });
-  assertType<Array<['a', string | undefined]>>(actual);
-});
+    test('with undefined properties', () => {
+      const actual = toPairs.strict({ a: undefined } as {
+        a: string | undefined;
+      });
+      expectTypeOf(actual).toEqualTypeOf<Array<['a', string | undefined]>>();
+    });
 
-test('stricter with a broad type', () => {
-  const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as Record<
-    string,
-    unknown
-  >);
-
-  assertType<Array<[string, unknown]>>(actual);
+    test('with unknown properties', () => {
+      const actual = toPairs.strict({} as Record<string, unknown>);
+      expectTypeOf(actual).toEqualTypeOf<Array<[string, unknown]>>();
+    });
+  });
 });
