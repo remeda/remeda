@@ -21,16 +21,6 @@ describe('data last', () => {
   });
 });
 
-test('type for curried form', () => {
-  const omitFoo = omit(['foo']);
-
-  const result = omitFoo({ foo: 1, bar: 'potato' });
-
-  expectTypeOf(result).toEqualTypeOf<
-    Omit<Record<PropertyKey, unknown>, 'foo'>
-  >();
-});
-
 describe('typing', () => {
   describe('data first', () => {
     test('non existing prop', () => {

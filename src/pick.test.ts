@@ -42,26 +42,19 @@ test('read only', () => {
   pick(someObject, props); // TS2345 compilation error
 });
 
-describe('curried form', () => {
-  test('it should pick props', () => {
-    const pickFoo = pick(['foo']);
-
-    expectTypeOf(true as unknown as ReturnType<typeof pickFoo>).toEqualTypeOf<{
-      foo: unknown;
-    }>();
-
-    const result = pickFoo({ foo: 1, bar: 'potato' });
-
-    expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
-    expect(result).toEqual({ foo: 1 });
-  });
-});
-
 describe('typing', () => {
   describe('data first', () => {
     test('non existing prop', () => {
       // @ts-expect-error [ts2322] -- should not allow non existing props
       pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
+    });
+
+    test('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = pick(obj, ['a']);
+      expectTypeOf(result).toEqualTypeOf<
+        Pick<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
     });
   });
 
@@ -73,14 +66,13 @@ describe('typing', () => {
         pick(['not', 'in'])
       );
     });
-  });
 
-  describe('curried form', () => {
-    test('non existing prop', () => {
-      const pickFoo = pick(['foo']);
-
-      // @ts-expect-error [ts2353] -- should not allow non existing props
-      pickFoo({ bar: 'potato', baz: 123 });
+    test('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = pipe(obj, pick(['a']));
+      expectTypeOf(result).toEqualTypeOf<
+        Pick<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
     });
   });
 });

@@ -24,17 +24,17 @@ export function pick<T extends object, K extends keyof T>(
  * @dataLast
  * @category Object
  */
-export function pick<K extends PropertyKey>(
+export function pick<T extends object, K extends keyof T>(
   names: ReadonlyArray<K>
-): <T extends Record<K, unknown>>(object: T) => Pick<T, K>;
+): (object: T) => Pick<T, K>;
 
 export function pick() {
   return purry(_pick, arguments);
 }
 
-function _pick(
-  object: Readonly<Record<PropertyKey, unknown>>,
-  names: ReadonlyArray<PropertyKey>
+function _pick<T extends object, K extends keyof T>(
+  object: T,
+  names: ReadonlyArray<K>
 ) {
   if (object == null) {
     return {};
