@@ -19,6 +19,8 @@ export * from './findIndex';
 export * from './findLast';
 export * from './findLastIndex';
 export * from './first';
+export * from './firstBy';
+export * from './firstIndexBy';
 export * from './flatMap';
 export * from './flatMapToObj';
 export * from './flatten';
