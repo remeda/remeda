@@ -11,20 +11,18 @@ type FirstBy<T extends IterableContainer> =
         : undefined);
 
 /**
- * Find the first element in a that adheres to the order rules provided.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic.
  *
- * This allows using more complex ordering definitions for `maxBy` and `minBy` style operations, with the ability to define "tie-breakers" for equal values and to define order by more than just numbers.
+ * If you just need the offset in the array where the first element would be found use `firstIndexBy`.
  *
- * If you just need the index where the first element would be found use `firstIndexBy`.
- *
- * This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
- * O(n) instead of O(nlogn).
+ * **This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
+ * O(n) instead of O(nlogn).**
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns the first element by the order criteria, or `undefined` if the array
- * is empty. The function provides strong typing if the input type assures the
- * array isn't empty.
+ * is empty. (The function provides strong typing if the input type assures the
+ * array isn't empty).
  * @signature
  *   R.firstBy(data, ...rules);
  * @example
@@ -46,20 +44,18 @@ export function firstBy<T extends IterableContainer>(
 ): FirstBy<T>;
 
 /**
- * Find the first element in a that adheres to the order rules provided.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic.
  *
- * This allows using more complex ordering definitions for `maxBy` and `minBy` style operations, with the ability to define "tie-breakers" for equal values and to define order by more than just numbers.
+ * If you just need the offset in the array where the first element would be found use `firstIndexBy`.
  *
- * If you just need the index where the first element would be found use `firstIndexBy`.
- *
- * This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
- * O(n) instead of O(nlogn).
+ * **This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
+ * O(n) instead of O(nlogn).**
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns the first element by the order criteria, or `undefined` if the array
- * is empty. The function provides strong typing if the input type assures the
- * array isn't empty.
+ * is empty. (The function provides strong typing if the input type assures the
+ * array isn't empty).
  * @signature
  *   R.firstBy(...rules)(data);
  * @example
