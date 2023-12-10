@@ -1,4 +1,4 @@
-import { purryOrderRules, type OrderRule } from './_purryOrderRules';
+import { OrderRule, purryOrderRules } from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
 import { hasAtLeast } from './hasAtLeast';
 

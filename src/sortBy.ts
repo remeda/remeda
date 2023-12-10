@@ -1,4 +1,4 @@
-import { purryOrderRules, type OrderRule } from './_purryOrderRules';
+import { OrderRule, purryOrderRules } from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
 
 /**
@@ -40,6 +40,9 @@ export function sortBy<T>(
  *
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
+ *
+ * If you are only sorting the array in order to get the first (or last) element
+ * from it, consider using `firstBy` which would run more efficiently (O(n) vs O(nlogn)).
  *
  * @param array the array to sort
  * @param sortRule main sort rule
