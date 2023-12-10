@@ -5,10 +5,10 @@ import { hasAtLeast } from './hasAtLeast';
 /**
  * Find the index for the first element in the array that adheres to the order rules provided.
  *
- * If you just need the item itself use `firstBy`.
+ * If you need the item itself prefer `firstBy`.
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns an index of the first element by the order criteria, or `-1` if the array is empty.
  * @signature
  *   R.firstIndexBy(data, ...rules);
@@ -33,10 +33,10 @@ export function firstIndexBy<T extends IterableContainer>(
 /**
  * Find the index for the first element in the array that adheres to the order rules provided.
  *
- * If you just need the item itself use `firstBy`.
+ * If you need the item itself prefer `firstBy`.
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules, starting from the most important that define the ordering criteria by which to find the first element.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns an index of the first element by the order criteria, or `-1` if the array is empty.
  * @signature
  *   R.firstIndexBy(...rules)(data);
