@@ -1,22 +1,5 @@
+import { purryOrderRules, type OrderRule } from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
-import { purry } from './purry';
-
-const ALL_DIRECTIONS = ['asc', 'desc'] as const;
-type Direction = (typeof ALL_DIRECTIONS)[number];
-
-type ComparablePrimitive = number | string | boolean;
-type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
-type SortProjection<T> = (x: T) => Comparable;
-type SortPair<T> = readonly [
-  projector: SortProjection<T>,
-  direction: Direction,
-];
-type SortRule<T> = SortProjection<T> | SortPair<T>;
-
-const COMPARATOR = {
-  asc: <T>(x: T, y: T) => x > y,
-  desc: <T>(x: T, y: T) => x < y,
-} as const;
 
 /**
  * Sorts the list according to the supplied functions and directions.
@@ -46,7 +29,7 @@ const COMPARATOR = {
  * @strict
  */
 export function sortBy<T>(
-  ...sortRules: Readonly<NonEmptyArray<SortRule<T>>>
+  ...sortRules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 /**
@@ -98,95 +81,28 @@ export function sortBy<T>(
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,
-  ...sortRules: Readonly<NonEmptyArray<SortRule<T>>>
+  ...sortRules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): Array<T>;
 
-export function sortBy<T>(
-  arrayOrSortRule: ReadonlyArray<T> | SortRule<T>,
-  ...sortRules: ReadonlyArray<SortRule<T>>
-): unknown {
-  const args = isSortRule(arrayOrSortRule)
-    ? // *data-last invocation*: put all sort rules into a single array to be
-      // passed as the first param.
-      [[arrayOrSortRule, ...sortRules]]
-    : // *data-first invocation*: put the arrayOrSort (which is array now) as
-      // the first param, and all the sorts (as an array) into the second param.
-      // `purry` would pick the right "flavour" based on the length of the
-      // params tuple.
-      [arrayOrSortRule, sortRules];
-
-  return purry(_sortBy, args);
-}
-
-function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
-  if (typeof x === 'function') {
-    // must be a SortProjection
-    return true;
-  }
-
-  const [maybeProjection, maybeDirection, ...rest] = x;
-
-  if (rest.length > 0) {
-    // Not a SortPair if we have more stuff in the array
-    return false;
-  }
-
-  return (
-    typeof maybeProjection === 'function' &&
-    ALL_DIRECTIONS.indexOf(maybeDirection as Direction) !== -1
-  );
+export function sortBy(): unknown {
+  return purryOrderRules(_sortBy, arguments);
 }
 
 const _sortBy = <T>(
-  array: ReadonlyArray<T>,
-  sorts: Readonly<NonEmptyArray<SortRule<T>>>
+  data: ReadonlyArray<T>,
+  compareFn: (a: T, b: T) => number
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
-  [...array].sort(comparer(...sorts));
-
-function comparer<T>(
-  primaryRule: SortRule<T>,
-  secondaryRule?: SortRule<T>,
-  ...otherRules: ReadonlyArray<SortRule<T>>
-): (a: T, b: T) => number {
-  const projector =
-    typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
-
-  const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
-  const comparator = COMPARATOR[direction];
-
-  const nextComparer =
-    secondaryRule === undefined
-      ? undefined
-      : comparer(secondaryRule, ...otherRules);
-
-  return (a, b) => {
-    const projectedA = projector(a);
-    const projectedB = projector(b);
-
-    if (comparator(projectedA, projectedB)) {
-      return 1;
-    }
-
-    if (comparator(projectedB, projectedA)) {
-      return -1;
-    }
-
-    // The elements are equal base on the current comparator and projection. So
-    // we need to check the elements using the next comparer, if one exists,
-    // otherwise we consider them as true equal (returning 0).
-    return nextComparer?.(a, b) ?? 0;
-  };
-}
+  [...data].sort(compareFn);
 
 interface Strict {
   <T extends IterableContainer>(
-    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
+    ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
   ): (array: T) => SortedBy<T>;
 
   <T extends IterableContainer>(
     array: T,
-    ...sortRules: Readonly<NonEmptyArray<SortRule<T[number]>>>
+    ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
   ): SortedBy<T>;
 }
 
