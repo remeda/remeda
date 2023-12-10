@@ -26,7 +26,9 @@ test('type for curried form', () => {
 
   const result = omitFoo({ foo: 1, bar: 'potato' });
 
-  expectTypeOf(result).toEqualTypeOf<{ bar: string }>();
+  expectTypeOf(result).toEqualTypeOf<
+    Omit<Record<PropertyKey, unknown>, 'foo'>
+  >();
 });
 
 describe('typing', () => {
@@ -34,6 +36,14 @@ describe('typing', () => {
     test('non existing prop', () => {
       // @ts-expect-error [ts2322] -- should not allow non existing props
       omit({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in'] as const);
+    });
+
+    test('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = omit(obj, ['a']);
+      expectTypeOf(result).toEqualTypeOf<
+        Omit<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
     });
   });
 
@@ -45,14 +55,13 @@ describe('typing', () => {
         omit(['not', 'in'] as const)
       );
     });
-  });
 
-  describe('curried form', () => {
-    test('non existing prop', () => {
-      const omitFoo = omit(['foo'] as const);
-
-      // @ts-expect-error [ts2353] -- should not allow non existing props
-      omitFoo({ bar: 'potato' });
+    test('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = pipe(obj, omit(['a']));
+      expectTypeOf(result).toEqualTypeOf<
+        Omit<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
     });
   });
 });
