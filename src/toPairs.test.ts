@@ -47,7 +47,7 @@ describe('toPairs.strict', () => {
 
   describe('typing', () => {
     test('with known properties', () => {
-      const actual = toPairs.strict({ a: 1, b: 2, c: 3 });
+      const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as const);
       expectTypeOf(actual).toEqualTypeOf<
         Array<['a', 1] | ['b', 2] | ['c', 3]>
       >();
