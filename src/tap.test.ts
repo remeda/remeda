@@ -40,7 +40,28 @@ describe('data last', () => {
       pipe(
         [-1, 2],
         filter(n => n > 0),
-        tap(arr => expect(arr).toStrictEqual([2])),
+        tap(arr => {
+          expect(arr).toStrictEqual([2]);
+
+          // Verify TS types correctly inferred:
+          arr[0].toFixed();
+        }),
+        map(n => n * 2)
+      )
+    ).toStrictEqual([4]);
+  });
+
+  it('should infer types after tapping function reference with parameter type any', () => {
+    // (same as console.log)
+    function foo(x: any) {
+      return x;
+    }
+
+    expect(
+      pipe(
+        [-1, 2],
+        filter(n => n > 0),
+        tap(foo),
         map(n => n * 2)
       )
     ).toStrictEqual([4]);

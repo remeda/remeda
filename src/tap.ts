@@ -27,17 +27,16 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  * @signature
  *    R.tap(fn)(value)
  * @example
- *    const log = <T>(value: T) => console.log(value);
  *    R.pipe(
- *      [-1, 2],
+ *      [-5, -1, 2, 3],
  *      R.filter(n => n > 0),
- *      R.tap(log), // prints [2]
+ *      R.tap(console.log), // prints [2, 3]
  *      R.map(n => n * 2)
- *    ) // => [4]
+ *    ) // => [4, 6]
  * @dataLast
  * @category Other
  */
-export function tap<T>(fn: (value: T) => void): (value: T) => T;
+export function tap<T, F extends (value: T) => any>(fn: F): (value: T) => T;
 
 export function tap() {
   return purry(_tap, arguments);
