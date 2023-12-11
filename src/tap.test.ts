@@ -42,9 +42,7 @@ describe('data last', () => {
         filter(n => n > 0),
         tap(data => {
           expect(data).toStrictEqual([2]);
-
-          // Verify TS types correctly inferred:
-          data[0].toFixed();
+          expectTypeOf(data).toEqualTypeOf<Array<number>>();
         }),
         map(n => n * 2)
       )
@@ -62,7 +60,10 @@ describe('data last', () => {
         [-1, 2],
         filter(n => n > 0),
         tap(foo),
-        map(n => n * 2)
+        map(n => {
+          expectTypeOf(n).toBeNumber();
+          return n * 2;
+        })
       )
     ).toStrictEqual([4]);
   });
