@@ -2,7 +2,7 @@ import { heapSiftDown, heapify } from './_heap';
 import {
   CompareFunction,
   OrderRule,
-  purryOrderRules,
+  purryOrderRulesWithNumberArgument,
 } from './_purryOrderRules';
 import { NonEmptyArray } from './_types';
 
@@ -15,6 +15,7 @@ import { NonEmptyArray } from './_types';
  *
  * @params data - the input array
  * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
  *   R.takeBy(data, n, ...rules);
@@ -38,6 +39,7 @@ export function takeBy<T>(
  *
  * @params data - the input array
  * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
+ * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
  *   R.takeBy(n, ...rules)(data);
@@ -51,27 +53,8 @@ export function takeBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function takeBy(
-  first: unknown,
-  second: unknown,
-  ...rest: ReadonlyArray<unknown>
-): unknown {
-  // We need to pull the `n` argument out to make it work with purryOrderRules.
-  let n: number;
-  let args;
-  if (typeof first === 'number') {
-    // dataLast!
-    n = first;
-    args = [second, ...rest];
-  } else if (typeof second === 'number') {
-    // dataFirst!
-    n = second;
-    args = [first, ...rest];
-  } else {
-    throw new Error("Couldn't find a number argument in the called arguments");
-  }
-
-  return purryOrderRules((...args) => takeByImplementation(...args, n), args);
+export function takeBy(): unknown {
+  return purryOrderRulesWithNumberArgument(takeByImplementation, arguments);
 }
 
 function takeByImplementation<T>(

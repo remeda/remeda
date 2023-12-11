@@ -1,6 +1,7 @@
 export * from './addProp';
 export * from './allPass';
 export * from './anyPass';
+export * from './atIndexBy';
 export * from './chunk';
 export * from './clamp';
 export * from './clone';

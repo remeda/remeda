@@ -61,6 +61,37 @@ export function purryOrderRules<T>(
   return (data: ReadonlyArray<T>) => func(data, compareFn);
 }
 
+/**
+ * Some functions need an extra number argument, this helps facilitate that.
+ */
+export function purryOrderRulesWithNumberArgument<T>(
+  func: (
+    data: ReadonlyArray<T>,
+    compareFn: CompareFunction<T>,
+    n: number
+  ) => unknown,
+  inputArgs: IArguments
+): unknown {
+  const [first, second, ...rest] = Array.from(inputArgs);
+
+  // We need to pull the `n` argument out to make it work with purryOrderRules.
+  let n: number;
+  let args: ReadonlyArray<unknown>;
+  if (typeof first === 'number') {
+    // dataLast!
+    n = first;
+    args = [second, ...rest];
+  } else if (typeof second === 'number') {
+    // dataFirst!
+    n = second;
+    args = [first, ...rest];
+  } else {
+    throw new Error("Couldn't find a number argument in the called arguments");
+  }
+
+  return purryOrderRules<T>((...args) => func(...args, n), args);
+}
+
 function orderRuleComparer<T>(
   primaryRule: OrderRule<T>,
   secondaryRule?: OrderRule<T>,
