@@ -19,8 +19,8 @@ type Pairs<T> = Array<
 >;
 
 export namespace toPairs {
-  export function strict<T>(object: T): Pairs<T> {
-    // @ts-expect-error [ts2322][ts2769] - This is deliberately stricter than what TS
+  export function strict<T extends NonNullable<unknown>>(object: T): Pairs<T> {
+    // @ts-expect-error [ts2322] - This is deliberately stricter than what TS
     // provides out of the box.
     return Object.entries(object);
   }
