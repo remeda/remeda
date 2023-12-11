@@ -6,12 +6,46 @@ import {
 } from './_purryOrderRules';
 import { NonEmptyArray } from './_types';
 
+/**
+ * Drop the first `n` items from `data` based on the provided ordering criteria.
+ *
+ * This allows you to avoid sorting the array before dropping the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
+ *
+ * For the opposite operation (to keep `n` elements) see `takeBy`.
+ *
+ * @params data - the input array
+ * @params n - the number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @returns a subset of the input array.
+ * @signature
+ *   R.dropBy(data, n, ...rules);
+ * @example
+ *   R.dropBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ * @dataFirst
+ * @category Array
+ */
 export function dropBy<T>(
   data: ReadonlyArray<T>,
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): Array<T>;
 
+/**
+ * Drop the first `n` items from `data` based on the provided ordering criteria.
+ *
+ * This allows you to avoid sorting the array before dropping the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
+ *
+ * For the opposite operation (to keep `n` elements) see `takeBy`.
+ *
+ * @params data - the input array
+ * @params n - the number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @returns a subset of the input array.
+ * @signature
+ *   R.dropBy(n, ...rules)(data);
+ * @example
+ *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.dropBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ * @dataLast
+ * @category Array
+ */
 export function dropBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>

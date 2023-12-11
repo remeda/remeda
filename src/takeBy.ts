@@ -6,12 +6,46 @@ import {
 } from './_purryOrderRules';
 import { NonEmptyArray } from './_types';
 
+/**
+ * Take the first `n` items from `data` based on the provided ordering criteria.
+ *
+ * This allows you to avoid sorting the array before taking the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
+ *
+ * For the opposite operation (to drop `n` elements) see `dropBy`.
+ *
+ * @params data - the input array
+ * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
+ * @returns a subset of the input array.
+ * @signature
+ *   R.takeBy(data, n, ...rules);
+ * @example
+ *   R.takeBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ * @dataFirst
+ * @category Array
+ */
 export function takeBy<T>(
   data: ReadonlyArray<T>,
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): Array<T>;
 
+/**
+ * Take the first `n` items from `data` based on the provided ordering criteria.
+ *
+ * This allows you to avoid sorting the array before taking the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
+ *
+ * For the opposite operation (to drop `n` elements) see `dropBy`.
+ *
+ * @params data - the input array
+ * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
+ * @returns a subset of the input array.
+ * @signature
+ *   R.takeBy(n, ...rules)(data);
+ * @example
+ *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.takeBy(2, x => x.length)); // => ['a', 'aa']
+ * @dataLast
+ * @category Array
+ */
 export function takeBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -45,7 +79,7 @@ function takeByImplementation<T>(
   compareFn: CompareFunction<T>,
   n: number
 ): Array<T> {
-  if (n <= 0 || data.length === 0) {
+  if (n <= 0) {
     return [];
   }
 
