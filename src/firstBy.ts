@@ -22,6 +22,8 @@ type FirstBy<T extends IterableContainer> =
  * **This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
  * O(n) instead of O(nlogn).**
  *
+ * Use `atIndexBy` or `takeBy` if you more than just the first element.
+ *
  * @param data an array of items
  * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns the first element by the order criteria, or `undefined` if the array
