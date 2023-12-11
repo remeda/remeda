@@ -2,6 +2,7 @@ import { purry } from './purry';
 
 /**
  * Calls the given function with the given value, then returns the given value.
+ * The return value of the provided function is ignored.
  *
  * This allows "tapping into" a function sequence in a pipe, to perform side
  * effects on intermediate results.
@@ -19,6 +20,7 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
 
 /**
  * Calls the given function with the given value, then returns the given value.
+ * The return value of the provided function is ignored.
  *
  * This allows "tapping into" a function sequence in a pipe, to perform side
  * effects on intermediate results.
