@@ -3,36 +3,36 @@ import { map } from './map';
 import { pipe } from './pipe';
 import { tap } from './tap';
 
-const value = [1] as const;
+const DATA = [1] as const;
 
 describe('data first', () => {
   it('should call function with input value', () => {
     const fn = vi.fn();
-    tap(value, fn);
-    expect(fn).toBeCalledWith(value);
+    tap(DATA, fn);
+    expect(fn).toBeCalledWith(DATA);
     expect(fn).toHaveBeenCalledOnce();
   });
 
   it('should return input value', () => {
-    expect(tap(value, v => v.length)).toBe(value);
+    expect(tap(DATA, data => data.length)).toBe(DATA);
   });
 });
 
 describe('data last', () => {
   it('should call function with input value', () => {
     const fn = vi.fn();
-    pipe(value, tap(fn));
-    expect(fn).toBeCalledWith(value);
+    pipe(DATA, tap(fn));
+    expect(fn).toBeCalledWith(DATA);
     expect(fn).toHaveBeenCalledOnce();
   });
 
   it('should return input value', () => {
     expect(
       pipe(
-        value,
-        tap(v => v.length)
+        DATA,
+        tap(data => data.length)
       )
-    ).toBe(value);
+    ).toBe(DATA);
   });
 
   it('should work in the middle of pipe sequence', () => {
@@ -40,11 +40,11 @@ describe('data last', () => {
       pipe(
         [-1, 2],
         filter(n => n > 0),
-        tap(arr => {
-          expect(arr).toStrictEqual([2]);
+        tap(data => {
+          expect(data).toStrictEqual([2]);
 
           // Verify TS types correctly inferred:
-          arr[0].toFixed();
+          data[0].toFixed();
         }),
         map(n => n * 2)
       )
