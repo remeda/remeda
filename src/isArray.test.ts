@@ -3,7 +3,7 @@ import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isArray', () => {
   test('isArray: should infer ReadonlyArray<unknown> when given any', () => {
-    const data1 = {} as any;
+    const data1: any = [];
     if (isArray(data1)) {
       const unknownArray = [] as ReadonlyArray<unknown>;
       expectTypeOf(data1).toEqualTypeOf(unknownArray);
