@@ -1,6 +1,7 @@
 import type { NonEmptyArray } from './_types';
 
 export type OrderRule<T> = OrderProjection<T> | OrderPair<T>;
+export type CompareFunction<T> = (a: T, b: T) => number;
 
 type OrderPair<T> = readonly [
   projector: OrderProjection<T>,
@@ -30,12 +31,14 @@ const COMPARATOR = {
  * comparer, and manage the purrying of the input arguments.
  */
 export function purryOrderRules<T>(
-  func: (data: ReadonlyArray<T>, compareFn: (a: T, b: T) => number) => unknown,
-  inputArgs: IArguments
+  func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
+  inputArgs: IArguments | ReadonlyArray<unknown>
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call purry so it's fine...
-  const [dataOrRule, ...rules] = Array.from(inputArgs) as
+  const [dataOrRule, ...rules] = (
+    Array.isArray(inputArgs) ? inputArgs : Array.from(inputArgs)
+  ) as
     | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>]
     | Readonly<NonEmptyArray<OrderRule<T>>>;
 

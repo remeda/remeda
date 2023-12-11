@@ -1,4 +1,8 @@
-import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import {
+  CompareFunction,
+  OrderRule,
+  purryOrderRules,
+} from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
 
 /**
@@ -93,7 +97,7 @@ export function sortBy(): unknown {
 
 const _sortBy = <T>(
   data: ReadonlyArray<T>,
-  compareFn: (a: T, b: T) => number
+  compareFn: CompareFunction<T>
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
   [...data].sort(compareFn);

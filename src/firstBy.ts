@@ -1,4 +1,8 @@
-import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import {
+  CompareFunction,
+  OrderRule,
+  purryOrderRules,
+} from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
 import { hasAtLeast } from './hasAtLeast';
 
@@ -81,7 +85,7 @@ export function firstBy(): unknown {
 
 function firstByImplementation<T>(
   data: ReadonlyArray<T>,
-  compareFn: (a: T, b: T) => number
+  compareFn: CompareFunction<T>
 ): T | undefined {
   let [currentFirst] = data;
 

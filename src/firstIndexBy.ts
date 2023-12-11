@@ -1,4 +1,8 @@
-import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import {
+  CompareFunction,
+  OrderRule,
+  purryOrderRules,
+} from './_purryOrderRules';
 import type { IterableContainer, NonEmptyArray } from './_types';
 import { hasAtLeast } from './hasAtLeast';
 
@@ -63,7 +67,7 @@ export function firstIndexBy(): unknown {
 
 function firstIndexByImplementation<T>(
   data: ReadonlyArray<T>,
-  compareFn: (a: T, b: T) => number
+  compareFn: CompareFunction<T>
 ): number {
   if (!hasAtLeast(data, 1)) {
     // If we have 0 or 1 item we simply return the trivial result.
