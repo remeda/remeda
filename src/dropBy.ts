@@ -23,20 +23,21 @@ export function dropBy(
   ...rest: ReadonlyArray<unknown>
 ): unknown {
   // We need to pull the `n` argument out to make it work with purryOrderRules.
+  let n: number;
+  let args;
   if (typeof first === 'number') {
     // dataLast!
-    return purryOrderRules(
-      (...args) => dropByImplementation(...args, first),
-      rest
-    );
+    n = first;
+    args = [second, ...rest];
   } else if (typeof second === 'number') {
-    return purryOrderRules(
-      (...args) => dropByImplementation(...args, second),
-      [first, ...rest]
-    );
+    // dataFirst!
+    n = second;
+    args = [first, ...rest];
+  } else {
+    throw new Error("Couldn't find a number argument in the called arguments");
   }
 
-  throw new Error("Couldn't find a number argument in the called arguments");
+  return purryOrderRules((...args) => dropByImplementation(...args, n), args);
 }
 
 function dropByImplementation<T>(
@@ -44,7 +45,7 @@ function dropByImplementation<T>(
   compareFn: CompareFunction<T>,
   n: number
 ): Array<T> {
-  if (n >= data.length || data.length === 0) {
+  if (n >= data.length) {
     return [];
   }
 
@@ -65,6 +66,8 @@ function dropByImplementation<T>(
       out.push(heap[0]);
       heap[0] = item;
       heapSiftDown(heap, 0, compareFn);
+    } else {
+      out.push(item);
     }
   }
 

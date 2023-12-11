@@ -23,20 +23,21 @@ export function takeBy(
   ...rest: ReadonlyArray<unknown>
 ): unknown {
   // We need to pull the `n` argument out to make it work with purryOrderRules.
+  let n: number;
+  let args;
   if (typeof first === 'number') {
     // dataLast!
-    return purryOrderRules(
-      (...args) => takeByImplementation(...args, first),
-      rest
-    );
+    n = first;
+    args = [second, ...rest];
   } else if (typeof second === 'number') {
-    return purryOrderRules(
-      (...args) => takeByImplementation(...args, second),
-      [first, ...rest]
-    );
+    // dataFirst!
+    n = second;
+    args = [first, ...rest];
+  } else {
+    throw new Error("Couldn't find a number argument in the called arguments");
   }
 
-  throw new Error("Couldn't find a number argument in the called arguments");
+  return purryOrderRules((...args) => takeByImplementation(...args, n), args);
 }
 
 function takeByImplementation<T>(
