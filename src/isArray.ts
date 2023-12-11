@@ -1,4 +1,4 @@
-type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;
+import { IfIsAny } from './_types';
 
 type DefinitelyArray<T> = Extract<
   T,
