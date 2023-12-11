@@ -93,7 +93,8 @@ function firstByImplementation<T>(
   // Remove the first item, we won't compare it with itself.
   const [, ...rest] = data;
   for (const item of rest) {
-    if (compareFn(currentFirst, item) > 0) {
+    if (compareFn(item, currentFirst) < 0) {
+      // item comes before currentFirst in the order.
       currentFirst = item;
     }
   }

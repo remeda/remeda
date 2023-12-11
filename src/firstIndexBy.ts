@@ -73,7 +73,8 @@ function firstIndexByImplementation<T>(
   let currentIndex = 0;
 
   for (let i = 1; i < data.length; i++) {
-    if (compareFn(data[currentIndex], data[i]) > 0) {
+    if (compareFn(data[i], data[currentIndex]) < 0) {
+      // The item at i comes before the item at the current index in the order.
       currentIndex = i;
     }
   }
