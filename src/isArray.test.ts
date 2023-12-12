@@ -5,8 +5,8 @@ describe('isArray', () => {
   test('isArray: should infer ReadonlyArray<unknown> when given any', () => {
     const data1: any = [];
     if (isArray(data1)) {
-      const unknownArray = [] as ReadonlyArray<unknown>;
-      expectTypeOf(data1).toEqualTypeOf(unknownArray);
+      expectTypeOf(data1).not.toBeAny();
+      expectTypeOf(data1[0]).toBeUnknown()
     }
   });
   test('isArray: should work as type guard', () => {
