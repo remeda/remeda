@@ -62,6 +62,18 @@ describe('runtime (dataFirst)', () => {
     expect(mergeDeep(a, b)).toEqual({ foo: 123 });
     expect(mergeDeep(b, a)).toEqual({ foo: new Date(1337) });
   });
+
+  it("doesn't spread arrays", () => {
+    const a = { foo: ['bar'] };
+    const b = { foo: ['baz'] };
+    expect(mergeDeep(a, b)).toEqual({ foo: ['baz'] });
+  });
+
+  it("doesn't recurse into arrays", () => {
+    const a = { foo: [{ bar: 'baz' }] };
+    const b = { foo: [{ bar: 'hello, world' }] };
+    expect(mergeDeep(a, b)).toEqual({ foo: [{ bar: 'hello, world' }] });
+  });
 });
 
 describe('runtime (dataLast)', () => {
@@ -108,10 +120,16 @@ describe('typing', () => {
     expectTypeOf(mergeDeep(b, a)).toEqualTypeOf<typeof a>();
   });
 
-  it("doesn't deep-merge arrays", () => {
+  it("doesn't spread arrays", () => {
     const a = { foo: ['bar'] as const };
     const b = { foo: ['baz'] as const };
     const result = mergeDeep(a, b);
     expectTypeOf(result).toEqualTypeOf<{ foo: readonly ['baz'] }>();
+  });
+
+  it("doesn't recurse into arrays", () => {
+    const a = { foo: [{ bar: 'baz' }] };
+    const b = { foo: [{ bar: 'hello, world' }] };
+    expectTypeOf(mergeDeep(a, b)).toEqualTypeOf<typeof b>();
   });
 });
