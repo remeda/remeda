@@ -19,8 +19,8 @@ PRs should be titled following using the format: `< TYPE >(< scope >)?: descript
 
 ### Available Types:
 
-- `feat`: new functions!
-- `fix`: changes to an existing function.
+- `feat`: new functions, and changes to a function's type that would impact users.
+- `fix`: changes to the runtime behavior of an existing function, or refinements to it's type that shouldn't impact most users.
 - `perf`: changes to function implementations that improve a functions _runtime_ performance.
 - `refactor`: changes to function implementations that are neither `fix` nor `perf`
 - `test`: tests-only changes (transparent to users of the function).
