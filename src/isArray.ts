@@ -1,3 +1,5 @@
+import { IfIsAny } from './_types';
+
 type DefinitelyArray<T> = Extract<
   T,
   Array<any> | ReadonlyArray<any>
@@ -18,6 +20,6 @@ type DefinitelyArray<T> = Extract<
  */
 export function isArray<T>(
   data: T | ReadonlyArray<unknown>
-): data is DefinitelyArray<T> {
+): data is IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>> {
   return Array.isArray(data);
 }
