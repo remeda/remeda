@@ -2,6 +2,13 @@ import { isArray } from './isArray';
 import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isArray', () => {
+  test('isArray: should infer ReadonlyArray<unknown> when given any', () => {
+    const data1: any = [];
+    if (isArray(data1)) {
+      expectTypeOf(data1).not.toBeAny();
+      expectTypeOf(data1[0]).toBeUnknown();
+    }
+  });
   test('isArray: should work as type guard', () => {
     const data = typesDataProvider('array');
     if (isArray(data)) {
