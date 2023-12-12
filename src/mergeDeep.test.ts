@@ -1,5 +1,9 @@
-import { mergeDeep } from './mergeDeep';
 import { expect, test } from 'vitest';
+import { mergeDeep } from './mergeDeep';
+
+const NOOP = () => {
+  /* do nothing */
+};
 
 describe('runtime (dataFirst)', () => {
   test('should merge objects', () => {
@@ -25,6 +29,39 @@ describe('runtime (dataFirst)', () => {
     const b = { foo: ['qux'] };
     expect(mergeDeep(a, b)).toEqual({ foo: ['qux'] });
   });
+
+  it('should not merge arrays', () => {
+    const a = { foo: ['bar'] };
+    const b = { foo: ['baz'] };
+    expect(mergeDeep(a, b)).toEqual({ foo: ['baz'] });
+  });
+
+  it('should merge different types', () => {
+    const a = { foo: 'bar' };
+    const b = { foo: 123 };
+    expect(mergeDeep(a, b)).toEqual({ foo: 123 });
+  });
+
+  it('should work with weird object types, null', () => {
+    const a = { foo: null };
+    const b = { foo: 123 };
+    expect(mergeDeep(a, b)).toEqual({ foo: 123 });
+    expect(mergeDeep(b, a)).toEqual({ foo: null });
+  });
+
+  it('should work with weird object types, functions', () => {
+    const a = { foo: NOOP };
+    const b = { foo: 123 };
+    expect(mergeDeep(a, b)).toEqual({ foo: 123 });
+    expect(mergeDeep(b, a)).toEqual({ foo: NOOP });
+  });
+
+  it('should work with weird object types, date', () => {
+    const a = { foo: new Date(1337) };
+    const b = { foo: 123 };
+    expect(mergeDeep(a, b)).toEqual({ foo: 123 });
+    expect(mergeDeep(b, a)).toEqual({ foo: new Date(1337) });
+  });
 });
 
 describe('runtime (dataLast)', () => {
@@ -32,5 +69,49 @@ describe('runtime (dataLast)', () => {
     const a = { foo: 'baz', x: 1 };
     const b = { foo: 'bar', y: 2 };
     expect(mergeDeep(b)(a)).toEqual({ foo: 'bar', x: 1, y: 2 });
+  });
+});
+
+describe('typing', () => {
+  it('trivially merges disjoint objects', () => {
+    const a = { foo: 'bar' };
+    const b = { bar: 'baz' };
+    const result = mergeDeep(a, b);
+    expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
+  });
+
+  it('merges fully overlapping types', () => {
+    const a = { foo: 'bar' };
+    const b = { foo: 'baz' };
+    const result = mergeDeep(a, b);
+    expectTypeOf(result).toEqualTypeOf<{ foo: string }>();
+  });
+
+  it('merges semi-overlapping types', () => {
+    const a = { foo: 'bar', x: 1 };
+    const b = { foo: 'baz', y: 2 };
+    const result = mergeDeep(a, b);
+    expectTypeOf(result).toEqualTypeOf<{ foo: string; x: number; y: number }>();
+  });
+
+  it('deeply merges', () => {
+    const a = { foo: { bar: 'baz' } };
+    const b = { foo: { qux: 'quux' } };
+    const result = mergeDeep(a, b);
+    expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
+  });
+
+  it('overrides types', () => {
+    const a = { foo: { bar: 'baz' } };
+    const b = { foo: 'qux' };
+    expectTypeOf(mergeDeep(a, b)).toEqualTypeOf<typeof b>();
+    expectTypeOf(mergeDeep(b, a)).toEqualTypeOf<typeof a>();
+  });
+
+  it("doesn't deep-merge arrays", () => {
+    const a = { foo: ['bar'] as const };
+    const b = { foo: ['baz'] as const };
+    const result = mergeDeep(a, b);
+    expectTypeOf(result).toEqualTypeOf<{ foo: readonly ['baz'] }>();
   });
 });
