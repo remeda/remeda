@@ -48,6 +48,7 @@ documentation when migrating._
 | `meanBy`            | `meanBy`            | `-`                 |
 | `merge`             | `assign`            | `merge`             |
 | `mergeAll`          | `assign`            | `mergeAll`          |
+| `mergeDeep`         |                     | `mergeDeepRight`    |
 | `noop`              | `noop`              | `-`                 |
 | `objOf`             | `-`                 | `objOf`             |
 | `omit`              | `omit`              | `omit`              |
@@ -64,7 +65,6 @@ documentation when migrating._
 | `range`             | `range`             | `range`             |
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
-| `splice`            | `-`                 | `remove`            |
 | `reverse`           | `reverse`           | `reverse`           |
 | `sample`            | `sampleSize`\*      |                     |
 | `set`               | `set`               | `assoc`             |
@@ -77,6 +77,7 @@ documentation when migrating._
 | `sortedIndexBy`     | `sortedIndexBy`     |                     |
 | `sortedLastIndex`   | `sortedLastIndex`   |                     |
 | `sortedLastIndexBy` | `sortedLastIndexBy` |                     |
+| `splice`            | `-`                 | `remove`            |
 | `splitAt`           | `-`                 | `splitAt`           |
 | `splitWhen`         | `-`                 | `splitWhen`         |
 | `stringToPath`      | `toPath`            | `-`                 |
@@ -93,7 +94,6 @@ documentation when migrating._
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
 | `zipObj`            | `zipObj`            | `zipObj`            |
-| `mergeDeep`         |                     | `mergeDeepRight`\*  |
 
 ## Helpful one-liners
 

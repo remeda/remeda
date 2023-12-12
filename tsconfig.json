@@ -5,6 +5,7 @@
 
   "compilerOptions": {
     // Copied from the "recommended" tsconfig base.
+    "module": "CommonJS",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -14,8 +15,6 @@
     "allowJs": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-
-    "module": "CommonJS",
 
     // TYPE CHECKING
     "noFallthroughCasesInSwitch": true,
