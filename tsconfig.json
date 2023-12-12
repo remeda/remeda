@@ -1,11 +1,23 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "extends": "@tsconfig/recommended/tsconfig.json",
-
   "include": ["src", "test", "**/.eslintrc.js", "*.config.js", "*.config.ts"],
 
   "compilerOptions": {
+    // Copied from the "recommended" tsconfig base.
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Taken from the TSConfig cheat sheet: https://www.totaltypescript.com/tsconfig-cheat-sheet
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+
+    "module": "CommonJS",
+
     // TYPE CHECKING
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
