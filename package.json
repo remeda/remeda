@@ -29,7 +29,7 @@
   "scripts": {
     "build": "npm run clean && npm run build:es && npm run build:cjs",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
-    "build:es": "tsc --project tsconfig.build.json --module NodeNext --outDir \"./dist/es\"",
+    "build:es": "tsc --project tsconfig.build.json --module ESNext --moduleResolution Node10 --outDir \"./dist/es\"",
     "clean": "rm -rf ./dist && mkdir dist",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
