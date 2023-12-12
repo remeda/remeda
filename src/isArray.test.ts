@@ -6,7 +6,7 @@ describe('isArray', () => {
     const data1: any = [];
     if (isArray(data1)) {
       expectTypeOf(data1).not.toBeAny();
-      expectTypeOf(data1[0]).toBeUnknown()
+      expectTypeOf(data1[0]).toBeUnknown();
     }
   });
   test('isArray: should work as type guard', () => {
