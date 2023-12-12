@@ -12,7 +12,6 @@
 
     // Taken from the TSConfig cheat sheet: https://www.totaltypescript.com/tsconfig-cheat-sheet
     "allowJs": true,
-    "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
 
