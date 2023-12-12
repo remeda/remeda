@@ -93,6 +93,7 @@ documentation when migrating._
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
 | `zipObj`            | `zipObj`            | `zipObj`            |
+| `mergeDeep`         |                     | `mergeDeepRight`\*  |
 
 ## Helpful one-liners
 

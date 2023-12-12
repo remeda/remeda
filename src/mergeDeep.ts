@@ -1,118 +1,95 @@
 import type { MergeDeep } from 'type-fest';
 import { purry } from './purry';
 
-type UnknownRecordOrArray =
-  | Record<PropertyKey, unknown>
-  | ReadonlyArray<unknown>;
+/**
+ * Merges the `source` object into the `destination` object, while recursively merging any matching nested objects. When both objects have a value for a key and either value is not an object, the value from `source` would overwrite the value from `destination` (similar to a simple spread `{ ...destination, ...source }`).
+ *
+ * @param destination - The object to merge into. In general, this object would have it's values overridden.
+ * @param source - The object to merge from. In general, shared keys would be taken from this object.
+ * @returns - The merged object.
+ * @signature
+ *    R.mergeDeep(destination, source)
+ * @example
+ *    R.mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
+ * @dataFirst
+ * @category Object
+ */
+export function mergeDeep<
+  Destination extends Record<string, unknown>,
+  Source extends Record<string, unknown>,
+>(destination: Destination, source: Source): MergeDeep<Destination, Source>;
 
-function isRecord(object: unknown): object is UnknownRecordOrArray {
+/**
+ * Merges the `source` object into the `destination` object, while recursively merging any matching nested objects. When both objects have a value for a key and either value is not an object, the value from `source` would overwrite the value from `destination` (similar to a simple spread `{ ...destination, ...source }`).
+ *
+ * @param destination - The object to merge into. In general, this object would have it's values overridden.
+ * @param source - The object to merge from. In general, shared keys would be taken from this object.
+ * @returns - The merged object.
+ * @signature
+ *    R.mergeDeep(source)(destination)
+ * @example
+ *    R.pipe(
+ *      { foo: 'bar', x: 1 },
+ *      R.mergeDeep({ foo: 'baz', y: 2 }),
+ *    );  // => { foo: 'baz', x: 1, y: 2 }
+ * @dataLast
+ * @category Object
+ */
+export function mergeDeep<
+  Destination extends Record<string, unknown>,
+  Source extends Record<string, unknown>,
+>(source: Source): (target: Destination) => MergeDeep<Destination, Source>;
+
+export function mergeDeep() {
+  return purry(mergeDeepImplementation, arguments);
+}
+
+function mergeDeepImplementation<
+  Destination extends Record<string, unknown>,
+  Source extends Record<string, unknown>,
+>(destination: Destination, source: Source) {
+  // At this point the output is already merged, simply not deeply merged.
+  const output = { ...destination, ...source } as Record<
+    keyof Destination | keyof Source,
+    unknown
+  >;
+
+  // now just scan the output and look for values that should have been deep-
+  // merged
+  for (const key in source) {
+    if (!(key in destination)) {
+      // They don't share this key.
+      continue;
+    }
+
+    const destinationValue = destination[key];
+    if (!isRecord(destinationValue)) {
+      // The value in destination is not a mergable object so the value from
+      // source (which was already copied in the shallow merge) would be used
+      // as-is.
+      continue;
+    }
+
+    const sourceValue = source[key];
+    if (!isRecord(sourceValue)) {
+      // The value in source is not a mergable object either, so it will
+      // override the object in destination.
+      continue;
+    }
+
+    // Both destination and source have a mergable object for this key, so we
+    // recursively merge them.
+    output[key] = mergeDeepImplementation(destinationValue, sourceValue);
+  }
+
+  return output;
+}
+
+// TODO: Replace this with a call to `isPlainObject` once PR #436 ships.
+function isRecord(object: unknown): object is Record<string, unknown> {
   return (
     typeof object === 'object' &&
     object !== null &&
     Object.getPrototypeOf(object) === Object.prototype
   );
-}
-
-/**
- * Recursively merges two values, `a` and `b`.
- * @param target - The first value to merge.
- * @param source - The second value to merge. This is the dominant parameter in the merge operation.
- * @signature
- *    R.mergeDeep(a, b)
- * @example
- *    R.mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'bar', x: 1, y: 2 }
- * @data_first
- * @category Object
- * @pipeable
- */
-export function mergeDeep<
-  Target extends UnknownRecordOrArray,
-  Source extends UnknownRecordOrArray
->(
-  target: Target,
-  source: Source
-): MergeDeep<Target, Source, { arrayMergeMode: 'spread' }>;
-
-/**
- * Recursively merges two values, `a` and `b`.
- * @param source - The second value to merge.
- * @signature
- *    R.mergeDeep(b)(a)
- * @example
- *    R.mergeDeep({ foo: 'baz', y: 2 })({ foo: 'bar', x: 1 }) // => { foo: 'bar', x: 1, y: 2 }
- *    R.pipe(
- *      { foo: 'bar', x: 1 },
- *      R.mergeDeep({ foo: 'baz', y: 2 }),
- *    ) // => { foo: 'bar', x: 1, y: 2 }
- * @data_last
- * @category Object
- * @pipeable
- */
-export function mergeDeep<
-  Target extends UnknownRecordOrArray,
-  Source extends UnknownRecordOrArray
->(
-  source: Source
-): (target: Target) => MergeDeep<Target, Source, { arrayMergeMode: 'spread' }>;
-
-export function mergeDeep() {
-  return purry(_mergeDeep, arguments);
-}
-
-function _mergeDeep(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
-  const seenValues = new WeakSet(); // use to keep track of which objects have been seen.
-
-  function isArrayCyclic(arr: ReadonlyArray<unknown>) {
-    return arr.some(value => value && seenValues.has(value));
-  }
-
-  function merge(a: UnknownRecordOrArray, b: UnknownRecordOrArray) {
-    if (a === null || b === null) {
-      return a ?? b;
-    }
-
-    if (seenValues.has(a) || seenValues.has(b)) {
-      return a;
-    }
-    seenValues.add(a);
-    seenValues.add(b);
-
-    if (Array.isArray(a)) {
-      if (Array.isArray(b)) {
-        if (isArrayCyclic(a)) {
-          return b;
-        }
-        if (isArrayCyclic(b)) {
-          return a;
-        }
-        return a.concat(b);
-      }
-      return b;
-    }
-    if (Array.isArray(b)) {
-      return b;
-    }
-
-    // At this point the output is already merged, simply not deeply merged.
-    const output = { ...a, ...b };
-
-    // now just scan the output and look for values that should have been deep-merged
-    for (const k in b) {
-      const aValue = a[k];
-      const bValue = b[k];
-
-      if (
-        isRecord(aValue) &&
-        !seenValues.has(a[k] as object) &&
-        isRecord(bValue)
-      ) {
-        // These are the only keys that need recursive merging. At this point
-        // we already know that both of them are objects, so they match the type
-        // of _mergeDeep.
-        output[k] = _mergeDeep(aValue, bValue);
-      }
-    }
-    return output;
-  }
-  return merge(a, b);
 }
