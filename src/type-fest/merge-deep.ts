@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import type { ConditionalSimplifyDeep } from './conditional-simplify';
 import type { Merge } from './merge';
 import type { OmitIndexSignature } from './omit-index-signature';
