@@ -20,8 +20,7 @@ PRs should be titled following using the format: `< TYPE >(< scope >)?: descript
 ### Available Types:
 
 - `feat`: new functions!
-- `fix`: changes to function implementations that fix a bug where a function produces the wrong _runtime_ results.
-- `type`: type-only changes (params, overloading, return types, etc...)
+- `fix`: changes to an existing function.
 - `perf`: changes to function implementations that improve a functions _runtime_ performance.
 - `refactor`: changes to function implementations that are neither `fix` nor `perf`
 - `test`: tests-only changes (transparent to users of the function).
