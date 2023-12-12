@@ -24,19 +24,22 @@ export function pick<T extends object, K extends keyof T>(
  * @dataLast
  * @category Object
  */
-export function pick<K extends PropertyKey>(
+export function pick<T extends object, K extends keyof T>(
   names: ReadonlyArray<K>
-): <T extends Record<PropertyKey, any>>(object: T) => Pick<T, K>;
+): (object: T) => Pick<T, K>;
 
 export function pick() {
   return purry(_pick, arguments);
 }
 
-function _pick(object: any, names: Array<string>) {
+function _pick<T extends object, K extends keyof T>(
+  object: T,
+  names: ReadonlyArray<K>
+) {
   if (object == null) {
     return {};
   }
-  return names.reduce<any>((acc, name) => {
+  return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
     if (name in object) {
       acc[name] = object[name];
     }
