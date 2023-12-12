@@ -25,7 +25,6 @@ jobs:
           types: |
             feat
             fix
-            type
             perf
             refactor
             test
