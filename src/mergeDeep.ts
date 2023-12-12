@@ -1,5 +1,5 @@
-import type { MergeDeep } from 'type-fest';
 import { purry } from './purry';
+import { MergeDeep } from './type-fest/merge-deep';
 
 /**
  * Merges the `source` object into the `destination` object, while recursively merging any matching nested objects. When both objects have a value for a key and either value is not an object, the value from `source` would overwrite the value from `destination` (similar to a simple spread `{ ...destination, ...source }`).
