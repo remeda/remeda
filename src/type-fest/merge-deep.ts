@@ -52,28 +52,26 @@ type DoMergeDeepRecord<
   Destination extends UnknownRecord,
   Source extends UnknownRecord,
   Options extends MergeDeepInternalOptions,
-> =
+> = {
   // Case in rule 1: The destination contains the key but the source doesn't.
-  {
-    [Key in keyof Destination as Key extends keyof Source
-      ? never
-      : Key]: Destination[Key];
-  } & {
-    // Case in rule 2: The source contains the key but the destination doesn't.
-    [Key in keyof Source as Key extends keyof Destination
-      ? never
-      : Key]: Source[Key];
-  } & {
-    // Case in rule 3: Both the source and the destination contain the key.
-    [Key in keyof Source as Key extends keyof Destination
-      ? Key
-      : never]: MergeDeepRecordProperty<
-      // @ts-expect-error [ts2536]: I dunno? This might be due to differences in the tsconfig file between our project and type-fest
-      Destination[Key],
-      Source[Key],
-      Options
-    >;
-  };
+  [Key in keyof Destination as Key extends keyof Source
+    ? never
+    : Key]: Destination[Key];
+} & {
+  // Case in rule 2: The source contains the key but the destination doesn't.
+  [Key in keyof Source as Key extends keyof Destination
+    ? never
+    : Key]: Source[Key];
+} & {
+  // Case in rule 3: Both the source and the destination contain the key.
+  [Key in keyof Source as Key extends keyof Destination
+    ? Key
+    : never]: MergeDeepRecordProperty<
+    Key extends keyof Destination ? Destination[Key] : never,
+    Source[Key],
+    Options
+  >;
+};
 
 /**
 Wrapper around {@link DoMergeDeepRecord} which preserves index signatures.
