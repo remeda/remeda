@@ -131,20 +131,24 @@ jobs:
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Node.js
+
+      - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
-      - name: Build
+
+      - name: 🏗️ Build
         run: npm run build
-      - name: Release
-        run: npx semantic-release@19
+
+      - name: 🚀 Release
+        run: npm run release
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
