@@ -84,6 +84,7 @@ documentation when migrating._
 | `swapIndices`       | `-`                 | `swap`              |
 | `swapProps`         | `-`                 | `swap`              |
 | `take`              | `take`              | `take`              |
+| `takeLastWhile`     | `takeRightWhile`    | `takeLastWhile`     |
 | `takeWhile`         | `takeWhile`         | `takeWhile`         |
 | `tap`               | `tap`               | `tap`               |
 | `times`             | `times`             | `times`             |
