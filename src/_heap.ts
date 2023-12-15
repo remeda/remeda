@@ -2,44 +2,67 @@
  * Heap related utilities.
  */
 
+// The comparator used in the heapify algorithm to order items in the heap.
+type HeapComparator<T> = (a: T, b: T) => number;
+
 /**
- * Turn an array into a **MAX**-heap using `compareFn`
+ * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
+ *
+ * @param heap - The array to be heapified. The array would be mutated!
+ * @param compareFn - The comparator used to order items in the heap. Use the
+ * same function in all calls mutating the same heap otherwise you'd get
+ * unexpected results.
+ * @returns - void, the result is in the provided heap array.
  */
-export function heapify<T>(heap: Array<T>, compareFn: (a: T, b: T) => number) {
+export function heapify<T>(heap: Array<T>, compareFn: HeapComparator<T>): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
     heapSiftDown(heap, i, compareFn);
   }
 }
 
 /**
- * The main heap operation. Notice that enforces a **MAX**-heap, the head of the
- * heap would contain the largest element based on compareFn.
+ * The main heap operation. Takes a `heap` and an `index` and sifts the item
+ * down the heap until it reaches the correct position based on `compareFn`,
+ * swapping other items in the process.
  */
 export function heapSiftDown<T>(
   heap: Array<T>,
-  start: number,
-  compareFn: (a: T, b: T) => number
+  index: number,
+  compareFn: HeapComparator<T>
 ): void {
-  let root = start;
+  let currentIndex = index;
 
-  while (root * 2 + 1 <= heap.length - 1) {
-    const child = root * 2 + 1;
-    let swap = root;
+  // The loop continues while the currentIndex has children in the heap.
+  while (currentIndex * 2 + 1 < heap.length) {
+    const firstChildIndex = currentIndex * 2 + 1;
 
-    if (compareFn(heap[swap], heap[child]) < 0) {
-      swap = child;
-    }
+    let swapIndex =
+      compareFn(heap[currentIndex], heap[firstChildIndex]) < 0
+        ? // Is the parent "smaller" (in regards to `compareFn`) to its child?
+          firstChildIndex
+        : currentIndex;
+
+    const secondChildIndex = firstChildIndex + 1;
     if (
-      child + 1 <= heap.length - 1 &&
-      compareFn(heap[swap], heap[child + 1]) < 0
+      secondChildIndex < heap.length &&
+      compareFn(heap[swapIndex], heap[secondChildIndex]) < 0
     ) {
-      swap = child + 1;
+      // Is there a second child? Is it the smallest of the three?
+      swapIndex = secondChildIndex;
     }
-    if (swap === root) {
+
+    if (swapIndex === currentIndex) {
+      // We assume the array is a heap and the existing order of items satisfies
+      // the compareFn so we can stop here.
       return;
-    } else {
-      [heap[root], heap[swap]] = [heap[swap], heap[root]];
-      root = swap;
     }
+
+    // Swap in-place using array destructuring.
+    [heap[currentIndex], heap[swapIndex]] = [
+      heap[swapIndex],
+      heap[currentIndex],
+    ];
+
+    currentIndex = swapIndex;
   }
 }
