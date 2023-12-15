@@ -16,10 +16,11 @@ type ComparablePrimitive = number | string | boolean;
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
 type Direction = (typeof ALL_DIRECTIONS)[number];
 
-const COMPARATOR = {
+type ComparePredicate = <T>(a: T, b: T) => boolean;
+const COMPARATORS = {
   asc: <T>(x: T, y: T) => x > y,
   desc: <T>(x: T, y: T) => x < y,
-} as const;
+} as const satisfies Readonly<Record<Direction, ComparePredicate>>;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
@@ -101,7 +102,7 @@ function orderRuleComparer<T>(
     typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
-  const comparator = COMPARATOR[direction];
+  const comparator = COMPARATORS[direction];
 
   const nextComparer =
     secondaryRule === undefined
