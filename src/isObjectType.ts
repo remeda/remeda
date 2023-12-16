@@ -1,7 +1,7 @@
 import type { NarrowedTo } from './_types';
 
 /**
- * Checks if the given parameter is of type `"object"` in JavaScript runtime, excluding `null`.
+ * Checks if the given parameter is of type `"object"` in JavaScript runtime (via `typeof`), excluding `null`.
  *
  * It's important to note that in JavaScript, many entities are considered objects, like Arrays, Classes, RegExps, Maps, Sets, Dates, URLs, Promise, Errors, and more. Although technically an object too, `null` is not considered an object by this function, so that its easier to narrow nullable.
  *
@@ -10,7 +10,7 @@ import type { NarrowedTo } from './_types';
  * @param data - The variable to be checked for being an object type.
  * @signature
  *    R.isObjectType(data)
- * @returns - `true` if `typeof data === "object" && data !== null`
+ * @returns - The input type, narrowed to only objects.
  * @example
  *    // true
  *    R.isObjectType({}) //=> true

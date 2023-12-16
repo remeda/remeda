@@ -1,29 +1,34 @@
 import type { NarrowedTo } from './_types';
-import { isObjectType } from './isObjectType';
 
 /**
- * Checks if the param is a simple struct/shape/record-like object, that is, an object with keys and values. The values themselves can be anything, including other objects, functions, classes, etc.
+ * Checks if `data` is a "plain" object. A plain object is defined as an object with string keys and values of any type, including primitives, other objects, functions, classes, etc (aka struct/shape/record/simple). Technically, a plain object is one whose prototype is either `Object.prototype` or `null`, ensuring it does not inherit properties or methods from other object types.
  *
- * Use `isObjectType` for a wider check that accepts anything JS considers an object
+ * This function is narrower in scope than `isObjectType`, which accepts any entity considered an `"object"` by JavaScript's `typeof`.
  *
- * @param data the variable to check
+ * Note that Maps, Arrays, and Sets are not considered plain objects and would return `false`.
+ *
+ * @param data - The variable to check.
+ * @returns - The input type, narrowed to only plain objects.
  * @signature
  *    R.isPlainObject(data)
- * @returns true if the passed input is an Object, Promise, Date or Error, false otherwise
  * @example
+ *    // true
  *    R.isPlainObject({}) //=> true
  *    R.isPlainObject({ a: 123 }) //=> true
+ *
+ *    // false
  *    R.isPlainObject([]) //=> false
  *    R.isPlainObject(Promise.resolve("something")) //=> false
  *    R.isPlainObject(new Date()) //=> false
  *    R.isPlainObject(new Error("error")) //=> false
  *    R.isPlainObject('somethingElse') //=> false
+ *    R.isPlainObject(null) //=> false
  * @category Guard
  */
 export function isPlainObject<T>(
   data: T | Record<PropertyKey, unknown>
 ): data is NarrowedTo<T, Record<PropertyKey, unknown>> {
-  if (!isObjectType(data)) {
+  if (typeof data === 'object' && data !== null) {
     return false;
   }
 
