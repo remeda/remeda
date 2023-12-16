@@ -8,6 +8,7 @@ documentation when migrating._
 
 | Remeda              | Lodash              | Ramda               |
 | ------------------- | ------------------- | ------------------- |
+| `add`               | `add`               | `add`               |
 | `addProp`           | `set`               | `set`               |
 | `allPass`           |                     | `allPass`           |
 | `anyPass`           |                     | `anyPass`           |
@@ -110,7 +111,6 @@ you are relying on when migrating._
 
 | Lodash     | Ramda    | TypeScript                    |
 | ---------- | -------- | ----------------------------- |
-| `add`      | `add`    | `(x, y) => x + y`             |
 |            | `append` | `(arr, val) => [...arr, val]` |
 | `constant` | `always` | `x => () => x`                |
 | `nth`      | `nth`    | `n => a[n]`                   |

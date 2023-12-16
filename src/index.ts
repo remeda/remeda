@@ -1,3 +1,4 @@
+export * from './add';
 export * from './addProp';
 export * from './allPass';
 export * from './anyPass';
