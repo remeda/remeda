@@ -1,4 +1,3 @@
-import { expect, test } from 'vitest';
 import { mergeDeep } from './mergeDeep';
 
 const NOOP = () => {
