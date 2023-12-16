@@ -28,7 +28,7 @@ import type { NarrowedTo } from './_types';
 export function isPlainObject<T>(
   data: T | Record<PropertyKey, unknown>
 ): data is NarrowedTo<T, Record<PropertyKey, unknown>> {
-  if (typeof data === 'object' && data !== null) {
+  if (typeof data !== 'object' || data === null) {
     return false;
   }
 
