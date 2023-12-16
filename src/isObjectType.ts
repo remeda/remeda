@@ -1,24 +1,29 @@
 import type { NarrowedTo } from './_types';
 
 /**
- * Checks if the runtime `typeof` of the param is `object` and not null.
+ * Checks if the given parameter is of type `"object"` in JavaScript runtime, excluding `null`.
  *
- * Notice that a lot of things in JS are objects, pretty much anything that isn't a primitive type This includes Arrays, Classes, RegExps, Maps, Sets, Dates, URLs, Errors, etc...
+ * It's important to note that in JavaScript, many entities are considered objects, like Arrays, Classes, RegExps, Maps, Sets, Dates, URLs, Promise, Errors, and more. Although technically an object too, `null` is not considered an object by this function, so that its easier to narrow nullable.
  *
- * Use `isPlainObject` for a narrower check that only accepts simple struct/shape/record-like objects.
+ * For a more specific check that is limited to plain objects (simple struct/shape/record-like objects), consider using `isPlainObject` instead. For a simpler check that only removes `null` from the type prefer `isNonNull` or `isDefined`.
  *
- * @param data the variable to check
+ * @param data - The variable to be checked for being an object type.
  * @signature
  *    R.isObjectType(data)
- * @returns true if the passed input is an Object, Promise, Date or Error, false otherwise
+ * @returns - `true` if `typeof data === "object" && data !== null`
  * @example
+ *    // true
  *    R.isObjectType({}) //=> true
  *    R.isObjectType([]) //=> true
  *    R.isObjectType(Promise.resolve("something")) //=> true
  *    R.isObjectType(new Date()) //=> true
  *    R.isObjectType(new Error("error")) //=> true
+ *
+ *    // false
  *    R.isObjectType('somethingElse') //=> false
+ *    R.isObjectType(null) //=> false
  * @category Guard
+ * @dataFirst
  */
 export const isObjectType = <T>(
   data: T | object

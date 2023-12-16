@@ -18,6 +18,10 @@ describe('runtime', () => {
     expect(isObjectType('asd')).toEqual(false);
   });
 
+  it('rejects null', () => {
+    expect(isObjectType(null)).toEqual(false);
+  });
+
   it('accepts arrays', () => {
     expect(isObjectType([1, 2, 3])).toEqual(true);
   });
@@ -62,6 +66,13 @@ describe('runtime', () => {
 });
 
 describe('typing', () => {
+  test('narrows nullable types', () => {
+    const data: { a: string } | null = { a: 'hello' };
+    if (isObjectType(data)) {
+      expectTypeOf(data).toEqualTypeOf<{ a: string }>();
+    }
+  });
+
   test('isObjectType: should work as type guard', () => {
     const data = typesDataProvider('object');
     if (isObjectType(data)) {
