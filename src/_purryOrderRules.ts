@@ -1,26 +1,59 @@
 import type { NonEmptyArray } from './_types';
 
-export type OrderRule<T> = OrderProjection<T> | OrderPair<T>;
-export type CompareFunction<T> = (a: T, b: T) => number;
-
-type OrderPair<T> = readonly [
-  projector: OrderProjection<T>,
-  direction: Direction,
-];
-
-type OrderProjection<T> = (x: T) => Comparable;
-
-type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
-type ComparablePrimitive = number | string | boolean;
-
-const ALL_DIRECTIONS = ['asc', 'desc'] as const;
-type Direction = (typeof ALL_DIRECTIONS)[number];
-
-type ComparePredicate = <T>(a: T, b: T) => boolean;
+// We define the comparators in a global const so that they are only
+// instantiated once, and so we can couple a label (string) for them that could
+// be used in runtime to refer to them (e.g. "asc", "desc").
 const COMPARATORS = {
   asc: <T>(x: T, y: T) => x > y,
   desc: <T>(x: T, y: T) => x < y,
-} as const satisfies Readonly<Record<Direction, ComparePredicate>>;
+} as const;
+
+/**
+ * An order rule defines a projection/extractor that returns a comparable from
+ * the data being compared. It would be run on each item being compared, and a
+ * comparator would then be used on the results to determine the order.
+ *
+ * There are 2 forms of the order rule, a simple one which only provides the
+ * projection function and assumes ordering is ascending, and a 2-tuple where
+ * the first element is the projection function and the second is the direction;
+ * this allows changing the direction without defining a more complex projection
+ * to simply negate the value (e.g. `(x) => -x`).
+ *
+ * We rely on the javascript implementation of `<` and `>` for comparison, which
+ * will attempt to transform both operands into a primitive comparable value via
+ * the built in `valueOf` function (and then `toString`). It's up to the caller
+ * to make sure that the projection is returning a value that makes sense for
+ * this logic.
+ *
+ * It's important to note that there is no built-in caching/memoization of
+ * projection function and therefore no guarantee that it would only be called
+ * once.
+ */
+export type OrderRule<T> =
+  | Projection<T>
+  | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
+
+/**
+ * `purryOrderRules` provides a comparer with this signature based on the rules
+ * provided to the function. The implementation should use this function to
+ * define the order of items.
+ */
+export type CompareFunction<T> = (a: T, b: T) => number;
+
+type Projection<T> = (x: T) => Comparable;
+
+// We define the Comparable based on how JS coerces values into primitives when
+// used with the `<` and `>` operators.
+// @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#type_coercion
+type Comparable =
+  | ComparablePrimitive
+  | { [Symbol.toPrimitive](hint: string): ComparablePrimitive }
+  | { valueOf(): ComparablePrimitive }
+  | { toString(): string };
+
+//  Notice that `boolean` is special in that it is coerced as a number (0 for
+// `false`, 1 for `true`) implicitly.
+type ComparablePrimitive = number | string | boolean;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
@@ -143,6 +176,7 @@ function isOrderRule<T>(x: ReadonlyArray<T> | OrderRule<T>): x is OrderRule<T> {
 
   return (
     typeof maybeProjection === 'function' &&
-    ALL_DIRECTIONS.indexOf(maybeDirection as Direction) !== -1
+    typeof maybeDirection === 'string' &&
+    maybeDirection in COMPARATORS
   );
 }
