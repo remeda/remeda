@@ -18,13 +18,13 @@ import { NonEmptyArray } from './_types';
  * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
- *   R.dropBy(data, n, ...rules);
+ *   R.dropFirstBy(data, n, ...rules);
  * @example
- *   R.dropBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ *   R.dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
  * @dataFirst
  * @category Array
  */
-export function dropBy<T>(
+export function dropFirstBy<T>(
   data: ReadonlyArray<T>,
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -42,22 +42,25 @@ export function dropBy<T>(
  * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
- *   R.dropBy(n, ...rules)(data);
+ *   R.dropFirstBy(n, ...rules)(data);
  * @example
- *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.dropBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
  * @dataLast
  * @category Array
  */
-export function dropBy<T>(
+export function dropFirstBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropBy(): unknown {
-  return purryOrderRulesWithNumberArgument(dropByImplementation, arguments);
+export function dropFirstBy(): unknown {
+  return purryOrderRulesWithNumberArgument(
+    dropFirstByImplementation,
+    arguments
+  );
 }
 
-function dropByImplementation<T>(
+function dropFirstByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
   n: number

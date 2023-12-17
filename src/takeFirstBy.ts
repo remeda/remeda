@@ -18,13 +18,13 @@ import { NonEmptyArray } from './_types';
  * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
- *   R.takeBy(data, n, ...rules);
+ *   R.takeFirstBy(data, n, ...rules);
  * @example
- *   R.takeBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ *   R.takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
  * @dataFirst
  * @category Array
  */
-export function takeBy<T>(
+export function takeFirstBy<T>(
   data: ReadonlyArray<T>,
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -42,22 +42,25 @@ export function takeBy<T>(
  * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
  * @returns a subset of the input array.
  * @signature
- *   R.takeBy(n, ...rules)(data);
+ *   R.takeFirstBy(n, ...rules)(data);
  * @example
- *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.takeBy(2, x => x.length)); // => ['a', 'aa']
+ *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.takeFirstBy(2, x => x.length)); // => ['a', 'aa']
  * @dataLast
  * @category Array
  */
-export function takeBy<T>(
+export function takeFirstBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function takeBy(): unknown {
-  return purryOrderRulesWithNumberArgument(takeByImplementation, arguments);
+export function takeFirstBy(): unknown {
+  return purryOrderRulesWithNumberArgument(
+    takeFirstByImplementation,
+    arguments
+  );
 }
 
-function takeByImplementation<T>(
+function takeFirstByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
   n: number

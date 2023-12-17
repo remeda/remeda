@@ -1,31 +1,31 @@
-import { dropBy } from './dropBy';
 import { identity } from './identity';
 import { pipe } from './pipe';
+import { takeFirstBy } from './takeFirstBy';
 
 describe('runtime (dataFirst)', () => {
   it('works', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropBy(data, 2, identity)).toEqual([5, 6, 4, 3, 7]);
+    expect(takeFirstBy(data, 2, identity)).toEqual([2, 1]);
   });
 
   it('handles empty arrays gracefully', () => {
     const data: Array<number> = [];
-    expect(dropBy(data, 1, identity)).toHaveLength(0);
+    expect(takeFirstBy(data, 1, identity)).toHaveLength(0);
   });
 
   it('handles negative numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropBy(data, -3, identity)).toHaveLength(data.length);
+    expect(takeFirstBy(data, -3, identity)).toHaveLength(0);
   });
 
   it('handles overflowing numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropBy(data, 100, identity)).toHaveLength(0);
+    expect(takeFirstBy(data, 100, identity)).toHaveLength(data.length);
   });
 
-  it('clones the input when needed', () => {
+  it('clones the array when needed', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    const result = dropBy(data, 0, identity);
+    const result = takeFirstBy(data, 100, identity);
     expect(result).not.toBe(data);
     expect(result).toEqual(data);
   });
@@ -43,14 +43,10 @@ describe('runtime (dataFirst)', () => {
       'b',
       'aaaaa',
     ];
-    expect(dropBy(data, 3, x => x.length, identity)).toEqual([
-      'bbbbb',
-      'aaa',
-      'bbb',
-      'bbbb',
-      'aaaa',
-      'bb',
-      'aaaaa',
+    expect(takeFirstBy(data, 3, x => x.length, identity)).toEqual([
+      'aa',
+      'b',
+      'a',
     ]);
   });
 });
@@ -61,9 +57,9 @@ describe('runtime (dataLast)', () => {
     expect(
       pipe(
         data,
-        dropBy(2, x => x)
+        takeFirstBy(2, x => x)
       )
-    ).toEqual([5, 6, 4, 3, 7]);
+    ).toEqual([2, 1]);
   });
 
   it('handles empty arrays gracefully', () => {
@@ -71,7 +67,7 @@ describe('runtime (dataLast)', () => {
     expect(
       pipe(
         data,
-        dropBy(1, x => x)
+        takeFirstBy(1, x => x)
       )
     ).toHaveLength(0);
   });
@@ -81,9 +77,9 @@ describe('runtime (dataLast)', () => {
     expect(
       pipe(
         data,
-        dropBy(-3, x => x)
+        takeFirstBy(-3, x => x)
       )
-    ).toHaveLength(data.length);
+    ).toHaveLength(0);
   });
 
   it('handles overflowing numbers gracefully', () => {
@@ -91,16 +87,16 @@ describe('runtime (dataLast)', () => {
     expect(
       pipe(
         data,
-        dropBy(100, x => x)
+        takeFirstBy(100, x => x)
       )
-    ).toHaveLength(0);
+    ).toHaveLength(data.length);
   });
 
-  it('clones the data when needed', () => {
+  it('clones the array when needed', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
     const result = pipe(
       data,
-      dropBy(0, x => x)
+      takeFirstBy(100, x => x)
     );
     expect(result).not.toBe(data);
     expect(result).toEqual(data);
@@ -122,12 +118,12 @@ describe('runtime (dataLast)', () => {
     expect(
       pipe(
         data,
-        dropBy(
+        takeFirstBy(
           3,
           x => x.length,
           x => x
         )
       )
-    ).toEqual(['bbbbb', 'aaa', 'bbb', 'bbbb', 'aaaa', 'bb', 'aaaaa']);
+    ).toEqual(['aa', 'b', 'a']);
   });
 });
