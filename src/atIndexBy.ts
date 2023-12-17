@@ -26,7 +26,7 @@ export function atIndexBy<T extends IterableContainer>(
   data: T,
   index: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-): T | undefined;
+): T[number] | undefined;
 
 /**
  * Find the item at the given index/rank in the sorted array, without needing to sort the array before hand. This allows finding the item in O(nlogk) time where n is the size of the array and k is the index, instead of O(nlogn). It is equivalent to `sortBy(data, ...rules)[index]`.
@@ -47,7 +47,7 @@ export function atIndexBy<T extends IterableContainer>(
 export function atIndexBy<T extends IterableContainer>(
   index: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-): (data: T) => T | undefined;
+): (data: T) => T[number] | undefined;
 
 export function atIndexBy(): unknown {
   return purryOrderRulesWithNumberArgument(atIndexByImplementation, arguments);
