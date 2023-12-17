@@ -60,6 +60,7 @@ export * from './maxBy';
 export * from './meanBy';
 export * from './merge';
 export * from './mergeAll';
+export * from './mergeDeep';
 export * from './minBy';
 export * from './noop';
 export * from './objOf';
