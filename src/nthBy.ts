@@ -22,7 +22,7 @@ import { IterableContainer, NonEmptyArray } from './_types';
  * @dataFirst
  * @category Array
  */
-export function atIndexBy<T extends IterableContainer>(
+export function nthBy<T extends IterableContainer>(
   data: T,
   index: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
@@ -44,16 +44,16 @@ export function atIndexBy<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function atIndexBy<T extends IterableContainer>(
+export function nthBy<T extends IterableContainer>(
   index: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): (data: T) => T[number] | undefined;
 
-export function atIndexBy(): unknown {
-  return purryOrderRulesWithNumberArgument(atIndexByImplementation, arguments);
+export function nthBy(): unknown {
+  return purryOrderRulesWithNumberArgument(nthByImplementation, arguments);
 }
 
-const atIndexByImplementation = <T>(
+const nthByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
   index: number

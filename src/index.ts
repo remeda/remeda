@@ -1,7 +1,6 @@
 export * from './addProp';
 export * from './allPass';
 export * from './anyPass';
-export * from './atIndexBy';
 export * from './chunk';
 export * from './clamp';
 export * from './clone';
@@ -66,6 +65,7 @@ export * from './merge';
 export * from './mergeAll';
 export * from './minBy';
 export * from './noop';
+export * from './nthBy';
 export * from './objOf';
 export * from './omit';
 export * from './omitBy';
