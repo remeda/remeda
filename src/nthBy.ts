@@ -7,18 +7,18 @@ import { quickSelect } from './_quickSelect';
 import { IterableContainer, NonEmptyArray } from './_types';
 
 /**
- * Find the item at the given index/rank in the sorted array, without needing to sort the array before hand. This allows finding the item in O(nlogk) time where n is the size of the array and k is the index, instead of O(nlogn). It is equivalent to `sortBy(data, ...rules)[index]`.
+ * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the QuickSelect algorithm running at an average complexity of O(n). Semantically it is equivalent to `sortBy(data, ...rules)[index]` which would run at O(nlogn).
  *
- * See also `firstBy` which provides a stricter return type, but doesn't provide a flexible index param. See `takeBy` to get all the elements up to and including `index`.
+ * See also `firstBy` which provides an even more efficient algorithm and a stricter return type, but. See `takeBy` to get all the elements up to and including `index`.
  *
- * @params data - the input array
- * @param index - The index of the item to find. If `index` is negative the item at `data.length + index` would be returned.
- * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
- * @returns the item at the given index, or `undefined` if the `index` is out of bounds.
+ * @param data - The input array.
+ * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.
+ * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
- *   R.atIndexBy(data, index, ...rules);
+ *   R.nthBy(data, index, ...rules);
  * @example
- *   R.atIndexBy([2,1,4,5,3,], 2, identity); // => 3
+ *   R.nthBy([2,1,4,5,3,], 2, identity); // => 3
  * @dataFirst
  * @category Array
  */
@@ -29,18 +29,18 @@ export function nthBy<T extends IterableContainer>(
 ): T[number] | undefined;
 
 /**
- * Find the item at the given index/rank in the sorted array, without needing to sort the array before hand. This allows finding the item in O(nlogk) time where n is the size of the array and k is the index, instead of O(nlogn). It is equivalent to `sortBy(data, ...rules)[index]`.
+ * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the QuickSelect algorithm running at an average complexity of O(n). Semantically it is equivalent to `sortBy(data, ...rules)[index]` which would run at O(nlogn).
  *
- * See also `firstBy` which provides a stricter return type, but doesn't provide a flexible index param. See `takeBy` to get all the elements up to and including `index`.
+ * See also `firstBy` which provides an even more efficient algorithm and a stricter return type, but. See `takeBy` to get all the elements up to and including `index`.
  *
- * @params data - the input array
- * @param index - The index of the item to find. If `index` is negative the item at `data.length + index` would be returned.
- * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
- * @returns the item at the given index, or `undefined` if the `index` is out of bounds.
+ * @param data - The input array.
+ * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.
+ * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
- *   R.atIndexBy(index, ...rules)(data);
+ *   R.nthBy(index, ...rules)(data);
  * @example
- *   R.pipe([2,1,4,5,3,], R.atIndexBy(2, identity)); // => 3
+ *   R.pipe([2,1,4,5,3,], R.nthBy(2, identity)); // => 3
  * @dataLast
  * @category Array
  */
