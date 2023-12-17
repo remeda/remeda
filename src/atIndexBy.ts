@@ -1,9 +1,9 @@
-import { heapSiftDown, heapify } from './_heap';
 import {
   CompareFunction,
   OrderRule,
   purryOrderRulesWithNumberArgument,
 } from './_purryOrderRules';
+import { quickSelect } from './_quickSelect';
 import { IterableContainer, NonEmptyArray } from './_types';
 
 /**
@@ -53,44 +53,14 @@ export function atIndexBy(): unknown {
   return purryOrderRulesWithNumberArgument(atIndexByImplementation, arguments);
 }
 
-function atIndexByImplementation<T>(
+const atIndexByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
   index: number
-): T | undefined {
-  // Allow negative indices gracefully
-  const realIndex = index >= 0 ? index : data.length + index;
-
-  if (realIndex < 0 || realIndex >= data.length) {
-    // Index is overflowing
-    return;
-  }
-
-  // The performance of the algorithm depends on the index because we need to
-  // build a heap of that size, but the algorithm is also symmetric if we flip
-  // the compareFn. This allows us to always pick the smaller of two indices to
-  // work with.
-  const isFlipped = realIndex > data.length / 2;
-  const actualIndex = isFlipped ? data.length - realIndex - 1 : realIndex;
-  const actualCompareFn: CompareFunction<T> = isFlipped
-    ? (a, b) => -compareFn(a, b)
-    : compareFn;
-
-  // We build a max-heap of size `index` that will keep the **smallest** values
-  // of the array. This means that when we finish checking all values the heap
-  // would contain the `index` smallest values, and the root of the heap would
-  // contain the largest of them (by definition), which is exactly the item at
-  // `index` in the sorted array.
-  const heap = data.slice(0, actualIndex + 1);
-  heapify(heap, actualCompareFn);
-
-  const rest = data.slice(actualIndex + 1);
-  for (const item of rest) {
-    if (actualCompareFn(item, heap[0]) < 0) {
-      heap[0] = item;
-      heapSiftDown(heap, 0, actualCompareFn);
-    }
-  }
-
-  return heap[0];
-}
+): T | undefined =>
+  quickSelect(
+    data,
+    // Allow negative indices gracefully
+    index >= 0 ? index : data.length + index,
+    compareFn
+  );

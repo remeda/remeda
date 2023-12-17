@@ -1,0 +1,69 @@
+import { swapInPlace } from './_swapInPlace';
+
+type CompareFunction<T> = (a: T, b: T) => number;
+
+export const quickSelect = <T>(
+  data: ReadonlyArray<T>,
+  index: number,
+  compareFn: CompareFunction<T>
+): T | undefined =>
+  index < 0 || index >= data.length
+    ? // Quickselect doesn't work with out-of-bound indices
+      undefined
+    : quickSelectImplementation(
+        // We need to clone the array because quickSelect mutates it in-place.
+        [...data],
+        0 /* left */,
+        data.length - 1 /* right */,
+        index,
+        compareFn
+      );
+
+function quickSelectImplementation<T>(
+  data: Array<T>,
+  left: number,
+  right: number,
+  index: number,
+  compareFn: CompareFunction<T>
+): T {
+  if (left === right) {
+    return data[left];
+  }
+
+  const pivotIndex = partition(data, left, right, compareFn);
+
+  return index === pivotIndex
+    ? // Once a pivot is chosen it's location is final, so if it matches the
+      // index we found out item!
+      data[index]
+    : quickSelectImplementation(
+        data,
+        // We continue by recursing into the partition where index would be
+        index < pivotIndex ? left : pivotIndex + 1,
+        index < pivotIndex ? pivotIndex - 1 : right,
+        index,
+        compareFn
+      );
+}
+function partition<T>(
+  data: Array<T>,
+  left: number,
+  right: number,
+  compareFn: CompareFunction<T>
+): number {
+  const pivot = data[right];
+
+  let i = left;
+  for (let j = left; j < right; j++) {
+    if (compareFn(data[j], pivot) < 0) {
+      // Move items smaller then the pivot to the start of the array.
+      swapInPlace(data, i, j);
+      i++;
+    }
+  }
+
+  swapInPlace(data, i, right);
+
+  // The location of the pivot by the end of the partition function.
+  return i;
+}

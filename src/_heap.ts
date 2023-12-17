@@ -2,6 +2,8 @@
  * Heap related utilities.
  */
 
+import { swapInPlace } from './_swapInPlace';
+
 // The comparator used in the heapify algorithm to order items in the heap.
 type HeapComparator<T> = (a: T, b: T) => number;
 
@@ -57,11 +59,7 @@ export function heapSiftDown<T>(
       return;
     }
 
-    // Swap in-place using array destructuring.
-    [heap[currentIndex], heap[swapIndex]] = [
-      heap[swapIndex],
-      heap[currentIndex],
-    ];
+    swapInPlace(heap, currentIndex, swapIndex);
 
     currentIndex = swapIndex;
   }
