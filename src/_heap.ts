@@ -24,11 +24,40 @@ export function heapify<T>(
 }
 
 /**
+ * Insert an item into a heap if it's "smaller" (in regards to `compareFn`) than
+ * the current head of the heap (which is the "largest" value in the heap). If
+ * the item is inserted, the previous head of the heap is returned, otherwise
+ * `undefined` is returned and the heap is unchanged.
+ *
+ * @param heap - a *mutable* array representing a heap (see `heapify`).
+ * @param compareFn - The comparator used to order items in the heap. Use the
+ * @param item - The item to be inserted into the heap.
+ * @returns `undefined` if the heap is unchanged, or the previous head of the
+ * heap if the item was inserted.
+ */
+export function heapMaybeInsert<T>(
+  heap: Array<T>,
+  compareFn: CompareFunction<T>,
+  item: T
+): T | undefined {
+  const head = heap[0];
+
+  if (compareFn(item, head) >= 0) {
+    // The item shouldn't be inserted into the heap, the heap is unchanged.
+    return;
+  }
+
+  heap[0] = item;
+  heapSiftDown(heap, 0, compareFn);
+  return head;
+}
+
+/**
  * The main heap operation. Takes a `heap` and an `index` and sifts the item
  * down the heap until it reaches the correct position based on `compareFn`,
  * swapping other items in the process.
  */
-export function heapSiftDown<T>(
+function heapSiftDown<T>(
   heap: Array<T>,
   index: number,
   compareFn: CompareFunction<T>

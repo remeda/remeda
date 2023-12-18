@@ -1,4 +1,4 @@
-import { heapSiftDown, heapify } from './_heap';
+import { heapify, heapMaybeInsert } from './_heap';
 import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
 import type { CompareFunction, NonEmptyArray } from './_types';
 
@@ -65,19 +65,12 @@ function dropFirstByImplementation<T>(
   const heap = data.slice(0, n);
   heapify(heap, compareFn);
 
-  const out: Array<T> = [];
+  const out = Array.from<T>({ length: data.length - n });
 
   const rest = data.slice(n);
   for (const item of rest) {
-    if (compareFn(item, heap[0]) < 0) {
-      // Every time we change the head of the heap it means the existing head
-      // would not be dropped, so we add it to the output.
-      out.push(heap[0]);
-      heap[0] = item;
-      heapSiftDown(heap, 0, compareFn);
-    } else {
-      out.push(item);
-    }
+    const previousHead = heapMaybeInsert(heap, compareFn, item);
+    out.push(previousHead ?? item);
   }
 
   return out;

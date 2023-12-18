@@ -1,4 +1,4 @@
-import { heapSiftDown, heapify } from './_heap';
+import { heapify, heapMaybeInsert } from './_heap';
 import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
 import type { CompareFunction, NonEmptyArray } from './_types';
 
@@ -67,10 +67,7 @@ function takeFirstByImplementation<T>(
 
   const rest = data.slice(n);
   for (const item of rest) {
-    if (compareFn(item, heap[0]) < 0) {
-      heap[0] = item;
-      heapSiftDown(heap, 0, compareFn);
-    }
+    heapMaybeInsert(heap, compareFn, item);
   }
 
   return heap;
