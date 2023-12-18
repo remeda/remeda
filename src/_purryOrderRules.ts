@@ -163,15 +163,11 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
 
   const [maybeProjection, maybeDirection, ...rest] = x;
 
-  if (rest.length > 0) {
-    // Not a OrderPair if we have more stuff in the array
-    return false;
-  }
-
   return (
-    typeof maybeProjection === 'function' &&
-    typeof maybeDirection === 'string' &&
-    maybeDirection in COMPARATORS
+    isProjection(maybeProjection) &&
+    maybeDirection in COMPARATORS &&
+    // Has to be a 2-tuple
+    rest.length === 0
   );
 }
 
