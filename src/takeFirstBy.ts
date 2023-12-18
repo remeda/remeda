@@ -7,11 +7,9 @@ import {
 import { NonEmptyArray } from './_types';
 
 /**
- * Take the first `n` items from `data` based on the provided ordering criteria.
+ * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
  *
- * This allows you to avoid sorting the array before taking the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
- *
- * For the opposite operation (to drop `n` elements) see `dropBy`.
+ * For the opposite operation (to drop `n` elements) see `dropFirstBy`.
  *
  * @params data - the input array
  * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
@@ -31,11 +29,9 @@ export function takeFirstBy<T>(
 ): Array<T>;
 
 /**
- * Take the first `n` items from `data` based on the provided ordering criteria.
+ * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
  *
- * This allows you to avoid sorting the array before taking the items. The complexity of this function is O(Nlogn) where `N` is the length of the array.
- *
- * For the opposite operation (to drop `n` elements) see `dropBy`.
+ * For the opposite operation (to drop `n` elements) see `dropFirstBy`.
  *
  * @params data - the input array
  * @params n - the number of items to take. If `n` is non-positive no items would be returned, if `n` is bigger then data.length a *clone* of `data` would be returned.
