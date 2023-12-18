@@ -6,16 +6,20 @@ import {
 import type { IterableContainer, NonEmptyArray } from './_types';
 
 /**
- * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
  *
- * Directions are applied to functions in order and default to ascending if not specified.
+ * There are several other functions that take order rules that a more efficient than sorting the array first (in O(nlogn) time, and then performing the operation. Refer to the docs for more details:
+ * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
+ * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
+ * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
+ * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
  *
- * @param sortRule main sort rule
- * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
+ * @param data - The input array.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
+ * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(sortRule, ...additionalSortRules)(array)
  *    R.sortBy.strict(sortRule, ...additionalSortRules)(array)
@@ -33,24 +37,24 @@ import type { IterableContainer, NonEmptyArray } from './_types';
  * @strict
  */
 export function sortBy<T>(
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T>>>
-): (array: ReadonlyArray<T>) => Array<T>;
+  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+): (data: ReadonlyArray<T>) => Array<T>;
 
 /**
- * Sorts the list according to the supplied functions and directions.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
  *
- * Directions are applied to functions in order and default to ascending if not specified.
+ * There are several other functions that take order rules that a more efficient than sorting the array first (in O(nlogn) time, and then performing the operation. Refer to the docs for more details:
+ * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
+ * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
+ * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
+ * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
  *
- * If you are only sorting the array in order to get the first (or last) element
- * from it, consider using `firstBy` which would run more efficiently (O(n) vs O(nlogn)).
- *
- * @param array the array to sort
- * @param sortRule main sort rule
- * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
+ * @param data - The input array.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
+ * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(array, sortRule, ...additionalSortRules)
  *    R.sortBy.strict(array, sortRule, ...additionalSortRules)
