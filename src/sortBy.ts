@@ -21,8 +21,8 @@ import type { IterableContainer, NonEmptyArray } from './_types';
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    R.sortBy(sortRule, ...additionalSortRules)(array)
- *    R.sortBy.strict(sortRule, ...additionalSortRules)(array)
+ *    R.sortBy(...rules)(data)
+ *    R.sortBy.strict(...rules)(data)
  * @example
  *    R.pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
@@ -56,8 +56,8 @@ export function sortBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    R.sortBy(array, sortRule, ...additionalSortRules)
- *    R.sortBy.strict(array, sortRule, ...additionalSortRules)
+ *    R.sortBy(data, ...rules)
+ *    R.sortBy.strict(data, ...rules)
  * @example
  *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
