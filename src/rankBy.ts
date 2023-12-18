@@ -10,7 +10,7 @@ import { NonEmptyArray } from './_types';
  *
  * @param data - The input array.
  * @param item - The item whose rank is to be determined.
- * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns - The rank of the item in the sorted array in the range [0..data.length]
  * @signature
  *   R.rankBy(data, item, ...rules)
@@ -34,7 +34,7 @@ export function rankBy<T>(
  *
  * @param data - The input array.
  * @param item - The item whose rank is to be determined.
- * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns - The rank of the item in the sorted array in the range [0..data.length]
  * @signature
  *   R.rankBy(item, ...rules)(data)

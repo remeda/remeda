@@ -23,7 +23,7 @@ type FirstBy<T extends IterableContainer> =
  * O(n) instead of O(nlogn).**
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns the first element by the order criteria, or `undefined` if the array
  * is empty. (The function provides strong typing if the input type assures the
  * array isn't empty).
@@ -57,7 +57,7 @@ export function firstBy<T extends IterableContainer>(
  * Use `atIndexBy` or `takeBy` if you more than just the first element.
  *
  * @param data an array of items
- * @param rules a variadic set of ordering rules (defined as functions), starting from the most important, that define the ordering criteria by which to consider the elements in the array. Values are considered in ascending order based on the natural order of the values. If you need them in descending order use the `[fn, "desc"]` syntax.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns the first element by the order criteria, or `undefined` if the array
  * is empty. (The function provides strong typing if the input type assures the
  * array isn't empty).

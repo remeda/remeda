@@ -13,7 +13,7 @@ import { IterableContainer, NonEmptyArray } from './_types';
  *
  * @param data - The input array.
  * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.
- * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
  *   R.nthBy(data, index, ...rules);
@@ -35,7 +35,7 @@ export function nthBy<T extends IterableContainer>(
  *
  * @param data - The input array.
  * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.
- * @param rules - A set of ordering rules (functions) that define the sorting criteria. Use `[fn, "desc"]` syntax for descending order.
+ * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
  *   R.nthBy(index, ...rules)(data);
