@@ -6,7 +6,7 @@ import {
 import { NonEmptyArray } from './_types';
 
 /**
- * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in O(n) time, compared to O(nlogn) for sorting the array using `sortBy` followed by `sortedIndex`.
+ * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.
  *
  * @param data - The input array.
  * @param item - The item whose rank is to be determined.
@@ -30,7 +30,7 @@ export function rankBy<T>(
 ): number;
 
 /**
- * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in O(n) time, compared to O(nlogn) for sorting the array using `sortBy` followed by `sortedIndex`.
+ * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.
  *
  * @param data - The input array.
  * @param item - The item whose rank is to be determined.
