@@ -15,12 +15,9 @@ type FirstBy<T extends IterableContainer> =
         : undefined);
 
 /**
- * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `R.first(R.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
  *
- * If you just need the offset in the array where the first element would be found use `firstIndexBy`.
- *
- * **This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
- * O(n) instead of O(nlogn).**
+ * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
  * @param data an array of items
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
@@ -47,14 +44,9 @@ export function firstBy<T extends IterableContainer>(
 ): (data: T) => FirstBy<T>;
 
 /**
- * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `R.first(R.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
  *
- * If you just need the offset in the array where the first element would be found use `firstIndexBy`.
- *
- * **This function is equivalent to calling `R.first(R.sortBy(...))` but runs at
- * O(n) instead of O(nlogn).**
- *
- * Use `atIndexBy` or `takeBy` if you more than just the first element.
+ * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
  * @param data an array of items
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
