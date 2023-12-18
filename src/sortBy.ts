@@ -8,14 +8,15 @@ import type { IterableContainer, NonEmptyArray } from './_types';
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
  *
- * There are several other functions that take order rules that a more efficient than sorting the array first (in *O(nlogn)* time, and then performing the operation. Refer to the docs for more details:
- * * `firstBy` === `first(sortBy(data, ...rules))`, *O(n)*.
- * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, *O(nlogk)*.
- * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, *O(nlogk)*.
- * * `nthBy` === `sortBy(data, ...rules).at(k)`, *O(n)*.
- * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, *O(n)*.
- *
  * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
+ *
+ * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
+ * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
+ * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
+ * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
+ * Refer to the docs for more details.
  *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
@@ -43,14 +44,15 @@ export function sortBy<T>(
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
  *
- * There are several other functions that take order rules that a more efficient than sorting the array first (in O(nlogn) time, and then performing the operation. Refer to the docs for more details:
+ * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
+ *
+ * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
  * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
  * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
  * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
  * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
- *
- * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
+ * Refer to the docs for more details.
  *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
