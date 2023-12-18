@@ -2,7 +2,7 @@ import { heapSiftDown, heapify } from './_heap';
 import {
   CompareFunction,
   OrderRule,
-  purryOrderRulesWithNumberArgument,
+  purryOrderRulesWithArgument,
 } from './_purryOrderRules';
 import { NonEmptyArray } from './_types';
 
@@ -54,10 +54,7 @@ export function takeFirstBy<T>(
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function takeFirstBy(): unknown {
-  return purryOrderRulesWithNumberArgument(
-    takeFirstByImplementation,
-    arguments
-  );
+  return purryOrderRulesWithArgument(takeFirstByImplementation, arguments);
 }
 
 function takeFirstByImplementation<T>(

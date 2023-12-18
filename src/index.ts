@@ -79,6 +79,7 @@ export * from './prop';
 export * from './purry';
 export * from './randomString';
 export * from './range';
+export * from './rankBy';
 export * from './reduce';
 export * from './reject';
 export * from './reverse';

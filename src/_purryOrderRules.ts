@@ -76,7 +76,7 @@ export function purryOrderRules<T>(
     | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>]
     | Readonly<NonEmptyArray<OrderRule<T>>>;
 
-  if (!isOrderRule(dataOrRule)) {
+  if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!
 
     // @ts-expect-error [ts2556]: Typescript is failing to infer the type of rules
@@ -98,32 +98,30 @@ export function purryOrderRules<T>(
 /**
  * Some functions need an extra number argument, this helps facilitate that.
  */
-export function purryOrderRulesWithNumberArgument<T>(
-  func: (
+export function purryOrderRulesWithArgument(
+  func: <T>(
     data: ReadonlyArray<T>,
     compareFn: CompareFunction<T>,
-    n: number
+    arg: any
   ) => unknown,
   inputArgs: IArguments
 ): unknown {
   const [first, second, ...rest] = Array.from(inputArgs);
 
   // We need to pull the `n` argument out to make it work with purryOrderRules.
-  let n: number;
-  let args: ReadonlyArray<unknown>;
-  if (typeof first === 'number') {
+  let arg: unknown;
+  let argRemoved: ReadonlyArray<unknown>;
+  if (isOrderRule(second)) {
     // dataLast!
-    n = first;
-    args = [second, ...rest];
-  } else if (typeof second === 'number') {
-    // dataFirst!
-    n = second;
-    args = [first, ...rest];
+    arg = first;
+    argRemoved = [second, ...rest];
   } else {
-    throw new Error("Couldn't find a number argument in the called arguments");
+    // dataFirst!
+    arg = second;
+    argRemoved = [first, ...rest];
   }
 
-  return purryOrderRules<T>((...args) => func(...args, n), args);
+  return purryOrderRules((...args) => func(...args, arg), argRemoved);
 }
 
 function orderRuleComparer<T>(
@@ -161,10 +159,13 @@ function orderRuleComparer<T>(
   };
 }
 
-function isOrderRule<T>(x: ReadonlyArray<T> | OrderRule<T>): x is OrderRule<T> {
-  if (typeof x === 'function') {
-    // must be a OrderProjection
+function isOrderRule<T>(x: unknown): x is OrderRule<T> {
+  if (isProjection(x)) {
     return true;
+  }
+
+  if (typeof x !== 'object' || !Array.isArray(x)) {
+    return false;
   }
 
   const [maybeProjection, maybeDirection, ...rest] = x;
@@ -180,3 +181,6 @@ function isOrderRule<T>(x: ReadonlyArray<T> | OrderRule<T>): x is OrderRule<T> {
     maybeDirection in COMPARATORS
   );
 }
+
+const isProjection = <T>(x: unknown): x is Projection<T> =>
+  typeof x === 'function' && x.length === 1;

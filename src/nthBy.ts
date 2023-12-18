@@ -1,7 +1,7 @@
 import {
   CompareFunction,
   OrderRule,
-  purryOrderRulesWithNumberArgument,
+  purryOrderRulesWithArgument,
 } from './_purryOrderRules';
 import { quickSelect } from './_quickSelect';
 import { IterableContainer, NonEmptyArray } from './_types';
@@ -50,7 +50,7 @@ export function nthBy<T extends IterableContainer>(
 ): (data: T) => T[number] | undefined;
 
 export function nthBy(): unknown {
-  return purryOrderRulesWithNumberArgument(nthByImplementation, arguments);
+  return purryOrderRulesWithArgument(nthByImplementation, arguments);
 }
 
 const nthByImplementation = <T>(
