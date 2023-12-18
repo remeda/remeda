@@ -1,6 +1,5 @@
 import { swapInPlace } from './_swapInPlace';
-
-type CompareFunction<T> = (a: T, b: T) => number;
+import type { CompareFunction } from './_types';
 
 export const quickSelect = <T>(
   data: ReadonlyArray<T>,
@@ -45,6 +44,7 @@ function quickSelectImplementation<T>(
         compareFn
       );
 }
+
 function partition<T>(
   data: Array<T>,
   left: number,

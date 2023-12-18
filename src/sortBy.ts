@@ -1,9 +1,9 @@
-import {
+import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import type {
   CompareFunction,
-  OrderRule,
-  purryOrderRules,
-} from './_purryOrderRules';
-import type { IterableContainer, NonEmptyArray } from './_types';
+  IterableContainer,
+  NonEmptyArray,
+} from './_types';
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.

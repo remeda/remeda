@@ -1,10 +1,6 @@
 import { heapSiftDown, heapify } from './_heap';
-import {
-  CompareFunction,
-  OrderRule,
-  purryOrderRulesWithArgument,
-} from './_purryOrderRules';
-import { NonEmptyArray } from './_types';
+import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
+import type { CompareFunction, NonEmptyArray } from './_types';
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

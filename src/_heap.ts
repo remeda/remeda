@@ -3,9 +3,7 @@
  */
 
 import { swapInPlace } from './_swapInPlace';
-
-// The comparator used in the heapify algorithm to order items in the heap.
-type HeapComparator<T> = (a: T, b: T) => number;
+import type { CompareFunction } from './_types';
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
@@ -16,7 +14,10 @@ type HeapComparator<T> = (a: T, b: T) => number;
  * unexpected results.
  * @returns - void, the result is in the provided heap array.
  */
-export function heapify<T>(heap: Array<T>, compareFn: HeapComparator<T>): void {
+export function heapify<T>(
+  heap: Array<T>,
+  compareFn: CompareFunction<T>
+): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
     heapSiftDown(heap, i, compareFn);
   }
@@ -30,7 +31,7 @@ export function heapify<T>(heap: Array<T>, compareFn: HeapComparator<T>): void {
 export function heapSiftDown<T>(
   heap: Array<T>,
   index: number,
-  compareFn: HeapComparator<T>
+  compareFn: CompareFunction<T>
 ): void {
   let currentIndex = index;
 

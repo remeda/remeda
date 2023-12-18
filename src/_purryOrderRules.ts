@@ -1,4 +1,4 @@
-import type { NonEmptyArray } from './_types';
+import type { CompareFunction, NonEmptyArray } from './_types';
 
 // We define the comparators in a global const so that they are only
 // instantiated once, and so we can couple a label (string) for them that could
@@ -32,13 +32,6 @@ const COMPARATORS = {
 export type OrderRule<T> =
   | Projection<T>
   | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
-
-/**
- * `purryOrderRules` provides a comparer with this signature based on the rules
- * provided to the function. The implementation should use this function to
- * define the order of items.
- */
-export type CompareFunction<T> = (a: T, b: T) => number;
 
 type Projection<T> = (x: T) => Comparable;
 
