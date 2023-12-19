@@ -15,6 +15,7 @@ documentation when migrating._
 | `clamp`             | `clamp`             | `clamp`             |
 | `clone`             | `cloneDeep`         | `clone`             |
 | `concat`            | `concat`            | `concat`            |
+| `conditinoal`       | `cond`              | `cond`              |
 | `createPipe`        | `-`                 | `-`                 |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
