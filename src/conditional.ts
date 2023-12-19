@@ -25,7 +25,7 @@ type Case<In, Out, Thru extends In = In> = readonly [
  *       [R.isString, (name) => `Hello ${name}`],
  *       [R.isNumber, (id) => `Hello ID: ${id}`],
  *       R.conditional.defaultCase(
- *         (something) => 'Hello something (${JSON.stringify(something)})`,
+ *         (something) => `Hello something (${JSON.stringify(something)})`,
  *       ),
  *     ),
  *   ); //=> 'Hello ID: 3'
@@ -98,7 +98,7 @@ export function conditional<
  *     [R.isString, (name) => `Hello ${name}`],
  *     [R.isNumber, (id) => `Hello ID: ${id}`],
  *     R.conditional.defaultCase(
- *       (something) => 'Hello something (${JSON.stringify(something)})`,
+ *       (something) => `Hello something (${JSON.stringify(something)})`,
  *     ),
  *   ); //=> 'Hello ID: 3'
  * @dataFirst
