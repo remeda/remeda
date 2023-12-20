@@ -9,6 +9,7 @@ export * from './concat';
 export * from './conditional';
 export * from './countBy';
 export * from './createPipe';
+export * from './debounce';
 export * from './difference';
 export * from './differenceWith';
 export * from './drop';
