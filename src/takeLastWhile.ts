@@ -38,7 +38,10 @@ export function takeLastWhile() {
   return purry(_takeLastWhile, arguments);
 }
 
-function _takeLastWhile<T>(data: Array<T>, predicate: (item: T) => boolean) {
+function _takeLastWhile<T>(
+  data: ReadonlyArray<T>,
+  predicate: (item: T) => boolean
+): Array<T> {
   for (let i = data.length - 1; i >= 0; i--) {
     if (!predicate(data[i])) {
       return data.slice(i + 1);
