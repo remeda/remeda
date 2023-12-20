@@ -6,15 +6,15 @@ type Case<In, Out, Thru extends In = In> = readonly [
 ];
 
 /**
- * Runs the transformer paired to a truthy predicate, similar to a switch statement. It will go over the cases sequentially until a case's predicate returns true and then run that case's transformer. Any following cases would be ignored.
+ * Executes a transformer function based on the first matching predicate, functioning like a series of `if...else if...` statements. It sequentially evaluates each case and, upon finding a truthy predicate, runs the corresponding transformer. Further cases are then ignored.
  *
- * In other frameworks this function is often implemented so that it returns a default value when non of the cases match (usually `undefined` in JS). This would force us to add the type of the default value to the return type even for if the conditions are exhaustive. To avoid this we do not return `undefined` and throw instead. If you need the legacy behavior use `conditional.LEGACY_DEFAULT_CASE` as the last case in your conditions. If you need more control over the default case you can use `conditional.defaultCast(then)`.
+ * Unlike similar implementations in other frameworks, this does not return a default value when none of the cases match (like `undefined`); throwing an exception instead. To implement traditional default behavior, use `conditional.LEGACY_DEFAULT_CASE` as the final case, or `conditional.defaultCast(then)` which allows for customized default handling.
  *
- * This function is optimized for use with type predicates (functions that return `data is <something>`) so that the transformer gets a refined type to work with. Because of limitations in Typescript we can't refine the *following* conditions to exclude previous conditions' types. If you need more control over typing prefer an arrow function with a ternary operator or a `switch (true)` block which might be able to refine types more accurately.
+ * Due to TypeScript's limitation in defining a type that is the negation of a type we can't refine types further in subsequent cases due to a previous type predicate rejecting. Using a `switch (true)` statement or ternary operators is recommended for more precise type control when such type narrowing is needed.
  *
- * @param data - The data that would be run through the conditions, this could be anything.
- * @param cases - up to 10 2-tuples defining cases of the form `[predicate, transformer]`: predicate - a function that takes the data T and returns a boolean (or a narrowed type via `is <something>`); transformer - takes T (or the narrowed type) and can return anything.
- * @returns The result of the transformer that ran, or an exception if none of them ran. Because the transformer is selected at runtime, the return type is a union of all possible return types.
+ * @param data - The input data to be evaluated against the provided cases.
+ * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple consists of a predicate (or a type-predicate) and a transformer function that processes the data if its case matches.
+ * @returns The output of the matched transformer. If no cases match, an exception is thrown. The return type is a union of the return types of all provided transformers.
  * @signature
  *   R.conditional(...cases)(data);
  * @example
@@ -80,15 +80,15 @@ export function conditional<
   | Return9;
 
 /**
- * Runs the transformer paired to a truthy predicate, similar to a switch statement. It will go over the cases sequentially until a case's predicate returns true and then run that case's transformer. Any following cases would be ignored.
+ * Executes a transformer function based on the first matching predicate, functioning like a series of `if...else if...` statements. It sequentially evaluates each case and, upon finding a truthy predicate, runs the corresponding transformer. Further cases are then ignored.
  *
- * In other frameworks this function is often implemented so that it returns a default value when non of the cases match (usually `undefined` in JS). This would force us to add the type of the default value to the return type even for if the conditions are exhaustive. To avoid this we do not return `undefined` and throw instead. If you need the legacy behavior use `conditional.LEGACY_DEFAULT_CASE` as the last case in your conditions. If you need more control over the default case you can use `conditional.defaultCast(then)`.
+ * Unlike similar implementations in other frameworks, this does not return a default value when none of the cases match (like `undefined`); throwing an exception instead. To implement traditional default behavior, use `conditional.LEGACY_DEFAULT_CASE` as the final case, or `conditional.defaultCast(then)` which allows for customized default handling.
  *
- * This function is optimized for use with type predicates (functions that return `data is <something>`) so that the transformer gets a refined type to work with. Because of limitations in Typescript we can't refine the *following* conditions to exclude previous conditions' types. If you need more control over typing prefer an arrow function with a ternary operator or a `switch (true)` block which might be able to refine types more accurately.
+ * Due to TypeScript's limitation in defining a type that is the negation of a type we can't refine types further in subsequent cases due to a previous type predicate rejecting. Using a `switch (true)` statement or ternary operators is recommended for more precise type control when such type narrowing is needed.
  *
- * @param data - The data that would be run through the conditions, this could be anything.
- * @param cases - up to 10 2-tuples defining cases of the form `[predicate, transformer]`: predicate - a function that takes the data T and returns a boolean (or a narrowed type via `is <something>`); transformer - takes T (or the narrowed type) and can return anything.
- * @returns The result of the transformer that ran, or an exception if none of them ran. Because the transformer is selected at runtime, the return type is a union of all possible return types.
+ * @param data - The input data to be evaluated against the provided cases.
+ * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple consists of a predicate (or a type-predicate) and a transformer function that processes the data if its case matches.
+ * @returns The output of the matched transformer. If no cases match, an exception is thrown. The return type is a union of the return types of all provided transformers.
  * @signature
  *   R.conditional(data, ...cases);
  * @example
