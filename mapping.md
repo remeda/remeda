@@ -9,13 +9,14 @@ documentation when migrating._
 | Remeda              | Lodash              | Ramda               |
 | ------------------- | ------------------- | ------------------- |
 | `addProp`           | `set`               | `set`               |
-| `allPass`           | `-`                 | `allPass`           |
-| `anyPass`           | `-`                 | `anyPass`           |
-| `chunk`             | `chunk`             | `-`                 |
+| `allPass`           |                     | `allPass`           |
+| `anyPass`           |                     | `anyPass`           |
+| `chunk`             | `chunk`             |                     |
 | `clamp`             | `clamp`             | `clamp`             |
 | `clone`             | `cloneDeep`         | `clone`             |
 | `concat`            | `concat`            | `concat`            |
-| `createPipe`        | `-`                 | `-`                 |
+| `createPipe`        |                     |                     |
+| `debounce`          | `debounce`          |                     |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
 | `drop`              | `drop`              | `drop`              |
@@ -44,15 +45,15 @@ documentation when migrating._
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |
 | `map`               | `map`               | `map`               |
-| `mapKeys`           | `mapKeys`           | `-`                 |
-| `meanBy`            | `meanBy`            | `-`                 |
+| `mapKeys`           | `mapKeys`           |                     |
+| `meanBy`            | `meanBy`            |                     |
 | `merge`             | `assign`            | `merge`             |
 | `mergeAll`          | `assign`            | `mergeAll`          |
 | `mergeDeep`         |                     | `mergeDeepRight`    |
 | `noop`              | `noop`              | `-`                 |
 | `objOf`             | `-`                 | `objOf`             |
 | `omit`              | `omit`              | `omit`              |
-| `omitBy`            | `omitBy`            | `-`                 |
+| `omitBy`            | `omitBy`            |                     |
 | `once`              | `once`              | `once`              |
 | `partition`         | `partition`         | `partition`         |
 | `pathOr`            | `get`               | `pathOr`            |
@@ -60,8 +61,8 @@ documentation when migrating._
 | `pickBy`            | `pickBy`            | `pickBy`            |
 | `pipe`              | `flow`              | `pipe`              |
 | `prop`              | `get`               | `prop`              |
-| `purry`             | `-`                 | `-`                 |
-| `randomString`      | `-`                 | `-`                 |
+| `purry`             |                     |                     |
+| `randomString`      |                     |                     |
 | `range`             | `range`             | `range`             |
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
@@ -69,9 +70,9 @@ documentation when migrating._
 | `sample`            | `sampleSize`\*      |                     |
 | `set`               | `set`               | `assoc`             |
 | `setPath`           | `set`               | `assocPath`         |
-| `shuffle`           | `shuffle`           | `-`                 |
-| `sort`              | `-`                 | `sort`              |
-| `sortBy`            | `orderBy`           | `-`                 |
+| `shuffle`           | `shuffle`           |                     |
+| `sort`              |                     | `sort`              |
+| `sortBy`            | `orderBy`           |                     |
 | `sortBy`            | `sortBy`            | `sortBy`            |
 | `sortedIndex`       | `sortedIndex`       |                     |
 | `sortedIndexBy`     | `sortedIndexBy`     |                     |
@@ -89,7 +90,7 @@ documentation when migrating._
 | `tap`               | `tap`               | `tap`               |
 | `times`             | `times`             | `times`             |
 | `toPairs`           | `toPairs`           | `toPairs`           |
-| `type`              | `-`                 | `type`              |
+| `type`              |                     | `type`              |
 | `uniq`              | `uniq`              | `uniq`              |
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
@@ -109,11 +110,11 @@ you are relying on when migrating._
 | Lodash     | Ramda    | TypeScript                    |
 | ---------- | -------- | ----------------------------- |
 | `add`      | `add`    | `(x, y) => x + y`             |
-| `-`        | `append` | `(arr, val) => [...arr, val]` |
+|            | `append` | `(arr, val) => [...arr, val]` |
 | `constant` | `always` | `x => () => x`                |
 | `nth`      | `nth`    | `n => a[n]`                   |
-| `-`        | `path`   | `a?.b?.c`                     |
-| `-`        | `propEq` | `x => x.a === value`          |
-| `-`        | `propOr` | `x => x.a ?? defaultValue`    |
-| `words`    | `-`      | `str => str.split(/\s+/)`     |
-| `compact`  | `-`      | `R.filter(R.isTruthy)`        |
+|            | `path`   | `a?.b?.c`                     |
+|            | `propEq` | `x => x.a === value`          |
+|            | `propOr` | `x => x.a ?? defaultValue`    |
+| `words`    |          | `str => str.split(/\s+/)`     |
+| `compact`  |          | `R.filter(R.isTruthy)`        |
