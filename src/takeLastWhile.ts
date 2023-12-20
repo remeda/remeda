@@ -44,5 +44,5 @@ function _takeLastWhile<T>(data: Array<T>, predicate: (item: T) => boolean) {
       return data.slice(i + 1);
     }
   }
-  return data;
+  return data.slice();
 }

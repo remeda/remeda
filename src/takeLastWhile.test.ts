@@ -17,7 +17,7 @@ describe('data first', () => {
   });
 
   it('should return the original array when all items pass the predicate', () => {
-    expect(takeLastWhile(DATA, n => n > 0)).toBe(DATA);
+    expect(takeLastWhile(DATA, n => n > 0)).toStrictEqual(DATA);
   });
 });
 
@@ -55,6 +55,6 @@ describe('data last', () => {
         DATA,
         takeLastWhile(n => n > 0)
       )
-    ).toBe(DATA);
+    ).toStrictEqual(DATA);
   });
 });
