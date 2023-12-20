@@ -100,6 +100,7 @@ export * from './sumBy';
 export * from './swapIndices';
 export * from './swapProps';
 export * from './take';
+export * from './takeLastWhile';
 export * from './takeWhile';
 export * from './tap';
 export * from './times';
