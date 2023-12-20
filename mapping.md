@@ -16,7 +16,7 @@ documentation when migrating._
 | `clone`             | `cloneDeep`         | `clone`             |
 | `concat`            | `concat`            | `concat`            |
 | `createPipe`        |                     |                     |
-| `debouunce`         | `debounce`          |                     |
+| `debounce`          | `debounce`          |                     |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
 | `drop`              | `drop`              | `drop`              |
