@@ -93,26 +93,26 @@ type DebounceOptions = {
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options?: { readonly timing?: 'trailing' } & DebounceOptions
-): Debouncer<F, true /* call can return null */>;
+  options: { readonly timing?: 'trailing' } & DebounceOptions
+): Debouncer<F>;
 export function debounce<F extends (...args: any) => any>(
   func: F,
   options:
     | ({ readonly timing: 'leading' } & Omit<DebounceOptions, 'maxWaitMs'>)
     | ({ readonly timing: 'both' } & DebounceOptions)
-): Debouncer<F, false /* call can't return null */>;
+): Debouncer<F, false /* call CAN'T return null */>;
 
 export function debounce<F extends (...args: any) => any>(
   func: F,
   {
-    waitMs = 0,
+    waitMs,
     timing = 'trailing',
     maxWaitMs,
   }: DebounceOptions & {
     readonly timing?: 'leading' | 'both' | 'trailing';
-  } = {}
+  }
 ): Debouncer<F> {
-  if (maxWaitMs !== undefined && maxWaitMs < waitMs) {
+  if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
       `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`
     );
@@ -222,7 +222,14 @@ export function debounce<F extends (...args: any) => any>(
         clearTimeout(timeoutId);
       }
 
-      coolDownTimeoutId = setTimeout(handleCoolDownEnd, waitMs);
+      coolDownTimeoutId = setTimeout(
+        handleCoolDownEnd,
+        // If waitMs is not defined but maxWaitMs *is* it means the user is only
+        // interested in the leaky-bucket nature of the debouncer which is
+        // achieved by setting waitMs === maxWaitMs. If both are not defined we
+        // default to 0 which would wait until the end of the execution frame.
+        waitMs ?? maxWaitMs ?? 0
+      );
 
       // Return the last computed result while we "debounce" further calls.
       return result;
