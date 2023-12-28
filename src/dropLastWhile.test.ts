@@ -14,6 +14,10 @@ describe('data first', () => {
     expect(dropLastWhile([], n => n > 0)).toStrictEqual([]);
   });
 
+  it('should return first item when first item fails the predicate', () => {
+    expect(dropLastWhile([1, 2, 3, 4], n => n !== 1)).toStrictEqual([1]);
+  });
+
   it('should return a copy of the array when the last item fails the predicate', () => {
     const data = [1, 2, 3, 4];
     const result = dropLastWhile(data, n => n !== 4);
@@ -48,6 +52,15 @@ describe('data last', () => {
         dropLastWhile(n => n > 0)
       )
     ).toStrictEqual([]);
+  });
+
+  it('should return first item when first item fails the predicate', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4],
+        dropLastWhile(n => n !== 1)
+      )
+    ).toStrictEqual([1]);
   });
 
   it('should return a copy of the array when the last item fails the predicate', () => {
