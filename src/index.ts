@@ -13,6 +13,7 @@ export * from './difference';
 export * from './differenceWith';
 export * from './drop';
 export * from './dropLast';
+export * from './dropLastWhile';
 export * from './dropWhile';
 export * from './equals';
 export * from './filter';

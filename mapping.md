@@ -21,6 +21,7 @@ documentation when migrating._
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
 | `drop`              | `drop`              | `drop`              |
 | `dropLast`          | `dropRight`         | `dropLast`          |
+| `dropLastWhile`     | `dropRightWhile`    | `dropLastWhile`     |
 | `dropWhile`         | `dropWhile`         | `dropWhile`         |
 | `equals`            | `isEqual`           | `equals`            |
 | `filter`            | `filter`            | `filter`            |
