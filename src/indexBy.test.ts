@@ -28,7 +28,7 @@ describe('data first', () => {
 
   test('indexBy.strict', () => {
     const result = indexBy.strict(array, x => x.code);
-    assertType<ExpectedTypeStrict>(result);
+    expectTypeOf<ExpectedTypeStrict>(result);
     expect(result).toStrictEqual(expectedStrict);
   });
 });
@@ -57,7 +57,7 @@ describe('data last', () => {
       array,
       indexBy.strict(x => x.code)
     );
-    assertType<ExpectedTypeStrict>(result);
+    expectTypeOf<ExpectedTypeStrict>(result);
     expect(result).toEqual(expectedStrict);
   });
 });
