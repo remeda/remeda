@@ -64,5 +64,12 @@ module.exports = {
         node: true,
       },
     },
+    {
+      files: ['src/type-fest/**.ts'],
+      rules: {
+        // Type-fest uses a lot of "banned" types...
+        '@typescript-eslint/ban-types': 'off',
+      },
+    },
   ],
 };

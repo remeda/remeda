@@ -21,10 +21,10 @@ type Difference<A extends number, B extends number> = TupleOfLength<A> extends [
 type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
   ? false
   : 0 extends A
-  ? true
-  : 0 extends B
-  ? false
-  : isLessThan<Difference<A, 1>, Difference<B, 1>>;
+    ? true
+    : 0 extends B
+      ? false
+      : isLessThan<Difference<A, 1>, Difference<B, 1>>;
 
 type TupleOfLength<
   L extends number,
@@ -34,14 +34,14 @@ type TupleOfLength<
 type IsNonNegative<T extends number> = number extends T
   ? false
   : `${T}` extends `-${string}`
-  ? false
-  : true;
+    ? false
+    : true;
 
 type CharactersTuple<T extends string> = string extends T
   ? Array<string>
   : T extends `${infer C}${infer R}`
-  ? [C, ...CharactersTuple<R>]
-  : [];
+    ? [C, ...CharactersTuple<R>]
+    : [];
 
 type SwapArrayInternal<
   T extends IterableContainer,
@@ -54,8 +54,8 @@ type SwapArrayInternal<
       Position['length'] extends Index1
         ? Original[Index2]
         : Position['length'] extends Index2
-        ? Original[Index1]
-        : AtPosition,
+          ? Original[Index1]
+          : AtPosition,
       ...SwapArrayInternal<
         Rest,
         Index1,
@@ -86,14 +86,14 @@ type SwapArray<
   IsNonNegative<K1> extends false
     ? Array<T[number]>
     : IsNonNegative<K2> extends false
-    ? Array<T[number]>
-    : // If the indices are not within the input arrays range the result would be
-    // trivially the same as the input array.
-    isLessThan<K1, T['length']> extends false
-    ? T
-    : isLessThan<K2, T['length']> extends false
-    ? T
-    : SwapArrayInternal<T, K1, K2>;
+      ? Array<T[number]>
+      : // If the indices are not within the input arrays range the result would be
+        // trivially the same as the input array.
+        isLessThan<K1, T['length']> extends false
+        ? T
+        : isLessThan<K2, T['length']> extends false
+          ? T
+          : SwapArrayInternal<T, K1, K2>;
 
 type SwappedIndices<
   T extends IterableContainer | string,
@@ -102,8 +102,8 @@ type SwappedIndices<
 > = T extends string
   ? SwapString<T, K1, K2>
   : T extends IterableContainer
-  ? SwapArray<T, K1, K2>
-  : never;
+    ? SwapArray<T, K1, K2>
+    : never;
 
 /**
  * Swaps the positions of two elements in an array or string at the provided indices.

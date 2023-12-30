@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
+          - '~5.3.0'
           - '~5.2.0'
           - '~5.1.0'
-          - '~5.0.0'
           # We use features that were added in v4.2 of typescript, so that is
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
@@ -91,7 +91,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: npm run test:ci
+        run: npm run test
 
   lint:
     name: 🧹 Lint
@@ -131,20 +131,24 @@ jobs:
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Node.js
+
+      - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
-      - name: Build
+
+      - name: 🏗️ Build
         run: npm run build
-      - name: Release
-        run: npx semantic-release@19
+
+      - name: 🚀 Release
+        run: npm run release
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -1,8 +1,8 @@
 type DefinitelyBoolean<T> = Extract<T, boolean> extends never
   ? boolean
   : Extract<T, boolean> extends any
-  ? boolean
-  : Extract<T, number>;
+    ? boolean
+    : Extract<T, number>;
 
 /**
  * A function that checks if the passed parameter is a boolean and narrows its type accordingly

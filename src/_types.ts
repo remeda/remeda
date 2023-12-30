@@ -45,3 +45,9 @@ type BuildTupleHelper<
 > = Rest['length'] extends Length
   ? readonly [...Rest] // Terminate with readonly array (aka tuple)
   : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
+
+/**
+ * Based on type-fest's IsAny
+ * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
+ */
+export type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;

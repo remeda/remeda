@@ -116,7 +116,14 @@ async function transformFunction({
   const description =
     summary.length === 0
       ? undefined
-      : markedParse(summary.map(({ text }) => text).join(''), MARKED_OPTIONS);
+      : // Marked can't tell when it's called if an async plugin is being used
+        // or not, so it can't type it's result accordingly. We know that we
+        // don't use any plugins so we cast the return type explicitly. This is
+        // how the marked team suggests for handling this typing ambiguity :(
+        (markedParse(
+          summary.map(({ text }) => text).join(''),
+          MARKED_OPTIONS
+        ) as string);
 
   const methods = await Promise.all(
     signaturesWithComments.map(transformSignature)
@@ -175,12 +182,12 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
   return type === undefined
     ? 'Object'
     : type.type === 'intrinsic'
-    ? type.name
-    : type.type === 'array'
-    ? 'Array'
-    : type.type === 'predicate'
-    ? 'boolean'
-    : 'Object';
+      ? type.name
+      : type.type === 'array'
+        ? 'Array'
+        : type.type === 'predicate'
+          ? 'boolean'
+          : 'Object';
 }
 
 async function getExample(
