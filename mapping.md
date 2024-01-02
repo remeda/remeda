@@ -26,6 +26,7 @@ documentation when migrating._
 | `dropLastWhile`     | `dropRightWhile`    | `dropLastWhile`     |
 | `dropWhile`         | `dropWhile`         | `dropWhile`         |
 | `equals`            | `isEqual`           | `equals`            |
+| `evolve`            |                     | `evolve`            |
 | `filter`            | `filter`            | `filter`            |
 | `find`              | `find`              | `find`              |
 | `findIndex`         | `findIndex`         | `findIndex`         |

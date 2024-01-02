@@ -18,6 +18,7 @@ export * from './dropLast';
 export * from './dropLastWhile';
 export * from './dropWhile';
 export * from './equals';
+export * from './evolve';
 export * from './filter';
 export * from './find';
 export * from './findIndex';
