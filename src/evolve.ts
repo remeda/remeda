@@ -7,8 +7,9 @@ type AFunction = (...a: Array<any>) => any;
 /**
  * @example
  * type ab = Keys<{a: undefined},{ b: undefined}> // type ab = "a" | "b"
+ * type a = Keys<{a: undefined}> // type ab = "a"
  */
-type Keys<T, E> = Exclude<keyof T | keyof E, keyof []>;
+type Keys<T, E = []> = Exclude<keyof T | keyof E, keyof []>;
 
 /**
  * @example
@@ -22,28 +23,121 @@ type Keys<T, E> = Exclude<keyof T | keyof E, keyof []>;
 type GetValueByKey<
   T,
   K extends PropertyKey,
-  Default = never
+  Default = never,
 > = K extends keyof T ? T[K] : Default;
 
+type _SomeElmIsDefined<A extends [...params: any]> = {
+  [K in Keys<A> as undefined extends GetValueByKey<A, K>
+    ? never
+    : 'TRUE']: true;
+};
+
+/**
+ * @example
+ * type True = SomeElmIsDefined<[undefined | string, string]>; // type True = true
+ * type True = SomeElmIsDefined<[string, undefined | string]>; // type True = true
+ * type True = SomeElmIsDefined<[string, string]>; // type True = true
+ * type False = SomeElmIsDefined<[undefined | string, undefined | string]>; // type False = false
+ */
+type SomeElmIsDefined<A extends Array<any>> = GetValueByKey<
+  _SomeElmIsDefined<A>,
+  'TRUE',
+  false
+>;
+
+/**
+ * @example
+ * type False = AllElmAreUndefinable<[undefined | string, string]>; // type False = false
+ * type False = AllElmAreUndefinable<[string, undefined | string]>; // type False = false
+ * type False = AllElmAreUndefinable<[string, string]>; // type False = false
+ * type True = AllElmAreUndefinable<[undefined | string, undefined | string]>; // type True = true
+ */
+type AllElmAreUndefinable<A extends Array<any>> =
+  SomeElmIsDefined<A> extends true ? false : true;
+
+/**
+ * Get the type of first parameter.
+ * But get `never` if the function's the second and subsequent parameters do not take `undefined`.
+ * @example
+ * type Number = GetFirstParam<(arg1: number) => void>; // type Number = number
+ * type Number = GetFirstParam<(arg1: number, arg2?: number) => void>; // type Number = number
+ * type Number = GetFirstParam< (arg1: number, arg2?: number, arg3?: number) => void >; // type Number = number
+ * type Number = GetFirstParam<(arg1: number, arg2: number | undefined) => void>; // type Number = number
+ * type Never = GetFirstParam<(arg1: number, arg2: number) => void>; // type Never = never
+ * type Never = GetFirstParam<(arg1: number, arg2: number, arg3?: number) => void>; // type Never = never
+ * type Never = GetFirstParam<(arg1: number, arg2: number|undefined, arg3: number) => void>; // type Never = never
+ */
+type GetFirstParam<T extends AFunction> = T extends (
+  firstArg: infer Ret,
+  ...restArgs: infer Rest
+) => any
+  ? Rest['length'] extends 0
+    ? Ret
+    : AllElmAreUndefinable<Rest> extends true
+      ? Ret
+      : never
+  : never;
+
+/**
+ * Creates an assumed object type from the type of the `transformations` argument of `evolve`.
+ * @example
+ * type Number = EvolveTargetObject<(arg1: number) => void>; // type Number = number
+ * type Nested = EvolveTargetObject<{
+ *   num: (arg1: number) => void;
+ *   obj: {
+ *    num: (arg1: number) => void
+ *   }
+ *   ary: [(arg1: number) => void, (arg1: number) => void]
+ *   notFunc: 'test'
+ * }>; /* -> type Nested = {
+ *            num?: number | undefined;
+ *            obj?: {
+ *                num?: number | undefined;
+ *            } | undefined;
+ *            ary?: {
+ *                0?: number | undefined;
+ *                1?: number | undefined;
+ *            } | undefined;
+ *          } * /
+ */
+type EvolveTargetObject<E> = E extends AFunction
+  ? GetFirstParam<E>
+  : E extends object
+    ? {
+        [K in Keys<E> as GetValueByKey<E, K> extends never
+          ? never
+          : GetValueByKey<E, K> extends AFunction
+            ? K
+            : GetValueByKey<E, K> extends object
+              ? K
+              : never]?: EvolveTargetObject<GetValueByKey<E, K>>;
+      }
+    : never;
+
+/**
+ * Creates return type from the type of arguments of `evolve`.
+ */
 type Evolve<T, E> = E extends AFunction
   ? ReturnType<E>
   : T extends object
-  ? {
-      [K in Keys<T, E> as GetValueByKey<
-        T,
-        K
-      > extends never
-        ? never
-        : K]: Evolve<
-        GetValueByKey<T, K>,
-        GetValueByKey<E, K, GetValueByKey<T, K>>
-      >;
-    }
-  : T;
+    ? {
+        [K in Keys<T, E> as GetValueByKey<T, K> extends never
+          ? never
+          : K]: Evolve<
+          GetValueByKey<T, K>,
+          GetValueByKey<E, K, GetValueByKey<T, K>>
+        >;
+      }
+    : T;
 
-export function evolve<const T, const E>(object: T, transformations: E): Evolve<T, E>;
+export function evolve<const T extends EvolveTargetObject<E>, const E>(
+  object: T,
+  transformations: E
+): Evolve<T, E>;
 
-export function evolve<const E>(transformations: E): <const T>(object: T) => Evolve<T, E>;
+export function evolve<const E>(
+  transformations: E
+): <const T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
 
 export function evolve() {
   return purry(_evolve, arguments);
@@ -70,8 +164,8 @@ function _evolve(object: any, transformations: any) {
       type === 'function'
         ? transformation(object[key])
         : transformation && type === 'object'
-        ? _evolve(object[key], transformation)
-        : object[key];
+          ? _evolve(object[key], transformation)
+          : object[key];
   }
   return result;
 }
