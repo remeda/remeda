@@ -12,6 +12,7 @@ export * from './createPipe';
 export * from './debounce';
 export * from './difference';
 export * from './differenceWith';
+export * from './divide';
 export * from './drop';
 export * from './dropLast';
 export * from './equals';

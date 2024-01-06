@@ -20,6 +20,7 @@ documentation when migrating._
 | `debounce`          | `debounce`          |                     |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
+| `divide`            | `divide`            | `divide`            |
 | `drop`              | `drop`              | `drop`              |
 | `dropLast`          | `dropRight`         | `dropLast`          |
 | `equals`            | `isEqual`           | `equals`            |
