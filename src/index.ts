@@ -97,6 +97,7 @@ export * from './splice';
 export * from './splitAt';
 export * from './splitWhen';
 export * from './stringToPath';
+export * from './subtract';
 export * from './sumBy';
 export * from './swapIndices';
 export * from './swapProps';

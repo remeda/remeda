@@ -83,6 +83,7 @@ documentation when migrating._
 | `splitAt`           | `-`                 | `splitAt`           |
 | `splitWhen`         | `-`                 | `splitWhen`         |
 | `stringToPath`      | `toPath`            | `-`                 |
+| `subtract`          | `subtract`          | `subtract`          |
 | `sumBy`             | `sumBy`             | `-`                 |
 | `swapIndices`       | `-`                 | `swap`              |
 | `swapProps`         | `-`                 | `swap`              |
