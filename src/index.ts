@@ -64,6 +64,7 @@ export * from './merge';
 export * from './mergeAll';
 export * from './mergeDeep';
 export * from './minBy';
+export * from './multiply';
 export * from './noop';
 export * from './objOf';
 export * from './omit';

@@ -51,6 +51,7 @@ documentation when migrating._
 | `merge`             | `assign`            | `merge`             |
 | `mergeAll`          | `assign`            | `mergeAll`          |
 | `mergeDeep`         |                     | `mergeDeepRight`    |
+| `multiply`          | `multiply`          | `multiply`          |
 | `noop`              | `noop`              | `-`                 |
 | `objOf`             | `-`                 | `objOf`             |
 | `omit`              | `omit`              | `omit`              |
