@@ -1,12 +1,9 @@
 import { purry } from './purry';
 
 /**
- * Removes elements from the beginning of the array until the predicate returns
- * false.
+ * Removes elements from the beginning of the array until the predicate returns false.
  *
- * The predicate is applied to each element in the array, until the predicate
- * returns false. The returned array includes the rest of the elements, starting
- * with the element that produced false for the predicate.
+ * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
  *
  * @param data the array
  * @param predicate the predicate
@@ -23,12 +20,9 @@ export function dropWhile<T>(
 ): Array<T>;
 
 /**
- * Removes elements from the beginning of the array until the predicate returns
- * false.
+ * Removes elements from the beginning of the array until the predicate returns false.
  *
- * The predicate is applied to each element in the array, until the predicate
- * returns false. The returned array includes the rest of the elements, starting
- * with the element that produced false for the predicate.
+ * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
  *
  * @param predicate the predicate
  * @signature
