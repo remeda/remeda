@@ -10,6 +10,10 @@ describe('data first', () => {
     expect(takeLastWhile([1, 2, 3, 4], n => n !== 4)).toStrictEqual([]);
   });
 
+  it('should return rest of the items when first item fails the predicate', () => {
+    expect(takeLastWhile([1, 2, 3, 4], n => n !== 1)).toStrictEqual([2, 3, 4]);
+  });
+
   it('should return an empty array when an empty array is passed', () => {
     expect(takeLastWhile([], n => n > 0)).toStrictEqual([]);
   });
@@ -39,6 +43,15 @@ describe('data last', () => {
         takeLastWhile(n => n !== 4)
       )
     ).toStrictEqual([]);
+  });
+
+  it('should return rest of the items when first item fails the predicate', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4],
+        takeLastWhile(n => n !== 1)
+      )
+    ).toStrictEqual([2, 3, 4]);
   });
 
   it('should return an empty array when an empty array is passed', () => {

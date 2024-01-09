@@ -15,6 +15,8 @@ export * from './differenceWith';
 export * from './divide';
 export * from './drop';
 export * from './dropLast';
+export * from './dropLastWhile';
+export * from './dropWhile';
 export * from './equals';
 export * from './filter';
 export * from './find';
