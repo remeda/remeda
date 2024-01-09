@@ -2,7 +2,6 @@ import { pipe } from './pipe';
 import { evolve } from './evolve';
 import { omit } from './omit';
 import { set } from './set';
-import { identity } from './identity';
 import { map } from './map';
 import { add } from './add';
 
@@ -198,7 +197,7 @@ describe('data last', () => {
     // use `as const` or `evolve` can't handle typing.
     const transf = [
       add(-1),
-      identity<number>,
+      (x: number) => x,
       add(1),
       [null, (x: string) => x + '!!'],
     ] as const;

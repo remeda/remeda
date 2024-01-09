@@ -130,14 +130,14 @@ type Evolve<T, E> = E extends AFunction
       }
     : T;
 
-export function evolve<const T extends EvolveTargetObject<E>, const E>(
+export function evolve<T extends EvolveTargetObject<E>, E>(
   object: T,
   transformations: E
 ): Evolve<T, E>;
 
-export function evolve<const E>(
+export function evolve<E>(
   transformations: E
-): <const T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
+): <T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
 
 export function evolve() {
   return purry(_evolve, arguments);
