@@ -2,9 +2,8 @@ import { purry } from './purry';
 import { PredIndexedOptional, PredIndexed } from './_types';
 
 /**
- * Converts a list of objects into an object indexing the objects by the given key
- * (casted to a string). Use the strict version to maintain the given key's type, so
- * long as it is a valid `PropertyKey`.
+ * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
+ * Use the strict version to maintain the given key's type, so long as it is a valid `PropertyKey`.
  *
  * @param array the array
  * @param fn the indexing function
@@ -77,21 +76,19 @@ function indexByStrict<K extends PropertyKey, T>(
 ): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
 
 function indexByStrict() {
-  return purry(_indexByStrict(false), arguments);
+  return purry(_indexByStrict, arguments);
 }
 
-const _indexByStrict =
-  (indexed: boolean) =>
-  <K extends PropertyKey, T>(
-    array: Array<T>,
-    fn: PredIndexedOptional<T, K>
-  ) => {
-    return array.reduce<Partial<Record<K, T>>>((ret, item, index) => {
-      const key = indexed ? fn(item, index, array) : fn(item);
-      ret[key] = item;
-      return ret;
-    }, {});
-  };
+const _indexByStrict = <K extends PropertyKey, T>(
+  array: Array<T>,
+  fn: (item: T) => K
+) => {
+  return array.reduce<Partial<Record<K, T>>>((ret, item) => {
+    const key = fn(item);
+    ret[key] = item;
+    return ret;
+  }, {});
+};
 
 export namespace indexBy {
   export function indexed<T>(
