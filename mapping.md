@@ -8,6 +8,7 @@ documentation when migrating._
 
 | Remeda              | Lodash              | Ramda               |
 | ------------------- | ------------------- | ------------------- |
+| `add`               | `add`               | `add`               |
 | `addProp`           | `set`               | `set`               |
 | `allPass`           |                     | `allPass`           |
 | `anyPass`           |                     | `anyPass`           |
@@ -19,6 +20,7 @@ documentation when migrating._
 | `debounce`          | `debounce`          |                     |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
+| `divide`            | `divide`            | `divide`            |
 | `drop`              | `drop`              | `drop`              |
 | `dropLast`          | `dropRight`         | `dropLast`          |
 | `equals`            | `isEqual`           | `equals`            |
@@ -50,6 +52,7 @@ documentation when migrating._
 | `merge`             | `assign`            | `merge`             |
 | `mergeAll`          | `assign`            | `mergeAll`          |
 | `mergeDeep`         |                     | `mergeDeepRight`    |
+| `multiply`          | `multiply`          | `multiply`          |
 | `noop`              | `noop`              | `-`                 |
 | `objOf`             | `-`                 | `objOf`             |
 | `omit`              | `omit`              | `omit`              |
@@ -82,6 +85,7 @@ documentation when migrating._
 | `splitAt`           | `-`                 | `splitAt`           |
 | `splitWhen`         | `-`                 | `splitWhen`         |
 | `stringToPath`      | `toPath`            | `-`                 |
+| `subtract`          | `subtract`          | `subtract`          |
 | `sumBy`             | `sumBy`             | `-`                 |
 | `swapIndices`       | `-`                 | `swap`              |
 | `swapProps`         | `-`                 | `swap`              |
@@ -110,7 +114,6 @@ you are relying on when migrating._
 
 | Lodash     | Ramda    | TypeScript                    |
 | ---------- | -------- | ----------------------------- |
-| `add`      | `add`    | `(x, y) => x + y`             |
 |            | `append` | `(arr, val) => [...arr, val]` |
 | `constant` | `always` | `x => () => x`                |
 | `nth`      | `nth`    | `n => a[n]`                   |
