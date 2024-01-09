@@ -80,7 +80,7 @@ function indexByStrict() {
 }
 
 const _indexByStrict = <K extends PropertyKey, T>(
-  array: Array<T>,
+  array: ReadonlyArray<T>,
   fn: (item: T) => K
 ) => {
   return array.reduce<Partial<Record<K, T>>>((ret, item) => {
