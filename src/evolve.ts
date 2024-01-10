@@ -130,18 +130,43 @@ type Evolve<T, E> = E extends AFunction
       }
     : T;
 
+/**
+ * Creates a new object by recursively evolving a shallow copy of `object`,
+ * according to the `transformation` functions. All non-primitive properties
+ * are copied by reference.
+ *
+ * A `transformation` function will not be invoked if its corresponding key
+ * does not exist in the evolved object.
+
+ * @param object object or array whose value at some path is applied to
+ * the corresponding function that is defined in `transformations` at the same path.
+ * @param transformations it is object or array in which the functions at some path is applied to
+ * the corresponding value of `object` at the same path.
+ * @signature
+ *    R.evolve(object, transformations)
+ * @example
+ *    const transf = {
+ *      count: add(1),
+ *      data: { elapsed: add(1), remaining: add(-1) },
+ *    };
+ *    const object = {
+ *      id: 10,
+ *      count: 10,
+ *      data: { elapsed: 100, remaining: 1400 },
+ *    };
+ *    evolve(object, transf)
+ *    /* => {
+ *      id: 10,
+ *      count: 11,
+ *      data: { elapsed: 101, remaining: 1399 },
+ *    } * /
+ * @dataFirst
+ * @category Object
+ */
 export function evolve<T extends EvolveTargetObject<E>, E>(
   object: T,
   transformations: E
 ): Evolve<T, E>;
-
-export function evolve<E>(
-  transformations: E
-): <T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
-
-export function evolve() {
-  return purry(_evolve, arguments);
-}
 
 /**
  * Creates a new object by recursively evolving a shallow copy of `object`,
@@ -150,7 +175,40 @@ export function evolve() {
  *
  * A `transformation` function will not be invoked if its corresponding key
  * does not exist in the evolved object.
+
+ * @param object object or array whose value at some path is applied to
+ * the corresponding function that is defined in `transformations` at the same path.
+ * @param transformations it is object or array in which the functions at some path is applied to
+ * the corresponding value of `object` at the same path.
+ * @signature
+ *    R.evolve(transf)(object)
+ * @example
+ *    const transf = {
+ *      count: add(1),
+ *      data: { elapsed: add(1), remaining: add(-1) },
+ *    };
+ *    const object = {
+ *      id: 10,
+ *      count: 10,
+ *      data: { elapsed: 100, remaining: 1400 },
+ *    };
+ *    R.pipe(object, R.evolve(transf))
+ *    /* => {
+ *      id: 10,
+ *      count: 11,
+ *      data: { elapsed: 101, remaining: 1399 },
+ *    } * /
+ * @dataLast
+ * @category Object
  */
+export function evolve<E>(
+  transformations: E
+): <T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
+
+export function evolve() {
+  return purry(_evolve, arguments);
+}
+
 function _evolve(object: any, transformations: any) {
   if (!isObject(object) && !isArray(object)) {
     return object;
