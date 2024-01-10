@@ -41,7 +41,6 @@ export type FunctionsData = ReadonlyArray<
 
 const MARKED_OPTIONS = {
   gfm: true,
-  breaks: true,
 } satisfies MarkedOptions;
 
 const PRETTIER_OPTIONS = {
