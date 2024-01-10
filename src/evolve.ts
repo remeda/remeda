@@ -89,16 +89,17 @@ type GetFirstParam<T extends AFunction> = T extends (
  *   }
  *   ary: [(arg1: number) => void, (arg1: number) => void]
  *   notFunc: 'test'
- * }>; /* -> type Nested = {
- *            num?: number | undefined;
- *            obj?: {
- *                num?: number | undefined;
- *            } | undefined;
- *            ary?: {
- *                0?: number | undefined;
- *                1?: number | undefined;
- *            } | undefined;
- *          } * /
+ * }>;
+ * // type Nested = {
+ * //   num?: number | undefined;
+ * //   obj?: {
+ * //       num?: number | undefined;
+ * //   } | undefined;
+ * //   ary?: {
+ * //       0?: number | undefined;
+ * //       1?: number | undefined;
+ * //   } | undefined;
+ * // }
  */
 type EvolveTargetObject<E> = E extends AFunction
   ? GetFirstParam<E>
@@ -155,11 +156,11 @@ type Evolve<T, E> = E extends AFunction
  *      data: { elapsed: 100, remaining: 1400 },
  *    };
  *    evolve(object, transf)
- *    /* => {
- *      id: 10,
- *      count: 11,
- *      data: { elapsed: 101, remaining: 1399 },
- *    } * /
+ *    // => {
+ *    //   id: 10,
+ *    //   count: 11,
+ *    //   data: { elapsed: 101, remaining: 1399 },
+ *    // }
  * @dataFirst
  * @category Object
  */
@@ -193,11 +194,11 @@ export function evolve<T extends EvolveTargetObject<E>, E>(
  *      data: { elapsed: 100, remaining: 1400 },
  *    };
  *    R.pipe(object, R.evolve(transf))
- *    /* => {
- *      id: 10,
- *      count: 11,
- *      data: { elapsed: 101, remaining: 1399 },
- *    } * /
+ *    // => {
+ *    //   id: 10,
+ *    //   count: 11,
+ *    //   data: { elapsed: 101, remaining: 1399 },
+ *    // }
  * @dataLast
  * @category Object
  */
