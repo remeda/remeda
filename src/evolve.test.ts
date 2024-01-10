@@ -43,6 +43,7 @@ describe('data first', () => {
     expect(object).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
+    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is recursive', function () {
@@ -60,6 +61,7 @@ describe('data first', () => {
     const expected = { n: 0, m: 1 };
     const result = evolve(object, transf);
     expect(result).toEqual(expected);
+    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('ignores null transformations', function () {
@@ -123,8 +125,6 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  const add = (x: number) => (y: number) => x + y;
-
   it('creates a new object by evolving the `object` according to the `transformation` functions', function () {
     const transf = {
       count: add(1),
@@ -162,6 +162,7 @@ describe('data last', () => {
     expect(object).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
+    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is recursive', function () {
@@ -354,7 +355,7 @@ describe('typing', () => {
   });
 
   describe('data last', () => {
-    describe('can detect mismatch of parameters and arguments', function () {
+    describe('it can detect mismatch of parameters and arguments', function () {
       it('detect property "number" are incompatible', function () {
         const transf = {
           number: add(1),
