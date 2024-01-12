@@ -19,6 +19,7 @@ describe('isNot', () => {
         | Date
         | Error
         | Promise<number>
+        | symbol
         | null
         | undefined
       >(data);
@@ -46,6 +47,7 @@ describe('isNot', () => {
         | null
         | Error
         | number
+        | symbol
       >
     >(result);
   });
