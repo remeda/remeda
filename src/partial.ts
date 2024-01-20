@@ -20,9 +20,10 @@
  * @category Function
  * @see partialRight
  */
-export function partial<A extends Array<unknown>, B extends Array<unknown>, C>(
-  func: (...args: [...A, ...B]) => C,
-  ...args: A
-): (...rest: B) => C {
+export function partial<
+  A extends ReadonlyArray<unknown>,
+  B extends ReadonlyArray<unknown>,
+  C,
+>(func: (...args: [...A, ...B]) => C, ...args: A): (...rest: B) => C {
   return (...rest: B) => func(...args, ...rest);
 }

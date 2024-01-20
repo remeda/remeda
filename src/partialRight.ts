@@ -20,29 +20,36 @@
  * @category Function
  * @see partial
  */
-export function partialRight<A extends Array<unknown>, C>(
+export function partialRight<A extends ReadonlyArray<unknown>, C>(
   func: (...args: [...A]) => C
 ): (...rest: A) => C;
 
-export function partialRight<A extends Array<unknown>, B1, C>(
+export function partialRight<A extends ReadonlyArray<unknown>, B1, C>(
   func: (...args: [...A, B1]) => C,
   arg1: B1
 ): (...rest: A) => C;
 
-export function partialRight<A extends Array<unknown>, B1, B2, C>(
+export function partialRight<A extends ReadonlyArray<unknown>, B1, B2, C>(
   func: (...args: [...A, B1, B2]) => C,
   arg1: B1,
   arg2: B2
 ): (...rest: A) => C;
 
-export function partialRight<A extends Array<unknown>, B1, B2, B3, C>(
+export function partialRight<A extends ReadonlyArray<unknown>, B1, B2, B3, C>(
   func: (...args: [...A, B1, B2, B3]) => C,
   arg1: B1,
   arg2: B2,
   arg3: B3
 ): (...rest: A) => C;
 
-export function partialRight<A extends Array<unknown>, B1, B2, B3, B4, C>(
+export function partialRight<
+  A extends ReadonlyArray<unknown>,
+  B1,
+  B2,
+  B3,
+  B4,
+  C,
+>(
   func: (...args: [...A, B1, B2, B3, B4]) => C,
   arg1: B1,
   arg2: B2,
@@ -50,7 +57,15 @@ export function partialRight<A extends Array<unknown>, B1, B2, B3, B4, C>(
   arg4: B4
 ): (...rest: A) => C;
 
-export function partialRight<A extends Array<unknown>, B1, B2, B3, B4, B5, C>(
+export function partialRight<
+  A extends ReadonlyArray<unknown>,
+  B1,
+  B2,
+  B3,
+  B4,
+  B5,
+  C,
+>(
   func: (...args: [...A, B1, B2, B3, B4, B5]) => C,
   arg1: B1,
   arg2: B2,
@@ -60,7 +75,7 @@ export function partialRight<A extends Array<unknown>, B1, B2, B3, B4, B5, C>(
 ): (...rest: A) => C;
 
 export function partialRight<
-  A extends Array<unknown>,
+  A extends ReadonlyArray<unknown>,
   B1,
   B2,
   B3,
@@ -79,7 +94,7 @@ export function partialRight<
 ): (...rest: A) => C;
 
 export function partialRight<
-  A extends Array<unknown>,
+  A extends ReadonlyArray<unknown>,
   B1,
   B2,
   B3,
@@ -100,7 +115,7 @@ export function partialRight<
 ): (...rest: A) => C;
 
 export function partialRight<
-  A extends Array<unknown>,
+  A extends ReadonlyArray<unknown>,
   B1,
   B2,
   B3,
@@ -123,7 +138,7 @@ export function partialRight<
 ): (...rest: A) => C;
 
 export function partialRight<
-  A extends Array<unknown>,
+  A extends ReadonlyArray<unknown>,
   B1,
   B2,
   B3,
@@ -148,8 +163,8 @@ export function partialRight<
 ): (...rest: A) => C;
 
 export function partialRight<
-  A extends Array<unknown>,
-  B extends Array<unknown>,
+  A extends ReadonlyArray<unknown>,
+  B extends ReadonlyArray<unknown>,
   C,
 >(func: (...args: [...A, ...B]) => C, ...args: B): (...rest: A) => C {
   return (...rest: A) => func(...rest, ...args);
