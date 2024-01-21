@@ -12,6 +12,7 @@ documentation when migrating._
 | `addProp`           | `set`               | `set`               |
 | `allPass`           |                     | `allPass`           |
 | `anyPass`           |                     | `anyPass`           |
+| `ceil`              | `ceil`              |                     |
 | `chunk`             | `chunk`             |                     |
 | `clamp`             | `clamp`             | `clamp`             |
 | `clone`             | `cloneDeep`         | `clone`             |
@@ -35,6 +36,7 @@ documentation when migrating._
 | `flatMap`           | `flatMap`           | `chain`             |
 | `flatten`           | `flatten`           | `flatten`           |
 | `flattenDeep`       | `flattenDeep`       | `flatten`           |
+| `floor`             | `floor`             |                     |
 | `forEach`           | `forEach`           | `forEach`           |
 | `forEachObj`        | `forEach`           | `forEachObjIndexed` |
 | `groupBy`           | `groupBy`           | `groupBy`           |
@@ -73,6 +75,7 @@ documentation when migrating._
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
 | `reverse`           | `reverse`           | `reverse`           |
+| `round`             | `round`             |                     |
 | `sample`            | `sampleSize`\*      |                     |
 | `set`               | `set`               | `assoc`             |
 | `setPath`           | `set`               | `assocPath`         |
