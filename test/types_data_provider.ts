@@ -9,7 +9,8 @@ type TestObj =
   | null
   | Error
   | number
-  | Promise<number>;
+  | Promise<number>
+  | symbol;
 
 export const typesDataProvider = (
   t:
@@ -24,6 +25,7 @@ export const typesDataProvider = (
     | 'error'
     | 'number'
     | 'promise'
+    | 'symbol'
 ): TestObj => {
   switch (t) {
     case 'number':
@@ -48,6 +50,8 @@ export const typesDataProvider = (
       return { a: 'asd' };
     case 'error':
       return new Error('asd');
+    case 'symbol':
+      return Symbol('symbol');
     case 'undefined':
       return undefined;
   }

@@ -53,6 +53,7 @@ export * from './isNot';
 export * from './isNumber';
 export * from './isObject';
 export * from './isPromise';
+export * from './isSymbol';
 export * from './isString';
 export * from './isTruthy';
 export * from './join';

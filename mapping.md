@@ -47,6 +47,7 @@ documentation when migrating._
 | `invert`            | `invert`            | `invertObj`         |
 | `isEmpty`           | `isEmpty`           | `isEmpty`           |
 | `isNil`             | `isNil`             | `isNil`             |
+| `isSymbol`          | `isSymbol`          |                     |
 | `join`              | `join`              | `join`              |
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |

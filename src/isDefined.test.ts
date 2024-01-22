@@ -16,6 +16,7 @@ describe('isDefined', () => {
         | Error
         | number
         | Promise<number>
+        | symbol
       >(data);
     }
   });
@@ -41,6 +42,7 @@ describe('isDefined', () => {
         | Date
         | Error
         | Promise<number>
+        | symbol
       >
     >(data);
   });
@@ -62,6 +64,7 @@ describe('strict', () => {
         | number
         | Promise<number>
         | null
+        | symbol
       >(data);
     }
   });
@@ -89,6 +92,7 @@ describe('strict', () => {
         | Error
         | Promise<number>
         | null
+        | symbol
       >
     >(data);
   });
