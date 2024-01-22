@@ -17,6 +17,7 @@ describe('isNonNull', () => {
         | number
         | Promise<number>
         | undefined
+        | symbol
       >(data);
     }
   });
@@ -44,6 +45,7 @@ describe('isNonNull', () => {
         | Error
         | Promise<number>
         | undefined
+        | symbol
       >
     >(data);
   });
