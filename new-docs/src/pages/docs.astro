@@ -4,7 +4,7 @@ import Layout from "@/layouts/layout.astro";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/navbar";
 import { Signature } from "@/components/signature";
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 import data from "~/build/data.json";
 import type { FunctionsData } from "~/scripts/transform";
 import { groupBy, values, isTruthy, pick } from "../../../src";
@@ -12,11 +12,6 @@ import { groupBy, values, isTruthy, pick } from "../../../src";
 const functionsData = data as FunctionsData;
 
 const groupedData = groupBy(functionsData, (func) => func.category);
-
-const groupedNames = groupBy(
-  functionsData.map((func) => pick(func, ["category", "name"])),
-  (func) => func.category,
-);
 
 const getTags = (func: FunctionsData[number]) => {
   const [method] = func.methods;
@@ -26,6 +21,21 @@ const getTags = (func: FunctionsData[number]) => {
     method.pipeable && "pipeable",
     method.strict && "strict",
   ].filter(isTruthy);
+};
+
+const groupedNames = groupBy(
+  functionsData.map((func) => ({
+    category: func.category,
+    name: func.name,
+    tags: getTags(func),
+  })),
+  (func) => func.category,
+);
+
+const tagToColor: Record<string, BadgeProps["variant"]> = {
+  pipeable: "success",
+  indexed: "secondary",
+  strict: "destructive",
 };
 ---
 
@@ -53,7 +63,7 @@ const getTags = (func: FunctionsData[number]) => {
                     <Badge className="ml-auto">{func.category}</Badge>
 
                     {getTags(func).map((tag) => (
-                      <Badge variant="secondary">{tag}</Badge>
+                      <Badge variant={tagToColor[tag]}>{tag}</Badge>
                     ))}
                   </div>
 

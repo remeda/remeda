@@ -1,15 +1,22 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { buttonVariants } from "@/components/ui/button";
+import { badgeVariants, type BadgeProps } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { toPairs } from "../../../src";
 import { useMemo, useState } from "react";
 
+const tagToColor: Record<string, BadgeProps["variant"]> = {
+  pipeable: "success",
+  indexed: "secondary",
+  strict: "destructive",
+};
+
 export const Navbar = ({
   entries,
   onSelect,
 }: {
-  entries: Record<string, Array<{ name: string }>>;
+  entries: Record<string, Array<{ name: string; tags: Array<string> }>>;
   onSelect?: () => void;
 }) => {
   const [query, setQuery] = useState("");
@@ -54,11 +61,26 @@ export const Navbar = ({
                       className={cn([
                         buttonVariants({ variant: "ghost" }),
                         "text-muted-foreground",
-                        "flex w-full items-center justify-between",
+                        "flex w-full items-center justify-between gap-1",
                       ])}
                       onClick={() => onSelect?.()}
                     >
                       {func.name}
+
+                      <span className="flex items-center gap-1">
+                        {func.tags.map((tag) => (
+                          <span
+                            className={cn(
+                              badgeVariants({
+                                variant: tagToColor[tag],
+                              }),
+                              "w-6 p-0 py-0.5 capitalize",
+                            )}
+                          >
+                            {tag[0]}
+                          </span>
+                        ))}
+                      </span>
                     </a>
                   </li>
                 ))}

@@ -95,7 +95,7 @@ const { pathname } = Astro.url;
 
             <ModeSwitcher client:load />
 
-            <MobileNav client:load entries={groupedNames} />
+            <MobileNav entries={groupedNames} client:media="(max-width: 767px)"  />
           </div>
         </div>
       </header>
