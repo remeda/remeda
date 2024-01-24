@@ -20,7 +20,7 @@ export function subtract(value: number, subtrahend: number): number;
  * @param value The number.
  * @param subtrahend The number to subtract from the value.
  * @signature
- *    R.clamp(subtrahend)(value);
+ *    R.subtract(subtrahend)(value);
  * @example
  *    R.subtract(5)(10) // => 5
  *    R.subtract(-5)(10) // => 15
