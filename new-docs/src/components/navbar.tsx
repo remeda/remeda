@@ -1,10 +1,12 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { buttonVariants } from "@/components/ui/button";
-import { badgeVariants, type BadgeProps } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { toPairs } from "../../../src";
 import { useMemo, useState } from "react";
+
+import { badgeVariants, type BadgeProps } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+
+import { toPairs } from "../../../src";
 
 const tagToColor: Record<string, BadgeProps["variant"]> = {
   pipeable: "success",
@@ -70,6 +72,7 @@ export const Navbar = ({
                       <span className="flex items-center gap-1">
                         {func.tags.map((tag) => (
                           <span
+                            key={tag}
                             className={cn(
                               badgeVariants({
                                 variant: tagToColor[tag],

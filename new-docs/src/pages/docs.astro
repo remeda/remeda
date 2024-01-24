@@ -1,129 +1,23 @@
 ---
-import { Code } from "astro:components";
 import Layout from "@/layouts/layout.astro";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/navbar";
-import { Signature } from "@/components/signature";
-import { Badge, type BadgeProps } from "@/components/ui/badge";
-import data from "~/build/data.json";
-import type { FunctionsData } from "~/scripts/transform";
-import { groupBy, values, isTruthy, pick } from "../../../src";
-
-const functionsData = data as FunctionsData;
-
-const groupedData = groupBy(functionsData, (func) => func.category);
-
-const getTags = (func: FunctionsData[number]) => {
-  const [method] = func.methods;
-
-  return [
-    method.indexed && "indexed",
-    method.pipeable && "pipeable",
-    method.strict && "strict",
-  ].filter(isTruthy);
-};
-
-const groupedNames = groupBy(
-  functionsData.map((func) => ({
-    category: func.category,
-    name: func.name,
-    tags: getTags(func),
-  })),
-  (func) => func.category,
-);
-
-const tagToColor: Record<string, BadgeProps["variant"]> = {
-  pipeable: "success",
-  indexed: "secondary",
-  strict: "destructive",
-};
+import FunctionCard from "@/components/function-card.astro";
+import { functions, navEntries } from "@/data";
 ---
 
 <Layout>
   <div
-    class="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"
+    class="items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"
   >
     <aside
       class="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
     >
-      <Navbar entries={groupedNames} client:load />
+      <Navbar entries={navEntries} client:load />
     </aside>
 
     <main class="h-full py-6">
       <div class="space-y-6">
-        {
-          values(groupedData)
-            .flat()
-            .map((func) => (
-              <Card id={func.name}>
-                <CardHeader>
-                  <div class="flex items-center gap-2">
-                    <CardTitle className="text-2xl">{func.name}</CardTitle>
-
-                    <Badge className="ml-auto">{func.category}</Badge>
-
-                    {getTags(func).map((tag) => (
-                      <Badge variant={tagToColor[tag]}>{tag}</Badge>
-                    ))}
-                  </div>
-
-                  <div class="max-w-prose text-balance text-sm text-muted-foreground">
-                    {func.description && <p set:html={func.description} />}
-                  </div>
-                </CardHeader>
-
-                <CardContent className="grid gap-6">
-                  {func.methods.map(
-                    (method) =>
-                      !!method.signature && (
-                        <div class="flex flex-col gap-2">
-                          {!!method.tag && <p>{method.tag}</p>}
-
-                          <Signature client:load>
-                            <Code
-                              code={method.signature}
-                              lang="js"
-                              theme="poimandres"
-                            />
-
-                            <div slot="signature" class="flex flex-col gap-3">
-                              <div>
-                                Parameters
-                                <dl class="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm">
-                                  {method.args.map((arg) => (
-                                    <>
-                                      <dt class="font-semibold">{arg.name}</dt>
-                                      <dd class="text-muted-foreground">
-                                        {arg.description}
-                                      </dd>
-                                    </>
-                                  ))}
-                                </dl>
-                              </div>
-
-                              <div>
-                                Returns
-                                <div class="text-sm font-semibold">
-                                  {method.returns.name}
-                                </div>
-                              </div>
-                            </div>
-                          </Signature>
-
-                          {!!method.example && (
-                            <Code
-                              code={method.example}
-                              lang="js"
-                              theme="poimandres"
-                            />
-                          )}
-                        </div>
-                      ),
-                  )}
-                </CardContent>
-              </Card>
-            ))
-        }
+        {functions.map((func) => <FunctionCard func={func} />)}
       </div>
     </main>
   </div>

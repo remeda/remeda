@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Navbar } from "@/components/navbar";
 import { useState } from "react";
 
+import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+
 export const MobileNav = (props: {
-  entries: Record<string, Array<{ name: string }>>;
+  entries: Record<string, Array<{ name: string; tags: Array<string> }>>;
 }) => {
   const [open, setOpen] = useState(false);
 

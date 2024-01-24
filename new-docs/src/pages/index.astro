@@ -1,7 +1,7 @@
 ---
-import { Code } from "astro:components";
 import Layout from "@/layouts/layout.astro";
-import { CopyButton } from "@/components/copy-button";
+import CodeBlock from "@/components/code-block.astro";
+import * as Typography from "@/components/ui/typography";
 
 const commands = [
   "npm install remeda",
@@ -12,50 +12,47 @@ const commands = [
 ---
 
 <Layout>
-  <main class="flex flex-col gap-6 py-20">
-    <h1 class="text-3xl font-bold md:text-5xl">Remeda</h1>
+  <main class="max-w-5xl py-20">
+    <section class="space-y-6">
+      <Typography.H1>Remeda</Typography.H1>
 
-    <p class="mt-2 max-w-prose text-muted-foreground sm:text-lg">
-      The first "data-first" and "data-last" utility library designed
-      specifically for TypeScript
-    </p>
+      <Typography.Lead>
+        The first "data-first" and "data-last" utility library designed
+        specifically for TypeScript
+      </Typography.Lead>
 
-    <div class="flex flex-col gap-2">
-      {
-        commands.map((command) => (
-          <div class="relative w-80">
-            <Code code={command} lang="bash" theme="poimandres" />
+      <div class="w-80 space-y-2">
+        {
+          commands.map((command) => (
+            <CodeBlock code={command} lang="bash" copy />
+          ))
+        }
+      </div>
+    </section>
 
-            <div class="absolute right-2 top-1/2 -translate-y-1/2">
-              <CopyButton value={command} client:load />
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    <div class="mt-20 space-y-16">
+      <section>
+        <Typography.H2>Why?</Typography.H2>
 
-    <h2 class="mt-10 text-2xl font-bold md:text-3xl">Why?</h2>
+        <Typography.P>
+          There are no good utility libraries that work well with TypeScript.
+          When working with Lodash or Ramda you have to annotate types manually
+          most of the time. Remeda is written and tested in TypeScript and that
+          means there won't be any problems with custom typings.
+        </Typography.P>
+      </section>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      There are no good utility libraries that work well with TypeScript. When
-      working with Lodash or Ramda you have to annotate types manually most of
-      the time. Remeda is written and tested in TypeScript and that means there
-      won't be any problems with custom typings.
-    </p>
+      <section>
+        <Typography.H2>What's "data-first" and "data-last"?</Typography.H2>
 
-    <h2 class="mt-10 text-2xl font-bold md:text-3xl">
-      What's "data-first" and "data-last"?
-    </h2>
+        <Typography.P>
+          Functional programming is nice, and it makes the code more readable.
+          However there are situations where you don't need "pipes", and you
+          want to call just a single function.
+        </Typography.P>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Functional programming is nice, and it makes the code more readable.
-      However there are situations where you don't need "pipes", and you want to
-      call just a single function.
-    </p>
-
-    <div class="max-w-5xl">
-      <Code
-        code=`
+        <CodeBlock
+          code=`
 // Remeda
 R.pick(obj, ['firstName', 'lastName']);
 
@@ -64,31 +61,28 @@ R.pick(['firstName', 'lastName'], obj);
 
 // Lodash
 _.pick(obj, ['firstName', 'lastName']);`
-        lang="js"
-        theme="poimandres"
-      />
-    </div>
+        />
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      For readers looking for data-last forms like
-      <code>R.filter(fn)(array)</code>, Remeda supports it. Keep reading along!
-    </p>
+        <Typography.P>
+          For readers looking for data-last forms like
+          <code>R.filter(fn)(array)</code>, Remeda supports it. Keep reading
+          along!
+        </Typography.P>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      In the above example, "data-first" approach is more natural and more
-      programmer friendly because when you type the second argument, you get the
-      auto-complete from the IDE. It's not possible to get the auto-complete in
-      Ramda because the data argument is not provided.
-    </p>
+        <Typography.P>
+          In the above example, "data-first" approach is more natural and more
+          programmer friendly because when you type the second argument, you get
+          the auto-complete from the IDE. It's not possible to get the
+          auto-complete in Ramda because the data argument is not provided.
+        </Typography.P>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      "data-last" approach is helpful when writing data transformations aka
-      pipes.
-    </p>
+        <Typography.P>
+          "data-last" approach is helpful when writing data transformations aka
+          pipes.
+        </Typography.P>
 
-    <div class="max-w-5xl">
-      <Code
-        code=`
+        <CodeBlock
+          code=`
 const users = [
   {name: 'john', age: 20, gender: 'm'},
   {name: 'marry', age: 22, gender: 'f'},
@@ -121,116 +115,105 @@ _.flow(
   _.filter(x => x.gender === 'f'),
   _.groupBy(x => x.age),
 )(users)// broken typings in TS :(`
-        lang="js"
-        theme="poimandres"
-      />
-    </div>
+        />
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Mixing paradigms can be cumbersome in Lodash because it requires importing
-      two different methods. Remeda implements all methods in two versions, and
-      the correct overload is picked based on the number of provided arguments.
-      The "data-last" version must always have one argument less than the
-      "data-first" version.
-    </p>
+        <Typography.P>
+          Mixing paradigms can be cumbersome in Lodash because it requires
+          importing two different methods. Remeda implements all methods in two
+          versions, and the correct overload is picked based on the number of
+          provided arguments. The "data-last" version must always have one
+          argument less than the "data-first" version.
+        </Typography.P>
 
-    <div class="max-w-5xl">
-      <Code
-        code=`
+        <CodeBlock
+          code=`
 // Remeda
 R.pick(obj, ['firstName', 'lastName']); // data-first
 R.pipe(obj, R.pick(['firstName', 'lastName'])); // data-last
 
 R.pick(['firstName', 'lastName'], obj); // error, this won't work!
 R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred`
-        lang="js"
-        theme="poimandres"
-      />
-    </div>
+        />
+      </section>
 
-    <h2 class="mt-10 text-2xl font-bold md:text-3xl">Lazy evaluation</h2>
+      <section>
+        <Typography.H2>Lazy evaluation</Typography.H2>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Many functions support lazy evaluation when using <code>pipe</code> or <code
-        >createPipe</code
-      >. These functions have a <code>pipeable</code> tag in the documentation.
-    </p>
+        <Typography.P>
+          Many functions support lazy evaluation when using <code>pipe</code> or
+          <code>createPipe</code>. These functions have a <code>pipeable</code> tag
+          in the documentation.
+        </Typography.P>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Lazy evaluation is not supported in Ramda and only partially supported in
-      lodash.
-    </p>
+        <Typography.P>
+          Lazy evaluation is not supported in Ramda and only partially supported
+          in lodash.
+        </Typography.P>
 
-    <div class="max-w-5xl">
-      <Code
-        code=`
-// Get first 3 unique values
-const arr = [1, 2, 2, 3, 3, 4, 5, 6];
+        <CodeBlock
+          code=`
+      // Get first 3 unique values
+      const arr = [1, 2, 2, 3, 3, 4, 5, 6];
+      
+      const result = R.pipe(
+        arr,
+        R.map(x => {
+      console.log('iterate', x);
+      return x;
+        }),
+        R.uniq(),
+        R.take(3)
+      ); // => [1, 2, 3]
+      
+      /**
+       * Console output:
+       * iterate 1
+       * iterate 2
+       * iterate 2
+       * iterate 3
+       * /`
+        />
+      </section>
 
-const result = R.pipe(
-  arr,
-  R.map(x => {
-    console.log('iterate', x);
-    return x;
-  }),
-  R.uniq(),
-  R.take(3)
-); // => [1, 2, 3]
+      <section>
+        <Typography.H2>Indexed version</Typography.H2>
 
-/**
- * Console output:
- * iterate 1
- * iterate 2
- * iterate 2
- * iterate 3
- * /`
-        lang="js"
-        theme="poimandres"
-      />
-    </div>
+        <Typography.P>
+          Iterable functions have an extra property <code>indexed</code> which is
+          the same function with iterator <code>(element, index, array)</code>.
+        </Typography.P>
 
-    <h2 class="mt-10 text-2xl font-bold md:text-3xl">Indexed version</h2>
+        <CodeBlock
+          code=`
+      const arr = [10, 12, 13, 3];
+      
+      // filter even values
+      R.filter(arr, x => x % 2 === 0); // => [10, 12]
+      
+      // filter even indexes
+      R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]`
+        />
+      </section>
 
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Iterable functions have an extra property <code>indexed</code> which is the
-      same function with iterator <code>(element, index, array)</code>.
-    </p>
+      <section>
+        <Typography.H2>Strict version</Typography.H2>
 
-    <div class="max-w-5xl">
-      <Code
-        code=`
-const arr = [10, 12, 13, 3];
+        <Typography.P>
+          Some functions have an extra property <code>strict</code> which is the
+          same function with stricter types.
+        </Typography.P>
 
-// filter even values
-R.filter(arr, x => x % 2 === 0); // => [10, 12]
-
-// filter even indexes
-R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]`
-        lang="js"
-        theme="poimandres"
-      />
-    </div>
-
-    <h2 class="mt-10 text-2xl font-bold md:text-3xl">Strict version</h2>
-
-    <p class="max-w-prose text-muted-foreground sm:text-lg">
-      Some functions have an extra property <code>strict</code> which is the same
-      function with stricter types.
-    </p>
-
-    <div class="max-w-5xl">
-      <Code
-        code=`
-const input = { a: 'x', b: 'y', c: 'z' } as const
-
-const result = R.keys(input)
-// ^? Array<string>
-
-const resultStrict = R.keys.strict(input)
-// ^? Array<'a' | 'b' | 'c'>`
-        lang="js"
-        theme="poimandres"
-      />
+        <CodeBlock
+          code=`
+      const input = { a: 'x', b: 'y', c: 'z' } as const
+      
+      const result = R.keys(input)
+      // ^? Array<string>
+      
+      const resultStrict = R.keys.strict(input)
+      // ^? Array<'a' | 'b' | 'c'>`
+        />
+      </section>
     </div>
   </main>
 </Layout>
