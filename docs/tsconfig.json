@@ -1,7 +1,7 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": "/Users/xander/Dev/OSS/remeda/new-docs",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "~/*": ["./*"],
