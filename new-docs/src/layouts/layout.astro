@@ -1,0 +1,108 @@
+---
+import "@/globals.css";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { ModeSwitcher } from "@/components/mode-switcher";
+import { buttonVariants } from "@/components/ui/button";
+import { MobileNav } from "@/components/mobile-nav";
+import data from "~/build/data.json";
+import type { FunctionsData } from "~/scripts/transform";
+import { groupBy, pick } from "../../../src";
+
+const functionsData = data as FunctionsData;
+
+const groupedNames = groupBy(
+  functionsData.map((func) => pick(func, ["category", "name"])),
+  (func) => func.category,
+);
+
+const { pathname } = Astro.url;
+---
+
+<!doctype html>
+<html lang="en" class="h-full scroll-pt-20">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Remeda</title>
+    <script is:inline>
+      const de = document.documentElement;
+
+      de.classList.remove("light", "dark");
+
+      const theme = localStorage.getItem("theme");
+
+      if (theme === "system" || !theme) {
+        const { matches: prefersDark } = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        );
+
+        if (prefersDark) {
+          de.classList.add("dark");
+          de.style.colorScheme = "dark";
+        } else {
+          de.classList.add("light");
+          de.style.colorScheme = "light";
+        }
+      } else {
+        de.classList.add(theme);
+        de.style.colorScheme = theme;
+      }
+    </script>
+  </head>
+
+  <body class="flex h-full flex-col">
+    <div class="relative flex flex-1 flex-col">
+      <header
+        class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      >
+        <div class="container flex h-14 items-center gap-8">
+          <a href="/" class="font-bold">Remeda</a>
+
+          <nav class="flex items-center gap-8 text-sm">
+            <a
+              href="/"
+              class:list={[
+                "transition-colors hover:text-foreground/80",
+                pathname === "/" ? "text-foreground" : "text-foreground/60",
+              ]}
+            >
+              Home
+            </a>
+
+            <a
+              href="/docs"
+              class:list={[
+                "transition-colors hover:text-foreground/80",
+                pathname === "/docs" ? "text-foreground" : "text-foreground/60",
+              ]}
+            >
+              Docs
+            </a>
+          </nav>
+
+          <div class="-mr-2 ml-auto flex items-center gap-2">
+            <a
+              href="https://github.com/remeda/remeda"
+              target="_blank"
+              class={buttonVariants({ variant: "ghost", size: "icon" })}
+            >
+              <GitHubLogoIcon />
+              <span class="sr-only">GitHub</span>
+            </a>
+
+            <ModeSwitcher client:load />
+
+            <MobileNav client:load entries={groupedNames} />
+          </div>
+        </div>
+      </header>
+
+      <div class="container flex flex-1 flex-col">
+        <slot />
+      </div>
+    </div>
+  </body>
+</html>
