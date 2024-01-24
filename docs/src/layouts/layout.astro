@@ -1,0 +1,48 @@
+---
+import "@/globals.css";
+import Header from "@/components/header.astro";
+---
+
+<!doctype html>
+<html lang="en" class="scroll-pt-20">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Remeda</title>
+    <script is:inline>
+      const de = document.documentElement;
+
+      de.classList.remove("light", "dark");
+
+      const theme = localStorage.getItem("theme");
+
+      if (theme === "system" || !theme) {
+        const { matches: prefersDark } = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        );
+
+        if (prefersDark) {
+          de.classList.add("dark");
+          de.style.colorScheme = "dark";
+        } else {
+          de.classList.add("light");
+          de.style.colorScheme = "light";
+        }
+      } else {
+        de.classList.add(theme);
+        de.style.colorScheme = theme;
+      }
+    </script>
+  </head>
+
+  <body>
+    <Header />
+
+    <div class="container">
+      <slot />
+    </div>
+  </body>
+</html>
