@@ -34,3 +34,29 @@ describe('isArray', () => {
     assertType<Array<Array<number>>>(data);
   });
 });
+
+describe('typing', () => {
+  test('mutable arrays work', () => {
+    const data = [] as Array<number> | string;
+
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<Array<number>>();
+    }
+
+    // We check the type when it's inferred from within an array due to https://github.com/remeda/remeda/issues/459 surfacing the issue. I don't know why it works differently than when checking data directly.
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<Array<Array<number>>>();
+  });
+
+  test('readonly arrays work', () => {
+    const data = [] as ReadonlyArray<number> | string;
+
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
+    }
+
+    // We check the type when it's inferred from within an array due to https://github.com/remeda/remeda/issues/459 surfacing the issue. I don't know why it works differently than when checking data directly.
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<
+      Array<ReadonlyArray<number>>
+    >();
+  });
+});
