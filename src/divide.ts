@@ -19,7 +19,7 @@ export function divide(value: number, divisor: number): number;
  * @param value The number.
  * @param divisor The number to divide the value by.
  * @signature
- *    R.clamp(divisor)(value);
+ *    R.divide(divisor)(value);
  * @example
  *    R.divide(3)(12) // => 4
  *    R.map([2, 4, 6, 8], R.divide(2)) // => [1, 2, 3, 4]
