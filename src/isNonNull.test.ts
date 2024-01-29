@@ -1,4 +1,4 @@
-import { typesDataProvider } from '../test/types_data_provider';
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isNonNull } from './isNonNull';
 
 describe('isNonNull', () => {
@@ -7,17 +7,23 @@ describe('isNonNull', () => {
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
         | number
         | Promise<number>
-        | undefined
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
+        | undefined
       >(data);
     }
   });
@@ -33,19 +39,23 @@ describe('isNonNull', () => {
     expect(data).toHaveLength(5);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
+        | number
         | Promise<number>
-        | undefined
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
+        | undefined
       >
     >(data);
   });

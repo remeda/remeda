@@ -1,5 +1,5 @@
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isDefined } from './isDefined';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isDefined', () => {
   test('isDefined": should work as type guard', () => {
@@ -7,16 +7,22 @@ describe('isDefined', () => {
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
         | number
         | Promise<number>
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
       >(data);
     }
   });
@@ -31,18 +37,22 @@ describe('isDefined', () => {
     expect(data).toHaveLength(4);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
+        | number
         | Promise<number>
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
       >
     >(data);
   });
@@ -54,17 +64,23 @@ describe('strict', () => {
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
+        | null
         | number
         | Promise<number>
-        | null
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
       >(data);
     }
   });
@@ -80,19 +96,23 @@ describe('strict', () => {
     expect(data).toHaveLength(5);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
+        | Map<string, string>
         | null
+        | number
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | string
         | symbol
+        | TestClass
+        | Uint8Array
       >
     >(data);
   });
