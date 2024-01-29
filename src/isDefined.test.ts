@@ -16,11 +16,12 @@ describe('isDefined', () => {
         | Error
         | number
         | Promise<number>
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >(data);
     }
@@ -47,11 +48,12 @@ describe('isDefined', () => {
         | Date
         | Error
         | Promise<number>
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >
     >(data);
@@ -74,11 +76,12 @@ describe('strict', () => {
         | number
         | Promise<number>
         | null
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >(data);
     }
@@ -107,11 +110,12 @@ describe('strict', () => {
         | Error
         | Promise<number>
         | null
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >
     >(data);

@@ -14,33 +14,35 @@ type TestObj =
   | Error
   | null
   | number
+  | Map<string, string>
   | Promise<number>
   | RegExp
-  | string
-  | TestClass
-  | undefined
   | Set<string>
-  | Map<string, string>
-  | Uint8Array;
+  | string
+  | symbol
+  | TestClass
+  | Uint8Array
+  | undefined;
 
 const ALL_TYPES = [
   'array',
-  'tuple',
   'boolean',
   'date',
   'error',
   'function',
   'instance',
+  'map',
   'null',
   'number',
   'object',
   'promise',
   'regex',
-  'string',
-  'undefined',
-  'map',
   'set',
+  'string',
+  'symbol',
+  'tuple',
   'typedArray',
+  'undefined',
 ] as const;
 type Type = (typeof ALL_TYPES)[number];
 
@@ -69,6 +71,8 @@ export const typesDataProvider = (t: Type): TestObj => {
       return { a: 'asd' };
     case 'error':
       return new Error('asd');
+    case 'symbol':
+      return Symbol('symbol');
     case 'undefined':
       return undefined;
     case 'instance':

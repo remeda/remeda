@@ -17,11 +17,12 @@ describe('isNonNull', () => {
         | number
         | Promise<number>
         | undefined
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >(data);
     }
@@ -50,11 +51,12 @@ describe('isNonNull', () => {
         | Error
         | Promise<number>
         | undefined
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >
     >(data);

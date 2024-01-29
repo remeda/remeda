@@ -19,6 +19,7 @@ describe('isNot', () => {
         | Date
         | Error
         | Promise<number>
+        | symbol
         | null
         | undefined
         | RegExp
@@ -52,11 +53,12 @@ describe('isNot', () => {
         | null
         | Error
         | number
-        | RegExp
-        | TestClass
-        | Set<string>
-        | Map<string, string>
         | [number, number, number]
+        | Map<string, string>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
       >
     >(result);
