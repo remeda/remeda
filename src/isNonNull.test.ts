@@ -7,23 +7,23 @@ describe('isNonNull', () => {
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
         | number
         | Promise<number>
-        | undefined
-        | [number, number, number]
-        | Map<string, string>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
+        | undefined
       >(data);
     }
   });
@@ -39,25 +39,23 @@ describe('isNonNull', () => {
     expect(data).toHaveLength(5);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
-        | undefined
-        | [number, number, number]
         | Map<string, string>
+        | number
+        | Promise<number>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
+        | undefined
       >
     >(data);
   });

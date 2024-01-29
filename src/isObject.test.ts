@@ -11,16 +11,14 @@ describe('isObject', () => {
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       assertType<
-        | RegExp
-        | {
-            a: string;
-          }
+        | { a: string }
         | Date
         | Error
-        | Promise<number>
-        | TestClass
-        | Set<string>
         | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
         | Uint8Array
       >(data);
     }
@@ -61,16 +59,14 @@ describe('isObject', () => {
     );
     assertType<
       Array<
-        | RegExp
-        | {
-            a: string;
-          }
+        | { a: string }
         | Date
         | Error
-        | Promise<number>
-        | TestClass
-        | Set<string>
         | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
         | Uint8Array
       >
     >(data);

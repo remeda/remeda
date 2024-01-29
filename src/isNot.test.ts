@@ -9,25 +9,23 @@ describe('isNot', () => {
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
       assertType<
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
-        | symbol
-        | null
-        | undefined
-        | RegExp
-        | TestClass
-        | Set<string>
         | Map<string, string>
-        | [number, number, number]
+        | null
+        | number
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
         | Uint8Array
+        | undefined
       >(data);
     }
   });
@@ -43,23 +41,23 @@ describe('isNot', () => {
 
     assertType<
       Array<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
-        | Array<number>
-        | Date
-        | undefined
-        | null
-        | Error
-        | number
         | [number, number, number]
+        | { a: string }
+        | Array<number>
+        | boolean
+        | Date
+        | Error
         | Map<string, string>
+        | null
+        | number
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
+        | undefined
       >
     >(result);
   });

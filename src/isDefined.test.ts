@@ -7,19 +7,19 @@ describe('isDefined', () => {
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
         | number
         | Promise<number>
-        | [number, number, number]
-        | Map<string, string>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
@@ -37,21 +37,19 @@ describe('isDefined', () => {
     expect(data).toHaveLength(4);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
-        | [number, number, number]
         | Map<string, string>
+        | number
+        | Promise<number>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
@@ -66,20 +64,20 @@ describe('strict', () => {
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
+        | Map<string, string>
+        | null
         | number
         | Promise<number>
-        | null
-        | [number, number, number]
-        | Map<string, string>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
@@ -98,22 +96,20 @@ describe('strict', () => {
     expect(data).toHaveLength(5);
     assertType<
       Array<
-        | string
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
-        | null
-        | [number, number, number]
         | Map<string, string>
+        | null
+        | number
+        | Promise<number>
         | RegExp
         | Set<string>
+        | string
         | symbol
         | TestClass
         | Uint8Array
