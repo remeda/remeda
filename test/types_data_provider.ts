@@ -6,15 +6,15 @@ export class TestClass {
 
 type TestObj =
   | (() => void)
-  // | [number, number, number] // tuple
+  | [number, number, number]
   | { a: string }
   | Array<number>
   | boolean
   | Date
   | Error
+  | Map<string, string>
   | null
   | number
-  | Map<string, string>
   | Promise<number>
   | RegExp
   | Set<string>

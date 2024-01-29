@@ -42,21 +42,21 @@ describe('runtime', () => {
           2,
           3,
         ],
-        [
-          1,
-          2,
-          3,
-        ],
         1985-07-24T07:40:00.000Z,
         [Error: asd],
         TestClass {},
+        Map {},
         {
           "a": "asd",
         },
         Promise {},
         /test/gu,
-        Map {},
         Set {},
+        [
+          1,
+          2,
+          3,
+        ],
         Uint8Array [
           0,
         ],
@@ -77,16 +77,17 @@ describe('typing', () => {
     const data = typesDataProvider('object');
     if (isObjectType(data)) {
       expectTypeOf(data).toEqualTypeOf<
-        | RegExp
         | (() => void)
+        | [number, number, number]
         | { a: string }
         | Array<number>
         | Date
         | Error
-        | Promise<number>
-        | TestClass
-        | Set<string>
         | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
         | Uint8Array
       >();
     }
@@ -105,6 +106,7 @@ describe('typing', () => {
       Array<
         | RegExp
         | (() => void)
+        | [number, number, number]
         | { a: string }
         | Array<number>
         | Date
