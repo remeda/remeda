@@ -1,4 +1,8 @@
-import { typesDataProvider } from '../test/types_data_provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  typesDataProvider,
+  type TestClass,
+} from '../test/types_data_provider';
 import { isObject } from './isObject';
 
 describe('isObject', () => {
@@ -7,12 +11,15 @@ describe('isObject', () => {
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       assertType<
-        | {
-            a: string;
-          }
+        | { a: string }
         | Date
         | Error
+        | Map<string, string>
         | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
+        | Uint8Array
       >(data);
     }
   });
@@ -46,24 +53,21 @@ describe('isObject', () => {
   });
 
   test('isObject: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('promise'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-      typesDataProvider('object'),
-    ].filter(isObject);
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isObject);
     expect(data.every(c => typeof c === 'object' && !Array.isArray(c))).toEqual(
       true
     );
     assertType<
       Array<
-        | {
-            a: string;
-          }
+        | { a: string }
         | Date
         | Error
+        | Map<string, string>
         | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
+        | Uint8Array
       >
     >(data);
   });

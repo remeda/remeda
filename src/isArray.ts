@@ -19,7 +19,7 @@ type DefinitelyArray<T> = Extract<
  * @category Guard
  */
 export function isArray<T>(
-  data: T | ReadonlyArray<unknown>
+  data: T | ArrayLike<unknown>
 ): data is IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>> {
   return Array.isArray(data);
 }

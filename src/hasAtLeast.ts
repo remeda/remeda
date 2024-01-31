@@ -47,8 +47,12 @@ export function hasAtLeast<T, N extends number>(
  * @example
  *   R.pipe([], R.hasAtLeast(4)); // => false
  *
- *   const data: number[] = [1,2,3,4];
- *   R.pipe(data, R.hasAtLeast(1), ([first]) => first); // => 1, with type `number`
+ *   const data = [[1,2], [3], [4,5]];
+ *   R.pipe(
+ *     data,
+ *     R.filter(R.hasAtLeast(2)),
+ *     R.map(([, second]) => second),
+ *   ); // => [2,5], with type `number[]`
  * @dataLast
  * @category Array
  */
