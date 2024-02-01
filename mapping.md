@@ -120,13 +120,17 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Lodash     | Ramda    | TypeScript                    |
-| ---------- | -------- | ----------------------------- |
-|            | `append` | `(arr, val) => [...arr, val]` |
-| `constant` | `always` | `x => () => x`                |
-| `nth`      | `nth`    | `n => a[n]`                   |
-|            | `path`   | `a?.b?.c`                     |
-|            | `propEq` | `x => x.a === value`          |
-|            | `propOr` | `x => x.a ?? defaultValue`    |
-| `words`    |          | `str => str.split(/\s+/)`     |
-| `compact`  |          | `R.filter(R.isTruthy)`        |
+| Lodash     | Ramda    | TypeScript                        |
+| ---------- | -------- | --------------------------------- |
+|            | `append` | `(arr, val) => [...arr, val]`     |
+| `constant` | `always` | `x => () => x`                    |
+| `nth`      | `nth`    | `n => a[n]`                       |
+|            | `path`   | `a?.b?.c`                         |
+|            | `propEq` | `x => x.a === value`              |
+|            | `propOr` | `x => x.a ?? defaultValue`        |
+| `words`    |          | `str => str.split(/\s+/)`         |
+| `compact`  |          | `R.filter(R.isTruthy)`            |
+| `max`      | `max`    | `R.firstBy([R.identity, "desc"])` |
+| `maxBy`    | `maxBy`  | `R.firstBy([fn, "desc"])`         |
+| `min`      | `min`    | `R.firstBy(R.identity)`           |
+| `minBy`    | `minBy`  | `R.firstBy(fn)`                   |
