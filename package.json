@@ -36,10 +36,8 @@
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:netlify-ci",
     "lint": "eslint src/**/*.ts --fix",
-    "lint:check": "eslint src/**/*.ts",
     "prepare": "husky",
     "prettier": "prettier . --write",
-    "prettier:check": "prettier . --check",
     "release": "semantic-release",
     "test": "vitest"
   },
