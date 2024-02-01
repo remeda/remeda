@@ -1,8 +1,9 @@
-type DefinitelySymbol<T> = Extract<T, string> extends never
-  ? symbol
-  : Extract<T, symbol> extends any
+type DefinitelySymbol<T> =
+  Extract<T, string> extends never
     ? symbol
-    : Extract<T, symbol>;
+    : Extract<T, symbol> extends any
+      ? symbol
+      : Extract<T, symbol>;
 
 /**
  * A function that checks if the passed parameter is a symbol and narrows its type accordingly

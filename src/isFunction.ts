@@ -2,9 +2,8 @@
  * Function is used generically in this file to define any type of function, so
  * this lint error is not relevant for it.
  */
-type DefinitelyFunction<T> = Extract<T, Function> extends never
-  ? Function
-  : Extract<T, Function>;
+type DefinitelyFunction<T> =
+  Extract<T, Function> extends never ? Function : Extract<T, Function>;
 /**
  * A function that checks if the passed parameter is a Function and narrows its type accordingly
  * @param data the variable to check

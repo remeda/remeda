@@ -5,26 +5,24 @@ import { purry } from './purry';
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
  */
-type isEqual<A, B> = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B
-  ? 1
-  : 2
-  ? true
-  : false;
-
-type Difference<A extends number, B extends number> = TupleOfLength<A> extends [
-  ...infer U,
-  ...TupleOfLength<B>,
-]
-  ? U['length']
-  : never;
-
-type isLessThan<A extends number, B extends number> = isEqual<A, B> extends true
-  ? false
-  : 0 extends A
+type isEqual<A, B> =
+  (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
     ? true
-    : 0 extends B
-      ? false
-      : isLessThan<Difference<A, 1>, Difference<B, 1>>;
+    : false;
+
+type Difference<A extends number, B extends number> =
+  TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
+    ? U['length']
+    : never;
+
+type isLessThan<A extends number, B extends number> =
+  isEqual<A, B> extends true
+    ? false
+    : 0 extends A
+      ? true
+      : 0 extends B
+        ? false
+        : isLessThan<Difference<A, 1>, Difference<B, 1>>;
 
 type TupleOfLength<
   L extends number,

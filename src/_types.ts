@@ -44,9 +44,8 @@ export type ReadonlyTuple<
  * @example
  *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
  */
-export type NarrowedTo<T, Base> = Extract<T, Base> extends never
-  ? Base
-  : Extract<T, Base>;
+export type NarrowedTo<T, Base> =
+  Extract<T, Base> extends never ? Base : Extract<T, Base>;
 
 type BuildTupleHelper<
   Element,
