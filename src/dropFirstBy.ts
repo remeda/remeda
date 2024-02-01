@@ -65,7 +65,7 @@ function dropFirstByImplementation<T>(
   const heap = data.slice(0, n);
   heapify(heap, compareFn);
 
-  const out = Array.from<T>({ length: data.length - n });
+  const out = [];
 
   const rest = data.slice(n);
   for (const item of rest) {
