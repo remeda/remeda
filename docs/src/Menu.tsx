@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import type { FunctionsData } from '../scripts/transform';
 
+const BADGE_COLORS: Record<string, string> = {
+  Array: 'bg-emerald-500',
+  Object: 'bg-amber-500',
+  Function: 'bg-fuchsia-500',
+  Number: 'bg-blue-500',
+  String: 'bg-violet-500',
+  Guard: 'bg-rose-500',
+  Type: 'bg-stone-500',
+  Other: 'bg-gray-500',
+};
+
+const DEFAULT_COLOR = 'bg-red-200';
+
 export function Menu({ items }: { readonly items: FunctionsData }) {
   const [searchTerm, setSearchTerm] = useState('');
   const searchTermLowered = searchTerm.toLowerCase();
@@ -25,7 +38,11 @@ export function Menu({ items }: { readonly items: FunctionsData }) {
               className="flex items-center px-6 py-1 font-medium text-black/60 hover:bg-[#f2f3f4] hover:no-underline"
             >
               <span>{item.name}</span>
-              <div className=" badge badge-success ml-auto">
+              <div
+                className={`badge ml-auto text-white ${
+                  BADGE_COLORS[item?.category ?? ''] ?? DEFAULT_COLOR
+                }`}
+              >
                 {item.category}
               </div>
               {item.methods[0].indexed && (

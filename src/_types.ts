@@ -38,6 +38,16 @@ export type ReadonlyTuple<
     ReadonlyArray<Element> // It's not fixed length.
   : BuildTupleHelper<Element, Length, []>; // Otherwise it is a fixed length tuple.
 
+/**
+ * An extension of Extract for type predicates which falls back to the base
+ * in order to narrow the `unknown` case.
+ * @example
+ *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
+ */
+export type NarrowedTo<T, Base> = Extract<T, Base> extends never
+  ? Base
+  : Extract<T, Base>;
+
 type BuildTupleHelper<
   Element,
   Length extends number,
@@ -51,3 +61,9 @@ type BuildTupleHelper<
  * @returns >0 if `a` should come after `b`, 0 if they are equal, and <0 if `a` should come before `b`.
  */
 export type CompareFunction<T> = (a: T, b: T) => number;
+
+/**
+ * Based on type-fest's IsAny
+ * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
+ */
+export type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;

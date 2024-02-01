@@ -8,18 +8,24 @@ documentation when migrating._
 
 | Remeda              | Lodash              | Ramda               |
 | ------------------- | ------------------- | ------------------- |
+| `add`               | `add`               | `add`               |
 | `addProp`           | `set`               | `set`               |
-| `allPass`           | `-`                 | `allPass`           |
-| `anyPass`           | `-`                 | `anyPass`           |
-| `chunk`             | `chunk`             | `-`                 |
+| `allPass`           |                     | `allPass`           |
+| `anyPass`           |                     | `anyPass`           |
+| `ceil`              | `ceil`              |                     |
+| `chunk`             | `chunk`             |                     |
 | `clamp`             | `clamp`             | `clamp`             |
 | `clone`             | `cloneDeep`         | `clone`             |
 | `concat`            | `concat`            | `concat`            |
-| `createPipe`        | `-`                 | `-`                 |
+| `createPipe`        |                     |                     |
+| `debounce`          | `debounce`          |                     |
 | `difference`        | `difference`        | `difference`        |
 | `differenceWith`    | `differenceWith`    | `differenceWith`    |
+| `divide`            | `divide`            | `divide`            |
 | `drop`              | `drop`              | `drop`              |
 | `dropLast`          | `dropRight`         | `dropLast`          |
+| `dropLastWhile`     | `dropRightWhile`    | `dropLastWhile`     |
+| `dropWhile`         | `dropWhile`         | `dropWhile`         |
 | `equals`            | `isEqual`           | `equals`            |
 | `filter`            | `filter`            | `filter`            |
 | `find`              | `find`              | `find`              |
@@ -30,6 +36,7 @@ documentation when migrating._
 | `flatMap`           | `flatMap`           | `chain`             |
 | `flatten`           | `flatten`           | `flatten`           |
 | `flattenDeep`       | `flattenDeep`       | `flatten`           |
+| `floor`             | `floor`             |                     |
 | `forEach`           | `forEach`           | `forEach`           |
 | `forEachObj`        | `forEach`           | `forEachObjIndexed` |
 | `groupBy`           | `groupBy`           | `groupBy`           |
@@ -40,18 +47,23 @@ documentation when migrating._
 | `invert`            | `invert`            | `invertObj`         |
 | `isEmpty`           | `isEmpty`           | `isEmpty`           |
 | `isNil`             | `isNil`             | `isNil`             |
+| `isObjectType`      | `isObjectLike`      |                     |
+| `isPlainObject`     | `isPlainObject`     |                     |
+| `isSymbol`          | `isSymbol`          |                     |
 | `join`              | `join`              | `join`              |
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |
 | `map`               | `map`               | `map`               |
-| `mapKeys`           | `mapKeys`           | `-`                 |
-| `meanBy`            | `meanBy`            | `-`                 |
+| `mapKeys`           | `mapKeys`           |                     |
+| `meanBy`            | `meanBy`            |                     |
 | `merge`             | `assign`            | `merge`             |
 | `mergeAll`          | `assign`            | `mergeAll`          |
+| `mergeDeep`         |                     | `mergeDeepRight`    |
+| `multiply`          | `multiply`          | `multiply`          |
 | `noop`              | `noop`              | `-`                 |
 | `objOf`             | `-`                 | `objOf`             |
 | `omit`              | `omit`              | `omit`              |
-| `omitBy`            | `omitBy`            | `-`                 |
+| `omitBy`            | `omitBy`            |                     |
 | `once`              | `once`              | `once`              |
 | `partition`         | `partition`         | `partition`         |
 | `pathOr`            | `get`               | `pathOr`            |
@@ -59,35 +71,39 @@ documentation when migrating._
 | `pickBy`            | `pickBy`            | `pickBy`            |
 | `pipe`              | `flow`              | `pipe`              |
 | `prop`              | `get`               | `prop`              |
-| `purry`             | `-`                 | `-`                 |
-| `randomString`      | `-`                 | `-`                 |
+| `purry`             |                     |                     |
+| `randomString`      |                     |                     |
 | `range`             | `range`             | `range`             |
 | `reduce`            | `reduce`            | `reduce`            |
 | `reject`            | `reject`            | `reject`            |
-| `splice`            | `-`                 | `remove`            |
 | `reverse`           | `reverse`           | `reverse`           |
+| `round`             | `round`             |                     |
 | `sample`            | `sampleSize`\*      |                     |
 | `set`               | `set`               | `assoc`             |
 | `setPath`           | `set`               | `assocPath`         |
-| `shuffle`           | `shuffle`           | `-`                 |
-| `sort`              | `-`                 | `sort`              |
-| `sortBy`            | `orderBy`           | `-`                 |
+| `shuffle`           | `shuffle`           |                     |
+| `sort`              |                     | `sort`              |
+| `sortBy`            | `orderBy`           |                     |
 | `sortBy`            | `sortBy`            | `sortBy`            |
 | `sortedIndex`       | `sortedIndex`       |                     |
 | `sortedIndexBy`     | `sortedIndexBy`     |                     |
 | `sortedLastIndex`   | `sortedLastIndex`   |                     |
 | `sortedLastIndexBy` | `sortedLastIndexBy` |                     |
+| `splice`            | `-`                 | `remove`            |
 | `splitAt`           | `-`                 | `splitAt`           |
 | `splitWhen`         | `-`                 | `splitWhen`         |
 | `stringToPath`      | `toPath`            | `-`                 |
+| `subtract`          | `subtract`          | `subtract`          |
 | `sumBy`             | `sumBy`             | `-`                 |
 | `swapIndices`       | `-`                 | `swap`              |
 | `swapProps`         | `-`                 | `swap`              |
 | `take`              | `take`              | `take`              |
+| `takeLastWhile`     | `takeRightWhile`    | `takeLastWhile`     |
 | `takeWhile`         | `takeWhile`         | `takeWhile`         |
+| `tap`               | `tap`               | `tap`               |
 | `times`             | `times`             | `times`             |
 | `toPairs`           | `toPairs`           | `toPairs`           |
-| `type`              | `-`                 | `type`              |
+| `type`              |                     | `type`              |
 | `uniq`              | `uniq`              | `uniq`              |
 | `uniqBy`            | `uniqBy`            | `uniqBy`            |
 | `uniqWith`          | `uniqWith`          | `uniqWith`          |
@@ -106,15 +122,14 @@ you are relying on when migrating._
 
 | Lodash     | Ramda    | TypeScript                        |
 | ---------- | -------- | --------------------------------- |
-| `add`      | `add`    | `(x, y) => x + y`                 |
-| `-`        | `append` | `(arr, val) => [...arr, val]`     |
+|            | `append` | `(arr, val) => [...arr, val]`     |
 | `constant` | `always` | `x => () => x`                    |
 | `nth`      | `nth`    | `n => a[n]`                       |
-| `-`        | `path`   | `a?.b?.c`                         |
-| `-`        | `propEq` | `x => x.a === value`              |
-| `-`        | `propOr` | `x => x.a ?? defaultValue`        |
-| `words`    | `-`      | `str => str.split(/\s+/)`         |
-| `compact`  | `-`      | `R.filter(R.isTruthy)`            |
+|            | `path`   | `a?.b?.c`                         |
+|            | `propEq` | `x => x.a === value`              |
+|            | `propOr` | `x => x.a ?? defaultValue`        |
+| `words`    |          | `str => str.split(/\s+/)`         |
+| `compact`  |          | `R.filter(R.isTruthy)`            |
 | `max`      | `max`    | `R.firstBy([R.identity, "desc"])` |
 | `maxBy`    | `maxBy`  | `R.firstBy([fn, "desc"])`         |
 | `min`      | `min`    | `R.firstBy(R.identity)`           |
