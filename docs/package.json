@@ -11,7 +11,8 @@
     "dev": "astro dev",
     "preview": "astro preview",
     "transform": "tsx --tsconfig scripts/tsconfig.json scripts/transform build/out.json build/data.json",
-    "typedoc": "typedoc --json build/out.json"
+    "typedoc": "typedoc --json build/out.json",
+    "clean": "rm -rf dist && rm -rf build"
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",

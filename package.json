@@ -34,7 +34,7 @@
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
-    "docs:build": "cd docs && npm ci && npm run build",
+    "docs:build": "cd docs && npm ci && npm run build:all",
     "lint": "eslint src/**/*.ts --fix",
     "lint:check": "eslint src/**/*.ts",
     "prepare": "husky install",

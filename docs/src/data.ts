@@ -1,5 +1,5 @@
-import data from "~/build/data.json";
-import type { FunctionsData } from "~/scripts/transform";
+import data from "../build/data.json";
+import type { FunctionsData } from "../scripts/transform";
 
 import { groupBy, isTruthy, values, pipe, flatten, map } from "../../src";
 
