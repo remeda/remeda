@@ -1,18 +1,12 @@
 import { useMemo, useState } from "react";
 
-import { badgeVariants, type BadgeProps } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FunctionTag } from "@/components/function-tag";
 import { cn } from "@/lib/utils";
 
 import { toPairs } from "../../../src";
-
-const tagToColor: Record<string, BadgeProps["variant"]> = {
-  pipeable: "success",
-  indexed: "secondary",
-  strict: "destructive",
-};
 
 export const Navbar = ({
   entries,
@@ -71,17 +65,9 @@ export const Navbar = ({
 
                       <span className="flex items-center gap-1">
                         {func.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className={cn(
-                              badgeVariants({
-                                variant: tagToColor[tag],
-                              }),
-                              "w-6 p-0 py-0.5 capitalize",
-                            )}
-                          >
+                          <FunctionTag tag={tag} className="px-1.5">
                             {tag[0]}
-                          </span>
+                          </FunctionTag>
                         ))}
                       </span>
                     </a>

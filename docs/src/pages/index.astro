@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import CodeBlock from "@/components/code-block.astro";
+import { CopyButton } from "@/components/copy-button";
 import * as Typography from "@/components/ui/typography";
 
 const commands = [
@@ -24,7 +25,15 @@ const commands = [
       <div class="w-80 space-y-2">
         {
           commands.map((command) => (
-            <CodeBlock code={command} lang="bash" copy />
+            <>
+              <div class="relative">
+                <CodeBlock code={command} lang="bash" />
+
+                <div class="absolute right-2 top-1/2 -translate-y-1/2">
+                  <CopyButton value={command} client:load />
+                </div>
+              </div>
+            </>
           ))
         }
       </div>

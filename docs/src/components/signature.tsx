@@ -24,7 +24,12 @@ export const MethodSignature = ({
         <div className="flex-1">{children}</div>
 
         <CollapsibleTrigger asChild className="absolute right-0">
-          <Button variant="link" size="sm">
+          <Button
+            variant="link"
+            size="sm"
+            className="text-background dark:text-foreground"
+          >
+            <span className="sr-only">Expand</span>
             <CaretSortIcon className="h-4 w-4" />
           </Button>
         </CollapsibleTrigger>
