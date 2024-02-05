@@ -1,8 +1,9 @@
-type DefinitelyNumber<T> = Extract<T, number> extends never
-  ? number
-  : Extract<T, number> extends any
+type DefinitelyNumber<T> =
+  Extract<T, number> extends never
     ? number
-    : Extract<T, number>;
+    : Extract<T, number> extends any
+      ? number
+      : Extract<T, number>;
 
 /**
  * A function that checks if the passed parameter is a number and narrows its type accordingly

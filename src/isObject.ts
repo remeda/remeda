@@ -2,12 +2,13 @@
  * Function is used generically in this file to define any type of function, so
  * this lint error is not relevant for it.
  */
-type DefinitelyObject<T> = Exclude<
-  Extract<T, object>,
-  Array<any> | Function | ReadonlyArray<any>
-> extends never
-  ? Record<string, unknown>
-  : Exclude<Extract<T, object>, Array<any> | Function | ReadonlyArray<any>>;
+type DefinitelyObject<T> =
+  Exclude<
+    Extract<T, object>,
+    Array<any> | Function | ReadonlyArray<any>
+  > extends never
+    ? Record<string, unknown>
+    : Exclude<Extract<T, object>, Array<any> | Function | ReadonlyArray<any>>;
 
 /**
  * A function that checks if the passed parameter is of type Object and narrows its type accordingly
