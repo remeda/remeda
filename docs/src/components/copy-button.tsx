@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 const COPIED_TIMEOUT = 2000;
 
 async function copyToClipboard(value: string) {
-  navigator.clipboard.writeText(value);
+  await navigator.clipboard.writeText(value);
 }
 
 interface CopyButtonProps {

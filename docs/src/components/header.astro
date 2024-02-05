@@ -1,10 +1,9 @@
 ---
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
-import { ModeSwitcher } from "@/components/mode-switcher";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
-import { navEntries } from "@/data";
 
 const { pathname } = Astro.url;
 ---
@@ -47,9 +46,9 @@ const { pathname } = Astro.url;
         <span class="sr-only">GitHub</span>
       </a>
 
-      <ModeSwitcher client:load />
+      <ThemeSwitcher client:load />
 
-      <MobileNav entries={navEntries} client:media="(max-width: 767px)" />
+      <MobileNav client:media="(max-width: 767px)" />
     </div>
   </div>
 </header>

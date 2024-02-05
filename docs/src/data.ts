@@ -1,11 +1,11 @@
+import { groupBy, isTruthy, values, pipe, flatten, map } from "remeda";
+
 import data from "../build/data.json";
 import type { FunctionsData } from "../scripts/transform";
 
-import { groupBy, isTruthy, values, pipe, flatten, map } from "../../src";
-
 export type FunctionData = FunctionsData[number];
 
-const functionsData = data as FunctionsData;
+const FUNCTIONS_DATA = data as FunctionsData;
 
 export const getTags = (func: FunctionData) => {
   const [method] = func.methods;
@@ -17,8 +17,8 @@ export const getTags = (func: FunctionData) => {
   ].filter(isTruthy);
 };
 
-export const navEntries = pipe(
-  functionsData,
+export const NAV_ENTRIES = pipe(
+  FUNCTIONS_DATA,
   map((func) => ({
     category: func.category,
     name: func.name,
@@ -27,8 +27,8 @@ export const navEntries = pipe(
   groupBy((func) => func.category),
 );
 
-export const functions = pipe(
-  functionsData,
+export const FUNCTIONS = pipe(
+  FUNCTIONS_DATA,
   groupBy((func) => func.category),
   values,
   flatten(),

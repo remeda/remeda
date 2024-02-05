@@ -5,9 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
-export const MobileNav = (props: {
-  entries: Record<string, Array<{ name: string; tags: Array<string> }>>;
-}) => {
+export const MobileNav = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,10 +16,8 @@ export const MobileNav = (props: {
         </Button>
       </SheetTrigger>
 
-      <SheetContent>
-        <div className="h-[calc(100vh-1.5rem)] pb-10 pt-6">
-          <Navbar entries={props.entries} onSelect={() => setOpen(false)} />
-        </div>
+      <SheetContent className="pt-12">
+        <Navbar onSelect={() => setOpen(false)} />
       </SheetContent>
     </Sheet>
   );

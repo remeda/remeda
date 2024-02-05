@@ -11,7 +11,7 @@ import {
 const setTheme = (theme: "light" | "dark" | "system") => {
   const de = document.documentElement;
 
-  de.classList.remove("light", "dark");
+  de.classList.remove("dark");
 
   if (theme === "system") {
     const { matches: prefersDark } = window.matchMedia(
@@ -20,26 +20,22 @@ const setTheme = (theme: "light" | "dark" | "system") => {
 
     if (prefersDark) {
       de.classList.add("dark");
-      de.style.colorScheme = "dark";
-    } else {
-      de.classList.add("light");
-      de.style.colorScheme = "light";
-    }
+    } 
+
+    localStorage.removeItem("theme");
   } else {
     de.classList.add(theme);
-    de.style.colorScheme = theme;
+    localStorage.setItem("theme", theme);
   }
-
-  localStorage.setItem("theme", theme);
 };
 
-export function ModeSwitcher() {
+export function ThemeSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <SunIcon className="scale-100 dark:scale-0" />
-          <MoonIcon className="absolute scale-0 dark:scale-100" />
+          <SunIcon className="scale-100 dark:invisible" />
+          <MoonIcon className="absolute invisible dark:visible" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>

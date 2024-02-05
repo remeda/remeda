@@ -10,3 +10,9 @@ const { code, lang = "ts" } = Astro.props;
 ---
 
 <Code code={code} lang={lang} theme="poimandres" />
+
+<style is:global>
+  .astro-code {
+    @apply rounded px-4 py-2;
+  }
+</style>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { toPairs } from "remeda";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,18 +7,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { FunctionTag } from "@/components/function-tag";
 import { cn } from "@/lib/utils";
 
-import { toPairs } from "../../../src";
+import { NAV_ENTRIES } from '../data'
 
 export const Navbar = ({
-  entries,
   onSelect,
 }: {
-  entries: Record<string, Array<{ name: string; tags: Array<string> }>>;
   onSelect?: () => void;
 }) => {
   const [query, setQuery] = useState("");
 
-  const pairs = useMemo(() => toPairs(entries), [entries]);
+  const pairs = useMemo(() => toPairs(NAV_ENTRIES), [NAV_ENTRIES]);
 
   const filteredEntries = useMemo(
     () =>
@@ -59,7 +58,7 @@ export const Navbar = ({
                         "text-muted-foreground",
                         "flex w-full items-center justify-between gap-1",
                       ])}
-                      onClick={() => onSelect?.()}
+                      onClick={onSelect}
                     >
                       {func.name}
 
