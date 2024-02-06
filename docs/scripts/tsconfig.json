@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "checkJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+  },
 }

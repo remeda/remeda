@@ -1,39 +1,12 @@
 {
-  // create-vite default config
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
+    "baseUrl": ".",
     "paths": {
-      // TODO [react-syntax-highlighter@>15.5.0]: It is using an old version of
-      // the react types, causing typing errors when using the component in our
-      // project. Once they update their versions we can drop this.
-      "react": ["./node_modules/@types/react"]
-    }
+      "@/*": ["src/*"],
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "allowArbitraryExtensions": true,
   },
-  "include": [
-    "src",
-    "lint-staged.config.js",
-    "postcss.config.js",
-    "prettier.config.js",
-    "tailwind.config.js"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,0 +1,27 @@
+---
+import '@/styles/globals.css';
+import Header from '@/components/header.astro';
+import ThemeScript from '@/components/theme-script.astro';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content='The first "data-first" and "data-last" utility library designed specifically for TypeScript'
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Remeda</title>
+    <ThemeScript />
+  </head>
+
+  <body>
+    <Header />
+
+    <div class="container">
+      <slot />
+    </div>
+  </body>
+</html>

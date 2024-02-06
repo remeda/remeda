@@ -1,7 +1,7 @@
 /** @type {import('prettier').Config} */
-module.exports = {
+export default {
   singleQuote: true,
   arrowParens: 'avoid',
   trailingComma: 'es5',
-  plugins: ['prettier-plugin-tailwindcss'],
+  plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
 };
