@@ -30,7 +30,11 @@ const commands = [
                 <CodeBlock code={command} lang="bash" />
 
                 <div class="absolute right-2 top-1/2 -translate-y-1/2">
-                  <CopyButton value={command} client:load />
+                  <CopyButton
+                    value={command}
+                    className="text-background dark:text-foreground"
+                    client:load
+                  />
                 </div>
               </div>
             </>
