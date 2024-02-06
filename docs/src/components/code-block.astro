@@ -9,7 +9,7 @@ interface Props {
 const { code, lang = 'ts' } = Astro.props;
 ---
 
-<Code code={code} lang={lang} theme="poimandres" />
+<Code code={code} lang={lang} theme="poimandres" wrap />
 
 <style is:global>
   .astro-code {
