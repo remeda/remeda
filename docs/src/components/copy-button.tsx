@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const COPIED_TIMEOUT = 2000;
 
@@ -11,9 +12,10 @@ async function copyToClipboard(value: string) {
 
 interface CopyButtonProps {
   value: string;
+  className?: string;
 }
 
-export function CopyButton({ value }: CopyButtonProps) {
+export function CopyButton({ value, className }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
   const handleClick = useCallback(() => {
@@ -28,7 +30,7 @@ export function CopyButton({ value }: CopyButtonProps) {
     <Button
       size="icon"
       variant="ghost"
-      className="relative z-10 h-6 w-6"
+      className={cn('relative z-10 h-6 w-6', className)}
       onClick={handleClick}
     >
       <span className="sr-only">Copy</span>
