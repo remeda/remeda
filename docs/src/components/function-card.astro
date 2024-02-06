@@ -15,7 +15,7 @@ const { func } = Astro.props;
 const tags = getTags(func);
 ---
 
-<Card id={func.name} className="scroll-mt-20">
+<Card id={func.name} className="scroll-mt-20 overflow-hidden">
   <CardHeader>
     <div class="flex items-center gap-2">
       <CardTitle className="text-2xl">{func.name}</CardTitle>
@@ -39,7 +39,6 @@ const tags = getTags(func);
           method.signature !== undefined && (
             <div class="flex flex-col gap-2">
               {method.tag !== undefined && <p>{method.tag}</p>}
-
               <MethodSignature
                 args={method.args}
                 returns={method.returns}
@@ -47,9 +46,10 @@ const tags = getTags(func);
               >
                 <CodeBlock code={method.signature} />
               </MethodSignature>
-
               {method.example !== undefined && (
-                <CodeBlock code={method.example} />
+                <section class="text-xs md:text-base">
+                  <CodeBlock code={method.example} />
+                </section>
               )}
             </div>
           )
