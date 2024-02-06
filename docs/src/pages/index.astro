@@ -93,12 +93,12 @@ _.pick(obj, ['firstName', 'lastName']);`
         <CodeBlock
           code=`
 const users = [
-  {name: 'john', age: 20, gender: 'm'},
-  {name: 'marry', age: 22, gender: 'f'},
-  {name: 'samara', age: 24, gender: 'f'},
-  {name: 'paula', age: 24, gender: 'f'},
-  {name: 'bill', age: 33, gender: 'm'},
-]
+  { name: 'john', age: 20, gender: 'm' },
+  { name: 'marry', age: 22, gender: 'f' },
+  { name: 'samara', age: 24, gender: 'f' },
+  { name: 'paula', age: 24, gender: 'f' },
+  { name: 'bill', age: 33, gender: 'm' },
+];
 
 // Remeda
 R.pipe(
@@ -111,19 +111,19 @@ R.pipe(
 R.pipe(
   R.filter(x => x.gender === 'f'),
   R.groupBy(x => x.age),
-)(users) // broken typings in TS :(
+)(users); // broken typings in TS :(
 
 // Lodash
 _(users)
   .filter(x => x.gender === 'f')
   .groupBy(x => x.age)
-  .value()
+  .value();
 
 // Lodash-fp
 _.flow(
   _.filter(x => x.gender === 'f'),
   _.groupBy(x => x.age),
-)(users)// broken typings in TS :(`
+)(users); // broken typings in TS :(`
         />
 
         <Typography.P>
@@ -161,26 +161,27 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
 
         <CodeBlock
           code=`
-      // Get first 3 unique values
-      const arr = [1, 2, 2, 3, 3, 4, 5, 6];
-      
-      const result = R.pipe(
-        arr,
-        R.map(x => {
-      console.log('iterate', x);
-      return x;
-        }),
-        R.uniq(),
-        R.take(3)
-      ); // => [1, 2, 3]
-      
-      /**
-       * Console output:
-       * iterate 1
-       * iterate 2
-       * iterate 2
-       * iterate 3
-       * /`
+// Get first 3 unique values
+const arr = [1, 2, 2, 3, 3, 4, 5, 6];
+
+const result = R.pipe(
+  arr,
+  R.map(x => {
+    console.log('iterate', x);
+    return x;
+  }),
+  R.uniq(),
+  R.take(3)
+); // => [1, 2, 3]
+
+/**
+ * Console output:
+ * iterate 1
+ * iterate 2
+ * iterate 2
+ * iterate 3
+ */
+       `
         />
       </section>
 
@@ -194,13 +195,14 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
 
         <CodeBlock
           code=`
-      const arr = [10, 12, 13, 3];
-      
-      // filter even values
-      R.filter(arr, x => x % 2 === 0); // => [10, 12]
-      
-      // filter even indexes
-      R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]`
+const arr = [10, 12, 13, 3];
+
+// filter even values
+R.filter(arr, x => x % 2 === 0); // => [10, 12]
+
+// filter even indexes
+R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
+      `
         />
       </section>
 
@@ -214,13 +216,14 @@ R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot b
 
         <CodeBlock
           code=`
-      const input = { a: 'x', b: 'y', c: 'z' } as const
-      
-      const result = R.keys(input)
-      // ^? Array<string>
-      
-      const resultStrict = R.keys.strict(input)
-      // ^? Array<'a' | 'b' | 'c'>`
+const input = { a: 'x', b: 'y', c: 'z' } as const;
+
+const result = R.keys(input);
+// ^? Array<string>
+
+const resultStrict = R.keys.strict(input);
+// ^? Array<'a' | 'b' | 'c'>
+      `
         />
       </section>
     </div>
