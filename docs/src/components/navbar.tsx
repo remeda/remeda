@@ -1,20 +1,16 @@
-import { useMemo, useState } from "react";
-import { toPairs } from "remeda";
+import { useMemo, useState } from 'react';
+import { toPairs } from 'remeda';
 
-import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FunctionTag } from "@/components/function-tag";
-import { cn } from "@/lib/utils";
+import { buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { FunctionTag } from '@/components/function-tag';
+import { cn } from '@/lib/utils';
 
-import { NAV_ENTRIES } from '../data'
+import { NAV_ENTRIES } from '../data';
 
-export const Navbar = ({
-  onSelect,
-}: {
-  onSelect?: () => void;
-}) => {
-  const [query, setQuery] = useState("");
+export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
+  const [query, setQuery] = useState('');
 
   const pairs = useMemo(() => toPairs(NAV_ENTRIES), [NAV_ENTRIES]);
 
@@ -25,13 +21,13 @@ export const Navbar = ({
           ([category, funcs]) =>
             [
               category,
-              funcs.filter((func) =>
-                func.name.toLowerCase().includes(query.toLowerCase()),
+              funcs.filter(func =>
+                func.name.toLowerCase().includes(query.toLowerCase())
               ),
-            ] as const,
+            ] as const
         )
         .filter(([_, funcs]) => funcs.length > 0),
-    [pairs, query],
+    [pairs, query]
   );
 
   return (
@@ -39,7 +35,7 @@ export const Navbar = ({
       <Input
         placeholder="Type to filter"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={e => setQuery(e.target.value)}
       />
 
       <ScrollArea className="h-full" barClassName="pt-6 pb-10">
@@ -49,21 +45,21 @@ export const Navbar = ({
               <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
 
               <ul>
-                {functions.map((func) => (
+                {functions.map(func => (
                   <li key={func.name}>
                     <a
                       href={`#${func.name}`}
                       className={cn([
-                        buttonVariants({ variant: "ghost" }),
-                        "text-muted-foreground",
-                        "flex w-full items-center justify-between gap-1",
+                        buttonVariants({ variant: 'ghost' }),
+                        'text-muted-foreground',
+                        'flex w-full items-center justify-between gap-1',
                       ])}
                       onClick={onSelect}
                     >
                       {func.name}
 
                       <span className="flex items-center gap-1">
-                        {func.tags.map((tag) => (
+                        {func.tags.map(tag => (
                           <FunctionTag tag={tag} className="px-1.5">
                             {tag[0]}
                           </FunctionTag>

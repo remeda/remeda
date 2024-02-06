@@ -1,5 +1,5 @@
 <script is:inline>
-  const theme = localStorage.getItem("theme");
+  const theme = localStorage.getItem('theme');
   const query = window.matchMedia('(prefers-color-scheme: dark)');
 
   if (theme === 'dark' || (!theme && query.matches)) {
@@ -9,7 +9,7 @@
   }
 
   query.addEventListener('change', e => {
-    if (e.matches && !localStorage.getItem("theme")) {
+    if (e.matches && !localStorage.getItem('theme')) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
