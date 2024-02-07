@@ -14,7 +14,7 @@ interface Props {
 const { func } = Astro.props;
 ---
 
-<Card id={func.name} className="scroll-mt-20 overflow-hidden">
+<Card id={func.name} className="scroll-mt-20">
   <CardHeader>
     <div class="flex items-center gap-2">
       <CardTitle className="text-2xl">{func.name}</CardTitle>
@@ -46,7 +46,7 @@ const { func } = Astro.props;
                 <CodeBlock code={method.signature} />
               </MethodSignature>
               {method.example !== undefined && (
-                <section class="text-xs md:text-base">
+                <section class="text-xs lg:text-base">
                   <CodeBlock code={method.example} />
                 </section>
               )}
