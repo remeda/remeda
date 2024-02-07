@@ -1,5 +1,6 @@
 ---
 import CodeBlock from "@/components/code-block.astro";
+import Description from "@/components/description.astro";
 import { FunctionTag } from "@/components/function-tag";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +28,11 @@ const { func } = Astro.props;
     </div>
 
     <div class="max-w-prose text-balance text-sm text-muted-foreground">
-      {func.description && <p set:html={func.description} />}
+      {
+        func.description !== undefined && (
+          <Description markdown={func.description} />
+        )
+      }
     </div>
   </CardHeader>
 

@@ -57,8 +57,4 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  code {
-    @apply text-primary;
-  }
 }
