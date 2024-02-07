@@ -1,6 +1,6 @@
 # build output
 dist/
-build/
+build/*.json
 
 # generated types
 .astro/

@@ -1,13 +1,14 @@
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Fragment, type ReactNode } from "react";
-
+import { Button } from "@/components/ui/button";
 import {
-  Collapsible as CollapsibleRoot,
   CollapsibleContent,
+  Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
-import type { FunctionData } from "@/data";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { Fragment, type ReactNode } from "react";
+import type DATA from "../../build/data.json";
+
+type Method = (typeof DATA)[number]["methods"][number];
 
 export const MethodSignature = ({
   args,
@@ -15,8 +16,8 @@ export const MethodSignature = ({
   children,
 }: {
   children: ReactNode;
-  args: FunctionData["methods"][number]["args"];
-  returns: FunctionData["methods"][number]["returns"];
+  args: Method["args"];
+  returns: Method["returns"];
 }) => {
   return (
     <CollapsibleRoot>

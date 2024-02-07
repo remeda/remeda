@@ -1,18 +1,17 @@
 ---
 import CodeBlock from "@/components/code-block.astro";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MethodSignature } from "@/components/signature";
-import { getTags, type FunctionData } from "@/data";
-import { Badge } from "@/components/ui/badge";
 import { FunctionTag } from "@/components/function-tag";
+import { MethodSignature } from "@/components/signature";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type DATA from "../../build/data.json";
+import { getTags } from "../lib/get-tags";
 
 interface Props {
-  func: FunctionData;
+  func: (typeof DATA)[number];
 }
 
 const { func } = Astro.props;
-
-const tags = getTags(func);
 ---
 
 <Card id={func.name} className="scroll-mt-20 overflow-hidden">
@@ -24,7 +23,7 @@ const tags = getTags(func);
         {func.category}
       </Badge>
 
-      {tags.map((tag) => <FunctionTag tag={tag} />)}
+      {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
     </div>
 
     <div class="max-w-prose text-balance text-sm text-muted-foreground">
@@ -57,3 +56,4 @@ const tags = getTags(func);
     }
   </CardContent>
 </Card>
+../lib/get-tags

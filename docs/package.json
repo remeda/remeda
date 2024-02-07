@@ -8,7 +8,7 @@
   "scripts": {
     "build": "astro check && astro build",
     "build:all": "npm run typedoc && npm run transform && npm run build",
-    "clean": "rm -rf dist && rm -rf build",
+    "clean": "rm -rf dist && rm -rf build/*.json",
     "dev": "astro dev",
     "preview": "astro preview",
     "transform": "tsx --tsconfig scripts/tsconfig.json scripts/transform build/out.json build/data.json",

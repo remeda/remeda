@@ -1,18 +1,30 @@
-import { useMemo, useState } from "react";
-import { toPairs } from "remeda";
-
+import { FunctionTag } from "@/components/function-tag";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FunctionTag } from "@/components/function-tag";
+import { getTags } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
-
-import { NAV_ENTRIES } from "../data";
+import { useMemo, useState } from "react";
+import { groupBy, map, pipe, toPairs } from "remeda";
+import DATA from "../../build/data.json";
 
 export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
   const [query, setQuery] = useState("");
 
-  const pairs = useMemo(() => toPairs(NAV_ENTRIES), []);
+  const pairs = useMemo(
+    () =>
+      pipe(
+        DATA,
+        map((func) => ({
+          category: func.category,
+          name: func.name,
+          tags: getTags(func),
+        })),
+        groupBy((func) => func.category),
+        toPairs,
+      ),
+    [],
+  );
 
   const filteredEntries = useMemo(
     () =>
