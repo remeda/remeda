@@ -26,14 +26,11 @@ const { func } = Astro.props;
 
       {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
     </div>
-
-    <div class="max-w-prose text-balance text-sm text-muted-foreground">
-      {
-        func.description !== undefined && (
-          <Description markdown={func.description} />
-        )
-      }
-    </div>
+    {
+      func.description !== undefined && (
+        <Description markdown={func.description} />
+      )
+    }
   </CardHeader>
 
   <CardContent className="grid gap-6">
