@@ -8,10 +8,10 @@ const FUNCTIONS_DATA = data as FunctionsData;
 
 export const getTags = (func: FunctionData) => {
   const {
-    methods: [method],
-  } = func;
-
-  const { pipeable = false, indexed = false, strict = false } = method ?? {};
+    pipeable = false,
+    indexed = false,
+    strict = false,
+  } = func.methods[0] ?? {};
 
   const out = [];
   if (pipeable) {
