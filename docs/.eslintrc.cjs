@@ -13,10 +13,11 @@ module.exports = {
     node: true,
   },
 
-  plugins: ["@typescript-eslint", "react", "jsx-a11y", "astro"],
+  plugins: ["@typescript-eslint", "react", "jsx-a11y", "astro", "unicorn"],
 
   extends: [
     "eslint:recommended",
+    "plugin:unicorn/recommended",
     "plugin:astro/recommended",
     "plugin:astro/jsx-a11y-strict",
     "prettier",
@@ -27,6 +28,8 @@ module.exports = {
   rules: {
     // We stay consistent with the main project on this...
     "@typescript-eslint/array-type": ["error", { default: "generic" }],
+
+    "unicorn/prevent-abbreviations": "off",
   },
 
   overrides: [

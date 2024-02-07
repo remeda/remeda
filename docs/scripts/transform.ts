@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-array-callback-reference, unicorn/no-process-exit */
+
 /**
  * This script takes the JSON output of typedoc and reformats and transforms it
  * to what our site needs in order to render the functions page.
@@ -50,14 +52,13 @@ const PRETTIER_OPTIONS = {
   trailingComma: "es5",
 } satisfies PrettierOptions;
 
-main(process.argv.slice(1))
-  .then(() => {
-    console.log("✅ Done!");
-  })
-  .catch((e) => {
-    console.log("💩 The process threw an error!", e);
-    process.exit(1);
-  });
+try {
+  await main(process.argv.slice(1));
+  console.log("✅ Done!");
+} catch (error) {
+  console.log("💩 The process threw an error!", error);
+  process.exit(1);
+}
 
 async function main([
   ,
@@ -74,6 +75,7 @@ async function main([
 
   const output = await transformProject(data);
 
+  /* eslint-disable-next-line unicorn/no-null */
   const jsonOutput = JSON.stringify(output, null, 2);
   await fs.writeFile(outputFileName, jsonOutput);
 }
@@ -168,7 +170,7 @@ function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
     return "Data Last";
   }
 
-  return undefined;
+  return;
 }
 
 function hasComment(
