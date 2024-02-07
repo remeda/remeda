@@ -1,8 +1,7 @@
-import { useState, useCallback } from "react";
-import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { useCallback, useState } from "react";
 
 const COPIED_TIMEOUT = 2000;
 
