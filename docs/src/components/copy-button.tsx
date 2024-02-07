@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
-import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
+import { useState, useCallback } from "react";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const COPIED_TIMEOUT = 2000;
 
@@ -30,7 +30,7 @@ export function CopyButton({ value, className }: CopyButtonProps) {
     <Button
       size="icon"
       variant="ghost"
-      className={cn('relative z-10 h-6 w-6', className)}
+      className={cn("relative z-10 h-6 w-6", className)}
       onClick={handleClick}
     >
       <span className="sr-only">Copy</span>

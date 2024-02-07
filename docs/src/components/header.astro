@@ -1,9 +1,9 @@
 ---
-import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
-import { ThemeSwitcher } from '@/components/theme-switcher';
-import { buttonVariants } from '@/components/ui/button';
-import { MobileNav } from '@/components/mobile-nav';
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { buttonVariants } from "@/components/ui/button";
+import { MobileNav } from "@/components/mobile-nav";
 
 const { pathname } = Astro.url;
 ---
@@ -18,8 +18,8 @@ const { pathname } = Astro.url;
       <a
         href="/"
         class:list={[
-          'transition-colors hover:text-foreground/80',
-          pathname === '/' ? 'text-foreground' : 'text-foreground/60',
+          "transition-colors hover:text-foreground/80",
+          pathname === "/" ? "text-foreground" : "text-foreground/60",
         ]}
       >
         Home
@@ -28,8 +28,8 @@ const { pathname } = Astro.url;
       <a
         href="/docs"
         class:list={[
-          'transition-colors hover:text-foreground/80',
-          pathname === '/docs' ? 'text-foreground' : 'text-foreground/60',
+          "transition-colors hover:text-foreground/80",
+          pathname === "/docs" ? "text-foreground" : "text-foreground/60",
         ]}
       >
         Docs
@@ -40,7 +40,7 @@ const { pathname } = Astro.url;
       <a
         href="https://github.com/remeda/remeda"
         target="_blank"
-        class={buttonVariants({ variant: 'ghost', size: 'icon' })}
+        class={buttonVariants({ variant: "ghost", size: "icon" })}
       >
         <GitHubLogoIcon />
         <span class="sr-only">GitHub</span>

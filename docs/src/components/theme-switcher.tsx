@@ -1,34 +1,34 @@
-import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
-const setTheme = (theme: 'light' | 'dark' | 'system') => {
+const setTheme = (theme: "light" | "dark" | "system") => {
   const de = document.documentElement;
 
-  de.classList.remove('dark');
+  de.classList.remove("dark");
 
-  if (theme === 'system') {
+  if (theme === "system") {
     const { matches: prefersDark } = window.matchMedia(
-      '(prefers-color-scheme: dark)'
+      "(prefers-color-scheme: dark)",
     );
 
     if (prefersDark) {
-      de.classList.add('dark');
+      de.classList.add("dark");
     }
 
-    localStorage.removeItem('theme');
+    localStorage.removeItem("theme");
   } else {
-    if (theme === 'dark') {
-      de.classList.add('dark');
+    if (theme === "dark") {
+      de.classList.add("dark");
     }
 
-    localStorage.setItem('theme', theme);
+    localStorage.setItem("theme", theme);
   }
 };
 
@@ -43,13 +43,13 @@ export function ThemeSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

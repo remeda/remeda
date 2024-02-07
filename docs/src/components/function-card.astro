@@ -1,10 +1,10 @@
 ---
-import CodeBlock from '@/components/code-block.astro';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MethodSignature } from '@/components/signature';
-import { getTags, type FunctionData } from '@/data';
-import { Badge } from '@/components/ui/badge';
-import { FunctionTag } from '@/components/function-tag';
+import CodeBlock from "@/components/code-block.astro";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MethodSignature } from "@/components/signature";
+import { getTags, type FunctionData } from "@/data";
+import { Badge } from "@/components/ui/badge";
+import { FunctionTag } from "@/components/function-tag";
 
 interface Props {
   func: FunctionData;
@@ -24,7 +24,7 @@ const tags = getTags(func);
         {func.category}
       </Badge>
 
-      {tags.map(tag => <FunctionTag tag={tag} />)}
+      {tags.map((tag) => <FunctionTag tag={tag} />)}
     </div>
 
     <div class="max-w-prose text-balance text-sm text-muted-foreground">
@@ -35,7 +35,7 @@ const tags = getTags(func);
   <CardContent className="grid gap-6">
     {
       func.methods.map(
-        method =>
+        (method) =>
           method.signature !== undefined && (
             <div class="flex flex-col gap-2">
               {method.tag !== undefined && <p>{method.tag}</p>}
@@ -52,7 +52,7 @@ const tags = getTags(func);
                 </section>
               )}
             </div>
-          )
+          ),
       )
     }
   </CardContent>

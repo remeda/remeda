@@ -1,8 +1,8 @@
 ---
-import Layout from '@/layouts/layout.astro';
-import { Navbar } from '@/components/navbar';
-import FunctionCard from '@/components/function-card.astro';
-import { FUNCTIONS } from '@/data';
+import Layout from "@/layouts/layout.astro";
+import { Navbar } from "@/components/navbar";
+import FunctionCard from "@/components/function-card.astro";
+import { FUNCTIONS } from "@/data";
 ---
 
 <Layout>
@@ -17,7 +17,7 @@ import { FUNCTIONS } from '@/data';
 
     <main class="h-full py-6">
       <div class="space-y-6">
-        {FUNCTIONS.map(func => <FunctionCard func={func} />)}
+        {FUNCTIONS.map((func) => <FunctionCard func={func} />)}
       </div>
     </main>
   </div>

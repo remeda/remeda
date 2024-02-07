@@ -1,14 +1,14 @@
 ---
-import Layout from '@/layouts/layout.astro';
-import CodeBlock from '@/components/code-block.astro';
-import { CopyButton } from '@/components/copy-button';
-import * as Typography from '@/components/ui/typography';
+import Layout from "@/layouts/layout.astro";
+import CodeBlock from "@/components/code-block.astro";
+import { CopyButton } from "@/components/copy-button";
+import * as Typography from "@/components/ui/typography";
 
 const commands = [
-  'npm install remeda',
-  'pnpm add remeda',
-  'yarn add remeda',
-  'bun install remeda',
+  "npm install remeda",
+  "pnpm add remeda",
+  "yarn add remeda",
+  "bun install remeda",
 ];
 ---
 
@@ -24,7 +24,7 @@ const commands = [
 
       <div class="w-80 space-y-2">
         {
-          commands.map(command => (
+          commands.map((command) => (
             <>
               <div class="relative">
                 <CodeBlock code={command} lang="bash" />
