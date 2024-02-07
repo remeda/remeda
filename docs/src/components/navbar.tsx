@@ -26,7 +26,7 @@ export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
               ),
             ] as const,
         )
-        .filter(([_, funcs]) => funcs.length > 0),
+        .filter(([, funcs]) => funcs.length > 0),
     [pairs, query],
   );
 
@@ -60,7 +60,7 @@ export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
 
                       <span className="flex items-center gap-1">
                         {func.tags.map((tag) => (
-                          <FunctionTag tag={tag} className="px-1.5">
+                          <FunctionTag key={tag} tag={tag} className="px-1.5">
                             {tag[0]}
                           </FunctionTag>
                         ))}
