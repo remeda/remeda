@@ -17,7 +17,11 @@ export const MobileNav = () => {
       </SheetTrigger>
 
       <SheetContent className="pt-12">
-        <Navbar onSelect={() => setOpen(false)} />
+        <Navbar
+          onSelect={() => {
+            setOpen(false);
+          }}
+        />
       </SheetContent>
     </Sheet>
   );

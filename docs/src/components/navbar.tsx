@@ -35,7 +35,9 @@ export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
       <Input
         placeholder="Type to filter"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+        }}
       />
 
       <ScrollArea className="h-full" barClassName="pt-6 pb-10">

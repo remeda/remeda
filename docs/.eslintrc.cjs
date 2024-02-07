@@ -20,7 +20,8 @@ module.exports = {
 
   extends: [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "prettier",
@@ -32,7 +33,10 @@ module.exports = {
     },
   },
 
-  rules: {},
+  rules: {
+    // We stay consistent with the main project on this...
+    "@typescript-eslint/array-type": ["error", { default: "generic" }],
+  },
 
   overrides: [
     {
