@@ -12,7 +12,7 @@ import { NAV_ENTRIES } from "../data";
 export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
   const [query, setQuery] = useState("");
 
-  const pairs = useMemo(() => toPairs(NAV_ENTRIES), [NAV_ENTRIES]);
+  const pairs = useMemo(() => toPairs(NAV_ENTRIES), []);
 
   const filteredEntries = useMemo(
     () =>
