@@ -1,6 +1,7 @@
 ---
 import CodeBlock from "@/components/code-block.astro";
 import { FunctionTag } from "@/components/function-tag";
+import Markdown from "@/components/markdown.astro";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,10 +26,7 @@ const { func } = Astro.props;
 
       {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
     </div>
-
-    <div class="max-w-prose text-balance text-sm text-muted-foreground">
-      {func.description && <p set:html={func.description} />}
-    </div>
+    {func.description !== undefined && <Markdown markdown={func.description} />}
   </CardHeader>
 
   <CardContent className="grid gap-6">

@@ -6,13 +6,12 @@
  */
 
 import fs from "node:fs/promises";
-import { parse as markedParse, type MarkedOptions } from "marked";
 import {
   format as prettierFormat,
   type Options as PrettierOptions,
 } from "prettier";
 import invariant from "tiny-invariant";
-import type { SetRequired, PartialOnUndefinedDeep } from "type-fest";
+import type { PartialOnUndefinedDeep, SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 
 /**
@@ -40,10 +39,6 @@ export type FunctionsData = ReadonlyArray<
     { recurseIntoArrays: true }
   >
 >;
-
-const MARKED_OPTIONS = {
-  gfm: true,
-} satisfies MarkedOptions;
 
 const PRETTIER_OPTIONS = {
   parser: "typescript",
@@ -115,16 +110,7 @@ async function transformFunction({
     },
   ] = signaturesWithComments;
   const description =
-    summary.length === 0
-      ? undefined
-      : // Marked can't tell when it's called if an async plugin is being used
-        // or not, so it can't type it's result accordingly. We know that we
-        // don't use any plugins so we cast the return type explicitly. This is
-        // how the marked team suggests for handling this typing ambiguity :(
-        (markedParse(
-          summary.map(({ text }) => text).join(""),
-          MARKED_OPTIONS,
-        ) as string);
+    summary.length === 0 ? undefined : summary.map(({ text }) => text).join("");
 
   const methods = await Promise.all(
     signaturesWithComments.map(transformSignature),
