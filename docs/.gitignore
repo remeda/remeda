@@ -1,6 +1,7 @@
 # build output
 dist/
-build/*.json
+build/
+src/data/functions.json
 
 # generated types
 .astro/

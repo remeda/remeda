@@ -2,11 +2,11 @@ import { FunctionTag } from "@/components/function-tag";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import FUNCTIONS from "@/data/functions.json";
 import { getTags } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import { groupBy, map, pipe, toPairs } from "remeda";
-import DATA from "../../build/data.json";
 
 export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
   const [query, setQuery] = useState("");
@@ -14,7 +14,7 @@ export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
   const pairs = useMemo(
     () =>
       pipe(
-        DATA,
+        FUNCTIONS,
         map((func) => ({
           category: func.category,
           name: func.name,

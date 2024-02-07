@@ -11,7 +11,7 @@
     "clean": "rm -rf dist && rm -rf build/*.json",
     "dev": "astro dev",
     "preview": "astro preview",
-    "transform": "tsx --tsconfig scripts/tsconfig.json scripts/transform build/out.json build/data.json",
+    "transform": "tsx --tsconfig scripts/tsconfig.json scripts/transform build/out.json src/data/functions.json",
     "typedoc": "typedoc --json build/out.json"
   },
   "dependencies": {

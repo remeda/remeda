@@ -6,9 +6,9 @@ import {
 } from "@/components/ui/collapsible";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
-import type DATA from "../../build/data.json";
+import type FUNCTIONS from "@/data/functions.json";
 
-type Method = (typeof DATA)[number]["methods"][number];
+type Method = (typeof FUNCTIONS)[number]["methods"][number];
 
 export const MethodSignature = ({
   args,

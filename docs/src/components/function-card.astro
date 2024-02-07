@@ -4,11 +4,11 @@ import { FunctionTag } from "@/components/function-tag";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type DATA from "../../build/data.json";
+import type FUNCTIONS from "@/data/functions.json";
 import { getTags } from "../lib/get-tags";
 
 interface Props {
-  func: (typeof DATA)[number];
+  func: (typeof FUNCTIONS)[number];
 }
 
 const { func } = Astro.props;

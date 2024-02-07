@@ -1,8 +1,8 @@
-import type DATA from "../../build/data.json";
+import type FUNCTIONS from "@/data/functions.json";
 
 export function getTags({
   methods: [method],
-}: (typeof DATA)[number]): ReadonlyArray<string> {
+}: (typeof FUNCTIONS)[number]): ReadonlyArray<string> {
   const { pipeable = false, indexed = false, strict = false } = method ?? {};
 
   const out = [];
