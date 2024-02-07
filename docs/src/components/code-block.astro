@@ -1,12 +1,12 @@
 ---
-import { Code } from 'astro:components';
+import { Code } from "astro:components";
 
 interface Props {
   code: string;
-  lang?: 'bash' | 'ts';
+  lang?: "bash" | "ts";
 }
 
-const { code, lang = 'ts' } = Astro.props;
+const { code, lang = "ts" } = Astro.props;
 ---
 
 <Code code={code} lang={lang} theme="poimandres" wrap />

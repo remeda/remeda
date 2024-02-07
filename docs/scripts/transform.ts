@@ -1,17 +1,19 @@
+/* eslint-disable unicorn/no-array-callback-reference, unicorn/no-process-exit */
+
 /**
  * This script takes the JSON output of typedoc and reformats and transforms it
  * to what our site needs in order to render the functions page.
  */
 
-import fs from 'node:fs/promises';
-import { parse as markedParse, type MarkedOptions } from 'marked';
+import fs from "node:fs/promises";
+import { parse as markedParse, type MarkedOptions } from "marked";
 import {
   format as prettierFormat,
   type Options as PrettierOptions,
-} from 'prettier';
-import invariant from 'tiny-invariant';
-import type { SetRequired, PartialOnUndefinedDeep } from 'type-fest';
-import { ReflectionKind, type JSONOutput } from 'typedoc';
+} from "prettier";
+import invariant from "tiny-invariant";
+import type { SetRequired, PartialOnUndefinedDeep } from "type-fest";
+import { ReflectionKind, type JSONOutput } from "typedoc";
 
 /**
  * Allows the site to "parse" the output of this script and use it's types as is
@@ -44,20 +46,19 @@ const MARKED_OPTIONS = {
 } satisfies MarkedOptions;
 
 const PRETTIER_OPTIONS = {
-  parser: 'typescript',
+  parser: "typescript",
   semi: false,
   singleQuote: true,
-  trailingComma: 'es5',
+  trailingComma: "es5",
 } satisfies PrettierOptions;
 
-main(process.argv.slice(1))
-  .then(() => {
-    console.log('✅ Done!');
-  })
-  .catch(e => {
-    console.log('💩 The process threw an error!', e);
-    process.exit(1);
-  });
+try {
+  await main(process.argv.slice(1));
+  console.log("✅ Done!");
+} catch (error) {
+  console.log("💩 The process threw an error!", error);
+  process.exit(1);
+}
 
 async function main([
   ,
@@ -65,27 +66,28 @@ async function main([
   outputFileName,
 ]: ReadonlyArray<string>): Promise<void> {
   if (dataFileName === undefined || outputFileName === undefined) {
-    console.log('Usage: script <inputFile> <outputFile>');
+    console.log("Usage: script <inputFile> <outputFile>");
     process.exit(1);
   }
 
-  const jsonData = await fs.readFile(dataFileName, 'utf8');
+  const jsonData = await fs.readFile(dataFileName, "utf8");
   const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
   const output = await transformProject(data);
 
+  /* eslint-disable-next-line unicorn/no-null */
   const jsonOutput = JSON.stringify(output, null, 2);
   await fs.writeFile(outputFileName, jsonOutput);
 }
 
 async function transformProject(project: JSONOutput.ProjectReflection) {
   const { children } = project;
-  invariant(children !== undefined, 'The typedoc output is empty!');
+  invariant(children !== undefined, "The typedoc output is empty!");
 
   const functions = await Promise.all(
     children
       .filter(({ kind }) => kind === ReflectionKind.Function)
-      .map(transformFunction)
+      .map(transformFunction),
   );
 
   return addCategories(project, functions.filter(isDefined));
@@ -96,7 +98,7 @@ async function transformFunction({
   name,
   signatures,
 }: JSONOutput.DeclarationReflection) {
-  console.log('processing', name);
+  console.log("processing", name);
 
   if (signatures === undefined) {
     return;
@@ -120,12 +122,12 @@ async function transformFunction({
         // don't use any plugins so we cast the return type explicitly. This is
         // how the marked team suggests for handling this typing ambiguity :(
         (markedParse(
-          summary.map(({ text }) => text).join(''),
-          MARKED_OPTIONS
+          summary.map(({ text }) => text).join(""),
+          MARKED_OPTIONS,
         ) as string);
 
   const methods = await Promise.all(
-    signaturesWithComments.map(transformSignature)
+    signaturesWithComments.map(transformSignature),
   );
 
   return { id, name, description, methods };
@@ -135,18 +137,18 @@ async function transformSignature({
   comment,
   parameters = [],
   type,
-}: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
+}: SetRequired<JSONOutput.SignatureReflection, "comment">) {
   return {
     tag: getFunctionCurriedVariant(comment),
     signature: await getFunctionSignature(comment),
-    indexed: hasTag(comment, 'indexed'),
-    pipeable: hasTag(comment, 'pipeable'),
-    strict: hasTag(comment, 'strict'),
+    indexed: hasTag(comment, "indexed"),
+    pipeable: hasTag(comment, "pipeable"),
+    strict: hasTag(comment, "strict"),
     example: await getExample(comment),
     args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
-      description: tagContent(comment, 'returns'),
+      description: tagContent(comment, "returns"),
     },
   };
 }
@@ -160,48 +162,48 @@ function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
 }
 
 function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
-  if (hasTag(comment, 'dataFirst')) {
-    return 'Data First';
+  if (hasTag(comment, "dataFirst")) {
+    return "Data First";
   }
 
-  if (hasTag(comment, 'dataLast')) {
-    return 'Data Last';
+  if (hasTag(comment, "dataLast")) {
+    return "Data Last";
   }
 
-  return undefined;
+  return;
 }
 
 function hasComment(
-  item: JSONOutput.SignatureReflection
-): item is SetRequired<JSONOutput.SignatureReflection, 'comment'> {
+  item: JSONOutput.SignatureReflection,
+): item is SetRequired<JSONOutput.SignatureReflection, "comment"> {
   return item.comment !== undefined;
 }
 
 function getReturnType(type: JSONOutput.SomeType | undefined) {
   return type === undefined
-    ? 'Object'
-    : type.type === 'intrinsic'
+    ? "Object"
+    : type.type === "intrinsic"
       ? type.name
-      : type.type === 'array'
-        ? 'Array'
-        : type.type === 'predicate'
-          ? 'boolean'
-          : 'Object';
+      : type.type === "array"
+        ? "Array"
+        : type.type === "predicate"
+          ? "boolean"
+          : "Object";
 }
 
 async function getExample(
-  comment: JSONOutput.Comment
+  comment: JSONOutput.Comment,
 ): Promise<string | undefined> {
-  const example = tagContent(comment, 'example');
+  const example = tagContent(comment, "example");
   if (example !== undefined) {
     return prettierFormat(example, PRETTIER_OPTIONS);
   }
 
-  const exampleRaw = tagContent(comment, 'exampleRaw');
+  const exampleRaw = tagContent(comment, "exampleRaw");
   return exampleRaw
-    ?.split('\n')
-    .map(str => str.replace(/^ {3}/, ''))
-    .join('\n');
+    ?.split("\n")
+    .map((str) => str.replace(/^ {3}/, ""))
+    .join("\n");
 }
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
@@ -211,14 +213,14 @@ function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
     description:
       summarySegments.length === 0
         ? undefined
-        : summarySegments.map(({ text }) => text).join(''),
+        : summarySegments.map(({ text }) => text).join(""),
   };
 }
 
 async function getFunctionSignature(
-  comment: JSONOutput.Comment
+  comment: JSONOutput.Comment,
 ): Promise<string | undefined> {
-  const signatureRaw = tagContent(comment, 'signature');
+  const signatureRaw = tagContent(comment, "signature");
 
   if (signatureRaw === undefined) {
     return;
@@ -235,7 +237,7 @@ function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
 
 function tagContent(
   { blockTags }: JSONOutput.Comment,
-  tagName: string
+  tagName: string,
 ): string | undefined {
   if (blockTags === undefined) {
     return;
@@ -252,18 +254,18 @@ function tagContent(
     return undefined;
   }
 
-  return content.map(({ text }) => text).join('');
+  return content.map(({ text }) => text).join("");
 }
 
 function addCategories(
   { categories }: JSONOutput.ProjectReflection,
   functions: ReadonlyArray<
     NonNullable<Awaited<ReturnType<typeof transformFunction>>>
-  >
+  >,
 ) {
   invariant(
     categories !== undefined,
-    'Category data is missing from typedoc output!'
+    "Category data is missing from typedoc output!",
   );
   const categoriesLookup = createCategoriesLookup(categories);
   return functions.map(({ id, ...item }) => ({
@@ -273,7 +275,7 @@ function addCategories(
 }
 
 function createCategoriesLookup(
-  categories: ReadonlyArray<JSONOutput.ReflectionCategory>
+  categories: ReadonlyArray<JSONOutput.ReflectionCategory>,
 ): ReadonlyMap<number, string> {
   const result = new Map<number, string>();
 

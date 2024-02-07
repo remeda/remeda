@@ -1,9 +1,8 @@
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
-
-import { Navbar } from '@/components/navbar';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 export const MobileNav = () => {
   const [open, setOpen] = useState(false);
@@ -17,7 +16,11 @@ export const MobileNav = () => {
       </SheetTrigger>
 
       <SheetContent className="pt-12">
-        <Navbar onSelect={() => setOpen(false)} />
+        <Navbar
+          onSelect={() => {
+            setOpen(false);
+          }}
+        />
       </SheetContent>
     </Sheet>
   );

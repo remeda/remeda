@@ -1,13 +1,14 @@
-import { CaretSortIcon } from '@radix-ui/react-icons';
-import { Fragment, type ReactNode } from 'react';
-
+import { Button } from "@/components/ui/button";
 import {
-  Collapsible as CollapsibleRoot,
   CollapsibleContent,
+  Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { Button } from '@/components/ui/button';
-import type { FunctionData } from '@/data';
+} from "@/components/ui/collapsible";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { Fragment, type ReactNode } from "react";
+import type FUNCTIONS from "@/data/functions.json";
+
+type Method = (typeof FUNCTIONS)[number]["methods"][number];
 
 export const MethodSignature = ({
   args,
@@ -15,8 +16,8 @@ export const MethodSignature = ({
   children,
 }: {
   children: ReactNode;
-  args: FunctionData['methods'][number]['args'];
-  returns: FunctionData['methods'][number]['returns'];
+  args: Method["args"];
+  returns: Method["returns"];
 }) => {
   return (
     <CollapsibleRoot>
@@ -40,7 +41,7 @@ export const MethodSignature = ({
           <div>
             Parameters
             <dl className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm">
-              {args.map(arg => (
+              {args.map((arg) => (
                 <Fragment key={arg.name}>
                   <dt className="font-semibold">{arg.name}</dt>
                   <dd className="text-muted-foreground">{arg.description}</dd>
