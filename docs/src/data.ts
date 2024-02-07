@@ -14,15 +14,19 @@ export const getTags = (func: FunctionData) => {
   } = func.methods[0] ?? {};
 
   const out = [];
+
   if (pipeable) {
     out.push("pipeable");
   }
+
   if (indexed) {
     out.push("indexed");
   }
+
   if (strict) {
     out.push("strict");
   }
+
   return out;
 };
 
