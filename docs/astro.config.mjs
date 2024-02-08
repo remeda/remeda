@@ -12,6 +12,8 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [visualizer({ filename: "debug/bundleVisualizer.html" })],
+    plugins: [
+      visualizer({ filename: "node_modules/.cache/bundleVisualizer.html" }),
+    ],
   },
 });

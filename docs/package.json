@@ -8,8 +8,8 @@
   "scripts": {
     "build": "astro check && astro build",
     "build:all": "npm run clean && npm run typedoc && npm run build",
-    "build:debug": "npm run build && open-cli debug/bundleVisualizer.html",
-    "clean": "rm -rf dist && rm -rf src/data/data.json",
+    "build:debug": "npm run build && open-cli node_modules/.cache/bundleVisualizer.html",
+    "clean": "rm -rf dist && rm src/data/data.json",
     "dev": "astro dev",
     "preview": "astro preview",
     "typedoc": "typedoc --json src/data/data.json"
@@ -33,6 +33,7 @@
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
+    "@astrojs/ts-plugin": "^1.4.0",
     "@tailwindcss/typography": "^0.5.10",
     "@types/dompurify": "^3.0.5",
     "@types/eslint": "^8.56.2",

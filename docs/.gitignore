@@ -2,7 +2,6 @@
 dist/
 build/
 src/data/data.json
-debug/
 
 # generated types
 .astro/
