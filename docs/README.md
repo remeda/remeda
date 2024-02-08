@@ -49,3 +49,5 @@ code docs
 ```
 
 This setup ensures that all VSCode tooling and extensions (typescript, prettier, eslint) work correctly within the documentation project context.
+
+**Important!**: When running under the root repository folder, vscode will not run prettier or eslint on the files of the docs site as they are disabled in the main project for the `docs` folder; but `lint-staged` will still run them, so you will still see the auto-fixes and auto-formatting run, and the commit would still fail on errors.
