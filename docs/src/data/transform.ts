@@ -1,9 +1,9 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
-import { isDefined } from "remeda";
+import { hasAtLeast, isDefined } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
-import type { JSONOutput } from "typedoc";
+import { ReflectionKind, type JSONOutput } from "typedoc";
 import DATA from "./data.json";
 
 export const TRANSFORMED = transformProject(DATA);
@@ -13,7 +13,7 @@ function transformProject(project: typeof DATA) {
   invariant(children !== undefined, "The typedoc output is empty!");
 
   const functions = children
-    .filter(({ kind }) => (kind as number) === 64 /* REflectionKind.Function */)
+    .filter(({ kind }) => kind === ReflectionKind.Function)
     .map(transformFunction);
 
   return addCategories(project, functions.filter(isDefined.strict));
@@ -29,7 +29,7 @@ function transformFunction({
   }
 
   const signaturesWithComments = signatures.filter(hasComment);
-  if (!isNonEmpty(signaturesWithComments)) {
+  if (!hasAtLeast(signaturesWithComments, 1)) {
     return;
   }
 
@@ -64,10 +64,6 @@ function transformSignature({
       description: tagContent(comment, "returns"),
     },
   };
-}
-
-function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
-  return value.length > 0;
 }
 
 function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
