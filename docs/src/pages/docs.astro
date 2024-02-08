@@ -1,9 +1,10 @@
 ---
 import FunctionCard from "@/components/function-card.astro";
 import { Navbar } from "@/components/navbar";
-import { TRANSFORMED } from "@/data/transform";
 import Layout from "@/layouts/layout.astro";
-import { flatten, groupBy, map, pipe, values } from "remeda";
+import { CATEGORIZED } from "@/lib/categorized";
+import { NAVBAR_CATEGORIES } from "@/lib/navbar-categories";
+import { flatten, map, pipe, values } from "remeda";
 ---
 
 <Layout>
@@ -13,15 +14,14 @@ import { flatten, groupBy, map, pipe, values } from "remeda";
     <aside
       class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
     >
-      <Navbar client:load />
+      <Navbar entries={NAVBAR_CATEGORIES} client:load />
     </aside>
 
     <main class="h-full py-6">
       <div class="space-y-6">
         {
           pipe(
-            TRANSFORMED,
-            groupBy((func) => func.category),
+            CATEGORIZED,
             values,
             flatten(),
             map((func) => <FunctionCard func={func} />),
