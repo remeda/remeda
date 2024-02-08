@@ -4,7 +4,7 @@ import { hasAtLeast, isDefined } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
-import DATA from "./data.json";
+import DATA from "@/data/data.json";
 
 export const TRANSFORMED = transformProject(DATA);
 

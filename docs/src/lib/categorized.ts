@@ -1,4 +1,4 @@
-import { TRANSFORMED } from "@/data/transform";
+import { TRANSFORMED } from "./transform";
 import { groupBy } from "remeda";
 
 const MISSING_CATEGORY_FALLBACK = "Other";

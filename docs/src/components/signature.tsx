@@ -4,7 +4,7 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { TRANSFORMED } from "@/data/transform";
+import type { TRANSFORMED } from "@/lib/transform";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
 

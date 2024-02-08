@@ -5,8 +5,8 @@ import Markdown from "@/components/markdown.astro";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { TRANSFORMED } from "@/data/transform";
 import { getTags } from "@/lib/get-tags";
+import type { TRANSFORMED } from "@/lib/transform";
 
 interface Props {
   func: (typeof TRANSFORMED)[number];
@@ -54,3 +54,4 @@ const { func } = Astro.props;
     }
   </CardContent>
 </Card>
+@/lib/transform

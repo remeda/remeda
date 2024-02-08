@@ -1,4 +1,4 @@
-import type { TRANSFORMED } from "@/data/transform";
+import type { TRANSFORMED } from "./transform";
 
 export function getTags({
   methods: [method],
