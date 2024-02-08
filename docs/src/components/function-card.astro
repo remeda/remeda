@@ -5,11 +5,11 @@ import Markdown from "@/components/markdown.astro";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type FUNCTIONS from "@/data/functions.json";
 import { getTags } from "@/lib/get-tags";
+import type { DocumentedFunction } from "@/lib/transform";
 
 interface Props {
-  func: (typeof FUNCTIONS)[number];
+  func: DocumentedFunction;
 }
 
 const { func } = Astro.props;

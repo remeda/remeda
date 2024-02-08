@@ -2,6 +2,7 @@
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
+import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 const { pathname } = Astro.url;
@@ -47,7 +48,7 @@ const { pathname } = Astro.url;
 
       <ThemeSwitcher client:load />
 
-      <MobileNav client:media="(max-width: 767px)" />
+      <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
     </div>
   </div>
 </header>

@@ -1,8 +1,8 @@
-import type FUNCTIONS from "@/data/functions.json";
+import type { DocumentedFunction } from "./transform";
 
 export function getTags({
   methods: [method],
-}: (typeof FUNCTIONS)[number]): ReadonlyArray<string> {
+}: DocumentedFunction): ReadonlyArray<string> {
   const { pipeable = false, indexed = false, strict = false } = method ?? {};
 
   const out = [];

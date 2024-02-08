@@ -9,5 +9,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "allowArbitraryExtensions": true,
+    "plugins": [{ "name": "@astro/ts-plugin" }],
+    "verbatimModuleSyntax": true,
   },
 }
