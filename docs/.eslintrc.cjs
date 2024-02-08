@@ -26,9 +26,6 @@ module.exports = {
   reportUnusedDisableDirectives: true,
 
   rules: {
-    // We stay consistent with the main project on this...
-    "@typescript-eslint/array-type": ["error", { default: "generic" }],
-
     "unicorn/prevent-abbreviations": "off",
   },
 
@@ -71,6 +68,11 @@ module.exports = {
         react: {
           version: "detect",
         },
+      },
+
+      rules: {
+        // We stay consistent with the main project on this...
+        "@typescript-eslint/array-type": ["error", { default: "generic" }],
       },
     },
   ],
