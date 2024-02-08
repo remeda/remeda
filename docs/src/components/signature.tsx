@@ -4,11 +4,11 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import type { TRANSFORMED } from "@/data/transform";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
-import type FUNCTIONS from "@/data/functions.json";
 
-type Method = (typeof FUNCTIONS)[number]["methods"][number];
+type Method = (typeof TRANSFORMED)[number]["methods"][number];
 
 export const MethodSignature = ({
   args,

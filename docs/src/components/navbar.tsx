@@ -2,7 +2,7 @@ import { FunctionTag } from "@/components/function-tag";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import FUNCTIONS from "@/data/functions.json";
+import { TRANSFORMED } from "@/data/transform";
 import { getTags } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
@@ -14,7 +14,7 @@ export const Navbar = ({ onSelect }: { onSelect?: () => void }) => {
   const pairs = useMemo(
     () =>
       pipe(
-        FUNCTIONS,
+        TRANSFORMED,
         map((func) => ({
           category: func.category,
           name: func.name,

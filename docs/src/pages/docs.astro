@@ -1,7 +1,7 @@
 ---
 import FunctionCard from "@/components/function-card.astro";
 import { Navbar } from "@/components/navbar";
-import FUNCTIONS from "@/data/functions.json";
+import { TRANSFORMED } from "@/data/transform";
 import Layout from "@/layouts/layout.astro";
 import { flatten, groupBy, map, pipe, values } from "remeda";
 ---
@@ -20,7 +20,7 @@ import { flatten, groupBy, map, pipe, values } from "remeda";
       <div class="space-y-6">
         {
           pipe(
-            FUNCTIONS,
+            TRANSFORMED,
             groupBy((func) => func.category),
             values,
             flatten(),

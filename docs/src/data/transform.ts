@@ -1,78 +1,22 @@
-/* eslint-disable unicorn/no-array-callback-reference, unicorn/no-process-exit */
+/* eslint-disable unicorn/no-array-callback-reference */
 
-/**
- * This script takes the JSON output of typedoc and reformats and transforms it
- * to what our site needs in order to render the functions page.
- */
-
-import fs from "node:fs/promises";
+import { isDefined } from "remeda";
 import invariant from "tiny-invariant";
-import type { PartialOnUndefinedDeep, SetRequired } from "type-fest";
-import { ReflectionKind, type JSONOutput } from "typedoc";
+import type { SetRequired } from "type-fest";
+import type { JSONOutput } from "typedoc";
+import DATA from "./data.json";
 
-/**
- * Allows the site to "parse" the output of this script and use it's types as is
- * without needing to use `any`, `unknown` or sync types manually. It is built
- * dynamically from the return type of the main function so that the actual
- * logic is the source of truth for the types so we don't get any type drifts.
- *
- * !IMPORTANT - Don't change this type if you have a typing issue! You most likely need to change one of the functions in this file to return something different.
- *
- * @example
- *   import { type FunctionsData } from '../scripts/transform';
- *   import data from '../build/data.json';
- *   const FUNCTIONS_DATA = data as unknown as FunctionsData;
- */
-export type FunctionsData = ReadonlyArray<
-  // We use PartialOnUndefinedDeep because the output goes through
-  // `JSON.stringify` which strips any object properties which have a value of
-  // `undefined`.
-  PartialOnUndefinedDeep<
-    // We had to "break" the array and rebuild it because type-fest's
-    // `PartialOnUndefinedDeep` works on objects at the top level and not arrays
-    // even while using the `recurseIntoArrays` option).
-    ReturnType<typeof transformProject>[number],
-    { recurseIntoArrays: true }
-  >
->;
+export const TRANSFORMED = transformProject(DATA);
 
-try {
-  await main(process.argv.slice(1));
-  console.log("✅ Done!");
-} catch (error) {
-  console.log("💩 The process threw an error!", error);
-  process.exit(1);
-}
-
-async function main([
-  ,
-  dataFileName,
-  outputFileName,
-]: ReadonlyArray<string>): Promise<void> {
-  if (dataFileName === undefined || outputFileName === undefined) {
-    console.log("Usage: script <inputFile> <outputFile>");
-    process.exit(1);
-  }
-
-  const jsonData = await fs.readFile(dataFileName, "utf8");
-  const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
-
-  const output = transformProject(data);
-
-  /* eslint-disable-next-line unicorn/no-null */
-  const jsonOutput = JSON.stringify(output, null, 2);
-  await fs.writeFile(outputFileName, jsonOutput);
-}
-
-function transformProject(project: JSONOutput.ProjectReflection) {
+function transformProject(project: typeof DATA) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
 
   const functions = children
-    .filter(({ kind }) => kind === ReflectionKind.Function)
+    .filter(({ kind }) => (kind as number) === 64 /* REflectionKind.Function */)
     .map(transformFunction);
 
-  return addCategories(project, functions.filter(isDefined));
+  return addCategories(project, functions.filter(isDefined.strict));
 }
 
 function transformFunction({
@@ -80,8 +24,6 @@ function transformFunction({
   name,
   signatures,
 }: JSONOutput.DeclarationReflection) {
-  console.log("processing", name);
-
   if (signatures === undefined) {
     return;
   }
@@ -122,10 +64,6 @@ function transformSignature({
       description: tagContent(comment, "returns"),
     },
   };
-}
-
-function isDefined<T>(value: T | undefined): value is T {
-  return value !== undefined;
 }
 
 function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
@@ -213,9 +151,7 @@ function tagContent(
 
 function addCategories(
   { categories }: JSONOutput.ProjectReflection,
-  functions: ReadonlyArray<
-    NonNullable<Awaited<ReturnType<typeof transformFunction>>>
-  >,
+  functions: ReadonlyArray<NonNullable<ReturnType<typeof transformFunction>>>,
 ) {
   invariant(
     categories !== undefined,
