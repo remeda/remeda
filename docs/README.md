@@ -1,28 +1,16 @@
 # [Remeda documentation site](https://remedajs.com)
 
-## Setting Up for Development
-
-The documentation site is built in a few steps, outlined below. Note that some steps are only required after updates to the main Remeda project.
+## The Build
 
 ### 1. Typedoc
 
-First, we generate the project documentation using Typedoc. This step parses jsdoc comments from the main project to create a JSON file in the `build` directory. It's typically run once after changes to the Remeda codebase.
+First, we generate the project documentation using Typedoc. This step parses jsdoc comments from the main project to create a JSON file that is written to `src/data`. It only needs to run once after any changes to the Remeda codebase.
 
 ```bash
 npm run typedoc
 ```
 
-### 2. Transform
-
-Next, we post-process the Typedoc output to restructure the data into a format suitable for our site. This processed data is saved as JSON in the `src` directory for easy access by the site.
-
-```bash
-npm run transform
-```
-
-This step, like Typedoc, is not required during routine docs site development.
-
-### 3. Astro
+### 2. Astro
 
 The site itself is generated via Astro. To run the development server that provides hot-swapping code while you develop use:
 
@@ -34,10 +22,11 @@ The build step for deployment (`npm run build`) is automated via GitHub Actions 
 
 ### Full Build Command
 
-To run the entire build process end-to-end, ensuring everything is set up correctly
+To run the entire build process end-to-end, ensuring everything is set up correctly.
 
 ```bash
 npm run build:all
+npm run preview
 ```
 
 ## VSCode Integration
