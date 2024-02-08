@@ -9,7 +9,7 @@
     "build": "astro check && astro build",
     "build:all": "npm run clean && npm run typedoc && npm run build",
     "build:debug": "npm run build && open-cli node_modules/.cache/bundleVisualizer.html",
-    "clean": "rm -rf dist && rm src/data/data.json",
+    "clean": "rm -rf dist && rm -f src/data/data.json",
     "dev": "astro dev",
     "preview": "astro preview",
     "typedoc": "typedoc --json src/data/data.json"
