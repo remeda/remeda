@@ -2,7 +2,7 @@ import { map, pipe, toPairs } from "remeda";
 import { CATEGORIZED } from "./categorized";
 import { getTags } from "./get-tags";
 
-export const NAVBAR_CATEGORIES = pipe(
+export const NAVBAR_ENTRIES = pipe(
   CATEGORIZED,
   toPairs,
   map(

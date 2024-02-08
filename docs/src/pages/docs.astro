@@ -3,7 +3,7 @@ import FunctionCard from "@/components/function-card.astro";
 import { Navbar } from "@/components/navbar";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/categorized";
-import { NAVBAR_CATEGORIES } from "@/lib/navbar-categories";
+import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { flatten, map, pipe, values } from "remeda";
 ---
 
@@ -14,7 +14,7 @@ import { flatten, map, pipe, values } from "remeda";
     <aside
       class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
     >
-      <Navbar entries={NAVBAR_CATEGORIES} client:load />
+      <Navbar entries={NAVBAR_ENTRIES} client:load />
     </aside>
 
     <main class="h-full py-6">
