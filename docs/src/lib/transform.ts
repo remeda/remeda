@@ -6,9 +6,9 @@ import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import DATA from "@/data/data.json";
 
-export const TRANSFORMED = transformProject(DATA);
+export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 
-function transformProject(project: typeof DATA) {
+export function transformProject(project: typeof DATA) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
 

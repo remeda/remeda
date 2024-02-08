@@ -1,12 +1,16 @@
-import { TRANSFORMED } from "./transform";
-import { groupBy } from "remeda";
+import DATA from "@/data/data.json";
+import { groupBy, pipe } from "remeda";
+import { transformProject } from "./transform";
 
 const MISSING_CATEGORY_FALLBACK = "Other";
 
-export const CATEGORIZED = groupBy(
-  TRANSFORMED,
-  ({ category }) =>
-    category ??
-    // We should probably throw instead so that the build would fail
-    MISSING_CATEGORY_FALLBACK,
+export const CATEGORIZED = pipe(
+  DATA,
+  transformProject,
+  groupBy(
+    ({ category }) =>
+      category ??
+      // We should probably throw instead so that the build would fail
+      MISSING_CATEGORY_FALLBACK,
+  ),
 );

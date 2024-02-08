@@ -6,10 +6,10 @@ import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTags } from "@/lib/get-tags";
-import type { TRANSFORMED } from "@/lib/transform";
+import type { DocumentedFunction } from "@/lib/transform";
 
 interface Props {
-  func: (typeof TRANSFORMED)[number];
+  func: DocumentedFunction;
 }
 
 const { func } = Astro.props;
