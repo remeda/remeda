@@ -6,10 +6,6 @@
  */
 
 import fs from "node:fs/promises";
-import {
-  format as prettierFormat,
-  type Options as PrettierOptions,
-} from "prettier";
 import invariant from "tiny-invariant";
 import type { PartialOnUndefinedDeep, SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
@@ -35,17 +31,10 @@ export type FunctionsData = ReadonlyArray<
     // We had to "break" the array and rebuild it because type-fest's
     // `PartialOnUndefinedDeep` works on objects at the top level and not arrays
     // even while using the `recurseIntoArrays` option).
-    Awaited<ReturnType<typeof transformProject>>[number],
+    ReturnType<typeof transformProject>[number],
     { recurseIntoArrays: true }
   >
 >;
-
-const PRETTIER_OPTIONS = {
-  parser: "typescript",
-  semi: false,
-  singleQuote: true,
-  trailingComma: "es5",
-} satisfies PrettierOptions;
 
 try {
   await main(process.argv.slice(1));
@@ -68,27 +57,25 @@ async function main([
   const jsonData = await fs.readFile(dataFileName, "utf8");
   const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
-  const output = await transformProject(data);
+  const output = transformProject(data);
 
   /* eslint-disable-next-line unicorn/no-null */
   const jsonOutput = JSON.stringify(output, null, 2);
   await fs.writeFile(outputFileName, jsonOutput);
 }
 
-async function transformProject(project: JSONOutput.ProjectReflection) {
+function transformProject(project: JSONOutput.ProjectReflection) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
 
-  const functions = await Promise.all(
-    children
-      .filter(({ kind }) => kind === ReflectionKind.Function)
-      .map(transformFunction),
-  );
+  const functions = children
+    .filter(({ kind }) => kind === ReflectionKind.Function)
+    .map(transformFunction);
 
   return addCategories(project, functions.filter(isDefined));
 }
 
-async function transformFunction({
+function transformFunction({
   id,
   name,
   signatures,
@@ -112,25 +99,23 @@ async function transformFunction({
   const description =
     summary.length === 0 ? undefined : summary.map(({ text }) => text).join("");
 
-  const methods = await Promise.all(
-    signaturesWithComments.map(transformSignature),
-  );
+  const methods = signaturesWithComments.map(transformSignature);
 
   return { id, name, description, methods };
 }
 
-async function transformSignature({
+function transformSignature({
   comment,
   parameters = [],
   type,
 }: SetRequired<JSONOutput.SignatureReflection, "comment">) {
   return {
     tag: getFunctionCurriedVariant(comment),
-    signature: await getFunctionSignature(comment),
+    signature: tagContent(comment, "signature"),
     indexed: hasTag(comment, "indexed"),
     pipeable: hasTag(comment, "pipeable"),
     strict: hasTag(comment, "strict"),
-    example: await getExample(comment),
+    example: getExample(comment),
     args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
@@ -177,19 +162,14 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
           : "Object";
 }
 
-async function getExample(
-  comment: JSONOutput.Comment,
-): Promise<string | undefined> {
-  const example = tagContent(comment, "example");
-  if (example !== undefined) {
-    return prettierFormat(example, PRETTIER_OPTIONS);
-  }
-
-  const exampleRaw = tagContent(comment, "exampleRaw");
-  return exampleRaw
-    ?.split("\n")
-    .map((str) => str.replace(/^ {3}/, ""))
-    .join("\n");
+function getExample(comment: JSONOutput.Comment): string | undefined {
+  return (
+    tagContent(comment, "example") ??
+    tagContent(comment, "exampleRaw")
+      ?.split("\n")
+      .map((str) => str.replace(/^ {3}/, ""))
+      .join("\n")
+  );
 }
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
@@ -201,18 +181,6 @@ function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
         ? undefined
         : summarySegments.map(({ text }) => text).join(""),
   };
-}
-
-async function getFunctionSignature(
-  comment: JSONOutput.Comment,
-): Promise<string | undefined> {
-  const signatureRaw = tagContent(comment, "signature");
-
-  if (signatureRaw === undefined) {
-    return;
-  }
-
-  return prettierFormat(signatureRaw, PRETTIER_OPTIONS);
 }
 
 function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
