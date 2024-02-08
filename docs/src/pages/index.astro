@@ -1,15 +1,8 @@
 ---
 import CodeBlock from "@/components/code-block.astro";
-import { CopyButton } from "@/components/copy-button";
+import InstallCommands from "@/components/install-commands.astro";
 import * as Typography from "@/components/ui/typography";
 import Layout from "@/layouts/layout.astro";
-
-const commands = [
-  "npm install remeda",
-  "pnpm add remeda",
-  "yarn add remeda",
-  "bun install remeda",
-];
 ---
 
 <Layout>
@@ -21,26 +14,7 @@ const commands = [
         The first "data-first" and "data-last" utility library designed
         specifically for TypeScript
       </Typography.Lead>
-
-      <div class="w-80 space-y-2">
-        {
-          commands.map((command) => (
-            <>
-              <div class="relative">
-                <CodeBlock code={command} lang="bash" />
-
-                <div class="absolute right-2 top-1/2 -translate-y-1/2">
-                  <CopyButton
-                    value={command}
-                    className="text-background dark:text-foreground"
-                    client:load
-                  />
-                </div>
-              </div>
-            </>
-          ))
-        }
-      </div>
+      <InstallCommands />
     </section>
 
     <div class="mt-20 space-y-16">
@@ -223,10 +197,10 @@ R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
 const input = { a: 'x', b: 'y', c: 'z' } as const;
 
 const result = R.keys(input);
-// ^? Array<string>
+//    ^?: Array<string>
 
 const resultStrict = R.keys.strict(input);
-// ^? Array<'a' | 'b' | 'c'>
+//    ^?: Array<'a' | 'b' | 'c'>
       `
         />
       </section>
