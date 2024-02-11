@@ -22,6 +22,7 @@ export function transformProject(project: typeof DATA) {
 function transformFunction({
   id,
   name,
+  sources,
   signatures,
 }: JSONOutput.DeclarationReflection) {
   if (signatures === undefined) {
@@ -43,7 +44,9 @@ function transformFunction({
 
   const methods = signaturesWithComments.map(transformSignature);
 
-  return { id, name, description, methods };
+  const source = sources?.[0]?.url;
+
+  return { id, name, description, methods, source };
 }
 
 function transformSignature({
