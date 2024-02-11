@@ -19,7 +19,7 @@ export function multiply(value: number, multiplicand: number): number;
  * @param value The number.
  * @param multiplicand The number to multiply the value by.
  * @signature
- *    R.clamp(multiplicand)(value);
+ *    R.multiply(multiplicand)(value);
  * @example
  *    R.multiply(4)(3) // => 12
  *    R.map([1, 2, 3, 4], R.multiply(2)) // => [2, 4, 6, 8]

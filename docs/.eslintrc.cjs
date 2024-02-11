@@ -2,73 +2,78 @@
 module.exports = {
   root: true,
 
-  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: true,
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    ecmaFeatures: { jsx: true },
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
 
   env: {
     browser: true,
-    es2020: true,
+    es2021: true,
     node: true,
   },
 
-  plugins: [
-    'react-refresh',
-    '@typescript-eslint',
-    'react-hooks',
-    'react',
-    'import',
-  ],
+  plugins: ["@typescript-eslint", "react", "jsx-a11y", "astro", "unicorn"],
 
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:@typescript-eslint/strict',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
-    'plugin:react-hooks/recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
-    'prettier',
+    "eslint:recommended",
+    "plugin:unicorn/recommended",
+    "plugin:astro/recommended",
+    "plugin:astro/jsx-a11y-strict",
+    "prettier",
   ],
-
-  settings: {
-    react: {
-      version: '18',
-      // React Router stuff...
-      formComponents: ['Form'],
-      linkComponents: [
-        { name: 'Link', linkAttribute: 'to' },
-        { name: 'NavLink', linkAttribute: 'to' },
-      ],
-    },
-    'import/ignore': ['node_modules', '\\.(css|md|svg|json)$'],
-    'import/parsers': { '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'] },
-    'import/resolver': {
-      node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
-      typescript: { alwaysTryTypes: true },
-    },
-  },
-
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
 
   reportUnusedDisableDirectives: true,
 
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-
-    '@typescript-eslint/no-explicit-any': 'off',
-
-    // TODO: Temporarily disabled these rules so we can ship the main changes
-    // in this PR more easily. We should fix each one and remove these:
-    'react/no-unescaped-entities': 'off',
+    "unicorn/prevent-abbreviations": "off",
   },
+
+  overrides: [
+    {
+      files: [".eslintrc.{js,cjs}"],
+      env: {
+        node: true,
+      },
+      parserOptions: {
+        sourceType: "script",
+      },
+    },
+    {
+      files: ["*.astro"],
+      parser: "astro-eslint-parser",
+      parserOptions: {
+        parser: "@typescript-eslint/parser",
+        extraFileExtensions: [".astro"],
+      },
+    },
+    {
+      files: ["*.ts", "*.tsx"],
+
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: __dirname,
+      },
+
+      extends: [
+        "plugin:@typescript-eslint/strict-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:react/jsx-runtime",
+      ],
+
+      settings: {
+        react: {
+          version: "detect",
+        },
+      },
+
+      rules: {
+        // We stay consistent with the main project on this...
+        "@typescript-eslint/array-type": ["error", { default: "generic" }],
+      },
+    },
+  ],
 };

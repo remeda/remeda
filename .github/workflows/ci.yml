@@ -106,7 +106,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
       - name: Lint
-        run: npm run lint:check
+        run: npm run lint
 
   prettier:
     name: 💄 Formatting (prettier)
@@ -121,7 +121,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
       - name: Prettier
-        run: npm run prettier:check
+        run: npm run prettier
 
   publish:
     needs:
