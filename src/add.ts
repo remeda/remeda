@@ -20,7 +20,7 @@ export function add(value: number, addend: number): number;
  * @param value The number.
  * @param addend The number to add to the value.
  * @signature
- *    R.clamp(addend)(value);
+ *    R.add(addend)(value);
  * @example
  *    R.add(5)(10) // => 15
  *    R.add(-5)(10) // => 5

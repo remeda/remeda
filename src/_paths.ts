@@ -24,10 +24,7 @@ export type ValueAtPath<
       : never
     : never;
 
-export type SupportsValueAtPath<
-  Obj,
-  Path extends Array<PropertyKey>,
-  Value,
-> = Value extends ValueAtPath<Obj, Path> ? Obj : never;
+export type SupportsValueAtPath<Obj, Path extends Array<PropertyKey>, Value> =
+  Value extends ValueAtPath<Obj, Path> ? Obj : never;
 
 type Primitive = string | number | boolean | null | undefined | symbol;

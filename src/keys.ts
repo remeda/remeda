@@ -45,11 +45,12 @@ type ArrayKeys<T extends IterableContainer> = {
 type IsIndexAfterSpread<
   T extends IterableContainer,
   Index extends string | number,
-> = IndicesAfterSpread<T> extends never
-  ? false
-  : Index extends `${IndicesAfterSpread<T>}`
-    ? true
-    : false;
+> =
+  IndicesAfterSpread<T> extends never
+    ? false
+    : Index extends `${IndicesAfterSpread<T>}`
+      ? true
+      : false;
 
 // Find the index of the tuple where a spread item is located, and return all
 // indices in the tuple which are located after it. The tuple could be prefixed
@@ -71,9 +72,10 @@ type IndicesAfterSpread<
           | Iterations['length']
       : Iterations['length'];
 
-type ObjectKeys<T> = T extends Record<PropertyKey, never>
-  ? []
-  : Array<`${Exclude<keyof T, symbol>}`>;
+type ObjectKeys<T> =
+  T extends Record<PropertyKey, never>
+    ? []
+    : Array<`${Exclude<keyof T, symbol>}`>;
 export namespace keys {
   // @ts-expect-error [ts2322] - I don't know why i'm getting this, the typing
   // should be fine here because Key<T> returns a narrower type of string...

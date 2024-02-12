@@ -1,7 +1,7 @@
+import { typesDataProvider, type TestClass } from '../test/types_data_provider';
 import { isNot } from './isNot';
 import { isPromise } from './isPromise';
 import { isString } from './isString';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isNot', () => {
   test('isNot: should work as type guard', () => {
@@ -9,17 +9,22 @@ describe('isNot', () => {
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
       assertType<
-        | number
-        | boolean
-        | {
-            a: string;
-          }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
         | Error
-        | Promise<number>
+        | Map<string, string>
         | null
+        | number
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | symbol
+        | TestClass
+        | Uint8Array
         | undefined
       >(data);
     }
@@ -36,16 +41,23 @@ describe('isNot', () => {
 
     assertType<
       Array<
-        | boolean
-        | string
-        | { a: string }
         | (() => void)
+        | [number, number, number]
+        | { a: string }
         | Array<number>
+        | boolean
         | Date
-        | undefined
-        | null
         | Error
+        | Map<string, string>
+        | null
         | number
+        | RegExp
+        | Set<string>
+        | string
+        | symbol
+        | TestClass
+        | Uint8Array
+        | undefined
       >
     >(result);
   });
