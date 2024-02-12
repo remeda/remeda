@@ -215,14 +215,13 @@ function _evolve(data: any, transformations: any) {
     return data;
   }
   const result: Record<string, any> = Array.isArray(data) ? [] : {};
-  let transformation, key, type;
+  let transformation, key;
   for (key in data) {
     transformation = transformations[key];
-    type = typeof transformation;
     result[key] =
-      type === 'function'
+      typeof transformation === 'function'
         ? transformation(data[key])
-        : transformation && type === 'object'
+        : transformation && typeof transformation === 'object'
           ? _evolve(data[key], transformation)
           : data[key];
   }
