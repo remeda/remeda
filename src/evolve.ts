@@ -210,21 +210,21 @@ export function evolve() {
   return purry(_evolve, arguments);
 }
 
-function _evolve(object: any, transformations: any) {
-  if (!isObject(object) && !isArray(object)) {
-    return object;
+function _evolve(data: any, transformations: any) {
+  if (!isObject(data) && !isArray(data)) {
+    return data;
   }
-  const result: Record<string, any> = object instanceof Array ? [] : {};
+  const result: Record<string, any> = data instanceof Array ? [] : {};
   let transformation, key, type;
-  for (key in object) {
+  for (key in data) {
     transformation = transformations[key];
     type = typeof transformation;
     result[key] =
       type === 'function'
-        ? transformation(object[key])
+        ? transformation(data[key])
         : transformation && type === 'object'
-          ? _evolve(object[key], transformation)
-          : object[key];
+          ? _evolve(data[key], transformation)
+          : data[key];
   }
   return result;
 }
