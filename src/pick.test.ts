@@ -75,4 +75,18 @@ describe('typing', () => {
       >();
     });
   });
+
+  test('multiple type', () => {
+    type Data = { aProp: string; bProp: string };
+
+    const obj: Data = {
+      aProp: 'p1',
+
+      bProp: 'p2',
+    };
+
+    const result = pipe(obj, pick(['aProp', 'bProp']));
+
+    expectTypeOf(result).toEqualTypeOf<Pick<Data, 'aProp' | 'bProp'>>();
+  });
 });
