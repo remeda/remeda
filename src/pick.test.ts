@@ -76,7 +76,7 @@ describe('typing', () => {
     });
   });
 
-  test('multiple type', () => {
+  test('multiple keys', () => {
     type Data = { aProp: string; bProp: string };
 
     const obj: Data = {
