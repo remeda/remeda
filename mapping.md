@@ -46,6 +46,7 @@ documentation when migrating._
 | `intersection`      | `intersection`      | `intersection`      |
 | `intersectionWith`  | `intersectionWith`  | `innerJoin`         |
 | `invert`            | `invert`            | `invertObj`         |
+| `isDefined`         |                     | `isNotNil`          |
 | `isEmpty`           | `isEmpty`           | `isEmpty`           |
 | `isNil`             | `isNil`             | `isNil`             |
 | `isObjectType`      | `isObjectLike`      |                     |
