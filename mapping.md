@@ -79,7 +79,7 @@ documentation when migrating._
 | [`reject`](https://remedajs.com/docs/#reject)                       | [`reject`](https://lodash.com/docs/4.17.15#reject)                       | [`reject`](https://ramdajs.com/docs/#reject)                        |
 | [`reverse`](https://remedajs.com/docs/#reverse)                     | [`reverse`](https://lodash.com/docs/4.17.15#reverse)                     | [`reverse`](https://ramdajs.com/docs/#reverse)                      |
 | [`round`](https://remedajs.com/docs/#round)                         | [`round`](https://lodash.com/docs/4.17.15#round)                         |                                                                     |
-| [`sample`](https://remedajs.com/docs/#sample)                       | [`sampleSize`](https://lodash.com/docs/4.17.15#)\sampleSize*             |                                                                     |
+| [`sample`](https://remedajs.com/docs/#sample)                       | [`sampleSize`](https://lodash.com/docs/4.17.15#)\*                       |                                                                     |
 | [`set`](https://remedajs.com/docs/#set)                             | [`set`](https://lodash.com/docs/4.17.15#set)                             | [`assoc`](https://ramdajs.com/docs/#assoc)                          |
 | [`setPath`](https://remedajs.com/docs/#setPath)                     | [`set`](https://lodash.com/docs/4.17.15#set)                             | [`assocPath`](https://ramdajs.com/docs/#assocPath)                  |
 | [`shuffle`](https://remedajs.com/docs/#shuffle)                     | [`shuffle`](https://lodash.com/docs/4.17.15#shuffle)                     |                                                                     |
