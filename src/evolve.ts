@@ -214,7 +214,7 @@ function _evolve(data: any, transformations: any) {
   if (!isObject(data) && !isArray(data)) {
     return data;
   }
-  const result: Record<string, any> = data instanceof Array ? [] : {};
+  const result: Record<string, any> = Array.isArray(data) ? [] : {};
   let transformation, key, type;
   for (key in data) {
     transformation = transformations[key];
