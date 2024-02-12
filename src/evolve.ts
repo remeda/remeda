@@ -209,7 +209,13 @@ export function evolve() {
   return purry(_evolve, arguments);
 }
 
-function _evolve(data: any, transformations: any) {
+// Let's define a helper type just for the implementation,
+// it's the basic structure of a generic Transformations object.
+type Transformations = Readonly<
+  Record<PropertyKey, ((data: unknown) => unknown) | object>
+>;
+
+function _evolve(data: unknown, transformations: Transformations) {
   if (typeof data !== 'object' || data === null) {
     return data;
   }
@@ -218,9 +224,7 @@ function _evolve(data: any, transformations: any) {
     result[key] =
       typeof transformation === 'function'
         ? transformation(data[key])
-        : transformation && typeof transformation === 'object'
-          ? _evolve(data[key], transformation)
-          : data[key];
+        : _evolve(data[key], transformation as Transformations);
   }
   return result;
 }
