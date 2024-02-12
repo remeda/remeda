@@ -54,4 +54,18 @@ describe('typing', () => {
       >();
     });
   });
+
+  test('multiple keys', () => {
+    type Data = { aProp: string; bProp: string };
+
+    const obj: Data = {
+      aProp: 'p1',
+
+      bProp: 'p2',
+    };
+
+    const result = pipe(obj, omit(['aProp', 'bProp']));
+
+    expectTypeOf(result).toEqualTypeOf<Omit<Data, 'aProp' | 'bProp'>>();
+  });
 });
