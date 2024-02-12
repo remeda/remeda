@@ -1,6 +1,4 @@
 import { purry } from './purry';
-import { isObject } from './isObject';
-import { isArray } from './isArray';
 import { toPairs } from './toPairs';
 
 type AFunction = (...a: Array<any>) => any;
@@ -212,7 +210,7 @@ export function evolve() {
 }
 
 function _evolve(data: any, transformations: any) {
-  if (!isObject(data) && !isArray(data)) {
+  if (typeof data !== 'object' || data === null) {
     return data;
   }
   const result = Array.isArray(data) ? [...data] : { ...data };
