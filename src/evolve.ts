@@ -1,6 +1,7 @@
 import { purry } from './purry';
 import { isObject } from './isObject';
 import { isArray } from './isArray';
+import { toPairs } from './toPairs';
 
 type AFunction = (...a: Array<any>) => any;
 
@@ -214,10 +215,8 @@ function _evolve(data: any, transformations: any) {
   if (!isObject(data) && !isArray(data)) {
     return data;
   }
-  const result: Record<string, any> = Array.isArray(data) ? [] : {};
-  let transformation, key;
-  for (key in data) {
-    transformation = transformations[key];
+  const result = Array.isArray(data) ? [...data] : { ...data };
+  for (const [key, transformation] of toPairs.strict(transformations)) {
     result[key] =
       typeof transformation === 'function'
         ? transformation(data[key])
