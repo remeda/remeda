@@ -66,6 +66,7 @@ documentation when migrating._
 | `omit`              | `omit`              | `omit`              |
 | `omitBy`            | `omitBy`            |                     |
 | `once`              | `once`              | `once`              |
+| `only`              |                     |                     |
 | `partition`         | `partition`         | `partition`         |
 | `pathOr`            | `get`               | `pathOr`            |
 | `pick`              | `pick`              | `pick`              |
