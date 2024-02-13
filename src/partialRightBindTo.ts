@@ -3,7 +3,9 @@ import { purry } from './purry';
 type RemoveSuffix<
   P extends ReadonlyArray<unknown>,
   U extends ReadonlyArray<unknown>,
-> = P extends readonly [...infer T, ...U] ? T : never;
+> = P extends readonly [...infer T, ...U]
+  ? T
+  : ["ERROR(partialRightBindTo): Data doesn't match function signature."];
 
 /**
  * Creates a function that calls `func` with `data` put after the arguments it
