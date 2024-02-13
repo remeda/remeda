@@ -5,13 +5,6 @@ type AFunction = (...a: Array<any>) => any;
 
 /**
  * @example
- * type ab = Keys<{a: undefined }, { b: undefined }> // type ab = "a" | "b"
- * type a = Keys<{a: undefined }> // type a = "a"
- */
-type Keys<T, E = []> = Exclude<keyof T | keyof E, keyof []>;
-
-/**
- * @example
  * type A = GetValueByKey<['A', 'B'], '0'>; // type A = "A"
  * type B = GetValueByKey<['A', 'B'], '1'>; // type B = "B"
  * type C = GetValueByKey<['A', 'B'], '2', 'C'>; // type C = "C"
@@ -73,7 +66,7 @@ type EvolveTargetObject<E> = E extends AFunction
   ? GetFirstParam<E>
   : E extends object
     ? {
-        [K in Keys<E> as GetValueByKey<E, K> extends never
+        [K in keyof E as GetValueByKey<E, K> extends never
           ? never
           : GetValueByKey<E, K> extends AFunction
             ? K
@@ -91,7 +84,7 @@ type Evolver<T> =
     ? (data: T) => any
     : T extends object
       ? {
-          [K in Keys<T>]?:
+          [K in keyof T]?:
             | Evolver<GetValueByKey<T, K>>
             | ((data: GetValueByKey<T, K>) => any);
         }
@@ -104,7 +97,7 @@ type Evolved<T, E> = E extends AFunction
   ? ReturnType<E>
   : T extends object
     ? {
-        [K in Keys<T, E> as GetValueByKey<T, K> extends never
+        [K in keyof T as GetValueByKey<T, K> extends never
           ? never
           : K]: Evolved<
           GetValueByKey<T, K>,
