@@ -6,12 +6,12 @@ import { map } from './map';
 import { add } from './add';
 
 describe('data first', () => {
-  it('creates a new object by evolving the `object` according to the `transformation` functions', function () {
+  it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
     const transf = {
       count: add(1),
       data: { elapsed: add(1), remaining: add(-1) },
     };
-    const object = {
+    const data = {
       id: 10,
       count: 10,
       data: { elapsed: 100, remaining: 1400 },
@@ -21,26 +21,26 @@ describe('data first', () => {
       count: 11,
       data: { elapsed: 101, remaining: 1399 },
     };
-    const result = evolve(object, transf);
+    const result = evolve(data, transf);
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it('does not invoke function if object does not contain the key', function () {
+  it('does not invoke function if `data` does not contain the key', function () {
     const transf = { n: add(1), m: add(1) };
-    const object = { m: 3 };
+    const data = { m: 3 };
     const expected = { m: 4 };
-    const result = evolve(object, transf);
+    const result = evolve(data, transf);
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is not destructive and is immutable', function () {
     const transf = { n: add(1) };
-    const object = { n: 100 };
+    const data = { n: 100 };
     const expected = { n: 101 };
-    const result = evolve(object, transf);
-    expect(object).toEqual({ n: 100 });
+    const result = evolve(data, transf);
+    expect(data).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
@@ -48,9 +48,9 @@ describe('data first', () => {
 
   it('is recursive', function () {
     const transf = { nested: { second: add(-1), third: add(1) } };
-    const object = { first: 1, nested: { second: 2, third: 3 } };
+    const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
-    const result = evolve(object, transf);
+    const result = evolve(data, transf);
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
@@ -58,14 +58,14 @@ describe('data first', () => {
   // REMOVE THIS TEST: in remeda, transformations don't include primitive value
   it('ignores null transformations', function () {
     const transf = { n: null };
-    const object = { n: 0 };
+    const data = { n: 0 };
     const expected = { n: 0 };
     // @ts-expect-error -- for regression test
-    const result = evolve(object, transf);
+    const result = evolve(data, transf);
     expect(result).toEqual(expected);
   });
 
-  it('can handle complex nested objects', function () {
+  it('can handle data that is complex nested objects', function () {
     const transf = {
       array: (array: ReadonlyArray<string>) => array.length,
       nestedObj: { a: set<{ b: string }, 'b'>('b', 'Set') },
@@ -93,12 +93,12 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  it('creates a new object by evolving the `object` according to the `transformation` functions', function () {
+  it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
     const transf = {
       count: add(1),
       data: { elapsed: add(1), remaining: add(-1) },
     };
-    const object = {
+    const data = {
       id: 10,
       count: 10,
       data: { elapsed: 100, remaining: 1400 },
@@ -108,26 +108,26 @@ describe('data last', () => {
       count: 11,
       data: { elapsed: 101, remaining: 1399 },
     };
-    const result = pipe(object, evolve(transf));
+    const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it('does not invoke function if object does not contain the key', function () {
+  it('does not invoke function if `data` does not contain the key', function () {
     const transf = { n: add(1), m: add(1) };
-    const object = { m: 3 };
+    const data = { m: 3 };
     const expected = { m: 4 };
-    const result = pipe(object, evolve(transf));
+    const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is not destructive and is immutable', function () {
     const transf = { n: add(1) };
-    const object = { n: 100 };
+    const data = { n: 100 };
     const expected = { n: 101 };
-    const result = pipe(object, evolve(transf));
-    expect(object).toEqual({ n: 100 });
+    const result = pipe(data, evolve(transf));
+    expect(data).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
@@ -135,23 +135,23 @@ describe('data last', () => {
 
   it('is recursive', function () {
     const transf = { nested: { second: add(-1), third: add(1) } };
-    const object = { first: 1, nested: { second: 2, third: 3 } };
+    const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
-    const result = pipe(object, evolve(transf));
+    const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('ignores null transformations', function () {
     const transf = { n: null };
-    const object = { n: 0 };
+    const data = { n: 0 };
     const expected = { n: 0 };
-    const result = pipe(object, evolve(transf));
+    const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it('can handle complex nested objects', function () {
+  it('can handle data that is complex nested objects', function () {
     const result = pipe(
       {
         array: ['1', '2', '3'],
@@ -180,11 +180,11 @@ describe('data last', () => {
 describe('typing', () => {
   describe('data first', () => {
     it('can reflect type of data to function of evolver object', function () {
-      const object = {
+      const data = {
         data: { elapsed: 100, remaining: 1400 },
       };
-      const expected = object;
-      const result = evolve(object, {
+      const expected = data;
+      const result = evolve(data, {
         count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
         data: x => x,
       });
@@ -193,11 +193,11 @@ describe('typing', () => {
     });
 
     it('can reflect type of data to function of nested evolver object', function () {
-      const object = {
+      const data = {
         data: { elapsed: 100, remaining: 1400 },
       };
-      const expected = object;
-      const result = evolve(object, {
+      const expected = data;
+      const result = evolve(data, {
         count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
         data: { elapsed: x => x, remaining: x => x },
       });

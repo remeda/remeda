@@ -47,7 +47,7 @@ type GetFirstParam<T extends AFunction> = T extends (
   : never;
 
 /**
- * Creates an assumed object type from the type of the `transformations` argument of `evolve`.
+ * Creates an assumed object type from the type of the `evolver` argument of `evolve`.
  * @example
  * type Number = EvolveTargetObject<(arg1: number) => void>; // type Number = number
  * type Nested = EvolveTargetObject<{
@@ -92,7 +92,7 @@ type Evolver<T> =
     : T extends object
       ? {
           [K in Keys<T>]?:
-            | Evolver<NonNullable<GetValueByKey<T, K>>>
+            | Evolver<GetValueByKey<T, K>>
             | ((data: GetValueByKey<T, K>) => any);
         }
       : (data: T) => any;
@@ -100,23 +100,18 @@ type Evolver<T> =
 /**
  * Creates return type from the type of arguments of `evolve`.
  */
-type Evolve<T, E> = E extends AFunction
+type Evolved<T, E> = E extends AFunction
   ? ReturnType<E>
   : T extends object
     ? {
         [K in Keys<T, E> as GetValueByKey<T, K> extends never
           ? never
-          : K]: Evolve<
+          : K]: Evolved<
           GetValueByKey<T, K>,
           GetValueByKey<E, K, GetValueByKey<T, K>>
         >;
       }
     : T;
-
-export declare function evolve2<T, E extends Evolver<T>>(
-  object: T,
-  transformations: E
-): Evolve<T, E>;
 
 /**
  * Creates a new object by recursively evolving a shallow copy of `object`,
@@ -127,11 +122,11 @@ export declare function evolve2<T, E extends Evolver<T>>(
  * does not exist in the evolved object.
 
  * @param object object or array whose value at some path is applied to
- * the corresponding function that is defined in `transformations` at the same path.
- * @param transformations it is object or array in which the functions at some path is applied to
+ * the corresponding function that is defined in `evolver` at the same path.
+ * @param evolver it is object or array in which the functions at some path is applied to
  * the corresponding value of `object` at the same path.
  * @signature
- *    R.evolve(object, transformations)
+ *    R.evolve(object, evolver)
  * @example
  *    const transf = {
  *      count: add(1),
@@ -153,8 +148,8 @@ export declare function evolve2<T, E extends Evolver<T>>(
  */
 export function evolve<T, E extends Evolver<T>>(
   object: T,
-  transformations: E
-): Evolve<T, E>;
+  evolver: E
+): Evolved<T, E>;
 
 /**
  * Creates a new object by recursively evolving a shallow copy of `object`,
@@ -165,8 +160,8 @@ export function evolve<T, E extends Evolver<T>>(
  * does not exist in the evolved object.
 
  * @param object object or array whose value at some path is applied to
- * the corresponding function that is defined in `transformations` at the same path.
- * @param transformations it is object or array in which the functions at some path is applied to
+ * the corresponding function that is defined in `evolver` at the same path.
+ * @param evolver it is object or array in which the functions at some path is applied to
  * the corresponding value of `object` at the same path.
  * @signature
  *    R.evolve(transf)(object)
@@ -190,45 +185,43 @@ export function evolve<T, E extends Evolver<T>>(
  * @category Object
  */
 export function evolve<E>(
-  transformations: E
-): <T extends EvolveTargetObject<E>>(object: T) => Evolve<T, E>;
+  evolver: E
+): <T extends EvolveTargetObject<E>>(object: T) => Evolved<T, E>;
 
 export function evolve() {
   return purry(_evolve, arguments);
 }
 
 // define a helper type just for the implementation.
-// they are the basic structures of parameters.
 type Primitive = string | number | boolean | null | undefined | symbol;
 type PlainObject = Record<string, Primitive | object>;
 type Nil = null | undefined;
-// type Data = Primitive | Array<Primitive | object> | PlainObject;
-
-type Transformations = Readonly<
+type EvolverStructure = Readonly<
   Record<string, ((data: unknown) => unknown) | object | Nil>
 >;
-function _evolve(data: PlainObject, transformations: Transformations) {
+
+function _evolve(data: PlainObject, evolver: EvolverStructure) {
   if (typeof data !== 'object' || data === null) {
-    return data;
+    return data; // Dead logic if the type is followed.
   }
 
   const dataKeys = Object.keys(data);
 
-  return toPairs.strict(transformations).reduce<PlainObject>(
-    (result, [key, transformation]) => {
+  return toPairs.strict(evolver).reduce<PlainObject>(
+    (result, [key, value]) => {
       if (dataKeys.indexOf(key) === -1) {
         return result;
       }
-      if (typeof transformation === 'function') {
-        result[key] = transformation(result[key]);
+      if (typeof value === 'function') {
+        result[key] = value(result[key]);
         return result;
       }
-      if (transformation == null) {
+      if (value === null || value === undefined) {
         return result;
       }
       result[key] = _evolve(
         result[key] as PlainObject,
-        transformation as Transformations
+        value as EvolverStructure
       );
       return result;
     },
