@@ -3,17 +3,14 @@ import { purry } from './purry';
 type RemovePrefix<
   T extends ReadonlyArray<unknown>,
   U extends ReadonlyArray<unknown>,
-> = T extends [...U, ...infer V] ? V : never;
+> = T extends readonly [...U, ...infer V] ? V : never;
 
 /**
  * Creates a function that calls `func` with `args` put before the arguments
  * it receives.
  *
- * **Note:** This method doesn't set the `length` property of partially applied
- * functions.
- *
- * @param func the function to wrap
  * @param args the arguments to put before
+ * @param func the function to wrap
  * @returns a partially applied function
  *
  * @signature
