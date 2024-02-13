@@ -13,7 +13,7 @@ type NestedObject = Record<string, Primitive | object>;
  * basic structure of `evolver` parameter of the function `evolve`.
  */
 type EvolverStructure = Readonly<
-  Record<string, ((data: unknown) => unknown) | object | null | undefined>
+  Record<string, ((data: unknown) => unknown) | object | undefined>
 >;
 
 /**
@@ -55,7 +55,7 @@ type GetFirstParam<T extends AFunction> = T extends (
  *   obj: {
  *    num: (arg1: number) => void
  *   }
- *   notFunc: null
+ *   notFunc: undefined
  * }>;
  * // type Nested = {
  * //     num?: number | undefined;

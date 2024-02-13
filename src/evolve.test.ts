@@ -59,12 +59,10 @@ describe('data first', () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  // REMOVE THIS TEST: in remeda, transformations don't include primitive value
-  it('ignores null transformations', function () {
-    const transf = { n: null };
-    const data = { n: 0 };
+  it('ignores undefined transformations', function () {
+    const transf = { n: undefined };
+    const data: { n: number } = { n: 0 };
     const expected = { n: 0 };
-    // @ts-expect-error -- for regression test
     const result = evolve(data, transf);
     expect(result).toEqual(expected);
   });
@@ -147,8 +145,8 @@ describe('data last', () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it('ignores null transformations', function () {
-    const transf = { n: null };
+  it('ignores undefined transformations', function () {
+    const transf = { n: undefined };
     const data = { n: 0 };
     const expected = { n: 0 };
     const result = pipe(data, evolve(transf));
