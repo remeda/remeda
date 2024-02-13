@@ -1,20 +1,20 @@
 import { purry } from './purry';
 
 type RemovePrefix<
+  P extends ReadonlyArray<unknown>,
   T extends ReadonlyArray<unknown>,
-  U extends ReadonlyArray<unknown>,
-> = T extends readonly [...U, ...infer V] ? V : never;
+> = P extends readonly [...T, ...infer U] ? U : never;
 
 /**
- * Creates a function that calls `func` with `args` put before the arguments
+ * Creates a function that calls `func` with `data` put before the arguments
  * it receives.
  *
- * @param args the arguments to put before
+ * @param data the arguments to put before
  * @param func the function to wrap
  * @returns a partially applied function
  *
  * @signature
- *    R.partial(args, func)
+ *    R.partial(data, func)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
@@ -26,24 +26,23 @@ type RemovePrefix<
  * @see partialRight
  */
 export function partial<
-  A extends ReadonlyArray<unknown>,
-  B extends ReadonlyArray<unknown>,
-  C,
->(args: [...A], func: (...args: B) => C): (...rest: RemovePrefix<B, A>) => C;
+  T extends ReadonlyArray<unknown>,
+  F extends (...args: any) => any,
+>(
+  data: [...T],
+  func: F
+): (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
 /**
- * Creates a function that calls `func` with `args` put before the arguments
+ * Creates a function that calls `func` with `data` put before the arguments
  * it receives.
  *
- * **Note:** This method doesn't set the `length` property of partially applied
- * functions.
- *
  * @param func the function to wrap
- * @param args the arguments to put before
+ * @param data the arguments to put before
  * @returns a partially applied function
  *
  * @signature
- *    R.partial(func)(args)
+ *    R.partial(func)(data)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
@@ -54,11 +53,11 @@ export function partial<
  * @category Function
  * @see partialRight
  */
-export function partial<B extends ReadonlyArray<unknown>, C>(
-  func: (...args: B) => C
-): <A extends ReadonlyArray<unknown>>(
-  args: [...A]
-) => (...rest: RemovePrefix<B, A>) => C;
+export function partial<F extends (...args: any) => any>(
+  func: F
+): <T extends ReadonlyArray<unknown>>(
+  data: [...T]
+) => (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
 export function partial() {
   return purry(_partial, arguments);
@@ -68,6 +67,6 @@ function _partial<
   A extends ReadonlyArray<unknown>,
   B extends ReadonlyArray<unknown>,
   C,
->(args: A, func: (...args: [...A, ...B]) => C): (...rest: B) => C {
-  return (...rest: B) => func(...args, ...rest);
+>(data: A, func: (...args: [...A, ...B]) => C): (...rest: B) => C {
+  return (...rest: B) => func(...data, ...rest);
 }

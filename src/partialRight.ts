@@ -1,23 +1,20 @@
 import { purry } from './purry';
 
 type RemoveSuffix<
-  T extends ReadonlyArray<unknown>,
-  V extends ReadonlyArray<unknown>,
-> = T extends [...infer U, ...V] ? U : never;
+  P extends ReadonlyArray<unknown>,
+  U extends ReadonlyArray<unknown>,
+> = P extends readonly [...infer T, ...U] ? T : never;
 
 /**
- * Creates a function that calls `func` with `args` put after the arguments it
+ * Creates a function that calls `func` with `data` put after the arguments it
  * receives.
  *
- * **Note:** This method doesn't set the `length` property of partially applied
- * functions.
- *
+ * @param data the arguments to put after
  * @param func the function to wrap
- * @param args the arguments to put after
  * @returns a partially applied function
  *
  * @signature
- *    R.partialRight(args, func)
+ *    R.partialRight(data, func)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
@@ -29,24 +26,23 @@ type RemoveSuffix<
  * @see partial
  */
 export function partialRight<
-  A extends ReadonlyArray<unknown>,
-  B extends ReadonlyArray<unknown>,
-  C,
->(args: [...A], func: (...args: B) => C): (...rest: RemoveSuffix<B, A>) => C;
+  T extends ReadonlyArray<unknown>,
+  F extends (...args: any) => any,
+>(
+  data: [...T],
+  func: F
+): (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
 
 /**
- * Creates a function that calls `func` with `args` put after the arguments it
+ * Creates a function that calls `func` with `data` put after the arguments it
  * receives.
  *
- * **Note:** This method doesn't set the `length` property of partially applied
- * functions.
- *
  * @param func the function to wrap
- * @param args the arguments to put after
+ * @param data the arguments to put after
  * @returns a partially applied function
  *
  * @signature
- *    R.partialRight(func)(args)
+ *    R.partialRight(func)(data)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
@@ -57,11 +53,11 @@ export function partialRight<
  * @category Function
  * @see partial
  */
-export function partialRight<B extends ReadonlyArray<unknown>, C>(
-  func: (...args: B) => C
-): <A extends ReadonlyArray<unknown>>(
-  args: [...A]
-) => (...rest: RemoveSuffix<B, A>) => C;
+export function partialRight<F extends (...args: any) => any>(
+  func: F
+): <T extends ReadonlyArray<unknown>>(
+  data: [...T]
+) => (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
 
 export function partialRight() {
   return purry(_partialRight, arguments);
@@ -71,6 +67,6 @@ function _partialRight<
   A extends ReadonlyArray<unknown>,
   B extends ReadonlyArray<unknown>,
   C,
->(args: B, func: (...args: [...A, ...B]) => C): (...rest: A) => C {
-  return (...rest: A) => func(...rest, ...args);
+>(data: B, func: (...args: [...A, ...B]) => C): (...rest: A) => C {
+  return (...rest: A) => func(...rest, ...data);
 }
