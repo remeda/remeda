@@ -331,7 +331,7 @@ describe('typing', () => {
     it('does not accept function that require multiple arguments', function () {
       pipe(
         {
-          requiring2Args: [1, 2],
+          requiring2Args: 1,
         },
         // @ts-expect-error -- [ts2345]: Types of property 'requiring2Args' are incompatible.Type 'number[]' is not assignable to type 'undefined'.
         evolve({
@@ -343,13 +343,12 @@ describe('typing', () => {
     it('accept function whose second and subsequent arguments are optional', function () {
       const result = pipe(
         {
-          arg2Optional: ['1', 2],
-          arg2arg3Optional: '1',
-        } as const,
+          arg2Optional: 1,
+          arg2arg3Optional: 1,
+        },
         evolve({
-          arg2Optional: (arg1: readonly [string, number], arg2?: string) =>
-            arg2 === undefined,
-          arg2arg3Optional: (arg1: string, arg2?: string, arg3?: string) =>
+          arg2Optional: (arg1: number, arg2?: number) => arg2 === undefined,
+          arg2arg3Optional: (arg1: number, arg2?: number, arg3?: string) =>
             arg2 === undefined && arg3 === undefined,
         })
       );
@@ -360,34 +359,6 @@ describe('typing', () => {
       expectTypeOf(result).toEqualTypeOf<{
         arg2Optional: boolean;
         arg2arg3Optional: boolean;
-      }>();
-    });
-
-    it('accept function whose second and subsequent arguments accept undefined', function () {
-      const result = pipe(
-        {
-          arg2Undefinable: ['1', 2],
-          arg2arg3Undefinable: '1',
-        } as const,
-        evolve({
-          arg2Undefinable: (
-            arg1: readonly [string, number],
-            arg2: string | undefined
-          ) => arg2 === undefined,
-          arg2arg3Undefinable: (
-            arg1: string,
-            arg2: string | undefined,
-            arg3: string | undefined
-          ) => arg2 === undefined && arg3 === undefined,
-        })
-      );
-      expect(result).toEqual({
-        arg2Undefinable: true,
-        arg2arg3Undefinable: true,
-      });
-      expectTypeOf(result).toEqualTypeOf<{
-        arg2Undefinable: boolean;
-        arg2arg3Undefinable: boolean;
       }>();
     });
   });

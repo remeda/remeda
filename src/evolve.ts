@@ -25,35 +25,6 @@ type GetValueByKey<
   Default = never,
 > = K extends keyof T ? T[K] : Default;
 
-type _SomeElmIsDefined<A extends [...params: any]> = {
-  [K in Keys<A> as undefined extends GetValueByKey<A, K>
-    ? never
-    : 'TRUE']: true;
-};
-
-/**
- * @example
- * type True = SomeElmIsDefined<[undefined | string, string]>; // type True = true
- * type True = SomeElmIsDefined<[string, undefined | string]>; // type True = true
- * type True = SomeElmIsDefined<[string, string]>; // type True = true
- * type False = SomeElmIsDefined<[undefined | string, undefined | string]>; // type False = false
- */
-type SomeElmIsDefined<A extends Array<any>> = GetValueByKey<
-  _SomeElmIsDefined<A>,
-  'TRUE',
-  false
->;
-
-/**
- * @example
- * type False = AllElmAreUndefinable<[undefined | string, string]>; // type False = false
- * type False = AllElmAreUndefinable<[string, undefined | string]>; // type False = false
- * type False = AllElmAreUndefinable<[string, string]>; // type False = false
- * type True = AllElmAreUndefinable<[undefined | string, undefined | string]>; // type True = true
- */
-type AllElmAreUndefinable<A extends Array<any>> =
-  SomeElmIsDefined<A> extends true ? false : true;
-
 /**
  * Get the type of first parameter.
  * But get `never` if the function's the second and subsequent parameters do not take `undefined`.
@@ -70,11 +41,9 @@ type GetFirstParam<T extends AFunction> = T extends (
   firstArg: infer Ret,
   ...restArgs: infer Rest
 ) => any
-  ? Rest['length'] extends 0
+  ? 0 extends Rest['length']
     ? Ret
-    : AllElmAreUndefinable<Rest> extends true
-      ? Ret
-      : never
+    : never
   : never;
 
 /**
