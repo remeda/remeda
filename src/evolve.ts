@@ -1,4 +1,5 @@
 import { purry } from './purry';
+import { toPairs } from './toPairs';
 
 type AFunction = (...a: Array<any>) => any;
 
@@ -231,49 +232,35 @@ export function evolve() {
 // they are the basic structures of parameters.
 type Primitive = string | number | boolean | null | undefined | symbol;
 type PlainObject = Record<string, Primitive | object>;
-type Data = Primitive | Array<Primitive | object> | PlainObject;
+type Nil = null | undefined;
+// type Data = Primitive | Array<Primitive | object> | PlainObject;
 
 type Transformations = Readonly<
-  Record<string, ((data: unknown) => unknown) | object>
+  Record<string, ((data: unknown) => unknown) | object | Nil>
 >;
-
-function _evolve(
-  data: Primitive | Array<Primitive | object> | PlainObject,
-  transformations: Transformations
-) {
+function _evolve(data: PlainObject, transformations: Transformations) {
   if (typeof data !== 'object' || data === null) {
     return data;
   }
 
-  if (Array.isArray(data)) {
-    return data.reduce<Array<Primitive | object>>(
-      (result, value, key) => {
-        const transformation = transformations[key];
-        if (typeof transformation === 'function') {
-          result[key] = transformation(result[key]);
-        } else if (typeof transformation === 'object') {
-          result[key] = _evolve(
-            result[key] as Data,
-            transformation as Transformations
-          );
-        }
-        return result;
-      },
-      [...data]
-    );
-  }
+  const dataKeys = Object.keys(data);
 
-  return Object.keys(data).reduce<PlainObject>(
-    (result, key) => {
-      const transformation = transformations[key];
+  return toPairs.strict(transformations).reduce<PlainObject>(
+    (result, [key, transformation]) => {
+      if (dataKeys.indexOf(key) === -1) {
+        return result;
+      }
       if (typeof transformation === 'function') {
         result[key] = transformation(result[key]);
-      } else if (typeof transformation === 'object') {
-        result[key] = _evolve(
-          result[key] as Data,
-          transformation as Transformations
-        );
+        return result;
       }
+      if (transformation == null) {
+        return result;
+      }
+      result[key] = _evolve(
+        result[key] as PlainObject,
+        transformation as Transformations
+      );
       return result;
     },
     { ...data }

@@ -56,16 +56,6 @@ describe('data first', () => {
   });
 
   // REMOVE THIS TEST: in remeda, transformations don't include primitive value
-  it('ignores primitive value transformations', function () {
-    const transf = { n: 2, m: 'foo' };
-    const object = { n: 0, m: 1 };
-    const expected = { n: 0, m: 1 };
-    // @ts-expect-error -- for regression test
-    const result = evolve(object, transf);
-    expect(result).toEqual(expected);
-  });
-
-  // REMOVE THIS TEST: in remeda, transformations don't include primitive value
   it('ignores null transformations', function () {
     const transf = { n: null };
     const object = { n: 0 };
@@ -73,25 +63,6 @@ describe('data first', () => {
     // @ts-expect-error -- for regression test
     const result = evolve(object, transf);
     expect(result).toEqual(expected);
-  });
-
-  // REMOVE THIS TEST: in remeda, transformations don't include tuple
-  it('creates a new array by evolving the `array` according to the `transformation` functions', function () {
-    // NOTE:
-    // If we use tuple in `transformations` parameter,
-    // use `as const` or `evolve` can't handle typing.
-    const transf = [
-      add(-1),
-      (x: number) => x,
-      add(1),
-      [(x: number) => x, (x: string) => x + '!!'],
-    ] as const;
-    const object = [2, 2, 2, ['...', 'Go']] as const;
-    const expected = [1, 2, 3, ['...', 'Go!!']] as const;
-    // @ts-expect-error -- for regression test
-    let result = evolve(object, transf);
-    expect(result).toEqual(expected);
-    result = expected; // Assignment is possible
   });
 
   it('can handle complex nested objects', function () {
@@ -143,9 +114,9 @@ describe('data last', () => {
   });
 
   it('does not invoke function if object does not contain the key', function () {
-    const transf = { n: add(1), m: add(1), l: [add(1)] as const };
-    const object = { m: 3, l: [2, 1] as const };
-    const expected = { m: 4, l: [3, 1] as { 0: number; 1: 1 } };
+    const transf = { n: add(1), m: add(1) };
+    const object = { m: 3 };
+    const expected = { m: 4 };
     const result = pipe(object, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
@@ -171,15 +142,6 @@ describe('data last', () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it('ignores primitive value transformations', function () {
-    const transf = { n: 2, m: 'foo' };
-    const object = { n: 0, m: 1 };
-    const expected = { n: 0, m: 1 };
-    const result = pipe(object, evolve(transf));
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
-  });
-
   it('ignores null transformations', function () {
     const transf = { n: null };
     const object = { n: 0 };
@@ -187,29 +149,6 @@ describe('data last', () => {
     const result = pipe(object, evolve(transf));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
-  });
-
-  it('creates a new array by evolving the `array` according to the `transformation` functions', function () {
-    // NOTE:
-    // If we use tuple in `transformations` parameter,
-    // use `as const` or `evolve` can't handle typing.
-    const transf = [
-      add(-1),
-      (x: number) => x,
-      add(1),
-      [null, (x: string) => x + '!!'],
-    ] as const;
-    const object = [2, 2, 2, ['...', 'Go']] as const;
-    const expected = [1, 2, 3, ['...', 'Go!!']] as const;
-    let result = pipe(object, evolve(transf));
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<{
-      0: number;
-      1: number;
-      2: number;
-      3: { 0: '...'; 1: string };
-    }>();
-    result = expected; // Assignment is possible
   });
 
   it('can handle complex nested objects', function () {
@@ -292,15 +231,15 @@ describe('typing', () => {
 
     it('does not accept the input value that is not Array and Object', function () {
       const transf = { a: add(1) };
-      // @ts-expect-error -- [ts2559]: Type '0' has no properties in common with type '{ a?: number | undefined; }'
+      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: undefined): any'.ts(2345)
       const result = evolve(0, transf);
       expect(result).toEqual(0); // ignores transformations if the input value is not Array and Object
 
-      // @ts-expect-error -- [ts2345]: Argument of type 'undefined' is not assignable to parameter of type '{ a?: number | undefined; }'.
+      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: undefined): any'.ts(2345)
       evolve(undefined, transf);
-      // @ts-expect-error -- [ts2345]: Argument of type 'null' is not assignable to parameter of type '{ a?: number | undefined; }'.
+      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: null): any'.ts(2345)
       evolve(null, transf);
-      // @ts-expect-error -- [ts2559]: Type '""' has no properties in common with type '{ a?: number | undefined; }'.
+      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: ""): any'.ts(2345)
       evolve('', transf);
     });
 
@@ -377,15 +316,15 @@ describe('typing', () => {
 
     it('does not accept the input value that is not Array and Object', function () {
       const transf = { a: add(1) };
-      // @ts-expect-error -- [ts2345]: Argument of type '~' is not assignable to parameter of type '(input: number) => { a: number; }'.
+      // @ts-expect-error -- Type 'number' has no properties in common with type '{ a?: number | undefined; }'.ts(2345)
       const result = pipe(0, evolve(transf));
       expect(result).toEqual(0); // ignores transformations if the input value is not Array and Object
 
-      // @ts-expect-error -- [ts2345]: Argument of type '~' is not assignable to parameter of type '(input: undefined) => { a: number; }'.
+      // @ts-expect-error -- Type 'undefined' is not assignable to type '{ a?: number | undefined; }'.ts(2345)
       pipe(undefined, evolve(transf));
-      // @ts-expect-error -- [ts2345]: Argument of type '~' is not assignable to parameter of type '(input: null) => { a: number; }'.
+      // @ts-expect-error -- Type 'null' is not assignable to type '{ a?: number | undefined; }'.ts(2345)
       pipe(null, evolve(transf));
-      // @ts-expect-error -- [ts2345]: Argument of type '~' is not assignable to parameter of type '(input: string) => { a: number; }'.
+      // @ts-expect-error -- Type 'string' has no properties in common with type '{ a?: number | undefined; }'.ts(2345)
       pipe('', evolve(transf));
     });
 
