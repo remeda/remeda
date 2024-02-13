@@ -5,12 +5,12 @@ type AFunction = (...a: Array<any>) => any;
 type Primitive = string | number | boolean | null | undefined | symbol;
 
 /**
- * basic structure of `data` parameter.
+ * basic structure of `data` parameter and return of the function `evolve`.
  */
 type NestedObject = Record<string, Primitive | object>;
 
 /**
- * basic structure of `evolver` parameter.
+ * basic structure of `evolver` parameter of the function `evolve`.
  */
 type EvolverStructure = Readonly<
   Record<string, ((data: unknown) => unknown) | object | null | undefined>
@@ -126,34 +126,35 @@ type Evolved<T, E> = E extends AFunction
     : T;
 
 /**
- * Creates a new object by recursively evolving a shallow copy of `object`,
- * according to the `transformation` functions. All non-primitive properties
- * are copied by reference.
+ * Creates a new object by applying functions that is included in `evolver` object parameter
+ * to the `data` object parameter according to their corresponding path.
  *
- * A `transformation` function will not be invoked if its corresponding key
- * does not exist in the evolved object.
-
- * @param object object or array whose value at some path is applied to
- * the corresponding function that is defined in `evolver` at the same path.
- * @param evolver it is object or array in which the functions at some path is applied to
- * the corresponding value of `object` at the same path.
+ * Functions included in `evolver` object will not be invoked
+ * if its corresponding key does not exist in the `data` object.
+ * Also, values included in `data` object will not be used
+ * if its corresponding key does not exist in the `evolver` object.
+ *
+ * @param data object whose value is applied to the corresponding function
+ * that is defined in `evolver` at the same path.
+ * @param evolver object that include functions that is applied to
+ * the corresponding value of `data` object at the same path.
  * @signature
- *    R.evolve(object, evolver)
+ *    R.evolve(data, evolver)
  * @example
  *    const transf = {
  *      count: add(1),
- *      data: { elapsed: add(1), remaining: add(-1) },
+ *      time: { elapsed: add(1), remaining: add(-1) },
  *    };
- *    const object = {
+ *    const data = {
  *      id: 10,
  *      count: 10,
- *      data: { elapsed: 100, remaining: 1400 },
+ *      time: { elapsed: 100, remaining: 1400 },
  *    };
- *    evolve(object, transf)
+ *    evolve(data, transf)
  *    // => {
  *    //   id: 10,
  *    //   count: 11,
- *    //   data: { elapsed: 101, remaining: 1399 },
+ *    //   time: { elapsed: 101, remaining: 1399 },
  *    // }
  * @dataFirst
  * @category Object
@@ -164,34 +165,35 @@ export function evolve<T, E extends Evolver<T>>(
 ): Evolved<T, E>;
 
 /**
- * Creates a new object by recursively evolving a shallow copy of `object`,
- * according to the `transformation` functions. All non-primitive properties
- * are copied by reference.
+ * Creates a new object by applying functions that is included in `evolver` object parameter
+ * to the `data` object parameter according to their corresponding path.
  *
- * A `transformation` function will not be invoked if its corresponding key
- * does not exist in the evolved object.
-
- * @param object object or array whose value at some path is applied to
- * the corresponding function that is defined in `evolver` at the same path.
- * @param evolver it is object or array in which the functions at some path is applied to
- * the corresponding value of `object` at the same path.
+ * Functions included in `evolver` object will not be invoked
+ * if its corresponding key does not exist in the `data` object.
+ * Also, values included in `data` object will not be used
+ * if its corresponding key does not exist in the `evolver` object.
+ *
+ * @param data object whose value is applied to the corresponding function
+ * that is defined in `evolver` at the same path.
+ * @param evolver object that include functions that is applied to
+ * the corresponding value of `data` object at the same path.
  * @signature
- *    R.evolve(transf)(object)
+ *    R.evolve(transf)(data)
  * @example
  *    const transf = {
  *      count: add(1),
- *      data: { elapsed: add(1), remaining: add(-1) },
+ *      time: { elapsed: add(1), remaining: add(-1) },
  *    };
- *    const object = {
+ *    const data = {
  *      id: 10,
  *      count: 10,
- *      data: { elapsed: 100, remaining: 1400 },
+ *      time: { elapsed: 100, remaining: 1400 },
  *    };
  *    R.pipe(object, R.evolve(transf))
  *    // => {
  *    //   id: 10,
  *    //   count: 11,
- *    //   data: { elapsed: 101, remaining: 1399 },
+ *    //   time: { elapsed: 101, remaining: 1399 },
  *    // }
  * @dataLast
  * @category Object
@@ -204,7 +206,7 @@ export function evolve() {
   return purry(_evolve, arguments);
 }
 
-function _evolve(data: NestedObject, evolver: EvolverStructure) {
+function _evolve(data: NestedObject, evolver: EvolverStructure): NestedObject {
   if (typeof data !== 'object' || data === null) {
     return data; // Dead logic if the type is followed.
   }
