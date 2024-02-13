@@ -6,110 +6,110 @@ differently than the Ramda equivalent, the Remeda function may also
 behave differently from either or both. Be sure to consult each library's
 documentation when migrating._
 
-| Remeda              | Lodash              | Ramda               |
-| ------------------- | ------------------- | ------------------- |
-| `add`               | `add`               | `add`               |
-| `addProp`           | `set`               | `set`               |
-| `allPass`           |                     | `allPass`           |
-| `anyPass`           |                     | `anyPass`           |
-| `ceil`              | `ceil`              |                     |
-| `chunk`             | `chunk`             |                     |
-| `clamp`             | `clamp`             | `clamp`             |
-| `clone`             | `cloneDeep`         | `clone`             |
-| `concat`            | `concat`            | `concat`            |
-| `createPipe`        |                     |                     |
-| `debounce`          | `debounce`          |                     |
-| `difference`        | `difference`        | `difference`        |
-| `differenceWith`    | `differenceWith`    | `differenceWith`    |
-| `divide`            | `divide`            | `divide`            |
-| `drop`              | `drop`              | `drop`              |
-| `dropLast`          | `dropRight`         | `dropLast`          |
-| `dropLastWhile`     | `dropRightWhile`    | `dropLastWhile`     |
-| `dropWhile`         | `dropWhile`         | `dropWhile`         |
-| `equals`            | `isEqual`           | `equals`            |
-| `filter`            | `filter`            | `filter`            |
-| `find`              | `find`              | `find`              |
-| `findIndex`         | `findIndex`         | `findIndex`         |
-| `findLast`          | `findLast`          | `findLast`          |
-| `findLastIndex`     | `findLastIndex`     | `findLastIndex`     |
-| `first`             | `head`              | `head`              |
-| `flatMap`           | `flatMap`           | `chain`             |
-| `flatten`           | `flatten`           | `flatten`           |
-| `flattenDeep`       | `flattenDeep`       | `flatten`           |
-| `floor`             | `floor`             |                     |
-| `forEach`           | `forEach`           | `forEach`           |
-| `forEachObj`        | `forEach`           | `forEachObjIndexed` |
-| `groupBy`           | `groupBy`           | `groupBy`           |
-| `identity`          | `identity`          | `identity`          |
-| `indexBy`           | `keyBy`             | `indexBy`           |
-| `intersection`      | `intersection`      | `intersection`      |
-| `intersectionWith`  | `intersectionWith`  | `innerJoin`         |
-| `invert`            | `invert`            | `invertObj`         |
-| `isEmpty`           | `isEmpty`           | `isEmpty`           |
-| `isNil`             | `isNil`             | `isNil`             |
-| `isObjectType`      | `isObjectLike`      |                     |
-| `isPlainObject`     | `isPlainObject`     |                     |
-| `isSymbol`          | `isSymbol`          |                     |
-| `join`              | `join`              | `join`              |
-| `last`              | `last`              | `last`              |
-| `length`            | `size`              | `length`            |
-| `map`               | `map`               | `map`               |
-| `mapKeys`           | `mapKeys`           |                     |
-| `meanBy`            | `meanBy`            |                     |
-| `merge`             | `assign`            | `merge`             |
-| `mergeAll`          | `assign`            | `mergeAll`          |
-| `mergeDeep`         |                     | `mergeDeepRight`    |
-| `multiply`          | `multiply`          | `multiply`          |
-| `noop`              | `noop`              | `-`                 |
-| `objOf`             | `-`                 | `objOf`             |
-| `omit`              | `omit`              | `omit`              |
-| `omitBy`            | `omitBy`            |                     |
-| `once`              | `once`              | `once`              |
-| `partial`           | `partial`           | `partial`           |
-| `partialRight`      | `partialRight`      | `partialRight`      |
-| `partition`         | `partition`         | `partition`         |
-| `pathOr`            | `get`               | `pathOr`            |
-| `pick`              | `pick`              | `pick`              |
-| `pickBy`            | `pickBy`            | `pickBy`            |
-| `pipe`              | `flow`              | `pipe`              |
-| `prop`              | `get`               | `prop`              |
-| `purry`             |                     |                     |
-| `randomString`      |                     |                     |
-| `range`             | `range`             | `range`             |
-| `reduce`            | `reduce`            | `reduce`            |
-| `reject`            | `reject`            | `reject`            |
-| `reverse`           | `reverse`           | `reverse`           |
-| `round`             | `round`             |                     |
-| `sample`            | `sampleSize`\*      |                     |
-| `set`               | `set`               | `assoc`             |
-| `setPath`           | `set`               | `assocPath`         |
-| `shuffle`           | `shuffle`           |                     |
-| `sort`              |                     | `sort`              |
-| `sortBy`            | `orderBy`           |                     |
-| `sortBy`            | `sortBy`            | `sortBy`            |
-| `sortedIndex`       | `sortedIndex`       |                     |
-| `sortedIndexBy`     | `sortedIndexBy`     |                     |
-| `sortedLastIndex`   | `sortedLastIndex`   |                     |
-| `sortedLastIndexBy` | `sortedLastIndexBy` |                     |
-| `splice`            | `-`                 | `remove`            |
-| `splitAt`           | `-`                 | `splitAt`           |
-| `splitWhen`         | `-`                 | `splitWhen`         |
-| `stringToPath`      | `toPath`            | `-`                 |
-| `subtract`          | `subtract`          | `subtract`          |
-| `sumBy`             | `sumBy`             | `-`                 |
-| `swapIndices`       | `-`                 | `swap`              |
-| `swapProps`         | `-`                 | `swap`              |
-| `take`              | `take`              | `take`              |
-| `takeLastWhile`     | `takeRightWhile`    | `takeLastWhile`     |
-| `takeWhile`         | `takeWhile`         | `takeWhile`         |
-| `tap`               | `tap`               | `tap`               |
-| `times`             | `times`             | `times`             |
-| `toPairs`           | `toPairs`           | `toPairs`           |
-| `type`              |                     | `type`              |
-| `uniq`              | `uniq`              | `uniq`              |
-| `uniqBy`            | `uniqBy`            | `uniqBy`            |
-| `uniqWith`          | `uniqWith`          | `uniqWith`          |
-| `zipObj`            | `zipObj`            | `zipObj`            |
+| Remeda               | Lodash              | Ramda               |
+| -------------------- | ------------------- | ------------------- |
+| `add`                | `add`               | `add`               |
+| `addProp`            | `set`               | `set`               |
+| `allPass`            |                     | `allPass`           |
+| `anyPass`            |                     | `anyPass`           |
+| `ceil`               | `ceil`              |                     |
+| `chunk`              | `chunk`             |                     |
+| `clamp`              | `clamp`             | `clamp`             |
+| `clone`              | `cloneDeep`         | `clone`             |
+| `concat`             | `concat`            | `concat`            |
+| `createPipe`         |                     |                     |
+| `debounce`           | `debounce`          |                     |
+| `difference`         | `difference`        | `difference`        |
+| `differenceWith`     | `differenceWith`    | `differenceWith`    |
+| `divide`             | `divide`            | `divide`            |
+| `drop`               | `drop`              | `drop`              |
+| `dropLast`           | `dropRight`         | `dropLast`          |
+| `dropLastWhile`      | `dropRightWhile`    | `dropLastWhile`     |
+| `dropWhile`          | `dropWhile`         | `dropWhile`         |
+| `equals`             | `isEqual`           | `equals`            |
+| `filter`             | `filter`            | `filter`            |
+| `find`               | `find`              | `find`              |
+| `findIndex`          | `findIndex`         | `findIndex`         |
+| `findLast`           | `findLast`          | `findLast`          |
+| `findLastIndex`      | `findLastIndex`     | `findLastIndex`     |
+| `first`              | `head`              | `head`              |
+| `flatMap`            | `flatMap`           | `chain`             |
+| `flatten`            | `flatten`           | `flatten`           |
+| `flattenDeep`        | `flattenDeep`       | `flatten`           |
+| `floor`              | `floor`             |                     |
+| `forEach`            | `forEach`           | `forEach`           |
+| `forEachObj`         | `forEach`           | `forEachObjIndexed` |
+| `groupBy`            | `groupBy`           | `groupBy`           |
+| `identity`           | `identity`          | `identity`          |
+| `indexBy`            | `keyBy`             | `indexBy`           |
+| `intersection`       | `intersection`      | `intersection`      |
+| `intersectionWith`   | `intersectionWith`  | `innerJoin`         |
+| `invert`             | `invert`            | `invertObj`         |
+| `isEmpty`            | `isEmpty`           | `isEmpty`           |
+| `isNil`              | `isNil`             | `isNil`             |
+| `isObjectType`       | `isObjectLike`      |                     |
+| `isPlainObject`      | `isPlainObject`     |                     |
+| `isSymbol`           | `isSymbol`          |                     |
+| `join`               | `join`              | `join`              |
+| `last`               | `last`              | `last`              |
+| `length`             | `size`              | `length`            |
+| `map`                | `map`               | `map`               |
+| `mapKeys`            | `mapKeys`           |                     |
+| `meanBy`             | `meanBy`            |                     |
+| `merge`              | `assign`            | `merge`             |
+| `mergeAll`           | `assign`            | `mergeAll`          |
+| `mergeDeep`          |                     | `mergeDeepRight`    |
+| `multiply`           | `multiply`          | `multiply`          |
+| `noop`               | `noop`              | `-`                 |
+| `objOf`              | `-`                 | `objOf`             |
+| `omit`               | `omit`              | `omit`              |
+| `omitBy`             | `omitBy`            |                     |
+| `once`               | `once`              | `once`              |
+| `partialBindTo`      | `partial`           | `partial`           |
+| `partialRightBindTo` | `partialRight`      | `partialRight`      |
+| `partition`          | `partition`         | `partition`         |
+| `pathOr`             | `get`               | `pathOr`            |
+| `pick`               | `pick`              | `pick`              |
+| `pickBy`             | `pickBy`            | `pickBy`            |
+| `pipe`               | `flow`              | `pipe`              |
+| `prop`               | `get`               | `prop`              |
+| `purry`              |                     |                     |
+| `randomString`       |                     |                     |
+| `range`              | `range`             | `range`             |
+| `reduce`             | `reduce`            | `reduce`            |
+| `reject`             | `reject`            | `reject`            |
+| `reverse`            | `reverse`           | `reverse`           |
+| `round`              | `round`             |                     |
+| `sample`             | `sampleSize`\*      |                     |
+| `set`                | `set`               | `assoc`             |
+| `setPath`            | `set`               | `assocPath`         |
+| `shuffle`            | `shuffle`           |                     |
+| `sort`               |                     | `sort`              |
+| `sortBy`             | `orderBy`           |                     |
+| `sortBy`             | `sortBy`            | `sortBy`            |
+| `sortedIndex`        | `sortedIndex`       |                     |
+| `sortedIndexBy`      | `sortedIndexBy`     |                     |
+| `sortedLastIndex`    | `sortedLastIndex`   |                     |
+| `sortedLastIndexBy`  | `sortedLastIndexBy` |                     |
+| `splice`             | `-`                 | `remove`            |
+| `splitAt`            | `-`                 | `splitAt`           |
+| `splitWhen`          | `-`                 | `splitWhen`         |
+| `stringToPath`       | `toPath`            | `-`                 |
+| `subtract`           | `subtract`          | `subtract`          |
+| `sumBy`              | `sumBy`             | `-`                 |
+| `swapIndices`        | `-`                 | `swap`              |
+| `swapProps`          | `-`                 | `swap`              |
+| `take`               | `take`              | `take`              |
+| `takeLastWhile`      | `takeRightWhile`    | `takeLastWhile`     |
+| `takeWhile`          | `takeWhile`         | `takeWhile`         |
+| `tap`                | `tap`               | `tap`               |
+| `times`              | `times`             | `times`             |
+| `toPairs`            | `toPairs`           | `toPairs`           |
+| `type`               |                     | `type`              |
+| `uniq`               | `uniq`              | `uniq`              |
+| `uniqBy`             | `uniqBy`            | `uniqBy`            |
+| `uniqWith`           | `uniqWith`          | `uniqWith`          |
+| `zipObj`             | `zipObj`            | `zipObj`            |
 
 ## Helpful one-liners
 

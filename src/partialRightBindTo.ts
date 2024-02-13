@@ -11,21 +11,21 @@ type RemoveSuffix<
  *
  * @param data the arguments to put after
  * @param func the function to wrap
- * @returns a partially applied function
+ * @returns a partially bound function
  *
  * @signature
- *    R.partialRight(data, func)
+ *    R.partialRightBindTo(data, func)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partialRight([2, 3], fn)
+ *    const partialFn = R.partialRightBindTo([2, 3], fn)
  *    partialFn(1) // => 1, 2, and 3
  *
  * @dataFirst
  * @category Function
- * @see partial
+ * @see partialBindTo
  */
-export function partialRight<
+export function partialRightBindTo<
   T extends ReadonlyArray<unknown>,
   F extends (...args: any) => any,
 >(
@@ -39,31 +39,31 @@ export function partialRight<
  *
  * @param func the function to wrap
  * @param data the arguments to put after
- * @returns a partially applied function
+ * @returns a partially bound function
  *
  * @signature
- *    R.partialRight(func)(data)
+ *    R.partialRightBindTo(func)(data)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partialRight(fn)([2, 3])
+ *    const partialFn = R.partialRightBindTo(fn)([2, 3])
  *    partialFn(1) // => 1, 2, and 3
  *
  * @dataLast
  * @category Function
- * @see partial
+ * @see partialBindTo
  */
-export function partialRight<F extends (...args: any) => any>(
+export function partialRightBindTo<F extends (...args: any) => any>(
   func: F
 ): <T extends ReadonlyArray<unknown>>(
   data: [...T]
 ) => (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
 
-export function partialRight() {
-  return purry(_partialRight, arguments);
+export function partialRightBindTo() {
+  return purry(_partialRightBindTo, arguments);
 }
 
-function _partialRight<
+function _partialRightBindTo<
   A extends ReadonlyArray<unknown>,
   B extends ReadonlyArray<unknown>,
   C,

@@ -11,21 +11,21 @@ type RemovePrefix<
  *
  * @param data the arguments to put before
  * @param func the function to wrap
- * @returns a partially applied function
+ * @returns a partially bound function
  *
  * @signature
- *    R.partial(data, func)
+ *    R.partialBindTo(data, func)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partial([1, 2], fn)
+ *    const partialFn = R.partialBindTo([1, 2], fn)
  *    partialFn(3) // => 1, 2, and 3
  *
  * @dataFirst
  * @category Function
- * @see partialRight
+ * @see partialRightBindTo
  */
-export function partial<
+export function partialBindTo<
   T extends ReadonlyArray<unknown>,
   F extends (...args: any) => any,
 >(
@@ -39,31 +39,31 @@ export function partial<
  *
  * @param func the function to wrap
  * @param data the arguments to put before
- * @returns a partially applied function
+ * @returns a partially bound function
  *
  * @signature
- *    R.partial(func)(data)
+ *    R.partialBindTo(func)(data)
  *
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partial(fn)([1, 2])
+ *    const partialFn = R.partialBindTo(fn)([1, 2])
  *    partialFn(3) // => 1, 2, and 3
  *
  * @dataLast
  * @category Function
- * @see partialRight
+ * @see partialRightBindTo
  */
-export function partial<F extends (...args: any) => any>(
+export function partialBindTo<F extends (...args: any) => any>(
   func: F
 ): <T extends ReadonlyArray<unknown>>(
   data: [...T]
 ) => (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
-export function partial() {
-  return purry(_partial, arguments);
+export function partialBindTo() {
+  return purry(_partialBindTo, arguments);
 }
 
-function _partial<
+function _partialBindTo<
   A extends ReadonlyArray<unknown>,
   B extends ReadonlyArray<unknown>,
   C,
