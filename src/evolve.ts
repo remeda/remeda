@@ -2,12 +2,22 @@ import { purry } from './purry';
 import { toPairs } from './toPairs';
 
 type AFunction = (...a: Array<any>) => any;
+type Primitive = string | number | boolean | null | undefined | symbol;
+
+/**
+ * basic structure of `data` parameter.
+ */
+type NestedObject = Record<string, Primitive | object>;
+
+/**
+ * basic structure of `evolver` parameter.
+ */
+type EvolverStructure = Readonly<
+  Record<string, ((data: unknown) => unknown) | object | null | undefined>
+>;
 
 /**
  * @example
- * type A = GetValueByKey<['A', 'B'], '0'>; // type A = "A"
- * type B = GetValueByKey<['A', 'B'], '1'>; // type B = "B"
- * type C = GetValueByKey<['A', 'B'], '2', 'C'>; // type C = "C"
  * type T1 = GetValueByKey<{ A: '1', B: '2' }, 'A'>; // type T1 = "1"
  * type T2 = GetValueByKey<{ A: '1', B: '2' }, 'B'>; // type T2 = "2"
  * type T3 = GetValueByKey<{ A: '1', B: '2' }, 'C', '3'>; // type T3 = "3"
@@ -20,15 +30,12 @@ type GetValueByKey<
 
 /**
  * Get the type of first parameter.
- * But get `never` if the function's the second and subsequent parameters do not take `undefined`.
+ * But get `never` if the function take two or more required parameters.
  * @example
  * type Number = GetFirstParam<(arg1: number) => void>; // type Number = number
  * type Number = GetFirstParam<(arg1: number, arg2?: number) => void>; // type Number = number
  * type Number = GetFirstParam< (arg1: number, arg2?: number, arg3?: number) => void >; // type Number = number
- * type Number = GetFirstParam<(arg1: number, arg2: number | undefined) => void>; // type Number = number
- * type Never = GetFirstParam<(arg1: number, arg2: number) => void>; // type Never = never
- * type Never = GetFirstParam<(arg1: number, arg2: number, arg3?: number) => void>; // type Never = never
- * type Never = GetFirstParam<(arg1: number, arg2: number|undefined, arg3: number) => void>; // type Never = never
+ * type Never = GetFirstParam<(arg1: number, arg2: number | undefined) => void>; // type Never = never
  */
 type GetFirstParam<T extends AFunction> = T extends (
   firstArg: infer Ret,
@@ -40,51 +47,58 @@ type GetFirstParam<T extends AFunction> = T extends (
   : never;
 
 /**
- * Creates an assumed object type from the type of the `evolver` argument of `evolve`.
+ * Creates an assumed `data` type from the type of the `evolver` argument.
  * @example
- * type Number = EvolveTargetObject<(arg1: number) => void>; // type Number = number
- * type Nested = EvolveTargetObject<{
+ * type Number = EvolveTarget<(arg1: number) => void>; // type Number = number
+ * type Nested = EvolveTarget<{
  *   num: (arg1: number) => void;
  *   obj: {
  *    num: (arg1: number) => void
  *   }
- *   ary: [(arg1: number) => void, (arg1: number) => void]
- *   notFunc: 'test'
+ *   notFunc: null
  * }>;
  * // type Nested = {
- * //   num?: number | undefined;
- * //   obj?: {
- * //       num?: number | undefined;
- * //   } | undefined;
- * //   ary?: {
- * //       0?: number | undefined;
- * //       1?: number | undefined;
- * //   } | undefined;
+ * //     num?: number | undefined;
+ * //     obj?: {
+ * //         num?: number | undefined;
+ * //     } | undefined;
  * // }
  */
-type EvolveTargetObject<E> = E extends AFunction
+type EvolveTarget<E> = E extends AFunction
   ? GetFirstParam<E>
   : E extends object
     ? {
-        [K in keyof E as GetValueByKey<E, K> extends AFunction
+        [K in keyof E as E[K] extends AFunction
           ? K
-          : GetValueByKey<E, K> extends object
+          : E[K] extends object
             ? K
-            : never]?: EvolveTargetObject<GetValueByKey<E, K>>;
+            : never]?: EvolveTarget<E[K]>;
       }
     : never;
 
 /**
- * Creates evolver type from the type of `data` argument.
+ * Creates an assumed `evolver` type from the type of `data` argument.
+ * @example
+ * interface Data {
+ *   id: number;
+ *   size: { width: number; height?: number };
+ * }
+ * declare const evolver: Evolver<Data>;
+ * type ID = typeof evolver.id; // type ID =  ((data: number) => any) | undefined
+ * type Size = typeof evolver.size  // type Size =
+ * //   | {
+ * //       width?: ((data: number) => any) | undefined;
+ * //       height?: ((data: number | undefined) => any) | undefined;
+ * //     }
+ * //   | ((data: { width: number; height?: number | undefined }) => any)
+ * //   | undefined;
  */
 type Evolver<T> =
   T extends Array<any>
     ? (data: T) => any
     : T extends object
       ? {
-          [K in keyof T]?:
-            | Evolver<GetValueByKey<T, K>>
-            | ((data: GetValueByKey<T, K>) => any);
+          [K in keyof T]?: Evolver<T[K]> | ((data: T[K]) => any);
         }
       : (data: T) => any;
 
@@ -95,10 +109,7 @@ type Evolved<T, E> = E extends AFunction
   ? ReturnType<E>
   : T extends object
     ? {
-        [K in keyof T]: Evolved<
-          GetValueByKey<T, K>,
-          GetValueByKey<E, K, GetValueByKey<T, K>>
-        >;
+        [K in keyof T]: Evolved<T[K], GetValueByKey<E, K, T[K]>>;
       }
     : T;
 
@@ -135,7 +146,7 @@ type Evolved<T, E> = E extends AFunction
  * @dataFirst
  * @category Object
  */
-export function evolve<T, E extends Evolver<T>>(
+export function evolve<T extends NestedObject, E extends Evolver<T>>(
   object: T,
   evolver: E
 ): Evolved<T, E>;
@@ -173,30 +184,22 @@ export function evolve<T, E extends Evolver<T>>(
  * @dataLast
  * @category Object
  */
-export function evolve<E>(
+export function evolve<E extends EvolverStructure>(
   evolver: E
-): <T extends EvolveTargetObject<E>>(object: T) => Evolved<T, E>;
+): <T extends EvolveTarget<E>>(object: T) => Evolved<T, E>;
 
 export function evolve() {
   return purry(_evolve, arguments);
 }
 
-// define a helper type just for the implementation.
-type Primitive = string | number | boolean | null | undefined | symbol;
-type PlainObject = Record<string, Primitive | object>;
-type Nil = null | undefined;
-type EvolverStructure = Readonly<
-  Record<string, ((data: unknown) => unknown) | object | Nil>
->;
-
-function _evolve(data: PlainObject, evolver: EvolverStructure) {
+function _evolve(data: NestedObject, evolver: EvolverStructure) {
   if (typeof data !== 'object' || data === null) {
     return data; // Dead logic if the type is followed.
   }
 
   const dataKeys = Object.keys(data);
 
-  return toPairs.strict(evolver).reduce<PlainObject>(
+  return toPairs.strict(evolver).reduce<NestedObject>(
     (result, [key, value]) => {
       if (dataKeys.indexOf(key) === -1) {
         return result;
@@ -209,7 +212,7 @@ function _evolve(data: PlainObject, evolver: EvolverStructure) {
         return result;
       }
       result[key] = _evolve(
-        result[key] as PlainObject,
+        result[key] as NestedObject,
         value as EvolverStructure
       );
       return result;
