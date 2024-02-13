@@ -78,29 +78,41 @@ type EvolveTarget<E> = E extends AFunction
 
 /**
  * Creates an assumed `evolver` type from the type of `data` argument.
+ * Note: `[T] extends [Something] ? ...` is conditional type avoiding distributivity.
  * @example
  * interface Data {
  *   id: number;
- *   size: { width: number; height?: number };
+ *   quartile: Array<number>;
+ *   time?: { elapsed: number; remaining?: number };
  * }
- * declare const evolver: Evolver<Data>;
- * type ID = typeof evolver.id; // type ID =  ((data: number) => any) | undefined
- * type Size = typeof evolver.size  // type Size =
- * //   | {
- * //       width?: ((data: number) => any) | undefined;
- * //       height?: ((data: number | undefined) => any) | undefined;
- * //     }
- * //   | ((data: { width: number; height?: number | undefined }) => any)
- * //   | undefined;
+ * type Nested = Evolver<Data>; // type Nested = {
+ * //  id?: ((data: number) => any) | undefined;
+ * //  quartile?: ((data: number[]) => any) | undefined;
+ * //  time?:
+ * //    | ((
+ * //        data:
+ * //          | {
+ * //              elapsed: number;
+ * //              remaining?: number | undefined;
+ * //            }
+ * //          | undefined
+ * //      ) => any)
+ * //    | {
+ * //        elapsed?: ((data: number) => any) | undefined;
+ * //        remaining?: ((data: number | undefined) => any) | undefined;
+ * //      }
+ * //    | undefined;
+ * //};
  */
-type Evolver<T> =
-  T extends Array<any>
-    ? (data: T) => any
-    : T extends object
-      ? {
-          [K in keyof T]?: Evolver<T[K]> | ((data: T[K]) => any);
-        }
-      : (data: T) => any;
+type Evolver<T> = [T] extends [Array<any>]
+  ? (data: T) => any
+  : T extends object
+    ? {
+        [K in keyof T]?:
+          | ([T[K]] extends [Array<any>] ? never : (data: T[K]) => any)
+          | Evolver<T[K]>;
+      }
+    : never;
 
 /**
  * Creates return type from the type of arguments of `evolve`.
@@ -146,7 +158,7 @@ type Evolved<T, E> = E extends AFunction
  * @dataFirst
  * @category Object
  */
-export function evolve<T extends NestedObject, E extends Evolver<T>>(
+export function evolve<T, E extends Evolver<T>>(
   object: T,
   evolver: E
 ): Evolved<T, E>;

@@ -4,22 +4,26 @@ import { omit } from './omit';
 import { set } from './set';
 import { map } from './map';
 import { add } from './add';
+import { reduce } from './reduce';
+
+const sum = reduce((a, b: number) => add(a, b), 0);
 
 describe('data first', () => {
   it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
     const transf = {
-      count: add(1),
-      data: { elapsed: add(1), remaining: add(-1) },
+      id: add(1),
+      quartile: sum,
+      time: { elapsed: add(1), remaining: add(-1) },
     };
     const data = {
-      id: 10,
-      count: 10,
-      data: { elapsed: 100, remaining: 1400 },
+      id: 1,
+      quartile: [1, 2, 3, 4],
+      time: { elapsed: 100, remaining: 1400 },
     };
     const expected = {
-      id: 10,
-      count: 11,
-      data: { elapsed: 101, remaining: 1399 },
+      id: 2,
+      quartile: 10,
+      time: { elapsed: 101, remaining: 1399 },
     };
     const result = evolve(data, transf);
     expect(result).toEqual(expected);
@@ -95,18 +99,19 @@ describe('data first', () => {
 describe('data last', () => {
   it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
     const transf = {
-      count: add(1),
-      data: { elapsed: add(1), remaining: add(-1) },
+      id: add(1),
+      quartile: sum,
+      time: { elapsed: add(1), remaining: add(-1) },
     };
     const data = {
-      id: 10,
-      count: 10,
-      data: { elapsed: 100, remaining: 1400 },
+      id: 1,
+      quartile: [1, 2, 3, 4],
+      time: { elapsed: 100, remaining: 1400 },
     };
     const expected = {
-      id: 10,
-      count: 11,
-      data: { elapsed: 101, remaining: 1399 },
+      id: 2,
+      quartile: 10,
+      time: { elapsed: 101, remaining: 1399 },
     };
     const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
@@ -179,30 +184,38 @@ describe('data last', () => {
 
 describe('typing', () => {
   describe('data first', () => {
-    it('can reflect type of data to function of evolver object', function () {
-      const data = {
-        data: { elapsed: 100, remaining: 1400 },
+    describe('type reflection', (): void => {
+      interface Data {
+        id: number;
+        quartile: Array<number>;
+        time?: { elapsed: number; remaining?: number };
+      }
+      const data: Data = {
+        id: 1,
+        quartile: [1, 2, 3, 4],
+        time: { elapsed: 100, remaining: 1400 },
       };
       const expected = data;
-      const result = evolve(data, {
-        count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
-        data: x => x,
-      });
-      expect(result).toEqual(expected);
-      expectTypeOf(result).toEqualTypeOf<typeof expected>();
-    });
 
-    it('can reflect type of data to function of nested evolver object', function () {
-      const data = {
-        data: { elapsed: 100, remaining: 1400 },
-      };
-      const expected = data;
-      const result = evolve(data, {
-        count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
-        data: { elapsed: x => x, remaining: x => x },
+      it('can reflect type of data to function of evolver object', function () {
+        const result = evolve(data, {
+          count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+          quartile: x => x,
+          time: x => x,
+        });
+        expect(result).toEqual(expected);
+        expectTypeOf(result).toEqualTypeOf<typeof expected>();
       });
-      expect(result).toEqual(expected);
-      expectTypeOf(result).toEqualTypeOf<typeof expected>();
+
+      it('can reflect type of data to function of nested evolver object', function () {
+        const result = evolve(data, {
+          count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+          quartile: x => x,
+          time: { elapsed: x => x, remaining: x => x },
+        });
+        expect(result).toEqual(expected);
+        expectTypeOf(result).toEqualTypeOf<typeof expected>();
+      });
     });
 
     it('can detect mismatch of parameters and arguments', function () {
