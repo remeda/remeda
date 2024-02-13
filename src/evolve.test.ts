@@ -55,45 +55,42 @@ describe('data first', () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
+  // REMOVE THIS TEST: in remeda, transformations don't include primitive value
   it('ignores primitive value transformations', function () {
     const transf = { n: 2, m: 'foo' };
     const object = { n: 0, m: 1 };
     const expected = { n: 0, m: 1 };
+    // @ts-expect-error -- for regression test
     const result = evolve(object, transf);
     expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
+  // REMOVE THIS TEST: in remeda, transformations don't include primitive value
   it('ignores null transformations', function () {
     const transf = { n: null };
     const object = { n: 0 };
     const expected = { n: 0 };
+    // @ts-expect-error -- for regression test
     const result = evolve(object, transf);
     expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
+  // REMOVE THIS TEST: in remeda, transformations don't include tuple
   it('creates a new array by evolving the `array` according to the `transformation` functions', function () {
     // NOTE:
     // If we use tuple in `transformations` parameter,
     // use `as const` or `evolve` can't handle typing.
     const transf = [
       add(-1),
-      null,
+      (x: number) => x,
       add(1),
-      [null, (x: string) => x + '!!'],
+      [(x: number) => x, (x: string) => x + '!!'],
     ] as const;
     const object = [2, 2, 2, ['...', 'Go']] as const;
     const expected = [1, 2, 3, ['...', 'Go!!']] as const;
+    // @ts-expect-error -- for regression test
     let result = evolve(object, transf);
     expect(result).toEqual(expected);
-    // FIXME: Because of limitations of working with tuple types in TypeScript.
-    expectTypeOf(result).toEqualTypeOf<{
-      0: number;
-      1: 2;
-      2: number;
-      3: { 0: '...'; 1: string };
-    }>();
     result = expected; // Assignment is possible
   });
 
@@ -243,34 +240,53 @@ describe('data last', () => {
 
 describe('typing', () => {
   describe('data first', () => {
-    it('can detect mismatch of parameters and arguments', function () {
-      const transf = {
-        number: add(1),
-        array: (array: ReadonlyArray<number>) => array.length,
-        nestedObj: { a: set<{ b: number }, 'b'>('b', 0) },
-        objAry: map(omit<{ a: number; b: number }, 'b'>(['b'])),
-        tupleParam: (arg1: [number, number]) => arg1.length,
-        functionTuple: [add(1), add(2)] as const,
+    it('can reflect type of data to function of evolver object', function () {
+      const object = {
+        data: { elapsed: 100, remaining: 1400 },
       };
+      const expected = object;
+      const result = evolve(object, {
+        count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+        data: x => x,
+      });
+      expect(result).toEqual(expected);
+      expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    });
+
+    it('can reflect type of data to function of nested evolver object', function () {
+      const object = {
+        data: { elapsed: 100, remaining: 1400 },
+      };
+      const expected = object;
+      const result = evolve(object, {
+        count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+        data: { elapsed: x => x, remaining: x => x },
+      });
+      expect(result).toEqual(expected);
+      expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    });
+
+    it('can detect mismatch of parameters and arguments', function () {
       evolve(
         {
-          // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number | undefined'
           number: '1',
-          // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number'
           array: ['1', '2', '3'],
-          // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number'
           nestedObj: { a: { b: 'c' } },
           objAry: [
-            // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number'
             { a: '0', b: 0 },
             { a: 1, b: 1 },
           ],
-          // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number'
-          tupleParam: ['1', 2],
-          // @ts-expect-error -- [ts2322]: Type 'string' is not assignable to type 'number | undefined'
-          functionTuple: ['1', 2],
         },
-        transf
+        {
+          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          number: add(1),
+          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          array: (array: ReadonlyArray<number>) => array.length,
+          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          nestedObj: { a: set<{ b: number }, 'b'>('b', 0) },
+          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          objAry: map(omit<{ a: number; b: number }, 'b'>(['b'])),
+        }
       );
     });
 
@@ -291,13 +307,13 @@ describe('typing', () => {
     it('does not accept function that require multiple arguments', function () {
       evolve(
         {
-          // @ts-expect-error -- [ts2322]: Type 'number[]' is not assignable to type 'undefined'.
-          requiring2Args: [1, 2],
-          // @ts-expect-error -- [ts2322]: Type 'number' is not assignable to type 'undefined'..
+          requiring2Args: 1,
           requiring3Args: 1,
         },
         {
+          // @ts-expect-error -- Target signature provides too few arguments. Expected 2 or more, but got 1.ts(2322)
           requiring2Args: (a: number, b: number) => a + b,
+          // @ts-expect-error -- Target signature provides too few arguments. Expected 3 or more, but got 1.ts(2322)
           requiring3Args: (a: number, b: number | undefined, c: number) =>
             a + (b ?? 0) + c,
         }
@@ -307,13 +323,12 @@ describe('typing', () => {
     it('accept function whose second and subsequent arguments are optional', function () {
       const result = evolve(
         {
-          arg2Optional: ['1', 2],
-          arg2arg3Optional: '1',
+          arg2Optional: 1,
+          arg2arg3Optional: 1,
         },
         {
-          arg2Optional: (arg1: [string, number], arg2?: string) =>
-            arg2 === undefined,
-          arg2arg3Optional: (arg1: string, arg2?: string, arg3?: string) =>
+          arg2Optional: (arg1: number, arg2?: number) => arg2 === undefined,
+          arg2arg3Optional: (arg1: number, arg2?: number, arg3?: number) =>
             arg2 === undefined && arg3 === undefined,
         }
       );
@@ -324,32 +339,6 @@ describe('typing', () => {
       expectTypeOf(result).toEqualTypeOf<{
         arg2Optional: boolean;
         arg2arg3Optional: boolean;
-      }>();
-    });
-
-    it('accept function whose second and subsequent arguments accept undefined', function () {
-      const result = evolve(
-        {
-          arg2Undefinable: ['1', 2],
-          arg2arg3Undefinable: '1',
-        },
-        {
-          arg2Undefinable: (arg1: [string, number], arg2: string | undefined) =>
-            arg2 === undefined,
-          arg2arg3Undefinable: (
-            arg1: string,
-            arg2: string | undefined,
-            arg3: string | undefined
-          ) => arg2 === undefined && arg3 === undefined,
-        }
-      );
-      expect(result).toEqual({
-        arg2Undefinable: true,
-        arg2arg3Undefinable: true,
-      });
-      expectTypeOf(result).toEqualTypeOf<{
-        arg2Undefinable: boolean;
-        arg2arg3Undefinable: boolean;
       }>();
     });
   });

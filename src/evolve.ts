@@ -1,12 +1,11 @@
 import { purry } from './purry';
-import { toPairs } from './toPairs';
 
 type AFunction = (...a: Array<any>) => any;
 
 /**
  * @example
- * type ab = Keys<{a: undefined},{ b: undefined}> // type ab = "a" | "b"
- * type a = Keys<{a: undefined}> // type ab = "a"
+ * type ab = Keys<{a: undefined }, { b: undefined }> // type ab = "a" | "b"
+ * type a = Keys<{a: undefined }> // type a = "a"
  */
 type Keys<T, E = []> = Exclude<keyof T | keyof E, keyof []>;
 
@@ -115,6 +114,20 @@ type EvolveTargetObject<E> = E extends AFunction
     : never;
 
 /**
+ * Creates evolver type from the type of `data` argument.
+ */
+type Evolver<T> =
+  T extends Array<any>
+    ? (data: T) => any
+    : T extends object
+      ? {
+          [K in Keys<T>]?:
+            | Evolver<NonNullable<GetValueByKey<T, K>>>
+            | ((data: GetValueByKey<T, K>) => any);
+        }
+      : (data: T) => any;
+
+/**
  * Creates return type from the type of arguments of `evolve`.
  */
 type Evolve<T, E> = E extends AFunction
@@ -129,6 +142,11 @@ type Evolve<T, E> = E extends AFunction
         >;
       }
     : T;
+
+export declare function evolve2<T, E extends Evolver<T>>(
+  object: T,
+  transformations: E
+): Evolve<T, E>;
 
 /**
  * Creates a new object by recursively evolving a shallow copy of `object`,
@@ -163,7 +181,7 @@ type Evolve<T, E> = E extends AFunction
  * @dataFirst
  * @category Object
  */
-export function evolve<T extends EvolveTargetObject<E>, E>(
+export function evolve<T, E extends Evolver<T>>(
   object: T,
   transformations: E
 ): Evolve<T, E>;
@@ -209,22 +227,55 @@ export function evolve() {
   return purry(_evolve, arguments);
 }
 
-// Let's define a helper type just for the implementation,
-// it's the basic structure of a generic Transformations object.
+// define a helper type just for the implementation.
+// they are the basic structures of parameters.
+type Primitive = string | number | boolean | null | undefined | symbol;
+type PlainObject = Record<string, Primitive | object>;
+type Data = Primitive | Array<Primitive | object> | PlainObject;
+
 type Transformations = Readonly<
-  Record<PropertyKey, ((data: unknown) => unknown) | object>
+  Record<string, ((data: unknown) => unknown) | object>
 >;
 
-function _evolve(data: unknown, transformations: Transformations) {
+function _evolve(
+  data: Primitive | Array<Primitive | object> | PlainObject,
+  transformations: Transformations
+) {
   if (typeof data !== 'object' || data === null) {
     return data;
   }
-  const result = Array.isArray(data) ? [...data] : { ...data };
-  for (const [key, transformation] of toPairs.strict(transformations)) {
-    result[key] =
-      typeof transformation === 'function'
-        ? transformation(data[key])
-        : _evolve(data[key], transformation as Transformations);
+
+  if (Array.isArray(data)) {
+    return data.reduce<Array<Primitive | object>>(
+      (result, value, key) => {
+        const transformation = transformations[key];
+        if (typeof transformation === 'function') {
+          result[key] = transformation(result[key]);
+        } else if (typeof transformation === 'object') {
+          result[key] = _evolve(
+            result[key] as Data,
+            transformation as Transformations
+          );
+        }
+        return result;
+      },
+      [...data]
+    );
   }
-  return result;
+
+  return Object.keys(data).reduce<PlainObject>(
+    (result, key) => {
+      const transformation = transformations[key];
+      if (typeof transformation === 'function') {
+        result[key] = transformation(result[key]);
+      } else if (typeof transformation === 'object') {
+        result[key] = _evolve(
+          result[key] as Data,
+          transformation as Transformations
+        );
+      }
+      return result;
+    },
+    { ...data }
+  );
 }
