@@ -1,4 +1,33 @@
 import { only } from './only';
+import { pipe } from './pipe';
+
+describe('data first', () => {
+  test('empty array', () => {
+    expect(only([])).toEqual(undefined);
+  });
+
+  test('length 1 array', () => {
+    expect(only([1])).toEqual(1);
+  });
+
+  test('length 2 array', () => {
+    expect(only([1, 2])).toEqual(undefined);
+  });
+});
+
+describe('data last', () => {
+  test('empty array', () => {
+    expect(pipe([], only())).toEqual(undefined);
+  });
+
+  test('length 1 array', () => {
+    expect(pipe([1], only())).toEqual(1);
+  });
+
+  test('length 2 array', () => {
+    expect(pipe([1, 2], only())).toEqual(undefined);
+  });
+});
 
 describe('strict typing', () => {
   test('simple empty array', () => {
