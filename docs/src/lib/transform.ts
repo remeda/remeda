@@ -44,9 +44,9 @@ function transformFunction({
 
   const methods = signaturesWithComments.map(transformSignature);
 
-  const source = sources?.[0]?.url;
+  const sourceUrl = sources?.[0]?.url;
 
-  return { id, name, description, methods, source };
+  return { id, name, description, methods, sourceUrl };
 }
 
 function transformSignature({
