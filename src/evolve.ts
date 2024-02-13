@@ -66,13 +66,11 @@ type EvolveTargetObject<E> = E extends AFunction
   ? GetFirstParam<E>
   : E extends object
     ? {
-        [K in keyof E as GetValueByKey<E, K> extends never
-          ? never
-          : GetValueByKey<E, K> extends AFunction
+        [K in keyof E as GetValueByKey<E, K> extends AFunction
+          ? K
+          : GetValueByKey<E, K> extends object
             ? K
-            : GetValueByKey<E, K> extends object
-              ? K
-              : never]?: EvolveTargetObject<GetValueByKey<E, K>>;
+            : never]?: EvolveTargetObject<GetValueByKey<E, K>>;
       }
     : never;
 
@@ -97,9 +95,7 @@ type Evolved<T, E> = E extends AFunction
   ? ReturnType<E>
   : T extends object
     ? {
-        [K in keyof T as GetValueByKey<T, K> extends never
-          ? never
-          : K]: Evolved<
+        [K in keyof T]: Evolved<
           GetValueByKey<T, K>,
           GetValueByKey<E, K, GetValueByKey<T, K>>
         >;
