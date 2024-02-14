@@ -4,9 +4,11 @@ import { FunctionTag } from "@/components/function-tag";
 import Markdown from "@/components/markdown.astro";
 import { MethodSignature } from "@/components/signature";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/transform";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 interface Props {
   func: DocumentedFunction;
@@ -25,6 +27,20 @@ const { func } = Astro.props;
       </Badge>
 
       {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
+
+      {
+        func.sourceUrl !== undefined && (
+          <a
+            href={func.sourceUrl}
+            target="_blank"
+            class={buttonVariants({ variant: "secondary", size: "sm" })}
+            title="View source on Github"
+          >
+            <GitHubLogoIcon />
+            <span class="sr-only">View source on GitHub</span>
+          </a>
+        )
+      }
     </div>
     {func.description !== undefined && <Markdown markdown={func.description} />}
   </CardHeader>
