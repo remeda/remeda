@@ -39,14 +39,30 @@ function transformFunction({
       comment: { summary },
     },
   ] = signaturesWithComments;
-  const description =
-    summary.length === 0 ? undefined : summary.map(({ text }) => text).join("");
+  const description = transformSummary(summary);
 
   const methods = signaturesWithComments.map(transformSignature);
 
   const sourceUrl = sources?.[0]?.url;
 
   return { id, name, description, methods, sourceUrl };
+}
+
+function transformSummary(
+  summary: Array<JSONOutput.CommentDisplayPart>,
+): string | undefined {
+  if (summary.length === 0) {
+    return undefined;
+  }
+  return summary
+    .map((part) => {
+      const { kind, text } = part;
+      if (kind === "inline-tag" && part.tag === "@link") {
+        return `[\`${text}\`](#${text})`;
+      }
+      return text;
+    })
+    .join("");
 }
 
 function transformSignature({

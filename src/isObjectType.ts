@@ -5,7 +5,7 @@ import type { NarrowedTo } from './_types';
  *
  * It's important to note that in JavaScript, many entities are considered objects, like Arrays, Classes, RegExps, Maps, Sets, Dates, URLs, Promise, Errors, and more. Although technically an object too, `null` is not considered an object by this function, so that its easier to narrow nullables.
  *
- * For a more specific check that is limited to plain objects (simple struct/shape/record-like objects), consider using `isPlainObject` instead. For a simpler check that only removes `null` from the type prefer `isNonNull` or `isDefined`.
+ * For a more specific check that is limited to plain objects (simple struct/shape/record-like objects), consider using {@link isPlainObject} instead. For a simpler check that only removes `null` from the type prefer {@link isNonNull} or {@link isDefined}.
  *
  * @param data - The variable to be checked for being an object type.
  * @signature

@@ -13,7 +13,7 @@ type DefinitelyObject<T> =
 /**
  * A function that checks if the passed parameter is of type Object and narrows its type accordingly
  *
- * ! **DEPRECATED: The semantics of this guard are confusing. It excludes Arrays but does not exclude other complex objects like Classes or built-in objects (such as Date, Promise, Error, etc.). Instead, consider using `isObjectType` for a more inclusive validation encompassing any JavaScript "object" type, or `isPlainObject` for a more specific validation targeting simple struct/shape/record-like objects. To replicate the existing logic, use: `const isObject = (x) => isObjectType(x) && !Array.isArray(x)`.** !
+ * ! **DEPRECATED: The semantics of this guard are confusing. It excludes Arrays but does not exclude other complex objects like Classes or built-in objects (such as Date, Promise, Error, etc.). Instead, consider using {@link isObjectType} for a more inclusive validation encompassing any JavaScript "object" type, or {@link isPlainObject} for a more specific validation targeting simple struct/shape/record-like objects. To replicate the existing logic, use: `const isObject = (x) => isObjectType(x) && !Array.isArray(x)`.** !
  *
  * @param data the variable to check
  * @signature

@@ -11,7 +11,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
  *
  * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
+ * result when calling the strict {@link toPairs} function.
  * @param pairs the list of input tuples
  * @signature
  *   R.fromPairs(tuples)
