@@ -1,11 +1,12 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
 type RemovePrefix<
-  P extends ReadonlyArray<unknown>,
-  T extends ReadonlyArray<unknown>,
-> = P extends readonly [...T, ...infer U]
-  ? U
-  : ["ERROR(partialBindTo): Data doesn't match function signature."];
+  T extends IterableContainer,
+  Prefix extends IterableContainer,
+> = T extends readonly [...Prefix, ...infer Rest]
+  ? Rest
+  : ["RemedaTypeError(partialBindTo): Data doesn't match function signature."];
 
 /**
  * Creates a function that calls `func` with `data` put before the arguments
@@ -28,12 +29,9 @@ type RemovePrefix<
  * @see partialRightBindTo
  */
 export function partialBindTo<
-  T extends ReadonlyArray<unknown>,
+  T extends IterableContainer,
   F extends (...args: any) => any,
->(
-  data: [...T],
-  func: F
-): (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
+>(data: T, func: F): (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
 /**
  * Creates a function that calls `func` with `data` put before the arguments
@@ -57,8 +55,8 @@ export function partialBindTo<
  */
 export function partialBindTo<F extends (...args: any) => any>(
   func: F
-): <T extends ReadonlyArray<unknown>>(
-  data: [...T]
+): <T extends IterableContainer>(
+  data: T
 ) => (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
 export function partialBindTo() {
@@ -66,9 +64,11 @@ export function partialBindTo() {
 }
 
 function _partialBindTo<
-  A extends ReadonlyArray<unknown>,
-  B extends ReadonlyArray<unknown>,
-  C,
->(data: A, func: (...args: [...A, ...B]) => C): (...rest: B) => C {
-  return (...rest: B) => func(...data, ...rest);
+  T extends IterableContainer,
+  F extends (...args: any) => any,
+>(
+  data: T,
+  func: F
+): (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F> {
+  return (...rest) => func(...data, ...rest);
 }

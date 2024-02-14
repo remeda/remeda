@@ -1,11 +1,14 @@
+import { IterableContainer } from './_types';
 import { purry } from './purry';
 
 type RemoveSuffix<
-  P extends ReadonlyArray<unknown>,
-  U extends ReadonlyArray<unknown>,
-> = P extends readonly [...infer T, ...U]
-  ? T
-  : ["ERROR(partialRightBindTo): Data doesn't match function signature."];
+  T extends IterableContainer,
+  Suffix extends IterableContainer,
+> = T extends readonly [...infer Rest, ...Suffix]
+  ? Rest
+  : [
+      "RemedaTypeError(partialRightBindTo): Data doesn't match function signature.",
+    ];
 
 /**
  * Creates a function that calls `func` with `data` put after the arguments it
@@ -28,12 +31,9 @@ type RemoveSuffix<
  * @see partialBindTo
  */
 export function partialRightBindTo<
-  T extends ReadonlyArray<unknown>,
+  T extends IterableContainer,
   F extends (...args: any) => any,
->(
-  data: [...T],
-  func: F
-): (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
+>(data: T, func: F): (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
 
 /**
  * Creates a function that calls `func` with `data` put after the arguments it
@@ -57,8 +57,8 @@ export function partialRightBindTo<
  */
 export function partialRightBindTo<F extends (...args: any) => any>(
   func: F
-): <T extends ReadonlyArray<unknown>>(
-  data: [...T]
+): <T extends IterableContainer>(
+  data: T
 ) => (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
 
 export function partialRightBindTo() {
@@ -66,9 +66,11 @@ export function partialRightBindTo() {
 }
 
 function _partialRightBindTo<
-  A extends ReadonlyArray<unknown>,
-  B extends ReadonlyArray<unknown>,
-  C,
->(data: B, func: (...args: [...A, ...B]) => C): (...rest: A) => C {
-  return (...rest: A) => func(...rest, ...data);
+  T extends IterableContainer,
+  F extends (...args: any) => any,
+>(
+  data: T,
+  func: F
+): (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F> {
+  return (...rest) => func(...rest, ...data);
 }
