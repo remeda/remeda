@@ -17,7 +17,7 @@ documentation when migrating._
 | [`clamp`](https://remedajs.com/docs/#clamp)                         | [`clamp`](https://lodash.com/docs/4.17.15#clamp)                         | [`clamp`](https://ramdajs.com/docs/#clamp)                         |
 | [`clone`](https://remedajs.com/docs/#clone)                         | [`cloneDeep`](https://lodash.com/docs/4.17.15#cloneDeep)                 | [`clone`](https://ramdajs.com/docs/#clone)                         |
 | [`concat`](https://remedajs.com/docs/#concat)                       | [`concat`](https://lodash.com/docs/4.17.15#concat)                       | [`concat`](https://ramdajs.com/docs/#concat)                       |
-| [`conditionally`](https://remedajs.com/docs/#conditionally)         | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
+| [`conditional`](https://remedajs.com/docs/#conditional)             | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
 | [`createPipe`](https://remedajs.com/docs/#createPipe)               |                                                                          |                                                                    |
 | [`debounce`](https://remedajs.com/docs/#debounce)                   | [`debounce`](https://lodash.com/docs/4.17.15#debounce)                   |                                                                    |
 | [`difference`](https://remedajs.com/docs/#difference)               | [`difference`](https://lodash.com/docs/4.17.15#difference)               | [`difference`](https://ramdajs.com/docs/#difference)               |
