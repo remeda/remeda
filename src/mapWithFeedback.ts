@@ -1,13 +1,27 @@
 import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
-
 import { purry } from './purry';
+
+type Reducer<TItem, TAccumulator> = (
+  accumulator: TAccumulator,
+  currentValue: TItem,
+  index: number,
+  items: Array<TItem>
+) => TAccumulator;
+
+type PartialReducer<TItem, TAccumulator> = (
+  accumulator: TAccumulator,
+  currentValue: TItem,
+  index?: number,
+  items?: Array<TItem>
+) => TAccumulator;
 
 /**
  * Similar to reduce, but returns an array of successively reduced values from the left side of the array.
  * @param array the array to map over
- * @param fn the callback function
- * @param initialValue the initial value to use as an accumulator value in the callback function
+ * @param reducer the callback function
+ * @param initialValue the initial value of the accumulator
+ * @returns An array of successively reduced values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(items, fn, initialValue)
  *    R.mapWithFeedback.indexed(items, fn, initialValue)
@@ -16,18 +30,20 @@ import { purry } from './purry';
  *    R.mapWithFeedback.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100) // => [101, 103, 106, 110, 115]
  * @dataFirst
  * @indexed
+ * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T, K>(
-  items: ReadonlyArray<T>,
-  fn: (acc: K, item: T) => K,
-  initialValue: K
-): Array<K>;
+export function mapWithFeedback<TItem, TAccumulator>(
+  array: ReadonlyArray<TItem>,
+  reducer: (accumulator: TAccumulator, currentValue: TItem) => TAccumulator,
+  initialValue: TAccumulator
+): Array<TAccumulator>;
 
 /**
  * Similar to reduce, but returns an array of successively reduced values from the left side of the array.
- * @param fn the callback function
+ * @param reducer the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
+ * @returns An array of successively reduced values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(fn, initialValue)(array)
  * @example
@@ -38,106 +54,80 @@ export function mapWithFeedback<T, K>(
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T, K>(
-  fn: (acc: K, item: T) => K,
-  initialValue: K
-): (items: ReadonlyArray<T>) => Array<K>;
+export function mapWithFeedback<TItem, TAccumulator>(
+  reducer: (accumulator: TAccumulator, currentValue: TItem) => TAccumulator,
+  initialValue: TAccumulator
+): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
 
 export function mapWithFeedback() {
-  return purry(_mapWithFeedback(false), arguments, mapWithFeedback.lazy);
+  return purry(
+    mapWithFeedbackImplementation(false),
+    arguments,
+    mapWithFeedback.lazy
+  );
 }
 
-const _mapWithFeedback =
+const mapWithFeedbackImplementation =
   (indexed: boolean) =>
-  <T, K>(
-    items: Array<T>,
-    reducer: (
-      accumulator: K,
-      currentValue: T,
-      index?: number,
-      items?: Array<T>
-    ) => K,
-    initialValue: K
+  <TItem, TAccumulator>(
+    items: Array<TItem>,
+    reducer: PartialReducer<TItem, TAccumulator>,
+    initialValue: TAccumulator
   ) => {
-    const createImplementation = indexed
+    const implementation = indexed
       ? mapWithFeedback.lazyIndexed
       : mapWithFeedback.lazy;
 
-    return _reduceLazy(
-      items,
-      createImplementation(reducer, initialValue),
-      indexed
-    );
+    return _reduceLazy(items, implementation(reducer, initialValue), indexed);
   };
 
-const _lazyIndexed = <T, K>(
-  reducer: (
-    accumulator: K,
-    currentValue: T,
-    index?: number,
-    items?: Array<T>
-  ) => K,
-  initialValue: K
-) => {
-  let accumulator = initialValue;
-  const curriedReducer = (
-    currentValue: T,
-    index?: number,
-    items?: Array<T>
-  ): K => {
-    accumulator = reducer(accumulator, currentValue, index, items);
-    return accumulator;
-  };
+const lazyImplementation =
+  (indexed: boolean) =>
+  <TItem, TAccumulator>(
+    reducer: PartialReducer<TItem, TAccumulator>,
+    initialValue: TAccumulator
+  ) => {
+    let accumulator = initialValue;
+    const curriedReducer = (
+      currentValue: TItem,
+      index?: number,
+      items?: Array<TItem>
+    ): TAccumulator => {
+      accumulator = reducer(accumulator, currentValue, index, items);
+      return accumulator;
+    };
 
-  return (value: T, index?: number, items?: Array<T>): LazyResult<K> => {
-    return {
+    return (
+      value: TItem,
+      index?: number,
+      items?: Array<TItem>
+    ): LazyResult<TAccumulator> => ({
       done: false,
       hasNext: true,
-      next: curriedReducer(value, index, items),
-    };
+      next: indexed
+        ? curriedReducer(value, index, items)
+        : curriedReducer(value),
+    });
   };
-};
 
 export namespace mapWithFeedback {
+  export function indexed<TItem, TAccumulator>(
+    items: ReadonlyArray<TItem>,
+    fn: Reducer<TItem, TAccumulator>,
+    initialValue: TAccumulator
+  ): Array<TAccumulator>;
   export function indexed<T, K>(
-    items: ReadonlyArray<T>,
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
-    initialValue: K
-  ): Array<K>;
-  export function indexed<T, K>(
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: Reducer<T, K>,
     initialValue: K
   ): (items: ReadonlyArray<T>) => Array<K>;
   export function indexed() {
     return purry(
-      _mapWithFeedback(true),
+      mapWithFeedbackImplementation(true),
       arguments,
       mapWithFeedback.lazyIndexed
     );
   }
 
-  export function lazy<T, K>(
-    reducer: (
-      accumulator: K,
-      currentValue: T,
-      index?: number,
-      items?: Array<T>
-    ) => K,
-    initialValue: K
-  ) {
-    let accumulator = initialValue;
-    const curriedReducer = (currentValue: T): K => {
-      accumulator = reducer(accumulator, currentValue);
-      return accumulator;
-    };
-
-    return (value: T): LazyResult<K> => {
-      return {
-        done: false,
-        hasNext: true,
-        next: curriedReducer(value),
-      };
-    };
-  }
-  export const lazyIndexed = _toLazyIndexed(_lazyIndexed);
+  export const lazy = lazyImplementation(false);
+  export const lazyIndexed = _toLazyIndexed(lazyImplementation(true));
 }
