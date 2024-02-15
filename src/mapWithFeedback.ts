@@ -6,27 +6,27 @@ import { purry } from './purry';
 /**
  * A callback function receiving the first two parameters of a reduce operation.
  */
-type Reducer<TItem, TAccumulator> = (
-  accumulator: TAccumulator,
-  currentValue: TItem
-) => TAccumulator;
+type Reducer<T, Accumulator> = (
+  accumulator: Accumulator,
+  currentValue: T
+) => Accumulator;
 
 /**
  * A callback function receiving the parameters of a reduce operation.
  */
-type ReducerIndexed<TItem, TAccumulator> = (
-  accumulator: TAccumulator,
-  currentValue: TItem,
+type ReducerIndexed<T, Accumulator> = (
+  accumulator: Accumulator,
+  currentValue: T,
   index: number,
-  items: Array<TItem>
-) => TAccumulator;
+  items: Array<T>
+) => Accumulator;
 
-type ReducerIndexedOptional<TItem, TAccumulator> = (
-  accumulator: TAccumulator,
-  currentValue: TItem,
+type ReducerIndexedOptional<T, Accumulator> = (
+  accumulator: Accumulator,
+  currentValue: T,
   index?: number,
-  items?: Array<TItem>
-) => TAccumulator;
+  items?: Array<T>
+) => Accumulator;
 
 /**
  * Applies a reducer function on each element of the array, accumulating the results,
@@ -46,11 +46,11 @@ type ReducerIndexedOptional<TItem, TAccumulator> = (
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<TItem, TAccumulator>(
-  array: ReadonlyArray<TItem>,
-  reducer: Reducer<TItem, TAccumulator>,
-  initialValue: TAccumulator
-): Array<TAccumulator>;
+export function mapWithFeedback<T, Accumulator>(
+  array: ReadonlyArray<T>,
+  reducer: Reducer<T, Accumulator>,
+  initialValue: Accumulator
+): Array<Accumulator>;
 
 /**
  * Applies a reducer function on each element of the array, accumulating the results,
@@ -68,10 +68,10 @@ export function mapWithFeedback<TItem, TAccumulator>(
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<TItem, TAccumulator>(
-  reducer: Reducer<TItem, TAccumulator>,
-  initialValue: TAccumulator
-): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
+export function mapWithFeedback<T, Accumulator>(
+  reducer: Reducer<T, Accumulator>,
+  initialValue: Accumulator
+): (items: ReadonlyArray<T>) => Array<Accumulator>;
 
 export function mapWithFeedback() {
   return purry(
@@ -83,10 +83,10 @@ export function mapWithFeedback() {
 
 const mapWithFeedbackImplementation =
   (indexed: boolean) =>
-  <TItem, TAccumulator>(
-    items: Array<TItem>,
-    reducer: ReducerIndexedOptional<TItem, TAccumulator>,
-    initialValue: TAccumulator
+  <T, Accumulator>(
+    items: Array<T>,
+    reducer: ReducerIndexedOptional<T, Accumulator>,
+    initialValue: Accumulator
   ) => {
     const implementation = indexed
       ? mapWithFeedback.lazyIndexed
@@ -97,12 +97,12 @@ const mapWithFeedbackImplementation =
 
 const lazyImplementation =
   (indexed: boolean) =>
-  <TItem, TAccumulator>(
-    reducer: ReducerIndexedOptional<TItem, TAccumulator>,
-    initialValue: TAccumulator
+  <T, Accumulator>(
+    reducer: ReducerIndexedOptional<T, Accumulator>,
+    initialValue: Accumulator
   ) => {
     let accumulator = initialValue;
-    const modifiedReducer: PredIndexedOptional<TItem, TAccumulator> = (
+    const modifiedReducer: PredIndexedOptional<T, Accumulator> = (
       currentValue,
       index,
       items
@@ -112,10 +112,10 @@ const lazyImplementation =
     };
 
     return (
-      value: TItem,
+      value: T,
       index?: number,
-      items?: Array<TItem>
-    ): LazyResult<TAccumulator> => ({
+      items?: Array<T>
+    ): LazyResult<Accumulator> => ({
       done: false,
       hasNext: true,
       next: indexed
@@ -125,15 +125,15 @@ const lazyImplementation =
   };
 
 export namespace mapWithFeedback {
-  export function indexed<TItem, TAccumulator>(
-    items: ReadonlyArray<TItem>,
-    reducer: ReducerIndexed<TItem, TAccumulator>,
-    initialValue: TAccumulator
-  ): Array<TAccumulator>;
-  export function indexed<TItem, TAccumulator>(
-    reducer: ReducerIndexed<TItem, TAccumulator>,
-    initialValue: TAccumulator
-  ): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
+  export function indexed<T, Accumulator>(
+    items: ReadonlyArray<T>,
+    reducer: ReducerIndexed<T, Accumulator>,
+    initialValue: Accumulator
+  ): Array<Accumulator>;
+  export function indexed<T, Accumulator>(
+    reducer: ReducerIndexed<T, Accumulator>,
+    initialValue: Accumulator
+  ): (items: ReadonlyArray<T>) => Array<Accumulator>;
   export function indexed() {
     return purry(
       mapWithFeedbackImplementation(true),
