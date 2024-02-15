@@ -12,36 +12,34 @@ describe('data first', () => {
         100
       );
       expect(result).toEqual([101, 103, 106, 110, 115]);
-      expectTypeOf(result).toEqualTypeOf<Array<number>>();
     });
 
-    it("should reuse the accumulator if it's mutable, therefore returning an array containing {array length} references to the accumulator.", () => {
+    it("should use the same accumulator on every iteration if it's mutable, therefore returning an array containing {array length} references to the accumulator.", () => {
       const results = mapWithFeedback(
         [1, 2, 3, 4, 5] as const,
         (acc, x) => {
-          acc.push(x);
+          acc[x] = x;
           return acc;
         },
-        [] as Array<number>
+        {} as Record<string, any>
       );
-      const expectedEquality = [1, 2, 3, 4, 5];
-      expect(results).toEqual([
-        expectedEquality,
-        expectedEquality,
-        expectedEquality,
-        expectedEquality,
-        expectedEquality,
-      ]);
-      const accumulator = results[0];
-      results.forEach(reference => {
-        expect(reference).toBe(accumulator);
+      const expectedEquality = new Array(5).fill({
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
       });
+      expect(results).toEqual(expectedEquality);
+      const item = results[0];
+      expect(results.every(result => result === item)).toBe(true);
     });
 
     it('if an empty array is provided, it should never iterate, returning an empty array.', () => {
       const result = mapWithFeedback([], acc => acc, 'value');
       expect(result).toEqual([]);
     });
+
     it('should return an Array<accumulator type>', () => {
       const result = mapWithFeedback(
         [1, 2, 3, 4, 5] as const,
