@@ -100,16 +100,6 @@ const lazyImplementation =
     initialValue: Accumulator
   ) => {
     let accumulator = initialValue;
-    const modifiedReducer: PredIndexedOptional<T, Accumulator> = (
-      currentValue,
-      index,
-      items
-    ) => {
-      accumulator = indexed
-        ? reducer(accumulator, currentValue, index, items)
-        : reducer(accumulator, currentValue);
-      return accumulator;
-    };
 
     return (
       value: T,
@@ -118,7 +108,9 @@ const lazyImplementation =
     ): LazyResult<Accumulator> => ({
       done: false,
       hasNext: true,
-      next: modifiedReducer(value, index, items),
+      next: indexed
+        ? reducer(accumulator, value, index, items)
+        : reducer(accumulator, value),
     });
   };
 
