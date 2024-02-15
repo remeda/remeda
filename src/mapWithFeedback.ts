@@ -29,8 +29,7 @@ type ReducerIndexedOptional<T, Accumulator> = (
 ) => Accumulator;
 
 /**
- * Applies a reducer function on each element of the array, accumulating the results,
- * and returns an array of the successively reduced values.
+ * Applies a reducer function on each element of the array, accumulating the results, and returns an array of the successively reduced values.
  * @param array the array to map over
  * @param reducer the callback function
  * @param initialValue the initial value of the accumulator
@@ -53,8 +52,7 @@ export function mapWithFeedback<T, Accumulator>(
 ): Array<Accumulator>;
 
 /**
- * Applies a reducer function on each element of the array, accumulating the results,
- * and returns an array of the successively reduced values.
+ * Applies a reducer function on each element of the array, accumulating the results, and returns an array of the successively reduced values.
  * @param reducer the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
  * @returns An array of successively reduced values from the left side of the array.
