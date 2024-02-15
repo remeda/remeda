@@ -3,7 +3,7 @@ import { pipe } from './pipe';
 
 describe('data first', () => {
   test('empty array', () => {
-    expect(only([])).toEqual(undefined);
+    expect(only([])).toBeUndefined();
   });
 
   test('length 1 array', () => {
@@ -11,13 +11,13 @@ describe('data first', () => {
   });
 
   test('length 2 array', () => {
-    expect(only([1, 2])).toEqual(undefined);
+    expect(only([1, 2])).toBeUndefined();
   });
 });
 
 describe('data last', () => {
   test('empty array', () => {
-    expect(pipe([], only())).toEqual(undefined);
+    expect(pipe([], only())).toBeUndefined();
   });
 
   test('length 1 array', () => {
@@ -25,7 +25,7 @@ describe('data last', () => {
   });
 
   test('length 2 array', () => {
-    expect(pipe([1, 2], only())).toEqual(undefined);
+    expect(pipe([1, 2], only())).toBeUndefined();
   });
 });
 
@@ -34,7 +34,7 @@ describe('strict typing', () => {
     const arr: Array<number> = [];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('simple array', () => {
@@ -55,21 +55,21 @@ describe('strict typing', () => {
     const arr: [number, string] = [1, 'a'];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('array with more than one item', () => {
     const arr: [number, number, ...Array<number>] = [1, 2];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('trivial empty array', () => {
     const arr: [] = [];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf(undefined);
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('array with last', () => {
@@ -83,28 +83,42 @@ describe('strict typing', () => {
     const arr: [...Array<string>, number] = ['a', 1];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('tuple with two last', () => {
     const arr: [...Array<string>, number, number] = ['a', 1, 2];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('tuple with first and last', () => {
     const arr: [number, ...Array<string>, number] = [1, 'a', 2];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
+  });
+
+  test('tuple with optional and array', () => {
+    const arr: [string?, ...Array<number>] = ['a', 1];
+    const result = only(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expect(result).toBeUndefined();
+  });
+
+  test('tuple with all optional', () => {
+    const arr: [string?, number?] = ['a', 1];
+    const result = only(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expect(result).toBeUndefined();
   });
 
   test('simple empty readonly array', () => {
     const arr: ReadonlyArray<number> = [];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('simple readonly array', () => {
@@ -125,21 +139,21 @@ describe('strict typing', () => {
     const arr: readonly [number, string] = [1, 'a'];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('readonly array with more than one item', () => {
     const arr: readonly [number, number, ...Array<number>] = [1, 2];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('readonly trivial empty array', () => {
     const arr: readonly [] = [];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf(undefined);
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 
   test('readonly array with last', () => {
@@ -153,6 +167,20 @@ describe('strict typing', () => {
     const arr: readonly [...Array<string>, number] = ['a', 1];
     const result = only(arr);
     expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
+  });
+
+  test('readonly tuple with optional and array', () => {
+    const arr: readonly [string?, ...Array<number>] = ['a', 1];
+    const result = only(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expect(result).toBeUndefined();
+  });
+
+  test('readonly tuple with all optional', () => {
+    const arr: readonly [string?, number?] = ['a', 1];
+    const result = only(arr);
+    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expect(result).toBeUndefined();
   });
 });
