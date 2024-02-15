@@ -54,6 +54,7 @@ documentation when migrating._
 | `last`              | `last`              | `last`              |
 | `length`            | `size`              | `length`            |
 | `map`               | `map`               | `map`               |
+| `mapWithFeedback`   |                     | `scan`              |
 | `mapKeys`           | `mapKeys`           |                     |
 | `meanBy`            | `meanBy`            |                     |
 | `merge`             | `assign`            | `merge`             |
