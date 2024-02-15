@@ -10,7 +10,7 @@ const sum = reduce((a, b: number) => add(a, b), 0);
 
 describe('data first', () => {
   it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
-    const transf = {
+    const evolver = {
       id: add(1),
       quartile: sum,
       time: { elapsed: add(1), remaining: add(-1) },
@@ -25,7 +25,7 @@ describe('data first', () => {
       quartile: 10,
       time: { elapsed: 101, remaining: 1399 },
     };
-    const result = evolve(data, transf);
+    const result = evolve(data, evolver);
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
@@ -33,16 +33,16 @@ describe('data first', () => {
   it('does not invoke function if `data` does not contain the key', function () {
     const data: { id?: number } = {};
     const expected = {};
-    const transf = { id: add(1) };
-    const result = evolve(data, transf);
+    const evolver = { id: add(1) };
+    const result = evolve(data, evolver);
     expect(result).toEqual(expected);
   });
 
   it('is not destructive and is immutable', function () {
-    const transf = { n: add(1) };
+    const evolver = { n: add(1) };
     const data = { n: 100 };
     const expected = { n: 101 };
-    const result = evolve(data, transf);
+    const result = evolve(data, evolver);
     expect(data).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
@@ -50,24 +50,24 @@ describe('data first', () => {
   });
 
   it('is recursive', function () {
-    const transf = { nested: { second: add(-1), third: add(1) } };
+    const evolver = { nested: { second: add(-1), third: add(1) } };
     const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
-    const result = evolve(data, transf);
+    const result = evolve(data, evolver);
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('ignores undefined transformations', function () {
-    const transf = { n: undefined };
+    const evolver = { n: undefined };
     const data: { n: number } = { n: 0 };
     const expected = { n: 0 };
-    const result = evolve(data, transf);
+    const result = evolve(data, evolver);
     expect(result).toEqual(expected);
   });
 
   it('can handle data that is complex nested objects', function () {
-    const transf = {
+    const evolver = {
       array: (array: ReadonlyArray<string>) => array.length,
       nestedObj: { a: set<{ b: string }, 'b'>('b', 'Set') },
       objAry: map(omit<{ a: number; b: number }, 'b'>(['b'])),
@@ -81,7 +81,7 @@ describe('data first', () => {
           { a: 1, b: 1 },
         ],
       },
-      transf
+      evolver
     );
     const expected = {
       array: 3,
@@ -95,7 +95,7 @@ describe('data first', () => {
 
 describe('data last', () => {
   it('creates a new object by evolving the `data` according to the `transformation` functions', function () {
-    const transf = {
+    const evolver = {
       id: add(1),
       quartile: sum,
       time: { elapsed: add(1), remaining: add(-1) },
@@ -110,7 +110,7 @@ describe('data last', () => {
       quartile: 10,
       time: { elapsed: 101, remaining: 1399 },
     };
-    const result = pipe(data, evolve(transf));
+    const result = pipe(data, evolve(evolver));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
@@ -118,17 +118,17 @@ describe('data last', () => {
   it('does not invoke function if `data` does not contain the key', function () {
     const data: { id?: number } = {};
     const expected = {};
-    const transf = { id: add(1) };
-    // const result = pipe(data, evolve(transf));
-    const result = pipe(data, evolve(transf));
+    const evolver = { id: add(1) };
+    // const result = pipe(data, evolve(evolver));
+    const result = pipe(data, evolve(evolver));
     expect(result).toEqual(expected);
   });
 
   it('is not destructive and is immutable', function () {
-    const transf = { n: add(1) };
+    const evolver = { n: add(1) };
     const data = { n: 100 };
     const expected = { n: 101 };
-    const result = pipe(data, evolve(transf));
+    const result = pipe(data, evolve(evolver));
     expect(data).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
@@ -136,19 +136,19 @@ describe('data last', () => {
   });
 
   it('is recursive', function () {
-    const transf = { nested: { second: add(-1), third: add(1) } };
+    const evolver = { nested: { second: add(-1), third: add(1) } };
     const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
-    const result = pipe(data, evolve(transf));
+    const result = pipe(data, evolve(evolver));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('ignores undefined transformations', function () {
-    const transf = { n: undefined };
+    const evolver = { n: undefined };
     const data = { n: 0 };
     const expected = { n: 0 };
-    const result = pipe(data, evolve(transf));
+    const result = pipe(data, evolve(evolver));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
@@ -240,17 +240,17 @@ describe('typing', () => {
     });
 
     it('does not accept the input value that is not Array and Object', function () {
-      const transf = { a: add(1) };
+      const evolver = { a: add(1) };
       // Type check only
       () => {
         // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        evolve(0, transf);
+        evolve(0, evolver);
         // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(undefined, transf)).toThrowError();
+        expect(evolve(undefined, evolver)).toThrowError();
         // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(null, transf)).toThrowError();
+        expect(evolve(null, evolver)).toThrowError();
         // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve('', transf)).toThrowError();
+        expect(evolve('', evolver)).toThrowError();
       };
     });
 
@@ -308,7 +308,7 @@ describe('typing', () => {
   describe('data last', () => {
     describe('it can detect mismatch of parameters and arguments', function () {
       it('detect property "number" are incompatible', function () {
-        const transf = {
+        const evolver = {
           number: add(1),
           array: (array: ReadonlyArray<number>) => array.length,
         };
@@ -318,11 +318,11 @@ describe('typing', () => {
             array: ['1', '2', '3'],
           },
           // @ts-expect-error -- [ts2345]: Type 'string' is not assignable to type 'number | undefined'.
-          evolve(transf)
+          evolve(evolver)
         );
       });
       it('detect property "array" are incompatible', function () {
-        const transf = {
+        const evolver = {
           number: add(1),
           array: (array: ReadonlyArray<number>) => array.length,
         };
@@ -332,23 +332,23 @@ describe('typing', () => {
             array: ['1', '2', '3'],
           },
           // @ts-expect-error -- [ts2345]: Type 'string[]' is not assignable to type 'readonly number[]'.
-          evolve(transf)
+          evolve(evolver)
         );
       });
     });
 
     it('does not accept the input value that is not Array and Object', function () {
-      const transf = { a: add(1) };
+      const evolver = { a: add(1) };
       // Type check only
       () => {
         // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: number): unknown'.ts(2345)
-        pipe(0, evolve(transf));
+        pipe(0, evolve(evolver));
         // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: undefined): unknown'.ts(2345)
-        pipe(undefined, evolve(transf));
+        pipe(undefined, evolve(evolver));
         // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: null): unknown'.ts(2345)
-        pipe(null, evolve(transf));
+        pipe(null, evolve(evolver));
         // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: string): unknown'.ts(2345)
-        pipe('', evolve(transf));
+        pipe('', evolve(evolver));
       };
     });
 
