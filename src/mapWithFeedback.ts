@@ -17,7 +17,8 @@ type PartialReducer<TItem, TAccumulator> = (
 ) => TAccumulator;
 
 /**
- * Similar to reduce, but returns an array of successively reduced values from the left side of the array.
+ * Applies a reducer function on each element of the array, accumulating the results,
+ * and returns an array of the successively reduced values.
  * @param array the array to map over
  * @param reducer the callback function
  * @param initialValue the initial value of the accumulator
@@ -40,7 +41,8 @@ export function mapWithFeedback<TItem, TAccumulator>(
 ): Array<TAccumulator>;
 
 /**
- * Similar to reduce, but returns an array of successively reduced values from the left side of the array.
+ * Applies a reducer function on each element of the array, accumulating the results,
+ * and returns an array of the successively reduced values.
  * @param reducer the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
  * @returns An array of successively reduced values from the left side of the array.
@@ -113,13 +115,13 @@ const lazyImplementation =
 export namespace mapWithFeedback {
   export function indexed<TItem, TAccumulator>(
     items: ReadonlyArray<TItem>,
-    fn: Reducer<TItem, TAccumulator>,
+    reducer: Reducer<TItem, TAccumulator>,
     initialValue: TAccumulator
   ): Array<TAccumulator>;
-  export function indexed<T, K>(
-    fn: Reducer<T, K>,
-    initialValue: K
-  ): (items: ReadonlyArray<T>) => Array<K>;
+  export function indexed<TItem, TAccumulator>(
+    reducer: Reducer<TItem, TAccumulator>,
+    initialValue: TAccumulator
+  ): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
   export function indexed() {
     return purry(
       mapWithFeedbackImplementation(true),
