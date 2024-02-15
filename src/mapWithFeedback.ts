@@ -1,15 +1,27 @@
 import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
+import { PredIndexedOptional } from './_types';
 import { purry } from './purry';
 
+/**
+ * A callback function receiving the first two parameters of a reduce operation.
+ */
 type Reducer<TItem, TAccumulator> = (
+  accumulator: TAccumulator,
+  currentValue: TItem
+) => TAccumulator;
+
+/**
+ * A callback function receiving the parameters of a reduce operation.
+ */
+type ReducerIndexed<TItem, TAccumulator> = (
   accumulator: TAccumulator,
   currentValue: TItem,
   index: number,
   items: Array<TItem>
 ) => TAccumulator;
 
-type PartialReducer<TItem, TAccumulator> = (
+type ReducerIndexedOptional<TItem, TAccumulator> = (
   accumulator: TAccumulator,
   currentValue: TItem,
   index?: number,
@@ -36,7 +48,7 @@ type PartialReducer<TItem, TAccumulator> = (
  */
 export function mapWithFeedback<TItem, TAccumulator>(
   array: ReadonlyArray<TItem>,
-  reducer: (accumulator: TAccumulator, currentValue: TItem) => TAccumulator,
+  reducer: Reducer<TItem, TAccumulator>,
   initialValue: TAccumulator
 ): Array<TAccumulator>;
 
@@ -57,7 +69,7 @@ export function mapWithFeedback<TItem, TAccumulator>(
  * @category Array
  */
 export function mapWithFeedback<TItem, TAccumulator>(
-  reducer: (accumulator: TAccumulator, currentValue: TItem) => TAccumulator,
+  reducer: Reducer<TItem, TAccumulator>,
   initialValue: TAccumulator
 ): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
 
@@ -73,7 +85,7 @@ const mapWithFeedbackImplementation =
   (indexed: boolean) =>
   <TItem, TAccumulator>(
     items: Array<TItem>,
-    reducer: PartialReducer<TItem, TAccumulator>,
+    reducer: ReducerIndexedOptional<TItem, TAccumulator>,
     initialValue: TAccumulator
   ) => {
     const implementation = indexed
@@ -86,15 +98,15 @@ const mapWithFeedbackImplementation =
 const lazyImplementation =
   (indexed: boolean) =>
   <TItem, TAccumulator>(
-    reducer: PartialReducer<TItem, TAccumulator>,
+    reducer: ReducerIndexedOptional<TItem, TAccumulator>,
     initialValue: TAccumulator
   ) => {
     let accumulator = initialValue;
-    const curriedReducer = (
-      currentValue: TItem,
-      index?: number,
-      items?: Array<TItem>
-    ): TAccumulator => {
+    const modifiedReducer: PredIndexedOptional<TItem, TAccumulator> = (
+      currentValue,
+      index,
+      items
+    ) => {
       accumulator = reducer(accumulator, currentValue, index, items);
       return accumulator;
     };
@@ -107,19 +119,19 @@ const lazyImplementation =
       done: false,
       hasNext: true,
       next: indexed
-        ? curriedReducer(value, index, items)
-        : curriedReducer(value),
+        ? modifiedReducer(value, index, items)
+        : modifiedReducer(value),
     });
   };
 
 export namespace mapWithFeedback {
   export function indexed<TItem, TAccumulator>(
     items: ReadonlyArray<TItem>,
-    reducer: Reducer<TItem, TAccumulator>,
+    reducer: ReducerIndexed<TItem, TAccumulator>,
     initialValue: TAccumulator
   ): Array<TAccumulator>;
   export function indexed<TItem, TAccumulator>(
-    reducer: Reducer<TItem, TAccumulator>,
+    reducer: ReducerIndexed<TItem, TAccumulator>,
     initialValue: TAccumulator
   ): (items: ReadonlyArray<TItem>) => Array<TAccumulator>;
   export function indexed() {
