@@ -1,12 +1,39 @@
 import { IterableContainer } from './_types';
 import { purry } from './purry';
 
+type RemedaTypeError<Message extends string | number> = [
+  Message extends string
+    ? `RemedaTypeError(partialBindTo): ${Message}.`
+    : RemedaTypeError<`[ERR:${Message}] Something unexpected happened! please report this in the remeda github project`>,
+];
+
 type RemovePrefix<
   T extends IterableContainer,
   Prefix extends IterableContainer,
-> = T extends readonly [...Prefix, ...infer Rest]
-  ? Rest
-  : ["RemedaTypeError(partialBindTo): Data doesn't match function signature."];
+> = Prefix['length'] extends 0
+  ? T
+  : T['length'] extends 0
+    ? RemedaTypeError<'Too many args provided to function'>
+    : T extends [infer THead, ...infer TRest]
+      ? Prefix extends [infer PrefixHead, ...infer PrefixRest]
+        ? PrefixHead extends THead
+          ? RemovePrefix<TRest, PrefixRest>
+          : RemedaTypeError<'Argument of the wrong type provided to function'>
+        : RemedaTypeError<1>
+      : T extends [(infer THead)?, ...infer TRest]
+        ? Prefix extends [infer PrefixHead, ...infer PrefixRest]
+          ? PrefixHead extends THead
+            ? RemovePrefix<TRest, PrefixRest>
+            : RemedaTypeError<'Argument of the wrong type provided to function'>
+          : Prefix extends TRest
+            ? TRest
+            : RemedaTypeError<2>
+        : RemedaTypeError<3>;
+
+type PartiallyBound<
+  F extends (...args: any) => any,
+  T extends IterableContainer,
+> = (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
 
 /**
  * Creates a function that calls `func` with `data` put before the arguments
@@ -31,7 +58,7 @@ type RemovePrefix<
 export function partialBindTo<
   T extends IterableContainer,
   F extends (...args: any) => any,
->(data: T, func: F): (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
+>(data: T, func: F): PartiallyBound<F, T>;
 
 /**
  * Creates a function that calls `func` with `data` put before the arguments
@@ -55,9 +82,7 @@ export function partialBindTo<
  */
 export function partialBindTo<F extends (...args: any) => any>(
   func: F
-): <T extends IterableContainer>(
-  data: T
-) => (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
+): <T extends IterableContainer>(data: T) => PartiallyBound<F, T>;
 
 export function partialBindTo() {
   return purry(_partialBindTo, arguments);
