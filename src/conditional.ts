@@ -5,6 +5,9 @@ type Case<In, Out, Thru extends In = In> = readonly [
   then: (data: Thru) => Out,
 ];
 
+// Lodash and Ramda return `undefined` as the default case.
+const TRIVIAL_DEFAULT_CASE = () => undefined;
+
 /**
  * Executes a transformer function based on the first matching predicate,
  * functioning like a series of `if...else if...` statements. It sequentially
@@ -229,6 +232,6 @@ export namespace conditional {
    * the final fallback case.
    */
   export const defaultCase = <In>(
-    then: (data: In) => unknown = () => undefined
+    then: (data: In) => unknown = TRIVIAL_DEFAULT_CASE
   ) => [() => true, then] as const;
 }
