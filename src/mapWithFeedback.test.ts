@@ -2,6 +2,7 @@ import { pipe } from './pipe';
 import { mapWithFeedback } from './mapWithFeedback';
 import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
 import { take } from './take';
+import { add } from './add';
 
 describe('data first', () => {
   describe('base', () => {
@@ -23,6 +24,7 @@ describe('data first', () => {
         },
         {} as Record<string, any>
       );
+
       const expectedEquality = new Array(5).fill({
         '1': 1,
         '2': 2,
@@ -38,6 +40,20 @@ describe('data first', () => {
     it('if an empty array is provided, it should never iterate, returning an empty array.', () => {
       const result = mapWithFeedback([], acc => acc, 'value');
       expect(result).toEqual([]);
+    });
+
+    it('should be compatible with transformer functions', () => {
+      expect(() => {
+        const result = mapWithFeedback([1, 2, 3, 4, 5], add, 100);
+        expect(result).toEqual([101, 103, 106, 110, 115]);
+      }).not.toThrowError('Wrong number of arguments');
+    });
+
+    it('indexed should not be compatible with transformer functions', () => {
+      expect(() => {
+        const result = mapWithFeedback.indexed([1, 2, 3, 4, 5], add, 100);
+        expect(result).toEqual([101, 103, 106, 110, 115]);
+      }).toThrowError('Wrong number of arguments');
     });
 
     it('should return an Array<accumulator type>', () => {

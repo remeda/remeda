@@ -107,7 +107,9 @@ const lazyImplementation =
       index,
       items
     ) => {
-      accumulator = reducer(accumulator, currentValue, index, items);
+      accumulator = indexed
+        ? reducer(accumulator, currentValue, index, items)
+        : reducer(accumulator, currentValue);
       return accumulator;
     };
 
@@ -118,9 +120,7 @@ const lazyImplementation =
     ): LazyResult<Accumulator> => ({
       done: false,
       hasNext: true,
-      next: indexed
-        ? modifiedReducer(value, index, items)
-        : modifiedReducer(value),
+      next: modifiedReducer(value, index, items),
     });
   };
 
