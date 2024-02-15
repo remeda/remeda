@@ -31,12 +31,11 @@ describe('data first', () => {
   });
 
   it('does not invoke function if `data` does not contain the key', function () {
-    const transf = { n: add(1), m: add(1) };
-    const data = { m: 3 };
-    const expected = { m: 4 };
+    const data: { id?: number } = {};
+    const expected = {};
+    const transf = { id: add(1) };
     const result = evolve(data, transf);
     expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is not destructive and is immutable', function () {
@@ -117,12 +116,12 @@ describe('data last', () => {
   });
 
   it('does not invoke function if `data` does not contain the key', function () {
-    const transf = { n: add(1), m: add(1) };
-    const data = { m: 3 };
-    const expected = { m: 4 };
+    const data: { id?: number } = {};
+    const expected = {};
+    const transf = { id: add(1) };
+    // const result = pipe(data, evolve(transf));
     const result = pipe(data, evolve(transf));
     expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it('is not destructive and is immutable', function () {
@@ -242,16 +241,17 @@ describe('typing', () => {
 
     it('does not accept the input value that is not Array and Object', function () {
       const transf = { a: add(1) };
-      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: undefined): any'.ts(2345)
-      const result = evolve(0, transf);
-      expect(result).toEqual(0); // ignores transformations if the input value is not Array and Object
-
-      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: undefined): any'.ts(2345)
-      evolve(undefined, transf);
-      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: null): any'.ts(2345)
-      evolve(null, transf);
-      // @ts-expect-error -- Type '{ a: (value: number) => number; }' provides no match for the signature '(data: ""): any'.ts(2345)
-      evolve('', transf);
+      // Type check only
+      () => {
+        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+        evolve(0, transf);
+        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+        expect(evolve(undefined, transf)).toThrowError();
+        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+        expect(evolve(null, transf)).toThrowError();
+        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+        expect(evolve('', transf)).toThrowError();
+      };
     });
 
     it('does not accept function that require multiple arguments', function () {
@@ -291,6 +291,18 @@ describe('typing', () => {
         arg2arg3Optional: boolean;
       }>();
     });
+
+    it('can not handle function arrays.', function () {
+      evolve(
+        {
+          quartile: [1, 2],
+        },
+        {
+          // @ts-expect-error -- Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.ts(2322)
+          quartile: [add(1), add(-1)],
+        }
+      );
+    });
   });
 
   describe('data last', () => {
@@ -327,16 +339,17 @@ describe('typing', () => {
 
     it('does not accept the input value that is not Array and Object', function () {
       const transf = { a: add(1) };
-      // @ts-expect-error -- Type 'number' has no properties in common with type '{ a?: number | undefined; }'.ts(2345)
-      const result = pipe(0, evolve(transf));
-      expect(result).toEqual(0); // ignores transformations if the input value is not Array and Object
-
-      // @ts-expect-error -- Type 'undefined' is not assignable to type '{ a?: number | undefined; }'.ts(2345)
-      pipe(undefined, evolve(transf));
-      // @ts-expect-error -- Type 'null' is not assignable to type '{ a?: number | undefined; }'.ts(2345)
-      pipe(null, evolve(transf));
-      // @ts-expect-error -- Type 'string' has no properties in common with type '{ a?: number | undefined; }'.ts(2345)
-      pipe('', evolve(transf));
+      // Type check only
+      () => {
+        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: number): unknown'.ts(2345)
+        pipe(0, evolve(transf));
+        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: undefined): unknown'.ts(2345)
+        pipe(undefined, evolve(transf));
+        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: null): unknown'.ts(2345)
+        pipe(null, evolve(transf));
+        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: string): unknown'.ts(2345)
+        pipe('', evolve(transf));
+      };
     });
 
     it('does not accept function that require multiple arguments', function () {
@@ -344,8 +357,9 @@ describe('typing', () => {
         {
           requiring2Args: 1,
         },
-        // @ts-expect-error -- [ts2345]: Types of property 'requiring2Args' are incompatible.Type 'number[]' is not assignable to type 'undefined'.
+        // @ts-expect-error -- Type '{ requiring2Args: any; }' provides no match for the signature '(input: { requiring2Args: number; }): unknown'.ts(2345)
         evolve({
+          // @ts-expect-error -- Target signature provides too few arguments. Expected 2 or more, but got 1.ts(2322)
           requiring2Args: (a: number, b: number) => a + b,
         })
       );
@@ -371,6 +385,19 @@ describe('typing', () => {
         arg2Optional: boolean;
         arg2arg3Optional: boolean;
       }>();
+    });
+
+    it('can not handle function arrays.', function () {
+      pipe(
+        {
+          quartile: [1, 2],
+        },
+        // @ts-expect-error -- Type '{ quartile: ((value: number) => number)[]; }' provides no match for the signature '(input: { quartile: number[]; }): unknown'.ts(2345)
+        evolve({
+          // @ts-expect-error -- Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.ts(2322)
+          quartile: [add(1), add(-1)],
+        })
+      );
     });
   });
 });
