@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
-import { hasAtLeast, isDefined } from "remeda";
+import { hasAtLeast, isDefined, isString } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
@@ -49,20 +49,29 @@ function transformFunction({
 }
 
 function transformSummary(
-  summary: Array<JSONOutput.CommentDisplayPart>,
+  summary: ReadonlyArray<JSONOutput.CommentDisplayPart>,
 ): string | undefined {
   if (summary.length === 0) {
-    return undefined;
+    return;
   }
   return summary
     .map((part) => {
       const { kind, text } = part;
       if (kind === "inline-tag" && part.tag === "@link") {
-        return `[\`${text}\`](#${text})`;
+        return `[\`${text}\`](${linkHref(part)})`;
       }
       return text;
     })
     .join("");
+}
+
+function linkHref({ text, target }: JSONOutput.InlineTagDisplayPart): string {
+  // A string target is kept:
+  if (isString(target)) {
+    return target;
+  }
+  // Otherwise, it's a symbol ID; assume it's a function.
+  return `#${text}`;
 }
 
 function transformSignature({
