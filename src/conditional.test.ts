@@ -5,10 +5,8 @@ import { isString } from './isString';
 import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
-  it('falls back to legacy default', () => {
-    expect(
-      conditional('Jokic', conditional.LEGACY_DEFAULT_CASE)
-    ).toBeUndefined();
+  it('falls back to trivial default', () => {
+    expect(conditional('Jokic', conditional.defaultCase())).toBeUndefined();
   });
 
   it('falls back to our default', () => {

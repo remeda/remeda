@@ -6,15 +6,33 @@ type Case<In, Out, Thru extends In = In> = readonly [
 ];
 
 /**
- * Executes a transformer function based on the first matching predicate, functioning like a series of `if...else if...` statements. It sequentially evaluates each case and, upon finding a truthy predicate, runs the corresponding transformer. Further cases are then ignored.
+ * Executes a transformer function based on the first matching predicate,
+ * functioning like a series of `if...else if...` statements. It sequentially
+ * evaluates each case and, upon finding a truthy predicate, runs the
+ * corresponding transformer, and returns, ignoring any further cases, even if
+ * they would match.
  *
- * Unlike similar implementations in other frameworks, this does not return a default value when none of the cases match (like `undefined`); throwing an exception instead. To implement traditional default behavior, use `conditional.LEGACY_DEFAULT_CASE` as the final case, or `conditional.defaultCast(then)` which allows for customized default handling.
+ * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
+ * Ramda, the Remeda implementation does **NOT** return a default/fallback
+ * `undefined` value when none of the cases match; and instead will **throw** an
+ * exception in those cases.
+ * To add a default case use the `conditional.defaultCase` helper as the final
+ * case of your implementation. By default it returns `undefined`, but could be
+ * provided a transformer in order to return something else.
  *
- * Due to TypeScript's limitation in defining a type that is the negation of a type we can't refine types further in subsequent cases due to a previous type predicate rejecting. Using a `switch (true)` statement or ternary operators is recommended for more precise type control when such type narrowing is needed.
+ * Due to TypeScript's inability to infer the result of negating a type-
+ * predicate we can't refine the types used in subsequent cases based on
+ * previous conditions. Using a `switch (true)` statement or ternary operators
+ * is recommended for more precise type control when such type narrowing is
+ * needed.
  *
  * @param data - The input data to be evaluated against the provided cases.
- * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple consists of a predicate (or a type-predicate) and a transformer function that processes the data if its case matches.
- * @returns The output of the matched transformer. If no cases match, an exception is thrown. The return type is a union of the return types of all provided transformers.
+ * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
+ * consists of a predicate (or a type-predicate) and a transformer function that
+ * processes the data if its case matches.
+ * @returns The output of the matched transformer. If no cases match, an
+ * exception is thrown. The return type is a union of the return types of all
+ * provided transformers.
  * @signature
  *   R.conditional(...cases)(data);
  * @example
@@ -80,15 +98,33 @@ export function conditional<
   | Return9;
 
 /**
- * Executes a transformer function based on the first matching predicate, functioning like a series of `if...else if...` statements. It sequentially evaluates each case and, upon finding a truthy predicate, runs the corresponding transformer. Further cases are then ignored.
+ * Executes a transformer function based on the first matching predicate,
+ * functioning like a series of `if...else if...` statements. It sequentially
+ * evaluates each case and, upon finding a truthy predicate, runs the
+ * corresponding transformer, and returns, ignoring any further cases, even if
+ * they would match.
  *
- * Unlike similar implementations in other frameworks, this does not return a default value when none of the cases match (like `undefined`); throwing an exception instead. To implement traditional default behavior, use `conditional.LEGACY_DEFAULT_CASE` as the final case, or `conditional.defaultCast(then)` which allows for customized default handling.
+ * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
+ * Ramda, the Remeda implementation does **NOT** return a default/fallback
+ * `undefined` value when none of the cases match; and instead will **throw** an
+ * exception in those cases.
+ * To add a default case use the `conditional.defaultCase` helper as the final
+ * case of your implementation. By default it returns `undefined`, but could be
+ * provided a transformer in order to return something else.
  *
- * Due to TypeScript's limitation in defining a type that is the negation of a type we can't refine types further in subsequent cases due to a previous type predicate rejecting. Using a `switch (true)` statement or ternary operators is recommended for more precise type control when such type narrowing is needed.
+ * Due to TypeScript's inability to infer the result of negating a type-
+ * predicate we can't refine the types used in subsequent cases based on
+ * previous conditions. Using a `switch (true)` statement or ternary operators
+ * is recommended for more precise type control when such type narrowing is
+ * needed.
  *
  * @param data - The input data to be evaluated against the provided cases.
- * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple consists of a predicate (or a type-predicate) and a transformer function that processes the data if its case matches.
- * @returns The output of the matched transformer. If no cases match, an exception is thrown. The return type is a union of the return types of all provided transformers.
+ * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
+ * consists of a predicate (or a type-predicate) and a transformer function that
+ * processes the data if its case matches.
+ * @returns The output of the matched transformer. If no cases match, an
+ * exception is thrown. The return type is a union of the return types of all
+ * provided transformers.
  * @signature
  *   R.conditional(data, ...cases);
  * @example
@@ -184,15 +220,15 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
 
 export namespace conditional {
   /**
-   * A simplified case that accepts all data. Put this as the last case to prevent an exception from being thrown when none of the previous cases matched. If this is not the last case it will short-circuit anything after it.
-   * @param then - You only need to provide the transformer, the predicate is implicit.
+   * A simplified case that accepts all data. Put this as the last case to
+   * prevent an exception from being thrown when none of the previous cases
+   * match.
+   * If this is not the last case it will short-circuit anything after it.
+   * @param then - You only need to provide the transformer, the predicate is
+   * implicit. @default () => undefined, which is how Lodash and Ramda handle
+   * the final fallback case.
    */
-  export const defaultCase = <In>(then: (data: In) => unknown) =>
-    [() => true, then] as const;
-
-  /**
-   * An even simpler catch-all case that simply returns undefined, to match the behavior of other frameworks.
-   * @see defaultCase.
-   */
-  export const LEGACY_DEFAULT_CASE = defaultCase(() => undefined);
+  export const defaultCase = <In>(
+    then: (data: In) => unknown = () => undefined
+  ) => [() => true, then] as const;
 }
