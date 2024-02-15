@@ -38,7 +38,7 @@ describe('data first', () => {
       });
     });
 
-    it('if an empty array is provided, should never iterate, returning an empty array.', () => {
+    it('if an empty array is provided, it should never iterate, returning an empty array.', () => {
       const result = mapWithFeedback([], acc => acc, 'value');
       expect(result).toEqual([]);
     });
