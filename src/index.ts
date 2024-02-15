@@ -8,6 +8,7 @@ export * from './clamp';
 export * from './clone';
 export * from './compact';
 export * from './concat';
+export * from './conditional';
 export * from './countBy';
 export * from './createPipe';
 export * from './debounce';
