@@ -1,3 +1,4 @@
+import type { IterableContainer } from './_types';
 import { purry } from './purry';
 import { toPairs } from './toPairs';
 
@@ -28,29 +29,26 @@ type GenericEvolver = {
  * //     | undefined;
  * // };
  */
-type Evolver<T> =
-  T extends Array<any>
-    ? (data: T) => unknown
-    : T extends object
-      ? {
-          [K in keyof T]?:
-            | (T[K] extends Array<any>
-                ? never
-                : (data: Required<T>[K]) => unknown)
-            | Evolver<T[K]>;
-        }
-      : never;
+type Evolver<T> = T extends object
+  ? T extends IterableContainer
+    ? never
+    : {
+        readonly [K in keyof T]?:
+          | ((data: Required<T>[K]) => unknown)
+          | Evolver<T[K]>;
+      }
+  : never;
 
 /**
  * Creates return type from the type of arguments of `evolve`.
  */
 type Evolved<T, E> = T extends object
   ? {
-      [K in keyof T]: K extends keyof E
+      -readonly [K in keyof T]: K extends keyof E
         ? E[K] extends (...arg: any) => infer R
           ? R
           : Evolved<T[K], E[K]>
-        : T[K];
+        : Required<T>[K];
     }
   : T;
 
@@ -88,7 +86,7 @@ type Evolved<T, E> = T extends object
  * @dataFirst
  * @category Object
  */
-export function evolve<T, E extends Evolver<T>>(
+export function evolve<T extends object, E extends Evolver<T>>(
   object: T,
   evolver: E
 ): Evolved<T, E>;
@@ -127,7 +125,7 @@ export function evolve<T, E extends Evolver<T>>(
  * @dataLast
  * @category Object
  */
-export function evolve<T, E extends Evolver<T>>(
+export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E
 ): (object: T) => Evolved<T, E>;
 
@@ -141,14 +139,12 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
   }
   return toPairs.strict(evolver).reduce<Record<string, unknown>>(
     (result, [key, value]) => {
-      if (!(key in result)) {
-        return result;
+      if (key in result) {
+        result[key] =
+          typeof value === 'function'
+            ? value(result[key])
+            : _evolve(result[key], value);
       }
-      if (typeof value === 'function') {
-        result[key] = value(result[key]);
-        return result;
-      }
-      result[key] = _evolve(result[key], value);
       return result;
     },
     { ...data }
