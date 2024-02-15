@@ -9,5 +9,6 @@
     "exampleTag": false
   },
 
-  "excludeNotDocumented": true
+  "excludeNotDocumented": true,
+  "sourceLinkTemplate": "https://github.com/remeda/remeda/blob/master/{path}"
 }
