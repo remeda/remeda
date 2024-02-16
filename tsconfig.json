@@ -22,6 +22,6 @@
     // the vast majority of browsers are probably above that too already. It's
     // most likely safe to up this value, and it would probably result in a
     // smaller package size.
-    "target": "ES6",
+    "target": "ES5",
   },
 }
