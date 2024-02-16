@@ -65,7 +65,7 @@ function transformSummary(
       if (kind !== "code") {
         return text;
       }
-      const codeContent = text.slice(0, -1);
+      const codeContent = text.slice(1, -1);
       // If this is a function name, link to its anchor:
       if (functionNames.has(codeContent)) {
         return `[${text}](#${codeContent})`;
