@@ -11,11 +11,11 @@ import type {
  * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
  *
  * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
- * * {@link firstBy} === `first(sortBy(data, ...rules))`, O(n).
- * * {@link takeFirstBy} === `take(sortBy(data, ...rules), k)`, O(nlogk).
- * * {@link dropFirstBy} === `drop(sortBy(data, ...rules), k)`, O(nlogk).
- * * {@link nthBy} === `sortBy(data, ...rules).at(k)`, O(n).
- * * {@link rankBy} === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
+ * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
+ * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
+ * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
  *
  * @param data - The input array.
@@ -47,11 +47,11 @@ export function sortBy<T>(
  * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
  *
  * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
- * * {@link firstBy} === `first(sortBy(data, ...rules))`, O(n).
- * * {@link takeFirstBy} === `take(sortBy(data, ...rules), k)`, O(nlogk).
- * * {@link dropFirstBy} === `drop(sortBy(data, ...rules), k)`, O(nlogk).
- * * {@link nthBy} === `sortBy(data, ...rules).at(k)`, O(n).
- * * {@link rankBy} === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
+ * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
+ * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
+ * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
+ * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
  *
  * @param data - The input array.

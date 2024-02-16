@@ -9,7 +9,7 @@ import type {
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.
  *
- * See also {@link firstBy} which provides an even more efficient algorithm and a stricter return type, but only for `index === 0`. See {@link takeFirstBy} to get all the elements up to and including `index`.
+ * See also `firstBy` which provides an even more efficient algorithm and a stricter return type, but only for `index === 0`. See `takeFirstBy` to get all the elements up to and including `index`.
  *
  * @param data - The input array.
  * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.

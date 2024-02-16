@@ -7,7 +7,7 @@ import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
  * regards to the predicate, meaning that running the predicate as a mapper on
  * it would result in an array `[...true[], ...false[]]`.
  * This stricter requirement from the predicate provides us 2 benefits over
- * {@link findIndex} which does a similar thing:
+ * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
  * predicate returns `true` for all items).
@@ -41,7 +41,7 @@ export function sortedIndexWith<T>(
  * regards to the predicate, meaning that running the predicate as a mapper on
  * it would result in an array `[...true[], ...false[]]`.
  * This stricter requirement from the predicate provides us 2 benefits over
- * {@link findIndex} which does a similar thing:
+ * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
  * predicate returns `false` for all items).

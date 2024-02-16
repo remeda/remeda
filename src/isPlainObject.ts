@@ -3,7 +3,7 @@ import type { NarrowedTo } from './_types';
 /**
  * Checks if `data` is a "plain" object. A plain object is defined as an object with string keys and values of any type, including primitives, other objects, functions, classes, etc (aka struct/shape/record/simple). Technically, a plain object is one whose prototype is either `Object.prototype` or `null`, ensuring it does not inherit properties or methods from other object types.
  *
- * This function is narrower in scope than {@link isObjectType}, which accepts any entity considered an `"object"` by JavaScript's `typeof`.
+ * This function is narrower in scope than `isObjectType`, which accepts any entity considered an `"object"` by JavaScript's `typeof`.
  *
  * Note that Maps, Arrays, and Sets are not considered plain objects and would return `false`.
  *
