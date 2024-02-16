@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
-import { hasAtLeast, isDefined, isString } from "remeda";
+import { hasAtLeast, isDefined } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
@@ -12,19 +12,24 @@ export function transformProject(project: typeof DATA) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
 
-  const functions = children
-    .filter(({ kind }) => kind === ReflectionKind.Function)
-    .map(transformFunction);
+  const functions = children.filter(
+    ({ kind }) => kind === ReflectionKind.Function,
+  );
 
-  return addCategories(project, functions.filter(isDefined.strict));
+  const functionNames = new Set(functions.map(({ name }) => name));
+
+  return addCategories(
+    project,
+    functions
+      .map((function_) => transformFunction(function_, functionNames))
+      .filter(isDefined.strict),
+  );
 }
 
-function transformFunction({
-  id,
-  name,
-  sources,
-  signatures,
-}: JSONOutput.DeclarationReflection) {
+function transformFunction(
+  { id, name, sources, signatures }: JSONOutput.DeclarationReflection,
+  functionNames: Set<string>,
+) {
   if (signatures === undefined) {
     return;
   }
@@ -39,7 +44,7 @@ function transformFunction({
       comment: { summary },
     },
   ] = signaturesWithComments;
-  const description = transformSummary(summary);
+  const description = transformSummary(summary, functionNames);
 
   const methods = signaturesWithComments.map(transformSignature);
 
@@ -50,28 +55,24 @@ function transformFunction({
 
 function transformSummary(
   summary: ReadonlyArray<JSONOutput.CommentDisplayPart>,
+  functionNames: Set<string>,
 ): string | undefined {
   if (summary.length === 0) {
     return;
   }
   return summary
-    .map((part) => {
-      const { kind, text } = part;
-      if (kind === "inline-tag" && part.tag === "@link") {
-        return `[\`${text}\`](${linkHref(part)})`;
+    .map(({ kind, text }) => {
+      if (kind !== "code") {
+        return text;
+      }
+      const codeContent = text.slice(0, -1);
+      // If this is a function name, link to its anchor:
+      if (functionNames.has(codeContent)) {
+        return `[${text}](#${codeContent})`;
       }
       return text;
     })
     .join("");
-}
-
-function linkHref({ text, target }: JSONOutput.InlineTagDisplayPart): string {
-  // A string target is kept:
-  if (isString(target)) {
-    return target;
-  }
-  // Otherwise, it's a symbol ID; assume it's a function.
-  return `#${text}`;
 }
 
 function transformSignature({
