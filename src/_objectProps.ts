@@ -6,16 +6,9 @@ type MakeKeyRequired<Obj, Prop extends keyof Obj> = Obj & {
   [key in Prop]-?: Obj[key];
 };
 
-type IsArrayButNotTuple<Obj> = Obj extends [any, ...Array<any>]
-  ? false
-  : Obj extends Array<any>
-    ? true
-    : false;
-
-export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> =
-  IsArrayButNotTuple<Obj> extends true
-    ? Obj
-    : Simplify<MakeKeyRequired<Extract<Obj, { [key in Prop]?: any }>, Prop>>;
+export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> = Simplify<
+  MakeKeyRequired<Extract<Obj, { [key in Prop]?: any }>, Prop>
+>;
 
 export type WithPropOfType<
   Obj,
@@ -27,11 +20,7 @@ export type WithPropOfType<
   }
 >;
 
-export type AllPossiblePropValues<Obj, Prop extends AllUnionKeys<Obj>> = [
-  IsArrayButNotTuple<Obj>,
-  Prop,
-] extends [true, number]
-  ? Obj extends Array<any>
-    ? Obj[number]
-    : never
-  : Extract<WithRequiredProp<Obj, Prop>, { [key in Prop]: any }>[Prop];
+export type AllPossiblePropValues<
+  Obj,
+  Prop extends AllUnionKeys<Obj>,
+> = Extract<WithRequiredProp<Obj, Prop>, { [key in Prop]: any }>[Prop];

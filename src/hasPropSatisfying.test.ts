@@ -25,10 +25,6 @@ test('data-first', () => {
   expect(hasPropSatisfying(tuple, 0, isEqual(1))).toBe(false);
   // @ts-expect-error this element is not present
   expect(hasPropSatisfying(tuple, 1, isEqual(0))).toBe(false);
-
-  const arr = [0];
-  expect(hasPropSatisfying(arr, 0, isEqual(0))).toBe(true);
-  expect(hasPropSatisfying(arr, 1, isEqual(0))).toBe(false);
 });
 
 test('data-last', () => {
@@ -65,14 +61,6 @@ test('predicate argument type narrowing', () => {
   });
   hasPropSatisfying(obj, 'd', (val): val is 'hi' => {
     expectTypeOf(val).toEqualTypeOf<string | number>();
-    return true;
-  });
-  hasPropSatisfying([0], 0, (val): val is 0 => {
-    expectTypeOf(val).toEqualTypeOf<number>();
-    return true;
-  });
-  hasPropSatisfying([0] as const, 0, (val): val is 0 => {
-    expectTypeOf(val).toEqualTypeOf<0>();
     return true;
   });
 });

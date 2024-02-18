@@ -11,9 +11,6 @@ test('data-first', () => {
   expect(hasProp(obj, 'b')).toBe(false);
   expect(hasProp(obj, 'c')).toBe(false);
   expect(hasProp(obj, 1)).toBe(true);
-  expect(hasProp([0], 0)).toBe(true);
-  expect(hasProp([0], 1)).toBe(false);
-  expect(hasProp([0], 'concat')).toBe(true);
 
   // @ts-expect-error this property does not exist
   expect(hasProp(obj, 'd')).toBe(false);
@@ -26,14 +23,9 @@ test('data-last', () => {
   expect(pipe(obj, hasProp('b'))).toBe(false);
   expect(pipe(obj, hasProp('c'))).toBe(false);
   expect(pipe(obj, hasProp(1))).toBe(true);
-  expect(pipe([0], hasProp(0))).toBe(true);
-  expect(pipe([0], hasProp(1))).toBe(false);
-  expect(pipe([0], hasProp('concat'))).toBe(true);
 
   // @ts-expect-error this property does not exist
   expect(pipe(obj, hasProp('d'))).toBe(false);
-  // @ts-expect-error this property does not exist
-  expect(pipe(obj, hasProp(2))).toBe(false);
 });
 
 test('conditional type narrowing', () => {
@@ -51,20 +43,6 @@ test('conditional type narrowing', () => {
 
   if (hasProp(obj, 1)) {
     expectTypeOf(obj).toEqualTypeOf<{ c: number; 1: string }>();
-  }
-
-  const tuple = [0] as [0] | [1, 2];
-  if (hasProp(tuple, 1)) {
-    expectTypeOf(tuple).toEqualTypeOf<[1, 2]>();
-  }
-
-  const arr = [0];
-  if (hasProp(arr, 0)) {
-    expectTypeOf(arr).toEqualTypeOf<Array<number>>();
-  }
-
-  if (hasProp(arr, 'concat')) {
-    expectTypeOf(arr).toEqualTypeOf<Array<number>>();
   }
 });
 
