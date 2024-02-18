@@ -5,7 +5,10 @@ export type GenericObject = Record<AnyValidObjectKey, unknown>;
 
 export type AllUnionKeys<Union> = Union extends Union ? keyof Union : never;
 
-type MakeKeyRequired<Obj, Prop extends keyof Obj> = Obj & {
+// Used to ensure the type asserted by a type guard is recognized as a subtype of the original type.
+export type EnsureExtends<T, U> = U extends T ? U : Simplify<T & U>;
+
+type MakeKeyRequired<Obj, Prop extends keyof Obj> = Omit<Obj, Prop> & {
   // We need to both remove the optional modifier and exclude undefined.
   // This is because the `-?` modifier will only exclude undefined from the type if the property is optional,
   // which makes the behavior of the type inconsistent.
@@ -14,24 +17,24 @@ type MakeKeyRequired<Obj, Prop extends keyof Obj> = Obj & {
   [key in Prop]-?: Exclude<Obj[key], undefined>;
 };
 
-export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> = Simplify<
-  MakeKeyRequired<Extract<Obj, { [key in Prop]?: any }>, Prop>
->;
-
-type UnionMembersContainingProp<Union, Prop extends keyof Union> = Extract<
-  Union,
+type UnionMemebersWithProp<Obj, Prop extends keyof Obj> = Extract<
+  Obj,
   { [key in Prop]?: any }
 >;
+
+export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> = Simplify<
+  MakeKeyRequired<UnionMemebersWithProp<Obj, Prop>, Prop>
+>;
+
+type ReplaceProp<Obj, Prop extends keyof Obj, NewType> = Omit<Obj, Prop> & {
+  [key in Prop]: NewType;
+};
 
 export type WithPropOfType<
   Obj,
   Prop extends AllUnionKeys<Obj>,
   PropType extends AllPossiblePropValues<Obj, Prop>,
-> = Simplify<
-  UnionMembersContainingProp<Obj, Prop> & {
-    [key in Prop]: PropType;
-  }
->;
+> = Simplify<ReplaceProp<UnionMemebersWithProp<Obj, Prop>, Prop, PropType>>;
 
 export type AllPossiblePropValues<
   Obj,

@@ -118,7 +118,7 @@ describe('data-first', () => {
       ) {
         expectTypeOf(obj).toEqualTypeOf<{
           type: 'success';
-          data: { foo: string } & { foo: 'bar' };
+          data: { foo: 'bar' };
         }>();
       }
     });
@@ -241,7 +241,7 @@ describe('data-last', () => {
       expectTypeOf(success).toEqualTypeOf<
         Array<{
           type: 'success';
-          data: { foo: string } & { foo: 'bar' };
+          data: { foo: 'bar' };
         }>
       >();
     });

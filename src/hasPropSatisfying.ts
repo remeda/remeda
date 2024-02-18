@@ -4,6 +4,7 @@ import {
   WithPropOfType,
   AllPossiblePropValues,
   GenericObject,
+  EnsureExtends,
 } from './_objectProps';
 import { hasProp } from './hasProp';
 
@@ -31,7 +32,9 @@ export function hasPropSatisfying<
 >(
   key: Prop,
   predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate
-): (obj: Obj) => obj is WithPropOfType<Obj, Prop, AfterPredicate>;
+): (
+  obj: Obj
+) => obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>>;
 
 /**
  * Determines if an object or array has a property with the specified key that satisfies the predicate.
@@ -57,7 +60,7 @@ export function hasPropSatisfying<
   obj: Obj,
   key: Prop,
   predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate
-): obj is WithPropOfType<Obj, Prop, AfterPredicate>;
+): obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>>;
 
 export function hasPropSatisfying(...args: Array<any>): any {
   return purry(hasPropSatisfyingImpl, args);
