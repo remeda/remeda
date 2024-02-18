@@ -60,30 +60,6 @@ describe('deep clone objects', () => {
     x.c.b = 1;
     assert.notDeepEqual(cloned.c.b, x.c.b);
   });
-
-  // it('clone instances', () => {
-  //   const Obj = function(x) {
-  //     this.x = x;
-  //   };
-  //   Obj.prototype.get = () => {
-  //     return this.x;
-  //   };
-  //   Obj.prototype.set = function(x) {
-  //     this.x = x;
-  //   };
-
-  //   const obj = new Obj(10);
-  //   eq(obj.get(), 10);
-
-  //   const cloned = clone(obj);
-  //   eq(cloned.get(), 10);
-
-  //   assert.notStrictEqual(obj, cloned);
-
-  //   obj.set(11);
-  //   eq(obj.get(), 11);
-  //   eq(cloned.get(), 10);
-  // });
 });
 
 describe('deep clone arrays', () => {
@@ -111,7 +87,7 @@ describe('deep clone functions', () => {
     const fn = (x: number) => {
       return x + x;
     };
-    const list = [{ a: fn }];
+    const list = [{ a: fn }] as const;
 
     const cloned = clone(list);
 
@@ -156,7 +132,7 @@ describe('deep clone deep nested mixed objects', () => {
   it('clones array with arrays', () => {
     const list: Array<Array<any>> = [[1], [[3]]];
     const cloned = clone(list);
-    list[1][0] = null;
+    list[1]![0] = null;
     eq(cloned, [[1], [[3]]]);
   });
 
@@ -165,17 +141,17 @@ describe('deep clone deep nested mixed objects', () => {
     const list = [{ b: obj }, { b: obj }];
     const cloned = clone(list);
 
-    assert.strictEqual(list[0].b, list[1].b);
-    assert.strictEqual(cloned[0].b, cloned[1].b);
-    assert.notStrictEqual(cloned[0].b, list[0].b);
-    assert.notStrictEqual(cloned[1].b, list[1].b);
+    assert.strictEqual(list[0]?.b, list[1]?.b);
+    assert.strictEqual(cloned[0]?.b, cloned[1]?.b);
+    assert.notStrictEqual(cloned[0]?.b, list[0]?.b);
+    assert.notStrictEqual(cloned[1]?.b, list[1]?.b);
 
-    eq(cloned[0].b, { a: 1 });
-    eq(cloned[1].b, { a: 1 });
+    eq(cloned[0]?.b, { a: 1 });
+    eq(cloned[1]?.b, { a: 1 });
 
     obj.a = 2;
-    eq(cloned[0].b, { a: 1 });
-    eq(cloned[1].b, { a: 1 });
+    eq(cloned[0]?.b, { a: 1 });
+    eq(cloned[1]?.b, { a: 1 });
   });
 });
 
@@ -192,19 +168,3 @@ describe('deep clone edge cases', () => {
     assert.notStrictEqual(clone(list), list);
   });
 });
-
-// describe('Let `clone` use an arbitrary user defined `clone` method', () => {
-//   it('dispatches to `clone` method if present', () => {
-//     function ArbitraryClone(x: any) {
-//       this.value = x;
-//     }
-//     ArbitraryClone.prototype.clone = () => {
-//       return new ArbitraryClone(this.value);
-//     };
-
-//     const obj = new ArbitraryClone(42);
-//     const arbitraryClonedObj = clone(obj);
-//     eq(arbitraryClonedObj, new ArbitraryClone(42));
-//     eq(arbitraryClonedObj instanceof ArbitraryClone, true);
-//   });
-// });

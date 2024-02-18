@@ -152,7 +152,7 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
   if (sampleSize === actualSampleSize) {
     return Array.from(sampleIndices)
       .sort((a, b) => a - b)
-      .map(index => data[index]);
+      .map(index => data[index]!);
   }
 
   return data.filter((_, index) => !sampleIndices.has(index));

@@ -211,7 +211,7 @@ export function pipe(
   });
   let opIdx = 0;
   while (opIdx < operations.length) {
-    const op = operations[opIdx];
+    const op = operations[opIdx]!;
     const lazyOp = lazyOps[opIdx];
     if (!lazyOp) {
       ret = op(ret);

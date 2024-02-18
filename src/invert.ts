@@ -42,7 +42,7 @@ function _invert(
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const key in object) {
-    result[object[key]] = key;
+    result[object[key]!] = key;
   }
 
   return result;
