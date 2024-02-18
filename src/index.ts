@@ -129,6 +129,7 @@ export * from "./toLowerCase";
 export * from "./toPairs";
 export * from "./toUpperCase";
 export * from "./type";
+export * from "./uncapitalize";
 export * from "./uniq";
 export * from "./uniqBy";
 export * from "./uniqWith";
