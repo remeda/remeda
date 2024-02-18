@@ -81,12 +81,12 @@ function firstByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>
 ): T | undefined {
-  let [currentFirst] = data;
-
   if (!hasAtLeast(data, 2)) {
     // If we have 0 or 1 item we simply return the trivial result.
-    return currentFirst;
+    return data[0];
   }
+
+  let [currentFirst] = data;
 
   // Remove the first item, we won't compare it with itself.
   const [, ...rest] = data;

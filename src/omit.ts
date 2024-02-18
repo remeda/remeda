@@ -1,4 +1,5 @@
 import { fromPairs } from './fromPairs';
+import { hasAtLeast } from './hasAtLeast';
 import { purry } from './purry';
 
 /**
@@ -40,11 +41,14 @@ function _omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>
 ): Omit<T, K> {
-  if (propNames.length === 0) {
+  if (!hasAtLeast(propNames, 1)) {
+    // No props to omit at all!
     return { ...data };
   }
 
-  if (propNames.length === 1) {
+  if (!hasAtLeast(propNames, 2)) {
+    // Only one prop to omit.
+
     const [propName] = propNames;
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars -- use destructuring to remove a single key, letting JS optimize here...
@@ -53,6 +57,8 @@ function _omit<T extends object, K extends keyof T>(
     } = data;
     return remaining;
   }
+
+  // Multiple props to omit...
 
   if (!propNames.some(propName => propName in data)) {
     return { ...data };

@@ -25,7 +25,7 @@ export function _binarySearchCutoffIndex<T>(
     // We use bitwise operator here as a way to find the mid-point and round it
     // down using the same operation.
     const pivotIndex = (lowIndex + highIndex) >>> 1;
-    const pivot = array[pivotIndex];
+    const pivot = array[pivotIndex]!;
 
     if (predicate(pivot, pivotIndex)) {
       lowIndex = pivotIndex + 1;

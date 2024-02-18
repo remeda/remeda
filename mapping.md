@@ -17,6 +17,7 @@ documentation when migrating._
 | [`clamp`](https://remedajs.com/docs/#clamp)                         | [`clamp`](https://lodash.com/docs/4.17.15#clamp)                         | [`clamp`](https://ramdajs.com/docs/#clamp)                         |
 | [`clone`](https://remedajs.com/docs/#clone)                         | [`cloneDeep`](https://lodash.com/docs/4.17.15#cloneDeep)                 | [`clone`](https://ramdajs.com/docs/#clone)                         |
 | [`concat`](https://remedajs.com/docs/#concat)                       | [`concat`](https://lodash.com/docs/4.17.15#concat)                       | [`concat`](https://ramdajs.com/docs/#concat)                       |
+| [`conditional`](https://remedajs.com/docs/#conditional)             | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
 | [`createPipe`](https://remedajs.com/docs/#createPipe)               |                                                                          |                                                                    |
 | [`debounce`](https://remedajs.com/docs/#debounce)                   | [`debounce`](https://lodash.com/docs/4.17.15#debounce)                   |                                                                    |
 | [`difference`](https://remedajs.com/docs/#difference)               | [`difference`](https://lodash.com/docs/4.17.15#difference)               | [`difference`](https://ramdajs.com/docs/#difference)               |
@@ -27,6 +28,7 @@ documentation when migrating._
 | [`dropLastWhile`](https://remedajs.com/docs/#dropLastWhile)         | [`dropRightWhile`](https://lodash.com/docs/4.17.15#dropRightWhile)       | [`dropLastWhile`](https://ramdajs.com/docs/#dropLastWhile)         |
 | [`dropWhile`](https://remedajs.com/docs/#dropWhile)                 | [`dropWhile`](https://lodash.com/docs/4.17.15#dropWhile)                 | [`dropWhile`](https://ramdajs.com/docs/#dropWhile)                 |
 | [`equals`](https://remedajs.com/docs/#equals)                       | [`isEqual`](https://lodash.com/docs/4.17.15#isEqual)                     | [`equals`](https://ramdajs.com/docs/#equals)                       |
+| [`evolve`](https://remedajs.com/docs/#evolve)                       |                                                                          | [`evolve`](https://ramdajs.com/docs/#evolve)                       |
 | [`filter`](https://remedajs.com/docs/#filter)                       | [`filter`](https://lodash.com/docs/4.17.15#filter)                       | [`filter`](https://ramdajs.com/docs/#filter)                       |
 | [`find`](https://remedajs.com/docs/#find)                           | [`find`](https://lodash.com/docs/4.17.15#find)                           | [`find`](https://ramdajs.com/docs/#find)                           |
 | [`findIndex`](https://remedajs.com/docs/#findIndex)                 | [`findIndex`](https://lodash.com/docs/4.17.15#findIndex)                 | [`findIndex`](https://ramdajs.com/docs/#findIndex)                 |
@@ -57,6 +59,7 @@ documentation when migrating._
 | [`length`](https://remedajs.com/docs/#length)                       | [`size`](https://lodash.com/docs/4.17.15#size)                           | [`length`](https://ramdajs.com/docs/#length)                       |
 | [`map`](https://remedajs.com/docs/#map)                             | [`map`](https://lodash.com/docs/4.17.15#map)                             | [`map`](https://ramdajs.com/docs/#map)                             |
 | [`mapKeys`](https://remedajs.com/docs/#mapKeys)                     | [`mapKeys`](https://lodash.com/docs/4.17.15#mapKeys)                     |                                                                    |
+| [`mapValues`](https://remedajs.com/docs/#mapValues)                 | [`mapValues`](https://lodash.com/docs/4.17.15#mapValues)                 | [`mapValues`](https://ramdajs.com/docs/#mapObjIndexed)             |
 | [`meanBy`](https://remedajs.com/docs/#meanBy)                       | [`meanBy`](https://lodash.com/docs/4.17.15#meanBy)                       |                                                                    |
 | [`merge`](https://remedajs.com/docs/#merge)                         | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`merge`](https://ramdajs.com/docs/#merge)                         |
 | [`mergeAll`](https://remedajs.com/docs/#mergeAll)                   | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`mergeAll`](https://ramdajs.com/docs/#mergeAll)                   |

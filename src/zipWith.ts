@@ -63,9 +63,7 @@ export function zipWith() {
     };
   }
 
-  if (args.length === 3) {
-    return _zipWith(args[0], args[1], args[2]);
-  }
+  return _zipWith(args[0], args[1], args[2]);
 }
 
 function _zipWith<F, S, R>(
@@ -77,7 +75,7 @@ function _zipWith<F, S, R>(
     first.length > second.length ? second.length : first.length;
   const result = [];
   for (let i = 0; i < resultLength; i++) {
-    result.push(fn(first[i], second[i]));
+    result.push(fn(first[i]!, second[i]!));
   }
 
   return result;
