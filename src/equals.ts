@@ -95,13 +95,13 @@ function _equals(a: any, b: any) {
     }
 
     for (i = length; i-- !== 0; ) {
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
+      if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) {
         return false;
       }
     }
 
     for (i = length; i-- !== 0; ) {
-      key = keys[i];
+      key = keys[i]!;
       if (!equals(a[key], b[key])) {
         return false;
       }

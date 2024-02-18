@@ -10,7 +10,10 @@ describe('runtime (dataFirst)', () => {
     const data = [5, 1, 3] as const;
     const sorted = [...data].sort();
     for (let i = 0; i < sorted.length; i += 1) {
-      expect(rankBy(data, sorted[i], identity)).toBe(i);
+      // TODO: Use `Array.prototype.entries` once we bump our TS target so we
+      // can get both the index and the item at the same time, and don't need
+      // the non-null assertion.
+      expect(rankBy(data, sorted[i]!, identity)).toBe(i);
     }
   });
 
