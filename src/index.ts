@@ -126,6 +126,7 @@ export * from "./tap";
 export * from "./times";
 export * from "./toLowerCase";
 export * from "./toPairs";
+export * from "./toUpperCase";
 export * from "./type";
 export * from "./uniq";
 export * from "./uniqBy";
