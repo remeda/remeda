@@ -124,6 +124,7 @@ export * from "./takeLastWhile";
 export * from "./takeWhile";
 export * from "./tap";
 export * from "./times";
+export * from "./toLowerCase";
 export * from "./toPairs";
 export * from "./type";
 export * from "./uniq";
