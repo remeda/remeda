@@ -1,27 +1,46 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "extends": "@tsconfig/recommended/tsconfig.json",
-
   "include": ["src", "test", "**/.eslintrc.js", "*.config.js", "*.config.ts"],
 
   "compilerOptions": {
     // TYPE CHECKING
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": true,
 
     // MODULES
+    "module": "commonjs",
     "types": ["vitest/globals"],
 
     // EMIT
     "noEmit": true,
 
+    // JAVASCRIPT SUPPORT
+    "checkJs": true,
+
+    // INTEROP CONSTRAINTS
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
     // LANGUAGE and ENVIRONMENT
-    "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
     // TODO: The recommended target is ES2015 (ES6). Node10 supports es2018 and
     // the vast majority of browsers are probably above that too already. It's
     // most likely safe to up this value, and it would probably result in a
     // smaller package size.
     "target": "ES5",
+    "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
+
+    // COMPLETENESS
+    "skipLibCheck": true,
   },
 }

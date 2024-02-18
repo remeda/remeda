@@ -1,6 +1,6 @@
+import { NonEmptyArray } from './_types';
 import { groupBy } from './groupBy';
 import { pipe } from './pipe';
-import { NonEmptyArray } from './_types';
 
 const array = [
   { a: 1, b: 1 },
@@ -87,7 +87,7 @@ describe('Filtering on undefined grouper result', () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty('even');
-    expect(result.even).toEqual([0, 2, 4, 6, 8]);
+    expect(result['even']).toEqual([0, 2, 4, 6, 8]);
   });
 
   test('regular indexed', () => {
@@ -97,7 +97,7 @@ describe('Filtering on undefined grouper result', () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty('even');
-    expect(result.even).toEqual(['a', 'c', 'e', 'g', 'i']);
+    expect(result['even']).toEqual(['a', 'c', 'e', 'g', 'i']);
   });
 
   test('strict', () => {

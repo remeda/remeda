@@ -46,7 +46,7 @@ function _zipObj(
     first.length > second.length ? second.length : first.length;
   const result: Record<string | number | symbol, unknown> = {};
   for (let i = 0; i < resultLength; i++) {
-    result[first[i]] = second[i];
+    result[first[i]!] = second[i];
   }
 
   return result;
