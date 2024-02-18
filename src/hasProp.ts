@@ -1,5 +1,5 @@
 import { purry } from './purry';
-import { AllUnionKeys, WithRequiredProp } from './_objectProps';
+import { AllUnionKeys, GenericObject, WithRequiredProp } from './_objectProps';
 
 /**
  * Determines if an object or array has a property with the specified key.
@@ -20,9 +20,10 @@ import { AllUnionKeys, WithRequiredProp } from './_objectProps';
  * @dataLast
  * @category Guard
  */
-export function hasProp<Obj, Prop extends AllUnionKeys<Obj>>(
-  key: Prop
-): (obj: Obj) => obj is WithRequiredProp<Obj, Prop>;
+export function hasProp<
+  Obj extends GenericObject,
+  Prop extends AllUnionKeys<Obj>,
+>(key: Prop): (obj: Obj) => obj is WithRequiredProp<Obj, Prop>;
 
 /**
  * Determines if an object has a property with the specified key.
@@ -40,10 +41,10 @@ export function hasProp<Obj, Prop extends AllUnionKeys<Obj>>(
  * @dataFirst
  * @category Guard
  */
-export function hasProp<Obj, Prop extends AllUnionKeys<Obj>>(
-  obj: Obj,
-  key: Prop
-): obj is WithRequiredProp<Obj, Prop>;
+export function hasProp<
+  Obj extends GenericObject,
+  Prop extends AllUnionKeys<Obj>,
+>(obj: Obj, key: Prop): obj is WithRequiredProp<Obj, Prop>;
 
 export function hasProp(...args: Array<any>): any {
   return purry(hasPropImpl, args);

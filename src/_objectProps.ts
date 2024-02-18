@@ -1,9 +1,11 @@
-import { SimplifyDeep } from './type-fest/merge-deep';
 import { Simplify } from './type-fest/simplify';
+
+export type AnyValidObjectKey = string | number | symbol;
+export type GenericObject = Record<AnyValidObjectKey, unknown>;
 
 export type AllUnionKeys<Union> = Union extends Union ? keyof Union : never;
 
-type MakeKeyRequired<Obj, Prop extends keyof Obj> = Omit<Obj, Prop> & {
+type MakeKeyRequired<Obj, Prop extends keyof Obj> = Obj & {
   // We need to both remove the optional modifier and exclude undefined.
   // This is because the `-?` modifier will only exclude undefined from the type if the property is optional,
   // which makes the behavior of the type inconsistent.
@@ -25,7 +27,7 @@ export type WithPropOfType<
   Obj,
   Prop extends AllUnionKeys<Obj>,
   PropType extends AllPossiblePropValues<Obj, Prop>,
-> = SimplifyDeep<
+> = Simplify<
   UnionMembersContainingProp<Obj, Prop> & {
     [key in Prop]: PropType;
   }

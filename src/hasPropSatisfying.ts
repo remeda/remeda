@@ -3,10 +3,9 @@ import {
   AllUnionKeys,
   WithPropOfType,
   AllPossiblePropValues,
+  GenericObject,
 } from './_objectProps';
 import { hasProp } from './hasProp';
-
-type AnyValidObjectKey = string | number | symbol;
 
 /**
  * Determines if an object or array has a property with the specified key that satisfies the predicate.
@@ -26,7 +25,7 @@ type AnyValidObjectKey = string | number | symbol;
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj extends Record<AnyValidObjectKey, any>,
+  Obj extends GenericObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -51,7 +50,7 @@ export function hasPropSatisfying<
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj extends Record<AnyValidObjectKey, any>,
+  Obj extends GenericObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -65,7 +64,7 @@ export function hasPropSatisfying(...args: Array<any>): any {
 }
 
 function hasPropSatisfyingImpl<
-  Obj extends Record<AnyValidObjectKey, any>,
+  Obj extends GenericObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
