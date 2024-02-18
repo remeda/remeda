@@ -2,7 +2,7 @@ import { Narrow } from './_narrow';
 import { purry } from './purry';
 
 /**
- * Returns a function that determines if a value is _shallowly_ equal to the specified value using Object.is equality,
+ * Determines if a value is _shallowly_ equal to the specified value using Object.is equality,
  * and narrows the type of the value to match.
  *
  * @param specificValue the to compare to. This type should be narrower than the type being passed into the returned function.
