@@ -6,6 +6,8 @@ import {
 } from './_objectProps';
 import { hasProp } from './hasProp';
 
+type AnyValidObjectKey = string | number | symbol;
+
 /**
  * Determines if an object or array has a property with the specified key that satisfies the predicate.
  * Will first check if the property exists, then if it is not undefined,
@@ -24,7 +26,7 @@ import { hasProp } from './hasProp';
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj,
+  Obj extends Record<AnyValidObjectKey, any>,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -49,7 +51,7 @@ export function hasPropSatisfying<
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj,
+  Obj extends Record<AnyValidObjectKey, any>,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -63,7 +65,7 @@ export function hasPropSatisfying(...args: Array<any>): any {
 }
 
 function hasPropSatisfyingImpl<
-  Obj extends object,
+  Obj extends Record<AnyValidObjectKey, any>,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(

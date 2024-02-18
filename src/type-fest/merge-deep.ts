@@ -8,7 +8,7 @@ type UnknownRecord = Record<string, unknown>;
 /**
 Deeply simplifies an object excluding iterables and functions. Used internally to improve the UX and accept both interfaces and type aliases as inputs.
 */
-type SimplifyDeep<Type> = ConditionalSimplifyDeep<
+export type SimplifyDeep<Type> = ConditionalSimplifyDeep<
   Type,
   Function | Iterable<unknown>,
   object
