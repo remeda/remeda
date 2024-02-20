@@ -6,7 +6,14 @@ module.exports = tseslint.config(
     ignores: ['dist', 'docs'],
   },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+      },
+    },
+  },
   {
     linterOptions: {
       reportUnusedDisableDirectives: true,
@@ -52,6 +59,14 @@ module.exports = tseslint.config(
       // again, go over all the non-null-assertions, and see which ones are due to
       // a for loop which could use `Array.prototype.entries` instead.
       '@typescript-eslint/no-non-null-assertion': 'off',
+
+      // When our return type is just `undefined` (like `first([])`) this rule
+      // considers the function as returning `void` (which is technically
+      // correct because assigning a void function to a variable will result in
+      // `undefined`), but this is not an error, it's by design. I don't know
+      // what this rule expects us to do in those cases so turning it off for
+      // now instead...
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
   {
