@@ -31,10 +31,6 @@ module.exports = tseslint.config(
         },
       ],
 
-      // TODO: There are a ton of `any` throughout the codebase, they should be
-      // replaced by `unknown` or better types.
-      '@typescript-eslint/no-explicit-any': 'off',
-
       // TODO: A lot of related typing issues arise from the fact that `any` is
       // used throughout the codebase.
       '@typescript-eslint/no-unsafe-argument': 'off',
