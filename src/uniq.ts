@@ -32,8 +32,8 @@ function _uniq<T>(array: Array<T>) {
 
 export namespace uniq {
   export function lazy() {
-    const set = new Set<any>();
-    return (value: any): LazyResult<any> => {
+    const set = new Set<unknown>();
+    return (value: unknown): LazyResult<unknown> => {
       if (set.has(value)) {
         return {
           done: false,
