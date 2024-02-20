@@ -11,8 +11,8 @@ describe('data first', () => {
     expect(result).toStrictEqual({ A: 3, B: 4 });
   });
   test('allow undefined or null', () => {
-    expect(pickBy(undefined as any, (_, key) => key === 'foo')).toEqual({});
-    expect(pickBy(null as any, (_, key) => key === 'foo')).toEqual({});
+    expect(pickBy(undefined as unknown, (_, key) => key === 'foo')).toEqual({});
+    expect(pickBy(null as unknown, (_, key) => key === 'foo')).toEqual({});
   });
   test('allow partial type', () => {
     const result = pickBy(
