@@ -3,5 +3,6 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.ts": "${capture}.test.ts"
-  }
+  },
+  "eslint.experimental.useFlatConfig": true
 }
