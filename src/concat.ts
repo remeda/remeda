@@ -34,6 +34,6 @@ export function concat() {
   return purry(_concat, arguments);
 }
 
-function _concat(arr1: Array<any>, arr2: Array<any>) {
+function _concat(arr1: ReadonlyArray<unknown>, arr2: ReadonlyArray<unknown>) {
   return arr1.concat(arr2);
 }

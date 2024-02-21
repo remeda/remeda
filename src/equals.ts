@@ -18,7 +18,7 @@ const keyList = Object.keys;
  * @dataFirst
  * @category Object
  */
-export function equals(a: any, b: any): boolean;
+export function equals(a: unknown, b: unknown): boolean;
 
 /**
  * Returns true if its arguments are equivalent, false otherwise.
@@ -34,13 +34,13 @@ export function equals(a: any, b: any): boolean;
  * @dataLast
  * @category Object
  */
-export function equals(a: any): (b: any) => boolean;
+export function equals(a: unknown): (b: unknown) => boolean;
 
 export function equals() {
   return purry(_equals, arguments);
 }
 
-function _equals(a: any, b: any) {
+function _equals(a: unknown, b: unknown) {
   if (a === b) {
     return true;
   }
@@ -102,6 +102,7 @@ function _equals(a: any, b: any) {
 
     for (i = length; i-- !== 0; ) {
       key = keys[i]!;
+      // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
       if (!equals(a[key], b[key])) {
         return false;
       }
