@@ -33,8 +33,6 @@ module.exports = tseslint.config(
 
       // TODO: A lot of related typing issues arise from the fact that `any` is
       // used throughout the codebase.
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
