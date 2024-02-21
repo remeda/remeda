@@ -1,7 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
   TestClass,
-  typesDataProvider,
 } from '../test/types_data_provider';
 import { isPlainObject } from './isPlainObject';
 
@@ -58,14 +59,14 @@ describe('typing', () => {
   });
 
   test('should work as type guard', () => {
-    const data = typesDataProvider('object');
+    const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
     if (isPlainObject(data)) {
-      expectTypeOf(data).toEqualTypeOf<{ a: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ readonly a: 'asd' }>();
     }
   });
 
   test('should work even if data type is unknown', () => {
-    const data: unknown = typesDataProvider('object');
+    const data = TYPES_DATA_PROVIDER.object as unknown;
     if (isPlainObject(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, unknown>>();
     }
@@ -73,12 +74,12 @@ describe('typing', () => {
 
   test('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isPlainObject);
-    expectTypeOf(data).toEqualTypeOf<Array<{ a: string }>>();
+    expectTypeOf(data).toEqualTypeOf<Array<{ readonly a: 'asd' }>>();
   });
 
   test('Can narrow down `any`', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Explicitly testing `any`
-    const data: any = { hello: 'world' };
+    const data = { hello: 'world' } as any;
     if (isPlainObject(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, unknown>>();
     }
