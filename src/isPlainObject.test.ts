@@ -75,4 +75,12 @@ describe('typing', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isPlainObject);
     expectTypeOf(data).toEqualTypeOf<Array<{ a: string }>>();
   });
+
+  test('Can narrow down `any`', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Explicitly testing `any`
+    const data: any = { hello: 'world' };
+    if (isPlainObject(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, unknown>>();
+    }
+  });
 });

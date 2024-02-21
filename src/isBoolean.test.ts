@@ -6,19 +6,20 @@ describe('isBoolean', () => {
     const data = typesDataProvider('boolean');
     if (isBoolean(data)) {
       expect(typeof data).toEqual('boolean');
-      assertType<boolean>(data);
+      expectTypeOf(data).toEqualTypeOf<boolean>();
     }
 
     const data1: unknown = typesDataProvider('boolean');
     if (isBoolean(data1)) {
       expect(typeof data1).toEqual('boolean');
-      assertType<boolean>(data1);
+      expectTypeOf(data1).toEqualTypeOf<boolean>();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We are explicitly testing the `any` case here
     const data2: any = typesDataProvider('boolean');
     if (isBoolean(data2)) {
       expect(typeof data2).toEqual('boolean');
-      assertType<boolean>(data2);
+      expectTypeOf(data2).toEqualTypeOf<boolean>();
     }
   });
   test('isBoolean: should work as type guard in filter', () => {
@@ -31,6 +32,6 @@ describe('isBoolean', () => {
       typesDataProvider('boolean'),
     ].filter(isBoolean);
     expect(data.every(c => typeof c === 'boolean')).toEqual(true);
-    assertType<Array<boolean>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<boolean>>();
   });
 });

@@ -1,6 +1,5 @@
-/* eslint @typescript-eslint/ban-types: ["error",{types:{Function: false},extendDefaults:true}] --
- * Function is used generically in this file to define any type of function, so
- * this lint error is not relevant for it.
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any --
+ * This function is deprecated so it doesn't matter that it uses bad types.
  */
 type DefinitelyObject<T> =
   Exclude<

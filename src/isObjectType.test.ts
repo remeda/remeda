@@ -119,4 +119,12 @@ describe('typing', () => {
       >
     >();
   });
+
+  test('Can narrow down `any`', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Explicitly testing `any`
+    const data: any = { hello: 'world' };
+    if (isObjectType(data)) {
+      expectTypeOf(data).toEqualTypeOf<object>();
+    }
+  });
 });
