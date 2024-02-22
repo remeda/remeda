@@ -1,24 +1,22 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isNil } from './isNil';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isNil', () => {
-  test('isNil: should work as type guard', () => {
-    const data = typesDataProvider('null');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.null as AllTypesDataProviderTypes;
     if (isNil(data)) {
       expect(data).toEqual(null);
-      assertType<undefined | null>(data);
+      expectTypeOf(data).toEqualTypeOf<null | undefined>();
     }
   });
-  test('isNil: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-    ].filter(isNil);
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNil);
     expect(data.every(c => c == null)).toEqual(true);
-    assertType<Array<undefined | null>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<undefined | null>>();
   });
 });

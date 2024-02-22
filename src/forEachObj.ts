@@ -1,11 +1,10 @@
 import { purry } from './purry';
 
-type IndexedIteratee<T extends Record<PropertyKey, any>, K extends keyof T> = (
-  value: T[K],
-  key: K,
-  obj: T
-) => void;
-type UnindexedIteratee<T extends Record<PropertyKey, any>> = (
+type IndexedIteratee<
+  T extends Record<PropertyKey, unknown>,
+  K extends keyof T,
+> = (value: T[K], key: K, obj: T) => void;
+type UnindexedIteratee<T extends Record<PropertyKey, unknown>> = (
   value: T[keyof T]
 ) => void;
 
@@ -26,7 +25,7 @@ type UnindexedIteratee<T extends Record<PropertyKey, any>> = (
  * @dataFirst
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, any>>(
+export function forEachObj<T extends Record<PropertyKey, unknown>>(
   object: T,
   fn: UnindexedIteratee<T>
 ): T;
@@ -48,7 +47,7 @@ export function forEachObj<T extends Record<PropertyKey, any>>(
  * @dataLast
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, any>>(
+export function forEachObj<T extends Record<PropertyKey, unknown>>(
   fn: UnindexedIteratee<T>
 ): (object: T) => T;
 
@@ -58,23 +57,30 @@ export function forEachObj() {
 
 const _forEachObj =
   (indexed: boolean) =>
-  (object: any, fn: (value: any, key?: any, obj?: any) => void) => {
-    for (const key in object) {
-      if (Object.prototype.hasOwnProperty.call(object, key)) {
-        const val = object[key];
-        if (indexed) fn(val, key, object);
+  <T extends Record<PropertyKey, unknown>>(
+    data: T,
+    fn: (
+      value: T[Extract<keyof T, string>],
+      key?: Extract<keyof T, string>,
+      obj?: T
+    ) => void
+  ) => {
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        const val = data[key];
+        if (indexed) fn(val, key, data);
         else fn(val);
       }
     }
-    return object;
+    return data;
   };
 
 export namespace forEachObj {
-  export function indexed<T extends Record<PropertyKey, any>>(
+  export function indexed<T extends Record<PropertyKey, unknown>>(
     object: T,
     fn: IndexedIteratee<T, keyof T>
   ): T;
-  export function indexed<T extends Record<PropertyKey, any>>(
+  export function indexed<T extends Record<PropertyKey, unknown>>(
     fn: IndexedIteratee<T, keyof T>
   ): (object: T) => T;
   export function indexed() {

@@ -49,13 +49,17 @@ export function uniqWith() {
   return purry(_uniqWith, arguments, uniqWith.lazy);
 }
 
-function _uniqWith<T>(array: Array<T>, isEquals: IsEquals<T>) {
+function _uniqWith<T>(array: ReadonlyArray<T>, isEquals: IsEquals<T>) {
   const lazy = uniqWith.lazy(isEquals);
   return _reduceLazy(array, lazy, true);
 }
 
 function _lazy<T>(isEquals: IsEquals<T>) {
-  return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+  return (
+    value: T,
+    index?: number,
+    array?: ReadonlyArray<T>
+  ): LazyResult<T> => {
     if (
       array &&
       array.findIndex(otherValue => isEquals(value, otherValue)) === index

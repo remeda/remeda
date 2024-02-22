@@ -1,7 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
   TestClass,
-  typesDataProvider,
 } from '../test/types_data_provider';
 import { isObjectType } from './isObjectType';
 
@@ -73,13 +74,13 @@ describe('typing', () => {
     }
   });
 
-  test('isObjectType: should work as type guard', () => {
-    const data = typesDataProvider('object');
+  test('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
     if (isObjectType(data)) {
       expectTypeOf(data).toEqualTypeOf<
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -94,29 +95,37 @@ describe('typing', () => {
   });
 
   test('should work even if data type is unknown', () => {
-    const data: unknown = typesDataProvider('object');
+    const data = TYPES_DATA_PROVIDER.object as unknown;
     if (isObjectType(data)) {
       expectTypeOf(data).toEqualTypeOf<object>();
     }
   });
 
-  test('isObjectType: should work as type guard in filter', () => {
+  test('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | RegExp
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
-        | Promise<number>
-        | TestClass
-        | Set<string>
         | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
         | Uint8Array
       >
     >();
+  });
+
+  test('Can narrow down `any`', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Explicitly testing `any`
+    const data = { hello: 'world' } as any;
+    if (isObjectType(data)) {
+      expectTypeOf(data).toEqualTypeOf<object>();
+    }
   });
 });

@@ -1,9 +1,4 @@
-type DefinitelyBoolean<T> =
-  Extract<T, boolean> extends never
-    ? boolean
-    : Extract<T, boolean> extends any
-      ? boolean
-      : Extract<T, number>;
+import type { NarrowedTo } from './_types';
 
 /**
  * A function that checks if the passed parameter is a boolean and narrows its type accordingly
@@ -17,7 +12,8 @@ type DefinitelyBoolean<T> =
  *    R.isBoolean('somethingElse') //=> false
  * @category Guard
  */
-
-export function isBoolean<T>(data: T | boolean): data is DefinitelyBoolean<T> {
+export function isBoolean<T>(
+  data: T | boolean
+): data is NarrowedTo<T, boolean> {
   return typeof data === 'boolean';
 }

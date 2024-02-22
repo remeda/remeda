@@ -31,7 +31,7 @@ export function set() {
   return purry(_set, arguments);
 }
 
-function _set(obj: any, prop: string, value: any) {
+function _set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
   return {
     ...obj,
     [prop]: value,

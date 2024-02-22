@@ -1,3 +1,4 @@
+import { keys } from './keys';
 import { purry } from './purry';
 
 /**
@@ -32,11 +33,14 @@ export function pickBy() {
   return purry(_pickBy, arguments);
 }
 
-function _pickBy(object: any, fn: (value: any, key: any) => boolean) {
+function _pickBy<T>(
+  object: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): Partial<T> {
   if (object == null) {
     return {};
   }
-  return Object.keys(object).reduce<any>((acc, key) => {
+  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
     if (fn(object[key], key)) {
       acc[key] = object[key];
     }

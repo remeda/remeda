@@ -5,7 +5,11 @@
  */
 export function purryOn<T>(
   isArg: (firstArg: unknown) => firstArg is T,
-  implementation: (firstArg: T, ...args: Array<any>) => unknown,
+  implementation: (
+    firstArg: T,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
+    ...args: Array<any>
+  ) => unknown,
   args: IArguments
 ): unknown {
   const callArgs = Array.from(args);

@@ -18,6 +18,6 @@ export function mergeAll<A, B, C, D, E>(
 ): A & B & C & D & E;
 export function mergeAll(array: ReadonlyArray<object>): object;
 
-export function mergeAll(items: ReadonlyArray<any>) {
+export function mergeAll(items: ReadonlyArray<object>) {
   return items.reduce((acc, x) => ({ ...acc, ...x }), {});
 }
