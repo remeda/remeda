@@ -1,9 +1,11 @@
+import type { IsAny } from './type-fest/is-any';
+
 export type Pred<T, K> = (input: T) => K;
 export type PredIndexed<T, K> = (input: T, index: number, array: Array<T>) => K;
 export type PredIndexedOptional<T, K> = (
   input: T,
   index?: number,
-  array?: Array<T>
+  array?: ReadonlyArray<T>
 ) => K;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
@@ -45,7 +47,11 @@ export type ReadonlyTuple<
  *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
  */
 export type NarrowedTo<T, Base> =
-  Extract<T, Base> extends never ? Base : Extract<T, Base>;
+  Extract<T, Base> extends never
+    ? Base
+    : IsAny<T> extends true
+      ? Base
+      : Extract<T, Base>;
 
 type BuildTupleHelper<
   Element,

@@ -33,7 +33,7 @@ type NarrowRaw<A> =
   | (A extends [] ? [] : never)
   | (A extends Narrowable ? A : never)
   | {
-      [K in keyof A]: A[K] extends (...args: Array<any>) => any
+      [K in keyof A]: A[K] extends (...args: Array<unknown>) => unknown
         ? A[K]
         : NarrowRaw<A[K]>;
     };

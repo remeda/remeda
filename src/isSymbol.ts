@@ -1,9 +1,4 @@
-type DefinitelySymbol<T> =
-  Extract<T, string> extends never
-    ? symbol
-    : Extract<T, symbol> extends any
-      ? symbol
-      : Extract<T, symbol>;
+import type { NarrowedTo } from './_types';
 
 /**
  * A function that checks if the passed parameter is a symbol and narrows its type accordingly
@@ -16,6 +11,6 @@ type DefinitelySymbol<T> =
  *    R.isSymbol(1) //=> false
  * @category Guard
  */
-export function isSymbol<T>(data: T | symbol): data is DefinitelySymbol<T> {
+export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {
   return typeof data === 'symbol';
 }

@@ -1,17 +1,22 @@
-import { typesDataProvider, type TestClass } from '../test/types_data_provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+  TestClass,
+} from '../test/types_data_provider';
 import { isNot } from './isNot';
 import { isPromise } from './isPromise';
 import { isString } from './isString';
 
 describe('isNot', () => {
-  test('isNot: should work as type guard', () => {
-    const data = typesDataProvider('promise');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
-      assertType<
+      expectTypeOf(data).toEqualTypeOf<
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | boolean
         | Date
@@ -29,21 +34,15 @@ describe('isNot', () => {
       >(data);
     }
   });
-  test('isNot: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('promise'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-    ];
-    const result = data.filter(isNot(isPromise));
-    expect(result.some(c => c instanceof Promise)).toEqual(false);
 
-    assertType<
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
+    expect(data.some(c => c instanceof Promise)).toEqual(false);
+    expectTypeOf(data).toEqualTypeOf<
       Array<
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | boolean
         | Date
@@ -59,6 +58,6 @@ describe('isNot', () => {
         | Uint8Array
         | undefined
       >
-    >(result);
+    >();
   });
 });
