@@ -1,7 +1,6 @@
 import { Simplify } from './type-fest/simplify';
 
-export type AnyValidObjectKey = string | number | symbol;
-export type GenericObject = Record<AnyValidObjectKey, unknown>;
+export type PlainObject = Record<PropertyKey, unknown>;
 
 export type AllUnionKeys<Union> = Union extends Union ? keyof Union : never;
 
@@ -17,13 +16,13 @@ type MakeKeyRequired<Obj, Prop extends keyof Obj> = Omit<Obj, Prop> & {
   [key in Prop]-?: Exclude<Obj[key], undefined>;
 };
 
-type UnionMemebersWithProp<Obj, Prop extends keyof Obj> = Extract<
+type UnionMembersWithProp<Obj, Prop extends keyof Obj> = Extract<
   Obj,
   { [key in Prop]?: any }
 >;
 
 export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> = Simplify<
-  MakeKeyRequired<UnionMemebersWithProp<Obj, Prop>, Prop>
+  MakeKeyRequired<UnionMembersWithProp<Obj, Prop>, Prop>
 >;
 
 type ReplaceProp<Obj, Prop extends keyof Obj, NewType> = Omit<Obj, Prop> & {
@@ -34,7 +33,7 @@ export type WithPropOfType<
   Obj,
   Prop extends AllUnionKeys<Obj>,
   PropType extends AllPossiblePropValues<Obj, Prop>,
-> = Simplify<ReplaceProp<UnionMemebersWithProp<Obj, Prop>, Prop, PropType>>;
+> = Simplify<ReplaceProp<UnionMembersWithProp<Obj, Prop>, Prop, PropType>>;
 
 export type AllPossiblePropValues<
   Obj,

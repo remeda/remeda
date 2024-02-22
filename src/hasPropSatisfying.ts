@@ -3,7 +3,7 @@ import {
   AllUnionKeys,
   WithPropOfType,
   AllPossiblePropValues,
-  GenericObject,
+  PlainObject,
   EnsureExtends,
 } from './_objectProps';
 import { hasProp } from './hasProp';
@@ -26,7 +26,7 @@ import { hasProp } from './hasProp';
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj extends GenericObject,
+  Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -53,7 +53,7 @@ export function hasPropSatisfying<
  * @category Guard
  */
 export function hasPropSatisfying<
-  Obj extends GenericObject,
+  Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
@@ -67,7 +67,7 @@ export function hasPropSatisfying(...args: Array<any>): any {
 }
 
 function hasPropSatisfyingImpl<
-  Obj extends GenericObject,
+  Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(

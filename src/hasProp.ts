@@ -2,7 +2,7 @@ import { purry } from './purry';
 import {
   AllUnionKeys,
   EnsureExtends,
-  GenericObject,
+  PlainObject,
   WithRequiredProp,
 } from './_objectProps';
 
@@ -26,7 +26,7 @@ import {
  * @category Guard
  */
 export function hasProp<
-  Obj extends GenericObject,
+  Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
 >(
   key: Prop
@@ -49,7 +49,7 @@ export function hasProp<
  * @category Guard
  */
 export function hasProp<
-  Obj extends GenericObject,
+  Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
 >(obj: Obj, key: Prop): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>>;
 
