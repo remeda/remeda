@@ -37,7 +37,10 @@ export function splitWhen() {
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
   for (let i = 0; i < array.length; i++) {
-    if (fn(array[i])) {
+    // TODO: Use `Array.prototype.entries` once we bump our TS target so we
+    // can get both the index and the item at the same time, and don't need
+    // the non-null assertion.
+    if (fn(array[i]!)) {
       return splitAt(array, i);
     }
   }

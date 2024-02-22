@@ -45,7 +45,10 @@ type Evolver<T> = T extends object
 type Evolved<T, E> = T extends object
   ? {
       -readonly [K in keyof T]: K extends keyof E
-        ? E[K] extends (...arg: any) => infer R
+        ? E[K] extends (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Functions aren't inferred correctly when using `unknown` for the params.
+            ...arg: any
+          ) => infer R
           ? R
           : Evolved<T[K], E[K]>
         : Required<T>[K];

@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any --
+ * Function inference doesn't work when `unknown` is used as the parameters
+ * generic type, it **has** to be `any`.
+ */
+
 type Debouncer<
   F extends (...args: any) => unknown,
   IsNullable extends boolean = true,

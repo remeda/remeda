@@ -59,11 +59,7 @@ describe('data first', () => {
   });
 
   it('ignores undefined transformations', function () {
-    const evolver = { n: undefined };
-    const data: { n: number } = { n: 0 };
-    const expected = { n: 0 };
-    const result = evolve(data, evolver);
-    expect(result).toEqual(expected);
+    expect(evolve({ n: 0 }, {})).toEqual({ n: 0 });
   });
 
   it('can handle data that is complex nested objects', function () {
@@ -145,10 +141,8 @@ describe('data last', () => {
   });
 
   it('ignores undefined transformations', function () {
-    const evolver = { n: undefined };
-    const data = { n: 0 };
     const expected = { n: 0 };
-    const result = pipe(data, evolve(evolver));
+    const result = pipe({ n: 0 }, evolve({}));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
@@ -277,8 +271,8 @@ describe('typing', () => {
           arg2arg3Optional: 1,
         },
         {
-          arg2Optional: (arg1: number, arg2?: number) => arg2 === undefined,
-          arg2arg3Optional: (arg1: number, arg2?: number, arg3?: number) =>
+          arg2Optional: (_: number, arg2?: number) => arg2 === undefined,
+          arg2arg3Optional: (_: number, arg2?: number, arg3?: number) =>
             arg2 === undefined && arg3 === undefined,
         }
       );
@@ -372,8 +366,8 @@ describe('typing', () => {
           arg2arg3Optional: 1,
         },
         evolve({
-          arg2Optional: (arg1: number, arg2?: number) => arg2 === undefined,
-          arg2arg3Optional: (arg1: number, arg2?: number, arg3?: string) =>
+          arg2Optional: (_: number, arg2?: number) => arg2 === undefined,
+          arg2arg3Optional: (_: number, arg2?: number, arg3?: string) =>
             arg2 === undefined && arg3 === undefined,
         })
       );

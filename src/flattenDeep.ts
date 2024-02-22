@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 

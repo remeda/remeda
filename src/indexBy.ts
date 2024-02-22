@@ -20,7 +20,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  */
 export function indexBy<T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => any
+  fn: (item: T) => unknown
 ): Record<string, T>;
 
 /**
@@ -48,7 +48,7 @@ export function indexBy<T>(
  * @strict
  */
 export function indexBy<T>(
-  fn: (item: T) => any
+  fn: (item: T) => unknown
 ): (array: ReadonlyArray<T>) => Record<string, T>;
 
 export function indexBy() {
@@ -57,7 +57,7 @@ export function indexBy() {
 
 const _indexBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) => {
     return array.reduce<Record<string, T>>((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
@@ -93,10 +93,10 @@ const _indexByStrict = <K extends PropertyKey, T>(
 export namespace indexBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, any>
+    fn: PredIndexed<T, unknown>
   ): Record<string, T>;
   export function indexed<T>(
-    fn: PredIndexed<T, any>
+    fn: PredIndexed<T, unknown>
   ): (array: ReadonlyArray<T>) => Record<string, T>;
   export function indexed() {
     return purry(_indexBy(true), arguments);

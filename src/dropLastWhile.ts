@@ -45,7 +45,7 @@ function _dropLastWhile<T>(
   predicate: (item: T) => boolean
 ): Array<T> {
   for (let i = data.length - 1; i >= 0; i--) {
-    if (!predicate(data[i])) {
+    if (!predicate(data[i]!)) {
       return data.slice(0, i + 1);
     }
   }

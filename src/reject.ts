@@ -48,7 +48,7 @@ export function reject() {
 
 const _reject =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     return _reduceLazy(
       array,
       indexed ? reject.lazyIndexed(fn) : reject.lazy(fn),
@@ -59,7 +59,11 @@ const _reject =
 const _lazy =
   (indexed: boolean) =>
   <T>(fn: PredIndexedOptional<T, boolean>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+    return (
+      value: T,
+      index?: number,
+      array?: ReadonlyArray<T>
+    ): LazyResult<T> => {
       const valid = indexed ? fn(value, index, array) : fn(value);
       if (!valid) {
         return {

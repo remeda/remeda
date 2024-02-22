@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
 import { type } from './type';

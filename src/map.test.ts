@@ -10,7 +10,7 @@ describe('data_first', () => {
     expect(result).toEqual([2, 4, 6]);
   });
   it('map.indexed', () => {
-    const result = map.indexed([0, 0, 0] as const, (x, i) => i);
+    const result = map.indexed([0, 0, 0] as const, (_, i) => i);
     expect(result).toEqual([0, 1, 2]);
   });
 });
@@ -26,7 +26,7 @@ describe('data_last', () => {
   it('map.indexed', () => {
     const result = pipe(
       [0, 0, 0] as const,
-      map.indexed((x, i) => i)
+      map.indexed((_, i) => i)
     );
     expect(result).toEqual([0, 1, 2]);
   });
@@ -51,7 +51,7 @@ describe('pipe', () => {
     const count = vi.fn();
     const result = pipe(
       [0, 0, 0] as const,
-      map.indexed((x, i) => {
+      map.indexed((_, i) => {
         count();
         return i;
       }),

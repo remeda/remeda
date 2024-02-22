@@ -21,7 +21,7 @@ import { purry } from './purry';
  * @indexed
  * @category Array
  */
-export function flatMapToObj<T, K extends keyof any, V>(
+export function flatMapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
   fn: (element: T) => Array<[K, V]>
 ): Record<K, V>;
@@ -49,7 +49,7 @@ export function flatMapToObj<T, K extends keyof any, V>(
  * @indexed
  * @category Array
  */
-export function flatMapToObj<T, K extends keyof any, V>(
+export function flatMapToObj<T, K extends PropertyKey, V>(
   fn: (element: T) => Array<[K, V]>
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
@@ -59,22 +59,31 @@ export function flatMapToObj() {
 
 const _flatMapToObj =
   (indexed: boolean) =>
-  (array: Array<any>, fn: PredIndexedOptional<any, any>) => {
-    return array.reduce((result, element, index) => {
-      const items = indexed ? fn(element, index, array) : fn(element);
-      items.forEach(([key, value]: [any, any]) => {
-        result[key] = value;
-      });
-      return result;
-    }, {});
+  <T>(
+    array: ReadonlyArray<T>,
+    fn: PredIndexedOptional<
+      T,
+      ReadonlyArray<[key: PropertyKey, value: unknown]>
+    >
+  ) => {
+    return array.reduce<Record<PropertyKey, unknown>>(
+      (result, element, index) => {
+        const items = indexed ? fn(element, index, array) : fn(element);
+        items.forEach(([key, value]) => {
+          result[key] = value;
+        });
+        return result;
+      },
+      {}
+    );
   };
 
 export namespace flatMapToObj {
-  export function indexed<T, K extends keyof any, V>(
+  export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
   ): Record<K, V>;
-  export function indexed<T, K extends keyof any, V>(
+  export function indexed<T, K extends PropertyKey, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
   ): (array: ReadonlyArray<T>) => Record<K, V>;
   export function indexed() {

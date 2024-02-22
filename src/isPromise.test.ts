@@ -1,21 +1,21 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isPromise } from './isPromise';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isPromise', () => {
-  test('isPromise: should work as type guard', () => {
-    const data = typesDataProvider('promise');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isPromise(data)) {
       expect(data instanceof Promise).toEqual(true);
-      assertType<Promise<number>>(data);
+      expectTypeOf(data).toEqualTypeOf<Promise<number>>();
     }
   });
-  test('isPromise: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('promise'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-    ].filter(isPromise);
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isPromise);
     expect(data.every(c => c instanceof Promise)).toEqual(true);
     assertType<Array<Promise<number>>>(data);
   });
