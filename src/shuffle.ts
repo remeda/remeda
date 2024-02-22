@@ -31,8 +31,8 @@ function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {
   const result = items.slice();
   for (let index = 0; index < items.length; index += 1) {
     const rand = index + Math.floor(Math.random() * (items.length - index));
-    const value = result[rand];
-    result[rand] = result[index];
+    const value = result[rand]!;
+    result[rand] = result[index]!;
     result[index] = value;
   }
   return result;

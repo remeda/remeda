@@ -4,6 +4,7 @@
 
 import { swapInPlace } from './_swapInPlace';
 import type { CompareFunction } from './_types';
+import { hasAtLeast } from './hasAtLeast';
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
@@ -40,6 +41,10 @@ export function heapMaybeInsert<T>(
   compareFn: CompareFunction<T>,
   item: T
 ): T | undefined {
+  if (!hasAtLeast(heap, 1)) {
+    return;
+  }
+
   const head = heap[0];
 
   if (compareFn(item, head) >= 0) {
@@ -69,7 +74,7 @@ function heapSiftDown<T>(
     const firstChildIndex = currentIndex * 2 + 1;
 
     let swapIndex =
-      compareFn(heap[currentIndex], heap[firstChildIndex]) < 0
+      compareFn(heap[currentIndex]!, heap[firstChildIndex]!) < 0
         ? // Is the parent "smaller" (in regards to `compareFn`) to its child?
           firstChildIndex
         : currentIndex;
@@ -77,7 +82,7 @@ function heapSiftDown<T>(
     const secondChildIndex = firstChildIndex + 1;
     if (
       secondChildIndex < heap.length &&
-      compareFn(heap[swapIndex], heap[secondChildIndex]) < 0
+      compareFn(heap[swapIndex]!, heap[secondChildIndex]!) < 0
     ) {
       // Is there a second child? Is it the smallest of the three?
       swapIndex = secondChildIndex;

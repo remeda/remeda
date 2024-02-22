@@ -1,5 +1,5 @@
+import { Pred, PredIndexed, PredIndexedOptional } from './_types';
 import { purry } from './purry';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
 
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined
@@ -55,10 +55,11 @@ const _findLast =
   (indexed: boolean) =>
   <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
-      if (indexed ? fn(array[i], i, array) : fn(array[i])) {
+      if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return array[i];
       }
     }
+    return undefined;
   };
 
 export namespace findLast {

@@ -45,7 +45,7 @@ function _dropWhile<T>(
   predicate: (item: T) => boolean
 ): Array<T> {
   for (let i = 0; i < data.length; i++) {
-    if (!predicate(data[i])) {
+    if (!predicate(data[i]!)) {
       return data.slice(i);
     }
   }

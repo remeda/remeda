@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Creates a function with `data-first` and `data-last` signatures.
  *

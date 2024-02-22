@@ -1,29 +1,29 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isDate } from './isDate';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isDate', () => {
-  test('isDate: should work as type guard', () => {
-    const data = typesDataProvider('date');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isDate(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<Date>(data);
-    }
-
-    const data1: unknown = typesDataProvider('date');
-    if (isDate(data1)) {
-      assertType<Date>(data1);
+      expectTypeOf(data).toEqualTypeOf<Date>();
     }
   });
-  test('isDate: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-      typesDataProvider('date'),
-    ].filter(isDate);
+
+  it('should narrow `unknown`', () => {
+    const data = TYPES_DATA_PROVIDER.date as unknown;
+    if (isDate(data)) {
+      expectTypeOf(data).toEqualTypeOf<Date>();
+    }
+  });
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isDate);
     expect(data.every(c => c instanceof Date)).toEqual(true);
-    assertType<Array<Date>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<Date>>();
   });
 });

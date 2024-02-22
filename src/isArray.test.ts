@@ -1,37 +1,43 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isArray } from './isArray';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isArray', () => {
-  test('isArray: should infer ReadonlyArray<unknown> when given any', () => {
-    const data1: any = [];
-    if (isArray(data1)) {
-      expectTypeOf(data1).not.toBeAny();
-      expectTypeOf(data1[0]).toBeUnknown();
+  it('should infer ReadonlyArray<unknown> when given any', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- explicitly testing `any`
+    const data = [] as any;
+    if (isArray(data)) {
+      expectTypeOf(data).not.toBeAny();
+      expectTypeOf(data[0]).toBeUnknown();
     }
   });
-  test('isArray: should work as type guard', () => {
-    const data = typesDataProvider('array');
+
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.array as AllTypesDataProviderTypes;
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
-      assertType<Array<number>>(data);
-    }
-
-    const data1: unknown = typesDataProvider('array');
-    if (isArray(data1)) {
-      assertType<ReadonlyArray<unknown>>(data1);
+      expectTypeOf(data).toEqualTypeOf<
+        Array<number> | [number, number, number]
+      >();
     }
   });
-  test('isArray: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('array'),
-      typesDataProvider('date'),
-    ].filter(isArray);
+
+  it('should infer ReadonlyArray<unknown> when given `unknown`', () => {
+    const data = TYPES_DATA_PROVIDER.array as unknown;
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<unknown>>();
+    }
+  });
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
     expect(data.every(c => Array.isArray(c))).toEqual(true);
-    assertType<Array<Array<number>>>(data);
+    expectTypeOf(data).toEqualTypeOf<
+      Array<Array<number> | [number, number, number]>
+    >();
   });
 });
 

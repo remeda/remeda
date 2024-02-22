@@ -1,31 +1,29 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isError } from './isError';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isError', () => {
-  test('isError: should work as type guard', () => {
-    const data = typesDataProvider('error');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.error as AllTypesDataProviderTypes;
     if (isError(data)) {
       expect(data instanceof Error).toEqual(true);
-      assertType<Error>(data);
+      expectTypeOf(data).toEqualTypeOf<Error>();
     }
 
     class MyError extends Error {}
 
     let maybeError: MyError | undefined;
     if (isError(maybeError)) {
-      assertType<MyError>(maybeError);
+      expectTypeOf(maybeError).toEqualTypeOf<MyError>();
     }
   });
-  test('isError: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-      typesDataProvider('object'),
-      typesDataProvider('number'),
-    ].filter(isError);
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isError);
     expect(data.every(c => c instanceof Error)).toEqual(true);
-    assertType<Array<Error>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<Error>>();
   });
 });

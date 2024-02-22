@@ -1,15 +1,20 @@
-import { typesDataProvider, type TestClass } from '../test/types_data_provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+  TestClass,
+} from '../test/types_data_provider';
 import { isNonNull } from './isNonNull';
 
 describe('isNonNull', () => {
-  test('isNonNull": should work as type guard', () => {
-    const data = typesDataProvider('date');
+  test('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<
+      expectTypeOf(data).toEqualTypeOf<
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | boolean
         | Date
@@ -24,24 +29,17 @@ describe('isNonNull', () => {
         | TestClass
         | Uint8Array
         | undefined
-      >(data);
+      >();
     }
   });
-  test('isNonNull: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-      typesDataProvider('undefined'),
-    ].filter(isNonNull);
-    expect(data).toHaveLength(5);
-    assertType<
+  test('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
+    expect(data).toHaveLength(17);
+    expectTypeOf(data).toEqualTypeOf<
       Array<
         | (() => void)
         | [number, number, number]
-        | { a: string }
+        | { readonly a: 'asd' }
         | Array<number>
         | boolean
         | Date

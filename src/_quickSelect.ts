@@ -45,7 +45,7 @@ function quickSelectImplementation<T>(
   compareFn: CompareFunction<T>
 ): T {
   if (left === right) {
-    return data[left];
+    return data[left]!;
   }
 
   const pivotIndex = partition(data, left, right, compareFn);
@@ -53,7 +53,7 @@ function quickSelectImplementation<T>(
   return index === pivotIndex
     ? // Once a pivot is chosen it's location is final, so if it matches the
       // index we found out item!
-      data[index]
+      data[index]!
     : quickSelectImplementation(
         data,
         // We continue by recursing into the partition where index would be
@@ -70,11 +70,11 @@ function partition<T>(
   right: number,
   compareFn: CompareFunction<T>
 ): number {
-  const pivot = data[right];
+  const pivot = data[right]!;
 
   let i = left;
   for (let j = left; j < right; j++) {
-    if (compareFn(data[j], pivot) < 0) {
+    if (compareFn(data[j]!, pivot) < 0) {
       // Move items smaller then the pivot to the start of the array.
       swapInPlace(data, i, j);
       i++;

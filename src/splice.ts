@@ -45,12 +45,12 @@ export function splice() {
   return purry(_splice, arguments);
 }
 
-function _splice(
-  items: ReadonlyArray<any>,
+function _splice<T>(
+  items: ReadonlyArray<T>,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<any>
-): Array<any> {
+  replacement: ReadonlyArray<T>
+): Array<T> {
   const result = [...items];
   result.splice(start, deleteCount, ...replacement);
   return result;

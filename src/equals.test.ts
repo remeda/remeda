@@ -1,6 +1,6 @@
 import { equals } from './equals';
 
-const tests: any = [
+const tests = [
   {
     description: 'scalars',
     tests: [
@@ -392,9 +392,9 @@ function func2() {
 }
 
 describe('equal', () => {
-  tests.forEach((suite: any) => {
+  tests.forEach(suite => {
     describe(suite.description, () => {
-      suite.tests.forEach((test: any) => {
+      suite.tests.forEach(test => {
         it(test.description, () => {
           expect(equals(test.value1, test.value2)).toEqual(test.equal);
         });
