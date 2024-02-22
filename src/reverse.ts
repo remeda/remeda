@@ -43,6 +43,6 @@ export function reverse() {
   return purry(_reverse, arguments);
 }
 
-function _reverse(array: Array<any>) {
+function _reverse<T>(array: ReadonlyArray<T>): Array<T> {
   return array.slice().reverse();
 }

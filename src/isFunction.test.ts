@@ -1,30 +1,28 @@
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types_data_provider';
 import { isFunction } from './isFunction';
-import { typesDataProvider } from '../test/types_data_provider';
 
 describe('isFunction', () => {
-  test('isFunction: should work as type guard', () => {
-    const data = typesDataProvider('null');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.function as AllTypesDataProviderTypes;
     if (isFunction(data)) {
-      expect(data).toEqual(null);
-      assertType<() => void>(data);
+      expect(typeof data).toEqual('function');
+      expectTypeOf(data).toEqualTypeOf<() => void>();
     }
 
     let maybeFunction: string | ((a: number) => string) | undefined;
     if (isFunction(maybeFunction)) {
       maybeFunction(1);
-      assertType<(a: number) => string>(maybeFunction);
+      expectTypeOf(maybeFunction).toEqualTypeOf<(a: number) => string>();
     }
   });
-  test('isFunction: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('function'),
-      typesDataProvider('object'),
-      typesDataProvider('number'),
-    ].filter(isFunction);
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isFunction);
     expect(data.every(c => typeof c === 'function')).toEqual(true);
-    assertType<Array<() => void>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<() => void>>();
   });
 });

@@ -1,17 +1,18 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
-  typesDataProvider,
+  AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
   type TestClass,
 } from '../test/types_data_provider';
 import { isObject } from './isObject';
 
 describe('isObject', () => {
-  test('isObject: should work as type guard', () => {
-    const data = typesDataProvider('object');
+  test('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
-      assertType<
-        | { a: string }
+      expectTypeOf(data).toEqualTypeOf<
+        | { readonly a: 'asd' }
         | Date
         | Error
         | Map<string, string>
@@ -20,46 +21,42 @@ describe('isObject', () => {
         | Set<string>
         | TestClass
         | Uint8Array
-      >(data);
+      >();
     }
   });
 
-  test('isObject: should work as type guard', () => {
+  test('should work as type guard', () => {
     const data = { data: 5 } as ReadonlyArray<number> | { data: 5 };
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
-      assertType<{
-        data: 5;
-      }>(data);
+      expectTypeOf(data).toEqualTypeOf<{ data: 5 }>();
     }
   });
 
-  test('isObject: should work as type guard for more narrow types', () => {
+  test('should work as type guard for more narrow types', () => {
     const data = { data: 5 } as Array<number> | { data: number };
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
-      assertType<{
-        data: number;
-      }>(data);
+      expectTypeOf(data).toEqualTypeOf<{ data: number }>();
     }
   });
 
   test('should work even if data type is unknown', () => {
-    const data: unknown = typesDataProvider('object');
+    const data = TYPES_DATA_PROVIDER.object as unknown;
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
-      assertType<Record<string, unknown>>(data);
+      expectTypeOf(data).toEqualTypeOf<Record<string, unknown>>();
     }
   });
 
-  test('isObject: should work as type guard in filter', () => {
+  test('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isObject);
     expect(data.every(c => typeof c === 'object' && !Array.isArray(c))).toEqual(
       true
     );
-    assertType<
+    expectTypeOf(data).toEqualTypeOf<
       Array<
-        | { a: string }
+        | { readonly a: 'asd' }
         | Date
         | Error
         | Map<string, string>

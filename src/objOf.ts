@@ -29,6 +29,6 @@ export function objOf() {
   return purry(_objOf, arguments);
 }
 
-function _objOf(value: any, key: string) {
+function _objOf<T, K extends string>(value: T, key: K) {
   return { [key]: value };
 }

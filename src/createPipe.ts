@@ -58,6 +58,13 @@ export function createPipe<A, B, C, D, E, F, G, H>(
   op7: (input: G) => H
 ): (value: A) => H;
 
-export function createPipe(...operations: ReadonlyArray<(input: any) => any>) {
-  return (value: any) => (pipe as any)(value, ...operations);
+export function createPipe(
+  ...operations: ReadonlyArray<(input: unknown) => unknown>
+) {
+  return (value: unknown) =>
+    pipe(
+      value,
+      // @ts-expect-error [ts2556] - We can't avoid this error because pipe is typed for users and this is an internal function
+      ...operations
+    );
 }

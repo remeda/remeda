@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { purry } from './purry';
 import { Path, SupportsValueAtPath, ValueAtPath } from './_paths';
 import { Narrow } from './_narrow';

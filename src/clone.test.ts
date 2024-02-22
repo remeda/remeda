@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+
 import { clone } from './clone';
 
 const eq = (a: any, b: any) => {

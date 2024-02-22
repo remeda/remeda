@@ -9,7 +9,7 @@
 export function stringToPath<Path extends string>(
   path: Path
 ): StringToPath<Path> {
-  return _stringToPath(path) as any;
+  return _stringToPath(path) as StringToPath<Path>;
 }
 
 function _stringToPath(path: string): Array<string> {

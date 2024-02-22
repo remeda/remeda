@@ -75,7 +75,7 @@ export function partition() {
 
 const _partition =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     const ret: [Array<T>, Array<T>] = [[], []];
     array.forEach((item, index) => {
       const matches = indexed ? fn(item, index, array) : fn(item);

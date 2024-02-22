@@ -95,6 +95,7 @@ export function purryOrderRulesWithArgument(
   func: <T>(
     data: ReadonlyArray<T>,
     compareFn: CompareFunction<T>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
     arg: any
   ) => unknown,
   inputArgs: IArguments
