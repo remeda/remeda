@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- FIXME! */
 
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
