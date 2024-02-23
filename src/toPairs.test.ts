@@ -1,9 +1,16 @@
 import { toPairs } from './toPairs';
 
-describe('toPairs', () => {
-  test('should return pairs', () => {
-    const actual = toPairs({ a: 1, b: 2, c: 3 });
-    expect(actual).toEqual([
+describe('runtime', () => {
+  test('dataFirst', () => {
+    expect(toPairs({ a: 1, b: 2, c: 3 })).toEqual([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ]);
+  });
+
+  test('dataLast', () => {
+    expect(toPairs()({ a: 1, b: 2, c: 3 })).toEqual([
       ['a', 1],
       ['b', 2],
       ['c', 3],
