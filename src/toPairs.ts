@@ -56,5 +56,5 @@ type Strict = {
 };
 
 export namespace toPairs {
-  export const strict = toPairsImplementation as Strict;
+  export const strict = toPairs as Strict;
 }
