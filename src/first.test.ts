@@ -18,6 +18,18 @@ test('empty array', () => {
 });
 
 describe('pipe', () => {
+  test('as no-fn', () => {
+    const counter = createLazyInvocationCounter();
+    const result = pipe(
+      [1, 2, 3, 4, 5, 6] as const,
+      counter.fn(),
+      first,
+      x => x
+    );
+    expect(counter.count).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(1);
+  });
+
   test('as fn', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe([1, 2, 3, 4, 5, 6] as const, counter.fn(), first());

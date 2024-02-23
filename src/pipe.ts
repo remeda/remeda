@@ -252,7 +252,7 @@ type LazyOp = ((input: any) => any) & {
     indexed: boolean;
     single: boolean;
   };
-  lazyArgs: ReadonlyArray<unknown>;
+  lazyArgs?: ReadonlyArray<unknown>;
 };
 
 function _processItem({
@@ -316,7 +316,7 @@ function _processItem({
 
 function toPipedLazy(op: LazyOp) {
   const { lazy, lazyArgs } = op;
-  const fn = lazy(...lazyArgs);
+  const fn = lazy(...(lazyArgs ?? []));
   return Object.assign(fn, {
     isIndexed: lazy.indexed,
     isSingle: lazy.single,
