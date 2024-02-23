@@ -55,12 +55,9 @@ export function fromPairs<V>(
  * @strict
  * @dataLast
  */
-export function fromPairs(): <V>(
-  pairs: ReadonlyArray<Entry<number, V>>
-) => Record<number, V>;
-export function fromPairs(): <V>(
-  pairs: ReadonlyArray<Entry<string, V>>
-) => Record<string, V>;
+export function fromPairs(): <K extends PropertyKey, V>(
+  pairs: ReadonlyArray<Entry<K, V>>
+) => Record<K extends string ? string : K extends number ? number : never, V>;
 
 export function fromPairs() {
   return purry(fromPairsImplementation, arguments);
