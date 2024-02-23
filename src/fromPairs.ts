@@ -66,7 +66,7 @@ export function fromPairs() {
   return purry(fromPairsImplementation, arguments);
 }
 
-export function fromPairsImplementation(
+function fromPairsImplementation(
   entries: ReadonlyArray<Entry>
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
