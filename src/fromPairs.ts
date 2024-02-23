@@ -60,6 +60,7 @@ export function fromPairs(): <K extends PropertyKey, V>(
 ) => Record<K extends string ? string : K extends number ? number : never, V>;
 
 export function fromPairs() {
+  // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
   return purry(fromPairsImplementation, arguments);
 }
 
