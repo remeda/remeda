@@ -1,12 +1,34 @@
+import { pipe } from './pipe';
 import { values } from './values';
 
-describe('Test for values as data first', () => {
-  it('should return values of array', () => {
-    expect(values(['x', 'y', 'z'])).toEqual(['x', 'y', 'z']);
+describe('Runtime', () => {
+  describe('dataFirst', () => {
+    it('works with arrays', () => {
+      expect(values(['x', 'y', 'z'])).toEqual(['x', 'y', 'z']);
+    });
+
+    it('should return values of object', () => {
+      expect(values({ a: 'x', b: 'y', c: 'z' })).toEqual(['x', 'y', 'z']);
+    });
   });
 
-  it('should return values of object', () => {
-    expect(values({ a: 'x', b: 'y', c: 'z' })).toEqual(['x', 'y', 'z']);
+  describe('dataLast', () => {
+    it('works with arrays', () => {
+      expect(values()(['x', 'y', 'z'])).toEqual(['x', 'y', 'z']);
+    });
+
+    it('works with objects', () => {
+      expect(values()({ a: 'x', b: 'y', c: 'z' })).toEqual(['x', 'y', 'z']);
+    });
+
+    it('works with pipes', () => {
+      expect(pipe(['x', 'y', 'z'], values())).toEqual(['x', 'y', 'z']);
+      expect(pipe({ a: 'x', b: 'y', c: 'z' }, values())).toEqual([
+        'x',
+        'y',
+        'z',
+      ]);
+    });
   });
 });
 
