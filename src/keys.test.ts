@@ -23,7 +23,7 @@ describe('Test for keys', () => {
         foo: '1',
         bar: 7,
       };
-      const actual = pipe(data, keys.strict);
+      const actual = pipe(data, keys.strict());
       expect(actual).toEqual(['foo', 'bar']);
 
       assertType<Array<'foo' | 'bar'>>(actual);

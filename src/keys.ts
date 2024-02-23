@@ -1,3 +1,6 @@
+import { IterableContainer } from './_types';
+import { purry } from './purry';
+
 /**
  * Returns a new array containing the keys of the array or object.
  * @param source Either an array or an object
@@ -7,26 +10,54 @@
  * @example
  *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
- *    R.pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      R.keys,
- *      R.first
- *    ) // => 'a'
  *    R.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
+ * @dataFirst
  */
-
-import { IterableContainer } from './_types';
-
 export function keys(
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+): Array<string>;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ * @param source Either an array or an object
+ * @signature
+ *    R.keys()(source)
+ *    R.keys.strict()(source)
+ * @example
+ *    R.pipe(['x', 'y', 'z'], R.keys()) // => ['0', '1', '2']
+ *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.keys()) // => ['a', 'b', 'c']
+ *    R.pipe(
+ *      { a: 'x', b: 'y', c: 'z' },
+ *      R.keys(),
+ *      R.first(),
+ *    ) // => 'a'
+ *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @pipeable
+ * @strict
+ * @category Object
+ * @dataLast
+ */
+export function keys(): (
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+) => Array<string>;
+
+export function keys() {
+  return purry(keysImplementation, arguments);
+}
+
+function keysImplementation(
   source: Record<PropertyKey, unknown> | ArrayLike<unknown>
 ): Array<string> {
   return Object.keys(source);
 }
 
-type Strict = <T extends object>(source: T) => Keys<T>;
+type Strict = {
+  <T extends object>(data: T): Keys<T>;
+  (): <T extends object>(data: T) => Keys<T>;
+};
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
@@ -77,7 +108,5 @@ type ObjectKeys<T> =
     ? []
     : Array<`${Exclude<keyof T, symbol>}`>;
 export namespace keys {
-  // @ts-expect-error [ts2322] - I don't know why i'm getting this, the typing
-  // should be fine here because Key<T> returns a narrower type of string...
-  export const strict: Strict = keys;
+  export const strict = keys as Strict;
 }
