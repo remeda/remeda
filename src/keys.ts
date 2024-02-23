@@ -45,13 +45,7 @@ export function keys(): (
 ) => Array<string>;
 
 export function keys() {
-  return purry(keysImplementation, arguments);
-}
-
-function keysImplementation(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
-): Array<string> {
-  return Object.keys(source);
+  return purry(Object.keys, arguments);
 }
 
 type Strict = {

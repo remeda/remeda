@@ -37,13 +37,7 @@ export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
 export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
 
 export function toPairs() {
-  return purry(toPairsImplementation, arguments);
-}
-
-function toPairsImplementation<T>(
-  object: Record<string, T>
-): Array<[string, T]> {
-  return Object.entries(object);
+  return purry(Object.entries, arguments);
 }
 
 type Pairs<T> = Array<

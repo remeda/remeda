@@ -38,9 +38,5 @@ export function values<T extends object>(data: T): Values<T>;
 export function values(): <T extends object>(data: T) => Values<T>;
 
 export function values() {
-  return purry(valuesImplementation, arguments);
-}
-
-function valuesImplementation<T extends object>(source: T): Values<T> {
-  return Object.values(source) as Values<T>;
+  return purry(Object.values, arguments);
 }
