@@ -15,7 +15,7 @@ export function purryOn<T>(
 ): unknown {
   // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;
-  return isArg(callArgs[0])
+  return isArg(args[0])
     ? // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
       (data: unknown) => implementation(data, ...callArgs)
     : // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
