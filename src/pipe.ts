@@ -272,11 +272,9 @@ function _processItem({
   let isDone = false;
   for (let i = 0; i < lazySeq.length; i++) {
     const lazyFn = lazySeq[i]!;
-    const indexed = lazyFn.isIndexed;
-    const index = lazyFn.index;
-    const items = lazyFn.items;
+    const { isIndexed, index, items } = lazyFn;
     items.push(item);
-    lazyResult = indexed ? lazyFn(item, index, items) : lazyFn(item);
+    lazyResult = isIndexed ? lazyFn(item, index, items) : lazyFn(item);
     lazyFn.index++;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany) {
