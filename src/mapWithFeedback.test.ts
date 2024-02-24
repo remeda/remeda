@@ -22,7 +22,7 @@ describe('data first', () => {
           acc[x] = x;
           return acc;
         },
-        {} as Record<string, any>
+        {} as Record<string, unknown>
       );
 
       const expectedEquality = new Array(5).fill({
@@ -96,7 +96,7 @@ describe('data first', () => {
       mapWithFeedback.indexed(
         [1, 2, 3, 4, 5] as const,
         (acc, x, _index, items) => {
-          expectTypeOf(items).toEqualTypeOf<Array<1 | 2 | 3 | 4 | 5>>();
+          expectTypeOf(items).toEqualTypeOf<ReadonlyArray<1 | 2 | 3 | 4 | 5>>();
           return acc + x;
         },
         100
