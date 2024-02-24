@@ -2,7 +2,6 @@ import { LazyResult, _reduceLazy } from './_reduceLazy';
 import { _toLazyIndexed } from './_toLazyIndexed';
 import { purry } from './purry';
 
-
 /**
  * Applies a reducer function on each element of the array, accumulating the results, and returns an array of the successively reduced values.
  * @param array the array to map over
@@ -22,10 +21,7 @@ import { purry } from './purry';
  */
 export function mapWithFeedback<T, Accumulator>(
   array: ReadonlyArray<T>,
-  reducer: (
-    accumulator: Accumulator,
-    currentValue: T
-  ) => Accumulator,
+  reducer: (accumulator: Accumulator, currentValue: T) => Accumulator,
   initialValue: Accumulator
 ): Array<Accumulator>;
 
@@ -45,10 +41,7 @@ export function mapWithFeedback<T, Accumulator>(
  * @category Array
  */
 export function mapWithFeedback<T, Accumulator>(
-  reducer: (
-    accumulator: Accumulator,
-    currentValue: T
-  ) => Accumulator,
+  reducer: (accumulator: Accumulator, currentValue: T) => Accumulator,
   initialValue: Accumulator
 ): (items: ReadonlyArray<T>) => Array<Accumulator>;
 
@@ -63,13 +56,13 @@ export function mapWithFeedback() {
 const mapWithFeedbackImplementation =
   (indexed: boolean) =>
   <T, Accumulator>(
-    items: Array<T>,
+    items: ReadonlyArray<T>,
     reducer: (
-  accumulator: Accumulator,
-  currentValue: T,
-  index?: number,
-  items?: Array<T>
-) => Accumulator,
+      accumulator: Accumulator,
+      currentValue: T,
+      index?: number,
+      items?: ReadonlyArray<T>
+    ) => Accumulator,
     initialValue: Accumulator
   ) => {
     const implementation = indexed
@@ -83,15 +76,19 @@ const lazyImplementation =
   (indexed: boolean) =>
   <T, Accumulator>(
     reducer: (
-  accumulator: Accumulator,
-  currentValue: T,
-  index?: number,
-  items?: Array<T>
-) => Accumulator,
+      accumulator: Accumulator,
+      currentValue: T,
+      index?: number,
+      items?: ReadonlyArray<T>
+    ) => Accumulator,
     initialValue: Accumulator
   ) => {
     let accumulator = initialValue;
-    return (value: T, index?: number, items?: Array<T>): LazyResult<Accumulator> => {
+    return (
+      value: T,
+      index?: number,
+      items?: ReadonlyArray<T>
+    ): LazyResult<Accumulator> => {
       accumulator = indexed
         ? reducer(accumulator, value, index, items)
         : reducer(accumulator, value);
@@ -107,20 +104,20 @@ export namespace mapWithFeedback {
   export function indexed<T, Accumulator>(
     items: ReadonlyArray<T>,
     reducer: (
-  accumulator: Accumulator,
-  currentValue: T,
-  index: number,
-  items: Array<T>
-) => Accumulator,
+      accumulator: Accumulator,
+      currentValue: T,
+      index: number,
+      items: ReadonlyArray<T>
+    ) => Accumulator,
     initialValue: Accumulator
   ): Array<Accumulator>;
   export function indexed<T, Accumulator>(
     reducer: (
-  accumulator: Accumulator,
-  currentValue: T,
-  index: number,
-  items: Array<T>
-) => Accumulator,
+      accumulator: Accumulator,
+      currentValue: T,
+      index: number,
+      items: ReadonlyArray<T>
+    ) => Accumulator,
     initialValue: Accumulator
   ): (items: ReadonlyArray<T>) => Array<Accumulator>;
   export function indexed() {
