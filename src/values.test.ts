@@ -29,6 +29,15 @@ describe('Runtime', () => {
         'z',
       ]);
     });
+
+    test('"headless" dataLast', () => {
+      // Older versions of Remeda didn't provide a native dataLast impl and
+      // suggested users use a "headless" version of the dataFirst impl to get the
+      // dataLast behavior.
+      // TODO: Remove this test once we release Remeda v2 where we won't
+      // officially continue to support this.
+      expect(pipe({ a: 'x', b: 'y', c: 'z' }, values)).toEqual(['x', 'y', 'z']);
+    });
   });
 });
 
