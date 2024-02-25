@@ -31,9 +31,11 @@ export function Navbar({
         ([category, entries]) =>
           [
             category,
-            entries.filter(({ name }) =>
-              name.toLowerCase().includes(lowerCaseQuery),
-            ),
+            category.toLowerCase().includes(lowerCaseQuery)
+              ? entries
+              : entries.filter(({ name }) =>
+                  name.toLowerCase().includes(lowerCaseQuery),
+                ),
           ] as const,
       )
       .filter(([, entries]) => entries.length > 0);
