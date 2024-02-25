@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- FIXME! */
 
 import { clone } from './clone';
 

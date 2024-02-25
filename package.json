@@ -35,7 +35,7 @@
     "compile:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
-    "lint": "eslint --fix --max-warnings 0 .",
+    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/ .",
     "prepare": "husky",
     "prettier": "prettier . --write",
     "release": "semantic-release",
