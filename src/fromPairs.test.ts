@@ -1,4 +1,5 @@
 import { fromPairs } from './fromPairs';
+import { pipe } from './pipe';
 
 const tuples: Array<[string, number]> = [
   ['a', 1],
@@ -6,9 +7,38 @@ const tuples: Array<[string, number]> = [
   ['c', 3],
 ];
 
-describe('fromPairs', () => {
-  test('generates object from pairs', () => {
+describe('runtime', () => {
+  test('dataFirst', () => {
     expect(fromPairs(tuples)).toEqual({
+      a: 1,
+      b: 2,
+      c: 3,
+    });
+  });
+
+  test('dataLast', () => {
+    expect(fromPairs()(tuples)).toEqual({
+      a: 1,
+      b: 2,
+      c: 3,
+    });
+  });
+
+  test('dataLast pipe', () => {
+    expect(pipe(tuples, fromPairs())).toEqual({
+      a: 1,
+      b: 2,
+      c: 3,
+    });
+  });
+
+  test('"headless" dataLast', () => {
+    // Older versions of Remeda didn't provide a native dataLast impl and
+    // suggested users use a "headless" version of the dataFirst impl to get the
+    // dataLast behavior.
+    // TODO: Remove this test once we release Remeda v2 where we won't
+    // officially continue to support this.
+    expect(pipe(tuples, fromPairs)).toEqual({
       a: 1,
       b: 2,
       c: 3,
@@ -27,6 +57,12 @@ describe('typings', () => {
       ['b', 'c'],
     ]);
     assertType<Record<string, string | number>>(actual);
+  });
+
+  test('narrow types are widened by non-strict dataLast call', () => {
+    const data = [['a', 1]] as const;
+    expectTypeOf(fromPairs(data)).toEqualTypeOf<Record<string, 1>>();
+    expectTypeOf(pipe(data, fromPairs())).toEqualTypeOf<Record<string, 1>>();
   });
 });
 

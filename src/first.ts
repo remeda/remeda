@@ -1,7 +1,7 @@
 import { IterableContainer } from './_types';
 import { purry } from './purry';
 
-type FirstOut<T extends IterableContainer> = T extends []
+type First<T extends IterableContainer> = T extends []
   ? undefined
   : T extends readonly [unknown, ...Array<unknown>]
     ? T[0]
@@ -11,13 +11,27 @@ type FirstOut<T extends IterableContainer> = T extends []
 
 /**
  * Gets the first element of `array`.
- * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.
- * @param array the array
+ * @param data the array
+ * @returns the first element of the array
  * @signature
  *    R.first(array)
  * @example
  *    R.first([1, 2, 3]) // => 1
  *    R.first([]) // => undefined
+ *
+ * @category Array
+ * @pipeable
+ * @dataFirst
+ */
+export function first<T extends IterableContainer>(data: T): First<T>;
+
+/**
+ * Gets the first element of `array`.
+ * @param data the array
+ * @returns the first element of the array
+ * @signature
+ *    R.first()(array)
+ * @example
  *    R.pipe(
  *      [1, 2, 4, 8, 16],
  *      R.filter(x => x > 3),
@@ -27,13 +41,9 @@ type FirstOut<T extends IterableContainer> = T extends []
  *
  * @category Array
  * @pipeable
+ * @dataLast
  */
-export function first<T extends IterableContainer>(
-  array: Readonly<T>
-): FirstOut<T>;
-export function first<T extends IterableContainer>(): (
-  array: Readonly<T>
-) => FirstOut<T>;
+export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first() {
   return purry(_first, arguments, first.lazy);
@@ -53,6 +63,7 @@ export namespace first {
       };
     };
   }
+
   export namespace lazy {
     export const single = true;
   }

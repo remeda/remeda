@@ -1,4 +1,5 @@
 import { IterableContainer } from './_types';
+import { purry } from './purry';
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
@@ -21,6 +22,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  *   R.fromPairs.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})
  * @category Object
  * @strict
+ * @dataFirst
  */
 export function fromPairs<V>(
   pairs: ReadonlyArray<Entry<number, V>>
@@ -29,7 +31,40 @@ export function fromPairs<V>(
   pairs: ReadonlyArray<Entry<string, V>>
 ): Record<string, V>;
 
-export function fromPairs(
+/**
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ * @param pairs the list of input tuples
+ * @signature
+ *   R.fromPairs()(tuples)
+ *   R.fromPairs.strict()(tuples)
+ * @example
+ *   R.pipe(
+ *     [['a', 'b'], ['c', 'd']],
+ *     R.fromPairs(),
+ *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *   R.pipe(
+ *     ['a', 1] as const,
+ *     R.fromPairs.strict(),
+ *   ); // => {a: 1} (type: {a: 1})
+ * @category Object
+ * @strict
+ * @dataLast
+ */
+export function fromPairs(): <K extends PropertyKey, V>(
+  pairs: ReadonlyArray<Entry<K, V>>
+) => Record<K extends string ? string : K extends number ? number : never, V>;
+
+export function fromPairs() {
+  // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
+  return purry(fromPairsImplementation, arguments);
+}
+
+function fromPairsImplementation(
   entries: ReadonlyArray<Entry>
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
@@ -41,9 +76,14 @@ export function fromPairs(
 
 // Redefining the fromPairs function to allow stricter pairs arrays and fine-
 // grained handling of partiality of the output.
-type Strict = <Entries extends IterableContainer<Entry>>(
-  entries: Entries
-) => StrictOut<Entries>;
+type Strict = {
+  <Entries extends IterableContainer<Entry>>(
+    entries: Entries
+  ): StrictOut<Entries>;
+  (): <Entries extends IterableContainer<Entry>>(
+    entries: Entries
+  ) => StrictOut<Entries>;
+};
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
 // 1. If the input is a *tuple*, we know exactly what pairs it would hold,
@@ -116,5 +156,5 @@ type ValueForKey<
 
 export namespace fromPairs {
   // Strict is simply a retyping of fromPairs, it runs the same runtime logic.
-  export const strict: Strict = fromPairs;
+  export const strict = fromPairs as Strict;
 }
