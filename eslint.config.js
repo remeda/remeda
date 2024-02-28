@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-call -- I don't understand FlatConfigs, this follows the typescript example so I don't know how to fix it... */
 
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
