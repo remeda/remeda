@@ -35,7 +35,7 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
  * @dataLast
  * @category Array
  */
-export function reverse<T extends ReadonlyArray<unknown>>(): (
+export function reverse(): <T extends ReadonlyArray<unknown>>(
   array: T
 ) => Reverse<T>;
 

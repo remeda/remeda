@@ -21,7 +21,7 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  * @category Array
  * @dataLast
  */
-export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
+export function shuffle(): <T>(items: ReadonlyArray<T>) => Array<T>;
 
 export function shuffle() {
   return purry(_shuffle, arguments);
