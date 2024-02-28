@@ -23,15 +23,15 @@
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:es && npm run build:cjs",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\" && npm run build:cjs:types",
-    "build:cjs:types": "tsc --project tsconfig.build.types.json --module commonjs --outDir \"./dist/commonjs\"",
-    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\" && npm run build:es:types",
-    "build:es:types": "tsc --project tsconfig.build.types.json --module esnext --outDir \"./dist/es\"",
+    "build": "npm run clean && npm run build:es && npm run build:cjs && npm run build:types",
+    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
+    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
+    "build:types": "tsc --project tsconfig.build.types.json --outDir \"./dist/types\"",
     "clean": "rm -rf ./dist && mkdir dist",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
