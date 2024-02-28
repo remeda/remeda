@@ -31,7 +31,7 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
  * @category Array
  * @dataLast
  */
-export function uniq(): <T>(array: ReadonlyArray<T>) => Array<T>;
+export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniq() {
   return purry(_uniq, arguments, uniq.lazy);
