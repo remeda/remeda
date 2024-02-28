@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { purry } from './purry';
 
 /**
@@ -148,13 +146,18 @@ export function pathOr() {
   return purry(_pathOr, arguments);
 }
 
-function _pathOr(object: any, path: Array<any>, defaultValue: any): any {
-  let current = object;
+function _pathOr(
+  data: unknown,
+  path: ReadonlyArray<PropertyKey>,
+  defaultValue: unknown
+): unknown {
+  let current = data;
   for (const prop of path) {
-    if (current == null || current[prop] == null) {
-      return defaultValue;
+    if (current == null) {
+      break;
     }
-    current = current[prop];
+    current = (current as Record<PropertyKey, unknown>)[prop];
   }
-  return current;
+
+  return current ?? defaultValue;
 }

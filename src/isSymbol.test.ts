@@ -23,7 +23,7 @@ describe('isSymbol', () => {
   });
 
   it('should work even if data type is `any`', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Explicitly checking any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly checking any
     const data = TYPES_DATA_PROVIDER.symbol as any;
     if (isSymbol(data)) {
       expect(typeof data).toEqual('symbol');

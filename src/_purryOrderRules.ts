@@ -100,7 +100,9 @@ export function purryOrderRulesWithArgument(
   ) => unknown,
   inputArgs: IArguments
 ): unknown {
-  const [first, second, ...rest] = Array.from(inputArgs);
+  const [first, second, ...rest] = Array.from(
+    inputArgs
+  ) as ReadonlyArray<unknown>;
 
   // We need to pull the `n` argument out to make it work with purryOrderRules.
   let arg: unknown;
@@ -162,10 +164,12 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] = x;
+  const [maybeProjection, maybeDirection, ...rest] =
+    x as ReadonlyArray<unknown>;
 
   return (
     isProjection(maybeProjection) &&
+    typeof maybeDirection === 'string' &&
     maybeDirection in COMPARATORS &&
     // Has to be a 2-tuple
     rest.length === 0

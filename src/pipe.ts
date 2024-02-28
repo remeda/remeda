@@ -195,54 +195,54 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 ): P;
 
 export function pipe(
-  value: any,
+  input: unknown,
   ...operations: ReadonlyArray<((value: any) => unknown) | LazyOp>
 ): any {
-  let ret = value;
+  let output = input;
 
-  const lazyOps = operations.map(op =>
+  const lazyOperations = operations.map(op =>
     'lazy' in op ? toPipedLazy(op) : undefined
   );
 
-  let opIdx = 0;
-  while (opIdx < operations.length) {
-    const op = operations[opIdx]!;
-    const lazyOp = lazyOps[opIdx];
-    if (!lazyOp) {
-      ret = op(ret);
-      opIdx++;
+  let operationIndex = 0;
+  while (operationIndex < operations.length) {
+    const lazyOperation = lazyOperations[operationIndex];
+    if (lazyOperation === undefined || !isIterable(output)) {
+      const operation = operations[operationIndex]!;
+      output = operation(output);
+      operationIndex++;
       continue;
     }
 
-    const lazySeq: Array<ReturnType<typeof toPipedLazy>> = [];
-    for (let j = opIdx; j < operations.length; j++) {
-      const lazyOp = lazyOps[j];
+    const lazySequence: Array<ReturnType<typeof toPipedLazy>> = [];
+    for (let j = operationIndex; j < operations.length; j++) {
+      const lazyOp = lazyOperations[j];
       if (lazyOp === undefined) {
         break;
       }
 
-      lazySeq.push(lazyOp);
+      lazySequence.push(lazyOp);
       if (lazyOp.isSingle) {
         break;
       }
     }
 
-    const acc: Array<any> = [];
+    const accumulator: Array<unknown> = [];
 
-    for (const item of ret) {
-      if (_processItem({ item, acc, lazySeq })) {
+    for (const item of output) {
+      if (_processItem(item, accumulator, lazySequence)) {
         break;
       }
     }
-    const { isSingle } = lazySeq[lazySeq.length - 1]!;
+    const { isSingle } = lazySequence[lazySequence.length - 1]!;
     if (isSingle) {
-      ret = acc[0];
+      output = accumulator[0];
     } else {
-      ret = acc;
+      output = accumulator;
     }
-    opIdx += lazySeq.length;
+    operationIndex += lazySequence.length;
   }
-  return ret;
+  return output;
 }
 
 type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
@@ -255,23 +255,19 @@ type LazyOp = ((input: any) => any) & {
   lazyArgs?: ReadonlyArray<unknown>;
 };
 
-function _processItem({
-  item,
-  lazySeq,
-  acc,
-}: {
-  item: any;
-  lazySeq: ReadonlyArray<ReturnType<typeof toPipedLazy>>;
-  acc: Array<any>;
-}): boolean {
-  if (lazySeq.length === 0) {
-    acc.push(item);
+function _processItem(
+  item: unknown,
+  accumulator: Array<unknown>,
+  lazySequence: ReadonlyArray<ReturnType<typeof toPipedLazy>>
+): boolean {
+  if (lazySequence.length === 0) {
+    accumulator.push(item);
     return false;
   }
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
-  for (let i = 0; i < lazySeq.length; i++) {
-    const lazyFn = lazySeq[i]!;
+  for (let i = 0; i < lazySequence.length; i++) {
+    const lazyFn = lazySequence[i]!;
     const { isIndexed, index, items } = lazyFn;
     items.push(item);
     lazyResult = isIndexed ? lazyFn(item, index, items) : lazyFn(item);
@@ -280,11 +276,11 @@ function _processItem({
       if (lazyResult.hasMany) {
         const nextValues: Array<any> = lazyResult.next;
         for (const subItem of nextValues) {
-          const subResult = _processItem({
-            item: subItem,
-            acc,
-            lazySeq: lazySeq.slice(i + 1),
-          });
+          const subResult = _processItem(
+            subItem,
+            accumulator,
+            lazySequence.slice(i + 1)
+          );
           if (subResult) {
             return true;
           }
@@ -304,7 +300,7 @@ function _processItem({
     }
   }
   if (lazyResult.hasNext) {
-    acc.push(item);
+    accumulator.push(item);
   }
   if (isDone) {
     return true;
@@ -321,4 +317,14 @@ function toPipedLazy(op: LazyOp) {
     index: 0,
     items: [] as Array<unknown>,
   });
+}
+
+function isIterable(something: unknown): something is Iterable<unknown> {
+  // Check for null and undefined to avoid errors when accessing Symbol.iterator
+  return (
+    typeof something === 'string' ||
+    (typeof something === 'object' &&
+      something !== null &&
+      Symbol.iterator in something)
+  );
 }

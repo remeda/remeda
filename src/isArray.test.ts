@@ -7,7 +7,7 @@ import { isArray } from './isArray';
 
 describe('isArray', () => {
   it('should infer ReadonlyArray<unknown> when given any', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- explicitly testing `any`
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
     const data = [] as any;
     if (isArray(data)) {
       expectTypeOf(data).not.toBeAny();

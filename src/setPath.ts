@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- FIXME! */
 
 import { purry } from './purry';
 import { Path, SupportsValueAtPath, ValueAtPath } from './_paths';

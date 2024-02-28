@@ -32,6 +32,7 @@ export function isPlainObject<T>(
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is a low-level check, we can't avoid it being typed as `any`.
   const proto = Object.getPrototypeOf(data);
   return proto === null || proto === Object.prototype;
 }
