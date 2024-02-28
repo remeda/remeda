@@ -42,13 +42,16 @@ export function purry(
   args: IArguments | ReadonlyArray<unknown>,
   lazyFactory?: LazyFactory
 ): unknown {
+  // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
+  const callArgs = Array.from(args) as ReadonlyArray<unknown>;
+
   const diff = fn.length - args.length;
   if (diff === 0) {
-    return fn(...args);
+    return fn(...callArgs);
   }
 
   if (diff === 1) {
-    const ret = (data: unknown) => fn(data, ...args);
+    const ret = (data: unknown) => fn(data, ...callArgs);
     const lazy = lazyFactory ?? fn.lazy;
     return lazy === undefined
       ? ret

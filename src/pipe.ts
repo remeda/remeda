@@ -229,11 +229,25 @@ export function pipe(
 
     const accumulator: Array<unknown> = [];
 
-    for (const item of output) {
-      if (_processItem(item, accumulator, lazySequence)) {
+    const iterator = output[Symbol.iterator]();
+
+    // eslint-disable-next-line no-constant-condition -- TODO: Once we bump the TS target version above ES5 we can use the built-in for-of loop instead.
+    while (true) {
+      const result = iterator.next();
+      if (result.done ?? false) {
+        break;
+      }
+
+      const shouldExitEarly = _processItem(
+        result.value,
+        accumulator,
+        lazySequence
+      );
+      if (shouldExitEarly) {
         break;
       }
     }
+
     const { isSingle } = lazySequence[lazySequence.length - 1]!;
     if (isSingle) {
       output = accumulator[0];
