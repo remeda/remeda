@@ -104,7 +104,7 @@ describe('lazy', () => {
         return x * 10;
       }),
       take(4),
-      identity(),
+      identity,
       map(x => {
         count2();
         return x * 10;
