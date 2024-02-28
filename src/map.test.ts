@@ -190,7 +190,7 @@ describe('Strict', () => {
       ...Array<number>,
       boolean,
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
-    const result = map.strict(input, identity);
+    const result = map.strict(input, identity());
     expectTypeOf(result).toEqualTypeOf<
       [...Array<string | number | boolean>, string | number | boolean]
     >();
@@ -294,7 +294,7 @@ describe('Strict Indexed', () => {
       ...Array<number>,
       boolean,
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
-    const result = map.strict.indexed(input, identity);
+    const result = map.strict.indexed(input, identity());
     expectTypeOf(result).toEqualTypeOf<
       [...Array<string | number | boolean>, string | number | boolean]
     >();
