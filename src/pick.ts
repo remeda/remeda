@@ -36,9 +36,6 @@ function _pick<T extends object, K extends keyof T>(
   object: T,
   names: ReadonlyArray<K>
 ) {
-  if (object == null) {
-    return {};
-  }
   return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
     if (name in object) {
       acc[name] = object[name];

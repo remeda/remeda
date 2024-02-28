@@ -46,7 +46,7 @@ const _groupBy =
   (indexed: boolean) =>
   <T, Key extends PropertyKey = PropertyKey>(
     array: Array<T>,
-    fn: PredIndexedOptional<T, Key>
+    fn: PredIndexedOptional<T, Key | undefined>
   ) => {
     const ret: Record<string, Array<T>> = {};
     array.forEach((item, index) => {
