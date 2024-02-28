@@ -212,7 +212,9 @@ describe('Optional param maxWaitMs', () => {
 describe('Additional functionality', () => {
   it('can cancel before the timer starts', async () => {
     const debouncer = debounce(identity, { waitMs: 32 });
-    expect(() => debouncer.cancel()).not.toThrow();
+    expect(() => {
+      debouncer.cancel();
+    }).not.toThrow();
 
     expect(debouncer.call('hello')).toBeUndefined();
     await sleep(32);
@@ -248,7 +250,9 @@ describe('Additional functionality', () => {
     await sleep(32);
 
     expect(debouncer.call('world')).toEqual('hello');
-    expect(() => debouncer.cancel()).not.toThrow();
+    expect(() => {
+      debouncer.cancel();
+    }).not.toThrow();
   });
 
   it('can cancel maxWait timer', async () => {

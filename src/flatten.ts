@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
-
 import { _reduceLazy, LazyResult } from './_reduceLazy';
 import { purry } from './purry';
 
@@ -40,13 +38,13 @@ export function flatten() {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
+function _flatten<T>(items: Array<T>) {
   return _reduceLazy(items, flatten.lazy());
 }
 
 export namespace flatten {
   export function lazy<T>() {
-    return (next: T): LazyResult<any> => {
+    return (next: T): LazyResult<unknown> => {
       if (Array.isArray(next)) {
         return {
           done: false,
