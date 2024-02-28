@@ -15,9 +15,9 @@ describe('data first', () => {
     }
     class TestClass extends BaseClass {}
     const testClass = new TestClass();
-    expect(pick(testClass, ['testProp'])).toEqual({
-      testProp: expect.any(Function),
-    });
+    expectTypeOf(pick(testClass, ['testProp'])).toEqualTypeOf<{
+      testProp: () => string;
+    }>();
   });
 });
 

@@ -36,7 +36,7 @@ describe('data_last', () => {
   });
 
   it('forEachObj.indexed', () => {
-    const cb = vi.fn();
+    const cb = vi.fn<[number, string, typeof obj]>();
     const result = pipe(obj, forEachObj.indexed(cb));
     expect(cb.mock.calls).toEqual([
       [1, 'a', obj],

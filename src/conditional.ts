@@ -208,7 +208,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
     return false;
   }
 
-  const [when, then, ...rest] = maybeCase;
+  const [when, then, ...rest] = maybeCase as ReadonlyArray<unknown>;
   return (
     typeof when === 'function' &&
     when.length <= 1 &&

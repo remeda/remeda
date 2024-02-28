@@ -23,7 +23,7 @@ describe('isBoolean', () => {
   });
 
   it('should narrow `any`', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We are explicitly testing the `any` case here
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
     const data = TYPES_DATA_PROVIDER.boolean as any;
     if (isBoolean(data)) {
       expect(typeof data).toEqual('boolean');
