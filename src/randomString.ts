@@ -12,6 +12,7 @@ const ALPHABET =
  *   R.randomString(length)
  * @example
  *   R.randomString(5) // => aB92J
+ *   R.pipe(5, R.randomString) // => aB92J
  * @category String
  * @dataFirst
  */

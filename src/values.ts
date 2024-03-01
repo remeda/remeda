@@ -12,6 +12,13 @@ type Values<T extends object> = T extends ReadonlyArray<unknown> | []
  * @example
  *    R.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
  *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
+ *    R.pipe(['x', 'y', 'z'], R.values) // => ['x', 'y', 'z']
+ *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.values) // => ['x', 'y', 'z']
+ *    R.pipe(
+ *      { a: 'x', b: 'y', c: 'z' },
+ *      R.values,
+ *      R.first,
+ *    ) // => 'x'
  * @pipeable
  * @category Object
  * @dataFirst

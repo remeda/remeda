@@ -9,6 +9,14 @@ import { purry } from "./purry";
  * @example
  *    R.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
  *    R.toPairs.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    R.pipe(
+ *      { a: 1, b: 2, c: 3 },
+ *      toPairs,
+ *    ); // => [['a', 1], ['b', 2], ['c', 3]]
+ *    R.pipe(
+ *      { a: 1 } as const,
+ *      toPairs.strict,
+ *    ); // => [['a', 1]] typed Array<['a', 1]>
  * @strict
  * @category Object
  * @dataFirst

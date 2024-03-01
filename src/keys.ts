@@ -11,6 +11,14 @@ import { purry } from "./purry";
  *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    R.pipe(['x', 'y', 'z'], R.keys) // => ['0', '1', '2']
+ *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.keys) // => ['a', 'b', 'c']
+ *    R.pipe(
+ *      { a: 'x', b: 'y', c: 'z' },
+ *      R.keys,
+ *      R.first(),
+ *    ) // => 'a'
+ *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
