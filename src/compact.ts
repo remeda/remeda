@@ -1,4 +1,4 @@
-import { isTruthy } from './isTruthy';
+import { isTruthy } from "./isTruthy";
 
 /**
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.
@@ -14,7 +14,7 @@ import { isTruthy } from './isTruthy';
  * @deprecated equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.
  */
 export function compact<T>(
-  items: ReadonlyArray<T | null | undefined | false | '' | 0>
+  items: ReadonlyArray<T | null | undefined | false | "" | 0>,
 ): Array<T> {
   // TODO: Make lazy version
   return items.filter(isTruthy);

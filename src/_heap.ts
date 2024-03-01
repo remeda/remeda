@@ -2,9 +2,9 @@
  * Heap related utilities.
  */
 
-import { swapInPlace } from './_swapInPlace';
-import type { CompareFunction } from './_types';
-import { hasAtLeast } from './hasAtLeast';
+import { swapInPlace } from "./_swapInPlace";
+import type { CompareFunction } from "./_types";
+import { hasAtLeast } from "./hasAtLeast";
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
@@ -17,7 +17,7 @@ import { hasAtLeast } from './hasAtLeast';
  */
 export function heapify<T>(
   heap: Array<T>,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
     heapSiftDown(heap, i, compareFn);
@@ -39,7 +39,7 @@ export function heapify<T>(
 export function heapMaybeInsert<T>(
   heap: Array<T>,
   compareFn: CompareFunction<T>,
-  item: T
+  item: T,
 ): T | undefined {
   if (!hasAtLeast(heap, 1)) {
     return;
@@ -65,7 +65,7 @@ export function heapMaybeInsert<T>(
 function heapSiftDown<T>(
   heap: Array<T>,
   index: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   let currentIndex = index;
 

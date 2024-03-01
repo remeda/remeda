@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Combines two arrays.
@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function concat<T, K>(
   arr1: ReadonlyArray<T>,
-  arr2: ReadonlyArray<K>
+  arr2: ReadonlyArray<K>,
 ): Array<T | K>;
 
 /**
@@ -27,7 +27,7 @@ export function concat<T, K>(
  * @category Array
  */
 export function concat<T, K>(
-  arr2: ReadonlyArray<K>
+  arr2: ReadonlyArray<K>,
 ): (arr1: ReadonlyArray<T>) => Array<T | K>;
 
 export function concat() {

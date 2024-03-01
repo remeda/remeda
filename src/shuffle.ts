@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.

@@ -1,6 +1,6 @@
-import type { IterableContainer } from './_types';
-import { purry } from './purry';
-import { toPairs } from './toPairs';
+import type { IterableContainer } from "./_types";
+import { purry } from "./purry";
+import { toPairs } from "./toPairs";
 
 /**
  * basic structure of `evolver` parameter of the function `evolve`.
@@ -91,7 +91,7 @@ type Evolved<T, E> = T extends object
  */
 export function evolve<T extends object, E extends Evolver<T>>(
   object: T,
-  evolver: E
+  evolver: E,
 ): Evolved<T, E>;
 
 /**
@@ -129,7 +129,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * @category Object
  */
 export function evolve<T extends object, E extends Evolver<T>>(
-  evolver: E
+  evolver: E,
 ): (object: T) => Evolved<T, E>;
 
 export function evolve() {
@@ -137,19 +137,19 @@ export function evolve() {
 }
 
 function _evolve(data: unknown, evolver: GenericEvolver): unknown {
-  if (typeof data !== 'object' || data === null) {
+  if (typeof data !== "object" || data === null) {
     return data;
   }
   return toPairs.strict(evolver).reduce<Record<string, unknown>>(
     (result, [key, value]) => {
       if (key in result) {
         result[key] =
-          typeof value === 'function'
+          typeof value === "function"
             ? value(result[key])
             : _evolve(result[key], value);
       }
       return result;
     },
-    { ...data }
+    { ...data },
   );
 }

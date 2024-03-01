@@ -1,8 +1,8 @@
-import { purry } from './purry';
-import { times } from './times';
+import { purry } from "./purry";
+import { times } from "./times";
 
 const ALPHABET =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
@@ -35,7 +35,7 @@ export function randomString() {
 }
 
 function randomStringImplementation(length: number) {
-  return times(length, randomChar).join('');
+  return times(length, randomChar).join("");
 }
 
 const randomChar = () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;

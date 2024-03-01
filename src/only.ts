@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 type Only<T extends IterableContainer> = T extends
   | readonly []
@@ -40,7 +40,7 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  * @dataLast
  */
 export function only<T extends IterableContainer>(): (
-  array: Readonly<T>
+  array: Readonly<T>,
 ) => Only<T>;
 
 export function only() {

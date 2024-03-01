@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -10,7 +10,7 @@ import { purry } from './purry';
  * @category Object
  */
 export function pick<T extends object, K extends keyof T>(
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ): (object: T) => Pick<T, K>;
 
 /**
@@ -25,7 +25,7 @@ export function pick<T extends object, K extends keyof T>(
  */
 export function pick<T extends object, K extends keyof T>(
   object: T,
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ): Pick<T, K>;
 
 export function pick() {
@@ -34,7 +34,7 @@ export function pick() {
 
 function _pick<T extends object, K extends keyof T>(
   object: T,
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ) {
   return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
     if (name in object) {

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 
@@ -39,5 +39,5 @@ export function length() {
 }
 
 function _length<T>(items: Enumerable<T>) {
-  return 'length' in items ? items.length : Array.from(items).length;
+  return "length" in items ? items.length : Array.from(items).length;
 }

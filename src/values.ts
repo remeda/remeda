@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 type Values<T extends object> = T extends ReadonlyArray<unknown> | []
   ? Array<T[number]>

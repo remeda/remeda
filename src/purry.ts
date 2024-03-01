@@ -40,7 +40,7 @@ type MaybeLazyFunction = {
 export function purry(
   fn: MaybeLazyFunction,
   args: IArguments | ReadonlyArray<unknown>,
-  lazyFactory?: LazyFactory
+  lazyFactory?: LazyFactory,
 ): unknown {
   // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;
@@ -58,5 +58,5 @@ export function purry(
       : Object.assign(ret, { lazy, lazyArgs: args });
   }
 
-  throw new Error('Wrong number of arguments');
+  throw new Error("Wrong number of arguments");
 }

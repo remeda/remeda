@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
@@ -18,7 +18,7 @@ import { purry } from './purry';
 export function reduce<T, K>(
   items: ReadonlyArray<T>,
   fn: (acc: K, item: T) => K,
-  initialValue: K
+  initialValue: K,
 ): K;
 
 /**
@@ -36,7 +36,7 @@ export function reduce<T, K>(
  */
 export function reduce<T, K>(
   fn: (acc: K, item: T) => K,
-  initialValue: K
+  initialValue: K,
 ): (items: ReadonlyArray<T>) => K;
 
 export function reduce() {
@@ -48,12 +48,12 @@ const _reduce =
   <T, K>(
     items: Array<T>,
     fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
-    initialValue: K
+    initialValue: K,
   ): K => {
     return items.reduce(
       (acc, item, index) =>
         indexed ? fn(acc, item, index, items) : fn(acc, item),
-      initialValue
+      initialValue,
     );
   };
 
@@ -61,11 +61,11 @@ export namespace reduce {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
     fn: (acc: K, item: T, index: number, items: Array<T>) => K,
-    initialValue: K
+    initialValue: K,
   ): K;
   export function indexed<T, K>(
     fn: (acc: K, item: T, index: number, items: Array<T>) => K,
-    initialValue: K
+    initialValue: K,
   ): (array: ReadonlyArray<T>) => K;
   export function indexed() {
     return purry(_reduce(true), arguments);

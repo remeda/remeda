@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
@@ -60,7 +60,7 @@ export function swapProps(): unknown {
 function _swapProps<T extends object, K1 extends keyof T, K2 extends keyof T>(
   obj: T,
   key1: K1,
-  key2: K2
+  key2: K2,
 ): {
   [K in PropertyKey]: unknown;
 } {

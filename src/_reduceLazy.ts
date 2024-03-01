@@ -24,7 +24,7 @@ interface LazyMany<T> {
 export function _reduceLazy<T, K>(
   array: ReadonlyArray<T>,
   lazy: (item: T, index?: number, array?: ReadonlyArray<T>) => LazyResult<K>,
-  indexed?: boolean
+  indexed?: boolean,
 ): Array<K> {
   const newArray: Array<K> = [];
   // We intentionally use a for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Add a new property to an object.
@@ -42,7 +42,7 @@ export function addProp() {
 function _addProp<T extends Record<PropertyKey, unknown>, K extends string, V>(
   obj: T,
   prop: K,
-  value: V
+  value: V,
 ): T & { [x in K]: V } {
   return {
     ...obj,

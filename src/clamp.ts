@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
@@ -15,7 +15,7 @@ import { purry } from './purry';
  */
 export function clamp(
   value: number,
-  limits: { min?: number; max?: number }
+  limits: { min?: number; max?: number },
 ): number;
 
 /**

@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is a number and narrows its type accordingly
@@ -12,5 +12,5 @@ import type { NarrowedTo } from './_types';
  * @category Guard
  */
 export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {
-  return typeof data === 'number' && !isNaN(data);
+  return typeof data === "number" && !isNaN(data);
 }

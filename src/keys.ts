@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Returns a new array containing the keys of the array or object.
@@ -17,7 +17,7 @@ import { purry } from './purry';
  * @dataFirst
  */
 export function keys(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 ): Array<string>;
 
 /**
@@ -41,7 +41,7 @@ export function keys(
  * @dataLast
  */
 export function keys(): (
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 ) => Array<string>;
 
 export function keys() {
@@ -94,8 +94,8 @@ type IndicesAfterSpread<
     : T extends readonly [...infer Head, unknown]
       ?
           | IndicesAfterSpread<Head, [unknown, ...Iterations]>
-          | Iterations['length']
-      : Iterations['length'];
+          | Iterations["length"]
+      : Iterations["length"];
 
 type ObjectKeys<T> =
   T extends Record<PropertyKey, never>

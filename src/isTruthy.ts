@@ -14,7 +14,7 @@
  * @category Guard
  */
 export function isTruthy<T>(
-  data: T
-): data is Exclude<T, null | undefined | false | '' | 0> {
+  data: T,
+): data is Exclude<T, null | undefined | false | "" | 0> {
   return !!data;
 }

@@ -28,5 +28,5 @@ type DefinitelyObject<T> =
  * @deprecated - The semantics of this guard are confusing. It excludes Arrays but does not exclude other complex objects like Classes or built-in objects (such as Date, Promise, Error, etc.). Instead, consider using `isObjectType` for a more inclusive validation encompassing any JavaScript "object" type, or `isPlainObject` for a more specific validation targeting simple struct/shape/record-like objects. To replicate the existing logic, use: `const isObject = (x) => isObjectType(x) && !Array.isArray(x)`.
  */
 export function isObject<T>(data: T | object): data is DefinitelyObject<T> {
-  return !!data && !Array.isArray(data) && typeof data === 'object';
+  return !!data && !Array.isArray(data) && typeof data === "object";
 }

@@ -11,7 +11,7 @@ export function purryOn<T>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
     ...args: any
   ) => unknown,
-  args: IArguments
+  args: IArguments,
 ): unknown {
   // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;
