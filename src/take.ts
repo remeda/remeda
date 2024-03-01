@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from "./purry";
+import { _reduceLazy, LazyResult } from "./_reduceLazy";
 
 /**
  * Returns the first `n` elements of `array`.

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Creates an object containing a single `key:value` pair.
@@ -22,7 +22,7 @@ export function objOf<T, K extends string>(value: T, key: K): { [x in K]: T };
  * @category Object
  */
 export function objOf<T, K extends string>(
-  key: K
+  key: K,
 ): (value: T) => { [x in K]: T };
 
 export function objOf() {

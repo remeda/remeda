@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> =
   // Check if N is generic (e.g. not '5' but 'number')
@@ -29,7 +29,7 @@ type SampledLiteral<
   Iteration extends Array<unknown> = [],
 > =
   // Stop the recursion when the Iteration "array" is full
-  Iteration['length'] extends N
+  Iteration["length"] extends N
     ? []
     : // If the tuple has a defined (non-rest) element, cut it and add it to the
       // output tuple.
@@ -70,7 +70,7 @@ type SampledLiteral<
  */
 export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
-  sampleSize: N
+  sampleSize: N,
 ): Sampled<T, N>;
 
 /**
@@ -96,7 +96,7 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * @category Array
  */
 export function sample<T extends IterableContainer, N extends number = number>(
-  sampleSize: N
+  sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
@@ -152,7 +152,7 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
   if (sampleSize === actualSampleSize) {
     return Array.from(sampleIndices)
       .sort((a, b) => a - b)
-      .map(index => data[index]!);
+      .map((index) => data[index]!);
   }
 
   return data.filter((_, index) => !sampleIndices.has(index));

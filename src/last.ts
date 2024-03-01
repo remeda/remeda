@@ -1,5 +1,5 @@
-import { NonEmptyArray } from './_types';
-import { purry } from './purry';
+import { NonEmptyArray } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Gets the last element of `array`.

@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
@@ -25,10 +25,10 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @dataFirst
  */
 export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<number, V>>
+  pairs: ReadonlyArray<Entry<number, V>>,
 ): Record<number, V>;
 export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<string, V>>
+  pairs: ReadonlyArray<Entry<string, V>>,
 ): Record<string, V>;
 
 /**
@@ -56,7 +56,7 @@ export function fromPairs<V>(
  * @dataLast
  */
 export function fromPairs(): <K extends PropertyKey, V>(
-  pairs: ReadonlyArray<Entry<K, V>>
+  pairs: ReadonlyArray<Entry<K, V>>,
 ) => Record<K extends string ? string : K extends number ? number : never, V>;
 
 export function fromPairs() {
@@ -65,7 +65,7 @@ export function fromPairs() {
 }
 
 function fromPairsImplementation(
-  entries: ReadonlyArray<Entry>
+  entries: ReadonlyArray<Entry>,
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
   for (const [key, value] of entries) {
@@ -78,10 +78,10 @@ function fromPairsImplementation(
 // grained handling of partiality of the output.
 type Strict = {
   <Entries extends IterableContainer<Entry>>(
-    entries: Entries
+    entries: Entries,
   ): StrictOut<Entries>;
   (): <Entries extends IterableContainer<Entry>>(
-    entries: Entries
+    entries: Entries,
   ) => StrictOut<Entries>;
 };
 
@@ -98,14 +98,14 @@ type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
     ? FromPairsTuple<Last, Head>
     : Entries extends IterableContainer<Entry>
       ? FromPairsArray<Entries>
-      : 'ERROR: Entries array-like could not be infered';
+      : "ERROR: Entries array-like could not be infered";
 
 // For strict tuples we build the result by intersecting each pair as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromPairsTuple<E, Rest> = E extends Entry
   ? Record<E[0], E[1]> & StrictOut<Rest>
-  : 'ERROR: Array-like contains a non-entry element';
+  : "ERROR: Array-like contains a non-entry element";
 
 // For the array case we also need to handle what kind of keys it defines:
 // 1. If it defines a *broad* key (one that has an infinite set of values, like

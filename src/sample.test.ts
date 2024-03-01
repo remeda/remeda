@@ -1,28 +1,28 @@
-import { NonEmptyArray } from './_types';
-import { sample } from './sample';
+import { NonEmptyArray } from "./_types";
+import { sample } from "./sample";
 
-describe('at runtime', () => {
-  describe.each([[generateRandomArray()]])('mathy stuff', array => {
+describe("at runtime", () => {
+  describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     it.each(allIndices(array))(
-      'returns the right number of items',
-      sampleSize => {
+      "returns the right number of items",
+      (sampleSize) => {
         const result = sample(array, sampleSize);
         expect(result).toHaveLength(sampleSize);
-      }
+      },
     );
 
     it.each(allIndices(array))(
       "doesn't make items up (returns a subset of the input array)",
-      sampleSize => {
+      (sampleSize) => {
         const result = sample(array, sampleSize);
 
         for (const item of result) {
           expect(array).toContain(item);
         }
-      }
+      },
     );
 
-    it('returns a random result', () => {
+    it("returns a random result", () => {
       const collector = new Set<number>();
       // We iterate because we might hit randomly on the same item several
       // times. We took a large enough number so that it's unlikely to happen
@@ -37,12 +37,12 @@ describe('at runtime', () => {
       expect(collector.size).toBeGreaterThan(1);
     });
 
-    it.each(allIndices(array))("doesn't return repetitions", sampleSize => {
+    it.each(allIndices(array))("doesn't return repetitions", (sampleSize) => {
       const result = sample(array, sampleSize);
       expect(result).toHaveLength(new Set(result).size);
     });
 
-    it.each(allIndices(array))("doesn't reorder items", sampleSize => {
+    it.each(allIndices(array))("doesn't reorder items", (sampleSize) => {
       const result = sample(array, sampleSize);
 
       // Scan the result array and make sure each item is after the previous one
@@ -55,101 +55,101 @@ describe('at runtime', () => {
     });
   });
 
-  describe('identity', () => {
-    it('for full (=== n) sample size', () => {
+  describe("identity", () => {
+    it("for full (=== n) sample size", () => {
       const array = [1, 2, 3];
       const result = sample(array, 3);
       expect(result).toBe(array);
     });
 
-    it('for large (> n) sample sizes', () => {
+    it("for large (> n) sample sizes", () => {
       const array = [1, 2, 3];
       const result = sample(array, 10);
       expect(result).toBe(array);
     });
 
-    it('on empty arrays', () => {
+    it("on empty arrays", () => {
       const array: Array<number> = [];
       const result = sample(array, 1);
       expect(result).toBe(array);
     });
 
-    it('on empty arrays and sample size 0', () => {
+    it("on empty arrays and sample size 0", () => {
       const array: Array<number> = [];
       const result = sample(array, 0);
       expect(result).toBe(array);
     });
   });
 
-  describe('edge cases', () => {
-    it('works on empty arrays', () => {
+  describe("edge cases", () => {
+    it("works on empty arrays", () => {
       const result = sample([], 1);
       expect(result).toStrictEqual([]);
     });
 
-    it('throws on negative sample size', () => {
+    it("throws on negative sample size", () => {
       expect(() => sample([1, 2, 3], -1 as number)).toThrow();
     });
 
-    it('throws on non-integer sample size', () => {
+    it("throws on non-integer sample size", () => {
       expect(() => sample([1, 2, 3], 0.5)).toThrow();
     });
   });
 });
 
-describe('typing', () => {
-  describe('sampleSize 0', () => {
-    it('on arrays', () => {
+describe("typing", () => {
+  describe("sampleSize 0", () => {
+    it("on arrays", () => {
       const array: Array<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on readonly arrays', () => {
+    it("on readonly arrays", () => {
       const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on tuples', () => {
+    it("on tuples", () => {
       const array: [number, number, number, number, number] = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on readonly tuples', () => {
+    it("on readonly tuples", () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on tuples with rest tail', () => {
+    it("on tuples with rest tail", () => {
       const array: [number, ...Array<number>] = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on tuples with rest head', () => {
+    it("on tuples with rest head", () => {
       const array: [...Array<number>, number] = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on readonly tuples with rest tail', () => {
+    it("on readonly tuples with rest tail", () => {
       const array: readonly [number, ...Array<number>] = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
-    it('on readonly tuples with rest head', () => {
+    it("on readonly tuples with rest head", () => {
       const array: readonly [...Array<number>, number] = [1, 2, 3, 4, 5];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
   });
 
-  describe('sampleSize < n', () => {
-    it('on arrays', () => {
+  describe("sampleSize < n", () => {
+    it("on arrays", () => {
       const array: Array<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -161,7 +161,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly arrays', () => {
+    it("on readonly arrays", () => {
       const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -173,7 +173,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples', () => {
+    it("on tuples", () => {
       const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -181,7 +181,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples', () => {
+    it("on readonly tuples", () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -189,13 +189,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest tail', () => {
+    it("on tuples with rest tail", () => {
       const array: [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -211,13 +211,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest tail', () => {
+    it("on readonly tuples with rest tail", () => {
       const array: readonly [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
@@ -233,11 +233,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest head', () => {
+    it("on tuples with rest head", () => {
       const array: [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -249,11 +249,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest head', () => {
+    it("on readonly tuples with rest head", () => {
       const array: readonly [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -266,22 +266,22 @@ describe('typing', () => {
     });
   });
 
-  describe('sampleSize === n', () => {
-    it('empty array', () => {
+  describe("sampleSize === n", () => {
+    it("empty array", () => {
       const array: [] = [];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<[]>();
       expect(result).toStrictEqual([]);
     });
 
-    it('empty readonly array', () => {
+    it("empty readonly array", () => {
       const array: readonly [] = [];
       const result = sample(array, 0);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
       expect(result).toStrictEqual([]);
     });
 
-    it('on arrays', () => {
+    it("on arrays", () => {
       const array: Array<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
@@ -294,7 +294,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly arrays', () => {
+    it("on readonly arrays", () => {
       const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
@@ -307,25 +307,25 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples', () => {
+    it("on tuples", () => {
       const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
     });
 
-    it('on readonly tuples', () => {
+    it("on readonly tuples", () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
     });
 
-    it('on tuples with rest tail', () => {
+    it("on tuples with rest tail", () => {
       const array: [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
@@ -342,13 +342,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest tail', () => {
+    it("on readonly tuples with rest tail", () => {
       const array: readonly [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
@@ -365,11 +365,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest head', () => {
+    it("on tuples with rest head", () => {
       const array: [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -382,11 +382,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest head', () => {
+    it("on readonly tuples with rest head", () => {
       const array: readonly [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -400,22 +400,22 @@ describe('typing', () => {
     });
   });
 
-  describe('sampleSize > n', () => {
-    it('empty array', () => {
+  describe("sampleSize > n", () => {
+    it("empty array", () => {
       const array: [] = [];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<[]>();
       expect(result).toStrictEqual([]);
     });
 
-    it('empty readonly array', () => {
+    it("empty readonly array", () => {
       const array: readonly [] = [];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
       expect(result).toStrictEqual([]);
     });
 
-    it('on arrays', () => {
+    it("on arrays", () => {
       const array: Array<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
@@ -454,7 +454,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly arrays', () => {
+    it("on readonly arrays", () => {
       const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
@@ -493,25 +493,25 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples', () => {
+    it("on tuples", () => {
       const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
     });
 
-    it('on readonly tuples', () => {
+    it("on readonly tuples", () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
     });
 
-    it('on tuples with rest tail', () => {
+    it("on tuples with rest tail", () => {
       const array: [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
@@ -578,13 +578,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest tail', () => {
+    it("on readonly tuples with rest tail", () => {
       const array: readonly [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
@@ -651,11 +651,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest head', () => {
+    it("on tuples with rest head", () => {
       const array: [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -694,11 +694,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest head', () => {
+    it("on readonly tuples with rest head", () => {
       const array: readonly [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -738,34 +738,34 @@ describe('typing', () => {
     });
   });
 
-  describe('non-const sampleSize', () => {
-    it('empty array', () => {
+  describe("non-const sampleSize", () => {
+    it("empty array", () => {
       const array: [] = [];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<[]>();
       expect(result).toStrictEqual([]);
     });
 
-    it('empty readonly array', () => {
+    it("empty readonly array", () => {
       const array: readonly [] = [];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<typeof array>();
       expect(result).toStrictEqual([]);
     });
 
-    it('on arrays', () => {
+    it("on arrays", () => {
       const array: Array<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<Array<number>>();
     });
 
-    it('on readonly arrays', () => {
+    it("on readonly arrays", () => {
       const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<Array<number>>();
     });
 
-    it('on tuples', () => {
+    it("on tuples", () => {
       const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
@@ -804,7 +804,7 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples', () => {
+    it("on readonly tuples", () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
@@ -843,13 +843,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest tail', () => {
+    it("on tuples with rest tail", () => {
       const array: [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
@@ -860,13 +860,13 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest tail', () => {
+    it("on readonly tuples with rest tail", () => {
       const array: readonly [number, boolean, ...Array<string>] = [
         1,
         true,
-        'hello',
-        'world',
-        'yey',
+        "hello",
+        "world",
+        "yey",
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
@@ -877,11 +877,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on tuples with rest head', () => {
+    it("on tuples with rest head", () => {
       const array: [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];
@@ -893,11 +893,11 @@ describe('typing', () => {
       >();
     });
 
-    it('on readonly tuples with rest head', () => {
+    it("on readonly tuples with rest head", () => {
       const array: readonly [...Array<string>, boolean, number] = [
-        'yey',
-        'hello',
-        'world',
+        "yey",
+        "hello",
+        "world",
         true,
         3,
       ];

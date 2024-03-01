@@ -1,12 +1,12 @@
-import { purry } from './purry';
-import { LazyResult, _reduceLazy } from './_reduceLazy';
-import { _toLazyIndexed } from './_toLazyIndexed';
+import { purry } from "./purry";
+import { LazyResult, _reduceLazy } from "./_reduceLazy";
+import { _toLazyIndexed } from "./_toLazyIndexed";
 import {
   IterableContainer,
   Pred,
   PredIndexed,
   PredIndexedOptional,
-} from './_types';
+} from "./_types";
 
 /**
  * Map each element of an array using a defined callback function. If the input
@@ -47,7 +47,7 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
  * @category Array
  */
 export function map<T, K>(
-  fn: Pred<T, K>
+  fn: Pred<T, K>,
 ): (array: ReadonlyArray<T>) => Array<K>;
 
 export function map() {
@@ -60,7 +60,7 @@ const _map =
     return _reduceLazy(
       array,
       indexed ? map.lazyIndexed(fn) : map.lazy(fn),
-      indexed
+      indexed,
     );
   };
 
@@ -70,7 +70,7 @@ const _lazy =
     return (
       value: T,
       index?: number,
-      array?: ReadonlyArray<T>
+      array?: ReadonlyArray<T>,
     ): LazyResult<K> => {
       return {
         done: false,
@@ -85,21 +85,21 @@ const _lazy =
 interface Strict {
   <T extends IterableContainer, K>(
     items: T,
-    mapper: Pred<T[number], K>
+    mapper: Pred<T[number], K>,
   ): StrictOut<T, K>;
 
   <T extends IterableContainer, K>(
-    mapper: Pred<T[number], K>
+    mapper: Pred<T[number], K>,
   ): (items: T) => StrictOut<T, K>;
 
   readonly indexed: {
     <T extends IterableContainer, K>(
       items: T,
-      mapper: PredIndexed<T[number], K>
+      mapper: PredIndexed<T[number], K>,
     ): StrictOut<T, K>;
 
     <T extends IterableContainer, K>(
-      mapper: PredIndexed<T[number], K>
+      mapper: PredIndexed<T[number], K>,
     ): (items: T) => StrictOut<T, K>;
   };
 }
@@ -111,10 +111,10 @@ type StrictOut<T extends IterableContainer, K> = {
 export namespace map {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, K>
+    fn: PredIndexed<T, K>,
   ): Array<K>;
   export function indexed<T, K>(
-    fn: PredIndexed<T, K>
+    fn: PredIndexed<T, K>,
   ): (array: ReadonlyArray<T>) => Array<K>;
   export function indexed() {
     return purry(_map(true), arguments, map.lazyIndexed);

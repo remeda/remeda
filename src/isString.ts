@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is a string and narrows its type accordingly
@@ -12,5 +12,5 @@ import type { NarrowedTo } from './_types';
  * @category Guard
  */
 export function isString<T>(data: T | string): data is NarrowedTo<T, string> {
-  return typeof data === 'string';
+  return typeof data === "string";
 }

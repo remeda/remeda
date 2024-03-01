@@ -2,16 +2,16 @@
 
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
-import { type } from './type';
+import { type } from "./type";
 
 function _cloneRegExp(pattern: RegExp) {
   return new RegExp(
     pattern.source,
-    (pattern.global ? 'g' : '') +
-      (pattern.ignoreCase ? 'i' : '') +
-      (pattern.multiline ? 'm' : '') +
-      (pattern.sticky ? 'y' : '') +
-      (pattern.unicode ? 'u' : '')
+    (pattern.global ? "g" : "") +
+      (pattern.ignoreCase ? "i" : "") +
+      (pattern.multiline ? "m" : "") +
+      (pattern.sticky ? "y" : "") +
+      (pattern.unicode ? "u" : ""),
   );
 }
 
@@ -19,7 +19,7 @@ function _clone(
   value: any,
   refFrom: Array<any>,
   refTo: Array<any>,
-  deep: boolean
+  deep: boolean,
 ) {
   function copy(copiedValue: any) {
     const len = refFrom.length;
@@ -40,13 +40,13 @@ function _clone(
     return copiedValue;
   }
   switch (type(value)) {
-    case 'Object':
+    case "Object":
       return copy({});
-    case 'Array':
+    case "Array":
       return copy([]);
-    case 'Date':
+    case "Date":
       return new Date(value.valueOf());
-    case 'RegExp':
+    case "RegExp":
       return _cloneRegExp(value);
     default:
       return value;
@@ -61,7 +61,7 @@ function _clone(
  * @example R.clone({foo: 'bar'}) // {foo: 'bar'}
  */
 export function clone<T>(value: T): T {
-  return value != null && typeof (value as any).clone === 'function'
+  return value != null && typeof (value as any).clone === "function"
     ? (value as any).clone()
     : _clone(value, [], [], true);
 }

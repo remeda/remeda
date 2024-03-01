@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexedOptional, PredIndexed } from './_types';
+import { purry } from "./purry";
+import { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
@@ -16,7 +16,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  */
 export function partition<T, S extends T>(
   items: ReadonlyArray<T>,
-  predicate: (item: T) => item is S
+  predicate: (item: T) => item is S,
 ): [Array<S>, Array<Exclude<T, S>>];
 
 /**
@@ -34,7 +34,7 @@ export function partition<T, S extends T>(
  */
 export function partition<T>(
   items: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
@@ -50,7 +50,7 @@ export function partition<T>(
  * @category Array
  */
 export function partition<T, S extends T>(
-  predicate: (item: T) => item is S
+  predicate: (item: T) => item is S,
 ): (array: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
 
 /**
@@ -66,7 +66,7 @@ export function partition<T, S extends T>(
  * @category Array
  */
 export function partition<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function partition() {
@@ -87,10 +87,10 @@ const _partition =
 export namespace partition {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    predicate: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>,
   ): [Array<T>, Array<T>];
   export function indexed<T>(
-    predicate: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
   export function indexed() {
     return purry(_partition(true), arguments);

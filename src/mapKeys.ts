@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { toPairs } from './toPairs';
+import { purry } from "./purry";
+import { toPairs } from "./toPairs";
 
 /**
  * Maps keys of `object` and keeps the same values.
@@ -14,7 +14,7 @@ import { toPairs } from './toPairs';
  */
 export function mapKeys<T, S extends PropertyKey>(
   data: T,
-  fn: (key: keyof T, value: Required<T>[keyof T]) => S
+  fn: (key: keyof T, value: Required<T>[keyof T]) => S,
 ): Record<S, T[keyof T]>;
 
 /**
@@ -28,7 +28,7 @@ export function mapKeys<T, S extends PropertyKey>(
  * @category Object
  */
 export function mapKeys<T, S extends PropertyKey>(
-  fn: (key: keyof T, value: Required<T>[keyof T]) => S
+  fn: (key: keyof T, value: Required<T>[keyof T]) => S,
 ): (data: T) => Record<S, T[keyof T]>;
 
 export function mapKeys() {
@@ -37,7 +37,7 @@ export function mapKeys() {
 
 function _mapKeys<T extends object>(
   data: T,
-  fn: (key: keyof T, value: Required<T>[keyof T]) => PropertyKey
+  fn: (key: keyof T, value: Required<T>[keyof T]) => PropertyKey,
 ) {
   const out: Partial<Record<PropertyKey, Required<T>[keyof T]>> = {};
   for (const [key, value] of toPairs.strict(data)) {

@@ -1,6 +1,6 @@
-import { Narrow } from './_narrow';
-import { Path, SupportsValueAtPath, ValueAtPath } from './_paths';
-import { purry } from './purry';
+import { Narrow } from "./_narrow";
+import { Path, SupportsValueAtPath, ValueAtPath } from "./_paths";
+import { purry } from "./purry";
 
 /**
  * Sets the value at `path` of `object`.
@@ -17,7 +17,7 @@ import { purry } from './purry';
 export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
   object: T,
   path: Narrow<TPath>,
-  value: ValueAtPath<T, TPath>
+  value: ValueAtPath<T, TPath>,
 ): T;
 
 /**
@@ -34,7 +34,7 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(
   path: Narrow<TPath>,
-  value: Value
+  value: Value,
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
 export function setPath() {
@@ -44,7 +44,7 @@ export function setPath() {
 export function _setPath(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
-  value: unknown
+  value: unknown,
 ): unknown {
   const [current, ...rest] = path;
   if (current === undefined) {
@@ -53,7 +53,7 @@ export function _setPath(
 
   if (Array.isArray(data)) {
     return data.map((item: unknown, index) =>
-      index === current ? _setPath(item, rest, value) : item
+      index === current ? _setPath(item, rest, value) : item,
     );
   }
 
@@ -66,7 +66,7 @@ export function _setPath(
     [current]: _setPath(
       (data as Record<PropertyKey, unknown>)[current],
       rest,
-      value
+      value,
     ),
   };
 }

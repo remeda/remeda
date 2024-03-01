@@ -18,7 +18,7 @@ yarn add remeda
 Then in .js or .ts
 
 ```js
-import * as R from 'remeda'; // tree-shaking supported!
+import * as R from "remeda"; // tree-shaking supported!
 ```
 
 ## Why Remeda?
@@ -32,13 +32,13 @@ Functional programming is nice, and it makes the code more readable. However the
 
 ```js
 // Remeda
-R.pick(obj, ['firstName', 'lastName']);
+R.pick(obj, ["firstName", "lastName"]);
 
 // Ramda
-R.pick(['firstName', 'lastName'], obj);
+R.pick(["firstName", "lastName"], obj);
 
 // Lodash
-_.pick(obj, ['firstName', 'lastName']);
+_.pick(obj, ["firstName", "lastName"]);
 ```
 
 > For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda supports it. Keep reading along!
@@ -49,36 +49,36 @@ In the above example, "data-first" approach is more natural and more programmer 
 
 ```js
 const users = [
-  { name: 'john', age: 20, gender: 'm' },
-  { name: 'marry', age: 22, gender: 'f' },
-  { name: 'samara', age: 24, gender: 'f' },
-  { name: 'paula', age: 24, gender: 'f' },
-  { name: 'bill', age: 33, gender: 'm' },
+  { name: "john", age: 20, gender: "m" },
+  { name: "marry", age: 22, gender: "f" },
+  { name: "samara", age: 24, gender: "f" },
+  { name: "paula", age: 24, gender: "f" },
+  { name: "bill", age: 33, gender: "m" },
 ];
 
 // Remeda
 R.pipe(
   users,
-  R.filter(x => x.gender === 'f'),
-  R.groupBy(x => x.age)
+  R.filter((x) => x.gender === "f"),
+  R.groupBy((x) => x.age),
 );
 
 // Ramda
 R.pipe(
-  R.filter(x => x.gender === 'f'),
-  R.groupBy(x => x.age)
+  R.filter((x) => x.gender === "f"),
+  R.groupBy((x) => x.age),
 )(users); // broken typings in TS :(
 
 // Lodash
 _(users)
-  .filter(x => x.gender === 'f')
-  .groupBy(x => x.age)
+  .filter((x) => x.gender === "f")
+  .groupBy((x) => x.age)
   .value();
 
 // Lodash-fp
 _.flow(
-  _.filter(x => x.gender === 'f'),
-  _.groupBy(x => x.age)
+  _.filter((x) => x.gender === "f"),
+  _.groupBy((x) => x.age),
 )(users); // broken typings in TS :(
 ```
 
@@ -88,11 +88,11 @@ The "data-last" version must always have one argument less than the "data-first"
 
 ```js
 // Remeda
-R.pick(obj, ['firstName', 'lastName']); // data-first
-R.pipe(obj, R.pick(['firstName', 'lastName'])); // data-last
+R.pick(obj, ["firstName", "lastName"]); // data-first
+R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
 
-R.pick(['firstName', 'lastName'], obj); // error, this won't work!
-R.pick(['firstName', 'lastName'])(obj); // this will work but the types cannot be inferred
+R.pick(["firstName", "lastName"], obj); // error, this won't work!
+R.pick(["firstName", "lastName"])(obj); // this will work but the types cannot be inferred
 ```
 
 ## Lazy evaluation
@@ -132,7 +132,7 @@ Iterable functions have an extra property `indexed` which is the same function w
 const arr = [10, 12, 13, 3];
 
 // filter even values
-R.filter(arr, x => x % 2 === 0); // => [10, 12]
+R.filter(arr, (x) => x % 2 === 0); // => [10, 12]
 
 // filter even indexes
 R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]

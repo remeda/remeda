@@ -16,7 +16,7 @@ type DefinitelyFunction<T> =
  * @category Guard
  */
 export function isFunction<T>(
-  data: T | Function
+  data: T | Function,
 ): data is DefinitelyFunction<T> {
-  return typeof data === 'function';
+  return typeof data === "function";
 }

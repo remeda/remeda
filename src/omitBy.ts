@@ -1,5 +1,5 @@
-import { keys } from './keys';
-import { purry } from './purry';
+import { keys } from "./keys";
+import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function omitBy<T>(
   object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
@@ -26,7 +26,7 @@ export function omitBy<T>(
  * @category Object
  */
 export function omitBy<T>(
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function omitBy() {
@@ -35,7 +35,7 @@ export function omitBy() {
 
 function _omitBy<T>(
   object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ) {
   if (object === undefined || object === null) {
     return object;

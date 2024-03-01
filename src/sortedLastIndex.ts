@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
+import { purry } from "./purry";
+import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -55,12 +55,12 @@ export function sortedLastIndex(): unknown {
 
 const sortedLastIndexImplementation = <T>(
   array: ReadonlyArray<T>,
-  item: T
+  item: T,
 ): number =>
   _binarySearchCutoffIndex(
     array,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.
-    pivot => pivot <= item
+    (pivot) => pivot <= item,
   );

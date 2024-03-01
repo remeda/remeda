@@ -1,9 +1,9 @@
-import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import { OrderRule, purryOrderRules } from "./_purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
-} from './_types';
+} from "./_types";
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
@@ -103,7 +103,7 @@ export function sortBy(): unknown {
 
 const _sortBy = <T>(
   data: ReadonlyArray<T>,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
   [...data].sort(compareFn);

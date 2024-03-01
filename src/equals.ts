@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 // from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
 const isArray = Array.isArray;
@@ -45,7 +45,7 @@ function _equals(a: unknown, b: unknown) {
     return true;
   }
 
-  if (a && b && typeof a === 'object' && typeof b === 'object') {
+  if (a && b && typeof a === "object" && typeof b === "object") {
     const arrA = isArray(a);
     const arrB = isArray(b);
     let i;
