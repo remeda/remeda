@@ -20,6 +20,14 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @example
  *   R.fromPairs([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'} (type: Record<string, string>)
  *   R.fromPairs.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})
+ *   R.pipe(
+ *     [['a', 'b'], ['c', 'd']],
+ *     R.fromPairs,
+ *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *   R.pipe(
+ *     ['a', 1] as const,
+ *     R.fromPairs.strict,
+ *   ); // => {a: 1} (type: {a: 1})
  * @category Object
  * @strict
  * @dataFirst
@@ -55,9 +63,10 @@ export function fromPairs<V>(
  * @strict
  * @dataLast
  */
-export function fromPairs(): <K extends PropertyKey, V>(
-  pairs: ReadonlyArray<Entry<K, V>>,
-) => Record<K extends string ? string : K extends number ? number : never, V>;
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function fromPairs(): <K extends PropertyKey, V>(
+//   pairs: ReadonlyArray<Entry<K, V>>,
+// ) => Record<K extends string ? string : K extends number ? number : never, V>;
 
 export function fromPairs() {
   // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
@@ -80,9 +89,10 @@ type Strict = {
   <Entries extends IterableContainer<Entry>>(
     entries: Entries,
   ): StrictOut<Entries>;
-  (): <Entries extends IterableContainer<Entry>>(
-    entries: Entries,
-  ) => StrictOut<Entries>;
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  // (): <Entries extends IterableContainer<Entry>>(
+  //   entries: Entries,
+  // ) => StrictOut<Entries>;
 };
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
