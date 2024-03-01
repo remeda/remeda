@@ -40,9 +40,10 @@ export function keys(
  * @category Object
  * @dataLast
  */
-export function keys(): (
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
-) => Array<string>;
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function keys(): (
+//   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
+// ) => Array<string>;
 
 export function keys() {
   return purry(Object.keys, arguments);
@@ -50,7 +51,8 @@ export function keys() {
 
 type Strict = {
   <T extends object>(data: T): Keys<T>;
-  (): <T extends object>(data: T) => Keys<T>;
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  // (): <T extends object>(data: T) => Keys<T>;
 };
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
