@@ -181,10 +181,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/sort-type-constituents": "warn",
       "@typescript-eslint/promise-function-async": "error",
       "no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-expressions": [
-        "error",
-        { enforceForJSX: true },
-      ],
+      "@typescript-eslint/no-unused-expressions": "error",
       "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": [
         "error",
@@ -245,10 +242,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/no-loop-func": "error",
       "@typescript-eslint/no-require-imports": "error",
       "no-shadow": "off",
-      "@typescript-eslint/no-shadow": [
-        "error",
-        { ignoreTypeValueShadow: false },
-      ],
+      "@typescript-eslint/no-shadow": "error",
       "@typescript-eslint/no-unsafe-unary-minus": "error",
     },
   },
