@@ -16,7 +16,6 @@ type DefinitelyFunction<T> =
  * @category Guard
  */
 export function isFunction<T>(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Function is built-in and can't be made readonly easily.
   data: Function | T,
 ): data is DefinitelyFunction<T> {
   return typeof data === "function";

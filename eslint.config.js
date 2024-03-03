@@ -172,7 +172,16 @@ module.exports = tseslint.config(
       "prefer-destructuring": "off",
       "@typescript-eslint/prefer-destructuring": [
         "warn",
-        { array: true, object: true },
+        {
+          VariableDeclarator: {
+            array: true,
+            object: true,
+          },
+          AssignmentExpression: {
+            array: true,
+            object: true,
+          },
+        },
         { enforceForRenamedProperties: true },
       ],
       "@typescript-eslint/sort-type-constituents": "warn",
@@ -211,7 +220,19 @@ module.exports = tseslint.config(
         "error",
         {
           ignoreInferredTypes: true,
-          allow: [{ from: "lib", name: ["RegExp", "IArguments", "Promise"] }],
+          allow: [
+            {
+              from: "lib",
+              name: [
+                "Error",
+                "Function",
+                "IArguments",
+                "Iterable",
+                "Promise",
+                "RegExp",
+              ],
+            },
+          ],
         },
       ],
       "@typescript-eslint/no-useless-empty-export": "error",

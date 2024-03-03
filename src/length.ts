@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types -- We use built-in types which are not readonly at the library level. */
-
 import { purry } from "./purry";
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;

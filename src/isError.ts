@@ -11,7 +11,7 @@ type DefinitelyError<T> =
  *    R.isError('somethingElse') //=> false
  * @category Guard
  */
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Error is built-in and can't be made readonly easily.
+
 export function isError<T>(data: Error | T): data is DefinitelyError<T> {
   return data instanceof Error;
 }
