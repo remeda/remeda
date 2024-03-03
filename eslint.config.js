@@ -65,9 +65,6 @@ module.exports = tseslint.config(
       // (We are assuming that the config is extended by eslint's: recommended
       // extension)
 
-      // --- Optional Rules ----------------------------------------------------
-      // These aren't enabled by default
-
       // Possible Problems
       "array-callback-return": [
         "warn",
