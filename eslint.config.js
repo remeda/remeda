@@ -233,6 +233,8 @@ module.exports = tseslint.config(
       ],
 
       // Security & Correctness
+      // TODO: Requires manual fixes, enable in a separate PR.
+      // "@typescript-eslint/prefer-readonly-parameter-types": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/prefer-regexp-exec": "error",
       // TODO: Requires manual fixes, enable in a separate PR.
