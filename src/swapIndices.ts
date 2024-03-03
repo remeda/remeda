@@ -191,7 +191,6 @@ function _swapArray(
   }
 
   result[positiveIndexA] = item[positiveIndexB];
-
   result[positiveIndexB] = item[positiveIndexA];
 
   return result;

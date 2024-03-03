@@ -309,7 +309,6 @@ function _processItem(
         }
         return false;
       }
-
       currentItem = lazyResult.next;
     }
     if (!lazyResult.hasNext) {

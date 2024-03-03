@@ -156,7 +156,6 @@ function _pathOr(
     if (current === null || current === undefined) {
       break;
     }
-
     current = (current as Record<PropertyKey, unknown>)[prop];
   }
 

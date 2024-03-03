@@ -59,7 +59,6 @@ type ComparablePrimitive = boolean | number | string;
  */
 export function purryOrderRules<T>(
   func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
-
   inputArgs: IArguments | ReadonlyArray<unknown>,
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere

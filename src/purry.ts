@@ -39,7 +39,6 @@ type MaybeLazyFunction = {
  */
 export function purry(
   fn: MaybeLazyFunction,
-
   args: IArguments | ReadonlyArray<unknown>,
   lazyFactory?: LazyFactory,
 ): unknown {

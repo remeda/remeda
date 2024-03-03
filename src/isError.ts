@@ -11,7 +11,6 @@ type DefinitelyError<T> =
  *    R.isError('somethingElse') //=> false
  * @category Guard
  */
-
 export function isError<T>(data: Error | T): data is DefinitelyError<T> {
   return data instanceof Error;
 }

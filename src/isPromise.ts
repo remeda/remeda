@@ -10,7 +10,6 @@
  *    R.isPromise('somethingElse') //=> false
  * @category Guard
  */
-
 export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {
   return data instanceof Promise;
 }
