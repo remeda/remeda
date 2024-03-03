@@ -53,7 +53,6 @@ function _equals(a: unknown, b: unknown) {
     let key;
 
     if (arrA && arrB) {
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       length = a.length;
       if (length !== b.length) {
         return false;
@@ -89,7 +88,7 @@ function _equals(a: unknown, b: unknown) {
     }
 
     const keys = Object.keys(a);
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+
     length = keys.length;
 
     if (length !== Object.keys(b).length) {

@@ -43,7 +43,6 @@ function _pickBy<T>(
 
   return keys.strict(data).reduce<Partial<T>>((acc, key) => {
     if (fn(data[key], key)) {
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       acc[key] = data[key];
     }
     return acc;

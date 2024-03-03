@@ -43,7 +43,6 @@ function _omitBy<T>(
 
   return keys.strict(object).reduce<Partial<T>>((acc, key) => {
     if (!fn(object[key], key)) {
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       acc[key] = object[key];
     }
     return acc;

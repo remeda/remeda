@@ -252,7 +252,6 @@ export function pipe(
 
     const { isSingle } = lazySequence[lazySequence.length - 1]!;
     if (isSingle) {
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       output = accumulator[0];
     } else {
       output = accumulator;
@@ -310,7 +309,7 @@ function _processItem(
         }
         return false;
       }
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+
       currentItem = lazyResult.next;
     }
     if (!lazyResult.hasNext) {

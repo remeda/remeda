@@ -173,14 +173,8 @@ module.exports = tseslint.config(
       "@typescript-eslint/prefer-destructuring": [
         "warn",
         {
-          VariableDeclarator: {
-            array: true,
-            object: true,
-          },
-          AssignmentExpression: {
-            array: true,
-            object: true,
-          },
+          VariableDeclarator: { array: true, object: true },
+          AssignmentExpression: { array: false, object: false },
         },
         { enforceForRenamedProperties: true },
       ],

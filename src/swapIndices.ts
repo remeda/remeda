@@ -190,9 +190,8 @@ function _swapArray(
     return result;
   }
 
-  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
   result[positiveIndexA] = item[positiveIndexB];
-  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+
   result[positiveIndexB] = item[positiveIndexA];
 
   return result;
