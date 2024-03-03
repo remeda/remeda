@@ -1,9 +1,5 @@
 import { purry } from "./purry";
 
-// from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
-const isArray = Array.isArray;
-const keyList = Object.keys;
-
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
@@ -45,19 +41,24 @@ function _equals(a: unknown, b: unknown) {
     return true;
   }
 
-  if (a && b && typeof a === "object" && typeof b === "object") {
-    const arrA = isArray(a);
-    const arrB = isArray(b);
-    let i;
+  if (
+    typeof a === "object" &&
+    typeof b === "object" &&
+    a !== null &&
+    b !== null
+  ) {
+    const arrA = Array.isArray(a);
+    const arrB = Array.isArray(b);
     let length;
     let key;
 
     if (arrA && arrB) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       length = a.length;
       if (length !== b.length) {
         return false;
       }
-      for (i = length; i-- !== 0; ) {
+      for (let i = length; i > 0; i -= 1) {
         if (!equals(a[i], b[i])) {
           return false;
         }
@@ -87,20 +88,21 @@ function _equals(a: unknown, b: unknown) {
       return a.toString() === b.toString();
     }
 
-    const keys = keyList(a);
+    const keys = Object.keys(a);
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     length = keys.length;
 
-    if (length !== keyList(b).length) {
+    if (length !== Object.keys(b).length) {
       return false;
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (let i = length; i > 0; i -= 1) {
       if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) {
         return false;
       }
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (let i = length; i > 0; i -= 1) {
       key = keys[i]!;
       // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
       if (!equals(a[key], b[key])) {
@@ -111,5 +113,5 @@ function _equals(a: unknown, b: unknown) {
     return true;
   }
 
-  return a !== a && b !== b;
+  return Number.isNaN(a) && Number.isNaN(b);
 }

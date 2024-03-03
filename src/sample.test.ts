@@ -2,6 +2,7 @@ import type { NonEmptyArray } from "./_types";
 import { sample } from "./sample";
 
 describe("at runtime", () => {
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     it.each(allIndices(array))(
       "returns the right number of items",
@@ -916,5 +917,5 @@ const generateRandomArray = (): NonEmptyArray<number> =>
   // @ts-expect-error [ts2322]: we know this array isn't empty!
   Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
 
-const allIndices = (array: Array<unknown>): Array<number> =>
+const allIndices = (array: ReadonlyArray<unknown>): Array<number> =>
   array.map((_, index) => index);

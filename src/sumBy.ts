@@ -3,7 +3,7 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _sumBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let sum = 0;
     array.forEach((item, i) => {
       const summand = indexed ? fn(item, i, array) : fn(item);

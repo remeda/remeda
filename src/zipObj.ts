@@ -39,13 +39,14 @@ export function zipObj() {
 }
 
 function _zipObj(
-  first: Array<number | string | symbol>,
-  second: Array<unknown>,
+  first: ReadonlyArray<number | string | symbol>,
+  second: ReadonlyArray<unknown>,
 ) {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result: Record<number | string | symbol, unknown> = {};
   for (let i = 0; i < resultLength; i++) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     result[first[i]!] = second[i];
   }
 

@@ -159,7 +159,7 @@ export function swapIndices() {
 }
 
 function _swapIndices(
-  item: IterableContainer | string,
+  item: Readonly<IterableContainer> | string,
   index1: number,
   index2: number,
 ): unknown {
@@ -190,7 +190,9 @@ function _swapArray(
     return result;
   }
 
+  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
   result[positiveIndexA] = item[positiveIndexB];
+  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
   result[positiveIndexB] = item[positiveIndexA];
 
   return result;

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types -- These are just tests... */
+
 import { sortedLastIndexBy } from "./sortedLastIndexBy";
 
 describe("runtime correctness", () => {
@@ -260,10 +262,10 @@ function indicesSeen<T>(
   item: T,
   valueFunction: (item: T) => NonNullable<unknown>,
 ): ReadonlyArray<number | undefined> {
-  const indicesSeen: Array<number | undefined> = [];
+  const indices: Array<number | undefined> = [];
   sortedLastIndexBy.indexed(items, item, (pivot, index) => {
-    indicesSeen.push(index);
+    indices.push(index);
     return valueFunction(pivot);
   });
-  return indicesSeen;
+  return indices;
 }

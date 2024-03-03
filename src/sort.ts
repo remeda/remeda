@@ -51,7 +51,7 @@ export function sort() {
   return purry(_sort, arguments);
 }
 
-function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
+function _sort<T>(items: ReadonlyArray<T>, cmp: (a: T, b: T) => number) {
   const ret = [...items];
   ret.sort(cmp);
   return ret;

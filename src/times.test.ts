@@ -32,8 +32,8 @@ describe("times", () => {
     });
 
     it("returns fn results as arr", () => {
-      const idx = (idx: number) => idx;
-      expect(times(5, idx)).toEqual([0, 1, 2, 3, 4]);
+      const mul1 = (idx: number) => idx;
+      expect(times(5, mul1)).toEqual([0, 1, 2, 3, 4]);
 
       const mul2 = (idx: number) => idx * 2;
       expect(times(5, mul2)).toEqual([0, 2, 4, 6, 8]);
@@ -73,8 +73,8 @@ describe("times", () => {
     });
 
     it("returns fn results as arr", () => {
-      const idx = (idx: number) => idx;
-      expect(times(idx)(5)).toEqual([0, 1, 2, 3, 4]);
+      const mul1 = (idx: number) => idx;
+      expect(times(mul1)(5)).toEqual([0, 1, 2, 3, 4]);
 
       const mul2 = (idx: number) => idx * 2;
       expect(times(mul2)(5)).toEqual([0, 2, 4, 6, 8]);

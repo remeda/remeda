@@ -38,7 +38,7 @@ export function uniq() {
   return purry(_uniq, arguments, uniq.lazy);
 }
 
-function _uniq<T>(array: Array<T>) {
+function _uniq<T>(array: ReadonlyArray<T>) {
   return _reduceLazy(array, uniq.lazy());
 }
 

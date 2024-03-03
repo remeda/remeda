@@ -55,28 +55,20 @@ function _uniqWith<T>(array: ReadonlyArray<T>, isEquals: IsEquals<T>) {
   return _reduceLazy(array, lazy, true);
 }
 
-function _lazy<T>(isEquals: IsEquals<T>) {
-  return (
-    value: T,
-    index?: number,
-    array?: ReadonlyArray<T>,
-  ): LazyResult<T> => {
-    if (
-      array &&
-      array.findIndex((otherValue) => isEquals(value, otherValue)) === index
-    ) {
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
-    }
-    return {
-      done: false,
-      hasNext: false,
-    };
-  };
-}
+const _lazy =
+  <T>(isEquals: IsEquals<T>) =>
+  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> =>
+    array !== undefined &&
+    array.findIndex((otherValue) => isEquals(value, otherValue)) === index
+      ? {
+          done: false,
+          hasNext: true,
+          next: value,
+        }
+      : {
+          done: false,
+          hasNext: false,
+        };
 
 export namespace uniqWith {
   export const lazy = _toLazyIndexed(_lazy);

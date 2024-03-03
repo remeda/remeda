@@ -34,7 +34,7 @@ export function takeWhile() {
   return purry(_takeWhile, arguments);
 }
 
-function _takeWhile<T>(array: Array<T>, fn: (item: T) => boolean) {
+function _takeWhile<T>(array: ReadonlyArray<T>, fn: (item: T) => boolean) {
   const ret: Array<T> = [];
   for (const item of array) {
     if (!fn(item)) {

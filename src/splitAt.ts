@@ -37,7 +37,7 @@ export function splitAt() {
   return purry(_splitAt, arguments);
 }
 
-function _splitAt<T>(array: Array<T>, index: number) {
+function _splitAt<T>(array: ReadonlyArray<T>, index: number) {
   const copy = [...array];
   const tail = copy.splice(index);
   return [copy, tail];

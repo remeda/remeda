@@ -33,21 +33,22 @@ export function take() {
   return purry(_take, arguments, take.lazy);
 }
 
-function _take<T>(array: Array<T>, n: number) {
+function _take<T>(array: ReadonlyArray<T>, n: number) {
   return _reduceLazy(array, take.lazy(n));
 }
 
 export namespace take {
   export function lazy<T>(n: number) {
+    let remaining = n;
     return (value: T): LazyResult<T> => {
-      if (n === 0) {
+      if (remaining === 0) {
         return {
           done: true,
           hasNext: false,
         };
       }
-      n--;
-      if (n === 0) {
+      remaining -= 1;
+      if (remaining === 0) {
         return {
           done: true,
           hasNext: true,

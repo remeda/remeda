@@ -35,7 +35,7 @@ export function uniqBy() {
   return purry(_uniqBy, arguments, lazyUniqBy);
 }
 
-function _uniqBy<T, K>(array: Array<T>, transformer: (item: T) => K) {
+function _uniqBy<T, K>(array: ReadonlyArray<T>, transformer: (item: T) => K) {
   return _reduceLazy(array, lazyUniqBy(transformer));
 }
 

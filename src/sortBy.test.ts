@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types -- These are just tests... */
+
 import { identity } from "./identity";
 import { pipe } from "./pipe";
 import { sortBy } from "./sortBy";

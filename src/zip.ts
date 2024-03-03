@@ -47,7 +47,7 @@ export function zip() {
   return purry(_zip, arguments);
 }
 
-function _zip(first: Array<unknown>, second: Array<unknown>) {
+function _zip(first: ReadonlyArray<unknown>, second: ReadonlyArray<unknown>) {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];

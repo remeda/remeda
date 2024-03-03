@@ -40,6 +40,7 @@ describe("data last", () => {
       pipe(
         [-1, 2],
         filter((n) => n > 0),
+        // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
         tap((data) => {
           expect(data).toStrictEqual([2]);
           expectTypeOf(data).toEqualTypeOf<Array<number>>();

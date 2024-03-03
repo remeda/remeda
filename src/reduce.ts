@@ -46,8 +46,8 @@ export function reduce() {
 const _reduce =
   (indexed: boolean) =>
   <T, K>(
-    items: Array<T>,
-    fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
+    items: ReadonlyArray<T>,
+    fn: (acc: K, item: T, index?: number, items?: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K =>
     items.reduce(
@@ -59,11 +59,11 @@ const _reduce =
 export namespace reduce {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K;
   export function indexed<T, K>(
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K,
   ): (array: ReadonlyArray<T>) => K;
   export function indexed() {

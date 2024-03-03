@@ -21,7 +21,9 @@ import { purry } from "./purry";
  * @category Object
  * @dataFirst
  */
-export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
+export function toPairs<T>(
+  object: Readonly<Record<string, T>>,
+): Array<[string, T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
