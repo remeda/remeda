@@ -158,7 +158,7 @@ describe("data last", () => {
         ],
       },
       evolve({
-        array: (array: Array<string>) => array.length,
+        array: (array: ReadonlyArray<string>) => array.length,
         nestedObj: { a: set<{ b: string }, "b">("b", "Set") },
         objAry: map(omit<{ a: number; b: number }, "b">(["b"])),
       }),

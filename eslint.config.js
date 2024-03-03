@@ -262,11 +262,4 @@ module.exports = tseslint.config(
       "@typescript-eslint/ban-types": "off",
     },
   },
-  {
-    files: ["src/**.test.ts"],
-    rules: {
-      // There's no need to be that strict within tests...
-      "@typescript-eslint/prefer-readonly-parameter-types": "off",
-    },
-  },
 );
