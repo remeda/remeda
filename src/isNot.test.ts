@@ -3,20 +3,20 @@ import {
   AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
   TestClass,
-} from '../test/types_data_provider';
-import { isNot } from './isNot';
-import { isPromise } from './isPromise';
-import { isString } from './isString';
+} from "../test/types_data_provider";
+import { isNot } from "./isNot";
+import { isPromise } from "./isPromise";
+import { isString } from "./isString";
 
-describe('isNot', () => {
-  it('should work as type guard', () => {
+describe("isNot", () => {
+  it("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
         | (() => void)
         | [number, number, number]
-        | { readonly a: 'asd' }
+        | { readonly a: "asd" }
         | Array<number>
         | boolean
         | Date
@@ -35,14 +35,14 @@ describe('isNot', () => {
     }
   });
 
-  it('should work as type guard in filter', () => {
+  it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
-    expect(data.some(c => c instanceof Promise)).toEqual(false);
+    expect(data.some((c) => c instanceof Promise)).toEqual(false);
     expectTypeOf(data).toEqualTypeOf<
       Array<
         | (() => void)
         | [number, number, number]
-        | { readonly a: 'asd' }
+        | { readonly a: "asd" }
         | Array<number>
         | boolean
         | Date

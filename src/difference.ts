@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from "./purry";
+import { _reduceLazy, LazyResult } from "./_reduceLazy";
 
 /**
  * Excludes the values from `other` array.
@@ -15,7 +15,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  */
 export function difference<T>(
   array: ReadonlyArray<T>,
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
@@ -35,7 +35,7 @@ export function difference<T>(
  * @pipeable
  */
 export function difference<T, K>(
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): (array: ReadonlyArray<K>) => Array<T>;
 
 export function difference() {

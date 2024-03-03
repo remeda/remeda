@@ -7,7 +7,7 @@
  * @category String
  */
 export function stringToPath<Path extends string>(
-  path: Path
+  path: Path,
 ): StringToPath<Path> {
   return _stringToPath(path) as StringToPath<Path>;
 }
@@ -25,7 +25,7 @@ function _stringToPath(path: string): Array<string> {
   return [path];
 }
 
-export type StringToPath<T extends string> = T extends ''
+export type StringToPath<T extends string> = T extends ""
   ? []
   : T extends `[${infer Head}].${infer Tail}`
     ? [Head, ...StringToPath<Tail>]

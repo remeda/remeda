@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Calls an input function `n` times, returning an array containing the results
@@ -36,7 +36,7 @@ export function times() {
 
 function _times<T>(count: number, fn: (n: number) => T): Array<T> {
   if (count < 0) {
-    throw new RangeError('n must be a non-negative number');
+    throw new RangeError("n must be a non-negative number");
   }
 
   const res = [];

@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from "./purry";
+import { _reduceLazy, LazyResult } from "./_reduceLazy";
 
 /**
  * Returns a list of elements that exist in both array.
@@ -15,7 +15,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
@@ -31,7 +31,7 @@ export function intersection<T>(
  * @pipeable
  */
 export function intersection<T, K>(
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): (source: ReadonlyArray<K>) => Array<T>;
 
 export function intersection() {

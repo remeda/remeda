@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return -- FIXME! */
 
-import { _reduceLazy, LazyResult } from './_reduceLazy';
-import { purry } from './purry';
+import { _reduceLazy, LazyResult } from "./_reduceLazy";
+import { purry } from "./purry";
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
 type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;
@@ -35,7 +35,7 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
  * @dataLast
  */
 export function flattenDeep<T>(): (
-  items: ReadonlyArray<T>
+  items: ReadonlyArray<T>,
 ) => Array<FlattenDeep<T>>;
 
 export function flattenDeep() {
@@ -51,7 +51,7 @@ function _flattenDeepValue<T>(value: T | Array<T>): T | Array<FlattenDeep<T>> {
     return value;
   }
   const ret: Array<any> = [];
-  value.forEach(item => {
+  value.forEach((item) => {
     if (Array.isArray(item)) {
       ret.push(...flattenDeep(item));
     } else {

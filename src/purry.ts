@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+type LazyFactory = (...args: any) => unknown;
+
+type MaybeLazyFunction = {
+  (...args: any): unknown;
+  lazy?: LazyFactory;
+};
+
 /**
  * Creates a function with `data-first` and `data-last` signatures.
  *
@@ -31,22 +38,25 @@
  * @category Function
  */
 export function purry(
-  fn: any,
-  args: IArguments | ReadonlyArray<any>,
-  lazy?: any
-) {
+  fn: MaybeLazyFunction,
+  args: IArguments | ReadonlyArray<unknown>,
+  lazyFactory?: LazyFactory,
+): unknown {
+  // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
+  const callArgs = Array.from(args) as ReadonlyArray<unknown>;
+
   const diff = fn.length - args.length;
-  const arrayArgs = Array.from(args);
   if (diff === 0) {
-    return fn(...arrayArgs);
+    return fn(...callArgs);
   }
+
   if (diff === 1) {
-    const ret: any = (data: any) => fn(data, ...arrayArgs);
-    if (lazy || fn.lazy) {
-      ret.lazy = lazy || fn.lazy;
-      ret.lazyArgs = args;
-    }
-    return ret;
+    const ret = (data: unknown) => fn(data, ...callArgs);
+    const lazy = lazyFactory ?? fn.lazy;
+    return lazy === undefined
+      ? ret
+      : Object.assign(ret, { lazy, lazyArgs: args });
   }
-  throw new Error('Wrong number of arguments');
+
+  throw new Error("Wrong number of arguments");
 }

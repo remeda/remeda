@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -9,6 +9,14 @@ import { purry } from './purry';
  * @example
  *    R.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
  *    R.toPairs.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    R.pipe(
+ *      { a: 1, b: 2, c: 3 },
+ *      toPairs,
+ *    ); // => [['a', 1], ['b', 2], ['c', 3]]
+ *    R.pipe(
+ *      { a: 1 } as const,
+ *      toPairs.strict,
+ *    ); // => [['a', 1]] typed Array<['a', 1]>
  * @strict
  * @category Object
  * @dataFirst
@@ -34,7 +42,8 @@ export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
  * @category Object
  * @dataLast
  */
-export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
 
 export function toPairs() {
   return purry(Object.entries, arguments);
@@ -46,7 +55,8 @@ type Pairs<T> = Array<
 
 type Strict = {
   <T extends NonNullable<unknown>>(object: T): Pairs<T>;
-  (): <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  // (): <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
 };
 
 export namespace toPairs {

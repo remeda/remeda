@@ -2,12 +2,12 @@ import {
   ALL_TYPES_DATA_PROVIDER,
   AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
-} from '../test/types_data_provider';
-import { isArray } from './isArray';
+} from "../test/types_data_provider";
+import { isArray } from "./isArray";
 
-describe('isArray', () => {
-  it('should infer ReadonlyArray<unknown> when given any', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- explicitly testing `any`
+describe("isArray", () => {
+  it("should infer ReadonlyArray<unknown> when given any", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
     const data = [] as any;
     if (isArray(data)) {
       expectTypeOf(data).not.toBeAny();
@@ -15,7 +15,7 @@ describe('isArray', () => {
     }
   });
 
-  it('should work as type guard', () => {
+  it("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.array as AllTypesDataProviderTypes;
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
@@ -25,24 +25,24 @@ describe('isArray', () => {
     }
   });
 
-  it('should infer ReadonlyArray<unknown> when given `unknown`', () => {
+  it("should infer ReadonlyArray<unknown> when given `unknown`", () => {
     const data = TYPES_DATA_PROVIDER.array as unknown;
     if (isArray(data)) {
       expectTypeOf(data).toEqualTypeOf<ReadonlyArray<unknown>>();
     }
   });
 
-  it('should work as type guard in filter', () => {
+  it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
-    expect(data.every(c => Array.isArray(c))).toEqual(true);
+    expect(data.every((c) => Array.isArray(c))).toEqual(true);
     expectTypeOf(data).toEqualTypeOf<
       Array<Array<number> | [number, number, number]>
     >();
   });
 });
 
-describe('typing', () => {
-  test('mutable arrays work', () => {
+describe("typing", () => {
+  test("mutable arrays work", () => {
     const data = [] as Array<number> | string;
 
     if (isArray(data)) {
@@ -53,7 +53,7 @@ describe('typing', () => {
     expectTypeOf([data].filter(isArray)).toEqualTypeOf<Array<Array<number>>>();
   });
 
-  test('readonly arrays work', () => {
+  test("readonly arrays work", () => {
     const data = [] as ReadonlyArray<number> | string;
 
     if (isArray(data)) {

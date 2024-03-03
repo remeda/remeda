@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -15,7 +15,7 @@ import { purry } from './purry';
  */
 export function takeLastWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): Array<T>;
 
 /**
@@ -31,7 +31,7 @@ export function takeLastWhile<T>(
  * @category Array
  */
 export function takeLastWhile<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function takeLastWhile() {
@@ -40,7 +40,7 @@ export function takeLastWhile() {
 
 function _takeLastWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): Array<T> {
   for (let i = data.length - 1; i >= 0; i--) {
     if (!predicate(data[i]!)) {

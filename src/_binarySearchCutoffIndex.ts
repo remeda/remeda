@@ -1,6 +1,6 @@
 export function _binarySearchCutoffIndex<T>(
   array: ReadonlyArray<T>,
-  predicate: (item: T, index: number) => boolean
+  predicate: (item: T, index: number) => boolean,
 ): number {
   // !IMPORTANT: This docblock is not above the function because then the code that builds our docs site breaks. Please do not move it.
   /**

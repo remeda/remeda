@@ -1,4 +1,4 @@
-import type { CompareFunction, NonEmptyArray } from './_types';
+import type { CompareFunction, NonEmptyArray } from "./_types";
 
 // We define the comparators in a global const so that they are only
 // instantiated once, and so we can couple a label (string) for them that could
@@ -59,7 +59,7 @@ type ComparablePrimitive = number | string | boolean;
  */
 export function purryOrderRules<T>(
   func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
-  inputArgs: IArguments | ReadonlyArray<unknown>
+  inputArgs: IArguments | ReadonlyArray<unknown>,
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call purry so it's fine...
@@ -96,11 +96,13 @@ export function purryOrderRulesWithArgument(
     data: ReadonlyArray<T>,
     compareFn: CompareFunction<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
-    arg: any
+    arg: any,
   ) => unknown,
-  inputArgs: IArguments
+  inputArgs: IArguments,
 ): unknown {
-  const [first, second, ...rest] = Array.from(inputArgs);
+  const [first, second, ...rest] = Array.from(
+    inputArgs,
+  ) as ReadonlyArray<unknown>;
 
   // We need to pull the `n` argument out to make it work with purryOrderRules.
   let arg: unknown;
@@ -124,9 +126,9 @@ function orderRuleComparer<T>(
   ...otherRules: ReadonlyArray<OrderRule<T>>
 ): (a: T, b: T) => number {
   const projector =
-    typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
+    typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
-  const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
+  const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
   const comparator = COMPARATORS[direction];
 
   const nextComparer =
@@ -158,14 +160,16 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return true;
   }
 
-  if (typeof x !== 'object' || !Array.isArray(x)) {
+  if (typeof x !== "object" || !Array.isArray(x)) {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] = x;
+  const [maybeProjection, maybeDirection, ...rest] =
+    x as ReadonlyArray<unknown>;
 
   return (
     isProjection(maybeProjection) &&
+    typeof maybeDirection === "string" &&
     maybeDirection in COMPARATORS &&
     // Has to be a 2-tuple
     rest.length === 0
@@ -173,4 +177,4 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
 }
 
 const isProjection = <T>(x: unknown): x is Projection<T> =>
-  typeof x === 'function' && x.length === 1;
+  typeof x === "function" && x.length === 1;

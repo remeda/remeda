@@ -1,6 +1,6 @@
-import { once } from './once';
+import { once } from "./once";
 
-test('should call only once', () => {
+test("should call only once", () => {
   const mock = vi.fn(() => ({}));
   const wrapped = once(mock as () => object);
   const ret1 = wrapped();

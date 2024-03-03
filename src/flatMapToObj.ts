@@ -1,5 +1,5 @@
-import { PredIndexedOptional } from './_types';
-import { purry } from './purry';
+import { PredIndexedOptional } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
@@ -23,7 +23,7 @@ import { purry } from './purry';
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
-  fn: (element: T) => Array<[K, V]>
+  fn: (element: T) => Array<[K, V]>,
 ): Record<K, V>;
 
 /**
@@ -50,7 +50,7 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
-  fn: (element: T) => Array<[K, V]>
+  fn: (element: T) => Array<[K, V]>,
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
 export function flatMapToObj() {
@@ -64,7 +64,7 @@ const _flatMapToObj =
     fn: PredIndexedOptional<
       T,
       ReadonlyArray<[key: PropertyKey, value: unknown]>
-    >
+    >,
   ) => {
     return array.reduce<Record<PropertyKey, unknown>>(
       (result, element, index) => {
@@ -74,17 +74,17 @@ const _flatMapToObj =
         });
         return result;
       },
-      {}
+      {},
     );
   };
 
 export namespace flatMapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): Record<K, V>;
   export function indexed<T, K extends PropertyKey, V>(
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): (array: ReadonlyArray<T>) => Record<K, V>;
   export function indexed() {
     return purry(_flatMapToObj(true), arguments);

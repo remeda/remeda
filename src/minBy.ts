@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexed, PredIndexedOptional } from './_types';
+import { purry } from "./purry";
+import { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _minBy =
   (indexed: boolean) =>
@@ -36,7 +36,7 @@ const _minBy =
  * @category Array
  */
 export function minBy<T>(
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => T | undefined;
 
 /**
@@ -57,7 +57,7 @@ export function minBy<T>(
  */
 export function minBy<T>(
   items: ReadonlyArray<T>,
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): T | undefined;
 
 export function minBy() {
@@ -67,10 +67,10 @@ export function minBy() {
 export namespace minBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): T | undefined;
   export function indexed<T>(
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => T | undefined;
   export function indexed() {
     return purry(_minBy(true), arguments);

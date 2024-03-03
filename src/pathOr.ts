@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
@@ -84,7 +82,7 @@ type PathValue3<
 export function pathOr<T, A extends keyof Pathable<T>>(
   object: T,
   path: readonly [A],
-  defaultValue: PathValue1<T, A>
+  defaultValue: PathValue1<T, A>,
 ): PathValue1<T, A>;
 
 export function pathOr<
@@ -94,7 +92,7 @@ export function pathOr<
 >(
   object: T,
   path: readonly [A, B],
-  defaultValue: PathValue2<T, A, B>
+  defaultValue: PathValue2<T, A, B>,
 ): PathValue2<T, A, B>;
 
 export function pathOr<
@@ -105,7 +103,7 @@ export function pathOr<
 >(
   object: T,
   path: readonly [A, B, C],
-  defaultValue: PathValue3<T, A, B, C>
+  defaultValue: PathValue3<T, A, B, C>,
 ): PathValue3<T, A, B, C>;
 
 /**
@@ -122,7 +120,7 @@ export function pathOr<
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   path: readonly [A],
-  defaultValue: PathValue1<T, A>
+  defaultValue: PathValue1<T, A>,
 ): (object: T) => PathValue1<T, A>;
 
 export function pathOr<
@@ -131,7 +129,7 @@ export function pathOr<
   B extends keyof Pathable1<T, A>,
 >(
   path: readonly [A, B],
-  defaultValue: PathValue2<T, A, B>
+  defaultValue: PathValue2<T, A, B>,
 ): (object: T) => PathValue2<T, A, B>;
 
 export function pathOr<
@@ -141,20 +139,25 @@ export function pathOr<
   C extends keyof Pathable2<T, A, B>,
 >(
   path: readonly [A, B, C],
-  defaultValue: PathValue3<T, A, B, C>
+  defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
 export function pathOr() {
   return purry(_pathOr, arguments);
 }
 
-function _pathOr(object: any, path: Array<any>, defaultValue: any): any {
-  let current = object;
+function _pathOr(
+  data: unknown,
+  path: ReadonlyArray<PropertyKey>,
+  defaultValue: unknown,
+): unknown {
+  let current = data;
   for (const prop of path) {
-    if (current == null || current[prop] == null) {
-      return defaultValue;
+    if (current == null) {
+      break;
     }
-    current = current[prop];
+    current = (current as Record<PropertyKey, unknown>)[prop];
   }
-  return current;
+
+  return current ?? defaultValue;
 }

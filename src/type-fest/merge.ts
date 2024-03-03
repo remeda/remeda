@@ -1,6 +1,6 @@
-import type { EnforceOptional } from './enforce-optional';
-import type { OmitIndexSignature } from './omit-index-signature';
-import type { PickIndexSignature } from './pick-index-signature';
+import type { EnforceOptional } from "./enforce-optional";
+import type { OmitIndexSignature } from "./omit-index-signature";
+import type { PickIndexSignature } from "./pick-index-signature";
 
 // Merges two objects without worrying about index signatures.
 type SimpleMerge<Destination, Source> = {

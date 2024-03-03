@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Returns a new array containing the keys of the array or object.
@@ -11,13 +11,21 @@ import { purry } from './purry';
  *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
  *    R.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    R.pipe(['x', 'y', 'z'], R.keys) // => ['0', '1', '2']
+ *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.keys) // => ['a', 'b', 'c']
+ *    R.pipe(
+ *      { a: 'x', b: 'y', c: 'z' },
+ *      R.keys,
+ *      R.first(),
+ *    ) // => 'a'
+ *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
  * @dataFirst
  */
 export function keys(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 ): Array<string>;
 
 /**
@@ -40,9 +48,10 @@ export function keys(
  * @category Object
  * @dataLast
  */
-export function keys(): (
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
-) => Array<string>;
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function keys(): (
+//   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
+// ) => Array<string>;
 
 export function keys() {
   return purry(Object.keys, arguments);
@@ -50,7 +59,8 @@ export function keys() {
 
 type Strict = {
   <T extends object>(data: T): Keys<T>;
-  (): <T extends object>(data: T) => Keys<T>;
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  // (): <T extends object>(data: T) => Keys<T>;
 };
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
@@ -94,8 +104,8 @@ type IndicesAfterSpread<
     : T extends readonly [...infer Head, unknown]
       ?
           | IndicesAfterSpread<Head, [unknown, ...Iterations]>
-          | Iterations['length']
-      : Iterations['length'];
+          | Iterations["length"]
+      : Iterations["length"];
 
 type ObjectKeys<T> =
   T extends Record<PropertyKey, never>

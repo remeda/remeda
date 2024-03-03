@@ -1,7 +1,7 @@
-import { purry } from './purry';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
-import { _toLazyIndexed } from './_toLazyIndexed';
-import { _toSingle } from './_toSingle';
+import { purry } from "./purry";
+import { Pred, PredIndexedOptional, PredIndexed } from "./_types";
+import { _toLazyIndexed } from "./_toLazyIndexed";
+import { _toSingle } from "./_toSingle";
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
@@ -20,7 +20,7 @@ import { _toSingle } from './_toSingle';
  */
 export function findIndex<T>(
   array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): number;
 
 /**
@@ -45,7 +45,7 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => number;
 
 export function findIndex() {
@@ -59,7 +59,7 @@ const _findIndex =
       return array.findIndex(fn);
     }
 
-    return array.findIndex(x => fn(x));
+    return array.findIndex((x) => fn(x));
   };
 
 const _lazy =
@@ -86,10 +86,10 @@ const _lazy =
 export namespace findIndex {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): number;
   export function indexed<T>(
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
   export function indexed() {
     return purry(_findIndex(true), arguments, findIndex.lazyIndexed);

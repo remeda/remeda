@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexedOptional, PredIndexed } from './_types';
+import { purry } from "./purry";
+import { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
@@ -20,7 +20,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  */
 export function indexBy<T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => unknown
+  fn: (item: T) => unknown,
 ): Record<string, T>;
 
 /**
@@ -48,7 +48,7 @@ export function indexBy<T>(
  * @strict
  */
 export function indexBy<T>(
-  fn: (item: T) => unknown
+  fn: (item: T) => unknown,
 ): (array: ReadonlyArray<T>) => Record<string, T>;
 
 export function indexBy() {
@@ -68,11 +68,11 @@ const _indexBy =
 
 function indexByStrict<K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => K
+  fn: (item: T) => K,
 ): Partial<Record<K, T>>;
 
 function indexByStrict<K extends PropertyKey, T>(
-  fn: (item: T) => K
+  fn: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
 
 function indexByStrict() {
@@ -81,7 +81,7 @@ function indexByStrict() {
 
 const _indexByStrict = <K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => K
+  fn: (item: T) => K,
 ) => {
   return array.reduce<Partial<Record<K, T>>>((ret, item) => {
     const key = fn(item);
@@ -93,10 +93,10 @@ const _indexByStrict = <K extends PropertyKey, T>(
 export namespace indexBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, unknown>
+    fn: PredIndexed<T, unknown>,
   ): Record<string, T>;
   export function indexed<T>(
-    fn: PredIndexed<T, unknown>
+    fn: PredIndexed<T, unknown>,
   ): (array: ReadonlyArray<T>) => Record<string, T>;
   export function indexed() {
     return purry(_indexBy(true), arguments);

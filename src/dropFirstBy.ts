@@ -1,6 +1,6 @@
-import { heapify, heapMaybeInsert } from './_heap';
-import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
-import type { CompareFunction, NonEmptyArray } from './_types';
+import { heapify, heapMaybeInsert } from "./_heap";
+import { OrderRule, purryOrderRulesWithArgument } from "./_purryOrderRules";
+import type { CompareFunction, NonEmptyArray } from "./_types";
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -52,7 +52,7 @@ export function dropFirstBy(): unknown {
 function dropFirstByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
-  n: number
+  n: number,
 ): Array<T> {
   if (n >= data.length) {
     return [];

@@ -1,10 +1,10 @@
-import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
-import { quickSelect } from './_quickSelect';
+import { OrderRule, purryOrderRulesWithArgument } from "./_purryOrderRules";
+import { quickSelect } from "./_quickSelect";
 import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
-} from './_types';
+} from "./_types";
 
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.
@@ -56,11 +56,11 @@ export function nthBy(): unknown {
 const nthByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
-  index: number
+  index: number,
 ): T | undefined =>
   quickSelect(
     data,
     // Allow negative indices gracefully
     index >= 0 ? index : data.length + index,
-    compareFn
+    compareFn,
   );

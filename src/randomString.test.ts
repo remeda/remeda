@@ -1,5 +1,5 @@
-import { randomString } from './randomString';
+import { randomString } from "./randomString";
 
-test('randomString', () => {
+test("randomString", () => {
   expect(randomString(10).length).toBe(10);
 });
