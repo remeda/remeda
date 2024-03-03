@@ -25,7 +25,7 @@ import { purry } from "./purry";
  * @dataFirst
  */
 export function keys(
-  source: ArrayLike<unknown> | Record<PropertyKey, unknown>,
+  source: ArrayLike<unknown> | Readonly<Record<PropertyKey, unknown>>,
 ): Array<string>;
 
 /**

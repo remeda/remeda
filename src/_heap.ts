@@ -16,6 +16,7 @@ import { hasAtLeast } from "./hasAtLeast";
  * @returns - void, the result is in the provided heap array.
  */
 export function heapify<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   compareFn: CompareFunction<T>,
 ): void {
@@ -37,6 +38,7 @@ export function heapify<T>(
  * heap if the item was inserted.
  */
 export function heapMaybeInsert<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   compareFn: CompareFunction<T>,
   item: T,
@@ -45,7 +47,7 @@ export function heapMaybeInsert<T>(
     return;
   }
 
-  const head = heap[0];
+  const [head] = heap;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.
@@ -63,6 +65,7 @@ export function heapMaybeInsert<T>(
  * swapping other items in the process.
  */
 function heapSiftDown<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   index: number,
   compareFn: CompareFunction<T>,

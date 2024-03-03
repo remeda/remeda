@@ -39,7 +39,7 @@ export function flatMap() {
 }
 
 function _flatMap<T, K>(
-  array: Array<T>,
+  array: ReadonlyArray<T>,
   fn: (input: T) => ReadonlyArray<K>,
 ): Array<K> {
   return flatten(array.map((item) => fn(item)));

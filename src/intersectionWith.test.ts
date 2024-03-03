@@ -38,17 +38,21 @@ describe("intersectionWith", () => {
       ).toEqual(expected);
     });
     it("checks if items are equal based on remeda's imported util function as a comparator", () => {
-      const source = [
-        { x: 1, y: 2 },
-        { x: 2, y: 1 },
-      ];
-      const other = [
-        { x: 1, y: 1 },
-        { x: 1, y: 2 },
-      ];
-      const expected = [{ x: 1, y: 2 }];
-
-      expect(pipe(source, intersectionWith(other, equals))).toEqual(expected);
+      expect(
+        pipe(
+          [
+            { x: 1, y: 2 },
+            { x: 2, y: 1 },
+          ],
+          intersectionWith(
+            [
+              { x: 1, y: 1 },
+              { x: 1, y: 2 },
+            ],
+            equals,
+          ),
+        ),
+      ).toEqual([{ x: 1, y: 2 }]);
     });
 
     it("evaluates lazily", () => {

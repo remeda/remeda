@@ -34,7 +34,7 @@ export function drop() {
   return purry(_drop, arguments, drop.lazy);
 }
 
-function _drop<T>(array: Array<T>, n: number) {
+function _drop<T>(array: ReadonlyArray<T>, n: number) {
   return _reduceLazy(array, drop.lazy(n));
 }
 
@@ -43,7 +43,7 @@ export namespace drop {
     let left = n;
     return (value: T): LazyResult<T> => {
       if (left > 0) {
-        left--;
+        left -= 1;
         return {
           done: false,
           hasNext: false,

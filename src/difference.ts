@@ -43,13 +43,13 @@ export function difference() {
   return purry(_difference, arguments, difference.lazy);
 }
 
-function _difference<T>(array: Array<T>, other: Array<T>) {
+function _difference<T>(array: ReadonlyArray<T>, other: ReadonlyArray<T>) {
   const lazy = difference.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace difference {
-  export function lazy<T>(other: Array<T>) {
+  export function lazy<T>(other: ReadonlyArray<T>) {
     const set = new Set(other);
     return (value: T): LazyResult<T> => {
       if (!set.has(value)) {

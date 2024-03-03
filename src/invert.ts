@@ -42,7 +42,10 @@ function _invert(
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const key in object) {
-    result[object[key]!] = key;
+    // @see https://eslint.org/docs/latest/rules/guard-for-in
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      result[object[key]!] = key;
+    }
   }
 
   return result;

@@ -3,7 +3,7 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _maxBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let ret: T | undefined = undefined;
     let retMax: number | undefined = undefined;
     array.forEach((item, i) => {

@@ -207,7 +207,13 @@ module.exports = tseslint.config(
       ],
 
       // Security & Correctness
-      "@typescript-eslint/prefer-readonly-parameter-types": "error",
+      "@typescript-eslint/prefer-readonly-parameter-types": [
+        "error",
+        {
+          ignoreInferredTypes: true,
+          allow: [{ from: "lib", name: ["RegExp", "IArguments", "Promise"] }],
+        },
+      ],
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/prefer-regexp-exec": "error",
       "@typescript-eslint/require-array-sort-compare": "error",
@@ -245,6 +251,13 @@ module.exports = tseslint.config(
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+    },
+  },
+  {
+    files: ["src/**.test.ts"],
+    rules: {
+      // There's no need to be that strict within tests...
+      "@typescript-eslint/prefer-readonly-parameter-types": "off",
     },
   },
 );

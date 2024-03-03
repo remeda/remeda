@@ -38,6 +38,7 @@ function _pick<T extends object, K extends keyof T>(
 ) {
   return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
     if (name in object) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       acc[name] = object[name];
     }
     return acc;

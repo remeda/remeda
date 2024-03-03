@@ -235,17 +235,15 @@ describe("typing", () => {
 
     it("does not accept the input value that is not Array and Object", () => {
       const evolver = { a: add(1) };
-      // Type check only
-      () => {
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        evolve(0, evolver);
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(undefined, evolver)).toThrowError();
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(null, evolver)).toThrowError();
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve("", evolver)).toThrowError();
-      };
+
+      // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+      evolve(0, evolver);
+      // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+      expect(evolve(undefined, evolver)).toThrowError();
+      // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+      expect(evolve(null, evolver)).toThrowError();
+      // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
+      expect(evolve("", evolver)).toThrowError();
     });
 
     it("does not accept function that require multiple arguments", () => {
@@ -333,17 +331,14 @@ describe("typing", () => {
 
     it("does not accept the input value that is not Array and Object", () => {
       const evolver = { a: add(1) };
-      // Type check only
-      () => {
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: number): unknown'.ts(2345)
-        pipe(0, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: undefined): unknown'.ts(2345)
-        pipe(undefined, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: null): unknown'.ts(2345)
-        pipe(null, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: string): unknown'.ts(2345)
-        pipe("", evolve(evolver));
-      };
+      // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: number): unknown'.ts(2345)
+      pipe(0, evolve(evolver));
+      // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: undefined): unknown'.ts(2345)
+      pipe(undefined, evolve(evolver));
+      // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: null): unknown'.ts(2345)
+      pipe(null, evolve(evolver));
+      // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: string): unknown'.ts(2345)
+      pipe("", evolve(evolver));
     });
 
     it("does not accept function that require multiple arguments", () => {

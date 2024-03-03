@@ -30,7 +30,7 @@ export function dropLast() {
   return purry(_dropLast, arguments);
 }
 
-function _dropLast<T>(array: Array<T>, n: number) {
+function _dropLast<T>(array: ReadonlyArray<T>, n: number) {
   const copy = [...array];
   if (n > 0) {
     copy.splice(-n);

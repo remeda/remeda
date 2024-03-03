@@ -45,7 +45,7 @@ export function groupBy() {
 const _groupBy =
   (indexed: boolean) =>
   <T, Key extends PropertyKey = PropertyKey>(
-    array: Array<T>,
+    array: ReadonlyArray<T>,
     fn: PredIndexedOptional<T, Key | undefined>,
   ) => {
     const ret: Record<string, Array<T>> = {};
@@ -53,6 +53,7 @@ const _groupBy =
       const key = indexed ? fn(item, index, array) : fn(item);
       if (key !== undefined) {
         const actualKey = String(key);
+        // eslint-disable-next-line @typescript-eslint/prefer-destructuring
         let items = ret[actualKey];
         if (items === undefined) {
           items = [];

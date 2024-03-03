@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types -- These are just tests... */
-
 import { sortedIndexBy } from "./sortedIndexBy";
 
 describe("runtime correctness", () => {

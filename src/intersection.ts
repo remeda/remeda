@@ -39,13 +39,13 @@ export function intersection() {
   return purry(_intersection, arguments, intersection.lazy);
 }
 
-function _intersection<T>(array: Array<T>, other: Array<T>) {
+function _intersection<T>(array: ReadonlyArray<T>, other: ReadonlyArray<T>) {
   const lazy = intersection.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace intersection {
-  export function lazy<T>(other: Array<T>) {
+  export function lazy<T>(other: ReadonlyArray<T>) {
     return (value: T): LazyResult<T> => {
       const set = new Set(other);
       if (set.has(value)) {

@@ -39,7 +39,7 @@ export function flatten() {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: Array<T>) {
+function _flatten<T>(items: ReadonlyArray<T>) {
   return _reduceLazy(items, flatten.lazy());
 }
 

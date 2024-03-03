@@ -83,7 +83,7 @@ const _lazy =
 export namespace filter {
   export function indexed<T, S extends T>(
     array: ReadonlyArray<T>,
-    fn: (input: T, index: number, array: Array<T>) => input is S,
+    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
   ): Array<S>;
   export function indexed<T>(
     array: ReadonlyArray<T>,
@@ -93,7 +93,7 @@ export namespace filter {
    * @dataLast
    */
   export function indexed<T, S extends T>(
-    fn: (input: T, index: number, array: Array<T>) => input is S,
+    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
   ): (array: ReadonlyArray<T>) => Array<S>;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,

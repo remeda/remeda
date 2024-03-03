@@ -3,7 +3,7 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _meanBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     if (array.length === 0) {
       return NaN;
     }

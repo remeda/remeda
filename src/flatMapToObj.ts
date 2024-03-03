@@ -63,7 +63,7 @@ const _flatMapToObj =
     array: ReadonlyArray<T>,
     fn: PredIndexedOptional<
       T,
-      ReadonlyArray<[key: PropertyKey, value: unknown]>
+      ReadonlyArray<readonly [key: PropertyKey, value: unknown]>
     >,
   ) =>
     array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {

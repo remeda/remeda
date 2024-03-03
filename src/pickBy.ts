@@ -34,15 +34,17 @@ export function pickBy() {
 }
 
 function _pickBy<T>(
-  object: T,
+  data: T,
   fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): Partial<T> {
-  if (object == null) {
+  if (data === null || data === undefined) {
     return {};
   }
-  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
-    if (fn(object[key], key)) {
-      acc[key] = object[key];
+
+  return keys.strict(data).reduce<Partial<T>>((acc, key) => {
+    if (fn(data[key], key)) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+      acc[key] = data[key];
     }
     return acc;
   }, {});

@@ -3,7 +3,7 @@ import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 
 const _countBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) =>
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) =>
     array.reduce((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       return ret + (value ? 1 : 0);

@@ -49,8 +49,8 @@ export function first() {
   return purry(_first, arguments, first.lazy);
 }
 
-function _first<T>([first]: ReadonlyArray<T>) {
-  return first;
+function _first<T>([item]: ReadonlyArray<T>) {
+  return item;
 }
 
 export namespace first {

@@ -62,7 +62,7 @@ function mergeDeepImplementation<
       continue;
     }
 
-    const destinationValue = destination[key];
+    const { [key]: destinationValue } = destination;
     if (!isRecord(destinationValue)) {
       // The value in destination is not a mergable object so the value from
       // source (which was already copied in the shallow merge) would be used
@@ -70,7 +70,7 @@ function mergeDeepImplementation<
       continue;
     }
 
-    const sourceValue = source[key];
+    const { [key]: sourceValue } = source;
     if (!isRecord(sourceValue)) {
       // The value in source is not a mergable object either, so it will
       // override the object in destination.

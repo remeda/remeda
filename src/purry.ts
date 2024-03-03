@@ -4,7 +4,7 @@ type LazyFactory = (...args: any) => unknown;
 
 type MaybeLazyFunction = {
   (...args: any): unknown;
-  lazy?: LazyFactory;
+  readonly lazy?: LazyFactory;
 };
 
 /**
@@ -39,6 +39,7 @@ type MaybeLazyFunction = {
  */
 export function purry(
   fn: MaybeLazyFunction,
+
   args: IArguments | ReadonlyArray<unknown>,
   lazyFactory?: LazyFactory,
 ): unknown {

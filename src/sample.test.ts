@@ -2,7 +2,6 @@ import type { NonEmptyArray } from "./_types";
 import { sample } from "./sample";
 
 describe("at runtime", () => {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     it.each(allIndices(array))(
       "returns the right number of items",

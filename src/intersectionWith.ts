@@ -64,8 +64,8 @@ export function intersectionWith() {
 }
 
 function _intersectionWith<TFirst, TSecond>(
-  array: Array<TFirst>,
-  other: Array<TSecond>,
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   comparator: Comparator<TFirst, TSecond>,
 ) {
   const lazy = intersectionWith.lazy(other, comparator);
@@ -74,7 +74,7 @@ function _intersectionWith<TFirst, TSecond>(
 
 export namespace intersectionWith {
   export function lazy<TFirst, TSecond>(
-    other: Array<TSecond>,
+    other: ReadonlyArray<TSecond>,
     comparator: Comparator<TFirst, TSecond>,
   ) {
     return (value: TFirst): LazyResult<TFirst> => {

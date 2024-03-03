@@ -59,6 +59,7 @@ type ComparablePrimitive = boolean | number | string;
  */
 export function purryOrderRules<T>(
   func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
+
   inputArgs: IArguments | ReadonlyArray<unknown>,
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
@@ -129,7 +130,7 @@ function orderRuleComparer<T>(
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const comparator = COMPARATORS[direction];
+  const { [direction]: comparator } = COMPARATORS;
 
   const nextComparer =
     secondaryRule === undefined

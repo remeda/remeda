@@ -53,7 +53,7 @@ export function findLast() {
 
 const _findLast =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
       if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return array[i];

@@ -14,7 +14,7 @@ export function mergeAll<A, B, C, D>(
   array: readonly [A, B, C, D],
 ): A & B & C & D;
 export function mergeAll<A, B, C, D, E>(
-  array: [A, B, C, D, E],
+  array: readonly [A, B, C, D, E],
 ): A & B & C & D & E;
 export function mergeAll(array: ReadonlyArray<object>): object;
 

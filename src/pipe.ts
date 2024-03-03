@@ -206,16 +206,18 @@ export function pipe(
 
   let operationIndex = 0;
   while (operationIndex < operations.length) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     const lazyOperation = lazyOperations[operationIndex];
     if (lazyOperation === undefined || !isIterable(output)) {
       const operation = operations[operationIndex]!;
       output = operation(output);
-      operationIndex++;
+      operationIndex += 1;
       continue;
     }
 
     const lazySequence: Array<ReturnType<typeof toPipedLazy>> = [];
     for (let j = operationIndex; j < operations.length; j++) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       const lazyOp = lazyOperations[j];
       if (lazyOp === undefined) {
         break;
@@ -250,6 +252,7 @@ export function pipe(
 
     const { isSingle } = lazySequence[lazySequence.length - 1]!;
     if (isSingle) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       output = accumulator[0];
     } else {
       output = accumulator;
@@ -262,34 +265,40 @@ export function pipe(
 type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
 
 type LazyOp = ((input: any) => any) & {
-  lazy: ((...args: Array<any>) => LazyFn) & {
-    indexed: boolean;
-    single: boolean;
+  readonly lazy: ((...args: ReadonlyArray<any>) => LazyFn) & {
+    readonly indexed: boolean;
+    readonly single: boolean;
   };
-  lazyArgs?: ReadonlyArray<unknown>;
+  readonly lazyArgs?: ReadonlyArray<unknown>;
 };
 
 function _processItem(
   item: unknown,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: Array<unknown>,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
   lazySequence: ReadonlyArray<ReturnType<typeof toPipedLazy>>,
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
     return false;
   }
+
+  let currentItem = item;
+
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
   for (let i = 0; i < lazySequence.length; i++) {
     const lazyFn = lazySequence[i]!;
     const { isIndexed, index, items } = lazyFn;
-    items.push(item);
-    lazyResult = isIndexed ? lazyFn(item, index, items) : lazyFn(item);
-    lazyFn.index++;
+    items.push(currentItem);
+    lazyResult = isIndexed
+      ? lazyFn(currentItem, index, items)
+      : lazyFn(currentItem);
+    lazyFn.index += 1;
     if (lazyResult.hasNext) {
-      if (lazyResult.hasMany) {
-        const nextValues: Array<any> = lazyResult.next;
-        for (const subItem of nextValues) {
+      if (lazyResult.hasMany ?? false) {
+        for (const subItem of lazyResult.next as ReadonlyArray<unknown>) {
           const subResult = _processItem(
             subItem,
             accumulator,
@@ -301,7 +310,8 @@ function _processItem(
         }
         return false;
       }
-      item = lazyResult.next;
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+      currentItem = lazyResult.next;
     }
     if (!lazyResult.hasNext) {
       break;
@@ -313,7 +323,7 @@ function _processItem(
     }
   }
   if (lazyResult.hasNext) {
-    accumulator.push(item);
+    accumulator.push(currentItem);
   }
   if (isDone) {
     return true;

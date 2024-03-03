@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-readonly-parameter-types -- FIXME! */
 
 import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
@@ -43,7 +43,7 @@ export function flattenDeep() {
   return purry(_flattenDeep, arguments, flattenDeep.lazy);
 }
 
-function _flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>> {
+function _flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>> {
   return _reduceLazy(items, flattenDeep.lazy());
 }
 

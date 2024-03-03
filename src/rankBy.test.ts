@@ -8,7 +8,7 @@ describe("runtime (dataFirst)", () => {
 
   it("maintains the rank for items already in the array", () => {
     const data = [5, 1, 3] as const;
-    const sorted = [...data].sort();
+    const sorted = [...data].sort((a, b) => a - b);
     for (let i = 0; i < sorted.length; i += 1) {
       // TODO: Use `Array.prototype.entries` once we bump our TS target so we
       // can get both the index and the item at the same time, and don't need

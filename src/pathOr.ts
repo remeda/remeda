@@ -153,9 +153,10 @@ function _pathOr(
 ): unknown {
   let current = data;
   for (const prop of path) {
-    if (current == null) {
+    if (current === null || current === undefined) {
       break;
     }
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     current = (current as Record<PropertyKey, unknown>)[prop];
   }
 

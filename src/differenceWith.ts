@@ -59,8 +59,8 @@ export function differenceWith() {
 }
 
 function _differenceWith<TFirst, TSecond>(
-  array: Array<TFirst>,
-  other: Array<TSecond>,
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ) {
   const lazy = differenceWith.lazy(other, isEquals);
@@ -69,7 +69,7 @@ function _differenceWith<TFirst, TSecond>(
 
 export namespace differenceWith {
   export function lazy<TFirst, TSecond>(
-    other: Array<TSecond>,
+    other: ReadonlyArray<TSecond>,
     isEquals: IsEquals<TFirst, TSecond>,
   ) {
     return (value: TFirst): LazyResult<TFirst> => {
