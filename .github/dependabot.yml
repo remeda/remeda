@@ -37,4 +37,4 @@ updates:
     groups:
       actions:
         patterns:
-          - '*'
+          - "*"

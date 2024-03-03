@@ -1,9 +1,4 @@
-type DefinitelyString<T> =
-  Extract<T, string> extends never
-    ? string
-    : Extract<T, string> extends any
-      ? string
-      : Extract<T, string>;
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is a string and narrows its type accordingly
@@ -16,6 +11,6 @@ type DefinitelyString<T> =
  *    R.isString(1) //=> false
  * @category Guard
  */
-export function isString<T>(data: T | string): data is DefinitelyString<T> {
-  return typeof data === 'string';
+export function isString<T>(data: T | string): data is NarrowedTo<T, string> {
+  return typeof data === "string";
 }

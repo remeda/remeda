@@ -14,16 +14,16 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
-          - '~5.3.0'
-          - '~5.2.0'
-          - '~5.1.0'
+          - "~5.3.0"
+          - "~5.2.0"
+          - "~5.1.0"
           # We use features that were added in v4.2 of typescript, so that is
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
           # to be communicated to the users.
-          - '~4.4.0'
-          - '~4.3.0'
-          - '~4.2.0'
+          - "~4.4.0"
+          - "~4.3.0"
+          - "~4.2.0"
 
     steps:
       - name: ⬇️ Checkout repo

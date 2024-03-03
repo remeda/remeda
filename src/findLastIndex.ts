@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { Pred, PredIndexedOptional, PredIndexed } from './_types';
+import { purry } from "./purry";
+import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
@@ -18,7 +18,7 @@ import { Pred, PredIndexedOptional, PredIndexed } from './_types';
  */
 export function findLastIndex<T>(
   array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): number;
 
 /**
@@ -43,7 +43,7 @@ export function findLastIndex<T>(
  * @category Array
  */
 export function findLastIndex<T>(
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex() {
@@ -54,7 +54,7 @@ const _findLastIndex =
   (indexed: boolean) =>
   <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
-      if (indexed ? fn(array[i], i, array) : fn(array[i])) {
+      if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return i;
       }
     }
@@ -65,10 +65,10 @@ const _findLastIndex =
 export namespace findLastIndex {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): number;
   export function indexed<T>(
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Returns elements from the array until predicate returns false.
@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function takeWhile<T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => boolean
+  fn: (item: T) => boolean,
 ): Array<T>;
 
 /**
@@ -27,7 +27,7 @@ export function takeWhile<T>(
  * @category Array
  */
 export function takeWhile<T>(
-  fn: (item: T) => boolean
+  fn: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 export function takeWhile() {

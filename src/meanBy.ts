@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexed, PredIndexedOptional } from './_types';
+import { purry } from "./purry";
+import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _meanBy =
   (indexed: boolean) =>
@@ -33,7 +33,7 @@ const _meanBy =
  */
 
 export function meanBy<T>(
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => number;
 
 /**
@@ -55,7 +55,7 @@ export function meanBy<T>(
 
 export function meanBy<T>(
   items: ReadonlyArray<T>,
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): number;
 
 export function meanBy() {
@@ -65,11 +65,11 @@ export function meanBy() {
 export namespace meanBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): number;
 
   export function indexed<T>(
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {

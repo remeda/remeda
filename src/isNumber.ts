@@ -1,9 +1,4 @@
-type DefinitelyNumber<T> =
-  Extract<T, number> extends never
-    ? number
-    : Extract<T, number> extends any
-      ? number
-      : Extract<T, number>;
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is a number and narrows its type accordingly
@@ -16,6 +11,6 @@ type DefinitelyNumber<T> =
  *    R.isNumber('notANumber') //=> false
  * @category Guard
  */
-export function isNumber<T>(data: T | number): data is DefinitelyNumber<T> {
-  return typeof data === 'number' && !isNaN(data);
+export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {
+  return typeof data === "number" && !isNaN(data);
 }

@@ -58,6 +58,7 @@ documentation when migrating._
 | [`length`](https://remedajs.com/docs/#length)                       | [`size`](https://lodash.com/docs/4.17.15#size)                           | [`length`](https://ramdajs.com/docs/#length)                       |
 | [`map`](https://remedajs.com/docs/#map)                             | [`map`](https://lodash.com/docs/4.17.15#map)                             | [`map`](https://ramdajs.com/docs/#map)                             |
 | [`mapKeys`](https://remedajs.com/docs/#mapKeys)                     | [`mapKeys`](https://lodash.com/docs/4.17.15#mapKeys)                     |                                                                    |
+| [`mapValues`](https://remedajs.com/docs/#mapValues)                 | [`mapValues`](https://lodash.com/docs/4.17.15#mapValues)                 | [`mapValues`](https://ramdajs.com/docs/#mapObjIndexed)             |
 | [`meanBy`](https://remedajs.com/docs/#meanBy)                       | [`meanBy`](https://lodash.com/docs/4.17.15#meanBy)                       |                                                                    |
 | [`merge`](https://remedajs.com/docs/#merge)                         | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`merge`](https://ramdajs.com/docs/#merge)                         |
 | [`mergeAll`](https://remedajs.com/docs/#mergeAll)                   | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`mergeAll`](https://ramdajs.com/docs/#mergeAll)                   |

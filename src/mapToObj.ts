@@ -1,5 +1,5 @@
-import { PredIndexedOptional } from './_types';
-import { purry } from './purry';
+import type { PredIndexedOptional } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function.
@@ -16,9 +16,9 @@ import { purry } from './purry';
  * @indexed
  * @category Array
  */
-export function mapToObj<T, K extends keyof any, V>(
+export function mapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
-  fn: (element: T) => [K, V]
+  fn: (element: T) => [K, V],
 ): Record<K, V>;
 
 /**
@@ -41,8 +41,8 @@ export function mapToObj<T, K extends keyof any, V>(
  * @indexed
  * @category Array
  */
-export function mapToObj<T, K extends keyof any, V>(
-  fn: (element: T) => [K, V]
+export function mapToObj<T, K extends PropertyKey, V>(
+  fn: (element: T) => [K, V],
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
 export function mapToObj() {
@@ -51,21 +51,23 @@ export function mapToObj() {
 
 const _mapToObj =
   (indexed: boolean) =>
-  (array: Array<any>, fn: PredIndexedOptional<any, any>) => {
-    return array.reduce((result, element, index) => {
+  (
+    array: ReadonlyArray<unknown>,
+    fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>,
+  ) =>
+    array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {
       const [key, value] = indexed ? fn(element, index, array) : fn(element);
       result[key] = value;
       return result;
     }, {});
-  };
 
 export namespace mapToObj {
-  export function indexed<T, K extends keyof any, V>(
+  export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V],
   ): Record<K, V>;
-  export function indexed<T, K extends keyof any, V>(
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+  export function indexed<T, K extends PropertyKey, V>(
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V],
   ): (array: ReadonlyArray<T>) => Record<K, V>;
   export function indexed() {
     return purry(_mapToObj(true), arguments);

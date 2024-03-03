@@ -1,4 +1,6 @@
-import { LazyResult } from './_reduceLazy';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { LazyResult } from "./_reduceLazy";
 
 /**
  * Perform left-to-right function composition.
@@ -20,14 +22,14 @@ export function pipe<A, B>(value: A, op1: (input: A) => B): B;
 export function pipe<A, B, C>(
   value: A,
   op1: (input: A) => B,
-  op2: (input: B) => C
+  op2: (input: B) => C,
 ): C;
 
 export function pipe<A, B, C, D>(
   value: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
-  op3: (input: C) => D
+  op3: (input: C) => D,
 ): D;
 
 export function pipe<A, B, C, D, E>(
@@ -35,7 +37,7 @@ export function pipe<A, B, C, D, E>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
-  op4: (input: D) => E
+  op4: (input: D) => E,
 ): E;
 
 export function pipe<A, B, C, D, E, F>(
@@ -44,7 +46,7 @@ export function pipe<A, B, C, D, E, F>(
   op2: (input: B) => C,
   op3: (input: C) => D,
   op4: (input: D) => E,
-  op5: (input: E) => F
+  op5: (input: E) => F,
 ): F;
 
 export function pipe<A, B, C, D, E, F, G>(
@@ -54,7 +56,7 @@ export function pipe<A, B, C, D, E, F, G>(
   op3: (input: C) => D,
   op4: (input: D) => E,
   op5: (input: E) => F,
-  op6: (input: F) => G
+  op6: (input: F) => G,
 ): G;
 
 export function pipe<A, B, C, D, E, F, G, H>(
@@ -65,7 +67,7 @@ export function pipe<A, B, C, D, E, F, G, H>(
   op4: (input: D) => E,
   op5: (input: E) => F,
   op6: (input: F) => G,
-  op7: (input: G) => H
+  op7: (input: G) => H,
 ): H;
 
 export function pipe<A, B, C, D, E, F, G, H, I>(
@@ -77,7 +79,7 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
   op5: (input: E) => F,
   op6: (input: F) => G,
   op7: (input: G) => H,
-  op8: (input: H) => I
+  op8: (input: H) => I,
 ): I;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J>(
@@ -90,7 +92,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J>(
   op6: (input: F) => G,
   op7: (input: G) => H,
   op8: (input: H) => I,
-  op9: (input: I) => J
+  op9: (input: I) => J,
 ): J;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
@@ -104,7 +106,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
   op07: (input: G) => H,
   op08: (input: H) => I,
   op09: (input: I) => J,
-  op10: (input: J) => K
+  op10: (input: J) => K,
 ): K;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
@@ -119,7 +121,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
   op08: (input: H) => I,
   op09: (input: I) => J,
   op10: (input: J) => K,
-  op11: (input: K) => L
+  op11: (input: K) => L,
 ): L;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
@@ -135,7 +137,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
   op09: (input: I) => J,
   op10: (input: J) => K,
   op11: (input: K) => L,
-  op12: (input: L) => M
+  op12: (input: L) => M,
 ): M;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
@@ -152,7 +154,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
   op10: (input: J) => K,
   op11: (input: K) => L,
   op12: (input: L) => M,
-  op13: (input: M) => N
+  op13: (input: M) => N,
 ): N;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
@@ -170,7 +172,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
   op11: (input: K) => L,
   op12: (input: L) => M,
   op13: (input: M) => N,
-  op14: (input: N) => O
+  op14: (input: N) => O,
 ): O;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
@@ -189,63 +191,72 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   op12: (input: L) => M,
   op13: (input: M) => N,
   op14: (input: N) => O,
-  op15: (input: O) => P
+  op15: (input: O) => P,
 ): P;
 
 export function pipe(
-  value: any,
-  ...operations: Array<(value: any) => any>
+  input: unknown,
+  ...operations: ReadonlyArray<LazyOp | ((value: any) => unknown)>
 ): any {
-  let ret = value;
-  const lazyOps = operations.map(op => {
-    const { lazy, lazyArgs } = op as LazyOp;
-    if (lazy) {
-      const fn: any = lazy(...(lazyArgs || []));
-      fn.indexed = lazy.indexed;
-      fn.single = lazy.single;
-      fn.index = 0;
-      fn.items = [];
-      return fn;
-    }
-    return null;
-  });
-  let opIdx = 0;
-  while (opIdx < operations.length) {
-    const op = operations[opIdx];
-    const lazyOp = lazyOps[opIdx];
-    if (!lazyOp) {
-      ret = op(ret);
-      opIdx++;
+  let output = input;
+
+  const lazyOperations = operations.map((op) =>
+    "lazy" in op ? toPipedLazy(op) : undefined,
+  );
+
+  let operationIndex = 0;
+  while (operationIndex < operations.length) {
+    const lazyOperation = lazyOperations[operationIndex];
+    if (lazyOperation === undefined || !isIterable(output)) {
+      const operation = operations[operationIndex]!;
+      output = operation(output);
+      operationIndex++;
       continue;
     }
-    const lazySeq: Array<LazyFn> = [];
-    for (let j = opIdx; j < operations.length; j++) {
-      if (lazyOps[j]) {
-        lazySeq.push(lazyOps[j]);
-        if (lazyOps[j].single) {
-          break;
-        }
-      } else {
+
+    const lazySequence: Array<ReturnType<typeof toPipedLazy>> = [];
+    for (let j = operationIndex; j < operations.length; j++) {
+      const lazyOp = lazyOperations[j];
+      if (lazyOp === undefined) {
+        break;
+      }
+
+      lazySequence.push(lazyOp);
+      if (lazyOp.isSingle) {
         break;
       }
     }
 
-    const acc: Array<any> = [];
+    const accumulator: Array<unknown> = [];
 
-    for (const item of ret) {
-      if (_processItem({ item, acc, lazySeq })) {
+    const iterator = output[Symbol.iterator]();
+
+    // eslint-disable-next-line no-constant-condition, @typescript-eslint/no-unnecessary-condition -- TODO: Once we bump the TS target version above ES5 we can use the built-in for-of loop instead.
+    while (true) {
+      const result = iterator.next();
+      if (result.done ?? false) {
+        break;
+      }
+
+      const shouldExitEarly = _processItem(
+        result.value,
+        accumulator,
+        lazySequence,
+      );
+      if (shouldExitEarly) {
         break;
       }
     }
-    const lastLazySeq = lazySeq[lazySeq.length - 1];
-    if ((lastLazySeq as any).single) {
-      ret = acc[0];
+
+    const { isSingle } = lazySequence[lazySequence.length - 1]!;
+    if (isSingle) {
+      output = accumulator[0];
     } else {
-      ret = acc;
+      output = accumulator;
     }
-    opIdx += lazySeq.length;
+    operationIndex += lazySequence.length;
   }
-  return ret;
+  return output;
 }
 
 type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
@@ -255,49 +266,42 @@ type LazyOp = ((input: any) => any) & {
     indexed: boolean;
     single: boolean;
   };
-  lazyArgs: Array<any>;
+  lazyArgs?: ReadonlyArray<unknown>;
 };
 
-function _processItem({
-  item,
-  lazySeq,
-  acc,
-}: {
-  item: any;
-  lazySeq: Array<any>;
-  acc: Array<any>;
-}): boolean {
-  if (lazySeq.length === 0) {
-    acc.push(item);
+function _processItem(
+  item: unknown,
+  accumulator: Array<unknown>,
+  lazySequence: ReadonlyArray<ReturnType<typeof toPipedLazy>>,
+): boolean {
+  if (lazySequence.length === 0) {
+    accumulator.push(item);
     return false;
   }
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
-  for (let i = 0; i < lazySeq.length; i++) {
-    const lazyFn = lazySeq[i];
-    const indexed = lazyFn.indexed;
-    const index = lazyFn.index;
-    const items = lazyFn.items;
+  for (let i = 0; i < lazySequence.length; i++) {
+    const lazyFn = lazySequence[i]!;
+    const { isIndexed, index, items } = lazyFn;
     items.push(item);
-    lazyResult = indexed ? lazyFn(item, index, items) : lazyFn(item);
+    lazyResult = isIndexed ? lazyFn(item, index, items) : lazyFn(item);
     lazyFn.index++;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany) {
         const nextValues: Array<any> = lazyResult.next;
         for (const subItem of nextValues) {
-          const subResult = _processItem({
-            item: subItem,
-            acc,
-            lazySeq: lazySeq.slice(i + 1),
-          });
+          const subResult = _processItem(
+            subItem,
+            accumulator,
+            lazySequence.slice(i + 1),
+          );
           if (subResult) {
             return true;
           }
         }
         return false;
-      } else {
-        item = lazyResult.next;
       }
+      item = lazyResult.next;
     }
     if (!lazyResult.hasNext) {
       break;
@@ -309,10 +313,31 @@ function _processItem({
     }
   }
   if (lazyResult.hasNext) {
-    acc.push(item);
+    accumulator.push(item);
   }
   if (isDone) {
     return true;
   }
   return false;
+}
+
+function toPipedLazy(op: LazyOp) {
+  const { lazy, lazyArgs } = op;
+  const fn = lazy(...(lazyArgs ?? []));
+  return Object.assign(fn, {
+    isIndexed: lazy.indexed,
+    isSingle: lazy.single,
+    index: 0,
+    items: [] as Array<unknown>,
+  });
+}
+
+function isIterable(something: unknown): something is Iterable<unknown> {
+  // Check for null and undefined to avoid errors when accessing Symbol.iterator
+  return (
+    typeof something === "string" ||
+    (typeof something === "object" &&
+      something !== null &&
+      Symbol.iterator in something)
+  );
 }

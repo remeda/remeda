@@ -16,10 +16,10 @@
  *    R.type(undefined); //=> "Undefined"
  * @category Type
  */
-export function type(val: any) {
+export function type(val: unknown) {
   return val === null
-    ? 'Null'
+    ? "Null"
     : val === undefined
-      ? 'Undefined'
+      ? "Undefined"
       : Object.prototype.toString.call(val).slice(8, -1);
 }

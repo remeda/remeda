@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 type Reverse<
   T extends ReadonlyArray<unknown>,
@@ -36,13 +36,13 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
  * @category Array
  */
 export function reverse<T extends ReadonlyArray<unknown>>(): (
-  array: T
+  array: T,
 ) => Reverse<T>;
 
 export function reverse() {
   return purry(_reverse, arguments);
 }
 
-function _reverse(array: Array<any>) {
+function _reverse<T>(array: ReadonlyArray<T>): Array<T> {
   return array.slice().reverse();
 }

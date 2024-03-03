@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { MergeDeep } from './type-fest/merge-deep';
+import { purry } from "./purry";
+import type { MergeDeep } from "./type-fest/merge-deep";
 
 /**
  * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
@@ -88,7 +88,7 @@ function mergeDeepImplementation<
 // TODO: Replace this with a call to `isPlainObject` once PR #436 ships.
 function isRecord(object: unknown): object is Record<string, unknown> {
   return (
-    typeof object === 'object' &&
+    typeof object === "object" &&
     object !== null &&
     Object.getPrototypeOf(object) === Object.prototype
   );

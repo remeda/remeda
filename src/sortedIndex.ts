@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
+import { purry } from "./purry";
+import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -55,5 +55,5 @@ export function sortedIndex(): unknown {
 
 const sortedIndexImplementation = <T>(
   array: ReadonlyArray<T>,
-  item: T
-): number => _binarySearchCutoffIndex(array, pivot => pivot < item);
+  item: T,
+): number => _binarySearchCutoffIndex(array, (pivot) => pivot < item);

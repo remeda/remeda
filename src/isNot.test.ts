@@ -1,64 +1,65 @@
-import { typesDataProvider, type TestClass } from '../test/types_data_provider';
-import { isNot } from './isNot';
-import { isPromise } from './isPromise';
-import { isString } from './isString';
+import type {
+  AllTypesDataProviderTypes,
+  TestClass,
+} from "../test/types_data_provider";
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  TYPES_DATA_PROVIDER,
+} from "../test/types_data_provider";
+import { isNot } from "./isNot";
+import { isPromise } from "./isPromise";
+import { isString } from "./isString";
 
-describe('isNot', () => {
-  test('isNot: should work as type guard', () => {
-    const data = typesDataProvider('promise');
+describe("isNot", () => {
+  it("should work as type guard", () => {
+    const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
-      assertType<
-        | (() => void)
-        | [number, number, number]
-        | { a: string }
+      expectTypeOf(data).toEqualTypeOf<
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
         | undefined
       >(data);
     }
   });
-  test('isNot: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('promise'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-    ];
-    const result = data.filter(isNot(isPromise));
-    expect(result.some(c => c instanceof Promise)).toEqual(false);
 
-    assertType<
+  it("should work as type guard in filter", () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
+    expect(data.some((c) => c instanceof Promise)).toEqual(false);
+    expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { a: string }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
         | undefined
       >
-    >(result);
+    >();
   });
 });

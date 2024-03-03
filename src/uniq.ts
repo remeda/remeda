@@ -1,15 +1,28 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from "./purry";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
- * Note: In `pipe`, use `uniq()` form instead of `uniq`. Otherwise, the inferred type is lost.
  * @param array
  * @signature
  *    R.uniq(array)
  * @example
  *    R.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
+ * @pipeable
+ * @category Array
+ * @dataFirst
+ */
+export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
+
+/**
+ * Returns a new array containing only one copy of each element in the original list.
+ * Elements are compared by reference using Set.
+ * @param array
+ * @signature
+ *    R.uniq()(array)
+ * @example
  *    R.pipe(
  *      [1, 2, 2, 5, 1, 6, 7], // only 4 iterations
  *      R.uniq(),
@@ -17,9 +30,8 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  *    ) // => [1, 2, 5]
  * @pipeable
  * @category Array
+ * @dataLast
  */
-
-export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
 export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniq() {
@@ -31,9 +43,9 @@ function _uniq<T>(array: Array<T>) {
 }
 
 export namespace uniq {
-  export function lazy() {
-    const set = new Set<any>();
-    return (value: any): LazyResult<any> => {
+  export function lazy<T>() {
+    const set = new Set<T>();
+    return (value: T): LazyResult<T> => {
       if (set.has(value)) {
         return {
           done: false,

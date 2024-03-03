@@ -1,5 +1,5 @@
-import { ReadonlyTuple } from './_types';
-import { purry } from './purry';
+import type { ReadonlyTuple } from "./_types";
+import { purry } from "./purry";
 
 type ArrayMinN<T, N extends number> = number extends N
   ? // We can only compute the type for a literal number!
@@ -31,7 +31,7 @@ type ArrayMinN<T, N extends number> = number extends N
  */
 export function hasAtLeast<T, N extends number>(
   data: ReadonlyArray<T>,
-  minimum: N
+  minimum: N,
 ): data is ArrayMinN<T, N>;
 
 /**
@@ -57,7 +57,7 @@ export function hasAtLeast<T, N extends number>(
  * @category Array
  */
 export function hasAtLeast<N extends number>(
-  minimum: N
+  minimum: N,
 ): <T>(data: ReadonlyArray<T>) => data is ArrayMinN<T, N>;
 
 export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
@@ -66,5 +66,5 @@ export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
 
 const hasAtLeastImplementation = <T, N extends number>(
   data: ReadonlyArray<T>,
-  minimum: N
+  minimum: N,
 ): data is ArrayMinN<T, N> => data.length >= minimum;

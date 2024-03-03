@@ -1,5 +1,8 @@
-import { _reduceLazy, LazyResult } from './_reduceLazy';
-import { purry } from './purry';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return -- FIXME! */
+
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
+import { purry } from "./purry";
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
 type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;
@@ -8,22 +11,32 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
 
 /**
  * Recursively flattens `array`.
- * Note: In `pipe`, use `flattenDeep()` form instead of `flattenDeep`. Otherwise, the inferred type is lost.
  * @param items the target array
- * @signature R.flattenDeep(array)
+ * @signature
+ *   R.flattenDeep(array)
  * @example
  *    R.flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]
+ * @category Array
+ * @pipeable
+ */
+export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
+
+/**
+ * Recursively flattens `array`.
+ * @param items the target array
+ * @signature
+ *   R.flattenDeep()(array)
+ * @example
  *    R.pipe(
  *      [[1, 2], [[3], [4, 5]]],
  *      R.flattenDeep(),
  *    ); // => [1, 2, 3, 4, 5]
  * @category Array
  * @pipeable
+ * @dataLast
  */
-export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
-
 export function flattenDeep<T>(): (
-  items: ReadonlyArray<T>
+  items: ReadonlyArray<T>,
 ) => Array<FlattenDeep<T>>;
 
 export function flattenDeep() {
@@ -34,12 +47,12 @@ function _flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>> {
   return _reduceLazy(items, flattenDeep.lazy());
 }
 
-function _flattenDeepValue<T>(value: T | Array<T>): T | Array<FlattenDeep<T>> {
+function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
   if (!Array.isArray(value)) {
     return value;
   }
   const ret: Array<any> = [];
-  value.forEach(item => {
+  value.forEach((item) => {
     if (Array.isArray(item)) {
       ret.push(...flattenDeep(item));
     } else {
@@ -58,7 +71,7 @@ export namespace flattenDeep {
           done: false,
           hasNext: true,
           hasMany: true,
-          next: next,
+          next,
         };
       }
       return {

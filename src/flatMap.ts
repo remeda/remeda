@@ -1,5 +1,5 @@
-import { flatten } from './flatten';
-import { purry } from './purry';
+import { flatten } from "./flatten";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
@@ -15,7 +15,7 @@ import { purry } from './purry';
  */
 export function flatMap<T, K>(
   array: ReadonlyArray<T>,
-  fn: (input: T) => K | ReadonlyArray<K>
+  fn: (input: T) => K | ReadonlyArray<K>,
 ): Array<K>;
 
 /**
@@ -31,7 +31,7 @@ export function flatMap<T, K>(
  * @category Array
  */
 export function flatMap<T, K>(
-  fn: (input: T) => K | ReadonlyArray<K>
+  fn: (input: T) => K | ReadonlyArray<K>,
 ): (array: ReadonlyArray<T>) => Array<K>;
 
 export function flatMap() {
@@ -40,9 +40,9 @@ export function flatMap() {
 
 function _flatMap<T, K>(
   array: Array<T>,
-  fn: (input: T) => ReadonlyArray<K>
+  fn: (input: T) => ReadonlyArray<K>,
 ): Array<K> {
-  return flatten(array.map(item => fn(item)));
+  return flatten(array.map((item) => fn(item)));
 }
 
 export namespace flatMap {
@@ -54,7 +54,7 @@ export namespace flatMap {
           done: false,
           hasNext: true,
           hasMany: true,
-          next: next,
+          next,
         };
       }
       return {

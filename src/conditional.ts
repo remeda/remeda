@@ -1,7 +1,7 @@
-import { purryOn } from './_purryOn';
+import { purryOn } from "./_purryOn";
 
 type Case<In, Out, Thru extends In = In> = readonly [
-  when: ((data: In) => data is Thru) | ((data: In) => boolean),
+  when: ((data: In) => boolean) | ((data: In) => data is Thru),
   then: (data: Thru) => Out,
 ];
 
@@ -82,9 +82,9 @@ export function conditional<
   case6?: Case<T, Return6, Thru6>,
   case7?: Case<T, Return7, Thru7>,
   case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>
+  case9?: Case<T, Return9, Thru9>,
 ): (
-  data: T
+  data: T,
 ) =>
   | Return0
   | Return1
@@ -173,7 +173,7 @@ export function conditional<
   case6?: Case<T, Return6, Thru6>,
   case7?: Case<T, Return7, Thru7>,
   case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>
+  case9?: Case<T, Return9, Thru9>,
 ):
   | Return0
   | Return1
@@ -200,7 +200,7 @@ function conditionalImplementation<In, Out>(
     }
   }
 
-  throw new Error('conditional: data failed for all cases');
+  throw new Error("conditional: data failed for all cases");
 }
 
 function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
@@ -208,11 +208,11 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
     return false;
   }
 
-  const [when, then, ...rest] = maybeCase;
+  const [when, then, ...rest] = maybeCase as ReadonlyArray<unknown>;
   return (
-    typeof when === 'function' &&
+    typeof when === "function" &&
     when.length <= 1 &&
-    typeof then === 'function' &&
+    typeof then === "function" &&
     then.length <= 1 &&
     rest.length === 0
   );
@@ -229,7 +229,7 @@ export namespace conditional {
    * the final fallback case.
    */
   export const defaultCase = <In>(
-    then: (data: In) => unknown = trivialDefaultCase
+    then: (data: In) => unknown = trivialDefaultCase,
   ) => [() => true, then] as const;
 }
 

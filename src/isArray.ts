@@ -1,9 +1,5 @@
-import { IfIsAny } from './_types';
+import type { NarrowedTo } from "./_types";
 
-type DefinitelyArray<T> =
-  Extract<T, Array<any> | ReadonlyArray<any>> extends never
-    ? ReadonlyArray<unknown>
-    : Extract<T, Array<any> | ReadonlyArray<any>>;
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly
  * @param data the variable to check
@@ -17,7 +13,7 @@ type DefinitelyArray<T> =
  * @category Guard
  */
 export function isArray<T>(
-  data: T | ArrayLike<unknown>
-): data is IfIsAny<T, ReadonlyArray<unknown>, DefinitelyArray<T>> {
+  data: ArrayLike<unknown> | T,
+): data is NarrowedTo<T, ReadonlyArray<unknown>> {
   return Array.isArray(data);
 }

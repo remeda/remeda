@@ -3,8 +3,8 @@
  * @see https://en.wikipedia.org/wiki/Quickselect
  */
 
-import { swapInPlace } from './_swapInPlace';
-import type { CompareFunction } from './_types';
+import { swapInPlace } from "./_swapInPlace";
+import type { CompareFunction } from "./_types";
 
 /**
  * Perform QuickSelect on the given data. Notice that the data would be cloned
@@ -20,7 +20,7 @@ import type { CompareFunction } from './_types';
 export const quickSelect = <T>(
   data: ReadonlyArray<T>,
   index: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): T | undefined =>
   index < 0 || index >= data.length
     ? // Quickselect doesn't work with out-of-bound indices
@@ -31,7 +31,7 @@ export const quickSelect = <T>(
         0 /* left */,
         data.length - 1 /* right */,
         index,
-        compareFn
+        compareFn,
       );
 
 /**
@@ -42,10 +42,10 @@ function quickSelectImplementation<T>(
   left: number,
   right: number,
   index: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): T {
   if (left === right) {
-    return data[left];
+    return data[left]!;
   }
 
   const pivotIndex = partition(data, left, right, compareFn);
@@ -53,14 +53,14 @@ function quickSelectImplementation<T>(
   return index === pivotIndex
     ? // Once a pivot is chosen it's location is final, so if it matches the
       // index we found out item!
-      data[index]
+      data[index]!
     : quickSelectImplementation(
         data,
         // We continue by recursing into the partition where index would be
         index < pivotIndex ? left : pivotIndex + 1,
         index < pivotIndex ? pivotIndex - 1 : right,
         index,
-        compareFn
+        compareFn,
       );
 }
 
@@ -68,13 +68,13 @@ function partition<T>(
   data: Array<T>,
   left: number,
   right: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): number {
-  const pivot = data[right];
+  const pivot = data[right]!;
 
   let i = left;
   for (let j = left; j < right; j++) {
-    if (compareFn(data[j], pivot) < 0) {
+    if (compareFn(data[j]!, pivot) < 0) {
       // Move items smaller then the pivot to the start of the array.
       swapInPlace(data, i, j);
       i++;

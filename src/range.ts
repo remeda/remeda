@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).

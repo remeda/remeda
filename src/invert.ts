@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 type Inverted<T extends object> = T[keyof T] extends PropertyKey
   ? Record<T[keyof T], keyof T>
@@ -37,12 +37,12 @@ export function invert() {
 }
 
 function _invert(
-  object: Readonly<Record<PropertyKey, PropertyKey>>
+  object: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const key in object) {
-    result[object[key]] = key;
+    result[object[key]!] = key;
   }
 
   return result;
