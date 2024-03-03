@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type First<T extends IterableContainer> = T extends []
@@ -6,7 +6,7 @@ type First<T extends IterableContainer> = T extends []
   : T extends readonly [unknown, ...Array<unknown>]
     ? T[0]
     : T extends readonly [...infer Pre, infer Last]
-      ? Pre[0] | Last
+      ? Last | Pre[0]
       : T[0] | undefined;
 
 /**
@@ -55,13 +55,11 @@ function _first<T>([first]: ReadonlyArray<T>) {
 
 export namespace first {
   export function lazy<T>() {
-    return (value: T) => {
-      return {
-        done: true,
-        hasNext: true,
-        next: value,
-      };
-    };
+    return (value: T) => ({
+      done: true,
+      hasNext: true,
+      next: value,
+    });
   }
 
   export namespace lazy {

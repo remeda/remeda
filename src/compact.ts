@@ -14,7 +14,7 @@ import { isTruthy } from "./isTruthy";
  * @deprecated equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.
  */
 export function compact<T>(
-  items: ReadonlyArray<T | null | undefined | false | "" | 0>,
+  items: ReadonlyArray<T | "" | 0 | false | null | undefined>,
 ): Array<T> {
   // TODO: Make lazy version
   return items.filter(isTruthy);

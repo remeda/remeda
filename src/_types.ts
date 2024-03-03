@@ -71,4 +71,4 @@ export type CompareFunction<T> = (a: T, b: T) => number;
  * Based on type-fest's IsAny
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
  */
-export type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;
+export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;

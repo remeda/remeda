@@ -1,6 +1,6 @@
+import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
-  AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
   type TestClass,
 } from "../test/types_data_provider";
@@ -12,7 +12,6 @@ describe("isObject", () => {
     if (isObject(data)) {
       expect(typeof data).toEqual("object");
       expectTypeOf(data).toEqualTypeOf<
-        | { readonly a: "asd" }
         | Date
         | Error
         | Map<string, string>
@@ -21,6 +20,7 @@ describe("isObject", () => {
         | Set<string>
         | TestClass
         | Uint8Array
+        | { readonly a: "asd" }
       >();
     }
   });
@@ -56,7 +56,6 @@ describe("isObject", () => {
     ).toEqual(true);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | { readonly a: "asd" }
         | Date
         | Error
         | Map<string, string>
@@ -65,6 +64,7 @@ describe("isObject", () => {
         | Set<string>
         | TestClass
         | Uint8Array
+        | { readonly a: "asd" }
       >
     >(data);
   });

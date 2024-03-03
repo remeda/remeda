@@ -39,7 +39,7 @@ describe("mapValues key types", () => {
   describe("interface", () => {
     test("should set the type of the key to be the union of the keys of the object", () => {
       mapValues({} as { foo: unknown; bar: unknown }, (_, key) =>
-        expectTypeOf(key).toEqualTypeOf<"foo" | "bar">(),
+        expectTypeOf(key).toEqualTypeOf<"bar" | "foo">(),
       );
     });
 
@@ -47,7 +47,7 @@ describe("mapValues key types", () => {
       const mySymbol = Symbol("mySymbol");
       mapValues(
         {} as { [mySymbol]: unknown; foo: unknown; bar: unknown },
-        (_, key) => expectTypeOf(key).toEqualTypeOf<"foo" | "bar">(),
+        (_, key) => expectTypeOf(key).toEqualTypeOf<"bar" | "foo">(),
       );
     });
   });
@@ -77,22 +77,22 @@ describe("mapValues key types", () => {
 
   describe("indexed signature", () => {
     test("should work with string keys", () => {
-      mapValues({} as { [key: string]: unknown }, (_, key) => {
+      mapValues({} as Record<string, unknown>, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<string>();
       });
     });
     test("should work with number keys", () => {
-      mapValues({} as { [key: number]: unknown }, (_, key) => {
+      mapValues({} as Record<number, unknown>, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<`${number}`>();
       });
     });
     test("should work with template literal string keys", () => {
-      mapValues({} as { [key: `prefix${string}`]: unknown }, (_, key) => {
+      mapValues({} as Record<`prefix${string}`, unknown>, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
       });
     });
     test("should not work with symbol keys", () => {
-      mapValues({} as { [key: symbol]: unknown }, (_, key) => {
+      mapValues({} as Record<symbol, unknown>, (_, key) => {
         expectTypeOf(key).toEqualTypeOf<never>();
       });
     });

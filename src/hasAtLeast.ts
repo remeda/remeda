@@ -1,4 +1,4 @@
-import { ReadonlyTuple } from "./_types";
+import type { ReadonlyTuple } from "./_types";
 import { purry } from "./purry";
 
 type ArrayMinN<T, N extends number> = number extends N

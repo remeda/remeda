@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { PredIndexedOptional, PredIndexed } from "./_types";
+import type { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.

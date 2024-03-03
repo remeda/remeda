@@ -1,7 +1,8 @@
 import { purry } from "./purry";
-import { LazyResult, _reduceLazy } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
-import {
+import type {
   IterableContainer,
   Pred,
   PredIndexed,
@@ -56,33 +57,21 @@ export function map() {
 
 const _map =
   (indexed: boolean) =>
-  <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) => {
-    return _reduceLazy(
-      array,
-      indexed ? map.lazyIndexed(fn) : map.lazy(fn),
-      indexed,
-    );
-  };
+  <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
+    _reduceLazy(array, indexed ? map.lazyIndexed(fn) : map.lazy(fn), indexed);
 
 const _lazy =
   (indexed: boolean) =>
-  <T, K>(fn: PredIndexedOptional<T, K>) => {
-    return (
-      value: T,
-      index?: number,
-      array?: ReadonlyArray<T>,
-    ): LazyResult<K> => {
-      return {
-        done: false,
-        hasNext: true,
-        next: indexed ? fn(value, index, array) : fn(value),
-      };
-    };
-  };
+  <T, K>(fn: PredIndexedOptional<T, K>) =>
+  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<K> => ({
+    done: false,
+    hasNext: true,
+    next: indexed ? fn(value, index, array) : fn(value),
+  });
 
 // Redefining the map API with a stricter return type. This API is accessed via
 // `map.strict`
-interface Strict {
+type Strict = {
   <T extends IterableContainer, K>(
     items: T,
     mapper: Pred<T[number], K>,
@@ -102,7 +91,7 @@ interface Strict {
       mapper: PredIndexed<T[number], K>,
     ): (items: T) => StrictOut<T, K>;
   };
-}
+};
 
 type StrictOut<T extends IterableContainer, K> = {
   -readonly [P in keyof T]: K;

@@ -41,7 +41,7 @@ describe("dataFirst typings", () => {
     const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
     const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
     const actual = zip(firstVariadic, secondVariadic);
-    assertType<Array<[string | number, string | number]>>(actual);
+    assertType<Array<[number | string, number | string]>>(actual);
   });
 });
 
@@ -80,7 +80,7 @@ describe("dataLast typings", () => {
     const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
     const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
     const actual = pipe(firstVariadic, zip(secondVariadic));
-    assertType<Array<[string | number, string | number]>>(actual);
+    assertType<Array<[number | string, number | string]>>(actual);
   });
 });
 

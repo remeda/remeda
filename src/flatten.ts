@@ -1,4 +1,5 @@
-import { _reduceLazy, LazyResult } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 import { purry } from "./purry";
 
 type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
@@ -50,7 +51,7 @@ export namespace flatten {
           done: false,
           hasNext: true,
           hasMany: true,
-          next: next,
+          next,
         };
       }
       return {

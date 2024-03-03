@@ -1,5 +1,6 @@
 import { purry } from "./purry";
-import { _reduceLazy, LazyResult } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 
 /**
  * Returns a new array containing only one copy of each element in the original list.

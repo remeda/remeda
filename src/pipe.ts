@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { LazyResult } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
 
 /**
  * Perform left-to-right function composition.
@@ -196,7 +196,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...operations: ReadonlyArray<((value: any) => unknown) | LazyOp>
+  ...operations: ReadonlyArray<LazyOp | ((value: any) => unknown)>
 ): any {
   let output = input;
 
@@ -300,9 +300,8 @@ function _processItem(
           }
         }
         return false;
-      } else {
-        item = lazyResult.next;
       }
+      item = lazyResult.next;
     }
     if (!lazyResult.hasNext) {
       break;

@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -57,7 +57,7 @@ function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
   return ret;
 }
 
-interface Strict {
+type Strict = {
   <T extends IterableContainer>(
     items: T,
     cmp: (a: T[number], b: T[number]) => number,
@@ -66,7 +66,7 @@ interface Strict {
   <T extends IterableContainer>(
     cmp: (a: T[number], b: T[number]) => number,
   ): (items: T) => Sorted<T>;
-}
+};
 
 type Sorted<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

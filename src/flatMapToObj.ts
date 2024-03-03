@@ -1,4 +1,4 @@
-import { PredIndexedOptional } from "./_types";
+import type { PredIndexedOptional } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -65,18 +65,14 @@ const _flatMapToObj =
       T,
       ReadonlyArray<[key: PropertyKey, value: unknown]>
     >,
-  ) => {
-    return array.reduce<Record<PropertyKey, unknown>>(
-      (result, element, index) => {
-        const items = indexed ? fn(element, index, array) : fn(element);
-        items.forEach(([key, value]) => {
-          result[key] = value;
-        });
-        return result;
-      },
-      {},
-    );
-  };
+  ) =>
+    array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {
+      const items = indexed ? fn(element, index, array) : fn(element);
+      items.forEach(([key, value]) => {
+        result[key] = value;
+      });
+      return result;
+    }, {});
 
 export namespace flatMapToObj {
   export function indexed<T, K extends PropertyKey, V>(

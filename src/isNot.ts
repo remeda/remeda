@@ -16,7 +16,5 @@ export function isNot<T, S extends T>(
 export function isNot<T>(predicate: (data: T) => boolean): (data: T) => boolean;
 
 export function isNot<T>(predicate: (data: T) => boolean) {
-  return (data: T) => {
-    return !predicate(data);
-  };
+  return (data: T) => !predicate(data);
 }

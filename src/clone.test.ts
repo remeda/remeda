@@ -86,9 +86,7 @@ describe("deep clone arrays", () => {
 
 describe("deep clone functions", () => {
   it("keep reference to function", () => {
-    const fn = (x: number) => {
-      return x + x;
-    };
+    const fn = (x: number) => x + x;
     const list = [{ a: fn }] as const;
 
     const cloned = clone(list);

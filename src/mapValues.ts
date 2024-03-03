@@ -1,4 +1,4 @@
-import { ObjectKeys } from "./_types";
+import type { ObjectKeys } from "./_types";
 import { purry } from "./purry";
 import { toPairs } from "./toPairs";
 

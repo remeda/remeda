@@ -40,13 +40,13 @@ type Projection<T> = (x: T) => Comparable;
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#type_coercion
 type Comparable =
   | ComparablePrimitive
-  | { [Symbol.toPrimitive](hint: string): ComparablePrimitive }
-  | { valueOf(): ComparablePrimitive }
-  | { toString(): string };
+  | { [Symbol.toPrimitive]: (hint: string) => ComparablePrimitive }
+  | { toString: () => string }
+  | { valueOf: () => ComparablePrimitive };
 
 //  Notice that `boolean` is special in that it is coerced as a number (0 for
 // `false`, 1 for `true`) implicitly.
-type ComparablePrimitive = number | string | boolean;
+type ComparablePrimitive = boolean | number | string;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
@@ -66,8 +66,8 @@ export function purryOrderRules<T>(
   const [dataOrRule, ...rules] = (
     Array.isArray(inputArgs) ? inputArgs : Array.from(inputArgs)
   ) as
-    | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>]
-    | Readonly<NonEmptyArray<OrderRule<T>>>;
+    | Readonly<NonEmptyArray<OrderRule<T>>>
+    | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>];
 
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!

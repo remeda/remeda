@@ -1,7 +1,7 @@
 import { purryOn } from "./_purryOn";
 
 type Case<In, Out, Thru extends In = In> = readonly [
-  when: ((data: In) => data is Thru) | ((data: In) => boolean),
+  when: ((data: In) => boolean) | ((data: In) => data is Thru),
   then: (data: Thru) => Out,
 ];
 

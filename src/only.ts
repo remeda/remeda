@@ -1,11 +1,11 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type Only<T extends IterableContainer> = T extends
-  | readonly []
-  | readonly [unknown, unknown, ...Array<unknown>]
-  | readonly [unknown, ...Array<unknown>, unknown]
   | readonly [...Array<unknown>, unknown, unknown]
+  | readonly []
+  | readonly [unknown, ...Array<unknown>, unknown]
+  | readonly [unknown, unknown, ...Array<unknown>]
   ? undefined
   : T extends readonly [unknown]
     ? T[number]

@@ -9,7 +9,7 @@ import { reduce } from "./reduce";
 const sum = reduce((a, b: number) => add(a, b), 0);
 
 describe("data first", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", function () {
+  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     const evolver = {
       id: add(1),
       quartile: sum,
@@ -30,7 +30,7 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("does not invoke function if `data` does not contain the key", function () {
+  it("does not invoke function if `data` does not contain the key", () => {
     const data: { id?: number } = {};
     const expected = {};
     const evolver = { id: add(1) };
@@ -38,7 +38,7 @@ describe("data first", () => {
     expect(result).toEqual(expected);
   });
 
-  it("is not destructive and is immutable", function () {
+  it("is not destructive and is immutable", () => {
     const evolver = { n: add(1) };
     const data = { n: 100 };
     const expected = { n: 101 };
@@ -49,7 +49,7 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("is recursive", function () {
+  it("is recursive", () => {
     const evolver = { nested: { second: add(-1), third: add(1) } };
     const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
@@ -58,11 +58,11 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("ignores undefined transformations", function () {
+  it("ignores undefined transformations", () => {
     expect(evolve({ n: 0 }, {})).toEqual({ n: 0 });
   });
 
-  it("can handle data that is complex nested objects", function () {
+  it("can handle data that is complex nested objects", () => {
     const evolver = {
       array: (array: ReadonlyArray<string>) => array.length,
       nestedObj: { a: set<{ b: string }, "b">("b", "Set") },
@@ -90,7 +90,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", function () {
+  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     const evolver = {
       id: add(1),
       quartile: sum,
@@ -111,7 +111,7 @@ describe("data last", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("does not invoke function if `data` does not contain the key", function () {
+  it("does not invoke function if `data` does not contain the key", () => {
     const data: { id?: number } = {};
     const expected = {};
     const evolver = { id: add(1) };
@@ -120,7 +120,7 @@ describe("data last", () => {
     expect(result).toEqual(expected);
   });
 
-  it("is not destructive and is immutable", function () {
+  it("is not destructive and is immutable", () => {
     const evolver = { n: add(1) };
     const data = { n: 100 };
     const expected = { n: 101 };
@@ -131,7 +131,7 @@ describe("data last", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("is recursive", function () {
+  it("is recursive", () => {
     const evolver = { nested: { second: add(-1), third: add(1) } };
     const data = { first: 1, nested: { second: 2, third: 3 } };
     const expected = { first: 1, nested: { second: 1, third: 4 } };
@@ -140,14 +140,14 @@ describe("data last", () => {
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("ignores undefined transformations", function () {
+  it("ignores undefined transformations", () => {
     const expected = { n: 0 };
     const result = pipe({ n: 0 }, evolve({}));
     expect(result).toEqual(expected);
     expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
-  it("can handle data that is complex nested objects", function () {
+  it("can handle data that is complex nested objects", () => {
     const result = pipe(
       {
         array: ["1", "2", "3"],
@@ -176,11 +176,11 @@ describe("data last", () => {
 describe("typing", () => {
   describe("data first", () => {
     describe("type reflection", (): void => {
-      interface Data {
+      type Data = {
         id: number;
         quartile: Array<number>;
         time?: { elapsed: number; remaining?: number };
-      }
+      };
       const data: Data = {
         id: 1,
         quartile: [1, 2, 3, 4],
@@ -188,7 +188,7 @@ describe("typing", () => {
       };
       const expected = data;
 
-      it("can reflect type of data to function of evolver object", function () {
+      it("can reflect type of data to function of evolver object", () => {
         const result = evolve(data, {
           count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
           quartile: (x) => x,
@@ -198,7 +198,7 @@ describe("typing", () => {
         expectTypeOf(result).toEqualTypeOf<typeof expected>();
       });
 
-      it("can reflect type of data to function of nested evolver object", function () {
+      it("can reflect type of data to function of nested evolver object", () => {
         const result = evolve(data, {
           count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
           quartile: (x) => x,
@@ -209,7 +209,7 @@ describe("typing", () => {
       });
     });
 
-    it("can detect mismatch of parameters and arguments", function () {
+    it("can detect mismatch of parameters and arguments", () => {
       evolve(
         {
           number: "1",
@@ -233,7 +233,7 @@ describe("typing", () => {
       );
     });
 
-    it("does not accept the input value that is not Array and Object", function () {
+    it("does not accept the input value that is not Array and Object", () => {
       const evolver = { a: add(1) };
       // Type check only
       () => {
@@ -248,7 +248,7 @@ describe("typing", () => {
       };
     });
 
-    it("does not accept function that require multiple arguments", function () {
+    it("does not accept function that require multiple arguments", () => {
       evolve(
         {
           requiring2Args: 1,
@@ -264,7 +264,7 @@ describe("typing", () => {
       );
     });
 
-    it("accept function whose second and subsequent arguments are optional", function () {
+    it("accept function whose second and subsequent arguments are optional", () => {
       const result = evolve(
         {
           arg2Optional: 1,
@@ -286,7 +286,7 @@ describe("typing", () => {
       }>();
     });
 
-    it("can not handle function arrays.", function () {
+    it("can not handle function arrays.", () => {
       evolve(
         {
           quartile: [1, 2],
@@ -300,8 +300,8 @@ describe("typing", () => {
   });
 
   describe("data last", () => {
-    describe("it can detect mismatch of parameters and arguments", function () {
-      it('detect property "number" are incompatible', function () {
+    describe("it can detect mismatch of parameters and arguments", () => {
+      it('detect property "number" are incompatible', () => {
         const evolver = {
           number: add(1),
           array: (array: ReadonlyArray<number>) => array.length,
@@ -315,7 +315,7 @@ describe("typing", () => {
           evolve(evolver),
         );
       });
-      it('detect property "array" are incompatible', function () {
+      it('detect property "array" are incompatible', () => {
         const evolver = {
           number: add(1),
           array: (array: ReadonlyArray<number>) => array.length,
@@ -331,7 +331,7 @@ describe("typing", () => {
       });
     });
 
-    it("does not accept the input value that is not Array and Object", function () {
+    it("does not accept the input value that is not Array and Object", () => {
       const evolver = { a: add(1) };
       // Type check only
       () => {
@@ -346,7 +346,7 @@ describe("typing", () => {
       };
     });
 
-    it("does not accept function that require multiple arguments", function () {
+    it("does not accept function that require multiple arguments", () => {
       pipe(
         {
           requiring2Args: 1,
@@ -359,7 +359,7 @@ describe("typing", () => {
       );
     });
 
-    it("accept function whose second and subsequent arguments are optional", function () {
+    it("accept function whose second and subsequent arguments are optional", () => {
       const result = pipe(
         {
           arg2Optional: 1,
@@ -381,7 +381,7 @@ describe("typing", () => {
       }>();
     });
 
-    it("can not handle function arrays.", function () {
+    it("can not handle function arrays.", () => {
       pipe(
         {
           quartile: [1, 2],

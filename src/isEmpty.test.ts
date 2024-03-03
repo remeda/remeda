@@ -84,7 +84,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("string literals that CAN be empty", () => {
-    const data = "cat" as "cat" | "dog" | "";
+    const data = "cat" as "" | "cat" | "dog";
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"">();
     }
@@ -98,7 +98,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("string literals that CAN be undefined or empty", () => {
-    const data = "cat" as "cat" | "dog" | "" | undefined;
+    const data = "cat" as "" | "cat" | "dog" | undefined;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"" | undefined>();
     }
@@ -113,7 +113,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("string templates that CAN be empty", () => {
-    const data = "" as `prefix_${number}` | "";
+    const data = "" as "" | `prefix_${number}`;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"">();
     }
@@ -127,7 +127,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("string templates that CAN be undefined or empty", () => {
-    const data = "prefix_0" as `prefix_${number}` | "" | undefined;
+    const data = "prefix_0" as "" | `prefix_${number}` | undefined;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"" | undefined>();
     }

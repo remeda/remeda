@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -25,7 +25,7 @@ import { purry } from "./purry";
  * @dataFirst
  */
 export function keys(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
+  source: ArrayLike<unknown> | Record<PropertyKey, unknown>,
 ): Array<string>;
 
 /**
@@ -57,18 +57,16 @@ export function keys() {
   return purry(Object.keys, arguments);
 }
 
-type Strict = {
-  <T extends object>(data: T): Keys<T>;
+type Strict = // (): <T extends object>(data: T) => Keys<T>;
   // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-  // (): <T extends object>(data: T) => Keys<T>;
-};
+  <T extends object>(data: T) => Keys<T>;
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
 // "mapping" each item "key" (which is actually an index) as its own value. This
 // would maintain the shape, even including labels.
 type ArrayKeys<T extends IterableContainer> = {
-  -readonly [Index in keyof T]: Index extends string | number
+  -readonly [Index in keyof T]: Index extends number | string
     ? // Notice that we coalesce the values as strings, this is because in JS,
       // Object.keys always returns strings, even for arrays.
       `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
@@ -79,7 +77,7 @@ type ArrayKeys<T extends IterableContainer> = {
 
 type IsIndexAfterSpread<
   T extends IterableContainer,
-  Index extends string | number,
+  Index extends number | string,
 > =
   IndicesAfterSpread<T> extends never
     ? false

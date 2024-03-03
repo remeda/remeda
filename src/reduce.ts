@@ -49,13 +49,12 @@ const _reduce =
     items: Array<T>,
     fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
     initialValue: K,
-  ): K => {
-    return items.reduce(
+  ): K =>
+    items.reduce(
       (acc, item, index) =>
         indexed ? fn(acc, item, index, items) : fn(acc, item),
       initialValue,
     );
-  };
 
 export namespace reduce {
   export function indexed<T, K>(

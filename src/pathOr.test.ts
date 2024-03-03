@@ -1,7 +1,7 @@
 import { pathOr } from "./pathOr";
 import { pipe } from "./pipe";
 
-interface SampleType {
+type SampleType = {
   a: {
     b: {
       c: number;
@@ -11,7 +11,7 @@ interface SampleType {
   };
   x?: number;
   y?: number;
-}
+};
 
 const obj: SampleType = {
   a: {

@@ -403,7 +403,7 @@ describe("typing", () => {
 
   test("argument typing to be good (with defaults)", () => {
     const debouncer = debounce(
-      (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c}`,
+      (a: string, b = 2, c = true) => `${a}${b}${c}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.

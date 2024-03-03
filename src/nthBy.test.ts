@@ -122,6 +122,6 @@ describe("typing", () => {
   it("works with tuples", () => {
     const data: [string, boolean, number] = ["a", true, 1];
     const result = nthBy(data, 1, identity);
-    expectTypeOf(result).toEqualTypeOf<string | number | boolean | undefined>();
+    expectTypeOf(result).toEqualTypeOf<boolean | number | string | undefined>();
   });
 });

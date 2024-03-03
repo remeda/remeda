@@ -184,9 +184,9 @@ describe("typing", () => {
         "suffix" | undefined,
       ] = ["prefix", undefined, "suffix"];
       const result = join(array, ",");
-      expectTypeOf(result).toEqualTypeOf<`${"prefix" | ""},${"midfix" | ""},${
-        | "suffix"
-        | ""}`>();
+      expectTypeOf(result).toEqualTypeOf<`${"" | "prefix"},${"" | "midfix"},${
+        | ""
+        | "suffix"}`>();
     });
   });
 });

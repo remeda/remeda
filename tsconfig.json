@@ -41,6 +41,6 @@
     "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
 
     // COMPLETENESS
-    "skipLibCheck": true,
-  },
+    "skipLibCheck": true
+  }
 }

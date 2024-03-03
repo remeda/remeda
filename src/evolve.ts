@@ -6,7 +6,7 @@ import { toPairs } from "./toPairs";
  * basic structure of `evolver` parameter of the function `evolve`.
  */
 type GenericEvolver = {
-  readonly [P in string]: ((data: unknown) => unknown) | GenericEvolver;
+  readonly [P in string]: GenericEvolver | ((data: unknown) => unknown);
 };
 
 /**
@@ -34,8 +34,8 @@ type Evolver<T> = T extends object
     ? never
     : {
         readonly [K in keyof T]?:
-          | ((data: Required<T>[K]) => unknown)
-          | Evolver<T[K]>;
+          | Evolver<T[K]>
+          | ((data: Required<T>[K]) => unknown);
       }
   : never;
 

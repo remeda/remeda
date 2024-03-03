@@ -26,7 +26,7 @@ import type { NarrowedTo } from "./_types";
  * @category Guard
  */
 export function isPlainObject<T>(
-  data: T | Record<PropertyKey, unknown>,
+  data: Record<PropertyKey, unknown> | T,
 ): data is NarrowedTo<T, Record<PropertyKey, unknown>> {
   if (typeof data !== "object" || data === null) {
     return false;

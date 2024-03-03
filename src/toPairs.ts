@@ -53,11 +53,9 @@ type Pairs<T> = Array<
   { [K in keyof T]-?: [key: K, value: Required<T>[K]] }[keyof T]
 >;
 
-type Strict = {
-  <T extends NonNullable<unknown>>(object: T): Pairs<T>;
+type Strict = // (): <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
   // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-  // (): <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
-};
+  <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
 
 export namespace toPairs {
   export const strict = toPairs as Strict;

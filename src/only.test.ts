@@ -82,7 +82,7 @@ describe("strict typing", () => {
   test("tuple with last", () => {
     const arr: [...Array<string>, number] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 
@@ -103,14 +103,14 @@ describe("strict typing", () => {
   test("tuple with optional and array", () => {
     const arr: [string?, ...Array<number>] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 
   test("tuple with all optional", () => {
     const arr: [string?, number?] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 
@@ -166,21 +166,21 @@ describe("strict typing", () => {
   test("readonly tuple with last", () => {
     const arr: readonly [...Array<string>, number] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 
   test("readonly tuple with optional and array", () => {
     const arr: readonly [string?, ...Array<number>] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 
   test("readonly tuple with all optional", () => {
     const arr: readonly [string?, number?] = ["a", 1];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
     expect(result).toBeUndefined();
   });
 });

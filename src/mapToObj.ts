@@ -1,4 +1,4 @@
-import { PredIndexedOptional } from "./_types";
+import type { PredIndexedOptional } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -54,16 +54,12 @@ const _mapToObj =
   (
     array: ReadonlyArray<unknown>,
     fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>,
-  ) => {
-    return array.reduce<Record<PropertyKey, unknown>>(
-      (result, element, index) => {
-        const [key, value] = indexed ? fn(element, index, array) : fn(element);
-        result[key] = value;
-        return result;
-      },
-      {},
-    );
-  };
+  ) =>
+    array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {
+      const [key, value] = indexed ? fn(element, index, array) : fn(element);
+      result[key] = value;
+      return result;
+    }, {});
 
 export namespace mapToObj {
   export function indexed<T, K extends PropertyKey, V>(

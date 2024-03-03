@@ -14,7 +14,7 @@ describe("Runtime", () => {
 
 describe("typing", () => {
   it("should correctly types indexed types", () => {
-    expectTypeOf(values<{ [index: string]: string }>({ a: "b" })).toEqualTypeOf<
+    expectTypeOf(values<Record<string, string>>({ a: "b" })).toEqualTypeOf<
       Array<string>
     >();
   });
@@ -46,6 +46,6 @@ describe("typing", () => {
   it("should correctly type typed objects", () => {
     expectTypeOf(
       values<{ type: "cat" | "dog"; age: number }>({ type: "cat", age: 7 }),
-    ).toEqualTypeOf<Array<"cat" | "dog" | number>>();
+    ).toEqualTypeOf<Array<number | "cat" | "dog">>();
   });
 });

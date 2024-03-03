@@ -1,4 +1,5 @@
-import { OrderRule, purryOrderRules } from "./_purryOrderRules";
+import type { OrderRule } from "./_purryOrderRules";
+import { purryOrderRules } from "./_purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,
@@ -108,7 +109,7 @@ const _sortBy = <T>(
   // Sort is done in-place so we need to copy the array.
   [...data].sort(compareFn);
 
-interface Strict {
+type Strict = {
   <T extends IterableContainer>(
     ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
   ): (array: T) => SortedBy<T>;
@@ -117,7 +118,7 @@ interface Strict {
     array: T,
     ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
   ): SortedBy<T>;
-}
+};
 
 type SortedBy<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

@@ -68,8 +68,11 @@ const _forEachObj =
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         const val = data[key];
-        if (indexed) fn(val, key, data);
-        else fn(val);
+        if (indexed) {
+          fn(val, key, data);
+        } else {
+          fn(val);
+        }
       }
     }
     return data;

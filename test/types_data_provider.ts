@@ -24,7 +24,7 @@ export const TYPES_DATA_PROVIDER = {
   symbol: Symbol("symbol"),
   tuple: [1, 2, 3] as [number, number, number],
   typedArray: new Uint8Array(1),
-  undefined: undefined,
+  undefined,
 } as const;
 
 export const ALL_TYPES_DATA_PROVIDER = Object.values(TYPES_DATA_PROVIDER);

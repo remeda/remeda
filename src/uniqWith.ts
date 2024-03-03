@@ -1,5 +1,6 @@
 import { purry } from "./purry";
-import { LazyResult, _reduceLazy } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
