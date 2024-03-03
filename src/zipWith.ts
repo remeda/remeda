@@ -16,7 +16,7 @@ type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
 export function zipWith<F, S, R>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>,
-  fn: ZippingFunction<F, S, R>
+  fn: ZippingFunction<F, S, R>,
 ): Array<R>;
 
 /**
@@ -31,7 +31,7 @@ export function zipWith<F, S, R>(
  * @category Array
  */
 export function zipWith<F, S, R>(
-  fn: ZippingFunction<F, S, R>
+  fn: ZippingFunction<F, S, R>,
 ): (first: ReadonlyArray<F>, second: ReadonlyArray<S>) => Array<R>;
 
 /**
@@ -48,15 +48,15 @@ export function zipWith<F, S, R>(
  */
 export function zipWith<F, S, R>(
   fn: ZippingFunction<F, S, R>,
-  second: ReadonlyArray<S>
+  second: ReadonlyArray<S>,
 ): (first: ReadonlyArray<F>) => Array<R>;
 
 export function zipWith(
-  arg0: ZippingFunction | ReadonlyArray<unknown>,
+  arg0: ReadonlyArray<unknown> | ZippingFunction,
   arg1?: ReadonlyArray<unknown>,
-  arg2?: ZippingFunction
+  arg2?: ZippingFunction,
 ): unknown {
-  if (typeof arg0 === 'function') {
+  if (typeof arg0 === "function") {
     return arg1 === undefined
       ? (f: ReadonlyArray<unknown>, s: ReadonlyArray<unknown>) =>
           _zipWith(f, s, arg0)
@@ -64,7 +64,7 @@ export function zipWith(
   }
 
   if (arg1 === undefined || arg2 === undefined) {
-    throw new Error('zipWith: Missing arguments in dataFirst function call');
+    throw new Error("zipWith: Missing arguments in dataFirst function call");
   }
 
   return _zipWith(arg0, arg1, arg2);
@@ -73,7 +73,7 @@ export function zipWith(
 function _zipWith<F, S, R>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>,
-  fn: ZippingFunction<F, S, R>
+  fn: ZippingFunction<F, S, R>,
 ) {
   const resultLength =
     first.length > second.length ? second.length : first.length;

@@ -1,6 +1,7 @@
-import { purry } from './purry';
-import { LazyResult, _reduceLazy } from './_reduceLazy';
-import { _toLazyIndexed } from './_toLazyIndexed';
+import { purry } from "./purry";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
+import { _toLazyIndexed } from "./_toLazyIndexed";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 
@@ -21,7 +22,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  */
 export function uniqWith<T>(
   array: ReadonlyArray<T>,
-  isEquals: IsEquals<T>
+  isEquals: IsEquals<T>,
 ): Array<T>;
 
 /**
@@ -42,7 +43,7 @@ export function uniqWith<T>(
  * @category Object
  */
 export function uniqWith<T>(
-  isEquals: IsEquals<T>
+  isEquals: IsEquals<T>,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniqWith() {
@@ -58,11 +59,11 @@ function _lazy<T>(isEquals: IsEquals<T>) {
   return (
     value: T,
     index?: number,
-    array?: ReadonlyArray<T>
+    array?: ReadonlyArray<T>,
   ): LazyResult<T> => {
     if (
       array &&
-      array.findIndex(otherValue => isEquals(value, otherValue)) === index
+      array.findIndex((otherValue) => isEquals(value, otherValue)) === index
     ) {
       return {
         done: false,

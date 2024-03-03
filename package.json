@@ -23,35 +23,37 @@
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:es && npm run build:cjs",
+    "build": "npm run clean && npm run build:es && npm run build:cjs && npm run build:types",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
     "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
+    "build:types": "tsc --project tsconfig.build.types.json --outDir \"./dist/types\"",
     "clean": "rm -rf ./dist && mkdir dist",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
-    "lint": "eslint --fix --max-warnings 0 .",
+    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/ .",
     "prepare": "husky",
     "prettier": "prettier . --write",
     "release": "semantic-release",
     "test": "vitest"
   },
   "devDependencies": {
-    "@eslint/js": "^8.56.0",
+    "@eslint/js": "^8.57.0",
     "@types/eslint__js": "^8.42.3",
-    "@vitest/coverage-v8": "^1.0.1",
-    "eslint": "^8.56.0",
-    "husky": "^9.0.9",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.0",
-    "semantic-release": "^23.0.0",
+    "@vitest/coverage-v8": "^1.3.1",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "semantic-release": "^23.0.2",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^7.0.2",
-    "vitest": "^1.0.1"
+    "typescript-eslint": "^7.1.0",
+    "vitest": "^1.3.1"
   }
 }

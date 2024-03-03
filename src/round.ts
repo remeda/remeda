@@ -1,5 +1,5 @@
-import { _withPrecision } from './_withPrecision';
-import { purry } from './purry';
+import { _withPrecision } from "./_withPrecision";
+import { purry } from "./purry";
 
 /**
  * Rounds a given number to a specific precision.

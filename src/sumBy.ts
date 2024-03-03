@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexed, PredIndexedOptional } from './_types';
+import { purry } from "./purry";
+import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _sumBy =
   (indexed: boolean) =>
@@ -29,7 +29,7 @@ const _sumBy =
  */
 
 export function sumBy<T>(
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => number;
 
 /**
@@ -51,7 +51,7 @@ export function sumBy<T>(
 
 export function sumBy<T>(
   items: ReadonlyArray<T>,
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): number;
 
 export function sumBy() {
@@ -61,11 +61,11 @@ export function sumBy() {
 export namespace sumBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): number;
 
   export function indexed<T>(
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => number;
 
   export function indexed() {

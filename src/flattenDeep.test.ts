@@ -1,23 +1,23 @@
-import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
-import { find } from './find';
-import { flattenDeep } from './flattenDeep';
-import { pipe } from './pipe';
+import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import { find } from "./find";
+import { flattenDeep } from "./flattenDeep";
+import { pipe } from "./pipe";
 
-test('flatten', () => {
+test("flatten", () => {
   expect(flattenDeep([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);
 });
 
-test('nested', () => {
+test("nested", () => {
   expect(
     flattenDeep([
       [1, 2],
       [[3], [4, 5]],
-    ] as const)
+    ] as const),
   ).toEqual([1, 2, 3, 4, 5]);
 });
 
-describe('pipe', () => {
-  test('with find', () => {
+describe("pipe", () => {
+  test("with find", () => {
     const counter1 = createLazyInvocationCounter();
     const counter2 = createLazyInvocationCounter();
     const result = pipe(
@@ -25,7 +25,7 @@ describe('pipe', () => {
       counter1.fn(),
       flattenDeep(),
       counter2.fn(),
-      find(x => x - 1 === 2)
+      find((x) => x - 1 === 2),
     );
     expect(counter1.count).toHaveBeenCalledTimes(2);
     expect(counter2.count).toHaveBeenCalledTimes(3);

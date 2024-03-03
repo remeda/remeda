@@ -1,5 +1,5 @@
-import { keys } from './keys';
-import { purry } from './purry';
+import { keys } from "./keys";
+import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function pickBy<T>(
   object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
@@ -26,7 +26,7 @@ export function pickBy<T>(
  * @category Object
  */
 export function pickBy<T>(
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function pickBy() {
@@ -35,7 +35,7 @@ export function pickBy() {
 
 function _pickBy<T>(
   object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): Partial<T> {
   if (object == null) {
     return {};

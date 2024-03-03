@@ -1,6 +1,6 @@
-import { isArray } from './isArray';
-import { isObject } from './isObject';
-import { isString } from './isString';
+import { isArray } from "./isArray";
+import { isObject } from "./isObject";
+import { isString } from "./isString";
 
 /**
  * A function that checks if the passed parameter is empty.
@@ -28,13 +28,13 @@ import { isString } from './isString';
  * @category Guard
  */
 export function isEmpty<T extends string | undefined>(
-  data: T
+  data: T,
 ): data is
-  | ('' extends T ? '' : never)
+  | ("" extends T ? "" : never)
   | (undefined extends T ? undefined : never);
 export function isEmpty(data: ReadonlyArray<unknown> | []): data is [];
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
-  data: T
+  data: T,
 ): data is Record<keyof T, never>;
 export function isEmpty(data: unknown): boolean {
   if (data === undefined) {

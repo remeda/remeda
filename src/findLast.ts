@@ -1,5 +1,5 @@
-import { Pred, PredIndexed, PredIndexedOptional } from './_types';
-import { purry } from './purry';
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined
@@ -19,7 +19,7 @@ import { purry } from './purry';
  */
 export function findLast<T>(
   array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): T | undefined;
 
 /**
@@ -44,7 +44,7 @@ export function findLast<T>(
  * @category Array
  */
 export function findLast<T = never>(
-  fn: Pred<T, boolean>
+  fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => T | undefined;
 
 export function findLast() {
@@ -65,10 +65,10 @@ const _findLast =
 export namespace findLast {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): T | undefined;
   export function indexed<T>(
-    fn: PredIndexed<T, boolean>
+    fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => T | undefined;
 
   export function indexed() {

@@ -1,9 +1,10 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { purry } from "./purry";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 
 export function uniqBy<T, K>(
   array: ReadonlyArray<T>,
-  transformer: (item: T) => K
+  transformer: (item: T) => K,
 ): Array<T>;
 
 /**
@@ -27,7 +28,7 @@ export function uniqBy<T, K>(
  */
 
 export function uniqBy<T, K>(
-  transformer: (item: T) => K
+  transformer: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniqBy() {

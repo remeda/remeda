@@ -1,115 +1,115 @@
-import { filter } from './filter';
-import { identity } from './identity';
-import { map } from './map';
-import { pipe } from './pipe';
-import { prop } from './prop';
-import { take } from './take';
+import { filter } from "./filter";
+import { identity } from "./identity";
+import { map } from "./map";
+import { pipe } from "./pipe";
+import { prop } from "./prop";
+import { take } from "./take";
 
-it('should pipe a single operation', () => {
-  const result = pipe(1, x => x * 2);
+it("should pipe a single operation", () => {
+  const result = pipe(1, (x) => x * 2);
   expect(result).toEqual(2);
 });
 
-it('should pipe operations', () => {
+it("should pipe operations", () => {
   const result = pipe(
     1,
-    x => x * 2,
-    x => x * 3
+    (x) => x * 2,
+    (x) => x * 3,
   );
   expect(result).toEqual(6);
 });
 
-describe('lazy', () => {
-  it('lazy map + take', () => {
+describe("lazy", () => {
+  it("lazy map + take", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
-      map(x => {
+      map((x) => {
         count();
         return x * 10;
       }),
-      take(2)
+      take(2),
     );
     expect(count).toHaveBeenCalledTimes(2);
     expect(result).toEqual([10, 20]);
   });
 
-  it('lazy map + filter + take', () => {
+  it("lazy map + filter + take", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3, 4, 5],
-      map(x => {
+      map((x) => {
         count();
         return x * 10;
       }),
-      filter(x => (x / 10) % 2 === 1),
-      take(2)
+      filter((x) => (x / 10) % 2 === 1),
+      take(2),
     );
     expect(count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([10, 30]);
   });
 
-  it('lazy after 1st op', () => {
+  it("lazy after 1st op", () => {
     const count = vi.fn();
     const result = pipe(
       { inner: [1, 2, 3] },
-      prop('inner'),
-      map(x => {
+      prop("inner"),
+      map((x) => {
         count();
         return x * 10;
       }),
-      take(2)
+      take(2),
     );
     expect(count).toHaveBeenCalledTimes(2);
     expect(result).toEqual([10, 20]);
   });
 
-  it('break lazy', () => {
+  it("break lazy", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
-      map(x => {
+      map((x) => {
         count();
         return x * 10;
       }),
-      x => x,
-      take(2)
+      (x) => x,
+      take(2),
     );
     expect(count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([10, 20]);
   });
 
-  it('multiple take', () => {
+  it("multiple take", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
-      map(x => {
+      map((x) => {
         count();
         return x * 10;
       }),
       take(2),
-      take(1)
+      take(1),
     );
     expect(count).toHaveBeenCalledTimes(1);
     expect(result).toEqual([10]);
   });
 
-  it('multiple lazy', () => {
+  it("multiple lazy", () => {
     const count = vi.fn();
     const count2 = vi.fn();
     const result = pipe(
       [1, 2, 3, 4, 5, 6, 7],
-      map(x => {
+      map((x) => {
         count();
         return x * 10;
       }),
       take(4),
       identity,
-      map(x => {
+      map((x) => {
         count2();
         return x * 10;
       }),
-      take(2)
+      take(2),
     );
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);

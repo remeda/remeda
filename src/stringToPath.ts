@@ -7,16 +7,18 @@
  * @category String
  */
 export function stringToPath<Path extends string>(
-  path: Path
+  path: Path,
 ): StringToPath<Path> {
   return _stringToPath(path) as StringToPath<Path>;
 }
 
 function _stringToPath(path: string): Array<string> {
-  if (path.length === 0) return [];
+  if (path.length === 0) {
+    return [];
+  }
 
   const match =
-    path.match(/^\[(.+?)\](.*)$/) ?? path.match(/^\.?([^.[\]]+)(.*)$/);
+    /^\[(.+?)\](.*)$/.exec(path) ?? /^\.?([^.[\]]+)(.*)$/.exec(path);
   if (match) {
     const [, key, rest] = match;
     // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?
@@ -25,7 +27,7 @@ function _stringToPath(path: string): Array<string> {
   return [path];
 }
 
-export type StringToPath<T extends string> = T extends ''
+export type StringToPath<T extends string> = T extends ""
   ? []
   : T extends `[${infer Head}].${infer Tail}`
     ? [Head, ...StringToPath<Tail>]

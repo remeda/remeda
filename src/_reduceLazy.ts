@@ -1,30 +1,30 @@
-export type LazyResult<T> = LazyEmpty | LazyNext<T> | LazyMany<T>;
+export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
-interface LazyEmpty {
+type LazyEmpty = {
   done: boolean;
   hasNext: false;
   hasMany?: false | undefined;
   next?: undefined;
-}
+};
 
-interface LazyNext<T> {
+type LazyNext<T> = {
   done: boolean;
   hasNext: true;
   hasMany?: false | undefined;
   next: T;
-}
+};
 
-interface LazyMany<T> {
+type LazyMany<T> = {
   done: boolean;
   hasNext: true;
   hasMany: true;
   next: Array<T>;
-}
+};
 
 export function _reduceLazy<T, K>(
   array: ReadonlyArray<T>,
   lazy: (item: T, index?: number, array?: ReadonlyArray<T>) => LazyResult<K>,
-  indexed?: boolean
+  indexed?: boolean,
 ): Array<K> {
   const newArray: Array<K> = [];
   // We intentionally use a for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info

@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is a symbol and narrows its type accordingly
@@ -12,5 +12,5 @@ import type { NarrowedTo } from './_types';
  * @category Guard
  */
 export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {
-  return typeof data === 'symbol';
+  return typeof data === "symbol";
 }

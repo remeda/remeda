@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import type { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -20,7 +20,7 @@ import { purry } from './purry';
  */
 export function zip<F, S>(
   first: ReadonlyArray<F>,
-  second: ReadonlyArray<S>
+  second: ReadonlyArray<S>,
 ): Array<[F, S]>;
 
 /**
@@ -40,7 +40,7 @@ export function zip<F, S>(
  * @strict
  */
 export function zip<S>(
-  second: ReadonlyArray<S>
+  second: ReadonlyArray<S>,
 ): <F>(first: ReadonlyArray<F>) => Array<[F, S]>;
 
 export function zip() {
@@ -58,16 +58,16 @@ function _zip(first: Array<unknown>, second: Array<unknown>) {
   return result;
 }
 
-interface Strict {
+type Strict = {
   <F extends IterableContainer, S extends IterableContainer>(
     first: F,
-    second: S
+    second: S,
   ): Zip<F, S>;
 
   <S extends IterableContainer>(
-    second: S
+    second: S,
   ): <F extends IterableContainer>(first: F) => Zip<F, S>;
-}
+};
 
 type Zip<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises

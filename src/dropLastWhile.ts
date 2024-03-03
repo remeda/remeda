@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -16,7 +16,7 @@ import { purry } from './purry';
  */
 export function dropLastWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): Array<T>;
 
 /**
@@ -33,7 +33,7 @@ export function dropLastWhile<T>(
  * @category Array
  */
 export function dropLastWhile<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function dropLastWhile() {
@@ -42,7 +42,7 @@ export function dropLastWhile() {
 
 function _dropLastWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): Array<T> {
   for (let i = data.length - 1; i >= 0; i--) {
     if (!predicate(data[i]!)) {

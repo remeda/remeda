@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return --
  * Function inference doesn't work when `unknown` is used as the parameters
  * generic type, it **has** to be `any`.
  */
@@ -98,28 +98,28 @@ type DebounceOptions = {
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options: { readonly timing?: 'trailing' } & DebounceOptions
+  options: DebounceOptions & { readonly timing?: "trailing" },
 ): Debouncer<F>;
 export function debounce<F extends (...args: any) => any>(
   func: F,
   options:
-    | ({ readonly timing: 'leading' } & Omit<DebounceOptions, 'maxWaitMs'>)
-    | ({ readonly timing: 'both' } & DebounceOptions)
+    | (DebounceOptions & { readonly timing: "both" })
+    | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
 ): Debouncer<F, false /* call CAN'T return null */>;
 
 export function debounce<F extends (...args: any) => any>(
   func: F,
   {
     waitMs,
-    timing = 'trailing',
+    timing = "trailing",
     maxWaitMs,
   }: DebounceOptions & {
-    readonly timing?: 'leading' | 'both' | 'trailing';
-  }
+    readonly timing?: "both" | "leading" | "trailing";
+  },
 ): Debouncer<F> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
-      `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`
+      `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
     );
   }
 
@@ -202,7 +202,7 @@ export function debounce<F extends (...args: any) => any>(
       if (coolDownTimeoutId === undefined) {
         // This call is starting a new cool-down window!
 
-        if (timing === 'trailing') {
+        if (timing === "trailing") {
           // Only when the timing is "trailing" is the first call "debounced".
           handleDebouncedCall(args);
         } else {
@@ -213,7 +213,7 @@ export function debounce<F extends (...args: any) => any>(
       } else {
         // There's an inflight cool-down window.
 
-        if (timing !== 'leading') {
+        if (timing !== "leading") {
           // When the timing is 'leading' all following calls are just ignored
           // until the cool-down period ends. But for the other timings the call
           // is "debounced".
@@ -233,7 +233,7 @@ export function debounce<F extends (...args: any) => any>(
         // interested in the leaky-bucket nature of the debouncer which is
         // achieved by setting waitMs === maxWaitMs. If both are not defined we
         // default to 0 which would wait until the end of the execution frame.
-        waitMs ?? maxWaitMs ?? 0
+        waitMs ?? maxWaitMs ?? 0,
       );
 
       // Return the last computed result while we "debounce" further calls.

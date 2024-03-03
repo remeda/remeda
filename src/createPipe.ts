@@ -1,4 +1,4 @@
-import { pipe } from './pipe';
+import { pipe } from "./pipe";
 
 /**
  * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
@@ -15,20 +15,20 @@ export function createPipe<A, B>(op1: (input: A) => B): (value: A) => B;
 
 export function createPipe<A, B, C>(
   op1: (input: A) => B,
-  op2: (input: B) => C
+  op2: (input: B) => C,
 ): (value: A) => C;
 
 export function createPipe<A, B, C, D>(
   op1: (input: A) => B,
   op2: (input: B) => C,
-  op3: (input: C) => D
+  op3: (input: C) => D,
 ): (value: A) => D;
 
 export function createPipe<A, B, C, D, E>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
-  op4: (input: D) => E
+  op4: (input: D) => E,
 ): (value: A) => E;
 
 export function createPipe<A, B, C, D, E, F>(
@@ -36,7 +36,7 @@ export function createPipe<A, B, C, D, E, F>(
   op2: (input: B) => C,
   op3: (input: C) => D,
   op4: (input: D) => E,
-  op5: (input: E) => F
+  op5: (input: E) => F,
 ): (value: A) => F;
 
 export function createPipe<A, B, C, D, E, F, G>(
@@ -45,7 +45,7 @@ export function createPipe<A, B, C, D, E, F, G>(
   op3: (input: C) => D,
   op4: (input: D) => E,
   op5: (input: E) => F,
-  op6: (input: F) => G
+  op6: (input: F) => G,
 ): (value: A) => G;
 
 export function createPipe<A, B, C, D, E, F, G, H>(
@@ -55,7 +55,7 @@ export function createPipe<A, B, C, D, E, F, G, H>(
   op4: (input: D) => E,
   op5: (input: E) => F,
   op6: (input: F) => G,
-  op7: (input: G) => H
+  op7: (input: G) => H,
 ): (value: A) => H;
 
 export function createPipe(
@@ -65,6 +65,6 @@ export function createPipe(
     pipe(
       value,
       // @ts-expect-error [ts2556] - We can't avoid this error because pipe is typed for users and this is an internal function
-      ...operations
+      ...operations,
     );
 }

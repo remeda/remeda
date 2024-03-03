@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexed, PredIndexedOptional } from './_types';
+import { purry } from "./purry";
+import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _maxBy =
   (indexed: boolean) =>
@@ -36,7 +36,7 @@ const _maxBy =
  * @category Array
  */
 export function maxBy<T>(
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => T | undefined;
 
 /**
@@ -57,7 +57,7 @@ export function maxBy<T>(
  */
 export function maxBy<T>(
   items: ReadonlyArray<T>,
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): T | undefined;
 
 export function maxBy() {
@@ -67,10 +67,10 @@ export function maxBy() {
 export namespace maxBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): T | undefined;
   export function indexed<T>(
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => T | undefined;
   export function indexed() {
     return purry(_maxBy(true), arguments);

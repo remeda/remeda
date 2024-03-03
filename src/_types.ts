@@ -1,11 +1,11 @@
-import type { IsAny } from './type-fest/is-any';
+import type { IsAny } from "./type-fest/is-any";
 
 export type Pred<T, K> = (input: T) => K;
 export type PredIndexed<T, K> = (input: T, index: number, array: Array<T>) => K;
 export type PredIndexedOptional<T, K> = (
   input: T,
   index?: number,
-  array?: ReadonlyArray<T>
+  array?: ReadonlyArray<T>,
 ) => K;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
@@ -57,7 +57,7 @@ type BuildTupleHelper<
   Element,
   Length extends number,
   Rest extends Array<Element>,
-> = Rest['length'] extends Length
+> = Rest["length"] extends Length
   ? readonly [...Rest] // Terminate with readonly array (aka tuple)
   : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
 
@@ -71,4 +71,4 @@ export type CompareFunction<T> = (a: T, b: T) => number;
  * Based on type-fest's IsAny
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
  */
-export type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;
+export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;
