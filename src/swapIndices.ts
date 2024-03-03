@@ -159,7 +159,7 @@ export function swapIndices() {
 }
 
 function _swapIndices(
-  item: Readonly<IterableContainer> | string,
+  item: IterableContainer | string,
   index1: number,
   index2: number,
 ): unknown {
