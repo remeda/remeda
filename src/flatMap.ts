@@ -54,7 +54,7 @@ export namespace flatMap {
           done: false,
           hasNext: true,
           hasMany: true,
-          next: next,
+          next,
         };
       }
       return {

@@ -1,5 +1,5 @@
-import { Narrow } from "./_narrow";
-import { Path, SupportsValueAtPath, ValueAtPath } from "./_paths";
+import type { Narrow } from "./_narrow";
+import type { Path, SupportsValueAtPath, ValueAtPath } from "./_paths";
 import { purry } from "./purry";
 
 /**

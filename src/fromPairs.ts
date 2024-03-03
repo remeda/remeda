@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
@@ -85,15 +85,13 @@ function fromPairsImplementation(
 
 // Redefining the fromPairs function to allow stricter pairs arrays and fine-
 // grained handling of partiality of the output.
-type Strict = {
+type Strict = // ) => StrictOut<Entries>;
+  //   entries: Entries,
+  // (): <Entries extends IterableContainer<Entry>>(
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
   <Entries extends IterableContainer<Entry>>(
     entries: Entries,
-  ): StrictOut<Entries>;
-  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-  // (): <Entries extends IterableContainer<Entry>>(
-  //   entries: Entries,
-  // ) => StrictOut<Entries>;
-};
+  ) => StrictOut<Entries>;
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
 // 1. If the input is a *tuple*, we know exactly what pairs it would hold,

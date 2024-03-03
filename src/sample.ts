@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> =
@@ -18,7 +18,7 @@ type SampledGeneric<T extends IterableContainer> =
     : // As long as the tuple has non-rest elements we continue expanding the type
       // by both taking the item, and not taking it.
       T extends readonly [infer First, ...infer Rest]
-      ? [First, ...SampledGeneric<Rest>] | SampledGeneric<Rest>
+      ? SampledGeneric<Rest> | [First, ...SampledGeneric<Rest>]
       : // Stop the recursion also when we have an array, or the rest element of the
         // tuple
         Array<T[number]>;
@@ -43,8 +43,8 @@ type SampledLiteral<
         : // If the input is an array, or a tuple's rest-element we need to split the
           // recursion in 2, one type adds an element to the output, and the other
           // skips it, just like the sample method itself.
-          | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>]
-            | SampledLiteral<T, N, [unknown, ...Iteration]>;
+          | SampledLiteral<T, N, [unknown, ...Iteration]>
+            | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>];
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.

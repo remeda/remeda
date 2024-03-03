@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { PredIndexed, PredIndexedOptional } from "./_types";
+import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _minBy =
   (indexed: boolean) =>

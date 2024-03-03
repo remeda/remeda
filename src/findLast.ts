@@ -1,4 +1,4 @@
-import { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 import { purry } from "./purry";
 
 /**

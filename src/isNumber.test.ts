@@ -1,6 +1,6 @@
+import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
-  AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
 } from "../test/types_data_provider";
 import { isNumber } from "./isNumber";
@@ -29,9 +29,7 @@ describe("isNumber", () => {
   });
 
   it("should work with literal types", () => {
-    const data = (): 1 | 2 | 3 | string => {
-      return 1;
-    };
+    const data = (): string | 1 | 2 | 3 => 1;
     const x = data();
     if (isNumber(x)) {
       expect(typeof x).toEqual("number");

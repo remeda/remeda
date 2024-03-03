@@ -4,7 +4,7 @@ import { first } from "./first";
 import { pipe } from "./pipe";
 
 function defaultTo<T>(d: T) {
-  return function (v: T | undefined | null) {
+  return function (v: T | null | undefined) {
     return v == null ? d : v;
   };
 }
@@ -143,7 +143,7 @@ describe("strict typing", () => {
   test("tuple with last", () => {
     const arr: [...Array<string>, number] = ["a", 1];
     const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expectTypeOf(result).toEqualTypeOf<number | string>();
     expect(result).toEqual("a");
   });
 
@@ -199,7 +199,7 @@ describe("strict typing", () => {
   test("readonly tuple with last", () => {
     const arr: readonly [...Array<string>, number] = ["a", 1];
     const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expectTypeOf(result).toEqualTypeOf<number | string>();
     expect(result).toEqual("a");
   });
 });

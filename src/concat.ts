@@ -14,7 +14,7 @@ import { purry } from "./purry";
 export function concat<T, K>(
   arr1: ReadonlyArray<T>,
   arr2: ReadonlyArray<K>,
-): Array<T | K>;
+): Array<K | T>;
 
 /**
  * Combines two arrays.
@@ -28,7 +28,7 @@ export function concat<T, K>(
  */
 export function concat<T, K>(
   arr2: ReadonlyArray<K>,
-): (arr1: ReadonlyArray<T>) => Array<T | K>;
+): (arr1: ReadonlyArray<T>) => Array<K | T>;
 
 export function concat() {
   return purry(_concat, arguments);

@@ -31,5 +31,5 @@ export function merge() {
 }
 
 function _merge<A, B>(a: A, b: B) {
-  return Object.assign({}, a, b);
+  return { ...a, ...b };
 }

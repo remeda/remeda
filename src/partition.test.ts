@@ -34,9 +34,7 @@ describe("data first", () => {
   test("partition with type guard in pipe", () => {
     const actual = pipe(
       [1, "a", 2, "b"],
-      partition((value): value is number => {
-        return typeof value === "number";
-      }),
+      partition((value): value is number => typeof value === "number"),
     );
     expect(actual).toEqual([
       [1, 2],

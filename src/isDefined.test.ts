@@ -1,8 +1,10 @@
+import type {
+  AllTypesDataProviderTypes,
+  TestClass,
+} from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
-  AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
-  TestClass,
 } from "../test/types_data_provider";
 import { isDefined } from "./isDefined";
 
@@ -12,22 +14,22 @@ describe("isDefined", () => {
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
       >();
     }
   });
@@ -36,22 +38,22 @@ describe("isDefined", () => {
     expect(data).toHaveLength(16);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
       >
     >();
   });
@@ -63,23 +65,23 @@ describe("strict", () => {
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
       >();
     }
   });
@@ -89,23 +91,23 @@ describe("strict", () => {
     expect(data).toHaveLength(17);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
       >
     >();
   });

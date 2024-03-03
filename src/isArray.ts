@@ -1,4 +1,4 @@
-import { NarrowedTo } from "./_types";
+import type { NarrowedTo } from "./_types";
 
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly
@@ -13,7 +13,7 @@ import { NarrowedTo } from "./_types";
  * @category Guard
  */
 export function isArray<T>(
-  data: T | ArrayLike<unknown>,
+  data: ArrayLike<unknown> | T,
 ): data is NarrowedTo<T, ReadonlyArray<unknown>> {
   return Array.isArray(data);
 }

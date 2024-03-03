@@ -50,11 +50,7 @@ function _omit<T extends object, K extends keyof T>(
     // Only one prop to omit.
 
     const [propName] = propNames;
-    const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- use destructuring to remove a single key, letting JS optimize here...
-      [propName]: omitted,
-      ...remaining
-    } = data;
+    const { [propName]: omitted, ...remaining } = data;
     return remaining;
   }
 

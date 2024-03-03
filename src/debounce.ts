@@ -98,13 +98,13 @@ type DebounceOptions = {
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options: { readonly timing?: "trailing" } & DebounceOptions,
+  options: DebounceOptions & { readonly timing?: "trailing" },
 ): Debouncer<F>;
 export function debounce<F extends (...args: any) => any>(
   func: F,
   options:
-    | ({ readonly timing: "leading" } & Omit<DebounceOptions, "maxWaitMs">)
-    | ({ readonly timing: "both" } & DebounceOptions),
+    | (DebounceOptions & { readonly timing: "both" })
+    | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
 ): Debouncer<F, false /* call CAN'T return null */>;
 
 export function debounce<F extends (...args: any) => any>(
@@ -114,7 +114,7 @@ export function debounce<F extends (...args: any) => any>(
     timing = "trailing",
     maxWaitMs,
   }: DebounceOptions & {
-    readonly timing?: "leading" | "both" | "trailing";
+    readonly timing?: "both" | "leading" | "trailing";
   },
 ): Debouncer<F> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {

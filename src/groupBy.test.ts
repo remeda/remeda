@@ -1,4 +1,4 @@
-import { NonEmptyArray } from "./_types";
+import type { NonEmptyArray } from "./_types";
 import { groupBy } from "./groupBy";
 import { pipe } from "./pipe";
 
@@ -70,8 +70,8 @@ describe("Result key types", () => {
     assertType<Record<number, NonEmptyArray<Array2Item>>>(data);
   });
   test("string | number", () => {
-    const data = groupBy.strict(array2, (x): string | number => x.b);
-    assertType<Record<string | number, NonEmptyArray<Array2Item>>>(data);
+    const data = groupBy.strict(array2, (x): number | string => x.b);
+    assertType<Record<number | string, NonEmptyArray<Array2Item>>>(data);
   });
 });
 

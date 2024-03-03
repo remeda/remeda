@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { Pred, PredIndexedOptional, PredIndexed } from "./_types";
+import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import { _toSingle } from "./_toSingle";
 
@@ -63,14 +63,13 @@ const _find =
 
 const _lazy =
   (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, boolean>) => {
-    return (value: T, index?: number, array?: Array<T>) => {
-      const valid = indexed ? fn(value, index, array) : fn(value);
-      return {
-        done: valid,
-        hasNext: valid,
-        next: value,
-      };
+  <T>(fn: PredIndexedOptional<T, boolean>) =>
+  (value: T, index?: number, array?: Array<T>) => {
+    const valid = indexed ? fn(value, index, array) : fn(value);
+    return {
+      done: valid,
+      hasNext: valid,
+      next: value,
     };
   };
 

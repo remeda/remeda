@@ -22,11 +22,11 @@ describe("typings", () => {
     assertType<Record<string, number>>(actual);
   });
   test("arrays with mixed type value", () => {
-    const actual = fromPairs<string | number>([
+    const actual = fromPairs<number | string>([
       ["a", 2],
       ["b", "c"],
     ]);
-    assertType<Record<string, string | number>>(actual);
+    assertType<Record<string, number | string>>(actual);
   });
 });
 
@@ -126,7 +126,7 @@ describe("Strict (with readonly inputs)", () => {
     > = [["a", 1]];
     const result = fromPairs.strict(arr);
     expectTypeOf(result).toMatchTypeOf<
-      { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
+      Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
     >();
     expect(result).toStrictEqual({ a: 1 });
   });
@@ -243,7 +243,7 @@ describe("Strict (with non-readonly inputs)", () => {
     const arr: Array<["a", 1] | [`testing_${string}`, boolean]> = [["a", 1]];
     const result = fromPairs.strict(arr);
     expectTypeOf(result).toMatchTypeOf<
-      { a?: 1 } & Partial<Record<`testing_${string}`, boolean>>
+      Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
     >();
     expect(result).toStrictEqual({ a: 1 });
   });

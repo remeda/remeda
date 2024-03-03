@@ -15,6 +15,6 @@
  */
 export function isTruthy<T>(
   data: T,
-): data is Exclude<T, null | undefined | false | "" | 0> {
-  return !!data;
+): data is Exclude<T, "" | 0 | false | null | undefined> {
+  return Boolean(data);
 }

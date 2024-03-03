@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { PredIndexedOptional, PredIndexed } from "./_types";
+import type { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
@@ -57,14 +57,13 @@ export function indexBy() {
 
 const _indexBy =
   (indexed: boolean) =>
-  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) => {
-    return array.reduce<Record<string, T>>((ret, item, index) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) =>
+    array.reduce<Record<string, T>>((ret, item, index) => {
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
       ret[key] = item;
       return ret;
     }, {});
-  };
 
 function indexByStrict<K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
@@ -82,13 +81,12 @@ function indexByStrict() {
 const _indexByStrict = <K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
   fn: (item: T) => K,
-) => {
-  return array.reduce<Partial<Record<K, T>>>((ret, item) => {
+) =>
+  array.reduce<Partial<Record<K, T>>>((ret, item) => {
     const key = fn(item);
     ret[key] = item;
     return ret;
   }, {});
-};
 
 export namespace indexBy {
   export function indexed<T>(

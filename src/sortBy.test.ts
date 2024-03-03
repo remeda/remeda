@@ -229,9 +229,9 @@ describe("strict", () => {
     const result = sortBy.strict(array, identity);
     expectTypeOf(result).toEqualTypeOf<
       [
-        number | string | boolean,
-        number | string | boolean,
-        number | string | boolean,
+        boolean | number | string,
+        boolean | number | string,
+        boolean | number | string,
       ]
     >();
   });

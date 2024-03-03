@@ -1,4 +1,4 @@
-import { IterableContainer } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -58,7 +58,7 @@ function _zip(first: Array<unknown>, second: Array<unknown>) {
   return result;
 }
 
-interface Strict {
+type Strict = {
   <F extends IterableContainer, S extends IterableContainer>(
     first: F,
     second: S,
@@ -67,7 +67,7 @@ interface Strict {
   <S extends IterableContainer>(
     second: S,
   ): <F extends IterableContainer>(first: F) => Zip<F, S>;
-}
+};
 
 type Zip<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises

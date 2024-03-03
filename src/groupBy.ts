@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { NonEmptyArray, PredIndexedOptional, PredIndexed } from "./_types";
+import type { NonEmptyArray, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -66,7 +66,7 @@ const _groupBy =
 
 // Redefining the groupBy API with a stricter return type. This API is accessed
 // via `groupBy.strict`
-interface Strict {
+type Strict = {
   // Data-First
   <Value, Key extends PropertyKey = PropertyKey>(
     items: ReadonlyArray<Value>,
@@ -90,7 +90,7 @@ interface Strict {
       fn: PredIndexed<Value, Key | undefined>,
     ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
   };
-}
+};
 
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using

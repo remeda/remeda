@@ -48,7 +48,7 @@ describe("runtime (dataFirst)", () => {
     expect(() =>
       conditional("Jokic", [() => false, () => "world"]),
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: conditional: data failed for all cases]`,
+      "[Error: conditional: data failed for all cases]",
     );
   });
 });
@@ -69,7 +69,7 @@ describe("runtime (dataLast)", () => {
 
 describe("typing", () => {
   it("can narrow types in the transformers", () => {
-    const data = 3 as string | number;
+    const data = 3 as number | string;
     conditional(
       data,
       [

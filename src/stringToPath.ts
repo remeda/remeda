@@ -13,10 +13,12 @@ export function stringToPath<Path extends string>(
 }
 
 function _stringToPath(path: string): Array<string> {
-  if (path.length === 0) return [];
+  if (path.length === 0) {
+    return [];
+  }
 
   const match =
-    path.match(/^\[(.+?)\](.*)$/) ?? path.match(/^\.?([^.[\]]+)(.*)$/);
+    /^\[(.+?)\](.*)$/.exec(path) ?? /^\.?([^.[\]]+)(.*)$/.exec(path);
   if (match) {
     const [, key, rest] = match;
     // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?

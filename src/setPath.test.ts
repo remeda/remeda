@@ -2,7 +2,7 @@ import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 import { stringToPath } from "./stringToPath";
 
-interface SampleType {
+type SampleType = {
   a: {
     b: {
       c: number;
@@ -13,7 +13,7 @@ interface SampleType {
   };
   x?: number;
   y?: number;
-}
+};
 
 const obj: SampleType = {
   a: {

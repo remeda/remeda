@@ -1,5 +1,6 @@
 import { heapify, heapMaybeInsert } from "./_heap";
-import { OrderRule, purryOrderRulesWithArgument } from "./_purryOrderRules";
+import type { OrderRule } from "./_purryOrderRules";
+import { purryOrderRulesWithArgument } from "./_purryOrderRules";
 import type { CompareFunction, NonEmptyArray } from "./_types";
 
 /**

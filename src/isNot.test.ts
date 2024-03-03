@@ -1,8 +1,10 @@
+import type {
+  AllTypesDataProviderTypes,
+  TestClass,
+} from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
-  AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
-  TestClass,
 } from "../test/types_data_provider";
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
@@ -14,22 +16,22 @@ describe("isNot", () => {
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
         | undefined
       >(data);
     }
@@ -40,22 +42,22 @@ describe("isNot", () => {
     expect(data.some((c) => c instanceof Promise)).toEqual(false);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | null
-        | number
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
+        | null
         | undefined
       >
     >();

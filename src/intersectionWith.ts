@@ -1,4 +1,5 @@
-import { LazyResult, _reduceLazy } from "./_reduceLazy";
+import type { LazyResult } from "./_reduceLazy";
+import { _reduceLazy } from "./_reduceLazy";
 import { purry } from "./purry";
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;

@@ -1,6 +1,6 @@
+import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
-  AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
   TestClass,
 } from "../test/types_data_provider";
@@ -78,9 +78,6 @@ describe("typing", () => {
     const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
     if (isObjectType(data)) {
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
         | Date
         | Error
@@ -90,6 +87,9 @@ describe("typing", () => {
         | Set<string>
         | TestClass
         | Uint8Array
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
       >();
     }
   });
@@ -105,9 +105,6 @@ describe("typing", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: "asd" }
         | Array<number>
         | Date
         | Error
@@ -117,6 +114,9 @@ describe("typing", () => {
         | Set<string>
         | TestClass
         | Uint8Array
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
       >
     >();
   });

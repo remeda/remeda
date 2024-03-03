@@ -7,7 +7,7 @@ describe("data first", () => {
       { a: 1, b: 2, A: 3, B: 4 },
       (_, key) => key.toUpperCase() === key,
     );
-    assertType<Record<"a" | "b" | "A" | "B", number>>(result);
+    assertType<Record<"A" | "a" | "B" | "b", number>>(result);
     expect(result).toStrictEqual({ a: 1, b: 2 });
   });
   test("allow partial type", () => {
@@ -26,7 +26,7 @@ describe("data last", () => {
       { a: 1, b: 2, A: 3, B: 4 },
       omitBy((_, key) => key.toUpperCase() === key),
     );
-    assertType<Record<"a" | "b" | "A" | "B", number>>(result);
+    assertType<Record<"A" | "a" | "B" | "b", number>>(result);
     expect(result).toStrictEqual({ a: 1, b: 2 });
   });
   test("allow partial type", () => {

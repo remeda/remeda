@@ -52,7 +52,7 @@ export function zipWith<F, S, R>(
 ): (first: ReadonlyArray<F>) => Array<R>;
 
 export function zipWith(
-  arg0: ZippingFunction | ReadonlyArray<unknown>,
+  arg0: ReadonlyArray<unknown> | ZippingFunction,
   arg1?: ReadonlyArray<unknown>,
   arg2?: ZippingFunction,
 ): unknown {
