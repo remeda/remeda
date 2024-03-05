@@ -263,13 +263,13 @@ module.exports = tseslint.config(
       // (We are assuming that the config is extended by unicorns's:
       // flat/recommended extension)
 
+      "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
       "unicorn/filename-case": ["error", { case: "camelCase" }],
       "unicorn/no-keyword-prefix": "warn",
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
-      "unicorn/consistent-destructuring": "warn",
 
       // TODO: Once we bump our typescript `target` we should enable this rule
       "unicorn/no-array-for-each": "off",
