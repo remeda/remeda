@@ -41,8 +41,14 @@ function _equals(a: unknown, b: unknown) {
     return true;
   }
 
+  if (typeof a === "number" && typeof b === "number") {
+    // TODO: This is a temporary fix for NaN, we should use Number.isNaN once we bump our target above ES5.
+    // eslint-disable-next-line no-self-compare -- We should use Number.isNaN here, but it's ES2015.
+    return a !== a && b !== b;
+  }
+
   if (typeof a !== "object" || typeof b !== "object") {
-    return Number.isNaN(a) && Number.isNaN(b);
+    return false;
   }
 
   if (a === null || b === null) {
@@ -57,7 +63,7 @@ function _equals(a: unknown, b: unknown) {
       return false;
     }
     for (let i = 0; i < a.length; i++) {
-      if (!equals(a[i], b[i])) {
+      if (!_equals(a[i], b[i])) {
         return false;
       }
     }
@@ -96,11 +102,9 @@ function _equals(a: unknown, b: unknown) {
     if (!Object.prototype.hasOwnProperty.call(b, key)) {
       return false;
     }
-  }
 
-  for (const key of keys) {
     // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
-    if (!equals(a[key], b[key])) {
+    if (!_equals(a[key], b[key])) {
       return false;
     }
   }
