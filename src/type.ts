@@ -19,7 +19,8 @@
 export function type(val: unknown): string {
   return val === null
     ? "Null"
-    : val === undefined
+    : // eslint-disable-next-line unicorn/no-nested-ternary -- I don't understand what makes the rule fire here...
+      val === undefined
       ? "Undefined"
       : Object.prototype.toString.call(val).slice(8, -1);
 }

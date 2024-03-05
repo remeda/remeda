@@ -269,15 +269,14 @@ module.exports = tseslint.config(
       "unicorn/switch-case-braces": ["error", "avoid"],
       "unicorn/filename-case": ["error", { case: "camelCase" }],
 
-      "unicorn/no-nested-ternary": "off",
-      "unicorn/prevent-abbreviations": "off",
-
       // TODO: Once we bump our typescript `target` we should enable this rule
       "unicorn/no-array-for-each": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-spread": "off",
+
+      "unicorn/prevent-abbreviations": "off",
     },
   },
   {
