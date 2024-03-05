@@ -1,4 +1,4 @@
-/* eslint-disable eqeqeq, guard-for-in, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-destructuring, @typescript-eslint/prefer-readonly-parameter-types, unicorn/no-null -- FIXME! */
+/* eslint-disable eqeqeq, guard-for-in, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-destructuring, @typescript-eslint/prefer-readonly-parameter-types, unicorn/no-null, unicorn/prevent-abbreviations -- FIXME! */
 
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
