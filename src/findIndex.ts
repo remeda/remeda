@@ -63,12 +63,13 @@ const _findIndex =
 const _lazy =
   (indexed: boolean) =>
   <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T, number> => {
-    let i = 0;
+    // TODO: We use the `actualIndex` here because we can't trust the index coming from pipe. This is due to the fact that the `indexed` abstraction might turn off incrementing the index or not send it at all. Once we simplify the code base by removing the non-indexed versions, we can remove this.
+    let actualIndex = 0;
     return (value, index, array) => {
       if (indexed ? fn(value, index, array) : fn(value)) {
-        return { done: true, hasNext: true, next: i };
+        return { done: true, hasNext: true, next: actualIndex };
       }
-      i += 1;
+      actualIndex += 1;
       return { done: false, hasNext: false };
     };
   };
