@@ -24,13 +24,13 @@ type LazyMany<T> = {
 export function _reduceLazy<T, K>(
   array: ReadonlyArray<T>,
   lazy: (item: T, index?: number, array?: ReadonlyArray<T>) => LazyResult<K>,
-  indexed?: boolean,
+  isIndexed = false,
 ): Array<K> {
   const newArray: Array<K> = [];
   // We intentionally use a for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info
   for (let index = 0; index < array.length; index++) {
     const item = array[index]!;
-    const result = indexed ?? false ? lazy(item, index, array) : lazy(item);
+    const result = isIndexed ? lazy(item, index, array) : lazy(item);
     if (result.hasMany === true) {
       newArray.push(...result.next);
     } else if (result.hasNext) {
