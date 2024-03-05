@@ -258,6 +258,13 @@ module.exports = tseslint.config(
       "no-shadow": "off",
       "@typescript-eslint/no-shadow": "error",
       "@typescript-eslint/no-unsafe-unary-minus": "error",
+
+      // === Unicorn ==========================================================
+      // (We are assuming that the config is extended by unicorns's:
+      // flat/recommended extension)
+
+      "unicorn/filename-case": "off",
+      "unicorn/prevent-abbreviations": "off",
     },
   },
   {
