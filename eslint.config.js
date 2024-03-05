@@ -1,5 +1,8 @@
 const js = require("@eslint/js");
 const tseslint = require("typescript-eslint");
+// @ts-expect-error [ts7016] - Unicorn not supporting CommonJS-based flat configs.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Unicorn doesn't support CommonJS-based flat configs.
+const eslintPluginUnicorn = require("eslint-plugin-unicorn");
 
 module.exports = tseslint.config(
   {
@@ -8,6 +11,8 @@ module.exports = tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- Unicorn doesn't support CommonJS-based flat configs.
+  eslintPluginUnicorn.configs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {
@@ -262,6 +267,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/no-require-imports": "off",
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-var-requires": "off",
+      "unicorn/prefer-module": "off",
     },
   },
   {
