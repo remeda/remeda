@@ -263,22 +263,21 @@ module.exports = tseslint.config(
       // (We are assuming that the config is extended by unicorns's:
       // flat/recommended extension)
 
+      "unicorn/custom-error-definition": "warn",
+      "unicorn/no-unused-properties": "warn",
+      "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
-      "unicorn/no-useless-undefined": [
-        "error",
-        { checkArguments: false, checkArrowFunctionBody: false },
-      ],
+      "unicorn/filename-case": ["error", { case: "camelCase" }],
 
-      "unicorn/filename-case": "off",
-      "unicorn/prevent-abbreviations": "off",
       "unicorn/no-nested-ternary": "off",
+      "unicorn/prevent-abbreviations": "off",
 
       // TODO: Once we bump our typescript `target` we should enable this rule
       "unicorn/no-array-for-each": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
-      "unicorn/prefer-spread": "off",
       "unicorn/prefer-number-properties": "off",
+      "unicorn/prefer-spread": "off",
     },
   },
   {
@@ -289,6 +288,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-var-requires": "off",
       "unicorn/prefer-module": "off",
+      "unicorn/filename-case": "off",
     },
   },
   {
@@ -296,14 +296,26 @@ module.exports = tseslint.config(
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+      "unicorn/filename-case": "off",
     },
   },
   {
-    files: ["src/**/*.test.ts", "test/**/*.ts"],
+    files: ["src/**/*.test.ts"],
+    rules: {
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": [
+        "warn",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
+  },
+  {
+    files: ["test/**/*.ts"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      "unicorn/no-array-callback-reference": "off",
+      "unicorn/filename-case": "off",
       "unicorn/no-null": "off",
     },
   },

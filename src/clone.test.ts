@@ -6,7 +6,7 @@ const eq = (a: any, b: any): void => {
   expect(a).toEqual(b);
 };
 
-const fn = (x: number) => x + x;
+const fn = (x: number): number => x + x;
 
 describe("deep clone integers, strings and booleans", () => {
   it("clones integers", () => {

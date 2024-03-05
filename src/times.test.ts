@@ -1,9 +1,9 @@
 import { times } from "./times";
 
-const noop = () => undefined;
-const one = () => 1;
-const mul1 = (idx: number) => idx;
-const mul2 = (idx: number) => idx * 2;
+const noop = (): undefined => undefined;
+const one = () => 1 as const;
+const mul1 = (idx: number): number => idx;
+const mul2 = (idx: number): number => idx * 2;
 
 describe("times", () => {
   describe("data_first", () => {
