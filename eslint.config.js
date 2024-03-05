@@ -278,7 +278,39 @@ module.exports = tseslint.config(
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-spread": "off",
 
-      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prevent-abbreviations": [
+        "warn",
+        {
+          replacements: {
+            res: {
+              resource: false,
+              response: false,
+            },
+            ret: {
+              out: true,
+              returnValue: false,
+            },
+          },
+          allowList: {
+            arg: true,
+            Arg: true,
+            args: true,
+            Args: true,
+            fn: true,
+            Fn: true,
+            func: true,
+            Func: true,
+            num: true,
+            obj: true,
+            Obj: true,
+            prop: true,
+            Prop: true,
+            props: true,
+            Props: true,
+            str: true,
+          },
+        },
+      ],
     },
   },
   {
