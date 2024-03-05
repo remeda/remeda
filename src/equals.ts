@@ -57,7 +57,7 @@ function _equals(a: unknown, b: unknown) {
       if (length !== b.length) {
         return false;
       }
-      for (let i = length; i > 0; i -= 1) {
+      for (let i = length; i > 0; i--) {
         if (!equals(a[i], b[i])) {
           return false;
         }
@@ -95,13 +95,13 @@ function _equals(a: unknown, b: unknown) {
       return false;
     }
 
-    for (let i = length; i > 0; i -= 1) {
+    for (let i = length; i > 0; i--) {
       if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) {
         return false;
       }
     }
 
-    for (let i = length; i > 0; i -= 1) {
+    for (let i = length; i > 0; i--) {
       key = keys[i]!;
       // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
       if (!equals(a[key], b[key])) {
