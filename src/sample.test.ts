@@ -45,10 +45,11 @@ describe("at runtime", () => {
     it.each(allIndices(array))("doesn't reorder items", (sampleSize) => {
       const result = sample(array, sampleSize);
 
-      // Scan the result array and make sure each item is after the previous one
-      // in the input array.
-      let lastInputIndex = -1; /* outside of the array */
+      let lastInputIndex = -1; // outside of the array
       for (const item of result) {
+        // Scan the result array and make sure each item is after the previous one
+        // in the input array.
+
         const currentInputIndex = array.indexOf(item);
         expect(currentInputIndex).toBeGreaterThan(lastInputIndex);
         lastInputIndex = currentInputIndex;
