@@ -41,76 +41,69 @@ function _equals(a: unknown, b: unknown) {
     return true;
   }
 
-  if (
-    typeof a === "object" &&
-    typeof b === "object" &&
-    a !== null &&
-    b !== null
-  ) {
-    const arrA = Array.isArray(a);
-    const arrB = Array.isArray(b);
-    let length;
-    let key;
+  if (typeof a !== "object" || typeof b !== "object") {
+    return Number.isNaN(a) && Number.isNaN(b);
+  }
 
-    if (arrA && arrB) {
-      length = a.length;
-      if (length !== b.length) {
-        return false;
-      }
-      for (let i = length; i > 0; i--) {
-        if (!equals(a[i], b[i])) {
-          return false;
-        }
-      }
-      return true;
-    }
+  if (a === null || b === null) {
+    return false;
+  }
 
-    if (arrA !== arrB) {
+  const isArrayA = Array.isArray(a);
+  const isArrayB = Array.isArray(b);
+
+  if (isArrayA && isArrayB) {
+    if (a.length !== b.length) {
       return false;
     }
-
-    const dateA = a instanceof Date;
-    const dateB = b instanceof Date;
-    if (dateA !== dateB) {
-      return false;
-    }
-    if (dateA && dateB) {
-      return a.getTime() === b.getTime();
-    }
-
-    const regexpA = a instanceof RegExp;
-    const regexpB = b instanceof RegExp;
-    if (regexpA !== regexpB) {
-      return false;
-    }
-    if (regexpA && regexpB) {
-      return a.toString() === b.toString();
-    }
-
-    const keys = Object.keys(a);
-
-    length = keys.length;
-
-    if (length !== Object.keys(b).length) {
-      return false;
-    }
-
-    for (let i = length; i > 0; i--) {
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) {
+    for (let i = 0; i < a.length; i++) {
+      if (!equals(a[i], b[i])) {
         return false;
       }
     }
-
-    for (let i = length; i > 0; i--) {
-      key = keys[i]!;
-      // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
-      if (!equals(a[key], b[key])) {
-        return false;
-      }
-    }
-
     return true;
   }
 
-  return Number.isNaN(a) && Number.isNaN(b);
+  if (isArrayA !== isArrayB) {
+    return false;
+  }
+
+  const isDateA = a instanceof Date;
+  const isDateB = b instanceof Date;
+  if (isDateA && isDateB) {
+    return a.getTime() === b.getTime();
+  }
+  if (isDateA !== isDateB) {
+    return false;
+  }
+
+  const isRegExpA = a instanceof RegExp;
+  const isRegExpB = b instanceof RegExp;
+  if (isRegExpA && isRegExpB) {
+    return a.toString() === b.toString();
+  }
+  if (isRegExpA !== isRegExpB) {
+    return false;
+  }
+
+  const keys = Object.keys(a);
+
+  if (keys.length !== Object.keys(b).length) {
+    return false;
+  }
+
+  for (const key of keys) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+      return false;
+    }
+  }
+
+  for (const key of keys) {
+    // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
+    if (!equals(a[key], b[key])) {
+      return false;
+    }
+  }
+
+  return true;
 }
