@@ -50,6 +50,7 @@ const _reduce =
     fn: (acc: K, item: T, index?: number, items?: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K =>
+    // eslint-disable-next-line unicorn/no-array-reduce -- Our function wraps the built-in reduce.
     items.reduce(
       (acc, item, index) =>
         indexed ? fn(acc, item, index, items) : fn(acc, item),

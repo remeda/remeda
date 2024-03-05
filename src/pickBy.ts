@@ -41,10 +41,13 @@ function _pickBy<T>(
     return {};
   }
 
-  return keys.strict(data).reduce<Partial<T>>((acc, key) => {
+  const out: Partial<T> = {};
+
+  for (const key of keys.strict(data)) {
     if (fn(data[key], key)) {
-      acc[key] = data[key];
+      out[key] = data[key];
     }
-    return acc;
-  }, {});
+  }
+
+  return out;
 }

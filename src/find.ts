@@ -54,13 +54,10 @@ export function find(): unknown {
 
 const _find =
   (indexed: boolean) =>
-  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
-    if (indexed) {
-      return array.find(fn);
-    }
-
-    return array.find((x) => fn(x));
-  };
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) =>
+    array.find((item, index, input) =>
+      indexed ? fn(item, index, input) : fn(item),
+    );
 
 const _lazy =
   (indexed: boolean) =>

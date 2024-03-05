@@ -57,13 +57,17 @@ export function indexBy(): unknown {
 
 const _indexBy =
   (indexed: boolean) =>
-  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) =>
-    array.reduce<Record<string, T>>((ret, item, index) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) => {
+    const out: Record<string, T> = {};
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target version we can use Array.prototype.entries to iterate over the elements and index at the same time.
+      const item = array[index]!;
       const value = indexed ? fn(item, index, array) : fn(item);
       const key = String(value);
-      ret[key] = item;
-      return ret;
-    }, {});
+      out[key] = item;
+    }
+    return out;
+  };
 
 function indexByStrict<K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
@@ -78,15 +82,19 @@ function indexByStrict(): unknown {
   return purry(_indexByStrict, arguments);
 }
 
-const _indexByStrict = <K extends PropertyKey, T>(
+function _indexByStrict<K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
   fn: (item: T) => K,
-): Partial<Record<K, T>> =>
-  array.reduce<Partial<Record<K, T>>>((ret, item) => {
+): Partial<Record<K, T>> {
+  const out: Partial<Record<K, T>> = {};
+
+  for (const item of array) {
     const key = fn(item);
-    ret[key] = item;
-    return ret;
-  }, {});
+    out[key] = item;
+  }
+
+  return out;
+}
 
 export namespace indexBy {
   export function indexed<T>(

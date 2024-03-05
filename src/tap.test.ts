@@ -5,6 +5,11 @@ import { tap } from "./tap";
 
 const DATA = [1] as const;
 
+// (same as console.log)
+function foo(x: unknown): unknown {
+  return x;
+}
+
 describe("data first", () => {
   it("should call function with input value", () => {
     const fn = vi.fn();
@@ -50,11 +55,6 @@ describe("data last", () => {
   });
 
   it("should infer types after tapping function reference with parameter type any", () => {
-    // (same as console.log)
-    function foo(x: unknown): unknown {
-      return x;
-    }
-
     expect(
       pipe(
         [-1, 2],

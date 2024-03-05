@@ -6,6 +6,8 @@ const eq = (a: any, b: any): void => {
   expect(a).toEqual(b);
 };
 
+const fn = (x: number) => x + x;
+
 describe("deep clone integers, strings and booleans", () => {
   it("clones integers", () => {
     eq(clone(-4), -4);
@@ -86,7 +88,6 @@ describe("deep clone arrays", () => {
 
 describe("deep clone functions", () => {
   it("keep reference to function", () => {
-    const fn = (x: number) => x + x;
     const list = [{ a: fn }] as const;
 
     const cloned = clone(list);

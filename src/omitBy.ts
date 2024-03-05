@@ -41,10 +41,13 @@ function _omitBy<T>(
     return object;
   }
 
-  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
+  const out: Partial<T> = {};
+
+  for (const key of keys.strict(object)) {
     if (!fn(object[key], key)) {
-      acc[key] = object[key];
+      out[key] = object[key];
     }
-    return acc;
-  }, {});
+  }
+
+  return out;
 }

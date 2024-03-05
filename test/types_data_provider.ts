@@ -15,6 +15,7 @@ export const TYPES_DATA_PROVIDER = {
   },
   instance: new TestClass(),
   map: new Map<string, string>(),
+
   null: null,
   number: 5 as number,
   object: { a: "asd" },

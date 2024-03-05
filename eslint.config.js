@@ -271,12 +271,14 @@ module.exports = tseslint.config(
 
       "unicorn/filename-case": "off",
       "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-nested-ternary": "off",
 
       // TODO: Once we bump our typescript `target` we should enable this rule
       "unicorn/no-array-for-each": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
       "unicorn/prefer-spread": "off",
+      "unicorn/prefer-number-properties": "off",
     },
   },
   {
@@ -301,6 +303,8 @@ module.exports = tseslint.config(
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-null": "off",
     },
   },
 );

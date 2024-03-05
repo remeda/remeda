@@ -65,14 +65,18 @@ const _flatMapToObj =
       T,
       ReadonlyArray<readonly [key: PropertyKey, value: unknown]>
     >,
-  ) =>
-    array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {
+  ) => {
+    const out: Record<PropertyKey, unknown> = {};
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump the TypeScript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value at the same time.
+      const element = array[index]!;
       const items = indexed ? fn(element, index, array) : fn(element);
       items.forEach(([key, value]) => {
-        result[key] = value;
+        out[key] = value;
       });
-      return result;
-    }, {});
+    }
+    return out;
+  };
 
 export namespace flatMapToObj {
   export function indexed<T, K extends PropertyKey, V>(

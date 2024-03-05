@@ -25,7 +25,7 @@ it('"String" if given a String literal', () => {
 });
 
 it('"String" if given a String object', () => {
-  // eslint-disable-next-line no-new-wrappers -- Intentional
+  // eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins -- Intentional
   expect(type(new String("I am a String object"))).toEqual("String");
 });
 

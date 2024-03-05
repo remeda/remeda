@@ -65,6 +65,7 @@ function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
 export namespace flattenDeep {
   export const lazy =
     <T>(): LazyEvaluator<T, any> =>
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
     (value) => {
       const next = _flattenDeepValue(value);
       return Array.isArray(next)

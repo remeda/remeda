@@ -54,12 +54,19 @@ const _mapToObj =
   (
     array: ReadonlyArray<unknown>,
     fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>,
-  ) =>
-    array.reduce<Record<PropertyKey, unknown>>((result, element, index) => {
+  ) => {
+    const out: Record<PropertyKey, unknown> = {};
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Use Array.prototype.entries once we bump the Typescript target version to iterate over the elements and index at the same time.
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+      const element = array[index];
       const [key, value] = indexed ? fn(element, index, array) : fn(element);
-      result[key] = value;
-      return result;
-    }, {});
+      out[key] = value;
+    }
+
+    return out;
+  };
 
 export namespace mapToObj {
   export function indexed<T, K extends PropertyKey, V>(
