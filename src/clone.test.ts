@@ -109,19 +109,18 @@ describe("built-in types", () => {
     eq(cloned.getDay(), 5); // friday
   });
 
-  it("clones RegExp object", () => {
-    [/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu].forEach(
-      (pattern) => {
-        const cloned = clone(pattern);
-        assert.notStrictEqual(cloned, pattern);
-        eq(cloned.constructor, RegExp);
-        eq(cloned.source, pattern.source);
-        eq(cloned.global, pattern.global);
-        eq(cloned.ignoreCase, pattern.ignoreCase);
-        eq(cloned.multiline, pattern.multiline);
-      },
-    );
-  });
+  it.each([/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu])(
+    "clones RegExp object",
+    (pattern) => {
+      const cloned = clone(pattern);
+      assert.notStrictEqual(cloned, pattern);
+      eq(cloned.constructor, RegExp);
+      eq(cloned.source, pattern.source);
+      eq(cloned.global, pattern.global);
+      eq(cloned.ignoreCase, pattern.ignoreCase);
+      eq(cloned.multiline, pattern.multiline);
+    },
+  );
 });
 
 describe("deep clone deep nested mixed objects", () => {

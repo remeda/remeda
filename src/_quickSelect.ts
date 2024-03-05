@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations -- It's fine, this is a pure algo */
-
 /**
  * A simple implementation of the *QuickSelect* algorithm.
  * @see https://en.wikipedia.org/wiki/Quickselect

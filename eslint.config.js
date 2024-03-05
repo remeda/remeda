@@ -59,7 +59,7 @@ module.exports = tseslint.config(
       "@typescript-eslint/consistent-type-imports": ["warn"],
 
       // TODO: Once we bump our typescript `target` we should enable this rule
-      "unicorn/no-array-for-each": "off",
+      // "unicorn/no-array-for-each": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
       "unicorn/prefer-number-properties": "off",
@@ -279,6 +279,7 @@ module.exports = tseslint.config(
       "unicorn/switch-case-braces": ["error", "avoid"],
 
       // TODO: Enable this in a separate PR so we can run the auto-fix and ship without reviewing every file.
+      "unicorn/prevent-abbreviations": "off",
       //   "unicorn/prevent-abbreviations": [
       //     "warn",
       //     {

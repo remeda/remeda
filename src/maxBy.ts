@@ -6,13 +6,16 @@ const _maxBy =
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let ret: T | undefined;
     let retMax: number | undefined;
-    array.forEach((item, i) => {
-      const max = indexed ? fn(item, i, array) : fn(item);
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
+      const max = indexed ? fn(item, index, array) : fn(item);
       if (retMax === undefined || max > retMax) {
         ret = item;
         retMax = max;
       }
-    });
+    }
 
     return ret;
   };

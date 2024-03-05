@@ -77,10 +77,12 @@ const _partition =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     const ret: [Array<T>, Array<T>] = [[], []];
-    array.forEach((item, index) => {
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
       const matches = indexed ? fn(item, index, array) : fn(item);
       ret[matches ? 0 : 1].push(item);
-    });
+    }
     return ret;
   };
 

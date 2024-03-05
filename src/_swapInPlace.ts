@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations -- This is fine... */
-
 /**
  * An efficient hack to swap the values at two indices in an array *in-place*.
  */

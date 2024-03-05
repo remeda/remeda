@@ -71,9 +71,10 @@ const _flatMapToObj =
       // TODO: Once we bump the TypeScript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value at the same time.
       const element = array[index]!;
       const items = indexed ? fn(element, index, array) : fn(element);
-      items.forEach(([key, value]) => {
+
+      for (const [key, value] of items) {
         out[key] = value;
-      });
+      }
     }
     return out;
   };

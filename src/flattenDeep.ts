@@ -52,13 +52,15 @@ function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
     return value;
   }
   const ret: Array<any> = [];
-  value.forEach((item) => {
+
+  for (const item of value) {
     if (Array.isArray(item)) {
       ret.push(...flattenDeep(item));
     } else {
       ret.push(item);
     }
-  });
+  }
+
   return ret;
 }
 
