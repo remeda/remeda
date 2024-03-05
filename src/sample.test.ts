@@ -59,25 +59,29 @@ describe("at runtime", () => {
     it("for full (=== n) sample size", () => {
       const array = [1, 2, 3];
       const result = sample(array, 3);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it("for large (> n) sample sizes", () => {
       const array = [1, 2, 3];
       const result = sample(array, 10);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it("on empty arrays", () => {
       const array: Array<number> = [];
       const result = sample(array, 1);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it("on empty arrays and sample size 0", () => {
       const array: Array<number> = [];
       const result = sample(array, 0);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
   });
 
