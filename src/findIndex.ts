@@ -1,7 +1,8 @@
-import { purry } from "./purry";
-import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import { _toSingle } from "./_toSingle";
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
@@ -48,7 +49,7 @@ export function findIndex<T>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => number;
 
-export function findIndex() {
+export function findIndex(): unknown {
   return purry(_findIndex(false), arguments, findIndex.lazy);
 }
 
@@ -64,22 +65,14 @@ const _findIndex =
 
 const _lazy =
   (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, boolean>) => {
+  <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T, number> => {
     let i = 0;
-    return (value: T, index?: number, array?: ReadonlyArray<T>) => {
-      const valid = indexed ? fn(value, index, array) : fn(value);
-      if (valid) {
-        return {
-          done: true,
-          hasNext: true,
-          next: i,
-        };
+    return (value, index, array) => {
+      if (indexed ? fn(value, index, array) : fn(value)) {
+        return { done: true, hasNext: true, next: i };
       }
       i += 1;
-      return {
-        done: false,
-        hasNext: false,
-      };
+      return { done: false, hasNext: false };
     };
   };
 
@@ -91,7 +84,7 @@ export namespace findIndex {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_findIndex(true), arguments, findIndex.lazyIndexed);
   }
 
