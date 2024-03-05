@@ -209,20 +209,7 @@ module.exports = tseslint.config(
       // Security & Correctness
       "@typescript-eslint/explicit-function-return-type": [
         "error",
-        {
-          // Make it less strict
-          allowConciseArrowFunctionExpressionsStartingWithVoid: false,
-          allowFunctionsWithoutTypeParameters: false,
-          allowIIFEs: false,
-
-          // Make it more strict
-          allowTypedFunctionExpressions: true,
-          allowHigherOrderFunctions: true,
-          allowDirectConstAssertionInArrowFunctions: true,
-
-          // Changed:
-          allowExpressions: true,
-        },
+        { allowExpressions: true },
       ],
       "@typescript-eslint/prefer-readonly-parameter-types": [
         "error",
@@ -232,6 +219,7 @@ module.exports = tseslint.config(
             {
               from: "lib",
               name: [
+                // Built-ins that aren't read-only but aren't detected as such by this rule...
                 "Error",
                 "Function",
                 "IArguments",
@@ -273,10 +261,16 @@ module.exports = tseslint.config(
     },
   },
   {
-    files: ["src/type-fest/**.ts"],
+    files: ["src/type-fest/**/*.ts"],
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+    },
+  },
+  {
+    files: ["src/**/*.test.ts", "test/**/*.ts"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
 );

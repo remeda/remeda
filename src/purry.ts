@@ -53,7 +53,7 @@ export function purry(
   }
 
   if (diff === 1) {
-    const ret = (data: unknown) => fn(data, ...callArgs);
+    const ret = (data: unknown): unknown => fn(data, ...callArgs);
     const lazy = lazyFactory ?? fn.lazy;
     return lazy === undefined
       ? ret
