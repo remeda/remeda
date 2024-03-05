@@ -207,6 +207,23 @@ module.exports = tseslint.config(
       ],
 
       // Security & Correctness
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        {
+          // Make it less strict
+          allowConciseArrowFunctionExpressionsStartingWithVoid: false,
+          allowFunctionsWithoutTypeParameters: false,
+          allowIIFEs: false,
+
+          // Make it more strict
+          allowTypedFunctionExpressions: true,
+          allowHigherOrderFunctions: true,
+          allowDirectConstAssertionInArrowFunctions: true,
+
+          // Changed:
+          allowExpressions: true,
+        },
+      ],
       "@typescript-eslint/prefer-readonly-parameter-types": [
         "error",
         {

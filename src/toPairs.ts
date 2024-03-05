@@ -47,7 +47,7 @@ export function toPairs<T>(
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
 
-export function toPairs() {
+export function toPairs(): unknown {
   return purry(Object.entries, arguments);
 }
 

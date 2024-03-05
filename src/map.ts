@@ -1,5 +1,3 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import type {
@@ -8,6 +6,8 @@ import type {
   PredIndexed,
   PredIndexedOptional,
 } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array using a defined callback function. If the input
@@ -51,7 +51,7 @@ export function map<T, K>(
   fn: Pred<T, K>,
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function map() {
+export function map(): unknown {
   return purry(_map(false), arguments, map.lazy);
 }
 
@@ -62,8 +62,8 @@ const _map =
 
 const _lazy =
   (indexed: boolean) =>
-  <T, K>(fn: PredIndexedOptional<T, K>) =>
-  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<K> => ({
+  <T, K>(fn: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
+  (value, index, array) => ({
     done: false,
     hasNext: true,
     next: indexed ? fn(value, index, array) : fn(value),
@@ -105,7 +105,7 @@ export namespace map {
   export function indexed<T, K>(
     fn: PredIndexed<T, K>,
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_map(true), arguments, map.lazyIndexed);
   }
 

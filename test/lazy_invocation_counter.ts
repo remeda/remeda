@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { map } from "../src/map";
 
 export const createLazyInvocationCounter = () => {

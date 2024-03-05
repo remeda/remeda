@@ -1,6 +1,6 @@
 export class TestClass {
   // eslint-disable-next-line @typescript-eslint/class-literal-property-style -- Maybe we can just accept the auto-fixer here...?
-  get foo() {
+  get foo(): string {
     return "a";
   }
 }

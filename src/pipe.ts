@@ -1,6 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { LazyResult } from "./_reduceLazy";
+export type LazyEvaluator<T = unknown, R = T> = (
+  item: T,
+  index?: number,
+  data?: ReadonlyArray<T>,
+) => LazyResult<R>;
+
+export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
+
+type LazyEmpty = {
+  done: boolean;
+  hasNext: false;
+  hasMany?: false | undefined;
+  next?: undefined;
+};
+
+type LazyNext<T> = {
+  done: boolean;
+  hasNext: true;
+  hasMany?: false | undefined;
+  next: T;
+};
+
+type LazyMany<T> = {
+  done: boolean;
+  hasNext: true;
+  hasMany: true;
+  next: Array<T>;
+};
 
 /**
  * Perform left-to-right function composition.

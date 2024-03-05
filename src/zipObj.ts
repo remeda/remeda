@@ -12,7 +12,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function zipObj<F extends number | string | symbol, S>(
+export function zipObj<F extends PropertyKey, S>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>,
 ): Record<F, S>;
@@ -30,21 +30,19 @@ export function zipObj<F extends number | string | symbol, S>(
  */
 export function zipObj<S>(
   second: ReadonlyArray<S>,
-): <F extends number | string | symbol>(
-  first: ReadonlyArray<F>,
-) => Record<F, S>;
+): <F extends PropertyKey>(first: ReadonlyArray<F>) => Record<F, S>;
 
-export function zipObj() {
+export function zipObj(): unknown {
   return purry(_zipObj, arguments);
 }
 
 function _zipObj(
-  first: ReadonlyArray<number | string | symbol>,
+  first: ReadonlyArray<PropertyKey>,
   second: ReadonlyArray<unknown>,
-) {
+): Record<PropertyKey, unknown> {
   const resultLength =
     first.length > second.length ? second.length : first.length;
-  const result: Record<number | string | symbol, unknown> = {};
+  const result: Record<PropertyKey, unknown> = {};
   for (let i = 0; i < resultLength; i++) {
     result[first[i]!] = second[i];
   }

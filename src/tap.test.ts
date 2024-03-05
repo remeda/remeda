@@ -51,7 +51,7 @@ describe("data last", () => {
 
   it("should infer types after tapping function reference with parameter type any", () => {
     // (same as console.log)
-    function foo(x: unknown) {
+    function foo(x: unknown): unknown {
       return x;
     }
 

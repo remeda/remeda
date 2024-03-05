@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-readonly-parameter-types -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-readonly-parameter-types -- FIXME! */
 
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
@@ -39,7 +39,7 @@ export function flattenDeep<T>(): (
   items: ReadonlyArray<T>,
 ) => Array<FlattenDeep<T>>;
 
-export function flattenDeep() {
+export function flattenDeep(): unknown {
   return purry(_flattenDeep, arguments, flattenDeep.lazy);
 }
 
@@ -63,22 +63,12 @@ function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
 }
 
 export namespace flattenDeep {
-  export function lazy() {
-    return (value: any): LazyResult<any> => {
+  export const lazy =
+    <T>(): LazyEvaluator<T, any> =>
+    (value) => {
       const next = _flattenDeepValue(value);
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasNext: true,
-          hasMany: true,
-          next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
+      return Array.isArray(next)
+        ? { done: false, hasNext: true, hasMany: true, next }
+        : { done: false, hasNext: true, next };
     };
-  }
 }

@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type LazyFactory = (...args: any) => unknown;
+import type { LazyEvaluator } from "./pipe";
+
+type LazyEvaluatorFactory = (...args: any) => LazyEvaluator;
 
 type MaybeLazyFunction = {
   (...args: any): unknown;
-  readonly lazy?: LazyFactory;
+  readonly lazy?: LazyEvaluatorFactory;
 };
 
 /**
@@ -40,7 +42,7 @@ type MaybeLazyFunction = {
 export function purry(
   fn: MaybeLazyFunction,
   args: IArguments | ReadonlyArray<unknown>,
-  lazyFactory?: LazyFactory,
+  lazyFactory?: LazyEvaluatorFactory,
 ): unknown {
   // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;

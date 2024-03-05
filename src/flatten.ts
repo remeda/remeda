@@ -1,5 +1,5 @@
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
@@ -35,30 +35,20 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
  */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
-export function flatten() {
+export function flatten(): unknown {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: ReadonlyArray<T>) {
+function _flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>> {
   return _reduceLazy(items, flatten.lazy());
 }
 
 export namespace flatten {
-  export function lazy<T>() {
-    return (next: T): LazyResult<unknown> => {
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasNext: true,
-          hasMany: true,
-          next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
-    };
-  }
+  export const lazy =
+    <T>(): LazyEvaluator<T, Flatten<T>> =>
+    (item) =>
+      // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+      Array.isArray(item)
+        ? { done: false, hasNext: true, hasMany: true, next: item }
+        : { done: false, hasNext: true, next: item };
 }

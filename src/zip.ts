@@ -43,14 +43,17 @@ export function zip<S>(
   second: ReadonlyArray<S>,
 ): <F>(first: ReadonlyArray<F>) => Array<[F, S]>;
 
-export function zip() {
+export function zip(): unknown {
   return purry(_zip, arguments);
 }
 
-function _zip(first: ReadonlyArray<unknown>, second: ReadonlyArray<unknown>) {
+function _zip(
+  first: ReadonlyArray<unknown>,
+  second: ReadonlyArray<unknown>,
+): Array<[unknown, unknown]> {
   const resultLength =
     first.length > second.length ? second.length : first.length;
-  const result = [];
+  const result: Array<[unknown, unknown]> = [];
   for (let i = 0; i < resultLength; i++) {
     result.push([first[i], second[i]]);
   }
