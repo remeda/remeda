@@ -58,6 +58,13 @@ module.exports = tseslint.config(
       "no-duplicate-imports": "off",
       "@typescript-eslint/consistent-type-imports": ["warn"],
 
+      // TODO: Once we bump our typescript `target` we should enable this rule
+      "unicorn/no-array-for-each": "off",
+      "unicorn/no-for-loop": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-number-properties": "off",
+      "unicorn/prefer-spread": "off",
+
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
       // extension)
@@ -271,46 +278,37 @@ module.exports = tseslint.config(
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
 
-      // TODO: Once we bump our typescript `target` we should enable this rule
-      "unicorn/no-array-for-each": "off",
-      "unicorn/no-for-loop": "off",
-      "unicorn/prefer-at": "off",
-      "unicorn/prefer-number-properties": "off",
-      "unicorn/prefer-spread": "off",
-
-      "unicorn/prevent-abbreviations": [
-        "warn",
-        {
-          replacements: {
-            res: {
-              resource: false,
-              response: false,
-            },
-            ret: {
-              out: true,
-              returnValue: false,
-            },
-          },
-          allowList: {
-            arg: true,
-            Arg: true,
-            args: true,
-            Args: true,
-            fn: true,
-            Fn: true,
-            func: true,
-            Func: true,
-            num: true,
-            obj: true,
-            Obj: true,
-            prop: true,
-            Prop: true,
-            props: true,
-            Props: true,
-            str: true,
-          },
-        },
-      ],
+      // TODO: Enable this in a separate PR so we can run the auto-fix and ship without reviewing every file.
+      //   "unicorn/prevent-abbreviations": [
+      //     "warn",
+      //     {
+      //       replacements: {
+      //         res: {
+      //           resource: false,
+      //           response: false,
+      //         },
+      //       },
+      //       allowList: {
+      //         arg: true,
+      //         Arg: true,
+      //         args: true,
+      //         Args: true,
+      //         fn: true,
+      //         Fn: true,
+      //         func: true,
+      //         Func: true,
+      //         num: true,
+      //         obj: true,
+      //         Obj: true,
+      //         prop: true,
+      //         Prop: true,
+      //         props: true,
+      //         Props: true,
+      //         ret: true,
+      //         str: true,
+      //       },
+      //     },
+      //   ],
     },
   },
   {
