@@ -49,7 +49,7 @@ export function countBy<T>(
  * @category Array
  * @deprecated equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
-export function countBy() {
+export function countBy(): unknown {
   return purry(_countBy(false), arguments);
 }
 
@@ -67,7 +67,7 @@ export namespace countBy {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_countBy(true), arguments);
   }
 }

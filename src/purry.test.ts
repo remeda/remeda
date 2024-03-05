@@ -1,18 +1,18 @@
 import { purry } from "./purry";
 
-function sub(a: number, b: number) {
+function sub(a: number, b: number): number {
   return a - b;
 }
 
 test("all arguments", () => {
-  function fn(...args: ReadonlyArray<unknown>) {
+  function fn(...args: ReadonlyArray<unknown>): unknown {
     return purry(sub, args);
   }
   expect(fn(10, 5)).toEqual(5);
 });
 
 test("1 missing", () => {
-  function fn(...args: ReadonlyArray<unknown>) {
+  function fn(...args: ReadonlyArray<unknown>): unknown {
     return purry(sub, args);
   }
   const purried = fn(5) as (...args: ReadonlyArray<unknown>) => unknown;
@@ -20,7 +20,7 @@ test("1 missing", () => {
 });
 
 test("wrong number of arguments", () => {
-  function fn(...args: ReadonlyArray<unknown>) {
+  function fn(...args: ReadonlyArray<unknown>): unknown {
     return purry(sub, args);
   }
   expect(() => fn(5, 10, 40)).toThrowError("Wrong number of arguments");

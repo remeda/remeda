@@ -28,15 +28,16 @@ export function pick<T extends object, K extends keyof T>(
   names: ReadonlyArray<K>,
 ): Pick<T, K>;
 
-export function pick() {
+export function pick(): unknown {
   return purry(_pick, arguments);
 }
 
 function _pick<T extends object, K extends keyof T>(
   object: T,
   names: ReadonlyArray<K>,
-) {
-  return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
+): Pick<T, K> {
+  // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.
+  return names.reduce<Partial<Pick<T, K>>>((acc, name) => {
     if (name in object) {
       acc[name] = object[name];
     }

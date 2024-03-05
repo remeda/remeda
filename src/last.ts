@@ -34,10 +34,10 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 
-export function last() {
+export function last(): unknown {
   return purry(_last, arguments);
 }
 
-function _last<T>(array: ReadonlyArray<T>) {
+function _last<T>(array: ReadonlyArray<T>): T | undefined {
   return array[array.length - 1];
 }

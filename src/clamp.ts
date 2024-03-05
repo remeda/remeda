@@ -35,11 +35,11 @@ export function clamp(value: number, limits: Limits): number;
  */
 export function clamp(limits: Limits): (value: number) => number;
 
-export function clamp() {
+export function clamp(): unknown {
   return purry(_clamp, arguments);
 }
 
-function _clamp(value: number, limits: Limits) {
+function _clamp(value: number, limits: Limits): number {
   if (limits.min !== undefined) {
     if (limits.min > value) {
       return limits.min;

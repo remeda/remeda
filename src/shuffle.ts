@@ -23,7 +23,7 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 
-export function shuffle() {
+export function shuffle(): unknown {
   return purry(_shuffle, arguments);
 }
 

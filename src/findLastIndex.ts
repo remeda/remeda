@@ -46,7 +46,7 @@ export function findLastIndex<T>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => number;
 
-export function findLastIndex() {
+export function findLastIndex(): unknown {
   return purry(_findLastIndex(false), arguments);
 }
 
@@ -71,7 +71,7 @@ export namespace findLastIndex {
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_findLastIndex(true), arguments);
   }
 }

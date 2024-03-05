@@ -31,11 +31,14 @@ export function splitWhen<T>(
   fn: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen() {
+export function splitWhen(): unknown {
   return purry(_splitWhen, arguments);
 }
 
-function _splitWhen<T>(array: ReadonlyArray<T>, fn: (item: T) => boolean) {
+function _splitWhen<T>(
+  array: ReadonlyArray<T>,
+  fn: (item: T) => boolean,
+): [Array<T>, Array<T>] {
   for (let i = 0; i < array.length; i++) {
     // TODO: Use `Array.prototype.entries` once we bump our TS target so we
     // can get both the index and the item at the same time, and don't need
@@ -44,5 +47,6 @@ function _splitWhen<T>(array: ReadonlyArray<T>, fn: (item: T) => boolean) {
       return splitAt(array, i);
     }
   }
-  return [array, []];
+
+  return [[...array], []];
 }

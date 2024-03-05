@@ -51,7 +51,7 @@ export function indexBy<T>(
   fn: (item: T) => unknown,
 ): (array: ReadonlyArray<T>) => Record<string, T>;
 
-export function indexBy() {
+export function indexBy(): unknown {
   return purry(_indexBy(false), arguments);
 }
 
@@ -74,14 +74,14 @@ function indexByStrict<K extends PropertyKey, T>(
   fn: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
 
-function indexByStrict() {
+function indexByStrict(): unknown {
   return purry(_indexByStrict, arguments);
 }
 
 const _indexByStrict = <K extends PropertyKey, T>(
   array: ReadonlyArray<T>,
   fn: (item: T) => K,
-) =>
+): Partial<Record<K, T>> =>
   array.reduce<Partial<Record<K, T>>>((ret, item) => {
     const key = fn(item);
     ret[key] = item;
@@ -96,7 +96,7 @@ export namespace indexBy {
   export function indexed<T>(
     fn: PredIndexed<T, unknown>,
   ): (array: ReadonlyArray<T>) => Record<string, T>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_indexBy(true), arguments);
   }
   export const strict = indexByStrict;

@@ -142,7 +142,7 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr() {
+export function pathOr(): unknown {
   return purry(_pathOr, arguments);
 }
 

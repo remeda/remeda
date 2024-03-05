@@ -384,11 +384,11 @@ const tests = [
   },
 ];
 
-function func1() {
-  //
+function func1(): void {
+  // (intentionally empty)
 }
-function func2() {
-  //
+function func2(): void {
+  // (intentionally empty)
 }
 
 describe("equal", () => {

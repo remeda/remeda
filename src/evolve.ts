@@ -132,7 +132,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,
 ): (object: T) => Evolved<T, E>;
 
-export function evolve() {
+export function evolve(): unknown {
   return purry(_evolve, arguments);
 }
 

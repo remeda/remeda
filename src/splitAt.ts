@@ -33,11 +33,14 @@ export function splitAt<T>(
   index: number,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt() {
+export function splitAt(): unknown {
   return purry(_splitAt, arguments);
 }
 
-function _splitAt<T>(array: ReadonlyArray<T>, index: number) {
+function _splitAt<T>(
+  array: ReadonlyArray<T>,
+  index: number,
+): [Array<T>, Array<T>] {
   const copy = [...array];
   const tail = copy.splice(index);
   return [copy, tail];

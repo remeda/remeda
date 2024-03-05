@@ -4,7 +4,7 @@
 
 import { type } from "./type";
 
-function _cloneRegExp(pattern: RegExp) {
+function _cloneRegExp(pattern: RegExp): RegExp {
   return new RegExp(
     pattern.source,
     (pattern.global ? "g" : "") +
@@ -20,8 +20,8 @@ function _clone(
   refFrom: Array<any>,
   refTo: Array<any>,
   deep: boolean,
-) {
-  function copy(copiedValue: any) {
+): unknown {
+  function copy(copiedValue: any): unknown {
     const len = refFrom.length;
     let idx = 0;
     while (idx < len) {

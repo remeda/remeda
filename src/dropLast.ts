@@ -26,11 +26,11 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast() {
+export function dropLast(): unknown {
   return purry(_dropLast, arguments);
 }
 
-function _dropLast<T>(array: ReadonlyArray<T>, n: number) {
+function _dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T> {
   const copy = [...array];
   if (n > 0) {
     copy.splice(-n);

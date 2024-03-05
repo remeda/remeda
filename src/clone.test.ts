@@ -2,7 +2,7 @@
 
 import { clone } from "./clone";
 
-const eq = (a: any, b: any) => {
+const eq = (a: any, b: any): void => {
   expect(a).toEqual(b);
 };
 

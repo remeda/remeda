@@ -32,11 +32,11 @@ export function equals(a: unknown, b: unknown): boolean;
  */
 export function equals(a: unknown): (b: unknown) => boolean;
 
-export function equals() {
+export function equals(): unknown {
   return purry(_equals, arguments);
 }
 
-function _equals(a: unknown, b: unknown) {
+function _equals(a: unknown, b: unknown): boolean {
   if (a === b) {
     return true;
   }

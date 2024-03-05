@@ -6,7 +6,7 @@ export type LazyEvaluator<T = unknown, R = T> = (
   data?: ReadonlyArray<T>,
 ) => LazyResult<R>;
 
-export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
+type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 type LazyEmpty = {
   done: boolean;
@@ -27,6 +27,15 @@ type LazyMany<T> = {
   hasNext: true;
   hasMany: true;
   next: Array<T>;
+};
+
+type PreparedLazyOperation = LazyEvaluator & {
+  readonly isIndexed: boolean;
+  readonly isSingle: boolean;
+
+  // These are intentionally mutable, they maintain the lazy piped state.
+  index: number;
+  items: Array<unknown>;
 };
 
 /**
@@ -228,7 +237,7 @@ export function pipe(
   let output = input;
 
   const lazyOperations = operations.map((op) =>
-    "lazy" in op ? toPipedLazy(op) : undefined,
+    "lazy" in op ? prepareLazyOperation(op) : undefined,
   );
 
   let operationIndex = 0;
@@ -242,7 +251,7 @@ export function pipe(
       continue;
     }
 
-    const lazySequence: Array<ReturnType<typeof toPipedLazy>> = [];
+    const lazySequence: Array<PreparedLazyOperation> = [];
     for (let j = operationIndex; j < operations.length; j++) {
       // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       const lazyOp = lazyOperations[j];
@@ -303,7 +312,7 @@ function _processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: Array<unknown>,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: ReadonlyArray<ReturnType<typeof toPipedLazy>>,
+  lazySequence: ReadonlyArray<PreparedLazyOperation>,
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -356,7 +365,7 @@ function _processItem(
   return false;
 }
 
-function toPipedLazy(op: LazyOp) {
+function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
   const fn = lazy(...(lazyArgs ?? []));
   return Object.assign(fn, {

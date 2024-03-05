@@ -53,7 +53,7 @@ export function keys(
 //   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 // ) => Array<string>;
 
-export function keys() {
+export function keys(): unknown {
   return purry(Object.keys, arguments);
 }
 

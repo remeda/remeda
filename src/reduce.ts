@@ -39,7 +39,7 @@ export function reduce<T, K>(
   initialValue: K,
 ): (items: ReadonlyArray<T>) => K;
 
-export function reduce() {
+export function reduce(): unknown {
   return purry(_reduce(false), arguments);
 }
 
@@ -66,7 +66,7 @@ export namespace reduce {
     fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K,
   ): (array: ReadonlyArray<T>) => K;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_reduce(true), arguments);
   }
 }

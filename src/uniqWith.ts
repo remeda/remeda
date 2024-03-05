@@ -1,6 +1,6 @@
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
-import type { LazyResult } from "./pipe";
+import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
@@ -59,19 +59,12 @@ function _uniqWith<T>(
 }
 
 const _lazy =
-  <T>(isEquals: IsEquals<T>) =>
-  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> =>
+  <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
+  (value, index, array) =>
     array !== undefined &&
     array.findIndex((otherValue) => isEquals(value, otherValue)) === index
-      ? {
-          done: false,
-          hasNext: true,
-          next: value,
-        }
-      : {
-          done: false,
-          hasNext: false,
-        };
+      ? { done: false, hasNext: true, next: value }
+      : { done: false, hasNext: false };
 
 export namespace uniqWith {
   export const lazy = _toLazyIndexed(_lazy);

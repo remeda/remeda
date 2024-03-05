@@ -38,7 +38,7 @@ export function groupBy<T>(
  * @indexed
  * @category Array
  */
-export function groupBy() {
+export function groupBy(): unknown {
   return purry(_groupBy(false), arguments);
 }
 
@@ -121,7 +121,7 @@ export namespace groupBy {
   export function indexed<T>(
     fn: PredIndexed<T, PropertyKey | undefined>,
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_groupBy(true), arguments);
   }
 

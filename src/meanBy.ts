@@ -58,7 +58,7 @@ export function meanBy<T>(
   fn: (item: T) => number,
 ): number;
 
-export function meanBy() {
+export function meanBy(): unknown {
   return purry(_meanBy(false), arguments);
 }
 
@@ -72,7 +72,7 @@ export namespace meanBy {
     fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_meanBy(true), arguments);
   }
 }

@@ -1,6 +1,6 @@
 import { mergeDeep } from "./mergeDeep";
 
-const NOOP = () => {
+const NOOP = (): void => {
   /* do nothing */
 };
 

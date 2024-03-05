@@ -32,7 +32,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
-export function invert() {
+export function invert(): unknown {
   return purry(_invert, arguments);
 }
 
