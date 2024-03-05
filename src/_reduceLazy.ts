@@ -6,6 +6,7 @@ export function _reduceLazy<T, K>(
   isIndexed = false,
 ): Array<K> {
   const newArray: Array<K> = [];
+
   // We intentionally use a for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info
   for (let index = 0; index < array.length; index++) {
     const item = array[index]!;
@@ -15,6 +16,11 @@ export function _reduceLazy<T, K>(
     } else if (result.hasNext) {
       newArray.push(result.next);
     }
+
+    if (result.done) {
+      break;
+    }
   }
+
   return newArray;
 }
