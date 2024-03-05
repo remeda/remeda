@@ -264,10 +264,12 @@ module.exports = tseslint.config(
       // flat/recommended extension)
 
       "unicorn/custom-error-definition": "warn",
+      "unicorn/filename-case": ["error", { case: "camelCase" }],
+      "unicorn/no-keyword-prefix": "warn",
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
-      "unicorn/filename-case": ["error", { case: "camelCase" }],
+      "unicorn/consistent-destructuring": "warn",
 
       // TODO: Once we bump our typescript `target` we should enable this rule
       "unicorn/no-array-for-each": "off",
