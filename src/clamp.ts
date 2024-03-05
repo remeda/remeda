@@ -40,15 +40,11 @@ export function clamp(): unknown {
 }
 
 function _clamp(value: number, limits: Limits): number {
-  if (limits.min !== undefined) {
-    if (limits.min > value) {
-      return limits.min;
-    }
+  if (limits.min !== undefined && limits.min > value) {
+    return limits.min;
   }
-  if (limits.max !== undefined) {
-    if (limits.max < value) {
-      return limits.max;
-    }
+  if (limits.max !== undefined && limits.max < value) {
+    return limits.max;
   }
   return value;
 }

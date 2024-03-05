@@ -17,7 +17,7 @@ it('"Number" if given a numeric value', () => {
 });
 
 it('"Number" if given the NaN value', () => {
-  expect(type(NaN)).toEqual("Number");
+  expect(type(Number.NaN)).toEqual("Number");
 });
 
 it('"String" if given a String literal', () => {

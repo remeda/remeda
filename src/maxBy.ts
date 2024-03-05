@@ -4,8 +4,8 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 const _maxBy =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
-    let ret: T | undefined = undefined;
-    let retMax: number | undefined = undefined;
+    let ret: T | undefined;
+    let retMax: number | undefined;
     array.forEach((item, i) => {
       const max = indexed ? fn(item, i, array) : fn(item);
       if (retMax === undefined || max > retMax) {

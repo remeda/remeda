@@ -3,24 +3,27 @@ import { ceil } from "./ceil";
 describe("data-first", () => {
   test("should work with positive precision", () => {
     expect(ceil(8123.4317, 3)).toEqual(8123.432);
-    expect(ceil(483.22243, 1)).toEqual(483.3);
+    expect(ceil(483.222_43, 1)).toEqual(483.3);
     expect(ceil(123.4317, 5)).toEqual(123.4317);
   });
 
   test("should work with negative precision", () => {
     expect(ceil(8123.4317, -2)).toEqual(8200);
-    expect(ceil(8123.4317, -4)).toEqual(10000);
+    expect(ceil(8123.4317, -4)).toEqual(10_000);
   });
 
   test("should work with precision = 0", () => {
     expect(ceil(8123.4317, 0)).toEqual(8124);
   });
 
-  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
-    expect(() => ceil(1, val)).toThrowError(
-      `precision must be an integer: ${val}`,
-    );
-  });
+  test.each([Number.NaN, Number.POSITIVE_INFINITY])(
+    "should throw for %d precision",
+    (val) => {
+      expect(() => ceil(1, val)).toThrowError(
+        `precision must be an integer: ${val}`,
+      );
+    },
+  );
 
   test("should throw for non integer precision", () => {
     expect(() => ceil(1, 21.37)).toThrowError(
@@ -37,7 +40,7 @@ describe("data-first", () => {
     );
   });
 
-  test.each([NaN, Infinity, -Infinity])(
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {
@@ -50,24 +53,27 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("should work with positive precision", () => {
     expect(ceil(3)(8123.4317)).toEqual(8123.432);
-    expect(ceil(1)(483.22243)).toEqual(483.3);
+    expect(ceil(1)(483.222_43)).toEqual(483.3);
     expect(ceil(5)(123.4317)).toEqual(123.4317);
   });
 
   test("should work with negative precision", () => {
     expect(ceil(-2)(8123.4317)).toEqual(8200);
-    expect(ceil(-4)(8123.4317)).toEqual(10000);
+    expect(ceil(-4)(8123.4317)).toEqual(10_000);
   });
 
   test("should work with precision = 0", () => {
     expect(ceil(0)(8123.4317)).toEqual(8124);
   });
 
-  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
-    expect(() => ceil(val)(1)).toThrowError(
-      `precision must be an integer: ${val}`,
-    );
-  });
+  test.each([Number.NaN, Number.POSITIVE_INFINITY])(
+    "should throw for %d precision",
+    (val) => {
+      expect(() => ceil(val)(1)).toThrowError(
+        `precision must be an integer: ${val}`,
+      );
+    },
+  );
 
   test("should throw for non integer precision", () => {
     expect(() => ceil(21.37)(1)).toThrowError(
@@ -84,7 +90,7 @@ describe("data-last", () => {
     );
   });
 
-  test.each([NaN, Infinity, -Infinity])(
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {

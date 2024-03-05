@@ -5,7 +5,7 @@ const _meanBy =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     if (array.length === 0) {
-      return NaN;
+      return Number.NaN;
     }
 
     let sum = 0;

@@ -4,8 +4,8 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 const _minBy =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
-    let ret: T | undefined = undefined;
-    let retMin: number | undefined = undefined;
+    let ret: T | undefined;
+    let retMin: number | undefined;
     array.forEach((item, i) => {
       const min = indexed ? fn(item, i, array) : fn(item);
       if (retMin === undefined || min < retMin) {

@@ -287,11 +287,7 @@ export function pipe(
     }
 
     const { isSingle } = lazySequence[lazySequence.length - 1]!;
-    if (isSingle) {
-      output = accumulator[0];
-    } else {
-      output = accumulator;
-    }
+    output = isSingle ? accumulator[0] : accumulator;
     operationIndex += lazySequence.length;
   }
   return output;

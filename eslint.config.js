@@ -263,8 +263,20 @@ module.exports = tseslint.config(
       // (We are assuming that the config is extended by unicorns's:
       // flat/recommended extension)
 
+      "unicorn/switch-case-braces": ["error", "avoid"],
+      "unicorn/no-useless-undefined": [
+        "error",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+
       "unicorn/filename-case": "off",
       "unicorn/prevent-abbreviations": "off",
+
+      // TODO: Once we bump our typescript `target` we should enable this rule
+      "unicorn/no-array-for-each": "off",
+      "unicorn/no-for-loop": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-spread": "off",
     },
   },
   {

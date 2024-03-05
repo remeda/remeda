@@ -9,12 +9,12 @@ const eq = (a: any, b: any): void => {
 describe("deep clone integers, strings and booleans", () => {
   it("clones integers", () => {
     eq(clone(-4), -4);
-    eq(clone(9007199254740991), 9007199254740991);
+    eq(clone(9_007_199_254_740_991), 9_007_199_254_740_991);
   });
 
   it("clones floats", () => {
     eq(clone(-4.5), -4.5);
-    eq(clone(0.0), 0.0);
+    eq(clone(0), 0);
   });
 
   it("clones strings", () => {

@@ -59,7 +59,7 @@ const _findLast =
         return array[i];
       }
     }
-    return undefined;
+    return;
   };
 
 export namespace findLast {

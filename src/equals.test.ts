@@ -84,8 +84,8 @@ const tests = [
       },
       {
         description: "NaN and NaN are equal",
-        value1: NaN,
-        value2: NaN,
+        value1: Number.NaN,
+        value2: Number.NaN,
         equal: true,
       },
       {
@@ -96,14 +96,14 @@ const tests = [
       },
       {
         description: "Infinity and Infinity are equal",
-        value1: Infinity,
-        value2: Infinity,
+        value1: Number.POSITIVE_INFINITY,
+        value2: Number.POSITIVE_INFINITY,
         equal: true,
       },
       {
         description: "Infinity and -Infinity are not equal",
-        value1: Infinity,
-        value2: -Infinity,
+        value1: Number.POSITIVE_INFINITY,
+        value2: Number.NEGATIVE_INFINITY,
         equal: false,
       },
     ],
