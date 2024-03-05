@@ -48,5 +48,5 @@ function _splitWhen<T>(
     }
   }
 
-  return [[...array], []];
+  return [array.slice(), []];
 }

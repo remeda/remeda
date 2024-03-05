@@ -31,7 +31,7 @@ export function dropLast(): unknown {
 }
 
 function _dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  const copy = [...array];
+  const copy = array.slice();
   if (n > 0) {
     copy.splice(-n);
   }
