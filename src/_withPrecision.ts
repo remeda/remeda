@@ -5,7 +5,7 @@
 const MAX_PRECISION = 15;
 
 export function _withPrecision(roundingFn: (value: number) => number) {
-  return (value: number, precision: number) => {
+  return (value: number, precision: number): number => {
     if (precision === 0) {
       return roundingFn(value);
     }

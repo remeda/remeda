@@ -211,6 +211,10 @@ module.exports = tseslint.config(
         "error",
         { allowExpressions: true },
       ],
+      "@typescript-eslint/explicit-module-boundary-types": [
+        "warn",
+        { allowTypedFunctionExpressions: false },
+      ],
       "@typescript-eslint/prefer-readonly-parameter-types": [
         "error",
         {
@@ -271,6 +275,7 @@ module.exports = tseslint.config(
     files: ["src/**/*.test.ts", "test/**/*.ts"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
     },
   },
 );
