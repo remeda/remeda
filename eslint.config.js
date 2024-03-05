@@ -58,8 +58,7 @@ module.exports = tseslint.config(
       "no-duplicate-imports": "off",
       "@typescript-eslint/consistent-type-imports": ["warn"],
 
-      // TODO: Once we bump our typescript `target` we should enable this rule
-      // "unicorn/no-array-for-each": "off",
+      // TODO: Once we bump our typescript `target` we should enable these rules.
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
       "unicorn/prefer-number-properties": "off",
