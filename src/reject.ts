@@ -6,8 +6,8 @@ import { _toLazyIndexed } from "./_toLazyIndexed";
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
- * @param items The array to reject.
- * @param fn the callback function.
+ * @param items - The array to reject.
+ * @param fn - The callback function.
  * @signature
  *    R.reject(array, fn)
  *    R.reject.indexed(array, fn)
@@ -26,8 +26,8 @@ export function reject<T>(
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
- * @param items The array to reject.
- * @param fn the callback function.
+ * @param items - The array to reject.
+ * @param fn - The callback function.
  * @signature
  *    R.reject(array, fn)
  *    R.reject.indexed(array, fn)

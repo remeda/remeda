@@ -6,8 +6,8 @@ import type { PickIndexSignature } from "./pick-index-signature";
 type UnknownRecord = Record<string, unknown>;
 
 /**
-Deeply simplifies an object excluding iterables and functions. Used internally to improve the UX and accept both interfaces and type aliases as inputs.
-*/
+ * Deeply simplifies an object excluding iterables and functions. Used internally to improve the UX and accept both interfaces and type aliases as inputs.
+ */
 type SimplifyDeep<Type> = ConditionalSimplifyDeep<
   Type,
   Function | Iterable<unknown>,
@@ -15,8 +15,8 @@ type SimplifyDeep<Type> = ConditionalSimplifyDeep<
 >;
 
 /**
-Try to merge two record properties or return the source property value, preserving `undefined` properties values in both cases.
-*/
+ * Try to merge two record properties or return the source property value, preserving `undefined` properties values in both cases.
+ */
 type MergeDeepRecordProperty<Destination, Source> = undefined extends Source
   ?
       | MergeDeepOrReturn<
@@ -28,12 +28,12 @@ type MergeDeepRecordProperty<Destination, Source> = undefined extends Source
   : MergeDeepOrReturn<Source, Destination, Source>;
 
 /**
-Walk through the union of the keys of the two objects and test in which object the properties are defined.
-Rules:
-1. If the source does not contain the key, the value of the destination is returned.
-2. If the source contains the key and the destination does not contain the key, the value of the source is returned.
-3. If both contain the key, try to merge according to the chosen {@link MergeDeepOptions options} or return the source if unable to merge.
-*/
+ * Walk through the union of the keys of the two objects and test in which object the properties are defined.
+ * Rules:
+ * 1. If the source does not contain the key, the value of the destination is returned.
+ * 2. If the source contains the key and the destination does not contain the key, the value of the source is returned.
+ * 3. If both contain the key, try to merge according to the chosen {@link MergeDeepOptions options} or return the source if unable to merge.
+ */
 type DoMergeDeepRecord<
   Destination extends UnknownRecord,
   Source extends UnknownRecord,
@@ -58,8 +58,8 @@ type DoMergeDeepRecord<
 };
 
 /**
-Wrapper around {@link DoMergeDeepRecord} which preserves index signatures.
-*/
+ * Wrapper around {@link DoMergeDeepRecord} which preserves index signatures.
+ */
 type MergeDeepRecord<
   Destination extends UnknownRecord,
   Source extends UnknownRecord,
@@ -70,8 +70,8 @@ type MergeDeepRecord<
   Merge<PickIndexSignature<Destination>, PickIndexSignature<Source>>;
 
 /**
-Try to merge two objects or two arrays/tuples recursively into a new type or return the default value.
-*/
+ * Try to merge two objects or two arrays/tuples recursively into a new type or return the default value.
+ */
 type MergeDeepOrReturn<DefaultType, Destination, Source> = SimplifyDeep<
   [undefined] extends [Destination | Source]
     ? DefaultType

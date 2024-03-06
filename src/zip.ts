@@ -7,8 +7,8 @@ import { purry } from "./purry";
  *
  * If the input array are tuples, you can use the strict option
  * to get another tuple instead of a generic array type.
- * @param first the first input list
- * @param second the second input list
+ * @param first - The first input list.
+ * @param second - The second input list.
  * @signature
  *   R.zip(first, second)
  * @example
@@ -29,7 +29,7 @@ export function zip<F, S>(
  *
  * If the input array are tuples, you can use the strict option
  * to get another tuple instead of a generic array type.
- * @param second the second input list
+ * @param second - The second input list.
  * @signature
  *   R.zip(second)(first)
  * @example

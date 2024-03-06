@@ -18,10 +18,9 @@ import type {
  * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
- *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @return - A shallow copy of the input array sorted by the provided rules.
+ * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(...rules)(data)
  *    R.sortBy.strict(...rules)(data)
@@ -54,10 +53,9 @@ export function sortBy<T>(
  * * `nthBy` === `sortBy(data, ...rules).at(k)`, O(n).
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
- *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @return - A shallow copy of the input array sorted by the provided rules.
+ * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(data, ...rules)
  *    R.sortBy.strict(data, ...rules)

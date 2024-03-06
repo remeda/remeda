@@ -2,7 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
- * @param items the array to shuffle
+ * @param items - The array to shuffle.
  * @signature
  *    R.shuffle(array)
  * @example

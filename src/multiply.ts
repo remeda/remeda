@@ -2,8 +2,8 @@ import { purry } from "./purry";
 
 /**
  * Multiplies two numbers.
- * @param value The number.
- * @param multiplicand The number to multiply the value by.
+ * @param value - The number.
+ * @param multiplicand - The number to multiply the value by.
  * @signature
  *    R.multiply(value, multiplicand);
  * @example
@@ -16,8 +16,8 @@ export function multiply(value: number, multiplicand: number): number;
 
 /**
  * Multiplies two numbers.
- * @param value The number.
- * @param multiplicand The number to multiply the value by.
+ * @param value - The number.
+ * @param multiplicand - The number to multiply the value by.
  * @signature
  *    R.multiply(multiplicand)(value);
  * @example

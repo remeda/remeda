@@ -4,9 +4,8 @@ import { purry } from "./purry";
  * Removes elements from the end of the array until the predicate returns false.
  *
  * The predicate is applied to each element in the array starting from the end and moving towards the beginning, until the predicate returns false. The returned array includes elements from the beginning of the array, up to and including the element that produced false for the predicate.
- *
- * @param data the array
- * @param predicate the predicate
+ * @param data - The array.
+ * @param predicate - The predicate.
  * @signature
  *    R.dropLastWhile(data, predicate)
  * @example
@@ -23,8 +22,7 @@ export function dropLastWhile<T>(
  * Removes elements from the end of the array until the predicate returns false.
  *
  * The predicate is applied to each element in the array starting from the end and moving towards the beginning, until the predicate returns false. The returned array includes elements from the beginning of the array, up to and including the element that produced false for the predicate.
- *
- * @param predicate the predicate
+ * @param predicate - The predicate.
  * @signature
  *    R.dropLastWhile(predicate)(data)
  * @example

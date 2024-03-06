@@ -1,4 +1,5 @@
 const js = require("@eslint/js");
+const jsdoc = require("eslint-plugin-jsdoc");
 const tseslint = require("typescript-eslint");
 
 module.exports = tseslint.config(
@@ -6,6 +7,9 @@ module.exports = tseslint.config(
     ignores: ["dist", "docs", "examples"],
   },
   js.configs.recommended,
+  // @ts-expect-error -- plugin types are broken
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- plugin doesn't support CommonJS-based flat configs.
+  jsdoc.configs["flat/recommended-typescript"],
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   {
@@ -159,6 +163,68 @@ module.exports = tseslint.config(
       "no-useless-concat": "warn",
       "no-useless-rename": "error",
 
+      // === JSDoc =============================================================
+      // (We are assuming that the config is extended by JSDoc's: recommended
+      // extension)
+
+      // Correctness
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/check-param-names": "off",
+      "jsdoc/check-tag-names": [
+        "warn",
+        {
+          // Non-standard JSDoc tags we use to generate documentation; see
+          // docs/src/lib/transform.ts.
+          definedTags: [
+            "category",
+            "dataFirst",
+            "dataLast",
+            "exampleRaw",
+            "indexed",
+            "pipeable",
+            "signature",
+            "strict",
+          ],
+        },
+      ],
+      "jsdoc/no-bad-blocks": "error",
+      "jsdoc/no-blank-blocks": "error",
+      "jsdoc/require-asterisk-prefix": "error",
+
+      // Style
+      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-jsdoc": [
+        "off",
+        {
+          enableFixer: false,
+          // We only require JSDoc for top-level function exports. Assuming
+          // that each function has overrides, we only require JSDocs for the
+          // overrides (which are TSDeclareFunction) and not the implementation
+          // (which is FunctionDeclaration).
+          require: { FunctionDeclaration: false },
+          contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
+        },
+      ],
+      "jsdoc/require-description": ["error", { exemptedBy: ["deprecated"] }],
+      "jsdoc/require-description-complete-sentence": [
+        "warn",
+        { abbreviations: ["etc.", "e.g.", "i.e."] },
+      ],
+      "jsdoc/require-example": [
+        "warn",
+        { enableFixer: false, exemptedBy: ["deprecated", "exampleRaw"] },
+      ],
+      "jsdoc/require-hyphen-before-param-description": [
+        "warn",
+        "always",
+        { tags: { "*": "never" } },
+      ],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-param": "off",
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-returns": "off",
+
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
       // strict-type-checked, and stylistic-type-checked extensions)
@@ -271,6 +337,14 @@ module.exports = tseslint.config(
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+    },
+  },
+  {
+    files: ["src/_*.ts"],
+    rules: {
+      // Skip some JSDoc rules for internal-only functions:
+      "jsdoc/require-example": "off",
+      "jsdoc/require-jsdoc": "off",
     },
   },
 );

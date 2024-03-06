@@ -36,9 +36,8 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  *
  * When called on a tuple and with stricter item types (union of literal values,
  * the result is strictly typed to the tuples shape and it's item types).
- *
- * @param data The array to join
- * @param glue The string to put in between every two elements
+ * @param data - The array to join.
+ * @param glue - The string to put in between every two elements.
  * @signature
  *    R.join(data, glue)
  * @example
@@ -60,9 +59,8 @@ export function join<
  *
  * When called on a tuple and with stricter item types (union of literal values,
  * the result is strictly typed to the tuples shape and it's item types).
- *
- * @param data The array to join
- * @param glue The string to put in between every two elements
+ * @param data - The array to join.
+ * @param glue - The string to put in between every two elements.
  * @signature
  *    R.join(glue)(data)
  * @example

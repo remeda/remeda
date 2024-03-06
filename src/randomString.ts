@@ -6,8 +6,8 @@ const ALPHABET =
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
- * @param length the length of the random string
- * @returns the random string
+ * @param length - The length of the random string.
+ * @returns The random string.
  * @signature
  *   R.randomString(length)
  * @example
@@ -20,8 +20,8 @@ export function randomString(length: number): string;
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
- * @param length the length of the random string
- * @returns the random string
+ * @param length - The length of the random string.
+ * @returns The random string.
  * @signature
  *   R.randomString()(length)
  * @example

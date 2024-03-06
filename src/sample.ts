@@ -56,9 +56,8 @@ type SampledLiteral<
  * The items in the result are kept in the same order as they are in the input.
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
- *
- * @param array the array
- * @param sampleSize the number of elements to take
+ * @param array - The array.
+ * @param sampleSize - The number of elements to take.
  * @signature
  *    R.sample(array, sampleSize)
  * @example
@@ -83,9 +82,8 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * The items in the result are kept in the same order as they are in the input.
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
- *
- * @param array the array
- * @param sampleSize the number of elements to take
+ * @param array - The array.
+ * @param sampleSize - The number of elements to take.
  * @signature
  *    R.sample(sampleSize)(array)
  * @example

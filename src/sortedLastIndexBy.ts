@@ -10,15 +10,13 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * occurrence of the item.
  *
  * Runs in O(logN) time.
- *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndexBy(data, item, valueFunction)
  * @example
@@ -26,7 +24,6 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
  */
 export function sortedLastIndexBy<T>(
@@ -44,15 +41,13 @@ export function sortedLastIndexBy<T>(
  * occurrence of the item.
  *
  * Runs in O(logN) time.
- *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndexBy(item, valueFunction)(data)
  * @example
@@ -60,7 +55,6 @@ export function sortedLastIndexBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
  */
 export function sortedLastIndexBy<T>(

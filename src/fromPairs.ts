@@ -13,7 +13,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
+ * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs(tuples)
  *   R.fromPairs.strict(tuples)
@@ -46,7 +46,7 @@ export function fromPairs<V>(
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
+ * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs()(tuples)
  *   R.fromPairs.strict()(tuples)

@@ -12,10 +12,9 @@ const _countBy =
 /**
  * Counts how many values of the collection pass the specified predicate.
  *
- * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2.**
- *
- * @param items The input data.
- * @param fn The predicate.
+ * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2**.
+ * @param items - The input data.
+ * @param fn - The predicate.
  * @signature
  *    R.countBy(array, fn)
  * @example
@@ -23,7 +22,7 @@ const _countBy =
  * @dataFirst
  * @indexed
  * @category Array
- * @deprecated equivalent to `R.filter(fn).length` and so will be removed in v2.
+ * @deprecated Equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
 export function countBy<T>(
   items: ReadonlyArray<T>,
@@ -37,9 +36,8 @@ export function countBy<T>(
 /**
  * Counts how many values of the collection pass the specified predicate.
  *
- * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2.**
- *
- * @param fn The predicate.
+ * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2**.
+ * @param fn - The predicate.
  * @signature
  *    R.countBy(fn)(array)
  * @example
@@ -47,7 +45,7 @@ export function countBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- * @deprecated equivalent to `R.filter(fn).length` and so will be removed in v2.
+ * @deprecated Equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
 export function countBy() {
   return purry(_countBy(false), arguments);
@@ -55,14 +53,14 @@ export function countBy() {
 
 export namespace countBy {
   /**
-   * @deprecated equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
+   * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
    */
   export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>,
   ): number;
   /**
-   * @deprecated equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
+   * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
    */
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,

@@ -4,8 +4,8 @@ import { _reduceLazy } from "./_reduceLazy";
 
 /**
  * Returns a list of elements that exist in both array.
- * @param array the source array
- * @param other the second array
+ * @param array - The source array.
+ * @param other - The second array.
  * @signature
  *    R.intersection(array, other)
  * @example
@@ -21,8 +21,8 @@ export function intersection<T>(
 
 /**
  * Returns a list of elements that exist in both array.
- * @param array the source array
- * @param other the second array
+ * @param array - The source array.
+ * @param other - The second array.
  * @signature
  *    R.intersection(other)(array)
  * @example

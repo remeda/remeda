@@ -11,14 +11,13 @@ type First<T extends IterableContainer> = T extends []
 
 /**
  * Gets the first element of `array`.
- * @param data the array
- * @returns the first element of the array
+ * @param data - The array.
+ * @returns The first element of the array.
  * @signature
  *    R.first(array)
  * @example
  *    R.first([1, 2, 3]) // => 1
  *    R.first([]) // => undefined
- *
  * @category Array
  * @pipeable
  * @dataFirst
@@ -27,8 +26,8 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 
 /**
  * Gets the first element of `array`.
- * @param data the array
- * @returns the first element of the array
+ * @param data - The array.
+ * @returns The first element of the array.
  * @signature
  *    R.first()(array)
  * @example
@@ -38,7 +37,6 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *      R.first(),
  *      x => x + 1
  *    ); // => 5
- *
  * @category Array
  * @pipeable
  * @dataLast

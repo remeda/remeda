@@ -1,11 +1,11 @@
 /**
  * A function that checks if the passed parameter is defined and narrows its type accordingly.
  * To test specifically for `undefined` (and not `null`) use the strict variant of this function.
- * @param data the variable to check
+ * @param data - The variable to check.
  * @signature
  *    R.isDefined(data)
  *    R.isDefined.strict(data)
- * @returns true if the passed input is defined, false otherwise
+ * @returns True if the passed input is defined, false otherwise.
  * @example
  *    R.isDefined('string') //=> true
  *    R.isDefined(null) //=> false

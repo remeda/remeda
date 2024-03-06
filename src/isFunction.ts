@@ -5,11 +5,11 @@
 type DefinitelyFunction<T> =
   Extract<T, Function> extends never ? Function : Extract<T, Function>;
 /**
- * A function that checks if the passed parameter is a Function and narrows its type accordingly
- * @param data the variable to check
+ * A function that checks if the passed parameter is a Function and narrows its type accordingly.
+ * @param data - The variable to check.
  * @signature
  *    R.isFunction(data)
- * @returns true if the passed input is a Function, false otherwise
+ * @returns True if the passed input is a Function, false otherwise.
  * @example
  *    R.isFunction(() => {}) //=> true
  *    R.isFunction('somethingElse') //=> false

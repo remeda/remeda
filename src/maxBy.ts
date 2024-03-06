@@ -20,9 +20,8 @@ const _maxBy =
 /**
  * Returns the max element using the provided predicate.
  *
- * If you need more control over how "max" is defined, consider using `firstBy` instead. maxBy might be deprecated in the future!
- *
- * @param fn the predicate
+ * If you need more control over how "max" is defined, consider using `firstBy` instead. `maxBy` might be deprecated in the future!
+ * @param fn - The predicate.
  * @signature
  *    R.maxBy(fn)(array)
  *    R.maxBy.indexed(fn)(array)
@@ -41,8 +40,8 @@ export function maxBy<T>(
 
 /**
  * Returns the max element using the provided predicate.
- * @param items the array
- * @param fn the predicate
+ * @param items - The array.
+ * @param fn - The predicate.
  * @signature
  *    R.maxBy(array, fn)
  *    R.maxBy.indexed(array, fn)

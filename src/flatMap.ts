@@ -3,8 +3,8 @@ import { purry } from "./purry";
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
- * @param array The array to map.
- * @param fn The function mapper.
+ * @param array - The array to map.
+ * @param fn - The function mapper.
  * @signature
  *    R.flatMap(array, fn)
  * @example
@@ -20,8 +20,8 @@ export function flatMap<T, K>(
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
- * @param array The array to map.
- * @param fn The function mapper.
+ * @param array - The array to map.
+ * @param fn - The function mapper.
  * @signature
  *    R.flatMap(fn)(array)
  * @example

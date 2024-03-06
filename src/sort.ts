@@ -7,9 +7,8 @@ import { purry } from "./purry";
  *
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
- *
- * @param items the array to sort
- * @param cmp the comparator function
+ * @param items - The array to sort.
+ * @param cmp - The comparator function.
  * @signature
  *    R.sort(items, cmp)
  *    R.sort.strict(items, cmp)
@@ -31,8 +30,7 @@ export function sort<T>(
  *
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
- *
- * @param cmp the comparator function
+ * @param cmp - The comparator function.
  * @signature
  *    R.sort(cmp)(items)
  *    R.sort.strict(cmp)(items)

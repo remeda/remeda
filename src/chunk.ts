@@ -11,8 +11,8 @@ type Chunked<T extends IterableContainer> = T[number] extends never
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
- * @param array the array
- * @param size the length of the chunk
+ * @param array - The array.
+ * @param size - The length of the chunk.
  * @signature
  *    R.chunk(array, size)
  * @example
@@ -28,7 +28,7 @@ export function chunk<T extends IterableContainer>(
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
- * @param size the length of the chunk
+ * @param size - The length of the chunk.
  * @signature
  *    R.chunk(size)(array)
  * @example

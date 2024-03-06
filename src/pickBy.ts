@@ -3,8 +3,8 @@ import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
- * @param object the target object
- * @param fn the predicate
+ * @param object - The target object.
+ * @param fn - The predicate.
  * @signature R.pickBy(object, fn)
  * @example
  *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
@@ -18,7 +18,7 @@ export function pickBy<T>(
 
 /**
  * Creates an object composed of the picked `object` properties.
- * @param fn the predicate
+ * @param fn - The predicate.
  * @signature R.pickBy(fn)(object)
  * @example
  *    R.pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}

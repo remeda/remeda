@@ -14,7 +14,7 @@ const _sumBy =
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
- * @param fn predicate function
+ * @param fn - Predicate function.
  * @signature
  *   R.sumBy(fn)(array)
  *   R.sumBy.indexed(fn)(array)
@@ -34,8 +34,8 @@ export function sumBy<T>(
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
- * @param items the array
- * @param fn predicate function
+ * @param items - The array.
+ * @param fn - Predicate function.
  * @signature
  *   R.sumBy(array, fn)
  *   R.sumBy.indexed(array, fn)

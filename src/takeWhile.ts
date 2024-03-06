@@ -2,8 +2,8 @@ import { purry } from "./purry";
 
 /**
  * Returns elements from the array until predicate returns false.
- * @param array the array
- * @param fn the predicate
+ * @param array - The array.
+ * @param fn - The predicate.
  * @signature
  *    R.takeWhile(array, fn)
  * @example
@@ -18,7 +18,7 @@ export function takeWhile<T>(
 
 /**
  * Returns elements from the array until predicate returns false.
- * @param fn the predicate
+ * @param fn - The predicate.
  * @signature
  *    R.takeWhile(fn)(array)
  * @example

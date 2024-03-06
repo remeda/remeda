@@ -20,9 +20,8 @@ const _minBy =
 /**
  * Returns the min element using the provided predicate.
  *
- * If you need more control over how "min" is defined, consider using `firstBy` instead. minBy might be deprecated in the future!
- *
- * @param fn the predicate
+ * If you need more control over how "min" is defined, consider using `firstBy` instead. `minBy` might be deprecated in the future!
+ * @param fn - The predicate.
  * @signature
  *    R.minBy(fn)(array)
  *    R.minBy.indexed(fn)(array)
@@ -41,8 +40,8 @@ export function minBy<T>(
 
 /**
  * Returns the min element using the provided predicate.
- * @param items the array
- * @param fn the predicate
+ * @param items - The array.
+ * @param fn - The predicate.
  * @signature
  *    R.minBy(array, fn)
  *    R.minBy.indexed(array, fn)

@@ -13,7 +13,7 @@ type Only<T extends IterableContainer> = T extends
 
 /**
  * Returns the first and only element of `array`, or undefined otherwise.
- * @param array the target array
+ * @param array - The target array.
  * @signature
  *    R.only(array)
  * @example
@@ -28,7 +28,7 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
 
 /**
  * Returns the first and only element of `array`, or undefined otherwise.
- * @param array the target array
+ * @param array - The target array.
  * @signature
  *    R.only()(array)
  * @example

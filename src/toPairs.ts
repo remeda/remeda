@@ -2,7 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
- * @param object
+ * @param object - Object to return keys and values of.
  * @signature
  *    R.toPairs(object)
  *    R.toPairs.strict(object)
@@ -25,7 +25,7 @@ export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
- * @param object
+ * @param object - Object to return keys and values of.
  * @signature
  *    R.toPairs()(object)
  *    R.toPairs.strict()(object)

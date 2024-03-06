@@ -1,15 +1,15 @@
 /**
  * Copied from ts-toolbelt
- * https://github.com/millsp/ts-toolbelt/blob/master/sources/Function/Narrow.ts
+ * https://github.com/millsp/ts-toolbelt/blob/master/sources/Function/Narrow.ts.
  */
 
 /**
  * Similar to [[Cast]] but with a custom fallback `Catch`. If it fails,
  * it will enforce `Catch` instead of `A2`.
- * @param A1 to check against
- * @param A2 to try/test with
- * @param Catch to fallback to if the test failed
- * @returns `A1 | Catch`
+ * @param A1 - Type to check against.
+ * @param A2 - Type to try/test with.
+ * @param Catch - Type to fallback to if the test failed.
+ * @returns `A1 | Catch`.
  * @example
  * ```ts
  * import {A} from 'ts-toolbelt'
@@ -22,13 +22,10 @@
 export type Try<A1, A2, Catch = never> = A1 extends A2 ? A1 : Catch;
 
 /**
- * Describes types that can be narrowed
+ * Describes types that can be narrowed.
  */
 export type Narrowable = bigint | boolean | number | string;
 
-/**
- * @hidden
- */
 type NarrowRaw<A> =
   | (A extends [] ? [] : never)
   | (A extends Narrowable ? A : never)
@@ -39,9 +36,9 @@ type NarrowRaw<A> =
     };
 
 /**
- * Prevent type widening on generic function parameters
- * @param A to narrow
- * @returns `A`
+ * Prevent type widening on generic function parameters.
+ * @param A - Type to narrow.
+ * @returns `A`.
  * @example
  * ```ts
  * import {F} from 'ts-toolbelt'

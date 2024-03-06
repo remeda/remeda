@@ -3,7 +3,7 @@ import type { Joined } from "./join";
 import { purry } from "./purry";
 
 /**
- * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
+ * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
  */
 type isEqual<A, B> =
   (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
@@ -109,23 +109,17 @@ type SwappedIndices<
  * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
  *
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
- *
- * @param data the item to be manipulated. This can be an array, or a string.
- * @param index1 the first index
- * @param index2 the second index
- *
+ * @param data - The item to be manipulated. This can be an array, or a string.
+ * @param index1 - The first index.
+ * @param index2 - The second index.
  * @signature
  *   swapIndices(data, index1, index2)
- *
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
  *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
  *   swapIndices('abc', 0, 1) // => 'bac'
- *
  * @category Array
- *
  * @returns Returns the manipulated array or string.
- *
  * @dataFirst
  */
 export function swapIndices<
@@ -135,16 +129,18 @@ export function swapIndices<
 >(data: T, index1: K1, index2: K2): SwappedIndices<T, K1, K2>;
 
 /**
- * @param index1 the first index
- * @param index2 the second index
+ * Swaps the positions of two elements in an array or string at the provided indices.
  *
+ * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
+ *
+ * If either index is out of bounds the result would be a shallow copy of the input, as-is.
+ * @param index1 - The first index.
+ * @param index2 - The second index.
  * @signature
  *   swapIndices(index1, index2)(data)
- *
  * @example
  *   swapIndices(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']
  *   swapIndices(0, -1)('abc') // => 'cba'
- *
  * @category Array
  * @returns Returns the manipulated array or string.
  * @dataLast

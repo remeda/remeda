@@ -2,9 +2,9 @@ import { purry } from "./purry";
 
 /**
  * Sets the `value` at `prop` of `object`.
- * @param obj the target method
- * @param prop the property name
- * @param value the value to set
+ * @param obj - The target method.
+ * @param prop - The property name.
+ * @param value - The value to set.
  * @signature
  *    R.set(obj, prop, value)
  * @example
@@ -16,8 +16,8 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
 
 /**
  * Sets the `value` at `prop` of `object`.
- * @param prop the property name
- * @param value the value to set
+ * @param prop - The property name.
+ * @param value - The value to set.
  * @signature
  *    R.set(prop, value)(obj)
  * @example

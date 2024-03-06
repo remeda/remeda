@@ -12,9 +12,8 @@ type MaybeLazyFunction = {
  *
  * `purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.
  * Refer to the example below for correct usage.
- *
- * @param fn the function to purry.
- * @param args the arguments
+ * @param fn - The function to purry.
+ * @param args - The arguments.
  * @signature R.purry(fn, arguments);
  * @exampleRaw
  *    function _findIndex(array, fn) {

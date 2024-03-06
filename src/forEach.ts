@@ -6,9 +6,9 @@ import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
- * @param array The array.
- * @param fn The callback function.
- * @returns The original array
+ * @param array - The array.
+ * @param fn - The callback function.
+ * @returns The original array.
  * @signature
  *    R.forEach(array, fn)
  *    R.forEach.indexed(array, fn)
@@ -31,7 +31,7 @@ export function forEach<T>(
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
- * @param fn the function mapper
+ * @param fn - The function mapper.
  * @signature
  *    R.forEach(fn)(array)
  *    R.forEach.indexed(fn)(array)

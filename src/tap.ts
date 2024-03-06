@@ -6,9 +6,8 @@ import { purry } from "./purry";
  *
  * This allows "tapping into" a function sequence in a pipe, to perform side
  * effects on intermediate results.
- *
- * @param value the value to pass into the function
- * @param fn the function to call
+ * @param value - The value to pass into the function.
+ * @param fn - The function to call.
  * @signature
  *    R.tap(value, fn)
  * @example
@@ -24,8 +23,7 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *
  * This allows "tapping into" a function sequence in a pipe, to perform side
  * effects on intermediate results.
- *
- * @param fn the function to call
+ * @param fn - The function to call.
  * @signature
  *    R.tap(fn)(value)
  * @example

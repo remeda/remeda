@@ -10,15 +10,13 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * occurrence of the item.
  *
  * Runs in O(logN) time.
- *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
  * @example
@@ -26,7 +24,6 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(
@@ -44,15 +41,13 @@ export function sortedIndexBy<T>(
  * occurrence of the item.
  *
  * Runs in O(logN) time.
- *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
  * @example
@@ -60,7 +55,6 @@ export function sortedIndexBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(
@@ -74,22 +68,19 @@ export function sortedIndexBy<T>(
  * would result in maintaining the arrays sort-ness. The array can contain
  * duplicates. If the item already exists in the array the index would be of the
  * first occurrence of the item.
- *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..array.length - 1)
- *
+ * @returns Insertion index (In the range 0..array.length - 1).
  * @signature
  *    R.sortedIndexBy(item, valueFunction)(data)
  * @example
  *    R.pipe([{age:20},{age:22}], R.sortedIndexBy({age:21},prop('age'))) // => 1
  * @dataLast
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy(): unknown {

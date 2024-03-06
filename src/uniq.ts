@@ -5,7 +5,7 @@ import { _reduceLazy } from "./_reduceLazy";
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
- * @param array
+ * @param array - The array to filter.
  * @signature
  *    R.uniq(array)
  * @example
@@ -19,7 +19,7 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
- * @param array
+ * @param array - The array to filter.
  * @signature
  *    R.uniq()(array)
  * @example

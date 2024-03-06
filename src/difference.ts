@@ -4,8 +4,8 @@ import { _reduceLazy } from "./_reduceLazy";
 
 /**
  * Excludes the values from `other` array.
- * @param array the source array
- * @param other the values to exclude
+ * @param array - The source array.
+ * @param other - The values to exclude.
  * @signature
  *    R.difference(array, other)
  * @example
@@ -21,7 +21,7 @@ export function difference<T>(
 
 /**
  * Excludes the values from `other` array.
- * @param other the values to exclude
+ * @param other - The values to exclude.
  * @signature
  *    R.difference(other)(array)
  * @example

@@ -9,8 +9,8 @@ type Debouncer<
 > = {
   /**
    * Invoke the debounced function.
-   * @param args - same as the args for the debounced function.
-   * @returns - the last computed value of the debounced function with the
+   * @param args - Same as the args for the debounced function.
+   * @returns The last computed value of the debounced function with the
    * latest args provided to it. If `timing` does not include `leading` then the
    * the function would return `undefined` until the first cool-down period is
    * over, otherwise the function would always return the return type of the
@@ -55,9 +55,9 @@ type DebounceOptions = {
  * It stores the latest call's arguments so they could be used at the end of the cool-down period when invoking `func` (if configured to invoke the function at the end of the cool-down period).
  * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
- * @param func The function to debounce, the returned `call` function will have
+ * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
- * @param options An object allowing further customization of the debouncer:
+ * @param options - An object allowing further customization of the debouncer:
  * - `timing?: 'leading' | 'trailing' |'both'`. The default is `'trailing'`.
  *   `leading` would result in the function being invoked at the start of the
  *   cool-down period; `trailing` would result in the function being invoked at
@@ -76,7 +76,7 @@ type DebounceOptions = {
  *   reach the end of the cool-down period, this allows the function to still
  *   be invoked occasionally. IMPORTANT: This param is ignored when `timing` is
  *   `'leading'`.
- * @returns a debouncer object. The main function is `call`. In addition to it
+ * @returns A debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
  * - `flush` method to end the cool-down period immediately.

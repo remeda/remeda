@@ -4,8 +4,8 @@ import type { LazyResult } from "./_reduceLazy";
 
 /**
  * Perform left-to-right function composition.
- * @param value The initial value.
- * @param operations the list of operations to apply.
+ * @param value - The initial value.
+ * @param operations - The list of operations to apply.
  * @signature R.pipe(data, op1, op2, op3)
  * @example
  *    R.pipe(
@@ -13,8 +13,6 @@ import type { LazyResult } from "./_reduceLazy";
  *      R.map(x => x * 2),
  *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
  *    ) // => [6, 14]
- *
- *
  * @dataFirst
  * @category Function
  */

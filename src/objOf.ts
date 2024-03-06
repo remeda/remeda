@@ -2,8 +2,8 @@ import { purry } from "./purry";
 
 /**
  * Creates an object containing a single `key:value` pair.
- * @param value the object value
- * @param key the property name
+ * @param value - The object value.
+ * @param key - The property name.
  * @signature
  *    R.objOf(value, key)
  * @example
@@ -14,7 +14,7 @@ export function objOf<T, K extends string>(value: T, key: K): { [x in K]: T };
 
 /**
  * Creates an object containing a single `key:value` pair.
- * @param key the property name
+ * @param key - The property name.
  * @signature
  *    R.objOf(key)(value)
  * @example

@@ -2,8 +2,8 @@ import { purry } from "./purry";
 
 /**
  * Subtracts two numbers.
- * @param value The number.
- * @param subtrahend The number to subtract from the value.
+ * @param value - The number.
+ * @param subtrahend - The number to subtract from the value.
  * @signature
  *    R.subtract(value, subtrahend);
  * @example
@@ -17,8 +17,8 @@ export function subtract(value: number, subtrahend: number): number;
 
 /**
  * Subtracts two numbers.
- * @param value The number.
- * @param subtrahend The number to subtract from the value.
+ * @param value - The number.
+ * @param subtrahend - The number to subtract from the value.
  * @signature
  *    R.subtract(subtrahend)(value);
  * @example
