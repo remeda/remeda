@@ -1,1 +1,1 @@
-export type IsAny<T> = 0 extends 1 & T ? true : false;
+export type IsAny<T> = 0 extends T & 1 ? true : false;

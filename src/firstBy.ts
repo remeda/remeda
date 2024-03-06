@@ -1,10 +1,11 @@
-import { OrderRule, purryOrderRules } from './_purryOrderRules';
+import type { OrderRule } from "./_purryOrderRules";
+import { purryOrderRules } from "./_purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
-} from './_types';
-import { hasAtLeast } from './hasAtLeast';
+} from "./_types";
+import { hasAtLeast } from "./hasAtLeast";
 
 type FirstBy<T extends IterableContainer> =
   | T[number]
@@ -79,7 +80,7 @@ export function firstBy(): unknown {
 
 function firstByImplementation<T>(
   data: ReadonlyArray<T>,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): T | undefined {
   if (!hasAtLeast(data, 2)) {
     // If we have 0 or 1 item we simply return the trivial result.

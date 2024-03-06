@@ -20,5 +20,5 @@
  */
 export const sliceString =
   (indexStart: number, indexEnd?: number): ((data: string) => string) =>
-  data =>
+  (data) =>
     data.slice(indexStart, indexEnd);

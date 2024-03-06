@@ -1,48 +1,50 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- FIXME! */
 
-import { clone } from './clone';
+import { clone } from "./clone";
 
-const eq = (a: any, b: any) => {
+const eq = (a: any, b: any): void => {
   expect(a).toEqual(b);
 };
 
-describe('deep clone integers, strings and booleans', () => {
-  it('clones integers', () => {
+const fn = (x: number): number => x + x;
+
+describe("deep clone integers, strings and booleans", () => {
+  it("clones integers", () => {
     eq(clone(-4), -4);
-    eq(clone(9007199254740991), 9007199254740991);
+    eq(clone(9_007_199_254_740_991), 9_007_199_254_740_991);
   });
 
-  it('clones floats', () => {
+  it("clones floats", () => {
     eq(clone(-4.5), -4.5);
-    eq(clone(0.0), 0.0);
+    eq(clone(0), 0);
   });
 
-  it('clones strings', () => {
-    eq(clone('foo'), 'foo');
+  it("clones strings", () => {
+    eq(clone("foo"), "foo");
   });
 
-  it('clones booleans', () => {
+  it("clones booleans", () => {
     eq(clone(true), true);
   });
 });
 
-describe('deep clone objects', () => {
-  it('clones shallow object', () => {
-    const obj = { a: 1, b: 'foo', c: true, d: new Date(2013, 11, 25) };
+describe("deep clone objects", () => {
+  it("clones shallow object", () => {
+    const obj = { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) };
     const cloned = clone(obj);
     obj.c = false;
     obj.d.setDate(31);
-    eq(cloned, { a: 1, b: 'foo', c: true, d: new Date(2013, 11, 25) });
+    eq(cloned, { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) });
   });
 
-  it('clones deep object', () => {
-    const obj = { a: { b: { c: 'foo' } } };
+  it("clones deep object", () => {
+    const obj = { a: { b: { c: "foo" } } };
     const cloned = clone(obj);
-    obj.a.b.c = 'bar';
-    eq(cloned, { a: { b: { c: 'foo' } } });
+    obj.a.b.c = "bar";
+    eq(cloned, { a: { b: { c: "foo" } } });
   });
 
-  it('clones objects with circular references', () => {
+  it("clones objects with circular references", () => {
     const x: any = { c: null };
     const y = { a: x };
     const z = { b: y };
@@ -64,15 +66,15 @@ describe('deep clone objects', () => {
   });
 });
 
-describe('deep clone arrays', () => {
-  it('clones shallow arrays', () => {
+describe("deep clone arrays", () => {
+  it("clones shallow arrays", () => {
     const list = [1, 2, 3];
     const cloned = clone(list);
     list.pop();
     eq(cloned, [1, 2, 3]);
   });
 
-  it('clones deep arrays', () => {
+  it("clones deep arrays", () => {
     const list: any = [1, [1, 2, 3], [[[5]]]];
     const cloned = clone(list);
 
@@ -84,11 +86,8 @@ describe('deep clone arrays', () => {
   });
 });
 
-describe('deep clone functions', () => {
-  it('keep reference to function', () => {
-    const fn = (x: number) => {
-      return x + x;
-    };
+describe("deep clone functions", () => {
+  it("keep reference to function", () => {
     const list = [{ a: fn }] as const;
 
     const cloned = clone(list);
@@ -98,8 +97,8 @@ describe('deep clone functions', () => {
   });
 });
 
-describe('built-in types', () => {
-  it('clones Date object', () => {
+describe("built-in types", () => {
+  it("clones Date object", () => {
     const date = new Date(2014, 10, 14, 23, 59, 59, 999);
 
     const cloned = clone(date);
@@ -110,8 +109,9 @@ describe('built-in types', () => {
     eq(cloned.getDay(), 5); // friday
   });
 
-  it('clones RegExp object', () => {
-    [/x/, /x/g, /x/i, /x/m, /x/gi, /x/gm, /x/im, /x/gim].forEach(pattern => {
+  it.each([/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu])(
+    "clones RegExp object",
+    (pattern) => {
       const cloned = clone(pattern);
       assert.notStrictEqual(cloned, pattern);
       eq(cloned.constructor, RegExp);
@@ -119,26 +119,26 @@ describe('built-in types', () => {
       eq(cloned.global, pattern.global);
       eq(cloned.ignoreCase, pattern.ignoreCase);
       eq(cloned.multiline, pattern.multiline);
-    });
-  });
+    },
+  );
 });
 
-describe('deep clone deep nested mixed objects', () => {
-  it('clones array with objects', () => {
+describe("deep clone deep nested mixed objects", () => {
+  it("clones array with objects", () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
     const cloned = clone(list);
     list[1][0] = null;
     eq(cloned, [{ a: { b: 1 } }, [{ c: { d: 1 } }]]);
   });
 
-  it('clones array with arrays', () => {
+  it("clones array with arrays", () => {
     const list: Array<Array<any>> = [[1], [[3]]];
     const cloned = clone(list);
     list[1]![0] = null;
     eq(cloned, [[1], [[3]]]);
   });
 
-  it('clones array with mutual ref object', () => {
+  it("clones array with mutual ref object", () => {
     const obj = { a: 1 };
     const list = [{ b: obj }, { b: obj }];
     const cloned = clone(list);
@@ -157,8 +157,8 @@ describe('deep clone deep nested mixed objects', () => {
   });
 });
 
-describe('deep clone edge cases', () => {
-  it('nulls, undefineds and empty objects and arrays', () => {
+describe("deep clone edge cases", () => {
+  it("nulls, undefineds and empty objects and arrays", () => {
     eq(clone(null), null);
     eq(clone(undefined), undefined);
     assert.notStrictEqual(clone(undefined), null);

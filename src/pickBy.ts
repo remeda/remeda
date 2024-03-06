@@ -1,5 +1,5 @@
-import { keys } from './keys';
-import { purry } from './purry';
+import { keys } from "./keys";
+import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -13,7 +13,7 @@ import { purry } from './purry';
  */
 export function pickBy<T>(
   object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
@@ -26,24 +26,28 @@ export function pickBy<T>(
  * @category Object
  */
 export function pickBy<T>(
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function pickBy() {
+export function pickBy(): unknown {
   return purry(_pickBy, arguments);
 }
 
 function _pickBy<T>(
-  object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+  data: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): Partial<T> {
-  if (object == null) {
+  if (data === null || data === undefined) {
     return {};
   }
-  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
-    if (fn(object[key], key)) {
-      acc[key] = object[key];
+
+  const out: Partial<T> = {};
+
+  for (const key of keys.strict(data)) {
+    if (fn(data[key], key)) {
+      out[key] = data[key];
     }
-    return acc;
-  }, {});
+  }
+
+  return out;
 }

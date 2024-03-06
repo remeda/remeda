@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Removes last `n` elements from the `array`.
@@ -26,12 +26,12 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast() {
+export function dropLast(): unknown {
   return purry(_dropLast, arguments);
 }
 
-function _dropLast<T>(array: Array<T>, n: number) {
-  const copy = [...array];
+function _dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+  const copy = array.slice();
   if (n > 0) {
     copy.splice(-n);
   }

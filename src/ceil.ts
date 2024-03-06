@@ -1,5 +1,5 @@
-import { _withPrecision } from './_withPrecision';
-import { purry } from './purry';
+import { _withPrecision } from "./_withPrecision";
+import { purry } from "./purry";
 
 /**
  * Rounds up a given number to a specific precision.
@@ -37,6 +37,6 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil() {
+export function ceil(): unknown {
   return purry(_withPrecision(Math.ceil), arguments);
 }

@@ -1,5 +1,5 @@
-import { PredIndexedOptional } from './_types';
-import { purry } from './purry';
+import type { PredIndexedOptional } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
@@ -23,7 +23,7 @@ import { purry } from './purry';
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
-  fn: (element: T) => Array<[K, V]>
+  fn: (element: T) => Array<[K, V]>,
 ): Record<K, V>;
 
 /**
@@ -50,10 +50,10 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
-  fn: (element: T) => Array<[K, V]>
+  fn: (element: T) => Array<[K, V]>,
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function flatMapToObj() {
+export function flatMapToObj(): unknown {
   return purry(_flatMapToObj(false), arguments);
 }
 
@@ -63,30 +63,31 @@ const _flatMapToObj =
     array: ReadonlyArray<T>,
     fn: PredIndexedOptional<
       T,
-      ReadonlyArray<[key: PropertyKey, value: unknown]>
-    >
+      ReadonlyArray<readonly [key: PropertyKey, value: unknown]>
+    >,
   ) => {
-    return array.reduce<Record<PropertyKey, unknown>>(
-      (result, element, index) => {
-        const items = indexed ? fn(element, index, array) : fn(element);
-        items.forEach(([key, value]) => {
-          result[key] = value;
-        });
-        return result;
-      },
-      {}
-    );
+    const out: Record<PropertyKey, unknown> = {};
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump the TypeScript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value at the same time.
+      const element = array[index]!;
+      const items = indexed ? fn(element, index, array) : fn(element);
+
+      for (const [key, value] of items) {
+        out[key] = value;
+      }
+    }
+    return out;
   };
 
 export namespace flatMapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): Record<K, V>;
   export function indexed<T, K extends PropertyKey, V>(
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_flatMapToObj(true), arguments);
   }
 }

@@ -1,5 +1,6 @@
-import { LazyResult, _reduceLazy } from './_reduceLazy';
-import { purry } from './purry';
+import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -27,7 +28,7 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 export function intersectionWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
   other: ReadonlyArray<TSecond>,
-  comparator: Comparator<TFirst, TSecond>
+  comparator: Comparator<TFirst, TSecond>,
 ): Array<TFirst>;
 
 /**
@@ -55,39 +56,30 @@ export function intersectionWith<TFirst, TSecond>(
    * type inference doesn't work properly for the comparator's first parameter
    * in data last variant
    */
-  comparator: Comparator<TFirst, TSecond>
+  comparator: Comparator<TFirst, TSecond>,
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith() {
+export function intersectionWith(): unknown {
   return purry(_intersectionWith, arguments, intersectionWith.lazy);
 }
 
 function _intersectionWith<TFirst, TSecond>(
-  array: Array<TFirst>,
-  other: Array<TSecond>,
-  comparator: Comparator<TFirst, TSecond>
-) {
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
+  comparator: Comparator<TFirst, TSecond>,
+): Array<TFirst> {
   const lazy = intersectionWith.lazy(other, comparator);
   return _reduceLazy(array, lazy);
 }
 
 export namespace intersectionWith {
-  export function lazy<TFirst, TSecond>(
-    other: Array<TSecond>,
-    comparator: Comparator<TFirst, TSecond>
-  ) {
-    return (value: TFirst): LazyResult<TFirst> => {
-      if (other.some(otherValue => comparator(value, otherValue))) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
-  }
+  export const lazy =
+    <TFirst, TSecond>(
+      other: ReadonlyArray<TSecond>,
+      comparator: Comparator<TFirst, TSecond>,
+    ): LazyEvaluator<TFirst> =>
+    (value) =>
+      other.some((otherValue) => comparator(value, otherValue))
+        ? { done: false, hasNext: true, next: value }
+        : { done: false, hasNext: false };
 }

@@ -1,11 +1,15 @@
-import type { IsAny } from './type-fest/is-any';
+import type { IsAny } from "./type-fest/is-any";
 
 export type Pred<T, K> = (input: T) => K;
-export type PredIndexed<T, K> = (input: T, index: number, array: Array<T>) => K;
+export type PredIndexed<T, K> = (
+  input: T,
+  index: number,
+  array: ReadonlyArray<T>,
+) => K;
 export type PredIndexedOptional<T, K> = (
   input: T,
   index?: number,
-  array?: ReadonlyArray<T>
+  array?: ReadonlyArray<T>,
 ) => K;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
@@ -22,7 +26,7 @@ export type NonEmptyArray<T> = [T, ...Array<T>];
  *
  * @see This was inspired by the type-definition of Promise.all (https://github.com/microsoft/TypeScript/blob/1df5717b120cddd325deab8b0f2b2c3eecaf2b01/src/lib/es2015.promise.d.ts#L21)
  */
-export type IterableContainer<T = unknown> = ReadonlyArray<T> | [];
+export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 // Inspired and largely copied from `sindresorhus/ts-extras`:
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
@@ -57,7 +61,7 @@ type BuildTupleHelper<
   Element,
   Length extends number,
   Rest extends Array<Element>,
-> = Rest['length'] extends Length
+> = Rest["length"] extends Length
   ? readonly [...Rest] // Terminate with readonly array (aka tuple)
   : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
 
@@ -71,4 +75,4 @@ export type CompareFunction<T> = (a: T, b: T) => number;
  * Based on type-fest's IsAny
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
  */
-export type IfIsAny<T, Then, Else> = 0 extends 1 & T ? Then : Else;
+export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;

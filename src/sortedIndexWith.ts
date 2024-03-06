@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
+import { purry } from "./purry";
+import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -32,7 +32,7 @@ import { _binarySearchCutoffIndex } from './_binarySearchCutoffIndex';
  */
 export function sortedIndexWith<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): number;
 
 /**
@@ -65,7 +65,7 @@ export function sortedIndexWith<T>(
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexWith(): unknown {
@@ -75,10 +75,10 @@ export function sortedIndexWith(): unknown {
 export namespace sortedIndexWith {
   export function indexed<T>(
     data: ReadonlyArray<T>,
-    predicate: (item: T, index: number) => NonNullable<unknown>
+    predicate: (item: T, index: number) => NonNullable<unknown>,
   ): number;
   export function indexed<T>(
-    predicate: (item: T, index: number) => NonNullable<unknown>
+    predicate: (item: T, index: number) => NonNullable<unknown>,
   ): (data: ReadonlyArray<T>) => number;
   export function indexed(): unknown {
     return purry(_binarySearchCutoffIndex, arguments);

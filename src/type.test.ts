@@ -1,37 +1,38 @@
-import { type } from './type';
+import { type } from "./type";
 
 it('"Array" if given an array literal', () => {
-  expect(type([1, 2, 3])).toEqual('Array');
+  expect(type([1, 2, 3])).toEqual("Array");
 });
 
 it('"Object" if given an object literal', () => {
-  expect(type({ batman: 'na na na na na na na' })).toEqual('Object');
+  expect(type({ batman: "na na na na na na na" })).toEqual("Object");
 });
 
 it('"RegExp" if given a RegExp literal', () => {
-  expect(type(/[A-z]/)).toEqual('RegExp');
+  expect(type(/[A-z]/u)).toEqual("RegExp");
 });
 
 it('"Number" if given a numeric value', () => {
-  expect(type(4)).toEqual('Number');
+  expect(type(4)).toEqual("Number");
 });
 
 it('"Number" if given the NaN value', () => {
-  expect(type(NaN)).toEqual('Number');
+  expect(type(Number.NaN)).toEqual("Number");
 });
 
 it('"String" if given a String literal', () => {
-  expect(type('Gooooodd Mornning a!!')).toEqual('String');
+  expect(type("Gooooodd Mornning a!!")).toEqual("String");
 });
 
 it('"String" if given a String object', () => {
-  expect(type(new String('I am a String object'))).toEqual('String');
+  // eslint-disable-next-line no-new-wrappers, unicorn/new-for-builtins -- Intentional
+  expect(type(new String("I am a String object"))).toEqual("String");
 });
 
 it('"Null" if given the null value', () => {
-  expect(type(null)).toEqual('Null');
+  expect(type(null)).toEqual("Null");
 });
 
 it('"Undefined" if given the undefined value', () => {
-  expect(type(undefined)).toEqual('Undefined');
+  expect(type(undefined)).toEqual("Undefined");
 });

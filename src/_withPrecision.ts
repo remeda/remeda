@@ -5,7 +5,7 @@
 const MAX_PRECISION = 15;
 
 export function _withPrecision(roundingFn: (value: number) => number) {
-  return (value: number, precision: number) => {
+  return (value: number, precision: number): number => {
     if (precision === 0) {
       return roundingFn(value);
     }
@@ -15,7 +15,7 @@ export function _withPrecision(roundingFn: (value: number) => number) {
     }
 
     if (precision > MAX_PRECISION || precision < -MAX_PRECISION) {
-      throw new RangeError(`precision must be between -15 and 15`);
+      throw new RangeError("precision must be between -15 and 15");
     }
 
     if (Number.isNaN(value) || !Number.isFinite(value)) {
