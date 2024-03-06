@@ -13,7 +13,7 @@ import { purry } from "./purry";
  * @pipeable
  * @dataFirst
  */
-export function last<T>(array: NonEmptyArray<T>): T;
+export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
 
 /**
@@ -34,10 +34,10 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 
-export function last() {
+export function last(): unknown {
   return purry(_last, arguments);
 }
 
-function _last<T>(array: Array<T>) {
+function _last<T>(array: ReadonlyArray<T>): T | undefined {
   return array[array.length - 1];
 }

@@ -41,15 +41,15 @@ export function chunk<T extends IterableContainer>(
   size: number,
 ): (array: T) => Chunked<T>;
 
-export function chunk() {
+export function chunk(): unknown {
   return purry(_chunk, arguments);
 }
 
-function _chunk<T>(array: ReadonlyArray<T>, size: number) {
-  const ret: Array<ReadonlyArray<T>> = Array.from({
+function _chunk<T>(array: ReadonlyArray<T>, size: number): Array<Array<T>> {
+  const ret: Array<Array<T>> = Array.from({
     length: Math.ceil(array.length / size),
   });
-  for (let index = 0; index < ret.length; index += 1) {
+  for (let index = 0; index < ret.length; index++) {
     ret[index] = array.slice(index * size, (index + 1) * size);
   }
   return ret;

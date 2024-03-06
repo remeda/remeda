@@ -63,7 +63,7 @@ function rankByImplementation<T>(
     if (compareFn(targetItem, item) > 0) {
       // The rank of the item is equivalent to the number of items that would
       // come before it if the array was sorted. We assume that the
-      rank++;
+      rank += 1;
     }
   }
   return rank;

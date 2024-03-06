@@ -47,12 +47,15 @@ export function sort<T>(
   cmp: (a: T, b: T) => number,
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort() {
+export function sort(): unknown {
   return purry(_sort, arguments);
 }
 
-function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
-  const ret = [...items];
+function _sort<T>(
+  items: ReadonlyArray<T>,
+  cmp: (a: T, b: T) => number,
+): Array<T> {
+  const ret = items.slice();
   ret.sort(cmp);
   return ret;
 }

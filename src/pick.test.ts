@@ -9,7 +9,7 @@ describe("data first", () => {
   });
   test("support inherited properties", () => {
     class BaseClass {
-      testProp() {
+      testProp(): string {
         return "abc";
       }
     }

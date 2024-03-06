@@ -15,7 +15,7 @@ describe("data first", () => {
         (acc, x, index, items) => {
           expect(index).toBe(i);
           expect(items).toBe(array);
-          i++;
+          i += 1;
           return acc + x;
         },
         100,

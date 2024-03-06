@@ -39,17 +39,18 @@ export function reduce<T, K>(
   initialValue: K,
 ): (items: ReadonlyArray<T>) => K;
 
-export function reduce() {
+export function reduce(): unknown {
   return purry(_reduce(false), arguments);
 }
 
 const _reduce =
   (indexed: boolean) =>
   <T, K>(
-    items: Array<T>,
-    fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
+    items: ReadonlyArray<T>,
+    fn: (acc: K, item: T, index?: number, items?: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K =>
+    // eslint-disable-next-line unicorn/no-array-reduce -- Our function wraps the built-in reduce.
     items.reduce(
       (acc, item, index) =>
         indexed ? fn(acc, item, index, items) : fn(acc, item),
@@ -59,14 +60,14 @@ const _reduce =
 export namespace reduce {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K;
   export function indexed<T, K>(
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K,
   ): (array: ReadonlyArray<T>) => K;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_reduce(true), arguments);
   }
 }

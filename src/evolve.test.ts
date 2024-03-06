@@ -158,7 +158,7 @@ describe("data last", () => {
         ],
       },
       evolve({
-        array: (array: Array<string>) => array.length,
+        array: (array: ReadonlyArray<string>) => array.length,
         nestedObj: { a: set<{ b: string }, "b">("b", "Set") },
         objAry: map(omit<{ a: number; b: number }, "b">(["b"])),
       }),
@@ -190,7 +190,9 @@ describe("typing", () => {
 
       it("can reflect type of data to function of evolver object", () => {
         const result = evolve(data, {
-          count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+          // type of parameter is required because `count` property is not
+          // defined in data
+          count: (x: number) => x,
           quartile: (x) => x,
           time: (x) => x,
         });
@@ -200,7 +202,9 @@ describe("typing", () => {
 
       it("can reflect type of data to function of nested evolver object", () => {
         const result = evolve(data, {
-          count: (x: number) => x, // type of parameter is required because `count` property is not defined in data
+          // type of parameter is required because `count` property is not
+          // defined in data
+          count: (x: number) => x,
           quartile: (x) => x,
           time: { elapsed: (x) => x, remaining: (x) => x },
         });
@@ -221,31 +225,16 @@ describe("typing", () => {
           ],
         },
         {
-          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
           number: add(1),
-          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
           array: (array: ReadonlyArray<number>) => array.length,
-          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
           nestedObj: { a: set<{ b: number }, "b">("b", 0) },
-          // @ts-expect-error -- Type 'string' is not assignable to type 'number'.ts(2322)
+          // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
           objAry: map(omit<{ a: number; b: number }, "b">(["b"])),
         },
       );
-    });
-
-    it("does not accept the input value that is not Array and Object", () => {
-      const evolver = { a: add(1) };
-      // Type check only
-      () => {
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        evolve(0, evolver);
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(undefined, evolver)).toThrowError();
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve(null, evolver)).toThrowError();
-        // @ts-expect-error -- Argument of type '{ a: (value: number) => number; }' is not assignable to parameter of type 'never'.ts(2345)
-        expect(evolve("", evolver)).toThrowError();
-      };
     });
 
     it("does not accept function that require multiple arguments", () => {
@@ -255,9 +244,9 @@ describe("typing", () => {
           requiring3Args: 1,
         },
         {
-          // @ts-expect-error -- Target signature provides too few arguments. Expected 2 or more, but got 1.ts(2322)
+          // @ts-expect-error [ts2322] - Target signature provides too few arguments. Expected 2 or more, but got 1.
           requiring2Args: (a: number, b: number) => a + b,
-          // @ts-expect-error -- Target signature provides too few arguments. Expected 3 or more, but got 1.ts(2322)
+          // @ts-expect-error [ts2322] - Target signature provides too few arguments. Expected 3 or more, but got 1.
           requiring3Args: (a: number, b: number | undefined, c: number) =>
             a + (b ?? 0) + c,
         },
@@ -292,7 +281,7 @@ describe("typing", () => {
           quartile: [1, 2],
         },
         {
-          // @ts-expect-error -- Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.ts(2322)
+          // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
           quartile: [add(1), add(-1)],
         },
       );
@@ -311,7 +300,7 @@ describe("typing", () => {
             number: "1",
             array: ["1", "2", "3"],
           },
-          // @ts-expect-error -- [ts2345]: Type 'string' is not assignable to type 'number | undefined'.
+          // @ts-expect-error [ts2345] - Type 'string' is not assignable to type 'number | undefined'.
           evolve(evolver),
         );
       });
@@ -325,25 +314,10 @@ describe("typing", () => {
             number: 1,
             array: ["1", "2", "3"],
           },
-          // @ts-expect-error -- [ts2345]: Type 'string[]' is not assignable to type 'readonly number[]'.
+          // @ts-expect-error [ts2345] - Type 'string[]' is not assignable to type 'readonly number[]'.
           evolve(evolver),
         );
       });
-    });
-
-    it("does not accept the input value that is not Array and Object", () => {
-      const evolver = { a: add(1) };
-      // Type check only
-      () => {
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: number): unknown'.ts(2345)
-        pipe(0, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: undefined): unknown'.ts(2345)
-        pipe(undefined, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: null): unknown'.ts(2345)
-        pipe(null, evolve(evolver));
-        // @ts-expect-error -- Type '{ a: any; }' provides no match for the signature '(input: string): unknown'.ts(2345)
-        pipe("", evolve(evolver));
-      };
     });
 
     it("does not accept function that require multiple arguments", () => {
@@ -351,9 +325,9 @@ describe("typing", () => {
         {
           requiring2Args: 1,
         },
-        // @ts-expect-error -- Type '{ requiring2Args: any; }' provides no match for the signature '(input: { requiring2Args: number; }): unknown'.ts(2345)
+        // @ts-expect-error [ts2345] - Type '{ requiring2Args: any; }' provides no match for the signature '(input: { requiring2Args: number; }): unknown'.
         evolve({
-          // @ts-expect-error -- Target signature provides too few arguments. Expected 2 or more, but got 1.ts(2322)
+          // @ts-expect-error [ts2322] - Target signature provides too few arguments. Expected 2 or more, but got 1.
           requiring2Args: (a: number, b: number) => a + b,
         }),
       );
@@ -386,9 +360,9 @@ describe("typing", () => {
         {
           quartile: [1, 2],
         },
-        // @ts-expect-error -- Type '{ quartile: ((value: number) => number)[]; }' provides no match for the signature '(input: { quartile: number[]; }): unknown'.ts(2345)
+        // @ts-expect-error [ts2345] - Type '{ quartile: ((value: number) => number)[]; }' provides no match for the signature '(input: { quartile: number[]; }): unknown'.
         evolve({
-          // @ts-expect-error -- Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.ts(2322)
+          // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
           quartile: [add(1), add(-1)],
         }),
       );

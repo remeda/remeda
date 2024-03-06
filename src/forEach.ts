@@ -1,8 +1,8 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
-import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
@@ -57,7 +57,7 @@ export function forEach<T>(
   fn: Pred<T, void>,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function forEach() {
+export function forEach(): unknown {
   return purry(_forEach(false), arguments, forEach.lazy);
 }
 
@@ -72,8 +72,8 @@ const _forEach =
 
 const _lazy =
   (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, void>) =>
-  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> => {
+  <T>(fn: PredIndexedOptional<T, void>): LazyEvaluator<T> =>
+  (value, index, array) => {
     if (indexed) {
       fn(value, index, array);
     } else {
@@ -94,7 +94,7 @@ export namespace forEach {
   export function indexed<T>(
     fn: PredIndexed<T, void>,
   ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_forEach(true), arguments, forEach.lazyIndexed);
   }
   export const lazy = _lazy(false);

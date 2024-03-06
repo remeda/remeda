@@ -87,6 +87,7 @@ describe("Filtering on undefined grouper result", () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty("even");
+    // eslint-disable-next-line dot-notation
     expect(result["even"]).toEqual([0, 2, 4, 6, 8]);
   });
 
@@ -97,6 +98,7 @@ describe("Filtering on undefined grouper result", () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty("even");
+    // eslint-disable-next-line dot-notation
     expect(result["even"]).toEqual(["a", "c", "e", "g", "i"]);
   });
 
