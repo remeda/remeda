@@ -21,7 +21,7 @@ export function transformProject(project: typeof DATA) {
   return addCategories(
     project,
     functions
-      .map((function_) => transformFunction(function_, functionNames))
+      .map((func) => transformFunction(func, functionNames))
       .filter(isDefined.strict),
   );
 }
@@ -44,7 +44,12 @@ function transformFunction(
       comment: { summary },
     },
   ] = signaturesWithComments;
-  const description = transformSummary(summary, functionNames);
+  const description =
+    summary.length === 0
+      ? undefined
+      : summary
+          .map((part) => transformCommentDisplayPart(part, functionNames))
+          .join("");
 
   const methods = signaturesWithComments.map(transformSignature);
 
@@ -53,26 +58,16 @@ function transformFunction(
   return { id, name, description, methods, sourceUrl };
 }
 
-function transformSummary(
-  summary: ReadonlyArray<JSONOutput.CommentDisplayPart>,
-  functionNames: Set<string>,
-): string | undefined {
-  if (summary.length === 0) {
-    return;
+function transformCommentDisplayPart(
+  { kind, text }: JSONOutput.CommentDisplayPart,
+  functionNames: ReadonlySet<string>,
+): string {
+  if (kind !== "code") {
+    return text;
   }
-  return summary
-    .map(({ kind, text }) => {
-      if (kind !== "code") {
-        return text;
-      }
-      const codeContent = text.slice(1, -1);
-      // If this is a function name, link to its anchor:
-      if (functionNames.has(codeContent)) {
-        return `[${text}](#${codeContent})`;
-      }
-      return text;
-    })
-    .join("");
+  const codeContent = text.slice(1, -1);
+  // If this is a function name, link to its anchor:
+  return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
 }
 
 function transformSignature({
