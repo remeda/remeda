@@ -63,6 +63,12 @@ export default config(
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-spread": "off",
 
+      // TODO: These rules allow us to really standardize our codebase, but they
+      // also do sweeping changes to the whole codebase which is very noisy. We
+      // should do it in one sweep sometime in the future.
+      "@typescript-eslint/naming-convention": "off",
+      "unicorn/prevent-abbreviations": "off",
+
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
       // extension)
@@ -275,12 +281,6 @@ export default config(
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
-
-      // TODO: These rules allow us to really standardize our codebase, but they
-      // also do sweeping changes to the whole codebase which is very noisy. We
-      // should do it in one sweep sometime in the future.
-      "@typescript-eslint/naming-convention": "off",
-      "unicorn/prevent-abbreviations": "off",
     },
   },
   {
