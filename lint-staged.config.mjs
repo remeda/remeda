@@ -1,8 +1,9 @@
-module.exports = {
+export default {
   // The Typescript compiler can't type-check a single file, it needs to run on
   // the whole project. To do that we use a function (instead of a string or
   // array) so that no matter what file or how many, we will always run the same
   // command.
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types -- this is stupid...
   "*.ts?(x)": () => "tsc -p tsconfig.json --noEmit",
 
   // Javascript and Typescript (including commonJs and esm variants)

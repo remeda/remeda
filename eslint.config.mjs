@@ -1,18 +1,17 @@
-const js = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-// @ts-expect-error [ts7016] - Unicorn not supporting CommonJS-based flat configs.
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Unicorn doesn't support CommonJS-based flat configs.
-const eslintPluginUnicorn = require("eslint-plugin-unicorn");
+import core from "@eslint/js";
+// @ts-expect-error [ts7016] -- I don't know why typing is broken here...
+import { configs as unicornConfigs } from "eslint-plugin-unicorn";
+import { config, configs as typescriptConfigs } from "typescript-eslint";
 
-module.exports = tseslint.config(
+export default config(
   {
     ignores: ["dist", "docs", "examples"],
   },
-  js.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- Unicorn doesn't support CommonJS-based flat configs.
-  eslintPluginUnicorn.configs["flat/recommended"],
+  core.configs.recommended,
+  ...typescriptConfigs.strictTypeChecked,
+  ...typescriptConfigs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- I don't know why typing is broken for unicorn...
+  unicornConfigs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {
@@ -285,13 +284,8 @@ module.exports = tseslint.config(
     },
   },
   {
-    files: ["*.config.js"],
+    files: ["*.config.mjs"],
     rules: {
-      "no-undef": "off",
-      "@typescript-eslint/no-require-imports": "off",
-      "@typescript-eslint/no-unsafe-call": "off",
-      "@typescript-eslint/no-var-requires": "off",
-      "unicorn/prefer-module": "off",
       "unicorn/filename-case": "off",
     },
   },
