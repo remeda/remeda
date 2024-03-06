@@ -277,38 +277,11 @@ module.exports = tseslint.config(
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
 
-      // TODO: Enable this in a separate PR so we can run the auto-fix and ship without reviewing every file.
+      // TODO: These rules allow us to really standardize our codebase, but they
+      // also do sweeping changes to the whole codebase which is very noisy. We
+      // should do it in one sweep sometime in the future.
+      "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
-      //   "unicorn/prevent-abbreviations": [
-      //     "warn",
-      //     {
-      //       replacements: {
-      //         res: {
-      //           resource: false,
-      //           response: false,
-      //         },
-      //       },
-      //       allowList: {
-      //         arg: true,
-      //         Arg: true,
-      //         args: true,
-      //         Args: true,
-      //         fn: true,
-      //         Fn: true,
-      //         func: true,
-      //         Func: true,
-      //         num: true,
-      //         obj: true,
-      //         Obj: true,
-      //         prop: true,
-      //         Prop: true,
-      //         props: true,
-      //         Props: true,
-      //         ret: true,
-      //         str: true,
-      //       },
-      //     },
-      //   ],
     },
   },
   {
