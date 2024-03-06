@@ -39,12 +39,10 @@ export function clamp(): unknown {
   return purry(_clamp, arguments);
 }
 
-function _clamp(value: number, limits: Limits): number {
-  if (limits.min !== undefined && limits.min > value) {
-    return limits.min;
-  }
-  if (limits.max !== undefined && limits.max < value) {
-    return limits.max;
-  }
-  return value;
+function _clamp(value: number, { min, max }: Limits): number {
+  return min !== undefined && value < min
+    ? min
+    : max !== undefined && value > max
+      ? max
+      : value;
 }

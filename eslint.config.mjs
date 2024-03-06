@@ -1,4 +1,5 @@
 import core from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
 // @ts-expect-error [ts7016] -- I don't know why typing is broken here...
 import { configs as unicornConfigs } from "eslint-plugin-unicorn";
 import { config, configs as typescriptConfigs } from "typescript-eslint";
@@ -12,6 +13,7 @@ export default config(
   ...typescriptConfigs.stylisticTypeChecked,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- I don't know why typing is broken for unicorn...
   unicornConfigs["flat/recommended"],
+  prettierConfig,
   {
     languageOptions: {
       parserOptions: {
@@ -213,13 +215,6 @@ export default config(
           allowNumber: false,
           allowNullableObject: false,
         },
-      ],
-      // @see https://github.com/prettier/eslint-config-prettier#forbid-unnecessary-backticks
-      quotes: "off",
-      "@typescript-eslint/quotes": [
-        "warn",
-        "double",
-        { avoidEscape: true, allowTemplateLiterals: false },
       ],
 
       // Security & Correctness
