@@ -191,8 +191,7 @@ module.exports = tseslint.config(
       "jsdoc/no-blank-blocks": "error",
       "jsdoc/require-asterisk-prefix": "error",
 
-      // Style
-      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      // Completeness
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-jsdoc": [
         "off",
@@ -207,23 +206,26 @@ module.exports = tseslint.config(
         },
       ],
       "jsdoc/require-description": ["error", { exemptedBy: ["deprecated"] }],
-      "jsdoc/require-description-complete-sentence": [
-        "warn",
-        { abbreviations: ["etc.", "e.g.", "i.e."] },
-      ],
       "jsdoc/require-example": [
         "warn",
         { enableFixer: false, exemptedBy: ["deprecated", "exampleRaw"] },
+      ],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-param": "off",
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-returns": "off",
+
+      // Style
+      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      "jsdoc/require-description-complete-sentence": [
+        "warn",
+        { abbreviations: ["etc.", "e.g.", "i.e."] },
       ],
       "jsdoc/require-hyphen-before-param-description": [
         "error",
         "always",
         { tags: { "*": "never" } },
       ],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-param": "off",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-returns": "off",
       "jsdoc/sort-tags": [
         "error",
         {
