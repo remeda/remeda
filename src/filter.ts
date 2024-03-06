@@ -1,8 +1,8 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
-import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 import { _toLazyIndexed } from "./_toLazyIndexed";
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
@@ -49,7 +49,7 @@ export function filter<T>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function filter() {
+export function filter(): unknown {
   return purry(_filter(false), arguments, filter.lazy);
 }
 
@@ -64,38 +64,28 @@ const _filter =
 
 const _lazy =
   (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, boolean>) =>
-  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    if (valid) {
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
-    }
-    return {
-      done: false,
-      hasNext: false,
-    };
-  };
+  <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T> =>
+  (value, index, array) =>
+    (indexed ? fn(value, index, array) : fn(value))
+      ? { done: false, hasNext: true, next: value }
+      : { done: false, hasNext: false };
 
 export namespace filter {
   export function indexed<T, S extends T>(
     array: ReadonlyArray<T>,
-    fn: (input: T, index: number, array: Array<T>) => input is S,
+    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
   ): Array<S>;
   export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>,
   ): Array<T>;
   export function indexed<T, S extends T>(
-    fn: (input: T, index: number, array: Array<T>) => input is S,
+    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
   ): (array: ReadonlyArray<T>) => Array<S>;
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_filter(true), arguments, filter.lazyIndexed);
   }
 

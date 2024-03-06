@@ -101,7 +101,10 @@ export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
 }
 
-function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
+function sampleImplementation<T>(
+  data: ReadonlyArray<T>,
+  sampleSize: number,
+): Array<T> {
   if (sampleSize < 0) {
     throw new RangeError(`sampleSize must cannot be negative: ${sampleSize}`);
   }
@@ -112,7 +115,7 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
 
   if (sampleSize >= data.length) {
     // Trivial
-    return data;
+    return data.slice();
   }
 
   if (sampleSize === 0) {

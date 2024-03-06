@@ -47,19 +47,19 @@ export function findLast<T = never>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function findLast() {
+export function findLast(): unknown {
   return purry(_findLast(false), arguments);
 }
 
 const _findLast =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
       if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return array[i];
       }
     }
-    return undefined;
+    return;
   };
 
 export namespace findLast {
@@ -71,7 +71,7 @@ export namespace findLast {
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => T | undefined;
 
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_findLast(true), arguments);
   }
 }

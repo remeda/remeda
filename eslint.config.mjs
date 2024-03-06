@@ -1,17 +1,21 @@
-const js = require("@eslint/js");
-const jsdoc = require("eslint-plugin-jsdoc");
-const tseslint = require("typescript-eslint");
+import core from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
+// @ts-expect-error [ts7016] -- I don't know why typing is broken here...
+import { configs as unicornConfigs } from "eslint-plugin-unicorn";
+import { config, configs as typescriptConfigs } from "typescript-eslint";
+import jsdoc from "eslint-plugin-jsdoc";
 
-module.exports = tseslint.config(
+export default config(
   {
     ignores: ["dist", "docs", "examples"],
   },
-  js.configs.recommended,
-  // @ts-expect-error -- plugin types are broken
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- plugin doesn't support CommonJS-based flat configs.
+  core.configs.recommended,
   jsdoc.configs["flat/recommended-typescript"],
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  ...typescriptConfigs.strictTypeChecked,
+  ...typescriptConfigs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- I don't know why typing is broken for unicorn...
+  unicornConfigs["flat/recommended"],
+  prettierConfig,
   {
     languageOptions: {
       parserOptions: {
@@ -57,13 +61,17 @@ module.exports = tseslint.config(
       "no-duplicate-imports": "off",
       "@typescript-eslint/consistent-type-imports": ["warn"],
 
-      // -----------------------------------------------------------------------
-      // TODO: These rules are part of the typescript configs but require manual fixes which I want to do in a separate PR for easier reviewing and reverting. Turning them off for now so that our CI is green.
-      "@typescript-eslint/class-literal-property-style": "off",
-      "@typescript-eslint/no-empty-function": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      // TODO: Once we bump our typescript `target` we should enable these rules.
+      "unicorn/no-for-loop": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-number-properties": "off",
+      "unicorn/prefer-spread": "off",
 
-      // -----------------------------------------------------------------------
+      // TODO: These rules allow us to really standardize our codebase, but they
+      // also do sweeping changes to the whole codebase which is very noisy. We
+      // should do it in one sweep sometime in the future.
+      "@typescript-eslint/naming-convention": "off",
+      "unicorn/prevent-abbreviations": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
@@ -82,10 +90,8 @@ module.exports = tseslint.config(
       "no-await-in-loop": "error",
       "no-constant-binary-expression": "error",
       "no-new-native-nonconstructor": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-promise-executor-return": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-self-compare": "error",
+      "no-promise-executor-return": "error",
+      "no-self-compare": "error",
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
@@ -95,22 +101,17 @@ module.exports = tseslint.config(
       "arrow-body-style": "warn",
       curly: "error",
       "default-case-last": "warn",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "dot-notation": "warn",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // eqeqeq: ["error", "always", { null: "always" }],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "func-style": ["error", "declaration", { allowArrowFunctions: true }],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "guard-for-in": "error",
+      "dot-notation": "warn",
+      eqeqeq: ["error", "always", { null: "always" }],
+      "func-style": ["error", "declaration", { allowArrowFunctions: true }],
+      "guard-for-in": "error",
       "logical-assignment-operators": "warn",
       "operator-assignment": "warn",
       "object-shorthand": "warn",
       "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
       "prefer-const": "error",
       "prefer-exponentiation-operator": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "prefer-named-capture-group": "warn",
+      "prefer-named-capture-group": "warn",
       "prefer-numeric-literals": "error",
       "prefer-object-spread": "error",
       "prefer-promise-reject-errors": ["error", { allowEmptyReject: false }],
@@ -118,14 +119,12 @@ module.exports = tseslint.config(
       "prefer-spread": "error",
       "prefer-template": "error",
       "require-await": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "require-unicode-regexp": "warn",
+      "require-unicode-regexp": "warn",
       "symbol-description": "warn",
 
       "no-alert": "error",
       "no-array-constructor": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-bitwise": "warn",
+      "no-bitwise": "warn",
       "no-caller": "error",
       "no-console": "error",
       "no-else-return": ["warn", { allowElseIf: false }],
@@ -144,14 +143,11 @@ module.exports = tseslint.config(
       "no-negated-condition": "warn",
       "no-new": "error",
       "no-new-func": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-new-wrappers": "error",
+      "no-new-wrappers": "error",
       "no-object-constructor": "error",
       "no-octal-escape": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-param-reassign": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-plusplus": ["warn", { allowForLoopAfterthoughts: true }],
+      "no-param-reassign": "error",
+      "no-plusplus": ["warn", { allowForLoopAfterthoughts: true }],
       "no-proto": "error",
       "no-return-assign": ["warn", "always"],
       "no-script-url": "error",
@@ -280,21 +276,19 @@ module.exports = tseslint.config(
       // These aren't enabled by default
 
       // Style & Conventions
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "prefer-destructuring": "off",
-      // "@typescript-eslint/prefer-destructuring": [
-      //   "warn",
-      //   { array: true, object: true },
-      //   { enforceForRenamedProperties: true },
-      // ],
+      "prefer-destructuring": "off",
+      "@typescript-eslint/prefer-destructuring": [
+        "warn",
+        {
+          VariableDeclarator: { array: true, object: true },
+          AssignmentExpression: { array: false, object: false },
+        },
+        { enforceForRenamedProperties: true },
+      ],
       "@typescript-eslint/sort-type-constituents": "warn",
       "@typescript-eslint/promise-function-async": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-unused-expressions": "off",
-      // "@typescript-eslint/no-unused-expressions": [
-      //   "error",
-      //   { enforceForJSX: true },
-      // ],
+      "no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-expressions": "error",
       "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": [
         "error",
@@ -302,31 +296,48 @@ module.exports = tseslint.config(
         // other than that we don't need this rule...
         { functions: false, variables: false },
       ],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "@typescript-eslint/strict-boolean-expressions": [
-      //   "warn",
-      //   {
-      //     // As strict as possible...
-      //     allowString: false,
-      //     allowNumber: false,
-      //     allowNullableObject: false,
-      //   },
-      // ],
-      // @see https://github.com/prettier/eslint-config-prettier#forbid-unnecessary-backticks
-      quotes: "off",
-      "@typescript-eslint/quotes": [
+      "@typescript-eslint/strict-boolean-expressions": [
         "warn",
-        "double",
-        { avoidEscape: true, allowTemplateLiterals: false },
+        {
+          // As strict as possible...
+          allowString: false,
+          allowNumber: false,
+          allowNullableObject: false,
+        },
       ],
 
       // Security & Correctness
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "@typescript-eslint/prefer-readonly-parameter-types": "error",
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        { allowExpressions: true },
+      ],
+      "@typescript-eslint/explicit-module-boundary-types": [
+        "warn",
+        { allowTypedFunctionExpressions: false },
+      ],
+      "@typescript-eslint/prefer-readonly-parameter-types": [
+        "error",
+        {
+          ignoreInferredTypes: true,
+          allow: [
+            {
+              from: "lib",
+              name: [
+                // Built-ins that aren't read-only but aren't detected as such by this rule...
+                "Error",
+                "Function",
+                "IArguments",
+                "Iterable",
+                "Promise",
+                "RegExp",
+              ],
+            },
+          ],
+        },
+      ],
       "@typescript-eslint/no-useless-empty-export": "error",
       "@typescript-eslint/prefer-regexp-exec": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "@typescript-eslint/require-array-sort-compare": "error",
+      "@typescript-eslint/require-array-sort-compare": "error",
       "@typescript-eslint/switch-exhaustiveness-check": [
         "error",
         { requireDefaultForNonUnion: true },
@@ -339,29 +350,55 @@ module.exports = tseslint.config(
       "no-loop-func": "off",
       "@typescript-eslint/no-loop-func": "error",
       "@typescript-eslint/no-require-imports": "error",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      // "no-shadow": "off",
-      // "@typescript-eslint/no-shadow": [
-      //   "error",
-      //   { ignoreTypeValueShadow: false },
-      // ],
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": "error",
       "@typescript-eslint/no-unsafe-unary-minus": "error",
+
+      // === Unicorn ==========================================================
+      // (We are assuming that the config is extended by unicorns's:
+      // flat/recommended extension)
+
+      "unicorn/consistent-destructuring": "warn",
+      "unicorn/custom-error-definition": "warn",
+      "unicorn/filename-case": ["error", { case: "camelCase" }],
+      "unicorn/no-keyword-prefix": "warn",
+      "unicorn/no-unused-properties": "warn",
+      "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
+      "unicorn/switch-case-braces": ["error", "avoid"],
     },
   },
   {
-    files: ["*.config.js"],
+    files: ["*.config.mjs"],
     rules: {
-      "no-undef": "off",
-      "@typescript-eslint/no-require-imports": "off",
-      "@typescript-eslint/no-unsafe-call": "off",
-      "@typescript-eslint/no-var-requires": "off",
+      "unicorn/filename-case": "off",
     },
   },
   {
-    files: ["src/type-fest/**.ts"],
+    files: ["src/type-fest/**/*.ts"],
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+      "unicorn/filename-case": "off",
+    },
+  },
+  {
+    files: ["src/**/*.test.ts"],
+    rules: {
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": [
+        "warn",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
+  },
+  {
+    files: ["test/**/*.ts"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "unicorn/filename-case": "off",
+      "unicorn/no-null": "off",
     },
   },
   {

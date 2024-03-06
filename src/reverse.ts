@@ -39,7 +39,7 @@ export function reverse<T extends ReadonlyArray<unknown>>(): (
   array: T,
 ) => Reverse<T>;
 
-export function reverse() {
+export function reverse(): unknown {
   return purry(_reverse, arguments);
 }
 

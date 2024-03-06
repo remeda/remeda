@@ -38,14 +38,14 @@ export function mergeDeep<
   Source extends Record<string, unknown>,
 >(source: Source): (target: Destination) => MergeDeep<Destination, Source>;
 
-export function mergeDeep() {
+export function mergeDeep(): unknown {
   return purry(mergeDeepImplementation, arguments);
 }
 
 function mergeDeepImplementation<
   Destination extends Record<string, unknown>,
   Source extends Record<string, unknown>,
->(destination: Destination, source: Source) {
+>(destination: Destination, source: Source): MergeDeep<Destination, Source> {
   // At this point the output is already merged, simply not deeply merged.
   const output = { ...destination, ...source } as Record<
     keyof Destination | keyof Source,
@@ -60,7 +60,7 @@ function mergeDeepImplementation<
       continue;
     }
 
-    const destinationValue = destination[key];
+    const { [key]: destinationValue } = destination;
     if (!isRecord(destinationValue)) {
       // The value in destination is not a mergable object so the value from
       // source (which was already copied in the shallow merge) would be used
@@ -68,7 +68,7 @@ function mergeDeepImplementation<
       continue;
     }
 
-    const sourceValue = source[key];
+    const { [key]: sourceValue } = source;
     if (!isRecord(sourceValue)) {
       // The value in source is not a mergable object either, so it will
       // override the object in destination.
@@ -80,6 +80,7 @@ function mergeDeepImplementation<
     output[key] = mergeDeepImplementation(destinationValue, sourceValue);
   }
 
+  // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers the right type.
   return output;
 }
 

@@ -32,7 +32,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
-export function invert() {
+export function invert(): unknown {
   return purry(_invert, arguments);
 }
 
@@ -42,7 +42,10 @@ function _invert(
   const result: Record<PropertyKey, PropertyKey> = {};
 
   for (const key in object) {
-    result[object[key]!] = key;
+    // @see https://eslint.org/docs/latest/rules/guard-for-in
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      result[object[key]!] = key;
+    }
   }
 
   return result;

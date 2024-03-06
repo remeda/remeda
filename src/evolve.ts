@@ -130,7 +130,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,
 ): (object: T) => Evolved<T, E>;
 
-export function evolve() {
+export function evolve(): unknown {
   return purry(_evolve, arguments);
 }
 
@@ -138,16 +138,17 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
   if (typeof data !== "object" || data === null) {
     return data;
   }
-  return toPairs.strict(evolver).reduce<Record<string, unknown>>(
-    (result, [key, value]) => {
-      if (key in result) {
-        result[key] =
-          typeof value === "function"
-            ? value(result[key])
-            : _evolve(result[key], value);
-      }
-      return result;
-    },
-    { ...data },
-  );
+
+  const out: Record<string, unknown> = { ...data };
+
+  for (const [key, value] of toPairs.strict(evolver)) {
+    if (key in out) {
+      out[key] =
+        typeof value === "function"
+          ? value(out[key])
+          : _evolve(out[key], value);
+    }
+  }
+
+  return out;
 }

@@ -35,7 +35,7 @@ export function addProp<
   V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
-export function addProp() {
+export function addProp(): unknown {
   return purry(_addProp, arguments);
 }
 

@@ -1,6 +1,6 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -54,36 +54,27 @@ export function differenceWith<TFirst, TSecond>(
   isEquals: IsEquals<TFirst, TSecond>,
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function differenceWith() {
+export function differenceWith(): unknown {
   return purry(_differenceWith, arguments, differenceWith.lazy);
 }
 
 function _differenceWith<TFirst, TSecond>(
-  array: Array<TFirst>,
-  other: Array<TSecond>,
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
-) {
+): Array<TFirst> {
   const lazy = differenceWith.lazy(other, isEquals);
   return _reduceLazy(array, lazy);
 }
 
 export namespace differenceWith {
-  export function lazy<TFirst, TSecond>(
-    other: Array<TSecond>,
-    isEquals: IsEquals<TFirst, TSecond>,
-  ) {
-    return (value: TFirst): LazyResult<TFirst> => {
-      if (other.every((otherValue) => !isEquals(value, otherValue))) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
-  }
+  export const lazy =
+    <TFirst, TSecond>(
+      other: ReadonlyArray<TSecond>,
+      isEquals: IsEquals<TFirst, TSecond>,
+    ): LazyEvaluator<TFirst> =>
+    (value) =>
+      other.every((otherValue) => !isEquals(value, otherValue))
+        ? { done: false, hasNext: true, next: value }
+        : { done: false, hasNext: false };
 }

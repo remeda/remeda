@@ -3,11 +3,16 @@ import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 
 const _countBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) =>
-    array.reduce((ret, item, index) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
+    let out = 0;
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our TypeScript target above ES5 we can use Array.prototype.entries to iterate over the indices and values at the same time.
+      const item = array[index]!;
       const value = indexed ? fn(item, index, array) : fn(item);
-      return ret + (value ? 1 : 0);
-    }, 0);
+      out += value ? 1 : 0;
+    }
+    return out;
+  };
 
 /**
  * Counts how many values of the collection pass the specified predicate.
@@ -47,7 +52,7 @@ export function countBy<T>(
  * @category Array
  * @deprecated Equivalent to `R.filter(fn).length` and so will be removed in v2.
  */
-export function countBy() {
+export function countBy(): unknown {
   return purry(_countBy(false), arguments);
 }
 
@@ -65,7 +70,7 @@ export namespace countBy {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_countBy(true), arguments);
   }
 }

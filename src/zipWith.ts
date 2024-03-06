@@ -74,7 +74,7 @@ function _zipWith<F, S, R>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>,
   fn: ZippingFunction<F, S, R>,
-) {
+): Array<R> {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];

@@ -16,7 +16,7 @@
  *    R.type(undefined); //=> "Undefined"
  * @category Type
  */
-export function type(val: unknown) {
+export function type(val: unknown): string {
   return val === null
     ? "Null"
     : val === undefined

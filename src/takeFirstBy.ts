@@ -58,7 +58,7 @@ function takeFirstByImplementation<T>(
   }
 
   if (n >= data.length) {
-    return [...data];
+    return data.slice();
   }
 
   const heap = data.slice(0, n);

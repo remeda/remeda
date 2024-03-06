@@ -32,12 +32,13 @@ export function randomString(length: number): string;
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function randomString(): (length: number) => string;
 
-export function randomString() {
+export function randomString(): unknown {
   return purry(randomStringImplementation, arguments);
 }
 
-function randomStringImplementation(length: number) {
+function randomStringImplementation(length: number): string {
   return times(length, randomChar).join("");
 }
 
-const randomChar = () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
+const randomChar = (): string =>
+  ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;

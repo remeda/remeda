@@ -51,7 +51,7 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
   fn: UnindexedIteratee<T>,
 ): (object: T) => T;
 
-export function forEachObj() {
+export function forEachObj(): unknown {
   return purry(_forEachObj(false), arguments);
 }
 
@@ -67,7 +67,7 @@ const _forEachObj =
   ) => {
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
-        const val = data[key];
+        const { [key]: val } = data;
         if (indexed) {
           fn(val, key, data);
         } else {
@@ -86,7 +86,7 @@ export namespace forEachObj {
   export function indexed<T extends Record<PropertyKey, unknown>>(
     fn: IndexedIteratee<T, keyof T>,
   ): (object: T) => T;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_forEachObj(true), arguments);
   }
 }

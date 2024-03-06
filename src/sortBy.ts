@@ -105,7 +105,7 @@ const _sortBy = <T>(
   compareFn: CompareFunction<T>,
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
-  [...data].sort(compareFn);
+  data.slice().sort(compareFn);
 
 type Strict = {
   <T extends IterableContainer>(

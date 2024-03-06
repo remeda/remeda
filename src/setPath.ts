@@ -37,7 +37,7 @@ export function setPath<TPath extends Array<PropertyKey>, Value>(
   value: Value,
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath() {
+export function setPath(): unknown {
   return purry(_setPath, arguments);
 }
 

@@ -1,6 +1,6 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
@@ -34,30 +34,23 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
  */
 export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniq() {
+export function uniq(): unknown {
   return purry(_uniq, arguments, uniq.lazy);
 }
 
-function _uniq<T>(array: Array<T>) {
+function _uniq<T>(array: ReadonlyArray<T>): Array<T> {
   return _reduceLazy(array, uniq.lazy());
 }
 
 export namespace uniq {
-  export function lazy<T>() {
+  export function lazy<T>(): LazyEvaluator<T> {
     const set = new Set<T>();
-    return (value: T): LazyResult<T> => {
+    return (value) => {
       if (set.has(value)) {
-        return {
-          done: false,
-          hasNext: false,
-        };
+        return { done: false, hasNext: false };
       }
       set.add(value);
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
+      return { done: false, hasNext: true, next: value };
     };
   }
 }

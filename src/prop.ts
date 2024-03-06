@@ -9,5 +9,5 @@
  */
 export const prop =
   <T, K extends keyof T = keyof T>(propName: K) =>
-  ({ [propName]: value }: T) =>
+  ({ [propName]: value }: T): T[K] =>
     value;

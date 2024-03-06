@@ -18,8 +18,9 @@ function _stringToPath(path: string): Array<string> {
   }
 
   const match =
-    /^\[(.+?)\](.*)$/.exec(path) ?? /^\.?([^.[\]]+)(.*)$/.exec(path);
-  if (match) {
+    // eslint-disable-next-line prefer-named-capture-group
+    /^\[(.+?)\](.*)$/u.exec(path) ?? /^\.?([^.[\]]+)(.*)$/u.exec(path);
+  if (match !== null) {
     const [, key, rest] = match;
     // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?
     return [key, ..._stringToPath(rest)];

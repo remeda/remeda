@@ -30,11 +30,14 @@ export function takeWhile<T>(
   fn: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function takeWhile() {
+export function takeWhile(): unknown {
   return purry(_takeWhile, arguments);
 }
 
-function _takeWhile<T>(array: Array<T>, fn: (item: T) => boolean) {
+function _takeWhile<T>(
+  array: ReadonlyArray<T>,
+  fn: (item: T) => boolean,
+): Array<T> {
   const ret: Array<T> = [];
   for (const item of array) {
     if (!fn(item)) {

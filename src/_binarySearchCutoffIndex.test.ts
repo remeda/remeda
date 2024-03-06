@@ -167,10 +167,10 @@ function indicesSeen(
   items: ReadonlyArray<unknown>,
   predicate: (item: unknown, index: number) => boolean,
 ): ReadonlyArray<number> {
-  const indicesSeen: Array<number> = [];
+  const indices: Array<number> = [];
   _binarySearchCutoffIndex(items, (pivot, index) => {
-    indicesSeen.push(index);
+    indices.push(index);
     return predicate(pivot, index);
   });
-  return indicesSeen;
+  return indices;
 }

@@ -1,3 +1,4 @@
+import type { IterableContainer } from "./_types";
 import { isArray } from "./isArray";
 import { isObject } from "./isObject";
 import { isString } from "./isString";
@@ -31,7 +32,7 @@ export function isEmpty<T extends string | undefined>(
 ): data is
   | ("" extends T ? "" : never)
   | (undefined extends T ? undefined : never);
-export function isEmpty(data: ReadonlyArray<unknown> | []): data is [];
+export function isEmpty(data: IterableContainer): data is [];
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
   data: T,
 ): data is Record<keyof T, never>;

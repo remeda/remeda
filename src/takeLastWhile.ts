@@ -32,7 +32,7 @@ export function takeLastWhile<T>(
   predicate: (item: T) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function takeLastWhile() {
+export function takeLastWhile(): unknown {
   return purry(_takeLastWhile, arguments);
 }
 
