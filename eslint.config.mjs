@@ -10,6 +10,7 @@ export default config(
     ignores: ["dist", "docs", "examples"],
   },
   core.configs.recommended,
+  // @ts-expect-error [ts7016] -- I don't know why typing is broken here...
   jsdoc.configs["flat/recommended-typescript"],
   ...typescriptConfigs.strictTypeChecked,
   ...typescriptConfigs.stylisticTypeChecked,
