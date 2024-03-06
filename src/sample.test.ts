@@ -45,13 +45,15 @@ describe("at runtime", () => {
     it.each(allIndices(array))("doesn't reorder items", (sampleSize) => {
       const result = sample(array, sampleSize);
 
-      // Scan the result array and make sure each item is after the previous one
-      // in the input array.
-      result.reduce((lastInputIndex, item) => {
+      let lastInputIndex = -1; // outside of the array
+      for (const item of result) {
+        // Scan the result array and make sure each item is after the previous one
+        // in the input array.
+
         const currentInputIndex = array.indexOf(item);
         expect(currentInputIndex).toBeGreaterThan(lastInputIndex);
-        return currentInputIndex;
-      }, -1 /* outside of the array */);
+        lastInputIndex = currentInputIndex;
+      }
     });
   });
 
@@ -918,7 +920,7 @@ describe("typing", () => {
 const generateRandomArray = (): NonEmptyArray<number> =>
   // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!
-  Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
+  Array.from(new Set(Array.from({ length: 100 }).map(() => Math.random())));
 
 const allIndices = (array: ReadonlyArray<unknown>): Array<number> =>
   array.map((_, index) => index);

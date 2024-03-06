@@ -252,9 +252,9 @@ export function pipe(
     }
 
     const lazySequence: Array<PreparedLazyOperation> = [];
-    for (let j = operationIndex; j < operations.length; j++) {
+    for (let index = operationIndex; index < operations.length; index++) {
       // eslint-disable-next-line @typescript-eslint/prefer-destructuring
-      const lazyOp = lazyOperations[j];
+      const lazyOp = lazyOperations[index];
       if (lazyOp === undefined) {
         break;
       }
@@ -287,11 +287,7 @@ export function pipe(
     }
 
     const { isSingle } = lazySequence[lazySequence.length - 1]!;
-    if (isSingle) {
-      output = accumulator[0];
-    } else {
-      output = accumulator;
-    }
+    output = isSingle ? accumulator[0] : accumulator;
     operationIndex += lazySequence.length;
   }
   return output;
@@ -323,8 +319,13 @@ function _processItem(
 
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
-  for (let i = 0; i < lazySequence.length; i++) {
-    const lazyFn = lazySequence[i]!;
+  for (
+    let operationsIndex = 0;
+    operationsIndex < lazySequence.length;
+    operationsIndex++
+  ) {
+    // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+    const lazyFn = lazySequence[operationsIndex]!;
     const { isIndexed, index, items } = lazyFn;
     items.push(currentItem);
     lazyResult = isIndexed
@@ -337,7 +338,7 @@ function _processItem(
           const subResult = _processItem(
             subItem,
             accumulator,
-            lazySequence.slice(i + 1),
+            lazySequence.slice(operationsIndex + 1),
           );
           if (subResult) {
             return true;

@@ -1,3 +1,4 @@
+import { isNumber } from "./isNumber";
 import { partition } from "./partition";
 import { pipe } from "./pipe";
 
@@ -21,8 +22,6 @@ describe("data first", () => {
     expect(partition(array, (x) => x.a === 1)).toEqual(expected);
   });
   test("partition with type guard", () => {
-    const isNumber = (value: unknown): value is number =>
-      typeof value === "number";
     const actual = partition([1, "a", 2, "b"], isNumber);
     expect(actual).toEqual([
       [1, 2],

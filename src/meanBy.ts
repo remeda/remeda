@@ -9,9 +9,12 @@ const _meanBy =
     }
 
     let sum = 0;
-    array.forEach((item, i) => {
-      sum += indexed ? fn(item, i, array) : fn(item);
-    });
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
+      sum += indexed ? fn(item, index, array) : fn(item);
+    }
 
     return sum / array.length;
   };

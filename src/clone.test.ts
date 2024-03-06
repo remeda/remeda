@@ -6,15 +6,17 @@ const eq = (a: any, b: any): void => {
   expect(a).toEqual(b);
 };
 
+const fn = (x: number): number => x + x;
+
 describe("deep clone integers, strings and booleans", () => {
   it("clones integers", () => {
     eq(clone(-4), -4);
-    eq(clone(9007199254740991), 9007199254740991);
+    eq(clone(9_007_199_254_740_991), 9_007_199_254_740_991);
   });
 
   it("clones floats", () => {
     eq(clone(-4.5), -4.5);
-    eq(clone(0.0), 0.0);
+    eq(clone(0), 0);
   });
 
   it("clones strings", () => {
@@ -86,7 +88,6 @@ describe("deep clone arrays", () => {
 
 describe("deep clone functions", () => {
   it("keep reference to function", () => {
-    const fn = (x: number) => x + x;
     const list = [{ a: fn }] as const;
 
     const cloned = clone(list);
@@ -108,19 +109,18 @@ describe("built-in types", () => {
     eq(cloned.getDay(), 5); // friday
   });
 
-  it("clones RegExp object", () => {
-    [/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu].forEach(
-      (pattern) => {
-        const cloned = clone(pattern);
-        assert.notStrictEqual(cloned, pattern);
-        eq(cloned.constructor, RegExp);
-        eq(cloned.source, pattern.source);
-        eq(cloned.global, pattern.global);
-        eq(cloned.ignoreCase, pattern.ignoreCase);
-        eq(cloned.multiline, pattern.multiline);
-      },
-    );
-  });
+  it.each([/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu])(
+    "clones RegExp object",
+    (pattern) => {
+      const cloned = clone(pattern);
+      assert.notStrictEqual(cloned, pattern);
+      eq(cloned.constructor, RegExp);
+      eq(cloned.source, pattern.source);
+      eq(cloned.global, pattern.global);
+      eq(cloned.ignoreCase, pattern.ignoreCase);
+      eq(cloned.multiline, pattern.multiline);
+    },
+  );
 });
 
 describe("deep clone deep nested mixed objects", () => {

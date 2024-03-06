@@ -1,13 +1,19 @@
-const js = require("@eslint/js");
-const tseslint = require("typescript-eslint");
+import core from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
+// @ts-expect-error [ts7016] -- I don't know why typing is broken here...
+import { configs as unicornConfigs } from "eslint-plugin-unicorn";
+import { config, configs as typescriptConfigs } from "typescript-eslint";
 
-module.exports = tseslint.config(
+export default config(
   {
     ignores: ["dist", "docs", "examples"],
   },
-  js.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  core.configs.recommended,
+  ...typescriptConfigs.strictTypeChecked,
+  ...typescriptConfigs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- I don't know why typing is broken for unicorn...
+  unicornConfigs["flat/recommended"],
+  prettierConfig,
   {
     languageOptions: {
       parserOptions: {
@@ -52,6 +58,18 @@ module.exports = tseslint.config(
       // TODO: Once we bump our minimum Typescript version above 4.5 we need to change the linting to prefer the inline style which allows us to combine type imports and regular ones:
       "no-duplicate-imports": "off",
       "@typescript-eslint/consistent-type-imports": ["warn"],
+
+      // TODO: Once we bump our typescript `target` we should enable these rules.
+      "unicorn/no-for-loop": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-number-properties": "off",
+      "unicorn/prefer-spread": "off",
+
+      // TODO: These rules allow us to really standardize our codebase, but they
+      // also do sweeping changes to the whole codebase which is very noisy. We
+      // should do it in one sweep sometime in the future.
+      "@typescript-eslint/naming-convention": "off",
+      "unicorn/prevent-abbreviations": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
@@ -198,13 +216,6 @@ module.exports = tseslint.config(
           allowNullableObject: false,
         },
       ],
-      // @see https://github.com/prettier/eslint-config-prettier#forbid-unnecessary-backticks
-      quotes: "off",
-      "@typescript-eslint/quotes": [
-        "warn",
-        "double",
-        { avoidEscape: true, allowTemplateLiterals: false },
-      ],
 
       // Security & Correctness
       "@typescript-eslint/explicit-function-return-type": [
@@ -253,15 +264,24 @@ module.exports = tseslint.config(
       "no-shadow": "off",
       "@typescript-eslint/no-shadow": "error",
       "@typescript-eslint/no-unsafe-unary-minus": "error",
+
+      // === Unicorn ==========================================================
+      // (We are assuming that the config is extended by unicorns's:
+      // flat/recommended extension)
+
+      "unicorn/consistent-destructuring": "warn",
+      "unicorn/custom-error-definition": "warn",
+      "unicorn/filename-case": ["error", { case: "camelCase" }],
+      "unicorn/no-keyword-prefix": "warn",
+      "unicorn/no-unused-properties": "warn",
+      "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
+      "unicorn/switch-case-braces": ["error", "avoid"],
     },
   },
   {
-    files: ["*.config.js"],
+    files: ["*.config.mjs"],
     rules: {
-      "no-undef": "off",
-      "@typescript-eslint/no-require-imports": "off",
-      "@typescript-eslint/no-unsafe-call": "off",
-      "@typescript-eslint/no-var-requires": "off",
+      "unicorn/filename-case": "off",
     },
   },
   {
@@ -269,13 +289,27 @@ module.exports = tseslint.config(
     rules: {
       // Type-fest uses a lot of "banned" types...
       "@typescript-eslint/ban-types": "off",
+      "unicorn/filename-case": "off",
     },
   },
   {
-    files: ["src/**/*.test.ts", "test/**/*.ts"],
+    files: ["src/**/*.test.ts"],
+    rules: {
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": [
+        "warn",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
+  },
+  {
+    files: ["test/**/*.ts"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "unicorn/filename-case": "off",
+      "unicorn/no-null": "off",
     },
   },
 );

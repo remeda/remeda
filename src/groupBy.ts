@@ -49,7 +49,10 @@ const _groupBy =
     fn: PredIndexedOptional<T, Key | undefined>,
   ) => {
     const ret: Record<string, Array<T>> = {};
-    array.forEach((item, index) => {
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
       const key = indexed ? fn(item, index, array) : fn(item);
       if (key !== undefined) {
         const actualKey = String(key);
@@ -61,7 +64,8 @@ const _groupBy =
         }
         items.push(item);
       }
-    });
+    }
+
     return ret;
   };
 

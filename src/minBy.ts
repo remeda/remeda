@@ -4,15 +4,18 @@ import type { PredIndexed, PredIndexedOptional } from "./_types";
 const _minBy =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
-    let ret: T | undefined = undefined;
-    let retMin: number | undefined = undefined;
-    array.forEach((item, i) => {
-      const min = indexed ? fn(item, i, array) : fn(item);
+    let ret: T | undefined;
+    let retMin: number | undefined;
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
+      const min = indexed ? fn(item, index, array) : fn(item);
       if (retMin === undefined || min < retMin) {
         ret = item;
         retMin = min;
       }
-    });
+    }
 
     return ret;
   };

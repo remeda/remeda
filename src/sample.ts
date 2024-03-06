@@ -117,7 +117,7 @@ function sampleImplementation<T>(
 
   if (sampleSize >= data.length) {
     // Trivial
-    return [...data];
+    return data.slice();
   }
 
   if (sampleSize === 0) {

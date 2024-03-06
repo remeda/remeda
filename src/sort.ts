@@ -55,7 +55,7 @@ function _sort<T>(
   items: ReadonlyArray<T>,
   cmp: (a: T, b: T) => number,
 ): Array<T> {
-  const ret = [...items];
+  const ret = items.slice();
   ret.sort(cmp);
   return ret;
 }
