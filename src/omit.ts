@@ -33,7 +33,7 @@ export function omit<T extends object, K extends keyof T>(
   propNames: ReadonlyArray<K>,
 ): Omit<T, K>;
 
-export function omit() {
+export function omit(): unknown {
   return purry(_omit, arguments);
 }
 

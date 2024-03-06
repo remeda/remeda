@@ -30,7 +30,7 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
-export function times() {
+export function times(): unknown {
   return purry(_times, arguments);
 }
 

@@ -234,4 +234,4 @@ export namespace conditional {
 }
 
 // Lodash and Ramda return `undefined` as the default case.
-const trivialDefaultCase = () => undefined;
+const trivialDefaultCase = (): undefined => undefined;

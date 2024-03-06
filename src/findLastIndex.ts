@@ -46,13 +46,13 @@ export function findLastIndex<T>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => number;
 
-export function findLastIndex() {
+export function findLastIndex(): unknown {
   return purry(_findLastIndex(false), arguments);
 }
 
 const _findLastIndex =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
       if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return i;
@@ -71,7 +71,7 @@ export namespace findLastIndex {
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_findLastIndex(true), arguments);
   }
 }

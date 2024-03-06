@@ -421,7 +421,7 @@ describe("typing", () => {
   test("argument typing to be good (with rest param)", async () => {
     const debouncer = debounce(
       (a: string, ...flags: ReadonlyArray<boolean>) =>
-        `${a}${flags.map((flag) => (flag ? "y" : "n")).join()}`,
+        `${a}${flags.map((flag) => (flag ? "y" : "n")).join(",")}`,
       { timing: "leading" },
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
@@ -457,5 +457,7 @@ describe("typing", () => {
 });
 
 async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

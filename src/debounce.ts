@@ -142,7 +142,7 @@ export function debounce<F extends (...args: any) => any>(
   // will return this cached value.
   let result: ReturnType<F> | undefined;
 
-  const handleInvoke = () => {
+  const handleInvoke = (): void => {
     if (latestCallArgs === undefined) {
       // This should never happen! It means we forgot to clear a timeout!
       return;
@@ -165,7 +165,7 @@ export function debounce<F extends (...args: any) => any>(
     result = func(...args);
   };
 
-  const handleCoolDownEnd = () => {
+  const handleCoolDownEnd = (): void => {
     if (coolDownTimeoutId === undefined) {
       // It's rare to get here, it should only happen when `flush` is called
       // when the cool-down window isn't active.
@@ -185,7 +185,7 @@ export function debounce<F extends (...args: any) => any>(
     }
   };
 
-  const handleDebouncedCall = (args: Parameters<F>) => {
+  const handleDebouncedCall = (args: Parameters<F>): void => {
     // We save the latest call args so that (if and) when we invoke the function
     // in the future, we have args to invoke it with.
     latestCallArgs = args;

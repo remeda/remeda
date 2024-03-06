@@ -15,7 +15,7 @@ describe("data first", () => {
     expect(drop(array, 0)).toEqual(array);
     expect(drop(array, -0)).toEqual(array);
     expect(drop(array, -1)).toEqual(array);
-    expect(drop(array, NaN)).toEqual(array);
+    expect(drop(array, Number.NaN)).toEqual(array);
   });
 
   test("should return a new array even if there was no drop", () => {
