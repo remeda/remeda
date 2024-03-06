@@ -1,11 +1,11 @@
-import { IterableContainer, NonEmptyArray } from './_types';
-import { purry } from './purry';
+import type { IterableContainer, NonEmptyArray } from "./_types";
+import { purry } from "./purry";
 
 type Chunked<T extends IterableContainer> = T[number] extends never
   ? []
   : T extends
-        | readonly [unknown, ...Array<unknown>]
         | readonly [...Array<unknown>, unknown]
+        | readonly [unknown, ...Array<unknown>]
     ? NonEmptyArray<NonEmptyArray<T[number]>>
     : Array<NonEmptyArray<T[number]>>;
 
@@ -23,7 +23,7 @@ type Chunked<T extends IterableContainer> = T[number] extends never
  */
 export function chunk<T extends IterableContainer>(
   array: T,
-  size: number
+  size: number,
 ): Chunked<T>;
 
 /**
@@ -38,18 +38,18 @@ export function chunk<T extends IterableContainer>(
  * @category Array
  */
 export function chunk<T extends IterableContainer>(
-  size: number
+  size: number,
 ): (array: T) => Chunked<T>;
 
-export function chunk() {
+export function chunk(): unknown {
   return purry(_chunk, arguments);
 }
 
-function _chunk<T>(array: ReadonlyArray<T>, size: number) {
-  const ret: Array<ReadonlyArray<T>> = Array.from({
+function _chunk<T>(array: ReadonlyArray<T>, size: number): Array<Array<T>> {
+  const ret: Array<Array<T>> = Array.from({
     length: Math.ceil(array.length / size),
   });
-  for (let index = 0; index < ret.length; index += 1) {
+  for (let index = 0; index < ret.length; index++) {
     ret[index] = array.slice(index * size, (index + 1) * size);
   }
   return ret;

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Splits a given array at a given index.
@@ -14,7 +14,7 @@ import { purry } from './purry';
  */
 export function splitAt<T>(
   array: ReadonlyArray<T>,
-  index: number
+  index: number,
 ): [Array<T>, Array<T>];
 
 /**
@@ -30,15 +30,18 @@ export function splitAt<T>(
  * @category Array
  */
 export function splitAt<T>(
-  index: number
+  index: number,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt() {
+export function splitAt(): unknown {
   return purry(_splitAt, arguments);
 }
 
-function _splitAt<T>(array: Array<T>, index: number) {
-  const copy = [...array];
+function _splitAt<T>(
+  array: ReadonlyArray<T>,
+  index: number,
+): [Array<T>, Array<T>] {
+  const copy = array.slice();
   const tail = copy.splice(index);
   return [copy, tail];
 }

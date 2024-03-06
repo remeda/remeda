@@ -1,14 +1,16 @@
-import { purry } from './purry';
-import { PredIndexed, PredIndexedOptional } from './_types';
+import { purry } from "./purry";
+import type { PredIndexed, PredIndexedOptional } from "./_types";
 
 const _sumBy =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let sum = 0;
-    array.forEach((item, i) => {
-      const summand = indexed ? fn(item, i, array) : fn(item);
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
+      const summand = indexed ? fn(item, index, array) : fn(item);
       sum += summand;
-    });
+    }
     return sum;
   };
 
@@ -29,7 +31,7 @@ const _sumBy =
  */
 
 export function sumBy<T>(
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => number;
 
 /**
@@ -51,24 +53,24 @@ export function sumBy<T>(
 
 export function sumBy<T>(
   items: ReadonlyArray<T>,
-  fn: (item: T) => number
+  fn: (item: T) => number,
 ): number;
 
-export function sumBy() {
+export function sumBy(): unknown {
   return purry(_sumBy(false), arguments);
 }
 
 export namespace sumBy {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): number;
 
   export function indexed<T>(
-    fn: PredIndexed<T, number>
+    fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_sumBy(true), arguments);
   }
 }

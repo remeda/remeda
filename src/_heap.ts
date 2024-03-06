@@ -2,9 +2,9 @@
  * Heap related utilities.
  */
 
-import { swapInPlace } from './_swapInPlace';
-import type { CompareFunction } from './_types';
-import { hasAtLeast } from './hasAtLeast';
+import { swapInPlace } from "./_swapInPlace";
+import type { CompareFunction } from "./_types";
+import { hasAtLeast } from "./hasAtLeast";
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
@@ -16,8 +16,9 @@ import { hasAtLeast } from './hasAtLeast';
  * @returns - void, the result is in the provided heap array.
  */
 export function heapify<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
     heapSiftDown(heap, i, compareFn);
@@ -37,15 +38,16 @@ export function heapify<T>(
  * heap if the item was inserted.
  */
 export function heapMaybeInsert<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   compareFn: CompareFunction<T>,
-  item: T
+  item: T,
 ): T | undefined {
   if (!hasAtLeast(heap, 1)) {
     return;
   }
 
-  const head = heap[0];
+  const [head] = heap;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.
@@ -63,9 +65,10 @@ export function heapMaybeInsert<T>(
  * swapping other items in the process.
  */
 function heapSiftDown<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   index: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   let currentIndex = index;
 

@@ -1,7 +1,7 @@
-import type { ConditionalSimplifyDeep } from './conditional-simplify';
-import type { Merge } from './merge';
-import type { OmitIndexSignature } from './omit-index-signature';
-import type { PickIndexSignature } from './pick-index-signature';
+import type { ConditionalSimplifyDeep } from "./conditional-simplify";
+import type { Merge } from "./merge";
+import type { OmitIndexSignature } from "./omit-index-signature";
+import type { PickIndexSignature } from "./pick-index-signature";
 
 type UnknownRecord = Record<string, unknown>;
 

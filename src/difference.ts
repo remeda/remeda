@@ -1,5 +1,6 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Excludes the values from `other` array.
@@ -15,7 +16,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  */
 export function difference<T>(
   array: ReadonlyArray<T>,
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
@@ -35,33 +36,27 @@ export function difference<T>(
  * @pipeable
  */
 export function difference<T, K>(
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): (array: ReadonlyArray<K>) => Array<T>;
 
-export function difference() {
+export function difference(): unknown {
   return purry(_difference, arguments, difference.lazy);
 }
 
-function _difference<T>(array: Array<T>, other: Array<T>) {
+function _difference<T>(
+  array: ReadonlyArray<T>,
+  other: ReadonlyArray<T>,
+): Array<T> {
   const lazy = difference.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace difference {
-  export function lazy<T>(other: Array<T>) {
+  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     const set = new Set(other);
-    return (value: T): LazyResult<T> => {
-      if (!set.has(value)) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
+    return (value) =>
+      set.has(value)
+        ? { done: false, hasNext: false }
+        : { done: false, hasNext: true, next: value };
   }
 }

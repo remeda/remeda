@@ -1,5 +1,6 @@
-import { partition } from './partition';
-import { pipe } from './pipe';
+import { isNumber } from "./isNumber";
+import { partition } from "./partition";
+import { pipe } from "./pipe";
 
 const array = [
   { a: 1, b: 1 },
@@ -16,56 +17,51 @@ const expected = [
   [{ a: 2, b: 1 }],
 ];
 
-describe('data first', () => {
-  test('partition', () => {
-    expect(partition(array, x => x.a === 1)).toEqual(expected);
+describe("data first", () => {
+  test("partition", () => {
+    expect(partition(array, (x) => x.a === 1)).toEqual(expected);
   });
-  test('partition with type guard', () => {
-    const isNumber = function (value: unknown): value is number {
-      return typeof value === 'number';
-    };
-    const actual = partition([1, 'a', 2, 'b'], isNumber);
+  test("partition with type guard", () => {
+    const actual = partition([1, "a", 2, "b"], isNumber);
     expect(actual).toEqual([
       [1, 2],
-      ['a', 'b'],
+      ["a", "b"],
     ]);
     assertType<[Array<number>, Array<string>]>(actual);
   });
-  test('partition with type guard in pipe', () => {
+  test("partition with type guard in pipe", () => {
     const actual = pipe(
-      [1, 'a', 2, 'b'],
-      partition((value): value is number => {
-        return typeof value === 'number';
-      })
+      [1, "a", 2, "b"],
+      partition((value): value is number => typeof value === "number"),
     );
     expect(actual).toEqual([
       [1, 2],
-      ['a', 'b'],
+      ["a", "b"],
     ]);
     assertType<[Array<number>, Array<string>]>(actual);
   });
-  test('partition.indexed', () => {
+  test("partition.indexed", () => {
     expect(partition.indexed(array, (_, index) => index !== 2)).toEqual(
-      expected
+      expected,
     );
   });
 });
 
-describe('data last', () => {
-  test('partition', () => {
+describe("data last", () => {
+  test("partition", () => {
     expect(
       pipe(
         array,
-        partition(x => x.a === 1)
-      )
+        partition((x) => x.a === 1),
+      ),
     ).toEqual(expected);
   });
-  test('partition.indexed', () => {
+  test("partition.indexed", () => {
     expect(
       pipe(
         array,
-        partition.indexed((_, index) => index !== 2)
-      )
+        partition.indexed((_, index) => index !== 2),
+      ),
     ).toEqual(expected);
   });
 });

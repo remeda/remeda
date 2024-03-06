@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Creates a new object from two supplied lists by pairing up equally-positioned items.
@@ -12,9 +12,9 @@ import { purry } from './purry';
  * @dataFirst
  * @category Array
  */
-export function zipObj<F extends string | number | symbol, S>(
+export function zipObj<F extends PropertyKey, S>(
   first: ReadonlyArray<F>,
-  second: ReadonlyArray<S>
+  second: ReadonlyArray<S>,
 ): Record<F, S>;
 
 /**
@@ -29,22 +29,20 @@ export function zipObj<F extends string | number | symbol, S>(
  * @category Array
  */
 export function zipObj<S>(
-  second: ReadonlyArray<S>
-): <F extends string | number | symbol>(
-  first: ReadonlyArray<F>
-) => Record<F, S>;
+  second: ReadonlyArray<S>,
+): <F extends PropertyKey>(first: ReadonlyArray<F>) => Record<F, S>;
 
-export function zipObj() {
+export function zipObj(): unknown {
   return purry(_zipObj, arguments);
 }
 
 function _zipObj(
-  first: Array<string | number | symbol>,
-  second: Array<unknown>
-) {
+  first: ReadonlyArray<PropertyKey>,
+  second: ReadonlyArray<unknown>,
+): Record<PropertyKey, unknown> {
   const resultLength =
     first.length > second.length ? second.length : first.length;
-  const result: Record<string | number | symbol, unknown> = {};
+  const result: Record<PropertyKey, unknown> = {};
   for (let i = 0; i < resultLength; i++) {
     result[first[i]!] = second[i];
   }

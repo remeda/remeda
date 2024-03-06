@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "include": ["src", "test", "*.config.js", "*.config.ts"],
+  "include": ["src", "test", "*.config.mjs", "*.config.ts"],
 
   "compilerOptions": {
     // TYPE CHECKING
@@ -42,6 +42,6 @@
     "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
 
     // COMPLETENESS
-    "skipLibCheck": true,
-  },
+    "skipLibCheck": true
+  }
 }

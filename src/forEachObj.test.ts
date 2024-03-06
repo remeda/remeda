@@ -1,5 +1,5 @@
-import { forEachObj } from './forEachObj';
-import { pipe } from './pipe';
+import { forEachObj } from "./forEachObj";
+import { pipe } from "./pipe";
 
 const obj = {
   a: 1,
@@ -7,41 +7,41 @@ const obj = {
   c: 3,
 };
 
-describe('data_first', () => {
-  it('forEachObj', () => {
+describe("data_first", () => {
+  it("forEachObj", () => {
     const cb = vi.fn();
     const result = forEachObj(obj, cb);
     expect(cb.mock.calls).toEqual([[1], [2], [3]]);
     expect(result).toEqual(obj);
   });
 
-  it('forEachObj.indexed', () => {
+  it("forEachObj.indexed", () => {
     const cb = vi.fn();
     const result = forEachObj.indexed(obj, cb);
     expect(cb.mock.calls).toEqual([
-      [1, 'a', obj],
-      [2, 'b', obj],
-      [3, 'c', obj],
+      [1, "a", obj],
+      [2, "b", obj],
+      [3, "c", obj],
     ]);
     expect(result).toEqual(obj);
   });
 });
 
-describe('data_last', () => {
-  it('forEachObj', () => {
+describe("data_last", () => {
+  it("forEachObj", () => {
     const cb = vi.fn();
     const result = pipe(obj, forEachObj(cb));
     expect(cb.mock.calls).toEqual([[1], [2], [3]]);
     expect(result).toEqual(obj);
   });
 
-  it('forEachObj.indexed', () => {
-    const cb = vi.fn();
+  it("forEachObj.indexed", () => {
+    const cb = vi.fn<[number, string, typeof obj]>();
     const result = pipe(obj, forEachObj.indexed(cb));
     expect(cb.mock.calls).toEqual([
-      [1, 'a', obj],
-      [2, 'b', obj],
-      [3, 'c', obj],
+      [1, "a", obj],
+      [2, "b", obj],
+      [3, "c", obj],
     ]);
     expect(result).toEqual(obj);
   });

@@ -1,5 +1,6 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Returns a list of elements that exist in both array.
@@ -15,7 +16,7 @@ import { _reduceLazy, LazyResult } from './_reduceLazy';
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
@@ -31,33 +32,27 @@ export function intersection<T>(
  * @pipeable
  */
 export function intersection<T, K>(
-  other: ReadonlyArray<T>
+  other: ReadonlyArray<T>,
 ): (source: ReadonlyArray<K>) => Array<T>;
 
-export function intersection() {
+export function intersection(): unknown {
   return purry(_intersection, arguments, intersection.lazy);
 }
 
-function _intersection<T>(array: Array<T>, other: Array<T>) {
+function _intersection<T>(
+  array: ReadonlyArray<T>,
+  other: ReadonlyArray<T>,
+): Array<T> {
   const lazy = intersection.lazy(other);
   return _reduceLazy(array, lazy);
 }
 
 export namespace intersection {
-  export function lazy<T>(other: Array<T>) {
-    return (value: T): LazyResult<T> => {
-      const set = new Set(other);
-      if (set.has(value)) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
+  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
+    const set = new Set(other);
+    return (value) =>
+      set.has(value)
+        ? { done: false, hasNext: true, next: value }
+        : { done: false, hasNext: false };
   }
 }

@@ -1,6 +1,6 @@
-import { createLazyInvocationCounter } from '../test/lazy_invocation_counter';
-import { find } from './find';
-import { pipe } from './pipe';
+import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import { find } from "./find";
+import { pipe } from "./pipe";
 
 const array = [
   { a: 1, b: 1 },
@@ -10,35 +10,35 @@ const array = [
 ] as const;
 const expected = { a: 1, b: 2 };
 
-describe('data first', () => {
-  test('find', () => {
-    expect(find(array, x => x.b === 2)).toEqual(expected);
+describe("data first", () => {
+  test("find", () => {
+    expect(find(array, (x) => x.b === 2)).toEqual(expected);
   });
-  test('find.indexed', () => {
+  test("find.indexed", () => {
     expect(find.indexed(array, (x, idx) => x.b === 2 && idx === 1)).toEqual(
-      expected
+      expected,
     );
   });
 });
 
-describe('data last', () => {
-  test('find', () => {
+describe("data last", () => {
+  test("find", () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
       counter.fn(),
-      find(x => x.b === 2)
+      find((x) => x.b === 2),
     );
     expect(counter.count).toHaveBeenCalledTimes(2);
     expect(actual).toEqual(expected);
   });
 
-  test('find.indexed', () => {
+  test("find.indexed", () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
       counter.fn(),
-      find.indexed((x, idx) => x.b === 2 && idx === 1)
+      find.indexed((x, idx) => x.b === 2 && idx === 1),
     );
     expect(counter.count).toHaveBeenCalledTimes(2);
     expect(actual).toEqual(expected);

@@ -1,6 +1,6 @@
-import { ObjectKeys } from './_types';
-import { purry } from './purry';
-import { toPairs } from './toPairs';
+import type { ObjectKeys } from "./_types";
+import { purry } from "./purry";
+import { toPairs } from "./toPairs";
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -15,7 +15,7 @@ import { toPairs } from './toPairs';
  */
 export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   data: T,
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
 ): Record<ObjectKeys<T>, S>;
 
 /**
@@ -29,20 +29,24 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, unknown>, S>(
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
 ): (data: T) => Record<ObjectKeys<T>, S>;
 
-export function mapValues() {
+export function mapValues(): unknown {
   return purry(_mapValues, arguments);
 }
 
-function _mapValues<T extends object>(
+function _mapValues<T extends Record<PropertyKey, unknown>, S>(
   data: T,
-  fn: (value: Required<T>[keyof T], key: keyof T) => unknown
-) {
-  const out: Partial<Record<keyof T, unknown>> = {};
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
+): Record<ObjectKeys<T>, S> {
+  const out: Partial<Record<ObjectKeys<T>, S>> = {};
   for (const [key, value] of toPairs.strict(data)) {
-    out[key] = fn(value, key);
+    // @ts-expect-error [ts2345] - FIXME!
+    const mappedValue = fn(value, key);
+    // @ts-expect-error [ts2536] - FIXME!
+    out[key] = mappedValue;
   }
+  // @ts-expect-error [ts2322] - We build the object incrementally so the type can't represent the final object.
   return out;
 }

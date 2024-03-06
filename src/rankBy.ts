@@ -1,5 +1,6 @@
-import { OrderRule, purryOrderRulesWithArgument } from './_purryOrderRules';
-import type { CompareFunction, NonEmptyArray } from './_types';
+import type { OrderRule } from "./_purryOrderRules";
+import { purryOrderRulesWithArgument } from "./_purryOrderRules";
+import type { CompareFunction, NonEmptyArray } from "./_types";
 
 /**
  * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.
@@ -55,14 +56,14 @@ export function rankBy(): unknown {
 function rankByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
-  targetItem: T
+  targetItem: T,
 ): number {
   let rank = 0;
   for (const item of data) {
     if (compareFn(targetItem, item) > 0) {
       // The rank of the item is equivalent to the number of items that would
       // come before it if the array was sorted. We assume that the
-      rank++;
+      rank += 1;
     }
   }
   return rank;

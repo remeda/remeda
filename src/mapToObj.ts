@@ -1,5 +1,5 @@
-import { PredIndexedOptional } from './_types';
-import { purry } from './purry';
+import type { PredIndexedOptional } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function.
@@ -18,7 +18,7 @@ import { purry } from './purry';
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
-  fn: (element: T) => [K, V]
+  fn: (element: T) => [K, V],
 ): Record<K, V>;
 
 /**
@@ -42,10 +42,10 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  fn: (element: T) => [K, V]
+  fn: (element: T) => [K, V],
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function mapToObj() {
+export function mapToObj(): unknown {
   return purry(_mapToObj(false), arguments);
 }
 
@@ -53,27 +53,30 @@ const _mapToObj =
   (indexed: boolean) =>
   (
     array: ReadonlyArray<unknown>,
-    fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>
+    fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>,
   ) => {
-    return array.reduce<Record<PropertyKey, unknown>>(
-      (result, element, index) => {
-        const [key, value] = indexed ? fn(element, index, array) : fn(element);
-        result[key] = value;
-        return result;
-      },
-      {}
-    );
+    const out: Record<PropertyKey, unknown> = {};
+
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Use Array.prototype.entries once we bump the Typescript target version to iterate over the elements and index at the same time.
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+      const element = array[index];
+      const [key, value] = indexed ? fn(element, index, array) : fn(element);
+      out[key] = value;
+    }
+
+    return out;
   };
 
 export namespace mapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V],
   ): Record<K, V>;
   export function indexed<T, K extends PropertyKey, V>(
-    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
+    fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V],
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_mapToObj(true), arguments);
   }
 }

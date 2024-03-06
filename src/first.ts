@@ -1,23 +1,38 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import type { IterableContainer } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
-type FirstOut<T extends IterableContainer> = T extends []
+type First<T extends IterableContainer> = T extends []
   ? undefined
   : T extends readonly [unknown, ...Array<unknown>]
     ? T[0]
     : T extends readonly [...infer Pre, infer Last]
-      ? Pre[0] | Last
+      ? Last | Pre[0]
       : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.
- * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.
- * @param array the array
+ * @param data the array
+ * @returns the first element of the array
  * @signature
  *    R.first(array)
  * @example
  *    R.first([1, 2, 3]) // => 1
  *    R.first([]) // => undefined
+ *
+ * @category Array
+ * @pipeable
+ * @dataFirst
+ */
+export function first<T extends IterableContainer>(data: T): First<T>;
+
+/**
+ * Gets the first element of `array`.
+ * @param data the array
+ * @returns the first element of the array
+ * @signature
+ *    R.first()(array)
+ * @example
  *    R.pipe(
  *      [1, 2, 4, 8, 16],
  *      R.filter(x => x > 3),
@@ -27,32 +42,23 @@ type FirstOut<T extends IterableContainer> = T extends []
  *
  * @category Array
  * @pipeable
+ * @dataLast
  */
-export function first<T extends IterableContainer>(
-  array: Readonly<T>
-): FirstOut<T>;
-export function first<T extends IterableContainer>(): (
-  array: Readonly<T>
-) => FirstOut<T>;
+export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first() {
+export function first(): unknown {
   return purry(_first, arguments, first.lazy);
 }
 
-function _first<T>([first]: ReadonlyArray<T>) {
-  return first;
+function _first<T>([item]: ReadonlyArray<T>): T | undefined {
+  return item;
 }
 
 export namespace first {
-  export function lazy<T>() {
-    return (value: T) => {
-      return {
-        done: true,
-        hasNext: true,
-        next: value,
-      };
-    };
+  export function lazy<T>(): LazyEvaluator<T> {
+    return (value) => ({ done: true, hasNext: true, next: value });
   }
+
   export namespace lazy {
     export const single = true;
   }

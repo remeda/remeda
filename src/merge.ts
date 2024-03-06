@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Merges two objects. The same as `Object.assign`.
@@ -26,10 +26,10 @@ export function merge<A, B>(a: A, b: B): A & B;
  */
 export function merge<A, B>(b: B): (a: A) => A & B;
 
-export function merge() {
+export function merge(): unknown {
   return purry(_merge, arguments);
 }
 
-function _merge<A, B>(a: A, b: B) {
-  return Object.assign({}, a, b);
+function _merge<A, B>(a: A, b: B): A & B {
+  return { ...a, ...b };
 }

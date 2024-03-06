@@ -1,6 +1,6 @@
 export function _binarySearchCutoffIndex<T>(
   array: ReadonlyArray<T>,
-  predicate: (item: T, index: number) => boolean
+  predicate: (item: T, index: number) => boolean,
 ): number {
   // !IMPORTANT: This docblock is not above the function because then the code that builds our docs site breaks. Please do not move it.
   /**
@@ -19,11 +19,11 @@ export function _binarySearchCutoffIndex<T>(
    */
 
   let lowIndex = 0;
+  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
   let highIndex = array.length;
 
   while (lowIndex < highIndex) {
-    // We use bitwise operator here as a way to find the mid-point and round it
-    // down using the same operation.
+    // eslint-disable-next-line no-bitwise -- We use bitwise operator here as a way to find the mid-point and round it down using the same operation.
     const pivotIndex = (lowIndex + highIndex) >>> 1;
     const pivot = array[pivotIndex]!;
 
