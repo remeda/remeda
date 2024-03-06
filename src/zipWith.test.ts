@@ -1,6 +1,6 @@
 import { zipWith } from "./zipWith";
 
-const pred = (a: string, b: string) => a + b;
+const pred = (a: string, b: string): string => a + b;
 
 const first = ["1", "2", "3"];
 const second = ["a", "b", "c"];

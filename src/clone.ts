@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return -- FIXME! */
+/* eslint-disable eqeqeq, guard-for-in, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-destructuring, @typescript-eslint/prefer-readonly-parameter-types, unicorn/no-null -- FIXME! */
 
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
 import { type } from "./type";
 
-function _cloneRegExp(pattern: RegExp) {
+function _cloneRegExp(pattern: RegExp): RegExp {
   return new RegExp(
     pattern.source,
     (pattern.global ? "g" : "") +
@@ -20,8 +20,8 @@ function _clone(
   refFrom: Array<any>,
   refTo: Array<any>,
   deep: boolean,
-) {
-  function copy(copiedValue: any) {
+): unknown {
+  function copy(copiedValue: any): unknown {
     const len = refFrom.length;
     let idx = 0;
     while (idx < len) {

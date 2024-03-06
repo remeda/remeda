@@ -1,4 +1,5 @@
 import type { IterableContainer } from "./_types";
+import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type First<T extends IterableContainer> = T extends []
@@ -45,21 +46,17 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first() {
+export function first(): unknown {
   return purry(_first, arguments, first.lazy);
 }
 
-function _first<T>([first]: ReadonlyArray<T>) {
-  return first;
+function _first<T>([item]: ReadonlyArray<T>): T | undefined {
+  return item;
 }
 
 export namespace first {
-  export function lazy<T>() {
-    return (value: T) => ({
-      done: true,
-      hasNext: true,
-      next: value,
-    });
+  export function lazy<T>(): LazyEvaluator<T> {
+    return (value) => ({ done: true, hasNext: true, next: value });
   }
 
   export namespace lazy {

@@ -5,6 +5,8 @@ import {
 } from "../test/types_data_provider";
 import { isString } from "./isString";
 
+const dataFunction = (): number | "a" | "b" | "c" => "a";
+
 describe("isString", () => {
   it("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.string as AllTypesDataProviderTypes;
@@ -23,8 +25,7 @@ describe("isString", () => {
   });
 
   it("should work with literal types", () => {
-    const data = (): number | "a" | "b" | "c" => "a";
-    const x = data();
+    const x = dataFunction();
     if (isString(x)) {
       expect(typeof x).toEqual("string");
       expectTypeOf(x).toEqualTypeOf<"a" | "b" | "c">();

@@ -16,7 +16,8 @@ describe("isNil", () => {
 
   it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNil);
-    expect(data.every((c) => c == null)).toEqual(true);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Intentional for the test.
+    expect(data.every((c) => c === null || c === undefined)).toEqual(true);
     expectTypeOf(data).toEqualTypeOf<Array<null | undefined>>();
   });
 });

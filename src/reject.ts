@@ -1,8 +1,8 @@
-import { purry } from "./purry";
-import type { LazyResult } from "./_reduceLazy";
 import { _reduceLazy } from "./_reduceLazy";
-import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 import { _toLazyIndexed } from "./_toLazyIndexed";
+import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
@@ -43,7 +43,7 @@ export function reject<T>(
   fn: Pred<T, boolean>,
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function reject() {
+export function reject(): unknown {
   return purry(_reject(false), arguments, reject.lazy);
 }
 
@@ -58,21 +58,11 @@ const _reject =
 
 const _lazy =
   (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, boolean>) =>
-  (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> => {
-    const valid = indexed ? fn(value, index, array) : fn(value);
-    if (!valid) {
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
-    }
-    return {
-      done: false,
-      hasNext: false,
-    };
-  };
+  <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T> =>
+  (item, index, data) =>
+    (indexed ? fn(item, index, data) : fn(item))
+      ? { done: false, hasNext: false }
+      : { done: false, hasNext: true, next: item };
 
 export namespace reject {
   export function indexed<T, K>(
@@ -82,7 +72,7 @@ export namespace reject {
   export function indexed<T, K>(
     fn: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_reject(true), arguments, reject.lazyIndexed);
   }
 

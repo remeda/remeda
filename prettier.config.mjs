@@ -1,2 +1,2 @@
 /** @type {import('prettier').Config} */
-module.exports = {};
+export default {};

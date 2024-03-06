@@ -142,7 +142,7 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr() {
+export function pathOr(): unknown {
   return purry(_pathOr, arguments);
 }
 
@@ -153,7 +153,7 @@ function _pathOr(
 ): unknown {
   let current = data;
   for (const prop of path) {
-    if (current == null) {
+    if (current === null || current === undefined) {
       break;
     }
     current = (current as Record<PropertyKey, unknown>)[prop];
