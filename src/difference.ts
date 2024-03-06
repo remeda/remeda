@@ -11,8 +11,8 @@ import { _reduceLazy } from "./_reduceLazy";
  * @example
  *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
  * @dataFirst
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function difference<T>(
   array: ReadonlyArray<T>,
@@ -32,8 +32,8 @@ export function difference<T>(
  *      R.take(2)
  *    ) // => [1, 4]
  * @dataLast
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function difference<T, K>(
   other: ReadonlyArray<T>,

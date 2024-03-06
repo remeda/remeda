@@ -16,8 +16,8 @@ import { purry } from "./purry";
  *    R.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
  *    R.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
  * @dataFirst
- * @category Array
  * @strict
+ * @category Array
  */
 export function sort<T>(
   items: ReadonlyArray<T>,
@@ -38,8 +38,8 @@ export function sort<T>(
  *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
  *    R.pipe([4, 2] as [number, number], R.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
  * @dataLast
- * @category Array
  * @strict
+ * @category Array
  */
 export function sort<T>(
   cmp: (a: T, b: T) => number,

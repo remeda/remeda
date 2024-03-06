@@ -10,9 +10,9 @@ import { _reduceLazy } from "./_reduceLazy";
  *    R.uniq(array)
  * @example
  *    R.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
+ * @dataFirst
  * @pipeable
  * @category Array
- * @dataFirst
  */
 export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
 
@@ -28,9 +28,9 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
  *      R.uniq(),
  *      R.take(3)
  *    ) // => [1, 2, 5]
+ * @dataLast
  * @pipeable
  * @category Array
- * @dataLast
  */
 export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 

@@ -7,8 +7,8 @@ import { purry } from "./purry";
  *    R.shuffle(array)
  * @example
  *    R.shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
- * @category Array
  * @dataFirst
+ * @category Array
  */
 export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 
@@ -18,8 +18,8 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  *    R.shuffle()(array)
  * @example
  *    R.pipe([4, 2, 7, 5], R.shuffle()) // => [7, 5, 4, 2]
- * @category Array
  * @dataLast
+ * @category Array
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 

@@ -18,9 +18,9 @@ type First<T extends IterableContainer> = T extends []
  * @example
  *    R.first([1, 2, 3]) // => 1
  *    R.first([]) // => undefined
- * @category Array
- * @pipeable
  * @dataFirst
+ * @pipeable
+ * @category Array
  */
 export function first<T extends IterableContainer>(data: T): First<T>;
 
@@ -37,9 +37,9 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *      R.first(),
  *      x => x + 1
  *    ); // => 5
- * @category Array
- * @pipeable
  * @dataLast
+ * @pipeable
+ * @category Array
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 

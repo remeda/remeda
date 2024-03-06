@@ -11,8 +11,8 @@ import { _reduceLazy } from "./_reduceLazy";
  * @example
  *    R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]
  * @dataFirst
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
@@ -28,8 +28,8 @@ export function intersection<T>(
  * @example
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
  * @dataLast
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersection<T, K>(
   other: ReadonlyArray<T>,

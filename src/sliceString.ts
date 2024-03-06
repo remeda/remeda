@@ -14,8 +14,8 @@
  *    R.sliceString(1)(`abcdefghijkl`) // => `bcdefghijkl`
  *    R.sliceString(4, 7)(`abcdefghijkl`) // => `efg`
  * @dataLast
- * @category String
  * @strict
+ * @category String
  */
 export const sliceString =
   (indexStart: number, indexEnd?: number): ((data: string) => string) =>

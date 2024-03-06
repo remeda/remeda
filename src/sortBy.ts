@@ -34,8 +34,8 @@ import type {
  *      R.sortBy.strict(x => x.a)
  *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataLast
- * @category Array
  * @strict
+ * @category Array
  */
 export function sortBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -88,8 +88,8 @@ export function sortBy<T>(
  *    )
  *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataFirst
- * @category Array
  * @strict
+ * @category Array
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,

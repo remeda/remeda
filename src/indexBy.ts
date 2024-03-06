@@ -14,8 +14,8 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
  *    R.indexBy.strict(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
  * @indexed
- * @category Array
  * @strict
+ * @category Array
  */
 export function indexBy<T>(
   array: ReadonlyArray<T>,
@@ -42,8 +42,8 @@ export function indexBy<T>(
  *    ) // => {3: 'two', 5: 'three'}
  * @dataLast
  * @indexed
- * @category Array
  * @strict
+ * @category Array
  */
 export function indexBy<T>(
   fn: (item: T) => unknown,

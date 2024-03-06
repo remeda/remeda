@@ -7,9 +7,9 @@ type DefinitelyFunction<T> =
 /**
  * A function that checks if the passed parameter is a Function and narrows its type accordingly.
  * @param data - The variable to check.
+ * @returns True if the passed input is a Function, false otherwise.
  * @signature
  *    R.isFunction(data)
- * @returns True if the passed input is a Function, false otherwise.
  * @example
  *    R.isFunction(() => {}) //=> true
  *    R.isFunction('somethingElse') //=> false

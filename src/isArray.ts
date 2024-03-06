@@ -3,9 +3,9 @@ import type { NarrowedTo } from "./_types";
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly.
  * @param data - The variable to check.
+ * @returns True if the passed input is an Array, false otherwise.
  * @signature
  *    R.isArray(data)
- * @returns True if the passed input is an Array, false otherwise.
  * @example
  *    R.isArray([5]) //=> true
  *    R.isArray([]) //=> true

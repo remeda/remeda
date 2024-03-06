@@ -112,15 +112,15 @@ type SwappedIndices<
  * @param data - The item to be manipulated. This can be an array, or a string.
  * @param index1 - The first index.
  * @param index2 - The second index.
+ * @returns Returns the manipulated array or string.
  * @signature
  *   swapIndices(data, index1, index2)
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
  *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
  *   swapIndices('abc', 0, 1) // => 'bac'
- * @category Array
- * @returns Returns the manipulated array or string.
  * @dataFirst
+ * @category Array
  */
 export function swapIndices<
   T extends IterableContainer | string,
@@ -136,14 +136,14 @@ export function swapIndices<
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
  * @param index1 - The first index.
  * @param index2 - The second index.
+ * @returns Returns the manipulated array or string.
  * @signature
  *   swapIndices(index1, index2)(data)
  * @example
  *   swapIndices(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']
  *   swapIndices(0, -1)('abc') // => 'cba'
- * @category Array
- * @returns Returns the manipulated array or string.
  * @dataLast
+ * @category Array
  */
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,

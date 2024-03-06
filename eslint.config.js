@@ -171,19 +171,19 @@ module.exports = tseslint.config(
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/check-param-names": "off",
       "jsdoc/check-tag-names": [
-        "warn",
+        "error",
         {
           // Non-standard JSDoc tags we use to generate documentation; see
           // docs/src/lib/transform.ts.
           definedTags: [
-            "category",
+            "signature",
+            "exampleRaw",
             "dataFirst",
             "dataLast",
-            "exampleRaw",
             "indexed",
             "pipeable",
-            "signature",
             "strict",
+            "category",
           ],
         },
       ],
@@ -216,7 +216,7 @@ module.exports = tseslint.config(
         { enableFixer: false, exemptedBy: ["deprecated", "exampleRaw"] },
       ],
       "jsdoc/require-hyphen-before-param-description": [
-        "warn",
+        "error",
         "always",
         { tags: { "*": "never" } },
       ],
@@ -224,6 +224,29 @@ module.exports = tseslint.config(
       "jsdoc/require-param": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
+      "jsdoc/sort-tags": [
+        "error",
+        {
+          tagSequence: [
+            {
+              tags: [
+                "param",
+                "returns",
+                "signature",
+                "example",
+                "exampleRaw",
+                "dataFirst",
+                "dataLast",
+                "indexed",
+                "pipeable",
+                "strict",
+                "category",
+              ],
+            },
+          ],
+          linesBetween: 0,
+        },
+      ],
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:

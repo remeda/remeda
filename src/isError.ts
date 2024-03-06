@@ -3,9 +3,9 @@ type DefinitelyError<T> =
 /**
  * A function that checks if the passed parameter is an Error and narrows its type accordingly.
  * @param data - The variable to check.
+ * @returns True if the passed input is an Error, false otherwise.
  * @signature
  *    R.isError(data)
- * @returns True if the passed input is an Error, false otherwise.
  * @example
  *    R.isError(new Error('message')) //=> true
  *    R.isError('somethingElse') //=> false
