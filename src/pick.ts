@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -10,7 +10,7 @@ import { purry } from './purry';
  * @category Object
  */
 export function pick<T extends object, K extends keyof T>(
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ): (object: T) => Pick<T, K>;
 
 /**
@@ -25,24 +25,23 @@ export function pick<T extends object, K extends keyof T>(
  */
 export function pick<T extends object, K extends keyof T>(
   object: T,
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ): Pick<T, K>;
 
-export function pick() {
+export function pick(): unknown {
   return purry(_pick, arguments);
 }
 
 function _pick<T extends object, K extends keyof T>(
   object: T,
-  names: ReadonlyArray<K>
-) {
-  if (object == null) {
-    return {};
-  }
-  return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
+  names: ReadonlyArray<K>,
+): Pick<T, K> {
+  const out: Partial<Pick<T, K>> = {};
+  for (const name of names) {
     if (name in object) {
-      acc[name] = object[name];
+      out[name] = object[name];
     }
-    return acc;
-  }, {});
+  }
+  // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.
+  return out;
 }

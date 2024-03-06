@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Calls the given function with the given value, then returns the given value.
@@ -40,7 +40,7 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  */
 export function tap<T, F extends (value: T) => unknown>(fn: F): (value: T) => T;
 
-export function tap() {
+export function tap(): unknown {
   return purry(_tap, arguments);
 }
 

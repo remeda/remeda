@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
@@ -18,7 +18,7 @@ export function splice<T>(
   items: ReadonlyArray<T>,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>
+  replacement: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
@@ -38,10 +38,10 @@ export function splice<T>(
 export function splice<T>(
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>
+  replacement: ReadonlyArray<T>,
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function splice() {
+export function splice(): unknown {
   return purry(_splice, arguments);
 }
 
@@ -49,9 +49,9 @@ function _splice<T>(
   items: ReadonlyArray<T>,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>
+  replacement: ReadonlyArray<T>,
 ): Array<T> {
-  const result = [...items];
+  const result = items.slice();
   result.splice(start, deleteCount, ...replacement);
   return result;
 }

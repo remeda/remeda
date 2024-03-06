@@ -4,8 +4,8 @@ export type Path<
 > = Obj extends Primitive
   ? Prefix
   : Obj extends Array<infer Item>
-    ? Prefix | Path<Item, [...Prefix, number]>
-    : Prefix | PathsOfObject<Obj, Prefix>;
+    ? Path<Item, [...Prefix, number]> | Prefix
+    : PathsOfObject<Obj, Prefix> | Prefix;
 
 type PathsOfObject<Obj, Prefix extends Array<PropertyKey>> = {
   [K in keyof Obj]: Path<Obj[K], [...Prefix, K]>;
@@ -24,7 +24,7 @@ export type ValueAtPath<
       : never
     : never;
 
-export type SupportsValueAtPath<Obj, Path extends Array<PropertyKey>, Value> =
-  Value extends ValueAtPath<Obj, Path> ? Obj : never;
+export type SupportsValueAtPath<Obj, P extends Array<PropertyKey>, Value> =
+  Value extends ValueAtPath<Obj, P> ? Obj : never;
 
-type Primitive = string | number | boolean | null | undefined | symbol;
+type Primitive = boolean | number | string | symbol | null | undefined;

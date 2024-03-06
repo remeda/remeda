@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Divides two numbers.
@@ -28,10 +28,10 @@ export function divide(value: number, divisor: number): number;
  */
 export function divide(divisor: number): (value: number) => number;
 
-export function divide() {
+export function divide(): unknown {
   return purry(_divide, arguments);
 }
 
-function _divide(value: number, divisor: number) {
+function _divide(value: number, divisor: number): number {
   return value / divisor;
 }

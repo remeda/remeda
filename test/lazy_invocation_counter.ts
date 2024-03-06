@@ -1,11 +1,11 @@
-import { map } from '../src/map';
+import { map } from "../src/map";
 
 export const createLazyInvocationCounter = () => {
   const count = vi.fn();
   return {
     count,
     fn: <T>() =>
-      map<T, T>(x => {
+      map<T, T>((x) => {
         count();
         return x;
       }),

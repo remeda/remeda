@@ -1,53 +1,55 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- FIXME! */
-
-import { _reduceLazy, LazyResult } from './_reduceLazy';
-import { purry } from './purry';
+import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 
 /**
  * Flattens `array` a single level deep.
- * Note: In `pipe`, use `flatten()` form instead of `flatten`. Otherwise, the inferred type is lost.
- 
+ *
  * @param items the target array
- * @signature R.flatten(array)
+ * @signature
+ *   R.flatten(array)
  * @example
  *    R.flatten([[1, 2], [3], [4, 5]]) // => [1, 2, 3, 4, 5]
+ * @category Array
+ * @pipeable
+ * @dataFirst
+ */
+export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
+
+/**
+ * Flattens `array` a single level deep.
+ *
+ * @param items the target array
+ * @signature
+ *   R.flatten()(array)
+ * @example
  *    R.pipe(
  *      [[1, 2], [3], [4, 5]],
  *      R.flatten(),
  *    ); // => [1, 2, 3, 4, 5]
  * @category Array
  * @pipeable
+ * @dataLast
  */
-export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
-
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
-export function flatten() {
+export function flatten(): unknown {
   return purry(_flatten, arguments, flatten.lazy);
 }
 
-function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
+function _flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>> {
   return _reduceLazy(items, flatten.lazy());
 }
 
 export namespace flatten {
-  export function lazy<T>() {
-    return (next: T): LazyResult<any> => {
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasNext: true,
-          hasMany: true,
-          next: next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
-    };
-  }
+  export const lazy =
+    <T>(): LazyEvaluator<T, Flatten<T>> =>
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
+    (item) =>
+      // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+      Array.isArray(item)
+        ? { done: false, hasNext: true, hasMany: true, next: item }
+        : { done: false, hasNext: true, next: item };
 }

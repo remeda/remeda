@@ -1,18 +1,44 @@
-import { range } from './range';
+import { purry } from "./purry";
+import { times } from "./times";
+
+const ALPHABET =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
  * @param length the length of the random string
- * @signature randomString(length)
+ * @returns the random string
+ * @signature
+ *   R.randomString(length)
  * @example
- *    randomString(5) // => aB92J
+ *   R.randomString(5) // => aB92J
+ *   R.pipe(5, R.randomString) // => aB92J
  * @category String
+ * @dataFirst
  */
-export function randomString(length: number) {
-  const characterSet =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const randomChar = () =>
-    characterSet[Math.floor(Math.random() * characterSet.length)];
+export function randomString(length: number): string;
 
-  return range(0, length).reduce(text => text + randomChar(), '');
+/**
+ * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * @param length the length of the random string
+ * @returns the random string
+ * @signature
+ *   R.randomString()(length)
+ * @example
+ *    R.pipe(5, R.randomString()) // => aB92J
+ * @category String
+ * @dataLast
+ */
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function randomString(): (length: number) => string;
+
+export function randomString(): unknown {
+  return purry(randomStringImplementation, arguments);
 }
+
+function randomStringImplementation(length: number): string {
+  return times(length, randomChar).join("");
+}
+
+const randomChar = (): string =>
+  ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
