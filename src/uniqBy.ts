@@ -1,9 +1,10 @@
-import { purry } from './purry';
-import { _reduceLazy, LazyResult } from './_reduceLazy';
+import { _reduceLazy } from "./_reduceLazy";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 export function uniqBy<T, K>(
   array: ReadonlyArray<T>,
-  transformer: (item: T) => K
+  transformer: (item: T) => K,
 ): Array<T>;
 
 /**
@@ -27,33 +28,29 @@ export function uniqBy<T, K>(
  */
 
 export function uniqBy<T, K>(
-  transformer: (item: T) => K
+  transformer: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqBy() {
+export function uniqBy(): unknown {
   return purry(_uniqBy, arguments, lazyUniqBy);
 }
 
-function _uniqBy<T, K>(array: Array<T>, transformer: (item: T) => K) {
+function _uniqBy<T, K>(
+  array: ReadonlyArray<T>,
+  transformer: (item: T) => K,
+): Array<T> {
   return _reduceLazy(array, lazyUniqBy(transformer));
 }
 
-function lazyUniqBy(transformer: (item: any) => any) {
-  const set = new Set<any>();
-  return (value: any): LazyResult<any> => {
+function lazyUniqBy<T, K>(transformer: (item: T) => K): LazyEvaluator<T> {
+  const set = new Set<K>();
+  return (value) => {
     const appliedItem = transformer(value);
     if (set.has(appliedItem)) {
-      return {
-        done: false,
-        hasNext: false,
-      };
+      return { done: false, hasNext: false };
     }
 
     set.add(appliedItem);
-    return {
-      done: false,
-      hasNext: true,
-      next: value,
-    };
+    return { done: false, hasNext: true, next: value };
   };
 }

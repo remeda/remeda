@@ -1,12 +1,12 @@
-import type { IterableContainer } from './_types';
-import { purry } from './purry';
-import { toPairs } from './toPairs';
+import type { IterableContainer } from "./_types";
+import { purry } from "./purry";
+import { toPairs } from "./toPairs";
 
 /**
  * basic structure of `evolver` parameter of the function `evolve`.
  */
 type GenericEvolver = {
-  readonly [P in string]: ((data: unknown) => unknown) | GenericEvolver;
+  readonly [P in string]: GenericEvolver | ((data: unknown) => unknown);
 };
 
 /**
@@ -34,8 +34,8 @@ type Evolver<T> = T extends object
     ? never
     : {
         readonly [K in keyof T]?:
-          | ((data: Required<T>[K]) => unknown)
-          | Evolver<T[K]>;
+          | Evolver<T[K]>
+          | ((data: Required<T>[K]) => unknown);
       }
   : never;
 
@@ -45,7 +45,10 @@ type Evolver<T> = T extends object
 type Evolved<T, E> = T extends object
   ? {
       -readonly [K in keyof T]: K extends keyof E
-        ? E[K] extends (...arg: any) => infer R
+        ? E[K] extends (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Functions aren't inferred correctly when using `unknown` for the params.
+            ...arg: any
+          ) => infer R
           ? R
           : Evolved<T[K], E[K]>
         : Required<T>[K];
@@ -88,7 +91,7 @@ type Evolved<T, E> = T extends object
  */
 export function evolve<T extends object, E extends Evolver<T>>(
   object: T,
-  evolver: E
+  evolver: E,
 ): Evolved<T, E>;
 
 /**
@@ -126,27 +129,28 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * @category Object
  */
 export function evolve<T extends object, E extends Evolver<T>>(
-  evolver: E
+  evolver: E,
 ): (object: T) => Evolved<T, E>;
 
-export function evolve() {
+export function evolve(): unknown {
   return purry(_evolve, arguments);
 }
 
 function _evolve(data: unknown, evolver: GenericEvolver): unknown {
-  if (typeof data !== 'object' || data === null) {
+  if (typeof data !== "object" || data === null) {
     return data;
   }
-  return toPairs.strict(evolver).reduce<Record<string, unknown>>(
-    (result, [key, value]) => {
-      if (key in result) {
-        result[key] =
-          typeof value === 'function'
-            ? value(result[key])
-            : _evolve(result[key], value);
-      }
-      return result;
-    },
-    { ...data }
-  );
+
+  const out: Record<string, unknown> = { ...data };
+
+  for (const [key, value] of toPairs.strict(evolver)) {
+    if (key in out) {
+      out[key] =
+        typeof value === "function"
+          ? value(out[key])
+          : _evolve(out[key], value);
+    }
+  }
+
+  return out;
 }

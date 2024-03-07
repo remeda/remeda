@@ -1,6 +1,6 @@
-import { purry } from './purry';
-import { Path, SupportsValueAtPath, ValueAtPath } from './_paths';
-import { Narrow } from './_narrow';
+import type { Narrow } from "./_narrow";
+import type { Path, SupportsValueAtPath, ValueAtPath } from "./_paths";
+import { purry } from "./purry";
 
 /**
  * Sets the value at `path` of `object`.
@@ -17,7 +17,7 @@ import { Narrow } from './_narrow';
 export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
   object: T,
   path: Narrow<TPath>,
-  value: ValueAtPath<T, TPath>
+  value: ValueAtPath<T, TPath>,
 ): T;
 
 /**
@@ -34,27 +34,39 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(
   path: Narrow<TPath>,
-  value: Value
+  value: Value,
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath() {
+export function setPath(): unknown {
   return purry(_setPath, arguments);
 }
 
-export function _setPath(object: any, path: Array<any>, value: any): any {
-  if (path.length === 0) return value;
+export function _setPath(
+  data: unknown,
+  path: ReadonlyArray<PropertyKey>,
+  value: unknown,
+): unknown {
+  const [current, ...rest] = path;
+  if (current === undefined) {
+    return value;
+  }
 
-  if (Array.isArray(object)) {
-    return object.map((item, index) => {
-      if (index === path[0]) {
-        return _setPath(item, path.slice(1), value);
-      }
-      return item;
-    });
+  if (Array.isArray(data)) {
+    return data.map((item: unknown, index) =>
+      index === current ? _setPath(item, rest, value) : item,
+    );
+  }
+
+  if (data === null || data === undefined) {
+    throw new Error("Path doesn't exist in object!");
   }
 
   return {
-    ...object,
-    [path[0]]: _setPath(object[path[0]], path.slice(1), value),
+    ...data,
+    [current]: _setPath(
+      (data as Record<PropertyKey, unknown>)[current],
+      rest,
+      value,
+    ),
   };
 }

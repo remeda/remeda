@@ -1,21 +1,21 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import type { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 type Joinable = bigint | boolean | number | string | null | undefined;
 
 export type Joined<T extends IterableContainer, Glue extends string> =
   // Empty tuple
   T[number] extends never
-    ? ''
+    ? ""
     : // Single item tuple (could be optional too!)
       T extends readonly [Joinable?]
-      ? `${NullishCoalesce<T[0], ''>}`
+      ? `${NullishCoalesce<T[0], "">}`
       : // Tuple with non-rest element (head)
         T extends readonly [infer First, ...infer Tail]
-        ? `${NullishCoalesce<First, ''>}${Glue}${Joined<Tail, Glue>}`
+        ? `${NullishCoalesce<First, "">}${Glue}${Joined<Tail, Glue>}`
         : // Tuple with non-rest element (tail)
           T extends readonly [...infer Head, infer Last]
-          ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, ''>}`
+          ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, "">}`
           : // Arrays and tuple rest-elements, we can't say anything about the output
             string;
 
@@ -24,8 +24,8 @@ export type Joined<T extends IterableContainer, Glue extends string> =
 // the builtin `join` method, they should result in an empty string!
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join#description
 type NullishCoalesce<T, Fallback> = T extends Joinable
-  ? T extends undefined | null
-    ? NonNullable<T> | Fallback
+  ? T extends null | undefined
+    ? Fallback | NonNullable<T>
     : T
   : never;
 
@@ -83,5 +83,5 @@ export function join(): unknown {
 
 const joinImplementation = (
   data: ReadonlyArray<unknown>,
-  glue: string
+  glue: string,
 ): string => data.join(glue);

@@ -1,6 +1,6 @@
-import type { IterableContainer } from './_types';
-import type { Joined } from './join';
-import { purry } from './purry';
+import type { IterableContainer } from "./_types";
+import type { Joined } from "./join";
+import { purry } from "./purry";
 
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
@@ -12,7 +12,7 @@ type isEqual<A, B> =
 
 type Difference<A extends number, B extends number> =
   TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
-    ? U['length']
+    ? U["length"]
     : never;
 
 type isLessThan<A extends number, B extends number> =
@@ -27,7 +27,7 @@ type isLessThan<A extends number, B extends number> =
 type TupleOfLength<
   L extends number,
   T extends IterableContainer = [],
-> = T['length'] extends L ? T : TupleOfLength<L, [...T, unknown]>;
+> = T["length"] extends L ? T : TupleOfLength<L, [...T, unknown]>;
 
 type IsNonNegative<T extends number> = number extends T
   ? false
@@ -49,9 +49,9 @@ type SwapArrayInternal<
   Original extends IterableContainer = T,
 > = T extends readonly [infer AtPosition, ...infer Rest]
   ? [
-      Position['length'] extends Index1
+      Position["length"] extends Index1
         ? Original[Index2]
-        : Position['length'] extends Index2
+        : Position["length"] extends Index2
           ? Original[Index1]
           : AtPosition,
       ...SwapArrayInternal<
@@ -68,17 +68,17 @@ type SwapString<
   T extends string,
   K1 extends number,
   K2 extends number,
-> = Joined<SwapArray<CharactersTuple<T>, K1, K2>, ''>;
+> = Joined<SwapArray<CharactersTuple<T>, K1, K2>, "">;
 
 type SwapArray<
   T extends IterableContainer,
   K1 extends number,
   K2 extends number,
 > =
-  // TODO [typescript@>4.6]: Because of limitations on the typescript version
-  // used in Remeda we can't build a proper Absolute number type so we can't
-  // implement proper typing for negative indices and have to opt for a less-
-  // strict type instead.
+  // TODO: Because of limitations on the typescript version used in Remeda we
+  // can't build a proper Absolute number type so we can't implement proper
+  // typing for negative indices and have to opt for a less- strict type
+  // instead.
   // Check out the history for the PR that introduced this TODO to see how it
   // could be implemented.
   IsNonNegative<K1> extends false
@@ -87,9 +87,9 @@ type SwapArray<
       ? Array<T[number]>
       : // If the indices are not within the input arrays range the result would be
         // trivially the same as the input array.
-        isLessThan<K1, T['length']> extends false
+        isLessThan<K1, T["length"]> extends false
         ? T
-        : isLessThan<K2, T['length']> extends false
+        : isLessThan<K2, T["length"]> extends false
           ? T
           : SwapArrayInternal<T, K1, K2>;
 
@@ -151,19 +151,19 @@ export function swapIndices<
  */
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,
-  index2: K2
+  index2: K2,
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
-export function swapIndices() {
+export function swapIndices(): unknown {
   return purry(_swapIndices, arguments);
 }
 
 function _swapIndices(
   item: IterableContainer | string,
   index1: number,
-  index2: number
+  index2: number,
 ): unknown {
-  return typeof item === 'string'
+  return typeof item === "string"
     ? _swapString(item, index1, index2)
     : _swapArray(item, index1, index2);
 }
@@ -171,7 +171,7 @@ function _swapIndices(
 function _swapArray(
   item: ReadonlyArray<unknown>,
   index1: number,
-  index2: number
+  index2: number,
 ): Array<unknown> {
   const result = item.slice();
 
@@ -197,6 +197,6 @@ function _swapArray(
 }
 
 function _swapString(item: string, index1: number, index2: number): string {
-  const result = _swapArray(item.split(''), index1, index2);
-  return result.join('');
+  const result = _swapArray(item.split(""), index1, index2);
+  return result.join("");
 }

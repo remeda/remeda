@@ -1,4 +1,4 @@
-import type { CompareFunction, NonEmptyArray } from './_types';
+import type { CompareFunction, NonEmptyArray } from "./_types";
 
 // We define the comparators in a global const so that they are only
 // instantiated once, and so we can couple a label (string) for them that could
@@ -40,13 +40,13 @@ type Projection<T> = (x: T) => Comparable;
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#type_coercion
 type Comparable =
   | ComparablePrimitive
-  | { [Symbol.toPrimitive](hint: string): ComparablePrimitive }
-  | { valueOf(): ComparablePrimitive }
-  | { toString(): string };
+  | { [Symbol.toPrimitive]: (hint: string) => ComparablePrimitive }
+  | { toString: () => string }
+  | { valueOf: () => ComparablePrimitive };
 
 //  Notice that `boolean` is special in that it is coerced as a number (0 for
 // `false`, 1 for `true`) implicitly.
-type ComparablePrimitive = number | string | boolean;
+type ComparablePrimitive = boolean | number | string;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
@@ -59,15 +59,15 @@ type ComparablePrimitive = number | string | boolean;
  */
 export function purryOrderRules<T>(
   func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
-  inputArgs: IArguments | ReadonlyArray<unknown>
+  inputArgs: IArguments | ReadonlyArray<unknown>,
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call purry so it's fine...
   const [dataOrRule, ...rules] = (
     Array.isArray(inputArgs) ? inputArgs : Array.from(inputArgs)
   ) as
-    | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>]
-    | Readonly<NonEmptyArray<OrderRule<T>>>;
+    | Readonly<NonEmptyArray<OrderRule<T>>>
+    | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>];
 
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!
@@ -95,11 +95,14 @@ export function purryOrderRulesWithArgument(
   func: <T>(
     data: ReadonlyArray<T>,
     compareFn: CompareFunction<T>,
-    arg: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
+    arg: any,
   ) => unknown,
-  inputArgs: IArguments
+  inputArgs: IArguments,
 ): unknown {
-  const [first, second, ...rest] = Array.from(inputArgs);
+  const [first, second, ...rest] = Array.from(
+    inputArgs,
+  ) as ReadonlyArray<unknown>;
 
   // We need to pull the `n` argument out to make it work with purryOrderRules.
   let arg: unknown;
@@ -123,10 +126,10 @@ function orderRuleComparer<T>(
   ...otherRules: ReadonlyArray<OrderRule<T>>
 ): (a: T, b: T) => number {
   const projector =
-    typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
+    typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
-  const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
-  const comparator = COMPARATORS[direction];
+  const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
+  const { [direction]: comparator } = COMPARATORS;
 
   const nextComparer =
     secondaryRule === undefined
@@ -157,14 +160,16 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return true;
   }
 
-  if (typeof x !== 'object' || !Array.isArray(x)) {
+  if (typeof x !== "object" || !Array.isArray(x)) {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] = x;
+  const [maybeProjection, maybeDirection, ...rest] =
+    x as ReadonlyArray<unknown>;
 
   return (
     isProjection(maybeProjection) &&
+    typeof maybeDirection === "string" &&
     maybeDirection in COMPARATORS &&
     // Has to be a 2-tuple
     rest.length === 0
@@ -172,4 +177,4 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
 }
 
 const isProjection = <T>(x: unknown): x is Projection<T> =>
-  typeof x === 'function' && x.length === 1;
+  typeof x === "function" && x.length === 1;

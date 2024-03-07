@@ -1,5 +1,5 @@
-import { splitAt } from './splitAt';
-import { purry } from './purry';
+import { splitAt } from "./splitAt";
+import { purry } from "./purry";
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -14,7 +14,7 @@ import { purry } from './purry';
  */
 export function splitWhen<T>(
   array: ReadonlyArray<T>,
-  fn: (item: T) => boolean
+  fn: (item: T) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
@@ -28,18 +28,25 @@ export function splitWhen<T>(
  * @category Array
  */
 export function splitWhen<T>(
-  fn: (item: T) => boolean
+  fn: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen() {
+export function splitWhen(): unknown {
   return purry(_splitWhen, arguments);
 }
 
-function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
+function _splitWhen<T>(
+  array: ReadonlyArray<T>,
+  fn: (item: T) => boolean,
+): [Array<T>, Array<T>] {
   for (let i = 0; i < array.length; i++) {
-    if (fn(array[i])) {
+    // TODO: Use `Array.prototype.entries` once we bump our TS target so we
+    // can get both the index and the item at the same time, and don't need
+    // the non-null assertion.
+    if (fn(array[i]!)) {
       return splitAt(array, i);
     }
   }
-  return [array, []];
+
+  return [array.slice(), []];
 }

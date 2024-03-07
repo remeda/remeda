@@ -1,3 +1,5 @@
+type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
+
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
@@ -12,9 +14,9 @@
  * @category Array
  */
 export function zipWith<F, S, R>(
-  first: Array<F>,
-  second: Array<S>,
-  fn: (f: F, s: S) => R
+  first: ReadonlyArray<F>,
+  second: ReadonlyArray<S>,
+  fn: ZippingFunction<F, S, R>,
 ): Array<R>;
 
 /**
@@ -29,8 +31,8 @@ export function zipWith<F, S, R>(
  * @category Array
  */
 export function zipWith<F, S, R>(
-  fn: (f: F, s: S) => R
-): (first: Array<F>, second: Array<S>) => Array<R>;
+  fn: ZippingFunction<F, S, R>,
+): (first: ReadonlyArray<F>, second: ReadonlyArray<S>) => Array<R>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -45,39 +47,39 @@ export function zipWith<F, S, R>(
  * @category Array
  */
 export function zipWith<F, S, R>(
-  fn: (f: F, s: S) => R,
-  second: Array<S>
-): (first: Array<F>) => Array<R>;
+  fn: ZippingFunction<F, S, R>,
+  second: ReadonlyArray<S>,
+): (first: ReadonlyArray<F>) => Array<R>;
 
-export function zipWith() {
-  const args = Array.from(arguments);
-  if (typeof args[0] === 'function' && args.length === 1) {
-    return function (f: any, s: any) {
-      return _zipWith(f, s, args[0]);
-    };
+export function zipWith(
+  arg0: ReadonlyArray<unknown> | ZippingFunction,
+  arg1?: ReadonlyArray<unknown>,
+  arg2?: ZippingFunction,
+): unknown {
+  if (typeof arg0 === "function") {
+    return arg1 === undefined
+      ? (f: ReadonlyArray<unknown>, s: ReadonlyArray<unknown>) =>
+          _zipWith(f, s, arg0)
+      : (f: ReadonlyArray<unknown>) => _zipWith(f, arg1, arg0);
   }
 
-  if (typeof args[0] === 'function' && args.length === 2) {
-    return function (f: any) {
-      return _zipWith(f, args[1], args[0]);
-    };
+  if (arg1 === undefined || arg2 === undefined) {
+    throw new Error("zipWith: Missing arguments in dataFirst function call");
   }
 
-  if (args.length === 3) {
-    return _zipWith(args[0], args[1], args[2]);
-  }
+  return _zipWith(arg0, arg1, arg2);
 }
 
 function _zipWith<F, S, R>(
-  first: Array<F>,
-  second: Array<S>,
-  fn: (f: F, s: S) => R
-) {
+  first: ReadonlyArray<F>,
+  second: ReadonlyArray<S>,
+  fn: ZippingFunction<F, S, R>,
+): Array<R> {
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];
   for (let i = 0; i < resultLength; i++) {
-    result.push(fn(first[i], second[i]));
+    result.push(fn(first[i]!, second[i]!));
   }
 
   return result;

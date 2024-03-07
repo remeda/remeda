@@ -1,36 +1,39 @@
-import { isBoolean } from './isBoolean';
-import { typesDataProvider } from '../test/types_data_provider';
+import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  TYPES_DATA_PROVIDER,
+} from "../test/types_data_provider";
+import { isBoolean } from "./isBoolean";
 
-describe('isBoolean', () => {
-  test('isBoolean: should work as type guard', () => {
-    const data = typesDataProvider('boolean');
+describe("isBoolean", () => {
+  it("should work as type guard", () => {
+    const data = TYPES_DATA_PROVIDER.boolean as AllTypesDataProviderTypes;
     if (isBoolean(data)) {
-      expect(typeof data).toEqual('boolean');
-      assertType<boolean>(data);
-    }
-
-    const data1: unknown = typesDataProvider('boolean');
-    if (isBoolean(data1)) {
-      expect(typeof data1).toEqual('boolean');
-      assertType<boolean>(data1);
-    }
-
-    const data2: any = typesDataProvider('boolean');
-    if (isBoolean(data2)) {
-      expect(typeof data2).toEqual('boolean');
-      assertType<boolean>(data2);
+      expect(typeof data).toEqual("boolean");
+      expectTypeOf(data).toEqualTypeOf<boolean>();
     }
   });
-  test('isBoolean: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-    ].filter(isBoolean);
-    expect(data.every(c => typeof c === 'boolean')).toEqual(true);
-    assertType<Array<boolean>>(data);
+
+  it("should narrow `unknown`", () => {
+    const data = TYPES_DATA_PROVIDER.boolean as unknown;
+    if (isBoolean(data)) {
+      expect(typeof data).toEqual("boolean");
+      expectTypeOf(data).toEqualTypeOf<boolean>();
+    }
+  });
+
+  it("should narrow `any`", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
+    const data = TYPES_DATA_PROVIDER.boolean as any;
+    if (isBoolean(data)) {
+      expect(typeof data).toEqual("boolean");
+      expectTypeOf(data).toEqualTypeOf<boolean>();
+    }
+  });
+
+  it("should work as type guard in filter", () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isBoolean);
+    expect(data.every((c) => typeof c === "boolean")).toEqual(true);
+    expectTypeOf(data).toEqualTypeOf<Array<boolean>>();
   });
 });

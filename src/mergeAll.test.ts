@@ -1,8 +1,8 @@
-import { mergeAll } from './mergeAll';
+import { mergeAll } from "./mergeAll";
 
-test('merge objects', () => {
+test("merge objects", () => {
   expect(
-    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }] as const)
+    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }] as const),
   ).toEqual({
     a: 1,
     b: 2,

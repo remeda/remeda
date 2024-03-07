@@ -1,60 +1,60 @@
-import { typesDataProvider, type TestClass } from '../test/types_data_provider';
-import { isNonNull } from './isNonNull';
+import type {
+  AllTypesDataProviderTypes,
+  TestClass,
+} from "../test/types_data_provider";
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  TYPES_DATA_PROVIDER,
+} from "../test/types_data_provider";
+import { isNonNull } from "./isNonNull";
 
-describe('isNonNull', () => {
-  test('isNonNull": should work as type guard', () => {
-    const data = typesDataProvider('date');
+describe("isNonNull", () => {
+  test("should work as type guard", () => {
+    const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<
-        | (() => void)
-        | [number, number, number]
-        | { a: string }
+      expectTypeOf(data).toEqualTypeOf<
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
         | undefined
-      >(data);
+      >();
     }
   });
-  test('isNonNull: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-      typesDataProvider('undefined'),
-    ].filter(isNonNull);
-    expect(data).toHaveLength(5);
-    assertType<
+  test("should work as type guard in filter", () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
+    expect(data).toHaveLength(17);
+    expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { a: string }
         | Array<number>
-        | boolean
         | Date
         | Error
         | Map<string, string>
-        | number
         | Promise<number>
         | RegExp
         | Set<string>
-        | string
-        | symbol
         | TestClass
         | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | (() => void)
+        | { readonly a: "asd" }
+        | [number, number, number]
         | undefined
       >
     >(data);

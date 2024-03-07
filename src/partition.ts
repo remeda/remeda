@@ -1,5 +1,5 @@
-import { purry } from './purry';
-import { PredIndexedOptional, PredIndexed } from './_types';
+import { purry } from "./purry";
+import type { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
@@ -16,7 +16,7 @@ import { PredIndexedOptional, PredIndexed } from './_types';
  */
 export function partition<T, S extends T>(
   items: ReadonlyArray<T>,
-  predicate: (item: T) => item is S
+  predicate: (item: T) => item is S,
 ): [Array<S>, Array<Exclude<T, S>>];
 
 /**
@@ -34,7 +34,7 @@ export function partition<T, S extends T>(
  */
 export function partition<T>(
   items: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
@@ -50,7 +50,7 @@ export function partition<T>(
  * @category Array
  */
 export function partition<T, S extends T>(
-  predicate: (item: T) => item is S
+  predicate: (item: T) => item is S,
 ): (array: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
 
 /**
@@ -66,33 +66,35 @@ export function partition<T, S extends T>(
  * @category Array
  */
 export function partition<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition() {
+export function partition(): unknown {
   return purry(_partition(false), arguments);
 }
 
 const _partition =
   (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     const ret: [Array<T>, Array<T>] = [[], []];
-    array.forEach((item, index) => {
+    for (let index = 0; index < array.length; index++) {
+      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+      const item = array[index]!;
       const matches = indexed ? fn(item, index, array) : fn(item);
       ret[matches ? 0 : 1].push(item);
-    });
+    }
     return ret;
   };
 
 export namespace partition {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    predicate: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>,
   ): [Array<T>, Array<T>];
   export function indexed<T>(
-    predicate: PredIndexed<T, boolean>
+    predicate: PredIndexed<T, boolean>,
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
-  export function indexed() {
+  export function indexed(): unknown {
     return purry(_partition(true), arguments);
   }
 }

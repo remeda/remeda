@@ -1,5 +1,5 @@
-import { IterableContainer } from './_types';
-import { purry } from './purry';
+import type { IterableContainer } from "./_types";
+import { purry } from "./purry";
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
@@ -22,7 +22,7 @@ import { purry } from './purry';
  */
 export function sort<T>(
   items: ReadonlyArray<T>,
-  cmp: (a: T, b: T) => number
+  cmp: (a: T, b: T) => number,
 ): Array<T>;
 
 /**
@@ -44,29 +44,32 @@ export function sort<T>(
  * @strict
  */
 export function sort<T>(
-  cmp: (a: T, b: T) => number
+  cmp: (a: T, b: T) => number,
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort() {
+export function sort(): unknown {
   return purry(_sort, arguments);
 }
 
-function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {
-  const ret = [...items];
+function _sort<T>(
+  items: ReadonlyArray<T>,
+  cmp: (a: T, b: T) => number,
+): Array<T> {
+  const ret = items.slice();
   ret.sort(cmp);
   return ret;
 }
 
-interface Strict {
+type Strict = {
   <T extends IterableContainer>(
     items: T,
-    cmp: (a: T[number], b: T[number]) => number
+    cmp: (a: T[number], b: T[number]) => number,
   ): Sorted<T>;
 
   <T extends IterableContainer>(
-    cmp: (a: T[number], b: T[number]) => number
+    cmp: (a: T[number], b: T[number]) => number,
   ): (items: T) => Sorted<T>;
-}
+};
 
 type Sorted<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

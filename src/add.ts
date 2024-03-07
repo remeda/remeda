@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Adds two numbers.
@@ -30,10 +30,10 @@ export function add(value: number, addend: number): number;
  */
 export function add(addend: number): (value: number) => number;
 
-export function add() {
+export function add(): unknown {
   return purry(_add, arguments);
 }
 
-function _add(value: number, addend: number) {
+function _add(value: number, addend: number): number {
   return value + addend;
 }

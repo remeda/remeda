@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from "./_types";
 
 /**
  * Checks if the given parameter is of type `"object"` via `typeof`, excluding `null`.
@@ -26,5 +26,5 @@ import type { NarrowedTo } from './_types';
  * @dataFirst
  */
 export const isObjectType = <T>(
-  data: T | object
-): data is NarrowedTo<T, object> => typeof data === 'object' && data !== null;
+  data: T | object,
+): data is NarrowedTo<T, object> => typeof data === "object" && data !== null;

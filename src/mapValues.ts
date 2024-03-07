@@ -1,8 +1,10 @@
-import { ObjectKeys } from './_types';
+import type { ObjectKeys } from "./_types";
+import { purry } from "./purry";
+import { toPairs } from "./toPairs";
 
 /**
  * Maps values of `object` and keeps the same keys.
- * @param object the object to map
+ * @param data the object to map
  * @param fn the mapping function
  * @signature
  *    R.mapValues(object, fn)
@@ -11,9 +13,9 @@ import { ObjectKeys } from './_types';
  * @dataFirst
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, any>, S>(
-  object: T,
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
+export function mapValues<T extends Record<PropertyKey, unknown>, S>(
+  data: T,
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
 ): Record<ObjectKeys<T>, S>;
 
 /**
@@ -26,20 +28,25 @@ export function mapValues<T extends Record<PropertyKey, any>, S>(
  * @dataLast
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, any>, S>(
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
-): (object: T) => Record<ObjectKeys<T>, S>;
+export function mapValues<T extends Record<PropertyKey, unknown>, S>(
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
+): (data: T) => Record<ObjectKeys<T>, S>;
 
-export function mapValues(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (data: any) => _mapValues(data, arg1);
-  }
-  return _mapValues(arg1, arg2);
+export function mapValues(): unknown {
+  return purry(_mapValues, arguments);
 }
 
-function _mapValues(obj: any, fn: (key: string, value: any) => any) {
-  return Object.keys(obj).reduce<any>((acc, key) => {
-    acc[key] = fn(obj[key], key);
-    return acc;
-  }, {});
+function _mapValues<T extends Record<PropertyKey, unknown>, S>(
+  data: T,
+  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
+): Record<ObjectKeys<T>, S> {
+  const out: Partial<Record<ObjectKeys<T>, S>> = {};
+  for (const [key, value] of toPairs.strict(data)) {
+    // @ts-expect-error [ts2345] - FIXME!
+    const mappedValue = fn(value, key);
+    // @ts-expect-error [ts2536] - FIXME!
+    out[key] = mappedValue;
+  }
+  // @ts-expect-error [ts2322] - We build the object incrementally so the type can't represent the final object.
+  return out;
 }

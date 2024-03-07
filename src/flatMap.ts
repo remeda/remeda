@@ -1,5 +1,6 @@
-import { flatten } from './flatten';
-import { purry } from './purry';
+import { flatten } from "./flatten";
+import type { LazyEvaluator } from "./pipe";
+import { purry } from "./purry";
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
@@ -15,7 +16,7 @@ import { purry } from './purry';
  */
 export function flatMap<T, K>(
   array: ReadonlyArray<T>,
-  fn: (input: T) => K | ReadonlyArray<K>
+  fn: (input: T) => K | ReadonlyArray<K>,
 ): Array<K>;
 
 /**
@@ -31,37 +32,28 @@ export function flatMap<T, K>(
  * @category Array
  */
 export function flatMap<T, K>(
-  fn: (input: T) => K | ReadonlyArray<K>
+  fn: (input: T) => K | ReadonlyArray<K>,
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function flatMap() {
+export function flatMap(): unknown {
   return purry(_flatMap, arguments, flatMap.lazy);
 }
 
 function _flatMap<T, K>(
-  array: Array<T>,
-  fn: (input: T) => ReadonlyArray<K>
+  array: ReadonlyArray<T>,
+  fn: (input: T) => ReadonlyArray<K>,
 ): Array<K> {
-  return flatten(array.map(item => fn(item)));
+  return flatten(array.map((item) => fn(item)));
 }
 
 export namespace flatMap {
-  export function lazy<T, K>(fn: (input: T) => K | ReadonlyArray<K>) {
-    return (value: T) => {
+  export const lazy =
+    <T, K>(fn: (input: T) => K | ReadonlyArray<K>): LazyEvaluator<T, K> =>
+    // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+    (value) => {
       const next = fn(value);
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasNext: true,
-          hasMany: true,
-          next: next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
+      return Array.isArray(next)
+        ? { done: false, hasNext: true, hasMany: true, next }
+        : { done: false, hasNext: true, next };
     };
-  }
 }

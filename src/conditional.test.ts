@@ -1,91 +1,91 @@
-import { conditional } from './conditional';
-import { equals } from './equals';
-import { isNumber } from './isNumber';
-import { isString } from './isString';
-import { pipe } from './pipe';
+import { conditional } from "./conditional";
+import { equals } from "./equals";
+import { isNumber } from "./isNumber";
+import { isString } from "./isString";
+import { pipe } from "./pipe";
 
-describe('runtime (dataFirst)', () => {
-  it('falls back to trivial default', () => {
-    expect(conditional('Jokic', conditional.defaultCase())).toBeUndefined();
+describe("runtime (dataFirst)", () => {
+  it("falls back to trivial default", () => {
+    expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
   });
 
-  it('falls back to our default', () => {
+  it("falls back to our default", () => {
     expect(
       conditional(
-        'Jokic',
-        conditional.defaultCase(() => 'hello')
-      )
-    ).toEqual('hello');
+        "Jokic",
+        conditional.defaultCase(() => "hello"),
+      ),
+    ).toEqual("hello");
   });
 
-  it('works with a single case', () => {
-    expect(conditional('Jokic', [equals('Jokic'), () => 'center'])).toBe(
-      'center'
+  it("works with a single case", () => {
+    expect(conditional("Jokic", [equals("Jokic"), () => "center"])).toBe(
+      "center",
     );
   });
 
-  it('works with two cases', () => {
+  it("works with two cases", () => {
     expect(
       conditional(
-        'Jokic',
-        [equals('Murray'), () => 'point guard'],
-        [equals('Jokic'), () => 'center']
-      )
-    ).toBe('center');
+        "Jokic",
+        [equals("Murray"), () => "point guard"],
+        [equals("Jokic"), () => "center"],
+      ),
+    ).toBe("center");
   });
 
-  it('picks the first matching case', () => {
+  it("picks the first matching case", () => {
     expect(
       conditional(
-        'Jokic',
-        [equals('Jokic'), () => 'center'],
-        [equals('Jokic'), () => 'mvp']
-      )
-    ).toBe('center');
+        "Jokic",
+        [equals("Jokic"), () => "center"],
+        [equals("Jokic"), () => "mvp"],
+      ),
+    ).toBe("center");
   });
 
-  it('throws when no matching case', () => {
+  it("throws when no matching case", () => {
     expect(() =>
-      conditional('Jokic', [() => false, () => 'world'])
+      conditional("Jokic", [() => false, () => "world"]),
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: conditional: data failed for all cases]`
+      "[Error: conditional: data failed for all cases]",
     );
   });
 });
 
-describe('runtime (dataLast)', () => {
-  test('should return value of first pair', () => {
+describe("runtime (dataLast)", () => {
+  test("should return value of first pair", () => {
     const value = pipe(
-      'Jokic',
+      "Jokic",
       conditional(
-        [equals('Murray'), () => 'point guard'],
-        [equals('Jokic'), () => 'center'],
-        [equals('Jokic'), () => 'mvp']
-      )
+        [equals("Murray"), () => "point guard"],
+        [equals("Jokic"), () => "center"],
+        [equals("Jokic"), () => "mvp"],
+      ),
     );
-    expect(value).toBe('center');
+    expect(value).toBe("center");
   });
 });
 
-describe('typing', () => {
-  it('can narrow types in the transformers', () => {
-    const data = 3 as string | number;
+describe("typing", () => {
+  it("can narrow types in the transformers", () => {
+    const data = 3 as number | string;
     conditional(
       data,
       [
         isString,
-        str => {
+        (str) => {
           expectTypeOf(str).toBeString();
           expectTypeOf(str).not.toBeNumber();
         },
       ],
       [
         isNumber,
-        num => {
+        (num) => {
           expectTypeOf(num).toBeNumber();
           expectTypeOf(num).not.toBeString();
         },
-      ]
+      ],
     );
   });
 });

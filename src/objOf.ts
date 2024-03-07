@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 
 /**
  * Creates an object containing a single `key:value` pair.
@@ -22,13 +22,14 @@ export function objOf<T, K extends string>(value: T, key: K): { [x in K]: T };
  * @category Object
  */
 export function objOf<T, K extends string>(
-  key: K
+  key: K,
 ): (value: T) => { [x in K]: T };
 
-export function objOf() {
+export function objOf(): unknown {
   return purry(_objOf, arguments);
 }
 
-function _objOf(value: any, key: string) {
+function _objOf<T, K extends string>(value: T, key: K): { [x in K]: T } {
+  // @ts-expect-error [ts2322] - I'm not sure how to get the type right here...
   return { [key]: value };
 }

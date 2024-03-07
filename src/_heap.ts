@@ -2,8 +2,9 @@
  * Heap related utilities.
  */
 
-import { swapInPlace } from './_swapInPlace';
-import type { CompareFunction } from './_types';
+import { swapInPlace } from "./_swapInPlace";
+import type { CompareFunction } from "./_types";
+import { hasAtLeast } from "./hasAtLeast";
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`
@@ -15,8 +16,9 @@ import type { CompareFunction } from './_types';
  * @returns - void, the result is in the provided heap array.
  */
 export function heapify<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
     heapSiftDown(heap, i, compareFn);
@@ -36,11 +38,16 @@ export function heapify<T>(
  * heap if the item was inserted.
  */
 export function heapMaybeInsert<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   compareFn: CompareFunction<T>,
-  item: T
+  item: T,
 ): T | undefined {
-  const head = heap[0];
+  if (!hasAtLeast(heap, 1)) {
+    return;
+  }
+
+  const [head] = heap;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.
@@ -58,9 +65,10 @@ export function heapMaybeInsert<T>(
  * swapping other items in the process.
  */
 function heapSiftDown<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
   heap: Array<T>,
   index: number,
-  compareFn: CompareFunction<T>
+  compareFn: CompareFunction<T>,
 ): void {
   let currentIndex = index;
 
@@ -69,7 +77,7 @@ function heapSiftDown<T>(
     const firstChildIndex = currentIndex * 2 + 1;
 
     let swapIndex =
-      compareFn(heap[currentIndex], heap[firstChildIndex]) < 0
+      compareFn(heap[currentIndex]!, heap[firstChildIndex]!) < 0
         ? // Is the parent "smaller" (in regards to `compareFn`) to its child?
           firstChildIndex
         : currentIndex;
@@ -77,7 +85,7 @@ function heapSiftDown<T>(
     const secondChildIndex = firstChildIndex + 1;
     if (
       secondChildIndex < heap.length &&
-      compareFn(heap[swapIndex], heap[secondChildIndex]) < 0
+      compareFn(heap[swapIndex]!, heap[secondChildIndex]!) < 0
     ) {
       // Is there a second child? Is it the smallest of the three?
       swapIndex = secondChildIndex;

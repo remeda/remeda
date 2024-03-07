@@ -1,6 +1,5 @@
-/* eslint @typescript-eslint/ban-types: ["error",{types:{Function: false},extendDefaults:true}] --
- * Function is used generically in this file to define any type of function, so
- * this lint error is not relevant for it.
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any --
+ * This function is deprecated so it doesn't matter that it uses bad types.
  */
 type DefinitelyObject<T> =
   Exclude<
@@ -29,5 +28,5 @@ type DefinitelyObject<T> =
  * @deprecated - The semantics of this guard are confusing. It excludes Arrays but does not exclude other complex objects like Classes or built-in objects (such as Date, Promise, Error, etc.). Instead, consider using `isObjectType` for a more inclusive validation encompassing any JavaScript "object" type, or `isPlainObject` for a more specific validation targeting simple struct/shape/record-like objects. To replicate the existing logic, use: `const isObject = (x) => isObjectType(x) && !Array.isArray(x)`.
  */
 export function isObject<T>(data: T | object): data is DefinitelyObject<T> {
-  return !!data && !Array.isArray(data) && typeof data === 'object';
+  return Boolean(data) && !Array.isArray(data) && typeof data === "object";
 }
