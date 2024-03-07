@@ -1,5 +1,5 @@
-import { equals } from './equals';
-import { purry } from './purry';
+import { equals } from "./equals";
+import { purry } from "./purry";
 
 /**
  * Checks if `subObject` is a subobject of `object`, which means for every
@@ -37,16 +37,16 @@ export function hasSubobject<
  * @category Object
  */
 export function hasSubobject<S extends Record<PropertyKey, unknown>>(
-  subObject: S
+  subObject: S,
 ): <T extends S>(object: T) => boolean;
 
-export function hasSubobject() {
+export function hasSubobject(): unknown {
   return purry(_hasSubobject, arguments);
 }
 
 function _hasSubobject<S extends Record<PropertyKey, unknown>, T extends S>(
   object: T,
-  subObject: S
+  subObject: S,
 ): boolean {
   for (const key of Object.keys(subObject)) {
     if (!equals(subObject[key], object[key])) {
