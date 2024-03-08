@@ -1,37 +1,38 @@
 import { purry } from "./purry";
+import type { Merge } from "./type-fest/merge";
 
 /**
- * Merges two objects. The same as `Object.assign`.
- * `b` object will override properties of `a`.
- *
- * @param a - The first object.
- * @param b - The second object.
+ * Spreads the properties of the second object into the first object, overriding
+ * any existing properties; equivalent to `{ ...data, ...other }`.
+ * @param data the first object, shared props will be overridden.
+ * @param other the second object.
  * @signature
- *    R.merge(a, b)
+ *    R.merge(data, other)
  * @example
  *    R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
  */
-export function merge<A, B>(a: A, b: B): A & B;
+export function merge<T, S>(data: T, other: S): Merge<T, S>;
 
 /**
- * Merges two objects. The same as `Object.assign`. `b` object will override properties of `a`.
- *
- * @param b - The second object.
+ * Spreads the properties of the second object into the first object, overriding
+ * any existing properties; equivalent to `{ ...data, ...other }`.
+ * @param data the first object, shared props will be overridden.
+ * @param other the second object.
  * @signature
- *    R.merge(b)(a)
+ *    R.merge(other)(data)
  * @example
- *    R.merge({ y: 10, z: 2 })({ x: 1, y: 2 }) // => { x: 1, y: 10, z: 2 }
+ *    R.pipe({ x: 1, y: 2 }, R.merge({ y: 10, z: 2 })) // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object
  */
-export function merge<A, B>(b: B): (a: A) => A & B;
+export function merge<S>(other: S): <T>(data: T) => Merge<T, S>;
 
 export function merge(): unknown {
   return purry(_merge, arguments);
 }
 
-function _merge<A, B>(a: A, b: B): A & B {
-  return { ...a, ...b };
+function _merge<T, S>(data: T, other: S): Merge<T, S> {
+  return { ...data, ...other };
 }
