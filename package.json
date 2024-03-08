@@ -2,6 +2,7 @@
   "name": "remeda",
   "version": "0.0.35",
   "description": "A utility library for JavaScript and Typescript.",
+  "type": "module",
   "keywords": [
     "utils",
     "fp",
