@@ -25,7 +25,7 @@ describe("data first", () => {
         {} as Record<string, unknown>,
       );
 
-      const expectedEquality = new Array(5).fill({
+      const expectedEquality = Array.from({ length: 5 }).fill({
         "1": 1,
         "2": 2,
         "3": 3,
