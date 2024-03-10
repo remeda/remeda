@@ -54,12 +54,12 @@ export function hasProp<
 >(obj: Obj, key: Prop): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>>;
 
 export function hasProp(): unknown {
-  return purry(hasPropImpl, arguments);
+  return purry(hasPropImplementation, arguments);
 }
 
-function hasPropImpl<Obj extends PlainObject, Prop extends AllUnionKeys<Obj>>(
-  obj: Obj,
-  key: Prop,
-): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>> {
+function hasPropImplementation<
+  Obj extends PlainObject,
+  Prop extends AllUnionKeys<Obj>,
+>(obj: Obj, key: Prop): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>> {
   return key in obj && obj[key] !== undefined;
 }

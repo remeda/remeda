@@ -36,10 +36,10 @@ export function isEqual<WideValue, SpecificValue extends WideValue>(
 ): wideValue is SpecificValue;
 
 export function isEqual(): unknown {
-  return purry(isEqualImpl, arguments);
+  return purry(isEqualImplementation, arguments);
 }
 
-function isEqualImpl<WideValue, SpecificValue extends WideValue>(
+function isEqualImplementation<WideValue, SpecificValue extends WideValue>(
   widened: WideValue,
   value: SpecificValue,
 ): widened is SpecificValue {
