@@ -46,11 +46,10 @@ export function chunk(): unknown {
 }
 
 function _chunk<T>(array: ReadonlyArray<T>, size: number): Array<Array<T>> {
-  const ret: Array<Array<T>> = Array.from({
-    length: Math.ceil(array.length / size),
-  });
-  for (let index = 0; index < ret.length; index++) {
-    ret[index] = array.slice(index * size, (index + 1) * size);
+  const length = Math.ceil(array.length / size);
+  const ret: Array<Array<T>> = Array.from({ length });
+  for (let index = 0, offset = size; index < length; index++) {
+    ret[index] = array.slice(offset, (offset += size));
   }
   return ret;
 }
