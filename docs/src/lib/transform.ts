@@ -81,7 +81,7 @@ function transformSignature({
     indexed: hasTag(comment, "indexed"),
     pipeable: hasTag(comment, "pipeable"),
     strict: hasTag(comment, "strict"),
-    example: getExample(comment),
+    example: tagContent(comment, "example"),
     args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
@@ -118,16 +118,6 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
         : type.type === "predicate"
           ? "boolean"
           : "Object";
-}
-
-function getExample(comment: JSONOutput.Comment): string | undefined {
-  return (
-    tagContent(comment, "example") ??
-    tagContent(comment, "exampleRaw")
-      ?.split("\n")
-      .map((str) => str.replace(/^ {3}/, ""))
-      .join("\n")
-  );
 }
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
