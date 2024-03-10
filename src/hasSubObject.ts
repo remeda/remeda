@@ -16,10 +16,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function hasSubObject<
-  S extends Record<PropertyKey, unknown>,
-  T extends S,
->(object: T, subObject: S): boolean;
+export function hasSubObject<S extends object, T extends S = S>(
+  object: T,
+  subObject: S,
+): boolean;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -36,19 +36,20 @@ export function hasSubObject<
  * @dataLast
  * @category Object
  */
-export function hasSubObject<S extends Record<PropertyKey, unknown>>(
+export function hasSubObject<S extends object>(
   subObject: S,
-): <T extends S>(object: T) => boolean;
+): <T extends S = S>(object: T) => boolean;
 
 export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
 }
 
-function _hasSubObject<S extends Record<PropertyKey, unknown>, T extends S>(
+function _hasSubObject<S extends object, T extends S = S>(
   object: T,
   subObject: S,
 ): boolean {
   for (const key of Object.keys(subObject)) {
+    // @ts-expect-error [ts7053] - This indexing is safe:
     if (!equals(subObject[key], object[key])) {
       return false;
     }
