@@ -39,7 +39,7 @@ export * from "./forEachObj";
 export * from "./fromPairs";
 export * from "./groupBy";
 export * from "./hasAtLeast";
-export * from "./hasSubobject";
+export * from "./hasSubObject";
 export * from "./identity";
 export * from "./indexBy";
 export * from "./intersection";
