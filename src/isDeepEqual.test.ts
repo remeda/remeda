@@ -275,4 +275,13 @@ describe("typing", () => {
     // @ts-expect-error [ts2345] - Checking against the wrong type should fail
     isDeepEqual(1 as number, true);
   });
+
+  it("works deeply", () => {
+    const data = [] as Array<
+      { a: Array<number> | Array<string> } | { b: Array<boolean> }
+    >;
+    if (isDeepEqual(data, [{ a: [1] }])) {
+      expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
+    }
+  });
 });
