@@ -47,6 +47,7 @@ export * from "./invert";
 export * from "./isArray";
 export * from "./isBoolean";
 export * from "./isDate";
+export * from "./isDeepEqual";
 export * from "./isDefined";
 export * from "./isEmpty";
 export * from "./isError";
