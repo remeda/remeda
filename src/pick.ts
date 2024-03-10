@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param names - The properties names.
  * @signature R.pick([prop1, prop2])(object)
  * @example
@@ -15,6 +16,7 @@ export function pick<T extends object, K extends keyof T>(
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param object - The target object.
  * @param names - The properties names.
  * @signature R.pick(object, [prop1, prop2])

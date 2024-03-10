@@ -22,6 +22,7 @@ type MaybeLazyFunction = {
  * provide a generic return type that is built from the input function, and
  * crafting one manually isn't worthwhile as we rely on function declaration
  * overloading to combine the types for dataFirst and dataLast invocations!
+ *
  * @param fn - The function to purry.
  * @param args - The arguments.
  * @signature R.purry(fn, arguments);

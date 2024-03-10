@@ -10,6 +10,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * occurrence of the item.
  *
  * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
@@ -41,6 +42,7 @@ export function sortedIndexBy<T>(
  * occurrence of the item.
  *
  * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
@@ -68,6 +70,7 @@ export function sortedIndexBy<T>(
  * would result in maintaining the arrays sort-ness. The array can contain
  * duplicates. If the item already exists in the array the index would be of the
  * first occurrence of the item.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of

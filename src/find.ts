@@ -6,6 +6,7 @@ import { purry } from "./purry";
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
+ *
  * @param items - The array.
  * @param fn - The predicate.
  * @signature
@@ -26,6 +27,7 @@ export function find<T>(
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
+ *
  * @param fn - The predicate.
  * @signature
  *    R.find(fn)(items)

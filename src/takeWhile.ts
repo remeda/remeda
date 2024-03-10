@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Returns elements from the array until predicate returns false.
+ *
  * @param array - The array.
  * @param fn - The predicate.
  * @signature
@@ -18,6 +19,7 @@ export function takeWhile<T>(
 
 /**
  * Returns elements from the array until predicate returns false.
+ *
  * @param fn - The predicate.
  * @signature
  *    R.takeWhile(fn)(array)

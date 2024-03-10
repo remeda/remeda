@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Adds two numbers.
+ *
  * @param value - The number.
  * @param addend - The number to add to the value.
  * @signature
@@ -17,6 +18,7 @@ export function add(value: number, addend: number): number;
 
 /**
  * Adds two numbers.
+ *
  * @param value - The number.
  * @param addend - The number to add to the value.
  * @signature

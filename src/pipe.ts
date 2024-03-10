@@ -40,6 +40,7 @@ type PreparedLazyOperation = LazyEvaluator & {
 
 /**
  * Perform left-to-right function composition.
+ *
  * @param value - The initial value.
  * @param operations - The list of operations to apply.
  * @signature R.pipe(data, op1, op2, op3)

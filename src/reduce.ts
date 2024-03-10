@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+ *
  * @param array - The array to reduce.
  * @param fn - The callback function.
  * @param initialValue - The initial value to use as an accumulator value in the callback function.
@@ -23,6 +24,7 @@ export function reduce<T, K>(
 
 /**
  * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+ *
  * @param fn - The callback function.
  * @param initialValue - The initial value to use as an accumulator value in the callback function.
  * @signature

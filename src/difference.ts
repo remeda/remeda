@@ -4,6 +4,7 @@ import { purry } from "./purry";
 
 /**
  * Excludes the values from `other` array.
+ *
  * @param array - The source array.
  * @param other - The values to exclude.
  * @signature
@@ -21,6 +22,7 @@ export function difference<T>(
 
 /**
  * Excludes the values from `other` array.
+ *
  * @param other - The values to exclude.
  * @signature
  *    R.difference(other)(array)

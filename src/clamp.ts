@@ -7,6 +7,7 @@ type Limits = {
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
+ *
  * @param value - The number.
  * @param limits - The bounds limits.
  * @signature
@@ -22,6 +23,7 @@ export function clamp(value: number, limits: Limits): number;
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
+ *
  * @param value - The number.
  * @param limits - The bounds limits.
  * @signature

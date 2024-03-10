@@ -18,6 +18,7 @@ const _countBy =
  * Counts how many values of the collection pass the specified predicate.
  *
  * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2**.
+ *
  * @param items - The input data.
  * @param fn - The predicate.
  * @signature
@@ -42,6 +43,7 @@ export function countBy<T>(
  * Counts how many values of the collection pass the specified predicate.
  *
  * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2**.
+ *
  * @param fn - The predicate.
  * @signature
  *    R.countBy(fn)(array)
@@ -58,6 +60,10 @@ export function countBy(): unknown {
 
 export namespace countBy {
   /**
+   * Counts how many values of the collection pass the specified predicate.
+   *
+   * @example
+   *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
    * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
    */
   export function indexed<T>(
@@ -65,6 +71,10 @@ export namespace countBy {
     fn: PredIndexed<T, boolean>,
   ): number;
   /**
+   * Counts how many values of the collection pass the specified predicate.
+   *
+   * @example
+   *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
    * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
    */
   export function indexed<T>(

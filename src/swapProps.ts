@@ -6,6 +6,7 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
 
 /**
  * Swaps the positions of two properties in an object based on the provided keys.
+ *
  * @param data - The object to be manipulated.
  * @param key1 - The first property key.
  * @param key2 - The second property key.
@@ -25,6 +26,7 @@ export function swapProps<
 
 /**
  * Swaps the positions of two properties in an object based on the provided keys.
+ *
  * @param key1 - The first property key.
  * @param key2 - The second property key.
  * @returns Returns the manipulated object.

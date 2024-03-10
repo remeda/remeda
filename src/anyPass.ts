@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Determines whether any predicate returns true for the input data.
+ *
  * @param data - The input data for predicates.
  * @param fns - The list of predicates.
  * @signature
@@ -22,6 +23,7 @@ export function anyPass<T>(
 
 /**
  * Determines whether any predicate returns true for the input data.
+ *
  * @param fns - The list of predicates.
  * @signature
  *    R.anyPass(fns)(data)

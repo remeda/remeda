@@ -6,6 +6,7 @@
 /**
  * Similar to [[Cast]] but with a custom fallback `Catch`. If it fails,
  * it will enforce `Catch` instead of `A2`.
+ *
  * @param A1 - Type to check against.
  * @param A2 - Type to try/test with.
  * @param Catch - Type to fallback to if the test failed.
@@ -37,6 +38,7 @@ type NarrowRaw<A> =
 
 /**
  * Prevent type widening on generic function parameters.
+ *
  * @param A - Type to narrow.
  * @returns `A`.
  * @example

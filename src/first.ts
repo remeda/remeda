@@ -12,6 +12,7 @@ type First<T extends IterableContainer> = T extends []
 
 /**
  * Gets the first element of `array`.
+ *
  * @param data - The array.
  * @returns The first element of the array.
  * @signature
@@ -27,6 +28,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 
 /**
  * Gets the first element of `array`.
+ *
  * @param data - The array.
  * @returns The first element of the array.
  * @signature

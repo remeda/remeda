@@ -9,6 +9,7 @@ type Debouncer<
 > = {
   /**
    * Invoke the debounced function.
+   *
    * @param args - Same as the args for the debounced function.
    * @returns The last computed value of the debounced function with the
    * latest args provided to it. If `timing` does not include `leading` then the
@@ -55,6 +56,7 @@ type DebounceOptions = {
  * It stores the latest call's arguments so they could be used at the end of the cool-down period when invoking `func` (if configured to invoke the function at the end of the cool-down period).
  * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
+ *
  * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
  * @param options - An object allowing further customization of the debouncer:

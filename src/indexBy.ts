@@ -4,6 +4,7 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
 /**
  * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
  * Use the strict version to maintain the given key's type, so long as it is a valid `PropertyKey`.
+ *
  * @param array - The array.
  * @param fn - The indexing function.
  * @signature
@@ -26,6 +27,7 @@ export function indexBy<T>(
  * Converts a list of objects into an object indexing the objects by the given key.
  * (casted to a string). Use the strict version to maintain the given key's type, so
  * long as it is a valid `PropertyKey`.
+ *
  * @param array - The array.
  * @param fn - The indexing function.
  * @signature

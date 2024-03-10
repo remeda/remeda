@@ -1,6 +1,7 @@
 /**
  * A function that checks if the passed parameter is defined and narrows its type accordingly.
  * To test specifically for `undefined` (and not `null`) use the strict variant of this function.
+ *
  * @param data - The variable to check.
  * @returns True if the passed input is defined, false otherwise.
  * @signature

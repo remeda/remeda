@@ -7,6 +7,7 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 /**
  * Excludes the values from `other` array.
  * Elements are compared by custom comparator isEquals.
+ *
  * @param array - The source array.
  * @param other - The values to exclude.
  * @param isEquals - The comparator.
@@ -31,6 +32,7 @@ export function differenceWith<TFirst, TSecond>(
 /**
  * Excludes the values from `other` array.
  * Elements are compared by custom comparator isEquals.
+ *
  * @param other - The values to exclude.
  * @param isEquals - The comparator.
  * @signature

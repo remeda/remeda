@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Gets the last element of `array`.
+ *
  * @param array - The array.
  * @signature
  *    R.last(array)
@@ -18,6 +19,7 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
 
 /**
  * Gets the last element of `array`.
+ *
  * @param array - The array.
  * @signature
  *    R.last()(array)

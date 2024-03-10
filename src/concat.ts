@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Combines two arrays.
+ *
  * @param arr1 - The first array.
  * @param arr2 - The second array.
  * @signature
@@ -18,6 +19,7 @@ export function concat<T, K>(
 
 /**
  * Combines two arrays.
+ *
  * @param arr2 - The second array.
  * @signature
  *    R.concat(arr2)(arr1);

@@ -11,6 +11,7 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
 
 /**
  * Recursively flattens `array`.
+ *
  * @param items - The target array.
  * @signature
  *   R.flattenDeep(array)
@@ -23,6 +24,7 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
 
 /**
  * Recursively flattens `array`.
+ *
  * @param items - The target array.
  * @signature
  *   R.flattenDeep()(array)

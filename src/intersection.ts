@@ -4,6 +4,7 @@ import { purry } from "./purry";
 
 /**
  * Returns a list of elements that exist in both array.
+ *
  * @param array - The source array.
  * @param other - The second array.
  * @signature
@@ -21,6 +22,7 @@ export function intersection<T>(
 
 /**
  * Returns a list of elements that exist in both array.
+ *
  * @param array - The source array.
  * @param other - The second array.
  * @signature

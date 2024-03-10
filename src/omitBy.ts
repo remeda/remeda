@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
+ *
  * @param object - The target object.
  * @param fn - The predicate.
  * @signature R.omitBy(object, fn)
@@ -18,6 +19,7 @@ export function omitBy<T>(
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
+ *
  * @param fn - The predicate.
  * @signature R.omitBy(fn)(object)
  * @example

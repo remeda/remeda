@@ -3,6 +3,7 @@ import type { NonEmptyArray, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
+ *
  * @param items - The items to group.
  * @param fn - The grouping function. When `undefined` is returned the item would
  * be skipped and not grouped under any key.
@@ -29,6 +30,7 @@ export function groupBy<T>(
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
+ *
  * @param fn - The grouping function.
  * @signature
  *    R.groupBy(fn)(array)

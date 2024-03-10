@@ -4,6 +4,7 @@ import { purry } from "./purry";
  * Removes elements from the beginning of the array until the predicate returns false.
  *
  * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
+ *
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
@@ -22,6 +23,7 @@ export function dropWhile<T>(
  * Removes elements from the beginning of the array until the predicate returns false.
  *
  * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
+ *
  * @param predicate - The predicate.
  * @signature
  *    R.dropWhile(predicate)(data)

@@ -4,6 +4,7 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 
 /**
  * Counts values of the collection or iterable.
+ *
  * @param items - The input data.
  * @signature
  *    R.length(array)
@@ -16,6 +17,7 @@ export function length<T>(items: Enumerable<T>): number;
 
 /**
  * Counts values of the collection or iterable.
+ *
  * @param items - The input data.
  * @signature
  *    R.length()(array)
@@ -28,6 +30,7 @@ export function length<T>(): (items: Enumerable<T>) => number;
 
 /**
  * Counts values of the collection or iterable.
+ *
  * @signature
  *    R.length()(array)
  * @example

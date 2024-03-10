@@ -4,6 +4,7 @@ import { toPairs } from "./toPairs";
 
 /**
  * Maps values of `object` and keeps the same keys.
+ *
  * @param data - The object to map.
  * @param fn - The mapping function.
  * @signature
@@ -20,6 +21,7 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
 
 /**
  * Maps values of `object` and keeps the same keys.
+ *
  * @param fn - The mapping function.
  * @signature
  *    R.mapValues(fn)(object)

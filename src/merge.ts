@@ -3,6 +3,7 @@ import { purry } from "./purry";
 /**
  * Merges two objects. The same as `Object.assign`.
  * `b` object will override properties of `a`.
+ *
  * @param a - The first object.
  * @param b - The second object.
  * @signature
@@ -16,6 +17,7 @@ export function merge<A, B>(a: A, b: B): A & B;
 
 /**
  * Merges two objects. The same as `Object.assign`. `b` object will override properties of `a`.
+ *
  * @param b - The second object.
  * @signature
  *    R.merge(b)(a)

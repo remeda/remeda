@@ -6,6 +6,7 @@ import { purry } from "./purry";
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
+ *
  * @param array - The array to filter.
  * @param fn - The callback function.
  * @signature
@@ -30,6 +31,7 @@ export function filter<T>(
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
+ *
  * @param fn - The callback function.
  * @signature
  *    R.filter(fn)(array)

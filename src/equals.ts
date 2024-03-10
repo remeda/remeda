@@ -3,6 +3,7 @@ import { purry } from "./purry";
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
+ *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
  * @signature
@@ -19,6 +20,7 @@ export function equals(a: unknown, b: unknown): boolean;
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
+ *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
  * @signature

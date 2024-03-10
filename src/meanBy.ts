@@ -21,6 +21,7 @@ const _meanBy =
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
+ *
  * @param fn - Predicate function.
  * @signature
  *   R.meanBy(fn)(array)
@@ -41,6 +42,7 @@ export function meanBy<T>(
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
+ *
  * @param items - The array.
  * @param fn - Predicate function.
  * @signature

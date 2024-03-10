@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Returns a new array containing the keys of the array or object.
+ *
  * @param source - Either an array or an object.
  * @signature
  *    R.keys(source)
@@ -30,6 +31,7 @@ export function keys(
 
 /**
  * Returns a new array containing the keys of the array or object.
+ *
  * @param source - Either an array or an object.
  * @signature
  *    R.keys()(source)

@@ -6,6 +6,7 @@ import { isTruthy } from "./isTruthy";
  *
  * **DEPRECATED: equivalent to `R.filter(R.isTruthy)` and so will be removed in
  * v2**.
+ *
  * @param items - The array to compact.
  * @signature
  *    R.compact(array)

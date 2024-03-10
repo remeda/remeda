@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
+ *
  * @param array - The array to map.
  * @param fn - The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries.
  * @returns The new mapped object.
@@ -28,6 +29,7 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
+ *
  * @param fn - The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature

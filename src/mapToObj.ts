@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function.
+ *
  * @param array - The array to map.
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
@@ -23,6 +24,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
 
 /**
  * Map each element of an array into an object using a defined callback function.
+ *
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature

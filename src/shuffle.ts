@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
+ *
  * @param items - The array to shuffle.
  * @signature
  *    R.shuffle(array)
@@ -14,6 +15,7 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
+ *
  * @signature
  *    R.shuffle()(array)
  * @example

@@ -10,6 +10,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * occurrence of the item.
  *
  * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
@@ -41,6 +42,7 @@ export function sortedLastIndexBy<T>(
  * occurrence of the item.
  *
  * Runs in O(logN) time.
+ *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of

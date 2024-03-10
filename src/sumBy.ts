@@ -16,6 +16,7 @@ const _sumBy =
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ *
  * @param fn - Predicate function.
  * @signature
  *   R.sumBy(fn)(array)
@@ -36,6 +37,7 @@ export function sumBy<T>(
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ *
  * @param items - The array.
  * @param fn - Predicate function.
  * @signature

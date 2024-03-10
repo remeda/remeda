@@ -161,8 +161,8 @@ export default config(
       "no-useless-rename": "error",
 
       // === JSDoc =============================================================
-      // (We are assuming that the config is extended by JSDoc's: recommended
-      // extension)
+      // (We are assuming that the config is extended by JSDoc's:
+      // recommended-typescript extension)
 
       // Correctness
       // TODO: Requires manual fixes, enable in a separate PR.
@@ -174,7 +174,6 @@ export default config(
           // docs/src/lib/transform.ts.
           definedTags: [
             "signature",
-            "exampleRaw",
             "dataFirst",
             "dataLast",
             "indexed",
@@ -202,11 +201,8 @@ export default config(
           contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
         },
       ],
-      "jsdoc/require-description": ["error", { exemptedBy: ["deprecated"] }],
-      "jsdoc/require-example": [
-        "warn",
-        { enableFixer: false, exemptedBy: ["deprecated", "exampleRaw"] },
-      ],
+      "jsdoc/require-description": "error",
+      "jsdoc/require-example": ["warn", { enableFixer: false }],
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-param": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
@@ -233,7 +229,6 @@ export default config(
                 "returns",
                 "signature",
                 "example",
-                "exampleRaw",
                 "dataFirst",
                 "dataLast",
                 "indexed",
@@ -246,6 +241,7 @@ export default config(
           linesBetween: 0,
         },
       ],
+      "jsdoc/tag-lines": ["error", "any", { startLines: 1 }],
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:

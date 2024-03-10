@@ -8,6 +8,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by custom comparator isEquals.
+ *
  * @param array - The array to filter.
  * @param isEquals - The comparator.
  * @signature
@@ -28,6 +29,7 @@ export function uniqWith<T>(
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by custom comparator isEquals.
+ *
  * @param isEquals - The comparator.
  * @signature R.uniqWith(isEquals)(array)
  * @example

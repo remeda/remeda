@@ -4,6 +4,7 @@ import { purry } from "./purry";
 
 /**
  * Sets the value at `path` of `object`.
+ *
  * @param object - The target method.
  * @param path - The array of properties.
  * @param value - The value to set.
@@ -22,6 +23,7 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
 
 /**
  * Sets the value at `path` of `object`.
+ *
  * @param obj - The target method.
  * @param path - The array of properties.
  * @param value - The value to set.

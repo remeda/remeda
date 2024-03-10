@@ -4,6 +4,7 @@ import { purry } from "./purry";
 
 /**
  * Removes first `n` elements from the `array`.
+ *
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
@@ -18,6 +19,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Removes first `n` elements from the `array`.
+ *
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature

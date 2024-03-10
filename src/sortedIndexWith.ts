@@ -15,6 +15,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
+ *
  * @param data - Array, "sorted" by `predicate`.
  * @param predicate - A predicate which also defines the array's order.
  * @returns Index (In the range 0..data.length).
@@ -46,6 +47,7 @@ export function sortedIndexWith<T>(
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
+ *
  * @param data - Array, "sorted" by `predicate`.
  * @param predicate - A predicate which also defines the array's order.
  * @returns Index (In the range 0..data.length).

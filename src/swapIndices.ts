@@ -109,6 +109,7 @@ type SwappedIndices<
  * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
  *
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
+ *
  * @param data - The item to be manipulated. This can be an array, or a string.
  * @param index1 - The first index.
  * @param index2 - The second index.
@@ -134,6 +135,7 @@ export function swapIndices<
  * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
  *
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
+ *
  * @param index1 - The first index.
  * @param index2 - The second index.
  * @returns Returns the manipulated array or string.

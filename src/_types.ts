@@ -19,6 +19,7 @@ export type NonEmptyArray<T> = [T, ...Array<T>];
  * array under the hood, this includes arrays *AND* tuples (of the form [x, y],
  * and of the form [x, ...y[]], etc...), and their readonly equivalent. This
  * allows us to be more inclusive to what functions can process.
+ *
  * @example map<T extends ArrayLike>(items: T) { ... }
  *
  * We would've named this `ArrayLike`, but that's already used by typescript...
@@ -32,6 +33,7 @@ export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
 
 /**
  * Copied verbatim from `sindresorhus/ts-extras` (MIT License).
+ *
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/readonly-tuple.d.ts
  */
 export type ReadonlyTuple<
@@ -45,6 +47,7 @@ export type ReadonlyTuple<
 /**
  * An extension of Extract for type predicates which falls back to the base
  * in order to narrow the `unknown` case.
+ *
  * @example
  *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
  */
@@ -65,12 +68,14 @@ type BuildTupleHelper<
 
 /**
  * A compare function that is compatible with the native `Array.sort` function.
+ *
  * @returns >0 if `a` should come after `b`, 0 if they are equal, and <0 if `a` should come before `b`.
  */
 export type CompareFunction<T> = (a: T, b: T) => number;
 
 /**
  * Based on type-fest's IsAny.
+ *
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
  */
 export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;

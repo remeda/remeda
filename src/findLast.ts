@@ -4,6 +4,7 @@ import { purry } from "./purry";
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined
  * otherwise.
+ *
  * @param array - The array.
  * @param fn - The predicate.
  * @signature
@@ -25,6 +26,7 @@ export function findLast<T>(
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined
  * otherwise.
+ *
  * @param fn - The predicate.
  * @signature
  *    R.findLast(fn)(items)

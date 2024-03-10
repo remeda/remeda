@@ -6,6 +6,7 @@ import type { NarrowedTo } from "./_types";
  * This function is narrower in scope than `isObjectType`, which accepts any entity considered an `"object"` by JavaScript's `typeof`.
  *
  * Note that Maps, Arrays, and Sets are not considered plain objects and would return `false`.
+ *
  * @param data - The variable to check.
  * @returns The input type, narrowed to only plain objects.
  * @signature

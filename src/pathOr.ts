@@ -5,6 +5,7 @@ import { purry } from "./purry";
  * containing all of the keys of each variant of `T`. If a key is
  * present in multiple variants of `T`, then the corresponding type in
  * `Pathable<T>` will be the intersection of all types for that key.
+ *
  * @example
  *    type T1 = Pathable<{a: number} | {a: string; b: boolean}>
  *    // {a: number | string; b: boolean}
@@ -69,6 +70,7 @@ type PathValue3<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ *
  * @param object - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
@@ -108,6 +110,7 @@ export function pathOr<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ *
  * @param object - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.

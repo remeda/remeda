@@ -1,5 +1,6 @@
 /**
  * A function that checks if the passed parameter is truthy and narrows its type accordingly.
+ *
  * @param data - The variable to check.
  * @returns True if the passed input is truthy, false otherwise.
  * @signature

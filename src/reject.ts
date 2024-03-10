@@ -6,6 +6,7 @@ import { purry } from "./purry";
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
+ *
  * @param items - The array to reject.
  * @param fn - The callback function.
  * @signature
@@ -26,6 +27,7 @@ export function reject<T>(
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
+ *
  * @param items - The array to reject.
  * @param fn - The callback function.
  * @signature

@@ -3,6 +3,7 @@ type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
+ *
  * @param first - The first input list.
  * @param second - The second input list.
  * @param fn - The function applied to each position of the list.
@@ -22,6 +23,7 @@ export function zipWith<F, S, R>(
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
+ *
  * @param fn - The function applied to each position of the list.
  * @signature
  *   R.zipWith(fn)(first, second)
@@ -37,6 +39,7 @@ export function zipWith<F, S, R>(
 /**
  * Creates a new list from two supplied lists by calling the supplied function
  * with the same-positioned element from each list.
+ *
  * @param fn - The function applied to each position of the list.
  * @param second - The second input list.
  * @signature

@@ -1,5 +1,6 @@
 /**
  * A function that returns always `undefined`.
+ *
  * @signature
  *    R.noop()
  * @example

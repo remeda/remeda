@@ -1,5 +1,6 @@
 /**
  * A function that checks if the passed parameter is Nil (null or undefined) and narrows its type accordingly.
+ *
  * @param data - The variable to check.
  * @returns True if the passed input is Nil (null or undefined), false otherwise.
  * @signature

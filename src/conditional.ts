@@ -25,6 +25,7 @@ type Case<In, Out, Thru extends In = In> = readonly [
  * previous conditions. Using a `switch (true)` statement or ternary operators
  * is recommended for more precise type control when such type narrowing is
  * needed.
+ *
  * @param data - The input data to be evaluated against the provided cases.
  * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
  * consists of a predicate (or a type-predicate) and a transformer function that
@@ -116,6 +117,7 @@ export function conditional<
  * previous conditions. Using a `switch (true)` statement or ternary operators
  * is recommended for more precise type control when such type narrowing is
  * needed.
+ *
  * @param data - The input data to be evaluated against the provided cases.
  * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
  * consists of a predicate (or a type-predicate) and a transformer function that
@@ -222,6 +224,7 @@ export namespace conditional {
    * prevent an exception from being thrown when none of the previous cases
    * match.
    * If this is not the last case it will short-circuit anything after it.
+   *
    * @param then - You only need to provide the transformer, the predicate is
    * implicit. @default () => undefined, which is how Lodash and Ramda handle
    * the final fallback case.

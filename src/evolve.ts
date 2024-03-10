@@ -11,6 +11,7 @@ type GenericEvolver = {
 
 /**
  * Creates an assumed `evolver` type from the type of `data` argument.
+ *
  * @example
  * interface Data {
  *   id: number;
@@ -63,6 +64,7 @@ type Evolved<T, E> = T extends object
  * if its corresponding key does not exist in the `data` object.
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
+ *
  * @param data - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
  * @param evolver - Object that include functions that is applied to
@@ -101,6 +103,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * if its corresponding key does not exist in the `data` object.
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
+ *
  * @param data - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
  * @param evolver - Object that include functions that is applied to

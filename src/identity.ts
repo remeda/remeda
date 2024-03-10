@@ -7,6 +7,7 @@
 
 /**
  * A function that always returns the param passed to it.
+ *
  * @signature
  *    R.identity(data)
  * @example

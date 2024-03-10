@@ -3,6 +3,7 @@ import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ *
  * @param array - The array.
  * @param fn - The predicate.
  * @signature
@@ -23,6 +24,7 @@ export function findLastIndex<T>(
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ *
  * @param array - The array.
  * @param fn - The predicate.
  * @signature

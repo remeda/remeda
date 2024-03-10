@@ -4,6 +4,7 @@
  * NOTE: You don't need this function if you are calling it directly, just use
  * `String.prototype.slice` directly. This function doesn't provide any type
  * improvements over the built-in types.
+ *
  * @param string - The string to slice.
  * @param indexStart - The index of the first character to include in the returned substring.
  * @param indexEnd - (optional) The index of the first character to exclude from the returned substring.

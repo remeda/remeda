@@ -4,6 +4,7 @@ import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
+ *
  * @param data - The object.
  * @param propNames - The property names.
  * @signature
@@ -19,6 +20,7 @@ export function omit<T extends object, K extends keyof T>(
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
+ *
  * @param data - The object.
  * @param propNames - The property names.
  * @signature

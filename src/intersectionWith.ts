@@ -7,6 +7,7 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
+ *
  * @param array - The source array.
  * @param other - The second array.
  * @param comparator - The custom comparator.
@@ -34,6 +35,7 @@ export function intersectionWith<TFirst, TSecond>(
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
+ *
  * @param other - The second array.
  * @param comparator - The custom comparator.
  * @signature

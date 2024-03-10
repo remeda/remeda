@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param object - The target object.
  * @param fn - The predicate.
  * @signature R.pickBy(object, fn)
@@ -18,6 +19,7 @@ export function pickBy<T>(
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param fn - The predicate.
  * @signature R.pickBy(fn)(object)
  * @example

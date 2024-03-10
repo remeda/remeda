@@ -3,6 +3,7 @@ import { purry } from "./purry";
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
+ *
  * @param array - The array to split.
  * @param fn - The predicate.
  * @signature
@@ -19,6 +20,7 @@ export function splitWhen<T>(
 
 /**
  * Splits a given array at an index where the given predicate returns true.
+ *
  * @param fn - The predicate.
  * @signature
  *    R.splitWhen(fn)(array)

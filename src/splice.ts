@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
+ *
  * @param items - The array to splice.
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.
@@ -23,6 +24,7 @@ export function splice<T>(
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
+ *
  * @param items - The array to splice.
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.

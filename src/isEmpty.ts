@@ -13,6 +13,7 @@ import { isString } from "./isString";
  * need to check that an array is *not* empty, use `R.hasAtLeast(data, 1)`
  * and not `!R.isEmpty(data)`. For strings and objects there's no way in
  * typescript to narrow the result to a non-empty type.
+ *
  * @param data - The variable to check.
  * @returns True if the passed input is empty, false otherwise.
  * @signature

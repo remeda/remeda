@@ -2,6 +2,7 @@ import { purry } from "./purry";
 
 /**
  * Add a new property to an object.
+ *
  * @param obj - The target object.
  * @param prop - The property name.
  * @param value - The property value.
@@ -20,6 +21,7 @@ export function addProp<
 
 /**
  * Add a new property to an object.
+ *
  * @param prop - The property name.
  * @param value - The property value.
  * @signature

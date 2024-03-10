@@ -6,6 +6,7 @@ import { purry } from "./purry";
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
+ *
  * @param array - The array.
  * @param fn - The callback function.
  * @returns The original array.
@@ -31,6 +32,7 @@ export function forEach<T>(
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
+ *
  * @param fn - The function mapper.
  * @signature
  *    R.forEach(fn)(array)
