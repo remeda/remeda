@@ -52,7 +52,9 @@ describe("data last", () => {
 describe("typing", () => {
   test("must have matching keys and values", () => {
     expectTypeOf(hasSubObject({ a: 1 })).toEqualTypeOf<
-      <T extends { a: number } = { a: number }>(object: T) => boolean
+      <T extends { a: number } = { a: number }>(
+        object: T,
+      ) => object is T & { a: number }
     >();
 
     expectTypeOf(hasSubObject({ a: 1 })({ a: 2 })).toEqualTypeOf<boolean>();
@@ -62,6 +64,9 @@ describe("typing", () => {
 
     // @ts-expect-error - wrong value type
     hasSubObject({ a: 1 })({ a: "a" });
+
+    // @ts-expect-error - wrong value type
+    hasSubObject({ a: 1 })({ a: 2 } as unknown);
 
     // @ts-expect-error - wrong value type
     hasSubObject({ a: 1 } as const)({ a: 2 });
@@ -75,7 +80,7 @@ describe("typing", () => {
         },
       >(
         object: T,
-      ) => boolean
+      ) => object is T & { a: { b: number; c: number } }
     >();
 
     // @ts-expect-error - nested object missing keys

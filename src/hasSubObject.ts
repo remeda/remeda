@@ -19,7 +19,7 @@ import { purry } from "./purry";
 export function hasSubObject<S extends object, T extends S = S>(
   object: T,
   subObject: S,
-): boolean;
+): object is S & T;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -38,7 +38,7 @@ export function hasSubObject<S extends object, T extends S = S>(
  */
 export function hasSubObject<S extends object>(
   subObject: S,
-): <T extends S = S>(object: T) => boolean;
+): <T extends S = S>(object: T) => object is S & T;
 
 export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
@@ -47,7 +47,7 @@ export function hasSubObject(): unknown {
 function _hasSubObject<S extends object, T extends S = S>(
   object: T,
   subObject: S,
-): boolean {
+): object is S & T {
   for (const key of Object.keys(subObject)) {
     // @ts-expect-error [ts7053] - This indexing is safe:
     if (!equals(subObject[key], object[key])) {
