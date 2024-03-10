@@ -1,12 +1,12 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 import {
   AllUnionKeys,
   WithPropOfType,
   AllPossiblePropValues,
   PlainObject,
   EnsureExtends,
-} from './_objectProps';
-import { hasProp } from './hasProp';
+} from "./_objectProps";
+import { hasProp } from "./hasProp";
 
 /**
  * Determines if an object or array has a property with the specified key that satisfies the predicate.
@@ -31,9 +31,9 @@ export function hasPropSatisfying<
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
 >(
   key: Prop,
-  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate
+  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
 ): (
-  obj: Obj
+  obj: Obj,
 ) => obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>>;
 
 /**
@@ -59,7 +59,7 @@ export function hasPropSatisfying<
 >(
   obj: Obj,
   key: Prop,
-  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate
+  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
 ): obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>>;
 
 export function hasPropSatisfying(...args: Array<any>): any {
@@ -73,7 +73,7 @@ function hasPropSatisfyingImpl<
 >(
   obj: Obj,
   key: Prop,
-  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate
+  predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
 ) {
   if (!hasProp(obj, key)) return false;
   const value = obj[key] as AllPossiblePropValues<Obj, Prop>;

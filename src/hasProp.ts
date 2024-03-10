@@ -1,10 +1,10 @@
-import { purry } from './purry';
+import { purry } from "./purry";
 import {
   AllUnionKeys,
   EnsureExtends,
   PlainObject,
   WithRequiredProp,
-} from './_objectProps';
+} from "./_objectProps";
 
 /**
  * Determines if an object or array has a property with the specified key.
@@ -29,7 +29,7 @@ export function hasProp<
   Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
 >(
-  key: Prop
+  key: Prop,
 ): (obj: Obj) => obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>>;
 
 /**
@@ -59,7 +59,7 @@ export function hasProp(...args: Array<any>): any {
 
 function hasPropImpl<Obj extends object, Prop extends AllUnionKeys<Obj>>(
   obj: Obj,
-  key: Prop
+  key: Prop,
 ) {
   return key in obj && obj[key] !== undefined;
 }

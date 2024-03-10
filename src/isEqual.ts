@@ -1,5 +1,5 @@
-import { Narrow } from './_narrow';
-import { purry } from './purry';
+import { Narrow } from "./_narrow";
+import { purry } from "./purry";
 
 /**
  * Determines if a value is _shallowly_ equal to the specified value using Object.is equality,
@@ -15,7 +15,7 @@ import { purry } from './purry';
  * @category Guard
  */
 export function isEqual<WideValue, SpecificValue extends WideValue>(
-  specificValue: Narrow<SpecificValue>
+  specificValue: Narrow<SpecificValue>,
 ): (wideValue: WideValue) => wideValue is SpecificValue;
 
 /**
@@ -32,7 +32,7 @@ export function isEqual<WideValue, SpecificValue extends WideValue>(
  */
 export function isEqual<WideValue, SpecificValue extends WideValue>(
   wideValue: WideValue,
-  specificValue: Narrow<SpecificValue>
+  specificValue: Narrow<SpecificValue>,
 ): wideValue is SpecificValue;
 
 export function isEqual(...args: Array<any>) {
@@ -41,7 +41,7 @@ export function isEqual(...args: Array<any>) {
 
 function isEqualImpl<WideValue, SpecificValue extends WideValue>(
   widened: WideValue,
-  value: SpecificValue
+  value: SpecificValue,
 ): widened is SpecificValue {
   return Object.is(widened, value);
 }
