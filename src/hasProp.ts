@@ -53,13 +53,13 @@ export function hasProp<
   Prop extends AllUnionKeys<Obj>,
 >(obj: Obj, key: Prop): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>>;
 
-export function hasProp(...args: Array<any>): any {
-  return purry(hasPropImpl, args);
+export function hasProp(): unknown {
+  return purry(hasPropImpl, arguments);
 }
 
-function hasPropImpl<Obj extends object, Prop extends AllUnionKeys<Obj>>(
+function hasPropImpl<Obj extends PlainObject, Prop extends AllUnionKeys<Obj>>(
   obj: Obj,
   key: Prop,
-) {
+): obj is EnsureExtends<Obj, WithRequiredProp<Obj, Prop>> {
   return key in obj && obj[key] !== undefined;
 }

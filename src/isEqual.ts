@@ -35,8 +35,8 @@ export function isEqual<WideValue, SpecificValue extends WideValue>(
   specificValue: Narrow<SpecificValue>,
 ): wideValue is SpecificValue;
 
-export function isEqual(...args: Array<any>) {
-  return purry(isEqualImpl, args);
+export function isEqual(): unknown {
+  return purry(isEqualImpl, arguments);
 }
 
 function isEqualImpl<WideValue, SpecificValue extends WideValue>(

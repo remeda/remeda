@@ -18,7 +18,7 @@ type MakeKeyRequired<Obj, Prop extends keyof Obj> = Omit<Obj, Prop> & {
 
 type UnionMembersWithProp<Obj, Prop extends keyof Obj> = Extract<
   Obj,
-  { [key in Prop]?: any }
+  { [key in Prop]?: unknown }
 >;
 
 export type WithRequiredProp<Obj, Prop extends AllUnionKeys<Obj>> = Simplify<
@@ -38,4 +38,4 @@ export type WithPropOfType<
 export type AllPossiblePropValues<
   Obj,
   Prop extends AllUnionKeys<Obj>,
-> = Extract<WithRequiredProp<Obj, Prop>, { [key in Prop]: any }>[Prop];
+> = Extract<WithRequiredProp<Obj, Prop>, { [key in Prop]: unknown }>[Prop];

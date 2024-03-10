@@ -62,11 +62,11 @@ export function hasPropSatisfying<
   predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
 ): obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>>;
 
-export function hasPropSatisfying(...args: Array<any>): any {
-  return purry(hasPropSatisfyingImpl, args);
+export function hasPropSatisfying(): unknown {
+  return purry(hasPropSatisfyingImplementation, arguments);
 }
 
-function hasPropSatisfyingImpl<
+function hasPropSatisfyingImplementation<
   Obj extends PlainObject,
   Prop extends AllUnionKeys<Obj>,
   AfterPredicate extends AllPossiblePropValues<Obj, Prop>,
@@ -74,7 +74,7 @@ function hasPropSatisfyingImpl<
   obj: Obj,
   key: Prop,
   predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
-) {
+): obj is EnsureExtends<Obj, WithPropOfType<Obj, Prop, AfterPredicate>> {
   if (!hasProp(obj, key)) {
     return false;
   }
