@@ -27,7 +27,7 @@ documentation when migrating._
 | [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 | [`dropLastWhile`](https://remedajs.com/docs/#dropLastWhile)         | [`dropRightWhile`](https://lodash.com/docs/4.17.15#dropRightWhile)       | [`dropLastWhile`](https://ramdajs.com/docs/#dropLastWhile)         |
 | [`dropWhile`](https://remedajs.com/docs/#dropWhile)                 | [`dropWhile`](https://lodash.com/docs/4.17.15#dropWhile)                 | [`dropWhile`](https://ramdajs.com/docs/#dropWhile)                 |
-| [`equals`](https://remedajs.com/docs/#equals)                       | [`isEqual`](https://lodash.com/docs/4.17.15#isEqual)                     | [`equals`](https://ramdajs.com/docs/#equals)                       |
+| [`isDeepEqual`](https://remedajs.com/docs/#isDeepEqual)             | [`isEqual`](https://lodash.com/docs/4.17.15#isEqual)                     | [`equals`](https://ramdajs.com/docs/#equals)                       |
 | [`evolve`](https://remedajs.com/docs/#evolve)                       |                                                                          | [`evolve`](https://ramdajs.com/docs/#evolve)                       |
 | [`filter`](https://remedajs.com/docs/#filter)                       | [`filter`](https://lodash.com/docs/4.17.15#filter)                       | [`filter`](https://ramdajs.com/docs/#filter)                       |
 | [`find`](https://remedajs.com/docs/#find)                           | [`find`](https://lodash.com/docs/4.17.15#find)                           | [`find`](https://ramdajs.com/docs/#find)                           |
