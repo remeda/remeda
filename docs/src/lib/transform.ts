@@ -12,19 +12,24 @@ export function transformProject(project: typeof DATA) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
 
-  const functions = children
-    .filter(({ kind }) => kind === ReflectionKind.Function)
-    .map(transformFunction);
+  const functions = children.filter(
+    ({ kind }) => kind === ReflectionKind.Function,
+  );
 
-  return addCategories(project, functions.filter(isDefined.strict));
+  const functionNames = new Set(functions.map(({ name }) => name));
+
+  return addCategories(
+    project,
+    functions
+      .map((func) => transformFunction(func, functionNames))
+      .filter(isDefined.strict),
+  );
 }
 
-function transformFunction({
-  id,
-  name,
-  sources,
-  signatures,
-}: JSONOutput.DeclarationReflection) {
+function transformFunction(
+  { id, name, sources, signatures }: JSONOutput.DeclarationReflection,
+  functionNames: Set<string>,
+) {
   if (signatures === undefined) {
     return;
   }
@@ -40,13 +45,29 @@ function transformFunction({
     },
   ] = signaturesWithComments;
   const description =
-    summary.length === 0 ? undefined : summary.map(({ text }) => text).join("");
+    summary.length === 0
+      ? undefined
+      : summary
+          .map((part) => transformCommentDisplayPart(part, functionNames))
+          .join("");
 
   const methods = signaturesWithComments.map(transformSignature);
 
   const sourceUrl = sources?.[0]?.url;
 
   return { id, name, description, methods, sourceUrl };
+}
+
+function transformCommentDisplayPart(
+  { kind, text }: JSONOutput.CommentDisplayPart,
+  functionNames: ReadonlySet<string>,
+): string {
+  if (kind !== "code") {
+    return text;
+  }
+  const codeContent = text.slice(1, -1);
+  // If this is a function name, link to its anchor:
+  return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
 }
 
 function transformSignature({
@@ -60,7 +81,7 @@ function transformSignature({
     indexed: hasTag(comment, "indexed"),
     pipeable: hasTag(comment, "pipeable"),
     strict: hasTag(comment, "strict"),
-    example: getExample(comment),
+    example: tagContent(comment, "example"),
     args: parameters.map(getParameter),
     returns: {
       name: getReturnType(type),
@@ -97,16 +118,6 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
         : type.type === "predicate"
           ? "boolean"
           : "Object";
-}
-
-function getExample(comment: JSONOutput.Comment): string | undefined {
-  return (
-    tagContent(comment, "example") ??
-    tagContent(comment, "exampleRaw")
-      ?.split("\n")
-      .map((str) => str.replace(/^ {3}/, ""))
-      .join("\n")
-  );
 }
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
