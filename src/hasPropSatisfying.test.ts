@@ -80,8 +80,8 @@ describe("data-first", () => {
 
     it("should narrow the type of an object union based on the predicate result", () => {
       const obj = { type: "success", data: { foo: "bar" } } as
-        | { type: "success"; data: { foo: string } }
-        | { type: "error"; error: string };
+        | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } };
 
       if (hasPropSatisfying(obj, "type", isEqual("success"))) {
         expectTypeOf(obj).toEqualTypeOf<{
@@ -97,8 +97,8 @@ describe("data-first", () => {
 
     it("should narrow the type of an object union based on property presence", () => {
       const obj = { type: "success", data: { foo: "bar" } } as
-        | { type: "success"; data: { foo: string } }
-        | { type: "error"; error: string };
+        | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } };
 
       if (hasPropSatisfying(obj, "data", isObjectType)) {
         expectTypeOf(obj).toEqualTypeOf<{
@@ -110,8 +110,8 @@ describe("data-first", () => {
 
     it("should be able to accept another hasPropSatisfying as a predicate", () => {
       const obj = { type: "success", data: { foo: "bar" } } as
-        | { type: "success"; data: { foo: string } }
-        | { type: "error"; error: string };
+        | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } };
 
       if (
         hasPropSatisfying(obj, "data", hasPropSatisfying("foo", isEqual("bar")))
@@ -198,8 +198,8 @@ describe("data-last", () => {
 
     it("should narrow the type of an array of object unions based on the predicate result", () => {
       const arr = [] as Array<
-        | { type: "success"; data: { foo: string } }
         | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } }
       >;
 
       const success = arr.filter(hasPropSatisfying("type", isEqual("success")));
@@ -215,8 +215,8 @@ describe("data-last", () => {
 
     it("should narrow the type of an array of object unions based on property presence", () => {
       const arr = [] as Array<
-        | { type: "success"; data: { foo: string } }
         | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } }
       >;
 
       const success = arr.filter(hasPropSatisfying("data", isNonNull));
@@ -232,8 +232,8 @@ describe("data-last", () => {
 
     it("should be able to accept another hasPropSatisfying as a predicate", () => {
       const arr = [] as Array<
-        | { type: "success"; data: { foo: string } }
         | { type: "error"; error: string }
+        | { type: "success"; data: { foo: string } }
       >;
       const success = arr.filter(
         hasPropSatisfying("data", hasPropSatisfying("foo", isEqual("bar"))),

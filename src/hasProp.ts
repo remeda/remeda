@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import {
+import type {
   AllUnionKeys,
   EnsureExtends,
   PlainObject,

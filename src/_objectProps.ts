@@ -1,4 +1,4 @@
-import { Simplify } from "./type-fest/simplify";
+import type { Simplify } from "./type-fest/simplify";
 
 export type PlainObject = Record<PropertyKey, unknown>;
 

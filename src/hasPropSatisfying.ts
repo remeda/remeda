@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import {
+import type {
   AllUnionKeys,
   WithPropOfType,
   AllPossiblePropValues,
@@ -75,7 +75,9 @@ function hasPropSatisfyingImpl<
   key: Prop,
   predicate: (prop: AllPossiblePropValues<Obj, Prop>) => prop is AfterPredicate,
 ) {
-  if (!hasProp(obj, key)) return false;
+  if (!hasProp(obj, key)) {
+    return false;
+  }
   const value = obj[key] as AllPossiblePropValues<Obj, Prop>;
   return predicate(value);
 }

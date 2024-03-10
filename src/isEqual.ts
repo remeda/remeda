@@ -1,4 +1,4 @@
-import { Narrow } from "./_narrow";
+import type { Narrow } from "./_narrow";
 import { purry } from "./purry";
 
 /**

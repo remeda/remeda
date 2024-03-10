@@ -42,7 +42,7 @@ describe("data-first", () => {
   });
 
   it("should narrow the type of the first value to match that of the second value", () => {
-    const status = "pending" as "pending" | "fulfilled" | "rejected";
+    const status = "pending" as "fulfilled" | "pending" | "rejected";
     if (isEqual(status, "pending")) {
       expectTypeOf(status).toEqualTypeOf<"pending">();
     }
@@ -75,8 +75,8 @@ describe("data-first", () => {
   describe("interactions", () => {
     it("should work together with hasPropSatisfying to narrow the types of object unions", () => {
       const obj = { type: "foo", foo: 1 } as
-        | { type: "foo"; foo: number }
-        | { type: "bar"; bar: string };
+        | { type: "bar"; bar: string }
+        | { type: "foo"; foo: number };
       if (hasPropSatisfying(obj, "type", isEqual("foo"))) {
         expectTypeOf(obj).toEqualTypeOf<{ type: "foo"; foo: number }>();
       }
@@ -146,7 +146,7 @@ describe("data-last", () => {
   describe("interactions", () => {
     it("should work together with hasPropSatisfying to narrow the types of object unions", () => {
       const obj = [{ type: "foo", foo: 1 }] as Array<
-        { type: "foo"; foo: number } | { type: "bar"; bar: string }
+        { type: "bar"; bar: string } | { type: "foo"; foo: number }
       >;
       const foos = obj.filter(hasPropSatisfying("type", isEqual("foo")));
       expectTypeOf(foos).toEqualTypeOf<Array<{ type: "foo"; foo: number }>>();
