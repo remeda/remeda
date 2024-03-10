@@ -24,7 +24,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function isDeepEqual<T, S>(data: S | T, other: S): data is S;
+export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
 
 /**
  * Performs a deep *semantic* comparison between two values to determine if they
@@ -50,7 +50,9 @@ export function isDeepEqual<T, S>(data: S | T, other: S): data is S;
  * @dataLast
  * @category Object
  */
-export function isDeepEqual<S>(other: S): <T>(data: S | T) => data is S;
+export function isDeepEqual<T, S extends T = T>(
+  other: S,
+): (data: T) => data is S;
 
 export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
