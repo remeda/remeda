@@ -55,13 +55,12 @@ function _uniqWith<T>(
   isEquals: IsEquals<T>,
 ): Array<T> {
   const lazy = uniqWith.lazy(isEquals);
-  return _reduceLazy(array, lazy, true);
+  return _reduceLazy(array, lazy);
 }
 
 const _lazy =
   <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
   (value, index, array) =>
-    array !== undefined &&
     array.findIndex((otherValue) => isEquals(value, otherValue)) === index
       ? { done: false, hasNext: true, next: value }
       : { done: false, hasNext: false };

@@ -64,11 +64,7 @@ export function forEach(): unknown {
 const _forEach =
   (indexed: boolean) =>
   <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    _reduceLazy(
-      array,
-      indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
-      indexed,
-    );
+    _reduceLazy(array, indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn));
 
 const _lazy =
   (indexed: boolean) =>

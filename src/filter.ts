@@ -56,11 +56,7 @@ export function filter(): unknown {
 const _filter =
   (indexed: boolean) =>
   <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) =>
-    _reduceLazy(
-      array,
-      indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
-      indexed,
-    );
+    _reduceLazy(array, indexed ? filter.lazyIndexed(fn) : filter.lazy(fn));
 
 const _lazy =
   (indexed: boolean) =>
