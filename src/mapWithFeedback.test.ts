@@ -33,7 +33,7 @@ describe("data first", () => {
         "5": 5,
       });
       expect(results).toEqual(expectedEquality);
-      const item = results[0];
+      const [item] = results;
       expect(results.every((result) => result === item)).toBe(true);
     });
 
@@ -75,7 +75,7 @@ describe("data first", () => {
           (acc, x, index, items) => {
             expect(index).toBe(i);
             expect(items).toEqual([1, 2, 3, 4, 5] as const);
-            i++;
+            i += 1;
             return acc + x;
           },
           100,
