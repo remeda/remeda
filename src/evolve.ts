@@ -3,7 +3,7 @@ import { purry } from "./purry";
 import { toPairs } from "./toPairs";
 
 /**
- * basic structure of `evolver` parameter of the function `evolve`.
+ * Basic structure of `evolver` parameter of the function `evolve`.
  */
 type GenericEvolver = {
   readonly [P in string]: GenericEvolver | ((data: unknown) => unknown);
@@ -11,6 +11,7 @@ type GenericEvolver = {
 
 /**
  * Creates an assumed `evolver` type from the type of `data` argument.
+ *
  * @example
  * interface Data {
  *   id: number;
@@ -64,9 +65,9 @@ type Evolved<T, E> = T extends object
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
  *
- * @param data object whose value is applied to the corresponding function
+ * @param data - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
- * @param evolver object that include functions that is applied to
+ * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
  *    R.evolve(data, evolver)
@@ -103,9 +104,9 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
  *
- * @param data object whose value is applied to the corresponding function
+ * @param data - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
- * @param evolver object that include functions that is applied to
+ * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
  *    R.evolve(evolver)(data)

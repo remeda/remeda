@@ -1,6 +1,7 @@
 /**
  * Converts a path string to an array of keys.
- * @param path a string path
+ *
+ * @param path - A string path.
  * @signature R.stringToPathArray(path)
  * @example R.stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst

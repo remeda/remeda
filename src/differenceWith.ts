@@ -7,9 +7,10 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 /**
  * Excludes the values from `other` array.
  * Elements are compared by custom comparator isEquals.
- * @param array the source array
- * @param other the values to exclude
- * @param isEquals the comparator
+ *
+ * @param array - The source array.
+ * @param other - The values to exclude.
+ * @param isEquals - The comparator.
  * @signature
  *    R.differenceWith(array, other, isEquals)
  * @example
@@ -19,8 +20,8 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      R.equals,
  *    ) // => [{a: 1}, {a: 4}]
  * @dataFirst
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function differenceWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
@@ -31,8 +32,9 @@ export function differenceWith<TFirst, TSecond>(
 /**
  * Excludes the values from `other` array.
  * Elements are compared by custom comparator isEquals.
- * @param other the values to exclude
- * @param isEquals the comparator
+ *
+ * @param other - The values to exclude.
+ * @param isEquals - The comparator.
  * @signature
  *    R.differenceWith(other, isEquals)(array)
  * @example
@@ -46,8 +48,8 @@ export function differenceWith<TFirst, TSecond>(
  *      R.take(2),
  *    ) // => [{a: 1}, {a: 4}]
  * @dataLast
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function differenceWith<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,

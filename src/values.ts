@@ -6,7 +6,8 @@ type Values<T extends object> = T extends ReadonlyArray<unknown> | []
 
 /**
  * Returns a new array containing the values of the array or object.
- * @param data Either an array or an object
+ *
+ * @param data - Either an array or an object.
  * @signature
  *    R.values(source)
  * @example
@@ -19,15 +20,16 @@ type Values<T extends object> = T extends ReadonlyArray<unknown> | []
  *      R.values,
  *      R.first,
  *    ) // => 'x'
+ * @dataFirst
  * @pipeable
  * @category Object
- * @dataFirst
  */
 export function values<T extends object>(data: T): Values<T>;
 
 /**
  * Returns a new array containing the values of the array or object.
- * @param source Either an array or an object
+ *
+ * @param source - Either an array or an object.
  * @signature
  *    R.values()(source)
  * @example
@@ -38,9 +40,9 @@ export function values<T extends object>(data: T): Values<T>;
  *      R.values(),
  *      R.first(),
  *    ) // => 'x'
+ * @dataLast
  * @pipeable
  * @category Object
- * @dataLast
  */
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function values(): <T extends object>(data: T) => Values<T>;

@@ -4,15 +4,16 @@ import { purry } from "./purry";
 
 /**
  * Returns a list of elements that exist in both array.
- * @param array the source array
- * @param other the second array
+ *
+ * @param array - The source array.
+ * @param other - The second array.
  * @signature
  *    R.intersection(array, other)
  * @example
  *    R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]
  * @dataFirst
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
@@ -21,15 +22,16 @@ export function intersection<T>(
 
 /**
  * Returns a list of elements that exist in both array.
- * @param array the source array
- * @param other the second array
+ *
+ * @param array - The source array.
+ * @param other - The second array.
  * @signature
  *    R.intersection(other)(array)
  * @example
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
  * @dataLast
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersection<T, K>(
   other: ReadonlyArray<T>,

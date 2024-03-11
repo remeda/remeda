@@ -3,7 +3,8 @@ import { purry } from "./purry";
 
 /**
  * Returns a new array containing the keys of the array or object.
- * @param source Either an array or an object
+ *
+ * @param source - Either an array or an object.
  * @signature
  *    R.keys(source)
  *    R.keys.strict(source)
@@ -19,10 +20,10 @@ import { purry } from "./purry";
  *      R.first(),
  *    ) // => 'a'
  *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @dataFirst
  * @pipeable
  * @strict
  * @category Object
- * @dataFirst
  */
 export function keys(
   source: ArrayLike<unknown> | Readonly<Record<PropertyKey, unknown>>,
@@ -30,7 +31,8 @@ export function keys(
 
 /**
  * Returns a new array containing the keys of the array or object.
- * @param source Either an array or an object
+ *
+ * @param source - Either an array or an object.
  * @signature
  *    R.keys()(source)
  *    R.keys.strict()(source)
@@ -43,10 +45,10 @@ export function keys(
  *      R.first(),
  *    ) // => 'a'
  *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @dataLast
  * @pipeable
  * @strict
  * @category Object
- * @dataLast
  */
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function keys(): (

@@ -7,9 +7,10 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
- * @param array the source array
- * @param other the second array
- * @param comparator the custom comparator
+ *
+ * @param array - The source array.
+ * @param other - The second array.
+ * @param comparator - The custom comparator.
  * @signature
  *    R.intersectionWith(array, other, comparator)
  * @example
@@ -22,8 +23,8 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      (a, b) => a.id === b,
  *    ) // => [{ id: 3, name: 'Emma' }]
  * @dataFirst
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
@@ -34,8 +35,9 @@ export function intersectionWith<TFirst, TSecond>(
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
- * @param other the second array
- * @param comparator the custom comparator
+ *
+ * @param other - The second array.
+ * @param comparator - The custom comparator.
  * @signature
  *    R.intersectionWith(other, comparator)(array)
  * @example
@@ -47,14 +49,14 @@ export function intersectionWith<TFirst, TSecond>(
  *        { id: 3, name: 'Emma' },
  *      ]); // => [{ id: 3, name: 'Emma' }]
  * @dataLast
- * @category Array
  * @pipeable
+ * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,
   /**
-   * type inference doesn't work properly for the comparator's first parameter
-   * in data last variant
+   * Type inference doesn't work properly for the comparator's first parameter
+   * in data last variant.
    */
   comparator: Comparator<TFirst, TSecond>,
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;

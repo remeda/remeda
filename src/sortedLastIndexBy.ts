@@ -17,8 +17,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndexBy(data, item, valueFunction)
  * @example
@@ -26,7 +25,6 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
  */
 export function sortedLastIndexBy<T>(
@@ -51,8 +49,7 @@ export function sortedLastIndexBy<T>(
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndexBy(item, valueFunction)(data)
  * @example
@@ -60,7 +57,6 @@ export function sortedLastIndexBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex
  */
 export function sortedLastIndexBy<T>(

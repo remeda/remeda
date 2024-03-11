@@ -16,10 +16,9 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
  *
- * @param data - Array, "sorted" by `predicate`
- * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..data.length)
- *
+ * @param data - Array, "sorted" by `predicate`.
+ * @param predicate - A predicate which also defines the array's order.
+ * @returns Index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexWith(data, predicate)
  * @example
@@ -27,7 +26,6 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
- *
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(
@@ -50,10 +48,9 @@ export function sortedIndexWith<T>(
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
  *
- * @param data - Array, "sorted" by `predicate`
- * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..data.length)
- *
+ * @param data - Array, "sorted" by `predicate`.
+ * @param predicate - A predicate which also defines the array's order.
+ * @returns Index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexWith(predicate)(data)
  * @example
@@ -61,7 +58,6 @@ export function sortedIndexWith<T>(
  * @dataLast
  * @indexed
  * @category Array
- *
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(

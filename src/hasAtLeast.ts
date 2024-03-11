@@ -15,9 +15,9 @@ type ArrayMinN<T, N extends number> = number extends N
  * refines the output type accordingly so that those indices are defined when
  * accessing the array even when using typescript's 'noUncheckedIndexAccess'.
  *
- * @param data the input array
- * @param minimum the minimum number of elements the array must have
- * @return true if the array's length is *at least* `minimum`.
+ * @param data - The input array.
+ * @param minimum - The minimum number of elements the array must have.
+ * @returns True if the array's length is *at least* `minimum`.
  * @signature
  *   R.hasAtLeast(data, minimum)
  * @example
@@ -39,9 +39,9 @@ export function hasAtLeast<T, N extends number>(
  * refines the output type accordingly so that those indices are defined when
  * accessing the array even when using typescript's 'noUncheckedIndexAccess'.
  *
- * @param data the input array
- * @param minimum the minimum number of elements the array must have
- * @return true if the array's length is *at least* `minimum`.
+ * @param data - The input array.
+ * @param minimum - The minimum number of elements the array must have.
+ * @returns True if the array's length is *at least* `minimum`.
  * @signature
  *   R.hasAtLeast(minimum)(data)
  * @example
