@@ -29,7 +29,7 @@ describe("intersectionWith", () => {
       expect(
         intersectionWith(
           other,
-          /**
+          /*
            * type inference doesn't work properly for the comparator's first parameter
            * in data last variant
            */

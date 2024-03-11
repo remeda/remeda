@@ -2,7 +2,8 @@ import { purry } from "./purry";
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
- * @param object
+ *
+ * @param object - Object to return keys and values of.
  * @signature
  *    R.toPairs(object)
  *    R.toPairs.strict(object)
@@ -17,9 +18,9 @@ import { purry } from "./purry";
  *      { a: 1 } as const,
  *      toPairs.strict,
  *    ); // => [['a', 1]] typed Array<['a', 1]>
+ * @dataFirst
  * @strict
  * @category Object
- * @dataFirst
  */
 export function toPairs<T>(
   object: Readonly<Record<string, T>>,
@@ -27,7 +28,8 @@ export function toPairs<T>(
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
- * @param object
+ *
+ * @param object - Object to return keys and values of.
  * @signature
  *    R.toPairs()(object)
  *    R.toPairs.strict()(object)
@@ -40,9 +42,9 @@ export function toPairs<T>(
  *      { a: 1 } as const,
  *      toPairs.strict(),
  *    ); // => [['a', 1]] typed Array<['a', 1]>
+ * @dataLast
  * @strict
  * @category Object
- * @dataLast
  */
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;

@@ -2,9 +2,10 @@ import { purry } from "./purry";
 
 /**
  * Add a new property to an object.
- * @param obj the target object
- * @param prop the property name
- * @param value the property value
+ *
+ * @param obj - The target object.
+ * @param prop - The property name.
+ * @param value - The property value.
  * @signature
  *    R.addProp(obj, prop, value)
  * @example
@@ -20,8 +21,9 @@ export function addProp<
 
 /**
  * Add a new property to an object.
- * @param prop the property name
- * @param value the property value
+ *
+ * @param prop - The property name.
+ * @param value - The property value.
  * @signature
  *    R.addProp(prop, value)(obj)
  * @example

@@ -6,8 +6,9 @@ import { purry } from "./purry";
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
- * @param array The array to filter.
- * @param fn the callback function.
+ *
+ * @param array - The array to filter.
+ * @param fn - The callback function.
  * @signature
  *    R.filter(array, fn)
  *    R.filter.indexed(array, fn)
@@ -30,7 +31,8 @@ export function filter<T>(
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.
- * @param fn the callback function.
+ *
+ * @param fn - The callback function.
  * @signature
  *    R.filter(fn)(array)
  *    R.filter.indexed(fn)(array)
@@ -79,9 +81,6 @@ export namespace filter {
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, boolean>,
   ): Array<T>;
-  /**
-   * @dataLast
-   */
   export function indexed<T, S extends T>(
     fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
   ): (array: ReadonlyArray<T>) => Array<S>;

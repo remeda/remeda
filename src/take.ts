@@ -4,8 +4,9 @@ import { purry } from "./purry";
 
 /**
  * Returns the first `n` elements of `array`.
- * @param array the array
- * @param n the number of elements to take
+ *
+ * @param array - The array.
+ * @param n - The number of elements to take.
  * @signature
  *    R.take(array, n)
  * @example
@@ -18,7 +19,8 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Returns the first `n` elements of `array`.
- * @param n the number of elements to take
+ *
+ * @param n - The number of elements to take.
  * @signature
  *    R.take(n)(array)
  * @example

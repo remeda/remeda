@@ -21,7 +21,7 @@ import type {
  *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @return - A shallow copy of the input array sorted by the provided rules.
+ * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(...rules)(data)
  *    R.sortBy.strict(...rules)(data)
@@ -35,8 +35,8 @@ import type {
  *      R.sortBy.strict(x => x.a)
  *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataLast
- * @category Array
  * @strict
+ * @category Array
  */
 export function sortBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -57,7 +57,7 @@ export function sortBy<T>(
  *
  * @param data - The input array.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @return - A shallow copy of the input array sorted by the provided rules.
+ * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(data, ...rules)
  *    R.sortBy.strict(data, ...rules)
@@ -90,8 +90,8 @@ export function sortBy<T>(
  *    )
  *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataFirst
- * @category Array
  * @strict
+ * @category Array
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,

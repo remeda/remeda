@@ -2,6 +2,7 @@ import { pipe } from "./pipe";
 
 /**
  * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
+ *
  * @signature
  *    R.createPipe(op1, op2, op3)(data);
  * @example

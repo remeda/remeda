@@ -224,9 +224,20 @@ export namespace conditional {
    * prevent an exception from being thrown when none of the previous cases
    * match.
    * If this is not the last case it will short-circuit anything after it.
+   *
    * @param then - You only need to provide the transformer, the predicate is
    * implicit. @default () => undefined, which is how Lodash and Ramda handle
    * the final fallback case.
+   * @example
+   *   const nameOrId = 3 as string | number;
+   *   R.conditional(
+   *     nameOrId,
+   *     [R.isString, (name) => `Hello ${name}`],
+   *     [R.isNumber, (id) => `Hello ID: ${id}`],
+   *     R.conditional.defaultCase(
+   *       (something) => `Hello something (${JSON.stringify(something)})`,
+   *     ),
+   *   ); //=> 'Hello ID: 3'
    */
   export const defaultCase = <In>(
     then: (data: In) => unknown = trivialDefaultCase,

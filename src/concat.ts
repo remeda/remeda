@@ -2,8 +2,9 @@ import { purry } from "./purry";
 
 /**
  * Combines two arrays.
- * @param arr1 the first array
- * @param arr2 the second array
+ *
+ * @param arr1 - The first array.
+ * @param arr2 - The second array.
  * @signature
  *    R.concat(arr1, arr2);
  * @example
@@ -18,7 +19,8 @@ export function concat<T, K>(
 
 /**
  * Combines two arrays.
- * @param arr2 the second array
+ *
+ * @param arr2 - The second array.
  * @signature
  *    R.concat(arr2)(arr1);
  * @example

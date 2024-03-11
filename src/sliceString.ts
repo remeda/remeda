@@ -5,9 +5,9 @@
  * `String.prototype.slice` directly. This function doesn't provide any type
  * improvements over the built-in types.
  *
- * @param string The string to slice.
- * @param indexStart The index of the first character to include in the returned substring.
- * @param indexEnd (optional) The index of the first character to exclude from the returned substring.
+ * @param string - The string to slice.
+ * @param indexStart - The index of the first character to include in the returned substring.
+ * @param indexEnd - (optional) The index of the first character to exclude from the returned substring.
  * @signature
  *    R.sliceString(indexStart)(string)
  *    R.sliceString(indexStart, indexEnd)(string)
@@ -15,8 +15,8 @@
  *    R.sliceString(1)(`abcdefghijkl`) // => `bcdefghijkl`
  *    R.sliceString(4, 7)(`abcdefghijkl`) // => `efg`
  * @dataLast
- * @category String
  * @strict
+ * @category String
  */
 export const sliceString =
   (indexStart: number, indexEnd?: number): ((data: string) => string) =>

@@ -12,15 +12,13 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndex(data, item)
  * @example
  *    R.sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
  * @dataFirst
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
 export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
@@ -36,15 +34,13 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  *
  * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedLastIndex(item)(data)
  * @example
  *    R.pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
  * @dataLast
  * @category Array
- *
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
 export function sortedLastIndex<T>(item: T): (data: ReadonlyArray<T>) => number;

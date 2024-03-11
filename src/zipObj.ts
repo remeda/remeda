@@ -2,9 +2,10 @@ import { purry } from "./purry";
 
 /**
  * Creates a new object from two supplied lists by pairing up equally-positioned items.
- * Key/value pairing is truncated to the length of the shorter of the two lists
- * @param first the first input list
- * @param second the second input list
+ * Key/value pairing is truncated to the length of the shorter of the two lists.
+ *
+ * @param first - The first input list.
+ * @param second - The second input list.
  * @signature
  *   R.zipObj(first, second)
  * @example
@@ -19,8 +20,9 @@ export function zipObj<F extends PropertyKey, S>(
 
 /**
  * Creates a new object from two supplied lists by pairing up equally-positioned items.
- * Key/value pairing is truncated to the length of the shorter of the two lists
- * @param second the second input list
+ * Key/value pairing is truncated to the length of the shorter of the two lists.
+ *
+ * @param second - The second input list.
  * @signature
  *   R.zipObj(second)(first)
  * @example

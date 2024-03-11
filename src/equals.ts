@@ -3,8 +3,9 @@ import { purry } from "./purry";
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
- * @param a the first object to compare
- * @param b the second object to compare
+ *
+ * @param a - The first object to compare.
+ * @param b - The second object to compare.
  * @signature
  *    R.equals(a, b)
  * @example
@@ -19,8 +20,9 @@ export function equals(a: unknown, b: unknown): boolean;
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
- * @param a the first object to compare
- * @param b the second object to compare
+ *
+ * @param a - The first object to compare.
+ * @param b - The second object to compare.
  * @signature
  *    R.equals(b)(a)
  * @example

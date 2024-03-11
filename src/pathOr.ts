@@ -5,6 +5,7 @@ import { purry } from "./purry";
  * containing all of the keys of each variant of `T`. If a key is
  * present in multiple variants of `T`, then the corresponding type in
  * `Pathable<T>` will be the intersection of all types for that key.
+ *
  * @example
  *    type T1 = Pathable<{a: number} | {a: string; b: boolean}>
  *    // {a: number | string; b: boolean}
@@ -43,23 +44,23 @@ type StrictlyRequired<T> = { [K in keyof T]-?: NonNullable<T[K]> };
 type PathValue1<T, A extends keyof Pathable<T>> = StrictlyRequired<
   Pathable<T>
 >[A];
-/** All possible options after successfully reaching `T[A]` */
+/** All possible options after successfully reaching `T[A]`. */
 type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
 
-/** As `PathValue1`, but for `T[A][B]` */
+/** As `PathValue1`, but for `T[A][B]`. */
 type PathValue2<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
 > = StrictlyRequired<Pathable1<T, A>>[B];
-/** As `Pathable1`, but for `T[A][B]` */
+/** As `Pathable1`, but for `T[A][B]`. */
 type Pathable2<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
 > = Pathable<PathValue2<T, A, B>>;
 
-/** As `PathValue1`, but for `T[A][B][C]` */
+/** As `PathValue1`, but for `T[A][B][C]`. */
 type PathValue3<
   T,
   A extends keyof Pathable<T>,
@@ -69,9 +70,10 @@ type PathValue3<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
- * @param object the target object
- * @param path the path of the property to get
- * @param defaultValue the default value
+ *
+ * @param object - The target object.
+ * @param path - The path of the property to get.
+ * @param defaultValue - The default value.
  * @signature R.pathOr(object, array, defaultValue)
  * @example
  *    R.pathOr({x: 10}, ['y'], 2) // 2
@@ -108,9 +110,10 @@ export function pathOr<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
- * @param object the target object
- * @param path the path of the property to get
- * @param defaultValue the default value
+ *
+ * @param object - The target object.
+ * @param path - The path of the property to get.
+ * @param defaultValue - The default value.
  * @signature R.pathOr(array, defaultValue)(object)
  * @example
  *    R.pipe({x: 10}, R.pathOr(['y'], 2)) // 2

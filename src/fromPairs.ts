@@ -13,7 +13,8 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
+ *
+ * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs(tuples)
  *   R.fromPairs.strict(tuples)
@@ -28,9 +29,9 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  *     ['a', 1] as const,
  *     R.fromPairs.strict,
  *   ); // => {a: 1} (type: {a: 1})
- * @category Object
- * @strict
  * @dataFirst
+ * @strict
+ * @category Object
  */
 export function fromPairs<V>(
   pairs: ReadonlyArray<Entry<number, V>>,
@@ -46,7 +47,8 @@ export function fromPairs<V>(
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
+ *
+ * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs()(tuples)
  *   R.fromPairs.strict()(tuples)
@@ -59,9 +61,9 @@ export function fromPairs<V>(
  *     ['a', 1] as const,
  *     R.fromPairs.strict(),
  *   ); // => {a: 1} (type: {a: 1})
- * @category Object
- * @strict
  * @dataLast
+ * @strict
+ * @category Object
  */
 // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function fromPairs(): <K extends PropertyKey, V>(

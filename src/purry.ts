@@ -23,8 +23,8 @@ type MaybeLazyFunction = {
  * crafting one manually isn't worthwhile as we rely on function declaration
  * overloading to combine the types for dataFirst and dataLast invocations!
  *
- * @param fn the function to purry.
- * @param args the arguments
+ * @param fn - The function to purry.
+ * @param args - The arguments.
  * @signature R.purry(fn, arguments);
  * @example
  *    function _findIndex(array, fn) {

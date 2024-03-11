@@ -7,8 +7,9 @@ type Limits = {
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
- * @param value the number
- * @param limits the bounds limits
+ *
+ * @param value - The number.
+ * @param limits - The bounds limits.
  * @signature
  *    R.clamp(value, { min, max });
  * @example
@@ -22,8 +23,9 @@ export function clamp(value: number, limits: Limits): number;
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
- * @param value the number
- * @param limits the bounds limits
+ *
+ * @param value - The number.
+ * @param limits - The bounds limits.
  * @signature
  *    R.clamp({ min, max })(value);
  * @example

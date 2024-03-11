@@ -7,16 +7,17 @@ import { purry } from "./purry";
  *
  * If the input array are tuples, you can use the strict option
  * to get another tuple instead of a generic array type.
- * @param first the first input list
- * @param second the second input list
+ *
+ * @param first - The first input list.
+ * @param second - The second input list.
  * @signature
  *   R.zip(first, second)
  * @example
  *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
  *   R.zip.strict([1, 2] as const, ['a', 'b'] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
  * @dataFirst
- * @category Array
  * @strict
+ * @category Array
  */
 export function zip<F, S>(
   first: ReadonlyArray<F>,
@@ -29,15 +30,16 @@ export function zip<F, S>(
  *
  * If the input array are tuples, you can use the strict option
  * to get another tuple instead of a generic array type.
- * @param second the second input list
+ *
+ * @param second - The second input list.
  * @signature
  *   R.zip(second)(first)
  * @example
  *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
  *   R.zip.strict(['a', 'b'] as const)([1, 2] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
  * @dataLast
- * @category Array
  * @strict
+ * @category Array
  */
 export function zip<S>(
   second: ReadonlyArray<S>,

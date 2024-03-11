@@ -17,8 +17,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
  * @example
@@ -26,7 +25,6 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(
@@ -51,8 +49,7 @@ export function sortedIndexBy<T>(
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..data.length)
- *
+ * @returns Insertion index (In the range 0..data.length).
  * @signature
  *    R.sortedIndexBy(data, item, valueFunction)
  * @example
@@ -60,7 +57,6 @@ export function sortedIndexBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(
@@ -81,15 +77,13 @@ export function sortedIndexBy<T>(
  * calling this function on each compared item. Preferably this function should
  * return a `number` or `string`. This function should be the same as the one
  * provided to sortBy to sort the array.
- * @return - Insertion index (In the range 0..array.length - 1)
- *
+ * @returns Insertion index (In the range 0..array.length - 1).
  * @signature
  *    R.sortedIndexBy(item, valueFunction)(data)
  * @example
  *    R.pipe([{age:20},{age:22}], R.sortedIndexBy({age:21},prop('age'))) // => 1
  * @dataLast
  * @category Array
- *
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy(): unknown {

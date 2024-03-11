@@ -4,8 +4,9 @@ import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param data the object
- * @param propNames the property names
+ *
+ * @param data - The object.
+ * @param propNames - The property names.
  * @signature
  *    R.omit(names)(obj);
  * @example
@@ -19,8 +20,9 @@ export function omit<T extends object, K extends keyof T>(
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param data the object
- * @param propNames the property names
+ *
+ * @param data - The object.
+ * @param propNames - The property names.
  * @signature
  *    R.omit(obj, names);
  * @example
