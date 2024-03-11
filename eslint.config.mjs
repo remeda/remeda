@@ -185,9 +185,29 @@ export default config(
       ],
       "jsdoc/no-bad-blocks": "error",
       "jsdoc/no-blank-blocks": "error",
+      "jsdoc/no-blank-block-descriptions": "error",
       "jsdoc/require-asterisk-prefix": "error",
 
       // Completeness
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/no-restricted-syntax": [
+        "off",
+        {
+          contexts: [
+            {
+              comment:
+                "JsdocBlock:not(*:has(JsdocTag[tag=/(dataFirst|dataLast)/]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include either @dataFirst or @dataLast.",
+            },
+            {
+              comment: "JsdocBlock:not(*:has(JsdocTag[tag=signature]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include @signature.",
+            },
+          ],
+        },
+      ],
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-jsdoc": [
         "off",
@@ -207,6 +227,9 @@ export default config(
       "jsdoc/require-param": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-throws": "off",
+      "jsdoc/require-yields": "error",
 
       // Style
       "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
@@ -402,6 +425,7 @@ export default config(
     files: ["src/_*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
+      "jsdoc/no-restricted-syntax": "off",
       "jsdoc/require-example": "off",
       "jsdoc/require-jsdoc": "off",
     },
