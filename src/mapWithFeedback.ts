@@ -1,50 +1,51 @@
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
+import type { IterableContainer } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Applies a reducer function on each element of the array, accumulating the results, and returns an array of the successively reduced values.
+ * Applies a function on each element of the array, using the result of the previous application, and returns an array of the successively computed values.
  * @param array the array to map over
- * @param reducer the callback function
- * @param initialValue the initial value of the accumulator
- * @returns An array of successively reduced values from the left side of the array.
+ * @param reducer the callback function that receives the previous value, the current element, and optionally the index and the whole array
+ * @param initialValue the initial value to start the computation with
+ * @returns An array of successively computed values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(items, fn, initialValue)
  *    R.mapWithFeedback.indexed(items, fn, initialValue)
  * @example
- *    R.mapWithFeedback([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => [101, 103, 106, 110, 115]
- *    R.mapWithFeedback.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100) // => [101, 103, 106, 110, 115]
+ *    R.mapWithFeedback([1, 2, 3, 4, 5], (prev, x) => prev + x, 100) // => [101, 103, 106, 110, 115]
+ *    R.mapWithFeedback.indexed([1, 2, 3, 4, 5], (prev, x, i, array) => prev + x, 100) // => [101, 103, 106, 110, 115]
  * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T, Accumulator>(
-  array: ReadonlyArray<T>,
-  reducer: (accumulator: Accumulator, currentValue: T) => Accumulator,
-  initialValue: Accumulator,
-): Array<Accumulator>;
+export function mapWithFeedback<T extends IterableContainer, Value>(
+  array: T,
+  reducer: (previousValue: Value, currentValue: T[number]) => Value,
+  initialValue: Value,
+): StrictOut<T, Value>;
 
 /**
- * Applies a reducer function on each element of the array, accumulating the results, and returns an array of the successively reduced values.
- * @param reducer the callback function
- * @param initialValue the initial value to use as an accumulator value in the callback function
- * @returns An array of successively reduced values from the left side of the array.
+ * Applies a function on each element of the array, using the result of the previous application, and returns an array of the successively computed values.
+ * @param reducer the callback function that receives the previous value, the current element, and optionally the index and the whole array
+ * @param initialValue the initial value to start the computation with
+ * @returns An array of successively computed values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(fn, initialValue)(array)
  * @example
- *    R.pipe([1, 2, 3, 4, 5], R.mapWithFeedback((acc, x) => acc + x, 100)) // => [101, 103, 106, 110, 115]
- *    R.pipe([1, 2, 3, 4, 5], R.mapWithFeedback.indexed((acc, x, i, array) => acc + x, 100)) // => [101, 103, 106, 110, 115]
+ *    R.pipe([1, 2, 3, 4, 5], R.mapWithFeedback((prev, x) => prev + x, 100)) // => [101, 103, 106, 110, 115]
+ *    R.pipe([1, 2, 3, 4, 5], R.mapWithFeedback.indexed((prev, x, i, array) => prev + x, 100)) // => [101, 103, 106, 110, 115]
  * @dataLast
  * @indexed
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T, Accumulator>(
-  reducer: (accumulator: Accumulator, currentValue: T) => Accumulator,
-  initialValue: Accumulator,
-): (items: ReadonlyArray<T>) => Array<Accumulator>;
+export function mapWithFeedback<T extends IterableContainer, Value>(
+  reducer: (previousValue: Value, currentValue: T[number]) => Value,
+  initialValue: Value,
+): (items: T) => StrictOut<T, Value>;
 
 export function mapWithFeedback(): unknown {
   return purry(
@@ -56,67 +57,71 @@ export function mapWithFeedback(): unknown {
 
 const mapWithFeedbackImplementation =
   (indexed: boolean) =>
-  <T, Accumulator>(
+  <T, Value>(
     items: ReadonlyArray<T>,
-    reducer: (
-      accumulator: Accumulator,
+    callbackFn: (
+      previousValue: Value,
       currentValue: T,
       index?: number,
       items?: ReadonlyArray<T>,
-    ) => Accumulator,
-    initialValue: Accumulator,
+    ) => Value,
+    initialValue: Value,
   ) => {
     const implementation = indexed
       ? mapWithFeedback.lazyIndexed
       : mapWithFeedback.lazy;
 
-    return _reduceLazy(items, implementation(reducer, initialValue), indexed);
+    return _reduceLazy(
+      items,
+      implementation(callbackFn, initialValue),
+      indexed,
+    );
   };
 
 const lazyImplementation =
   (indexed: boolean) =>
-  <T, Accumulator>(
-    reducer: (
-      accumulator: Accumulator,
+  <T, Value>(
+    callbackFn: (
+      previousValue: Value,
       currentValue: T,
       index?: number,
       items?: ReadonlyArray<T>,
-    ) => Accumulator,
-    initialValue: Accumulator,
-  ): LazyEvaluator<T, Accumulator> => {
-    let accumulator = initialValue;
+    ) => Value,
+    initialValue: Value,
+  ): LazyEvaluator<T, Value> => {
+    let previousValue = initialValue;
     return (value, index, items) => {
-      accumulator = indexed
-        ? reducer(accumulator, value, index, items)
-        : reducer(accumulator, value);
+      previousValue = indexed
+        ? callbackFn(previousValue, value, index, items)
+        : callbackFn(previousValue, value);
       return {
         done: false,
         hasNext: true,
-        next: accumulator,
+        next: previousValue,
       };
     };
   };
 
 export namespace mapWithFeedback {
-  export function indexed<T, Accumulator>(
-    items: ReadonlyArray<T>,
-    reducer: (
-      accumulator: Accumulator,
-      currentValue: T,
+  export function indexed<T extends IterableContainer, Value>(
+    items: T,
+    callbackFn: (
+      previousValue: Value,
+      currentValue: T[number],
       index: number,
-      items: ReadonlyArray<T>,
-    ) => Accumulator,
-    initialValue: Accumulator,
-  ): Array<Accumulator>;
-  export function indexed<T, Accumulator>(
-    reducer: (
-      accumulator: Accumulator,
-      currentValue: T,
+      items: T,
+    ) => Value,
+    initialValue: Value,
+  ): StrictOut<T, Value>;
+  export function indexed<T extends IterableContainer, Value>(
+    callbackFn: (
+      previousValue: Value,
+      currentValue: T[number],
       index: number,
-      items: ReadonlyArray<T>,
-    ) => Accumulator,
-    initialValue: Accumulator,
-  ): (items: ReadonlyArray<T>) => Array<Accumulator>;
+      items: T,
+    ) => Value,
+    initialValue: Value,
+  ): (items: T) => StrictOut<T, Value>;
   export function indexed(): unknown {
     return purry(
       mapWithFeedbackImplementation(true),
@@ -128,3 +133,7 @@ export namespace mapWithFeedback {
   export const lazy = lazyImplementation(false);
   export const lazyIndexed = _toLazyIndexed(lazyImplementation(true));
 }
+
+type StrictOut<T extends IterableContainer, K> = {
+  -readonly [P in keyof T]: K;
+};
