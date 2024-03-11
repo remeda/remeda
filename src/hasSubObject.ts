@@ -2,14 +2,13 @@ import { equals } from "./equals";
 import { purry } from "./purry";
 import type { Simplify } from "./type-fest/simplify";
 
-type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
-
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
  * property and value in `subObject`, there's the same property in `object`
  * with an equal value. Equality is checked with `equals`.
- * @param data the object to test
- * @param subObject the sub-object to test against
+ *
+ * @param data - The object to test.
+ * @param subObject - The sub-object to test against.
  * @signature
  *    R.hasSubObject(data, subObject)
  * @example
@@ -19,7 +18,7 @@ type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
  * @dataFirst
  * @category Object
  */
-export function hasSubObject<T, S extends DeepPartial<T>>(
+export function hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
 ): data is Simplify<S & T>;
@@ -28,8 +27,9 @@ export function hasSubObject<T, S extends DeepPartial<T>>(
  * Checks if `subObject` is a sub-object of `object`, which means for every
  * property and value in `subObject`, there's the same property in `object`
  * with an equal value. Equality is checked with `equals`.
- * @param subObject the sub-object to test against
- * @param object the object to test
+ *
+ * @param subObject - The sub-object to test against.
+ * @param object - The object to test.
  * @signature
  *    R.hasSubObject(subObject)(data)
  * @example
@@ -47,7 +47,7 @@ export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
 }
 
-function _hasSubObject<T, S extends DeepPartial<T>>(
+function _hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
 ): data is S & T {
