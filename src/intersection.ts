@@ -5,6 +5,10 @@ import { purry } from "./purry";
 /**
  * Returns a list of elements that exist in both array.
  *
+ * **DEPRECATED: equivalent to `R.filter(array, R.isIncludedIn(other))` and will
+ * be removed in v2.**
+ *
+ *
  * @param array - The source array.
  * @param other - The second array.
  * @signature
@@ -14,6 +18,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @pipeable
+ * @deprecated equivalent to `R.filter(array, R.isIncludedIn(other))` and will be removed in v2.
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
@@ -22,6 +28,10 @@ export function intersection<T>(
 
 /**
  * Returns a list of elements that exist in both array.
+ *
+ * **DEPRECATED: equivalent to `R.filter(R.isIncludedIn(other))` and will be
+ * removed in v2.**
+ *
  *
  * @param array - The source array.
  * @param other - The second array.
@@ -32,6 +42,8 @@ export function intersection<T>(
  * @dataLast
  * @pipeable
  * @category Array
+ * @pipeable
+ * @deprecated equivalent to `R.filter(R.isIncludedIn(other))` and will be removed in v2.
  */
 export function intersection<T, K>(
   other: ReadonlyArray<T>,
