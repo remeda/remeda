@@ -59,7 +59,7 @@ const mapWithFeedbackImplementation =
   (indexed: boolean) =>
   <T, Value>(
     items: ReadonlyArray<T>,
-    callbackFn: (
+    reducer: (
       previousValue: Value,
       currentValue: T,
       index?: number,
@@ -71,17 +71,13 @@ const mapWithFeedbackImplementation =
       ? mapWithFeedback.lazyIndexed
       : mapWithFeedback.lazy;
 
-    return _reduceLazy(
-      items,
-      implementation(callbackFn, initialValue),
-      indexed,
-    );
+    return _reduceLazy(items, implementation(reducer, initialValue), indexed);
   };
 
 const lazyImplementation =
   (indexed: boolean) =>
   <T, Value>(
-    callbackFn: (
+    reducer: (
       previousValue: Value,
       currentValue: T,
       index?: number,
@@ -92,8 +88,8 @@ const lazyImplementation =
     let previousValue = initialValue;
     return (value, index, items) => {
       previousValue = indexed
-        ? callbackFn(previousValue, value, index, items)
-        : callbackFn(previousValue, value);
+        ? reducer(previousValue, value, index, items)
+        : reducer(previousValue, value);
       return {
         done: false,
         hasNext: true,
@@ -105,7 +101,7 @@ const lazyImplementation =
 export namespace mapWithFeedback {
   export function indexed<T extends IterableContainer, Value>(
     items: T,
-    callbackFn: (
+    reducer: (
       previousValue: Value,
       currentValue: T[number],
       index: number,
@@ -114,7 +110,7 @@ export namespace mapWithFeedback {
     initialValue: Value,
   ): StrictOut<T, Value>;
   export function indexed<T extends IterableContainer, Value>(
-    callbackFn: (
+    reducer: (
       previousValue: Value,
       currentValue: T[number],
       index: number,
