@@ -50,7 +50,6 @@ describe("data first", () => {
     });
 
     it("indexed should not be compatible with transformer functions", () => {
-      // Test defines current behavior only. In the future, it would be ideal to make it compatible in 2.0 and remove this test.
       expect(() => {
         const result = mapWithFeedback.indexed([1, 2, 3, 4, 5], add, 100);
         expect(result).toEqual([101, 103, 106, 110, 115]);
