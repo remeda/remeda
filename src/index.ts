@@ -84,6 +84,8 @@ export * from "./omit";
 export * from "./omitBy";
 export * from "./once";
 export * from "./only";
+export * from "./partialBindTo";
+export * from "./partialRightBindTo";
 export * from "./partition";
 export * from "./pathOr";
 export * from "./pick";
