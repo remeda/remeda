@@ -50,19 +50,41 @@ describe("data first", () => {
     });
 
     it("indexed should not be compatible with transformer functions", () => {
+      // Test defines current behavior only. In the future, it would be ideal to make it compatible in 2.0 and remove this test.
       expect(() => {
         const result = mapWithFeedback.indexed([1, 2, 3, 4, 5], add, 100);
         expect(result).toEqual([101, 103, 106, 110, 115]);
       }).toThrowError("Wrong number of arguments");
     });
 
-    it("should return an Array<accumulator type>", () => {
-      const result = mapWithFeedback(
-        [1, 2, 3, 4, 5] as const,
-        (acc, x) => acc + x,
-        100,
-      );
-      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    describe("type test", () => {
+      it("should return a mutable tuple type whose length matches input container's length, consisting of the type of the initial value", () => {
+        const result = mapWithFeedback(
+          [1, 2, 3, 4, 5] as const,
+          (acc, x) => acc + x,
+          100,
+        );
+        expectTypeOf(result).toEqualTypeOf<
+          [number, number, number, number, number]
+        >();
+      });
+
+      it("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
+        const result = mapWithFeedback(
+          ["1", "2", "3", "4", "5"] as const,
+          (acc, x) => acc + parseInt(x),
+          100,
+        );
+        expectTypeOf(result).toEqualTypeOf<
+          [number, number, number, number, number]
+        >();
+      });
+
+      it("should correctly infer type with a non-literal array type", () => {
+        const data: Array<number> = [1, 2, 3, 4, 5];
+        const result = mapWithFeedback(data, (acc, x) => acc + x, 100);
+        expectTypeOf(result).toEqualTypeOf<Array<number>>();
+      });
     });
   });
 
@@ -83,24 +105,28 @@ describe("data first", () => {
       ).toEqual([101, 103, 106, 110, 115]);
     });
 
-    it("should return an Array<accumulator type>", () => {
-      const result = mapWithFeedback.indexed(
-        [1, 2, 3, 4, 5] as const,
-        (acc, x) => acc + x,
-        100,
-      );
-      expectTypeOf(result).toEqualTypeOf<Array<number>>();
-    });
+    describe("type test", () => {
+      it("should return a mutable tuple type whose length matches input container's length, consisting of the type of the initial value", () => {
+        const result = mapWithFeedback.indexed(
+          [1, 2, 3, 4, 5] as const,
+          (acc, x) => acc + x,
+          100,
+        );
+        expectTypeOf(result).toEqualTypeOf<
+          [number, number, number, number, number]
+        >();
+      });
 
-    it("the items array passed to the callback should be an array type containing the union type of all of the members in the original array", () => {
-      mapWithFeedback.indexed(
-        [1, 2, 3, 4, 5] as const,
-        (acc, x, _index, items) => {
-          expectTypeOf(items).toEqualTypeOf<ReadonlyArray<1 | 2 | 3 | 4 | 5>>();
-          return acc + x;
-        },
-        100,
-      );
+      it("the items array passed to the callback should be an array type containing the union type of all of the members in the original array", () => {
+        mapWithFeedback.indexed(
+          [1, 2, 3, 4, 5] as const,
+          (acc, x, _index, items) => {
+            expectTypeOf(items).toEqualTypeOf<readonly [1, 2, 3, 4, 5]>();
+            return acc + x;
+          },
+          100,
+        );
+      });
     });
   });
 });
@@ -127,12 +153,14 @@ describe("data last", () => {
       expect(counter.count).toHaveBeenCalledTimes(2);
     });
 
-    it("should return an Array<accumulator type>", () => {
+    it("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
       const result = pipe(
         [1, 2, 3, 4, 5] as const,
         mapWithFeedback((acc, x) => acc + x, 100),
       );
-      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+      expectTypeOf(result).toEqualTypeOf<
+        [number, number, number, number, number]
+      >();
     });
   });
 
@@ -169,12 +197,14 @@ describe("data last", () => {
       expect(counter.count).toHaveBeenCalledTimes(2);
     });
 
-    it("should return an Array<accumulator type>", () => {
+    it("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
       const result = pipe(
         [1, 2, 3, 4, 5] as const,
         mapWithFeedback.indexed((acc, x) => acc + x, 100),
       );
-      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+      expectTypeOf(result).toEqualTypeOf<
+        [number, number, number, number, number]
+      >();
     });
   });
 });
