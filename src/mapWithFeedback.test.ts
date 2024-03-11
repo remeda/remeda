@@ -25,21 +25,18 @@ describe("data first", () => {
         {} as Record<string, unknown>,
       );
 
-      const expectedEquality = Array.from({ length: 5 }).fill({
-        "1": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "5": 5,
-      });
-      expect(results).toEqual(expectedEquality);
       const [item] = results;
-      expect(results.every((result) => result === item)).toBe(true);
+      expect(item).toEqual({ "1": 1, "2": 2, "3": 3, "4": 4, "5": 5 });
+      for (const result of results) {
+        expect(result).toBe(item);
+      }
     });
 
-    it("if an empty array is provided, it should never iterate, returning an empty array.", () => {
-      const result = mapWithFeedback([], (acc) => acc, "value");
+    it("if an empty array is provided, it should never iterate, returning a new empty array.", () => {
+      const data: Array<unknown> = [];
+      const result = mapWithFeedback(data, (acc) => acc, "value");
       expect(result).toEqual([]);
+      expect(result).not.toBe(data);
     });
 
     it("should be compatible with transformer functions", () => {
@@ -89,19 +86,34 @@ describe("data first", () => {
 
   describe("indexed", () => {
     it("should track index and provide entire items array", () => {
-      let i = 0;
-      expect(
-        mapWithFeedback.indexed(
-          [1, 2, 3, 4, 5] as const,
-          (acc, x, index, items) => {
-            expect(index).toBe(i);
-            expect(items).toEqual([1, 2, 3, 4, 5] as const);
-            i += 1;
-            return acc + x;
-          },
-          100,
-        ),
-      ).toEqual([101, 103, 106, 110, 115]);
+      const data = [1, 2, 3, 4, 5] as const;
+      const mockedReducer = vi.fn(
+        (
+          acc: number,
+          x: number,
+          _index: number,
+          _items: ReadonlyArray<number>,
+        ): number => acc + x,
+      );
+      const expected: Array<Parameters<typeof mockedReducer>> = [
+        [100, 1, 0, [1, 2, 3, 4, 5]],
+        [101, 2, 1, [1, 2, 3, 4, 5]],
+        [103, 3, 2, [1, 2, 3, 4, 5]],
+        [106, 4, 3, [1, 2, 3, 4, 5]],
+        [110, 5, 4, [1, 2, 3, 4, 5]],
+      ];
+
+      mapWithFeedback.indexed(data, mockedReducer, 100);
+
+      expect(mockedReducer.mock.calls).toEqual(expected);
+    });
+    it("should return array of successively accumulated values", () => {
+      const result = mapWithFeedback.indexed(
+        [1, 2, 3, 4, 5] as const,
+        (acc, x) => acc + x,
+        100,
+      );
+      expect(result).toEqual([101, 103, 106, 110, 115]);
     });
 
     describe("type test", () => {
