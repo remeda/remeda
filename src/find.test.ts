@@ -14,10 +14,8 @@ describe("data first", () => {
   test("find", () => {
     expect(find(array, (x) => x.b === 2)).toEqual(expected);
   });
-  test("find.indexed", () => {
-    expect(find.indexed(array, (x, idx) => x.b === 2 && idx === 1)).toEqual(
-      expected,
-    );
+  test("find indexed", () => {
+    expect(find(array, (x, idx) => x.b === 2 && idx === 1)).toEqual(expected);
   });
 });
 
@@ -33,12 +31,12 @@ describe("data last", () => {
     expect(actual).toEqual(expected);
   });
 
-  test("find.indexed", () => {
+  test("find indexed", () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
       counter.fn(),
-      find.indexed((x, idx) => x.b === 2 && idx === 1),
+      find((x, idx) => x.b === 2 && idx === 1),
     );
     expect(counter.count).toHaveBeenCalledTimes(2);
     expect(actual).toEqual(expected);

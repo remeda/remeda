@@ -1,35 +1,34 @@
-import { _toLazyIndexed } from "./_toLazyIndexed";
 import { _toSingle } from "./_toSingle";
-import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
  * @param items the array
- * @param fn the predicate
+ * @param predicate the predicate
  * @signature
- *    R.find(items, fn)
- *    R.find.indexed(items, fn)
+ *    R.find(items, predicate)
  * @example
  *    R.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
- *    R.find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4
+ *    R.find([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4
  * @dataFirst
- * @indexed
  * @pipeable
  * @category Array
  */
+export function find<T, S extends T>(
+  array: ReadonlyArray<T>,
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => value is S,
+): S | undefined;
 export function find<T>(
   array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>,
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
 ): T | undefined;
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
- * @param fn the predicate
+ * @param predicate the predicate
  * @signature
- *    R.find(fn)(items)
- *    R.find.indexed(fn)(items)
+ *    R.find(predicate)(items)
  * @example
  *    R.pipe(
  *      [1, 3, 4, 6],
@@ -37,49 +36,35 @@ export function find<T>(
  *    ) // => 4
  *    R.pipe(
  *      [1, 3, 4, 6],
- *      R.find.indexed((n, i) => n % 2 === 0)
+ *      R.find((n, i) => n % 2 === 0)
  *    ) // => 4
  * @dataLast
- * @indexed
  * @pipeable
  * @category Array
  */
+export function find<T, S extends T>(
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => value is S,
+): (array: ReadonlyArray<T>) => S | undefined;
 export function find<T = never>(
-  fn: Pred<T, boolean>,
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => T | undefined;
 
 export function find(): unknown {
-  return purry(_find(false), arguments, find.lazy);
+  return purry(findImplementation, arguments, _toSingle(lazyImplementation));
 }
 
-const _find =
-  (indexed: boolean) =>
-  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) =>
-    array.find((item, index, input) =>
-      indexed ? fn(item, index, input) : fn(item),
-    );
+const findImplementation = <T>(
+  array: ReadonlyArray<T>,
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+): T | undefined =>
+  // eslint-disable-next-line unicorn/no-array-callback-reference -- predicate is built base on the signature for Array.prototype.find
+  array.find(predicate);
 
-const _lazy =
-  (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T> =>
+const lazyImplementation =
+  <T>(
+    predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+  ): LazyEvaluator<T> =>
   (value, index, array) =>
-    (indexed ? fn(value, index, array) : fn(value))
+    predicate(value, index, array)
       ? { done: true, hasNext: true, next: value }
       : { done: false, hasNext: false };
-
-export namespace find {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>,
-  ): T | undefined;
-  export function indexed<T>(
-    fn: PredIndexed<T, boolean>,
-  ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed(): unknown {
-    return purry(_find(true), arguments, find.lazyIndexed);
-  }
-
-  export const lazy = _toSingle(_lazy(false));
-
-  export const lazyIndexed = _toSingle(_toLazyIndexed(_lazy(true)));
-}

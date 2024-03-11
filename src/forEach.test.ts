@@ -8,12 +8,6 @@ describe("data_first", () => {
   it("forEach", () => {
     const cb = vi.fn();
     const result = forEach(array, cb);
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(array);
-  });
-  it("forEach.indexed", () => {
-    const cb = vi.fn();
-    const result = forEach.indexed(array, cb);
     expect(cb.mock.calls).toEqual([
       [1, 0, array],
       [2, 1, array],
@@ -24,15 +18,9 @@ describe("data_first", () => {
 });
 
 describe("data_last", () => {
-  it("forEach", () => {
+  it("forEach indexed", () => {
     const cb = vi.fn();
     const result = pipe(array, forEach(cb));
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(array);
-  });
-  it("forEach.indexed", () => {
-    const cb = vi.fn();
-    const result = pipe(array, forEach.indexed(cb));
     expect(cb.mock.calls).toEqual([
       [1, 0, array],
       [2, 1, array],
@@ -60,7 +48,7 @@ describe("pipe", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
-      forEach.indexed(() => {
+      forEach(() => {
         count();
       }),
       take(2),

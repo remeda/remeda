@@ -1,5 +1,4 @@
 import { _reduceLazy } from "./_reduceLazy";
-import { _toLazyIndexed } from "./_toLazyIndexed";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -47,15 +46,14 @@ export function uniqWith<T>(
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 export function uniqWith(): unknown {
-  return purry(_uniqWith, arguments, uniqWith.lazy);
+  return purry(_uniqWith, arguments, _lazy);
 }
 
 function _uniqWith<T>(
   array: ReadonlyArray<T>,
   isEquals: IsEquals<T>,
 ): Array<T> {
-  const lazy = uniqWith.lazy(isEquals);
-  return _reduceLazy(array, lazy);
+  return _reduceLazy(array, _lazy(isEquals));
 }
 
 const _lazy =
@@ -64,7 +62,3 @@ const _lazy =
     array.findIndex((otherValue) => isEquals(value, otherValue)) === index
       ? { done: false, hasNext: true, next: value }
       : { done: false, hasNext: false };
-
-export namespace uniqWith {
-  export const lazy = _toLazyIndexed(_lazy);
-}

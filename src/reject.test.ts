@@ -7,11 +7,8 @@ describe("data_first", () => {
     const result = reject([1, 2, 3] as const, (x) => x % 2 === 0);
     expect(result).toEqual([1, 3]);
   });
-  it("reject.indexed", () => {
-    const result = reject.indexed(
-      [1, 2, 3] as const,
-      (x, i) => x % 2 === 0 && i === 1,
-    );
+  it("reject indexed", () => {
+    const result = reject([1, 2, 3] as const, (x, i) => x % 2 === 0 && i === 1);
     expect(result).toEqual([1, 3]);
   });
 });
@@ -27,11 +24,11 @@ describe("data_last", () => {
     expect(counter.count).toHaveBeenCalledTimes(2);
     expect(result).toEqual([1, 3]);
   });
-  it("filter.indexed", () => {
+  it("filter indexed", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
-      reject.indexed((x, i) => x % 2 === 0 && i === 1),
+      reject((x, i) => x % 2 === 0 && i === 1),
       counter.fn(),
     );
     expect(counter.count).toHaveBeenCalledTimes(2);

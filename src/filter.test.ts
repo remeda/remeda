@@ -23,17 +23,14 @@ describe("data_first", () => {
     expect(result).toEqual([1, 2, 3]);
   });
 
-  it("filter.indexed", () => {
-    const result = filter.indexed(
-      [1, 2, 3] as const,
-      (x, i) => x % 2 === 1 && i !== 1,
-    );
+  it("filter indexed", () => {
+    const result = filter([1, 2, 3] as const, (x, i) => x % 2 === 1 && i !== 1);
     assertType<Array<1 | 2 | 3>>(result); // Type test
     expect(result).toEqual([1, 3]);
   });
 
-  it("filter.indexed with typescript guard", () => {
-    const result = filter.indexed(
+  it("filter indexed with typescript guard", () => {
+    const result = filter(
       [1, 2, 3, false, "text"] as const, // Type (1 | 2 | 3 | false | "text")[]
       isNumber,
     );
@@ -78,22 +75,22 @@ describe("data_last", () => {
     assertType<Array<1 | 2 | 3>>(result); // Type test (1 | 2 | 3)[]
     expect(result).toEqual([1, 2, 3]);
   });
-  it("filter.indexed with typescript guard", () => {
+  it("filter indexed with typescript guard", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3, false, "text"] as const, // Type (1 | 2 | 3 | false | "text")[]
-      filter.indexed(isNumber),
+      filter(isNumber),
       counter.fn(),
     );
     assertType<Array<1 | 2 | 3>>(result); // Type test (1 | 2 | 3)[]
     expect(counter.count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([1, 2, 3]);
   });
-  it("filter.indexed", () => {
+  it("filter indexed", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,
-      filter.indexed((x, i) => x % 2 === 1 && i !== 1),
+      filter((x, i) => x % 2 === 1 && i !== 1),
       counter.fn(),
     );
     assertType<Array<1 | 2 | 3>>(result); // Type test (1 | 2 | 3)[]
