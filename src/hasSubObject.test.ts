@@ -1,5 +1,6 @@
 import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
+import type { Simplify } from "./type-fest/simplify";
 
 describe("data first", () => {
   test("works with empty sub-object", () => {
@@ -52,9 +53,7 @@ describe("data last", () => {
 describe("typing", () => {
   test("must have matching keys and values", () => {
     expectTypeOf(hasSubObject({ a: 1 })).toEqualTypeOf<
-      <T extends { a: number } = { a: number }>(
-        object: T,
-      ) => object is T & { a: number }
+      <T extends { a: number }>(data: T) => data is Simplify<T & { a: number }>
     >();
 
     expectTypeOf(hasSubObject({ a: 1 })({ a: 2 })).toEqualTypeOf<boolean>();
@@ -74,13 +73,9 @@ describe("typing", () => {
 
   test("allows nested objects", () => {
     expectTypeOf(hasSubObject({ a: { b: 1, c: 2 } })).toEqualTypeOf<
-      <
-        T extends { a: { b: number; c: number } } = {
-          a: { b: number; c: number };
-        },
-      >(
-        object: T,
-      ) => object is T & { a: { b: number; c: number } }
+      <T extends { a: { b: number; c: number } }>(
+        data: T,
+      ) => data is Simplify<T & { a: { b: number; c: number } }>
     >();
 
     // @ts-expect-error - nested object missing keys
