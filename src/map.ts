@@ -2,6 +2,7 @@ import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import type {
   IterableContainer,
+  Mapped,
   Pred,
   PredIndexed,
   PredIndexedOptional,
@@ -75,26 +76,22 @@ type Strict = {
   <T extends IterableContainer, K>(
     items: T,
     mapper: Pred<T[number], K>,
-  ): StrictOut<T, K>;
+  ): Mapped<T, K>;
 
   <T extends IterableContainer, K>(
     mapper: Pred<T[number], K>,
-  ): (items: T) => StrictOut<T, K>;
+  ): (items: T) => Mapped<T, K>;
 
   readonly indexed: {
     <T extends IterableContainer, K>(
       items: T,
       mapper: PredIndexed<T[number], K>,
-    ): StrictOut<T, K>;
+    ): Mapped<T, K>;
 
     <T extends IterableContainer, K>(
       mapper: PredIndexed<T[number], K>,
-    ): (items: T) => StrictOut<T, K>;
+    ): (items: T) => Mapped<T, K>;
   };
-};
-
-type StrictOut<T extends IterableContainer, K> = {
-  -readonly [P in keyof T]: K;
 };
 
 export namespace map {

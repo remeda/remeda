@@ -14,6 +14,10 @@ export type PredIndexedOptional<T, K> = (
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
+export type Mapped<T extends IterableContainer, K> = {
+  -readonly [P in keyof T]: K;
+};
+
 /**
  * This should only be used for defining generics which extend any kind of JS
  * array under the hood, this includes arrays *AND* tuples (of the form [x, y],

@@ -1,6 +1,6 @@
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
-import type { IterableContainer } from "./_types";
+import type { IterableContainer, Mapped } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -23,9 +23,9 @@ import { purry } from "./purry";
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   array: T,
-  reducer: (previousValue: Value, currentValue: T[number]) => Value,
-  initialValue: Value,
-): StrictOut<T, Value>;
+  reducer: (previousValue: U, currentValue: T[number]) => U,
+  initialValue: U,
+): Mapped<T, U>;
 
 /**
  * Applies a function on each element of the array, using the result of the previous application, and returns an array of the successively computed values.
@@ -42,10 +42,10 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, Value>(
-  reducer: (previousValue: Value, currentValue: T[number]) => Value,
-  initialValue: Value,
-): (items: T) => StrictOut<T, Value>;
+export function mapWithFeedback<T extends IterableContainer, U>(
+  reducer: (previousValue: U, currentValue: T[number]) => U,
+  initialValue: U,
+): (items: T) => Mapped<T, U>;
 
 export function mapWithFeedback(): unknown {
   return purry(
@@ -57,15 +57,15 @@ export function mapWithFeedback(): unknown {
 
 const mapWithFeedbackImplementation =
   (indexed: boolean) =>
-  <T, Value>(
+  <T, U>(
     items: ReadonlyArray<T>,
     reducer: (
-      previousValue: Value,
+      previousValue: U,
       currentValue: T,
       index?: number,
       items?: ReadonlyArray<T>,
-    ) => Value,
-    initialValue: Value,
+    ) => U,
+    initialValue: U,
   ) => {
     const implementation = indexed
       ? mapWithFeedback.lazyIndexed
@@ -76,15 +76,15 @@ const mapWithFeedbackImplementation =
 
 const lazyImplementation =
   (indexed: boolean) =>
-  <T, Value>(
+  <T, U>(
     reducer: (
-      previousValue: Value,
+      previousValue: U,
       currentValue: T,
       index?: number,
       items?: ReadonlyArray<T>,
-    ) => Value,
-    initialValue: Value,
-  ): LazyEvaluator<T, Value> => {
+    ) => U,
+    initialValue: U,
+  ): LazyEvaluator<T, U> => {
     let previousValue = initialValue;
     return (value, index, items) => {
       previousValue = indexed
@@ -99,25 +99,25 @@ const lazyImplementation =
   };
 
 export namespace mapWithFeedback {
-  export function indexed<T extends IterableContainer, Value>(
+  export function indexed<T extends IterableContainer, U>(
     items: T,
     reducer: (
-      previousValue: Value,
+      previousValue: U,
       currentValue: T[number],
       index: number,
       items: T,
-    ) => Value,
-    initialValue: Value,
-  ): StrictOut<T, Value>;
-  export function indexed<T extends IterableContainer, Value>(
+    ) => U,
+    initialValue: U,
+  ): Mapped<T, U>;
+  export function indexed<T extends IterableContainer, U>(
     reducer: (
-      previousValue: Value,
+      previousValue: U,
       currentValue: T[number],
       index: number,
       items: T,
-    ) => Value,
-    initialValue: Value,
-  ): (items: T) => StrictOut<T, Value>;
+    ) => U,
+    initialValue: U,
+  ): (items: T) => Mapped<T, U>;
   export function indexed(): unknown {
     return purry(
       mapWithFeedbackImplementation(true),
@@ -129,7 +129,3 @@ export namespace mapWithFeedback {
   export const lazy = lazyImplementation(false);
   export const lazyIndexed = _toLazyIndexed(lazyImplementation(true));
 }
-
-type StrictOut<T extends IterableContainer, K> = {
-  -readonly [P in keyof T]: K;
-};
