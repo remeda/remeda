@@ -21,7 +21,7 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, Value>(
+export function mapWithFeedback<T extends IterableContainer, U>(
   array: T,
   reducer: (previousValue: Value, currentValue: T[number]) => Value,
   initialValue: Value,
