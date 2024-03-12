@@ -70,6 +70,7 @@ export * from "./map";
 export * from "./mapKeys";
 export * from "./mapToObj";
 export * from "./mapValues";
+export * from "./mapWithFeedback";
 export * from "./maxBy";
 export * from "./meanBy";
 export * from "./merge";
