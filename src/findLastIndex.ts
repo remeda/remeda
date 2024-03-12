@@ -3,8 +3,9 @@ import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
- * @param array the array
- * @param fn the predicate
+ *
+ * @param array - The array.
+ * @param fn - The predicate.
  * @signature
  *    R.findLastIndex(items, fn)
  *    R.findLastIndex.indexed(items, fn)
@@ -23,8 +24,9 @@ export function findLastIndex<T>(
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
- * @param array the array
- * @param fn the predicate
+ *
+ * @param array - The array.
+ * @param fn - The predicate.
  * @signature
  *    R.findLastIndex(fn)(items)
  *    R.findLastIndex.indexed(fn)(items)

@@ -3,22 +3,24 @@ import { purry } from "./purry";
 
 /**
  * Gets the last element of `array`.
- * @param array the array
+ *
+ * @param array - The array.
  * @signature
  *    R.last(array)
  * @example
  *    R.last([1, 2, 3]) // => 3
  *    R.last([]) // => undefined
- * @category Array
- * @pipeable
  * @dataFirst
+ * @pipeable
+ * @category Array
  */
 export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
 
 /**
  * Gets the last element of `array`.
- * @param array the array
+ *
+ * @param array - The array.
  * @signature
  *    R.last()(array)
  * @example
@@ -28,9 +30,9 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  *      R.last(),
  *      x => x + 1
  *    ); // => 17
- * @category Array
- * @pipeable
  * @dataLast
+ * @pipeable
+ * @category Array
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 

@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param {Number} count A value between `0` and `n - 1`. Increments after each function call.
- * @param {Function} fn The function to invoke. Passed one argument, the current value of `n`.
- * @return {Array} An array containing the return values of all calls to `fn`.
+ * @param count - A value between `0` and `n - 1`. Increments after each function call.
+ * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * @returns An array containing the return values of all calls to `fn`.
  * @example times(5, identity); //=> [0, 1, 2, 3, 4]
  * @dataFirst
  */
@@ -22,9 +22,9 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param {Function} fn The function to invoke. Passed one argument, the current value of `n`.
- * @param {Number} count A value between `0` and `n - 1`. Increments after each function call.
- * @return {Array} An array containing the return values of all calls to `fn`.
+ * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * @param count - A value between `0` and `n - 1`. Increments after each function call.
+ * @returns An array containing the return values of all calls to `fn`.
  * @example times(identity)(5); //=> [0, 1, 2, 3, 4]
  * @dataLast
  */

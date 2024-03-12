@@ -3,8 +3,9 @@ import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
- * @param object the target object
- * @param fn the predicate
+ *
+ * @param object - The target object.
+ * @param fn - The predicate.
  * @signature R.omitBy(object, fn)
  * @example
  *    R.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
@@ -18,7 +19,8 @@ export function omitBy<T>(
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
- * @param fn the predicate
+ *
+ * @param fn - The predicate.
  * @signature R.omitBy(fn)(object)
  * @example
  *    R.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}

@@ -8,7 +8,7 @@ import type { NarrowedTo } from "./_types";
  * Note that Maps, Arrays, and Sets are not considered plain objects and would return `false`.
  *
  * @param data - The variable to check.
- * @returns - The input type, narrowed to only plain objects.
+ * @returns The input type, narrowed to only plain objects.
  * @signature
  *    R.isPlainObject(data)
  * @example

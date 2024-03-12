@@ -8,9 +8,9 @@ import type { NarrowedTo } from "./_types";
  * For a more specific check that is limited to plain objects (simple struct/shape/record-like objects), consider using `isPlainObject` instead. For a simpler check that only removes `null` from the type prefer `isNonNull` or `isDefined`.
  *
  * @param data - The variable to be checked for being an object type.
+ * @returns The input type, narrowed to only objects.
  * @signature
  *    R.isObjectType(data)
- * @returns - The input type, narrowed to only objects.
  * @example
  *    // true
  *    R.isObjectType({}) //=> true
@@ -22,8 +22,8 @@ import type { NarrowedTo } from "./_types";
  *    // false
  *    R.isObjectType('somethingElse') //=> false
  *    R.isObjectType(null) //=> false
- * @category Guard
  * @dataFirst
+ * @category Guard
  */
 export const isObjectType = <T>(
   data: T | object,

@@ -7,21 +7,21 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 /**
  * Flattens `array` a single level deep.
  *
- * @param items the target array
+ * @param items - The target array.
  * @signature
  *   R.flatten(array)
  * @example
  *    R.flatten([[1, 2], [3], [4, 5]]) // => [1, 2, 3, 4, 5]
- * @category Array
- * @pipeable
  * @dataFirst
+ * @pipeable
+ * @category Array
  */
 export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
 /**
  * Flattens `array` a single level deep.
  *
- * @param items the target array
+ * @param items - The target array.
  * @signature
  *   R.flatten()(array)
  * @example
@@ -29,9 +29,9 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
  *      [[1, 2], [3], [4, 5]],
  *      R.flatten(),
  *    ); // => [1, 2, 3, 4, 5]
- * @category Array
- * @pipeable
  * @dataLast
+ * @pipeable
+ * @category Array
  */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 

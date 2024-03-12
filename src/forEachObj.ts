@@ -10,9 +10,10 @@ type UnindexedIteratee<T extends Record<PropertyKey, unknown>> = (
 
 /**
  * Iterate an object using a defined callback function. The original object is returned.
- * @param object The object.
- * @param fn The callback function.
- * @returns The original object
+ *
+ * @param object - The object.
+ * @param fn - The callback function.
+ * @returns The original object.
  * @signature
  *    R.forEachObj(object, fn)
  * @example
@@ -32,7 +33,8 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
 
 /**
  * Iterate an object using a defined callback function. The original object is returned.
- * @param fn The callback function.
+ *
+ * @param fn - The callback function.
  * @signature
  *    R.forEachObj(fn)(object)
  * @example

@@ -14,10 +14,10 @@ import { isString } from "./isString";
  * and not `!R.isEmpty(data)`. For strings and objects there's no way in
  * typescript to narrow the result to a non-empty type.
  *
- * @param data the variable to check
+ * @param data - The variable to check.
+ * @returns True if the passed input is empty, false otherwise.
  * @signature
  *    R.isEmpty(data)
- * @returns true if the passed input is empty, false otherwise
  * @example
  *    R.isEmpty(undefined) //=>true
  *    R.isEmpty('') //=> true

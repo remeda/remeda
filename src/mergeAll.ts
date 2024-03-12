@@ -1,6 +1,7 @@
 /**
  * Merges a list of objects into a single object.
- * @param array the array of objects
+ *
+ * @param array - The array of objects.
  * @signature
  *    R.mergeAll(objects)
  * @example

@@ -4,9 +4,10 @@ import { purry } from "./purry";
 
 /**
  * Sets the value at `path` of `object`.
- * @param object the target method
- * @param path the array of properties
- * @param value the value to set
+ *
+ * @param object - The target method.
+ * @param path - The array of properties.
+ * @param value - The value to set.
  * @signature
  *    R.setPath(obj, path, value)
  * @example
@@ -22,9 +23,10 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
 
 /**
  * Sets the value at `path` of `object`.
- * @param obj the target method
- * @param path the array of properties
- * @param value the value to set
+ *
+ * @param obj - The target method.
+ * @param path - The array of properties.
+ * @param value - The value to set.
  * @signature
  *    R.setPath(path, value)(obj)
  * @example

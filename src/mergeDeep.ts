@@ -6,7 +6,7 @@ import type { MergeDeep } from "./type-fest/merge-deep";
  *
  * @param destination - The object to merge into. In general, this object would have it's values overridden.
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
- * @returns - The merged object.
+ * @returns The merged object.
  * @signature
  *    R.mergeDeep(destination, source)
  * @example
@@ -24,7 +24,7 @@ export function mergeDeep<
  *
  * @param destination - The object to merge into. In general, this object would have it's values overridden.
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
- * @returns - The merged object.
+ * @returns The merged object.
  * @signature
  *    R.mergeDeep(source)(destination)
  * @example

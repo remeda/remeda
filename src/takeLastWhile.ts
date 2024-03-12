@@ -4,8 +4,8 @@ import { purry } from "./purry";
  * Returns elements from the end of the array until the predicate returns false.
  * The returned elements will be in the same order as in the original array.
  *
- * @param data the array
- * @param predicate the predicate
+ * @param data - The array.
+ * @param predicate - The predicate.
  * @signature
  *    R.takeLastWhile(data, predicate)
  * @example
@@ -22,7 +22,7 @@ export function takeLastWhile<T>(
  * Returns elements from the end of the array until the predicate returns false.
  * The returned elements will be in the same order as in the original array.
  *
- * @param predicate the predicate
+ * @param predicate - The predicate.
  * @signature
  *    R.takeLastWhile(predicate)(data)
  * @example

@@ -3,9 +3,10 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
- * @param items the items to split
- * @param predicate a type guard function to invoke on every item
- * @returns the array of grouped elements.
+ *
+ * @param items - The items to split.
+ * @param predicate - A type guard function to invoke on every item.
+ * @returns The array of grouped elements.
  * @signature
  *    R.partition(array, fn)
  * @example
@@ -21,9 +22,10 @@ export function partition<T, S extends T>(
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
- * @param items the items to split
- * @param predicate the function invoked per iteration
- * @returns the array of grouped elements.
+ *
+ * @param items - The items to split.
+ * @param predicate - The function invoked per iteration.
+ * @returns The array of grouped elements.
  * @signature
  *    R.partition(array, fn)
  * @example
@@ -39,8 +41,9 @@ export function partition<T>(
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
- * @param predicate the grouping function
- * @returns the array of grouped elements.
+ *
+ * @param predicate - The grouping function.
+ * @returns The array of grouped elements.
  * @signature
  *    R.partition(fn)(array)
  * @example
@@ -55,8 +58,9 @@ export function partition<T, S extends T>(
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
- * @param predicate the grouping function
- * @returns the array of grouped elements.
+ *
+ * @param predicate - The grouping function.
+ * @returns The array of grouped elements.
  * @signature
  *    R.partition(fn)(array)
  * @example

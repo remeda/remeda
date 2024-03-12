@@ -2,10 +2,11 @@ import { purry } from "./purry";
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
- * @param items the array to splice.
- * @param start the index from which to start removing elements.
- * @param deleteCount the number of elements to remove.
- * @param replacement the elements to insert into the array in place of the deleted elements.
+ *
+ * @param items - The array to splice.
+ * @param start - The index from which to start removing elements.
+ * @param deleteCount - The number of elements to remove.
+ * @param replacement - The elements to insert into the array in place of the deleted elements.
  * @signature
  *    R.splice(items, start, deleteCount, replacement)
  * @example
@@ -23,10 +24,11 @@ export function splice<T>(
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
- * @param items the array to splice.
- * @param start the index from which to start removing elements.
- * @param deleteCount the number of elements to remove.
- * @param replacement the elements to insert into the array in place of the deleted elements.
+ *
+ * @param items - The array to splice.
+ * @param start - The index from which to start removing elements.
+ * @param deleteCount - The number of elements to remove.
+ * @param replacement - The elements to insert into the array in place of the deleted elements.
  * @signature
  *    R.splice(start, deleteCount, replacement)(items)
  * @example

@@ -2,8 +2,9 @@ import { purry } from "./purry";
 
 /**
  * Divides two numbers.
- * @param value The number.
- * @param divisor The number to divide the value by.
+ *
+ * @param value - The number.
+ * @param divisor - The number to divide the value by.
  * @signature
  *    R.divide(value, divisor);
  * @example
@@ -16,8 +17,9 @@ export function divide(value: number, divisor: number): number;
 
 /**
  * Divides two numbers.
- * @param value The number.
- * @param divisor The number to divide the value by.
+ *
+ * @param value - The number.
+ * @param divisor - The number to divide the value by.
  * @signature
  *    R.divide(divisor)(value);
  * @example

@@ -8,8 +8,8 @@ import { purry } from "./purry";
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
  *
- * @param items the array to sort
- * @param cmp the comparator function
+ * @param items - The array to sort.
+ * @param cmp - The comparator function.
  * @signature
  *    R.sort(items, cmp)
  *    R.sort.strict(items, cmp)
@@ -17,8 +17,8 @@ import { purry } from "./purry";
  *    R.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
  *    R.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
  * @dataFirst
- * @category Array
  * @strict
+ * @category Array
  */
 export function sort<T>(
   items: ReadonlyArray<T>,
@@ -32,7 +32,7 @@ export function sort<T>(
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
  *
- * @param cmp the comparator function
+ * @param cmp - The comparator function.
  * @signature
  *    R.sort(cmp)(items)
  *    R.sort.strict(cmp)(items)
@@ -40,8 +40,8 @@ export function sort<T>(
  *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
  *    R.pipe([4, 2] as [number, number], R.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
  * @dataLast
- * @category Array
  * @strict
+ * @category Array
  */
 export function sort<T>(
   cmp: (a: T, b: T) => number,
