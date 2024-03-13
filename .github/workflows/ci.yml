@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - beta
   pull_request:
 
 jobs:
@@ -128,7 +129,7 @@ jobs:
       - typecheck-source
       - typecheck-outputs
       - test
-    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/master'
+    if: github.repository == 'remeda/remeda' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/beta')
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
