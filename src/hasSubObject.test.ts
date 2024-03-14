@@ -1,6 +1,5 @@
 import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
-import type { Simplify } from "./type-fest/simplify";
 
 describe("data first", () => {
   test("works with empty sub-object", () => {
@@ -21,6 +20,25 @@ describe("data first", () => {
     expect(hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 0 } })).toBe(
       false,
     );
+  });
+
+  test("checks for matching key", () => {
+    const data: { a?: undefined } = {};
+    expect(hasSubObject(data, { a: undefined })).toBe(false);
+  });
+
+  test("allows weird arguments", () => {
+    expect(hasSubObject(new Error("a"), { message: "a" })).toBe(true);
+    expect(hasSubObject(new Error("a"), { message: "b" })).toBe(false);
+
+    // Error has no enumerable properties, so this is true:
+    expect(hasSubObject(new Error("a"), new Error("b"))).toBe(true);
+
+    expect(hasSubObject(["a", "b"], ["a"])).toBe(true);
+    expect(hasSubObject(["a"], ["a", "b"])).toBe(false);
+
+    expect(hasSubObject("ab", "a")).toBe(true);
+    expect(hasSubObject("a", "ab")).toBe(false);
   });
 });
 
@@ -47,9 +65,9 @@ describe("data last", () => {
       pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 2 } })),
     ).toBe(true);
 
-    expect(pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1 } }))).toBe(
-      false,
-    );
+    expect(
+      pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 3 } })),
+    ).toBe(false);
   });
 });
 
@@ -71,21 +89,15 @@ describe("typing", () => {
       hasSubObject({ a: "a" }, { a: 1 } as { a: number | string });
 
       // ok - unknown data type
-      expectTypeOf(
-        hasSubObject({ a: 2 } as unknown, { a: 1 }),
-      ).toEqualTypeOf<boolean>();
+      hasSubObject({ a: 2 } as unknown, { a: 1 });
 
       // ok - const value
-      expectTypeOf(
-        hasSubObject({ a: 2 }, { a: 1 } as const),
-      ).toEqualTypeOf<boolean>();
+      hasSubObject({ a: 2 }, { a: 1 } as const);
     });
 
     test("allows nested objects", () => {
       // ok - nested object has extra keys
-      expectTypeOf(
-        hasSubObject({ a: { b: 4 } }, { a: { b: 1, c: 2 } }),
-      ).toEqualTypeOf<boolean>();
+      hasSubObject({ a: { b: 4 } }, { a: { b: 1, c: 2 } });
 
       // @ts-expect-error - nested object has missing keys
       hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1 } });
@@ -109,50 +121,38 @@ describe("typing", () => {
 
   describe("data-last", () => {
     test("must have matching keys and values", () => {
-      expectTypeOf(hasSubObject({ a: 1 })).toEqualTypeOf<
-        <T extends { a: number }>(
-          data: T,
-        ) => data is Simplify<T & { a: number }>
-      >();
-
-      expectTypeOf(hasSubObject({ a: 1 })({ a: 2 })).toEqualTypeOf<boolean>();
+      expectTypeOf(
+        pipe({ a: 2 }, hasSubObject({ a: 1 })),
+      ).toEqualTypeOf<boolean>();
 
       // @ts-expect-error - missing a key
-      hasSubObject({ a: 1 })({ b: 2 });
+      pipe({ b: 2 }, hasSubObject({ a: 1 }));
 
       // @ts-expect-error - different value type
-      hasSubObject({ a: 1 })({ a: "a" });
+      pipe({ a: "a" }, hasSubObject({ a: 1 }));
 
-      // @ts-expect-error - wider value type
-      hasSubObject({ a: 1 })({ a: "a" } as { a: number | string });
+      // ok - wider value type
+      pipe({ a: "a" } as { a: number | string }, hasSubObject({ a: 1 }));
 
-      // ok - narrower value type
-      hasSubObject({ a: 1 } as { a: number | string })({ a: "a" });
+      // @ts-expect-error - narrower value type
+      pipe({ a: "a" }, hasSubObject({ a: 1 } as { a: number | string }));
 
-      // @ts-expect-error - unknown data type
-      hasSubObject({ a: 1 })({ a: 2 } as unknown);
+      // ok - unknown data type
+      pipe({ a: 2 } as unknown, hasSubObject({ a: 1 }));
 
-      // @ts-expect-error - wrong value type
-      hasSubObject({ a: 1 } as const)({ a: 2 });
+      // ok - const value
+      pipe({ a: 2 }, hasSubObject({ a: 1 } as const));
     });
 
     test("allows nested objects", () => {
-      expectTypeOf(hasSubObject({ a: { b: 1, c: 2 } })).toEqualTypeOf<
-        <T extends { a: { b: number; c: number } }>(
-          data: T,
-        ) => data is Simplify<T & { a: { b: number; c: number } }>
-      >();
+      // ok - nested object has extra keys
+      pipe({ a: { b: 4 } }, hasSubObject({ a: { b: 1, c: 2 } }));
 
-      // @ts-expect-error - nested object has extra keys
-      hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 4 } });
-
-      // ok - nested object has missing keys
-      expectTypeOf(
-        hasSubObject({ a: { b: 1 } })({ a: { b: 1, c: 2 } }),
-      ).toEqualTypeOf<boolean>();
+      // @ts-expect-error - nested object has missing keys
+      pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1 } }));
 
       // @ts-expect-error - nested object has wrong value types
-      hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 4, c: "c" } });
+      pipe({ a: { b: 4, c: "c" } }, hasSubObject({ a: { b: 1, c: 2 } }));
     });
   });
 });

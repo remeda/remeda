@@ -39,9 +39,9 @@ export function hasSubObject<T, S extends Partial<T>>(
  * @dataLast
  * @category Object
  */
-export function hasSubObject<S>(
+export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-): <T extends S>(data: T) => data is Simplify<S & T>;
+): (data: T) => data is Simplify<S & T>;
 
 export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
@@ -50,9 +50,13 @@ export function hasSubObject(): unknown {
 function _hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-): data is S & T {
+): data is Simplify<S & T> {
   for (const key of Object.keys(subObject)) {
-    // @ts-expect-error [ts7053] - This indexing is safe:
+    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+      return false;
+    }
+
+    // @ts-expect-error [ts7053] - key is in both subObject and data:
     if (!equals(subObject[key], data[key])) {
       return false;
     }
