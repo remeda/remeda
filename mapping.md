@@ -136,4 +136,4 @@ you are relying on when migrating._
 | `reject`       | `reject`       | `R.filter(R.isNot(fn))`                                   |
 | `sumBy`        |                | `R.reduce(R.map(fn), (sum, item) => R.add(sum, item), 0)` |
 | `words`        |                | `str => str.split(/\s+/)`                                 |
-| `zipObj`       | `zipObj`       | `R.fromPairs(R.zip(keys, values))`                        |
+| `zipObj`       | `zipObj`       | `R.fromEntries(R.zip(keys, values))`                      |

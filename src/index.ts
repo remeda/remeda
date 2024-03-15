@@ -38,6 +38,7 @@ export * from "./flattenDeep";
 export * from "./floor";
 export * from "./forEach";
 export * from "./forEachObj";
+export * from "./fromEntries";
 export * from "./fromKeys";
 export * from "./fromPairs";
 export * from "./groupBy";

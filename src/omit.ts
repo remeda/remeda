@@ -1,6 +1,4 @@
-/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
-
-import { fromPairs } from "./fromPairs";
+import { fromEntries } from "./fromEntries";
 import { hasAtLeast } from "./hasAtLeast";
 import { purry } from "./purry";
 
@@ -65,7 +63,7 @@ function _omit<T extends object, K extends keyof T>(
   }
 
   const asSet = new Set(propNames);
-  return fromPairs(
+  return fromEntries(
     Object.entries(data).filter(([key]) => !asSet.has(key as K)),
   ) as Omit<T, K>;
 }
