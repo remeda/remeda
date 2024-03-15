@@ -67,6 +67,7 @@ export default config(
       "unicorn/prefer-at": "off",
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-spread": "off",
+      "unicorn/prefer-includes": "off",
 
       // TODO: These rules allow us to really standardize our codebase, but they
       // also do sweeping changes to the whole codebase which is very noisy. We

@@ -4,6 +4,8 @@ import { purry } from "./purry";
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
  *
+ * **DEPRECATED: use R.isDeepEqual().**.
+ *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
  * @signature
@@ -14,12 +16,15 @@ import { purry } from "./purry";
  *    R.equals([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
  * @category Object
+ * @deprecated Use `R.isDeepEqual`.
  */
 export function equals(a: unknown, b: unknown): boolean;
 
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
+ *
+ * **DEPRECATED: use R.isDeepEqual().**.
  *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
@@ -31,6 +36,7 @@ export function equals(a: unknown, b: unknown): boolean;
  *    R.equals([1, 2, 3])([1, 2, 3]) //=> true
  * @dataLast
  * @category Object
+ * @deprecated Use `R.isDeepEqual`.
  */
 export function equals(a: unknown): (b: unknown) => boolean;
 
