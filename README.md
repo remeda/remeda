@@ -97,7 +97,7 @@ R.pick(["firstName", "lastName"])(obj); // this will work but the types cannot b
 
 ## Lazy evaluation
 
-Many functions support lazy evaluation when using `pipe` or `createPipe`. These functions have a `pipeable` tag in the documentation.
+Many functions support lazy evaluation when using `pipe` or `piped`. These functions have a `pipeable` tag in the documentation.
 Lazy evaluation is not supported in Ramda and only partially supported in lodash.
 
 ```js
@@ -145,7 +145,7 @@ Please check function mapping in [mapping.md](./mapping.md).
 ## Remeda Design Goals
 
 1. The usage must be programmer friendly, and that's more important than following XYZ paradigm strictly.
-2. Manual annotation should never be required, and proper typings should infer everything. The only exception is the first function in `createPipe`.
+2. Manual annotation should never be required, and proper typings should infer everything. The only exception is the first function in `piped`.
 3. ES6 polyfill is required. Core methods are reused, and data structure (like Map/Set) are not re-implemented.
 4. The implementation of each function should be as minimal as possible. Tree-shaking is supported by default. (Do you know that `lodash.keyBy` has 14KB after minification?)
 5. All functions are immutable, and there are no side-effects.
