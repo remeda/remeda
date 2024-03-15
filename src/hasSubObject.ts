@@ -1,11 +1,11 @@
-import { equals } from "./equals";
+import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 import type { Simplify } from "./type-fest/simplify";
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
  * property and value in `subObject`, there's the same property in `object`
- * with an equal value. Equality is checked with `equals`.
+ * with an equal value. Equality is checked with `isDeepEqual`.
  *
  * @param data - The object to test.
  * @param subObject - The sub-object to test against.
@@ -26,7 +26,7 @@ export function hasSubObject<T, S extends Partial<T>>(
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
  * property and value in `subObject`, there's the same property in `object`
- * with an equal value. Equality is checked with `equals`.
+ * with an equal value. Equality is checked with `isDeepEqual`.
  *
  * @param subObject - The sub-object to test against.
  * @param object - The object to test.
@@ -57,7 +57,7 @@ function _hasSubObject<T, S extends Partial<T>>(
     }
 
     // @ts-expect-error [ts7053] - key is in both subObject and data:
-    if (!equals(subObject[key], data[key])) {
+    if (!isDeepEqual(subObject[key], data[key])) {
       return false;
     }
   }
