@@ -4,8 +4,7 @@ import { isTruthy } from "./isTruthy";
  * Filter out all falsy values. The values `false`, `null`, `0`, `""`,
  * `undefined`, and `NaN` are falsy.
  *
- * **DEPRECATED: equivalent to `R.filter(R.isTruthy)` and so will be removed in
- * v2**.
+ * ! **DEPRECATED**: Use `R.filter(items, R.isTruthy)`. Will be removed in V2!
  *
  * @param items - The array to compact.
  * @signature
@@ -13,7 +12,7 @@ import { isTruthy } from "./isTruthy";
  * @example
  *    R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]
  * @category Array
- * @deprecated Equivalent to `R.filter(R.isTruthy)` and so will be removed in v2.
+ * @deprecated Use `R.filter(items, R.isTruthy)`. Will be removed in V2!
  */
 export function compact<T>(
   items: ReadonlyArray<T | "" | 0 | false | null | undefined>,

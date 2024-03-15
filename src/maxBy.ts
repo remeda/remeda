@@ -23,7 +23,7 @@ const _maxBy =
 /**
  * Returns the max element using the provided predicate.
  *
- * If you need more control over how "max" is defined, consider using `firstBy` instead. `maxBy` might be deprecated in the future!
+ * ! **DEPRECATED**: Use R.firstBy(fn). Will be removed in V2!
  *
  * @param fn - The predicate.
  * @signature
@@ -37,6 +37,7 @@ const _maxBy =
  * @dataLast
  * @indexed
  * @category Array
+ * @deprecated Use R.firstBy(fn). Will be removed in V2!
  */
 export function maxBy<T>(
   fn: (item: T) => number,
@@ -44,6 +45,8 @@ export function maxBy<T>(
 
 /**
  * Returns the max element using the provided predicate.
+ *
+ * ! **DEPRECATED**: Use R.firstBy(items, fn). Will be removed in V2!
  *
  * @param items - The array.
  * @param fn - The predicate.
@@ -58,6 +61,7 @@ export function maxBy<T>(
  * @dataFirst
  * @indexed
  * @category Array
+ * @deprecated Use R.firstBy(items, fn). Will be removed in V2!
  */
 export function maxBy<T>(
   items: ReadonlyArray<T>,

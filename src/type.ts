@@ -1,6 +1,9 @@
 // from https://github.com/ramda/ramda/blob/master/source/type.js
+
 /**
  * Gives a single-word string description of the (native) type of a value, returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not attempt to distinguish user Object types any further, reporting them all as 'Object'.
+ *
+ * ! **DEPRECATED**: Will be removed from V2!
  *
  * @param val - Value to return type of.
  * @signature
@@ -16,6 +19,7 @@
  *    R.type(() => {}); //=> "Function"
  *    R.type(undefined); //=> "Undefined"
  * @category Type
+ * @deprecated Will be removed from V2.
  */
 export function type(val: unknown): string {
   return val === null
