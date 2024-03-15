@@ -8,6 +8,8 @@ import { purry } from "./purry";
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
  *
+ * ! **DEPRECATED**: Use `R.unique(array)`. Will be removed in V2.
+ *
  * @param array - The array to filter.
  * @signature
  *    R.uniq(array)
@@ -15,13 +17,16 @@ import { purry } from "./purry";
  *    R.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
  * @dataFirst
  * @pipeable
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.unique(array)`. Will be removed in V2.
  */
 export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by reference using Set.
+ *
+ * ! **DEPRECATED**: Use `R.unique()`. Will be removed in V2.
  *
  * @param array - The array to filter.
  * @signature
@@ -34,7 +39,8 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
  *    ) // => [1, 2, 5]
  * @dataLast
  * @pipeable
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.unique()`. Will be removed in V2.
  */
 export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 

@@ -16,7 +16,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
  *
- * ! **DEPRECATED**: Use `R.fromEntries(pairs)`, for dataLast invocations use the functional form `R.fromEntries()`.
+ * ! **DEPRECATED**: Use `R.fromEntries(pairs)`, for dataLast invocations use the functional form `R.fromEntries()`. Will be removed in V2!
  *
  * @param pairs - The list of input tuples.
  * @signature
@@ -36,7 +36,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @dataFirst
  * @strict
  * @category Deprecated
- * @deprecated Use `R.fromEntries(pairs)`, for dataLast invocations use the functional form `R.fromEntries()`.
+ * @deprecated Use `R.fromEntries(pairs)`, for dataLast invocations use the functional form `R.fromEntries()`. Will be removed in V2!
  */
 export function fromPairs<V>(
   pairs: ReadonlyArray<Entry<number, V>>,
@@ -137,7 +137,7 @@ type ValueForKey<
 
 export namespace fromPairs {
   /**
-   * @deprecated Use `R.fromEntries.strict(pairs)`, for dataLast invocations use the functional form `R.fromEntries.strict()`.
+   * @deprecated Use `R.fromEntries.strict(pairs)`, for dataLast invocations use the functional form `R.fromEntries.strict()`. Will be removed in V2!
    */
   export const strict = fromPairs as Strict;
 }
