@@ -142,6 +142,7 @@ export * from "./uniq";
 export * from "./uniqBy";
 export * from "./uniqWith";
 export * from "./unique";
+export * from "./uniqueWith";
 export * from "./values";
 export * from "./zip";
 export * from "./zipObj";

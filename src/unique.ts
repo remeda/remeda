@@ -37,10 +37,10 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function unique(): unknown {
-  return purry(_unique, arguments, unique.lazy);
+  return purry(uniqueImplementation, arguments, unique.lazy);
 }
 
-function _unique<T>(array: ReadonlyArray<T>): Array<T> {
+function uniqueImplementation<T>(array: ReadonlyArray<T>): Array<T> {
   return _reduceLazy(array, unique.lazy());
 }
 

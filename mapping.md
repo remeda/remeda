@@ -106,7 +106,7 @@ documentation when migrating._
 | [`toPairs`](https://remedajs.com/docs/#toPairs)                     | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
 | [`unique`](https://remedajs.com/docs/#unique)                       | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
 | [`uniqBy`](https://remedajs.com/docs/#uniqBy)                       | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
-| [`uniqWith`](https://remedajs.com/docs/#uniqWith)                   | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
+| [`uniqueWith`](https://remedajs.com/docs/#uniqueWith)               | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
 
 ## Helpful one-liners
 
