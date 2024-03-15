@@ -389,7 +389,7 @@ export default config(
     },
   },
   {
-    files: ["*.config.mjs"],
+    files: ["*.config.js"],
     rules: {
       "unicorn/filename-case": "off",
     },
