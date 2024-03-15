@@ -10,14 +10,6 @@ import { purry } from "./purry";
  * @example
  *    R.entries({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
  *    R.entries.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
- *    R.pipe(
- *      { a: 1, b: 2, c: 3 },
- *      entries(),
- *    ); // => [['a', 1], ['b', 2], ['c', 3]]
- *    R.pipe(
- *      { a: 1 } as const,
- *      entries.strict(),
- *    ); // => [['a', 1]] typed Array<['a', 1]>
  * @dataFirst
  * @strict
  * @category Object

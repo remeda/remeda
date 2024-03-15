@@ -21,14 +21,6 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @example
  *   R.fromEntries([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'} (type: Record<string, string>)
  *   R.fromEntries.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})
- *   R.pipe(
- *     [['a', 'b'], ['c', 'd']],
- *     R.fromEntries,
- *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *   R.pipe(
- *     ['a', 1] as const,
- *     R.fromEntries.strict,
- *   ); // => {a: 1} (type: {a: 1})
  * @dataFirst
  * @strict
  * @category Object
