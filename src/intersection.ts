@@ -38,7 +38,6 @@ export function intersection<T>(
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
  * @dataLast
  * @pipeable
- * @pipeable
  * @category Array
  * @deprecated Equivalent to `R.filter(R.isIncludedIn(other))` and will be removed in v2.
  */

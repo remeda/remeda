@@ -42,7 +42,6 @@ export function difference<T>(
  *    ) // => [1, 4]
  * @dataLast
  * @pipeable
- * @pipeable
  * @category Array
  * @deprecated Equivalent to `R.filter(R.isNot(R.isIncludedIn(other)))` and will be removed in v2.
  */
