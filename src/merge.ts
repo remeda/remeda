@@ -16,7 +16,7 @@ import type { Merge } from "./type-fest/merge";
  * new object. If properties in this object share keys with properties in the
  * destination object, the values from the source object will be used in the
  * new object.
- * @returns An object fully-containing `source`, and any properties from `data`
+ * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
  *    R.merge(data, source)
@@ -42,7 +42,7 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  * new object. If properties in this object share keys with properties in the
  * destination object, the values from the source object will be used in the
  * new object.
- * @returns An object fully-containing `source`, and any properties from `data`
+ * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
  *    R.merge(source)(data)
