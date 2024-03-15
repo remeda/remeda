@@ -13,8 +13,9 @@ import { purry } from "./purry";
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
- * @param data the first value to compare
- * @param other the second value to compare
+ *
+ * @param data - The first value to compare.
+ * @param other - The second value to compare.
  * @signature
  *    R.isDeepEqual(data, other)
  * @example
@@ -39,8 +40,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
- * @param data the first value to compare
- * @param other the second value to compare
+ *
+ * @param data - The first value to compare.
+ * @param other - The second value to compare.
  * @signature
  *    R.isDeepEqual(other)(data)
  * @example
