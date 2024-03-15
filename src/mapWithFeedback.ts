@@ -6,9 +6,10 @@ import { purry } from "./purry";
 
 /**
  * Applies a function on each element of the array, using the result of the previous application, and returns an array of the successively computed values.
- * @param array the array to map over
- * @param reducer the callback function that receives the previous value, the current element, and optionally the index and the whole array
- * @param initialValue the initial value to start the computation with
+ *
+ * @param array - The array to map over.
+ * @param reducer - The callback function that receives the previous value, the current element, and optionally the index and the whole array.
+ * @param initialValue - The initial value to start the computation with.
  * @returns An array of successively computed values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(items, fn, initialValue)
@@ -29,8 +30,9 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 
 /**
  * Applies a function on each element of the array, using the result of the previous application, and returns an array of the successively computed values.
- * @param reducer the callback function that receives the previous value, the current element, and optionally the index and the whole array
- * @param initialValue the initial value to start the computation with
+ *
+ * @param reducer - The callback function that receives the previous value, the current element, and optionally the index and the whole array.
+ * @param initialValue - The initial value to start the computation with.
  * @returns An array of successively computed values from the left side of the array.
  * @signature
  *    R.mapWithFeedback(fn, initialValue)(array)

@@ -51,6 +51,7 @@ export * from "./isDefined";
 export * from "./isEmpty";
 export * from "./isError";
 export * from "./isFunction";
+export * from "./isIncludedIn";
 export * from "./isNil";
 export * from "./isNonNull";
 export * from "./isNot";
