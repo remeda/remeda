@@ -15,7 +15,7 @@ import { purry } from "./purry";
  *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
  * @dataFirst
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(array, R.isNot(R.isIncludedIn(other)))`. Will be removed in v2.
  */
 export function difference<T>(
@@ -40,7 +40,7 @@ export function difference<T>(
  *    ) // => [1, 4]
  * @dataLast
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(R.isNot(R.isIncludedIn(other)))`. Will be removed in v2.
  */
 export function difference<T, K>(

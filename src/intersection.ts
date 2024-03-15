@@ -17,7 +17,7 @@ import { purry } from "./purry";
  *    R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]
  * @dataFirst
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(array, R.isIncludedIn(other))`. Will be removed in v2.
  */
 export function intersection<T>(
@@ -38,7 +38,7 @@ export function intersection<T>(
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
  * @dataLast
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(R.isIncludedIn(other))`. Will be removed in v2.
  */
 export function intersection<T, K>(

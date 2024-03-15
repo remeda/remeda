@@ -22,7 +22,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @indexed
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(items, R.isNot(fn))`. Will be removed in V2!
  */
 export function reject<T>(
@@ -46,7 +46,7 @@ export function reject<T>(
  * @dataFirst
  * @indexed
  * @pipeable
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(R.isNot(fn))`. Will be removed in V2!
  */
 export function reject<T>(

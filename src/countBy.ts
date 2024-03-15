@@ -29,7 +29,7 @@ const _countBy =
  *    R.countBy([1, 2, 3, 4, 5], x => x % 2 === 0) // => 2
  * @dataFirst
  * @indexed
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(items, fn).length`. Will be removed in v2.
  */
 export function countBy<T>(
@@ -49,7 +49,7 @@ export function countBy<T>(
  *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
  * @dataLast
  * @indexed
- * @category Array
+ * @category Deprecated
  * @deprecated Use `<T>(items: ReadonlyArray<T>) => R.filter(items, fn).length`. Will be removed in v2.
  */
 export function countBy<T>(

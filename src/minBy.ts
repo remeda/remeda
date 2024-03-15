@@ -23,7 +23,7 @@ const _minBy =
 /**
  * Returns the min element using the provided predicate.
  *
- * ! **DEPRECATED**: Use R.firstBy([fn, "desc"]). Will be removed in V2!
+ * ! **DEPRECATED**: Use `R.firstBy(fn)`. Will be removed in V2!
  *
  * @param fn - The predicate.
  * @signature
@@ -36,8 +36,8 @@ const _minBy =
  *    ) // { a: 1 }
  * @dataLast
  * @indexed
- * @category Array
- * @deprecated Use R.firstBy([fn, "desc"]). Will be removed in V2!
+ * @category Deprecated
+ * @deprecated Use `R.firstBy(fn)`. Will be removed in V2!
  */
 export function minBy<T>(
   fn: (item: T) => number,
@@ -46,7 +46,7 @@ export function minBy<T>(
 /**
  * Returns the min element using the provided predicate.
  *
- * ! **DEPRECATED**: Use R.firstBy(items, [fn, "desc"]). Will be removed in V2!
+ * ! **DEPRECATED**: Use `R.firstBy(items, fn)`. Will be removed in V2!
  *
  * @param items - The array.
  * @param fn - The predicate.
@@ -60,8 +60,8 @@ export function minBy<T>(
  *    ) // { a: 1 }
  * @dataFirst
  * @indexed
- * @category Array
- * @deprecated Use R.firstBy(items, [fn, "desc"]). Will be removed in V2!
+ * @category Deprecated
+ * @deprecated Use `R.firstBy(items, fn)`. Will be removed in V2!
  */
 export function minBy<T>(
   items: ReadonlyArray<T>,

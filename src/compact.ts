@@ -11,7 +11,7 @@ import { isTruthy } from "./isTruthy";
  *    R.compact(array)
  * @example
  *    R.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]
- * @category Array
+ * @category Deprecated
  * @deprecated Use `R.filter(items, R.isTruthy)`. Will be removed in V2!
  */
 export function compact<T>(
