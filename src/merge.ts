@@ -4,8 +4,9 @@ import type { Merge } from "./type-fest/merge";
 /**
  * Spreads the properties of the second object into the first object, overriding
  * any existing properties; equivalent to `{ ...data, ...other }`.
- * @param data the first object, shared props will be overridden.
- * @param other the second object, this object would be fully contained within
+ *
+ * @param data - The first object, shared props will be overridden.
+ * @param other - The second object, this object would be fully contained within
  * the result object.
  * @signature
  *    R.merge(data, other)
@@ -19,8 +20,9 @@ export function merge<T, S>(data: T, other: S): Merge<T, S>;
 /**
  * Spreads the properties of the second object into the first object, overriding
  * any existing properties; equivalent to `{ ...data, ...other }`.
- * @param data the first object, shared props will be overridden.
- * @param other the second object, this object would be fully contained within
+ *
+ * @param data - The first object, shared props will be overridden.
+ * @param other - The second object, this object would be fully contained within
  * the result object.
  * @signature
  *    R.merge(other)(data)
