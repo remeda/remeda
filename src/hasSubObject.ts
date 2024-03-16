@@ -1,6 +1,6 @@
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
-import type { Simplify } from "./type-fest/simplify";
+import type { Merge } from "./type-fest/merge";
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -21,7 +21,8 @@ import type { Simplify } from "./type-fest/simplify";
 export function hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-): data is Simplify<S & T>;
+  // @ts-expect-error: typescript doesn't infer merges correctly
+): data is Merge<T, S>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -41,7 +42,8 @@ export function hasSubObject<T, S extends Partial<T>>(
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-): (data: T) => data is Simplify<S & T>;
+  // @ts-expect-error: typescript doesn't infer merges correctly
+): (data: T) => data is Merge<T, S>;
 
 export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
@@ -50,7 +52,8 @@ export function hasSubObject(): unknown {
 function _hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-): data is Simplify<S & T> {
+  // @ts-expect-error: typescript doesn't infer merges correctly
+): data is Merge<T, S> {
   for (const key of Object.keys(subObject)) {
     if (!Object.prototype.hasOwnProperty.call(data, key)) {
       return false;

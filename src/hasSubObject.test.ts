@@ -109,12 +109,16 @@ describe("typing", () => {
     test("narrows type", () => {
       const obj = {} as { a?: string; b?: number };
 
+      if (hasSubObject(obj, {})) {
+        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+      }
+
       if (hasSubObject(obj, { a: "a" })) {
         expectTypeOf(obj).toEqualTypeOf<{ a: string; b?: number }>();
       }
 
       if (hasSubObject(obj, { a: "a" } as const)) {
-        expectTypeOf(obj).toEqualTypeOf<{ a: "a"; b?: number }>();
+        expectTypeOf(obj).toEqualTypeOf<{ readonly a: "a"; b?: number }>();
       }
     });
   });
