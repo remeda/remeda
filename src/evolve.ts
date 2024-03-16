@@ -65,7 +65,7 @@ type Evolved<T, E> = T extends object
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
  *
- * @param data - Object whose value is applied to the corresponding function
+ * @param object - Object whose value is applied to the corresponding function
  * that is defined in `evolver` at the same path.
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
@@ -104,8 +104,6 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * Also, values included in `data` object will not be used
  * if its corresponding key does not exist in the `evolver` object.
  *
- * @param data - Object whose value is applied to the corresponding function
- * that is defined in `evolver` at the same path.
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature

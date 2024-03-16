@@ -48,7 +48,6 @@ export function sortedIndexWith<T>(
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
  *
- * @param data - Array, "sorted" by `predicate`.
  * @param predicate - A predicate which also defines the array's order.
  * @returns Index (In the range 0..data.length).
  * @signature

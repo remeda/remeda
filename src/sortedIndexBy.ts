@@ -43,7 +43,6 @@ export function sortedIndexBy<T>(
  *
  * Runs in O(logN) time.
  *
- * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
@@ -71,12 +70,6 @@ export function sortedIndexBy<T>(
  * duplicates. If the item already exists in the array the index would be of the
  * first occurrence of the item.
  *
- * @param data - The (ascending) sorted array.
- * @param item - The item to insert.
- * @param valueFunction - All comparisons would be performed on the result of
- * calling this function on each compared item. Preferably this function should
- * return a `number` or `string`. This function should be the same as the one
- * provided to sortBy to sort the array.
  * @returns Insertion index (In the range 0..array.length - 1).
  * @signature
  *    R.sortedIndexBy(item, valueFunction)(data)

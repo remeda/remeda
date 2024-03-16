@@ -29,7 +29,6 @@ export function toPairs<T>(
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
- * @param object - Object to return keys and values of.
  * @signature
  *    R.toPairs()(object)
  *    R.toPairs.strict()(object)

@@ -35,9 +35,6 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  *
  * Equivalent to `{ ...data, ...source }`.
  *
- * @param data - The destination object, serving as the basis for the merge.
- * Properties from this object are included in the new object, but will be
- * overwritten by properties from the source object with matching keys.
  * @param source - The source object, whose properties will be included in the
  * new object. If properties in this object share keys with properties in the
  * destination object, the values from the source object will be used in the

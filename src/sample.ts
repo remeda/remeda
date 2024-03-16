@@ -57,7 +57,7 @@ type SampledLiteral<
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param array - The array.
+ * @param data - The array.
  * @param sampleSize - The number of elements to take.
  * @signature
  *    R.sample(array, sampleSize)
@@ -84,7 +84,6 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param array - The array.
  * @param sampleSize - The number of elements to take.
  * @signature
  *    R.sample(sampleSize)(array)

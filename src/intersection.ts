@@ -8,7 +8,7 @@ import { purry } from "./purry";
  * **DEPRECATED: equivalent to `R.filter(array, R.isIncludedIn(other))` and will
  * be removed in v2.**.
  *
- * @param array - The source array.
+ * @param source - The source array.
  * @param other - The second array.
  * @signature
  *    R.intersection(array, other)
@@ -30,7 +30,6 @@ export function intersection<T>(
  * **DEPRECATED: equivalent to `R.filter(R.isIncludedIn(other))` and will be
  * removed in v2.**.
  *
- * @param array - The source array.
  * @param other - The second array.
  * @signature
  *    R.intersection(other)(array)

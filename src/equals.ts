@@ -27,9 +27,8 @@ export function equals(a: unknown, b: unknown): boolean;
  * **DEPRECATED: use R.isDeepEqual().**.
  *
  * @param a - The first object to compare.
- * @param b - The second object to compare.
  * @signature
- *    R.equals(b)(a)
+ *    R.equals(a)(b)
  * @example
  *    R.equals(1)(1) //=> true
  *    R.equals('1')(1) //=> false
