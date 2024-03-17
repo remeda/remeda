@@ -18,6 +18,7 @@ documentation when migrating._
 | [`clone`](https://remedajs.com/docs/#clone)                         | [`cloneDeep`](https://lodash.com/docs/4.17.15#cloneDeep)                 | [`clone`](https://ramdajs.com/docs/#clone)                         |
 | [`concat`](https://remedajs.com/docs/#concat)                       | [`concat`](https://lodash.com/docs/4.17.15#concat)                       | [`concat`](https://ramdajs.com/docs/#concat)                       |
 | [`conditional`](https://remedajs.com/docs/#conditional)             | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
+| [`constant`](https://remedajs.com/docs/#constant)                   | [`constant`](https://lodash.com/docs/4.17.15#constant)                   | [`always`](https://ramdajs.com/docs/#always)                       |
 | [`createPipe`](https://remedajs.com/docs/#createPipe)               |                                                                          |                                                                    |
 | [`debounce`](https://remedajs.com/docs/#debounce)                   | [`debounce`](https://lodash.com/docs/4.17.15#debounce)                   |                                                                    |
 | [`difference`](https://remedajs.com/docs/#difference)               | [`difference`](https://lodash.com/docs/4.17.15#difference)               | [`difference`](https://ramdajs.com/docs/#difference)               |
@@ -65,7 +66,6 @@ documentation when migrating._
 | [`mergeAll`](https://remedajs.com/docs/#mergeAll)                   | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`mergeAll`](https://ramdajs.com/docs/#mergeAll)                   |
 | [`mergeDeep`](https://remedajs.com/docs/#mergeDeep)                 |                                                                          | [`mergeDeepRight`](https://ramdajs.com/docs/#mergeDeepRight)       |
 | [`multiply`](https://remedajs.com/docs/#multiply)                   | [`multiply`](https://lodash.com/docs/4.17.15#multiply)                   | [`multiply`](https://ramdajs.com/docs/#multiply)                   |
-| [`noop`](https://remedajs.com/docs/#noop)                           | [`noop`](https://lodash.com/docs/4.17.15#noop)                           |                                                                    |
 | [`objOf`](https://remedajs.com/docs/#objOf)                         |                                                                          | [`objOf`](https://ramdajs.com/docs/#objOf)                         |
 | [`omit`](https://remedajs.com/docs/#omit)                           | [`omit`](https://lodash.com/docs/4.17.15#omit)                           | [`omit`](https://ramdajs.com/docs/#omit)                           |
 | [`omitBy`](https://remedajs.com/docs/#omitBy)                       | [`omitBy`](https://lodash.com/docs/4.17.15#omitBy)                       |                                                                    |
@@ -125,17 +125,17 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Lodash     | Ramda    | TypeScript                        |
-| ---------- | -------- | --------------------------------- |
-|            | `append` | `(arr, val) => [...arr, val]`     |
-| `constant` | `always` | `x => () => x`                    |
-| `nth`      | `nth`    | `n => a[n]`                       |
-|            | `path`   | `a?.b?.c`                         |
-|            | `propEq` | `x => x.a === value`              |
-|            | `propOr` | `x => x.a ?? defaultValue`        |
-| `words`    |          | `str => str.split(/\s+/)`         |
-| `compact`  |          | `R.filter(R.isTruthy)`            |
-| `max`      | `max`    | `R.firstBy([R.identity, "desc"])` |
-| `maxBy`    | `maxBy`  | `R.firstBy([fn, "desc"])`         |
-| `min`      | `min`    | `R.firstBy(R.identity)`           |
-| `minBy`    | `minBy`  | `R.firstBy(fn)`                   |
+| Lodash    | Ramda    | TypeScript                        |
+| --------- | -------- | --------------------------------- |
+|           | `append` | `(arr, val) => [...arr, val]`     |
+| `nth`     | `nth`    | `n => a[n]`                       |
+|           | `path`   | `a?.b?.c`                         |
+|           | `propEq` | `x => x.a === value`              |
+|           | `propOr` | `x => x.a ?? defaultValue`        |
+| `words`   |          | `str => str.split(/\s+/)`         |
+| `compact` |          | `R.filter(R.isTruthy)`            |
+| `max`     | `max`    | `R.firstBy([R.identity, "desc"])` |
+| `maxBy`   | `maxBy`  | `R.firstBy([fn, "desc"])`         |
+| `min`     | `min`    | `R.firstBy(R.identity)`           |
+| `minBy`   | `minBy`  | `R.firstBy(fn)`                   |
+| `noop`    |          | `R.constant(undefined)`           |
