@@ -7,7 +7,7 @@
  *    R.noop()
  * @example
  *    onSomething(R.noop)
- * @category Function
+ * @category Deprecated
  * @deprecated Use `R.constant(undefined)`, or `R.doNothing()` if the function doesn't need to return a value. Will be removed in V2!
  */
 export const noop = (): undefined => undefined;
