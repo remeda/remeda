@@ -1,6 +1,6 @@
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
-import type { Merge } from "./type-fest/merge";
+import type { Simplify } from "./type-fest/simplify";
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -16,13 +16,14 @@ import type { Merge } from "./type-fest/merge";
  *    R.hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }) //=> false
  *    R.hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
  * @dataFirst
- * @category Object
+ * @category Guard
  */
 export function hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-  // @ts-expect-error: typescript doesn't infer merges correctly
-): data is Merge<T, S>;
+  // TODO: want to use data is Merge<T, S> here, but it's a typescript error.
+  // fix after we allow @ts-expect-error in the build process
+): data is Simplify<S & T>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -38,12 +39,11 @@ export function hasSubObject<T, S extends Partial<T>>(
  *    R.hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }) //=> false
  *    R.hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
  * @dataLast
- * @category Object
+ * @category Guard
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-  // @ts-expect-error: typescript doesn't infer merges correctly
-): (data: T) => data is Merge<T, S>;
+): (data: T) => data is Simplify<S & T>;
 
 export function hasSubObject(): unknown {
   return purry(_hasSubObject, arguments);
@@ -52,8 +52,7 @@ export function hasSubObject(): unknown {
 function _hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-  // @ts-expect-error: typescript doesn't infer merges correctly
-): data is Merge<T, S> {
+): data is Simplify<S & T> {
   for (const key of Object.keys(subObject)) {
     if (!Object.prototype.hasOwnProperty.call(data, key)) {
       return false;

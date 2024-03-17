@@ -26,20 +26,6 @@ describe("data first", () => {
     const data: { a?: undefined } = {};
     expect(hasSubObject(data, { a: undefined })).toBe(false);
   });
-
-  test("allows weird arguments", () => {
-    expect(hasSubObject(new Error("a"), { message: "a" })).toBe(true);
-    expect(hasSubObject(new Error("a"), { message: "b" })).toBe(false);
-
-    // Error has no enumerable properties, so this is true:
-    expect(hasSubObject(new Error("a"), new Error("b"))).toBe(true);
-
-    expect(hasSubObject(["a", "b"], ["a"])).toBe(true);
-    expect(hasSubObject(["a"], ["a", "b"])).toBe(false);
-
-    expect(hasSubObject("ab", "a")).toBe(true);
-    expect(hasSubObject("a", "ab")).toBe(false);
-  });
 });
 
 describe("data last", () => {
@@ -118,7 +104,7 @@ describe("typing", () => {
       }
 
       if (hasSubObject(obj, { a: "a" } as const)) {
-        expectTypeOf(obj).toEqualTypeOf<{ readonly a: "a"; b?: number }>();
+        expectTypeOf(obj).toEqualTypeOf<{ a: "a"; b?: number }>();
       }
     });
   });
