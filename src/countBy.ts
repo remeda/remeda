@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- ignore for deprecated files */
+
 import { purry } from "./purry";
 import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 
@@ -44,6 +46,7 @@ export function countBy<T>(
  *
  * **DEPRECATED: equivalent to `R.filter(fn).length` and so will be removed in v2**.
  *
+ * @param fn - The predicate.
  * @signature
  *    R.countBy(fn)(array)
  * @example
@@ -61,8 +64,6 @@ export namespace countBy {
   /**
    * Counts how many values of the collection pass the specified predicate.
    *
-   * @param array - The input data.
-   * @param fn - The predicate.
    * @example
    *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
    * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.
@@ -74,7 +75,6 @@ export namespace countBy {
   /**
    * Counts how many values of the collection pass the specified predicate.
    *
-   * @param fn - The predicate.
    * @example
    *    R.pipe([1, 2, 3, 4, 5], R.countBy(x => x % 2 === 0)) // => 2
    * @deprecated Equivalent to `R.filter.indexed(fn).length` and so will be removed in v2.

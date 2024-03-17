@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import { purry } from "./purry";
 
 /**
@@ -27,8 +29,9 @@ export function equals(a: unknown, b: unknown): boolean;
  * **DEPRECATED: use R.isDeepEqual().**.
  *
  * @param a - The first object to compare.
+ * @param b - The second object to compare.
  * @signature
- *    R.equals(a)(b)
+ *    R.equals(b)(a)
  * @example
  *    R.equals(1)(1) //=> true
  *    R.equals('1')(1) //=> false

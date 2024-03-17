@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
@@ -48,6 +50,7 @@ export function fromPairs<V>(
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
  *
+ * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs()(tuples)
  *   R.fromPairs.strict()(tuples)

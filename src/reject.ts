@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
@@ -28,6 +30,7 @@ export function reject<T>(
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
  *
+ * @param items - The array to reject.
  * @param fn - The callback function.
  * @signature
  *    R.reject(array, fn)

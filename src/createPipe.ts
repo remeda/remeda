@@ -1,11 +1,10 @@
-/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the op params, it'd be redundant */
+/* eslint-disable jsdoc/require-param -- ignore for deprecated files */
 
 import { pipe } from "./pipe";
 
 /**
  * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
  *
- * @param ops - The operations.
  * @signature
  *    R.createPipe(op1, op2, op3)(data);
  * @example

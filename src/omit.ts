@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import { fromPairs } from "./fromPairs";
 import { hasAtLeast } from "./hasAtLeast";
 import { purry } from "./purry";
@@ -5,6 +7,7 @@ import { purry } from "./purry";
 /**
  * Returns a partial copy of an object omitting the keys specified.
  *
+ * @param data - The object.
  * @param propNames - The property names.
  * @signature
  *    R.omit(names)(obj);
