@@ -302,6 +302,50 @@ describe("typing", () => {
         Record<`${number}_suffix` | `prefix_${number}`, number>
       >();
     });
+
+    describe("number keys", () => {
+      test("regular array", () => {
+        const data = [] as Array<number>;
+
+        const dataFirst = fromKeys(data, getVal);
+        expectTypeOf(dataFirst).toEqualTypeOf<
+          Partial<Record<number, number>>
+        >();
+
+        const dataLast = pipe(data, fromKeys(getVal));
+        expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<number, number>>>();
+      });
+
+      test("non-empty array", () => {
+        const data = [1] as [number, ...Array<number>];
+
+        const dataFirst = fromKeys(data, getVal);
+        expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
+
+        const dataLast = pipe(data, fromKeys(getVal));
+        expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
+      });
+
+      test("fixed tuple", () => {
+        const data = [1, 2] as [number, number];
+
+        const dataFirst = fromKeys(data, getVal);
+        expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
+
+        const dataLast = pipe(data, fromKeys(getVal));
+        expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
+      });
+
+      test("literals", () => {
+        const data = [1, 2, 3] as const;
+
+        const dataFirst = fromKeys(data, getVal);
+        expectTypeOf(dataFirst).toEqualTypeOf<Record<1 | 2 | 3, number>>();
+
+        const dataLast = pipe(data, fromKeys(getVal));
+        expectTypeOf(dataLast).toEqualTypeOf<Record<1 | 2 | 3, number>>();
+      });
+    });
   });
 
   test("typescript doesn't choke on huge literal unions", () => {
