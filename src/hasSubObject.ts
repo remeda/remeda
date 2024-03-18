@@ -21,9 +21,8 @@ import type { Simplify } from "./type-fest/simplify";
 export function hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
-  // TODO: want to use data is Merge<T, S> here, but it's a typescript error.
-  // fix after we allow @ts-expect-error in the build process
-): data is Simplify<S & T>;
+): // TODO: want to use data is Merge<T, S> here, but it's a typescript error. fix after we allow @ts-expect-error in the build process
+data is Simplify<S & T>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -31,7 +30,6 @@ export function hasSubObject<T, S extends Partial<T>>(
  * with an equal value. Equality is checked with `isDeepEqual`.
  *
  * @param subObject - The sub-object to test against.
- * @param object - The object to test.
  * @signature
  *    R.hasSubObject(subObject)(data)
  * @example

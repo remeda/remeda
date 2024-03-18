@@ -23,7 +23,7 @@ describe("data first", () => {
   });
 
   test("checks for matching key", () => {
-    const data: { a?: undefined } = {};
+    const data = {} as { a?: undefined };
     expect(hasSubObject(data, { a: undefined })).toBe(false);
   });
 });
@@ -62,16 +62,16 @@ describe("typing", () => {
     test("must have matching keys and values", () => {
       expectTypeOf(hasSubObject({ a: 2 }, { a: 1 })).toEqualTypeOf<boolean>();
 
-      // @ts-expect-error - missing a key
+      // @ts-expect-error [ts2353] - missing a key
       hasSubObject({ b: 2 }, { a: 1 });
 
-      // @ts-expect-error - different value type
+      // @ts-expect-error [ts2322] - different value type
       hasSubObject({ a: "a" }, { a: 1 });
 
       // ok - wider value type
       hasSubObject({ a: "a" } as { a: number | string }, { a: 1 });
 
-      // @ts-expect-error - narrower value type
+      // @ts-expect-error [ts2345] - narrower value type
       hasSubObject({ a: "a" }, { a: 1 } as { a: number | string });
 
       // ok - unknown data type
@@ -85,10 +85,10 @@ describe("typing", () => {
       // ok - nested object has extra keys
       hasSubObject({ a: { b: 4 } }, { a: { b: 1, c: 2 } });
 
-      // @ts-expect-error - nested object has missing keys
+      // @ts-expect-error [ts2741] - nested object has missing keys
       hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1 } });
 
-      // @ts-expect-error - nested object has wrong value types
+      // @ts-expect-error [ts2322] - nested object has wrong value types
       hasSubObject({ a: { b: 4, c: "c" } }, { a: { b: 1, c: 2 } });
     });
 
@@ -115,16 +115,16 @@ describe("typing", () => {
         pipe({ a: 2 }, hasSubObject({ a: 1 })),
       ).toEqualTypeOf<boolean>();
 
-      // @ts-expect-error - missing a key
+      // @ts-expect-error [ts2353] - missing a key
       pipe({ b: 2 }, hasSubObject({ a: 1 }));
 
-      // @ts-expect-error - different value type
+      // @ts-expect-error [ts2345] - different value type
       pipe({ a: "a" }, hasSubObject({ a: 1 }));
 
       // ok - wider value type
       pipe({ a: "a" } as { a: number | string }, hasSubObject({ a: 1 }));
 
-      // @ts-expect-error - narrower value type
+      // @ts-expect-error [ts2345] - narrower value type
       pipe({ a: "a" }, hasSubObject({ a: 1 } as { a: number | string }));
 
       // ok - unknown data type
@@ -138,10 +138,10 @@ describe("typing", () => {
       // ok - nested object has extra keys
       pipe({ a: { b: 4 } }, hasSubObject({ a: { b: 1, c: 2 } }));
 
-      // @ts-expect-error - nested object has missing keys
+      // @ts-expect-error [ts2345] - nested object has missing keys
       pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1 } }));
 
-      // @ts-expect-error - nested object has wrong value types
+      // @ts-expect-error [ts2345] - nested object has wrong value types
       pipe({ a: { b: 4, c: "c" } }, hasSubObject({ a: { b: 1, c: 2 } }));
     });
   });
