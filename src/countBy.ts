@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- ignore for deprecated files */
+
 import { purry } from "./purry";
 import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 

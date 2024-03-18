@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 

@@ -43,7 +43,6 @@ export function sortedLastIndexBy<T>(
  *
  * Runs in O(logN) time.
  *
- * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should

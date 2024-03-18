@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
+
 import { purryOn } from "./_purryOn";
 
 type Case<In, Out, Thru extends In = In> = readonly [
@@ -26,7 +28,6 @@ type Case<In, Out, Thru extends In = In> = readonly [
  * is recommended for more precise type control when such type narrowing is
  * needed.
  *
- * @param data - The input data to be evaluated against the provided cases.
  * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
  * consists of a predicate (or a type-predicate) and a transformer function that
  * processes the data if its case matches.

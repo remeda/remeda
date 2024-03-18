@@ -34,7 +34,6 @@ export function nthBy<T extends IterableContainer>(
  *
  * See also `firstBy` which provides an even more efficient algorithm and a stricter return type, but only for `index === 0`. See `takeFirstBy` to get all the elements up to and including `index`.
  *
- * @param data - The input array.
  * @param index - The zero-based index for selecting the element in the sorted order. Negative indices count backwards from the end.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.

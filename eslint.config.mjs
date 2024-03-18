@@ -166,8 +166,7 @@ export default config(
       // recommended-typescript extension)
 
       // Correctness
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/check-param-names": "off",
+      "jsdoc/check-param-names": "error",
       "jsdoc/check-tag-names": [
         "error",
         {
@@ -224,8 +223,7 @@ export default config(
       ],
       "jsdoc/require-description": "error",
       "jsdoc/require-example": ["warn", { enableFixer: false }],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-param": "off",
+      "jsdoc/require-param": "warn",
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
@@ -426,9 +424,11 @@ export default config(
     files: ["src/_*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
+      "jsdoc/check-param-names": "off",
       "jsdoc/no-restricted-syntax": "off",
       "jsdoc/require-example": "off",
       "jsdoc/require-jsdoc": "off",
+      "jsdoc/require-param": "off",
     },
   },
 );
