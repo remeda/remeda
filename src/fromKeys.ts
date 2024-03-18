@@ -68,7 +68,7 @@ function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   const result: Partial<FromKeys<T, V>> = {};
 
   for (const key of data) {
-    // @ts-expect-error [ts7053] - TODO
+    // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
     result[key] = mapper(key);
   }
 
