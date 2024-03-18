@@ -29,7 +29,6 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
 /**
  * Reverses array.
  *
- * @param array - The array.
  * @signature
  *    R.reverse()(array);
  * @example

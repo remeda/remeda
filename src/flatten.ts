@@ -21,7 +21,6 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 /**
  * Flattens `array` a single level deep.
  *
- * @param items - The target array.
  * @signature
  *   R.flatten()(array)
  * @example

@@ -25,6 +25,7 @@ type MaybeLazyFunction = {
  *
  * @param fn - The function to purry.
  * @param args - The arguments.
+ * @param lazyFactory - A lazy version of the function to purry.
  * @signature R.purry(fn, arguments);
  * @example
  *    function _findIndex(array, fn) {

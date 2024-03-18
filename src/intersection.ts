@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- ignore for deprecated files */
+
 import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";

@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-param -- ignore for deprecated files */
+
 import { pipe } from "./pipe";
 
 /**

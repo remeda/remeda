@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
 import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";

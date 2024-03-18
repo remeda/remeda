@@ -39,7 +39,6 @@ export function isIncludedIn<T, S extends T>(
  * Notice that unlike most functions, this function takes a generic item as it's
  * data and **an array** as it's parameter.
  *
- * @param data - The item that is checked.
  * @param container - The items that are checked against.
  * @returns A narrowed version of the input data on success, `false` otherwise.
  * @signature

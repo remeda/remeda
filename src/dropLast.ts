@@ -17,7 +17,6 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 /**
  * Removes last `n` elements from the `array`.
  *
- * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
  *    R.dropLast(n)(array)

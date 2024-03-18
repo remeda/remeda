@@ -32,7 +32,6 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  *
  * Runs in O(logN) time.
  *
- * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @returns Insertion index (In the range 0..data.length).
  * @signature

@@ -22,7 +22,6 @@ export function randomString(length: number): string;
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
  *
- * @param length - The length of the random string.
  * @returns The random string.
  * @signature
  *   R.randomString()(length)

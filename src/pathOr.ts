@@ -111,7 +111,6 @@ export function pathOr<
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
  *
- * @param object - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
  * @signature R.pathOr(array, defaultValue)(object)

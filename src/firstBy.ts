@@ -20,7 +20,6 @@ type FirstBy<T extends IterableContainer> =
  *
  * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
- * @param data - An array of items.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The first element by the order criteria, or `undefined` if the array
  * is empty. (The function provides strong typing if the input type assures the
