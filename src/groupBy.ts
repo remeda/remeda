@@ -31,7 +31,6 @@ export function groupBy<T>(
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
  *
- * @param fn - The grouping function.
  * @signature
  *    R.groupBy(fn)(array)
  * @example

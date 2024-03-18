@@ -25,7 +25,6 @@ export function round(value: number, precision: number): number;
  * If you'd like to round to an integer (i.e. use this function with constant `precision === 0`),
  * use `Math.round` instead, as it won't incur the additional library overhead.
  *
- * @param value - The number to round.
  * @param precision - The precision to round to. Must be an integer between -15 and 15.
  * @signature
  *    R.round(precision)(value);

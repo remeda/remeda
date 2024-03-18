@@ -28,7 +28,6 @@ export function indexBy<T>(
  * (casted to a string). Use the strict version to maintain the given key's type, so
  * long as it is a valid `PropertyKey`.
  *
- * @param array - The array.
  * @param fn - The indexing function.
  * @signature
  *    R.indexBy(fn)(array)

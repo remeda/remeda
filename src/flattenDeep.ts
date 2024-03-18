@@ -25,7 +25,6 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
 /**
  * Recursively flattens `array`.
  *
- * @param items - The target array.
  * @signature
  *   R.flattenDeep()(array)
  * @example
