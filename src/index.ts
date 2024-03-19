@@ -97,6 +97,7 @@ export * from "./pick";
 export * from "./pickBy";
 export * from "./pipe";
 export * from "./prop";
+export * from "./pull";
 export * from "./purry";
 export * from "./randomString";
 export * from "./range";

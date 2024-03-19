@@ -16,6 +16,14 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
  *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * @param pairs - The list of input tuples.
  * @signature
  *   R.fromPairs(tuples)
@@ -49,6 +57,14 @@ export function fromPairs<V>(
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
  *
  * @param pairs - The list of input tuples.
  * @signature
