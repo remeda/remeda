@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-param-description, jsdoc/check-param-names -- Deprecated file */
+
 import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
@@ -9,6 +11,7 @@ import { purry } from "./purry";
  * ! **DEPRECATED**: Use `R.uniqueBy(array, fn)`. Will be removed in V2!
  *
  * @param array - The array to filter.
+ * @param transformer
  * @signature
  *    R.uniqBy(array, fn)
  * @example
@@ -33,6 +36,7 @@ export function uniqBy<T, K>(
  * ! **DEPRECATED**: Use `R.uniqueBy(fn)`. Will be removed in V2!
  *
  * @param array - The array to filter.
+ * @param transformer
  * @signature
  *    R.uniqBy(fn)(array)
  * @example

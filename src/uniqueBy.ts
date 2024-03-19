@@ -6,7 +6,8 @@ import { purry } from "./purry";
  * Returns a new array containing only one copy of each element in the original
  * list transformed by a function. Elements are compared by reference using Set.
  *
- * @param array - The array to filter.
+ * @param data - The array to filter.
+ * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
  *    R.uniqueBy(array, fn)
  * @example
@@ -19,15 +20,15 @@ import { purry } from "./purry";
  * @category Array
  */
 export function uniqueBy<T, K>(
-  array: ReadonlyArray<T>,
-  transformer: (item: T) => K,
+  data: ReadonlyArray<T>,
+  keyFunction: (item: T) => K,
 ): Array<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
  * list transformed by a function. Elements are compared by reference using Set.
  *
- * @param array - The array to filter.
+ * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
  *    R.uniqueBy(fn)(array)
  * @example
@@ -41,29 +42,29 @@ export function uniqueBy<T, K>(
  * @category Array
  */
 export function uniqueBy<T, K>(
-  transformer: (item: T) => K,
-): (array: ReadonlyArray<T>) => Array<T>;
+  keyFunction: (item: T) => K,
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function uniqueBy(): unknown {
-  return purry(uniqueByImplementation, arguments, lazyuniqueBy);
+  return purry(uniqueByImplementation, arguments, lazyUniqueBy);
 }
 
 function uniqueByImplementation<T, K>(
-  array: ReadonlyArray<T>,
-  transformer: (item: T) => K,
+  data: ReadonlyArray<T>,
+  keyFunction: (item: T) => K,
 ): Array<T> {
-  return _reduceLazy(array, lazyuniqueBy(transformer));
+  return _reduceLazy(data, lazyUniqueBy(keyFunction));
 }
 
-function lazyuniqueBy<T, K>(transformer: (item: T) => K): LazyEvaluator<T> {
+function lazyUniqueBy<T, K>(keyFunction: (item: T) => K): LazyEvaluator<T> {
   const set = new Set<K>();
   return (value) => {
-    const appliedItem = transformer(value);
-    if (set.has(appliedItem)) {
+    const key = keyFunction(value);
+    if (set.has(key)) {
       return { done: false, hasNext: false };
     }
 
-    set.add(appliedItem);
+    set.add(key);
     return { done: false, hasNext: true, next: value };
   };
 }

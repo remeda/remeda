@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description, jsdoc/check-param-names -- ignore for deprecated files */
 
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";
@@ -75,7 +75,6 @@ const _lazy =
       : { done: false, hasNext: true, next: item };
 
 export namespace reject {
-  /* eslint-disable-next-line jsdoc/require-example, jsdoc/require-description */
   /**
    * @deprecated Use `R.filter.indexed(items, (item, index, array) => !fn(item, index, array))`. Will be removed in V2!
    */
@@ -84,7 +83,6 @@ export namespace reject {
     fn: PredIndexed<T, boolean>,
   ): Array<K>;
 
-  /* eslint-disable-next-line jsdoc/require-example, jsdoc/require-description */
   /**
    * @deprecated Use `R.filter.indexed((item, index, array) => !fn(item, index, array))`. Will be removed in V2!
    */

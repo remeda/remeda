@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-param-description -- We don't document the ops */
+
 import { pipe } from "./pipe";
 
 /**
@@ -8,6 +10,7 @@ import { pipe } from "./pipe";
  * The first function must be always annotated. Other functions are
  * automatically inferred.
  *
+ * @param op1
  * @signature
  *    R.piped(op1, op2, op3)(data);
  * @example

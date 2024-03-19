@@ -40,7 +40,6 @@ export function fromEntries<V>(
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
  *
- * @param entries - The list of input tuples.
  * @signature
  *   R.fromEntries()(tuples)
  *   R.fromEntries.strict()(tuples)

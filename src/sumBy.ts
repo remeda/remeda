@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- Deprecated file */
+
 import { purry } from "./purry";
 import type { PredIndexed, PredIndexedOptional } from "./_types";
 
@@ -69,7 +71,6 @@ export function sumBy(): unknown {
 }
 
 export namespace sumBy {
-  /* eslint-disable-next-line jsdoc/require-example, jsdoc/require-description */
   /**
    * @deprecated Use `R.reduce(R.map.indexed(array, fn), (sum, item) => R.add(sum, item), 0)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
    */
@@ -78,7 +79,6 @@ export namespace sumBy {
     fn: PredIndexed<T, number>,
   ): number;
 
-  /* eslint-disable-next-line jsdoc/require-example, jsdoc/require-description */
   /**
    * @deprecated Use `<T>(items: ReadonlyArray<T>) => R.reduce(R.map.indexed(items, fn), (sum, item) => R.add(sum, item), 0)` or if part of a pipe `R.pipe(..., R.map.indexed(fn), R.reduce((sum, item) => R.add(sum, item), 0), ...)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
    */
