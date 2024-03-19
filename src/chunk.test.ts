@@ -34,7 +34,7 @@ describe("data last", () => {
   });
 });
 
-describe("strict typing", () => {
+describe("typing", () => {
   test("empty tuple", () => {
     const input: [] = [];
     const result = chunk(input, 2);

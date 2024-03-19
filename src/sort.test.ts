@@ -18,7 +18,7 @@ describe("data_last", () => {
   });
 });
 
-describe("strict", () => {
+describe("typing", () => {
   it("on empty tuple", () => {
     const array: [] = [];
     const result = sort(array, (a, b) => a - b);

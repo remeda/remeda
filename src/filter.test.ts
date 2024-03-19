@@ -2,10 +2,6 @@ import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
 import { filter } from "./filter";
 import { pipe } from "./pipe";
 
-function assertType<T>(data: T): T {
-  return data;
-}
-
 function isNumber<T>(data: T): data is Extract<T, number> {
   return typeof data === "number";
 } // TODO Refactor to remeda function

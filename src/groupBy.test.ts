@@ -86,7 +86,6 @@ describe("Filtering on undefined grouper result", () => {
       x % 2 === 0 ? "even" : undefined,
     );
     expect(Object.values(result)).toHaveLength(1);
-    expect(result).toHaveProperty("even");
     expect(result.even).toEqual([0, 2, 4, 6, 8]);
   });
 
@@ -96,24 +95,23 @@ describe("Filtering on undefined grouper result", () => {
       (_, index) => (index % 2 === 0 ? "even" : undefined),
     );
     expect(Object.values(result)).toHaveLength(1);
-    expect(result).toHaveProperty("even");
     expect(result.even).toEqual(["a", "c", "e", "g", "i"]);
   });
 
-  test("strict", () => {
-    const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
-      x % 2 === 0 ? "even" : undefined,
-    );
-    expectTypeOf(rest).toEqualTypeOf({} as const);
-    expect(even).toEqual([0, 2, 4, 6, 8]);
-  });
+  describe("typing", () => {
+    test("regular", () => {
+      const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
+        x % 2 === 0 ? "even" : undefined,
+      );
+      expectTypeOf(rest).toEqualTypeOf({} as const);
+    });
 
-  test("strict indexed", () => {
-    const { even, ...rest } = groupBy.indexed(
-      ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
-      (_, index) => (index % 2 === 0 ? "even" : undefined),
-    );
-    expectTypeOf(rest).toEqualTypeOf({} as const);
-    expect(even).toEqual(["a", "c", "e", "g", "i"]);
+    test("indexed", () => {
+      const { even, ...rest } = groupBy.indexed(
+        ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+        (_, index) => (index % 2 === 0 ? "even" : undefined),
+      );
+      expectTypeOf(rest).toEqualTypeOf({} as const);
+    });
   });
 });

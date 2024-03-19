@@ -4,14 +4,7 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { sortBy } from "./sortBy";
 
-const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
-const sorted = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }];
-
-function assertType<T>(data: T): T {
-  return data;
-}
-
-const objects = [
+const DATA = [
   { id: 1, color: "red", weight: 2, active: true, date: new Date(2021, 1, 1) },
   {
     id: 2,
@@ -38,22 +31,24 @@ const objects = [
 
 describe("data first", () => {
   test("sort correctly", () => {
-    expect(sortBy(items, (x) => x.a)).toEqual(sorted);
+    expect(
+      sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const, (x) => x.a),
+    ).toEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
   });
   test("sort booleans correctly", () => {
     expect(
-      sortBy(objects, [(x) => x.active, "desc"]).map((x) => x.active),
+      sortBy(DATA, [(x) => x.active, "desc"]).map((x) => x.active),
     ).toEqual([true, true, false, false]);
   });
   test("sort dates correctly", () => {
-    expect(sortBy(objects, [(x) => x.date, "desc"]).map((x) => x.id)).toEqual([
+    expect(sortBy(DATA, [(x) => x.date, "desc"]).map((x) => x.id)).toEqual([
       4, 3, 2, 1,
     ]);
   });
   test("sort objects correctly", () => {
     expect(
       sortBy(
-        objects,
+        DATA,
         (x) => x.weight,
         (x) => x.color,
       ).map((x) => x.weight),
@@ -61,28 +56,15 @@ describe("data first", () => {
   });
   test("sort objects correctly mixing sort pair and sort projection", () => {
     expect(
-      sortBy(objects, (x) => x.weight, [(x) => x.color, "asc"]).map(
+      sortBy(DATA, (x) => x.weight, [(x) => x.color, "asc"]).map(
         (x) => x.weight,
       ),
     ).toEqual([1, 1, 2, 3]);
   });
   test("sort objects descending correctly", () => {
     expect(
-      sortBy(objects, [(x) => x.weight, "desc"]).map((x) => x.weight),
+      sortBy(DATA, [(x) => x.weight, "desc"]).map((x) => x.weight),
     ).toEqual([3, 2, 1, 1]);
-  });
-
-  describe("sortBy typings", () => {
-    test("SortProjection", () => {
-      const actual = sortBy(items, (x) => x.a);
-      type T = (typeof items)[number];
-      assertType<Array<T>>(actual);
-    });
-    test("SortPair", () => {
-      const actual = sortBy(objects, [(x) => x.active, "desc"]);
-      type T = (typeof objects)[number];
-      assertType<Array<T>>(actual);
-    });
   });
 });
 
@@ -90,33 +72,54 @@ describe("data last", () => {
   test("sort correctly", () => {
     expect(
       pipe(
-        items,
+        [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const,
         sortBy((x) => x.a),
       ),
-    ).toEqual(sorted);
+    ).toEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
   });
   test('sort correctly using pipe and "desc"', () => {
-    expect(pipe(items, sortBy([(x) => x.a, "desc"]))).toEqual(
-      [...sorted].reverse(),
-    );
+    expect(
+      pipe(
+        [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const,
+        sortBy([(x) => x.a, "desc"]),
+      ),
+    ).toEqual([{ a: 7 }, { a: 3 }, { a: 2 }, { a: 1 }]);
   });
   test("sort objects correctly", () => {
     expect(
-      pipe(objects, sortBy(prop("weight"), prop("color")), map(prop("color"))),
+      pipe(DATA, sortBy(prop("weight"), prop("color")), map(prop("color"))),
     ).toEqual(["green", "purple", "red", "blue"]);
   });
   test("sort objects correctly by weight asc then color desc", () => {
     expect(
       pipe(
-        objects,
+        DATA,
         sortBy([prop("weight"), "asc"], [prop("color"), "desc"]),
         map(prop("color")),
       ),
     ).toEqual(["purple", "green", "red", "blue"]);
   });
+});
 
-  describe("sortBy typings", () => {
+describe("typing", () => {
+  describe("dataFirst", () => {
     test("SortProjection", () => {
+      const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
+      const actual = sortBy(items, (x) => x.a);
+      type T = (typeof items)[number];
+      assertType<Array<T>>(actual);
+    });
+
+    test("SortPair", () => {
+      const actual = sortBy(DATA, [(x) => x.active, "desc"]);
+      type T = (typeof DATA)[number];
+      assertType<Array<T>>(actual);
+    });
+  });
+
+  describe("dataLast", () => {
+    test("SortProjection", () => {
+      const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
       const actual = pipe(
         items,
         sortBy((x) => x.a),
@@ -126,16 +129,14 @@ describe("data last", () => {
     });
     test("SortPair", () => {
       const actual = pipe(
-        objects,
+        DATA,
         sortBy([(x) => x.weight, "asc"], [(x) => x.color, "desc"]),
       );
-      type T = (typeof objects)[number];
+      type T = (typeof DATA)[number];
       assertType<Array<T>>(actual);
     });
   });
-});
 
-describe("strict", () => {
   it("on empty tuple", () => {
     const array: [] = [];
     const result = sortBy(array, identity);

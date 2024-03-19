@@ -6,7 +6,6 @@
  * @returns True if the passed input is defined, false otherwise.
  * @signature
  *    R.isDefined(data)
- *    R.isDefined.strict(data)
  * @example
  *    R.isDefined('string') //=> true
  *    R.isDefined(null) //=> true
