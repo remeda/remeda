@@ -80,7 +80,6 @@ function transformSignature({
     signature: tagContent(comment, "signature"),
     indexed: hasTag(comment, "indexed"),
     pipeable: hasTag(comment, "pipeable"),
-    strict: hasTag(comment, "strict"),
     example: tagContent(comment, "example"),
     args: parameters.map(getParameter),
     returns: {
