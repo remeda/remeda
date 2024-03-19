@@ -53,24 +53,24 @@ describe("data last", () => {
 
 describe("Result key types", () => {
   test("Union of string literals", () => {
-    const data = groupBy.strict(array2, (x) => x.a);
+    const data = groupBy(array2, (x) => x.a);
 
     assertType<Partial<Record<"cat" | "dog", NonEmptyArray<Array2Item>>>>(data);
   });
   test("Union of number literals", () => {
-    const data = groupBy.strict(array2, (x) => x.b);
+    const data = groupBy(array2, (x) => x.b);
     assertType<Partial<Record<123 | 456, NonEmptyArray<Array2Item>>>>(data);
   });
   test("string", () => {
-    const data = groupBy.strict(array2, (x): string => x.a);
+    const data = groupBy(array2, (x): string => x.a);
     assertType<Record<string, NonEmptyArray<Array2Item>>>(data);
   });
   test("number", () => {
-    const data = groupBy.strict(array2, (x): number => x.b);
+    const data = groupBy(array2, (x): number => x.b);
     assertType<Record<number, NonEmptyArray<Array2Item>>>(data);
   });
   test("string | number", () => {
-    const data = groupBy.strict(array2, (x): number | string => x.b);
+    const data = groupBy(array2, (x): number | string => x.b);
     assertType<Record<number | string, NonEmptyArray<Array2Item>>>(data);
   });
 });
@@ -87,8 +87,7 @@ describe("Filtering on undefined grouper result", () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty("even");
-    // eslint-disable-next-line dot-notation
-    expect(result["even"]).toEqual([0, 2, 4, 6, 8]);
+    expect(result.even).toEqual([0, 2, 4, 6, 8]);
   });
 
   test("regular indexed", () => {
@@ -98,21 +97,19 @@ describe("Filtering on undefined grouper result", () => {
     );
     expect(Object.values(result)).toHaveLength(1);
     expect(result).toHaveProperty("even");
-    // eslint-disable-next-line dot-notation
-    expect(result["even"]).toEqual(["a", "c", "e", "g", "i"]);
+    expect(result.even).toEqual(["a", "c", "e", "g", "i"]);
   });
 
   test("strict", () => {
-    const { even, ...rest } = groupBy.strict(
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      (x) => (x % 2 === 0 ? "even" : undefined),
+    const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
+      x % 2 === 0 ? "even" : undefined,
     );
     expectTypeOf(rest).toEqualTypeOf({} as const);
     expect(even).toEqual([0, 2, 4, 6, 8]);
   });
 
   test("strict indexed", () => {
-    const { even, ...rest } = groupBy.strict.indexed(
+    const { even, ...rest } = groupBy.indexed(
       ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
       (_, index) => (index % 2 === 0 ? "even" : undefined),
     );

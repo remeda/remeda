@@ -22,12 +22,8 @@ describe("data first", () => {
     expect(indexBy(array, (x) => x.code)).toEqual(expected);
   });
 
-  test("indexBy.indexed", () => {
-    expect(indexBy.indexed(array, (x) => x.code)).toEqual(expected);
-  });
-
-  test("indexBy.strict", () => {
-    const result = indexBy.strict(array, (x) => x.code);
+  test("indexBy", () => {
+    const result = indexBy(array, (x) => x.code);
     expectTypeOf<ExpectedTypeStrict>(result);
     expect(result).toStrictEqual(expectedStrict);
   });
@@ -43,19 +39,10 @@ describe("data last", () => {
     ).toEqual(expected);
   });
 
-  test("indexBy.indexed", () => {
-    expect(
-      pipe(
-        array,
-        indexBy.indexed((x) => x.code),
-      ),
-    ).toEqual(expected);
-  });
-
-  test("indexBy.strict", () => {
+  test("indexBy", () => {
     const result = pipe(
       array,
-      indexBy.strict((x) => x.code),
+      indexBy((x) => x.code),
     );
     expectTypeOf<ExpectedTypeStrict>(result);
     expect(result).toEqual(expectedStrict);

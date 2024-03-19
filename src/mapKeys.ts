@@ -42,7 +42,7 @@ function _mapKeys<T extends object, S extends PropertyKey>(
   fn: (key: keyof T, value: Required<T>[keyof T]) => S,
 ): Record<S, T[keyof T]> {
   const out: Partial<Record<S, T[keyof T]>> = {};
-  for (const [key, value] of entries.strict(data)) {
+  for (const [key, value] of entries(data)) {
     out[fn(key, value)] = value;
   }
   // @ts-expect-error [ts2322] - We build the object incrementally so the type can't represent the final object.

@@ -63,11 +63,6 @@ describe("data first", () => {
   });
 
   it("can handle data that is complex nested objects", () => {
-    const evolver = {
-      array: (array: ReadonlyArray<string>) => array.length,
-      nestedObj: { a: set<{ b: string }, "b">("b", "Set") },
-      objAry: map(omit<{ a: number; b: number }, "b">(["b"])),
-    };
     const result = evolve(
       {
         array: ["1", "2", "3"],
@@ -77,7 +72,11 @@ describe("data first", () => {
           { a: 1, b: 1 },
         ],
       },
-      evolver,
+      {
+        array: (x) => x.length,
+        nestedObj: { a: (x) => set(x, "b", "Set") },
+        objAry: (x) => map(x, omit(["b"])),
+      },
     );
     const expected = {
       array: 3,
@@ -158,9 +157,9 @@ describe("data last", () => {
         ],
       },
       evolve({
-        array: (array: ReadonlyArray<string>) => array.length,
-        nestedObj: { a: set<{ b: string }, "b">("b", "Set") },
-        objAry: map(omit<{ a: number; b: number }, "b">(["b"])),
+        array: (x) => x.length,
+        nestedObj: { a: (x) => set(x, "b", "Set") },
+        objAry: (x) => map(x, omit(["b"])),
       }),
     );
     const expected = {

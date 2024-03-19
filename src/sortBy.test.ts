@@ -1,5 +1,7 @@
 import { identity } from "./identity";
+import { map } from "./map";
 import { pipe } from "./pipe";
+import { prop } from "./prop";
 import { sortBy } from "./sortBy";
 
 const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
@@ -99,23 +101,17 @@ describe("data last", () => {
     );
   });
   test("sort objects correctly", () => {
-    const sortFn = sortBy<{ weight: number; color: string }>(
-      (x) => x.weight,
-      (x) => x.color,
-    );
-    expect(sortFn(objects).map((x) => x.color)).toEqual([
-      "green",
-      "purple",
-      "red",
-      "blue",
-    ]);
+    expect(
+      pipe(objects, sortBy(prop("weight"), prop("color")), map(prop("color"))),
+    ).toEqual(["green", "purple", "red", "blue"]);
   });
   test("sort objects correctly by weight asc then color desc", () => {
     expect(
-      sortBy<{ weight: number; color: string }>(
-        [(x) => x.weight, "asc"],
-        [(x) => x.color, "desc"],
-      )(objects).map((x) => x.color),
+      pipe(
+        objects,
+        sortBy([prop("weight"), "asc"], [prop("color"), "desc"]),
+        map(prop("color")),
+      ),
     ).toEqual(["purple", "green", "red", "blue"]);
   });
 

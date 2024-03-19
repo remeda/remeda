@@ -97,14 +97,14 @@ describe("pipe", () => {
 describe("Strict", () => {
   it("number array", () => {
     const input: Array<number> = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
     expect(result).toEqual([2, 3, 4]);
   });
 
   it("readonly number array", () => {
     const input: ReadonlyArray<number> = [1, 2, 3] as const;
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
     expect(result).toEqual([2, 3, 4]);
@@ -112,14 +112,14 @@ describe("Strict", () => {
 
   it("number 3-tuple", () => {
     const input: [number, number, number] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([2, 3, 4]);
   });
 
   it("readonly number 3-tuple", () => {
     const input: readonly [number, number, number] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([2, 3, 4]);
@@ -127,7 +127,7 @@ describe("Strict", () => {
 
   it("named number 3-tuple", () => {
     const input: [item1: number, item2: number, item3: number] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     // There's no way to test this, but notice that the names are copied to the
     // output here...
     expectTypeOf(result).toEqualTypeOf<
@@ -138,14 +138,14 @@ describe("Strict", () => {
 
   it("mixed type tuple", () => {
     const input: [number, string, boolean] = [1, "2", true];
-    const result = map.strict(input, () => 1);
+    const result = map(input, () => 1);
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([1, 1, 1]);
   });
 
   it("readonly mixed type tuple", () => {
     const input: readonly [number, string, boolean] = [1, "2", true];
-    const result = map.strict(input, () => 1);
+    const result = map(input, () => 1);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([1, 1, 1]);
@@ -153,14 +153,14 @@ describe("Strict", () => {
 
   it("nonempty (tail) number array", () => {
     const input: [number, ...Array<number>] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
     expect(result).toEqual([2, 3, 4]);
   });
 
   it("nonempty (tail) readonly number array", () => {
     const input: readonly [number, ...Array<number>] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
     expect(result).toEqual([2, 3, 4]);
@@ -168,14 +168,14 @@ describe("Strict", () => {
 
   it("nonempty (head) number array", () => {
     const input: [...Array<number>, number] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([2, 3, 4]);
   });
 
   it("nonempty readonly (head) number array", () => {
     const input: readonly [...Array<number>, number] = [1, 2, 3];
-    const result = map.strict(input, (x) => x + 1);
+    const result = map(input, (x) => x + 1);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([2, 3, 4]);
@@ -190,7 +190,7 @@ describe("Strict", () => {
       ...Array<number>,
       boolean,
     ] = ["hello", "world", 1, "testing", "testing", "testing", 123, true];
-    const result = map.strict(input, identity);
+    const result = map(input, identity);
     expectTypeOf(result).toEqualTypeOf<
       [...Array<boolean | number | string>, boolean | number | string]
     >();
@@ -201,14 +201,14 @@ describe("Strict", () => {
 describe("Strict Indexed", () => {
   it("number array", () => {
     const input: Array<number> = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
     expect(result).toEqual([1, 3, 5]);
   });
 
   it("readonly number array", () => {
     const input: ReadonlyArray<number> = [1, 2, 3] as const;
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
     expect(result).toEqual([1, 3, 5]);
@@ -216,14 +216,14 @@ describe("Strict Indexed", () => {
 
   it("number 3-tuple", () => {
     const input: [number, number, number] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([1, 3, 5]);
   });
 
   it("readonly number 3-tuple", () => {
     const input: readonly [number, number, number] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([1, 3, 5]);
@@ -231,7 +231,7 @@ describe("Strict Indexed", () => {
 
   it("named number 3-tuple", () => {
     const input: [item1: number, item2: number, item3: number] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     // There's no way to test this, but notice that the names are copied to the
     // output here...
     expectTypeOf(result).toEqualTypeOf<
@@ -242,14 +242,14 @@ describe("Strict Indexed", () => {
 
   it("mixed type tuple", () => {
     const input: [number, string, boolean] = [1, "2", true];
-    const result = map.strict.indexed(input, (_, index) => index);
+    const result = map.indexed(input, (_, index) => index);
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([0, 1, 2]);
   });
 
   it("readonly mixed type tuple", () => {
     const input: readonly [number, string, boolean] = [1, "2", true];
-    const result = map.strict.indexed(input, (_, index) => index);
+    const result = map.indexed(input, (_, index) => index);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
     expect(result).toEqual([0, 1, 2]);
@@ -257,14 +257,14 @@ describe("Strict Indexed", () => {
 
   it("nonempty (tail) number array", () => {
     const input: [number, ...Array<number>] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
     expect(result).toEqual([1, 3, 5]);
   });
 
   it("nonempty (tail) readonly number array", () => {
     const input: readonly [number, ...Array<number>] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
     expect(result).toEqual([1, 3, 5]);
@@ -272,14 +272,14 @@ describe("Strict Indexed", () => {
 
   it("nonempty (head) number array", () => {
     const input: [...Array<number>, number] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([1, 3, 5]);
   });
 
   it("nonempty readonly (head) number array", () => {
     const input: readonly [...Array<number>, number] = [1, 2, 3];
-    const result = map.strict.indexed(input, (x, index) => x + index);
+    const result = map.indexed(input, (x, index) => x + index);
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([1, 3, 5]);
@@ -294,7 +294,7 @@ describe("Strict Indexed", () => {
       ...Array<number>,
       boolean,
     ] = ["hello", "world", 1, "testing", "testing", "testing", 123, true];
-    const result = map.strict.indexed(input, identity);
+    const result = map.indexed(input, identity);
     expectTypeOf(result).toEqualTypeOf<
       [...Array<boolean | number | string>, boolean | number | string]
     >();

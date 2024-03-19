@@ -28,7 +28,7 @@ type FromEntries<Entries> = Entries extends readonly [
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromEntriesTuple<E, Rest> = E extends Entry
-  ? Record<E[0], E[1]> & FromEntries<Rest>
+  ? FromEntries<Rest> & Record<E[0], E[1]>
   : "ERROR: Array-like contains a non-entry element";
 
 // For the array case we also need to handle what kind of keys it defines:

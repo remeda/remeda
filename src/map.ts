@@ -12,8 +12,8 @@ import { purry } from "./purry";
 /**
  * Map each element of an array using a defined callback function.
  *
- * @param array - The array to map.
- * @param fn - The function mapper.
+ * @param data - The array to map.
+ * @param mapper - The function mapper.
  * @returns The new mapped array.
  * @signature
  *    R.map(array, fn)
@@ -27,14 +27,14 @@ import { purry } from "./purry";
  * @category Array
  */
 export function map<T extends IterableContainer, K>(
-  items: T,
+  data: T,
   mapper: (item: T[number]) => K,
 ): Mapped<T, K>;
 
 /**
  * Map each value of an object using a defined callback function.
  *
- * @param fn - The function mapper.
+ * @param mapper - The function mapper.
  * @signature
  *    R.map(fn)(array)
  *    R.map.indexed(fn)(array)

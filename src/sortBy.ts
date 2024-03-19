@@ -24,11 +24,11 @@ type SortedBy<T extends IterableContainer> = {
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
  *
- * @param rules - A variadic array of order rules defining the sorting criteria.
- * Each order rule is a projection function that extracts a comparable value
- * from the data. Sorting is based on these extracted values using the native
- * `<` and `>` operators. Earlier rules take precedence over later ones. Use the
- * syntax `[projection, "desc"]` for descending order.
+ * @param sortRules - A variadic array of order rules defining the sorting
+ * criteria. Each order rule is a projection function that extracts a comparable
+ * value from the data. Sorting is based on these extracted values using the
+ * native `<` and `>` operators. Earlier rules take precedence over later ones.
+ * Use the syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(...rules)(data)
@@ -59,12 +59,11 @@ export function sortBy<T extends IterableContainer>(
  * Refer to the docs for more details.
  *
  * @param array - The input array.
- * @param rules - A variadic array of order rules defining the sorting criteria.
- * Each order rule is a projection function that extracts a comparable value
- * from the data. Sorting is based on these extracted values using the native
- * `<` and `>` operators. Earlier rules take precedence over later ones. Use the
- * syntax `[projection, "desc"]` for descending order.
- * @param sortRules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
+ * @param sortRules - A variadic array of order rules defining the sorting
+ * criteria. Each order rule is a projection function that extracts a comparable
+ * value from the data. Sorting is based on these extracted values using the
+ * native `<` and `>` operators. Earlier rules take precedence over later ones.
+ * Use the syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(data, ...rules)

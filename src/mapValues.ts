@@ -43,7 +43,7 @@ function _mapValues<T extends Record<PropertyKey, unknown>, S>(
   fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
 ): Record<ObjectKeys<T>, S> {
   const out: Partial<Record<ObjectKeys<T>, S>> = {};
-  for (const [key, value] of entries.strict(data)) {
+  for (const [key, value] of entries(data)) {
     // @ts-expect-error [ts2345] - FIXME!
     const mappedValue = fn(value, key);
     // @ts-expect-error [ts2536] - FIXME!
