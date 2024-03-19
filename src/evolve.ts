@@ -1,6 +1,6 @@
 import type { IterableContainer } from "./_types";
+import { entries } from "./entries";
 import { purry } from "./purry";
-import { toPairs } from "./toPairs";
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
@@ -142,7 +142,7 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
 
   const out: Record<string, unknown> = { ...data };
 
-  for (const [key, value] of toPairs.strict(evolver)) {
+  for (const [key, value] of entries.strict(evolver)) {
     if (key in out) {
       out[key] =
         typeof value === "function"

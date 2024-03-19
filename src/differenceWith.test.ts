@@ -1,6 +1,6 @@
 import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
 import { differenceWith } from "./differenceWith";
-import { equals } from "./equals";
+import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
@@ -10,7 +10,7 @@ const expected = [{ a: 1 }, { a: 4 }];
 
 describe("data_first", () => {
   test("should return difference", () => {
-    expect(differenceWith(source, other, equals)).toEqual(expected);
+    expect(differenceWith(source, other, isDeepEqual)).toEqual(expected);
   });
 
   test("should allow differencing different data types", () => {
@@ -22,7 +22,7 @@ describe("data_first", () => {
 
 describe("data_last", () => {
   test("should return difference", () => {
-    expect(differenceWith(other, equals)(source)).toEqual(expected);
+    expect(differenceWith(other, isDeepEqual)(source)).toEqual(expected);
   });
 
   test("should allow differencing different data types", () => {
@@ -39,7 +39,7 @@ describe("data_last", () => {
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
       counter.fn(),
-      differenceWith([{ a: 2 }, { a: 3 }], equals),
+      differenceWith([{ a: 2 }, { a: 3 }], isDeepEqual),
       take(2),
     );
     expect(counter.count).toHaveBeenCalledTimes(4);

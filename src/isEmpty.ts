@@ -1,6 +1,6 @@
 import type { IterableContainer } from "./_types";
 import { isArray } from "./isArray";
-import { isObject } from "./isObject";
+import { isObjectType } from "./isObjectType";
 import { isString } from "./isString";
 
 /**
@@ -45,7 +45,7 @@ export function isEmpty(data: unknown): boolean {
   if (isArray(data) || isString(data)) {
     return data.length === 0;
   }
-  if (isObject(data)) {
+  if (isObjectType(data)) {
     return Object.keys(data).length === 0;
   }
   return false;

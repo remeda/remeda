@@ -1,7 +1,8 @@
-import { shuffle } from "./shuffle";
-
+import { filter } from "./filter";
+import { isIncludedIn } from "./isIncludedIn";
+import { isNot } from "./isNot";
 import { pipe } from "./pipe";
-import { difference } from "./difference";
+import { shuffle } from "./shuffle";
 
 describe("data_first", () => {
   test("shuffle", () => {
@@ -34,3 +35,6 @@ describe("data_last", () => {
     expect(input).toEqual([4, 2, 7, 5]);
   });
 });
+
+const difference = <T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): Array<T> =>
+  filter(a, isNot(isIncludedIn(b)));
