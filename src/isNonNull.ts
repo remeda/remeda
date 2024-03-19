@@ -10,6 +10,7 @@
  *    R.isNonNull('string') //=> true
  *    R.isNonNull(null) //=> false
  *    R.isNonNull(undefined) //=> true
+ * @dataFirst
  * @category Guard
  */
 export function isNonNull<T>(data: T | null): data is T {

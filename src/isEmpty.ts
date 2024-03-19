@@ -26,6 +26,7 @@ import { isString } from "./isString";
  *    R.isEmpty('test') //=> false
  *    R.isEmpty([1, 2, 3]) //=> false
  *    R.isEmpty({ length: 0 }) //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isEmpty<T extends string | undefined>(
@@ -33,10 +34,13 @@ export function isEmpty<T extends string | undefined>(
 ): data is
   | ("" extends T ? "" : never)
   | (undefined extends T ? undefined : never);
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function isEmpty(data: IterableContainer): data is [];
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
   data: T,
 ): data is Record<keyof T, never>;
+
 export function isEmpty(data: unknown): boolean {
   if (data === undefined) {
     return true;

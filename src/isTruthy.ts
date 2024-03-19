@@ -12,6 +12,7 @@
  *    R.isTruthy(false) //=> false
  *    R.isTruthy(0) //=> false
  *    R.isTruthy('') //=> false
+ * @dataFirst
  * @category Guard
  */
 // eslint-disable-next-line unicorn/prefer-native-coercion-functions -- This is not entirely correct, our isTruthy also coerces the type.

@@ -189,9 +189,8 @@ export default config(
       "jsdoc/require-asterisk-prefix": "error",
 
       // Completeness
-      // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/no-restricted-syntax": [
-        "off",
+        "error",
         {
           contexts: [
             {
@@ -208,9 +207,8 @@ export default config(
           ],
         },
       ],
-      // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-jsdoc": [
-        "off",
+        "error",
         {
           enableFixer: false,
           // We only require JSDoc for top-level function exports. Assuming
@@ -226,8 +224,7 @@ export default config(
       "jsdoc/require-param": "warn",
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-throws": "off",
+      "jsdoc/require-throws": "error",
       "jsdoc/require-yields": "error",
 
       // Style
@@ -249,6 +246,7 @@ export default config(
               tags: [
                 "param",
                 "returns",
+                "throws",
                 "signature",
                 "example",
                 "dataFirst",

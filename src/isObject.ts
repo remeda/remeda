@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, jsdoc/no-restricted-syntax --
  * This function is deprecated so it doesn't matter that it uses bad types.
  */
 type DefinitelyObject<T> =

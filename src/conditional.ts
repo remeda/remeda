@@ -220,6 +220,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
 }
 
 export namespace conditional {
+  // eslint-disable-next-line jsdoc/no-restricted-syntax -- no need for signature
   /**
    * A simplified case that accepts all data. Put this as the last case to
    * prevent an exception from being thrown when none of the previous cases

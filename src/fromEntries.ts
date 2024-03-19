@@ -28,6 +28,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
 export function fromEntries<V>(
   entries: ReadonlyArray<Entry<number, V>>,
 ): Record<number, V>;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function fromEntries<V>(
   entries: ReadonlyArray<Entry<string, V>>,
 ): Record<string, V>;

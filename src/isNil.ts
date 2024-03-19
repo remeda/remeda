@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/no-restricted-syntax -- ignore for deprecated files */
+
 /**
  * A function that checks if the passed parameter is Nil (null or undefined) and narrows its type accordingly.
  *

@@ -8,6 +8,7 @@
  * @example
  *    R.isDate(new Date()) //=> true
  *    R.isDate('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isDate(data: unknown): data is Date {

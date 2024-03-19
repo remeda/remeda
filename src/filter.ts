@@ -24,6 +24,7 @@ export function filter<T, S extends T>(
   array: ReadonlyArray<T>,
   fn: (value: T) => value is S,
 ): Array<S>;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function filter<T>(
   array: ReadonlyArray<T>,
   fn: Pred<T, boolean>,
@@ -47,6 +48,7 @@ export function filter<T>(
 export function filter<T, S extends T>(
   fn: (input: T) => input is S,
 ): (array: ReadonlyArray<T>) => Array<S>;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function filter<T>(
   fn: Pred<T, boolean>,
 ): (array: ReadonlyArray<T>) => Array<T>;

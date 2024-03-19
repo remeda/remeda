@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- Deprecated file */
+/* eslint-disable jsdoc/no-restricted-syntax, jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- Deprecated file */
 
 import type { PredIndexedOptional } from "./_types";
 import { purry } from "./purry";

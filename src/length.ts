@@ -27,15 +27,6 @@ export function length<T>(items: Enumerable<T>): number;
  */
 export function length<T>(): (items: Enumerable<T>) => number;
 
-/**
- * Counts values of the collection or iterable.
- *
- * @signature
- *    R.length()(array)
- * @example
- *    R.pipe([1, 2, 3], R.length()) // => 3
- * @category Array
- */
 export function length(): unknown {
   return purry(_length, arguments);
 }

@@ -10,6 +10,7 @@ import type { NarrowedTo } from "./_types";
  * @example
  *    R.isSymbol(Symbol('foo')) //=> true
  *    R.isSymbol(1) //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {

@@ -11,6 +11,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isBoolean(true) //=> true
  *    R.isBoolean(false) //=> true
  *    R.isBoolean('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isBoolean<T>(

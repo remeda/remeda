@@ -24,13 +24,11 @@ export function groupBy<T>(
   fn: (item: T) => PropertyKey | undefined,
 ): Record<PropertyKey, NonEmptyArray<T>>;
 
-export function groupBy<T>(
-  fn: (item: T) => PropertyKey | undefined,
-): (array: ReadonlyArray<T>) => Record<PropertyKey, NonEmptyArray<T>>;
-
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
  *
+ * @param fn - The grouping function. When `undefined` is returned the item would
+ * be skipped and not grouped under any key.
  * @signature
  *    R.groupBy(fn)(array)
  * @example
@@ -39,6 +37,10 @@ export function groupBy<T>(
  * @indexed
  * @category Array
  */
+export function groupBy<T>(
+  fn: (item: T) => PropertyKey | undefined,
+): (array: ReadonlyArray<T>) => Record<PropertyKey, NonEmptyArray<T>>;
+
 export function groupBy(): unknown {
   return purry(_groupBy(false), arguments);
 }

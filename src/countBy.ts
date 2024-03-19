@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-param -- ignore for deprecated files */
+/* eslint-disable jsdoc/no-restricted-syntax, jsdoc/require-param -- ignore for deprecated files */
 
 import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 import { purry } from "./purry";

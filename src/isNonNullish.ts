@@ -11,6 +11,7 @@
  *    R.isNonNullish('string') //=> true
  *    R.isNonNullish(null) //=> false
  *    R.isNonNullish(undefined) //=> false
+ * @dataFirst
  * @strict
  * @category Guard
  */

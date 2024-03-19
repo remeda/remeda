@@ -11,6 +11,7 @@
  *    R.isNullish(undefined) //=> true
  *    R.isNullish(null) //=> true
  *    R.isNullish('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isNullish<T>(data: T): data is Extract<T, null | undefined> {

@@ -30,7 +30,6 @@ const _sumBy =
  * @indexed
  * @category Array
  */
-
 export function sumBy<T>(
   fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => number;
@@ -52,7 +51,6 @@ export function sumBy<T>(
  * @indexed
  * @category Array
  */
-
 export function sumBy<T>(
   items: ReadonlyArray<T>,
   fn: (item: T) => number,

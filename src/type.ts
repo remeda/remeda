@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/no-restricted-syntax -- ignore for deprecated files */
+
 // from https://github.com/ramda/ramda/blob/master/source/type.js
 
 /**

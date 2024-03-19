@@ -17,6 +17,7 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
  *   R.flattenDeep(array)
  * @example
  *    R.flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]
+ * @dataFirst
  * @pipeable
  * @category Array
  */

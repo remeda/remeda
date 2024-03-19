@@ -11,6 +11,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isArray([5]) //=> true
  *    R.isArray([]) //=> true
  *    R.isArray('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isArray<T>(

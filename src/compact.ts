@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/no-restricted-syntax -- ignore for deprecated files */
+
 import { isTruthy } from "./isTruthy";
 
 /**

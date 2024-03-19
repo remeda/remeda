@@ -10,6 +10,7 @@ import type { NarrowedTo } from "./_types";
  * @example
  *    R.isNumber(1) //=> true
  *    R.isNumber('notANumber') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {
