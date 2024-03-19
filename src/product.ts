@@ -35,5 +35,10 @@ export function product(): unknown {
   return purry(productImplementation, arguments);
 }
 
-const productImplementation = (data: ReadonlyArray<number>): number =>
-  data.reduce((acc, value) => acc * value, 1);
+function productImplementation(data: ReadonlyArray<number>): number {
+  let out = 1;
+  for (const value of data) {
+    out *= value;
+  }
+  return out;
+}

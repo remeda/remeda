@@ -33,5 +33,10 @@ export function sum(): unknown {
   return purry(sumImplementation, arguments);
 }
 
-const sumImplementation = (data: ReadonlyArray<number>): number =>
-  data.reduce((acc, value) => acc + value, 0);
+function sumImplementation(data: ReadonlyArray<number>): number {
+  let out = 0;
+  for (const value of data) {
+    out += value;
+  }
+  return out;
+}
