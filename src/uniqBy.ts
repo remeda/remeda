@@ -1,7 +1,29 @@
+/* eslint-disable jsdoc/require-param-description, jsdoc/check-param-names -- Deprecated file */
+
 import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
+/**
+ * Returns a new array containing only one copy of each element in the original list transformed by a function.
+ * Elements are compared by reference using Set.
+ *
+ * ! **DEPRECATED**: Use `R.uniqueBy(array, fn)`. Will be removed in V2!
+ *
+ * @param array - The array to filter.
+ * @param transformer
+ * @signature
+ *    R.uniqBy(array, fn)
+ * @example
+ *    R.uniqBy(
+ *     [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],
+ *     (obj) => obj.n,
+ *    ) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
+ * @dataFirst
+ * @pipeable
+ * @category Deprecated
+ * @deprecated Use `R.uniqueBy(array, fn)`. Will be removed in V2!
+ */
 export function uniqBy<T, K>(
   array: ReadonlyArray<T>,
   transformer: (item: T) => K,
@@ -11,23 +33,23 @@ export function uniqBy<T, K>(
  * Returns a new array containing only one copy of each element in the original list transformed by a function.
  * Elements are compared by reference using Set.
  *
- * @param array
+ * ! **DEPRECATED**: Use `R.uniqueBy(fn)`. Will be removed in V2!
+ *
+ * @param array - The array to filter.
+ * @param transformer
  * @signature
- *    R.uniqBy(array, fn)
+ *    R.uniqBy(fn)(array)
  * @example
- *    R.uniqBy(
- *     [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],
- *     (obj) => obj.n,
- *    ) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
  *    R.pipe(
  *      [{n: 1}, {n: 2}, {n: 2}, {n: 5}, {n: 1}, {n: 6}, {n: 7}], // only 4 iterations
  *      R.uniqBy(obj => obj.n),
  *      R.take(3)
  *    ) // => [{n: 1}, {n: 2}, {n: 5}]
+ * @dataLast
  * @pipeable
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.uniqueBy(fn)`. Will be removed in V2!
  */
-
 export function uniqBy<T, K>(
   transformer: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Array<T>;
