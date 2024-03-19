@@ -96,6 +96,7 @@ documentation when migrating._
 | [`splitWhen`](https://remedajs.com/docs/#splitWhen)                 |                                                                          | [`splitWhen`](https://ramdajs.com/docs/#splitWhen)                 |
 | [`stringToPath`](https://remedajs.com/docs/#stringToPath)           | [`toPath`](https://lodash.com/docs/4.17.15#toPath)                       |                                                                    |
 | [`subtract`](https://remedajs.com/docs/#subtract)                   | [`subtract`](https://lodash.com/docs/4.17.15#subtract)                   | [`subtract`](https://ramdajs.com/docs/#subtract)                   |
+| [`sumBy`](https:/remedajs.com/docs/#sumBy)                          | [`sumBy`](https://lodash.com/docs/4.17.15#sumBy)                         |                                                                    |
 | [`swapIndices`](https://remedajs.com/docs/#swapIndices)             |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`swapProps`](https://remedajs.com/docs/#swapProps)                 |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`take`](https://remedajs.com/docs/#take)                           | [`take`](https://lodash.com/docs/4.17.15#take)                           | [`take`](https://ramdajs.com/docs/#take)                           |
@@ -119,22 +120,21 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Remeda                                                           | Lodash         | Ramda          |
-| ---------------------------------------------------------------- | -------------- | -------------- |
-| `(arr, val) => [...arr, val]`                                    |                | `append`       |
-| `a?.b?.c`                                                        | `path`         |                |
-| `n => a[n]`                                                      | `nth`          | `nth`          |
-| `R.constant(undefined)`                                          | `noop`         |                |
-| `R.filter(R.isIncludedIn(other))`                                | `intersection` | `intersection` |
-| `R.filter(R.isNot(fn))`                                          | `reject`       | `reject`       |
-| `R.filter(R.isNot(R.isIncludedIn(other)))`                       | `difference`   | `difference`   |
-| `R.filter(R.isTruthy)`                                           | `compact`      |                |
-| `R.firstBy([fn, "desc"])`                                        | `maxBy`        | `maxBy`        |
-| `R.firstBy([R.identity, "desc"])`                                | `max`          | `max`          |
-| `R.firstBy(fn)`                                                  | `minBy`        | `minBy`        |
-| `R.firstBy(R.identity)`                                          | `min`          | `min`          |
-| `R.fromEntries(R.zip(keys, values))`                             | `zipObj`       | `zipObj`       |
-| `R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)` | `sumBy`        |                |
-| `str => str.split(/\s+/)`                                        | `words`        |                |
-| `x => x.a ?? defaultValue`                                       | `propOr`       |                |
-| `x => x.a === value`                                             | `propEq`       |                |
+| Remeda                                     | Lodash         | Ramda          |
+| ------------------------------------------ | -------------- | -------------- |
+| `(arr, val) => [...arr, val]`              |                | `append`       |
+| `a?.b?.c`                                  | `path`         |                |
+| `n => a[n]`                                | `nth`          | `nth`          |
+| `R.constant(undefined)`                    | `noop`         |                |
+| `R.filter(R.isIncludedIn(other))`          | `intersection` | `intersection` |
+| `R.filter(R.isNot(fn))`                    | `reject`       | `reject`       |
+| `R.filter(R.isNot(R.isIncludedIn(other)))` | `difference`   | `difference`   |
+| `R.filter(R.isTruthy)`                     | `compact`      |                |
+| `R.firstBy([fn, "desc"])`                  | `maxBy`        | `maxBy`        |
+| `R.firstBy([R.identity, "desc"])`          | `max`          | `max`          |
+| `R.firstBy(fn)`                            | `minBy`        | `minBy`        |
+| `R.firstBy(R.identity)`                    | `min`          | `min`          |
+| `R.fromEntries(R.zip(keys, values))`       | `zipObj`       | `zipObj`       |
+| `str => str.split(/\s+/)`                  | `words`        |                |
+| `x => x.a ?? defaultValue`                 | `propOr`       |                |
+| `x => x.a === value`                       | `propEq`       |                |

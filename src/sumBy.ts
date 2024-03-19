@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- Deprecated file */
-
 import { purry } from "./purry";
 import type { PredIndexed, PredIndexedOptional } from "./_types";
 
@@ -19,8 +17,6 @@ const _sumBy =
 /**
  * Returns the sum of the elements of an array using the provided predicate.
  *
- * ! **DEPRECATED**: Use `<T>(items: ReadonlyArray<T>) => R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)` or if part of a pipe: `R.pipe(..., map(fn), reduce((sum, item) => R.add(sum, item), 0), ...)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
- *
  * @param fn - Predicate function.
  * @signature
  *   R.sumBy(fn)(array)
@@ -32,8 +28,7 @@ const _sumBy =
  *    ) // 9
  * @dataLast
  * @indexed
- * @category Deprecated
- * @deprecated Use `<T>(items: ReadonlyArray<T>) => R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)` or if part of a pipe: `R.pipe(..., map(fn), reduce((sum, item) => R.add(sum, item), 0), ...)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
+ * @category Array
  */
 
 export function sumBy<T>(
@@ -42,8 +37,6 @@ export function sumBy<T>(
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
- *
- * ! **DEPRECATED**: Use `R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
  *
  * @param items - The array.
  * @param fn - Predicate function.
@@ -57,8 +50,7 @@ export function sumBy<T>(
  *    ) // 9
  * @dataFirst
  * @indexed
- * @category Deprecated
- * @deprecated Use `R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
+ * @category Array
  */
 
 export function sumBy<T>(
@@ -71,17 +63,11 @@ export function sumBy(): unknown {
 }
 
 export namespace sumBy {
-  /**
-   * @deprecated Use `R.reduce(R.map.indexed(array, fn), (sum, item) => R.add(sum, item), 0)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
-   */
   export function indexed<T>(
     array: ReadonlyArray<T>,
     fn: PredIndexed<T, number>,
   ): number;
 
-  /**
-   * @deprecated Use `<T>(items: ReadonlyArray<T>) => R.reduce(R.map.indexed(items, fn), (sum, item) => R.add(sum, item), 0)` or if part of a pipe `R.pipe(..., R.map.indexed(fn), R.reduce((sum, item) => R.add(sum, item), 0), ...)`. This function might be removed in V2, but we are not sure yet so if you have a strong opinion about this please post an issue on GitHub to surface it.
-   */
   export function indexed<T>(
     fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => number;
