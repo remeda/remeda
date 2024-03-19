@@ -96,7 +96,7 @@ documentation when migrating._
 | [`splitWhen`](https://remedajs.com/docs/#splitWhen)                 |                                                                          | [`splitWhen`](https://ramdajs.com/docs/#splitWhen)                 |
 | [`stringToPath`](https://remedajs.com/docs/#stringToPath)           | [`toPath`](https://lodash.com/docs/4.17.15#toPath)                       |                                                                    |
 | [`subtract`](https://remedajs.com/docs/#subtract)                   | [`subtract`](https://lodash.com/docs/4.17.15#subtract)                   | [`subtract`](https://ramdajs.com/docs/#subtract)                   |
-| [`sumBy`](https:/remedajs.com/docs/#sumBy)                          | [`sumBy`](https://lodash.com/docs/4.17.15#sumBy)                         |                                                                    |
+| [`sumBy`](https://remedajs.com/docs/#sumBy)                         | [`sumBy`](https://lodash.com/docs/4.17.15#sumBy)                         |                                                                    |
 | [`swapIndices`](https://remedajs.com/docs/#swapIndices)             |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`swapProps`](https://remedajs.com/docs/#swapProps)                 |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`take`](https://remedajs.com/docs/#take)                           | [`take`](https://lodash.com/docs/4.17.15#take)                           | [`take`](https://ramdajs.com/docs/#take)                           |
