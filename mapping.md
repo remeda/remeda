@@ -126,6 +126,7 @@ you are relying on when migrating._
 |                | `path`         | `a?.b?.c`                                                 |
 |                | `propEq`       | `x => x.a === value`                                      |
 |                | `propOr`       | `x => x.a ?? defaultValue`                                |
+| `words`        |                | `str => str.split(/\s+/)`                                 |
 | `compact`      |                | `R.filter(R.isTruthy)`                                    |
 | `difference`   | `difference`   | `R.filter(R.isNot(R.isIncludedIn(other)))`                |
 | `intersection` | `intersection` | `R.filter(R.isIncludedIn(other))`                         |
@@ -133,7 +134,7 @@ you are relying on when migrating._
 | `maxBy`        | `maxBy`        | `R.firstBy([fn, "desc"])`                                 |
 | `min`          | `min`          | `R.firstBy(R.identity)`                                   |
 | `minBy`        | `minBy`        | `R.firstBy(fn)`                                           |
+| `noop`         |                | `R.constant(undefined)`                                   |
 | `reject`       | `reject`       | `R.filter(R.isNot(fn))`                                   |
 | `sumBy`        |                | `R.reduce(R.map(fn), (sum, item) => R.add(sum, item), 0)` |
-| `words`        |                | `str => str.split(/\s+/)`                                 |
 | `zipObj`       | `zipObj`       | `R.fromEntries(R.zip(keys, values))`                      |
