@@ -1,11 +1,10 @@
-import { fromPairs } from "./fromPairs";
+import { fromEntries } from "./fromEntries";
 import { hasAtLeast } from "./hasAtLeast";
 import { purry } from "./purry";
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
  *
- * @param data - The object.
  * @param propNames - The property names.
  * @signature
  *    R.omit(names)(obj);
@@ -63,7 +62,7 @@ function _omit<T extends object, K extends keyof T>(
   }
 
   const asSet = new Set(propNames);
-  return fromPairs(
+  return fromEntries(
     Object.entries(data).filter(([key]) => !asSet.has(key as K)),
   ) as Omit<T, K>;
 }

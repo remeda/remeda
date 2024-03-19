@@ -23,7 +23,6 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
- * @param object - The object.
  * @signature
  *    R.invert()(object)
  * @example

@@ -9,6 +9,8 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by custom comparator isEquals.
  *
+ * ! **DEPRECATED**: Use `R.uniqueWith(array, isEquals)`. Will be removed in V2!
+ *
  * @param array - The array to filter.
  * @param isEquals - The comparator.
  * @signature
@@ -19,7 +21,8 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *      R.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.uniqueWith(array, isEquals)`. Will be removed in V2!
  */
 export function uniqWith<T>(
   array: ReadonlyArray<T>,
@@ -29,6 +32,8 @@ export function uniqWith<T>(
 /**
  * Returns a new array containing only one copy of each element in the original list.
  * Elements are compared by custom comparator isEquals.
+ *
+ * ! **DEPRECATED**: Use `R.uniqueWith(isEquals)`. Will be removed in V2!
  *
  * @param isEquals - The comparator.
  * @signature R.uniqWith(isEquals)(array)
@@ -42,7 +47,8 @@ export function uniqWith<T>(
  *      R.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
- * @category Object
+ * @category Deprecated
+ * @deprecated Use `R.uniqueWith(isEquals)`. Will be removed in V2!
  */
 export function uniqWith<T>(
   isEquals: IsEquals<T>,

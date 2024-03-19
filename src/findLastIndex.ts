@@ -25,7 +25,6 @@ export function findLastIndex<T>(
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
  *
- * @param array - The array.
  * @param fn - The predicate.
  * @signature
  *    R.findLastIndex(fn)(items)

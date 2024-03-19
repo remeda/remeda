@@ -1,10 +1,12 @@
+/* eslint-disable jsdoc/check-param-names -- ignore for deprecated files */
+
 import { purry } from "./purry";
 
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
  *
- * **DEPRECATED: use R.isDeepEqual().**.
+ * ! **DEPRECATED**: Use `R.isDeepEqual(a, b)`. Will be removed in V2.
  *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
@@ -15,8 +17,8 @@ import { purry } from "./purry";
  *    R.equals(1, '1') //=> false
  *    R.equals([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
- * @category Object
- * @deprecated Use `R.isDeepEqual`.
+ * @category Deprecated
+ * @deprecated Use `R.isDeepEqual(a, b)`. Will be removed in V2.
  */
 export function equals(a: unknown, b: unknown): boolean;
 
@@ -24,7 +26,7 @@ export function equals(a: unknown, b: unknown): boolean;
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
  *
- * **DEPRECATED: use R.isDeepEqual().**.
+ * ! **DEPRECATED**: Use `R.isDeepEqual(b)`. Will be removed in V2.
  *
  * @param a - The first object to compare.
  * @param b - The second object to compare.
@@ -35,8 +37,8 @@ export function equals(a: unknown, b: unknown): boolean;
  *    R.equals('1')(1) //=> false
  *    R.equals([1, 2, 3])([1, 2, 3]) //=> true
  * @dataLast
- * @category Object
- * @deprecated Use `R.isDeepEqual`.
+ * @category Deprecated
+ * @deprecated Use `R.isDeepEqual(b)`. Will be removed in V2.
  */
 export function equals(a: unknown): (b: unknown) => boolean;
 

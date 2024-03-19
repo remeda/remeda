@@ -39,7 +39,6 @@ export function hasAtLeast<T, N extends number>(
  * refines the output type accordingly so that those indices are defined when
  * accessing the array even when using typescript's 'noUncheckedIndexAccess'.
  *
- * @param data - The input array.
  * @param minimum - The minimum number of elements the array must have.
  * @returns True if the array's length is *at least* `minimum`.
  * @signature

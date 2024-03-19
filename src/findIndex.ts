@@ -7,7 +7,7 @@ import { purry } from "./purry";
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
  *
- * @param items - The array.
+ * @param array - The array.
  * @param fn - The predicate.
  * @signature
  *    R.findIndex(items, fn)
@@ -28,7 +28,6 @@ export function findIndex<T>(
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
  *
- * @param items - The array.
  * @param fn - The predicate.
  * @signature
  *    R.findIndex(fn)(items)

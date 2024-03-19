@@ -21,7 +21,6 @@ export function splitAt<T>(
 /**
  * Splits a given array at a given index.
  *
- * @param array - The array to split.
  * @param index - The index to split at.
  * @signature
  *    R.splitAt(index)(array)

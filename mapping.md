@@ -18,15 +18,15 @@ documentation when migrating._
 | [`clone`](https://remedajs.com/docs/#clone)                         | [`cloneDeep`](https://lodash.com/docs/4.17.15#cloneDeep)                 | [`clone`](https://ramdajs.com/docs/#clone)                         |
 | [`concat`](https://remedajs.com/docs/#concat)                       | [`concat`](https://lodash.com/docs/4.17.15#concat)                       | [`concat`](https://ramdajs.com/docs/#concat)                       |
 | [`conditional`](https://remedajs.com/docs/#conditional)             | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
-| [`createPipe`](https://remedajs.com/docs/#createPipe)               |                                                                          |                                                                    |
+| [`constant`](https://remedajs.com/docs/#constant)                   | [`constant`](https://lodash.com/docs/4.17.15#constant)                   | [`always`](https://ramdajs.com/docs/#always)                       |
 | [`debounce`](https://remedajs.com/docs/#debounce)                   | [`debounce`](https://lodash.com/docs/4.17.15#debounce)                   |                                                                    |
-| [`difference`](https://remedajs.com/docs/#difference)               | [`difference`](https://lodash.com/docs/4.17.15#difference)               | [`difference`](https://ramdajs.com/docs/#difference)               |
 | [`differenceWith`](https://remedajs.com/docs/#differenceWith)       | [`differenceWith`](https://lodash.com/docs/4.17.15#differenceWith)       | [`differenceWith`](https://ramdajs.com/docs/#differenceWith)       |
 | [`divide`](https://remedajs.com/docs/#divide)                       | [`divide`](https://lodash.com/docs/4.17.15#divide)                       | [`divide`](https://ramdajs.com/docs/#divide)                       |
 | [`drop`](https://remedajs.com/docs/#drop)                           | [`drop`](https://lodash.com/docs/4.17.15#drop)                           | [`drop`](https://ramdajs.com/docs/#drop)                           |
 | [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 | [`dropLastWhile`](https://remedajs.com/docs/#dropLastWhile)         | [`dropRightWhile`](https://lodash.com/docs/4.17.15#dropRightWhile)       | [`dropLastWhile`](https://ramdajs.com/docs/#dropLastWhile)         |
 | [`dropWhile`](https://remedajs.com/docs/#dropWhile)                 | [`dropWhile`](https://lodash.com/docs/4.17.15#dropWhile)                 | [`dropWhile`](https://ramdajs.com/docs/#dropWhile)                 |
+| [`entries`](https://remedajs.com/docs/#entries)                     | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
 | [`evolve`](https://remedajs.com/docs/#evolve)                       |                                                                          | [`evolve`](https://ramdajs.com/docs/#evolve)                       |
 | [`filter`](https://remedajs.com/docs/#filter)                       | [`filter`](https://lodash.com/docs/4.17.15#filter)                       | [`filter`](https://ramdajs.com/docs/#filter)                       |
 | [`find`](https://remedajs.com/docs/#find)                           | [`find`](https://lodash.com/docs/4.17.15#find)                           | [`find`](https://ramdajs.com/docs/#find)                           |
@@ -41,15 +41,15 @@ documentation when migrating._
 | [`forEach`](https://remedajs.com/docs/#forEach)                     | [`forEach`](https://lodash.com/docs/4.17.15#forEach)                     | [`forEach`](https://ramdajs.com/docs/#forEach)                     |
 | [`forEachObj`](https://remedajs.com/docs/#forEachObj)               | [`forEach`](https://lodash.com/docs/4.17.15#forEach)                     | [`forEachObjIndexed`](https://ramdajs.com/docs/#forEachObjIndexed) |
 | [`groupBy`](https://remedajs.com/docs/#groupBy)                     | [`groupBy`](https://lodash.com/docs/4.17.15#groupBy)                     | [`groupBy`](https://ramdajs.com/docs/#groupBy)                     |
+| [`hasSubobject`](https://remedajs.com/docs/#hasSubobject)           | [`isMatch`](https://lodash.com/docs/4.17.15#isMatch)                     | [`where`](https://ramdajs.com/docs/#where)                         |
 | [`identity`](https://remedajs.com/docs/#identity)                   | [`identity`](https://lodash.com/docs/4.17.15#identity)                   | [`identity`](https://ramdajs.com/docs/#identity)                   |
 | [`indexBy`](https://remedajs.com/docs/#indexBy)                     | [`keyBy`](https://lodash.com/docs/4.17.15#keyBy)                         | [`indexBy`](https://ramdajs.com/docs/#indexBy)                     |
-| [`intersection`](https://remedajs.com/docs/#intersection)           | [`intersection`](https://lodash.com/docs/4.17.15#intersection)           | [`intersection`](https://ramdajs.com/docs/#intersection)           |
 | [`intersectionWith`](https://remedajs.com/docs/#intersectionWith)   | [`intersectionWith`](https://lodash.com/docs/4.17.15#intersectionWith)   | [`innerJoin`](https://ramdajs.com/docs/#innerJoin)                 |
 | [`invert`](https://remedajs.com/docs/#invert)                       | [`invert`](https://lodash.com/docs/4.17.15#invert)                       | [`invertObj`](https://ramdajs.com/docs/#invertObj)                 |
 | [`isDeepEqual`](https://remedajs.com/docs/#isDeepEqual)             | [`isEqual`](https://lodash.com/docs/4.17.15#isEqual)                     | [`equals`](https://ramdajs.com/docs/#equals)                       |
-| [`isDefined`](https://remedajs.com/docs/#isDefined)                 |                                                                          | [`isNotNil`](https://ramdajs.com/docs/#isNotNil)                   |
 | [`isEmpty`](https://remedajs.com/docs/#isEmpty)                     | [`isEmpty`](https://lodash.com/docs/4.17.15#isEmpty)                     | [`isEmpty`](https://ramdajs.com/docs/#isEmpty)                     |
-| [`isNil`](https://remedajs.com/docs/#isNil)                         | [`isNil`](https://lodash.com/docs/4.17.15#isNil)                         | [`isNil`](https://ramdajs.com/docs/#isNil)                         |
+| [`isNonNullish`](https://remedajs.com/docs/#isNonNullish)           |                                                                          | [`isNotNil`](https://ramdajs.com/docs/#isNotNil)                   |
+| [`isNullish`](https://remedajs.com/docs/#isNullish)                 | [`isNil`](https://lodash.com/docs/4.17.15#isNil)                         | [`isNil`](https://ramdajs.com/docs/#isNil)                         |
 | [`isObjectType`](https://remedajs.com/docs/#isObjectType)           | [`isObjectLike`](https://lodash.com/docs/4.17.15#isObjectLike)           |                                                                    |
 | [`isPlainObject`](https://remedajs.com/docs/#isPlainObject)         | [`isPlainObject`](https://lodash.com/docs/4.17.15#isPlainObject)         |                                                                    |
 | [`isSymbol`](https://remedajs.com/docs/#isSymbol)                   | [`isSymbol`](https://lodash.com/docs/4.17.15#isSymbol)                   |                                                                    |
@@ -65,7 +65,6 @@ documentation when migrating._
 | [`mergeAll`](https://remedajs.com/docs/#mergeAll)                   | [`assign`](https://lodash.com/docs/4.17.15#assign)                       | [`mergeAll`](https://ramdajs.com/docs/#mergeAll)                   |
 | [`mergeDeep`](https://remedajs.com/docs/#mergeDeep)                 |                                                                          | [`mergeDeepRight`](https://ramdajs.com/docs/#mergeDeepRight)       |
 | [`multiply`](https://remedajs.com/docs/#multiply)                   | [`multiply`](https://lodash.com/docs/4.17.15#multiply)                   | [`multiply`](https://ramdajs.com/docs/#multiply)                   |
-| [`noop`](https://remedajs.com/docs/#noop)                           | [`noop`](https://lodash.com/docs/4.17.15#noop)                           |                                                                    |
 | [`objOf`](https://remedajs.com/docs/#objOf)                         |                                                                          | [`objOf`](https://ramdajs.com/docs/#objOf)                         |
 | [`omit`](https://remedajs.com/docs/#omit)                           | [`omit`](https://lodash.com/docs/4.17.15#omit)                           | [`omit`](https://ramdajs.com/docs/#omit)                           |
 | [`omitBy`](https://remedajs.com/docs/#omitBy)                       | [`omitBy`](https://lodash.com/docs/4.17.15#omitBy)                       |                                                                    |
@@ -76,11 +75,9 @@ documentation when migrating._
 | [`pickBy`](https://remedajs.com/docs/#pickBy)                       | [`pickBy`](https://lodash.com/docs/4.17.15#pickBy)                       | [`pickBy`](https://ramdajs.com/docs/#pickBy)                       |
 | [`pipe`](https://remedajs.com/docs/#pipe)                           | [`flow`](https://lodash.com/docs/4.17.15#flow)                           | [`pipe`](https://ramdajs.com/docs/#pipe)                           |
 | [`prop`](https://remedajs.com/docs/#prop)                           | [`get`](https://lodash.com/docs/4.17.15#get)                             | [`prop`](https://ramdajs.com/docs/#prop)                           |
-| [`purry`](https://remedajs.com/docs/#purry)                         |                                                                          |                                                                    |
 | [`randomString`](https://remedajs.com/docs/#randomString)           |                                                                          |                                                                    |
 | [`range`](https://remedajs.com/docs/#range)                         | [`range`](https://lodash.com/docs/4.17.15#range)                         | [`range`](https://ramdajs.com/docs/#range)                         |
 | [`reduce`](https://remedajs.com/docs/#reduce)                       | [`reduce`](https://lodash.com/docs/4.17.15#reduce)                       | [`reduce`](https://ramdajs.com/docs/#reduce)                       |
-| [`reject`](https://remedajs.com/docs/#reject)                       | [`reject`](https://lodash.com/docs/4.17.15#reject)                       | [`reject`](https://ramdajs.com/docs/#reject)                       |
 | [`reverse`](https://remedajs.com/docs/#reverse)                     | [`reverse`](https://lodash.com/docs/4.17.15#reverse)                     | [`reverse`](https://ramdajs.com/docs/#reverse)                     |
 | [`round`](https://remedajs.com/docs/#round)                         | [`round`](https://lodash.com/docs/4.17.15#round)                         |                                                                    |
 | [`sample`](https://remedajs.com/docs/#sample)                       | [`sampleSize`](https://lodash.com/docs/4.17.15#)\*                       |                                                                    |
@@ -107,12 +104,9 @@ documentation when migrating._
 | [`takeWhile`](https://remedajs.com/docs/#takeWhile)                 | [`takeWhile`](https://lodash.com/docs/4.17.15#takeWhile)                 | [`takeWhile`](https://ramdajs.com/docs/#takeWhile)                 |
 | [`tap`](https://remedajs.com/docs/#tap)                             | [`tap`](https://lodash.com/docs/4.17.15#tap)                             | [`tap`](https://ramdajs.com/docs/#tap)                             |
 | [`times`](https://remedajs.com/docs/#times)                         | [`times`](https://lodash.com/docs/4.17.15#times)                         | [`times`](https://ramdajs.com/docs/#times)                         |
-| [`toPairs`](https://remedajs.com/docs/#toPairs)                     | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
-| [`type`](https://remedajs.com/docs/#type)                           |                                                                          | [`type`](https://ramdajs.com/docs/#type)                           |
-| [`uniq`](https://remedajs.com/docs/#uniq)                           | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
-| [`uniqBy`](https://remedajs.com/docs/#uniqBy)                       | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
-| [`uniqWith`](https://remedajs.com/docs/#uniqWith)                   | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
-| [`zipObj`](https://remedajs.com/docs/#zipObj)                       | [`zipObj`](https://lodash.com/docs/4.17.15#zipObj)                       | [`zipObj`](https://ramdajs.com/docs/#zipObj)                       |
+| [`unique`](https://remedajs.com/docs/#unique)                       | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
+| [`uniqueBy`](https://remedajs.com/docs/#uniqueBy)                   | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
+| [`uniqueWith`](https://remedajs.com/docs/#uniqueWith)               | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
 
 ## Helpful one-liners
 
@@ -125,17 +119,21 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Lodash     | Ramda    | TypeScript                        |
-| ---------- | -------- | --------------------------------- |
-|            | `append` | `(arr, val) => [...arr, val]`     |
-| `constant` | `always` | `x => () => x`                    |
-| `nth`      | `nth`    | `n => a[n]`                       |
-|            | `path`   | `a?.b?.c`                         |
-|            | `propEq` | `x => x.a === value`              |
-|            | `propOr` | `x => x.a ?? defaultValue`        |
-| `words`    |          | `str => str.split(/\s+/)`         |
-| `compact`  |          | `R.filter(R.isTruthy)`            |
-| `max`      | `max`    | `R.firstBy([R.identity, "desc"])` |
-| `maxBy`    | `maxBy`  | `R.firstBy([fn, "desc"])`         |
-| `min`      | `min`    | `R.firstBy(R.identity)`           |
-| `minBy`    | `minBy`  | `R.firstBy(fn)`                   |
+| Remeda                                      | Lodash         | Ramda          |
+| ------------------------------------------- | -------------- | -------------- |
+| `(arr, val) => [...arr, val]`               |                | `append`       |
+| `a?.b?.c`                                   | `path`         |                |
+| `n => a[n]`                                 | `nth`          | `nth`          |
+| `R.constant(undefined)`                     | `noop`         |                |
+| `R.filter(R.isIncludedIn(other))`           | `intersection` | `intersection` |
+| `R.filter(R.isNot(fn))`                     | `reject`       | `reject`       |
+| `R.filter(R.isNot(R.isIncludedIn(other)))`  | `difference`   | `difference`   |
+| `R.filter(R.isTruthy)`                      | `compact`      |                |
+| `R.firstBy([fn, "desc"])`                   | `maxBy`        | `maxBy`        |
+| `R.firstBy([R.identity, "desc"])`           | `max`          | `max`          |
+| `R.firstBy(fn)`                             | `minBy`        | `minBy`        |
+| `R.firstBy(R.identity)`                     | `min`          | `min`          |
+| `R.fromEntries.strict(R.zip(keys, values))` | `zipObj`       | `zipObj`       |
+| `str => str.split(/\s+/)`                   | `words`        |                |
+| `x => x.a ?? defaultValue`                  | `propOr`       |                |
+| `x => x.a === value`                        | `propEq`       |                |

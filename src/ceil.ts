@@ -25,7 +25,6 @@ export function ceil(value: number, precision: number): number;
  * If you'd like to round up to an integer (i.e. use this function with constant `precision === 0`),
  * use `Math.ceil` instead, as it won't incur the additional library overhead.
  *
- * @param value - The number to round up.
  * @param precision - The precision to round up to. Must be an integer between -15 and 15.
  * @signature
  *    R.ceil(precision)(value);

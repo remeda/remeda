@@ -22,7 +22,6 @@ export function mergeDeep<
 /**
  * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
  *
- * @param destination - The object to merge into. In general, this object would have it's values overridden.
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature

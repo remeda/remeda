@@ -1,7 +1,11 @@
+/* eslint-disable jsdoc/require-param -- ignore for deprecated files */
+
 import { pipe } from "./pipe";
 
 /**
  * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
+ *
+ * ! **DEPRECATED**: Use `R.piped(op1, op2, op3)`. Will be removed in V2!
  *
  * @signature
  *    R.createPipe(op1, op2, op3)(data);
@@ -10,7 +14,8 @@ import { pipe } from "./pipe";
  *      (x: number) => x * 2,
  *      x => x * 3
  *    )(1) // => 6
- * @category Function
+ * @category Deprecated
+ * @deprecated Use `R.piped(op1, op2, op3)`. Will be removed in V2!
  */
 export function createPipe<A, B>(op1: (input: A) => B): (value: A) => B;
 
