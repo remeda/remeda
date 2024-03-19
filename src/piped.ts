@@ -11,7 +11,7 @@ import { pipe } from "./pipe";
  * automatically inferred.
  *
  * @signature
- *    R.piped(op1, op2, op3, ...)(data);
+ *    R.piped(...ops)(data);
  * @example
  *    R.filter(
  *      [{ a: 1 }, { a: 2 }, { a: 3 }],
