@@ -26,6 +26,7 @@ documentation when migrating._
 | [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 | [`dropLastWhile`](https://remedajs.com/docs/#dropLastWhile)         | [`dropRightWhile`](https://lodash.com/docs/4.17.15#dropRightWhile)       | [`dropLastWhile`](https://ramdajs.com/docs/#dropLastWhile)         |
 | [`dropWhile`](https://remedajs.com/docs/#dropWhile)                 | [`dropWhile`](https://lodash.com/docs/4.17.15#dropWhile)                 | [`dropWhile`](https://ramdajs.com/docs/#dropWhile)                 |
+| [`entries`](https://remedajs.com/docs/#entries)                     | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
 | [`evolve`](https://remedajs.com/docs/#evolve)                       |                                                                          | [`evolve`](https://ramdajs.com/docs/#evolve)                       |
 | [`filter`](https://remedajs.com/docs/#filter)                       | [`filter`](https://lodash.com/docs/4.17.15#filter)                       | [`filter`](https://ramdajs.com/docs/#filter)                       |
 | [`find`](https://remedajs.com/docs/#find)                           | [`find`](https://lodash.com/docs/4.17.15#find)                           | [`find`](https://ramdajs.com/docs/#find)                           |
@@ -74,7 +75,6 @@ documentation when migrating._
 | [`pickBy`](https://remedajs.com/docs/#pickBy)                       | [`pickBy`](https://lodash.com/docs/4.17.15#pickBy)                       | [`pickBy`](https://ramdajs.com/docs/#pickBy)                       |
 | [`pipe`](https://remedajs.com/docs/#pipe)                           | [`flow`](https://lodash.com/docs/4.17.15#flow)                           | [`pipe`](https://ramdajs.com/docs/#pipe)                           |
 | [`prop`](https://remedajs.com/docs/#prop)                           | [`get`](https://lodash.com/docs/4.17.15#get)                             | [`prop`](https://ramdajs.com/docs/#prop)                           |
-| [`purry`](https://remedajs.com/docs/#purry)                         |                                                                          |                                                                    |
 | [`randomString`](https://remedajs.com/docs/#randomString)           |                                                                          |                                                                    |
 | [`range`](https://remedajs.com/docs/#range)                         | [`range`](https://lodash.com/docs/4.17.15#range)                         | [`range`](https://ramdajs.com/docs/#range)                         |
 | [`reduce`](https://remedajs.com/docs/#reduce)                       | [`reduce`](https://lodash.com/docs/4.17.15#reduce)                       | [`reduce`](https://ramdajs.com/docs/#reduce)                       |
@@ -104,7 +104,6 @@ documentation when migrating._
 | [`takeWhile`](https://remedajs.com/docs/#takeWhile)                 | [`takeWhile`](https://lodash.com/docs/4.17.15#takeWhile)                 | [`takeWhile`](https://ramdajs.com/docs/#takeWhile)                 |
 | [`tap`](https://remedajs.com/docs/#tap)                             | [`tap`](https://lodash.com/docs/4.17.15#tap)                             | [`tap`](https://ramdajs.com/docs/#tap)                             |
 | [`times`](https://remedajs.com/docs/#times)                         | [`times`](https://lodash.com/docs/4.17.15#times)                         | [`times`](https://ramdajs.com/docs/#times)                         |
-| [`toEntries`](https://remedajs.com/docs/#toEntries)                 | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
 | [`unique`](https://remedajs.com/docs/#unique)                       | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
 | [`uniqueBy`](https://remedajs.com/docs/#uniqueBy)                   | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
 | [`uniqueWith`](https://remedajs.com/docs/#uniqueWith)               | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
@@ -120,21 +119,21 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Remeda                                     | Lodash         | Ramda          |
-| ------------------------------------------ | -------------- | -------------- |
-| `(arr, val) => [...arr, val]`              |                | `append`       |
-| `a?.b?.c`                                  | `path`         |                |
-| `n => a[n]`                                | `nth`          | `nth`          |
-| `R.constant(undefined)`                    | `noop`         |                |
-| `R.filter(R.isIncludedIn(other))`          | `intersection` | `intersection` |
-| `R.filter(R.isNot(fn))`                    | `reject`       | `reject`       |
-| `R.filter(R.isNot(R.isIncludedIn(other)))` | `difference`   | `difference`   |
-| `R.filter(R.isTruthy)`                     | `compact`      |                |
-| `R.firstBy([fn, "desc"])`                  | `maxBy`        | `maxBy`        |
-| `R.firstBy([R.identity, "desc"])`          | `max`          | `max`          |
-| `R.firstBy(fn)`                            | `minBy`        | `minBy`        |
-| `R.firstBy(R.identity)`                    | `min`          | `min`          |
-| `R.fromEntries(R.zip(keys, values))`       | `zipObj`       | `zipObj`       |
-| `str => str.split(/\s+/)`                  | `words`        |                |
-| `x => x.a ?? defaultValue`                 | `propOr`       |                |
-| `x => x.a === value`                       | `propEq`       |                |
+| Remeda                                      | Lodash         | Ramda          |
+| ------------------------------------------- | -------------- | -------------- |
+| `(arr, val) => [...arr, val]`               |                | `append`       |
+| `a?.b?.c`                                   | `path`         |                |
+| `n => a[n]`                                 | `nth`          | `nth`          |
+| `R.constant(undefined)`                     | `noop`         |                |
+| `R.filter(R.isIncludedIn(other))`           | `intersection` | `intersection` |
+| `R.filter(R.isNot(fn))`                     | `reject`       | `reject`       |
+| `R.filter(R.isNot(R.isIncludedIn(other)))`  | `difference`   | `difference`   |
+| `R.filter(R.isTruthy)`                      | `compact`      |                |
+| `R.firstBy([fn, "desc"])`                   | `maxBy`        | `maxBy`        |
+| `R.firstBy([R.identity, "desc"])`           | `max`          | `max`          |
+| `R.firstBy(fn)`                             | `minBy`        | `minBy`        |
+| `R.firstBy(R.identity)`                     | `min`          | `min`          |
+| `R.fromEntries.strict(R.zip(keys, values))` | `zipObj`       | `zipObj`       |
+| `str => str.split(/\s+/)`                   | `words`        |                |
+| `x => x.a ?? defaultValue`                  | `propOr`       |                |
+| `x => x.a === value`                        | `propEq`       |                |
