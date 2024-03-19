@@ -119,22 +119,22 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Lodash         | Ramda          | Remeda                                                    |
-| -------------- | -------------- | --------------------------------------------------------- |
-|                | `append`       | `(arr, val) => [...arr, val]`                             |
-| `nth`          | `nth`          | `n => a[n]`                                               |
-|                | `path`         | `a?.b?.c`                                                 |
-|                | `propEq`       | `x => x.a === value`                                      |
-|                | `propOr`       | `x => x.a ?? defaultValue`                                |
-| `words`        |                | `str => str.split(/\s+/)`                                 |
-| `compact`      |                | `R.filter(R.isTruthy)`                                    |
-| `difference`   | `difference`   | `R.filter(R.isNot(R.isIncludedIn(other)))`                |
-| `intersection` | `intersection` | `R.filter(R.isIncludedIn(other))`                         |
-| `max`          | `max`          | `R.firstBy([R.identity, "desc"])`                         |
-| `maxBy`        | `maxBy`        | `R.firstBy([fn, "desc"])`                                 |
-| `min`          | `min`          | `R.firstBy(R.identity)`                                   |
-| `minBy`        | `minBy`        | `R.firstBy(fn)`                                           |
-| `noop`         |                | `R.constant(undefined)`                                   |
-| `reject`       | `reject`       | `R.filter(R.isNot(fn))`                                   |
-| `sumBy`        |                | `R.reduce(R.map(fn), (sum, item) => R.add(sum, item), 0)` |
-| `zipObj`       | `zipObj`       | `R.fromEntries(R.zip(keys, values))`                      |
+| Remeda                                                           | Lodash         | Ramda          |
+| ---------------------------------------------------------------- | -------------- | -------------- |
+| `(arr, val) => [...arr, val]`                                    |                | `append`       |
+| `a?.b?.c`                                                        | `path`         |                |
+| `n => a[n]`                                                      | `nth`          | `nth`          |
+| `R.constant(undefined)`                                          | `noop`         |                |
+| `R.filter(R.isIncludedIn(other))`                                | `intersection` | `intersection` |
+| `R.filter(R.isNot(fn))`                                          | `reject`       | `reject`       |
+| `R.filter(R.isNot(R.isIncludedIn(other)))`                       | `difference`   | `difference`   |
+| `R.filter(R.isTruthy)`                                           | `compact`      |                |
+| `R.firstBy([fn, "desc"])`                                        | `maxBy`        | `maxBy`        |
+| `R.firstBy([R.identity, "desc"])`                                | `max`          | `max`          |
+| `R.firstBy(fn)`                                                  | `minBy`        | `minBy`        |
+| `R.firstBy(R.identity)`                                          | `min`          | `min`          |
+| `R.fromEntries(R.zip(keys, values))`                             | `zipObj`       | `zipObj`       |
+| `R.reduce(R.map(items, fn), (sum, item) => R.add(sum, item), 0)` | `sumBy`        |                |
+| `str => str.split(/\s+/)`                                        | `words`        |                |
+| `x => x.a ?? defaultValue`                                       | `propOr`       |                |
+| `x => x.a === value`                                             | `propEq`       |                |
