@@ -2,8 +2,6 @@
 
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
-import { type } from "./type";
-
 function _cloneRegExp(pattern: RegExp): RegExp {
   return new RegExp(
     pattern.source,
@@ -65,4 +63,12 @@ export function clone<T>(value: T): T {
   return value != null && typeof (value as any).clone === "function"
     ? (value as any).clone()
     : _clone(value, [], [], true);
+}
+
+function type(val: unknown): string {
+  return val === null
+    ? "Null"
+    : val === undefined
+      ? "Undefined"
+      : Object.prototype.toString.call(val).slice(8, -1);
 }

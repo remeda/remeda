@@ -1,6 +1,6 @@
 import type { ObjectKeys } from "./_types";
+import { entries } from "./entries";
 import { purry } from "./purry";
-import { toPairs } from "./toPairs";
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -43,7 +43,7 @@ function _mapValues<T extends Record<PropertyKey, unknown>, S>(
   fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
 ): Record<ObjectKeys<T>, S> {
   const out: Partial<Record<ObjectKeys<T>, S>> = {};
-  for (const [key, value] of toPairs.strict(data)) {
+  for (const [key, value] of entries.strict(data)) {
     // @ts-expect-error [ts2345] - FIXME!
     const mappedValue = fn(value, key);
     // @ts-expect-error [ts2536] - FIXME!
