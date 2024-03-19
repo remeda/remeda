@@ -8,7 +8,7 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
  * There are several other functions that could be used to build an object from
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromPairs` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
@@ -39,7 +39,7 @@ export function indexBy<T>(
  * There are several other functions that could be used to build an object from
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromPairs` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.

@@ -19,9 +19,9 @@ import { purry } from "./purry";
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   R.pull(data, keyExtractor, valueExtractor);
+ *   R.pullObject(data, keyExtractor, valueExtractor);
  * @example
- *   R.pull(
+ *   R.pullObject(
  *     [
  *       { name: "john", email: "john@remedajs.com" },
  *       { name: "jane", email: "jane@remedajs.com" }
@@ -32,7 +32,11 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function pull<T extends IterableContainer, K extends PropertyKey, V>(
+export function pullObject<
+  T extends IterableContainer,
+  K extends PropertyKey,
+  V,
+>(
   data: T,
   keyExtractor: (item: T[number]) => K,
   valueExtractor: (item: T[number]) => V,
@@ -55,28 +59,32 @@ export function pull<T extends IterableContainer, K extends PropertyKey, V>(
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   R.pull(keyExtractor, valueExtractor)(data);
+ *   R.pullObject(keyExtractor, valueExtractor)(data);
  * @example
  *   R.pipe(
  *     [
  *       { name: "john", email: "john@remedajs.com" },
  *       { name: "jane", email: "jane@remedajs.com" }
  *     ],
- *     R.pull(R.prop("email"), R.prop("name")),
+ *     R.pullObject(R.prop("email"), R.prop("name")),
  *   ); // => { john: "john@remedajs.com", jane: "jane@remedajs.com" }
  * @dataLast
  * @category Object
  */
-export function pull<T extends IterableContainer, K extends PropertyKey, V>(
+export function pullObject<
+  T extends IterableContainer,
+  K extends PropertyKey,
+  V,
+>(
   keyExtractor: (item: T[number]) => K,
   valueExtractor: (item: T[number]) => V,
 ): (data: T) => Partial<Record<K, V>>;
 
-export function pull(): unknown {
-  return purry(pullImplementation, arguments);
+export function pullObject(): unknown {
+  return purry(pullObjectImplementation, arguments);
 }
 
-function pullImplementation<
+function pullObjectImplementation<
   T extends IterableContainer,
   K extends PropertyKey,
   V,

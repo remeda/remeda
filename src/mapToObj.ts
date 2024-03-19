@@ -8,7 +8,7 @@ import { purry } from "./purry";
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromPairs` - Builds an object from an array of key-value pairs.
  * Refer to the docs for more details.
  *
@@ -37,7 +37,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * * `pull` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromPairs` - Builds an object from an array of key-value pairs.
  * Refer to the docs for more details.
  *
