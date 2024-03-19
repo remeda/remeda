@@ -74,6 +74,7 @@ documentation when migrating._
 | [`pick`](https://remedajs.com/docs/#pick)                           | [`pick`](https://lodash.com/docs/4.17.15#pick)                           | [`pick`](https://ramdajs.com/docs/#pick)                           |
 | [`pickBy`](https://remedajs.com/docs/#pickBy)                       | [`pickBy`](https://lodash.com/docs/4.17.15#pickBy)                       | [`pickBy`](https://ramdajs.com/docs/#pickBy)                       |
 | [`pipe`](https://remedajs.com/docs/#pipe)                           | [`flow`](https://lodash.com/docs/4.17.15#flow)                           | [`pipe`](https://ramdajs.com/docs/#pipe)                           |
+| [`product`](https://remedajs.com/docs/#product)                     |                                                                          | [`product`](https://ramdajs.com/docs/#product)                     |
 | [`prop`](https://remedajs.com/docs/#prop)                           | [`get`](https://lodash.com/docs/4.17.15#get)                             | [`prop`](https://ramdajs.com/docs/#prop)                           |
 | [`randomString`](https://remedajs.com/docs/#randomString)           |                                                                          |                                                                    |
 | [`range`](https://remedajs.com/docs/#range)                         | [`range`](https://lodash.com/docs/4.17.15#range)                         | [`range`](https://ramdajs.com/docs/#range)                         |
@@ -96,6 +97,7 @@ documentation when migrating._
 | [`splitWhen`](https://remedajs.com/docs/#splitWhen)                 |                                                                          | [`splitWhen`](https://ramdajs.com/docs/#splitWhen)                 |
 | [`stringToPath`](https://remedajs.com/docs/#stringToPath)           | [`toPath`](https://lodash.com/docs/4.17.15#toPath)                       |                                                                    |
 | [`subtract`](https://remedajs.com/docs/#subtract)                   | [`subtract`](https://lodash.com/docs/4.17.15#subtract)                   | [`subtract`](https://ramdajs.com/docs/#subtract)                   |
+| [`sum`](https://remedajs.com/docs/#sum)                             | [`sum`](https://lodash.com/docs/4.17.15#sum)                             | [`sum`](https://ramdajs.com/docs/#sum)                             |
 | [`sumBy`](https://remedajs.com/docs/#sumBy)                         | [`sumBy`](https://lodash.com/docs/4.17.15#sumBy)                         |                                                                    |
 | [`swapIndices`](https://remedajs.com/docs/#swapIndices)             |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`swapProps`](https://remedajs.com/docs/#swapProps)                 |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
