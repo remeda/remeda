@@ -6,63 +6,57 @@ import { purry } from "./purry";
 type IsEquals<T> = (a: T, b: T) => boolean;
 
 /**
- * Returns a new array containing only one copy of each element in the original list.
- * Elements are compared by custom comparator isEquals.
- *
- * ! **DEPRECATED**: Use `R.uniqueWith(array, isEquals)`. Will be removed in V2!
+ * Returns a new array containing only one copy of each element in the original
+ * list. Elements are compared by custom comparator isEquals.
  *
  * @param array - The array to filter.
  * @param isEquals - The comparator.
  * @signature
- *    R.uniqWith(array, isEquals)
+ *    R.uniqueWith(array, isEquals)
  * @example
- *    R.uniqWith(
+ *    R.uniqueWith(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *      R.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
- * @category Deprecated
- * @deprecated Use `R.uniqueWith(array, isEquals)`. Will be removed in V2!
+ * @category Array
  */
-export function uniqWith<T>(
+export function uniqueWith<T>(
   array: ReadonlyArray<T>,
   isEquals: IsEquals<T>,
 ): Array<T>;
 
 /**
- * Returns a new array containing only one copy of each element in the original list.
- * Elements are compared by custom comparator isEquals.
- *
- * ! **DEPRECATED**: Use `R.uniqueWith(isEquals)`. Will be removed in V2!
+ * Returns a new array containing only one copy of each element in the original
+ * list. Elements are compared by custom comparator isEquals.
  *
  * @param isEquals - The comparator.
- * @signature R.uniqWith(isEquals)(array)
+ * @signature R.uniqueWith(isEquals)(array)
  * @example
- *    R.uniqWith(R.equals)(
+ *    R.uniqueWith(R.equals)(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  *    R.pipe(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}], // only 4 iterations
- *      R.uniqWith(R.equals),
+ *      R.uniqueWith(R.equals),
  *      R.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
- * @category Deprecated
- * @deprecated Use `R.uniqueWith(isEquals)`. Will be removed in V2!
+ * @category Object
  */
-export function uniqWith<T>(
+export function uniqueWith<T>(
   isEquals: IsEquals<T>,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqWith(): unknown {
-  return purry(_uniqWith, arguments, uniqWith.lazy);
+export function uniqueWith(): unknown {
+  return purry(uniqueWithImplementation, arguments, uniqueWith.lazy);
 }
 
-function _uniqWith<T>(
+function uniqueWithImplementation<T>(
   array: ReadonlyArray<T>,
   isEquals: IsEquals<T>,
 ): Array<T> {
-  const lazy = uniqWith.lazy(isEquals);
+  const lazy = uniqueWith.lazy(isEquals);
   return _reduceLazy(array, lazy, true);
 }
 
@@ -74,6 +68,6 @@ const _lazy =
       ? { done: false, hasNext: true, next: value }
       : { done: false, hasNext: false };
 
-export namespace uniqWith {
+export namespace uniqueWith {
   export const lazy = _toLazyIndexed(_lazy);
 }

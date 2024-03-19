@@ -7,8 +7,7 @@ import { purry } from "./purry";
 /**
  * Returns a list of elements that exist in both array.
  *
- * **DEPRECATED: equivalent to `R.filter(array, R.isIncludedIn(other))` and will
- * be removed in v2.**.
+ * ! **DEPRECATED**: Use `R.filter(array, R.isIncludedIn(other))`. Will be removed in v2!
  *
  * @param array - The source array.
  * @param other - The second array.
@@ -18,8 +17,8 @@ import { purry } from "./purry";
  *    R.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]
  * @dataFirst
  * @pipeable
- * @category Array
- * @deprecated Equivalent to `R.filter(array, R.isIncludedIn(other))` and will be removed in v2.
+ * @category Deprecated
+ * @deprecated Use `R.filter(array, R.isIncludedIn(other))`. Will be removed in v2.
  */
 export function intersection<T>(
   source: ReadonlyArray<T>,
@@ -29,8 +28,7 @@ export function intersection<T>(
 /**
  * Returns a list of elements that exist in both array.
  *
- * **DEPRECATED: equivalent to `R.filter(R.isIncludedIn(other))` and will be
- * removed in v2.**.
+ * ! **DEPRECATED**: Use `R.filter(R.isIncludedIn(other))`. Will be removed in v2!
  *
  * @param array - The source array.
  * @param other - The second array.
@@ -40,8 +38,8 @@ export function intersection<T>(
  *    R.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]
  * @dataLast
  * @pipeable
- * @category Array
- * @deprecated Equivalent to `R.filter(R.isIncludedIn(other))` and will be removed in v2.
+ * @category Deprecated
+ * @deprecated Use `R.filter(R.isIncludedIn(other))`. Will be removed in v2.
  */
 export function intersection<T, K>(
   other: ReadonlyArray<T>,

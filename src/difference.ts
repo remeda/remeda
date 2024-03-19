@@ -5,8 +5,7 @@ import { purry } from "./purry";
 /**
  * Excludes the values from `other` array.
  *
- * **DEPRECATED: equivalent to `R.filter(array, R.isNot(R.isIncludedIn(other)))`
- * and will be removed in v2.**.
+ * ! **DEPRECATED**: Use `R.filter(array, R.isNot(R.isIncludedIn(other)))`. Will be removed in v2!
  *
  * @param array - The source array.
  * @param other - The values to exclude.
@@ -16,8 +15,8 @@ import { purry } from "./purry";
  *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
  * @dataFirst
  * @pipeable
- * @category Array
- * @deprecated Equivalent to `R.filter(array, R.isNot(R.isIncludedIn(other)))` and will be removed in v2.
+ * @category Deprecated
+ * @deprecated Use `R.filter(array, R.isNot(R.isIncludedIn(other)))`. Will be removed in v2.
  */
 export function difference<T>(
   array: ReadonlyArray<T>,
@@ -27,8 +26,7 @@ export function difference<T>(
 /**
  * Excludes the values from `other` array.
  *
- * **DEPRECATED: equivalent to `R.filter(R.isNot(R.isIncludedIn(other)))` and
- * will be removed in v2.**.
+ * ! **DEPRECATED**: Use `R.filter(R.isNot(R.isIncludedIn(other)))`. Will be removed in v2!
  *
  * @param other - The values to exclude.
  * @signature
@@ -42,8 +40,8 @@ export function difference<T>(
  *    ) // => [1, 4]
  * @dataLast
  * @pipeable
- * @category Array
- * @deprecated Equivalent to `R.filter(R.isNot(R.isIncludedIn(other)))` and will be removed in v2.
+ * @category Deprecated
+ * @deprecated Use `R.filter(R.isNot(R.isIncludedIn(other)))`. Will be removed in v2.
  */
 export function difference<T, K>(
   other: ReadonlyArray<T>,

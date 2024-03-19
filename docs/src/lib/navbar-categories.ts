@@ -1,4 +1,4 @@
-import { map, pipe, toPairs } from "remeda";
+import { map, pipe, sortBy, toPairs } from "remeda";
 import { CATEGORIZED } from "./categorized";
 import { getTags } from "./get-tags";
 
@@ -11,5 +11,9 @@ export const NAVBAR_ENTRIES = pipe(
         category,
         map(funcs, (func) => ({ name: func.name, tags: getTags(func) })),
       ] as const,
+  ),
+  sortBy(
+    ([category]) => category === "Deprecated",
+    ([category]) => category,
   ),
 );
