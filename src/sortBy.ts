@@ -6,12 +6,17 @@ import type {
   NonEmptyArray,
 } from "./_types";
 
+type SortedBy<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};
+
 /**
- * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
+ * Sorts `data` using the provided ordering rules. The `sort` is done via the
+ * native `Array.prototype.sort` but is performed on a shallow copy of the array
+ * to avoid mutating the original data.
  *
- * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
- *
- * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
+ * There are several other functions that take order rules and **bypass** the
+ * need to sort the array first (in *O(nlogn)* time):
  * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
  * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
  * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
@@ -19,34 +24,33 @@ import type {
  * * `rankBy` === `sortedIndex(sortBy(data, ...rules), item)`, O(n).
  * Refer to the docs for more details.
  *
- * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
+ * @param rules - A variadic array of order rules defining the sorting criteria.
+ * Each order rule is a projection function that extracts a comparable value
+ * from the data. Sorting is based on these extracted values using the native
+ * `<` and `>` operators. Earlier rules take precedence over later ones. Use the
+ * syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(...rules)(data)
- *    R.sortBy.strict(...rules)(data)
  * @example
  *    R.pipe(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      R.sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
- *    R.pipe(
  *      [{ a: 1 }, { a: 3 }] as const,
- *      R.sortBy.strict(x => x.a)
+ *      R.sortBy(x => x.a)
  *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataLast
- * @strict
  * @category Array
  */
-export function sortBy<T>(
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
-): (data: ReadonlyArray<T>) => Array<T>;
+export function sortBy<T extends IterableContainer>(
+  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+): (array: T) => SortedBy<T>;
 
 /**
- * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
+ * Sorts `data` using the provided ordering rules. The `sort` is done via the
+ * native `Array.prototype.sort` but is performed on a shallow copy of the array
+ * to avoid mutating the original data.
  *
- * To maintain the shape of more complex inputs (like non-empty arrays, tuples, etc...) use the `strict` variant.
- *
- * There are several other functions that take order rules and **bypass** the need to sort the array first (in *O(nlogn)* time):
+ * There are several other functions that take order rules and **bypass** the
+ * need to sort the array first (in *O(nlogn)* time):
  * * `firstBy` === `first(sortBy(data, ...rules))`, O(n).
  * * `takeFirstBy` === `take(sortBy(data, ...rules), k)`, O(nlogk).
  * * `dropFirstBy` === `drop(sortBy(data, ...rules), k)`, O(nlogk).
@@ -55,18 +59,16 @@ export function sortBy<T>(
  * Refer to the docs for more details.
  *
  * @param array - The input array.
+ * @param rules - A variadic array of order rules defining the sorting criteria.
+ * Each order rule is a projection function that extracts a comparable value
+ * from the data. Sorting is based on these extracted values using the native
+ * `<` and `>` operators. Earlier rules take precedence over later ones. Use the
+ * syntax `[projection, "desc"]` for descending order.
  * @param sortRules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
  *    R.sortBy(data, ...rules)
- *    R.sortBy.strict(data, ...rules)
  * @example
- *    R.sortBy(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      x => x.a
- *    )
- *    // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
- *
  *    R.sortBy(
  *     [
  *       {color: 'red', weight: 2},
@@ -83,46 +85,25 @@ export function sortBy<T>(
  *    //   {color: 'blue', weight: 3},
  *    // typed Array<{color: string, weight: number}>
  *
- *    R.sortBy.strict(
+ *    R.sortBy(
  *      [{ a: 1 }, { a: 3 }] as const,
  *      x => x.a
- *    )
- *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
+ *    ); // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataFirst
- * @strict
  * @category Array
  */
-export function sortBy<T>(
-  array: ReadonlyArray<T>,
-  ...sortRules: Readonly<NonEmptyArray<OrderRule<T>>>
-): Array<T>;
+export function sortBy<T extends IterableContainer>(
+  array: T,
+  ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+): SortedBy<T>;
 
 export function sortBy(): unknown {
-  return purryOrderRules(_sortBy, arguments);
+  return purryOrderRules(sortByImplementation, arguments);
 }
 
-const _sortBy = <T>(
+const sortByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
   data.slice().sort(compareFn);
-
-type Strict = {
-  <T extends IterableContainer>(
-    ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-  ): (array: T) => SortedBy<T>;
-
-  <T extends IterableContainer>(
-    array: T,
-    ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-  ): SortedBy<T>;
-};
-
-type SortedBy<T extends IterableContainer> = {
-  -readonly [P in keyof T]: T[number];
-};
-
-export namespace sortBy {
-  export const strict: Strict = sortBy;
-}

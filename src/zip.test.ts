@@ -87,62 +87,62 @@ describe("dataLast typings", () => {
 describe("strict dataFirst typings", () => {
   test("on empty tuples", () => {
     const array: [] = [];
-    const result = zip.strict(array, array);
+    const result = zip(array, array);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   test("on empty readonly tuples", () => {
     const array: readonly [] = [];
-    const result = zip.strict(array, array);
+    const result = zip(array, array);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   test("on arrays", () => {
     const array: Array<number> = [];
-    const result = zip.strict(array, array);
+    const result = zip(array, array);
     expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
   });
 
   test("on mixed typeds array", () => {
     const array1: Array<number> = [];
     const array2: Array<string> = [];
-    const result = zip.strict(array1, array2);
+    const result = zip(array1, array2);
     expectTypeOf(result).toEqualTypeOf<Array<[number, string]>>();
   });
 
   test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [];
-    const result = zip.strict(array, array);
+    const result = zip(array, array);
     expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
   });
 
   test("on tuples", () => {
     const array1: [1, 2, 3] = [1, 2, 3];
     const array2: [4, 5, 6] = [4, 5, 6];
-    const result = zip.strict(array1, array2);
+    const result = zip(array1, array2);
     expectTypeOf(result).toEqualTypeOf<[[1, 4], [2, 5], [3, 6]]>();
   });
 
   test("on readonly tuples", () => {
     const array1: readonly [1, 2, 3] = [1, 2, 3];
     const array2: readonly [4, 5, 6] = [4, 5, 6];
-    const result = zip.strict(array1, array2);
+    const result = zip(array1, array2);
     expectTypeOf(result).toEqualTypeOf<[[1, 4], [2, 5], [3, 6]]>();
   });
 
   test("on tuples of different lengths", () => {
     const array1: [1, 2, 3] = [1, 2, 3];
     const array2: [4, 5] = [4, 5];
-    const result1 = zip.strict(array1, array2);
+    const result1 = zip(array1, array2);
     expectTypeOf(result1).toEqualTypeOf<[[1, 4], [2, 5]]>();
-    const result2 = zip.strict(array2, array1);
+    const result2 = zip(array2, array1);
     expectTypeOf(result2).toEqualTypeOf<[[4, 1], [5, 2]]>();
   });
 
   test("on variadic tuples", () => {
     const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
     const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
-    const result = zip.strict(firstVariadic, secondVariadic);
+    const result = zip(firstVariadic, secondVariadic);
     expectTypeOf(result).toEqualTypeOf<
       [[number, string], ...Array<[string, number]>]
     >();
@@ -152,62 +152,62 @@ describe("strict dataFirst typings", () => {
 describe("strict dataLast typings", () => {
   test("on empty tuples", () => {
     const array: [] = [];
-    const result = pipe(array, zip.strict(array));
+    const result = pipe(array, zip(array));
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   test("on empty readonly tuples", () => {
     const array: readonly [] = [];
-    const result = pipe(array, zip.strict(array));
+    const result = pipe(array, zip(array));
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   test("on arrays", () => {
     const array: Array<number> = [];
-    const result = pipe(array, zip.strict(array));
+    const result = pipe(array, zip(array));
     expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
   });
 
   test("on mixed typeds array", () => {
     const array1: Array<number> = [];
     const array2: Array<string> = [];
-    const result = pipe(array1, zip.strict(array2));
+    const result = pipe(array1, zip(array2));
     expectTypeOf(result).toEqualTypeOf<Array<[number, string]>>();
   });
 
   test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [];
-    const result = pipe(array, zip.strict(array));
+    const result = pipe(array, zip(array));
     expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
   });
 
   test("on tuples", () => {
     const array1: [1, 2, 3] = [1, 2, 3];
     const array2: [4, 5, 6] = [4, 5, 6];
-    const result = pipe(array1, zip.strict(array2));
+    const result = pipe(array1, zip(array2));
     expectTypeOf(result).toEqualTypeOf<[[1, 4], [2, 5], [3, 6]]>();
   });
 
   test("on readonly tuples", () => {
     const array1: readonly [1, 2, 3] = [1, 2, 3];
     const array2: readonly [4, 5, 6] = [4, 5, 6];
-    const result = pipe(array1, zip.strict(array2));
+    const result = pipe(array1, zip(array2));
     expectTypeOf(result).toEqualTypeOf<[[1, 4], [2, 5], [3, 6]]>();
   });
 
   test("on tuples of different lengths", () => {
     const array1: [1, 2, 3] = [1, 2, 3];
     const array2: [4, 5] = [4, 5];
-    const result1 = pipe(array1, zip.strict(array2));
+    const result1 = pipe(array1, zip(array2));
     expectTypeOf(result1).toEqualTypeOf<[[1, 4], [2, 5]]>();
-    const result2 = pipe(array2, zip.strict(array1));
+    const result2 = pipe(array2, zip(array1));
     expectTypeOf(result2).toEqualTypeOf<[[4, 1], [5, 2]]>();
   });
 
   test("on variadic tuples", () => {
     const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
     const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
-    const result = pipe(firstVariadic, zip.strict(secondVariadic));
+    const result = pipe(firstVariadic, zip(secondVariadic));
     expectTypeOf(result).toEqualTypeOf<
       [[number, string], ...Array<[string, number]>]
     >();

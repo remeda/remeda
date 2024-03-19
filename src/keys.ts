@@ -1,66 +1,6 @@
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
-/**
- * Returns a new array containing the keys of the array or object.
- *
- * @param source - Either an array or an object.
- * @signature
- *    R.keys(source)
- *    R.keys.strict(source)
- * @example
- *    R.keys(['x', 'y', 'z']) // => ['0', '1', '2']
- *    R.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
- *    R.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- *    R.pipe(['x', 'y', 'z'], R.keys) // => ['0', '1', '2']
- *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.keys) // => ['a', 'b', 'c']
- *    R.pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      R.keys,
- *      R.first(),
- *    ) // => 'a'
- *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- * @dataFirst
- * @pipeable
- * @strict
- * @category Object
- */
-export function keys(
-  source: ArrayLike<unknown> | Readonly<Record<PropertyKey, unknown>>,
-): Array<string>;
-
-/**
- * Returns a new array containing the keys of the array or object.
- *
- * @signature
- *    R.keys()(source)
- *    R.keys.strict()(source)
- * @example
- *    R.pipe(['x', 'y', 'z'], R.keys()) // => ['0', '1', '2']
- *    R.pipe({ a: 'x', b: 'y', c: 'z' }, R.keys()) // => ['a', 'b', 'c']
- *    R.pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      R.keys(),
- *      R.first(),
- *    ) // => 'a'
- *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- * @dataLast
- * @pipeable
- * @strict
- * @category Object
- */
-// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-// export function keys(): (
-//   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
-// ) => Array<string>;
-
-export function keys(): unknown {
-  return purry(Object.keys, arguments);
-}
-
-type Strict = // (): <T extends object>(data: T) => Keys<T>;
-  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-  <T extends object>(data: T) => Keys<T>;
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
@@ -110,6 +50,34 @@ type ObjectKeys<T> =
   T extends Record<PropertyKey, never>
     ? []
     : Array<`${Exclude<keyof T, symbol>}`>;
-export namespace keys {
-  export const strict = keys as Strict;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ *
+ * @param source - Either an array or an object.
+ * @signature
+ *    R.keys(source)
+ * @example
+ *    R.keys({ a: 'x', b: 'y', 5: 'z' } as const) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @dataFirst
+ * @pipeable
+ * @category Object
+ */
+export function keys<T extends object>(data: T): Keys<T>;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ *
+ * @signature
+ *    R.keys()(source)
+ * @example
+ *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @dataLast
+ * @pipeable
+ * @category Object
+ */
+export function keys(): <T extends object>(data: T) => Keys<T>;
+
+export function keys(): unknown {
+  return purry(Object.keys, arguments);
 }

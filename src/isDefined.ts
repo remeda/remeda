@@ -11,7 +11,6 @@
  *    R.isDefined('string') //=> true
  *    R.isDefined(null) //=> true
  *    R.isDefined(undefined) //=> false
- * @strict
  * @category Guard
  */
 export function isDefined<T>(data: T | undefined): data is T {

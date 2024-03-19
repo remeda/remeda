@@ -142,91 +142,91 @@ describe("data last", () => {
 describe("strict", () => {
   it("on empty tuple", () => {
     const array: [] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on empty readonly tuple", () => {
     const array: readonly [] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on array", () => {
     const array: Array<number> = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on readonly array", () => {
     const array: ReadonlyArray<number> = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on tuple", () => {
     const array: [1, 2, 3] = [1, 2, 3];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on readonly tuple", () => {
     const array: readonly [1, 2, 3] = [1, 2, 3];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on tuple with rest tail", () => {
     const array: [number, ...Array<number>] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   it("on readonly tuple with rest tail", () => {
     const array: readonly [number, ...Array<number>] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   test("on tuple with rest middle", () => {
     const array: [number, ...Array<number>, number] = [3, 2, 1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
   });
 
   test("on readonly tuple with rest middle", () => {
     const array: readonly [number, ...Array<number>, number] = [3, 2, 1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
   });
 
   it("on tuple with rest head", () => {
     const array: [...Array<number>, number] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   it("on readonly tuple with rest head", () => {
     const array: readonly [...Array<number>, number] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   test("on tuple with optional values", () => {
     const array: [number?, number?, number?] = [];
-    const result = sortBy.strict(array, () => 0);
+    const result = sortBy(array, () => 0);
     expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
   test("on readonly tuple with optional values", () => {
     const array: readonly [number?, number?, number?] = [];
-    const result = sortBy.strict(array, () => 0);
+    const result = sortBy(array, () => 0);
     expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
   it("on mixed types tuple", () => {
     const array: [number, string, boolean] = [1, "hello", true];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(array, identity);
     expectTypeOf(result).toEqualTypeOf<
       [
         boolean | number | string,
