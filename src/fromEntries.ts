@@ -120,12 +120,15 @@ export function fromEntries(): unknown {
   return purry(fromEntriesImplementation, arguments);
 }
 
-function fromEntriesImplementation(
-  entries: ReadonlyArray<Entry>,
-): Record<string, unknown> {
-  const out: Record<PropertyKey, unknown> = {};
+function fromEntriesImplementation<Entries extends IterableContainer<Entry>>(
+  entries: Entries,
+): FromEntries<Entries> {
+  const out: Partial<FromEntries<Entries>> = {};
+
   for (const [key, value] of entries) {
+    // @ts-expect-error [ts7053] - Our input is generic so typescript is having a hard time inferring this.
     out[key] = value;
   }
-  return out;
+
+  return out as FromEntries<Entries>;
 }
