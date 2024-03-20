@@ -102,3 +102,7 @@ export type ExactRecord<Key extends PropertyKey, Value> =
           // because we can't statically know what values the mapper would return on
           // a specific input
           Partial<Record<Key, Value>>;
+
+export type ReorderedArray<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};
