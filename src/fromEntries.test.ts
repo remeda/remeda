@@ -25,29 +25,15 @@ describe("runtime", () => {
     ).toEqual({ a: 1, b: 2, c: 3 });
   });
 
-  test("trivial empty case", () => {
+  test("empty array", () => {
     expect(fromEntries([])).toStrictEqual({});
   });
 
-  test("trivial single entry const case", () => {
+  test("Single entry", () => {
     expect(fromEntries([["a", 1]])).toStrictEqual({ a: 1 });
   });
 
-  test("trivial multi entry const case", () => {
-    expect(
-      fromEntries([
-        ["a", 1],
-        ["b", 2],
-        ["c", 3],
-      ] as const),
-    ).toStrictEqual({ a: 1, b: 2, c: 3 });
-  });
-
-  test("single value generic type", () => {
-    expect(fromEntries([["hello", true]])).toStrictEqual({ hello: true });
-  });
-
-  test("multi-value generic type", () => {
+  test("boolean values", () => {
     expect(
       fromEntries([
         ["hello", true],
@@ -56,29 +42,12 @@ describe("runtime", () => {
     ).toStrictEqual({ hello: true, world: false });
   });
 
-  test("array with literal keys", () => {
+  test("string values", () => {
     expect(fromEntries([["a", "d"]])).toStrictEqual({ a: "d" });
   });
 
-  test("backwards compatibility (number)", () => {
+  test("number keys and values", () => {
     expect(fromEntries([[1, 123]])).toStrictEqual({ 1: 123 });
-  });
-
-  test("backwards compatibility (string)", () => {
-    expect(fromEntries([["a", 123]])).toStrictEqual({ a: 123 });
-  });
-
-  test("single value generic type", () => {
-    expect(fromEntries([["hello", true]])).toStrictEqual({ hello: true });
-  });
-
-  test("multi-value generic type", () => {
-    expect(
-      fromEntries([
-        ["hello", true],
-        ["world", false],
-      ]),
-    ).toStrictEqual({ hello: true, world: false });
   });
 });
 
@@ -104,91 +73,64 @@ describe("typing", () => {
     });
 
     test("empty well defined array", () => {
-      const arr: ReadonlyArray<["a", 1] | ["b", 2] | ["c", 3]> = [];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
-    });
-
-    test("single value well defined array", () => {
-      const arr: ReadonlyArray<["a", 1] | ["b", 2] | ["c", 3]> = [["a", 1]];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
-    });
-
-    test("multi-value well defined array", () => {
-      const arr: ReadonlyArray<["a", 1] | ["b", 2] | ["c", 3]> = [
-        ["a", 1],
-        ["b", 2],
-        ["c", 3],
-      ];
-      const result = fromEntries(arr);
+      const result = fromEntries(
+        [] as ReadonlyArray<["a", 1] | ["b", 2] | ["c", 3]>,
+      );
       expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (first)", () => {
-      const arr: readonly [["a", 1], ...ReadonlyArray<["b", 2] | ["c", 3]>] = [
+      const result = fromEntries([["a", 1]] as readonly [
         ["a", 1],
-      ];
-      const result = fromEntries(arr);
+        ...ReadonlyArray<["b", 2] | ["c", 3]>,
+      ]);
       expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (last)", () => {
-      const arr: readonly [...ReadonlyArray<["b", 2] | ["c", 3]>, ["a", 1]] = [
+      const result = fromEntries([["a", 1]] as readonly [
+        ...ReadonlyArray<["b", 2] | ["c", 3]>,
         ["a", 1],
-      ];
-      const result = fromEntries(arr);
+      ]);
       expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("empty generic type", () => {
-      const arr: ReadonlyArray<readonly [string, boolean]> = [];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
-    });
-
-    test("single value generic type", () => {
-      const arr: ReadonlyArray<readonly [string, boolean]> = [["hello", true]];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
-    });
-
-    test("multi-value generic type", () => {
-      const arr: ReadonlyArray<readonly [string, boolean]> = [
-        ["hello", true],
-        ["world", false],
-      ];
-      const result = fromEntries(arr);
+      const result = fromEntries(
+        [] as ReadonlyArray<readonly [string, boolean]>,
+      );
       expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
     });
 
     test("mixed literals and generics", () => {
-      const arr: ReadonlyArray<
+      const result = fromEntries([["a", 1]] as ReadonlyArray<
         readonly ["a", 1] | readonly [`testing_${string}`, boolean]
-      > = [["a", 1]];
-      const result = fromEntries(arr);
+      >);
       expectTypeOf(result).toMatchTypeOf<
         Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
       >();
     });
 
     test("array with literal keys", () => {
-      const arr: ReadonlyArray<readonly ["a" | "b" | "c", "d"]> = [["a", "d"]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", "d"]] as ReadonlyArray<
+        readonly ["a" | "b" | "c", "d"]
+      >);
       expectTypeOf(result).toEqualTypeOf<
         Partial<Record<"a" | "b" | "c", "d">>
       >();
     });
 
     test("backwards compatibility (number)", () => {
-      const arr: ReadonlyArray<readonly [number, 123]> = [[1, 123]];
-      const result = fromEntries(arr);
+      const result = fromEntries([[1, 123]] as ReadonlyArray<
+        readonly [number, 123]
+      >);
       expectTypeOf(result).toEqualTypeOf<Record<number, 123>>();
     });
 
     test("backwards compatibility (string)", () => {
-      const arr: ReadonlyArray<readonly [string, 123]> = [["a", 123]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", 123]] as ReadonlyArray<
+        readonly [string, 123]
+      >);
       expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
     });
   });
@@ -214,85 +156,56 @@ describe("typing", () => {
     });
 
     test("empty well defined array", () => {
-      const arr: Array<["a", 1] | ["b", 2] | ["c", 3]> = [];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
-    });
-
-    test("single value well defined array", () => {
-      const arr: Array<["a", 1] | ["b", 2] | ["c", 3]> = [["a", 1]];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
-    });
-
-    test("multi-value well defined array", () => {
-      const arr: Array<["a", 1] | ["b", 2] | ["c", 3]> = [
-        ["a", 1],
-        ["b", 2],
-        ["c", 3],
-      ];
-      const result = fromEntries(arr);
+      const result = fromEntries([] as Array<["a", 1] | ["b", 2] | ["c", 3]>);
       expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (first)", () => {
-      const arr: [["a", 1], ...Array<["b", 2] | ["c", 3]>] = [["a", 1]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", 1]] as [
+        ["a", 1],
+        ...Array<["b", 2] | ["c", 3]>,
+      ]);
       expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (last)", () => {
-      const arr: [...Array<["b", 2] | ["c", 3]>, ["a", 1]] = [["a", 1]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", 1]] as [
+        ...Array<["b", 2] | ["c", 3]>,
+        ["a", 1],
+      ]);
       expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("empty generic type", () => {
-      const arr: Array<[string, boolean]> = [];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
-    });
-
-    test("single value generic type", () => {
-      const arr: Array<[string, boolean]> = [["hello", true]];
-      const result = fromEntries(arr);
-      expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
-    });
-
-    test("multi-value generic type", () => {
-      const arr: Array<[string, boolean]> = [
-        ["hello", true],
-        ["world", false],
-      ];
-      const result = fromEntries(arr);
+      const result = fromEntries([] as Array<[string, boolean]>);
       expectTypeOf(result).toEqualTypeOf<Record<string, boolean>>();
     });
 
     test("mixed literals and generics", () => {
-      const arr: Array<["a", 1] | [`testing_${string}`, boolean]> = [["a", 1]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", 1]] as Array<
+        ["a", 1] | [`testing_${string}`, boolean]
+      >);
       expectTypeOf(result).toMatchTypeOf<
         Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
       >();
     });
 
     test("array with literal keys", () => {
-      const arr: Array<readonly ["a" | "b" | "c", "d"]> = [["a", "d"]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", "d"]] as Array<
+        readonly ["a" | "b" | "c", "d"]
+      >);
       expectTypeOf(result).toEqualTypeOf<
         Partial<Record<"a" | "b" | "c", "d">>
       >();
     });
 
     test("backwards compatibility (number)", () => {
-      const arr: Array<[number, 123]> = [[1, 123]];
-      const result = fromEntries(arr);
+      const result = fromEntries([[1, 123]] as Array<[number, 123]>);
       expectTypeOf(result).toEqualTypeOf<Record<number, 123>>();
     });
 
     test("backwards compatibility (string)", () => {
-      const arr: Array<[string, 123]> = [["a", 123]];
-      const result = fromEntries(arr);
+      const result = fromEntries([["a", 123]] as Array<[string, 123]>);
       expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
     });
   });
