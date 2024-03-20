@@ -6,9 +6,12 @@
 import { purry } from "./purry";
 import type { Simplify } from "./type-fest/simplify";
 
-export type EntryForKey<T, K extends keyof T> = [key: K, value: Required<T>[K]];
+export type EntryForKey<T, Key extends keyof T> = [
+  key: Key,
+  value: Required<T>[Key],
+];
 
-type Entry<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
+type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
