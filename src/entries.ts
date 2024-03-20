@@ -8,7 +8,7 @@ import type { Simplify } from "./type-fest/simplify";
 
 export type EntryForKey<T, K extends keyof T> = [key: K, value: Required<T>[K]];
 
-type EntryOf<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
+type Entry<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -21,7 +21,7 @@ type EntryOf<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
  * @dataFirst
  * @category Object
  */
-export function entries<T extends {}>(data: T): Array<EntryOf<T>>;
+export function entries<T extends {}>(data: T): Array<Entry<T>>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -33,7 +33,7 @@ export function entries<T extends {}>(data: T): Array<EntryOf<T>>;
  * @dataLast
  * @category Object
  */
-export function entries(): <T extends {}>(data: T) => Array<EntryOf<T>>;
+export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
 export function entries(): unknown {
   return purry(Object.entries, arguments);
