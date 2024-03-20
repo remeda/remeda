@@ -6,10 +6,7 @@
 import { purry } from "./purry";
 import type { Simplify } from "./type-fest/simplify";
 
-export type EntryForKey<T, Key extends keyof T> = [
-  key: Key,
-  value: Required<T>[Key],
-];
+type EntryForKey<T, Key extends keyof T> = [key: Key, value: Required<T>[Key]];
 
 type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
 
