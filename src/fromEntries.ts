@@ -58,7 +58,7 @@ type FromEntriesArray<Entries extends IterableContainer<Entry>> =
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
 type FromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
   {
-    [K in AllKeys<Entries>]?: ValueForKey<Entries, K>;
+    [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
   };
 
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
