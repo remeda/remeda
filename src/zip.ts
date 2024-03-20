@@ -31,7 +31,7 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @signature
  *   R.zip(first, second)
  * @example
- *   R.zip([1, 2] as const, ['a', 'b'] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
+ *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
  * @category Array
  */
@@ -49,7 +49,7 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @signature
  *   R.zip(second)(first)
  * @example
- *   R.zip(['a', 'b'] as const)([1, 2] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
+ *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
  * @category Array
  */
