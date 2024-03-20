@@ -37,10 +37,10 @@ type Grouped<Value, Key extends PropertyKey = PropertyKey> =
  * @indexed
  * @category Array
  */
-export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
-  items: ReadonlyArray<Value>,
-  fn: (item: Value) => Key | undefined,
-): Grouped<Value, Key>;
+export function groupBy<T, Key extends PropertyKey = PropertyKey>(
+  items: ReadonlyArray<T>,
+  fn: (item: T) => Key | undefined,
+): Grouped<T, Key>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value
@@ -63,9 +63,9 @@ export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
  * @indexed
  * @category Array
  */
-export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
-  fn: (item: Value) => Key | undefined,
-): (items: ReadonlyArray<Value>) => Grouped<Value, Key>;
+export function groupBy<T, Key extends PropertyKey = PropertyKey>(
+  fn: (item: T) => Key | undefined,
+): (items: ReadonlyArray<T>) => Grouped<T, Key>;
 
 export function groupBy(): unknown {
   return purry(_groupBy(false), arguments);
