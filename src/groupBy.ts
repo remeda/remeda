@@ -31,7 +31,7 @@ type Grouped<Value, Key extends PropertyKey = PropertyKey> =
  * @signature
  *    R.groupBy(array, fn)
  * @example
- *    R.groupBy([{a: 'cat'}, {a: 'dog'}] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>
+ *    R.groupBy([{a: 'cat'}, {a: 'dog'}] as const, R.prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
  *    R.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
  * @dataFirst
  * @indexed
@@ -53,8 +53,8 @@ export function groupBy<Value, Key extends PropertyKey = PropertyKey>(
  * @example
  *    R.pipe(
  *      [{a: 'cat'}, {a: 'dog'}] as const,
- *      R.groupBy(prop('a'),
- *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>
+ *      R.groupBy(R.prop('a'),
+ *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
  *    R.pipe(
  *      [0, 1],
  *      R.groupBy(x => x % 2 === 0 ? 'even' : undefined),
