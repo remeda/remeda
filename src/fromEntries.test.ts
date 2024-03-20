@@ -9,7 +9,7 @@ describe("runtime", () => {
         ["b", 2],
         ["c", 3],
       ]),
-    ).toEqual({ a: 1, b: 2, c: 3 });
+    ).toStrictEqual({ a: 1, b: 2, c: 3 });
   });
 
   test("dataLast", () => {
@@ -22,7 +22,7 @@ describe("runtime", () => {
         ] as const,
         fromEntries(),
       ),
-    ).toEqual({ a: 1, b: 2, c: 3 });
+    ).toStrictEqual({ a: 1, b: 2, c: 3 });
   });
 
   test("empty array", () => {
@@ -60,7 +60,7 @@ describe("typing", () => {
 
     test("trivial single entry const case", () => {
       const result = fromEntries([["a", 1]] as const);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1 }>();
     });
 
     test("trivial multi entry const case", () => {
@@ -69,7 +69,7 @@ describe("typing", () => {
         ["b", 2],
         ["c", 3],
       ] as const);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1; b: 2; c: 3 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 2; c: 3 }>();
     });
 
     test("empty well defined array", () => {
@@ -84,7 +84,7 @@ describe("typing", () => {
         ["a", 1],
         ...ReadonlyArray<["b", 2] | ["c", 3]>,
       ]);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (last)", () => {
@@ -92,7 +92,7 @@ describe("typing", () => {
         ...ReadonlyArray<["b", 2] | ["c", 3]>,
         ["a", 1],
       ]);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("empty generic type", () => {
@@ -106,9 +106,11 @@ describe("typing", () => {
       const result = fromEntries([["a", 1]] as ReadonlyArray<
         readonly ["a", 1] | readonly [`testing_${string}`, boolean]
       >);
-      expectTypeOf(result).toMatchTypeOf<
-        Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
-      >();
+
+      expectTypeOf(result).toEqualTypeOf<{
+        [x: `testing_${string}`]: boolean | undefined;
+        a?: 1;
+      }>();
     });
 
     test("array with literal keys", () => {
@@ -143,7 +145,7 @@ describe("typing", () => {
 
     test("trivial single entry const case", () => {
       const result = fromEntries([["a", 1]]);
-      expectTypeOf(result).toMatchTypeOf<Record<string, number>>();
+      expectTypeOf(result).toEqualTypeOf<Record<string, number>>();
     });
 
     test("trivial multi entry const case", () => {
@@ -152,7 +154,7 @@ describe("typing", () => {
         ["b", 2],
         ["c", 3],
       ]);
-      expectTypeOf(result).toMatchTypeOf<Record<string, number>>();
+      expectTypeOf(result).toEqualTypeOf<Record<string, number>>();
     });
 
     test("empty well defined array", () => {
@@ -165,7 +167,7 @@ describe("typing", () => {
         ["a", 1],
         ...Array<["b", 2] | ["c", 3]>,
       ]);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("mixed tuple with rest (last)", () => {
@@ -173,7 +175,7 @@ describe("typing", () => {
         ...Array<["b", 2] | ["c", 3]>,
         ["a", 1],
       ]);
-      expectTypeOf(result).toMatchTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+      expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
     });
 
     test("empty generic type", () => {
@@ -185,9 +187,10 @@ describe("typing", () => {
       const result = fromEntries([["a", 1]] as Array<
         ["a", 1] | [`testing_${string}`, boolean]
       >);
-      expectTypeOf(result).toMatchTypeOf<
-        Partial<Record<`testing_${string}`, boolean>> & { a?: 1 }
-      >();
+      expectTypeOf(result).toEqualTypeOf<{
+        [x: `testing_${string}`]: boolean | undefined;
+        a?: 1;
+      }>();
     });
 
     test("array with literal keys", () => {

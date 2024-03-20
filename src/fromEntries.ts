@@ -1,5 +1,6 @@
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
+import type { Simplify } from "./type-fest/simplify";
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
@@ -93,7 +94,7 @@ type ValueForKey<
  */
 export function fromEntries<Entries extends IterableContainer<Entry>>(
   entries: Entries,
-): FromEntries<Entries>;
+): Simplify<FromEntries<Entries>>;
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second
@@ -112,7 +113,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  */
 export function fromEntries(): <Entries extends IterableContainer<Entry>>(
   entries: Entries,
-) => FromEntries<Entries>;
+) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(): unknown {
   // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
