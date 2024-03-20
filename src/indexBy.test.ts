@@ -9,7 +9,7 @@ describe("runtime", () => {
         [
           { dir: "left", code: 97 },
           { dir: "right", code: 100 },
-        ] as const,
+        ],
         prop("code"),
       ),
     ).toStrictEqual({
@@ -24,7 +24,7 @@ describe("runtime", () => {
         [
           { dir: "left", code: 97 },
           { dir: "right", code: 100 },
-        ] as const,
+        ],
         indexBy(prop("code")),
       ),
     ).toStrictEqual({
@@ -40,8 +40,8 @@ describe("typing", () => {
       [
         { dir: "left", code: 97 },
         { dir: "right", code: 100 },
-      ] as const,
-      (x) => x.code,
+      ],
+      prop("code"),
     );
     expectTypeOf<
       Partial<Record<97 | 100, { dir: "left" | "right"; code: 97 | 100 }>>
@@ -53,8 +53,8 @@ describe("typing", () => {
       [
         { dir: "left", code: 97 },
         { dir: "right", code: 100 },
-      ] as const,
-      indexBy((x) => x.code),
+      ],
+      indexBy(prop("code")),
     );
     expectTypeOf<
       Partial<Record<97 | 100, { dir: "left" | "right"; code: 97 | 100 }>>
