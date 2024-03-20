@@ -17,7 +17,7 @@ type EntryOf<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
  * @signature
  *    R.entries(object)
  * @example
- *    R.entries({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    R.entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
  * @category Object
  */
@@ -29,10 +29,7 @@ export function entries<T extends {}>(data: T): Array<EntryOf<T>>;
  * @signature
  *    R.entries()(object)
  * @example
- *    R.pipe(
- *      { a: 1 } as const,
- *      entries(),
- *    ); // => [['a', 1]] typed Array<['a', 1]>
+ *    R.pipe({ a: 1, b: 2, c: 3 }, R.entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast
  * @category Object
  */

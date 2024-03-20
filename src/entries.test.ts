@@ -12,6 +12,20 @@ describe("runtime", () => {
 
 describe("typing", () => {
   test("with known properties", () => {
+    const actual = entries({ a: 1, b: 2, c: 3 });
+    expectTypeOf(actual).toEqualTypeOf<
+      Array<["a", number] | ["b", number] | ["c", number]>
+    >();
+  });
+
+  test("with different value types", () => {
+    const actual = entries({ a: 1, b: "2", c: true });
+    expectTypeOf(actual).toEqualTypeOf<
+      Array<["a", number] | ["b", string] | ["c", boolean]>
+    >();
+  });
+
+  test("with const object", () => {
     const actual = entries({ a: 1, b: 2, c: 3 } as const);
     expectTypeOf(actual).toEqualTypeOf<Array<["a", 1] | ["b", 2] | ["c", 3]>>();
   });
