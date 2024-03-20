@@ -24,19 +24,23 @@ describe("data first", () => {
           time: { elapsed: add(1), remaining: add(-1) },
         },
       ),
-    ).toEqual({ id: 2, quartile: 10, time: { elapsed: 101, remaining: 1399 } });
+    ).toStrictEqual({
+      id: 2,
+      quartile: 10,
+      time: { elapsed: 101, remaining: 1399 },
+    });
   });
 
   it("does not invoke function if `data` does not contain the key", () => {
-    expect(evolve({} as { id?: number }, { id: add(1) })).toEqual({});
+    expect(evolve({} as { id?: number }, { id: add(1) })).toStrictEqual({});
   });
 
   it("is not destructive and is immutable", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = evolve(data, { n: add(1) });
-    expect(data).toEqual({ n: 100 });
-    expect(result).toEqual(expected);
+    expect(data).toStrictEqual({ n: 100 });
+    expect(result).toStrictEqual(expected);
     expect(result).not.toBe(expected);
   });
 
@@ -46,11 +50,11 @@ describe("data first", () => {
         { first: 1, nested: { second: 2, third: 3 } },
         { nested: { second: add(-1), third: add(1) } },
       ),
-    ).toEqual({ first: 1, nested: { second: 1, third: 4 } });
+    ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
   });
 
   it("ignores undefined transformations", () => {
-    expect(evolve({ n: 0 }, {})).toEqual({ n: 0 });
+    expect(evolve({ n: 0 }, {})).toStrictEqual({ n: 0 });
   });
 
   it("can handle data that is complex nested objects", () => {
@@ -70,7 +74,7 @@ describe("data first", () => {
           objAry: (x) => map(x, omit(["b"])),
         },
       ),
-    ).toEqual({
+    ).toStrictEqual({
       array: 3,
       nestedObj: { a: { b: "Set" } },
       objAry: [{ a: 0 }, { a: 1 }],
@@ -87,7 +91,7 @@ describe("data first", () => {
             arg2 === undefined && arg3 === undefined,
         },
       ),
-    ).toEqual({ arg2Optional: true, arg2arg3Optional: true });
+    ).toStrictEqual({ arg2Optional: true, arg2arg3Optional: true });
   });
 });
 
@@ -106,19 +110,25 @@ describe("data last", () => {
           time: { elapsed: add(1), remaining: add(-1) },
         }),
       ),
-    ).toEqual({ id: 2, quartile: 10, time: { elapsed: 101, remaining: 1399 } });
+    ).toStrictEqual({
+      id: 2,
+      quartile: 10,
+      time: { elapsed: 101, remaining: 1399 },
+    });
   });
 
   it("does not invoke function if `data` does not contain the key", () => {
-    expect(pipe({} as { id?: number }, evolve({ id: add(1) }))).toEqual({});
+    expect(pipe({} as { id?: number }, evolve({ id: add(1) }))).toStrictEqual(
+      {},
+    );
   });
 
   it("is not destructive and is immutable", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = pipe(data, evolve({ n: add(1) }));
-    expect(data).toEqual({ n: 100 });
-    expect(result).toEqual(expected);
+    expect(data).toStrictEqual({ n: 100 });
+    expect(result).toStrictEqual(expected);
     expect(result).not.toBe(expected);
   });
 
@@ -128,11 +138,11 @@ describe("data last", () => {
         { first: 1, nested: { second: 2, third: 3 } },
         evolve({ nested: { second: add(-1), third: add(1) } }),
       ),
-    ).toEqual({ first: 1, nested: { second: 1, third: 4 } });
+    ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
   });
 
   it("ignores undefined transformations", () => {
-    expect(pipe({ n: 0 }, evolve({}))).toEqual({ n: 0 });
+    expect(pipe({ n: 0 }, evolve({}))).toStrictEqual({ n: 0 });
   });
 
   it("can handle data that is complex nested objects", () => {
@@ -152,7 +162,7 @@ describe("data last", () => {
           objAry: (x) => map(x, omit(["b"])),
         }),
       ),
-    ).toEqual({
+    ).toStrictEqual({
       array: 3,
       nestedObj: { a: { b: "Set" } },
       objAry: [{ a: 0 }, { a: 1 }],
@@ -169,7 +179,7 @@ describe("data last", () => {
             arg2 === undefined && arg3 === undefined,
         }),
       ),
-    ).toEqual({ arg2Optional: true, arg2arg3Optional: true });
+    ).toStrictEqual({ arg2Optional: true, arg2arg3Optional: true });
   });
 });
 
