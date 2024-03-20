@@ -55,7 +55,9 @@ describe("typing", () => {
   describe("dataFirst", () => {
     test("arrays", () => {
       const actual = zip([1, 2, 3], ["a", "b", "c"]);
-      assertType<Array<[number, string]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<
+        [[number, string], [number, string], [number, string]]
+      >();
     });
 
     test("tuples", () => {
@@ -63,14 +65,16 @@ describe("typing", () => {
         [1, 2, 3] as [1, 2, 3],
         ["a", "b", "c"] as ["a", "b", "c"],
       );
-      assertType<Array<[1 | 2 | 3, "a" | "b" | "c"]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<[[1, "a"], [2, "b"], [3, "c"]]>();
     });
 
     test("variadic tuples", () => {
       const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
       const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
       const actual = zip(firstVariadic, secondVariadic);
-      assertType<Array<[number | string, number | string]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<
+        [[number, string], ...Array<[string, number]>]
+      >();
     });
 
     test("on empty tuples", () => {
@@ -140,20 +144,24 @@ describe("typing", () => {
   describe("dataLast", () => {
     test("arrays", () => {
       const actual = pipe([1, 2, 3], zip(["a", "b", "c"]));
-      assertType<Array<[number, string]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<
+        [[number, string], [number, string], [number, string]]
+      >();
     });
     test("tuples", () => {
       const actual = pipe(
         [1, 2, 3] as [1, 2, 3],
         zip(["a", "b", "c"] as ["a", "b", "c"]),
       );
-      assertType<Array<[1 | 2 | 3, "a" | "b" | "c"]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<[[1, "a"], [2, "b"], [3, "c"]]>();
     });
     test("variadic tuples", () => {
       const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
       const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
       const actual = pipe(firstVariadic, zip(secondVariadic));
-      assertType<Array<[number | string, number | string]>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<
+        [[number, string], ...Array<[string, number]>]
+      >();
     });
 
     test("on empty tuples", () => {
