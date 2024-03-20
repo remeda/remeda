@@ -97,30 +97,24 @@ describe("data first", () => {
 
 describe("data last", () => {
   it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
-    const expected = {
-      id: 2,
-      quartile: 10,
-      time: { elapsed: 101, remaining: 1399 },
-    };
-    const result = pipe(
-      {
-        id: 1,
-        quartile: [1, 2, 3, 4],
-        time: { elapsed: 100, remaining: 1400 },
-      },
-      evolve({
-        id: add(1),
-        quartile: sum,
-        time: { elapsed: add(1), remaining: add(-1) },
-      }),
-    );
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    expect(
+      pipe(
+        {
+          id: 1,
+          quartile: [1, 2, 3, 4],
+          time: { elapsed: 100, remaining: 1400 },
+        },
+        evolve({
+          id: add(1),
+          quartile: sum,
+          time: { elapsed: add(1), remaining: add(-1) },
+        }),
+      ),
+    ).toEqual({ id: 2, quartile: 10, time: { elapsed: 101, remaining: 1399 } });
   });
 
   it("does not invoke function if `data` does not contain the key", () => {
-    const result = pipe({} as { id?: number }, evolve({ id: add(1) }));
-    expect(result).toEqual({});
+    expect(pipe({} as { id?: number }, evolve({ id: add(1) }))).toEqual({});
   });
 
   it("is not destructive and is immutable", () => {
@@ -130,49 +124,56 @@ describe("data last", () => {
     expect(data).toEqual({ n: 100 });
     expect(result).toEqual(expected);
     expect(result).not.toBe(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
   });
 
   it("is recursive", () => {
-    const expected = { first: 1, nested: { second: 1, third: 4 } };
-    const result = pipe(
-      { first: 1, nested: { second: 2, third: 3 } },
-      evolve({ nested: { second: add(-1), third: add(1) } }),
-    );
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    expect(
+      pipe(
+        { first: 1, nested: { second: 2, third: 3 } },
+        evolve({ nested: { second: add(-1), third: add(1) } }),
+      ),
+    ).toEqual({ first: 1, nested: { second: 1, third: 4 } });
   });
 
   it("ignores undefined transformations", () => {
-    const expected = { n: 0 };
-    const result = pipe({ n: 0 }, evolve({}));
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    expect(pipe({ n: 0 }, evolve({}))).toEqual({ n: 0 });
   });
 
   it("can handle data that is complex nested objects", () => {
-    const result = pipe(
-      {
-        array: ["1", "2", "3"],
-        nestedObj: { a: { b: "c" } },
-        objAry: [
-          { a: 0, b: 0 },
-          { a: 1, b: 1 },
-        ],
-      },
-      evolve({
-        array: length(),
-        nestedObj: { a: (x) => set(x, "b", "Set") },
-        objAry: (x) => map(x, omit(["b"])),
-      }),
-    );
-    const expected = {
+    expect(
+      pipe(
+        {
+          array: ["1", "2", "3"],
+          nestedObj: { a: { b: "c" } },
+          objAry: [
+            { a: 0, b: 0 },
+            { a: 1, b: 1 },
+          ],
+        },
+        evolve({
+          array: length(),
+          nestedObj: { a: (x) => set(x, "b", "Set") },
+          objAry: (x) => map(x, omit(["b"])),
+        }),
+      ),
+    ).toEqual({
       array: 3,
       nestedObj: { a: { b: "Set" } },
       objAry: [{ a: 0 }, { a: 1 }],
-    };
-    expect(result).toEqual(expected);
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
+    });
+  });
+
+  it("accept function whose second and subsequent arguments are optional", () => {
+    expect(
+      pipe(
+        { arg2Optional: 1, arg2arg3Optional: 1 },
+        evolve({
+          arg2Optional: (_: number, arg2?: number) => arg2 === undefined,
+          arg2arg3Optional: (_: number, arg2?: number, arg3?: string) =>
+            arg2 === undefined && arg3 === undefined,
+        }),
+      ),
+    ).toEqual({ arg2Optional: true, arg2arg3Optional: true });
   });
 });
 
@@ -355,6 +356,70 @@ describe("typing", () => {
   });
 
   describe("data last", () => {
+    it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
+      const result = pipe(
+        {
+          id: 1,
+          quartile: [1, 2, 3, 4],
+          time: { elapsed: 100, remaining: 1400 },
+        },
+        evolve({
+          id: add(1),
+          quartile: sum,
+          time: { elapsed: add(1), remaining: add(-1) },
+        }),
+      );
+      expectTypeOf(result).toEqualTypeOf<{
+        id: number;
+        quartile: number;
+        time: { elapsed: number; remaining: number };
+      }>();
+    });
+
+    it("is not destructive and is immutable", () => {
+      const result = pipe({ n: 100 }, evolve({ n: add(1) }));
+      expectTypeOf(result).toEqualTypeOf<{ n: number }>();
+    });
+
+    it("is recursive", () => {
+      const result = pipe(
+        { first: 1, nested: { second: 2, third: 3 } },
+        evolve({ nested: { second: add(-1), third: add(1) } }),
+      );
+      expectTypeOf(result).toEqualTypeOf<{
+        first: number;
+        nested: { second: number; third: number };
+      }>();
+    });
+
+    it("ignores undefined transformations", () => {
+      const result = pipe({ n: 0 }, evolve({}));
+      expectTypeOf(result).toEqualTypeOf<{ n: number }>();
+    });
+
+    it("can handle data that is complex nested objects", () => {
+      const result = pipe(
+        {
+          array: ["1", "2", "3"],
+          nestedObj: { a: { b: "c" } },
+          objAry: [
+            { a: 0, b: 0 },
+            { a: 1, b: 1 },
+          ],
+        },
+        evolve({
+          array: length(),
+          nestedObj: { a: (x) => set(x, "b", "Set") },
+          objAry: (x) => map(x, omit(["b"])),
+        }),
+      );
+      expectTypeOf(result).toEqualTypeOf<{
+        array: number;
+        nestedObj: { a: { b: string } };
+        objAry: Array<{ a: number }>;
+      }>();
+    });
+
     describe("it can detect mismatch of parameters and arguments", () => {
       it('detect property "number" are incompatible', () => {
         pipe(
@@ -367,6 +432,7 @@ describe("typing", () => {
           }),
         );
       });
+
       it('detect property "array" are incompatible', () => {
         pipe(
           { number: 1, array: ["1", "2", "3"] },
@@ -400,7 +466,6 @@ describe("typing", () => {
             arg2 === undefined && arg3 === undefined,
         }),
       );
-      expect(result).toEqual({ arg2Optional: true, arg2arg3Optional: true });
       expectTypeOf(result).toEqualTypeOf<{
         arg2Optional: boolean;
         arg2arg3Optional: boolean;
