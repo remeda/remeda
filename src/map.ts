@@ -10,17 +10,22 @@ import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Map each element of an array using a defined callback function.
+ * Creates a new array populated with the results of calling `mapper` on every
+ * element in the calling array.
  *
  * @param data - The array to map.
- * @param mapper - The function mapper.
- * @returns The new mapped array.
+ * @param mapper - A function to execute for each element in the array. Its
+ * return value is added as a single element in the new array.
+ * @returns A new array with each element being the result of the callback
+ * function.
  * @signature
- *    R.map(array, fn)
- *    R.map.indexed(array, fn)
+ *    R.map(array, mapper)
+ *    R.map.indexed(array, mapper)
  * @example
- *    R.map([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
- *    R.map.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
+ *    R.map([1, 2, 3], R.multiply(2)); // => [2, 4, 6]
+ *    R.map([0, 0], R.add(1)); // => [1, 1]
+ *    R.map.indexed([0, 0, 0], (_, i) => i); // => [0, 1, 2]
+ *    R.map.indexed([0, 0], (x, i) => x + i); // => [0, 1]
  * @dataFirst
  * @indexed
  * @pipeable
@@ -32,15 +37,21 @@ export function map<T extends IterableContainer, K>(
 ): Mapped<T, K>;
 
 /**
- * Map each value of an object using a defined callback function.
+ * Creates a new array populated with the results of calling `mapper` on every
+ * element in the calling array.
  *
- * @param mapper - The function mapper.
+ * @param mapper - A function to execute for each element in the array. Its
+ * return value is added as a single element in the new array.
+ * @returns A new array with each element being the result of the callback
+ * function.
  * @signature
- *    R.map(fn)(array)
- *    R.map.indexed(fn)(array)
+ *    R.map(mapper)(array)
+ *    R.map.indexed(mapper)(array)
  * @example
- *    R.pipe([0, 1, 2], R.map(x => x * 2)) // => [0, 2, 4]
- *    R.pipe([0, 0, 0], R.map.indexed((x, i) => i)) // => [0, 1, 2]
+ *    R.pipe([1, 2, 3], R.map(R.multiply(2))); // => [2, 4, 6]
+ *    R.pipe([0, 0], R.map(R.add(1))); // => [1, 1]
+ *    R.pipe([0, 0, 0], R.map.indexed((_, i) => i)); // => [0, 1, 2]
+ *    R.pipe([0, 0], R.map.indexed((x, i) => x + i)); // => [0, 1]
  * @dataLast
  * @indexed
  * @pipeable
@@ -56,16 +67,20 @@ export function map(): unknown {
 
 const _map =
   (indexed: boolean) =>
-  <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    _reduceLazy(array, indexed ? map.lazyIndexed(fn) : map.lazy(fn), indexed);
+  <T, K>(array: ReadonlyArray<T>, mapper: PredIndexedOptional<T, K>) =>
+    _reduceLazy(
+      array,
+      indexed ? map.lazyIndexed(mapper) : map.lazy(mapper),
+      indexed,
+    );
 
 const _lazy =
   (indexed: boolean) =>
-  <T, K>(fn: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
+  <T, K>(mapper: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
   (value, index, array) => ({
     done: false,
     hasNext: true,
-    next: indexed ? fn(value, index, array) : fn(value),
+    next: indexed ? mapper(value, index, array) : mapper(value),
   });
 
 export namespace map {
