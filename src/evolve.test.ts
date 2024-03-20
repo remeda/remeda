@@ -24,11 +24,7 @@ describe("data first", () => {
           time: { elapsed: add(1), remaining: add(-1) },
         },
       ),
-    ).toEqual({
-      id: 2,
-      quartile: 10,
-      time: { elapsed: 101, remaining: 1399 },
-    });
+    ).toEqual({ id: 2, quartile: 10, time: { elapsed: 101, remaining: 1399 } });
   });
 
   it("does not invoke function if `data` does not contain the key", () => {
