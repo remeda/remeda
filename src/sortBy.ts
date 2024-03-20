@@ -4,11 +4,8 @@ import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
+  ReorderedArray,
 } from "./_types";
-
-type SortedBy<T extends IterableContainer> = {
-  -readonly [P in keyof T]: T[number];
-};
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the
@@ -34,15 +31,15 @@ type SortedBy<T extends IterableContainer> = {
  *    R.sortBy(...rules)(data)
  * @example
  *    R.pipe(
- *      [{ a: 1 }, { a: 3 }] as const,
- *      R.sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
+ *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *      R.sortBy(R.prop('a')),
+ *    ); // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
  * @dataLast
  * @category Array
  */
 export function sortBy<T extends IterableContainer>(
   ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-): (array: T) => SortedBy<T>;
+): (array: T) => ReorderedArray<T>;
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the
@@ -69,32 +66,31 @@ export function sortBy<T extends IterableContainer>(
  *    R.sortBy(data, ...rules)
  * @example
  *    R.sortBy(
- *     [
- *       {color: 'red', weight: 2},
- *       {color: 'blue', weight: 3},
- *       {color: 'green', weight: 1},
- *       {color: 'purple', weight: 1},
- *     ],
- *      [x => x.weight, 'asc'], x => x.color
- *    )
- *    // =>
+ *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *      prop('a'),
+ *    );  // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
+ *    R.sortBy(
+ *      [
+ *        {color: 'red', weight: 2},
+ *        {color: 'blue', weight: 3},
+ *        {color: 'green', weight: 1},
+ *        {color: 'purple', weight: 1},
+ *      ],
+ *      [prop('weight'), 'asc'],
+ *      prop('color'),
+ *    ); // => [
  *    //   {color: 'green', weight: 1},
  *    //   {color: 'purple', weight: 1},
  *    //   {color: 'red', weight: 2},
  *    //   {color: 'blue', weight: 3},
- *    // typed Array<{color: string, weight: number}>
- *
- *    R.sortBy(
- *      [{ a: 1 }, { a: 3 }] as const,
- *      x => x.a
- *    ); // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
+ *    // ]
  * @dataFirst
  * @category Array
  */
 export function sortBy<T extends IterableContainer>(
   array: T,
   ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
-): SortedBy<T>;
+): ReorderedArray<T>;
 
 export function sortBy(): unknown {
   return purryOrderRules(sortByImplementation, arguments);
