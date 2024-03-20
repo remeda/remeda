@@ -11,7 +11,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isSymbol(Symbol('foo')) //=> true
  *    R.isSymbol(1) //=> false
  * @category Guard
- * @mapping lodash isSymbol
+ * @similarTo lodash isSymbol
  */
 export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {
   return typeof data === "symbol";

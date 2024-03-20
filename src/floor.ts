@@ -17,7 +17,7 @@ import { purry } from "./purry";
  *    R.floor(456789, -3) // => 456000
  * @dataFirst
  * @category Number
- * @mapping lodash floor
+ * @similarTo lodash floor
  */
 export function floor(value: number, precision: number): number;
 
@@ -36,7 +36,7 @@ export function floor(value: number, precision: number): number;
  *    R.floor(-3)(456789) // => 456000
  * @dataLast
  * @category Number
- * @mapping lodash floor
+ * @similarTo lodash floor
  */
 export function floor(precision: number): (value: number) => number;
 

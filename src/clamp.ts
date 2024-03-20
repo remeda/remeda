@@ -18,8 +18,8 @@ type Limits = {
  *    clamp(10, { max: 20, min: 5 }) // => 10
  * @dataFirst
  * @category Number
- * @mapping lodash clamp
- * @mapping ramda clamp
+ * @similarTo lodash clamp
+ * @similarTo ramda clamp
  */
 export function clamp(value: number, limits: Limits): number;
 
@@ -35,8 +35,8 @@ export function clamp(value: number, limits: Limits): number;
  *    clamp({ max: 20, min: 5 })(10) // => 10
  * @dataLast
  * @category Number
- * @mapping lodash clamp
- * @mapping ramda clamp
+ * @similarTo lodash clamp
+ * @similarTo ramda clamp
  */
 export function clamp(limits: Limits): (value: number) => number;
 

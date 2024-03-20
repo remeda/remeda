@@ -29,7 +29,7 @@ const _sumBy =
  * @dataLast
  * @indexed
  * @category Array
- * @mapping lodash sumBy
+ * @similarTo lodash sumBy
  */
 
 export function sumBy<T>(
@@ -52,7 +52,7 @@ export function sumBy<T>(
  * @dataFirst
  * @indexed
  * @category Array
- * @mapping lodash sumBy
+ * @similarTo lodash sumBy
  */
 
 export function sumBy<T>(

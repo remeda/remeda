@@ -27,8 +27,8 @@ import { isString } from "./isString";
  *    R.isEmpty([1, 2, 3]) //=> false
  *    R.isEmpty({ length: 0 }) //=> false
  * @category Guard
- * @mapping lodash isEmpty
- * @mapping ramda isEmpty
+ * @similarTo lodash isEmpty
+ * @similarTo ramda isEmpty
  */
 export function isEmpty<T extends string | undefined>(
   data: T,

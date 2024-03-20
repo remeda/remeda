@@ -67,7 +67,7 @@ type SampledLiteral<
  * @dataFirst
  * @pipeable
  * @category Array
- * @mapping lodash sampleSize
+ * @similarTo lodash sampleSize
  */
 export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
@@ -94,7 +94,7 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * @dataLast
  * @pipeable
  * @category Array
- * @mapping lodash sampleSize
+ * @similarTo lodash sampleSize
  */
 export function sample<T extends IterableContainer, N extends number = number>(
   sampleSize: N,

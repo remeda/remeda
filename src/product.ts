@@ -14,7 +14,7 @@ import { purry } from "./purry";
  *   R.product([]); // => 1
  * @dataFirst
  * @category Number
- * @mapping ramda product
+ * @similarTo ramda product
  */
 export function product(data: ReadonlyArray<number>): number;
 
@@ -29,7 +29,7 @@ export function product(data: ReadonlyArray<number>): number;
  *   R.pipe([], R.product()); // => 0
  * @dataLast
  * @category Number
- * @mapping ramda product
+ * @similarTo ramda product
  */
 export function product(): (data: ReadonlyArray<number>) => number;
 

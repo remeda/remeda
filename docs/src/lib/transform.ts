@@ -48,13 +48,13 @@ function transformFunction(
       : summary
           .map((part) => transformCommentDisplayPart(part, functionNames))
           .join("");
-  const mapping = getMapping(comment);
+  const similarTo = getSimilarTo(comment);
 
   const methods = signaturesWithComments.map(transformSignature);
 
   const sourceUrl = sources?.[0]?.url;
 
-  return { id, name, description, mapping, methods, sourceUrl };
+  return { id, name, description, similarTo, methods, sourceUrl };
 }
 
 function transformCommentDisplayPart(
@@ -69,29 +69,30 @@ function transformCommentDisplayPart(
   return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
 }
 
-function getMapping({ blockTags }: JSONOutput.Comment) {
-  const result = new Array<{
+function getSimilarTo({ blockTags }: JSONOutput.Comment) {
+  const result: Array<{
     library: string;
     name: string;
     notes: string | undefined;
-  }>();
+  }> = [];
 
   if (blockTags === undefined) {
     return result;
   }
 
-  const mappingTags = blockTags.filter(({ tag }) => tag === `@mapping`);
+  const similarToTags = blockTags.filter(({ tag }) => tag === `@similarTo`);
 
-  for (const { content } of mappingTags) {
+  for (const { content } of similarToTags) {
     const textContent = content.map(({ text }) => text).join("");
 
     // Matches "<library> <name> [- notes]":
     const match = textContent.match(/(\w+) (\w+)(?: - (.+))?/);
     const [, library, name, notes] = match ?? [];
 
-    if (!library || !name) {
-      continue;
-    }
+    invariant(
+      library !== undefined && name !== undefined,
+      "Invalid @similarTo tag",
+    );
 
     result.push({ library, name, notes });
   }

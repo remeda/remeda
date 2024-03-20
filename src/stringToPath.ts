@@ -6,7 +6,7 @@
  * @example R.stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category String
- * @mapping lodash toPath
+ * @similarTo lodash toPath
  */
 export function stringToPath<Path extends string>(
   path: Path,

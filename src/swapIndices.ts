@@ -122,7 +122,7 @@ type SwappedIndices<
  *   swapIndices('abc', 0, 1) // => 'bac'
  * @dataFirst
  * @category Array
- * @mapping ramda swap
+ * @similarTo ramda swap
  */
 export function swapIndices<
   T extends IterableContainer | string,
@@ -147,7 +147,7 @@ export function swapIndices<
  *   swapIndices(0, -1)('abc') // => 'cba'
  * @dataLast
  * @category Array
- * @mapping ramda swap
+ * @similarTo ramda swap
  */
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,

@@ -10,8 +10,8 @@ import { purry } from "./purry";
  *    R.range(1, 5) // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
- * @mapping lodash range
- * @mapping ramda range
+ * @similarTo lodash range
+ * @similarTo ramda range
  */
 export function range(start: number, end: number): Array<number>;
 
@@ -24,8 +24,8 @@ export function range(start: number, end: number): Array<number>;
  *    R.range(5)(1) // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
- * @mapping lodash range
- * @mapping ramda range
+ * @similarTo lodash range
+ * @similarTo ramda range
  */
 export function range(end: number): (start: number) => Array<number>;
 

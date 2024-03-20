@@ -12,8 +12,8 @@ import { purry } from "./purry";
  *    R.set({ a: 1 }, 'a', 2) // => { a: 2 }
  * @dataFirst
  * @category Object
- * @mapping lodash set
- * @mapping ramda assoc
+ * @similarTo lodash set
+ * @similarTo ramda assoc
  */
 export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
 
@@ -28,8 +28,8 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
  *    R.pipe({ a: 1 }, R.set('a', 2)) // => { a: 2 }
  * @dataLast
  * @category Object
- * @mapping lodash set
- * @mapping ramda assoc
+ * @similarTo lodash set
+ * @similarTo ramda assoc
  */
 export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
 

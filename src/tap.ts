@@ -15,8 +15,8 @@ import { purry } from "./purry";
  *    R.tap("foo", console.log) // => "foo"
  * @dataFirst
  * @category Other
- * @mapping lodash tap
- * @mapping ramda tap
+ * @similarTo lodash tap
+ * @similarTo ramda tap
  */
 export function tap<T>(value: T, fn: (value: T) => void): T;
 
@@ -39,8 +39,8 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *    ) // => [4, 6]
  * @dataLast
  * @category Other
- * @mapping lodash tap
- * @mapping ramda tap
+ * @similarTo lodash tap
+ * @similarTo ramda tap
  */
 export function tap<T, F extends (value: T) => unknown>(fn: F): (value: T) => T;
 

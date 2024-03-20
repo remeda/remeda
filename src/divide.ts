@@ -12,8 +12,8 @@ import { purry } from "./purry";
  *    R.reduce([1, 2, 3, 4], R.divide, 24) // => 1
  * @dataFirst
  * @category Number
- * @mapping lodash divide
- * @mapping ramda divide
+ * @similarTo lodash divide
+ * @similarTo ramda divide
  */
 export function divide(value: number, divisor: number): number;
 
@@ -28,8 +28,8 @@ export function divide(value: number, divisor: number): number;
  *    R.map([2, 4, 6, 8], R.divide(2)) // => [1, 2, 3, 4]
  * @dataLast
  * @category Number
- * @mapping lodash divide
- * @mapping ramda divide
+ * @similarTo lodash divide
+ * @similarTo ramda divide
  */
 export function divide(divisor: number): (value: number) => number;
 

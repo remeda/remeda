@@ -13,8 +13,8 @@ import { purry } from "./purry";
  *    R.dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
  * @category Array
- * @mapping lodash dropWhile
- * @mapping ramda dropWhile
+ * @similarTo lodash dropWhile
+ * @similarTo ramda dropWhile
  */
 export function dropWhile<T>(
   data: ReadonlyArray<T>,
@@ -33,8 +33,8 @@ export function dropWhile<T>(
  *    R.pipe([1, 2, 10, 3, 4], R.dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
  * @category Array
- * @mapping lodash dropWhile
- * @mapping ramda dropWhile
+ * @similarTo lodash dropWhile
+ * @similarTo ramda dropWhile
  */
 export function dropWhile<T>(
   predicate: (item: T) => boolean,

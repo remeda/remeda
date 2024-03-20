@@ -14,7 +14,7 @@ import { purry } from "./purry";
  *    R.splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
  * @dataFirst
  * @category Array
- * @mapping ramda remove
+ * @similarTo ramda remove
  */
 export function splice<T>(
   items: ReadonlyArray<T>,
@@ -36,7 +36,7 @@ export function splice<T>(
  *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
  * @dataLast
  * @category Array
- * @mapping ramda remove
+ * @similarTo ramda remove
  */
 export function splice<T>(
   start: number,

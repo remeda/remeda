@@ -25,8 +25,8 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @dataFirst
  * @pipeable
  * @category Array
- * @mapping lodash intersectionWith
- * @mapping ramda innerJoin
+ * @similarTo lodash intersectionWith
+ * @similarTo ramda innerJoin
  */
 export function intersectionWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
@@ -53,8 +53,8 @@ export function intersectionWith<TFirst, TSecond>(
  * @dataLast
  * @pipeable
  * @category Array
- * @mapping lodash intersectionWith
- * @mapping ramda innerJoin
+ * @similarTo lodash intersectionWith
+ * @similarTo ramda innerJoin
  */
 export function intersectionWith<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,

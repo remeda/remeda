@@ -7,8 +7,8 @@
  * @example
  *    R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
  * @category Array
- * @mapping lodash assign
- * @mapping ramda mergeAll
+ * @similarTo lodash assign
+ * @similarTo ramda mergeAll
  */
 export function mergeAll<A>(array: readonly [A]): A;
 export function mergeAll<A, B>(array: readonly [A, B]): A & B;

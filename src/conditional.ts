@@ -50,8 +50,8 @@ type Case<In, Out, Thru extends In = In> = readonly [
  *   ); //=> 'Hello ID: 3'
  * @dataLast
  * @category Function
- * @mapping lodash cond
- * @mapping ramda cond
+ * @similarTo lodash cond
+ * @similarTo ramda cond
  */
 export function conditional<
   T,
@@ -142,8 +142,8 @@ export function conditional<
  *   ); //=> 'Hello ID: 3'
  * @dataFirst
  * @category Function
- * @mapping lodash cond
- * @mapping ramda cond
+ * @similarTo lodash cond
+ * @similarTo ramda cond
  */
 export function conditional<
   T,

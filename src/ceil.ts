@@ -17,7 +17,7 @@ import { purry } from "./purry";
  *    R.ceil(456789, -3) // => 457000
  * @dataFirst
  * @category Number
- * @mapping lodash ceil
+ * @similarTo lodash ceil
  */
 export function ceil(value: number, precision: number): number;
 
@@ -36,7 +36,7 @@ export function ceil(value: number, precision: number): number;
  *    R.ceil(-3)(456789) // => 457000
  * @dataLast
  * @category Number
- * @mapping lodash ceil
+ * @similarTo lodash ceil
  */
 export function ceil(precision: number): (value: number) => number;
 

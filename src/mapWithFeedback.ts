@@ -21,7 +21,7 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
- * @mapping ramda scan
+ * @similarTo ramda scan
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   array: T,
@@ -44,7 +44,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @indexed
  * @pipeable
  * @category Array
- * @mapping ramda scan
+ * @similarTo ramda scan
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   reducer: (previousValue: U, currentValue: T[number]) => U,

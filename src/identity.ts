@@ -14,8 +14,8 @@
  * @example
  *    R.identity('foo') // => 'foo'
  * @category Function
- * @mapping lodash identity
- * @mapping ramda identity
+ * @similarTo lodash identity
+ * @similarTo ramda identity
  */
 export function identity<T>(value: T): T {
   return value;

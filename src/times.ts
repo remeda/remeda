@@ -12,8 +12,8 @@ import { purry } from "./purry";
  * @returns An array containing the return values of all calls to `fn`.
  * @example times(5, identity); //=> [0, 1, 2, 3, 4]
  * @dataFirst
- * @mapping lodash times
- * @mapping ramda times
+ * @similarTo lodash times
+ * @similarTo ramda times
  */
 export function times<T>(count: number, fn: (n: number) => T): Array<T>;
 
@@ -28,8 +28,8 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  * @returns An array containing the return values of all calls to `fn`.
  * @example times(identity)(5); //=> [0, 1, 2, 3, 4]
  * @dataLast
- * @mapping lodash times
- * @mapping ramda times
+ * @similarTo lodash times
+ * @similarTo ramda times
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 

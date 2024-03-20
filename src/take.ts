@@ -14,8 +14,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
- * @mapping lodash take
- * @mapping ramda take
+ * @similarTo lodash take
+ * @similarTo ramda take
  */
 export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
@@ -30,8 +30,8 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @dataLast
  * @pipeable
  * @category Array
- * @mapping lodash take
- * @mapping ramda take
+ * @similarTo lodash take
+ * @similarTo ramda take
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 

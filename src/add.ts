@@ -13,8 +13,8 @@ import { purry } from "./purry";
  *    R.reduce([1, 2, 3, 4], R.add, 0) // => 10
  * @dataFirst
  * @category Number
- * @mapping lodash add
- * @mapping ramda add
+ * @similarTo lodash add
+ * @similarTo ramda add
  */
 export function add(value: number, addend: number): number;
 
@@ -30,8 +30,8 @@ export function add(value: number, addend: number): number;
  *    R.map([1, 2, 3, 4], R.add(1)) // => [2, 3, 4, 5]
  * @dataLast
  * @category Number
- * @mapping lodash add
- * @mapping ramda add
+ * @similarTo lodash add
+ * @similarTo ramda add
  */
 export function add(addend: number): (value: number) => number;
 

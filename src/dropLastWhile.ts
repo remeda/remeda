@@ -13,8 +13,8 @@ import { purry } from "./purry";
  *    R.dropLastWhile([1, 2, 10, 3, 4], x => x < 10) // => [1, 2, 10]
  * @dataFirst
  * @category Array
- * @mapping lodash dropRightWhile
- * @mapping ramda dropLastWhile
+ * @similarTo lodash dropRightWhile
+ * @similarTo ramda dropLastWhile
  */
 export function dropLastWhile<T>(
   data: ReadonlyArray<T>,
@@ -33,8 +33,8 @@ export function dropLastWhile<T>(
  *    R.pipe([1, 2, 10, 3, 4], R.dropLastWhile(x => x < 10))  // => [1, 2, 10]
  * @dataLast
  * @category Array
- * @mapping lodash dropRightWhile
- * @mapping ramda dropLastWhile
+ * @similarTo lodash dropRightWhile
+ * @similarTo ramda dropLastWhile
  */
 export function dropLastWhile<T>(
   predicate: (item: T) => boolean,

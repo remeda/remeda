@@ -7,8 +7,8 @@
  *    R.pipe({foo: 'bar'}, R.prop('foo')) // => 'bar'
  * @dataLast
  * @category Object
- * @mapping lodash get
- * @mapping ramda prop
+ * @similarTo lodash get
+ * @similarTo ramda prop
  */
 export const prop =
   <T, K extends keyof T = keyof T>(propName: K) =>

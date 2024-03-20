@@ -24,8 +24,8 @@ import type { Merge } from "./type-fest/merge";
  *    R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
- * @mapping lodash assign
- * @mapping ramda merge
+ * @similarTo lodash assign
+ * @similarTo ramda merge
  */
 export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
 
@@ -52,8 +52,8 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  *    ); // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object
- * @mapping lodash assign
- * @mapping ramda merge
+ * @similarTo lodash assign
+ * @similarTo ramda merge
  */
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 

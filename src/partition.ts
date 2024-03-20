@@ -14,8 +14,8 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
  * @dataFirst
  * @indexed
  * @category Array
- * @mapping lodash partition
- * @mapping ramda partition
+ * @similarTo lodash partition
+ * @similarTo ramda partition
  */
 export function partition<T, S extends T>(
   items: ReadonlyArray<T>,
@@ -35,8 +35,8 @@ export function partition<T, S extends T>(
  * @dataFirst
  * @indexed
  * @category Array
- * @mapping lodash partition
- * @mapping ramda partition
+ * @similarTo lodash partition
+ * @similarTo ramda partition
  */
 export function partition<T>(
   items: ReadonlyArray<T>,
@@ -55,8 +55,8 @@ export function partition<T>(
  * @dataLast
  * @indexed
  * @category Array
- * @mapping lodash partition
- * @mapping ramda partition
+ * @similarTo lodash partition
+ * @similarTo ramda partition
  */
 export function partition<T, S extends T>(
   predicate: (item: T) => item is S,
@@ -74,8 +74,8 @@ export function partition<T, S extends T>(
  * @dataLast
  * @indexed
  * @category Array
- * @mapping lodash partition
- * @mapping ramda partition
+ * @similarTo lodash partition
+ * @similarTo ramda partition
  */
 export function partition<T>(
   predicate: (item: T) => boolean,

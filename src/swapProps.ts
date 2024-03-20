@@ -17,7 +17,7 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
  * @dataFirst
  * @category Object
- * @mapping ramda swap
+ * @similarTo ramda swap
  */
 export function swapProps<
   T extends object,
@@ -37,7 +37,7 @@ export function swapProps<
  *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
  * @dataLast
  * @category Object
- * @mapping ramda swap
+ * @similarTo ramda swap
  */
 export function swapProps<
   T extends object,

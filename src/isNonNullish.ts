@@ -13,7 +13,7 @@
  *    R.isNonNullish(undefined) //=> false
  * @strict
  * @category Guard
- * @mapping ramda isNotNil
+ * @similarTo ramda isNotNil
  */
 export function isNonNullish<T>(data: T): data is NonNullable<T> {
   return data !== undefined && data !== null;

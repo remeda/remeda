@@ -22,8 +22,8 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @dataFirst
  * @pipeable
  * @category Array
- * @mapping lodash differenceWith
- * @mapping ramda differenceWith
+ * @similarTo lodash differenceWith
+ * @similarTo ramda differenceWith
  */
 export function differenceWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
@@ -52,8 +52,8 @@ export function differenceWith<TFirst, TSecond>(
  * @dataLast
  * @pipeable
  * @category Array
- * @mapping lodash differenceWith
- * @mapping ramda differenceWith
+ * @similarTo lodash differenceWith
+ * @similarTo ramda differenceWith
  */
 export function differenceWith<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,

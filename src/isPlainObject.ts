@@ -24,7 +24,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isPlainObject('somethingElse') //=> false
  *    R.isPlainObject(null) //=> false
  * @category Guard
- * @mapping lodash isPlainObject
+ * @similarTo lodash isPlainObject
  */
 export function isPlainObject<T>(
   data: Readonly<Record<PropertyKey, unknown>> | T,

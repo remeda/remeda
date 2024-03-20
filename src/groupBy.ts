@@ -18,8 +18,8 @@ import type { NonEmptyArray, PredIndexedOptional, PredIndexed } from "./_types";
  * @indexed
  * @strict
  * @category Array
- * @mapping lodash groupBy
- * @mapping ramda groupBy
+ * @similarTo lodash groupBy
+ * @similarTo ramda groupBy
  */
 export function groupBy<T>(
   items: ReadonlyArray<T>,
@@ -40,8 +40,8 @@ export function groupBy<T>(
  * @dataLast
  * @indexed
  * @category Array
- * @mapping lodash groupBy
- * @mapping ramda groupBy
+ * @similarTo lodash groupBy
+ * @similarTo ramda groupBy
  */
 export function groupBy(): unknown {
   return purry(_groupBy(false), arguments);

@@ -14,8 +14,8 @@ import { purry } from "./purry";
  *    R.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
  * @dataFirst
  * @category Object
- * @mapping lodash set
- * @mapping ramda assocPath
+ * @similarTo lodash set
+ * @similarTo ramda assocPath
  */
 export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
   object: T,
@@ -34,8 +34,8 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  *    R.pipe({ a: { b: 1 } }, R.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
  * @dataLast
  * @category Object
- * @mapping lodash set
- * @mapping ramda assocPath
+ * @similarTo lodash set
+ * @similarTo ramda assocPath
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(
   path: Narrow<TPath>,

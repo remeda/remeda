@@ -13,8 +13,8 @@ import { purry } from "./purry";
  *   R.sum([]); // => 0
  * @dataFirst
  * @category Number
- * @mapping lodash sum
- * @mapping ramda sum
+ * @similarTo lodash sum
+ * @similarTo ramda sum
  */
 export function sum(data: ReadonlyArray<number>): number;
 
@@ -28,8 +28,8 @@ export function sum(data: ReadonlyArray<number>): number;
  *   R.pipe([], R.sum()); // => 0
  * @dataLast
  * @category Number
- * @mapping lodash sum
- * @mapping ramda sum
+ * @similarTo lodash sum
+ * @similarTo ramda sum
  */
 export function sum(): (data: ReadonlyArray<number>) => number;
 
