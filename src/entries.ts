@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/ban-types --
+ * We want to match the typing of the built-in Object.entries as much as
+ * possible!
+ */
+
 import { purry } from "./purry";
 import type { Simplify } from "./type-fest/simplify";
 
-type Entries<T> = Array<
-  { [K in keyof T]-?: [key: K, value: Required<T>[K]] }[keyof T]
->;
+export type EntryForKey<T, K extends keyof T> = [key: K, value: Required<T>[K]];
+
+type EntryOf<T> = Simplify<{ [K in keyof T]-?: EntryForKey<T, K> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
- * @param object - Object to return keys and values of.
+ * @param data - Object to return keys and values of.
  * @signature
  *    R.entries(object)
  * @example
@@ -16,9 +21,7 @@ type Entries<T> = Array<
  * @dataFirst
  * @category Object
  */
-export function entries<T extends NonNullable<unknown>>(
-  object: T,
-): Simplify<Entries<T>>;
+export function entries<T extends {}>(data: T): Array<EntryOf<T>>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -33,9 +36,7 @@ export function entries<T extends NonNullable<unknown>>(
  * @dataLast
  * @category Object
  */
-export function entries(): <T extends NonNullable<unknown>>(
-  object: T,
-) => Simplify<Entries<T>>;
+export function entries(): <T extends {}>(data: T) => Array<EntryOf<T>>;
 
 export function entries(): unknown {
   return purry(Object.entries, arguments);
