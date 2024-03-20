@@ -88,7 +88,7 @@ type ValueForKey<
  * @signature
  *   R.fromEntries(tuples)
  * @example
- *   R.fromEntries(['a', 1] as const) // => {a: 1} (type: {a: 1})
+ *   R.fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
  * @dataFirst
  * @category Object
  */
@@ -105,9 +105,9 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  *   R.fromEntries()(tuples)
  * @example
  *   R.pipe(
- *     ['a', 1] as const,
+ *     [['a', 'b'], ['c', 'd']] as const,
  *     R.fromEntries(),
- *   ); // => {a: 1} (type: {a: 1})
+ *   ); // => {a: 'b', c: 'd'}
  * @dataLast
  * @category Object
  */
