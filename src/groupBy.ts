@@ -1,25 +1,10 @@
+import type {
+  ExactRecord,
+  NonEmptyArray,
+  PredIndexed,
+  PredIndexedOptional,
+} from "./_types";
 import { purry } from "./purry";
-import type { NonEmptyArray, PredIndexedOptional, PredIndexed } from "./_types";
-
-// Records keyed with generic `string` and `number` have different semantics
-// to those with a a union of literal values (e.g. 'cat' | 'dog') when using
-// 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
-// the latter are implicitly `Required`. Because groupBy returns a partial
-// record by definition, we need to make sure the result is properly partial
-// when using it with a refined key.
-type Grouped<Value, Key extends PropertyKey = PropertyKey> =
-  // If either string, number or symbol extend Key it means that Key is at least
-  // as wide as them, so we don't need to wrap the returned record with Partial.
-  string extends Key
-    ? Record<Key, NonEmptyArray<Value>>
-    : number extends Key
-      ? Record<Key, NonEmptyArray<Value>>
-      : symbol extends Key
-        ? Record<Key, NonEmptyArray<Value>>
-        : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-          // because we can't statically know what values the mapper would return on
-          // a specific input
-          Partial<Record<Key, NonEmptyArray<Value>>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value
@@ -40,7 +25,7 @@ type Grouped<Value, Key extends PropertyKey = PropertyKey> =
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   items: ReadonlyArray<T>,
   fn: (item: T) => Key | undefined,
-): Grouped<T, Key>;
+): ExactRecord<Key, NonEmptyArray<T>>;
 
 /**
  * Splits a collection into sets, grouped by the result of running each value
@@ -65,7 +50,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   fn: (item: T) => Key | undefined,
-): (items: ReadonlyArray<T>) => Grouped<T, Key>;
+): (items: ReadonlyArray<T>) => ExactRecord<Key, NonEmptyArray<T>>;
 
 export function groupBy(): unknown {
   return purry(_groupBy(false), arguments);
@@ -99,14 +84,14 @@ const _groupBy =
   };
 
 export namespace groupBy {
-  export function indexed<Value, Key extends PropertyKey = PropertyKey>(
-    items: ReadonlyArray<Value>,
-    fn: PredIndexed<Value, Key | undefined>,
-  ): Grouped<Value, Key>;
+  export function indexed<T, Key extends PropertyKey = PropertyKey>(
+    items: ReadonlyArray<T>,
+    fn: PredIndexed<T, Key | undefined>,
+  ): ExactRecord<Key, NonEmptyArray<T>>;
 
   export function indexed<Value, Key extends PropertyKey = PropertyKey>(
     fn: PredIndexed<Value, Key | undefined>,
-  ): (items: ReadonlyArray<Value>) => Grouped<Value, Key>;
+  ): (items: ReadonlyArray<Value>) => ExactRecord<Key, NonEmptyArray<Value>>;
 
   export function indexed(): unknown {
     return purry(_groupBy(true), arguments);

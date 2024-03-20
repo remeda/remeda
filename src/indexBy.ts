@@ -1,11 +1,12 @@
+import type { ExactRecord } from "./_types";
 import { purry } from "./purry";
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
  * key.
  *
- * @param array - The array.
- * @param fn - The indexing function.
+ * @param data - The array.
+ * @param mapper - The indexing function.
  * @signature
  *    R.indexBy(array, fn)
  * @example
@@ -13,16 +14,16 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function indexBy<K extends PropertyKey, T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => K,
-): Partial<Record<K, T>>;
+export function indexBy<T, K extends PropertyKey>(
+  data: ReadonlyArray<T>,
+  mapper: (item: T) => K,
+): ExactRecord<K, T>;
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
  * key.
  *
- * @param fn - The indexing function.
+ * @param mapper - The indexing function.
  * @signature
  *    R.indexBy(fn)(array)
  * @example
@@ -33,24 +34,24 @@ export function indexBy<K extends PropertyKey, T>(
  * @dataLast
  * @category Array
  */
-export function indexBy<K extends PropertyKey, T>(
-  fn: (item: T) => K,
-): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
+export function indexBy<T, K extends PropertyKey>(
+  mapper: (item: T) => K,
+): (data: ReadonlyArray<T>) => ExactRecord<K, T>;
 
 export function indexBy(): unknown {
   return purry(indexByImplementation, arguments);
 }
 
-function indexByImplementation<K extends PropertyKey, T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => K,
-): Partial<Record<K, T>> {
+function indexByImplementation<T, K extends PropertyKey>(
+  data: ReadonlyArray<T>,
+  mapper: (item: T) => K,
+): ExactRecord<K, T> {
   const out: Partial<Record<K, T>> = {};
 
-  for (const item of array) {
-    const key = fn(item);
+  for (const item of data) {
+    const key = mapper(item);
     out[key] = item;
   }
 
-  return out;
+  return out as ExactRecord<K, T>;
 }
