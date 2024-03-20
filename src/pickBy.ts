@@ -45,7 +45,7 @@ function _pickBy<T>(
 
   const out: Partial<T> = {};
 
-  for (const key of keys.strict(data)) {
+  for (const key of keys(data)) {
     if (fn(data[key], key)) {
       out[key] = data[key];
     }

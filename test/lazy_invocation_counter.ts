@@ -5,7 +5,7 @@ export const createLazyInvocationCounter = () => {
   return {
     count,
     fn: <T>() =>
-      map<T, T>((x) => {
+      map<ReadonlyArray<T>, T>((x) => {
         count();
         return x;
       }),

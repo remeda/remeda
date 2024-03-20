@@ -83,3 +83,26 @@ export type CompareFunction<T> = (a: T, b: T) => number;
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
  */
 export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;
+
+// Records keyed with generic `string` and `number` have different semantics
+// to those with a a union of literal values (e.g. 'cat' | 'dog') when using
+// 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
+// the latter are implicitly `Required`.
+// TODO: Support template string literals (e.g. `prefix_${number}`)
+export type ExactRecord<Key extends PropertyKey, Value> =
+  // If either string, number or symbol extend Key it means that Key is at least
+  // as wide as them, so we don't need to wrap the returned record with Partial.
+  string extends Key
+    ? Record<Key, Value>
+    : number extends Key
+      ? Record<Key, Value>
+      : symbol extends Key
+        ? Record<Key, Value>
+        : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+          // because we can't statically know what values the mapper would return on
+          // a specific input
+          Partial<Record<Key, Value>>;
+
+export type ReorderedArray<T extends IterableContainer> = {
+  -readonly [P in keyof T]: T[number];
+};

@@ -3,7 +3,7 @@ import { sort } from "./sort";
 
 describe("data_first", () => {
   test("sort", () => {
-    expect(sort([4, 2, 7, 5] as const, (a, b) => a - b)).toEqual([2, 4, 5, 7]);
+    expect(sort([4, 2, 7, 5], (a, b) => a - b)).toEqual([2, 4, 5, 7]);
   });
 });
 
@@ -11,77 +11,75 @@ describe("data_last", () => {
   test("sort", () => {
     expect(
       pipe(
-        [4, 2, 7, 5] as const,
+        [4, 2, 7, 5],
         sort((a, b) => a - b),
       ),
     ).toEqual([2, 4, 5, 7]);
   });
 });
 
-describe("strict", () => {
+describe("typing", () => {
   it("on empty tuple", () => {
-    const array: [] = [];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([] as [], (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on empty readonly tuple", () => {
-    const array: readonly [] = [];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([] as const, (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on array", () => {
-    const array: Array<number> = [];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([] as Array<number>, (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on readonly array", () => {
-    const array: ReadonlyArray<number> = [];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([] as ReadonlyArray<number>, (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on tuple", () => {
-    const array: [1, 2, 3] = [1, 2, 3];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([1, 2, 3] as [1, 2, 3], (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on readonly tuple", () => {
-    const array: readonly [1, 2, 3] = [1, 2, 3];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([1, 2, 3] as const, (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on tuple with rest tail", () => {
-    const array: [number, ...Array<number>] = [1];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([1] as [number, ...Array<number>], (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   it("on readonly tuple with rest tail", () => {
-    const array: readonly [number, ...Array<number>] = [1];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort(
+      [1] as readonly [number, ...Array<number>],
+      (a, b) => a - b,
+    );
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   it("on tuple with rest head", () => {
-    const array: [...Array<number>, number] = [1];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort([1] as [...Array<number>, number], (a, b) => a - b);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   it("on readonly tuple with rest head", () => {
-    const array: readonly [...Array<number>, number] = [1];
-    const result = sort.strict(array, (a, b) => a - b);
+    const result = sort(
+      [1] as readonly [...Array<number>, number],
+      (a, b) => a - b,
+    );
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   it("on mixed types tuple", () => {
-    const array: [number, string, boolean] = [1, "hello", true];
-    const result = sort.strict(array, () => 1);
+    const result = sort(
+      [1, "hello", true] as [number, string, boolean],
+      () => 1,
+    );
     expectTypeOf(result).toEqualTypeOf<
       [
         boolean | number | string,

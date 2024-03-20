@@ -90,7 +90,7 @@ describe("pipe", () => {
   });
 });
 
-describe("strict typing", () => {
+describe("typing", () => {
   test("simple empty array", () => {
     const arr: Array<number> = [];
     const result = first(arr);

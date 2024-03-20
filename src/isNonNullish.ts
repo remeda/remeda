@@ -11,7 +11,6 @@
  *    R.isNonNullish('string') //=> true
  *    R.isNonNullish(null) //=> false
  *    R.isNonNullish(undefined) //=> false
- * @strict
  * @category Guard
  */
 export function isNonNullish<T>(data: T): data is NonNullable<T> {

@@ -1,63 +1,63 @@
 import { indexBy } from "./indexBy";
 import { pipe } from "./pipe";
+import { prop } from "./prop";
 
-const array = [
-  { dir: "left", code: 97 },
-  { dir: "right", code: 100 },
-] as const;
-const expected = {
-  "97": { dir: "left", code: 97 },
-  "100": { dir: "right", code: 100 },
-};
-const expectedStrict = {
-  97: { dir: "left", code: 97 },
-  100: { dir: "right", code: 100 },
-};
-type ExpectedTypeStrict = Partial<
-  Record<97 | 100, { dir: "left" | "right"; code: 97 | 100 }>
->;
-
-describe("data first", () => {
-  test("indexBy", () => {
-    expect(indexBy(array, (x) => x.code)).toEqual(expected);
+describe("runtime", () => {
+  test("dataFirst", () => {
+    expect(
+      indexBy(
+        [
+          { dir: "left", code: 97 },
+          { dir: "right", code: 100 },
+        ],
+        prop("code"),
+      ),
+    ).toStrictEqual({
+      97: { dir: "left", code: 97 },
+      100: { dir: "right", code: 100 },
+    });
   });
 
-  test("indexBy.indexed", () => {
-    expect(indexBy.indexed(array, (x) => x.code)).toEqual(expected);
-  });
-
-  test("indexBy.strict", () => {
-    const result = indexBy.strict(array, (x) => x.code);
-    expectTypeOf<ExpectedTypeStrict>(result);
-    expect(result).toStrictEqual(expectedStrict);
+  test("dataLast", () => {
+    expect(
+      pipe(
+        [
+          { dir: "left", code: 97 },
+          { dir: "right", code: 100 },
+        ],
+        indexBy(prop("code")),
+      ),
+    ).toStrictEqual({
+      97: { dir: "left", code: 97 },
+      100: { dir: "right", code: 100 },
+    });
   });
 });
 
-describe("data last", () => {
-  test("indexBy", () => {
-    expect(
-      pipe(
-        array,
-        indexBy((x) => x.code),
-      ),
-    ).toEqual(expected);
-  });
-
-  test("indexBy.indexed", () => {
-    expect(
-      pipe(
-        array,
-        indexBy.indexed((x) => x.code),
-      ),
-    ).toEqual(expected);
-  });
-
-  test("indexBy.strict", () => {
-    const result = pipe(
-      array,
-      indexBy.strict((x) => x.code),
+describe("typing", () => {
+  test("dataFirst", () => {
+    const result = indexBy(
+      [
+        { dir: "left", code: 97 },
+        { dir: "right", code: 100 },
+      ],
+      prop("code"),
     );
-    expectTypeOf<ExpectedTypeStrict>(result);
-    expect(result).toEqual(expectedStrict);
+    expectTypeOf<
+      Partial<Record<97 | 100, { dir: "left" | "right"; code: 97 | 100 }>>
+    >(result);
+  });
+
+  test("dataLast", () => {
+    const result = pipe(
+      [
+        { dir: "left", code: 97 },
+        { dir: "right", code: 100 },
+      ],
+      indexBy(prop("code")),
+    );
+    expectTypeOf<
+      Partial<Record<97 | 100, { dir: "left" | "right"; code: 97 | 100 }>>
+    >(result);
   });
 });

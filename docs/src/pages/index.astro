@@ -183,27 +183,6 @@ R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
       `
         />
       </section>
-
-      <section>
-        <Typography.H2>Strict version</Typography.H2>
-
-        <Typography.P>
-          Some functions have an extra property <code>strict</code> which is the
-          same function with stricter types.
-        </Typography.P>
-
-        <CodeBlock
-          code=`
-const input = { a: 'x', b: 'y', c: 'z' } as const;
-
-const result = R.keys(input);
-//    ^?: Array<string>
-
-const resultStrict = R.keys.strict(input);
-//    ^?: Array<'a' | 'b' | 'c'>
-      `
-        />
-      </section>
     </div>
   </main>
 </Layout>

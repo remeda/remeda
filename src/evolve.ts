@@ -142,7 +142,7 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
 
   const out: Record<string, unknown> = { ...data };
 
-  for (const [key, value] of entries.strict(evolver)) {
+  for (const [key, value] of entries(evolver)) {
     if (key in out) {
       out[key] =
         typeof value === "function"

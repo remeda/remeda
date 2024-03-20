@@ -3,7 +3,6 @@ import { _toLazyIndexed } from "./_toLazyIndexed";
 import type {
   IterableContainer,
   Mapped,
-  Pred,
   PredIndexed,
   PredIndexedOptional,
 } from "./_types";
@@ -11,48 +10,56 @@ import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Map each element of an array using a defined callback function. If the input
- * array is a tuple use the `strict` variant to maintain it's shape.
+ * Creates a new array populated with the results of calling `mapper` on every
+ * element in the calling array.
  *
- * @param array - The array to map.
- * @param fn - The function mapper.
- * @returns The new mapped array.
+ * @param data - The array to map.
+ * @param mapper - A function to execute for each element in the array. Its
+ * return value is added as a single element in the new array.
+ * @returns A new array with each element being the result of the callback
+ * function.
  * @signature
- *    R.map(array, fn)
- *    R.map.indexed(array, fn)
- *    R.map.strict(array, fn)
- *    R.map.strict.indexed(array, fn)
+ *    R.map(array, mapper)
+ *    R.map.indexed(array, mapper)
  * @example
- *    R.map([1, 2, 3], x => x * 2) // => [2, 4, 6], typed number[]
- *    R.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
- *    R.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
- *    R.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
+ *    R.map([1, 2, 3], R.multiply(2)); // => [2, 4, 6]
+ *    R.map([0, 0], R.add(1)); // => [1, 1]
+ *    R.map.indexed([0, 0, 0], (_, i) => i); // => [0, 1, 2]
+ *    R.map.indexed([0, 0], (x, i) => x + i); // => [0, 1]
  * @dataFirst
  * @indexed
  * @pipeable
- * @strict
  * @category Array
  */
-export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
+export function map<T extends IterableContainer, K>(
+  data: T,
+  mapper: (item: T[number]) => K,
+): Mapped<T, K>;
 
 /**
- * Map each value of an object using a defined callback function.
+ * Creates a new array populated with the results of calling `mapper` on every
+ * element in the calling array.
  *
- * @param fn - The function mapper.
+ * @param mapper - A function to execute for each element in the array. Its
+ * return value is added as a single element in the new array.
+ * @returns A new array with each element being the result of the callback
+ * function.
  * @signature
- *    R.map(fn)(array)
- *    R.map.indexed(fn)(array)
+ *    R.map(mapper)(array)
+ *    R.map.indexed(mapper)(array)
  * @example
- *    R.pipe([0, 1, 2], R.map(x => x * 2)) // => [0, 2, 4]
- *    R.pipe([0, 0, 0], R.map.indexed((x, i) => i)) // => [0, 1, 2]
+ *    R.pipe([1, 2, 3], R.map(R.multiply(2))); // => [2, 4, 6]
+ *    R.pipe([0, 0], R.map(R.add(1))); // => [1, 1]
+ *    R.pipe([0, 0, 0], R.map.indexed((_, i) => i)); // => [0, 1, 2]
+ *    R.pipe([0, 0], R.map.indexed((x, i) => x + i)); // => [0, 1]
  * @dataLast
  * @indexed
  * @pipeable
  * @category Array
  */
-export function map<T, K>(
-  fn: Pred<T, K>,
-): (array: ReadonlyArray<T>) => Array<K>;
+export function map<T extends IterableContainer, K>(
+  mapper: (item: T[number]) => K,
+): (items: T) => Mapped<T, K>;
 
 export function map(): unknown {
   return purry(_map(false), arguments, map.lazy);
@@ -60,56 +67,36 @@ export function map(): unknown {
 
 const _map =
   (indexed: boolean) =>
-  <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    _reduceLazy(array, indexed ? map.lazyIndexed(fn) : map.lazy(fn), indexed);
+  <T, K>(array: ReadonlyArray<T>, mapper: PredIndexedOptional<T, K>) =>
+    _reduceLazy(
+      array,
+      indexed ? map.lazyIndexed(mapper) : map.lazy(mapper),
+      indexed,
+    );
 
 const _lazy =
   (indexed: boolean) =>
-  <T, K>(fn: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
+  <T, K>(mapper: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
   (value, index, array) => ({
     done: false,
     hasNext: true,
-    next: indexed ? fn(value, index, array) : fn(value),
+    next: indexed ? mapper(value, index, array) : mapper(value),
   });
 
-// Redefining the map API with a stricter return type. This API is accessed via
-// `map.strict`
-type Strict = {
-  <T extends IterableContainer, K>(
+export namespace map {
+  export function indexed<T extends IterableContainer, K>(
     items: T,
-    mapper: Pred<T[number], K>,
+    mapper: PredIndexed<T[number], K>,
   ): Mapped<T, K>;
 
-  <T extends IterableContainer, K>(
-    mapper: Pred<T[number], K>,
+  export function indexed<T extends IterableContainer, K>(
+    mapper: PredIndexed<T[number], K>,
   ): (items: T) => Mapped<T, K>;
 
-  readonly indexed: {
-    <T extends IterableContainer, K>(
-      items: T,
-      mapper: PredIndexed<T[number], K>,
-    ): Mapped<T, K>;
-
-    <T extends IterableContainer, K>(
-      mapper: PredIndexed<T[number], K>,
-    ): (items: T) => Mapped<T, K>;
-  };
-};
-
-export namespace map {
-  export function indexed<T, K>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, K>,
-  ): Array<K>;
-  export function indexed<T, K>(
-    fn: PredIndexed<T, K>,
-  ): (array: ReadonlyArray<T>) => Array<K>;
   export function indexed(): unknown {
     return purry(_map(true), arguments, map.lazyIndexed);
   }
 
   export const lazy = _lazy(false);
   export const lazyIndexed = _toLazyIndexed(_lazy(true));
-
-  export const strict: Strict = map;
 }

@@ -45,7 +45,7 @@ function _omitBy<T>(
 
   const out: Partial<T> = {};
 
-  for (const key of keys.strict(object)) {
+  for (const key of keys(object)) {
     if (!fn(object[key], key)) {
       out[key] = object[key];
     }

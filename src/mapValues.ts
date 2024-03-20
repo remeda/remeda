@@ -2,11 +2,13 @@ import type { ObjectKeys } from "./_types";
 import { entries } from "./entries";
 import { purry } from "./purry";
 
+type MappedValues<T, S> = { -readonly [P in keyof T]: S };
+
 /**
  * Maps values of `object` and keeps the same keys.
  *
  * @param data - The object to map.
- * @param fn - The mapping function.
+ * @param valueMapper - The mapping function.
  * @signature
  *    R.mapValues(object, fn)
  * @example
@@ -14,15 +16,15 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, unknown>, S>(
+export function mapValues<T extends object, S>(
   data: T,
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
-): Record<ObjectKeys<T>, S>;
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+): MappedValues<T, S>;
 
 /**
  * Maps values of `object` and keeps the same keys.
  *
- * @param fn - The mapping function.
+ * @param valueMapper - The mapping function.
  * @signature
  *    R.mapValues(fn)(object)
  * @example
@@ -30,25 +32,25 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
  * @dataLast
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, unknown>, S>(
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
-): (data: T) => Record<ObjectKeys<T>, S>;
+export function mapValues<T extends object, S>(
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+): (data: T) => MappedValues<T, S>;
 
 export function mapValues(): unknown {
-  return purry(_mapValues, arguments);
+  return purry(mapValuesImplementation, arguments);
 }
 
-function _mapValues<T extends Record<PropertyKey, unknown>, S>(
+function mapValuesImplementation<T extends object, S>(
   data: T,
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
-): Record<ObjectKeys<T>, S> {
-  const out: Partial<Record<ObjectKeys<T>, S>> = {};
-  for (const [key, value] of entries.strict(data)) {
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+): MappedValues<T, S> {
+  const out: Partial<MappedValues<T, S>> = {};
+
+  for (const [key, value] of entries(data)) {
     // @ts-expect-error [ts2345] - FIXME!
-    const mappedValue = fn(value, key);
-    // @ts-expect-error [ts2536] - FIXME!
+    const mappedValue = valueMapper(value, key);
     out[key] = mappedValue;
   }
-  // @ts-expect-error [ts2322] - We build the object incrementally so the type can't represent the final object.
-  return out;
+
+  return out as MappedValues<T, S>;
 }

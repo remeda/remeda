@@ -1,59 +1,40 @@
+/* eslint-disable @typescript-eslint/ban-types --
+ * We want to match the typing of the built-in Object.entries as much as
+ * possible!
+ */
+
 import { purry } from "./purry";
+import type { Simplify } from "./type-fest/simplify";
+
+type EntryForKey<T, Key extends keyof T> = [key: Key, value: Required<T>[Key]];
+
+type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
- * @param object - Object to return keys and values of.
+ * @param data - Object to return keys and values of.
  * @signature
  *    R.entries(object)
- *    R.entries.strict(object)
  * @example
- *    R.entries({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
- *    R.entries.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    R.entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
- * @strict
  * @category Object
  */
-export function entries<T>(
-  object: Readonly<Record<string, T>>,
-): Array<[string, T]>;
+export function entries<T extends {}>(data: T): Array<Entry<T>>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
  * @signature
  *    R.entries()(object)
- *    R.entries.strict()(object)
  * @example
- *    R.pipe(
- *      { a: 1, b: 2, c: 3 },
- *      entries(),
- *    ); // => [['a', 1], ['b', 2], ['c', 3]]
- *    R.pipe(
- *      { a: 1 } as const,
- *      entries.strict(),
- *    ); // => [['a', 1]] typed Array<['a', 1]>
+ *    R.pipe({ a: 1, b: 2, c: 3 }, R.entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast
- * @strict
  * @category Object
  */
-export function entries(): <T>(
-  object: Readonly<Record<string, T>>,
-) => Array<[string, T]>;
+export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
 export function entries(): unknown {
   return purry(Object.entries, arguments);
-}
-
-type Entries<T> = Array<
-  { [K in keyof T]-?: [key: K, value: Required<T>[K]] }[keyof T]
->;
-
-type Strict = {
-  <T extends NonNullable<unknown>>(object: T): Entries<T>;
-  (): <T extends NonNullable<unknown>>(object: T) => Entries<T>;
-};
-
-export namespace entries {
-  export const strict = entries as Strict;
 }

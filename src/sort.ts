@@ -1,80 +1,53 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer, ReorderedArray } from "./_types";
 import { purry } from "./purry";
 
 /**
- * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
- *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
+ * Sorts an array. The comparator function should accept two values at a time
+ * and return a negative number if the first value is smaller, a positive number
+ * if it's larger, and zero if they are equal. Sorting is based on a native
+ * `sort` function.
  *
  * @param items - The array to sort.
  * @param cmp - The comparator function.
  * @signature
  *    R.sort(items, cmp)
- *    R.sort.strict(items, cmp)
  * @example
- *    R.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
- *    R.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
+ *    R.sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
- * @strict
  * @category Array
  */
-export function sort<T>(
-  items: ReadonlyArray<T>,
-  cmp: (a: T, b: T) => number,
-): Array<T>;
+export function sort<T extends IterableContainer>(
+  items: T,
+  cmp: (a: T[number], b: T[number]) => number,
+): ReorderedArray<T>;
 
 /**
- * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
- *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
+ * Sorts an array. The comparator function should accept two values at a time
+ * and return a negative number if the first value is smaller, a positive number
+ * if it's larger, and zero if they are equal. Sorting is based on a native
+ * `sort` function.
  *
  * @param cmp - The comparator function.
  * @signature
  *    R.sort(cmp)(items)
- *    R.sort.strict(cmp)(items)
  * @example
- *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
- *    R.pipe([4, 2] as [number, number], R.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
+ *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
- * @strict
  * @category Array
  */
-export function sort<T>(
-  cmp: (a: T, b: T) => number,
-): (items: ReadonlyArray<T>) => Array<T>;
+export function sort<T extends IterableContainer>(
+  cmp: (a: T[number], b: T[number]) => number,
+): (items: T) => ReorderedArray<T>;
 
 export function sort(): unknown {
-  return purry(_sort, arguments);
+  return purry(sortImplementation, arguments);
 }
 
-function _sort<T>(
-  items: ReadonlyArray<T>,
-  cmp: (a: T, b: T) => number,
-): Array<T> {
+function sortImplementation<T extends IterableContainer>(
+  items: T,
+  cmp: (a: T[number], b: T[number]) => number,
+): ReorderedArray<T> {
   const ret = items.slice();
   ret.sort(cmp);
-  return ret;
-}
-
-type Strict = {
-  <T extends IterableContainer>(
-    items: T,
-    cmp: (a: T[number], b: T[number]) => number,
-  ): Sorted<T>;
-
-  <T extends IterableContainer>(
-    cmp: (a: T[number], b: T[number]) => number,
-  ): (items: T) => Sorted<T>;
-};
-
-type Sorted<T extends IterableContainer> = {
-  -readonly [P in keyof T]: T[number];
-};
-
-export namespace sort {
-  export const strict: Strict = sort;
+  return ret as ReorderedArray<T>;
 }

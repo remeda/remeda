@@ -1,15 +1,11 @@
+import { constant } from "./constant";
 import { identity } from "./identity";
+import { map } from "./map";
 import { pipe } from "./pipe";
+import { prop } from "./prop";
 import { sortBy } from "./sortBy";
 
-const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
-const sorted = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }];
-
-function assertType<T>(data: T): T {
-  return data;
-}
-
-const objects = [
+const DATA = [
   { id: 1, color: "red", weight: 2, active: true, date: new Date(2021, 1, 1) },
   {
     id: 2,
@@ -36,197 +32,192 @@ const objects = [
 
 describe("data first", () => {
   test("sort correctly", () => {
-    expect(sortBy(items, (x) => x.a)).toEqual(sorted);
+    expect(sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], prop("a"))).toEqual(
+      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }],
+    );
   });
+
   test("sort booleans correctly", () => {
-    expect(
-      sortBy(objects, [(x) => x.active, "desc"]).map((x) => x.active),
-    ).toEqual([true, true, false, false]);
+    expect(sortBy(DATA, [prop("active"), "desc"]).map(prop("active"))).toEqual([
+      true,
+      true,
+      false,
+      false,
+    ]);
   });
+
   test("sort dates correctly", () => {
-    expect(sortBy(objects, [(x) => x.date, "desc"]).map((x) => x.id)).toEqual([
+    expect(sortBy(DATA, [prop("date"), "desc"]).map(prop("id"))).toEqual([
       4, 3, 2, 1,
     ]);
   });
+
   test("sort objects correctly", () => {
     expect(
-      sortBy(
-        objects,
-        (x) => x.weight,
-        (x) => x.color,
-      ).map((x) => x.weight),
+      sortBy(DATA, prop("weight"), prop("color")).map(prop("weight")),
     ).toEqual([1, 1, 2, 3]);
-  });
-  test("sort objects correctly mixing sort pair and sort projection", () => {
-    expect(
-      sortBy(objects, (x) => x.weight, [(x) => x.color, "asc"]).map(
-        (x) => x.weight,
-      ),
-    ).toEqual([1, 1, 2, 3]);
-  });
-  test("sort objects descending correctly", () => {
-    expect(
-      sortBy(objects, [(x) => x.weight, "desc"]).map((x) => x.weight),
-    ).toEqual([3, 2, 1, 1]);
   });
 
-  describe("sortBy typings", () => {
-    test("SortProjection", () => {
-      const actual = sortBy(items, (x) => x.a);
-      type T = (typeof items)[number];
-      assertType<Array<T>>(actual);
-    });
-    test("SortPair", () => {
-      const actual = sortBy(objects, [(x) => x.active, "desc"]);
-      type T = (typeof objects)[number];
-      assertType<Array<T>>(actual);
-    });
+  test("sort objects correctly mixing sort pair and sort projection", () => {
+    expect(
+      sortBy(DATA, prop("weight"), [prop("color"), "asc"]).map(prop("weight")),
+    ).toEqual([1, 1, 2, 3]);
+  });
+
+  test("sort objects descending correctly", () => {
+    expect(sortBy(DATA, [prop("weight"), "desc"]).map(prop("weight"))).toEqual([
+      3, 2, 1, 1,
+    ]);
   });
 });
 
 describe("data last", () => {
   test("sort correctly", () => {
     expect(
-      pipe(
-        items,
-        sortBy((x) => x.a),
-      ),
-    ).toEqual(sorted);
-  });
-  test('sort correctly using pipe and "desc"', () => {
-    expect(pipe(items, sortBy([(x) => x.a, "desc"]))).toEqual(
-      [...sorted].reverse(),
-    );
-  });
-  test("sort objects correctly", () => {
-    const sortFn = sortBy<{ weight: number; color: string }>(
-      (x) => x.weight,
-      (x) => x.color,
-    );
-    expect(sortFn(objects).map((x) => x.color)).toEqual([
-      "green",
-      "purple",
-      "red",
-      "blue",
-    ]);
-  });
-  test("sort objects correctly by weight asc then color desc", () => {
-    expect(
-      sortBy<{ weight: number; color: string }>(
-        [(x) => x.weight, "asc"],
-        [(x) => x.color, "desc"],
-      )(objects).map((x) => x.color),
-    ).toEqual(["purple", "green", "red", "blue"]);
+      pipe([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], sortBy(prop("a"))),
+    ).toEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
   });
 
-  describe("sortBy typings", () => {
-    test("SortProjection", () => {
-      const actual = pipe(
-        items,
-        sortBy((x) => x.a),
-      );
-      type T = (typeof items)[number];
-      assertType<Array<T>>(actual);
-    });
-    test("SortPair", () => {
-      const actual = pipe(
-        objects,
-        sortBy([(x) => x.weight, "asc"], [(x) => x.color, "desc"]),
-      );
-      type T = (typeof objects)[number];
-      assertType<Array<T>>(actual);
-    });
+  test('sort correctly using pipe and "desc"', () => {
+    expect(
+      pipe(
+        [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+        sortBy([prop("a"), "desc"]),
+      ),
+    ).toEqual([{ a: 7 }, { a: 3 }, { a: 2 }, { a: 1 }]);
+  });
+
+  test("sort objects correctly", () => {
+    expect(
+      pipe(DATA, sortBy(prop("weight"), prop("color")), map(prop("color"))),
+    ).toEqual(["green", "purple", "red", "blue"]);
+  });
+
+  test("sort objects correctly by weight asc then color desc", () => {
+    expect(
+      pipe(
+        DATA,
+        sortBy([prop("weight"), "asc"], [prop("color"), "desc"]),
+        map(prop("color")),
+      ),
+    ).toEqual(["purple", "green", "red", "blue"]);
   });
 });
 
-describe("strict", () => {
+describe("typing", () => {
+  describe("dataFirst", () => {
+    test("SortProjection", () => {
+      const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
+      const actual = sortBy(items, prop("a"));
+      expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    });
+
+    test("SortPair", () => {
+      const actual = sortBy(DATA, [(x) => x.active, "desc"]);
+      expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();
+    });
+  });
+
+  describe("dataLast", () => {
+    test("SortProjection", () => {
+      const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
+      const actual = pipe(items, sortBy(prop("a")));
+      expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    });
+
+    test("SortPair", () => {
+      const actual = pipe(
+        DATA,
+        sortBy([prop("weight"), "asc"], [prop("color"), "desc"]),
+      );
+      expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();
+    });
+  });
+
   it("on empty tuple", () => {
-    const array: [] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([] as [], identity);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on empty readonly tuple", () => {
-    const array: readonly [] = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([] as const, identity);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on array", () => {
-    const array: Array<number> = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([] as Array<number>, identity);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on readonly array", () => {
-    const array: ReadonlyArray<number> = [];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([] as ReadonlyArray<number>, identity);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on tuple", () => {
-    const array: [1, 2, 3] = [1, 2, 3];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1, 2, 3] as [1, 2, 3], identity);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on readonly tuple", () => {
-    const array: readonly [1, 2, 3] = [1, 2, 3];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1, 2, 3] as const, identity);
     expectTypeOf(result).toEqualTypeOf<[1 | 2 | 3, 1 | 2 | 3, 1 | 2 | 3]>();
   });
 
   it("on tuple with rest tail", () => {
-    const array: [number, ...Array<number>] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1] as [number, ...Array<number>], identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   it("on readonly tuple with rest tail", () => {
-    const array: readonly [number, ...Array<number>] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1] as readonly [number, ...Array<number>], identity);
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
   });
 
   test("on tuple with rest middle", () => {
-    const array: [number, ...Array<number>, number] = [3, 2, 1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(
+      [3, 2, 1] as [number, ...Array<number>, number],
+      identity,
+    );
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
   });
 
   test("on readonly tuple with rest middle", () => {
-    const array: readonly [number, ...Array<number>, number] = [3, 2, 1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(
+      [3, 2, 1] as readonly [number, ...Array<number>, number],
+      identity,
+    );
     expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
   });
 
   it("on tuple with rest head", () => {
-    const array: [...Array<number>, number] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1] as [...Array<number>, number], identity);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   it("on readonly tuple with rest head", () => {
-    const array: readonly [...Array<number>, number] = [1];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy([1] as readonly [...Array<number>, number], identity);
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
   test("on tuple with optional values", () => {
-    const array: [number?, number?, number?] = [];
-    const result = sortBy.strict(array, () => 0);
+    const result = sortBy([] as [number?, number?, number?], constant(0));
     expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
   test("on readonly tuple with optional values", () => {
-    const array: readonly [number?, number?, number?] = [];
-    const result = sortBy.strict(array, () => 0);
+    const result = sortBy(
+      [] as readonly [number?, number?, number?],
+      constant(0),
+    );
     expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
   });
 
   it("on mixed types tuple", () => {
-    const array: [number, string, boolean] = [1, "hello", true];
-    const result = sortBy.strict(array, identity);
+    const result = sortBy(
+      [1, "hello", true] as [number, string, boolean],
+      identity,
+    );
     expectTypeOf(result).toEqualTypeOf<
       [
         boolean | number | string,
