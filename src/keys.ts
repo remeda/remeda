@@ -58,7 +58,8 @@ type ObjectKeys<T> =
  * @signature
  *    R.keys(source)
  * @example
- *    R.keys({ a: 'x', b: 'y', 5: 'z' } as const) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    R.keys(['x', 'y', 'z']); // => ['0', '1', '2']
+ *    R.keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
  * @dataFirst
  * @pipeable
  * @category Object
@@ -71,7 +72,8 @@ export function keys<T extends object>(data: T): Keys<T>;
  * @signature
  *    R.keys()(source)
  * @example
- *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    R.Pipe(['x', 'y', 'z'], keys()); // => ['0', '1', '2']
+ *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys()) // => ['a', 'b', '5']
  * @dataLast
  * @pipeable
  * @category Object
