@@ -25,6 +25,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * @dataFirst
  * @indexed
  * @category Array
+ * @mapping lodash sortedIndexBy
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(
@@ -56,6 +57,7 @@ export function sortedIndexBy<T>(
  * @dataLast
  * @indexed
  * @category Array
+ * @mapping lodash sortedIndexBy
  * @see sortedIndex, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexBy<T>(

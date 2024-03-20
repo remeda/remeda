@@ -12,6 +12,7 @@ import { purry } from "./purry";
  *    R.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
  * @category Array
+ * @mapping ramda splitWhen
  */
 export function splitWhen<T>(
   array: ReadonlyArray<T>,
@@ -28,6 +29,7 @@ export function splitWhen<T>(
  *    R.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast
  * @category Array
+ * @mapping ramda splitWhen
  */
 export function splitWhen<T>(
   fn: (item: T) => boolean,

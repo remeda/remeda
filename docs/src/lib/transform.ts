@@ -39,23 +39,22 @@ function transformFunction(
     return;
   }
 
-  const [
-    {
-      comment: { summary },
-    },
-  ] = signaturesWithComments;
+  const [{ comment }] = signaturesWithComments;
+  const { summary } = comment;
+
   const description =
     summary.length === 0
       ? undefined
       : summary
           .map((part) => transformCommentDisplayPart(part, functionNames))
           .join("");
+  const mapping = getMapping(comment);
 
   const methods = signaturesWithComments.map(transformSignature);
 
   const sourceUrl = sources?.[0]?.url;
 
-  return { id, name, description, methods, sourceUrl };
+  return { id, name, description, mapping, methods, sourceUrl };
 }
 
 function transformCommentDisplayPart(
@@ -68,6 +67,36 @@ function transformCommentDisplayPart(
   const codeContent = text.slice(1, -1);
   // If this is a function name, link to its anchor:
   return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
+}
+
+function getMapping({ blockTags }: JSONOutput.Comment) {
+  const result = new Array<{
+    library: string;
+    name: string;
+    notes: string | undefined;
+  }>();
+
+  if (blockTags === undefined) {
+    return result;
+  }
+
+  const mappingTags = blockTags.filter(({ tag }) => tag === `@mapping`);
+
+  for (const { content } of mappingTags) {
+    const textContent = content.map(({ text }) => text).join("");
+
+    // Matches "<library> <name> [- notes]":
+    const match = textContent.match(/(\w+) (\w+)(?: - (.+))?/);
+    const [, library, name, notes] = match ?? [];
+
+    if (!library || !name) {
+      continue;
+    }
+
+    result.push({ library, name, notes });
+  }
+
+  return result;
 }
 
 function transformSignature({

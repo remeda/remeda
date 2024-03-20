@@ -12,6 +12,8 @@ import { purry } from "./purry";
  *    R.takeLastWhile([1, 2, 10, 3, 4, 5], x => x < 10) // => [3, 4, 5]
  * @dataFirst
  * @category Array
+ * @mapping lodash takeRightWhile
+ * @mapping ramda takeLastWhile
  */
 export function takeLastWhile<T>(
   data: ReadonlyArray<T>,
@@ -29,6 +31,8 @@ export function takeLastWhile<T>(
  *    R.pipe([1, 2, 10, 3, 4, 5], R.takeLastWhile(x => x < 10))  // => [3, 4, 5]
  * @dataLast
  * @category Array
+ * @mapping lodash takeRightWhile
+ * @mapping ramda takeLastWhile
  */
 export function takeLastWhile<T>(
   predicate: (item: T) => boolean,

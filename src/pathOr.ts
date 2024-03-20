@@ -80,6 +80,8 @@ type PathValue3<
  *    R.pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
+ * @mapping lodash get
+ * @mapping ramda pathOr
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   object: T,
@@ -119,6 +121,8 @@ export function pathOr<
  *    R.pipe({y: 10}, R.pathOr(['y'], 2)) // 10
  * @dataLast
  * @category Object
+ * @mapping lodash get
+ * @mapping ramda pathOr
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   path: readonly [A],

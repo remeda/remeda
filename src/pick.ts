@@ -9,6 +9,8 @@ import { purry } from "./purry";
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.pick(['a', 'd'])) // => { a: 1, d: 4 }
  * @dataLast
  * @category Object
+ * @mapping lodash pick
+ * @mapping ramda pick
  */
 export function pick<T extends object, K extends keyof T>(
   names: ReadonlyArray<K>,
@@ -24,6 +26,8 @@ export function pick<T extends object, K extends keyof T>(
  *    R.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
  * @dataFirst
  * @category Object
+ * @mapping lodash pick
+ * @mapping ramda pick
  */
 export function pick<T extends object, K extends keyof T>(
   object: T,

@@ -10,6 +10,7 @@ import { purry } from "./purry";
  * @example
  *    R.objOf(10, 'a') // => { a: 10 }
  * @category Object
+ * @mapping ramda objOf
  */
 export function objOf<T, K extends string>(value: T, key: K): { [x in K]: T };
 
@@ -22,6 +23,7 @@ export function objOf<T, K extends string>(value: T, key: K): { [x in K]: T };
  * @example
  *    R.pipe(10, R.objOf('a')) // => { a: 10 }
  * @category Object
+ * @mapping ramda objOf
  */
 export function objOf<T, K extends string>(
   key: K,

@@ -11,6 +11,8 @@ import { purry } from "./purry";
  *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
  * @dataFirst
  * @category Object
+ * @mapping lodash pickBy
+ * @mapping ramda pickBy
  */
 export function pickBy<T>(
   object: T,
@@ -26,6 +28,8 @@ export function pickBy<T>(
  *    R.pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}
  * @dataLast
  * @category Object
+ * @mapping lodash pickBy
+ * @mapping ramda pickBy
  */
 export function pickBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean,

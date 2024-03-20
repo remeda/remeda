@@ -20,6 +20,8 @@
  *   ); // => [2, 3, 4] or [0, 0, 0]
  * @dataLast
  * @category Function
+ * @mapping lodash constant
+ * @mapping ramda always
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function constant<T>(value: T): (...args: any) => T {

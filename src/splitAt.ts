@@ -12,6 +12,7 @@ import { purry } from "./purry";
  *    R.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
  * @dataFirst
  * @category Array
+ * @mapping ramda splitAt
  */
 export function splitAt<T>(
   array: ReadonlyArray<T>,
@@ -29,6 +30,7 @@ export function splitAt<T>(
  *    R.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
  * @dataLast
  * @category Array
+ * @mapping ramda splitAt
  */
 export function splitAt<T>(
   index: number,

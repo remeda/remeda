@@ -14,6 +14,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @mapping lodash flatMap
+ * @mapping ramda chain
  */
 export function flatMap<T, K>(
   array: ReadonlyArray<T>,
@@ -31,6 +33,8 @@ export function flatMap<T, K>(
  * @dataLast
  * @pipeable
  * @category Array
+ * @mapping lodash flatMap
+ * @mapping ramda chain
  */
 export function flatMap<T, K>(
   fn: (input: T) => K | ReadonlyArray<K>,

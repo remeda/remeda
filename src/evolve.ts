@@ -89,6 +89,7 @@ type Evolved<T, E> = T extends object
  *    // }
  * @dataFirst
  * @category Object
+ * @mapping ramda evolve
  */
 export function evolve<T extends object, E extends Evolver<T>>(
   object: T,
@@ -126,6 +127,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  *    // }
  * @dataLast
  * @category Object
+ * @mapping ramda evolve
  */
 export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,

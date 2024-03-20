@@ -17,6 +17,7 @@ import { purry } from "./purry";
  *    R.round(456789, -3) // => 457000
  * @dataFirst
  * @category Number
+ * @mapping lodash round
  */
 export function round(value: number, precision: number): number;
 
@@ -35,6 +36,7 @@ export function round(value: number, precision: number): number;
  *    R.round(-3)(456789) // => 457000
  * @dataLast
  * @category Number
+ * @mapping lodash round
  */
 export function round(precision: number): (value: number) => number;
 

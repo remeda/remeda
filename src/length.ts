@@ -12,6 +12,8 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
  *    R.length([1, 2, 3]) // => 3
  * @dataFirst
  * @category Array
+ * @mapping lodash size
+ * @mapping ramda length
  */
 export function length<T>(items: Enumerable<T>): number;
 
@@ -24,6 +26,8 @@ export function length<T>(items: Enumerable<T>): number;
  *    R.pipe([1, 2, 3], R.length()) // => 3
  * @dataLast
  * @category Array
+ * @mapping lodash size
+ * @mapping ramda length
  */
 export function length<T>(): (items: Enumerable<T>) => number;
 
@@ -35,6 +39,8 @@ export function length<T>(): (items: Enumerable<T>) => number;
  * @example
  *    R.pipe([1, 2, 3], R.length()) // => 3
  * @category Array
+ * @mapping lodash size
+ * @mapping ramda length
  */
 export function length(): unknown {
   return purry(_length, arguments);

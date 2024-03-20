@@ -19,6 +19,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @strict
  * @category Array
+ * @mapping ramda sort
  */
 export function sort<T>(
   items: ReadonlyArray<T>,
@@ -42,6 +43,7 @@ export function sort<T>(
  * @dataLast
  * @strict
  * @category Array
+ * @mapping ramda sort
  */
 export function sort<T>(
   cmp: (a: T, b: T) => number,

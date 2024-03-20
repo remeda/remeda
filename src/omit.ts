@@ -12,6 +12,8 @@ import { purry } from "./purry";
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
  * @category Object
+ * @mapping lodash omit
+ * @mapping ramda omit
  */
 export function omit<T extends object, K extends keyof T>(
   propNames: ReadonlyArray<K>,
@@ -28,6 +30,8 @@ export function omit<T extends object, K extends keyof T>(
  *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
  * @dataFirst
  * @category Object
+ * @mapping lodash omit
+ * @mapping ramda omit
  */
 export function omit<T extends object, K extends keyof T>(
   data: T,

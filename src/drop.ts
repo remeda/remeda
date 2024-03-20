@@ -14,6 +14,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @mapping lodash drop
+ * @mapping ramda drop
  */
 export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
@@ -28,6 +30,8 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @dataLast
  * @pipeable
  * @category Array
+ * @mapping lodash drop
+ * @mapping ramda drop
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 

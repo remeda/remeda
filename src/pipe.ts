@@ -53,6 +53,8 @@ type PreparedLazyOperation = LazyEvaluator & {
  *    ) // => [6, 14]
  * @dataFirst
  * @category Function
+ * @mapping lodash flow
+ * @mapping ramda pipe
  */
 export function pipe<A, B>(value: A, op1: (input: A) => B): B;
 export function pipe<A, B, C>(

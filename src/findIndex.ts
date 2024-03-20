@@ -19,6 +19,8 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findIndex
+ * @mapping ramda findIndex
  */
 export function findIndex<T>(
   array: ReadonlyArray<T>,
@@ -45,6 +47,8 @@ export function findIndex<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findIndex
+ * @mapping ramda findIndex
  */
 export function findIndex<T>(
   fn: Pred<T, boolean>,

@@ -16,6 +16,8 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
  * @dataFirst
  * @pipeable
  * @category Object
+ * @mapping lodash invert
+ * @mapping ramda invertObj
  */
 export function invert<T extends object>(object: T): Inverted<T>;
 
@@ -30,6 +32,8 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * @dataLast
  * @pipeable
  * @category Object
+ * @mapping lodash invert
+ * @mapping ramda invertObj
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 

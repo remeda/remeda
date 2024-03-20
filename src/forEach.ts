@@ -24,6 +24,8 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash forEach
+ * @mapping ramda forEach
  */
 export function forEach<T>(
   array: ReadonlyArray<T>,
@@ -54,6 +56,8 @@ export function forEach<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash forEach
+ * @mapping ramda forEach
  */
 export function forEach<T>(
   fn: Pred<T, void>,

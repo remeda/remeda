@@ -11,6 +11,8 @@ import { purry } from "./purry";
  *    R.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
  * @dataFirst
  * @category Array
+ * @mapping lodash takeWhile
+ * @mapping ramda takeWhile
  */
 export function takeWhile<T>(
   array: ReadonlyArray<T>,
@@ -27,6 +29,8 @@ export function takeWhile<T>(
  *    R.pipe([1, 2, 3, 4, 3, 2, 1], R.takeWhile(x => x !== 4))  // => [1, 2, 3]
  * @dataLast
  * @category Array
+ * @mapping lodash takeWhile
+ * @mapping ramda takeWhile
  */
 export function takeWhile<T>(
   fn: (item: T) => boolean,

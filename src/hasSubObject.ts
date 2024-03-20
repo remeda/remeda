@@ -17,6 +17,8 @@ import type { Simplify } from "./type-fest/simplify";
  *    R.hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
  * @dataFirst
  * @category Guard
+ * @mapping lodash isMatch
+ * @mapping ramda where
  */
 export function hasSubObject<T, S extends Partial<T>>(
   data: T,
@@ -38,6 +40,8 @@ data is Simplify<S & T>;
  *    R.hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
  * @dataLast
  * @category Guard
+ * @mapping lodash isMatch
+ * @mapping ramda where
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,

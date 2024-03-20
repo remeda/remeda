@@ -13,6 +13,7 @@ import type { MergeDeep } from "./type-fest/merge-deep";
  *    R.mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
  * @dataFirst
  * @category Object
+ * @mapping ramda mergeDeepRight
  */
 export function mergeDeep<
   Destination extends Record<string, unknown>,
@@ -33,6 +34,7 @@ export function mergeDeep<
  *    );  // => { foo: 'baz', x: 1, y: 2 }
  * @dataLast
  * @category Object
+ * @mapping ramda mergeDeepRight
  */
 export function mergeDeep<
   Destination extends Record<string, unknown>,

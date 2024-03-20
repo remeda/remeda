@@ -36,6 +36,8 @@ import type {
  * @dataLast
  * @strict
  * @category Array
+ * @mapping lodash sortBy
+ * @mapping ramda sortBy
  */
 export function sortBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
@@ -91,6 +93,8 @@ export function sortBy<T>(
  * @dataFirst
  * @strict
  * @category Array
+ * @mapping lodash sortBy
+ * @mapping ramda sortBy
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,

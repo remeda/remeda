@@ -24,6 +24,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isObjectType(null) //=> false
  * @dataFirst
  * @category Guard
+ * @mapping lodash isObjectLike
  */
 export const isObjectType = <T>(
   data: T | object,

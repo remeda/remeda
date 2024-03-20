@@ -12,6 +12,8 @@ import { purry } from "./purry";
  *    R.reduce([1, 2, 3, 4], R.multiply, 1) // => 24
  * @dataFirst
  * @category Number
+ * @mapping lodash multiply
+ * @mapping ramda multiply
  */
 export function multiply(value: number, multiplicand: number): number;
 
@@ -26,6 +28,8 @@ export function multiply(value: number, multiplicand: number): number;
  *    R.map([1, 2, 3, 4], R.multiply(2)) // => [2, 4, 6, 8]
  * @dataLast
  * @category Number
+ * @mapping lodash multiply
+ * @mapping ramda multiply
  */
 export function multiply(multiplicand: number): (value: number) => number;
 

@@ -11,6 +11,7 @@ import { purry } from "./purry";
  *    R.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
  * @dataFirst
  * @category Object
+ * @mapping lodash omitBy
  */
 export function omitBy<T>(
   object: T,
@@ -26,6 +27,7 @@ export function omitBy<T>(
  *    R.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast
  * @category Object
+ * @mapping lodash omitBy
  */
 export function omitBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean,

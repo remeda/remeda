@@ -96,6 +96,7 @@ type DebounceOptions = {
  *   debouncer.cachedValue; // => 3
  * @dataFirst
  * @category Function
+ * @mapping lodash debounce
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<F extends (...args: any) => any>(

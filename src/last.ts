@@ -13,6 +13,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @mapping lodash last
+ * @mapping ramda last
  */
 export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
@@ -32,6 +34,8 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  * @dataLast
  * @pipeable
  * @category Array
+ * @mapping lodash last
+ * @mapping ramda last
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 

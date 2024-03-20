@@ -15,6 +15,7 @@ import { purry } from "./purry";
  *    R.allPass(8, fns) // => false
  * @dataFirst
  * @category Array
+ * @mapping ramda allPass
  */
 export function allPass<T>(
   data: T,
@@ -35,6 +36,7 @@ export function allPass<T>(
  *    R.allPass(fns)(8) // => false
  * @dataLast
  * @category Array
+ * @mapping ramda allPass
  */
 export function allPass<T>(
   fns: ReadonlyArray<(data: T) => boolean>,

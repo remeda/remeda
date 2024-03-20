@@ -17,6 +17,8 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
  * @indexed
  * @strict
  * @category Array
+ * @mapping lodash keyBy
+ * @mapping ramda indexBy
  */
 export function indexBy<T>(
   array: ReadonlyArray<T>,
@@ -45,6 +47,8 @@ export function indexBy<T>(
  * @indexed
  * @strict
  * @category Array
+ * @mapping lodash keyBy
+ * @mapping ramda indexBy
  */
 export function indexBy<T>(
   fn: (item: T) => unknown,

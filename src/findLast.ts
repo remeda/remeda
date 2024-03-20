@@ -17,6 +17,8 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findLast
+ * @mapping ramda findLast
  */
 export function findLast<T>(
   array: ReadonlyArray<T>,
@@ -44,6 +46,8 @@ export function findLast<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findLast
+ * @mapping ramda findLast
  */
 export function findLast<T = never>(
   fn: Pred<T, boolean>,

@@ -24,6 +24,8 @@ import { purry } from "./purry";
  *    R.isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
  * @category Guard
+ * @mapping lodash isEqual
+ * @mapping ramda equals
  */
 export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
 
@@ -50,6 +52,8 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  *    R.pipe([1, 2, 3], R.isDeepEqual([1, 2, 3])); //=> true
  * @dataLast
  * @category Guard
+ * @mapping lodash isEqual
+ * @mapping ramda equals
  */
 export function isDeepEqual<T, S extends T = T>(
   other: S,

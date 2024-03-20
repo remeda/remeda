@@ -15,6 +15,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @indexed
  * @category Array
+ * @mapping lodash reduce
+ * @mapping ramda reduce
  */
 export function reduce<T, K>(
   items: ReadonlyArray<T>,
@@ -35,6 +37,8 @@ export function reduce<T, K>(
  * @dataLast
  * @indexed
  * @category Array
+ * @mapping lodash reduce
+ * @mapping ramda reduce
  */
 export function reduce<T, K>(
   fn: (acc: K, item: T) => K,

@@ -47,6 +47,8 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  *    R.join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
  * @dataFirst
  * @category Array
+ * @mapping lodash join
+ * @mapping ramda join
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],
@@ -70,6 +72,8 @@ export function join<
  *    R.pipe(['hello', 'world'] as const, R.join(" ")) // => "hello world" (typed `hello world`)
  * @dataLast
  * @category Array
+ * @mapping lodash join
+ * @mapping ramda join
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],

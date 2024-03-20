@@ -11,6 +11,8 @@ import { purry } from "./purry";
  *    R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
  * @category Array
+ * @mapping lodash concat
+ * @mapping ramda concat
  */
 export function concat<T, K>(
   arr1: ReadonlyArray<T>,
@@ -27,6 +29,8 @@ export function concat<T, K>(
  *    R.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
  * @dataLast
  * @category Array
+ * @mapping lodash concat
+ * @mapping ramda concat
  */
 export function concat<T, K>(
   arr2: ReadonlyArray<K>,

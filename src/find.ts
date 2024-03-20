@@ -19,6 +19,8 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash find
+ * @mapping ramda find
  */
 export function find<T>(
   array: ReadonlyArray<T>,
@@ -45,6 +47,8 @@ export function find<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash find
+ * @mapping ramda find
  */
 export function find<T = never>(
   fn: Pred<T, boolean>,

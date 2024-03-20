@@ -10,6 +10,7 @@ import { purry } from "./purry";
  *    R.shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
  * @dataFirst
  * @category Array
+ * @mapping lodash shuffle
  */
 export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 
@@ -22,6 +23,7 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  *    R.pipe([4, 2, 7, 5], R.shuffle()) // => [7, 5, 4, 2]
  * @dataLast
  * @category Array
+ * @mapping lodash shuffle
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 

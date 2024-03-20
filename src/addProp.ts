@@ -12,6 +12,8 @@ import { purry } from "./purry";
  *    R.addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
  * @dataFirst
  * @category Object
+ * @mapping lodash set
+ * @mapping ramda set
  */
 export function addProp<
   T extends Record<PropertyKey, unknown>,
@@ -30,6 +32,8 @@ export function addProp<
  *    R.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
  * @dataLast
  * @category Object
+ * @mapping lodash set
+ * @mapping ramda set
  */
 export function addProp<
   T extends Record<PropertyKey, unknown>,

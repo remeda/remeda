@@ -19,6 +19,8 @@ import { purry } from "./purry";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash filter
+ * @mapping ramda filter
  */
 export function filter<T, S extends T>(
   array: ReadonlyArray<T>,
@@ -43,6 +45,8 @@ export function filter<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash filter
+ * @mapping ramda filter
  */
 export function filter<T, S extends T>(
   fn: (input: T) => input is S,

@@ -13,6 +13,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @strict
  * @category Object
+ * @mapping lodash toPairs
+ * @mapping ramda toPairs
  */
 export function entries<T>(
   object: Readonly<Record<string, T>>,
@@ -36,6 +38,8 @@ export function entries<T>(
  * @dataLast
  * @strict
  * @category Object
+ * @mapping lodash toPairs
+ * @mapping ramda toPairs
  */
 export function entries(): <T>(
   object: Readonly<Record<string, T>>,

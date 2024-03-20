@@ -60,6 +60,8 @@ function _clone(
  * @signature R.clone(value)
  * @example R.clone({foo: 'bar'}) // {foo: 'bar'}
  * @category Object
+ * @mapping lodash cloneDeep
+ * @mapping ramda clone
  */
 export function clone<T>(value: T): T {
   return value != null && typeof (value as any).clone === "function"

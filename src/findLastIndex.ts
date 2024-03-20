@@ -16,6 +16,8 @@ import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findLastIndex
+ * @mapping ramda findLastIndex
  */
 export function findLastIndex<T>(
   array: ReadonlyArray<T>,
@@ -42,6 +44,8 @@ export function findLastIndex<T>(
  * @indexed
  * @pipeable
  * @category Array
+ * @mapping lodash findLastIndex
+ * @mapping ramda findLastIndex
  */
 export function findLastIndex<T>(
   fn: Pred<T, boolean>,

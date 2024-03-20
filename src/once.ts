@@ -9,6 +9,8 @@
  * initialize();
  * // => `createApplication` is invoked once
  * @category Function
+ * @mapping lodash once
+ * @mapping ramda once
  */
 export function once<T>(fn: () => T): () => T {
   let called = false;

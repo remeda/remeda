@@ -13,6 +13,8 @@ import { toPairs } from "./toPairs";
  *    R.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
  * @dataFirst
  * @category Object
+ * @mapping lodash mapValues
+ * @mapping ramda mapValues
  */
 export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   data: T,
@@ -29,6 +31,8 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
  *    R.pipe({a: 1, b: 2}, R.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
  * @dataLast
  * @category Object
+ * @mapping lodash mapValues
+ * @mapping ramda mapValues
  */
 export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S,
