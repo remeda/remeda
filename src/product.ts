@@ -25,7 +25,7 @@ export function product(data: ReadonlyArray<number>): number;
  *   R.product()(data);
  * @example
  *   R.pipe([1, 2, 3], R.product()); // => 6
- *   R.pipe([], R.product()); // => 0
+ *   R.pipe([], R.product()); // => 1
  * @dataLast
  * @category Number
  */
