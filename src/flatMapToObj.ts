@@ -1,8 +1,12 @@
+/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- Deprecated file */
+
 import type { PredIndexedOptional } from "./_types";
 import { purry } from "./purry";
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
+ *
+ * ! **DEPRECATED**: Use `R.fromEntries.strict(R.flatMap(array, fn))`. Will be removed in V2!
  *
  * @param array - The array to map.
  * @param fn - The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries.
@@ -20,7 +24,8 @@ import { purry } from "./purry";
  *  ]) // => {a: 0, aa: 0, b: 1, bb: 2}
  * @dataFirst
  * @indexed
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.fromEntries.strict(R.flatMap(array, fn))`. Will be removed in V2!
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
@@ -29,6 +34,8 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.
+ *
+ * ! **DEPRECATED**: Use `(array: ReadonlyArray<T>) => R.fromEntries.strict(R.flatMap(array, fn))` or if used in a pipe: `pipe(..., R.flatMap(fn), R.fromEntries.strict(), ...)`. Will be removed in V2!
  *
  * @param fn - The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries.
  * @returns The new mapped object.
@@ -49,7 +56,8 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
  *    ) // => {a: 0, aa: 0, b: 1, bb: 2}
  * @dataLast
  * @indexed
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `(array: ReadonlyArray<T>) => R.fromEntries.strict(R.flatMap(array, fn))` or if used in a pipe: `pipe(..., R.flatMap(fn), R.fromEntries.strict(), ...)`. Will be removed in V2!
  */
 export function flatMapToObj<T, K extends PropertyKey, V>(
   fn: (element: T) => Array<[K, V]>,
@@ -82,10 +90,17 @@ const _flatMapToObj =
   };
 
 export namespace flatMapToObj {
+  /**
+   * @deprecated Use `R.fromEntries.strict(R.flatten(R.map.indexed(array, fn)))`. Will be removed in V2!
+   */
   export function indexed<T, K extends PropertyKey, V>(
     array: ReadonlyArray<T>,
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): Record<K, V>;
+
+  /**
+   * @deprecated Use `(array: ReadonlyArray<T>) => R.fromEntries.strict(R.flatten(R.map.indexed(array, fn)))` or if used in a pipe: `pipe(..., R.map.indexed(fn), R.flatten(), R.fromEntries.strict(), ...)`. Will be removed in V2!
+   */
   export function indexed<T, K extends PropertyKey, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>,
   ): (array: ReadonlyArray<T>) => Record<K, V>;
