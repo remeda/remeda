@@ -1,78 +1,72 @@
 import { purry } from "./purry";
-import type { Pred, PredIndexedOptional, PredIndexed } from "./_types";
 
 /**
- * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ * Iterates the array in reverse order and returns the index of the first
+ * element that satisfies the provided testing function. If no elements satisfy
+ * the testing function, -1 is returned.
  *
- * @param array - The array.
- * @param fn - The predicate.
+ * See also `findLast` which returns the value of last element that satisfies
+ * the testing function (rather than its index).
+ *
+ * @param data - The items to search in.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to indicate a matching element has been found, and
+ * `false` otherwise.
+ * @returns The index of the last (highest-index) element in the array that
+ * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    R.findLastIndex(items, fn)
- *    R.findLastIndex.indexed(items, fn)
+ *    R.findLastIndex(data, predicate)
  * @example
  *    R.findLastIndex([1, 3, 4, 6], n => n % 2 === 1) // => 1
- *    R.findLastIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1) // => 1
  * @dataFirst
- * @indexed
- * @pipeable
  * @category Array
  */
 export function findLastIndex<T>(
-  array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>,
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number;
 
 /**
- * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ * Iterates the array in reverse order and returns the index of the first
+ * element that satisfies the provided testing function. If no elements satisfy
+ * the testing function, -1 is returned.
  *
- * @param fn - The predicate.
+ * See also `findLast` which returns the value of last element that satisfies
+ * the testing function (rather than its index).
+ *
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to indicate a matching element has been found, and
+ * `false` otherwise.
+ * @returns The index of the last (highest-index) element in the array that
+ * passes the test. Otherwise -1 if no matching element is found.
  * @signature
  *    R.findLastIndex(fn)(items)
- *    R.findLastIndex.indexed(fn)(items)
  * @example
  *    R.pipe(
  *      [1, 3, 4, 6],
  *      R.findLastIndex(n => n % 2 === 1)
  *    ) // => 1
- *    R.pipe(
- *      [1, 3, 4, 6],
- *      R.findLastIndex.indexed((n, i) => n % 2 === 1)
- *    ) // => 1
  * @dataLast
- * @indexed
- * @pipeable
  * @category Array
  */
 export function findLastIndex<T>(
-  fn: Pred<T, boolean>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex(): unknown {
-  return purry(_findLastIndex(false), arguments);
+  // TODO: Use `Array.prototype.findLastIndex` once we bump our Typescript target.
+  return purry(findLastIndexImplementation, arguments);
 }
 
-const _findLastIndex =
-  (indexed: boolean) =>
-  <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
-    for (let i = array.length - 1; i >= 0; i--) {
-      if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
-        return i;
-      }
+const findLastIndexImplementation = <T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): number => {
+  for (let i = data.length - 1; i >= 0; i--) {
+    if (predicate(data[i]!, i, data)) {
+      return i;
     }
-
-    return -1;
-  };
-
-export namespace findLastIndex {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>,
-  ): number;
-  export function indexed<T>(
-    fn: PredIndexed<T, boolean>,
-  ): (array: ReadonlyArray<T>) => number;
-
-  export function indexed(): unknown {
-    return purry(_findLastIndex(true), arguments);
   }
-}
+
+  return -1;
+};
