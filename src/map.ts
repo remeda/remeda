@@ -1,102 +1,72 @@
-import { _reduceLazy } from "./_reduceLazy";
-import { _toLazyIndexed } from "./_toLazyIndexed";
-import type {
-  IterableContainer,
-  Mapped,
-  PredIndexed,
-  PredIndexedOptional,
-} from "./_types";
+import type { IterableContainer, Mapped } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Creates a new array populated with the results of calling `mapper` on every
- * element in the calling array.
+ * Creates a new array populated with the results of calling a provided function
+ * on every element in the calling array. Equivalent to `Array.prototype.map`.
  *
  * @param data - The array to map.
- * @param mapper - A function to execute for each element in the array. Its
+ * @param callbackfn - A function to execute for each element in the array. Its
  * return value is added as a single element in the new array.
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    R.map(array, mapper)
- *    R.map.indexed(array, mapper)
+ *    R.map(data, callbackfn)
  * @example
  *    R.map([1, 2, 3], R.multiply(2)); // => [2, 4, 6]
  *    R.map([0, 0], R.add(1)); // => [1, 1]
- *    R.map.indexed([0, 0, 0], (_, i) => i); // => [0, 1, 2]
- *    R.map.indexed([0, 0], (x, i) => x + i); // => [0, 1]
+ *    R.map([0, 0], (value, index) => value + index); // => [0, 1]
  * @dataFirst
- * @indexed
  * @pipeable
  * @category Array
  */
-export function map<T extends IterableContainer, K>(
+export function map<T extends IterableContainer, U>(
   data: T,
-  mapper: (item: T[number]) => K,
-): Mapped<T, K>;
+  callbackfn: (value: T[number], index: number, data: T) => U,
+): Mapped<T, U>;
 
 /**
- * Creates a new array populated with the results of calling `mapper` on every
- * element in the calling array.
+ * Creates a new array populated with the results of calling a provided function
+ * on every element in the calling array. Equivalent to `Array.prototype.map`.
  *
- * @param mapper - A function to execute for each element in the array. Its
+ * @param callbackfn - A function to execute for each element in the array. Its
  * return value is added as a single element in the new array.
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    R.map(mapper)(array)
- *    R.map.indexed(mapper)(array)
+ *    R.map(callbackfn)(data)
  * @example
  *    R.pipe([1, 2, 3], R.map(R.multiply(2))); // => [2, 4, 6]
  *    R.pipe([0, 0], R.map(R.add(1))); // => [1, 1]
- *    R.pipe([0, 0, 0], R.map.indexed((_, i) => i)); // => [0, 1, 2]
- *    R.pipe([0, 0], R.map.indexed((x, i) => x + i)); // => [0, 1]
+ *    R.pipe([0, 0], R.map((value, index) => value + index)); // => [0, 1]
  * @dataLast
- * @indexed
  * @pipeable
  * @category Array
  */
-export function map<T extends IterableContainer, K>(
-  mapper: (item: T[number]) => K,
-): (items: T) => Mapped<T, K>;
+export function map<T extends IterableContainer, U>(
+  callbackfn: (value: T[number], index: number, data: T) => U,
+): (data: T) => Mapped<T, U>;
 
 export function map(): unknown {
-  return purry(_map(false), arguments, map.lazy);
+  return purry(mapImplementation, arguments, lazyImplementation);
 }
 
-const _map =
-  (indexed: boolean) =>
-  <T, K>(array: ReadonlyArray<T>, mapper: PredIndexedOptional<T, K>) =>
-    _reduceLazy(
-      array,
-      indexed ? map.lazyIndexed(mapper) : map.lazy(mapper),
-      indexed,
-    );
+const mapImplementation = <T, U>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
+): Array<U> =>
+  data.map(
+    // eslint-disable-next-line unicorn/no-array-callback-reference -- Intentionally using the same callback
+    callbackfn,
+  );
 
-const _lazy =
-  (indexed: boolean) =>
-  <T, K>(mapper: PredIndexedOptional<T, K>): LazyEvaluator<T, K> =>
-  (value, index, array) => ({
+const lazyImplementation =
+  <T, U>(
+    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
+  ): LazyEvaluator<T, U> =>
+  (value, index, data) => ({
     done: false,
     hasNext: true,
-    next: indexed ? mapper(value, index, array) : mapper(value),
+    next: callbackfn(value, index, data),
   });
-
-export namespace map {
-  export function indexed<T extends IterableContainer, K>(
-    items: T,
-    mapper: PredIndexed<T[number], K>,
-  ): Mapped<T, K>;
-
-  export function indexed<T extends IterableContainer, K>(
-    mapper: PredIndexed<T[number], K>,
-  ): (items: T) => Mapped<T, K>;
-
-  export function indexed(): unknown {
-    return purry(_map(true), arguments, map.lazyIndexed);
-  }
-
-  export const lazy = _lazy(false);
-  export const lazyIndexed = _toLazyIndexed(_lazy(true));
-}

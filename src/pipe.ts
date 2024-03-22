@@ -3,8 +3,8 @@
 
 export type LazyEvaluator<T = unknown, R = T> = (
   item: T,
-  index?: number,
-  data?: ReadonlyArray<T>,
+  index: number,
+  data: ReadonlyArray<T>,
 ) => LazyResult<R>;
 
 type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
@@ -31,12 +31,20 @@ type LazyMany<T> = {
 };
 
 type PreparedLazyOperation = LazyEvaluator & {
-  readonly isIndexed: boolean;
   readonly isSingle: boolean;
 
   // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
   items: Array<unknown>;
+};
+
+type LazyFn = (value: any, index: number, items: any) => LazyResult<any>;
+
+type LazyOp = ((input: any) => any) & {
+  readonly lazy: ((...args: ReadonlyArray<any>) => LazyFn) & {
+    readonly single: boolean;
+  };
+  readonly lazyArgs?: ReadonlyArray<unknown>;
 };
 
 /**
@@ -293,16 +301,6 @@ export function pipe(
   return output;
 }
 
-type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
-
-type LazyOp = ((input: any) => any) & {
-  readonly lazy: ((...args: ReadonlyArray<any>) => LazyFn) & {
-    readonly indexed: boolean;
-    readonly single: boolean;
-  };
-  readonly lazyArgs?: ReadonlyArray<unknown>;
-};
-
 function _processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
@@ -326,11 +324,9 @@ function _processItem(
   ) {
     // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
     const lazyFn = lazySequence[operationsIndex]!;
-    const { isIndexed, index, items } = lazyFn;
+    const { index, items } = lazyFn;
     items.push(currentItem);
-    lazyResult = isIndexed
-      ? lazyFn(currentItem, index, items)
-      : lazyFn(currentItem);
+    lazyResult = lazyFn(currentItem, index, items);
     lazyFn.index += 1;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
@@ -370,7 +366,6 @@ function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
   const fn = lazy(...(lazyArgs ?? []));
   return Object.assign(fn, {
-    isIndexed: lazy.indexed,
     isSingle: lazy.single,
     index: 0,
     items: [] as Array<unknown>,

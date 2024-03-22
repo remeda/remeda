@@ -2,65 +2,57 @@ import { forEach } from "./forEach";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
-const array = [1, 2, 3] as const;
+describe("runtime", () => {
+  test("dataFirst", () => {
+    const data = [1, 2, 3];
+    const cb = vi.fn();
 
-describe("data_first", () => {
-  it("forEach", () => {
-    const cb = vi.fn();
-    const result = forEach(array, cb);
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(array);
-  });
-  it("forEach.indexed", () => {
-    const cb = vi.fn();
-    const result = forEach.indexed(array, cb);
+    forEach(data, cb);
+
     expect(cb.mock.calls).toEqual([
-      [1, 0, array],
-      [2, 1, array],
-      [3, 2, array],
+      [1, 0, data],
+      [2, 1, data],
+      [3, 2, data],
     ]);
-    expect(result).toEqual(array);
   });
-});
 
-describe("data_last", () => {
-  it("forEach", () => {
+  test("dataLast", () => {
+    const data = [1, 2, 3];
     const cb = vi.fn();
-    const result = pipe(array, forEach(cb));
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(array);
-  });
-  it("forEach.indexed", () => {
-    const cb = vi.fn();
-    const result = pipe(array, forEach.indexed(cb));
+
+    const result = forEach(cb)(data);
+
     expect(cb.mock.calls).toEqual([
-      [1, 0, array],
-      [2, 1, array],
-      [3, 2, array],
+      [1, 0, data],
+      [2, 1, data],
+      [3, 2, data],
     ]);
-    expect(result).toEqual(array);
-  });
-});
 
-describe("pipe", () => {
-  it("with take", () => {
+    // dataLast used directly, we return the same reference.
+    expect(result).toBe(data);
+  });
+
+  test("pipe", () => {
+    const data = [1, 2, 3];
+    const cb = vi.fn();
+
+    const result = pipe(data, forEach(cb));
+
+    expect(cb.mock.calls).toEqual([
+      [1, 0, data],
+      [2, 1, data],
+      [3, 2, data],
+    ]);
+    expect(result).toStrictEqual(data);
+    // The pipe reconstructs the array.
+    expect(result).not.toBe(data);
+  });
+
+  test("with take", () => {
     const count = vi.fn();
     const result = pipe(
       [1, 2, 3],
       forEach(() => {
-        count();
-      }),
-      take(2),
-    );
-    expect(count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([1, 2]);
-  });
-
-  it("indexed", () => {
-    const count = vi.fn();
-    const result = pipe(
-      [1, 2, 3],
-      forEach.indexed(() => {
         count();
       }),
       take(2),
