@@ -25,7 +25,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * an array:
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `fromPairs` - Builds an object from an array of key-value pairs.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
@@ -55,7 +55,7 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * an array:
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `fromPairs` - Builds an object from an array of key-value pairs.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *

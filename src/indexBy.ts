@@ -9,7 +9,7 @@ import type { PredIndexedOptional, PredIndexed } from "./_types";
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `fromPairs` - Builds an object from an array of key-value pairs.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
@@ -40,7 +40,7 @@ export function indexBy<T>(
  * an array:
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `fromPairs` - Builds an object from an array of key-value pairs.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
  * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
