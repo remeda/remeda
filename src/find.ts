@@ -8,6 +8,7 @@ import { purry } from "./purry";
  * returned.
  *
  * Similar functions:
+ * * `findLast` - If you need the last element that satisfies the provided testing function.
  * * `findIndex` - If you need the index of the found element in the array.
  * * `indexOf` - If you need to find the index of a value.
  * * `includes` - If you need to find if a value exists in an array.
@@ -43,6 +44,7 @@ export function find<T>(
  * returned.
  *
  * Similar functions:
+ * * `findLast` - If you need the last element that satisfies the provided testing function.
  * * `findIndex` - If you need the index of the found element in the array.
  * * `indexOf` - If you need to find the index of a value.
  * * `includes` - If you need to find if a value exists in an array.
