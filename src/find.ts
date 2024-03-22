@@ -79,11 +79,7 @@ export function find(): unknown {
 const findImplementation = <T, S extends T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): S | undefined =>
-  data.find(
-    // eslint-disable-next-line unicorn/no-array-callback-reference -- Intentional
-    predicate,
-  );
+): S | undefined => data.find(predicate);
 
 const lazyImplementation =
   <T, S extends T>(

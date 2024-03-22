@@ -55,11 +55,7 @@ export function map(): unknown {
 const mapImplementation = <T, U>(
   data: ReadonlyArray<T>,
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): Array<U> =>
-  data.map(
-    // eslint-disable-next-line unicorn/no-array-callback-reference -- Intentionally using the same callback
-    callbackfn,
-  );
+): Array<U> => data.map(callbackfn);
 
 const lazyImplementation =
   <T, U>(

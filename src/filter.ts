@@ -61,11 +61,7 @@ export function filter(): unknown {
 const filterImplementation = <T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
-): Array<T> =>
-  data.filter(
-    // eslint-disable-next-line unicorn/no-array-callback-reference -- Intentionally using the same callback
-    predicate,
-  );
+): Array<T> => data.filter(predicate);
 
 const lazyImplementation =
   <T>(
