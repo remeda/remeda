@@ -5,7 +5,7 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
   : never;
 
 /**
- * Returns an object whose keys are values are swapped. If the object contains duplicate values,
+ * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
  * @param object - The object.
@@ -20,7 +20,7 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
 export function invert<T extends object>(object: T): Inverted<T>;
 
 /**
- * Returns an object whose keys are values are swapped. If the object contains duplicate values,
+ * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
  * @signature

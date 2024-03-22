@@ -5,6 +5,14 @@ import { purry } from "./purry";
  * Converts a list of objects into an object indexing the objects by the given
  * key.
  *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
@@ -22,6 +30,14 @@ export function indexBy<T, K extends PropertyKey>(
 /**
  * Converts a list of objects into an object indexing the objects by the given
  * key.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `fromEntries` - Builds an object from an array of key-value pairs.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
  *
  * @param mapper - The indexing function.
  * @signature

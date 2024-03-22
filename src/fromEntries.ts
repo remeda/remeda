@@ -80,9 +80,20 @@ type ValueForKey<
   : Extract<Entries[number], Entry<K>>)[1];
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second
- * elements as `{ [key]: value }`. If duplicate keys exist, the tuple with the
- * greatest index in the input array will be preferred.
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
  *
  * @param entries - An array of key-value pairs.
  * @signature
@@ -97,9 +108,20 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
 ): Simplify<FromEntries<Entries>>;
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second
- * elements as `{ [key]: value }`. If duplicate keys exist, the tuple with the
- * greatest index in the input array will be preferred.
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
  *
  * @signature
  *   R.fromEntries()(tuples)
