@@ -103,6 +103,7 @@ export * from "./pipe";
 export * from "./piped";
 export * from "./product";
 export * from "./prop";
+export * from "./pullObject";
 export * from "./purry";
 export * from "./randomString";
 export * from "./range";

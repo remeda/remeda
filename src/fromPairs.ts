@@ -14,6 +14,14 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
  *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * ! **DEPRECATED**: Use `R.fromEntries(pairs)`, for dataLast invocations use the functional form `R.fromEntries()`. Will be removed in V2!
  *
  * @param pairs - The list of input tuples.
