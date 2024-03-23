@@ -46,8 +46,8 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(): unknown {
-  return purry(firstImplementation, arguments, _toSingle(lazyImplementation));
+export function first(...args: ReadonlyArray<unknown>): unknown {
+  return purry(firstImplementation, args, _toSingle(lazyImplementation));
 }
 
 const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>

@@ -34,8 +34,8 @@ export function takeLastWhile<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function takeLastWhile(): unknown {
-  return purry(takeLastWhileImplementation, arguments);
+export function takeLastWhile(...args: ReadonlyArray<unknown>): unknown {
+  return purry(takeLastWhileImplementation, args);
 }
 
 function takeLastWhileImplementation<T>(

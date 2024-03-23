@@ -59,8 +59,8 @@ export function partition<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition(): unknown {
-  return purry(partitionImplementation, arguments);
+export function partition(...args: ReadonlyArray<unknown>): unknown {
+  return purry(partitionImplementation, args);
 }
 
 const partitionImplementation = <T, S extends T>(

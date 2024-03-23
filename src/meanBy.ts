@@ -40,8 +40,8 @@ export function meanBy<T>(
   fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
 ): number;
 
-export function meanBy(): unknown {
-  return purry(meanByImplementation, arguments);
+export function meanBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(meanByImplementation, args);
 }
 
 const meanByImplementation = <T>(

@@ -76,6 +76,6 @@ export function sortedIndexWith<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedIndexWith(): unknown {
-  return purry(_binarySearchCutoffIndex, arguments);
+export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_binarySearchCutoffIndex, args);
 }

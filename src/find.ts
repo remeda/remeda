@@ -74,8 +74,8 @@ export function find<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => T | undefined;
 
-export function find(): unknown {
-  return purry(findImplementation, arguments, _toSingle(lazyImplementation));
+export function find(...args: ReadonlyArray<unknown>): unknown {
+  return purry(findImplementation, args, _toSingle(lazyImplementation));
 }
 
 const findImplementation = <T, S extends T>(

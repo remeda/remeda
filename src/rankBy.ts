@@ -48,8 +48,8 @@ export function rankBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => number;
 
-export function rankBy(): unknown {
-  return purryOrderRulesWithArgument(rankByImplementation, arguments);
+export function rankBy(...args: ReadonlyArray<unknown>): unknown {
+  return purryOrderRulesWithArgument(rankByImplementation, args);
 }
 
 function rankByImplementation<T>(

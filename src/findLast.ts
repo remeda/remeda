@@ -70,9 +70,9 @@ export function findLast<T = never>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => T | undefined;
 
-export function findLast(): unknown {
+export function findLast(...args: ReadonlyArray<unknown>): unknown {
   // TODO: Use Array.prototype.findLast once we bump our typescript target
-  return purry(findLastImplementation, arguments);
+  return purry(findLastImplementation, args);
 }
 
 const findLastImplementation = <T, S extends T>(

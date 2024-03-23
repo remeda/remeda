@@ -44,8 +44,8 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  */
 export function sortedLastIndex<T>(item: T): (data: ReadonlyArray<T>) => number;
 
-export function sortedLastIndex(): unknown {
-  return purry(sortedLastIndexImplementation, arguments);
+export function sortedLastIndex(...args: ReadonlyArray<unknown>): unknown {
+  return purry(sortedLastIndexImplementation, args);
 }
 
 const sortedLastIndexImplementation = <T>(

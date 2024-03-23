@@ -32,8 +32,8 @@ export function concat<T, K>(
   arr2: ReadonlyArray<K>,
 ): (arr1: ReadonlyArray<T>) => Array<K | T>;
 
-export function concat(): unknown {
-  return purry(_concat, arguments);
+export function concat(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_concat, args);
 }
 
 function _concat<T, K>(

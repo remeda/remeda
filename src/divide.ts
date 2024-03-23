@@ -29,8 +29,8 @@ export function divide(value: number, divisor: number): number;
  */
 export function divide(divisor: number): (value: number) => number;
 
-export function divide(): unknown {
-  return purry(_divide, arguments);
+export function divide(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_divide, args);
 }
 
 function _divide(value: number, divisor: number): number {

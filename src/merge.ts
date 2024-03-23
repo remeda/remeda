@@ -53,8 +53,8 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  */
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
-export function merge(): unknown {
-  return purry(_merge, arguments);
+export function merge(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_merge, args);
 }
 
 function _merge<T, Source>(data: T, source: Source): Merge<T, Source> {

@@ -53,9 +53,9 @@ export function findLastIndex<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => number;
 
-export function findLastIndex(): unknown {
+export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
   // TODO: Use `Array.prototype.findLastIndex` once we bump our Typescript target.
-  return purry(findLastIndexImplementation, arguments);
+  return purry(findLastIndexImplementation, args);
 }
 
 const findLastIndexImplementation = <T>(

@@ -67,8 +67,8 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   ) => Key | undefined,
 ): (items: ReadonlyArray<T>) => ExactRecord<Key, NonEmptyArray<T>>;
 
-export function groupBy(): unknown {
-  return purry(groupByImplementation, arguments);
+export function groupBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(groupByImplementation, args);
 }
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(

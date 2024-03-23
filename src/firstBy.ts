@@ -73,8 +73,8 @@ export function firstBy<T extends IterableContainer>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): FirstBy<T>;
 
-export function firstBy(): unknown {
-  return purryOrderRules(firstByImplementation, arguments);
+export function firstBy(...args: ReadonlyArray<unknown>): unknown {
+  return purryOrderRules(firstByImplementation, args);
 }
 
 function firstByImplementation<T>(

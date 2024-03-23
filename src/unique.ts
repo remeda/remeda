@@ -35,8 +35,8 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
  */
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
-export function unique(): unknown {
-  return purry(uniqueImplementation, arguments, lazyImplementation);
+export function unique(...args: ReadonlyArray<unknown>): unknown {
+  return purry(uniqueImplementation, args, lazyImplementation);
 }
 
 const uniqueImplementation = <T>(array: ReadonlyArray<T>): Array<T> =>

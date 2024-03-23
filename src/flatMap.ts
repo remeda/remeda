@@ -60,8 +60,8 @@ export function flatMap<T, K>(
   ) => K | ReadonlyArray<K>,
 ): (data: ReadonlyArray<T>) => Array<K>;
 
-export function flatMap(): unknown {
-  return purry(flatMapImplementation, arguments, lazyImplementation);
+export function flatMap(...args: ReadonlyArray<unknown>): unknown {
+  return purry(flatMapImplementation, args, lazyImplementation);
 }
 
 function flatMapImplementation<T, K>(

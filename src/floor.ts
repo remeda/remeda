@@ -38,6 +38,6 @@ export function floor(value: number, precision: number): number;
  */
 export function floor(precision: number): (value: number) => number;
 
-export function floor(): unknown {
-  return purry(_withPrecision(Math.floor), arguments);
+export function floor(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_withPrecision(Math.floor), args);
 }

@@ -31,8 +31,8 @@ export function pickBy<T>(
   predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
 ): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function pickBy(): unknown {
-  return purry(pickByImplementation, arguments);
+export function pickBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(pickByImplementation, args);
 }
 
 function pickByImplementation<T>(

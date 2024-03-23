@@ -57,8 +57,8 @@ export function zip<S extends IterableContainer>(
   second: S,
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
-export function zip(): unknown {
-  return purry(zipImplementation, arguments);
+export function zip(...args: ReadonlyArray<unknown>): unknown {
+  return purry(zipImplementation, args);
 }
 
 function zipImplementation<

@@ -45,8 +45,8 @@ export function takeFirstBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function takeFirstBy(): unknown {
-  return purryOrderRulesWithArgument(takeFirstByImplementation, arguments);
+export function takeFirstBy(...args: ReadonlyArray<unknown>): unknown {
+  return purryOrderRulesWithArgument(takeFirstByImplementation, args);
 }
 
 function takeFirstByImplementation<T>(

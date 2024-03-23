@@ -38,8 +38,8 @@ export function setPath<TPath extends Array<PropertyKey>, Value>(
   value: Value,
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath(): unknown {
-  return purry(_setPath, arguments);
+export function setPath(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_setPath, args);
 }
 
 export function _setPath(

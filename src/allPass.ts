@@ -40,8 +40,8 @@ export function allPass<T>(
   fns: ReadonlyArray<(data: T) => boolean>,
 ): (data: T) => boolean;
 
-export function allPass(): unknown {
-  return purry(_allPass, arguments);
+export function allPass(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_allPass, args);
 }
 
 function _allPass<T>(

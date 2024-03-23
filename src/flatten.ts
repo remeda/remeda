@@ -34,8 +34,8 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
  */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
-export function flatten(): unknown {
-  return purry(flattenImplementation, arguments, lazyImplementation);
+export function flatten(...args: ReadonlyArray<unknown>): unknown {
+  return purry(flattenImplementation, args, lazyImplementation);
 }
 
 const flattenImplementation = <T>(items: ReadonlyArray<T>): Array<Flatten<T>> =>

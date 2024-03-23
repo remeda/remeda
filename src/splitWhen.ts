@@ -33,8 +33,8 @@ export function splitWhen<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen(): unknown {
-  return purry(splitWhenImplementation, arguments);
+export function splitWhen(...args: ReadonlyArray<unknown>): unknown {
+  return purry(splitWhenImplementation, args);
 }
 
 function splitWhenImplementation<T>(

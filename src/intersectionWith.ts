@@ -61,8 +61,8 @@ export function intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>,
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith(): unknown {
-  return purry(intersectionWithImplementation, arguments, lazyImplementation);
+export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
+  return purry(intersectionWithImplementation, args, lazyImplementation);
 }
 
 const intersectionWithImplementation = <TFirst, TSecond>(

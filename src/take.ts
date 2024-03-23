@@ -31,8 +31,8 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take(): unknown {
-  return purry(takeImplementation, arguments, lazyImplementation);
+export function take(...args: ReadonlyArray<unknown>): unknown {
+  return purry(takeImplementation, args, lazyImplementation);
 }
 
 const takeImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>

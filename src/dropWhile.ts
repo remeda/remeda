@@ -36,8 +36,8 @@ export function dropWhile<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropWhile(): unknown {
-  return purry(dropWhileImplementation, arguments);
+export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
+  return purry(dropWhileImplementation, args);
 }
 
 function dropWhileImplementation<T>(

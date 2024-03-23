@@ -56,8 +56,8 @@ export function differenceWith<TFirst, TSecond>(
   isEquals: IsEquals<TFirst, TSecond>,
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function differenceWith(): unknown {
-  return purry(differenceWithImplementation, arguments, lazyImplementation);
+export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
+  return purry(differenceWithImplementation, args, lazyImplementation);
 }
 
 function differenceWithImplementation<TFirst, TSecond>(

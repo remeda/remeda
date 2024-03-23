@@ -35,6 +35,6 @@ export function entries<T extends {}>(data: T): Array<Entry<T>>;
  */
 export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
-export function entries(): unknown {
-  return purry(Object.entries, arguments);
+export function entries(...args: ReadonlyArray<unknown>): unknown {
+  return purry(Object.entries, args);
 }

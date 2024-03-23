@@ -59,15 +59,16 @@ type ComparablePrimitive = boolean | number | string;
  */
 export function purryOrderRules<T>(
   func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
-  inputArgs: IArguments | ReadonlyArray<unknown>,
+  inputArgs: ReadonlyArray<unknown>,
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call purry so it's fine...
-  const [dataOrRule, ...rules] = (
-    Array.isArray(inputArgs) ? inputArgs : Array.from(inputArgs)
-  ) as
+  const [dataOrRule, ...rules] = inputArgs as
     | Readonly<NonEmptyArray<OrderRule<T>>>
-    | [data: ReadonlyArray<T>, ...rules: Readonly<NonEmptyArray<OrderRule<T>>>];
+    | [
+        data: OrderRule<T> | ReadonlyArray<T>,
+        ...rules: Readonly<NonEmptyArray<OrderRule<T>>>,
+      ];
 
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!
@@ -98,12 +99,8 @@ export function purryOrderRulesWithArgument(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
     arg: any,
   ) => unknown,
-  inputArgs: IArguments,
+  [first, second, ...rest]: ReadonlyArray<unknown>,
 ): unknown {
-  const [first, second, ...rest] = Array.from(
-    inputArgs,
-  ) as ReadonlyArray<unknown>;
-
   // We need to pull the `n` argument out to make it work with purryOrderRules.
   let arg: unknown;
   let argRemoved: ReadonlyArray<unknown>;

@@ -31,8 +31,8 @@ export function subtract(value: number, subtrahend: number): number;
  */
 export function subtract(subtrahend: number): (value: number) => number;
 
-export function subtract(): unknown {
-  return purry(_subtract, arguments);
+export function subtract(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_subtract, args);
 }
 
 function _subtract(value: number, subtrahend: number): number {

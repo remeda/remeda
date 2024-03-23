@@ -31,8 +31,8 @@ export function product(data: ReadonlyArray<number>): number;
  */
 export function product(): (data: ReadonlyArray<number>) => number;
 
-export function product(): unknown {
-  return purry(productImplementation, arguments);
+export function product(...args: ReadonlyArray<unknown>): unknown {
+  return purry(productImplementation, args);
 }
 
 function productImplementation(data: ReadonlyArray<number>): number {

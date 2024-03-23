@@ -40,8 +40,8 @@ export function flattenDeep<T>(): (
   items: ReadonlyArray<T>,
 ) => Array<FlattenDeep<T>>;
 
-export function flattenDeep(): unknown {
-  return purry(flattenDeepImplementation, arguments, lazyImplementation);
+export function flattenDeep(...args: ReadonlyArray<unknown>): unknown {
+  return purry(flattenDeepImplementation, args, lazyImplementation);
 }
 
 const flattenDeepImplementation = <T>(

@@ -54,8 +54,8 @@ export function forEach<T>(
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function forEach(): unknown {
-  return purry(forEachImplementation, arguments, lazyImplementation);
+export function forEach(...args: ReadonlyArray<unknown>): unknown {
+  return purry(forEachImplementation, args, lazyImplementation);
 }
 
 function forEachImplementation<T>(

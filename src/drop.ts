@@ -31,8 +31,8 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function drop(): unknown {
-  return purry(dropImplementation, arguments, lazyImplementation);
+export function drop(...args: ReadonlyArray<unknown>): unknown {
+  return purry(dropImplementation, args, lazyImplementation);
 }
 
 function dropImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {

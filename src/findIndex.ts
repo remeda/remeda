@@ -53,8 +53,8 @@ export function findIndex<T>(
   predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => number;
 
-export function findIndex(): unknown {
-  return purry(findIndexImplementation, arguments);
+export function findIndex(...args: ReadonlyArray<unknown>): unknown {
+  return purry(findIndexImplementation, args);
 }
 
 const findIndexImplementation = <T>(
