@@ -123,20 +123,6 @@ const result = R.pipe(
 
 ```
 
-## Indexed version
-
-Iterable functions have an extra property `indexed` which is the same function with iterator `(element, index, array)`.
-
-```js
-const arr = [10, 12, 13, 3];
-
-// filter even values
-R.filter(arr, (x) => x % 2 === 0); // => [10, 12]
-
-// filter even indexes
-R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
-```
-
 ## For Lodash and Ramda users
 
 Please check function mapping in [mapping.md](./mapping.md).
