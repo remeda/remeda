@@ -1,5 +1,3 @@
-import { _toSingle } from "./_toSingle";
-import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
@@ -21,7 +19,6 @@ import { purry } from "./purry";
  * @example
  *    R.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  * @dataFirst
- * @pipeable
  * @category Array
  */
 export function findIndex<T>(
@@ -50,7 +47,6 @@ export function findIndex<T>(
  *      R.findIndex(n => n % 2 === 0)
  *    ); // => 2
  * @dataLast
- * @pipeable
  * @category Array
  */
 export function findIndex<T>(
@@ -58,28 +54,10 @@ export function findIndex<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function findIndex(): unknown {
-  return purry(
-    findIndexImplementation,
-    arguments,
-    _toSingle(lazyImplementation),
-  );
+  return purry(findIndexImplementation, arguments);
 }
 
 const findIndexImplementation = <T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
 ): number => data.findIndex(predicate);
-
-const lazyImplementation = <T>(
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
-): LazyEvaluator<T, number> => {
-  // TODO: We use the `actualIndex` here because we can't trust the index coming from pipe. This is due to the fact that the `indexed` abstraction might turn off incrementing the index or not send it at all. Once we simplify the code base by removing the non-indexed versions, we can remove this.
-  let actualIndex = 0;
-  return (value, index, data) => {
-    if (predicate(value, index, data)) {
-      return { done: true, hasNext: true, next: actualIndex };
-    }
-    actualIndex += 1;
-    return { done: false, hasNext: false };
-  };
-};
