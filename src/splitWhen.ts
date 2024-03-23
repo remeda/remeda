@@ -41,12 +41,9 @@ function splitWhenImplementation<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  for (let i = 0; i < data.length; i++) {
-    // TODO: Use `Array.prototype.entries` once we bump our TS target so we
-    // can get both the index and the item at the same time, and don't need
-    // the non-null assertion.
-    if (predicate(data[i]!, i, data)) {
-      return splitAt(data, i);
+  for (const [index, item] of data.entries()) {
+    if (predicate(item, index, data)) {
+      return splitAt(data, index);
     }
   }
 

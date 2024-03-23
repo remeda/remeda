@@ -321,13 +321,7 @@ function _processItem(
 
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
-  for (
-    let operationsIndex = 0;
-    operationsIndex < lazySequence.length;
-    operationsIndex++
-  ) {
-    // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
-    const lazyFn = lazySequence[operationsIndex]!;
+  for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
     items.push(currentItem);
     lazyResult = lazyFn(currentItem, index, items);

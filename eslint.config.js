@@ -39,7 +39,6 @@ export default config(
 
       // This isn't very useful in a utility library, a lot of utilities need to
       // access arrays in a random-access way.
-      // TODO: Once we bump our typescript `target` we should enable this rule again, go over all the non-null-assertions, and see which ones are due to a for loop which could use `Array.prototype.entries` instead.
       "@typescript-eslint/no-non-null-assertion": "off",
 
       // When our return type is just `undefined` (like `first([])`) this rule

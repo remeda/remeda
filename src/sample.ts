@@ -154,6 +154,7 @@ function sampleImplementation<T>(
   if (sampleSize === actualSampleSize) {
     return Array.from(sampleIndices)
       .sort((a, b) => a - b)
+
       .map((index) => data[index]!);
   }
 

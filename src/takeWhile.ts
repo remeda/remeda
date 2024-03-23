@@ -41,10 +41,8 @@ function takeWhileImplementation<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
   const ret: Array<T> = [];
-  for (let i = 0; i < data.length; i++) {
-    // TODO: Use entries once we bump our typescript target.
-    const item = data[i]!;
-    if (!predicate(item, i, data)) {
+  for (const [index, item] of data.entries()) {
+    if (!predicate(item, index, data)) {
       break;
     }
     ret.push(item);
