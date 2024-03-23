@@ -39,7 +39,6 @@ export default config(
 
       // This isn't very useful in a utility library, a lot of utilities need to
       // access arrays in a random-access way.
-      // TODO: Once we bump our typescript `target` we should enable this rule again, go over all the non-null-assertions, and see which ones are due to a for loop which could use `Array.prototype.entries` instead.
       "@typescript-eslint/no-non-null-assertion": "off",
 
       // When our return type is just `undefined` (like `first([])`) this rule
@@ -49,20 +48,6 @@ export default config(
       // what this rule expects us to do in those cases so turning it off for
       // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
-
-      // TODO: Once we bump our typescript `target` we should enable this rule
-      "prefer-object-has-own": "off",
-
-      // TODO: Once we bump our minimum Typescript version above 4.5 we need to change the linting to prefer the inline style which allows us to combine type imports and regular ones:
-      "no-duplicate-imports": "off",
-      "@typescript-eslint/consistent-type-imports": ["warn"],
-
-      // TODO: Once we bump our typescript `target` we should enable these rules.
-      "unicorn/no-for-loop": "off",
-      "unicorn/prefer-at": "off",
-      "unicorn/prefer-number-properties": "off",
-      "unicorn/prefer-spread": "off",
-      "unicorn/prefer-includes": "off",
 
       // TODO: These rules allow us to really standardize our codebase, but they
       // also do sweeping changes to the whole codebase which is very noisy. We
@@ -92,6 +77,7 @@ export default config(
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
+      "no-duplicate-imports": "error",
       "require-atomic-updates": "error",
 
       // Suggestions
@@ -274,6 +260,11 @@ export default config(
       // "strict" extension this rule is defined the opposite way though(?!).
       "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
 
+      "@typescript-eslint/consistent-type-imports": [
+        "warn",
+        { fixStyle: "inline-type-imports" },
+      ],
+
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -398,21 +389,11 @@ export default config(
   {
     files: ["src/**/*.test.ts"],
     rules: {
-      "unicorn/no-array-callback-reference": "off",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",
         { checkArguments: false, checkArrowFunctionBody: false },
       ],
-    },
-  },
-  {
-    files: ["test/**/*.ts"],
-    rules: {
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "unicorn/filename-case": "off",
-      "unicorn/no-null": "off",
     },
   },
   {

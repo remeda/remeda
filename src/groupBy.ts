@@ -81,9 +81,7 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
 ): ExactRecord<Key, NonEmptyArray<T>> => {
   const output: Partial<Record<Key, Array<T>>> = {};
 
-  for (let index = 0; index < data.length; index++) {
-    // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
-    const item = data[index]!;
+  for (const [index, item] of data.entries()) {
     const key = callbackfn(item, index, data);
     if (key !== undefined) {
       let { [key]: items } = output;

@@ -138,19 +138,5 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
-  // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
-  return purry(fromEntriesImplementation, args);
-}
-
-function fromEntriesImplementation<Entries extends IterableContainer<Entry>>(
-  entries: Entries,
-): FromEntries<Entries> {
-  const out: Partial<FromEntries<Entries>> = {};
-
-  for (const [key, value] of entries) {
-    // @ts-expect-error [ts7053] - Our input is generic so typescript is having a hard time inferring this.
-    out[key] = value;
-  }
-
-  return out as FromEntries<Entries>;
+  return purry(Object.fromEntries, args);
 }

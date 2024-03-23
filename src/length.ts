@@ -32,5 +32,5 @@ export function length(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function _length<T>(items: Enumerable<T>): number {
-  return "length" in items ? items.length : Array.from(items).length;
+  return "length" in items ? items.length : [...items].length;
 }

@@ -47,5 +47,5 @@ function takeLastWhileImplementation<T>(
       return data.slice(i + 1);
     }
   }
-  return data.slice();
+  return [...data];
 }

@@ -71,7 +71,7 @@ export function findLast<T = never>(
 ): (data: ReadonlyArray<T>) => T | undefined;
 
 export function findLast(...args: ReadonlyArray<unknown>): unknown {
-  // TODO: Use Array.prototype.findLast once we bump our typescript target
+  // TODO: Use Array.prototype.findLast once we bump our target to ES2023+
   return purry(findLastImplementation, args);
 }
 

@@ -68,9 +68,7 @@ const partitionImplementation = <T, S extends T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): [Array<T>, Array<T>] => {
   const ret: [Array<T>, Array<T>] = [[], []];
-  for (let index = 0; index < data.length; index++) {
-    // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
-    const item = data[index]!;
+  for (const [index, item] of data.entries()) {
     const matches = predicate(item, index, data);
     ret[matches ? 0 : 1].push(item);
   }

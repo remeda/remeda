@@ -40,5 +40,5 @@ export function last(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function _last<T>(array: ReadonlyArray<T>): T | undefined {
-  return array[array.length - 1];
+  return array.at(-1);
 }

@@ -1,8 +1,8 @@
-import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
-} from "../test/types_data_provider";
+  type AllTypesDataProviderTypes,
+} from "../test/typesDataProvider";
 import { isNumber } from "./isNumber";
 
 const dataFunction = (): string | 1 | 2 | 3 => 1;

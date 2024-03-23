@@ -64,10 +64,8 @@ function indexByImplementation<T, K extends PropertyKey>(
 ): ExactRecord<K, T> {
   const out: Partial<Record<K, T>> = {};
 
-  for (let i = 0; i < data.length; i++) {
-    // TODO: Use entries directly once we bump our typescript target version.
-    const item = data[i]!;
-    const key = mapper(item, i, data);
+  for (const [index, item] of data.entries()) {
+    const key = mapper(item, index, data);
     out[key] = item;
   }
 

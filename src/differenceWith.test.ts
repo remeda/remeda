@@ -1,4 +1,4 @@
-import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { differenceWith } from "./differenceWith";
 import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";

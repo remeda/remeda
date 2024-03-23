@@ -42,7 +42,7 @@ function _splitAt<T>(
   array: ReadonlyArray<T>,
   index: number,
 ): [Array<T>, Array<T>] {
-  const copy = array.slice();
+  const copy = [...array];
   const tail = copy.splice(index);
   return [copy, tail];
 }

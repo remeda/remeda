@@ -52,7 +52,8 @@ function _splice<T>(
   deleteCount: number,
   replacement: ReadonlyArray<T>,
 ): Array<T> {
-  const result = items.slice();
+  // TODO: Use `Array.prototype.toSpliced` once we bump our target/lib beyond ES2022.
+  const result = [...items];
   result.splice(start, deleteCount, ...replacement);
   return result;
 }

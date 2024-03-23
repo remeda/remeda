@@ -1,9 +1,9 @@
-import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
   TestClass,
-} from "../test/types_data_provider";
+  type AllTypesDataProviderTypes,
+} from "../test/typesDataProvider";
 import { isPlainObject } from "./isPlainObject";
 
 describe("runtime", () => {

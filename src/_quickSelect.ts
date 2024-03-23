@@ -29,7 +29,7 @@ export const quickSelect = <T>(
       undefined
     : quickSelectImplementation(
         // We need to clone the array because quickSelect mutates it in-place.
-        data.slice(),
+        [...data],
         0 /* left */,
         data.length - 1 /* right */,
         index,

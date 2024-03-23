@@ -62,7 +62,7 @@ function forEachImplementation<T>(
   data: ReadonlyArray<T>,
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
 ): Array<T> {
-  // eslint-disable-next-line unicorn/no-array-for-each -- TODO: Once we bump our Typescript target version we can swap this with a proper for loop.
+  // eslint-disable-next-line unicorn/no-array-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
   data.forEach(callbackfn);
   // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
   return data;

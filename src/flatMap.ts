@@ -1,4 +1,3 @@
-import { flatten } from "./flatten";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -23,14 +22,14 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function flatMap<T, K>(
+export function flatMap<T, U>(
   data: ReadonlyArray<T>,
   callbackfn: (
     input: T,
     index: number,
     data: ReadonlyArray<T>,
-  ) => K | ReadonlyArray<K>,
-): Array<K>;
+  ) => ReadonlyArray<U> | U,
+): Array<U>;
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -52,29 +51,26 @@ export function flatMap<T, K>(
  * @pipeable
  * @category Array
  */
-export function flatMap<T, K>(
+export function flatMap<T, U>(
   callbackfn: (
     input: T,
     index: number,
     data: ReadonlyArray<T>,
-  ) => K | ReadonlyArray<K>,
-): (data: ReadonlyArray<T>) => Array<K>;
+  ) => ReadonlyArray<U> | U,
+): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
   return purry(flatMapImplementation, args, lazyImplementation);
 }
 
-function flatMapImplementation<T, K>(
+const flatMapImplementation = <T, U>(
   data: ReadonlyArray<T>,
   callbackfn: (
-    input: T,
+    value: T,
     index: number,
     data: ReadonlyArray<T>,
-  ) => ReadonlyArray<K>,
-): Array<K> {
-  // TODO: Use flatMap directly once we bump our TypeScript target version.
-  return flatten(data.map(callbackfn));
-}
+  ) => ReadonlyArray<U> | U,
+): Array<U> => data.flatMap(callbackfn);
 
 const lazyImplementation =
   <T, K>(

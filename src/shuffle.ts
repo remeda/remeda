@@ -30,7 +30,7 @@ export function shuffle(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {
-  const result = items.slice();
+  const result = [...items];
   for (let index = 0; index < items.length; index++) {
     const rand = index + Math.floor(Math.random() * (items.length - index));
     const value = result[rand]!;

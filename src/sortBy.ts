@@ -1,5 +1,4 @@
-import type { OrderRule } from "./_purryOrderRules";
-import { purryOrderRules } from "./_purryOrderRules";
+import { purryOrderRules, type OrderRule } from "./_purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,
@@ -100,5 +99,5 @@ const sortByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
 ): Array<T> =>
-  // Sort is done in-place so we need to copy the array.
-  data.slice().sort(compareFn);
+  // TODO: Use `Array.prototype.toSorted` once we bump our target/lib beyond ES2022.
+  [...data].sort(compareFn);

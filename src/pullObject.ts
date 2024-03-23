@@ -95,11 +95,9 @@ function pullObjectImplementation<
 ): Partial<Record<K, V>> {
   const result: Partial<Record<K, V>> = {};
 
-  for (let i = 0; i < data.length; i++) {
-    // TODO: use entries once we bump our typescript target.
-    const item = data[i]!;
-    const key = keyExtractor(item, i, data);
-    const value = valueExtractor(item, i, data);
+  for (const [index, item] of data.entries()) {
+    const key = keyExtractor(item, index, data);
+    const value = valueExtractor(item, index, data);
     result[key] = value;
   }
 

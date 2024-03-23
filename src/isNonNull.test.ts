@@ -1,18 +1,16 @@
-import type {
-  AllTypesDataProviderTypes,
-  TestClass,
-} from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
-} from "../test/types_data_provider";
+  type AllTypesDataProviderTypes,
+  type TestClass,
+} from "../test/typesDataProvider";
 import { isNonNull } from "./isNonNull";
 
 describe("isNonNull", () => {
   test("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNull(data)) {
-      expect(data instanceof Date).toEqual(true);
+      expect(data instanceof Date).toBe(true);
       expectTypeOf(data).toEqualTypeOf<
         | Array<number>
         | Date
@@ -27,6 +25,7 @@ describe("isNonNull", () => {
         | number
         | string
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]
@@ -36,7 +35,7 @@ describe("isNonNull", () => {
   });
   test("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
-    expect(data).toHaveLength(17);
+    expect(data).toHaveLength(18);
     expectTypeOf(data).toEqualTypeOf<
       Array<
         | Array<number>
@@ -52,6 +51,7 @@ describe("isNonNull", () => {
         | number
         | string
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]

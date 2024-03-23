@@ -54,7 +54,7 @@ export function findLastIndex<T>(
 ): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
-  // TODO: Use `Array.prototype.findLastIndex` once we bump our Typescript target.
+  // TODO: Use Array.prototype.findLastIndex once we bump our target to ES2023+
   return purry(findLastIndexImplementation, args);
 }
 

@@ -1,6 +1,8 @@
 import { heapify, heapMaybeInsert } from "./_heap";
-import type { OrderRule } from "./_purryOrderRules";
-import { purryOrderRulesWithArgument } from "./_purryOrderRules";
+import {
+  purryOrderRulesWithArgument,
+  type OrderRule,
+} from "./_purryOrderRules";
 import type { CompareFunction, NonEmptyArray } from "./_types";
 
 /**
@@ -59,7 +61,7 @@ function takeFirstByImplementation<T>(
   }
 
   if (n >= data.length) {
-    return data.slice();
+    return [...data];
   }
 
   const heap = data.slice(0, n);

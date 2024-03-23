@@ -171,9 +171,9 @@ function _swapArray(
   index1: number,
   index2: number,
 ): Array<unknown> {
-  const result = item.slice();
+  const result = [...item];
 
-  if (isNaN(index1) || isNaN(index2)) {
+  if (Number.isNaN(index1) || Number.isNaN(index2)) {
     return result;
   }
 
@@ -195,6 +195,6 @@ function _swapArray(
 }
 
 function _swapString(item: string, index1: number, index2: number): string {
-  const result = _swapArray(item.split(""), index1, index2);
+  const result = _swapArray([...item], index1, index2);
   return result.join("");
 }

@@ -44,9 +44,9 @@ function dropWhileImplementation<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
-  for (let i = 0; i < data.length; i++) {
-    if (!predicate(data[i]!, i, data)) {
-      return data.slice(i);
+  for (const [index, item] of data.entries()) {
+    if (!predicate(item, index, data)) {
+      return data.slice(index);
     }
   }
   return [];
