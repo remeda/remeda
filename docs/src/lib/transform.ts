@@ -78,7 +78,6 @@ function transformSignature({
   return {
     tag: getFunctionCurriedVariant(comment),
     signature: tagContent(comment, "signature"),
-    indexed: hasTag(comment, "indexed"),
     pipeable: hasTag(comment, "pipeable"),
     example: tagContent(comment, "example"),
     args: parameters.map(getParameter),

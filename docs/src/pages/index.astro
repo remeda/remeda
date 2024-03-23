@@ -162,27 +162,6 @@ const result = R.pipe(
        `
         />
       </section>
-
-      <section>
-        <Typography.H2>Indexed version</Typography.H2>
-
-        <Typography.P>
-          Iterable functions have an extra property <code>indexed</code> which is
-          the same function with iterator <code>(element, index, array)</code>.
-        </Typography.P>
-
-        <CodeBlock
-          code=`
-const arr = [10, 12, 13, 3];
-
-// filter even values
-R.filter(arr, x => x % 2 === 0); // => [10, 12]
-
-// filter even indexes
-R.filter.indexed(arr, (x, i) => i % 2 === 0); // => [10, 13]
-      `
-        />
-      </section>
     </div>
   </main>
 </Layout>
