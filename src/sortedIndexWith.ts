@@ -10,7 +10,7 @@ import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
- * predicate returns `false` for all items).
+ * predicate returns `true` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
@@ -49,7 +49,7 @@ export function sortedIndexWith<T>(
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
- * predicate returns `false` for all items).
+ * predicate returns `true` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform

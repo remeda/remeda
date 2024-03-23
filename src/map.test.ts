@@ -45,7 +45,7 @@ describe("runtime", () => {
     it("invoked lazily (indexed)", () => {
       const count = vi.fn((_: unknown, index: number) => index);
 
-      expect(pipe([0, 0, 0] as const, map(count), take(2))).toEqual([0, 1]);
+      expect(pipe([0, 0, 0], map(count), take(2))).toEqual([0, 1]);
 
       expect(count).toHaveBeenCalledTimes(2);
     });

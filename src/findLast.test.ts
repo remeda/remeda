@@ -5,7 +5,7 @@ describe("data first", () => {
   test("findLast", () => {
     expect(findLast([1, 2, 3, 4], (x) => x % 2 === 1)).toEqual(3);
   });
-  test("indexed ", () => {
+  test("indexed", () => {
     expect(findLast([1, 2, 3, 4], (x, i) => x === 3 && i === 2)).toEqual(3);
   });
   test("findLast first value", () => {

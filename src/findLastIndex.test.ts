@@ -16,12 +16,21 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  test("findLastIndex", () => {
+  test("found", () => {
     expect(
       pipe(
         [1, 2, 3, 4],
         findLastIndex((x) => x % 2 === 1),
       ),
     ).toEqual(2);
+  });
+
+  test("not found", () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4],
+        findLastIndex((x) => x === 5),
+      ),
+    ).toBe(-1);
   });
 });

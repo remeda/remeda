@@ -13,8 +13,8 @@ describe("runtime", () => {
             { a: 1, b: 2 },
             { a: 2, b: 1 },
             { a: 1, b: 3 },
-          ] as const,
-          (x) => x.b === 2,
+          ],
+          ({ b }) => b === 2,
         ),
       ).toEqual({ a: 1, b: 2 });
     });
@@ -27,8 +27,8 @@ describe("runtime", () => {
             { a: 1, b: 2 },
             { a: 2, b: 1 },
             { a: 1, b: 3 },
-          ] as const,
-          (x, idx) => x.b === 2 && idx === 1,
+          ],
+          ({ b }, idx) => b === 2 && idx === 1,
         ),
       ).toEqual({ a: 1, b: 2 });
     });
@@ -46,9 +46,9 @@ describe("runtime", () => {
           { a: 1, b: 2 },
           { a: 2, b: 1 },
           { a: 1, b: 3 },
-        ] as const,
+        ],
         map(counter),
-        find((x) => x.b === 2),
+        find(({ b }) => b === 2),
       );
 
       expect(counter).toHaveBeenCalledTimes(2);
@@ -66,9 +66,9 @@ describe("runtime", () => {
           { a: 1, b: 2 },
           { a: 2, b: 1 },
           { a: 1, b: 3 },
-        ] as const,
+        ],
         map(counter),
-        find((x, idx) => x.b === 2 && idx === 1),
+        find(({ b }, idx) => b === 2 && idx === 1),
       );
       expect(counter).toHaveBeenCalledTimes(2);
       expect(actual).toEqual({ a: 1, b: 2 });

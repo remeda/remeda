@@ -69,10 +69,10 @@ export function reduce<T, U>(
 ): (data: ReadonlyArray<T>) => U;
 
 export function reduce(): unknown {
-  return purry(_reduce, arguments);
+  return purry(reduceImplementation, arguments);
 }
 
-const _reduce = <T, U>(
+const reduceImplementation = <T, U>(
   data: ReadonlyArray<T>,
   callbackfn: (
     previousValue: U,

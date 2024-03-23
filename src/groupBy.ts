@@ -5,8 +5,9 @@ import { purry } from "./purry";
  * Groups the elements of a given iterable according to the string values
  * returned by a provided callback function. The returned object has separate
  * properties for each group, containing arrays with the elements in the group.
- * Unlike the built in `Object.groupBy` this function allows the callback to
- * also return `undefined` in order to filter out an item from the grouping.
+ * Unlike the built in `Object.groupBy` this function also allows the callback to
+ * return `undefined` in order to exclude the item from being added to any
+ * group.
  *
  * @param data - The items to group.
  * @param callbackfn - A function to execute for each element in the iterable.
@@ -35,8 +36,9 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * Groups the elements of a given iterable according to the string values
  * returned by a provided callback function. The returned object has separate
  * properties for each group, containing arrays with the elements in the group.
- * Unlike the built in `Object.groupBy` this function allows the callback to
- * also return `undefined` in order to filter out an item from the grouping.
+ * Unlike the built in `Object.groupBy` this function also allows the callback to
+ * return `undefined` in order to exclude the item from being added to any
+ * group.
  *
  * @param callbackfn - A function to execute for each element in the iterable.
  * It should return a value indicating the group of the current element, or
@@ -77,21 +79,21 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
     data: ReadonlyArray<T>,
   ) => Key | undefined,
 ): ExactRecord<Key, NonEmptyArray<T>> => {
-  const ret: Partial<Record<Key, Array<T>>> = {};
+  const output: Partial<Record<Key, Array<T>>> = {};
 
   for (let index = 0; index < data.length; index++) {
     // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
     const item = data[index]!;
     const key = callbackfn(item, index, data);
     if (key !== undefined) {
-      let { [key]: items } = ret;
+      let { [key]: items } = output;
       if (items === undefined) {
         items = [];
-        ret[key] = items;
+        output[key] = items;
       }
       items.push(item);
     }
   }
 
-  return ret as ExactRecord<Key, NonEmptyArray<T>>;
+  return output as ExactRecord<Key, NonEmptyArray<T>>;
 };

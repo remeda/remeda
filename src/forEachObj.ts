@@ -7,8 +7,8 @@ import { purry } from "./purry";
  * anything (`void`)) to allow using it in a pipe. The returned object is the
  * same reference as the input object, and not a shallow copy of it!
  *
- * @param data - The object.
- * @param callbackfn - The callback function.
+ * @param data - The object who'se entries would be iterated on.
+ * @param callbackfn - A function to execute for each element in the array.
  * @signature
  *    R.forEachObj(object, fn)
  * @example
@@ -30,7 +30,7 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
  * anything (`void`)) to allow using it in a pipe. The returned object is the
  * same reference as the input object, and not a shallow copy of it!
  *
- * @param callbackfn - The callback function.
+ * @param callbackfn - A function to execute for each element in the array.
  * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
  *    R.forEachObj(fn)(object)

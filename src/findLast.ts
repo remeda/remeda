@@ -75,13 +75,14 @@ export function findLast(): unknown {
   return purry(findLastImplementation, arguments);
 }
 
-const findLastImplementation = <T>(
+const findLastImplementation = <T, S extends T>(
   data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): T | undefined => {
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+): S | undefined => {
   for (let i = data.length - 1; i >= 0; i--) {
-    if (predicate(data[i]!, i, data)) {
-      return data[i];
+    const item = data[i]!;
+    if (predicate(item, i, data)) {
+      return item;
     }
   }
   return;

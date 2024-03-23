@@ -10,7 +10,7 @@ import { purry } from "./purry";
  *
  * @param data - The array to map over.
  * @param callbackfn - The callback function that receives the previous value,
- * the current element, and optionally the index and the whole array.
+ * the current element.
  * @param initialValue - The initial value to start the computation with.
  * @returns An array of successively computed values from the left side of the
  * array.
@@ -43,7 +43,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * values.
  *
  * @param callbackfn - The callback function that receives the previous value,
- * the current element, and optionally the index and the whole array.
+ * the current element.
  * @param initialValue - The initial value to start the computation with.
  * @returns An array of successively computed values from the left side of the
  * array.

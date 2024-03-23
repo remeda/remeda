@@ -38,10 +38,14 @@ type PreparedLazyOperation = LazyEvaluator & {
   items: Array<unknown>;
 };
 
-type LazyFn = (value: any, index: number, items: any) => LazyResult<any>;
+type LazyFn = (
+  value: unknown,
+  index: number,
+  items: ReadonlyArray<unknown>,
+) => LazyResult<unknown>;
 
-type LazyOp = ((input: any) => any) & {
-  readonly lazy: ((...args: ReadonlyArray<any>) => LazyFn) & {
+type LazyOp = ((input: unknown) => unknown) & {
+  readonly lazy: ((...args: any) => LazyFn) & {
     readonly single: boolean;
   };
   readonly lazyArgs?: ReadonlyArray<unknown>;

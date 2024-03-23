@@ -49,13 +49,11 @@ describe("runtime", () => {
 
       mapWithFeedback(data, mockedReducer, 100);
 
-      expect(mockedReducer.mock.calls).toStrictEqual([
-        [100, 1, 0, data],
-        [101, 2, 1, data],
-        [103, 3, 2, data],
-        [106, 4, 3, data],
-        [110, 5, 4, data],
-      ]);
+      expect(mockedReducer).toHaveBeenCalledWith(100, 1, 0, data);
+      expect(mockedReducer).toHaveBeenCalledWith(101, 2, 1, data);
+      expect(mockedReducer).toHaveBeenCalledWith(103, 3, 2, data);
+      expect(mockedReducer).toHaveBeenCalledWith(106, 4, 3, data);
+      expect(mockedReducer).toHaveBeenCalledWith(110, 5, 4, data);
     });
   });
 
@@ -105,11 +103,7 @@ describe("runtime", () => {
 
 describe("typing", () => {
   it("should return a mutable tuple type whose length matches input container's length, consisting of the type of the initial value", () => {
-    const result = mapWithFeedback(
-      [1, 2, 3, 4, 5] as const,
-      (acc, x) => acc + x,
-      100,
-    );
+    const result = mapWithFeedback([1, 2, 3, 4, 5], (acc, x) => acc + x, 100);
     expectTypeOf(result).toEqualTypeOf<
       [number, number, number, number, number]
     >();
@@ -117,7 +111,7 @@ describe("typing", () => {
 
   it("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
     const result = mapWithFeedback(
-      ["1", "2", "3", "4", "5"] as const,
+      ["1", "2", "3", "4", "5"],
       (acc, x) => acc + parseInt(x),
       100,
     );
