@@ -1,6 +1,6 @@
 export function _binarySearchCutoffIndex<T>(
   array: ReadonlyArray<T>,
-  predicate: (item: T, index: number) => boolean,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number {
   // !IMPORTANT: This docblock is not above the function because then the code that builds our docs site breaks. Please do not move it.
   /**
@@ -27,7 +27,7 @@ export function _binarySearchCutoffIndex<T>(
     const pivotIndex = (lowIndex + highIndex) >>> 1;
     const pivot = array[pivotIndex]!;
 
-    if (predicate(pivot, pivotIndex)) {
+    if (predicate(pivot, pivotIndex, array)) {
       lowIndex = pivotIndex + 1;
     } else {
       highIndex = pivotIndex;

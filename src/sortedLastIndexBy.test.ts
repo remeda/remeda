@@ -261,7 +261,7 @@ function indicesSeen<T>(
   valueFunction: (item: T) => NonNullable<unknown>,
 ): ReadonlyArray<number | undefined> {
   const indices: Array<number | undefined> = [];
-  sortedLastIndexBy.indexed(items, item, (pivot, index) => {
+  sortedLastIndexBy(items, item, (pivot, index) => {
     indices.push(index);
     return valueFunction(pivot);
   });
