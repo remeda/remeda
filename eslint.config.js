@@ -397,12 +397,6 @@ export default config(
     },
   },
   {
-    files: ["test/**/*.ts"],
-    rules: {
-      "unicorn/no-null": "off",
-    },
-  },
-  {
     files: ["src/_*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
