@@ -73,5 +73,5 @@ export function isIncludedIn(
   }
 
   // === dataFirst ===
-  return container.includes(dataOrContainer);
+  return container.indexOf(dataOrContainer) >= 0;
 }
