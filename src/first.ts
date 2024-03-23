@@ -1,3 +1,4 @@
+import { _toSingle } from "./_toSingle";
 import type { IterableContainer } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
@@ -46,19 +47,13 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(): unknown {
-  return purry(_first, arguments, first.lazy);
+  return purry(firstImplementation, arguments, _toSingle(lazyImplementation));
 }
 
-function _first<T>([item]: ReadonlyArray<T>): T | undefined {
-  return item;
-}
+const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>
+  item;
 
-export namespace first {
-  export function lazy<T>(): LazyEvaluator<T> {
-    return (value) => ({ done: true, hasNext: true, next: value });
-  }
-
-  export namespace lazy {
-    export const single = true;
-  }
-}
+const lazyImplementation =
+  <T>(): LazyEvaluator<T> =>
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- TODO
+  (value) => ({ done: true, hasNext: true, next: value });

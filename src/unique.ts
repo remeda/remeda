@@ -36,22 +36,19 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function unique(): unknown {
-  return purry(uniqueImplementation, arguments, unique.lazy);
+  return purry(uniqueImplementation, arguments, lazyImplementation);
 }
 
-function uniqueImplementation<T>(array: ReadonlyArray<T>): Array<T> {
-  return _reduceLazy(array, unique.lazy());
-}
+const uniqueImplementation = <T>(array: ReadonlyArray<T>): Array<T> =>
+  _reduceLazy(array, lazyImplementation());
 
-export namespace unique {
-  export function lazy<T>(): LazyEvaluator<T> {
-    const set = new Set<T>();
-    return (value) => {
-      if (set.has(value)) {
-        return { done: false, hasNext: false };
-      }
-      set.add(value);
-      return { done: false, hasNext: true, next: value };
-    };
-  }
+function lazyImplementation<T>(): LazyEvaluator<T> {
+  const set = new Set<T>();
+  return (value) => {
+    if (set.has(value)) {
+      return { done: false, hasNext: false };
+    }
+    set.add(value);
+    return { done: false, hasNext: true, next: value };
+  };
 }

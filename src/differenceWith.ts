@@ -57,26 +57,23 @@ export function differenceWith<TFirst, TSecond>(
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function differenceWith(): unknown {
-  return purry(_differenceWith, arguments, differenceWith.lazy);
+  return purry(differenceWithImplementation, arguments, lazyImplementation);
 }
 
-function _differenceWith<TFirst, TSecond>(
+function differenceWithImplementation<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
   other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ): Array<TFirst> {
-  const lazy = differenceWith.lazy(other, isEquals);
-  return _reduceLazy(array, lazy);
+  return _reduceLazy(array, lazyImplementation(other, isEquals));
 }
 
-export namespace differenceWith {
-  export const lazy =
-    <TFirst, TSecond>(
-      other: ReadonlyArray<TSecond>,
-      isEquals: IsEquals<TFirst, TSecond>,
-    ): LazyEvaluator<TFirst> =>
-    (value) =>
-      other.every((otherValue) => !isEquals(value, otherValue))
-        ? { done: false, hasNext: true, next: value }
-        : { done: false, hasNext: false };
-}
+const lazyImplementation =
+  <TFirst, TSecond>(
+    other: ReadonlyArray<TSecond>,
+    isEquals: IsEquals<TFirst, TSecond>,
+  ): LazyEvaluator<TFirst> =>
+  (value) =>
+    other.every((otherValue) => !isEquals(value, otherValue))
+      ? { done: false, hasNext: true, next: value }
+      : { done: false, hasNext: false };

@@ -35,20 +35,17 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
 export function flatten(): unknown {
-  return purry(_flatten, arguments, flatten.lazy);
+  return purry(flattenImplementation, arguments, lazyImplementation);
 }
 
-function _flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>> {
-  return _reduceLazy(items, flatten.lazy());
-}
+const flattenImplementation = <T>(items: ReadonlyArray<T>): Array<Flatten<T>> =>
+  _reduceLazy(items, lazyImplementation());
 
-export namespace flatten {
-  export const lazy =
-    <T>(): LazyEvaluator<T, Flatten<T>> =>
-    // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
-    (item) =>
-      // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
-      Array.isArray(item)
-        ? { done: false, hasNext: true, hasMany: true, next: item }
-        : { done: false, hasNext: true, next: item };
-}
+const lazyImplementation =
+  <T>(): LazyEvaluator<T, Flatten<T>> =>
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
+  (item) =>
+    // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+    Array.isArray(item)
+      ? { done: false, hasNext: true, hasMany: true, next: item }
+      : { done: false, hasNext: true, next: item };

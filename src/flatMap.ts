@@ -76,7 +76,7 @@ function flatMapImplementation<T, K>(
   return flatten(data.map(callbackfn));
 }
 
-export const lazyImplementation =
+const lazyImplementation =
   <T, K>(
     callbackfn: (
       input: T,
