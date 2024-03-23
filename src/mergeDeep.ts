@@ -1,3 +1,4 @@
+import { isPlainObject } from "./isPlainObject";
 import { purry } from "./purry";
 import type { MergeDeep } from "./type-fest/merge-deep";
 
@@ -62,7 +63,7 @@ function mergeDeepImplementation<
     }
 
     const { [key]: destinationValue } = destination;
-    if (!isRecord(destinationValue)) {
+    if (!isPlainObject(destinationValue)) {
       // The value in destination is not a mergable object so the value from
       // source (which was already copied in the shallow merge) would be used
       // as-is.
@@ -70,7 +71,7 @@ function mergeDeepImplementation<
     }
 
     const { [key]: sourceValue } = source;
-    if (!isRecord(sourceValue)) {
+    if (!isPlainObject(sourceValue)) {
       // The value in source is not a mergable object either, so it will
       // override the object in destination.
       continue;
@@ -83,13 +84,4 @@ function mergeDeepImplementation<
 
   // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers the right type.
   return output;
-}
-
-// TODO: Replace this with a call to `isPlainObject` once PR #436 ships.
-function isRecord(object: unknown): object is Record<string, unknown> {
-  return (
-    typeof object === "object" &&
-    object !== null &&
-    Object.getPrototypeOf(object) === Object.prototype
-  );
 }

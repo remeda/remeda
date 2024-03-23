@@ -67,10 +67,7 @@ function mapToObjImplementation(
 ): Record<PropertyKey, unknown> {
   const out: Record<PropertyKey, unknown> = {};
 
-  for (let index = 0; index < array.length; index++) {
-    // TODO: Use Array.prototype.entries once we bump the Typescript target version to iterate over the elements and index at the same time.
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
-    const element = array[index];
+  for (const [index, element] of array.entries()) {
     const [key, value] = fn(element, index, array);
     out[key] = value;
   }

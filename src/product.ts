@@ -1,7 +1,5 @@
 import { purry } from "./purry";
 
-// TODO: Support bigint once we bump our typescript version beyond ES5
-
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
  * array.
@@ -15,7 +13,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
-export function product(data: ReadonlyArray<number>): number;
+export function product<
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
+>(data: T): T[number];
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
@@ -29,15 +29,22 @@ export function product(data: ReadonlyArray<number>): number;
  * @dataLast
  * @category Number
  */
-export function product(): (data: ReadonlyArray<number>) => number;
+export function product(): <
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
+>(
+  data: T,
+) => T[number];
 
 export function product(...args: ReadonlyArray<unknown>): unknown {
   return purry(productImplementation, args);
 }
 
-function productImplementation(data: ReadonlyArray<number>): number {
-  let out = 1;
+function productImplementation<
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
+>(data: T): T[number] {
+  let out = typeof data[0] === "bigint" ? 1n : 1;
   for (const value of data) {
+    // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     out *= value;
   }
   return out;

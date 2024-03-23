@@ -64,10 +64,10 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return true;
   }
 
-  if (typeof data === "number" && typeof other === "number") {
-    // TODO: This is a temporary fix for NaN, we should use Number.isNaN once we bump our target above ES5.
-    // eslint-disable-next-line no-self-compare -- We should use Number.isNaN here, but it's ES2015.
-    return data !== data && other !== other;
+  if (Object.is(data, other)) {
+    // We want to ignore the slight differences between `===` and `Object.is` as
+    // both of them largely define equality from a semantic point-of-view.
+    return true;
   }
 
   if (typeof data !== "object" || typeof other !== "object") {

@@ -279,20 +279,8 @@ export function pipe(
 
     const accumulator: Array<unknown> = [];
 
-    const iterator = output[Symbol.iterator]();
-
-    // eslint-disable-next-line no-constant-condition, @typescript-eslint/no-unnecessary-condition -- TODO: Once we bump the TS target version above ES5 we can use the built-in for-of loop instead.
-    while (true) {
-      const result = iterator.next();
-      if (result.done ?? false) {
-        break;
-      }
-
-      const shouldExitEarly = _processItem(
-        result.value,
-        accumulator,
-        lazySequence,
-      );
+    for (const value of output) {
+      const shouldExitEarly = _processItem(value, accumulator, lazySequence);
       if (shouldExitEarly) {
         break;
       }
