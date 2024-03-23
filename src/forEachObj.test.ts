@@ -1,48 +1,32 @@
 import { forEachObj } from "./forEachObj";
 import { pipe } from "./pipe";
 
-const obj = {
-  a: 1,
-  b: 2,
-  c: 3,
-};
-
-describe("data_first", () => {
-  it("forEachObj", () => {
+describe("runtime", () => {
+  test("dataFirst", () => {
+    const data = {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
     const cb = vi.fn();
-    const result = forEachObj(obj, cb);
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(obj);
+
+    expect(forEachObj(data, cb)).toBe(data);
+    expect(cb).toHaveBeenCalledWith(1, "a", data);
+    expect(cb).toHaveBeenCalledWith(2, "b", data);
+    expect(cb).toHaveBeenCalledWith(3, "c", data);
   });
 
-  it("forEachObj.indexed", () => {
-    const cb = vi.fn();
-    const result = forEachObj.indexed(obj, cb);
-    expect(cb.mock.calls).toEqual([
-      [1, "a", obj],
-      [2, "b", obj],
-      [3, "c", obj],
-    ]);
-    expect(result).toEqual(obj);
-  });
-});
+  test("dataLast", () => {
+    const data = {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
+    const cb = vi.fn<[number, string, typeof data]>();
 
-describe("data_last", () => {
-  it("forEachObj", () => {
-    const cb = vi.fn();
-    const result = pipe(obj, forEachObj(cb));
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(obj);
-  });
-
-  it("forEachObj.indexed", () => {
-    const cb = vi.fn<[number, string, typeof obj]>();
-    const result = pipe(obj, forEachObj.indexed(cb));
-    expect(cb.mock.calls).toEqual([
-      [1, "a", obj],
-      [2, "b", obj],
-      [3, "c", obj],
-    ]);
-    expect(result).toEqual(obj);
+    expect(pipe(data, forEachObj(cb))).toBe(data);
+    expect(cb).toHaveBeenCalledWith(1, "a", data);
+    expect(cb).toHaveBeenCalledWith(2, "b", data);
+    expect(cb).toHaveBeenCalledWith(3, "c", data);
   });
 });
