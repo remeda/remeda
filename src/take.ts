@@ -32,23 +32,20 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
 export function take(): unknown {
-  return purry(_take, arguments, take.lazy);
+  return purry(takeImplementation, arguments, lazyImplementation);
 }
 
-function _take<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return _reduceLazy(array, take.lazy(n));
-}
+const takeImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
+  _reduceLazy(array, lazyImplementation(n));
 
-export namespace take {
-  export function lazy<T>(n: number): LazyEvaluator<T> {
-    if (n <= 0) {
-      return () => ({ done: true, hasNext: false });
-    }
-
-    let remaining = n;
-    return (value) => {
-      remaining -= 1;
-      return { done: remaining <= 0, hasNext: true, next: value };
-    };
+function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+  if (n <= 0) {
+    return () => ({ done: true, hasNext: false });
   }
+
+  let remaining = n;
+  return (value) => {
+    remaining -= 1;
+    return { done: remaining <= 0, hasNext: true, next: value };
+  };
 }

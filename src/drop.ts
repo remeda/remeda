@@ -32,22 +32,20 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
 export function drop(): unknown {
-  return purry(_drop, arguments, drop.lazy);
+  return purry(dropImplementation, arguments, lazyImplementation);
 }
 
-function _drop<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return _reduceLazy(array, drop.lazy(n));
+function dropImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+  return _reduceLazy(array, lazyImplementation(n));
 }
 
-export namespace drop {
-  export function lazy<T>(n: number): LazyEvaluator<T> {
-    let left = n;
-    return (value) => {
-      if (left > 0) {
-        left -= 1;
-        return { done: false, hasNext: false };
-      }
-      return { done: false, hasNext: true, next: value };
-    };
-  }
+function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+  let left = n;
+  return (value) => {
+    if (left > 0) {
+      left -= 1;
+      return { done: false, hasNext: false };
+    }
+    return { done: false, hasNext: true, next: value };
+  };
 }

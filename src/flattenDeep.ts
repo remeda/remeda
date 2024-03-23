@@ -41,12 +41,22 @@ export function flattenDeep<T>(): (
 ) => Array<FlattenDeep<T>>;
 
 export function flattenDeep(): unknown {
-  return purry(_flattenDeep, arguments, flattenDeep.lazy);
+  return purry(flattenDeepImplementation, arguments, lazyImplementation);
 }
 
-function _flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>> {
-  return _reduceLazy(items, flattenDeep.lazy());
-}
+const flattenDeepImplementation = <T>(
+  items: ReadonlyArray<T>,
+): Array<FlattenDeep<T>> => _reduceLazy(items, lazyImplementation());
+
+const lazyImplementation =
+  <T>(): LazyEvaluator<T, any> =>
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
+  (value) => {
+    const next = _flattenDeepValue(value);
+    return Array.isArray(next)
+      ? { done: false, hasNext: true, hasMany: true, next }
+      : { done: false, hasNext: true, next };
+  };
 
 function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
   if (!Array.isArray(value)) {
@@ -63,16 +73,4 @@ function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {
   }
 
   return ret;
-}
-
-export namespace flattenDeep {
-  export const lazy =
-    <T>(): LazyEvaluator<T, any> =>
-    // eslint-disable-next-line unicorn/consistent-function-scoping -- I tried pulling the function out but I couldn't get the `<T>` to get inferred correctly.
-    (value) => {
-      const next = _flattenDeepValue(value);
-      return Array.isArray(next)
-        ? { done: false, hasNext: true, hasMany: true, next }
-        : { done: false, hasNext: true, next };
-    };
 }

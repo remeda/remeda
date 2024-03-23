@@ -219,6 +219,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace conditional {
   /**
    * A simplified case that accepts all data. Put this as the last case to

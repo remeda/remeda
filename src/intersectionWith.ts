@@ -62,26 +62,21 @@ export function intersectionWith<TFirst, TSecond>(
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function intersectionWith(): unknown {
-  return purry(_intersectionWith, arguments, intersectionWith.lazy);
+  return purry(intersectionWithImplementation, arguments, lazyImplementation);
 }
 
-function _intersectionWith<TFirst, TSecond>(
+const intersectionWithImplementation = <TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
   other: ReadonlyArray<TSecond>,
   comparator: Comparator<TFirst, TSecond>,
-): Array<TFirst> {
-  const lazy = intersectionWith.lazy(other, comparator);
-  return _reduceLazy(array, lazy);
-}
+): Array<TFirst> => _reduceLazy(array, lazyImplementation(other, comparator));
 
-export namespace intersectionWith {
-  export const lazy =
-    <TFirst, TSecond>(
-      other: ReadonlyArray<TSecond>,
-      comparator: Comparator<TFirst, TSecond>,
-    ): LazyEvaluator<TFirst> =>
-    (value) =>
-      other.some((otherValue) => comparator(value, otherValue))
-        ? { done: false, hasNext: true, next: value }
-        : { done: false, hasNext: false };
-}
+const lazyImplementation =
+  <TFirst, TSecond>(
+    other: ReadonlyArray<TSecond>,
+    comparator: Comparator<TFirst, TSecond>,
+  ): LazyEvaluator<TFirst> =>
+  (value) =>
+    other.some((otherValue) => comparator(value, otherValue))
+      ? { done: false, hasNext: true, next: value }
+      : { done: false, hasNext: false };
