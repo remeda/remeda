@@ -36,7 +36,7 @@ import type { LazyEvaluator } from "./pipe";
  *    // data-last
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
- *    function findIndex() {
+ *    function findIndex(...args: unknown[]) {
  *      return R.purry(_findIndex, args);
  *    }
  * @category Function
