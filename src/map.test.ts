@@ -105,7 +105,7 @@ describe("runtime", () => {
       123,
       true,
     ];
-    expect(map(input, identity)).toEqual(input);
+    expect(map(input, identity())).toEqual(input);
   });
 
   describe("Indexed", () => {
@@ -204,7 +204,7 @@ describe("typing", () => {
         ...Array<number>,
         boolean,
       ],
-      identity,
+      identity(),
     );
     expectTypeOf(result).toEqualTypeOf<
       [...Array<boolean | number | string>, boolean | number | string]

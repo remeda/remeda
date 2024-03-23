@@ -16,7 +16,9 @@ describe("uniqueBy", () => {
   ] as const;
 
   it("handles uniq by identity", () => {
-    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity)).toEqual([1, 2, 5, 6, 7]);
+    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity())).toEqual([
+      1, 2, 5, 6, 7,
+    ]);
   });
 
   it("returns people with uniq names", () => {
@@ -54,7 +56,7 @@ describe("uniqueBy", () => {
       const result = pipe(
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),
-        uniqueBy(identity),
+        uniqueBy(identity()),
         take(3),
       );
 
@@ -68,7 +70,7 @@ describe("uniqueBy", () => {
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),
         take(3),
-        uniqueBy(identity),
+        uniqueBy(identity()),
       );
 
       expect(counter.count).toHaveBeenCalledTimes(3);

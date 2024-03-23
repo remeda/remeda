@@ -47,7 +47,7 @@ describe("runtime", () => {
 
     test("number keys", () => {
       expect(
-        pullObject(["a", "aa"], (item) => item.length, identity),
+        pullObject(["a", "aa"], (item) => item.length, identity()),
       ).toStrictEqual({
         1: "a",
         2: "aa",
@@ -55,7 +55,7 @@ describe("runtime", () => {
     });
 
     test("undefined values", () => {
-      expect(pullObject(["a"], identity, constant(undefined))).toStrictEqual({
+      expect(pullObject(["a"], identity(), constant(undefined))).toStrictEqual({
         a: undefined,
       });
     });
@@ -76,8 +76,8 @@ describe("runtime", () => {
     test("Guaranteed to run on each item", () => {
       const data = ["a", "a", "a", "a", "a", "a"];
 
-      const keyFn = vi.fn(identity);
-      const valueFn = vi.fn(identity);
+      const keyFn = vi.fn(identity());
+      const valueFn = vi.fn(identity());
 
       pullObject(data, keyFn, valueFn);
 
@@ -130,14 +130,14 @@ describe("runtime", () => {
       expect(
         pipe(
           ["a", "aa"],
-          pullObject((item) => item.length, identity),
+          pullObject((item) => item.length, identity()),
         ),
       ).toStrictEqual({ 1: "a", 2: "aa" });
     });
 
     test("undefined values", () => {
       expect(
-        pipe(["a"], pullObject(identity, constant(undefined))),
+        pipe(["a"], pullObject(identity(), constant(undefined))),
       ).toStrictEqual({
         a: undefined,
       });
@@ -158,8 +158,8 @@ describe("runtime", () => {
     test("Guaranteed to run on each item", () => {
       const data = ["a", "a", "a", "a", "a", "a"];
 
-      const keyFn = vi.fn(identity);
-      const valueFn = vi.fn(identity);
+      const keyFn = vi.fn(identity());
+      const valueFn = vi.fn(identity());
 
       pipe(data, pullObject(keyFn, valueFn));
 
@@ -173,50 +173,50 @@ describe("typing", () => {
   test("string keys", () => {
     const data = ["a", "b"];
 
-    const dataFirst = pullObject(data, identity, constant("value"));
+    const dataFirst = pullObject(data, identity(), constant("value"));
     expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<string, string>>>();
 
-    const dataLast = pipe(data, pullObject(identity, constant("value")));
+    const dataLast = pipe(data, pullObject(identity(), constant("value")));
     expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<string, string>>>();
   });
 
   test("number keys", () => {
     const data = [1, 2];
 
-    const dataFirst = pullObject(data, identity, constant(3));
+    const dataFirst = pullObject(data, identity(), constant(3));
     expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<number, number>>>();
 
-    const dataLast = pipe(data, pullObject(identity, constant(3)));
+    const dataLast = pipe(data, pullObject(identity(), constant(3)));
     expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<number, number>>>();
   });
 
   test("symbol keys", () => {
     const data = [Symbol("a"), Symbol("b")];
 
-    const dataFirst = pullObject(data, identity, constant(Symbol("c")));
+    const dataFirst = pullObject(data, identity(), constant(Symbol("c")));
     expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<symbol, symbol>>>();
 
-    const dataLast = pipe(data, pullObject(identity, constant(Symbol("c"))));
+    const dataLast = pipe(data, pullObject(identity(), constant(Symbol("c"))));
     expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<symbol, symbol>>>();
   });
 
   test("number constants", () => {
     const data = [1, 2] as const;
 
-    const dataFirst = pullObject(data, identity, constant(3 as const));
+    const dataFirst = pullObject(data, identity(), constant(3 as const));
     expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
 
-    const dataLast = pipe(data, pullObject(identity, constant(3 as const)));
+    const dataLast = pipe(data, pullObject(identity(), constant(3 as const)));
     expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
   });
 
   test("string constants", () => {
     const data = ["a", "b"] as const;
 
-    const dataFirst = pullObject(data, identity, constant("c" as const));
+    const dataFirst = pullObject(data, identity(), constant("c" as const));
     expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
 
-    const dataLast = pipe(data, pullObject(identity, constant("c" as const)));
+    const dataLast = pipe(data, pullObject(identity(), constant("c" as const)));
     expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
   });
 

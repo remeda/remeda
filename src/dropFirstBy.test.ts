@@ -5,27 +5,27 @@ import { pipe } from "./pipe";
 describe("runtime (dataFirst)", () => {
   it("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropFirstBy(data, 2, identity)).toEqual([5, 6, 4, 3, 7]);
+    expect(dropFirstBy(data, 2, identity())).toEqual([5, 6, 4, 3, 7]);
   });
 
   it("handles empty arrays gracefully", () => {
     const data: Array<number> = [];
-    expect(dropFirstBy(data, 1, identity)).toHaveLength(0);
+    expect(dropFirstBy(data, 1, identity())).toHaveLength(0);
   });
 
   it("handles negative numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropFirstBy(data, -3, identity)).toHaveLength(data.length);
+    expect(dropFirstBy(data, -3, identity())).toHaveLength(data.length);
   });
 
   it("handles overflowing numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropFirstBy(data, 100, identity)).toHaveLength(0);
+    expect(dropFirstBy(data, 100, identity())).toHaveLength(0);
   });
 
   it("clones the input when needed", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    const result = dropFirstBy(data, 0, identity);
+    const result = dropFirstBy(data, 0, identity());
     expect(result).not.toBe(data);
     expect(result).toEqual(data);
   });
@@ -43,7 +43,7 @@ describe("runtime (dataFirst)", () => {
       "b",
       "aaaaa",
     ];
-    expect(dropFirstBy(data, 3, (x) => x.length, identity)).toEqual([
+    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toEqual([
       "bbbbb",
       "aaa",
       "bbb",

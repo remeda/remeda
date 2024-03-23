@@ -24,6 +24,20 @@ export function randomString(length: number): string;
  *
  * @returns The random string.
  * @signature
+ *   R.randomString(length)
+ * @example
+ *   R.randomString(5) // => aB92J
+ *   R.pipe(5, R.randomString) // => aB92J
+ * @dataLast
+ * @category String
+ */
+export function randomString(): (length: number) => string;
+
+/**
+ * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ *
+ * @returns The random string.
+ * @signature
  *   R.randomString()(length)
  * @example
  *    R.pipe(5, R.randomString()) // => aB92J
