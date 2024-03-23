@@ -48,7 +48,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @example
  *    R.pipe(
  *      [{a: 'cat'}, {a: 'dog'}] as const,
- *      R.groupBy(R.prop('a'),
+ *      R.groupBy(R.prop('a')),
  *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
  *    R.pipe(
  *      [0, 1],
