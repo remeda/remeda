@@ -4,8 +4,8 @@ import { purry } from "./purry";
 /**
  * Splits a given array at the first index where the given predicate returns true.
  *
- * @param array - The array to split.
- * @param fn - The predicate.
+ * @param data - The array to split.
+ * @param predicate - The predicate.
  * @signature
  *    R.splitWhen(array, fn)
  * @example
@@ -14,14 +14,14 @@ import { purry } from "./purry";
  * @category Array
  */
 export function splitWhen<T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => boolean,
+  data: ReadonlyArray<T>,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
  *
- * @param fn - The predicate.
+ * @param predicate - The predicate.
  * @signature
  *    R.splitWhen(fn)(array)
  * @example
@@ -30,25 +30,25 @@ export function splitWhen<T>(
  * @category Array
  */
 export function splitWhen<T>(
-  fn: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function splitWhen(): unknown {
-  return purry(_splitWhen, arguments);
+  return purry(splitWhenImplementation, arguments);
 }
 
-function _splitWhen<T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => boolean,
+function splitWhenImplementation<T>(
+  data: ReadonlyArray<T>,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  for (let i = 0; i < array.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     // TODO: Use `Array.prototype.entries` once we bump our TS target so we
     // can get both the index and the item at the same time, and don't need
     // the non-null assertion.
-    if (fn(array[i]!)) {
-      return splitAt(array, i);
+    if (predicate(data[i]!, i, data)) {
+      return splitAt(data, i);
     }
   }
 
-  return [array.slice(), []];
+  return [data.slice(), []];
 }

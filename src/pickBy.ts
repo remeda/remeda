@@ -4,8 +4,8 @@ import { purry } from "./purry";
 /**
  * Creates an object composed of the picked `object` properties.
  *
- * @param object - The target object.
- * @param fn - The predicate.
+ * @param data - The target object.
+ * @param predicate - The predicate.
  * @signature R.pickBy(object, fn)
  * @example
  *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
@@ -13,14 +13,14 @@ import { purry } from "./purry";
  * @category Object
  */
 export function pickBy<T>(
-  object: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
+  data: T,
+  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
  * Creates an object composed of the picked `object` properties.
  *
- * @param fn - The predicate.
+ * @param predicate - The predicate.
  * @signature R.pickBy(fn)(object)
  * @example
  *    R.pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}
@@ -28,16 +28,16 @@ export function pickBy<T>(
  * @category Object
  */
 export function pickBy<T>(
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
-): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
+): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function pickBy(): unknown {
-  return purry(_pickBy, arguments);
+  return purry(pickByImplementation, arguments);
 }
 
-function _pickBy<T>(
+function pickByImplementation<T>(
   data: T,
-  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
+  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
 ): Partial<T> {
   if (data === null || data === undefined) {
     return {};
@@ -46,7 +46,7 @@ function _pickBy<T>(
   const out: Partial<T> = {};
 
   for (const key of keys(data)) {
-    if (fn(data[key], key)) {
+    if (predicate(data[key], key, data)) {
       out[key] = data[key];
     }
   }

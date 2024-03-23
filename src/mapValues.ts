@@ -18,7 +18,7 @@ type MappedValues<T, S> = { -readonly [P in keyof T]: S };
  */
 export function mapValues<T extends object, S>(
   data: T,
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
 ): MappedValues<T, S>;
 
 /**
@@ -33,7 +33,7 @@ export function mapValues<T extends object, S>(
  * @category Object
  */
 export function mapValues<T extends object, S>(
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
 ): (data: T) => MappedValues<T, S>;
 
 export function mapValues(): unknown {
@@ -42,13 +42,13 @@ export function mapValues(): unknown {
 
 function mapValuesImplementation<T extends object, S>(
   data: T,
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>) => S,
+  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
 ): MappedValues<T, S> {
   const out: Partial<MappedValues<T, S>> = {};
 
   for (const [key, value] of entries(data)) {
     // @ts-expect-error [ts2345] - FIXME!
-    const mappedValue = valueMapper(value, key);
+    const mappedValue = valueMapper(value, key, data);
     out[key] = mappedValue;
   }
 

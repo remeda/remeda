@@ -16,7 +16,7 @@ import { purry } from "./purry";
  */
 export function dropWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T>;
 
 /**
@@ -33,19 +33,19 @@ export function dropWhile<T>(
  * @category Array
  */
 export function dropWhile<T>(
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function dropWhile(): unknown {
-  return purry(_dropWhile, arguments);
+  return purry(dropWhileImplementation, arguments);
 }
 
-function _dropWhile<T>(
+function dropWhileImplementation<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
   for (let i = 0; i < data.length; i++) {
-    if (!predicate(data[i]!)) {
+    if (!predicate(data[i]!, i, data)) {
       return data.slice(i);
     }
   }

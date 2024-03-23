@@ -3,12 +3,20 @@ import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Map each element of an array using a defined callback function and flatten the mapped result.
+ * Returns a new array formed by applying a given callback function to each
+ * element of the array, and then flattening the result by one level. It is
+ * identical to a `map` followed by a `flat` of depth 1
+ * (`flat(map(data, ...args))`), but slightly more efficient than calling those
+ * two methods separately. Equivalent to `Array.prototype.flatMap`.
  *
- * @param array - The array to map.
- * @param fn - The function mapper.
+ * @param data - The items to map and flatten.
+ * @param callbackfn - A function to execute for each element in the array. It
+ * should return an array containing new elements of the new array, or a single
+ * non-array value to be added to the new array.
+ * @returns A new array with each element being the result of the callback
+ * function and flattened by a depth of 1.
  * @signature
- *    R.flatMap(array, fn)
+ *    R.flatMap(data, callbackfn)
  * @example
  *    R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @dataFirst
@@ -16,16 +24,28 @@ import { purry } from "./purry";
  * @category Array
  */
 export function flatMap<T, K>(
-  array: ReadonlyArray<T>,
-  fn: (input: T) => K | ReadonlyArray<K>,
+  data: ReadonlyArray<T>,
+  callbackfn: (
+    input: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => K | ReadonlyArray<K>,
 ): Array<K>;
 
 /**
- * Map each element of an array using a defined callback function and flatten the mapped result.
+ * Returns a new array formed by applying a given callback function to each
+ * element of the array, and then flattening the result by one level. It is
+ * identical to a `map` followed by a `flat` of depth 1
+ * (`flat(map(data, ...args))`), but slightly more efficient than calling those
+ * two methods separately. Equivalent to `Array.prototype.flatMap`.
  *
- * @param fn - The function mapper.
+ * @param callbackfn - A function to execute for each element in the array. It
+ * should return an array containing new elements of the new array, or a single
+ * non-array value to be added to the new array.
+ * @returns A new array with each element being the result of the callback
+ * function and flattened by a depth of 1.
  * @signature
- *    R.flatMap(fn)(array)
+ *    R.flatMap(callbackfn)(data)
  * @example
  *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @dataLast
@@ -33,28 +53,41 @@ export function flatMap<T, K>(
  * @category Array
  */
 export function flatMap<T, K>(
-  fn: (input: T) => K | ReadonlyArray<K>,
-): (array: ReadonlyArray<T>) => Array<K>;
+  callbackfn: (
+    input: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => K | ReadonlyArray<K>,
+): (data: ReadonlyArray<T>) => Array<K>;
 
 export function flatMap(): unknown {
-  return purry(_flatMap, arguments, flatMap.lazy);
+  return purry(flatMapImplementation, arguments, lazyImplementation);
 }
 
-function _flatMap<T, K>(
-  array: ReadonlyArray<T>,
-  fn: (input: T) => ReadonlyArray<K>,
+function flatMapImplementation<T, K>(
+  data: ReadonlyArray<T>,
+  callbackfn: (
+    input: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => ReadonlyArray<K>,
 ): Array<K> {
-  return flatten(array.map((item) => fn(item)));
+  // TODO: Use flatMap directly once we bump our TypeScript target version.
+  return flatten(data.map(callbackfn));
 }
 
-export namespace flatMap {
-  export const lazy =
-    <T, K>(fn: (input: T) => K | ReadonlyArray<K>): LazyEvaluator<T, K> =>
-    // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
-    (value) => {
-      const next = fn(value);
-      return Array.isArray(next)
-        ? { done: false, hasNext: true, hasMany: true, next }
-        : { done: false, hasNext: true, next };
-    };
-}
+export const lazyImplementation =
+  <T, K>(
+    callbackfn: (
+      input: T,
+      index: number,
+      data: ReadonlyArray<T>,
+    ) => K | ReadonlyArray<K>,
+  ): LazyEvaluator<T, K> =>
+  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+  (value, index, data) => {
+    const next = callbackfn(value, index, data);
+    return Array.isArray(next)
+      ? { done: false, hasNext: true, hasMany: true, next }
+      : { done: false, hasNext: true, next };
+  };

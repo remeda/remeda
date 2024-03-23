@@ -1,4 +1,9 @@
-type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
+type ZippingFunction<T1 = unknown, T2 = unknown, Value = unknown> = (
+  first: T1,
+  second: T2,
+  index: number,
+  data: readonly [first: ReadonlyArray<T1>, second: ReadonlyArray<T2>],
+) => Value;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -14,11 +19,11 @@ type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
  * @dataFirst
  * @category Array
  */
-export function zipWith<F, S, R>(
-  first: ReadonlyArray<F>,
-  second: ReadonlyArray<S>,
-  fn: ZippingFunction<F, S, R>,
-): Array<R>;
+export function zipWith<T1, T2, Value>(
+  first: ReadonlyArray<T1>,
+  second: ReadonlyArray<T2>,
+  fn: ZippingFunction<T1, T2, Value>,
+): Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -32,9 +37,9 @@ export function zipWith<F, S, R>(
  * @dataLast
  * @category Array
  */
-export function zipWith<F, S, R>(
-  fn: ZippingFunction<F, S, R>,
-): (first: ReadonlyArray<F>, second: ReadonlyArray<S>) => Array<R>;
+export function zipWith<T1, T2, Value>(
+  fn: ZippingFunction<T1, T2, Value>,
+): (first: ReadonlyArray<T1>, second: ReadonlyArray<T2>) => Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -49,10 +54,10 @@ export function zipWith<F, S, R>(
  * @dataLast
  * @category Array
  */
-export function zipWith<F, S, R>(
-  fn: ZippingFunction<F, S, R>,
-  second: ReadonlyArray<S>,
-): (first: ReadonlyArray<F>) => Array<R>;
+export function zipWith<T1, T2, Value>(
+  fn: ZippingFunction<T1, T2, Value>,
+  second: ReadonlyArray<T2>,
+): (first: ReadonlyArray<T1>) => Array<Value>;
 
 export function zipWith(
   arg0: ReadonlyArray<unknown> | ZippingFunction,
@@ -62,27 +67,29 @@ export function zipWith(
   if (typeof arg0 === "function") {
     return arg1 === undefined
       ? (f: ReadonlyArray<unknown>, s: ReadonlyArray<unknown>) =>
-          _zipWith(f, s, arg0)
-      : (f: ReadonlyArray<unknown>) => _zipWith(f, arg1, arg0);
+          zipWithImplementation(f, s, arg0)
+      : (f: ReadonlyArray<unknown>) => zipWithImplementation(f, arg1, arg0);
   }
 
   if (arg1 === undefined || arg2 === undefined) {
     throw new Error("zipWith: Missing arguments in dataFirst function call");
   }
 
-  return _zipWith(arg0, arg1, arg2);
+  return zipWithImplementation(arg0, arg1, arg2);
 }
 
-function _zipWith<F, S, R>(
-  first: ReadonlyArray<F>,
-  second: ReadonlyArray<S>,
-  fn: ZippingFunction<F, S, R>,
-): Array<R> {
+function zipWithImplementation<T1, T2, Value>(
+  first: ReadonlyArray<T1>,
+  second: ReadonlyArray<T2>,
+  fn: ZippingFunction<T1, T2, Value>,
+): Array<Value> {
+  const datum = [first, second] as const;
+
   const resultLength =
     first.length > second.length ? second.length : first.length;
   const result = [];
   for (let i = 0; i < resultLength; i++) {
-    result.push(fn(first[i]!, second[i]!));
+    result.push(fn(first[i]!, second[i]!, i, datum));
   }
 
   return result;
