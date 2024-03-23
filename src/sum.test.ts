@@ -12,6 +12,10 @@ describe("runtime", () => {
     it("should return 0 for an empty array", () => {
       expect(sum([])).toBe(0);
     });
+
+    it("works on bigints", () => {
+      expect(sum([1n, 2n, 3n])).toBe(6n);
+    });
   });
 
   describe("dataLast", () => {
@@ -24,5 +28,34 @@ describe("runtime", () => {
     it("should return 0 for an empty array", () => {
       expect(pipe([], sum())).toBe(0);
     });
+  });
+});
+
+describe("typing", () => {
+  it("returns number on numbers", () => {
+    const result = sum([1, 2, 3]);
+    expectTypeOf(result).toEqualTypeOf<number>();
+  });
+
+  it("returns bigint on bigints", () => {
+    const result = sum([1n, 2n, 3n]);
+    expectTypeOf(result).toEqualTypeOf<bigint>();
+  });
+
+  it("doesn't allow mixed arrays", () => {
+    expect(() =>
+      // @ts-expect-error [ts2345] - Can't sum bigints and numbers...
+      sum([1, 2n]),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[TypeError: Cannot mix BigInt and other types, use explicit conversions]`,
+    );
+  });
+});
+
+describe("KNOWN ISSUES", () => {
+  it("Returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
+    const result = sum([] as Array<bigint>);
+    expect(result).toBe(0);
+    expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 });
