@@ -15,7 +15,6 @@ describe("at runtime", () => {
     });
 
     it("bigint", () => {
-      // @ts-expect-error [ts2737] - Our target is too low to use bigints but our runtimes support them so we want to test them too
       const array = [1n, 2n, 3n, 4n, 5n];
       const result = join(array, ",");
       expect(result).toEqual("1,2,3,4,5");
@@ -41,7 +40,6 @@ describe("at runtime", () => {
   });
 
   it("joins different-typed items", () => {
-    // @ts-expect-error [ts2737] - Our target is too low to use bigints but our runtimes support them so we want to test them too
     const array = [1, "2", 3n, true, null, undefined];
     const result = join(array, ",");
     expect(result).toEqual("1,2,3,true,,");
@@ -147,7 +145,6 @@ describe("typing", () => {
     });
 
     it("bigint", () => {
-      // @ts-expect-error [ts2737] - Our target is too low to use bigints but our runtimes support them so we want to test them too
       const array: [bigint, bigint] = [1n, 2n];
       const result = join(array, ",");
       expectTypeOf(result).toEqualTypeOf<`${bigint},${bigint}`>();
