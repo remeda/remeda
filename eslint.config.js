@@ -370,10 +370,6 @@ export default config(
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
-
-      // "unicorn/no-for-loop": "off",
-      // "unicorn/prefer-at": "off",
-      // "unicorn/prefer-includes": "off",
     },
   },
   {
