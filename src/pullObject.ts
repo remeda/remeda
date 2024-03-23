@@ -38,8 +38,8 @@ export function pullObject<
   V,
 >(
   data: T,
-  keyExtractor: (item: T[number]) => K,
-  valueExtractor: (item: T[number]) => V,
+  keyExtractor: (item: T[number], index: number, data: T) => K,
+  valueExtractor: (item: T[number], index: number, data: T) => V,
 ): Partial<Record<K, V>>;
 
 /**
@@ -76,8 +76,8 @@ export function pullObject<
   K extends PropertyKey,
   V,
 >(
-  keyExtractor: (item: T[number]) => K,
-  valueExtractor: (item: T[number]) => V,
+  keyExtractor: (item: T[number], index: number, data: T) => K,
+  valueExtractor: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Partial<Record<K, V>>;
 
 export function pullObject(): unknown {
@@ -90,14 +90,16 @@ function pullObjectImplementation<
   V,
 >(
   data: T,
-  keyExtractor: (item: T[number]) => K,
-  valueExtractor: (item: T[number]) => V,
+  keyExtractor: (item: T[number], index: number, data: T) => K,
+  valueExtractor: (item: T[number], index: number, data: T) => V,
 ): Partial<Record<K, V>> {
   const result: Partial<Record<K, V>> = {};
 
-  for (const item of data) {
-    const key = keyExtractor(item);
-    const value = valueExtractor(item);
+  for (let i = 0; i < data.length; i++) {
+    // TODO: use entries once we bump our typescript target.
+    const item = data[i]!;
+    const key = keyExtractor(item, i, data);
+    const value = valueExtractor(item, i, data);
     result[key] = value;
   }
 

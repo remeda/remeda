@@ -43,7 +43,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): Simplify<FromKeys<T, V>>;
 
 /**
@@ -70,7 +70,7 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @category Object
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
 export function fromKeys(): unknown {
@@ -79,13 +79,15 @@ export function fromKeys(): unknown {
 
 function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): FromKeys<T, V> {
   const result: Partial<FromKeys<T, V>> = {};
 
-  for (const key of data) {
+  for (let i = 0; i < data.length; i++) {
+    // TODO: Use entries once we bump our typescript target.
+    const key = data[i]!;
     // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
-    result[key] = mapper(key);
+    result[key] = mapper(key, i, data);
   }
 
   return result as FromKeys<T, V>;

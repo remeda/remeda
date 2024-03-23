@@ -15,7 +15,7 @@ import { purry } from "./purry";
  */
 export function takeLastWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T>;
 
 /**
@@ -31,19 +31,19 @@ export function takeLastWhile<T>(
  * @category Array
  */
 export function takeLastWhile<T>(
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function takeLastWhile(): unknown {
-  return purry(_takeLastWhile, arguments);
+  return purry(takeLastWhileImplementation, arguments);
 }
 
-function _takeLastWhile<T>(
+function takeLastWhileImplementation<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
   for (let i = data.length - 1; i >= 0; i--) {
-    if (!predicate(data[i]!)) {
+    if (!predicate(data[i]!, i, data)) {
       return data.slice(i + 1);
     }
   }

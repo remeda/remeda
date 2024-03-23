@@ -9,7 +9,7 @@ import { purry } from "./purry";
  * @param data - The array to filter.
  * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
- *    R.uniqueBy(array, fn)
+ *    R.uniqueBy(data, keyFunction)
  * @example
  *    R.uniqueBy(
  *     [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],
@@ -21,7 +21,7 @@ import { purry } from "./purry";
  */
 export function uniqueBy<T, K>(
   data: ReadonlyArray<T>,
-  keyFunction: (item: T) => K,
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): Array<T>;
 
 /**
@@ -30,7 +30,7 @@ export function uniqueBy<T, K>(
  *
  * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
- *    R.uniqueBy(fn)(array)
+ *    R.uniqueBy(keyFunction)(data)
  * @example
  *    R.pipe(
  *      [{n: 1}, {n: 2}, {n: 2}, {n: 5}, {n: 1}, {n: 6}, {n: 7}], // only 4 iterations
@@ -42,24 +42,24 @@ export function uniqueBy<T, K>(
  * @category Array
  */
 export function uniqueBy<T, K>(
-  keyFunction: (item: T) => K,
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function uniqueBy(): unknown {
-  return purry(uniqueByImplementation, arguments, lazyUniqueBy);
+  return purry(uniqueByImplementation, arguments, lazyImplementation);
 }
 
-function uniqueByImplementation<T, K>(
+const uniqueByImplementation = <T, K>(
   data: ReadonlyArray<T>,
-  keyFunction: (item: T) => K,
-): Array<T> {
-  return _reduceLazy(data, lazyUniqueBy(keyFunction));
-}
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+): Array<T> => _reduceLazy(data, lazyImplementation(keyFunction));
 
-function lazyUniqueBy<T, K>(keyFunction: (item: T) => K): LazyEvaluator<T> {
+function lazyImplementation<T, K>(
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+): LazyEvaluator<T> {
   const set = new Set<K>();
-  return (value) => {
-    const key = keyFunction(value);
+  return (value, index, data) => {
+    const key = keyFunction(value, index, data);
     if (set.has(key)) {
       return { done: false, hasNext: false };
     }

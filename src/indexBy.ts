@@ -24,7 +24,7 @@ import { purry } from "./purry";
  */
 export function indexBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
-  mapper: (item: T) => K,
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): ExactRecord<K, T>;
 
 /**
@@ -51,7 +51,7 @@ export function indexBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  mapper: (item: T) => K,
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): (data: ReadonlyArray<T>) => ExactRecord<K, T>;
 
 export function indexBy(): unknown {
@@ -60,12 +60,14 @@ export function indexBy(): unknown {
 
 function indexByImplementation<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
-  mapper: (item: T) => K,
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): ExactRecord<K, T> {
   const out: Partial<Record<K, T>> = {};
 
-  for (const item of data) {
-    const key = mapper(item);
+  for (let i = 0; i < data.length; i++) {
+    // TODO: Use entries directly once we bump our typescript target version.
+    const item = data[i]!;
+    const key = mapper(item, i, data);
     out[key] = item;
   }
 
