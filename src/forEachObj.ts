@@ -1,11 +1,14 @@
 import { purry } from "./purry";
 
 /**
- * Iterate an object using a defined callback function. The original object is returned.
+ * Iterate an object using a defined callback function.
  *
- * @param object - The object.
- * @param fn - The callback function.
- * @returns The original object.
+ * The dataLast version returns the original object (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned object is the
+ * same reference as the input object, and not a shallow copy of it!
+ *
+ * @param data - The object.
+ * @param callbackfn - The callback function.
  * @signature
  *    R.forEachObj(object, fn)
  * @example
@@ -16,14 +19,19 @@ import { purry } from "./purry";
  * @category Object
  */
 export function forEachObj<T extends Record<PropertyKey, unknown>>(
-  object: T,
-  fn: (value: T[keyof T], key: keyof T, obj: T) => void,
-): T;
+  data: T,
+  callbackfn: (value: T[keyof T], key: keyof T, obj: T) => void,
+): void;
 
 /**
- * Iterate an object using a defined callback function. The original object is returned.
+ * Iterate an object using a defined callback function.
  *
- * @param fn - The callback function.
+ * The dataLast version returns the original object (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned object is the
+ * same reference as the input object, and not a shallow copy of it!
+ *
+ * @param callbackfn - The callback function.
+ * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
  *    R.forEachObj(fn)(object)
  * @example
@@ -35,7 +43,7 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
  * @category Object
  */
 export function forEachObj<T extends Record<PropertyKey, unknown>>(
-  fn: (value: T[keyof T], key: keyof T, obj: T) => void,
+  callbackfn: (value: T[keyof T], key: keyof T, obj: T) => void,
 ): (object: T) => T;
 
 export function forEachObj(): unknown {

@@ -10,7 +10,8 @@ describe("runtime", () => {
     };
     const cb = vi.fn();
 
-    expect(forEachObj(data, cb)).toBe(data);
+    forEachObj(data, cb);
+
     expect(cb).toHaveBeenCalledWith(1, "a", data);
     expect(cb).toHaveBeenCalledWith(2, "b", data);
     expect(cb).toHaveBeenCalledWith(3, "c", data);
