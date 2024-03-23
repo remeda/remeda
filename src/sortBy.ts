@@ -99,5 +99,5 @@ const sortByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
 ): Array<T> =>
-  // Sort is done in-place so we need to copy the array.
+  // TODO: Use Array.toSorted once we bump our target/lib beyond ES2022.
   [...data].sort(compareFn);

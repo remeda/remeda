@@ -46,7 +46,7 @@ type Comparable =
 
 //  Notice that `boolean` is special in that it is coerced as a number (0 for
 // `false`, 1 for `true`) implicitly.
-type ComparablePrimitive = boolean | number | string;
+type ComparablePrimitive = bigint | boolean | number | string;
 
 /**
  * Allows functions that want to handle a variadic number of order rules a
