@@ -1,20 +1,20 @@
-// TODO: Adding a native dataLast implementation using `purry` breaks the typing
-// for `identity`. This is caused by the fact that `identity` is **so** generic
-// that it can take in any type of data, including **functions**, making it
-// impossible for typescript to infer the legacy "headless" calls properly,
-// which will definitely break for too many users currently. When we release v2
-// of Remeda we can do these sort of breaking changes.
-
 /**
- * A function that always returns the param passed to it.
+ * A function that returns the first argument passed to it.
  *
- * @param value - The param to return.
+ * Notice that this is a dataLast impl where the function needs to be invoked
+ * to get the "do nothing" function.
+ *
+ * See also:
+ * * `doNothing` - A function that doesn't return anything.
+ * * `constant` - A function that ignores the input arguments and returns the same value on every invocation.
+ *
  * @signature
- *    R.identity(data)
+ *    R.identity();
  * @example
- *    R.identity('foo') // => 'foo'
+ *    R.map([1,2,3], R.identity()); // => [1,2,3]
  * @category Function
  */
-export function identity<T>(value: T): T {
-  return value;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function identity(): <T>(value: T, ...args: any) => T {
+  return (value) => value;
 }

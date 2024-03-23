@@ -8,6 +8,10 @@
  * Notice that this is a dataLast impl where the function needs to be invoked
  * to get the "do nothing" function.
  *
+ * See also:
+ * * `constant` - A function that ignores it's arguments and returns the same value on every invocation.
+ * * `identity` - A function that returns the first argument it receives.
+ *
  * @signature
  *   R.doNothing();
  * @example

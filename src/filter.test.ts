@@ -1,5 +1,4 @@
 import { filter } from "./filter";
-import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
@@ -23,7 +22,7 @@ describe("runtime", () => {
 
   describe("data_last", () => {
     it("filter", () => {
-      const counter = vi.fn(identity);
+      const counter = vi.fn((x: unknown) => x);
       const result = pipe(
         [1, 2, 3],
         filter((x) => x % 2 === 1),
@@ -34,7 +33,7 @@ describe("runtime", () => {
     });
 
     it("filter with typescript guard", () => {
-      const counter = vi.fn(identity);
+      const counter = vi.fn((x: unknown) => x);
       const result = pipe(
         [1, 2, 3, false, "text"],
         filter(isNumber),
@@ -45,7 +44,7 @@ describe("runtime", () => {
     });
 
     it("filter indexed", () => {
-      const counter = vi.fn(identity);
+      const counter = vi.fn((x: unknown) => x);
       const result = pipe(
         [1, 2, 3],
         filter((x, i) => x % 2 === 1 && i !== 1),

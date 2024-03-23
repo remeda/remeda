@@ -7,6 +7,10 @@
  * Notice that this is a dataLast impl where the function needs to be invoked
  * to get the "do nothing" function.
  *
+ * See also:
+ * `doNothing` - A function that doesn't return anything.
+ * `identity` - A function that returns the first argument it receives.
+ *
  * @param value - The constant value that would be returned on every invocation.
  * The value is not copied/cloned on every invocation so care should be taken
  * with mutable objects (like arrays, objects, Maps, etc...).

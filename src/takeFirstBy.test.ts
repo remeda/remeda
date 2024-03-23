@@ -5,27 +5,27 @@ import { takeFirstBy } from "./takeFirstBy";
 describe("runtime (dataFirst)", () => {
   it("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(takeFirstBy(data, 2, identity)).toEqual([2, 1]);
+    expect(takeFirstBy(data, 2, identity())).toEqual([2, 1]);
   });
 
   it("handles empty arrays gracefully", () => {
     const data: Array<number> = [];
-    expect(takeFirstBy(data, 1, identity)).toHaveLength(0);
+    expect(takeFirstBy(data, 1, identity())).toHaveLength(0);
   });
 
   it("handles negative numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(takeFirstBy(data, -3, identity)).toHaveLength(0);
+    expect(takeFirstBy(data, -3, identity())).toHaveLength(0);
   });
 
   it("handles overflowing numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(takeFirstBy(data, 100, identity)).toHaveLength(data.length);
+    expect(takeFirstBy(data, 100, identity())).toHaveLength(data.length);
   });
 
   it("clones the array when needed", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    const result = takeFirstBy(data, 100, identity);
+    const result = takeFirstBy(data, 100, identity());
     expect(result).not.toBe(data);
     expect(result).toEqual(data);
   });
@@ -43,7 +43,7 @@ describe("runtime (dataFirst)", () => {
       "b",
       "aaaaa",
     ];
-    expect(takeFirstBy(data, 3, (x) => x.length, identity)).toEqual([
+    expect(takeFirstBy(data, 3, (x) => x.length, identity())).toEqual([
       "aa",
       "b",
       "a",

@@ -20,7 +20,7 @@ describe("data first", () => {
   });
 
   test("should handle empty array", () => {
-    expect(meanBy([], identity)).toBeNaN();
+    expect(meanBy([], identity())).toBeNaN();
   });
 });
 
@@ -44,6 +44,6 @@ describe("data last", () => {
   });
 
   test("should handle empty array", () => {
-    expect(pipe([], meanBy(identity))).toBeNaN();
+    expect(pipe([], meanBy(identity()))).toBeNaN();
   });
 });
