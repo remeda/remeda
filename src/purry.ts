@@ -19,7 +19,7 @@ import type { LazyEvaluator } from "./pipe";
  * @param fn - The function to purry.
  * @param args - The arguments.
  * @param lazy - A lazy version of the function to purry.
- * @signature R.purry(fn, arguments);
+ * @signature R.purry(fn, args);
  * @example
  *    function _findIndex(array, fn) {
  *      for (let i = 0; i < array.length; i++) {
@@ -36,26 +36,23 @@ import type { LazyEvaluator } from "./pipe";
  *    // data-last
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
- *    function findIndex() {
- *      return R.purry(_findIndex, arguments);
+ *    function findIndex(...args: unknown[]) {
+ *      return R.purry(_findIndex, args);
  *    }
  * @category Function
  */
 export function purry(
   fn: (...args: any) => unknown,
-  args: IArguments | ReadonlyArray<unknown>,
+  args: ReadonlyArray<unknown>,
   lazy?: (...args: any) => LazyEvaluator,
 ): unknown {
-  // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
-  const callArgs = Array.from(args) as ReadonlyArray<unknown>;
-
   const diff = fn.length - args.length;
   if (diff === 0) {
-    return fn(...callArgs);
+    return fn(...args);
   }
 
   if (diff === 1) {
-    const ret = (data: unknown): unknown => fn(data, ...callArgs);
+    const ret = (data: unknown): unknown => fn(data, ...args);
     return lazy === undefined
       ? ret
       : Object.assign(ret, { lazy, lazyArgs: args });

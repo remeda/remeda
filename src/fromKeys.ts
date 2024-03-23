@@ -73,8 +73,8 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   mapper: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
-export function fromKeys(): unknown {
-  return purry(fromKeysImplementation, arguments);
+export function fromKeys(...args: ReadonlyArray<unknown>): unknown {
+  return purry(fromKeysImplementation, args);
 }
 
 function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(

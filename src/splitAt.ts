@@ -34,8 +34,8 @@ export function splitAt<T>(
   index: number,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt(): unknown {
-  return purry(_splitAt, arguments);
+export function splitAt(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_splitAt, args);
 }
 
 function _splitAt<T>(

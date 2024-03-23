@@ -92,8 +92,8 @@ export function sortBy<T extends IterableContainer>(
   ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): ReorderedArray<T>;
 
-export function sortBy(): unknown {
-  return purryOrderRules(sortByImplementation, arguments);
+export function sortBy(...args: ReadonlyArray<unknown>): unknown {
+  return purryOrderRules(sortByImplementation, args);
 }
 
 const sortByImplementation = <T>(

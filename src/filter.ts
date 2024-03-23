@@ -54,8 +54,8 @@ export function filter<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function filter(): unknown {
-  return purry(filterImplementation, arguments, lazyImplementation);
+export function filter(...args: ReadonlyArray<unknown>): unknown {
+  return purry(filterImplementation, args, lazyImplementation);
 }
 
 const filterImplementation = <T>(

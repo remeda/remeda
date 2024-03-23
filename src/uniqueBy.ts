@@ -45,8 +45,8 @@ export function uniqueBy<T, K>(
   keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function uniqueBy(): unknown {
-  return purry(uniqueByImplementation, arguments, lazyImplementation);
+export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(uniqueByImplementation, args, lazyImplementation);
 }
 
 const uniqueByImplementation = <T, K>(

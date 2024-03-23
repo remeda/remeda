@@ -80,6 +80,6 @@ export function keys<T extends object>(data: T): Keys<T>;
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
-export function keys(): unknown {
-  return purry(Object.keys, arguments);
+export function keys(...args: ReadonlyArray<unknown>): unknown {
+  return purry(Object.keys, args);
 }

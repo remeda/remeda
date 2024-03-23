@@ -33,22 +33,8 @@ export function randomString(length: number): string;
  */
 export function randomString(): (length: number) => string;
 
-/**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
- *
- * @returns The random string.
- * @signature
- *   R.randomString()(length)
- * @example
- *    R.pipe(5, R.randomString()) // => aB92J
- * @dataLast
- * @category String
- */
-// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-// export function randomString(): (length: number) => string;
-
-export function randomString(): unknown {
-  return purry(randomStringImplementation, arguments);
+export function randomString(...args: ReadonlyArray<unknown>): unknown {
+  return purry(randomStringImplementation, args);
 }
 
 function randomStringImplementation(length: number): string {

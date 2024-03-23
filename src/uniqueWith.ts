@@ -47,8 +47,8 @@ export function uniqueWith<T>(
   isEquals: IsEquals<T>,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function uniqueWith(): unknown {
-  return purry(uniqueWithImplementation, arguments, lazyImplementation);
+export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
+  return purry(uniqueWithImplementation, args, lazyImplementation);
 }
 
 const uniqueWithImplementation = <T>(

@@ -27,8 +27,8 @@ export function prop<T, K extends keyof T>(data: T, key: K): T[K];
  */
 export function prop<T, K extends keyof T>(key: K): (data: T) => T[K];
 
-export function prop(): unknown {
-  return purry(propImplementation, arguments);
+export function prop(...args: ReadonlyArray<unknown>): unknown {
+  return purry(propImplementation, args);
 }
 
 export function propImplementation<T, K extends keyof T>(

@@ -44,8 +44,8 @@ export function only<T extends IterableContainer>(): (
   array: Readonly<T>,
 ) => Only<T>;
 
-export function only(): unknown {
-  return purry(_only, arguments);
+export function only(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_only, args);
 }
 
 function _only<T>(array: ReadonlyArray<T>): T | undefined {

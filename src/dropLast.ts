@@ -27,8 +27,8 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast(): unknown {
-  return purry(_dropLast, arguments);
+export function dropLast(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_dropLast, args);
 }
 
 function _dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T> {

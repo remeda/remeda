@@ -45,8 +45,8 @@ export function dropFirstBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropFirstBy(): unknown {
-  return purryOrderRulesWithArgument(dropFirstByImplementation, arguments);
+export function dropFirstBy(...args: ReadonlyArray<unknown>): unknown {
+  return purryOrderRulesWithArgument(dropFirstByImplementation, args);
 }
 
 function dropFirstByImplementation<T>(

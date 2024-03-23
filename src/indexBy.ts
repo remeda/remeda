@@ -54,8 +54,8 @@ export function indexBy<T, K extends PropertyKey>(
   mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
 ): (data: ReadonlyArray<T>) => ExactRecord<K, T>;
 
-export function indexBy(): unknown {
-  return purry(indexByImplementation, arguments);
+export function indexBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(indexByImplementation, args);
 }
 
 function indexByImplementation<T, K extends PropertyKey>(

@@ -42,8 +42,8 @@ export function splice<T>(
   replacement: ReadonlyArray<T>,
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function splice(): unknown {
-  return purry(_splice, arguments);
+export function splice(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_splice, args);
 }
 
 function _splice<T>(

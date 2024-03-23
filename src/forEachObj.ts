@@ -46,8 +46,8 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
   callbackfn: (value: T[keyof T], key: keyof T, obj: T) => void,
 ): (object: T) => T;
 
-export function forEachObj(): unknown {
-  return purry(forEachObjImplementation, arguments);
+export function forEachObj(...args: ReadonlyArray<unknown>): unknown {
+  return purry(forEachObjImplementation, args);
 }
 
 function forEachObjImplementation<T extends Record<PropertyKey, unknown>>(

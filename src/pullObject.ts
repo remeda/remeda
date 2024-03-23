@@ -80,8 +80,8 @@ export function pullObject<
   valueExtractor: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Partial<Record<K, V>>;
 
-export function pullObject(): unknown {
-  return purry(pullObjectImplementation, arguments);
+export function pullObject(...args: ReadonlyArray<unknown>): unknown {
+  return purry(pullObjectImplementation, args);
 }
 
 function pullObjectImplementation<

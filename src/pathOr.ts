@@ -144,8 +144,8 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr(): unknown {
-  return purry(_pathOr, arguments);
+export function pathOr(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_pathOr, args);
 }
 
 function _pathOr(

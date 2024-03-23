@@ -31,8 +31,8 @@ export function add(value: number, addend: number): number;
  */
 export function add(addend: number): (value: number) => number;
 
-export function add(): unknown {
-  return purry(_add, arguments);
+export function add(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_add, args);
 }
 
 function _add(value: number, addend: number): number {

@@ -32,8 +32,8 @@ export function takeWhile<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function takeWhile(): unknown {
-  return purry(takeWhileImplementation, arguments);
+export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
+  return purry(takeWhileImplementation, args);
 }
 
 function takeWhileImplementation<T>(

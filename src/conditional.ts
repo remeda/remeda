@@ -187,8 +187,8 @@ export function conditional<
   | Return8
   | Return9;
 
-export function conditional(): unknown {
-  return purryOn(isCase, conditionalImplementation, arguments);
+export function conditional(...args: ReadonlyArray<unknown>): unknown {
+  return purryOn(isCase, conditionalImplementation, args);
 }
 
 function conditionalImplementation<In, Out>(

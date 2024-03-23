@@ -40,8 +40,8 @@ export function sumBy<T>(
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
 ): number;
 
-export function sumBy(): unknown {
-  return purry(sumByImplementation, arguments);
+export function sumBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(sumByImplementation, args);
 }
 
 const sumByImplementation = <T>(

@@ -39,8 +39,8 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
   keyMapper: (key: keyof T, value: Required<T>[keyof T], data: T) => S,
 ): (data: T) => ExactRecord<S, T[keyof T]>;
 
-export function mapKeys(): unknown {
-  return purry(mapKeysImplementation, arguments);
+export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
+  return purry(mapKeysImplementation, args);
 }
 
 function mapKeysImplementation<T extends {}, S extends PropertyKey>(

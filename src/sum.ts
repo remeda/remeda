@@ -29,8 +29,8 @@ export function sum(data: ReadonlyArray<number>): number;
  */
 export function sum(): (data: ReadonlyArray<number>) => number;
 
-export function sum(): unknown {
-  return purry(sumImplementation, arguments);
+export function sum(...args: ReadonlyArray<unknown>): unknown {
+  return purry(sumImplementation, args);
 }
 
 function sumImplementation(data: ReadonlyArray<number>): number {

@@ -86,8 +86,8 @@ export function sortedLastIndexBy<T>(
   ) => NonNullable<unknown>,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedLastIndexBy(): unknown {
-  return purry(sortedLastIndexByImplementation, arguments);
+export function sortedLastIndexBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(sortedLastIndexByImplementation, args);
 }
 
 function sortedLastIndexByImplementation<T>(

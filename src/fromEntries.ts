@@ -137,9 +137,9 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
   entries: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(): unknown {
+export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
   // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
-  return purry(fromEntriesImplementation, arguments);
+  return purry(fromEntriesImplementation, args);
 }
 
 function fromEntriesImplementation<Entries extends IterableContainer<Entry>>(

@@ -68,8 +68,8 @@ export function mapWithFeedback<T extends IterableContainer, U>(
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
-export function mapWithFeedback(): unknown {
-  return purry(mapWithFeedbackImplementation, arguments, lazyImplementation);
+export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
+  return purry(mapWithFeedbackImplementation, args, lazyImplementation);
 }
 
 const mapWithFeedbackImplementation = <T, U>(

@@ -35,8 +35,8 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 
-export function last(): unknown {
-  return purry(_last, arguments);
+export function last(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_last, args);
 }
 
 function _last<T>(array: ReadonlyArray<T>): T | undefined {

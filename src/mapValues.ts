@@ -36,8 +36,8 @@ export function mapValues<T extends object, S>(
   valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
 ): (data: T) => MappedValues<T, S>;
 
-export function mapValues(): unknown {
-  return purry(mapValuesImplementation, arguments);
+export function mapValues(...args: ReadonlyArray<unknown>): unknown {
+  return purry(mapValuesImplementation, args);
 }
 
 function mapValuesImplementation<T extends object, S>(

@@ -29,8 +29,8 @@ export function multiply(value: number, multiplicand: number): number;
  */
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(): unknown {
-  return purry(_multiply, arguments);
+export function multiply(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_multiply, args);
 }
 
 function _multiply(value: number, multiplicand: number): number {

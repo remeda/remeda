@@ -31,8 +31,8 @@ export function omitBy<T>(
   predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
 ): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function omitBy(): unknown {
-  return purry(omitByImplementation, arguments);
+export function omitBy(...args: ReadonlyArray<unknown>): unknown {
+  return purry(omitByImplementation, args);
 }
 
 function omitByImplementation<T>(

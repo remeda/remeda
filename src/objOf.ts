@@ -27,8 +27,8 @@ export function objOf<T, K extends string>(
   key: K,
 ): (value: T) => { [x in K]: T };
 
-export function objOf(): unknown {
-  return purry(_objOf, arguments);
+export function objOf(...args: ReadonlyArray<unknown>): unknown {
+  return purry(_objOf, args);
 }
 
 function _objOf<T, K extends string>(value: T, key: K): { [x in K]: T } {

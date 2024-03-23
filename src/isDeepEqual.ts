@@ -55,8 +55,8 @@ export function isDeepEqual<T, S extends T = T>(
   other: S,
 ): (data: T) => data is S;
 
-export function isDeepEqual(): unknown {
-  return purry(isDeepEqualImplementation, arguments);
+export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
+  return purry(isDeepEqualImplementation, args);
 }
 
 function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
