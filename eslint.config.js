@@ -33,6 +33,11 @@ export default config(
       // etc...) via namespaces by design.
       "@typescript-eslint/no-namespace": "off",
 
+      // Whenever we call a built-in function we want to be as transparent as
+      // possible so we pass the callback directly without wrapping it with an
+      // arrow function. Our typing provides the safety needed here.
+      "unicorn/no-array-callback-reference": "off",
+
       // @see https://tkdodo.eu/blog/array-types-in-type-script
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
 

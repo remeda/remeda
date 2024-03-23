@@ -1,17 +1,5 @@
 import type { IsAny } from "./type-fest/is-any";
 
-export type Pred<T, K> = (input: T) => K;
-export type PredIndexed<T, K> = (
-  input: T,
-  index: number,
-  array: ReadonlyArray<T>,
-) => K;
-export type PredIndexedOptional<T, K> = (
-  input: T,
-  index?: number,
-  array?: ReadonlyArray<T>,
-) => K;
-
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
 export type Mapped<T extends IterableContainer, K> = {

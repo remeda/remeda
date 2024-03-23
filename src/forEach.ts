@@ -1,42 +1,44 @@
-import { _reduceLazy } from "./_reduceLazy";
-import { _toLazyIndexed } from "./_toLazyIndexed";
-import type { Pred, PredIndexed, PredIndexedOptional } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Iterate an array using a defined callback function. The original array is returned instead of `void`.
+ * Executes a provided function once for each array element. Equivalent to
+ * `Array.prototype.forEach`.
  *
- * @param array - The array.
- * @param fn - The callback function.
- * @returns The original array.
+ * The dataLast version returns the original array (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. When not used in a `pipe` the
+ * returned array is equal to the input array (by reference), and not a shallow
+ * copy of it!
+ *
+ * @param data - The values that would be iterated on.
+ * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    R.forEach(array, fn)
- *    R.forEach.indexed(array, fn)
+ *    R.forEach(data, callbackfn)
  * @example
  *    R.forEach([1, 2, 3], x => {
  *      console.log(x)
- *    }) // => [1, 2, 3]
- *    R.forEach.indexed([1, 2, 3], (x, i) => {
- *      console.log(x, i)
- *    }) // => [1, 2, 3]
+ *    });
  * @dataFirst
- * @indexed
  * @pipeable
  * @category Array
  */
 export function forEach<T>(
-  array: ReadonlyArray<T>,
-  fn: Pred<T, void>,
-): Array<T>;
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): void;
 
 /**
- * Iterate an array using a defined callback function. The original array is returned instead of `void`.
+ * Executes a provided function once for each array element. Equivalent to
+ * `Array.prototype.forEach`.
  *
- * @param fn - The function mapper.
+ * The dataLast version returns the original array (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned array is the
+ * same reference as the input array, and not a shallow copy of it!
+ *
+ * @param callbackfn - A function to execute for each element in the array.
+ * @returns The original array (the ref itself, not a shallow copy of it).
  * @signature
- *    R.forEach(fn)(array)
- *    R.forEach.indexed(fn)(array)
+ *    R.forEach(callbackfn)(data)
  * @example
  *    R.pipe(
  *      [1, 2, 3],
@@ -44,61 +46,33 @@ export function forEach<T>(
  *        console.log(x)
  *      })
  *    ) // => [1, 2, 3]
- *    R.pipe(
- *      [1, 2, 3],
- *      R.forEach.indexed((x, i) => {
- *        console.log(x, i)
- *      })
- *    ) // => [1, 2, 3]
  * @dataLast
- * @indexed
  * @pipeable
  * @category Array
  */
 export function forEach<T>(
-  fn: Pred<T, void>,
-): (array: ReadonlyArray<T>) => Array<T>;
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function forEach(): unknown {
-  return purry(_forEach(false), arguments, forEach.lazy);
+  return purry(forEachImplementation, arguments, lazyImplementation);
 }
 
-const _forEach =
-  (indexed: boolean) =>
-  <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    _reduceLazy(
-      array,
-      indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
-      indexed,
-    );
+function forEachImplementation<T>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): Array<T> {
+  // eslint-disable-next-line unicorn/no-array-for-each -- TODO: Once we bump our Typescript target version we can swap this with a proper for loop.
+  data.forEach(callbackfn);
+  // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
+  return data;
+}
 
-const _lazy =
-  (indexed: boolean) =>
-  <T>(fn: PredIndexedOptional<T, void>): LazyEvaluator<T> =>
-  (value, index, array) => {
-    if (indexed) {
-      fn(value, index, array);
-    } else {
-      fn(value);
-    }
-    return {
-      done: false,
-      hasNext: true,
-      next: value,
-    };
+const lazyImplementation =
+  <T>(
+    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+  ): LazyEvaluator<T> =>
+  (value, index, data) => {
+    callbackfn(value, index, data);
+    return { done: false, hasNext: true, next: value };
   };
-
-export namespace forEach {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, void>,
-  ): Array<T>;
-  export function indexed<T>(
-    fn: PredIndexed<T, void>,
-  ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed(): unknown {
-    return purry(_forEach(true), arguments, forEach.lazyIndexed);
-  }
-  export const lazy = _lazy(false);
-  export const lazyIndexed = _toLazyIndexed(_lazy(true));
-}

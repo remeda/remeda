@@ -1,20 +1,21 @@
 import { pipe } from "./pipe";
 import { reduce } from "./reduce";
 
-const array = [1, 2, 3, 4, 5] as const;
-
 describe("data first", () => {
   test("reduce", () => {
-    expect(reduce(array, (acc, x) => acc + x, 100)).toEqual(115);
+    expect(reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100)).toEqual(115);
   });
-  test("reduce.indexed", () => {
+
+  test("indexed", () => {
+    const data = [1, 2, 3, 4, 5];
     let i = 0;
+
     expect(
-      reduce.indexed(
-        array,
+      reduce(
+        data,
         (acc, x, index, items) => {
           expect(index).toBe(i);
-          expect(items).toBe(array);
+          expect(items).toBe(data);
           i += 1;
           return acc + x;
         },
@@ -28,17 +29,8 @@ describe("data last", () => {
   test("reduce", () => {
     expect(
       pipe(
-        array,
+        [1, 2, 3, 4, 5],
         reduce((acc, x) => acc + x, 100),
-      ),
-    ).toEqual(115);
-  });
-
-  test("reduce.indexed", () => {
-    expect(
-      pipe(
-        array,
-        reduce.indexed((acc, x) => acc + x, 100),
       ),
     ).toEqual(115);
   });

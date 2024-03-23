@@ -13,8 +13,8 @@ describe("runtime", () => {
       expect(map([1, 2, 3], multiply(2))).toEqual([2, 4, 6]);
     });
 
-    it("map.indexed", () => {
-      expect(map.indexed([0, 0, 0], (_, i) => i)).toEqual([0, 1, 2]);
+    it("map indexed", () => {
+      expect(map([0, 0, 0], (_, i) => i)).toEqual([0, 1, 2]);
     });
   });
 
@@ -23,11 +23,11 @@ describe("runtime", () => {
       expect(pipe([1, 2, 3], map(multiply(2)))).toEqual([2, 4, 6]);
     });
 
-    it("map.indexed", () => {
+    it("map", () => {
       expect(
         pipe(
           [0, 0, 0],
-          map.indexed((_, i) => i),
+          map((_, i) => i),
         ),
       ).toEqual([0, 1, 2]);
     });
@@ -45,9 +45,7 @@ describe("runtime", () => {
     it("invoked lazily (indexed)", () => {
       const count = vi.fn((_: unknown, index: number) => index);
 
-      expect(pipe([0, 0, 0] as const, map.indexed(count), take(2))).toEqual([
-        0, 1,
-      ]);
+      expect(pipe([0, 0, 0], map(count), take(2))).toEqual([0, 1]);
 
       expect(count).toHaveBeenCalledTimes(2);
     });
@@ -61,13 +59,13 @@ describe("runtime", () => {
       expect(
         pipe(
           [1, 2, 3, 4, 5],
-          map.indexed((x, i, items) => {
+          map((x, i, items) => {
             anyItems1.push([...items]);
             indexes1.push(i);
             return x;
           }),
           filter((x) => x % 2 === 1),
-          map.indexed((x, i, items) => {
+          map((x, i, items) => {
             anyItems2.push([...items]);
             indexes2.push(i);
             return x;
@@ -112,29 +110,11 @@ describe("runtime", () => {
 
   describe("Indexed", () => {
     it("number array", () => {
-      expect(map.indexed([1, 2, 3], (x, index) => x + index)).toEqual([
-        1, 3, 5,
-      ]);
+      expect(map([1, 2, 3], (x, index) => x + index)).toEqual([1, 3, 5]);
     });
 
     it("mixed type tuple", () => {
-      expect(map.indexed([1, "2", true], (_, index) => index)).toEqual([
-        0, 1, 2,
-      ]);
-    });
-
-    it("complex variadic number array", () => {
-      const input = [
-        "hello",
-        "world",
-        1,
-        "testing",
-        "testing",
-        "testing",
-        123,
-        true,
-      ];
-      expect(map.indexed(input, identity)).toEqual(input);
+      expect(map([1, "2", true], (_, index) => index)).toEqual([0, 1, 2]);
     });
   });
 });
@@ -233,15 +213,12 @@ describe("typing", () => {
 
   describe("Indexed", () => {
     it("number array", () => {
-      const result = map.indexed(
-        [1, 2, 3] as Array<number>,
-        (x, index) => x + index,
-      );
+      const result = map([1, 2, 3] as Array<number>, (x, index) => x + index);
       expectTypeOf(result).toEqualTypeOf<Array<number>>();
     });
 
     it("readonly number array", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as ReadonlyArray<number>,
         (x, index) => x + index,
       );
@@ -249,7 +226,7 @@ describe("typing", () => {
     });
 
     it("number 3-tuple", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as [number, number, number],
         (x, index) => x + index,
       );
@@ -257,7 +234,7 @@ describe("typing", () => {
     });
 
     it("readonly number 3-tuple", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as readonly [number, number, number],
         (x, index) => x + index,
       );
@@ -265,7 +242,7 @@ describe("typing", () => {
     });
 
     it("named number 3-tuple", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as [item1: number, item2: number, item3: number],
         (x, index) => x + index,
       );
@@ -277,7 +254,7 @@ describe("typing", () => {
     });
 
     it("mixed type tuple", () => {
-      const result = map.indexed(
+      const result = map(
         [1, "2", true] as [number, string, boolean],
         (_, index) => index,
       );
@@ -285,7 +262,7 @@ describe("typing", () => {
     });
 
     it("readonly mixed type tuple", () => {
-      const result = map.indexed(
+      const result = map(
         [1, "2", true] as readonly [number, string, boolean],
         (_, index) => index,
       );
@@ -293,7 +270,7 @@ describe("typing", () => {
     });
 
     it("nonempty (tail) number array", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as [number, ...Array<number>],
         (x, index) => x + index,
       );
@@ -301,7 +278,7 @@ describe("typing", () => {
     });
 
     it("nonempty (tail) readonly number array", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as readonly [number, ...Array<number>],
         (x, index) => x + index,
       );
@@ -309,7 +286,7 @@ describe("typing", () => {
     });
 
     it("nonempty (head) number array", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as [...Array<number>, number],
         (x, index) => x + index,
       );
@@ -317,28 +294,11 @@ describe("typing", () => {
     });
 
     it("nonempty readonly (head) number array", () => {
-      const result = map.indexed(
+      const result = map(
         [1, 2, 3] as readonly [...Array<number>, number],
         (x, index) => x + index,
       );
       expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
-    });
-
-    it("complex variadic number array", () => {
-      const result = map.indexed(
-        ["hello", "world", 1, "testing", "testing", "testing", 123, true] as [
-          ...Array<"hello">,
-          "world",
-          ...Array<number>,
-          string,
-          ...Array<number>,
-          boolean,
-        ],
-        identity,
-      );
-      expectTypeOf(result).toEqualTypeOf<
-        [...Array<boolean | number | string>, boolean | number | string]
-      >();
     });
   });
 });

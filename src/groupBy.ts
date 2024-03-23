@@ -1,99 +1,99 @@
-import type {
-  ExactRecord,
-  NonEmptyArray,
-  PredIndexed,
-  PredIndexedOptional,
-} from "./_types";
+import type { ExactRecord, NonEmptyArray } from "./_types";
 import { purry } from "./purry";
 
 /**
- * Splits a collection into sets, grouped by the result of running each value
- * through `fn`.
+ * Groups the elements of a given iterable according to the string values
+ * returned by a provided callback function. The returned object has separate
+ * properties for each group, containing arrays with the elements in the group.
+ * Unlike the built in `Object.groupBy` this function also allows the callback to
+ * return `undefined` in order to exclude the item from being added to any
+ * group.
  *
- * @param items - The items to group.
- * @param fn - The grouping function. When `undefined` is returned the item
- * would be skipped and not grouped under any key.
+ * @param data - The items to group.
+ * @param callbackfn - A function to execute for each element in the iterable.
+ * It should return a value indicating the group of the current element, or
+ * `undefined` when the item should be excluded from any group.
+ * @returns An object with properties for all groups, each assigned to an array
+ * containing the elements of the associated group.
  * @signature
- *    R.groupBy(array, fn)
+ *    R.groupBy(data, callbackfn)
  * @example
  *    R.groupBy([{a: 'cat'}, {a: 'dog'}] as const, R.prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
  *    R.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
  * @dataFirst
- * @indexed
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  items: ReadonlyArray<T>,
-  fn: (item: T) => Key | undefined,
+  data: ReadonlyArray<T>,
+  callbackfn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => Key | undefined,
 ): ExactRecord<Key, NonEmptyArray<T>>;
 
 /**
- * Splits a collection into sets, grouped by the result of running each value
- * through `fn`.
+ * Groups the elements of a given iterable according to the string values
+ * returned by a provided callback function. The returned object has separate
+ * properties for each group, containing arrays with the elements in the group.
+ * Unlike the built in `Object.groupBy` this function also allows the callback to
+ * return `undefined` in order to exclude the item from being added to any
+ * group.
  *
- * @param fn - The grouping function. When `undefined` is returned the item
- * would be skipped and not grouped under any key.
+ * @param callbackfn - A function to execute for each element in the iterable.
+ * It should return a value indicating the group of the current element, or
+ * `undefined` when the item should be excluded from any group.
+ * @returns An object with properties for all groups, each assigned to an array
+ * containing the elements of the associated group.
  * @signature
- *    R.groupBy(fn)(array);
+ *    R.groupBy(callbackfn)(data);
  * @example
  *    R.pipe(
  *      [{a: 'cat'}, {a: 'dog'}] as const,
- *      R.groupBy(R.prop('a'),
+ *      R.groupBy(R.prop('a')),
  *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
  *    R.pipe(
  *      [0, 1],
  *      R.groupBy(x => x % 2 === 0 ? 'even' : undefined),
  *    ); // => {even: [0]}
  * @dataLast
- * @indexed
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  fn: (item: T) => Key | undefined,
+  callbackfn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => Key | undefined,
 ): (items: ReadonlyArray<T>) => ExactRecord<Key, NonEmptyArray<T>>;
 
 export function groupBy(): unknown {
-  return purry(_groupBy(false), arguments);
+  return purry(groupByImplementation, arguments);
 }
 
-const _groupBy =
-  (indexed: boolean) =>
-  <T, Key extends PropertyKey = PropertyKey>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexedOptional<T, Key | undefined>,
-  ) => {
-    const ret: Record<string, Array<T>> = {};
+const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
+  data: ReadonlyArray<T>,
+  callbackfn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => Key | undefined,
+): ExactRecord<Key, NonEmptyArray<T>> => {
+  const output: Partial<Record<Key, Array<T>>> = {};
 
-    for (let index = 0; index < array.length; index++) {
-      // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
-      const item = array[index]!;
-      const key = indexed ? fn(item, index, array) : fn(item);
-      if (key !== undefined) {
-        const actualKey = String(key);
-        // eslint-disable-next-line @typescript-eslint/prefer-destructuring
-        let items = ret[actualKey];
-        if (items === undefined) {
-          items = [];
-          ret[actualKey] = items;
-        }
-        items.push(item);
+  for (let index = 0; index < data.length; index++) {
+    // TODO: Once we bump our Typescript target above ES5 we can use Array.prototype.entries to iterate over both the index and the value.
+    const item = data[index]!;
+    const key = callbackfn(item, index, data);
+    if (key !== undefined) {
+      let { [key]: items } = output;
+      if (items === undefined) {
+        items = [];
+        output[key] = items;
       }
+      items.push(item);
     }
-
-    return ret;
-  };
-
-export namespace groupBy {
-  export function indexed<T, Key extends PropertyKey = PropertyKey>(
-    items: ReadonlyArray<T>,
-    fn: PredIndexed<T, Key | undefined>,
-  ): ExactRecord<Key, NonEmptyArray<T>>;
-
-  export function indexed<Value, Key extends PropertyKey = PropertyKey>(
-    fn: PredIndexed<Value, Key | undefined>,
-  ): (items: ReadonlyArray<Value>) => ExactRecord<Key, NonEmptyArray<Value>>;
-
-  export function indexed(): unknown {
-    return purry(_groupBy(true), arguments);
   }
-}
+
+  return output as ExactRecord<Key, NonEmptyArray<T>>;
+};

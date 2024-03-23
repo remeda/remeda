@@ -25,27 +25,6 @@ describe("runtime", () => {
         2: [{ a: 2, b: 1 }],
       });
     });
-
-    test("groupBy.indexed", () => {
-      expect(
-        groupBy.indexed(
-          [
-            { a: 1, b: 1 },
-            { a: 1, b: 2 },
-            { a: 2, b: 1 },
-            { a: 1, b: 3 },
-          ],
-          prop("a"),
-        ),
-      ).toEqual({
-        1: [
-          { a: 1, b: 1 },
-          { a: 1, b: 2 },
-          { a: 1, b: 3 },
-        ],
-        2: [{ a: 2, b: 1 }],
-      });
-    });
   });
 
   describe("data last", () => {
@@ -59,27 +38,6 @@ describe("runtime", () => {
             { a: 1, b: 3 },
           ],
           groupBy(prop("a")),
-        ),
-      ).toEqual({
-        1: [
-          { a: 1, b: 1 },
-          { a: 1, b: 2 },
-          { a: 1, b: 3 },
-        ],
-        2: [{ a: 2, b: 1 }],
-      });
-    });
-
-    test("groupBy.indexed", () => {
-      expect(
-        pipe(
-          [
-            { a: 1, b: 1 },
-            { a: 1, b: 2 },
-            { a: 2, b: 1 },
-            { a: 1, b: 3 },
-          ],
-          groupBy.indexed(prop("a")),
         ),
       ).toEqual({
         1: [
@@ -107,7 +65,7 @@ describe("runtime", () => {
     });
 
     test("regular indexed", () => {
-      const result = groupBy.indexed(
+      const result = groupBy(
         ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
         (_, index) => (index % 2 === 0 ? "even" : undefined),
       );
@@ -227,7 +185,7 @@ describe("typing", () => {
     });
 
     test("indexed", () => {
-      const { even, ...rest } = groupBy.indexed(
+      const { even, ...rest } = groupBy(
         ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
         (_, index) => (index % 2 === 0 ? "even" : undefined),
       );

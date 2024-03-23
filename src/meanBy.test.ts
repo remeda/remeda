@@ -1,19 +1,26 @@
+import { identity } from "./identity";
 import { meanBy } from "./meanBy";
 import { pipe } from "./pipe";
-
-const array = [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }] as const;
+import { prop } from "./prop";
 
 describe("data first", () => {
   test("meanBy", () => {
-    expect(meanBy(array, (x) => x.a)).toEqual(3);
+    expect(
+      meanBy([{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }], prop("a")),
+    ).toEqual(3);
   });
 
-  test("meanBy.indexed", () => {
-    expect(meanBy.indexed(array, (x, idx) => x.a + idx)).toEqual(5);
+  test("indexed", () => {
+    expect(
+      meanBy(
+        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        ({ a }, idx) => a + idx,
+      ),
+    ).toEqual(5);
   });
 
   test("should handle empty array", () => {
-    expect(meanBy([], (x) => x)).toBeNaN();
+    expect(meanBy([], identity)).toBeNaN();
   });
 });
 
@@ -21,27 +28,22 @@ describe("data last", () => {
   test("meanBy", () => {
     expect(
       pipe(
-        array,
-        meanBy((x) => x.a),
+        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        meanBy(prop("a")),
       ),
     ).toEqual(3);
   });
 
-  test("meanBy.indexed", () => {
+  test("indexed", () => {
     expect(
       pipe(
-        array,
-        meanBy.indexed((x, idx) => x.a + idx),
+        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        meanBy(({ a }, idx) => a + idx),
       ),
     ).toEqual(5);
   });
 
   test("should handle empty array", () => {
-    expect(
-      pipe(
-        [],
-        meanBy((x) => x),
-      ),
-    ).toBeNaN();
+    expect(pipe([], meanBy(identity))).toBeNaN();
   });
 });

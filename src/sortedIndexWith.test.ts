@@ -14,7 +14,7 @@ describe("sanity", () => {
 
   test("indexed", () => {
     expect(
-      sortedIndexWith.indexed(
+      sortedIndexWith(
         ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
         (_, index) => index < 5,
       ),
