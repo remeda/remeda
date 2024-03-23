@@ -61,7 +61,7 @@ function takeFirstByImplementation<T>(
   }
 
   if (n >= data.length) {
-    return data.slice();
+    return [...data];
   }
 
   const heap = data.slice(0, n);

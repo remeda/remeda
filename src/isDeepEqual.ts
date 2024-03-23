@@ -94,11 +94,11 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
       return false;
     }
 
-    for (let i = 0; i < data.length; i++) {
+    for (const [index, item] of data.entries()) {
       if (
         !isDeepEqualImplementation(
-          data[i],
-          (other as ReadonlyArray<unknown>)[i],
+          item,
+          (other as ReadonlyArray<unknown>)[index],
         )
       ) {
         return false;

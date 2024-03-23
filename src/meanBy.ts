@@ -49,7 +49,7 @@ const meanByImplementation = <T>(
   fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
 ): number => {
   if (array.length === 0) {
-    return NaN;
+    return Number.NaN;
   }
 
   let sum = 0;

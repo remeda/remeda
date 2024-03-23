@@ -47,5 +47,5 @@ function splitWhenImplementation<T>(
     }
   }
 
-  return [data.slice(), []];
+  return [[...data], []];
 }

@@ -1,26 +1,35 @@
 import { purry } from "./purry";
 
 /**
- * Combines two arrays.
+ * Merge two or more arrays. This method does not change the existing arrays,
+ * but instead returns a new array, even if the other array is empty.
  *
- * @param arr1 - The first array.
- * @param arr2 - The second array.
+ * @param data - The first items, these would be at the beginning of the new
+ * array.
+ * @param other - The remaining items, these would be at the end of the new
+ * array.
+ * @returns A new array with the items of the first array followed by the items
+ * of the second array.
  * @signature
- *    R.concat(arr1, arr2);
+ *    R.concat(data, other);
  * @example
  *    R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
  * @category Array
  */
-export function concat<T, K>(
-  arr1: ReadonlyArray<T>,
-  arr2: ReadonlyArray<K>,
-): Array<K | T>;
+export function concat<T1, T2>(
+  data: ReadonlyArray<T1>,
+  other: ReadonlyArray<T2>,
+): [...Array<T1>, ...Array<T2>];
 
 /**
- * Combines two arrays.
+ * Merge two or more arrays. This method does not change the existing arrays,
+ * but instead returns a new array, even if the other array is empty.
  *
- * @param arr2 - The second array.
+ * @param other - The remaining items, these would be at the end of the new
+ * array.
+ * @returns A new array with the items of the first array followed by the items
+ * of the second array.
  * @signature
  *    R.concat(arr2)(arr1);
  * @example
@@ -29,16 +38,14 @@ export function concat<T, K>(
  * @category Array
  */
 export function concat<T, K>(
-  arr2: ReadonlyArray<K>,
-): (arr1: ReadonlyArray<T>) => Array<K | T>;
+  other: ReadonlyArray<K>,
+): (data: ReadonlyArray<T>) => [...Array<T>, ...Array<K>];
 
 export function concat(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_concat, args);
+  return purry(concatImplementation, args);
 }
 
-function _concat<T, K>(
+const concatImplementation = <T, K>(
   arr1: ReadonlyArray<T>,
   arr2: ReadonlyArray<K>,
-): Array<K | T> {
-  return (arr1 as Array<K | T>).concat(arr2);
-}
+): [...Array<T>, ...Array<K>] => [...arr1, ...arr2];

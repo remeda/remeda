@@ -52,7 +52,7 @@ function _splice<T>(
   deleteCount: number,
   replacement: ReadonlyArray<T>,
 ): Array<T> {
-  const result = items.slice();
+  const result = [...items];
   result.splice(start, deleteCount, ...replacement);
   return result;
 }

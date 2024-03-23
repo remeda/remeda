@@ -49,13 +49,6 @@ export default config(
       // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
 
-      // TODO: Once we bump our typescript `target` we should enable these rules.
-      "unicorn/no-for-loop": "off",
-      "unicorn/prefer-at": "off",
-      "unicorn/prefer-number-properties": "off",
-      "unicorn/prefer-spread": "off",
-      "unicorn/prefer-includes": "off",
-
       // TODO: These rules allow us to really standardize our codebase, but they
       // also do sweeping changes to the whole codebase which is very noisy. We
       // should do it in one sweep sometime in the future.
@@ -377,6 +370,10 @@ export default config(
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
       "unicorn/switch-case-braces": ["error", "avoid"],
+
+      // "unicorn/no-for-loop": "off",
+      // "unicorn/prefer-at": "off",
+      // "unicorn/prefer-includes": "off",
     },
   },
   {

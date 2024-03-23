@@ -47,7 +47,7 @@ function sortImplementation<T extends IterableContainer>(
   items: T,
   cmp: (a: T[number], b: T[number]) => number,
 ): ReorderedArray<T> {
-  const ret = items.slice();
+  const ret = [...items];
   ret.sort(cmp);
   return ret as ReorderedArray<T>;
 }

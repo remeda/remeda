@@ -100,4 +100,4 @@ const sortByImplementation = <T>(
   compareFn: CompareFunction<T>,
 ): Array<T> =>
   // Sort is done in-place so we need to copy the array.
-  data.slice().sort(compareFn);
+  [...data].sort(compareFn);

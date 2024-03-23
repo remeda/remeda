@@ -45,5 +45,5 @@ export function reverse(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function _reverse<T>(array: ReadonlyArray<T>): Array<T> {
-  return array.slice().reverse();
+  return [...array].reverse();
 }

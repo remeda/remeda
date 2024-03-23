@@ -13,5 +13,6 @@ import type { NarrowedTo } from "./_types";
  * @category Guard
  */
 export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {
-  return typeof data === "number" && !isNaN(data);
+  // Something is a number if it's a number and not not a number :)
+  return typeof data === "number" && !Number.isNaN(data);
 }

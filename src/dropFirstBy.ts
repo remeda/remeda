@@ -61,7 +61,7 @@ function dropFirstByImplementation<T>(
   }
 
   if (n <= 0) {
-    return data.slice();
+    return [...data];
   }
 
   const heap = data.slice(0, n);

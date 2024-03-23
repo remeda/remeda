@@ -920,7 +920,7 @@ describe("typing", () => {
 const generateRandomArray = (): NonEmptyArray<number> =>
   // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!
-  Array.from(new Set(Array.from({ length: 100 }).map(() => Math.random())));
+  [...new Set(Array.from({ length: 100 }).map(() => Math.random()))];
 
 const allIndices = (array: ReadonlyArray<unknown>): Array<number> =>
   array.map((_, index) => index);
