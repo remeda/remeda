@@ -7,6 +7,7 @@ export class TestClass {
 
 export const TYPES_DATA_PROVIDER = {
   array: [1, 2, 3] as Array<number>,
+  bigint: 1n,
   boolean: false as boolean,
   date: new Date("1985-07-24T07:40:00.000Z"),
   error: new Error("asd"),

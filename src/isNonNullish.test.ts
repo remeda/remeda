@@ -10,7 +10,7 @@ describe("isNonNullish", () => {
   it("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNullish(data)) {
-      expect(data instanceof Date).toEqual(true);
+      expect(data instanceof Date).toBe(true);
       expectTypeOf(data).toEqualTypeOf<
         | Array<number>
         | Date
@@ -25,6 +25,7 @@ describe("isNonNullish", () => {
         | number
         | string
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]
@@ -33,7 +34,7 @@ describe("isNonNullish", () => {
   });
   it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNullish);
-    expect(data).toHaveLength(16);
+    expect(data).toHaveLength(17);
     expectTypeOf(data).toEqualTypeOf<
       Array<
         | Array<number>
@@ -49,6 +50,7 @@ describe("isNonNullish", () => {
         | number
         | string
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]

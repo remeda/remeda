@@ -1,8 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
-  type TestClass,
   type AllTypesDataProviderTypes,
+  type TestClass,
 } from "../test/typesDataProvider";
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
@@ -12,7 +12,7 @@ describe("isNot", () => {
   it("should work as type guard", () => {
     const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isNot(isString)(data)) {
-      expect(data instanceof Promise).toEqual(true);
+      expect(data instanceof Promise).toBe(true);
       expectTypeOf(data).toEqualTypeOf<
         | Array<number>
         | Date
@@ -26,6 +26,7 @@ describe("isNot", () => {
         | boolean
         | number
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]
@@ -37,7 +38,7 @@ describe("isNot", () => {
 
   it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
-    expect(data.some((c) => c instanceof Promise)).toEqual(false);
+    expect(data.some((c) => c instanceof Promise)).toBe(false);
     expectTypeOf(data).toEqualTypeOf<
       Array<
         | Array<number>
@@ -52,6 +53,7 @@ describe("isNot", () => {
         | number
         | string
         | symbol
+        | 1n
         | (() => void)
         | { readonly a: "asd" }
         | [number, number, number]

@@ -43,6 +43,7 @@ export * from "./indexBy";
 export * from "./intersectionWith";
 export * from "./invert";
 export * from "./isArray";
+export * from "./isBigInt";
 export * from "./isBoolean";
 export * from "./isDate";
 export * from "./isDeepEqual";
