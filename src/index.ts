@@ -72,6 +72,7 @@ export * from "./isPromise";
 export * from "./isString";
 export * from "./isSymbol";
 export * from "./isTruthy";
+export * from "./iterPipe";
 export * from "./join";
 export * from "./keys";
 export * from "./last";

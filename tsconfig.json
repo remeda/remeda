@@ -22,6 +22,7 @@
     "types": ["vitest/globals"],
 
     // EMIT
+    "downlevelIteration": true,
     "noEmit": true,
 
     // JAVASCRIPT SUPPORT
