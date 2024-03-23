@@ -15,6 +15,8 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
  * @dataFirst
  * @pipeable
  * @category Array
+ * @similarTo lodash flatten
+ * @similarTo ramda flatten
  */
 export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
@@ -31,6 +33,8 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
  * @dataLast
  * @pipeable
  * @category Array
+ * @similarTo lodash flatten
+ * @similarTo ramda flatten
  */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 

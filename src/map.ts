@@ -32,6 +32,8 @@ import { purry } from "./purry";
  * @pipeable
  * @strict
  * @category Array
+ * @similarTo lodash map
+ * @similarTo ramda map
  */
 export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
 
@@ -49,6 +51,8 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
  * @indexed
  * @pipeable
  * @category Array
+ * @similarTo lodash map
+ * @similarTo ramda map
  */
 export function map<T, K>(
   fn: Pred<T, K>,

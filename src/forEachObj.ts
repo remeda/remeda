@@ -25,6 +25,8 @@ type UnindexedIteratee<T extends Record<PropertyKey, unknown>> = (
  *    }) // "a: 1"
  * @dataFirst
  * @category Object
+ * @similarTo lodash forEach
+ * @similarTo ramda forEachObjIndexed
  */
 export function forEachObj<T extends Record<PropertyKey, unknown>>(
   object: T,
@@ -48,6 +50,8 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
  *    ) // "a: 1"
  * @dataLast
  * @category Object
+ * @similarTo lodash forEach
+ * @similarTo ramda forEachObjIndexed
  */
 export function forEachObj<T extends Record<PropertyKey, unknown>>(
   fn: UnindexedIteratee<T>,

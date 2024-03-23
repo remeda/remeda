@@ -14,6 +14,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @similarTo lodash uniq
+ * @similarTo ramda uniq
  */
 export function unique<T>(array: ReadonlyArray<T>): Array<T>;
 
@@ -32,6 +34,8 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
  * @dataLast
  * @pipeable
  * @category Array
+ * @similarTo lodash uniq
+ * @similarTo ramda uniq
  */
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
 

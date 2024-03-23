@@ -20,6 +20,8 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
  * @category Array
+ * @similarTo lodash uniqWith
+ * @similarTo ramda uniqWith
  */
 export function uniqueWith<T>(
   array: ReadonlyArray<T>,
@@ -43,6 +45,8 @@ export function uniqueWith<T>(
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
  * @category Object
+ * @similarTo lodash uniqWith
+ * @similarTo ramda uniqWith
  */
 export function uniqueWith<T>(
   isEquals: IsEquals<T>,

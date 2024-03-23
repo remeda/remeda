@@ -18,6 +18,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
+ * @similarTo lodash uniqBy
+ * @similarTo ramda uniqBy
  */
 export function uniqueBy<T, K>(
   data: ReadonlyArray<T>,
@@ -40,6 +42,8 @@ export function uniqueBy<T, K>(
  * @dataLast
  * @pipeable
  * @category Array
+ * @similarTo lodash uniqBy
+ * @similarTo ramda uniqBy
  */
 export function uniqueBy<T, K>(
   keyFunction: (item: T) => K,

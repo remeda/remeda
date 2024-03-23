@@ -23,6 +23,8 @@ type First<T extends IterableContainer> = T extends []
  * @dataFirst
  * @pipeable
  * @category Array
+ * @similarTo lodash head
+ * @similarTo ramda head
  */
 export function first<T extends IterableContainer>(data: T): First<T>;
 
@@ -42,6 +44,8 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  * @dataLast
  * @pipeable
  * @category Array
+ * @similarTo lodash head
+ * @similarTo ramda head
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 

@@ -12,6 +12,8 @@
  *    R.isNullish(null) //=> true
  *    R.isNullish('somethingElse') //=> false
  * @category Guard
+ * @similarTo lodash isNil
+ * @similarTo ramda isNil
  */
 export function isNullish<T>(data: T): data is Extract<T, null | undefined> {
   return data === null || data === undefined;

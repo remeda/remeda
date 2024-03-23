@@ -34,6 +34,7 @@ const _meanBy =
  * @dataLast
  * @indexed
  * @category Array
+ * @similarTo lodash meanBy
  */
 
 export function meanBy<T>(
@@ -56,6 +57,7 @@ export function meanBy<T>(
  * @dataFirst
  * @indexed
  * @category Array
+ * @similarTo lodash meanBy
  */
 
 export function meanBy<T>(

@@ -11,6 +11,8 @@ import { purry } from "./purry";
  *    R.dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
  * @dataFirst
  * @category Array
+ * @similarTo lodash dropRight
+ * @similarTo ramda dropLast
  */
 export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
@@ -24,6 +26,8 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    R.dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
  * @dataLast
  * @category Array
+ * @similarTo lodash dropRight
+ * @similarTo ramda dropLast
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
