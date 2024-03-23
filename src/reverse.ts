@@ -41,9 +41,10 @@ export function reverse<T extends ReadonlyArray<unknown>>(): (
 ) => Reverse<T>;
 
 export function reverse(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_reverse, args);
+  return purry(reverseImplementation, args);
 }
 
-function _reverse<T>(array: ReadonlyArray<T>): Array<T> {
+function reverseImplementation<T>(array: ReadonlyArray<T>): Array<T> {
+  // TODO: Use `Array.prototype.toReversed` once we bump our target/lib beyond ES2022.
   return [...array].reverse();
 }
