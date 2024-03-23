@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-param -- ignore for deprecated files */
+/* eslint-disable jsdoc/no-restricted-syntax, jsdoc/require-jsdoc, jsdoc/require-param -- ignore for deprecated files */
 
 import { pipe } from "./pipe";
 

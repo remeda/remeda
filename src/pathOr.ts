@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc -- we only doc the first overload */
 import { purry } from "./purry";
 
 /**

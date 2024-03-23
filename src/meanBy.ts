@@ -35,7 +35,6 @@ const _meanBy =
  * @indexed
  * @category Array
  */
-
 export function meanBy<T>(
   fn: (item: T) => number,
 ): (items: ReadonlyArray<T>) => number;
@@ -57,7 +56,6 @@ export function meanBy<T>(
  * @indexed
  * @category Array
  */
-
 export function meanBy<T>(
   items: ReadonlyArray<T>,
   fn: (item: T) => number,

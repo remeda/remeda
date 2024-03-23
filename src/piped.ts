@@ -1,4 +1,5 @@
 /* eslint-disable jsdoc/require-param -- We don't document the ops */
+/* eslint-disable jsdoc/require-jsdoc -- we only doc the first overload */
 
 import { pipe } from "./pipe";
 
@@ -20,6 +21,7 @@ import { pipe } from "./pipe";
  *        (x) => x % 2 === 0,
  *      ),
  *    ); // => [{ a: 2 }]
+ * @dataLast
  * @category Function
  */
 export function piped<A, B>(op1: (input: A) => B): (value: A) => B;

@@ -15,6 +15,7 @@ import { purry } from "./purry";
  * @category Array
  */
 export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
 
 /**

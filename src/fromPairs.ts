@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/no-restricted-syntax, jsdoc/require-jsdoc -- ignore for deprecated files */
+
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 

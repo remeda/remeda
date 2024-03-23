@@ -14,6 +14,7 @@
 export function isNot<T, S extends T>(
   predicate: (data: T) => data is S,
 ): (data: T) => data is Exclude<T, S>;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function isNot<T>(predicate: (data: T) => boolean): (data: T) => boolean;
 
 export function isNot<T>(predicate: (data: T) => boolean) {

@@ -10,6 +10,7 @@ type DefinitelyError<T> =
  * @example
  *    R.isError(new Error('message')) //=> true
  *    R.isError('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isError<T>(data: Error | T): data is DefinitelyError<T> {

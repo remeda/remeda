@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description, jsdoc/check-param-names -- ignore for deprecated files */
+/* eslint-disable jsdoc/no-restricted-syntax, jsdoc/require-param, jsdoc/require-example, jsdoc/require-description, jsdoc/check-param-names -- ignore for deprecated files */
 
 import { _reduceLazy } from "./_reduceLazy";
 import { _toLazyIndexed } from "./_toLazyIndexed";

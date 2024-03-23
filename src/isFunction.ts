@@ -14,6 +14,7 @@ type DefinitelyFunction<T> =
  * @example
  *    R.isFunction(() => {}) //=> true
  *    R.isFunction('somethingElse') //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isFunction<T>(

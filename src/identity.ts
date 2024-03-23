@@ -13,6 +13,7 @@
  *    R.identity(data)
  * @example
  *    R.identity('foo') // => 'foo'
+ * @dataFirst
  * @category Function
  */
 export function identity<T>(value: T): T {

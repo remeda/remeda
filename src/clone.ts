@@ -59,6 +59,7 @@ function _clone(
  * @param value - The object to clone.
  * @signature R.clone(value)
  * @example R.clone({foo: 'bar'}) // {foo: 'bar'}
+ * @dataFirst
  * @category Object
  */
 export function clone<T>(value: T): T {

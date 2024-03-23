@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-jsdoc -- we only doc the first overload */
+
 /**
  * Merges a list of objects into a single object.
  *
@@ -6,6 +8,7 @@
  *    R.mergeAll(objects)
  * @example
  *    R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
+ * @dataFirst
  * @category Array
  */
 export function mergeAll<A>(array: readonly [A]): A;

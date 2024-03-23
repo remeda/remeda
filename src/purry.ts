@@ -26,6 +26,7 @@ type MaybeLazyFunction = {
  * @param fn - The function to purry.
  * @param args - The arguments.
  * @param lazyFactory - A lazy version of the function to purry.
+ * @throws Throws an error if number of arguments don't match.
  * @signature R.purry(fn, arguments);
  * @example
  *    function _findIndex(array, fn) {
@@ -46,6 +47,7 @@ type MaybeLazyFunction = {
  *    function findIndex() {
  *      return R.purry(_findIndex, arguments);
  *    }
+ * @dataFirst
  * @category Function
  */
 export function purry(

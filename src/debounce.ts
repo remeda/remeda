@@ -102,6 +102,7 @@ export function debounce<F extends (...args: any) => any>(
   func: F,
   options: DebounceOptions & { readonly timing?: "trailing" },
 ): Debouncer<F>;
+// eslint-disable-next-line jsdoc/require-jsdoc -- we only doc the first overload
 export function debounce<F extends (...args: any) => any>(
   func: F,
   options:

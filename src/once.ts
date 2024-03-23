@@ -8,6 +8,7 @@
  * initialize();
  * initialize();
  * // => `createApplication` is invoked once
+ * @dataFirst
  * @category Function
  */
 export function once<T>(fn: () => T): () => T {

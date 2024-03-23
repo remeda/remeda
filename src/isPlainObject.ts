@@ -23,6 +23,7 @@ import type { NarrowedTo } from "./_types";
  *    R.isPlainObject(new Error("error")) //=> false
  *    R.isPlainObject('somethingElse') //=> false
  *    R.isPlainObject(null) //=> false
+ * @dataFirst
  * @category Guard
  */
 export function isPlainObject<T>(
