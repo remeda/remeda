@@ -22,9 +22,9 @@ jobs:
           # the lowest we can go here. This also means this is the lowest
           # version we support. When this value changes in the future it needs
           # to be communicated to the users.
-          - "~4.4.0"
-          - "~4.3.0"
-          - "~4.2.0"
+          - "~4.7.0"
+          - "~4.6.0"
+          - "~4.5.0"
 
     steps:
       - name: ⬇️ Checkout repo
