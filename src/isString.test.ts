@@ -2,7 +2,7 @@ import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
-} from "../test/types_data_provider";
+} from "../test/typesDataProvider";
 import { isString } from "./isString";
 
 const dataFunction = (): number | "a" | "b" | "c" => "a";

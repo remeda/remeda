@@ -389,7 +389,6 @@ export default config(
   {
     files: ["src/**/*.test.ts"],
     rules: {
-      "unicorn/no-array-callback-reference": "off",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",
@@ -400,9 +399,6 @@ export default config(
   {
     files: ["test/**/*.ts"],
     rules: {
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "unicorn/filename-case": "off",
       "unicorn/no-null": "off",
     },
   },

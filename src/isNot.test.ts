@@ -3,7 +3,7 @@ import {
   TYPES_DATA_PROVIDER,
   type TestClass,
   type AllTypesDataProviderTypes,
-} from "../test/types_data_provider";
+} from "../test/typesDataProvider";
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
 import { isString } from "./isString";

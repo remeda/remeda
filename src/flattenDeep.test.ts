@@ -1,4 +1,4 @@
-import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { find } from "./find";
 import { flattenDeep } from "./flattenDeep";
 import { pipe } from "./pipe";

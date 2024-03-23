@@ -1,4 +1,4 @@
-import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
 import { take } from "./take";

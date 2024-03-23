@@ -3,7 +3,7 @@ import {
   TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
   type TestClass,
-} from "../test/types_data_provider";
+} from "../test/typesDataProvider";
 import { isNonNullish } from "./isNonNullish";
 
 describe("isNonNullish", () => {
