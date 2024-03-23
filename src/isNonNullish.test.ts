@@ -1,10 +1,8 @@
-import type {
-  AllTypesDataProviderTypes,
-  TestClass,
-} from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  type TestClass,
 } from "../test/types_data_provider";
 import { isNonNullish } from "./isNonNullish";
 

@@ -1,5 +1,4 @@
-import type { OrderRule } from "./_purryOrderRules";
-import { purryOrderRules } from "./_purryOrderRules";
+import { purryOrderRules, type OrderRule } from "./_purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,

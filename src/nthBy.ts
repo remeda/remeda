@@ -1,5 +1,7 @@
-import type { OrderRule } from "./_purryOrderRules";
-import { purryOrderRulesWithArgument } from "./_purryOrderRules";
+import {
+  purryOrderRulesWithArgument,
+  type OrderRule,
+} from "./_purryOrderRules";
 import { quickSelect } from "./_quickSelect";
 import type {
   CompareFunction,

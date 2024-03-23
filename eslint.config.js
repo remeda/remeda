@@ -49,13 +49,6 @@ export default config(
       // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
 
-      // TODO: Once we bump our typescript `target` we should enable this rule
-      "prefer-object-has-own": "off",
-
-      // TODO: Once we bump our minimum Typescript version above 4.5 we need to change the linting to prefer the inline style which allows us to combine type imports and regular ones:
-      "no-duplicate-imports": "off",
-      "@typescript-eslint/consistent-type-imports": ["warn"],
-
       // TODO: Once we bump our typescript `target` we should enable these rules.
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-at": "off",
@@ -91,6 +84,7 @@ export default config(
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
+      "no-duplicate-imports": "error",
       "require-atomic-updates": "error",
 
       // Suggestions
@@ -272,6 +266,11 @@ export default config(
       // typing edge-cases that interfaces aren't; in @typescript-eslint's
       // "strict" extension this rule is defined the opposite way though(?!).
       "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
+
+      "@typescript-eslint/consistent-type-imports": [
+        "warn",
+        { fixStyle: "inline-type-imports" },
+      ],
 
       "@typescript-eslint/no-unused-vars": [
         "error",

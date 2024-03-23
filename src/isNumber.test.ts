@@ -1,7 +1,7 @@
-import type { AllTypesDataProviderTypes } from "../test/types_data_provider";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
 } from "../test/types_data_provider";
 import { isNumber } from "./isNumber";
 
