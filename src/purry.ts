@@ -2,8 +2,6 @@
 
 import type { LazyEvaluator } from "./pipe";
 
-type LazyEvaluatorFactory = (...args: any) => LazyEvaluator;
-
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
  *
@@ -46,7 +44,7 @@ type LazyEvaluatorFactory = (...args: any) => LazyEvaluator;
 export function purry(
   fn: (...args: any) => unknown,
   args: IArguments | ReadonlyArray<unknown>,
-  lazy?: LazyEvaluatorFactory,
+  lazy?: (...args: any) => LazyEvaluator,
 ): unknown {
   // TODO: Once we bump our target beyond ES5 we can spread the args array directly and don't need this...
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;
