@@ -1,6 +1,6 @@
 {
   "name": "remeda",
-  "version": "0.0.35",
+  "version": "2.0.0",
   "description": "A utility library for JavaScript and Typescript.",
   "keywords": [
     "utils",
@@ -9,7 +9,7 @@
     "programming",
     "typescript"
   ],
-  "homepage": "https://github.com/remeda/remeda#readme",
+  "homepage": "https://remedajs.com/",
   "bugs": {
     "url": "https://github.com/remeda/remeda/issues"
   },
@@ -33,7 +33,6 @@
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist/*"
   ],
