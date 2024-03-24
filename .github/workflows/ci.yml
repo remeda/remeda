@@ -50,7 +50,7 @@ jobs:
         run: npm install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🔎 Type check
-        run: npm run compile:dist
+        run: npm run typeCheck:dist
 
   typecheck-source:
     name: 👷 Typecheck Source
@@ -68,7 +68,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
-        run: npm run compile
+        run: npm run typeCheck
 
   test:
     name: 🧪 Test [Node ${{ matrix.node }}]
