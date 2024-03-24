@@ -3,11 +3,24 @@
   "version": "2.0.0",
   "description": "A utility library for JavaScript and Typescript.",
   "keywords": [
-    "utils",
+    "algo",
+    "algorithm",
+    "curried",
     "fp",
     "functional",
-    "programming",
-    "typescript"
+    "generics",
+    "lodash",
+    "ramda",
+    "stdlib",
+    "toolkit",
+    "ts",
+    "types",
+    "typescript",
+    "underscore",
+    "util",
+    "utilities",
+    "utility",
+    "utils"
   ],
   "homepage": "https://remedajs.com/",
   "bugs": {
