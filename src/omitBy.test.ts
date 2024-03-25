@@ -1,40 +1,91 @@
+import { constant } from "./constant";
 import { omitBy } from "./omitBy";
 import { pipe } from "./pipe";
 
-describe("data first", () => {
-  test("it should omit props", () => {
-    const result = omitBy(
-      { a: 1, b: 2, A: 3, B: 4 },
-      (_, key) => key.toUpperCase() === key,
-    );
-    assertType<Record<"A" | "a" | "B" | "b", number>>(result);
-    expect(result).toStrictEqual({ a: 1, b: 2 });
+describe("runtime", () => {
+  test("dataFirst", () => {
+    expect(
+      omitBy({ a: 1, b: 2, A: 3, B: 4 }, (_, key) => key.toUpperCase() === key),
+    ).toStrictEqual({ a: 1, b: 2 });
   });
-  test("allow partial type", () => {
-    const result = omitBy(
-      {} as Partial<{ a: string; b: number }>,
-      (_, key) => key === "a",
-    );
-    assertType<Partial<{ a: string; b: number }>>(result);
-    expect(result).toEqual({});
+
+  test("dataLast", () => {
+    expect(
+      pipe(
+        { a: 1, b: 2, A: 3, B: 4 },
+        omitBy((_, key) => key.toUpperCase() === key),
+      ),
+    ).toStrictEqual({ a: 1, b: 2 });
+  });
+
+  test("symbols are passed through", () => {
+    const mySymbol = Symbol("mySymbol");
+    expect(omitBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({
+      [mySymbol]: 1,
+    });
+  });
+
+  test("symbols are not passed to the predicate", () => {
+    const mock = vi.fn();
+    const data = { [Symbol("mySymbol")]: 1, a: "hello" };
+    omitBy(data, mock);
+    expect(mock).toBeCalledTimes(1);
+    expect(mock).toBeCalledWith("hello", "a", data);
   });
 });
 
-describe("data last", () => {
-  test("it should omit props", () => {
-    const result = pipe(
-      { a: 1, b: 2, A: 3, B: 4 },
-      omitBy((_, key) => key.toUpperCase() === key),
-    );
-    assertType<Record<"A" | "a" | "B" | "b", number>>(result);
-    expect(result).toStrictEqual({ a: 1, b: 2 });
+describe("typing", () => {
+  describe("data first", () => {
+    test("it should omit props", () => {
+      const result = omitBy(
+        { a: 1, b: 2, A: 3, B: 4 },
+        (_, key) => key.toUpperCase() === key,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        Record<"A" | "a" | "B" | "b", number>
+      >();
+    });
+
+    test("allow partial type", () => {
+      const result = omitBy(
+        {} as Partial<{ a: string; b: number }>,
+        (_, key) => key === "a",
+      );
+      expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
+    });
   });
-  test("allow partial type", () => {
-    const result = pipe(
-      {} as Partial<{ a: string; b: number }>,
-      omitBy((_, key) => key.toUpperCase() === key),
-    );
-    assertType<Partial<{ a: string; b: number }>>(result);
-    expect(result).toEqual({});
+
+  describe("data last", () => {
+    test("it should omit props", () => {
+      const result = pipe(
+        { a: 1, b: 2, A: 3, B: 4 },
+        omitBy((_, key) => key.toUpperCase() === key),
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        Record<"A" | "a" | "B" | "b", number>
+      >();
+    });
+
+    test("allow partial type", () => {
+      const result = pipe(
+        {} as Partial<{ a: string; b: number }>,
+        omitBy((_, key) => key.toUpperCase() === key),
+      );
+      expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
+    });
+  });
+
+  test("symbols are passed through", () => {
+    const mySymbol = Symbol("mySymbol");
+    const result = omitBy({ [mySymbol]: 1 }, constant(true));
+    expectTypeOf(result).toEqualTypeOf<{ [mySymbol]: number }>();
+  });
+
+  test("symbols are not passed to the predicate", () => {
+    omitBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
+      expectTypeOf(value).toEqualTypeOf<boolean | string>();
+      expectTypeOf(key).toEqualTypeOf<"b" | "c">();
+      return true;
+    });
   });
 });
