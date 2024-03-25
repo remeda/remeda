@@ -64,12 +64,10 @@ export type ExactRecord<Key extends PropertyKey, Value> =
     ? Record<Key, Value>
     : number extends Key
       ? Record<Key, Value>
-      : symbol extends Key
-        ? Record<Key, Value>
-        : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-          // because we can't statically know what values the mapper would return on
-          // a specific input
-          Partial<Record<Key, Value>>;
+      : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+        // because we can't statically know what values the mapper would return on
+        // a specific input
+        Partial<Record<Key, Value>>;
 
 export type ReorderedArray<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

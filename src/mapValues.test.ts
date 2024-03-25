@@ -4,9 +4,9 @@ import { pipe } from "./pipe";
 
 describe("runtime", () => {
   test("dataFirst", () => {
-    expect(mapValues({ a: 1, b: 2 }, (value, key) => `${value}${key}`)).toEqual(
-      { a: "1a", b: "2b" },
-    );
+    expect(
+      mapValues({ a: 1, b: 2 }, (value, key) => `${value}${key}`),
+    ).toStrictEqual({ a: "1a", b: "2b" });
   });
 
   test("dataLast", () => {
@@ -15,7 +15,7 @@ describe("runtime", () => {
         { a: 1, b: 2 },
         mapValues((value, key) => `${value}${key}`),
       ),
-    ).toEqual({ a: "1a", b: "2b" });
+    ).toStrictEqual({ a: "1a", b: "2b" });
   });
 
   test("symbols are passed through", () => {
