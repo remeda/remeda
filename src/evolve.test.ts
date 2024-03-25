@@ -93,6 +93,13 @@ describe("data first", () => {
       ),
     ).toStrictEqual({ arg2Optional: true, arg2arg3Optional: true });
   });
+
+  it("doesn't evolve symbol keys", () => {
+    const mock = vi.fn();
+    const mySymbol = Symbol("a");
+    evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
+    expect(mock).toBeCalledTimes(0);
+  });
 });
 
 describe("data last", () => {
@@ -356,6 +363,19 @@ describe("typing", () => {
         {
           // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
           quartile: [add(1), add(-1)],
+        },
+      );
+    });
+
+    it("doesn't provide typing for symbol key evolvers", () => {
+      const mySymbol = Symbol("a");
+      evolve(
+        { [mySymbol]: "hello" },
+        {
+          // @ts-expect-error [ts7006] - That's the whole point!
+          [mySymbol]: (x) => {
+            expectTypeOf(x).toBeAny();
+          },
         },
       );
     });
