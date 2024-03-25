@@ -21,7 +21,15 @@ export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 // Inspired and largely copied from `sindresorhus/ts-extras`:
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
-export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
+export type EnumeratedKeyOf<T> = `${Exclude<keyof T, symbol>}`;
+
+// Object.values does only return the values paired with non-symbol keys.
+export type EnumeratedValueOf<T> = {
+  [K in keyof T]: K extends symbol
+    ? // Ignore any values that are coming from a symbol key
+      never
+    : Required<T>[K];
+}[keyof T];
 
 /**
  * An extension of Extract for type predicates which falls back to the base

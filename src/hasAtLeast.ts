@@ -27,7 +27,7 @@ type ArrayMinN<T, N extends number> = number extends N
  *   R.hasAtLeast(data, 1); // => true
  *   data[0]; // 1, with type `number`
  * @dataFirst
- * @category Array
+ * @category Guard
  */
 export function hasAtLeast<T, N extends number>(
   data: ReadonlyArray<T>,
@@ -53,7 +53,7 @@ export function hasAtLeast<T, N extends number>(
  *     R.map(([, second]) => second),
  *   ); // => [2,5], with type `number[]`
  * @dataLast
- * @category Array
+ * @category Guard
  */
 export function hasAtLeast<N extends number>(
   minimum: N,

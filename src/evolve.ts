@@ -1,5 +1,4 @@
 import type { IterableContainer } from "./_types";
-import { entries } from "./entries";
 import { purry } from "./purry";
 
 /**
@@ -34,7 +33,7 @@ type Evolver<T> = T extends object
   ? T extends IterableContainer
     ? never
     : {
-        readonly [K in keyof T]?:
+        readonly [K in keyof T as K extends symbol ? never : K]?:
           | Evolver<T[K]>
           | ((data: Required<T>[K]) => unknown);
       }
@@ -142,7 +141,7 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
 
   const out: Record<string, unknown> = { ...data };
 
-  for (const [key, value] of entries(evolver)) {
+  for (const [key, value] of Object.entries(evolver)) {
     if (key in out) {
       out[key] =
         typeof value === "function"

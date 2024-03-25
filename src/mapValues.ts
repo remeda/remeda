@@ -1,5 +1,8 @@
-import { type Mapped, type ObjectKeys } from "./_types";
-import { entries } from "./entries";
+import {
+  type EnumeratedKeyOf,
+  type EnumeratedValueOf,
+  type Mapped,
+} from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -16,7 +19,11 @@ import { purry } from "./purry";
  */
 export function mapValues<T extends object, S>(
   data: T,
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
+  valueMapper: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => S,
 ): Mapped<T, S>;
 
 /**
@@ -31,7 +38,11 @@ export function mapValues<T extends object, S>(
  * @category Object
  */
 export function mapValues<T extends object, S>(
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
+  valueMapper: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => S,
 ): (data: T) => Mapped<T, S>;
 
 export function mapValues(...args: ReadonlyArray<unknown>): unknown {
@@ -40,15 +51,14 @@ export function mapValues(...args: ReadonlyArray<unknown>): unknown {
 
 function mapValuesImplementation<T extends object, S>(
   data: T,
-  valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
-): Mapped<T, S> {
-  const out: Partial<Mapped<T, S>> = {};
+  valueMapper: (value: unknown, key: string, data: T) => S,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
 
-  for (const [key, value] of entries(data)) {
-    // @ts-expect-error [ts2345] - FIXME!
+  for (const [key, value] of Object.entries(data)) {
     const mappedValue = valueMapper(value, key, data);
     out[key] = mappedValue;
   }
 
-  return out as Mapped<T, S>;
+  return out;
 }

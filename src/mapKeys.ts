@@ -3,8 +3,7 @@
  * possible!
  */
 
-import type { ExactRecord } from "./_types";
-import { entries } from "./entries";
+import type { EnumeratedKeyOf, EnumeratedValueOf, ExactRecord } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -21,7 +20,11 @@ import { purry } from "./purry";
  */
 export function mapKeys<T extends {}, S extends PropertyKey>(
   data: T,
-  keyMapper: (key: keyof T, value: Required<T>[keyof T], data: T) => S,
+  keyMapper: (
+    key: EnumeratedKeyOf<T>,
+    value: EnumeratedValueOf<T>,
+    data: T,
+  ) => S,
 ): ExactRecord<S, T[keyof T]>;
 
 /**
@@ -36,7 +39,11 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
  * @category Object
  */
 export function mapKeys<T extends {}, S extends PropertyKey>(
-  keyMapper: (key: keyof T, value: Required<T>[keyof T], data: T) => S,
+  keyMapper: (
+    key: EnumeratedKeyOf<T>,
+    value: EnumeratedValueOf<T>,
+    data: T,
+  ) => S,
 ): (data: T) => ExactRecord<S, T[keyof T]>;
 
 export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
@@ -45,15 +52,14 @@ export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
 
 function mapKeysImplementation<T extends {}, S extends PropertyKey>(
   data: T,
-  keyMapper: (key: keyof T, value: Required<T>[keyof T], data: T) => S,
-): ExactRecord<S, T[keyof T]> {
-  const out: Partial<Record<S, T[keyof T]>> = {};
+  keyMapper: (key: string, value: unknown, data: T) => S,
+): Partial<Record<S, unknown>> {
+  const out: Partial<Record<S, unknown>> = {};
 
-  for (const [key, value] of entries(data)) {
-    // @ts-expect-error [ts2345] - Adding `Simplify` to the type of `EntryOf` takes away Typescripts ability to infer that the types match. Because we trust `Simplify` to only change how the type "looks" and not its semantics, we need to suppress the error.
+  for (const [key, value] of Object.entries(data)) {
     const mappedKey = keyMapper(key, value, data);
     out[mappedKey] = value;
   }
 
-  return out as ExactRecord<S, T[keyof T]>;
+  return out;
 }

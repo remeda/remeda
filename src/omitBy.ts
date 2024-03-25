@@ -1,4 +1,4 @@
-import { keys } from "./keys";
+import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -12,9 +12,13 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function omitBy<T>(
+export function omitBy<T extends object>(
   data: T,
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
+  predicate: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
@@ -27,27 +31,28 @@ export function omitBy<T>(
  * @dataLast
  * @category Object
  */
-export function omitBy<T>(
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
+export function omitBy<T extends object>(
+  predicate: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => boolean,
 ): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function omitBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(omitByImplementation, args);
 }
 
-function omitByImplementation<T>(
+function omitByImplementation<T extends object>(
   data: T,
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
-): Partial<T> {
-  if (data === undefined || data === null) {
-    return data;
-  }
+  predicate: (value: unknown, key: string, data: T) => boolean,
+): Record<string, unknown> {
+  const out: Partial<Record<string, unknown>> = { ...data };
 
-  const out: Partial<T> = {};
-
-  for (const key of keys(data)) {
-    if (!predicate(data[key], key, data)) {
-      out[key] = data[key];
+  for (const [key, value] of Object.entries(out)) {
+    if (predicate(value, key, data)) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is the best way to do it!
+      delete out[key];
     }
   }
 

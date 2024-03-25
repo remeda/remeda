@@ -51,13 +51,18 @@ function _hasSubObject<T, S extends Partial<T>>(
   data: T,
   subObject: S,
 ): data is Simplify<S & T> {
-  for (const key of Object.keys(subObject)) {
+  for (const [key, value] of Object.entries(subObject)) {
     if (!Object.prototype.hasOwnProperty.call(data, key)) {
       return false;
     }
 
-    // @ts-expect-error [ts7053] - key is in both subObject and data:
-    if (!isDeepEqual(subObject[key], data[key])) {
+    if (
+      !isDeepEqual(
+        value,
+        // @ts-expect-error [ts7053] - We already checked that `data` has `key
+        data[key],
+      )
+    ) {
       return false;
     }
   }

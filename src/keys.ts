@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { EnumeratedKeyOf, IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
@@ -47,9 +47,7 @@ type IndicesAfterSpread<
       : Iterations["length"];
 
 type ObjectKeys<T> =
-  T extends Record<PropertyKey, never>
-    ? []
-    : Array<`${Exclude<keyof T, symbol>}`>;
+  T extends Record<PropertyKey, never> ? [] : Array<EnumeratedKeyOf<T>>;
 
 /**
  * Returns a new array containing the keys of the array or object.
@@ -62,7 +60,7 @@ type ObjectKeys<T> =
  *    R.keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
  * @dataFirst
  * @pipeable
- * @category Object
+ * @category Array
  */
 export function keys<T extends object>(data: T): Keys<T>;
 
@@ -76,7 +74,7 @@ export function keys<T extends object>(data: T): Keys<T>;
  *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys()) // => ['a', 'b', '5']
  * @dataLast
  * @pipeable
- * @category Object
+ * @category Array
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 

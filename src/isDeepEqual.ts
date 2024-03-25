@@ -122,19 +122,22 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   // something weird. We assume that comparing values by keys is enough to judge
   // their equality.
 
-  const keys = Object.keys(data);
-
-  if (keys.length !== Object.keys(other).length) {
+  if (Object.keys(data).length !== Object.keys(other).length) {
     return false;
   }
 
-  for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(other, key)) {
+  for (const [key, value] of Object.entries(data)) {
+    if (!(key in other)) {
       return false;
     }
 
-    // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
-    if (!isDeepEqualImplementation(data[key], other[key])) {
+    if (
+      !isDeepEqualImplementation(
+        value,
+        // @ts-expect-error [ts7053] - We already checked that `other` has `key`
+        other[key],
+      )
+    ) {
       return false;
     }
   }

@@ -41,7 +41,7 @@ export function uniqueWith<T>(
  *      R.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
- * @category Object
+ * @category Array
  */
 export function uniqueWith<T>(
   isEquals: IsEquals<T>,

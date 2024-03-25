@@ -46,7 +46,7 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  *    R.join(['a','b','c'], "") // => "abc" (typed `string`)
  *    R.join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
  * @dataFirst
- * @category Array
+ * @category String
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],
@@ -69,7 +69,7 @@ export function join<
  *    R.pipe(['a','b','c'], R.join("")) // => "abc" (typed `string`)
  *    R.pipe(['hello', 'world'] as const, R.join(" ")) // => "hello world" (typed `hello world`)
  * @dataLast
- * @category Array
+ * @category String
  */
 export function join<
   T extends ReadonlyArray<Joinable> | [],

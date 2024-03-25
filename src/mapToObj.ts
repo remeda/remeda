@@ -19,7 +19,7 @@ import { purry } from "./purry";
  * @example
  *    R.mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  * @dataFirst
- * @category Array
+ * @category Object
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
@@ -47,7 +47,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
  *      R.mapToObj(x => [String(x), x * 2])
  *    ) // => {1: 2, 2: 4, 3: 6}
  * @dataLast
- * @category Array
+ * @category Object
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   fn: (value: T, index: number, data: ReadonlyArray<T>) => [K, V],

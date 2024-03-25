@@ -1,4 +1,4 @@
-import { keys } from "./keys";
+import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -12,9 +12,13 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function pickBy<T>(
+export function pickBy<T extends object>(
   data: T,
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
+  predicate: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => boolean,
 ): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 /**
@@ -27,27 +31,27 @@ export function pickBy<T>(
  * @dataLast
  * @category Object
  */
-export function pickBy<T>(
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
+export function pickBy<T extends object>(
+  predicate: (
+    value: EnumeratedValueOf<T>,
+    key: EnumeratedKeyOf<T>,
+    data: T,
+  ) => boolean,
 ): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
 export function pickBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(pickByImplementation, args);
 }
 
-function pickByImplementation<T>(
+function pickByImplementation<T extends object>(
   data: T,
-  predicate: <K extends keyof T>(value: T[K], key: K, data: T) => boolean,
-): Partial<T> {
-  if (data === null || data === undefined) {
-    return {};
-  }
+  predicate: (value: unknown, key: string, data: T) => boolean,
+): Record<string, unknown> {
+  const out: Partial<Record<string, unknown>> = {};
 
-  const out: Partial<T> = {};
-
-  for (const key of keys(data)) {
-    if (predicate(data[key], key, data)) {
-      out[key] = data[key];
+  for (const [key, value] of Object.entries(data)) {
+    if (predicate(value, key, data)) {
+      out[key] = value;
     }
   }
 

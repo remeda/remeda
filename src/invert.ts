@@ -1,8 +1,10 @@
+import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
 
-type Inverted<T extends object> = T[keyof T] extends PropertyKey
-  ? Record<T[keyof T], keyof T>
-  : never;
+type Inverted<T extends object> =
+  EnumeratedValueOf<T> extends PropertyKey
+    ? Record<EnumeratedValueOf<T>, EnumeratedKeyOf<T>>
+    : never;
 
 /**
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
@@ -38,15 +40,12 @@ export function invert(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function _invert(
-  object: Readonly<Record<PropertyKey, PropertyKey>>,
+  data: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
 
-  for (const key in object) {
-    // @see https://eslint.org/docs/latest/rules/guard-for-in
-    if (Object.prototype.hasOwnProperty.call(object, key)) {
-      result[object[key]!] = key;
-    }
+  for (const [key, value] of Object.entries(data)) {
+    result[value] = key;
   }
 
   return result;

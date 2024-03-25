@@ -8,7 +8,14 @@ import { purry } from "./purry";
 
 type EntryForKey<T, Key extends keyof T> = [key: Key, value: Required<T>[Key]];
 
-type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
+type Entry<T> = Simplify<
+  {
+    [P in keyof T]-?: P extends symbol
+      ? // Entries keyed by a symbol are ignored by Object.entries
+        never
+      : EntryForKey<T, P>;
+  }[keyof T]
+>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -19,7 +26,7 @@ type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
  * @example
  *    R.entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
- * @category Object
+ * @category Array
  */
 export function entries<T extends {}>(data: T): Array<Entry<T>>;
 
@@ -31,7 +38,7 @@ export function entries<T extends {}>(data: T): Array<Entry<T>>;
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3 }, R.entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast
- * @category Object
+ * @category Array
  */
 export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
