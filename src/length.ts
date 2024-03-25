@@ -11,7 +11,7 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
  * @example
  *    R.length([1, 2, 3]) // => 3
  * @dataFirst
- * @category Number
+ * @category Array
  */
 export function length<T>(items: Enumerable<T>): number;
 
@@ -23,7 +23,7 @@ export function length<T>(items: Enumerable<T>): number;
  * @example
  *    R.pipe([1, 2, 3], R.length()) // => 3
  * @dataLast
- * @category Number
+ * @category Array
  */
 export function length<T>(): (items: Enumerable<T>) => number;
 

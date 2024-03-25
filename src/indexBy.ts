@@ -20,7 +20,7 @@ import { purry } from "./purry";
  * @example
  *    R.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
- * @category Object
+ * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
@@ -48,7 +48,7 @@ export function indexBy<T, K extends PropertyKey>(
  *      R.indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
  * @dataLast
- * @category Object
+ * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
   mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
