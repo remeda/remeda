@@ -21,6 +21,11 @@ describe("data first", () => {
   test("numeric values", () => {
     expect(invert(["a", "b", "c"])).toEqual({ a: "0", b: "1", c: "2" });
   });
+
+  test("symbol keys are ignored", () => {
+    const data = { [Symbol("a")]: 4, a: "hello" };
+    expect(invert(data)).toEqual({ hello: "a" });
+  });
 });
 
 describe("data last", () => {
@@ -49,5 +54,12 @@ describe("data last", () => {
       b: "1",
       c: "2",
     });
+  });
+});
+
+describe("typing", () => {
+  test("symbol keys are ignored", () => {
+    const result = invert({ [Symbol("a")]: 4, a: "hello" } as const);
+    expectTypeOf(result).toEqualTypeOf<{ hello: "a" }>();
   });
 });
