@@ -1,5 +1,5 @@
+import type { Merge } from "type-fest";
 import { purry } from "./purry";
-import type { Merge } from "./type-fest/merge";
 
 /**
  * Merges two objects into one by combining their properties, effectively

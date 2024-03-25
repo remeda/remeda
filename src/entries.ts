@@ -3,8 +3,8 @@
  * possible!
  */
 
+import type { Simplify } from "type-fest";
 import { purry } from "./purry";
-import type { Simplify } from "./type-fest/simplify";
 
 type EntryForKey<T, Key extends keyof T> = [key: Key, value: Required<T>[Key]];
 

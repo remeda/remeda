@@ -1,6 +1,6 @@
+import type { Simplify } from "type-fest";
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
-import type { Simplify } from "./type-fest/simplify";
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,

@@ -1,7 +1,7 @@
+import type { Simplify } from "type-fest";
 import { add } from "./add";
 import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
-import type { Simplify } from "./type-fest/simplify";
 
 type Letter =
   | "a"
