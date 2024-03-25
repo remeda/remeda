@@ -1,6 +1,6 @@
+import type { Simplify } from "type-fest";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
-import type { Simplify } from "./type-fest/simplify";
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every

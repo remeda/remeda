@@ -7,7 +7,7 @@ import jsdoc from "eslint-plugin-jsdoc";
 
 export default config(
   {
-    ignores: ["dist", "docs", "examples"],
+    ignores: ["coverage", "dist", "docs", "examples"],
   },
   core.configs.recommended,
   // @ts-expect-error [ts7016] -- I don't know why typing is broken here...
@@ -377,14 +377,6 @@ export default config(
     rules: {
       "jsdoc/require-example": "off",
       "jsdoc/require-param": "off",
-      "unicorn/filename-case": "off",
-    },
-  },
-  {
-    files: ["src/type-fest/**/*.ts"],
-    rules: {
-      // Type-fest uses a lot of "banned" types...
-      "@typescript-eslint/ban-types": "off",
       "unicorn/filename-case": "off",
     },
   },

@@ -1,4 +1,4 @@
-import type { IsAny } from "./type-fest/is-any";
+import type { IsAny } from "type-fest";
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
