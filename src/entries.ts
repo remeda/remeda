@@ -6,16 +6,11 @@
 import type { Simplify } from "type-fest";
 import { purry } from "./purry";
 
-type EntryForKey<T, Key extends keyof T> = [key: Key, value: Required<T>[Key]];
+type EntryForKey<T, Key extends keyof T> = Key extends number | string
+  ? [key: `${Key}`, value: Required<T>[Key]]
+  : never;
 
-type Entry<T> = Simplify<
-  {
-    [P in keyof T]-?: P extends symbol
-      ? // Entries keyed by a symbol are ignored by Object.entries
-        never
-      : EntryForKey<T, P>;
-  }[keyof T]
->;
+type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
