@@ -2,7 +2,7 @@ import type { IsAny } from "type-fest";
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
-export type Mapped<T extends IterableContainer, K> = {
+export type Mapped<T, K> = {
   -readonly [P in keyof T]: K;
 };
 
@@ -24,19 +24,6 @@ export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
 
 /**
- * Copied verbatim from `sindresorhus/ts-extras` (MIT License).
- *
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/readonly-tuple.d.ts
- */
-export type ReadonlyTuple<
-  Element,
-  Length extends number,
-> = number extends Length
-  ? // Because `Length extends number` and `number extends Length`, then `Length` is not a specific finite number.
-    ReadonlyArray<Element> // It's not fixed length.
-  : BuildTupleHelper<Element, Length, []>; // Otherwise it is a fixed length tuple.
-
-/**
  * An extension of Extract for type predicates which falls back to the base
  * in order to narrow the `unknown` case.
  *
@@ -50,27 +37,12 @@ export type NarrowedTo<T, Base> =
       ? Base
       : Extract<T, Base>;
 
-type BuildTupleHelper<
-  Element,
-  Length extends number,
-  Rest extends Array<Element>,
-> = Rest["length"] extends Length
-  ? readonly [...Rest] // Terminate with readonly array (aka tuple)
-  : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
-
 /**
  * A compare function that is compatible with the native `Array.sort` function.
  *
  * @returns >0 if `a` should come after `b`, 0 if they are equal, and <0 if `a` should come before `b`.
  */
 export type CompareFunction<T> = (a: T, b: T) => number;
-
-/**
- * Based on type-fest's IsAny.
- *
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
- */
-export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;
 
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using

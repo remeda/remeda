@@ -1,8 +1,6 @@
-import type { ObjectKeys } from "./_types";
+import { type Mapped, type ObjectKeys } from "./_types";
 import { entries } from "./entries";
 import { purry } from "./purry";
-
-type MappedValues<T, S> = { -readonly [P in keyof T]: S };
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -19,7 +17,7 @@ type MappedValues<T, S> = { -readonly [P in keyof T]: S };
 export function mapValues<T extends object, S>(
   data: T,
   valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
-): MappedValues<T, S>;
+): Mapped<T, S>;
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -34,7 +32,7 @@ export function mapValues<T extends object, S>(
  */
 export function mapValues<T extends object, S>(
   valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
-): (data: T) => MappedValues<T, S>;
+): (data: T) => Mapped<T, S>;
 
 export function mapValues(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapValuesImplementation, args);
@@ -43,8 +41,8 @@ export function mapValues(...args: ReadonlyArray<unknown>): unknown {
 function mapValuesImplementation<T extends object, S>(
   data: T,
   valueMapper: (value: T[keyof T], key: ObjectKeys<T>, data: T) => S,
-): MappedValues<T, S> {
-  const out: Partial<MappedValues<T, S>> = {};
+): Mapped<T, S> {
+  const out: Partial<Mapped<T, S>> = {};
 
   for (const [key, value] of entries(data)) {
     // @ts-expect-error [ts2345] - FIXME!
@@ -52,5 +50,5 @@ function mapValuesImplementation<T extends object, S>(
     out[key] = mappedValue;
   }
 
-  return out as MappedValues<T, S>;
+  return out as Mapped<T, S>;
 }
