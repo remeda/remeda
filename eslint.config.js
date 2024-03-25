@@ -373,8 +373,10 @@ export default config(
     },
   },
   {
-    files: ["*.config.js"],
+    files: ["*.config.js", "*.config.ts"],
     rules: {
+      "jsdoc/require-example": "off",
+      "jsdoc/require-param": "off",
       "unicorn/filename-case": "off",
     },
   },

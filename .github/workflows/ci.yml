@@ -18,13 +18,16 @@ jobs:
           - "~5.3.0"
           - "~5.2.0"
           - "~5.1.0"
-          # We use a target of ES2022 which was introduced in TypeScript v4.6,
-          # so that is the lowest we can go here. This also means this is the
-          # lowest version we support. When this value changes in the future it
-          # needs to be communicated to the users.
+          # We use a `"module": "NodeNext"` in our tsconfig when we test our
+          # distribution types, which was introduced in TypeScript v4.7, so that
+          # is the earliest version we can test our code in. This defines the
+          # minimal TypeScript version we support.
+          # IMPORTANT: Increasing the minimal version might require us to bump
+          # a MAJOR version of Remeda! Any changes here should be discussed with
+          # the rest of the maintainers.
+          - "~4.9.0"
           - "~4.8.0"
           - "~4.7.0"
-          - "~4.6.0"
 
     steps:
       - name: ⬇️ Checkout repo

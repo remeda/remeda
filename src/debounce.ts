@@ -129,11 +129,11 @@ export function debounce<F extends (...args: any) => any>(
 
   // The timeout is the main object we use to tell if there's an active cool-
   // down period or not.
-  let coolDownTimeoutId: number | undefined;
+  let coolDownTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   // We use an additional timeout to track how long the last debounced call is
   // waiting.
-  let maxWaitTimeoutId: number | undefined;
+  let maxWaitTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   // For 'trailing' invocations we need to keep the args around until we
   // actually invoke the function.
