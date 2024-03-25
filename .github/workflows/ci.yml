@@ -151,6 +151,9 @@ jobs:
       - name: 🏗️ Build
         run: npm run build
 
+      - name: 👮 Lint output
+        run: npm run lint:build
+
       - name: 🚀 Release
         run: npm run release
         env:
