@@ -54,9 +54,9 @@ function _swapProps<T extends object, K1 extends keyof T, K2 extends keyof T>(
 ): {
   [K in PropertyKey]: unknown;
 } {
-  const { [key1]: value1, [key2]: value2, ...remaining } = obj;
+  const { [key1]: value1, [key2]: value2 } = obj;
   return {
-    ...remaining,
+    ...obj,
     [key1]: value2,
     [key2]: value1,
   };
