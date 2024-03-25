@@ -6,6 +6,8 @@
 import type { Simplify } from "type-fest";
 import { purry } from "./purry";
 
+// Object.entries only returns enumerable keys, skipping symbols. It also
+// only returns string keys, translating numbers to strings.
 type EntryForKey<T, Key extends keyof T> = Key extends number | string
   ? [key: `${Key}`, value: Required<T>[Key]]
   : never;
