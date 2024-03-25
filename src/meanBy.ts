@@ -12,7 +12,7 @@ import { purry } from "./purry";
  *      R.meanBy(x => x.a)
  *    ) // 3
  * @dataLast
- * @category Number
+ * @category Array
  */
 
 export function meanBy<T>(
@@ -32,7 +32,7 @@ export function meanBy<T>(
  *      x => x.a
  *    ) // 3
  * @dataFirst
- * @category Number
+ * @category Array
  */
 
 export function meanBy<T>(
