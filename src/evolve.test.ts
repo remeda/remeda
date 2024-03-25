@@ -97,6 +97,7 @@ describe("data first", () => {
   it("doesn't evolve symbol keys", () => {
     const mock = vi.fn();
     const mySymbol = Symbol("a");
+    // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
     evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
     expect(mock).toBeCalledTimes(0);
   });
@@ -369,15 +370,9 @@ describe("typing", () => {
 
     it("doesn't provide typing for symbol key evolvers", () => {
       const mySymbol = Symbol("a");
-      evolve(
-        { [mySymbol]: "hello" },
-        {
-          // @ts-expect-error [ts7006] - That's the whole point!
-          [mySymbol]: (x) => {
-            expectTypeOf(x).toBeAny();
-          },
-        },
-      );
+      const mock = vi.fn();
+      // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
+      evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
     });
   });
 

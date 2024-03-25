@@ -33,9 +33,9 @@ type Evolver<T> = T extends object
   ? T extends IterableContainer
     ? never
     : {
-        readonly [K in keyof T as K extends symbol ? never : K]?:
-          | Evolver<T[K]>
-          | ((data: Required<T>[K]) => unknown);
+        readonly [K in keyof T]?: K extends symbol
+          ? never
+          : Evolver<T[K]> | ((data: Required<T>[K]) => unknown);
       }
   : never;
 
