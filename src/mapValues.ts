@@ -1,9 +1,9 @@
-import {
-  type EnumeratedKeyOf,
-  type EnumeratedValueOf,
-  type Mapped,
-} from "./_types";
+import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
+
+type MappedValues<T extends object, Value> = {
+  -readonly [P in keyof T]: P extends symbol ? T[P] : Value;
+};
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -17,14 +17,14 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function mapValues<T extends object, S>(
+export function mapValues<T extends object, Value>(
   data: T,
   valueMapper: (
     value: EnumeratedValueOf<T>,
     key: EnumeratedKeyOf<T>,
     data: T,
-  ) => S,
-): Mapped<T, S>;
+  ) => Value,
+): MappedValues<T, Value>;
 
 /**
  * Maps values of `object` and keeps the same keys.
@@ -37,25 +37,25 @@ export function mapValues<T extends object, S>(
  * @dataLast
  * @category Object
  */
-export function mapValues<T extends object, S>(
+export function mapValues<T extends object, Value>(
   valueMapper: (
     value: EnumeratedValueOf<T>,
     key: EnumeratedKeyOf<T>,
     data: T,
-  ) => S,
-): (data: T) => Mapped<T, S>;
+  ) => Value,
+): (data: T) => MappedValues<T, Value>;
 
 export function mapValues(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapValuesImplementation, args);
 }
 
-function mapValuesImplementation<T extends object, S>(
+function mapValuesImplementation<T extends Record<string, unknown>, S>(
   data: T,
   valueMapper: (value: unknown, key: string, data: T) => S,
 ): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
+  const out: Record<string, unknown> = { ...data };
 
-  for (const [key, value] of Object.entries(data)) {
+  for (const [key, value] of Object.entries(out)) {
     const mappedValue = valueMapper(value, key, data);
     out[key] = mappedValue;
   }

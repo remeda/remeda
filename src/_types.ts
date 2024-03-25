@@ -2,7 +2,7 @@ import type { IsAny } from "type-fest";
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
-export type Mapped<T, K> = {
+export type Mapped<T extends IterableContainer, K> = {
   -readonly [P in keyof T]: K;
 };
 
