@@ -56,8 +56,10 @@ describe("typing", () => {
 
 describe("KNOWN ISSUES", () => {
   it("Returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
+    // @ts-expect-error [ts2769] - We prevent this situation using typing, but we still want to have a test in place so that we don't accidentally remove the defensive typing.
     const result = product([] as Array<bigint>);
     expect(result).toBe(1);
+    // @ts-expect-error [ts2344] - We prevent this situation using typing, but we still want to have a test in place so that we don't accidentally remove the defensive typing.
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 });

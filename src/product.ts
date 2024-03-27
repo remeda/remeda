@@ -1,3 +1,4 @@
+import { type NonEmptyArray } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -13,9 +14,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
-export function product<
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
->(data: T): T[number];
+export function product(data: ReadonlyArray<number>): number;
+export function product(data: Readonly<NonEmptyArray<bigint>>): bigint;
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
@@ -29,11 +29,8 @@ export function product<
  * @dataLast
  * @category Number
  */
-export function product(): <
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
->(
-  data: T,
-) => T[number];
+export function product(): (data: ReadonlyArray<number>) => number;
+export function product(): (data: Readonly<NonEmptyArray<bigint>>) => bigint;
 
 export function product(...args: ReadonlyArray<unknown>): unknown {
   return purry(productImplementation, args);

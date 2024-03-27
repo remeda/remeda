@@ -54,8 +54,10 @@ describe("typing", () => {
 
 describe("KNOWN ISSUES", () => {
   it("Returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
+    // @ts-expect-error [ts2769] - We prevent this situation using typing, but we still want to have a test in place so that we don't accidentally remove the defensive typing.
     const result = sum([] as Array<bigint>);
     expect(result).toBe(0);
+    // @ts-expect-error [ts2344] - We prevent this situation using typing, but we still want to have a test in place so that we don't accidentally remove the defensive typing.
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 });
