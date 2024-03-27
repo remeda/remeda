@@ -1,5 +1,12 @@
+import { type Simplify } from "type-fest";
 import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
+
+type EnumeratedPartial<T> = Simplify<{
+  -readonly [P in keyof T as P extends number | string
+    ? `${P}`
+    : never]?: Required<T>[P];
+}>;
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -19,7 +26,7 @@ export function pickBy<T extends object>(
     key: EnumeratedKeyOf<T>,
     data: T,
   ) => boolean,
-): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+): EnumeratedPartial<T>;
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -37,7 +44,7 @@ export function pickBy<T extends object>(
     key: EnumeratedKeyOf<T>,
     data: T,
   ) => boolean,
-): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+): (data: T) => EnumeratedPartial<T>;
 
 export function pickBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(pickByImplementation, args);
