@@ -52,7 +52,7 @@ describe("typing", () => {
   describe("mapped type", () => {
     test("should work with string keys", () => {
       mapValues({} as { [K in string]: unknown }, (_, key) => {
-        expectTypeOf(key).toEqualTypeOf<string>();
+        expectTypeOf(key).toBeString();
       });
     });
     test("should work with number keys", () => {
@@ -75,7 +75,7 @@ describe("typing", () => {
   describe("indexed signature", () => {
     test("should work with string keys", () => {
       mapValues({} as Record<string, unknown>, (_, key) => {
-        expectTypeOf(key).toEqualTypeOf<string>();
+        expectTypeOf(key).toBeString();
       });
     });
     test("should work with number keys", () => {

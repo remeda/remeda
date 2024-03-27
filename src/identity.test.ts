@@ -47,9 +47,9 @@ describe("runtime", () => {
 describe("typing", () => {
   test("normal values", () => {
     const id = identity();
-    expectTypeOf(id("hello")).toEqualTypeOf<string>();
-    expectTypeOf(id(123)).toEqualTypeOf<number>();
-    expectTypeOf(id(true)).toEqualTypeOf<boolean>();
+    expectTypeOf(id("hello")).toBeString();
+    expectTypeOf(id(123)).toBeNumber();
+    expectTypeOf(id(true)).toBeBoolean();
     expectTypeOf(id({ a: 1, b: "hello" })).toEqualTypeOf<{
       a: number;
       b: string;
