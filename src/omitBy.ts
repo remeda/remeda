@@ -1,44 +1,37 @@
-import {
-  type OptionalKeysOf,
-  type RequiredKeysOf,
-  type Simplify,
-} from "type-fest";
+import { type Simplify } from "type-fest";
 import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
 
+// Symbols are not passed to the predicate (because they can't be enumerated
+// with the `Object.entries` function) and the output object is built from a
+// shallow copy of the input; meaning symbols would just be passed through as-
+// is.
 type PickSymbolKeys<T extends object> = {
-  // Leave all non-optional symbol keys required
-  -readonly [P in RequiredKeysOf<T> as P extends symbol ? P : never]: T[P];
-} & {
-  // Leave all optional symbol keys optional
-  -readonly [P in OptionalKeysOf<T> as P extends symbol
-    ? P
-    : never]?: Required<T>[P];
+  -readonly [P in keyof T as P extends symbol ? P : never]: T[P];
 };
 
+// When we don't use a type-predicate we can't say anything about what props
+// would be omitted from the output, so we need to assume any of them could be
+// filtered out. This means that we effectively make all (enumerable) keys
+// optional.
 type PartialEnumerableKeys<T extends object> = Simplify<
   PickSymbolKeys<T> & {
-    // Make all non-symbol keys optional
     -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
   }
 >;
 
-type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
-  OmittedTypes<T, S> & PickSymbolKeys<T>
->;
-
 // When the predicate is a type-guard we have more information to work with when
 // constructing the type of the output object. We can safely remove any property
-// which value would never come up true for the predicate, AND we can also
-// assume that properties that match the predicate perfectly would **always**
-// show up in the output object. Hence to build the output object we need to
-// build and merge 2 output objects: One for the properties which have a value
-// of at type that would always yield a `true` result from the predicate, these
-// are the "matches", which would not change the "optionality" of the input
-// object's props, and one for partial matches which would also make the props
-// optional (as they could have a value that would be filtered out).
-type OmittedTypes<T, S> = Simplify<
-  {
+// which value would always be true for the predicate, AND we can also
+// assume that properties that are rejected by the predicate perfectly would
+// **always** show up in the output object. Hence to build the output object we
+// need to build and merge 2 output objects: One for the properties which have a
+// value of at type that would always yield a `false` result from the predicate,
+// these are the "matches", which would not change the "optionality" of the
+// input object's props, and one for partial matches which would also make the
+// props optional (as they could have a value that would be filtered out).
+type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
+  PickSymbolKeys<T> & {
     // The exact case, props here would always be part of the output object
     -readonly [P in keyof T as PropIsExact<T, P, S>]: Exclude<T[P], S>;
   } & {
@@ -49,8 +42,8 @@ type OmittedTypes<T, S> = Simplify<
 >;
 
 // If the input object's value type extends itself when the type-guard is
-// extracted from it we can safely assume that the predicate would always return
-// true for any value of that property.
+// excluded from it we can safely assume that the predicate would always return
+// `false` for any value of that property.
 type PropIsExact<T, P extends keyof T, S> =
   T[P] extends Exclude<T[P], S> ? P : never;
 
