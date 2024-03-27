@@ -38,18 +38,16 @@ describe("typing", () => {
   describe("data first", () => {
     test("it should omit props", () => {
       const result = omitBy(
-        { a: 1, b: 2, A: 3, B: 4 },
-        (_, key) => key.toUpperCase() === key,
+        { a: 1, b: 2, A: 3, B: 4 } as const,
+        constant(true),
       );
-      expectTypeOf(result).toEqualTypeOf<
-        Record<"A" | "a" | "B" | "b", number>
-      >();
+      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
     });
 
     test("allow partial type", () => {
       const result = omitBy(
         {} as Partial<{ a: string; b: number }>,
-        (_, key) => key === "a",
+        constant(true),
       );
       expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
     });
@@ -58,27 +56,33 @@ describe("typing", () => {
   describe("data last", () => {
     test("it should omit props", () => {
       const result = pipe(
-        { a: 1, b: 2, A: 3, B: 4 },
-        omitBy((_, key) => key.toUpperCase() === key),
+        { a: 1, b: 2, A: 3, B: 4 } as const,
+        omitBy(constant(true)),
       );
-      expectTypeOf(result).toEqualTypeOf<
-        Record<"A" | "a" | "B" | "b", number>
-      >();
+      expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
     });
 
     test("allow partial type", () => {
       const result = pipe(
         {} as Partial<{ a: string; b: number }>,
-        omitBy((_, key) => key.toUpperCase() === key),
+        omitBy(constant(true)),
       );
       expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
     });
   });
 
   test("symbols are passed through", () => {
-    const mySymbol = Symbol("mySymbol");
-    const result = omitBy({ [mySymbol]: 1 }, constant(true));
-    expectTypeOf(result).toEqualTypeOf<{ [mySymbol]: number }>();
+    const requiredSymbol = Symbol("required");
+    const optionalSymbol = Symbol("optional");
+    const result = omitBy(
+      {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
+      constant(true),
+    );
+    expectTypeOf(result).toEqualTypeOf<{
+      [requiredSymbol]: number;
+      [optionalSymbol]?: boolean;
+      a?: string;
+    }>();
   });
 
   test("symbols are not passed to the predicate", () => {

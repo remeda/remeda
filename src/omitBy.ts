@@ -1,5 +1,25 @@
+import {
+  type OptionalKeysOf,
+  type RequiredKeysOf,
+  type Simplify,
+} from "type-fest";
 import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
 import { purry } from "./purry";
+
+type PartialEnumerableKeys<T extends object> = Simplify<
+  {
+    // Leave all non-optional symbol keys required
+    -readonly [P in RequiredKeysOf<T> as P extends symbol ? P : never]: T[P];
+  } & {
+    // Leave all optional symbol keys optional
+    -readonly [P in OptionalKeysOf<T> as P extends symbol
+      ? P
+      : never]?: Required<T>[P];
+  } & {
+    // Make all non-symbol keys optional
+    -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
+  }
+>;
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -19,7 +39,7 @@ export function omitBy<T extends object>(
     key: EnumeratedKeyOf<T>,
     data: T,
   ) => boolean,
-): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+): PartialEnumerableKeys<T>;
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -37,7 +57,7 @@ export function omitBy<T extends object>(
     key: EnumeratedKeyOf<T>,
     data: T,
   ) => boolean,
-): (data: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+): (data: T) => PartialEnumerableKeys<T>;
 
 export function omitBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(omitByImplementation, args);
