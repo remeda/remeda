@@ -1,4 +1,6 @@
 import { constant } from "./constant";
+import { isNullish } from "./isNullish";
+import { isString } from "./isString";
 import { omitBy } from "./omitBy";
 import { pipe } from "./pipe";
 
@@ -92,4 +94,78 @@ describe("typing", () => {
       return true;
     });
   });
+
+  test("handles type-predicates", () => {
+    const result = omitBy(
+      {} as {
+        a: string;
+        b: number;
+        optionalA?: string;
+        optionalB?: number;
+        union: number | string;
+        optionalUnion?: number | string;
+      },
+      isString,
+    );
+    expectTypeOf(result).toEqualTypeOf<{
+      b: number;
+      optionalB?: number;
+      union?: number;
+      optionalUnion?: number;
+    }>();
+  });
+
+  test("Works well with nullish type-guards", () => {
+    const data = {} as {
+      required: string;
+      optional?: string;
+      undefinable: string | undefined;
+      nullable: string | null;
+      nullish: string | null | undefined;
+      optionalUndefinable?: string | undefined;
+      optionalNullable?: string | null;
+      optionalNullish?: string | null | undefined;
+    };
+    const resultDefined = omitBy(data, isUndefined);
+    expectTypeOf(resultDefined).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable?: string;
+      nullable: string | null;
+      nullish?: string | null;
+      optionalUndefinable?: string;
+      optionalNullable?: string | null;
+      optionalNullish?: string | null;
+    }>();
+
+    const resultNonNull = omitBy(data, isNull);
+    expectTypeOf(resultNonNull).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable: string | undefined;
+      nullable?: string;
+      nullish?: string | undefined;
+      optionalUndefinable?: string | undefined;
+      optionalNullable?: string;
+      optionalNullish?: string | undefined;
+    }>();
+
+    const resultNonNullish = omitBy(data, isNullish);
+    expectTypeOf(resultNonNullish).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable?: string;
+      nullable?: string;
+      nullish?: string;
+      optionalUndefinable?: string;
+      optionalNullable?: string;
+      optionalNullish?: string;
+    }>();
+  });
 });
+
+const isUndefined = <T>(value: T | undefined): value is undefined =>
+  value === undefined;
+
+const isNull = <T>(value: T | null): value is null =>
+  typeof value === "object" && value === null;
