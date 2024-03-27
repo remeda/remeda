@@ -20,6 +20,13 @@ describe("runtime", () => {
     ).toStrictEqual({ a: 1, b: 2 });
   });
 
+  test("number keys are converted to strings in the mapper", () => {
+    omitBy({ 123: "hello" }, (_, key) => {
+      expect(key).toBe("123");
+      return true;
+    });
+  });
+
   test("symbols are passed through", () => {
     const mySymbol = Symbol("mySymbol");
     expect(omitBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({
@@ -91,6 +98,13 @@ describe("typing", () => {
     omitBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
       expectTypeOf(value).toEqualTypeOf<boolean | string>();
       expectTypeOf(key).toEqualTypeOf<"b" | "c">();
+      return true;
+    });
+  });
+
+  test("number keys are passed as strings to the predicate", () => {
+    omitBy({ 123: "hello" }, (_, key) => {
+      expectTypeOf(key).toEqualTypeOf<"123">();
       return true;
     });
   });
