@@ -1,4 +1,8 @@
 import { constant } from "./constant";
+import { isDefined } from "./isDefined";
+import { isNonNull } from "./isNonNull";
+import { isNonNullish } from "./isNonNullish";
+import { isString } from "./isString";
 import { pickBy } from "./pickBy";
 import { pipe } from "./pipe";
 
@@ -74,5 +78,79 @@ describe("typing", () => {
       expectTypeOf(key).toEqualTypeOf<"b" | "c">();
       return true;
     });
+  });
+
+  test("works with type-guards", () => {
+    const mySymbol = Symbol("test");
+    const result = pickBy(
+      {} as {
+        a: number;
+        b: string;
+        [mySymbol]: string;
+        literalUnion: "cat" | "dog";
+        optionalA: number;
+        optionalB?: string;
+        optionalLiteralUnion?: "cat" | "dog";
+        partialMatch: "cat" | "dog" | 3;
+        partialOptionalMatch?: "cat" | "dog" | 3;
+      },
+      isString,
+    );
+    expectTypeOf(result).toEqualTypeOf<{
+      b: string;
+      literalUnion: "cat" | "dog";
+      optionalB?: string;
+      optionalLiteralUnion?: "cat" | "dog";
+      partialMatch?: "cat" | "dog";
+      partialOptionalMatch?: "cat" | "dog";
+    }>();
+  });
+
+  test("Works well with nullish type-guards", () => {
+    const data = {} as {
+      required: string;
+      optional?: string;
+      undefinable: string | undefined;
+      nullable: string | null;
+      nullish: string | null | undefined;
+      optionalUndefinable?: string | undefined;
+      optionalNullable?: string | null;
+      optionalNullish?: string | null | undefined;
+    };
+    const resultDefined = pickBy(data, isDefined);
+    expectTypeOf(resultDefined).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable?: string;
+      nullable: string | null;
+      nullish?: string | null;
+      optionalUndefinable?: string;
+      optionalNullable?: string | null;
+      optionalNullish?: string | null;
+    }>();
+
+    const resultNonNull = pickBy(data, isNonNull);
+    expectTypeOf(resultNonNull).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable: string | undefined;
+      nullable?: string;
+      nullish?: string | undefined;
+      optionalUndefinable?: string | undefined;
+      optionalNullable?: string;
+      optionalNullish?: string | undefined;
+    }>();
+
+    const resultNonNullish = pickBy(data, isNonNullish);
+    expectTypeOf(resultNonNullish).toEqualTypeOf<{
+      required: string;
+      optional?: string;
+      undefinable?: string;
+      nullable?: string;
+      nullish?: string;
+      optionalUndefinable?: string;
+      optionalNullable?: string;
+      optionalNullish?: string;
+    }>();
   });
 });
