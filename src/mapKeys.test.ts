@@ -51,6 +51,32 @@ describe("runtime", () => {
 });
 
 describe("typing", () => {
+  test("simple string records", () => {
+    const result = mapKeys(
+      {} as Record<string, string>,
+      constant("hello" as string),
+    );
+    expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
+  });
+
+  test("simple number records", () => {
+    const result = mapKeys(
+      {} as Record<number, number>,
+      constant(123 as number),
+    );
+    expectTypeOf(result).toEqualTypeOf<Record<number, number>>();
+  });
+
+  test("mapping to a string literal", () => {
+    const result = mapKeys(
+      {} as Record<number, number>,
+      constant("cat" as "cat" | "dog"),
+    );
+    expectTypeOf(result).toEqualTypeOf<
+      Partial<Record<"cat" | "dog", number>>
+    >();
+  });
+
   test("symbols are not passed to the mapper", () => {
     mapKeys({ [Symbol("mySymbol")]: 1, b: "hellO", c: true }, (key, value) => {
       expectTypeOf(key).toEqualTypeOf<"b" | "c">();
