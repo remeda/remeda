@@ -18,17 +18,25 @@ describe("runtime", () => {
     ).toStrictEqual({ a: "1a", b: "2b" });
   });
 
-  test("symbols are passed through", () => {
+  test("symbols are filtered out", () => {
     const mySymbol = Symbol("mySymbol");
-    expect({ [mySymbol]: 1 }).toStrictEqual({ [mySymbol]: 1 });
+    expect(mapValues({ [mySymbol]: 1 }, constant("hello"))).toStrictEqual({});
   });
 
   test("symbols are not passed to the mapper", () => {
-    const mock = vi.fn();
-    const data = { [Symbol("mySymbol")]: 1, a: "hello" };
-    mapValues(data, mock);
-    expect(mock).toBeCalledTimes(1);
-    expect(mock).toBeCalledWith("hello", "a", data);
+    mapValues({ [Symbol("mySymbol")]: 1, a: "hello" }, (value, key) => {
+      expect(value).toBe("hello");
+      expect(key).toBe("a");
+      return "world";
+    });
+  });
+
+  test("number keys are converted to string in the mapper", () => {
+    mapValues({ 123: 456 }, (value, key) => {
+      expect(value).toBe(456);
+      expect(key).toBe("123");
+      return "world";
+    });
   });
 });
 
@@ -95,10 +103,10 @@ describe("typing", () => {
     });
   });
 
-  test("symbols are passed through", () => {
+  test("symbols are filtered out", () => {
     const mySymbol = Symbol("mySymbol");
     const result = mapValues({ [mySymbol]: 1, a: "hello" }, constant(true));
-    expectTypeOf(result).toEqualTypeOf<{ [mySymbol]: number; a: boolean }>();
+    expectTypeOf(result).toEqualTypeOf<{ a: boolean }>();
   });
 
   test("symbols are ignored by the mapper", () => {
@@ -106,5 +114,32 @@ describe("typing", () => {
       expectTypeOf(value).toEqualTypeOf<boolean | number>();
       expectTypeOf(key).toEqualTypeOf<"b" | "c">();
     });
+  });
+
+  test("objects with just symbol keys are still well defined", () => {
+    const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    expectTypeOf(result).toEqualTypeOf<{}>();
+  });
+
+  test("number keys are converted to string in the mapper", () => {
+    mapValues({ 123: 456 }, (value, key) => {
+      expectTypeOf(value).toBeNumber();
+      expectTypeOf(key).toEqualTypeOf<"123">();
+      return "world";
+    });
+  });
+
+  test("maintains partiality", () => {
+    const result = mapValues(
+      {} as { a?: number; b?: string; c: number; d: string },
+      constant(true),
+    );
+    expectTypeOf(result).toEqualTypeOf<{
+      a?: boolean;
+      b?: boolean;
+      c: boolean;
+      d: boolean;
+    }>();
   });
 });
