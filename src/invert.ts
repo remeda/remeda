@@ -1,10 +1,13 @@
-import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
+import { type Simplify } from "type-fest";
 import { purry } from "./purry";
 
-type Inverted<T extends object> =
-  EnumeratedValueOf<T> extends PropertyKey
-    ? Record<EnumeratedValueOf<T>, EnumeratedKeyOf<T>>
-    : never;
+type Inverted<T extends object> = Simplify<{
+  -readonly [K in keyof T as K extends number | string
+    ? Required<T>[K] extends PropertyKey
+      ? Required<T>[K]
+      : never
+    : never]: `${K extends number | string ? K : never}`;
+}>;
 
 /**
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
