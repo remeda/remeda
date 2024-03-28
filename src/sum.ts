@@ -13,8 +13,8 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
-export function sum(data: Readonly<NonEmptyArray<bigint>>): bigint;
 export function sum(data: ReadonlyArray<number>): number;
+export function sum(data: Readonly<NonEmptyArray<bigint>>): bigint;
 
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
