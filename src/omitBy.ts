@@ -66,13 +66,13 @@ type PropIsPartially<T, P extends keyof T, S> =
  * passed through to the output as-is.
  *
  * See `pickBy` for a complementary function which starts with an empty object
- * and adds the entries that the predicate accepts. Because it is additive pick
- * does not copy symbol objects to the output.
+ * and adds the entries that the predicate accepts. Because it is additive,
+ * symbol keys will not be passed through to the output object.
  *
  * @param data - The target object.
  * @param predicate - A function that takes the value, key, and the data itself
- * and returns true if the entry shouldn't be part of the output object, and
- * false to keep it. If the function is a type-guard on the value the output
+ * and returns `true` if the entry shouldn't be part of the output object, or
+ * `false` to keep it. If the function is a type-guard on the value the output
  * type would be narrowed accordingly.
  * @returns A shallow copy of the input object with the rejected entries
  * removed.

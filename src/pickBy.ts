@@ -60,11 +60,25 @@ type PropIsPartially<T, P extends keyof T, S> = EnumerableKey<
 >;
 
 /**
- * Creates an object composed of the picked `object` properties.
+ * Iterates over the entries of `data` and reconstructs the object using only
+ * entries that `predicate` accepts. Symbol keys are not passed to the predicate
+ * and would be filtered out from the output object.
+ *
+ * See `omitBy` for a complementary function which starts with a shallow copy of
+ * the input object and removes the entries that the predicate rejects. Because
+ * it is subtractive symbol keys would be copied over to the output object.
+ * See also `entries`, `filter`, and `fromEntries` which could be used to build
+ * your own version of `pickBy` if you need more control (though the resulting
+ * type might be less precise).
  *
  * @param data - The target object.
- * @param predicate - The predicate.
- * @signature R.pickBy(object, fn)
+ * @param predicate - A function that takes the value, key, and the data itself
+ * and returns true if the entry should be part of the output object, or `false`
+ * to remove it. If the function is a type-guard on the value the output type
+ * would be narrowed accordingly.
+ * @returns A shallow copy of the input object with the rejected entries
+ * removed.
+ * @signature R.pickBy(data, predicate)
  * @example
  *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
  * @dataFirst
@@ -88,12 +102,25 @@ export function pickBy<T extends object>(
 ): EnumeratedPartial<T>;
 
 /**
- * Creates an object composed of the picked `object` properties.
+ * Iterates over the entries of `data` and reconstructs the object using only
+ * entries that `predicate` accepts. Symbol keys are not passed to the predicate
+ * and would be filtered out from the output object.
  *
- * @param predicate - The predicate.
- * @signature R.pickBy(fn)(object)
+ * See `omitBy` for a complementary function which starts with a shallow copy of
+ * the input object and removes the entries that the predicate rejects. Because
+ * it is subtractive symbol keys would be copied over to the output object.
+ * See also `entries`, `filter`, and `fromEntries` which could be used to build
+ * your own version of `pickBy` if you need more control (though the resulting
+ * type might be less precise).
+ *
+ * @param predicate - A function that takes the value, key, and the data itself
+ * and returns true if the entry should be part of the output object, or `false`
+ * to remove it. If the function is a type-guard on the value the output type
+ * would be narrowed accordingly.
+ * @signature
+ *   R.pickBy(predicate)(data)
  * @example
- *    R.pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}
+ *    R.pipe({a: 1, b: 2, A: 3, B: 4}, pickBy((val, key) => key.toUpperCase() === key)); // => {A: 3, B: 4}
  * @dataLast
  * @category Object
  */
