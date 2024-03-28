@@ -1,11 +1,12 @@
-import { pipe } from "./pipe";
-import { evolve } from "./evolve";
-import { omit } from "./omit";
-import { set } from "./set";
-import { map } from "./map";
 import { add } from "./add";
-import { reduce } from "./reduce";
+import { evolve } from "./evolve";
+import { identity } from "./identity";
 import { length } from "./length";
+import { map } from "./map";
+import { omit } from "./omit";
+import { pipe } from "./pipe";
+import { reduce } from "./reduce";
+import { set } from "./set";
 
 const sum = reduce((a, b: number) => add(a, b), 0);
 
@@ -370,9 +371,13 @@ describe("typing", () => {
 
     it("doesn't provide typing for symbol key evolvers", () => {
       const mySymbol = Symbol("a");
-      const mock = vi.fn();
-      // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
-      evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
+      evolve(
+        { [mySymbol]: "hello" },
+        {
+          // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
+          [mySymbol]: identity(),
+        },
+      );
     });
   });
 

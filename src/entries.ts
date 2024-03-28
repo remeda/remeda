@@ -23,7 +23,7 @@ type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
  * @example
  *    R.entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
- * @category Array
+ * @category Object
  */
 export function entries<T extends {}>(data: T): Array<Entry<T>>;
 
@@ -35,7 +35,7 @@ export function entries<T extends {}>(data: T): Array<Entry<T>>;
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3 }, R.entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast
- * @category Array
+ * @category Object
  */
 export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
