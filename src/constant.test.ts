@@ -35,6 +35,12 @@ describe("runtime", () => {
     expect(one(["a"])).toBe(1);
   });
 
+  test("works with variadic arguments", () => {
+    const data = [1, 2, 3] as const;
+    const one = constant("a");
+    expect(one(...data)).toBe("a");
+  });
+
   test("can be put in a pipe", () => {
     expect(pipe([1, 2, 3], constant([2, 3, 4]), map(add(1)))).toEqual([
       3, 4, 5,

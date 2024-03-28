@@ -1,8 +1,9 @@
+import { type EnumeratedValueOf, type IterableContainer } from "./_types";
 import { purry } from "./purry";
 
-type Values<T extends object> = T extends ReadonlyArray<unknown> | []
+type Values<T extends object> = T extends IterableContainer
   ? Array<T[number]>
-  : Array<T[keyof T]>;
+  : Array<EnumeratedValueOf<T>>;
 
 /**
  * Returns a new array containing the values of the array or object.

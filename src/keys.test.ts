@@ -13,6 +13,14 @@ describe("runtime", () => {
     it("should return strict types", () => {
       expect(keys({ 5: "x", b: "y", c: "z" })).toEqual(["5", "b", "c"]);
     });
+
+    it("should ignore symbol keys", () => {
+      expect(keys({ [Symbol("a")]: 1 })).toStrictEqual([]);
+    });
+
+    it("should turn numbers to strings", () => {
+      expect(keys({ 1: "hello" })).toStrictEqual(["1"]);
+    });
   });
 });
 
@@ -140,6 +148,21 @@ describe("typing", () => {
         string
       >);
       expectTypeOf(result).toEqualTypeOf<Array<`param_${number}`>>();
+    });
+
+    test("object with just symbol keys", () => {
+      const actual = keys({ [Symbol("a")]: 1, [Symbol("b")]: "world" });
+      expectTypeOf(actual).toEqualTypeOf<Array<never>>();
+    });
+
+    test("object with number keys", () => {
+      const actual = keys({ 123: "HELLO" });
+      expectTypeOf(actual).toEqualTypeOf<Array<"123">>();
+    });
+
+    test("object with combined symbols and keys", () => {
+      const actual = keys({ a: 1, [Symbol("b")]: "world", 123: true });
+      expectTypeOf(actual).toEqualTypeOf<Array<"123" | "a">>();
     });
   });
 });

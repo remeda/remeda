@@ -1,8 +1,8 @@
 import { omit } from "./omit";
 import { pipe } from "./pipe";
 
-describe("data first", () => {
-  test("omit", () => {
+describe("runtime", () => {
+  test("dataFirst", () => {
     const result = omit({ a: 1, b: 2, c: 3, d: 4 }, ["a", "d"] as const);
     expect(result).toEqual({ b: 2, c: 3 });
   });
@@ -12,12 +12,15 @@ describe("data first", () => {
     const result = omit(obj, ["a"]);
     expect(result).toEqual({});
   });
-});
 
-describe("data last", () => {
-  test("omit", () => {
+  test("dataLast", () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(["a", "d"] as const));
     expect(result).toEqual({ b: 2, c: 3 });
+  });
+
+  test("can omit symbol keys", () => {
+    const mySymbol = Symbol("mySymbol");
+    expect(omit({ [mySymbol]: 3 }, [mySymbol])).toStrictEqual({});
   });
 });
 

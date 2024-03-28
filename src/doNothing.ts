@@ -20,15 +20,15 @@
  * @dataLast
  * @category Function
  */
-export function doNothing(): (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...args: any
-) => void {
-  // Because the function does nothing we safely return the same function
-  // (pointer) and don't need to create a new one on every invocation.
-  return doesNothing;
-}
+export const doNothing = (): typeof doesNothing =>
+  // Notice that the exported identity function is just the "factory" for the
+  // function. We do it this way so that all "Function" utilities have a similar
+  // API where the function is called, and not just used "headless". e.g.
+  // `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
+  doesNothing;
 
-function doesNothing(): void {
+function doesNothing<Args extends ReadonlyArray<unknown>>(
+  ..._args: Args
+): void {
   /* do nothing */
 }

@@ -54,14 +54,14 @@ describe("typing", () => {
   test("simple tuple", () => {
     const arr: [number, string] = [1, "a"];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 
   test("array with more than one item", () => {
     const arr: [number, number, ...Array<number>] = [1, 2];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 
@@ -89,14 +89,14 @@ describe("typing", () => {
   test("tuple with two last", () => {
     const arr: [...Array<string>, number, number] = ["a", 1, 2];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 
   test("tuple with first and last", () => {
     const arr: [number, ...Array<string>, number] = [1, "a", 2];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 
@@ -138,14 +138,14 @@ describe("typing", () => {
   test("simple readonly tuple", () => {
     const arr: readonly [number, string] = [1, "a"];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 
   test("readonly array with more than one item", () => {
     const arr: readonly [number, number, ...Array<number>] = [1, 2];
     const result = only(arr);
-    expectTypeOf(result).toEqualTypeOf<undefined>();
+    expectTypeOf(result).toBeUndefined();
     expect(result).toBeUndefined();
   });
 

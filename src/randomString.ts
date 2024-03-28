@@ -1,5 +1,4 @@
 import { purry } from "./purry";
-import { times } from "./times";
 
 const ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -38,8 +37,10 @@ export function randomString(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function randomStringImplementation(length: number): string {
-  return times(length, randomChar).join("");
+  const out: Array<string> = [];
+  for (let iteration = 0; iteration < length; iteration++) {
+    const randomChar = ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
+    out.push(randomChar);
+  }
+  return out.join("");
 }
-
-const randomChar = (): string =>
-  ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;

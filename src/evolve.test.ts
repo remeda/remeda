@@ -1,11 +1,12 @@
-import { pipe } from "./pipe";
-import { evolve } from "./evolve";
-import { omit } from "./omit";
-import { set } from "./set";
-import { map } from "./map";
 import { add } from "./add";
-import { reduce } from "./reduce";
+import { evolve } from "./evolve";
+import { identity } from "./identity";
 import { length } from "./length";
+import { map } from "./map";
+import { omit } from "./omit";
+import { pipe } from "./pipe";
+import { reduce } from "./reduce";
+import { set } from "./set";
 
 const sum = reduce((a, b: number) => add(a, b), 0);
 
@@ -92,6 +93,14 @@ describe("data first", () => {
         },
       ),
     ).toStrictEqual({ arg2Optional: true, arg2arg3Optional: true });
+  });
+
+  it("doesn't evolve symbol keys", () => {
+    const mock = vi.fn();
+    const mySymbol = Symbol("a");
+    // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
+    evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
+    expect(mock).toBeCalledTimes(0);
   });
 });
 
@@ -356,6 +365,17 @@ describe("typing", () => {
         {
           // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
           quartile: [add(1), add(-1)],
+        },
+      );
+    });
+
+    it("doesn't provide typing for symbol key evolvers", () => {
+      const mySymbol = Symbol("a");
+      evolve(
+        { [mySymbol]: "hello" },
+        {
+          // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
+          [mySymbol]: identity(),
         },
       );
     });

@@ -50,7 +50,7 @@ describe("strings are narrowed correctly", () => {
   test("just undefined", () => {
     const data = undefined;
     if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<undefined>();
+      expectTypeOf(data).toBeUndefined();
     }
   });
 
@@ -93,7 +93,7 @@ describe("strings are narrowed correctly", () => {
   test("string literals that CAN be undefined", () => {
     const data = "cat" as "cat" | "dog" | undefined;
     if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<undefined>();
+      expectTypeOf(data).toBeUndefined();
     }
   });
 
@@ -122,7 +122,7 @@ describe("strings are narrowed correctly", () => {
   test("string templates that CAN be undefined", () => {
     const data = "prefix_0" as `prefix_${number}` | undefined;
     if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<undefined>();
+      expectTypeOf(data).toBeUndefined();
     }
   });
 

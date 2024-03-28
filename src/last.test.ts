@@ -27,18 +27,18 @@ describe("last", () => {
     test("should return T | undefined for Array input", () => {
       const input: Array<number> = [1, 2, 3];
       const actual = last(input);
-      assertType<number | undefined>(actual);
+      expectTypeOf(actual).toEqualTypeOf<number | undefined>();
     });
 
     test("should not return undefined for non empty arrays", () => {
       const input: NonEmptyArray<number> = [1, 2, 3];
       const data = last(input);
-      assertType<number>(data);
+      expectTypeOf(data).toBeNumber();
     });
 
     test("should infer type in pipes", () => {
       const data = pipe("this is a text", (text) => [...text], last());
-      assertType<string | undefined>(data);
+      expectTypeOf(data).toEqualTypeOf<string | undefined>();
     });
   });
 });
