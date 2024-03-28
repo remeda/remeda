@@ -23,11 +23,11 @@ describe("runtime", () => {
   });
 
   test("symbols are not passed to the mapper", () => {
-    const mock = vi.fn();
-    const data = { [Symbol("mySymbol")]: 1, a: "hello" };
-    mapKeys(data, mock);
-    expect(mock).toBeCalledTimes(1);
-    expect(mock).toBeCalledWith("a", "hello", data);
+    mapKeys({ [Symbol("mySymbol")]: 1, a: "hello" }, (key, value) => {
+      expect(key).toBe("a");
+      expect(value).toBe("hello");
+      return key;
+    });
   });
 
   test("symbols returned from the mapper are not ignored", () => {
@@ -35,6 +35,18 @@ describe("runtime", () => {
     expect(mapKeys({ a: 1 }, constant(mySymbol))).toStrictEqual({
       [mySymbol]: 1,
     });
+  });
+
+  test("number keys are converted to strings", () => {
+    mapKeys({ 123: 456 }, (key, value) => {
+      expect(key).toBe("123");
+      expect(value).toBe(456);
+      return key;
+    });
+  });
+
+  test("numbers returned from the mapper are used as-is", () => {
+    expect(mapKeys({ a: "b" }, constant(123))).toEqual({ 123: "b" });
   });
 });
 
@@ -53,5 +65,18 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<
       Partial<Record<typeof mySymbol, number>>
     >();
+  });
+
+  test("number keys are converted to strings", () => {
+    mapKeys({ 123: "abc", 456: "def" }, (key, value) => {
+      expectTypeOf(key).toEqualTypeOf<"123" | "456">();
+      expectTypeOf(value).toBeString();
+      return key;
+    });
+  });
+
+  test("numbers returned from the mapper are used as-is", () => {
+    const result = mapKeys({ a: "b" }, constant(123));
+    expectTypeOf(result).toEqualTypeOf<Partial<Record<123, string>>>();
   });
 });

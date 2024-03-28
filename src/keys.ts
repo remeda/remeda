@@ -60,7 +60,7 @@ type ObjectKeys<T> =
  *    R.keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
  * @dataFirst
  * @pipeable
- * @category Array
+ * @category Object
  */
 export function keys<T extends object>(data: T): Keys<T>;
 
@@ -74,7 +74,7 @@ export function keys<T extends object>(data: T): Keys<T>;
  *    R.pipe({ a: 'x', b: 'y', 5: 'z' } as const, R.keys()) // => ['a', 'b', '5']
  * @dataLast
  * @pipeable
- * @category Array
+ * @category Object
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
