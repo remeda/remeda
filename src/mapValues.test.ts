@@ -19,8 +19,9 @@ describe("runtime", () => {
   });
 
   test("symbols are filtered out", () => {
-    const mySymbol = Symbol("mySymbol");
-    expect(mapValues({ [mySymbol]: 1 }, constant("hello"))).toStrictEqual({});
+    expect(
+      mapValues({ [Symbol("mySymbol")]: 1 }, constant("hello")),
+    ).toStrictEqual({});
   });
 
   test("symbols are not passed to the mapper", () => {
