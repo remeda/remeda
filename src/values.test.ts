@@ -1,53 +1,73 @@
+import { doNothing } from "./doNothing";
 import { values } from "./values";
 
 describe("Runtime", () => {
   describe("dataFirst", () => {
     it("works with arrays", () => {
-      expect(values(["x", "y", "z"])).toEqual(["x", "y", "z"]);
+      expect(values(["x", "y", "z"])).toStrictEqual(["x", "y", "z"]);
     });
 
     it("should return values of object", () => {
-      expect(values({ a: "x", b: "y", c: "z" })).toEqual(["x", "y", "z"]);
+      expect(values({ a: "x", b: "y", c: "z" })).toStrictEqual(["x", "y", "z"]);
+    });
+
+    it("should skip symbol keys", () => {
+      expect(values({ [Symbol("a")]: "x" })).toStrictEqual([]);
+    });
+
+    it("shouldn't skip symbol values", () => {
+      const mySymbol = Symbol("mySymbol");
+      expect(values({ a: mySymbol })).toStrictEqual([mySymbol]);
     });
   });
 });
 
 describe("typing", () => {
   it("should correctly types indexed types", () => {
-    expectTypeOf(values<Record<string, string>>({ a: "b" })).toEqualTypeOf<
-      Array<string>
-    >();
+    const result = values<Record<string, string>>({ a: "b" });
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
   it("should correctly type functions", () => {
-    expectTypeOf(
-      values(function namedFunction() {
-        /* (intentionally empty) */
-      }),
-    ).toEqualTypeOf<Array<never>>();
+    const result = values(doNothing());
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   it("should correctly type arrays", () => {
-    expectTypeOf(values([1, 2, 3])).toEqualTypeOf<Array<number>>();
+    const results = values([1, 2, 3]);
+    expectTypeOf(results).toEqualTypeOf<Array<number>>();
   });
 
   it("should correctly type const arrays", () => {
-    expectTypeOf(values([1, 2, 3] as const)).toEqualTypeOf<Array<1 | 2 | 3>>();
+    const results = values([1, 2, 3] as const);
+    expectTypeOf(results).toEqualTypeOf<Array<1 | 2 | 3>>();
   });
 
   it("should correctly type objects", () => {
-    expectTypeOf(values({ a: true })).toEqualTypeOf<Array<boolean>>();
+    const result = values({ a: true });
+    expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
   it("should correctly type Records", () => {
-    expectTypeOf(values<Record<string, boolean>>({ a: true })).toEqualTypeOf<
-      Array<boolean>
-    >();
+    const result = values<Record<string, boolean>>({ a: true });
+    expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
   it("should correctly type typed objects", () => {
-    expectTypeOf(
-      values<{ type: "cat" | "dog"; age: number }>({ type: "cat", age: 7 }),
-    ).toEqualTypeOf<Array<number | "cat" | "dog">>();
+    const result = values<{ type: "cat" | "dog"; age: number }>({
+      type: "cat",
+      age: 7,
+    });
+    expectTypeOf(result).toEqualTypeOf<Array<number | "cat" | "dog">>();
+  });
+
+  it("should skip symbol keys", () => {
+    const result = values({ [Symbol("a")]: true, a: "b", 123: 456 });
+    expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  });
+
+  it("should return a useful type when all keys are symbols", () => {
+    const result = values({ [Symbol("a")]: true, [Symbol("b")]: "c" });
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 });
