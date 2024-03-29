@@ -45,6 +45,6 @@ export function reverse(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function reverseImplementation<T>(array: ReadonlyArray<T>): Array<T> {
-  // TODO: Use `Array.prototype.toReversed` once we bump our target/lib beyond ES2022.
+  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toReversed` here.
   return [...array].reverse();
 }

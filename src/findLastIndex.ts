@@ -54,7 +54,6 @@ export function findLastIndex<T>(
 ): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
-  // TODO: Use Array.prototype.findLastIndex once we bump our target to ES2023+
   return purry(findLastIndexImplementation, args);
 }
 
@@ -62,6 +61,8 @@ const findLastIndexImplementation = <T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number => {
+  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLastIndex` here.
+
   for (let i = data.length - 1; i >= 0; i--) {
     if (predicate(data[i]!, i, data)) {
       return i;
