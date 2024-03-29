@@ -191,7 +191,7 @@ describe("typing", () => {
   it("fails on N > array length", () => {
     const array = ["hello", "world"] as const;
     if (hasAtLeast(array, 3)) {
-      expectTypeOf(array).toEqualTypeOf<never>();
+      expectTypeOf(array).toBeNever();
     }
   });
 
