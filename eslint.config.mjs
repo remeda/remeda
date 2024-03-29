@@ -7,7 +7,7 @@ import jsdoc from "eslint-plugin-jsdoc";
 
 export default config(
   {
-    ignores: ["dist", "docs", "examples"],
+    ignores: ["coverage", "dist", "docs", "examples"],
   },
   core.configs.recommended,
   // @ts-expect-error [ts7016] -- I don't know why typing is broken here...
