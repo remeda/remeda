@@ -63,21 +63,21 @@ describe("runtime behavior", () => {
 describe("typing", () => {
   describe("dataFirst", () => {
     it("narrows on empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 0)) {
         expectTypeOf(array).toEqualTypeOf<Array<number>>();
       }
     });
 
     it("narrows on non-empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 1)) {
         expectTypeOf(array).toEqualTypeOf<[number, ...Array<number>]>();
       }
     });
 
     it("narrows on large numbers", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 10)) {
         expectTypeOf(array).toEqualTypeOf<
           [
@@ -180,7 +180,7 @@ describe("typing", () => {
     });
   });
 
-  it("doesnt narrow when minimum isnt literal", () => {
+  it("doesn't narrow when minimum isn't literal", () => {
     const array: Array<number> = [];
     if (hasAtLeast(array, 5 as number)) {
       expectTypeOf(array).toEqualTypeOf<Array<number>>();

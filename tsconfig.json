@@ -18,7 +18,8 @@
     "noUnusedParameters": true,
 
     // MODULES
-    "module": "commonjs",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
     "types": ["vitest/globals"],
 
     // EMIT
@@ -35,6 +36,7 @@
     // LANGUAGE and ENVIRONMENT
     "target": "ES2022",
     "lib": ["ES2022"],
+    "moduleDetection": "force",
 
     // COMPLETENESS
     "skipLibCheck": true

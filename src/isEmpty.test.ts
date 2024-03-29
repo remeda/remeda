@@ -62,7 +62,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("just EMPTY string", () => {
-    const data = "" as const;
+    const data = "";
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"">();
     }

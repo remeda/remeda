@@ -1,14 +1,22 @@
-import type { ReadonlyTuple } from "type-fest";
+import { type IterableContainer } from "./_types";
 import { purry } from "./purry";
 
-type ArrayMinN<T, N extends number> = number extends N
+type ArrayMinN<
+  T extends IterableContainer,
+  N extends number,
+  Iteration extends ReadonlyArray<unknown> = [],
+> = number extends N
   ? // We can only compute the type for a literal number!
-    Array<T>
-  : // I don't know why we need to special-case the 0 case, but otherwise
-    // typescript complains we have a deep recursion.
-    N extends 0
-    ? Array<T>
-    : [...ReadonlyTuple<T, N>, ...Array<T>];
+    T
+  : Iteration["length"] extends N
+    ? T
+    : T extends readonly []
+      ? never
+      : T extends [infer Head, ...infer Rest]
+        ? [Head, ...ArrayMinN<Rest, N, [Head, ...Iteration]>]
+        : T extends ReadonlyArray<infer Item>
+          ? [Item, ...ArrayMinN<T, N, [Item, ...Iteration]>]
+          : never;
 
 /**
  * Checks if the given array has at least the defined number of elements, and
@@ -29,8 +37,8 @@ type ArrayMinN<T, N extends number> = number extends N
  * @dataFirst
  * @category Array
  */
-export function hasAtLeast<T, N extends number>(
-  data: ReadonlyArray<T>,
+export function hasAtLeast<T extends IterableContainer, N extends number>(
+  data: IterableContainer | T,
   minimum: N,
 ): data is ArrayMinN<T, N>;
 
@@ -57,13 +65,18 @@ export function hasAtLeast<T, N extends number>(
  */
 export function hasAtLeast<N extends number>(
   minimum: N,
-): <T>(data: ReadonlyArray<T>) => data is ArrayMinN<T, N>;
+): <T extends IterableContainer>(
+  data: IterableContainer | T,
+) => data is ArrayMinN<T, N>;
 
 export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
   return purry(hasAtLeastImplementation, args);
 }
 
-const hasAtLeastImplementation = <T, N extends number>(
-  data: ReadonlyArray<T>,
+const hasAtLeastImplementation = <
+  T extends IterableContainer,
+  N extends number,
+>(
+  data: IterableContainer | T,
   minimum: N,
 ): data is ArrayMinN<T, N> => data.length >= minimum;

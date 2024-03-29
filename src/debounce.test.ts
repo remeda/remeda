@@ -367,7 +367,7 @@ describe("typing", () => {
 
   test("argument typing to be good (all required)", () => {
     const debouncer = debounce(
-      (a: string, b: number, c: boolean) => `${a}${b}${c}`,
+      (a: string, b: number, c: boolean) => `${a}${b}${c ? "y" : "n"}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 0.
@@ -386,7 +386,8 @@ describe("typing", () => {
 
   test("argument typing to be good (with optional)", () => {
     const debouncer = debounce(
-      (a: string, b?: number, c?: boolean) => `${a}${b}${c}`,
+      (a: string, b?: number, c?: boolean) =>
+        `${a}${b ?? "undefined"}${c === undefined ? "undefined" : c ? "y" : "n"}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
