@@ -71,7 +71,6 @@ export function findLast<T = never>(
 ): (data: ReadonlyArray<T>) => T | undefined;
 
 export function findLast(...args: ReadonlyArray<unknown>): unknown {
-  // TODO: Use Array.prototype.findLast once we bump our target to ES2023+
   return purry(findLastImplementation, args);
 }
 
@@ -79,6 +78,8 @@ const findLastImplementation = <T, S extends T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): S | undefined => {
+  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLast` here.
+
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
     if (predicate(item, i, data)) {
