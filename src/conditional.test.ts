@@ -9,10 +9,6 @@ describe("runtime (dataFirst)", () => {
     expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
   });
 
-  it("falls back to the legacy default", () => {
-    expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
-  });
-
   it("falls back to our default", () => {
     expect(
       conditional(
