@@ -1,4 +1,31 @@
 import type { IterableContainer } from "./_types";
+import type { IsLiteral } from "./type-fest/is-literal";
+
+type IsStrictTuple<T extends IterableContainer> = T extends readonly []
+  ? true
+  : T extends readonly [unknown, ...infer Rest]
+    ? IsStrictTuple<Rest>
+    : false;
+
+type NarrowableContainer<
+  T,
+  S extends IterableContainer<T>,
+> = T extends S[number]
+  ? // T is the narrowest we can get it, there's no additional value in passing it
+    // through the type-predicate
+    never
+  : IsLiteral<T> extends false
+    ? IsLiteral<S> extends true
+      ? // T is wide enough and S is narrow enough that the narrowing won't impact
+        // the negated type, avoiding our issue with the type-predicate (see the
+        // tests)
+        S
+      : never
+    : IsStrictTuple<S> extends true
+      ? // When the container is too flexible we can't narrow the type because
+        // we will also narrow the negated type too much.
+        S
+      : never;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around
@@ -24,10 +51,14 @@ import type { IterableContainer } from "./_types";
  * @dataFirst
  * @category Guard
  */
+export function isIncludedIn<T, S extends IterableContainer<T>>(
+  data: T,
+  container: NarrowableContainer<T, S>,
+): data is S[number];
 export function isIncludedIn<T, S extends T>(
   data: T,
   container: IterableContainer<S>,
-): data is S;
+): boolean;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around
@@ -55,9 +86,12 @@ export function isIncludedIn<T, S extends T>(
  * @dataLast
  * @category Guard
  */
+export function isIncludedIn<T, S extends IterableContainer<T>>(
+  container: NarrowableContainer<T, S>,
+): (data: T) => data is S[number];
 export function isIncludedIn<T, S extends T>(
   container: IterableContainer<S>,
-): (data: T) => data is S;
+): (data: T) => boolean;
 
 export function isIncludedIn(
   dataOrContainer: unknown,
