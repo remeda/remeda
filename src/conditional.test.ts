@@ -88,4 +88,22 @@ describe("typing", () => {
       ],
     );
   });
+
+  it("passes the trivial defaultCase's type to the output", () => {
+    const result = conditional(
+      "Jokic",
+      [isString, () => "hello" as const],
+      conditional.defaultCase(),
+    );
+    expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
+  });
+
+  it("passes the defaultCase's type to the output", () => {
+    const result = conditional(
+      "Jokic",
+      [isString, () => "hello" as const],
+      conditional.defaultCase(() => 123 as const),
+    );
+    expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
+  });
 });

@@ -240,10 +240,19 @@ export namespace conditional {
    *     ),
    *   ); //=> 'Hello ID: 3'
    */
-  export const defaultCase = <In>(
-    then: (data: In) => unknown = trivialDefaultCase,
-  ) => [() => true, then] as const;
+  export function defaultCase(): Case<unknown, undefined>;
+  export function defaultCase<In, Then extends (param: In) => unknown>(
+    then: Then,
+  ): Case<In, ReturnType<Then>>;
+  export function defaultCase(
+    then: (data: unknown) => unknown = trivialDefaultCase,
+  ): Case<unknown, unknown> {
+    return [acceptAnything, then];
+  }
 }
+
+// We memoize this so it isn't recreated on every invocation of `defaultCase`.
+const acceptAnything = () => true as const;
 
 // Lodash and Ramda return `undefined` as the default case.
 const trivialDefaultCase = (): undefined => undefined;
