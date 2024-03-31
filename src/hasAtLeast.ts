@@ -15,26 +15,31 @@ type ArraySetRequired<
     : T extends [infer Head, ...infer Rest]
       ? // The input is a *MUTABLE* tuple, we copy the head to the output and
         // recurse on rest of the tuple...
-        [Head, ...ArraySetRequired<Rest, N, [Head, ...Iteration]>]
+        [Head, ...ArraySetRequired<Rest, N, [unknown, ...Iteration]>]
       : T extends readonly [infer Head, ...infer Rest]
         ? // The input is a *READONLY* tuple, we copy the head to the output and
           // recurse on rest of the tuple...
-          readonly [Head, ...ArraySetRequired<Rest, N, [Head, ...Iteration]>]
+          readonly [Head, ...ArraySetRequired<Rest, N, [unknown, ...Iteration]>]
         : T extends Array<infer Item>
           ? // The input is a regular **MUTABLE** array, we need to fill the
             // output with items until we reach the required size.
-            [Item, ...ArraySetRequired<T, N, [Item, ...Iteration]>]
+            [Item, ...ArraySetRequired<T, N, [unknown, ...Iteration]>]
           : T extends ReadonlyArray<infer Item>
             ? // The input is a regular **READONLY** array, we need to fill the
               // output with items until we reach the required size.
-              readonly [Item, ...ArraySetRequired<T, N, [Item, ...Iteration]>]
+              readonly [
+                Item,
+                ...ArraySetRequired<T, N, [unknown, ...Iteration]>,
+              ]
             : // The input is not a tuple, an array or an empty array, what is
               // it?!
               never;
 
 // TODO: In V2 we need to enable this type and use it as the type for the
 // `minimum` param to prevent usage of the guard when it's output can't be
-// narrowed properly...
+// narrowed properly, and then add an overloaded function that just returns
+// `true` with the original signature to enable a non-narrowing version of this
+// function for those cases.
 // type Literal<N extends number> = number extends N ? never : N;
 
 /**
