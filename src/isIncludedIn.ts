@@ -1,38 +1,73 @@
 import type { IterableContainer } from "./_types";
+import type { IsNotFalse } from "./type-fest/internal";
 import type { IsLiteral } from "./type-fest/is-literal";
 
-type IsStrictTuple<T extends IterableContainer> = T extends readonly []
+/**
+ * A "pure" tuple is one that doesn't contain any optional or variadic parts,
+ * i.e. it has a finite and constant number of elements in it.
+ */
+type IsPureTuple<T extends IterableContainer> = T extends readonly []
   ? true
   : T extends readonly [unknown, ...infer Rest]
-    ? IsStrictTuple<Rest>
+    ? IsPureTuple<Rest>
     : false;
 
-type NarrowableContainer<
-  T,
-  S extends IterableContainer<T>,
-> = T extends S[number]
-  ? // T is the narrowest we can get it, there's no additional value in passing it
-    // through the type-predicate
-    never
-  : IsLiteral<T> extends false
-    ? IsLiteral<S> extends true
-      ? // T is wide enough and S is narrow enough that the narrowing won't impact
-        // the negated type, avoiding our issue with the type-predicate (see the
-        // tests)
-        S
-      : never
-    : IsStrictTuple<S> extends true
-      ? // When the container is too flexible we can't narrow the type because
-        // we will also narrow the negated type too much.
-        S
-      : never;
+/**
+ * There is no way to tell Typescript to only narrow the "accepted" side of a
+ * type-predicate and so in many cases the negated side is also affected, this
+ * results in over-narrowing in many cases, breaking typing. For this reason we
+ * only want to use the type-predicate variant of `isIncludedIn` when we can
+ * assume the result represents the expected types (closely enough). This is not
+ * and ideal solution and we will still generate wrong types in some cases (see
+ * tests), but it reduces the surface of this problem significantly, while still
+ * keeping the utility of `isIncludedIn` for the common cases.
+ *
+ * TL;DR - The types are narrowable when: T is literal and S is a pure tuple, or
+ * when T isn't a literal, and S is.
+ *
+ * @example
+ *   const data = 1 as 1 | 2 | 3;
+ *   const container = [] as Array<1 | 2>;
+ *   if (isIncludedIn(data, container)) {
+ *     ... it makes sense to narrow data to `1 | 2` as the value `3` is not part
+ *     ... of the typing of container, so will never result in being true.
+ *   } else {
+ *     ... but it doesn't make sense to narrow the value to 3 here, because 1
+ *     ... and 2 are still valid values for data, when container doesn't include
+ *     ... them **in runtime**.
+ *     ... Typescript narrows the _else_ clause based on how it narrowed the
+ *     ... _if_ clause, and we can't control it. Because our input type is
+ *     ... `1 | 2 | 3` and the accepted side is `1 | 2`, the rejected side is
+ *     ... typed `Exclude<1 | 2 | 3, 1 | 2>`, which is `3`.
+ *   }
+ * }
+ */
+type IsNarrowable<T, S extends IterableContainer<T>> =
+  IsLiteral<T> extends true
+    ? // When T is literal (i.g. it isn't a primitive type like `string` or
+      // `number`) then the criteria for narrowing is that the container is a
+      // "pure" tuple because we *assume* that S represents a constant set of
+      // values, and that it's typing also represents it's runtime content 1-
+      // for-1. If S isn't a pure tuple it means we can't tell from the typing
+      // which of it's values are actually present, and we will narrow
+      // incorrectly based on them.
+      IsNotFalse<IsPureTuple<S>>
+    : T extends S[number]
+      ? // T is already as narrow as S can narrow it, there is no additional
+        // value in narrowing for this case (and the negated type would be
+        // `never`).
+        false
+      : // When T isn't a literal type but the items in S are we can narrow the
+        // type because it won't affect the negated side (`Exclude<number, 3>`
+        // is still `number`).
+        IsNotFalse<IsLiteral<S[number]>>;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around
  * `Array.prototype.includes` and `Set.prototype.has` and thus relies on the
  * same equality checks that those functions do (which is reference equality,
- * e.g. `===`). The input's type is narrowed to the container's type if
- * possible.
+ * e.g. `===`). In some cases the input's type is narrowed to the container's
+ * type if possible.
  *
  * Notice that unlike most functions, this function takes a generic item as it's
  * data and **an array** as it's parameter.
@@ -53,7 +88,7 @@ type NarrowableContainer<
  */
 export function isIncludedIn<T, S extends IterableContainer<T>>(
   data: T,
-  container: NarrowableContainer<T, S>,
+  container: IsNarrowable<T, S> extends true ? S : never,
 ): data is S[number];
 export function isIncludedIn<T, S extends T>(
   data: T,
@@ -64,8 +99,8 @@ export function isIncludedIn<T, S extends T>(
  * Checks if the item is included in the container. This is a wrapper around
  * `Array.prototype.includes` and `Set.prototype.has` and thus relies on the
  * same equality checks that those functions do (which is reference equality,
- * e.g. `===`). The input's type is narrowed to the container's type if
- * possible.
+ * e.g. `===`). In some cases the input's type is narrowed to the container's
+ * type if possible.
  *
  * Notice that unlike most functions, this function takes a generic item as it's
  * data and **an array** as it's parameter.
@@ -87,7 +122,7 @@ export function isIncludedIn<T, S extends T>(
  * @category Guard
  */
 export function isIncludedIn<T, S extends IterableContainer<T>>(
-  container: NarrowableContainer<T, S>,
+  container: IsNarrowable<T, S> extends true ? S : never,
 ): (data: T) => data is S[number];
 export function isIncludedIn<T, S extends T>(
   container: IterableContainer<S>,
