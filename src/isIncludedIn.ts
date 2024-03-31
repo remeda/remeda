@@ -34,10 +34,10 @@ type IsPureTuple<T extends IterableContainer> = T extends readonly []
  *   } else {
  *     ... but it doesn't make sense to narrow the value to 3 here, because 1
  *     ... and 2 are still valid values for data, when container doesn't include
- *     ... them **in runtime**.
- *     ... Typescript narrows the _else_ clause based on how it narrowed the
- *     ... _if_ clause, and we can't control it. Because our input type is
- *     ... `1 | 2 | 3` and the accepted side is `1 | 2`, the rejected side is
+ *     ... them **at runtime**.
+ *     ... Typescript narrows the _rejected_ branch based on how it narrowed the
+ *     ... _accepted_ clause, and we can't control that; because our input type
+ *     ... is `1 | 2 | 3` and the accepted side is `1 | 2`, the rejected side is
  *     ... typed `Exclude<1 | 2 | 3, 1 | 2>`, which is `3`.
  *   }
  * }
