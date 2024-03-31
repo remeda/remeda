@@ -60,7 +60,7 @@ describe("data last", () => {
 describe("typing", () => {
   describe("data-first", () => {
     test("must have matching keys and values", () => {
-      expectTypeOf(hasSubObject({ a: 2 }, { a: 1 })).toBeBoolean();
+      expectTypeOf(hasSubObject({ a: 2 }, { a: 1 })).toEqualTypeOf<boolean>();
 
       // @ts-expect-error [ts2353] - missing a key
       hasSubObject({ b: 2 }, { a: 1 });
@@ -111,7 +111,9 @@ describe("typing", () => {
 
   describe("data-last", () => {
     test("must have matching keys and values", () => {
-      expectTypeOf(pipe({ a: 2 }, hasSubObject({ a: 1 }))).toBeBoolean();
+      expectTypeOf(
+        pipe({ a: 2 }, hasSubObject({ a: 1 })),
+      ).toEqualTypeOf<boolean>();
 
       // @ts-expect-error [ts2353] - missing a key
       pipe({ b: 2 }, hasSubObject({ a: 1 }));

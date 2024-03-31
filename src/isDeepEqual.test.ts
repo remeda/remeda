@@ -256,11 +256,11 @@ describe("typing", () => {
     const data = 1 as number | string;
 
     if (isDeepEqual(data, 1)) {
-      expectTypeOf(data).toBeNumber();
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
 
     if (isDeepEqual(data, "hello")) {
-      expectTypeOf(data).toBeString();
+      expectTypeOf(data).toEqualTypeOf<string>();
     }
   });
 

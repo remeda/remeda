@@ -12,7 +12,7 @@ describe("isNumber", () => {
     const data = TYPES_DATA_PROVIDER.number as AllTypesDataProviderTypes;
     if (isNumber(data)) {
       expect(typeof data).toEqual("number");
-      expectTypeOf(data).toBeNumber();
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 
@@ -26,7 +26,7 @@ describe("isNumber", () => {
     const data = TYPES_DATA_PROVIDER.number as unknown;
     if (isNumber(data)) {
       expect(typeof data).toEqual("number");
-      expectTypeOf(data).toBeNumber();
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 

@@ -10,7 +10,7 @@ describe("isBoolean", () => {
     const data = TYPES_DATA_PROVIDER.boolean as AllTypesDataProviderTypes;
     if (isBoolean(data)) {
       expect(typeof data).toEqual("boolean");
-      expectTypeOf(data).toBeBoolean();
+      expectTypeOf(data).toEqualTypeOf<boolean>();
     }
   });
 
@@ -18,7 +18,7 @@ describe("isBoolean", () => {
     const data = TYPES_DATA_PROVIDER.boolean as unknown;
     if (isBoolean(data)) {
       expect(typeof data).toEqual("boolean");
-      expectTypeOf(data).toBeBoolean();
+      expectTypeOf(data).toEqualTypeOf<boolean>();
     }
   });
 
@@ -27,7 +27,7 @@ describe("isBoolean", () => {
     const data = TYPES_DATA_PROVIDER.boolean as any;
     if (isBoolean(data)) {
       expect(typeof data).toEqual("boolean");
-      expectTypeOf(data).toBeBoolean();
+      expectTypeOf(data).toEqualTypeOf<boolean>();
     }
   });
 

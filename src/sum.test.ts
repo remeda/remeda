@@ -34,7 +34,7 @@ describe("runtime", () => {
 describe("typing", () => {
   it("returns number on numbers", () => {
     const result = sum([1, 2, 3]);
-    expectTypeOf(result).toBeNumber();
+    expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   it("returns bigint on bigints", () => {

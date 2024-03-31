@@ -36,7 +36,7 @@ describe("runtime", () => {
 describe("typing", () => {
   it("returns number on numbers", () => {
     const result = product([1, 2, 3]);
-    expectTypeOf(result).toBeNumber();
+    expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   it("returns bigint on bigints", () => {

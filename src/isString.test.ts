@@ -12,7 +12,7 @@ describe("isString", () => {
     const data = TYPES_DATA_PROVIDER.string as AllTypesDataProviderTypes;
     if (isString(data)) {
       expect(typeof data).toEqual("string");
-      expectTypeOf(data).toBeString();
+      expectTypeOf(data).toEqualTypeOf<string>();
     }
   });
 
@@ -20,7 +20,7 @@ describe("isString", () => {
     const data = TYPES_DATA_PROVIDER.string as unknown;
     if (isString(data)) {
       expect(typeof data).toEqual("string");
-      expectTypeOf(data).toBeString();
+      expectTypeOf(data).toEqualTypeOf<string>();
     }
   });
 

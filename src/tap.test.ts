@@ -61,7 +61,7 @@ describe("data last", () => {
         filter((n) => n > 0),
         tap(foo),
         map((n) => {
-          expectTypeOf(n).toBeNumber();
+          expectTypeOf(n).toEqualTypeOf<number>();
           return n * 2;
         }),
       ),

@@ -33,7 +33,7 @@ describe("last", () => {
     test("should not return undefined for non empty arrays", () => {
       const input: NonEmptyArray<number> = [1, 2, 3];
       const data = last(input);
-      expectTypeOf(data).toBeNumber();
+      expectTypeOf(data).toEqualTypeOf<number>();
     });
 
     test("should infer type in pipes", () => {

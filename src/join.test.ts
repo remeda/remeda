@@ -82,13 +82,13 @@ describe("typing", () => {
   it("array", () => {
     const array: Array<number> = [];
     const result = join(array, ",");
-    expectTypeOf(result).toBeString();
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
 
   it("readonly array", () => {
     const array: ReadonlyArray<number> = [];
     const result = join(array, ",");
-    expectTypeOf(result).toBeString();
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
 
   it("tuple", () => {

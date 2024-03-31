@@ -353,7 +353,7 @@ describe("typing", () => {
       timing: "leading",
     });
     const result = debouncer.call();
-    expectTypeOf(result).toBeString();
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
 
   it("doesn't return undefined on 'both' timing", () => {
@@ -362,7 +362,7 @@ describe("typing", () => {
       timing: "both",
     });
     const result = debouncer.call();
-    expectTypeOf(result).toBeString();
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
 
   test("argument typing to be good (all required)", () => {

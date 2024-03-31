@@ -61,7 +61,7 @@ describe("typing", () => {
   describe("mapped type", () => {
     test("should work with string keys", () => {
       mapValues({} as { [K in string]: unknown }, (_, key) => {
-        expectTypeOf(key).toBeString();
+        expectTypeOf(key).toEqualTypeOf<string>();
       });
     });
     test("should work with number keys", () => {
@@ -84,7 +84,7 @@ describe("typing", () => {
   describe("indexed signature", () => {
     test("should work with string keys", () => {
       mapValues({} as Record<string, unknown>, (_, key) => {
-        expectTypeOf(key).toBeString();
+        expectTypeOf(key).toEqualTypeOf<string>();
       });
     });
     test("should work with number keys", () => {
@@ -125,7 +125,7 @@ describe("typing", () => {
 
   test("number keys are converted to string in the mapper", () => {
     mapValues({ 123: 456 }, (value, key) => {
-      expectTypeOf(value).toBeNumber();
+      expectTypeOf(value).toEqualTypeOf<number>();
       expectTypeOf(key).toEqualTypeOf<"123">();
       return "world";
     });

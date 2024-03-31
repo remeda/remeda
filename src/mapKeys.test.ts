@@ -96,7 +96,7 @@ describe("typing", () => {
   test("number keys are converted to strings", () => {
     mapKeys({ 123: "abc", 456: "def" }, (key, value) => {
       expectTypeOf(key).toEqualTypeOf<"123" | "456">();
-      expectTypeOf(value).toBeString();
+      expectTypeOf(value).toEqualTypeOf<string>();
       return key;
     });
   });
