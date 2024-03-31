@@ -23,7 +23,7 @@ type IsPureTuple<T extends IterableContainer> = T extends readonly []
  * keeping the utility of `isIncludedIn` for the common cases.
  *
  * TL;DR - The types are narrowable when: T is literal and S is a pure tuple, or
- * when T isn't a literal, and S is.
+ * when T isn't a literal, but S is.
  *
  * @example
  *   const data = 1 as 1 | 2 | 3;
@@ -49,18 +49,13 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
       // "pure" tuple because we *assume* that S represents a constant set of
       // values, and that it's typing also represents it's runtime content 1-
       // for-1. If S isn't a pure tuple it means we can't tell from the typing
-      // which of it's values are actually present, and we will narrow
-      // incorrectly based on them.
+      // which of it's values are actually present in runtime so can't use them
+      // to narrow correctly.
       IsNotFalse<IsPureTuple<S>>
-    : T extends S[number]
-      ? // T is already as narrow as S can narrow it, there is no additional
-        // value in narrowing for this case (and the negated type would be
-        // `never`).
-        false
-      : // When T isn't a literal type but the items in S are we can narrow the
-        // type because it won't affect the negated side (`Exclude<number, 3>`
-        // is still `number`).
-        IsNotFalse<IsLiteral<S[number]>>;
+    : // When T isn't a literal type but the items in S are we can narrow the
+      // type because it won't affect the negated side (`Exclude<number, 3>`
+      // is still `number`).
+      IsNotFalse<IsLiteral<S[number]>>;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around
