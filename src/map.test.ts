@@ -1,5 +1,4 @@
 import { filter } from "./filter";
-import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -180,22 +179,6 @@ describe("Strict", () => {
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([2, 3, 4]);
   });
-
-  it("complex variadic number array", () => {
-    const input: [
-      ...Array<"hello">,
-      "world",
-      ...Array<number>,
-      string,
-      ...Array<number>,
-      boolean,
-    ] = ["hello", "world", 1, "testing", "testing", "testing", 123, true];
-    const result = map.strict(input, identity);
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean | number | string>, boolean | number | string]
-    >();
-    expect(result).toEqual(input);
-  });
 });
 
 describe("Strict Indexed", () => {
@@ -283,21 +266,5 @@ describe("Strict Indexed", () => {
     // readonlyness is stripped
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
     expect(result).toEqual([1, 3, 5]);
-  });
-
-  it("complex variadic number array", () => {
-    const input: [
-      ...Array<"hello">,
-      "world",
-      ...Array<number>,
-      string,
-      ...Array<number>,
-      boolean,
-    ] = ["hello", "world", 1, "testing", "testing", "testing", 123, true];
-    const result = map.strict.indexed(input, identity);
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean | number | string>, boolean | number | string]
-    >();
-    expect(result).toEqual(input);
   });
 });

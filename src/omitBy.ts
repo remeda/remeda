@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument -- This is rewritten in v2 */
+
 import { keys } from "./keys";
 import { purry } from "./purry";
 
@@ -46,7 +48,9 @@ function _omitBy<T>(
   const out: Partial<T> = {};
 
   for (const key of keys.strict(object)) {
+    // @ts-expect-error [ts7053] -- TODO: This is rewritten in v2.
     if (!fn(object[key], key)) {
+      // @ts-expect-error [ts7053] -- TODO: This is rewritten in v2.
       out[key] = object[key];
     }
   }

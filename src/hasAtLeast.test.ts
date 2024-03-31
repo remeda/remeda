@@ -63,21 +63,21 @@ describe("runtime behavior", () => {
 describe("typing", () => {
   describe("dataFirst", () => {
     it("narrows on empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 0)) {
         expectTypeOf(array).toEqualTypeOf<Array<number>>();
       }
     });
 
     it("narrows on non-empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 1)) {
         expectTypeOf(array).toEqualTypeOf<[number, ...Array<number>]>();
       }
     });
 
     it("narrows on large numbers", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(array, 10)) {
         expectTypeOf(array).toEqualTypeOf<
           [
@@ -100,21 +100,21 @@ describe("typing", () => {
 
   describe("dataLast", () => {
     it("narrows on empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(0)(array)) {
         expectTypeOf(array).toEqualTypeOf<Array<number>>();
       }
     });
 
     it("narrows on non-empty checks", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(1)(array)) {
         expectTypeOf(array).toEqualTypeOf<[number, ...Array<number>]>();
       }
     });
 
     it("narrows on large numbers", () => {
-      const array: Array<number> = [];
+      const array = [] as Array<number>;
       if (hasAtLeast(10)(array)) {
         expectTypeOf(array).toEqualTypeOf<
           [
@@ -136,7 +136,7 @@ describe("typing", () => {
 
     it("creates narrowing utility functions", () => {
       const hasADozen = hasAtLeast(12);
-      const numbersArray: Array<number> = [];
+      const numbersArray = [] as Array<number>;
       if (hasADozen(numbersArray)) {
         expectTypeOf(numbersArray).toEqualTypeOf<
           [
@@ -157,7 +157,7 @@ describe("typing", () => {
         >();
       }
 
-      const stringsArray: Array<string> = [];
+      const stringsArray = [] as Array<string>;
       if (hasADozen(stringsArray)) {
         expectTypeOf(stringsArray).toEqualTypeOf<
           [
@@ -180,10 +180,53 @@ describe("typing", () => {
     });
   });
 
-  it("doesnt narrow when minimum isnt literal", () => {
-    const array: Array<number> = [];
+  it("LEGACY: doesn't allow when minimum isn't literal", () => {
+    // TODO: Remove this in V2
+    const array = [] as Array<number>;
     if (hasAtLeast(array, 5 as number)) {
       expectTypeOf(array).toEqualTypeOf<Array<number>>();
+    }
+  });
+
+  it("fails on N > array length", () => {
+    const array = ["hello", "world"] as const;
+    if (hasAtLeast(array, 3)) {
+      expectTypeOf(array).toBeNever();
+    }
+  });
+
+  it("works with interesting tuples", () => {
+    const array = ["hello", "world", true, 456, 123, "cat"] as [
+      "hello",
+      string,
+      boolean,
+      number,
+      123,
+      ...Array<"cat" | "dog">,
+    ];
+    if (hasAtLeast(array, 8)) {
+      expectTypeOf(array).toEqualTypeOf<
+        [
+          "hello",
+          string,
+          boolean,
+          number,
+          123,
+          "cat" | "dog",
+          "cat" | "dog",
+          "cat" | "dog",
+          ...Array<"cat" | "dog">,
+        ]
+      >();
+    }
+  });
+
+  it("maintains readonly-ness", () => {
+    const array = [] as ReadonlyArray<string>;
+    if (hasAtLeast(array, 3)) {
+      expectTypeOf(array).toEqualTypeOf<
+        readonly [string, string, string, ...Array<string>]
+      >();
     }
   });
 });

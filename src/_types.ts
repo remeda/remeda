@@ -36,19 +36,6 @@ export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
 
 /**
- * Copied verbatim from `sindresorhus/ts-extras` (MIT License).
- *
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/readonly-tuple.d.ts
- */
-export type ReadonlyTuple<
-  Element,
-  Length extends number,
-> = number extends Length
-  ? // Because `Length extends number` and `number extends Length`, then `Length` is not a specific finite number.
-    ReadonlyArray<Element> // It's not fixed length.
-  : BuildTupleHelper<Element, Length, []>; // Otherwise it is a fixed length tuple.
-
-/**
  * An extension of Extract for type predicates which falls back to the base
  * in order to narrow the `unknown` case.
  *
@@ -61,14 +48,6 @@ export type NarrowedTo<T, Base> =
     : IsAny<T> extends true
       ? Base
       : Extract<T, Base>;
-
-type BuildTupleHelper<
-  Element,
-  Length extends number,
-  Rest extends Array<Element>,
-> = Rest["length"] extends Length
-  ? readonly [...Rest] // Terminate with readonly array (aka tuple)
-  : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
 
 /**
  * A compare function that is compatible with the native `Array.sort` function.

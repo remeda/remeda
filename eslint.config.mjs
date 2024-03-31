@@ -7,7 +7,7 @@ import jsdoc from "eslint-plugin-jsdoc";
 
 export default config(
   {
-    ignores: ["dist", "docs", "examples"],
+    ignores: ["coverage", "dist", "docs", "examples"],
   },
   core.configs.recommended,
   // @ts-expect-error [ts7016] -- I don't know why typing is broken here...
@@ -288,6 +288,20 @@ export default config(
           // This allows removing props by destructuring an object, which is
           // useful in arrow functions.
           ignoreRestSiblings: true,
+        },
+      ],
+
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        {
+          allowNumber: true,
+
+          allowAny: false,
+          allowArray: false,
+          allowBoolean: false,
+          allowNever: false,
+          allowNullish: false,
+          allowRegExp: false,
         },
       ],
 
