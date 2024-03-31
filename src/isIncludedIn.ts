@@ -61,15 +61,16 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
  * Checks if the item is included in the container. This is a wrapper around
  * `Array.prototype.includes` and `Set.prototype.has` and thus relies on the
  * same equality checks that those functions do (which is reference equality,
- * e.g. `===`). In some cases the input's type is narrowed to the container's
- * type if possible.
+ * e.g. `===`). In some cases the input's type is also narrowed to the
+ * container's item types.
  *
  * Notice that unlike most functions, this function takes a generic item as it's
  * data and **an array** as it's parameter.
  *
  * @param data - The item that is checked.
  * @param container - The items that are checked against.
- * @returns A narrowed version of the input data on success, `false` otherwise.
+ * @returns `true` if the item is in the container, or `false` otherwise. In
+ * cases the type of `data` is also narrowed down.
  * @signature
  *   R.isIncludedIn(data, container);
  * @example
@@ -94,14 +95,15 @@ export function isIncludedIn<T, S extends T>(
  * Checks if the item is included in the container. This is a wrapper around
  * `Array.prototype.includes` and `Set.prototype.has` and thus relies on the
  * same equality checks that those functions do (which is reference equality,
- * e.g. `===`). In some cases the input's type is narrowed to the container's
- * type if possible.
+ * e.g. `===`). In some cases the input's type is also narrowed to the
+ * container's item types.
  *
  * Notice that unlike most functions, this function takes a generic item as it's
  * data and **an array** as it's parameter.
  *
  * @param container - The items that are checked against.
- * @returns A narrowed version of the input data on success, `false` otherwise.
+ * @returns `true` if the item is in the container, or `false` otherwise. In
+ * cases the type of `data` is also narrowed down.
  * @signature
  *   R.isIncludedIn(container)(data);
  * @example
