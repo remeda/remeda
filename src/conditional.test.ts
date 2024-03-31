@@ -9,6 +9,10 @@ describe("runtime (dataFirst)", () => {
     expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
   });
 
+  it("falls back to the legacy default", () => {
+    expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
+  });
+
   it("falls back to our default", () => {
     expect(
       conditional(
@@ -87,6 +91,15 @@ describe("typing", () => {
         },
       ],
     );
+  });
+
+  it("passes the trivial defaultCase's type to the output", () => {
+    const result = conditional(
+      "Jokic",
+      [isString, () => "hello" as const],
+      conditional.defaultCase(),
+    );
+    expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
   });
 
   it("passes the defaultCase's type to the output", () => {
