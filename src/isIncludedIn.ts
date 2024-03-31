@@ -3,8 +3,8 @@ import type { IsNotFalse } from "./type-fest/internal";
 import type { IsLiteral } from "./type-fest/is-literal";
 
 /**
- * A "pure" tuple is one that doesn't contain any optional or variadic parts,
- * i.e. it has a finite and constant number of elements in it.
+ * A "pure" tuple is one that doesn't contain any variadic parts, i.e. it has a
+ * finite and constant number of elements in it.
  */
 type IsPureTuple<T extends IterableContainer> = T extends readonly []
   ? true
