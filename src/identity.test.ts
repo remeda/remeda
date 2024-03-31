@@ -15,7 +15,7 @@ describe("runtime", () => {
     expect(id(1)).toBe(1);
     expect(id(1, 2)).toBe(1);
     expect(id(1, "a")).toBe(1);
-    expect(id(undefined)).toBe(undefined);
+    expect(id(undefined)).toBeUndefined();
   });
 
   test("works with variadic arguments", () => {
