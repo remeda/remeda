@@ -94,18 +94,6 @@ describe("dataLast", () => {
 });
 
 describe("typing", () => {
-  // it("narrows the result", () => {
-  //   const data = 4 as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
-  //   if (isIncludedIn(data, [1, 2, 3])) {
-  //     expectTypeOf(data).toEqualTypeOf<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>();
-  //   }
-
-  //   if (isIncludedIn(data, [1, 2, 3] as const)) {
-  //     expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
-  //   }
-  // });
-
   it("throws on bad value types", () => {
     // @ts-expect-error [ts2322] - strings are not numbers
     isIncludedIn(1, ["yes", "no"]);
