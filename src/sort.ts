@@ -6,7 +6,7 @@ import { purry } from "./purry";
  * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
  *
  * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
+ * strict mode to maintain its shape.
  *
  * @param items - The array to sort.
  * @param cmp - The comparator function.
