@@ -34,19 +34,23 @@ type PartialEnumerableKeys<T extends object> = Simplify<
 // input object's props, and one for partial matches which would also make the
 // props optional (as they could have a value that would be filtered out).
 type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
-  PickSymbolKeys<T> & {
-    // The exact case, props here would always be part of the output object
-    -readonly [P in keyof T as IsExactProp<T, P, S> extends true
-      ? P
-      : never]: Exclude<T[P], S>;
-  } & {
-    // The partial case, props here might be part of the output object, but
-    // might not be, hence they are optional.
-    -readonly [P in keyof T as IsPartialProp<T, P, S> extends true
-      ? P
-      : never]?: Exclude<T[P], S>;
-  }
+  ExactProps<T, S> & PartialProps<T, S> & PickSymbolKeys<T>
 >;
+
+// The exact case, props here would always be part of the output object
+type ExactProps<T, S> = {
+  -readonly [P in keyof T as IsExactProp<T, P, S> extends true
+    ? P
+    : never]: Exclude<T[P], S>;
+};
+
+// The partial case, props here might be part of the output object, but might
+// not be, hence they are optional.
+type PartialProps<T, S> = {
+  -readonly [P in keyof T as IsPartialProp<T, P, S> extends true
+    ? P
+    : never]?: Exclude<T[P], S>;
+};
 
 // If the input object's value type extends itself when the type-guard is
 // excluded from it we can safely assume that the predicate would always return
