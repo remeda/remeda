@@ -1,4 +1,5 @@
 import { constant } from "./constant";
+import { isDeepEqual } from "./isDeepEqual";
 import { isNullish } from "./isNullish";
 import { isString } from "./isString";
 import { omitBy } from "./omitBy";
@@ -129,6 +130,15 @@ describe("typing", () => {
     }>();
   });
 
+  test("Makes wide types partial", () => {
+    const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+    expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
+
+    const narrow = omitBy({ a: 1 } as const, isDeepEqual(1 as const));
+    // eslint-disable-next-line @typescript-eslint/ban-types -- Expected!
+    expectTypeOf(narrow).toEqualTypeOf<{}>();
+  });
+
   test("Works well with nullish type-guards", () => {
     const data = {} as {
       required: string;
@@ -140,6 +150,7 @@ describe("typing", () => {
       optionalNullable?: string | null;
       optionalNullish?: string | null | undefined;
     };
+
     const resultDefined = omitBy(data, isUndefined);
     expectTypeOf(resultDefined).toEqualTypeOf<{
       required: string;

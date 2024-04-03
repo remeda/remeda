@@ -1,4 +1,4 @@
-import { type Simplify } from "type-fest";
+import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
@@ -36,32 +36,45 @@ type PartialEnumerableKeys<T extends object> = Simplify<
 type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
   PickSymbolKeys<T> & {
     // The exact case, props here would always be part of the output object
-    -readonly [P in keyof T as PropIsExact<T, P, S>]: Exclude<T[P], S>;
+    -readonly [P in keyof T as IsPropExact<T, P, S> extends true
+      ? P
+      : never]: Exclude<T[P], S>;
   } & {
     // The partial case, props here might be part of the output object, but
     // might not be, hence they are optional.
-    -readonly [P in keyof T as PropIsPartially<T, P, S>]?: Exclude<T[P], S>;
+    -readonly [P in keyof T as IsPropPartially<T, P, S> extends true
+      ? P
+      : never]?: Exclude<T[P], S>;
   }
 >;
 
 // If the input object's value type extends itself when the type-guard is
 // excluded from it we can safely assume that the predicate would always return
 // `false` for any value of that property.
-type PropIsExact<T, P extends keyof T, S> =
-  T[P] extends Exclude<T[P], S> ? P : never;
+type IsPropExact<T, P extends keyof T, S> = P extends symbol
+  ? // Symbols are passed through via the PickSymbolKeys type
+    false
+  : T[P] extends Exclude<T[P], S>
+    ? S extends T[P]
+      ? // If S extends the T[P] it means the type the predicate is narrowing to
+        // can't narrow the rejected value any further, so we can't say what
+        // would happen for a concrete value in runtime (e.g. if T[P] is
+        // `number` and S is `1`: `Exclude<number, 1> === number`.
+        false
+      : true
+    : false;
 
 // ...and if the input object's value type isn't an exact match, but still has
 // some partial match (i.g. the extracted type-guard isn't completely disjoint)
 // then we can assume that the property can sometimes return true, and sometimes
 // false when passed to the predicate, hence it should be optional in the
 // output.
-type PropIsPartially<T, P extends keyof T, S> =
-  T[P] extends Exclude<T[P], S>
-    ? // This is the exact case, we address it above
-      never
-    : Exclude<Required<T>[P], S> extends never
-      ? never
-      : P;
+type IsPropPartially<T, P extends keyof T, S> = P extends symbol
+  ? // Symbols are passed through via the PickSymbolKeys type
+    false
+  : IsPropExact<T, P, S> extends true
+    ? false
+    : IfNever<Exclude<Required<T>[P], S>, false, true>;
 
 /**
  * Creates a shallow copy of the data, and then removes any keys that the
