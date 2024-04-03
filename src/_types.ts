@@ -35,7 +35,7 @@ export type EnumerableStringKeyOf<T> = `${Exclude<keyof T, symbol>}`;
  * following the definition of `Object.values` and `Object.entries`.
  */
 export type EnumerableStringKeyedValueOf<T> = {
-  [K in keyof T]: K extends symbol
+  [K in keyof T]-?: K extends symbol
     ? // Ignore any values that are coming from a symbol key
       never
     : Required<T>[K];
