@@ -36,13 +36,13 @@ type PartialEnumerableKeys<T extends object> = Simplify<
 type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
   PickSymbolKeys<T> & {
     // The exact case, props here would always be part of the output object
-    -readonly [P in keyof T as IsPropExact<T, P, S> extends true
+    -readonly [P in keyof T as IsExactProp<T, P, S> extends true
       ? P
       : never]: Exclude<T[P], S>;
   } & {
     // The partial case, props here might be part of the output object, but
     // might not be, hence they are optional.
-    -readonly [P in keyof T as IsPropPartially<T, P, S> extends true
+    -readonly [P in keyof T as IsPartialProp<T, P, S> extends true
       ? P
       : never]?: Exclude<T[P], S>;
   }
@@ -51,7 +51,7 @@ type PartialEnumerableKeysNarrowed<T extends object, S> = Simplify<
 // If the input object's value type extends itself when the type-guard is
 // excluded from it we can safely assume that the predicate would always return
 // `false` for any value of that property.
-type IsPropExact<T, P extends keyof T, S> = P extends symbol
+type IsExactProp<T, P extends keyof T, S> = P extends symbol
   ? // Symbols are passed through via the PickSymbolKeys type
     false
   : T[P] extends Exclude<T[P], S>
@@ -69,10 +69,10 @@ type IsPropExact<T, P extends keyof T, S> = P extends symbol
 // then we can assume that the property can sometimes return true, and sometimes
 // false when passed to the predicate, hence it should be optional in the
 // output.
-type IsPropPartially<T, P extends keyof T, S> = P extends symbol
+type IsPartialProp<T, P extends keyof T, S> = P extends symbol
   ? // Symbols are passed through via the PickSymbolKeys type
     false
-  : IsPropExact<T, P, S> extends true
+  : IsExactProp<T, P, S> extends true
     ? false
     : IfNever<Exclude<Required<T>[P], S>, false, true>;
 
