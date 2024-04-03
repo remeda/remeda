@@ -1,5 +1,8 @@
 import { type Simplify } from "type-fest";
-import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
+import {
+  type EnumerableStringKeyOf,
+  type EnumerableStringKeyedValueOf,
+} from "./_types";
 import { purry } from "./purry";
 
 type MappedValues<T extends object, Value> = Simplify<{
@@ -25,8 +28,8 @@ type MappedValues<T extends object, Value> = Simplify<{
 export function mapValues<T extends object, Value>(
   data: T,
   valueMapper: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => Value,
 ): MappedValues<T, Value>;
@@ -48,8 +51,8 @@ export function mapValues<T extends object, Value>(
  */
 export function mapValues<T extends object, Value>(
   valueMapper: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => Value,
 ): (data: T) => MappedValues<T, Value>;

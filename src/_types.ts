@@ -19,12 +19,22 @@ export type Mapped<T extends IterableContainer, K> = {
  */
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
-// Inspired and largely copied from `sindresorhus/ts-extras`:
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
-export type EnumeratedKeyOf<T> = `${Exclude<keyof T, symbol>}`;
+/**
+ * A union of all keys of T which are not symbols, and where number keys are
+ * converted to strings, following the definition of `Object.keys` and
+ * `Object.entries`.
+ *
+ * Inspired and largely copied from [`sindresorhus/ts-extras`](https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts).
+ *
+ * @see EnumerableStringKeyedValueOf
+ */
+export type EnumerableStringKeyOf<T> = `${Exclude<keyof T, symbol>}`;
 
-// Object.values does only return the values paired with non-symbol keys.
-export type EnumeratedValueOf<T> = {
+/**
+ * A union of all values of properties in T which are not keyed by a symbol,
+ * following the definition of `Object.values` and `Object.entries`.
+ */
+export type EnumerableStringKeyedValueOf<T> = {
   [K in keyof T]: K extends symbol
     ? // Ignore any values that are coming from a symbol key
       never

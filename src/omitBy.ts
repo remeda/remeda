@@ -1,5 +1,8 @@
 import { type Simplify } from "type-fest";
-import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
+import {
+  type EnumerableStringKeyOf,
+  type EnumerableStringKeyedValueOf,
+} from "./_types";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
@@ -82,19 +85,22 @@ type PropIsPartially<T, P extends keyof T, S> =
  * @dataFirst
  * @category Object
  */
-export function omitBy<T extends object, S extends EnumeratedValueOf<T>>(
+export function omitBy<
+  T extends object,
+  S extends EnumerableStringKeyedValueOf<T>,
+>(
   data: T,
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => value is S,
 ): PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
   data: T,
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => boolean,
 ): PartialEnumerableKeys<T>;
@@ -109,17 +115,20 @@ export function omitBy<T extends object>(
  * @dataLast
  * @category Object
  */
-export function omitBy<T extends object, S extends EnumeratedValueOf<T>>(
+export function omitBy<
+  T extends object,
+  S extends EnumerableStringKeyedValueOf<T>,
+>(
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => value is S,
 ): (data: T) => PartialEnumerableKeysNarrowed<T, S>;
 export function omitBy<T extends object>(
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => boolean,
 ): (data: T) => PartialEnumerableKeys<T>;

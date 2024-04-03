@@ -3,7 +3,11 @@
  * possible!
  */
 
-import type { EnumeratedKeyOf, EnumeratedValueOf, ExactRecord } from "./_types";
+import type {
+  EnumerableStringKeyOf,
+  EnumerableStringKeyedValueOf,
+  ExactRecord,
+} from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -21,8 +25,8 @@ import { purry } from "./purry";
 export function mapKeys<T extends {}, S extends PropertyKey>(
   data: T,
   keyMapper: (
-    key: EnumeratedKeyOf<T>,
-    value: EnumeratedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
 ): ExactRecord<S, T[keyof T]>;
@@ -40,8 +44,8 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
  */
 export function mapKeys<T extends {}, S extends PropertyKey>(
   keyMapper: (
-    key: EnumeratedKeyOf<T>,
-    value: EnumeratedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
 ): (data: T) => ExactRecord<S, T[keyof T]>;

@@ -1,4 +1,7 @@
-import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
+import {
+  type EnumerableStringKeyOf,
+  type EnumerableStringKeyedValueOf,
+} from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -22,8 +25,8 @@ import { purry } from "./purry";
 export function forEachObj<T extends object>(
   data: T,
   callbackfn: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     obj: T,
   ) => void,
 ): void;
@@ -49,8 +52,8 @@ export function forEachObj<T extends object>(
  */
 export function forEachObj<T extends object>(
   callbackfn: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     obj: T,
   ) => void,
 ): (object: T) => T;

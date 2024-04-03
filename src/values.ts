@@ -1,9 +1,12 @@
-import { type EnumeratedValueOf, type IterableContainer } from "./_types";
+import {
+  type EnumerableStringKeyedValueOf,
+  type IterableContainer,
+} from "./_types";
 import { purry } from "./purry";
 
 type Values<T extends object> = T extends IterableContainer
   ? Array<T[number]>
-  : Array<EnumeratedValueOf<T>>;
+  : Array<EnumerableStringKeyedValueOf<T>>;
 
 /**
  * Returns a new array containing the values of the array or object.

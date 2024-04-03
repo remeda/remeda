@@ -1,5 +1,8 @@
 import { type Simplify } from "type-fest";
-import { type EnumeratedKeyOf, type EnumeratedValueOf } from "./_types";
+import {
+  type EnumerableStringKeyOf,
+  type EnumerableStringKeyedValueOf,
+} from "./_types";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only
@@ -84,19 +87,22 @@ type PropIsPartially<T, P extends keyof T, S> = EnumerableKey<
  * @dataFirst
  * @category Object
  */
-export function pickBy<T extends object, S extends EnumeratedValueOf<T>>(
+export function pickBy<
+  T extends object,
+  S extends EnumerableStringKeyedValueOf<T>,
+>(
   data: T,
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => value is S,
 ): EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
   data: T,
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => boolean,
 ): EnumeratedPartial<T>;
@@ -124,17 +130,20 @@ export function pickBy<T extends object>(
  * @dataLast
  * @category Object
  */
-export function pickBy<T extends object, S extends EnumeratedValueOf<T>>(
+export function pickBy<
+  T extends object,
+  S extends EnumerableStringKeyedValueOf<T>,
+>(
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => value is S,
 ): (data: T) => EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
   predicate: (
-    value: EnumeratedValueOf<T>,
-    key: EnumeratedKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
     data: T,
   ) => boolean,
 ): (data: T) => EnumeratedPartial<T>;
