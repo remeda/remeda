@@ -1,4 +1,5 @@
 import { constant } from "./constant";
+import { isDeepEqual } from "./isDeepEqual";
 import { isDefined } from "./isDefined";
 import { isNonNull } from "./isNonNull";
 import { isNonNullish } from "./isNonNullish";
@@ -78,6 +79,14 @@ describe("typing", () => {
       expectTypeOf(key).toEqualTypeOf<"b" | "c">();
       return true;
     });
+  });
+
+  test("Makes wide types partial", () => {
+    const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+    expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
+
+    const narrow = pickBy({ a: 1 } as const, isDeepEqual(1 as const));
+    expectTypeOf(narrow).toEqualTypeOf<{ a: 1 }>();
   });
 
   test("works with type-guards", () => {

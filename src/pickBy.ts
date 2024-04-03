@@ -1,4 +1,4 @@
-import { type Simplify } from "type-fest";
+import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
@@ -28,39 +28,59 @@ type EnumeratedPartial<T> = Simplify<{
 // object's props, and one for partial matches which would also make the props
 // optional (as they could have a value that would be filtered out).
 type EnumeratedPartialNarrowed<T, S> = Simplify<
-  {
-    // The exact case, props here would always be part of the output object
-    -readonly [P in keyof T as PropIsExact<T, P, S>]: Extract<
-      Required<T>[P],
-      S
-    >;
-  } & {
-    // The partial case, props here might be part of the output object, but
-    // might not be, hence they are optional.
-    -readonly [P in keyof T as PropIsPartially<T, P, S>]?: Extract<T[P], S>;
-  }
+  ExactProps<T, S> & PartialProps<T, S>
 >;
+
+// The exact case, props here would always be part of the output object
+type ExactProps<T, S> = {
+  -readonly [P in keyof T as EnumerableKey<
+    IsExactProp<T, P, S> extends true ? P : never
+  >]: Extract<Required<T>[P], S>;
+};
+
+// The partial case, props here might be part of the output object, but might
+// not be, hence they are optional.
+type PartialProps<T, S> = {
+  -readonly [P in keyof T as EnumerableKey<
+    IsPartialProp<T, P, S> extends true ? P : never
+  >]?: IfNever<
+    Extract<T[P], S>,
+    // If the result of extracting S from T[P] is never but S still extends
+    // it, it means that T[P] is too wide and S can't be extracted from it:
+    // e.g. if T[P] is `number` S is `1` then `Extract<number, 1> === never`.
+    // For these cases we can return S directly as the type as it's already
+    // very narrowed compared to T[P].
+    S extends T[P] ? S : never,
+    Extract<T[P], S>
+  >;
+};
 
 // If the input object's value type extends itself when the type-guard is
 // extracted from it we can safely assume that the predicate would always return
 // true for any value of that property.
-type PropIsExact<T, P extends keyof T, S> = EnumerableKey<
-  T[P] extends Extract<T[P], S> ? P : never
->;
+type IsExactProp<T, P extends keyof T, S> =
+  T[P] extends Extract<T[P], S> ? true : false;
 
 // ...and if the input object's value type isn't an exact match, but still has
 // some partial match (i.g. the extracted type-guard isn't completely disjoint)
 // then we can assume that the property can sometimes return true, and sometimes
 // false when passed to the predicate, hence it should be optional in the
 // output.
-type PropIsPartially<T, P extends keyof T, S> = EnumerableKey<
-  T[P] extends Extract<T[P], S>
-    ? // This is the exact case, we address it above
-      never
-    : Extract<T[P], S> extends never
-      ? never
-      : P
->;
+type IsPartialProp<T, P extends keyof T, S> =
+  IsExactProp<T, P, S> extends true
+    ? false
+    : IfNever<
+        Extract<T[P], S>,
+        S extends T[P]
+          ? // If the result of extracting S from T[P] is never but S still
+            // extends it, it means that T[P] is too wide and S can't be
+            // extracted from it: e.g. if T[P] is `number` S is `1` then
+            // `Extract<number, 1> === never`, but `1` extends `number`. We need
+            // to handle these cases when we extract the value too (see above).
+            true
+          : false,
+        true
+      >;
 
 /**
  * Iterates over the entries of `data` and reconstructs the object using only
