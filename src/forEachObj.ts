@@ -1,3 +1,7 @@
+import {
+  type EnumerableStringKeyOf,
+  type EnumerableStringKeyedValueOf,
+} from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -18,9 +22,13 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, unknown>>(
+export function forEachObj<T extends object>(
   data: T,
-  callbackfn: (value: T[keyof T], key: keyof T, obj: T) => void,
+  callbackfn: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    obj: T,
+  ) => void,
 ): void;
 
 /**
@@ -42,27 +50,24 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
  * @dataLast
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, unknown>>(
-  callbackfn: (value: T[keyof T], key: keyof T, obj: T) => void,
+export function forEachObj<T extends object>(
+  callbackfn: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    obj: T,
+  ) => void,
 ): (object: T) => T;
 
 export function forEachObj(...args: ReadonlyArray<unknown>): unknown {
   return purry(forEachObjImplementation, args);
 }
 
-function forEachObjImplementation<T extends Record<PropertyKey, unknown>>(
+function forEachObjImplementation<T extends object>(
   data: T,
-  fn: (
-    value: T[Extract<keyof T, string>],
-    key?: Extract<keyof T, string>,
-    obj?: T,
-  ) => void,
+  fn: (value: unknown, key: string, data: T) => void,
 ): T {
-  for (const key in data) {
-    if (Object.prototype.hasOwnProperty.call(data, key)) {
-      const { [key]: val } = data;
-      fn(val, key, data);
-    }
+  for (const [key, value] of Object.entries(data)) {
+    fn(value, key, data);
   }
   return data;
 }

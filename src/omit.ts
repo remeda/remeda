@@ -1,4 +1,3 @@
-import { fromEntries } from "./fromEntries";
 import { hasAtLeast } from "./hasAtLeast";
 import { purry } from "./purry";
 
@@ -49,20 +48,16 @@ function _omit<T extends object, K extends keyof T>(
 
   if (!hasAtLeast(propNames, 2)) {
     // Only one prop to omit.
-
-    const [propName] = propNames;
-    const { [propName]: omitted, ...remaining } = data;
+    const { [propNames[0]]: _omitted, ...remaining } = data;
     return remaining;
   }
 
   // Multiple props to omit...
 
-  if (!propNames.some((propName) => propName in data)) {
-    return { ...data };
+  const out = { ...data };
+  for (const prop of propNames) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is the best way to do it!
+    delete out[prop];
   }
-
-  const asSet = new Set(propNames);
-  return fromEntries(
-    Object.entries(data).filter(([key]) => !asSet.has(key as K)),
-  ) as Omit<T, K>;
+  return out;
 }

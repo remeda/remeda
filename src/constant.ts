@@ -25,7 +25,8 @@
  * @dataLast
  * @category Function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function constant<T>(value: T): (...args: any) => T {
+export function constant<T>(
+  value: T,
+): <Args extends ReadonlyArray<unknown>>(...args: Args) => T {
   return () => value;
 }

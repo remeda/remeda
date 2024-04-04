@@ -17,6 +17,6 @@ describe("isPromise", () => {
   it("should work as type guard in filter", () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isPromise);
     expect(data.every((c) => c instanceof Promise)).toEqual(true);
-    assertType<Array<Promise<number>>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<Promise<number>>>();
   });
 });

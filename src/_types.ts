@@ -19,22 +19,24 @@ export type Mapped<T extends IterableContainer, K> = {
  */
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
-// Inspired and largely copied from `sindresorhus/ts-extras`:
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
-export type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
+/**
+ * A union of all keys of T which are not symbols, and where number keys are
+ * converted to strings, following the definition of `Object.keys` and
+ * `Object.entries`.
+ *
+ * Inspired and largely copied from [`sindresorhus/ts-extras`](https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts).
+ *
+ * @see EnumerableStringKeyedValueOf
+ */
+export type EnumerableStringKeyOf<T> = `${Exclude<keyof T, symbol>}`;
 
 /**
- * Copied verbatim from `sindresorhus/ts-extras` (MIT License).
- *
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/readonly-tuple.d.ts
+ * A union of all values of properties in T which are not keyed by a symbol,
+ * following the definition of `Object.values` and `Object.entries`.
  */
-export type ReadonlyTuple<
-  Element,
-  Length extends number,
-> = number extends Length
-  ? // Because `Length extends number` and `number extends Length`, then `Length` is not a specific finite number.
-    ReadonlyArray<Element> // It's not fixed length.
-  : BuildTupleHelper<Element, Length, []>; // Otherwise it is a fixed length tuple.
+export type EnumerableStringKeyedValueOf<T> = {
+  [K in keyof T]-?: K extends symbol ? never : T[K];
+}[keyof T];
 
 /**
  * An extension of Extract for type predicates which falls back to the base
@@ -50,27 +52,12 @@ export type NarrowedTo<T, Base> =
       ? Base
       : Extract<T, Base>;
 
-type BuildTupleHelper<
-  Element,
-  Length extends number,
-  Rest extends Array<Element>,
-> = Rest["length"] extends Length
-  ? readonly [...Rest] // Terminate with readonly array (aka tuple)
-  : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
-
 /**
  * A compare function that is compatible with the native `Array.sort` function.
  *
  * @returns >0 if `a` should come after `b`, 0 if they are equal, and <0 if `a` should come before `b`.
  */
 export type CompareFunction<T> = (a: T, b: T) => number;
-
-/**
- * Based on type-fest's IsAny.
- *
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-any.d.ts
- */
-export type IfIsAny<T, Then, Else> = 0 extends T & 1 ? Then : Else;
 
 // Records keyed with generic `string` and `number` have different semantics
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using
@@ -84,12 +71,10 @@ export type ExactRecord<Key extends PropertyKey, Value> =
     ? Record<Key, Value>
     : number extends Key
       ? Record<Key, Value>
-      : symbol extends Key
-        ? Record<Key, Value>
-        : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-          // because we can't statically know what values the mapper would return on
-          // a specific input
-          Partial<Record<Key, Value>>;
+      : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+        // because we can't statically know what values the mapper would return on
+        // a specific input
+        Partial<Record<Key, Value>>;
 
 export type ReorderedArray<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

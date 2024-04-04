@@ -75,15 +75,15 @@ describe("typing", () => {
       [
         isString,
         (str) => {
-          expectTypeOf(str).toBeString();
-          expectTypeOf(str).not.toBeNumber();
+          expectTypeOf(str).toEqualTypeOf<string>();
+          expectTypeOf(str).not.toEqualTypeOf<number>();
         },
       ],
       [
         isNumber,
         (num) => {
-          expectTypeOf(num).toBeNumber();
-          expectTypeOf(num).not.toBeString();
+          expectTypeOf(num).toEqualTypeOf<number>();
+          expectTypeOf(num).not.toEqualTypeOf<string>();
         },
       ],
     );

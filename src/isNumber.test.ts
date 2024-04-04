@@ -26,7 +26,7 @@ describe("isNumber", () => {
     const data = TYPES_DATA_PROVIDER.number as unknown;
     if (isNumber(data)) {
       expect(typeof data).toEqual("number");
-      assertType<number>(data);
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 

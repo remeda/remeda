@@ -1,11 +1,31 @@
-import type { Narrow } from "./_narrow";
-import type { Path, SupportsValueAtPath, ValueAtPath } from "./_paths";
 import { purry } from "./purry";
+
+type Path<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
+  T extends ReadonlyArray<unknown>
+    ? Path<T[number], readonly [...Prefix, number]> | Prefix
+    : T extends object
+      ? PathsOfObject<T, Prefix> | Prefix
+      : Prefix;
+
+type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
+  [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]>;
+}[keyof T];
+
+type ValueAtPath<T, TPath extends Path<T>> = TPath extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? Head extends keyof T
+    ? Rest extends Path<T[Head]>
+      ? ValueAtPath<T[Head], Rest>
+      : never
+    : never
+  : T;
 
 /**
  * Sets the value at `path` of `object`.
  *
- * @param object - The target method.
+ * @param data - The target method.
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
@@ -15,9 +35,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
-  object: T,
-  path: Narrow<TPath>,
+export function setPath<T, TPath extends Path<T>>(
+  data: T,
+  path: TPath,
   value: ValueAtPath<T, TPath>,
 ): T;
 
@@ -33,41 +53,48 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  * @dataLast
  * @category Object
  */
-export function setPath<TPath extends Array<PropertyKey>, Value>(
-  path: Narrow<TPath>,
-  value: Value,
-): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
+export function setPath<
+  T,
+  TPath extends Path<T>,
+  Value extends ValueAtPath<T, TPath>,
+>(path: TPath, value: Value): (data: T) => T;
 
 export function setPath(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_setPath, args);
+  return purry(setPathImplementation, args);
 }
 
-export function _setPath(
+export function setPathImplementation(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
   value: unknown,
 ): unknown {
-  const [current, ...rest] = path;
-  if (current === undefined) {
+  const [pivot, ...rest] = path;
+  if (pivot === undefined) {
     return value;
   }
 
   if (Array.isArray(data)) {
-    return data.map((item: unknown, index) =>
-      index === current ? _setPath(item, rest, value) : item,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const copy = [...data];
+    copy[pivot as number] = setPathImplementation(
+      data[pivot as number],
+      rest,
+      value,
     );
+    return copy;
   }
 
   if (data === null || data === undefined) {
     throw new Error("Path doesn't exist in object!");
   }
 
+  const { [pivot]: currentValue, ...remaining } = data as Record<
+    PropertyKey,
+    unknown
+  >;
+
   return {
-    ...data,
-    [current]: _setPath(
-      (data as Record<PropertyKey, unknown>)[current],
-      rest,
-      value,
-    ),
+    ...remaining,
+    [pivot]: setPathImplementation(currentValue, rest, value),
   };
 }

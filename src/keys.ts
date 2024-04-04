@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { EnumerableStringKeyOf, IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
@@ -47,9 +47,7 @@ type IndicesAfterSpread<
       : Iterations["length"];
 
 type ObjectKeys<T> =
-  T extends Record<PropertyKey, never>
-    ? []
-    : Array<`${Exclude<keyof T, symbol>}`>;
+  T extends Record<PropertyKey, never> ? [] : Array<EnumerableStringKeyOf<T>>;
 
 /**
  * Returns a new array containing the keys of the array or object.
