@@ -1,5 +1,5 @@
 import type { IterableContainer } from "./_types";
-import type { IsNotFalse } from "./type-fest/internal";
+import type { IsNotFalse, IsUnion } from "./type-fest/internal";
 import type { IsLiteral } from "./type-fest/is-literal";
 
 /**
@@ -8,8 +8,10 @@ import type { IsLiteral } from "./type-fest/is-literal";
  */
 type IsPureTuple<T extends IterableContainer> = T extends readonly []
   ? true
-  : T extends readonly [unknown, ...infer Rest]
-    ? IsPureTuple<Rest>
+  : T extends readonly [infer Head, ...infer Rest]
+    ? IsUnion<Head> extends true
+      ? false
+      : IsPureTuple<Rest>
     : false;
 
 /**

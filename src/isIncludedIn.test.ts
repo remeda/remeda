@@ -107,6 +107,7 @@ describe("typing", () => {
 
   describe("narrowing", () => {
     test("data is single literal, container is pure tuple === NARROWED", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const data = 1 as const;
       if (isIncludedIn(data, [1] as const)) {
         expectTypeOf(data).toEqualTypeOf<1>();
@@ -125,6 +126,7 @@ describe("typing", () => {
     });
 
     test("data is single literal, container is array === NOT NARROWED", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const data = 1 as const;
       if (isIncludedIn(data, [1] as Array<1>)) {
         expectTypeOf(data).toEqualTypeOf<1>();
@@ -204,13 +206,12 @@ describe("typing", () => {
         expectTypeOf(data).toEqualTypeOf<number | string>();
       }
     });
-  });
 
-  describe("KNOWN ISSUES", () => {
-    test("pure tuples with literal unions break typing", () => {
+    test("pure tuples with literal unions", () => {
       const data = 1 as 1 | 2 | 3;
-      if (!isIncludedIn(data, [1] as [1 | 2])) {
-        // @ts-expect-error [ts2344] - Because we don't know if 1 or 2 is in the container, the rejected type should contain both of them!
+      if (isIncludedIn(data, [1] as [1 | 2])) {
+        expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
+      } else {
         expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
       }
     });
