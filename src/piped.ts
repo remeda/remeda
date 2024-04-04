@@ -5,7 +5,7 @@ import { pipe } from "./pipe";
 /**
  * A dataLast version of `pipe` that could be used to provide more complex
  * computations to functions that accept a function as a param (like `map`,
- * `filter`, `groupBy`, etc...).
+ * `filter`, `groupBy`, etc.).
  *
  * The first function must be always annotated. Other functions are
  * automatically inferred.
