@@ -1,7 +1,6 @@
 import { type IsNumericLiteral } from "type-fest";
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
-import type { IsNumericLiteral } from "./type-fest/is-literal";
 
 type ArraySetRequired<
   T extends IterableContainer,
