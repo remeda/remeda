@@ -1,3 +1,4 @@
+import { type IsNumericLiteral } from "type-fest";
 import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
 
@@ -35,13 +36,6 @@ type ArraySetRequired<
               // it?!
               never;
 
-// TODO: In V2 we need to enable this type and use it as the type for the
-// `minimum` param to prevent usage of the guard when it's output can't be
-// narrowed properly, and then add an overloaded function that just returns
-// `true` with the original signature to enable a non-narrowing version of this
-// function for those cases.
-// type Literal<N extends number> = number extends N ? never : N;
-
 /**
  * Checks if the given array has at least the defined number of elements, and
  * refines the output type accordingly so that those indices are defined when
@@ -63,8 +57,9 @@ type ArraySetRequired<
  */
 export function hasAtLeast<T extends IterableContainer, N extends number>(
   data: IterableContainer | T,
-  minimum: N,
+  minimum: IsNumericLiteral<N> extends true ? N : never,
 ): data is ArraySetRequired<T, N>;
+export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
 
 /**
  * Checks if the given array has at least the defined number of elements, and
@@ -88,10 +83,13 @@ export function hasAtLeast<T extends IterableContainer, N extends number>(
  * @category Array
  */
 export function hasAtLeast<N extends number>(
-  minimum: N,
+  minimum: IsNumericLiteral<N> extends true ? N : never,
 ): <T extends IterableContainer>(
   data: IterableContainer | T,
 ) => data is ArraySetRequired<T, N>;
+export function hasAtLeast(
+  minimum: number,
+): (data: IterableContainer) => boolean;
 
 export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
   return purry(hasAtLeastImplementation, args);

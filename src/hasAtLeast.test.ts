@@ -180,14 +180,6 @@ describe("typing", () => {
     });
   });
 
-  it("LEGACY: doesn't allow when minimum isn't literal", () => {
-    // TODO: Remove this in V2
-    const array = [] as Array<number>;
-    if (hasAtLeast(array, 5 as number)) {
-      expectTypeOf(array).toEqualTypeOf<Array<number>>();
-    }
-  });
-
   it("fails on N > array length", () => {
     const array = ["hello", "world"] as const;
     if (hasAtLeast(array, 3)) {
@@ -227,6 +219,26 @@ describe("typing", () => {
       expectTypeOf(array).toEqualTypeOf<
         readonly [string, string, string, ...Array<string>]
       >();
+    }
+  });
+
+  it("only narrows on literal numbers", () => {
+    const array = [] as Array<number>;
+    if (hasAtLeast(array, 3 as number)) {
+      expectTypeOf(array).toEqualTypeOf<Array<number>>();
+    } else {
+      expectTypeOf(array).toEqualTypeOf<Array<number>>();
+    }
+  });
+
+  it("can narrow on a literal union", () => {
+    const array = [] as Array<number>;
+    if (hasAtLeast(array, 3 as 3 | 4)) {
+      expectTypeOf(array).toEqualTypeOf<
+        [number, number, number, ...Array<number>]
+      >();
+    } else {
+      expectTypeOf(array).toEqualTypeOf<Array<number>>();
     }
   });
 });
