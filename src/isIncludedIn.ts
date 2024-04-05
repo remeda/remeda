@@ -1,6 +1,6 @@
 import { type IsLiteral } from "type-fest";
+import type { IsUnion } from "type-fest/source/internal";
 import type { IterableContainer } from "./_types";
-import type { IsUnion } from "./type-fest/internal";
 
 /**
  * A "pure" tuple is one that doesn't contain any variadic parts, i.e. it has a
