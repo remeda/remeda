@@ -2,15 +2,24 @@ import { type IsLiteral } from "type-fest";
 import type { IsUnion, IterableContainer } from "./_types";
 
 /**
- * A "pure" tuple is one that doesn't contain any variadic parts, i.e. it has a
- * finite and constant number of elements in it.
+ * A "constant" tuple is a type that has a single runtime value that can fulfil
+ * it. This means that it doesn't have any variadic/rest/spread/array parts, and
+ * that all it's values are singular (non-union) literals.
+ *
+ * We use this type to allow narrowing when checking against a set of values
+ * defined as a const.
+ *
+ * @example
+ *   type T1 = IsConstantTuple<["cat", "dog", 3, true]>; // => true;
+ *   type T2 = IsConstantTuple<["cat" | "dog"]>; // false;
+ *   type T2 = IsConstantTuple<["cat", ...Array<"cat">]>; // false;
  */
-type IsPureTuple<T extends IterableContainer> = T extends readonly []
+type IsConstantTuple<T extends IterableContainer> = T extends readonly []
   ? true
   : T extends readonly [infer Head, ...infer Rest]
     ? IsUnion<Head> extends true
       ? false
-      : IsPureTuple<Rest>
+      : IsConstantTuple<Rest>
     : false;
 
 /**
@@ -52,7 +61,7 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
       // for-1. If S isn't a pure tuple it means we can't tell from the typing
       // which of it's values are actually present in runtime so can't use them
       // to narrow correctly.
-      IsPureTuple<S>
+      IsConstantTuple<S>
     : // When T isn't a literal type but the items in S are we can narrow the
       // type because it won't affect the negated side (`Exclude<number, 3>`
       // is still `number`).
