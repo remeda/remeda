@@ -61,7 +61,7 @@ type Evolved<T, E> = T extends object
  *
  * Functions included in `evolver` object will not be invoked
  * if its corresponding key does not exist in the `data` object.
- * Also, values included in `data` object will not be used
+ * Also, values included in `data` object will be kept as is
  * if its corresponding key does not exist in the `evolver` object.
  *
  * @param object - Object whose value is applied to the corresponding function

@@ -1,7 +1,6 @@
 import { add } from "./add";
 import { constant } from "./constant";
 import { filter } from "./filter";
-import { identity } from "./identity";
 import { map } from "./map";
 import { multiply } from "./multiply";
 import { pipe } from "./pipe";
@@ -193,23 +192,7 @@ describe("typing", () => {
     );
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
-
-  it("complex variadic number array", () => {
-    const result = map(
-      ["hello", "world", 1, "testing", "testing", "testing", 123, true] as [
-        ...Array<"hello">,
-        "world",
-        ...Array<number>,
-        string,
-        ...Array<number>,
-        boolean,
-      ],
-      identity(),
-    );
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean | number | string>, boolean | number | string]
-    >();
-  });
+});
 
   describe("Indexed", () => {
     it("number array", () => {

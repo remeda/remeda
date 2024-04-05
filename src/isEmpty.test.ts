@@ -62,6 +62,7 @@ describe("strings are narrowed correctly", () => {
   });
 
   test("just EMPTY string", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const data = "" as const;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<"">();

@@ -367,7 +367,7 @@ describe("typing", () => {
 
   test("argument typing to be good (all required)", () => {
     const debouncer = debounce(
-      (a: string, b: number, c: boolean) => `${a}${b}${c}`,
+      (a: string, b: number, c: boolean) => `${a}${b}${c ? "y" : "n"}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 0.
@@ -386,7 +386,8 @@ describe("typing", () => {
 
   test("argument typing to be good (with optional)", () => {
     const debouncer = debounce(
-      (a: string, b?: number, c?: boolean) => `${a}${b}${c}`,
+      (a: string, b?: number, c?: boolean) =>
+        `${a}${b ?? "undefined"}${c === undefined ? "undefined" : c ? "y" : "n"}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
@@ -403,7 +404,9 @@ describe("typing", () => {
 
   test("argument typing to be good (with defaults)", () => {
     const debouncer = debounce(
-      (a: string, b = 2, c = true) => `${a}${b}${c}`,
+      // eslint-disable-next-line @typescript-eslint/no-inferrable-types -- otherwise typing doesn't work for the test
+      (a: string, b: number = 2, c: boolean = true) =>
+        `${a}${b}${c ? "y" : "n"}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
