@@ -234,6 +234,7 @@ describe("typing", () => {
   it("can narrow on a literal union", () => {
     const array = [] as Array<number>;
     if (hasAtLeast(array, 3 as 3 | 4)) {
+      // The narrowing would result in taking the minimum
       expectTypeOf(array).toEqualTypeOf<
         [number, number, number, ...Array<number>]
       >();
