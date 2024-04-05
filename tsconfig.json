@@ -18,7 +18,8 @@
     "noUnusedParameters": true,
 
     // MODULES
-    "module": "commonjs",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
     "types": ["vitest/globals"],
 
     // EMIT
@@ -36,6 +37,7 @@
     // TODO [2025-05-01]: These are defined by the minimum still-supported Node.JS version, which is currently 18.
     "target": "ES2022",
     "lib": ["ES2022"],
+    "moduleDetection": "force",
 
     // COMPLETENESS
     "skipLibCheck": true
