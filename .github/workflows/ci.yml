@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
+          - "~5.4.0"
           - "~5.3.0"
           - "~5.2.0"
-          - "~5.1.0"
           # We use a `"module": "NodeNext"` in our tsconfig when we test our
           # distribution types, which was introduced in TypeScript v4.7, so that
           # is the earliest version we can test our code in. This defines the

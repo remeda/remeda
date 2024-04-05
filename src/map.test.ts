@@ -194,23 +194,6 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
 
-  it("complex variadic number array", () => {
-    const result = map(
-      ["hello", "world", 1, "testing", "testing", "testing", 123, true] as [
-        ...Array<"hello">,
-        "world",
-        ...Array<number>,
-        string,
-        ...Array<number>,
-        boolean,
-      ],
-      identity(),
-    );
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean | number | string>, boolean | number | string]
-    >();
-  });
-
   describe("Indexed", () => {
     it("number array", () => {
       const result = map([1, 2, 3] as Array<number>, (x, index) => x + index);

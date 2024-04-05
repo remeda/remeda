@@ -277,6 +277,20 @@ export default config(
         },
       ],
 
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        {
+          allowNumber: true,
+
+          allowAny: false,
+          allowArray: false,
+          allowBoolean: false,
+          allowNever: false,
+          allowNullish: false,
+          allowRegExp: false,
+        },
+      ],
+
       // --- Optional ----------------------------------------------------------
       // These aren't enabled by default
 

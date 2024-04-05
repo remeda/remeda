@@ -164,7 +164,6 @@ export function debounce<F extends (...args: any) => any>(
     latestCallArgs = undefined;
 
     // Invoke the function and store the results locally.
-    // @ts-expect-error [ts2488] - I'm not sure why typescript is having problem re-spreading the args array we got.
     result = func(...args);
   };
 
@@ -211,7 +210,6 @@ export function debounce<F extends (...args: any) => any>(
         } else {
           // Otherwise for "leading" and "both" the first call is actually
           // called directly and not via a timeout.
-          // @ts-expect-error [ts2488] - I'm not sure why typescript is having problem re-spreading the args array we got.
           result = func(...args);
         }
       } else {
