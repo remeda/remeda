@@ -1,10 +1,8 @@
-import type { IsNever } from "./is-never";
-import type { Primitive } from "./primitive";
+import { type IsNever } from "type-fest";
 
-export type IsNotFalse<T extends boolean> = [T] extends [false] ? false : true;
-
-export type IsPrimitive<T> = [T] extends [Primitive] ? true : false;
-
+// Type-fest don't export this type so we need to redefine it, I don't know why
+// they don't export it, it's great!
+// TODO [2024-10-04]: Check if type-fest now export this type.
 export type IsUnion<T> = InternalIsUnion<T>;
 
 type InternalIsUnion<T, U = T> = (

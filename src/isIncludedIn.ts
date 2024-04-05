@@ -1,6 +1,6 @@
+import { type IsLiteral } from "type-fest";
 import type { IterableContainer } from "./_types";
-import type { IsNotFalse, IsUnion } from "./type-fest/internal";
-import type { IsLiteral } from "./type-fest/is-literal";
+import type { IsUnion } from "./type-fest/internal";
 
 /**
  * A "pure" tuple is one that doesn't contain any variadic parts, i.e. it has a
@@ -53,11 +53,11 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
       // for-1. If S isn't a pure tuple it means we can't tell from the typing
       // which of it's values are actually present in runtime so can't use them
       // to narrow correctly.
-      IsNotFalse<IsPureTuple<S>>
+      IsPureTuple<S>
     : // When T isn't a literal type but the items in S are we can narrow the
       // type because it won't affect the negated side (`Exclude<number, 3>`
       // is still `number`).
-      IsNotFalse<IsLiteral<S[number]>>;
+      IsLiteral<S[number]>;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around
