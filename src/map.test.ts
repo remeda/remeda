@@ -1,6 +1,7 @@
 import { add } from "./add";
 import { constant } from "./constant";
 import { filter } from "./filter";
+import { identity } from "./identity";
 import { map } from "./map";
 import { multiply } from "./multiply";
 import { pipe } from "./pipe";
@@ -192,7 +193,6 @@ describe("typing", () => {
     );
     expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
   });
-});
 
   describe("Indexed", () => {
     it("number array", () => {

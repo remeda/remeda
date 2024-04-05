@@ -1,3 +1,4 @@
+import { type IterableContainer } from "./_types";
 import { purry } from "./purry";
 
 /**
@@ -17,10 +18,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function concat<T1, T2>(
-  data: ReadonlyArray<T1>,
-  other: ReadonlyArray<T2>,
-): [...Array<T1>, ...Array<T2>];
+export function concat<
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
+>(data: T1, other: T2): [...T1, ...T2];
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -37,15 +38,18 @@ export function concat<T1, T2>(
  * @dataLast
  * @category Array
  */
-export function concat<T, K>(
-  other: ReadonlyArray<K>,
-): (data: ReadonlyArray<T>) => [...Array<T>, ...Array<K>];
+export function concat<T2 extends IterableContainer>(
+  other: T2,
+): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
 export function concat(...args: ReadonlyArray<unknown>): unknown {
   return purry(concatImplementation, args);
 }
 
-const concatImplementation = <T, K>(
-  arr1: ReadonlyArray<T>,
-  arr2: ReadonlyArray<K>,
-): [...Array<T>, ...Array<K>] => [...arr1, ...arr2];
+const concatImplementation = <
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
+>(
+  arr1: T1,
+  arr2: T2,
+): [...T1, ...T2] => [...arr1, ...arr2];
