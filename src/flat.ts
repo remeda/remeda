@@ -6,39 +6,34 @@ import type { LazyEvaluator } from "./pipe";
 // little easier as the constant has a name.
 const DEFAULT_DEPTH = 1;
 
-// Copied from the TypeScript's typing for ES2019 Array lib. @see https://github.com/microsoft/TypeScript/blob/main/src/lib/es2019.array.d.ts#L1-L5
-type FlatArray<T, Depth extends number> = {
-  done: T;
-  recur: T extends ReadonlyArray<infer InnerArr>
-    ? FlatArray<
-        InnerArr,
-        [
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20,
-        ][Depth]
-      >
-    : T;
-}[Depth extends -1 ? "done" : "recur"];
+type FlatArray<
+  T extends IterableContainer,
+  Depth extends number,
+  Iteration extends ReadonlyArray<unknown> = [],
+> = T extends readonly []
+  ? // Empty array is always flat
+    []
+  : Depth extends Iteration["length"]
+    ? // We reached the maximum depth, the array should not be flattened beyond
+      // this level.
+      T
+    : T extends readonly [infer Head, ...infer Rest]
+      ? [
+          ...(Head extends IterableContainer
+            ? // The first item of the tuple is an array so we need to
+              // recursively flatten it.
+              FlatArray<Head, Depth, [...Iteration, unknown]>
+            : // But if the item isn't an array we simply add it to the output.
+              [Head]),
+          // And then "iterate" over the rest of the items in the array by
+          // calling our type again with the first item removed.
+          ...FlatArray<Rest, Depth, Iteration>,
+        ]
+      : [T] extends [ReadonlyArray<infer Item>]
+        ? [Item] extends [ReadonlyArray<infer Item2>]
+          ? FlatArray<Array<Item2>, Depth, [...Iteration, unknown]>
+          : Array<Item>
+        : never;
 
 /**
  * Creates a new array with all sub-array elements concatenated into it
@@ -60,7 +55,7 @@ type FlatArray<T, Depth extends number> = {
 export function flat<
   T extends IterableContainer,
   D extends number = typeof DEFAULT_DEPTH,
->(data: T, depth?: D): Array<FlatArray<T, D>>;
+>(data: T, depth?: D): FlatArray<T, D>;
 
 /**
  * Creates a new array with all sub-array elements concatenated into it
@@ -80,7 +75,7 @@ export function flat<
  */
 export function flat<D extends number = typeof DEFAULT_DEPTH>(
   depth?: D,
-): <T extends IterableContainer>(data: T) => Array<FlatArray<T, D>>;
+): <T extends IterableContainer>(data: T) => FlatArray<T, D>;
 
 export function flat(
   dataOrDepth: IterableContainer | number,

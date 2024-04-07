@@ -130,7 +130,7 @@ describe("runtime", () => {
 describe("typing", () => {
   it("works on empty arrays", () => {
     const result = flat([], 1);
-    expectTypeOf(result).toEqualTypeOf<Array<never>>();
+    expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("works on already-flat arrays", () => {
@@ -168,7 +168,6 @@ describe("typing", () => {
       [] as Array<Array<Array<string>>>,
       Number.POSITIVE_INFINITY,
     );
-    // @ts-expect-error [ts2344] - The built-in typing when using Number.POSITIVE_INFINITY is broken as it returns an un-inferrable type based on FlatArray. We need to provide a better type to solve this. In the meantime we will recommend using a literal number that makes sense for their product.
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 });
