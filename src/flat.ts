@@ -52,8 +52,8 @@ type FlatArray<T, Depth extends number> = {
  *   R.flat(data)
  *   R.flat(data, depth)
  * @example
- *   R.flat([[1, 2], [3, 4], [5], [6]]); // => [1, 2, 3, 4, 5, 6]
- *   R.flat([[[1]], [[2]]], 1); // => [[1], [2]]
+ *   R.flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
+ *   R.flat([[[1]], [[2]]], 2); // => [1, 2]
  * @dataFirst
  * @category Array
  */
@@ -70,11 +70,11 @@ export function flat<
  * @param depth - The depth level specifying how deep a nested array structure
  * should be flattened. Defaults to 1.
  * @signature
- *   R.flat(data)
- *   R.flat(data, depth)
+ *   R.flat()(data)
+ *   R.flat(depth)(data)
  * @example
- *   R.flat([[1, 2], [3, 4], [5], [6]]); // => [1, 2, 3, 4, 5, 6]
- *   R.flat([[[1]], [[2]]], 1); // => [[1], [2]]
+ *   R.pipe([[1, 2], [3, 4], [5], [[6]]], R.flat()); // => [1, 2, 3, 4, 5, [6]]
+ *   R.pipe([[[1]], [[2]]], R.flat(2)); // => [1, 2]
  * @dataLast
  * @category Array
  */

@@ -12,6 +12,8 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
 /**
  * Recursively flattens `array`.
  *
+ * ! **DEPRECATED** Use `R.flat(data, 4)`. Will be removed in V2!
+ *
  * @param items - The target array.
  * @signature
  *   R.flattenDeep(array)
@@ -19,11 +21,14 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
  *    R.flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]
  * @pipeable
  * @category Array
+ * @deprecated Use `R.flat(data, 4)`. Will be removed in V2!
  */
 export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
 
 /**
  * Recursively flattens `array`.
+ *
+ * ! **DEPRECATED** Use `R.flat(4)`. Will be removed in V2!
  *
  * @signature
  *   R.flattenDeep()(array)
@@ -35,6 +40,7 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
  * @dataLast
  * @pipeable
  * @category Array
+ * @deprecated Use `R.flat(4)`. Will be removed in V2!
  */
 export function flattenDeep<T>(): (
   items: ReadonlyArray<T>,
