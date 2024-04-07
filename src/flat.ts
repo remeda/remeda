@@ -118,7 +118,7 @@ function flatImplementation(
   depth = DEFAULT_DEPTH,
 ): IterableContainer {
   if (depth <= 0) {
-    return data;
+    return data.slice();
   }
 
   const output: Array<unknown> = [];

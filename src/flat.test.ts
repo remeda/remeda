@@ -39,6 +39,26 @@ describe("runtime", () => {
         { b: 3 },
       ]);
     });
+
+    it("clones the array on depth 0", () => {
+      const data = [1, 2, 3];
+      const result = flat(data, 0);
+      expect(result).toStrictEqual(data);
+      expect(result).not.toBe(data);
+    });
+
+    it("clones the array when no nested items", () => {
+      const data = [1, 2, 3];
+      const result = flat(data, 1);
+      expect(result).toStrictEqual(data);
+      expect(result).not.toBe(data);
+    });
+
+    it("handles infinity depth", () => {
+      expect(
+        flat([[1], [2], [[3, 4], [5]], 6], Number.POSITIVE_INFINITY),
+      ).toStrictEqual([1, 2, 3, 4, 5, 6]);
+    });
   });
 
   describe("dataLast", () => {
@@ -191,9 +211,11 @@ describe("LEGACY", () => {
     });
   });
 
-  describe("`flattenDeep` equivalent (depth = 4)", () => {
+  describe("`flattenDeep` equivalent (depth = Number.POSITIVE_INFINITY)", () => {
     test("flatten", () => {
-      expect(flat([[1, 2], 3, [4, 5]], 4)).toStrictEqual([1, 2, 3, 4, 5]);
+      expect(flat([[1, 2], 3, [4, 5]], Number.POSITIVE_INFINITY)).toStrictEqual(
+        [1, 2, 3, 4, 5],
+      );
     });
 
     test("nested", () => {
@@ -203,7 +225,7 @@ describe("LEGACY", () => {
             [1, 2],
             [[3], [4, 5]],
           ],
-          4,
+          Number.POSITIVE_INFINITY,
         ),
       ).toStrictEqual([1, 2, 3, 4, 5]);
     });
@@ -214,6 +236,10 @@ describe("LEGACY", () => {
       const result = pipe(
         [[1, 2], [[3]], [[4, 5]]],
         counter1.fn(),
+        // This should be Number.POSITIVE_INFINITY but the typing of
+        // createLazyInvocationCounter doesn't work with the output we get from
+        // flat, the problem is **not** the typing of
+        // `flat(Number.POSITIVE_INFINITY)`
         flat(4),
         counter2.fn(),
         find((x) => x - 1 === 2),
