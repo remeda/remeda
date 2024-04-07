@@ -2,6 +2,10 @@ import { lazyDataLastImpl } from "./_lazyDataLastImpl";
 import type { IterableContainer } from "./_types";
 import type { LazyEvaluator } from "./pipe";
 
+// This is obvious and not likely to change, but it makes reading the code a
+// little easier as the constant has a name.
+const DEFAULT_DEPTH = 1;
+
 // Copied from the TypeScript's typing for ES2019 Array lib. @see https://github.com/microsoft/TypeScript/blob/main/src/lib/es2019.array.d.ts#L1-L5
 type FlatArray<T, Depth extends number> = {
   done: T;
@@ -36,12 +40,12 @@ type FlatArray<T, Depth extends number> = {
     : T;
 }[Depth extends -1 ? "done" : "recur"];
 
-export function flat<T extends IterableContainer, D extends number = 1>(
-  data: T,
-  depth?: D,
-): Array<FlatArray<T, D>>;
+export function flat<
+  T extends IterableContainer,
+  D extends number = typeof DEFAULT_DEPTH,
+>(data: T, depth?: D): Array<FlatArray<T, D>>;
 
-export function flat<D extends number = 1>(
+export function flat<D extends number = typeof DEFAULT_DEPTH>(
   depth?: D,
 ): <T extends IterableContainer>(data: T) => Array<FlatArray<T, D>>;
 
@@ -57,7 +61,7 @@ export function flat(
   return lazyDataLastImpl(flatImplementation, arguments, lazyImplementation);
 }
 
-const lazyImplementation = (depth: number): LazyEvaluator =>
+const lazyImplementation = (depth = DEFAULT_DEPTH): LazyEvaluator =>
   depth <= 0
     ? lazyIdentity
     : (value) =>
@@ -78,7 +82,7 @@ const lazyIdentity = <T>(value: T) =>
 
 function flatImplementation(
   data: IterableContainer,
-  depth = 1,
+  depth = DEFAULT_DEPTH,
 ): IterableContainer {
   if (depth <= 0) {
     return data;
