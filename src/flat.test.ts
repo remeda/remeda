@@ -162,6 +162,15 @@ describe("typing", () => {
     const result = flat([] as Array<string>, 10);
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
+
+  it("BUG: handles infinity depth", () => {
+    const result = flat(
+      [] as Array<Array<Array<string>>>,
+      Number.POSITIVE_INFINITY,
+    );
+    // @ts-expect-error [ts2344] - The built-in typing when using Number.POSITIVE_INFINITY is broken as it returns an un-inferrable type based on FlatArray. We need to provide a better type to solve this. In the meantime we will recommend using a literal number that makes sense for their product.
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
 });
 
 // These tests are copied from an previous implementations of the same concept
@@ -211,11 +220,9 @@ describe("LEGACY", () => {
     });
   });
 
-  describe("`flattenDeep` equivalent (depth = Number.POSITIVE_INFINITY)", () => {
+  describe("`flattenDeep` equivalent (depth = 20)", () => {
     test("flatten", () => {
-      expect(flat([[1, 2], 3, [4, 5]], Number.POSITIVE_INFINITY)).toStrictEqual(
-        [1, 2, 3, 4, 5],
-      );
+      expect(flat([[1, 2], 3, [4, 5]], 20)).toStrictEqual([1, 2, 3, 4, 5]);
     });
 
     test("nested", () => {
@@ -225,7 +232,7 @@ describe("LEGACY", () => {
             [1, 2],
             [[3], [4, 5]],
           ],
-          Number.POSITIVE_INFINITY,
+          20,
         ),
       ).toStrictEqual([1, 2, 3, 4, 5]);
     });
@@ -236,11 +243,7 @@ describe("LEGACY", () => {
       const result = pipe(
         [[1, 2], [[3]], [[4, 5]]],
         counter1.fn(),
-        // This should be Number.POSITIVE_INFINITY but the typing of
-        // createLazyInvocationCounter doesn't work with the output we get from
-        // flat, the problem is **not** the typing of
-        // `flat(Number.POSITIVE_INFINITY)`
-        flat(4),
+        flat(20),
         counter2.fn(),
         find((x) => x - 1 === 2),
       );
