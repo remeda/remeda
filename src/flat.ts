@@ -40,11 +40,44 @@ type FlatArray<T, Depth extends number> = {
     : T;
 }[Depth extends -1 ? "done" : "recur"];
 
+/**
+ * Creates a new array with all sub-array elements concatenated into it
+ * recursively up to the specified depth. Equivalent to the built-in
+ * `Array.prototype.flat` method.
+ *
+ * @param data - The items to flatten.
+ * @param depth - The depth level specifying how deep a nested array structure
+ * should be flattened. Defaults to 1.
+ * @signature
+ *   R.flat(data)
+ *   R.flat(data, depth)
+ * @example
+ *   R.flat([[1, 2], [3, 4], [5], [6]]); // => [1, 2, 3, 4, 5, 6]
+ *   R.flat([[[1]], [[2]]], 1); // => [[1], [2]]
+ * @dataFirst
+ * @category Array
+ */
 export function flat<
   T extends IterableContainer,
   D extends number = typeof DEFAULT_DEPTH,
 >(data: T, depth?: D): Array<FlatArray<T, D>>;
 
+/**
+ * Creates a new array with all sub-array elements concatenated into it
+ * recursively up to the specified depth. Equivalent to the built-in
+ * `Array.prototype.flat` method.
+ *
+ * @param depth - The depth level specifying how deep a nested array structure
+ * should be flattened. Defaults to 1.
+ * @signature
+ *   R.flat(data)
+ *   R.flat(data, depth)
+ * @example
+ *   R.flat([[1, 2], [3, 4], [5], [6]]); // => [1, 2, 3, 4, 5, 6]
+ *   R.flat([[[1]], [[2]]], 1); // => [[1], [2]]
+ * @dataLast
+ * @category Array
+ */
 export function flat<D extends number = typeof DEFAULT_DEPTH>(
   depth?: D,
 ): <T extends IterableContainer>(data: T) => Array<FlatArray<T, D>>;
