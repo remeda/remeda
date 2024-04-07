@@ -27,7 +27,7 @@ type LazyMany<T> = {
   done: boolean;
   hasNext: true;
   hasMany: true;
-  next: Array<T>;
+  next: ReadonlyArray<T>;
 };
 
 type PreparedLazyOperation = LazyEvaluator & {
