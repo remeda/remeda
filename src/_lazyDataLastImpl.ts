@@ -1,4 +1,13 @@
-import type { LazyEvaluatorFactory, MaybeLazyFunction } from "./purry";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { LazyEvaluator } from "./pipe";
+
+export type LazyEvaluatorFactory = (...args: any) => LazyEvaluator;
+
+export type MaybeLazyFunction = {
+  (...args: any): unknown;
+  readonly lazy?: LazyEvaluatorFactory;
+};
 
 /**
  * Use this helper function to build the data last implementation together with

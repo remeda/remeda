@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import type {
+  LazyEvaluatorFactory,
+  MaybeLazyFunction,
+} from "./_lazyDataLastImpl";
 import { lazyDataLastImpl } from "./_lazyDataLastImpl";
-import type { LazyEvaluator } from "./pipe";
-
-export type LazyEvaluatorFactory = (...args: any) => LazyEvaluator;
-
-export type MaybeLazyFunction = {
-  (...args: any): unknown;
-  readonly lazy?: LazyEvaluatorFactory;
-};
 
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
