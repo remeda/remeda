@@ -107,6 +107,43 @@ describe("runtime", () => {
   });
 });
 
+describe("typing", () => {
+  it("works on empty arrays", () => {
+    const result = flat([], 1);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
+  });
+
+  it("works on already-flat arrays", () => {
+    const result = flat([] as Array<string>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+
+  it("works on a single level of nesting", () => {
+    const result = flat([] as Array<Array<string>>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+
+  it("stops after the first level of nesting (depth === 1)", () => {
+    const result = flat([] as Array<Array<Array<string>>>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<Array<string>>>();
+  });
+
+  it("works with mixed types", () => {
+    const result = flat([] as Array<Array<number> | Array<string>>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  });
+
+  it("works with mixed levels of nesting", () => {
+    const result = flat([] as Array<Array<number> | string>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  });
+
+  it("works when depth is deeper than the array", () => {
+    const result = flat([] as Array<string>, 10);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+});
+
 // These tests are copied from an previous implementations of the same concept
 // as flat that existed in previous versions of Remeda. We copy the tests so
 // that we can ensure that the new function is equivalent. In the future these
