@@ -28,7 +28,7 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
 /**
  * Recursively flattens `array`.
  *
- * ! **DEPRECATED** Use `R.flat(4)`. Notice that the typing for `flattenDeep` was broken for arrays nested more than 4 levels deep; this might lead to typing issues when migrating to the new function. Will be removed in V2!
+ * ! **DEPRECATED** Use `R.flat(4)`. The typing for `flattenDeep` was broken for arrays nested more than 4 levels deep; this might lead to typing issues when migrating to the new function. Will be removed in V2!
  *
  * @signature
  *   R.flattenDeep()(array)
@@ -40,7 +40,7 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
  * @dataLast
  * @pipeable
  * @category Array
- * @deprecated Use `R.flat(4)`. Notice that the typing for `flattenDeep` was broken for arrays nested more than 4 levels deep; this might lead to typing issues when migrating to the new function. Will be removed in V2!
+ * @deprecated Use `R.flat(4)`. The typing for `flattenDeep` was broken for arrays nested more than 4 levels deep; this might lead to typing issues when migrating to the new function. Will be removed in V2!
  */
 export function flattenDeep<T>(): (
   items: ReadonlyArray<T>,
