@@ -162,6 +162,18 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
+  it("works when depth is really really really really big", () => {
+    const result = flat([] as Array<string>, 9_999_999);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+
+  it("works with depths beyond 20", () => {
+    // The built-in type for `Array.prototype.flat` only goes up to 20.
+
+    const result = flat([] as Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<string>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>, 99);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  })
+
   it("doesn't accept non-literal depths", () => {
     // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
     flat([], 1 as number);

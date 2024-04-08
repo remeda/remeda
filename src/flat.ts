@@ -21,6 +21,8 @@ type FlatArrayImpl<
         InnerArr,
         Depth,
         [...Iteration, unknown],
+        // This trick allows us to continue 1 iteration more than the depth,
+        // which is required to flatten the array up to depth.
         Iteration["length"] extends Depth ? true : false
       >
     : T;
