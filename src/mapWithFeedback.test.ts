@@ -112,7 +112,7 @@ describe("typing", () => {
   it("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
     const result = mapWithFeedback(
       ["1", "2", "3", "4", "5"],
-      (acc, x) => acc + Number.parseInt(x),
+      (acc, x) => acc + Number.parseInt(x, 10),
       100,
     );
     expectTypeOf(result).toEqualTypeOf<
