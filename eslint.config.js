@@ -151,6 +151,7 @@ export default config(
       "require-unicode-regexp": "warn",
       strict: "error",
       "symbol-description": "warn",
+      "unicode-bom": ["error", "never"],
       "vars-on-top": "warn",
 
       // Code Quality "Params"
