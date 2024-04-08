@@ -157,6 +157,7 @@ export function debounce<F extends (...args: any) => any>(
     // this function is invoked, and it should never be invoked without first
     // setting latestCallArgs. If this happens it might mean a previous timeout
     // wasn't cleared (or a race condition happened).
+    // TODO: This has the potential to fail in runtime, and without any error messages it could be very hard to detect, pin-point, reproduce, debug, and fix (or report to us). Although we usually avoid error mechanisms, we might want to consider one here!
     const args = latestCallArgs!;
     // Make sure the args aren't accidentally used again, this is mainly
     // relevant for the check above where we'll fail a subsequent call to
