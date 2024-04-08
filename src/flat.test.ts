@@ -170,9 +170,12 @@ describe("typing", () => {
   it("works with depths beyond 20", () => {
     // The built-in type for `Array.prototype.flat` only goes up to 20.
 
-    const result = flat([] as Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<Array<string>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>, 99);
-    expectTypeOf(result).toEqualTypeOf<Array<string>>();
-  })
+    const result = flat(
+      [[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]] as const,
+      99,
+    );
+    expectTypeOf(result).toEqualTypeOf<Array<1>>();
+  });
 
   it("doesn't accept non-literal depths", () => {
     // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
