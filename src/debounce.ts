@@ -145,11 +145,6 @@ export function debounce<F extends (...args: any) => any>(
   let result: ReturnType<F> | undefined;
 
   const handleInvoke = (): void => {
-    if (latestCallArgs === undefined) {
-      // This should never happen! It means we forgot to clear a timeout!
-      return;
-    }
-
     if (maxWaitTimeoutId !== undefined) {
       // We are invoking the function so the wait is over...
       const timeoutId = maxWaitTimeoutId;
@@ -157,7 +152,12 @@ export function debounce<F extends (...args: any) => any>(
       clearTimeout(timeoutId);
     }
 
-    const args = latestCallArgs;
+    // We use an assertion here because latestCallArgs cannot be undefined if
+    // all our assumptions are correct. The only place we reset it is when we
+    // this function is invoked, and it should never be invoked without first
+    // setting latestCallArgs. If this happens it might mean a previous timeout
+    // wasn't cleared (or a race condition happened).
+    const args = latestCallArgs!;
     // Make sure the args aren't accidentally used again, this is mainly
     // relevant for the check above where we'll fail a subsequent call to
     // 'trailingEdge'.
