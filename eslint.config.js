@@ -24,9 +24,6 @@ export default config(
     },
   },
   {
-    linterOptions: {
-      reportUnusedDisableDirectives: true,
-    },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
       // possible so we pass the callback directly without wrapping it with an
