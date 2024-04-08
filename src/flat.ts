@@ -7,9 +7,38 @@ import type { IsNumericLiteral } from "./type-fest/is-literal";
 // little easier as the constant has a name.
 const DEFAULT_DEPTH = 1;
 
-type FlatArray<T, Depth extends number> = Array<FlatArrayImpl<T, Depth>>;
+type FlatArray<
+  T,
+  Depth extends number,
+  Iteration extends ReadonlyArray<unknown> = [],
+> = Depth extends Iteration["length"]
+  ? // Stopping condition for the recursion when the array is a tuple.
+    T
+  : T extends readonly []
+    ? // Trivial result when the array is empty.
+      []
+    : T extends readonly [infer Item, ...infer Rest]
+      ? // Tuples could be special-cased by "iterating" over each item
+        // separately so that we maintain more information from the input type,
+        // instead of putting all values in a union.
+        [
+          ...(Item extends IterableContainer
+            ? // If the item itself is an array we continue going deeper
+              FlatArray<Item, Depth, [...Iteration, unknown]>
+            : // But if it isn't we add it to the output tuple
+              [Item]),
+          // And we merge this with the result from the rest of the tuple.
+          ...FlatArray<Rest, Depth, Iteration>,
+        ]
+      : // For simple arrays we compute the item type, and wrap it with an
+        // array.
+        Array<FlatSimpleArrayItems<T, Depth, Iteration>>;
 
-type FlatArrayImpl<
+// This type is based on the built-in type for `Array.prototype.flat` from the
+// ES2019 Array typescript library, but we improved it to handle any depth
+// (avoiding the fixed `20` in the built-in type).
+// @see https://github.com/microsoft/TypeScript/blob/main/src/lib/es2019.array.d.ts#L1-L5
+type FlatSimpleArrayItems<
   T,
   Depth extends number,
   Iteration extends ReadonlyArray<unknown> = [],
@@ -17,7 +46,7 @@ type FlatArrayImpl<
 > = {
   done: T;
   recur: T extends ReadonlyArray<infer InnerArr>
-    ? FlatArrayImpl<
+    ? FlatSimpleArrayItems<
         InnerArr,
         Depth,
         [...Iteration, unknown],

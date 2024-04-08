@@ -1,4 +1,5 @@
 import { createLazyInvocationCounter } from "../test/lazy_invocation_counter";
+import type { NonEmptyArray } from "./_types";
 import { find } from "./find";
 import { flat } from "./flat";
 import { identity } from "./identity";
@@ -124,7 +125,7 @@ describe("runtime", () => {
 describe("typing", () => {
   it("works on empty arrays", () => {
     const result = flat([], 1);
-    expectTypeOf(result).toEqualTypeOf<Array<never>>();
+    expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("works on already-flat arrays", () => {
@@ -167,14 +168,80 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
+  it("keeps the typing of trivial tuples", () => {
+    const result = flat([1, 2] as const, 1);
+    expectTypeOf(result).toEqualTypeOf<[1, 2]>();
+  });
+
+  it("Works on simple tuples", () => {
+    const result = flat(
+      [
+        [1, 2],
+        [3, 4],
+      ] as const,
+      1,
+    );
+    expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4]>();
+  });
+
+  it("works on tuples with different levels of nesting", () => {
+    const result = flat([1, [2, 3], [4, [5, 6]]] as const, 1);
+    expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, readonly [5, 6]]>();
+  });
+
+  it("works on tuples with depth>1", () => {
+    const result = flat([1, [2, 3], [4, [5, 6]]] as const, 2);
+    expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, 5, 6]>();
+  });
+
+  it("works with tuples with a lot of nesting", () => {
+    const result = flat([[[[1]], [[[[2]]]]], [[[[3, 4], 5]]]] as const, 10);
+    expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, 5]>();
+  });
+
+  it("works with a mix of simple arrays and tuples", () => {
+    const result = flat([[]] as [Array<string>], 1);
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  });
+
+  it("works with multiple types nested in a tuple", () => {
+    const result = flat([[], []] as [Array<string>, Array<number>], 1);
+    expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  });
+
+  it("works with a tuple with mixed array and non array items", () => {
+    const result = flat([1, []] as [number, Array<string>], 1);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<string>]>();
+  });
+
+  it("works with a tuple with mixed array and non array items, deeply", () => {
+    const result = flat([[1], []] as [[number], Array<Array<string>>], 2);
+    expectTypeOf(result).toEqualTypeOf<[number, ...Array<string>]>();
+  });
+
+  it("works on non-empty arrays", () => {
+    const result = flat([[1]] as NonEmptyArray<NonEmptyArray<number>>, 1);
+    expectTypeOf(result).toEqualTypeOf<NonEmptyArray<number>>();
+  });
+
+  it("works on tuples inside arrays", () => {
+    const result = flat([] as Array<[Array<string>, Array<number>]>, 2);
+    expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  });
+
+  it("works on tuples inside arrays", () => {
+    const result = flat([1, [], 4] as [1, Array<[2, 3]>, 4], 2);
+    expectTypeOf(result).toEqualTypeOf<[1, ...Array<2 | 3>, 4]>();
+  });
+
   it("works with depths beyond 20", () => {
     // The built-in type for `Array.prototype.flat` only goes up to 20.
 
     const result = flat(
-      [[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]] as const,
+      [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] as const,
       99,
     );
-    expectTypeOf(result).toEqualTypeOf<Array<1>>();
+    expectTypeOf(result).toEqualTypeOf<[1]>();
   });
 
   it("doesn't accept non-literal depths", () => {
