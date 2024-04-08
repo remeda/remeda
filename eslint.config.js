@@ -428,17 +428,12 @@ export default config(
       "max-lines": "off",
       "max-nested-callbacks": "off",
 
-      // We should consider enabling these rules and adding some limitations to
+      // We could consider enabling these rules and adding some limitations to
       // test files too so that tests are kept clean, simple, and easy to
       // maintain.
       "max-lines-per-function": "off",
       "max-statements": "off",
 
-      "unicorn/no-null": "off",
-      "unicorn/no-useless-undefined": [
-        "warn",
-        { checkArguments: false, checkArrowFunctionBody: false },
-      ],
       // When our return type is just `undefined` (like `first([])`) this rule
       // considers the function as returning `void` (which is technically
       // correct because assigning a void function to a variable will result in
@@ -446,6 +441,12 @@ export default config(
       // what this rule expects us to do in those cases so turning it off for
       // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
+
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": [
+        "warn",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
     },
   },
   {
