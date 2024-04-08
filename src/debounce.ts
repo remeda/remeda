@@ -152,13 +152,16 @@ export function debounce<F extends (...args: any) => any>(
       clearTimeout(timeoutId);
     }
 
-    // We use an assertion here because latestCallArgs cannot be undefined if
-    // all our assumptions are correct. The only place we reset it is when we
-    // this function is invoked, and it should never be invoked without first
-    // setting latestCallArgs. If this happens it might mean a previous timeout
-    // wasn't cleared (or a race condition happened).
-    // TODO: This has the potential to fail in runtime, and without any error messages it could be very hard to detect, pin-point, reproduce, debug, and fix (or report to us). Although we usually avoid error mechanisms, we might want to consider one here!
-    const args = latestCallArgs!;
+    /* v8 ignore next 7 -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing).*/
+    if (latestCallArgs === undefined) {
+      // If you see this error pop up when using this function please report
+      // it on the Remeda github page!
+      throw new Error(
+        "REMEDA[debounce]: latestCallArgs was unexpectedly undefined.",
+      );
+    }
+
+    const args = latestCallArgs;
     // Make sure the args aren't accidentally used again, this is mainly
     // relevant for the check above where we'll fail a subsequent call to
     // 'trailingEdge'.
