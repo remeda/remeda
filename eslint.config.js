@@ -29,27 +29,27 @@ export default config(
     },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
-      // Possible so we pass the callback directly without wrapping it with an
-      // Arrow function. Our typing provides the safety needed here.
+      // possible so we pass the callback directly without wrapping it with an
+      // arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
       // @see https://tkdodo.eu/blog/array-types-in-type-script
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
 
       // This isn't very useful in a utility library, a lot of utilities need to
-      // Access arrays in a random-access way.
+      // access arrays in a random-access way.
       "@typescript-eslint/no-non-null-assertion": "off",
 
       // TODO: These rules allow us to really standardize our codebase, but they
-      // Also do sweeping changes to the whole codebase which is very noisy. We
-      // Should do it in one sweep sometime in the future.
+      // also do sweeping changes to the whole codebase which is very noisy. We
+      // should do it in one sweep sometime in the future.
       "no-underscore-dangle": "off",
       "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
-      // Extension)
+      // extension)
 
       // Possible Problems
       "array-callback-return": [
@@ -171,7 +171,7 @@ export default config(
 
       // === JSDoc =============================================================
       // (We are assuming that the config is extended by JSDoc's:
-      // Recommended-typescript extension)
+      // recommended-typescript extension)
 
       // Correctness
       "jsdoc/check-param-names": "error",
@@ -179,7 +179,7 @@ export default config(
         "error",
         {
           // Non-standard JSDoc tags we use to generate documentation; see
-          // Docs/src/lib/transform.ts.
+          // docs/src/lib/transform.ts.
           definedTags: [
             "signature",
             "dataFirst",
@@ -222,8 +222,8 @@ export default config(
         {
           enableFixer: false,
           // We only require JSDoc for top-level function exports. Assuming
-          // That each function has overrides, we only require JSDocs for the
-          // Overrides (which are TSDeclareFunction) and not the implementation
+          // that each function has overrides, we only require JSDocs for the
+          // overrides (which are TSDeclareFunction) and not the implementation
           // (which is FunctionDeclaration).
           require: { FunctionDeclaration: false },
           contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
@@ -275,15 +275,15 @@ export default config(
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
-      // Strict-type-checked, and stylistic-type-checked extensions)
+      // strict-type-checked, and stylistic-type-checked extensions)
 
       // --- Overrides ---------------------------------------------------------
       // These are rules defined in the recommended extension that we needed to
-      // Make changes to.
+      // make changes to.
 
       // Types are actually stricter than interfaces because they can't be
-      // Extended via declaration merging, meaning they are immune to some
-      // Typing edge-cases that interfaces aren't; in @typescript-eslint's
+      // extended via declaration merging, meaning they are immune to some
+      // typing edge-cases that interfaces aren't; in @typescript-eslint's
       // "strict" extension this rule is defined the opposite way though(?!).
       "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
 
@@ -296,10 +296,10 @@ export default config(
         "error",
         {
           // The default config for this rule doesn't provide *some* way of
-          // Ignoring an unused argument, and we need one!
+          // ignoring an unused argument, and we need one!
           argsIgnorePattern: "^_",
           // This allows removing props by destructuring an object, which is
-          // Useful in arrow functions.
+          // useful in arrow functions.
           ignoreRestSiblings: true,
         },
       ],
@@ -339,7 +339,7 @@ export default config(
       "@typescript-eslint/no-use-before-define": [
         "error",
         // We just want to ensure that types are defined before they are used,
-        // Other than that we don't need this rule...
+        // other than that we don't need this rule...
         { functions: false, variables: false },
       ],
       "@typescript-eslint/strict-boolean-expressions": [
@@ -402,7 +402,7 @@ export default config(
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
-      // Flat/recommended extension)
+      // flat/recommended extension)
 
       "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
@@ -440,11 +440,11 @@ export default config(
         { checkArguments: false, checkArrowFunctionBody: false },
       ],
       // When our return type is just `undefined` (like `first([])`) this rule
-      // Considers the function as returning `void` (which is technically
-      // Correct because assigning a void function to a variable will result in
+      // considers the function as returning `void` (which is technically
+      // correct because assigning a void function to a variable will result in
       // `undefined`), but this is not an error, it's by design. I don't know
-      // What this rule expects us to do in those cases so turning it off for
-      // Now instead...
+      // what this rule expects us to do in those cases so turning it off for
+      // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
     },
   },
