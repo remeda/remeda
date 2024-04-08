@@ -65,17 +65,18 @@ export function zipWith(
   arg2?: ZippingFunction,
 ): unknown {
   if (typeof arg0 === "function") {
+    // dataLast
     return arg1 === undefined
       ? (f: ReadonlyArray<unknown>, s: ReadonlyArray<unknown>) =>
           zipWithImplementation(f, s, arg0)
       : (f: ReadonlyArray<unknown>) => zipWithImplementation(f, arg1, arg0);
   }
 
-  if (arg1 === undefined || arg2 === undefined) {
-    throw new Error("zipWith: Missing arguments in dataFirst function call");
-  }
-
-  return zipWithImplementation(arg0, arg1, arg2);
+  // dataFirst. Notice that we assert that the arguments are defined to reduce
+  // the number of runtime checks that would otherwise be needed to make
+  // TypeScript happy here. Because this is an internal implementation and we
+  // are protected by the function typing itself this is fine!
+  return zipWithImplementation(arg0, arg1!, arg2!);
 }
 
 function zipWithImplementation<T1, T2, Value>(
