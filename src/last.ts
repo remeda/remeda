@@ -30,13 +30,15 @@ type OneLess<Than extends number> = [
 // will work for readonly arrays of length up to 20, then falls back to union
 type Last<T extends IterableContainer> = T extends readonly []
   ? undefined
-  : T extends { length: infer L extends number }
-    ? // for non-empty, we know we can get T[length-1] directly
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      T extends readonly [infer _Head, ...infer _Tail]
-      ? T[OneLess<L>]
-      : // otherwise we add | undefined
-        T[OneLess<L>] | undefined
+  : T extends { length: infer L }
+    ? L extends number
+      ? // for non-empty, we know we can get T[length-1] directly
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        T extends readonly [infer _Head, ...infer _Tail]
+        ? T[OneLess<L>]
+        : // otherwise we add | undefined
+          T[OneLess<L>] | undefined
+      : undefined
     : undefined;
 
 /**
