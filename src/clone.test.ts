@@ -170,3 +170,11 @@ describe("deep clone edge cases", () => {
     assert.notStrictEqual(clone(list), list);
   });
 });
+
+describe("deep clone using attached clone function", () => {
+  test("calls the clone function on the object if it exists", () => {
+    const cloneMock = vi.fn();
+    clone({ clone: cloneMock });
+    expect(cloneMock).toHaveBeenCalled();
+  });
+});

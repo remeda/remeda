@@ -13,12 +13,7 @@ function _cloneRegExp(pattern: RegExp): RegExp {
   );
 }
 
-function _clone(
-  value: any,
-  refFrom: Array<any>,
-  refTo: Array<any>,
-  deep: boolean,
-): unknown {
+function _clone(value: any, refFrom: Array<any>, refTo: Array<any>): unknown {
   function copy(copiedValue: any): unknown {
     const len = refFrom.length;
     let idx = 0;
@@ -31,9 +26,7 @@ function _clone(
     refFrom[idx + 1] = value;
     refTo[idx + 1] = copiedValue;
     for (const key in value) {
-      copiedValue[key] = deep
-        ? _clone(value[key], refFrom, refTo, true)
-        : value[key];
+      copiedValue[key] = _clone(value[key], refFrom, refTo);
     }
     return copiedValue;
   }
@@ -62,7 +55,7 @@ function _clone(
 export function clone<T>(value: T): T {
   return value != null && typeof (value as any).clone === "function"
     ? (value as any).clone()
-    : _clone(value, [], [], true);
+    : _clone(value, [], []);
 }
 
 function type(val: unknown): string {
