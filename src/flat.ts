@@ -1,6 +1,6 @@
 import { lazyDataLastImpl } from "./_lazyDataLastImpl";
 import type { IterableContainer } from "./_types";
-import type { LazyEvaluator } from "./pipe";
+import type { LazyEvaluator, LazyResult } from "./pipe";
 import type { IsNumericLiteral } from "./type-fest/is-literal";
 
 // This is obvious and not likely to change, but it makes reading the code a
@@ -121,21 +121,31 @@ export function flat(
 const lazyImplementation = (depth = DEFAULT_DEPTH): LazyEvaluator =>
   depth <= 0
     ? lazyIdentity
-    : (value) =>
-        Array.isArray(value)
-          ? {
-              next: flatImplementation(value, depth - 1),
-              hasNext: true,
-              hasMany: true,
-              done: false,
-            }
-          : { next: value, hasNext: true, done: false };
+    : depth === 1
+      ? lazyShallow
+      : (value) =>
+          Array.isArray(value)
+            ? {
+                next: flatImplementation(value, depth - 1),
+                hasNext: true,
+                hasMany: true,
+                done: false,
+              }
+            : { next: value, hasNext: true, done: false };
 
 // This function is pulled out so that we don't generate a new arrow function
 // each time. It acts as a lazy identity function by wrapping the value with a
 // lazy object.
 const lazyIdentity = <T>(value: T) =>
   ({ next: value, hasNext: true, done: false }) as const;
+
+// This function is pulled out so that we don't generate a new arrow function
+// each time. Because it doesn't need to run with recursion it could be pulled
+// out from the lazyImplementation and be reused for all invocations.
+const lazyShallow = <T>(value: T): LazyResult<T> =>
+  Array.isArray(value)
+    ? { next: value, hasNext: true, hasMany: true, done: false }
+    : { next: value, hasNext: true, done: false };
 
 function flatImplementation(
   data: IterableContainer,

@@ -7,7 +7,7 @@ export type LazyEvaluator<T = unknown, R = T> = (
   data?: ReadonlyArray<T>,
 ) => LazyResult<R>;
 
-type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
+export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 type LazyEmpty = {
   done: boolean;

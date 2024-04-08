@@ -120,6 +120,12 @@ describe("runtime", () => {
       expect(result).toStrictEqual(3);
     });
   });
+
+  it("can go very very deep", () => {
+    expect(
+      flat([[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]], 99),
+    ).toStrictEqual([1]);
+  });
 });
 
 describe("typing", () => {
