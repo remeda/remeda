@@ -4,8 +4,8 @@ export default defineConfig({
   test: {
     globals: true,
     coverage: {
-      include: ["src/*.ts"],
-      exclude: ["src/index.ts", "src/_*.ts"],
+      include: ["src/**"],
+      exclude: ["src/index.ts", "src/_types.ts"],
     },
   },
 });
