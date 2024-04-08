@@ -53,12 +53,6 @@ describe("runtime", () => {
       expect(result).toStrictEqual(data);
       expect(result).not.toBe(data);
     });
-
-    it("handles infinity depth", () => {
-      expect(
-        flat([[1], [2], [[3, 4], [5]], 6], Number.POSITIVE_INFINITY),
-      ).toStrictEqual([1, 2, 3, 4, 5, 6]);
-    });
   });
 
   describe("dataLast", () => {
@@ -130,7 +124,7 @@ describe("runtime", () => {
 describe("typing", () => {
   it("works on empty arrays", () => {
     const result = flat([], 1);
-    expectTypeOf(result).toEqualTypeOf<[]>();
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   it("works on already-flat arrays", () => {
@@ -148,6 +142,11 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<Array<Array<string>>>();
   });
 
+  it("stops after the first level of nesting (depth === 1)", () => {
+    const result = flat([] as Array<Array<Array<Array<string>>>>, 1);
+    expectTypeOf(result).toEqualTypeOf<Array<Array<Array<string>>>>();
+  });
+
   it("works with mixed types", () => {
     const result = flat([] as Array<Array<number> | Array<string>>, 1);
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
@@ -163,12 +162,22 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
-  it("BUG: handles infinity depth", () => {
-    const result = flat(
-      [] as Array<Array<Array<string>>>,
-      Number.POSITIVE_INFINITY,
-    );
-    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  it("doesn't accept non-literal depths", () => {
+    // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
+    flat([], 1 as number);
+  });
+
+  it("doesn't accept built-in 'infinite' numbers", () => {
+    // They are all typed as `number` by typescript's libs.
+
+    // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L9
+    flat([], Infinity);
+
+    // @ts-expect-error [ts2345] - Max number is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L576
+    flat([], Number.MAX_VALUE);
+
+    // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
+    flat([], Number.POSITIVE_INFINITY);
   });
 });
 
@@ -219,9 +228,9 @@ describe("LEGACY", () => {
     });
   });
 
-  describe("`flattenDeep` equivalent (depth = 20)", () => {
+  describe("`flattenDeep` equivalent (depth = 4)", () => {
     test("flatten", () => {
-      expect(flat([[1, 2], 3, [4, 5]], 20)).toStrictEqual([1, 2, 3, 4, 5]);
+      expect(flat([[1, 2], 3, [4, 5]], 4)).toStrictEqual([1, 2, 3, 4, 5]);
     });
 
     test("nested", () => {
@@ -231,7 +240,7 @@ describe("LEGACY", () => {
             [1, 2],
             [[3], [4, 5]],
           ],
-          20,
+          4,
         ),
       ).toStrictEqual([1, 2, 3, 4, 5]);
     });
@@ -242,7 +251,7 @@ describe("LEGACY", () => {
       const result = pipe(
         [[1, 2], [[3]], [[4, 5]]],
         counter1.fn(),
-        flat(20),
+        flat(4),
         counter2.fn(),
         find((x) => x - 1 === 2),
       );

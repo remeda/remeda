@@ -1,39 +1,30 @@
 import { lazyDataLastImpl } from "./_lazyDataLastImpl";
 import type { IterableContainer } from "./_types";
 import type { LazyEvaluator } from "./pipe";
+import type { IsNumericLiteral } from "./type-fest/is-literal";
 
 // This is obvious and not likely to change, but it makes reading the code a
 // little easier as the constant has a name.
 const DEFAULT_DEPTH = 1;
 
-type FlatArray<
-  T extends IterableContainer,
+type FlatArray<T, Depth extends number> = Array<FlatArrayImpl<T, Depth>>;
+
+type FlatArrayImpl<
+  T,
   Depth extends number,
   Iteration extends ReadonlyArray<unknown> = [],
-> = T extends readonly []
-  ? // Empty array is always flat
-    []
-  : Depth extends Iteration["length"]
-    ? // We reached the maximum depth, the array should not be flattened beyond
-      // this level.
-      T
-    : T extends readonly [infer Head, ...infer Rest]
-      ? [
-          ...(Head extends IterableContainer
-            ? // The first item of the tuple is an array so we need to
-              // recursively flatten it.
-              FlatArray<Head, Depth, [...Iteration, unknown]>
-            : // But if the item isn't an array we simply add it to the output.
-              [Head]),
-          // And then "iterate" over the rest of the items in the array by
-          // calling our type again with the first item removed.
-          ...FlatArray<Rest, Depth, Iteration>,
-        ]
-      : [T] extends [ReadonlyArray<infer Item>]
-        ? [Item] extends [ReadonlyArray<infer Item2>]
-          ? FlatArray<Array<Item2>, Depth, [...Iteration, unknown]>
-          : Array<Item>
-        : never;
+  IsDone extends boolean = false,
+> = {
+  done: T;
+  recur: T extends ReadonlyArray<infer InnerArr>
+    ? FlatArrayImpl<
+        InnerArr,
+        Depth,
+        [...Iteration, unknown],
+        Iteration["length"] extends Depth ? true : false
+      >
+    : T;
+}[IsDone extends true ? "done" : "recur"];
 
 /**
  * Creates a new array with all sub-array elements concatenated into it
@@ -42,7 +33,11 @@ type FlatArray<
  *
  * @param data - The items to flatten.
  * @param depth - The depth level specifying how deep a nested array structure
- * should be flattened. Defaults to 1.
+ * should be flattened. Defaults to 1. Non literal values (those typed as
+ * `number`cannot be used. `Infinity`, `Number.POSITIVE_INFINITY` and
+ * `Number.MAX_VALUE` are all typed as `number` and can't be used either. For
+ * "unlimited" depth use a literal value that would exceed your expected
+ * practical maximum nesting level.
  * @signature
  *   R.flat(data)
  *   R.flat(data, depth)
@@ -54,8 +49,11 @@ type FlatArray<
  */
 export function flat<
   T extends IterableContainer,
-  D extends number = typeof DEFAULT_DEPTH,
->(data: T, depth?: D): FlatArray<T, D>;
+  Depth extends number = typeof DEFAULT_DEPTH,
+>(
+  data: T,
+  depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
+): FlatArray<T, Depth>;
 
 /**
  * Creates a new array with all sub-array elements concatenated into it
@@ -73,12 +71,12 @@ export function flat<
  * @dataLast
  * @category Array
  */
-export function flat<D extends number = typeof DEFAULT_DEPTH>(
-  depth?: D,
-): <T extends IterableContainer>(data: T) => FlatArray<T, D>;
+export function flat<Depth extends number = typeof DEFAULT_DEPTH>(
+  depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
+): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 
 export function flat(
-  dataOrDepth: IterableContainer | number,
+  dataOrDepth?: IterableContainer | number,
   depth?: number,
 ): unknown {
   if (typeof dataOrDepth === "object") {
