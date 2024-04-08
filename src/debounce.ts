@@ -109,6 +109,7 @@ export function debounce<F extends (...args: any) => any>(
     | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
 ): Debouncer<F, false /* call CAN'T return null */>;
 
+// eslint-disable-next-line max-lines-per-function -- This utility is a bit different from the others as it manages state and needs to handle several configuration patterns.
 export function debounce<F extends (...args: any) => any>(
   func: F,
   {

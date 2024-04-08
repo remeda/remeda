@@ -59,6 +59,7 @@ export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isDeepEqualImplementation, args);
 }
 
+// eslint-disable-next-line complexity, max-lines-per-function, max-statements -- This is a complex function!
 function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   if (data === other) {
     return true;

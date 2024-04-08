@@ -29,34 +29,26 @@ export default config(
     },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
-      // possible so we pass the callback directly without wrapping it with an
-      // arrow function. Our typing provides the safety needed here.
+      // Possible so we pass the callback directly without wrapping it with an
+      // Arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
       // @see https://tkdodo.eu/blog/array-types-in-type-script
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
 
       // This isn't very useful in a utility library, a lot of utilities need to
-      // access arrays in a random-access way.
+      // Access arrays in a random-access way.
       "@typescript-eslint/no-non-null-assertion": "off",
 
-      // When our return type is just `undefined` (like `first([])`) this rule
-      // considers the function as returning `void` (which is technically
-      // correct because assigning a void function to a variable will result in
-      // `undefined`), but this is not an error, it's by design. I don't know
-      // what this rule expects us to do in those cases so turning it off for
-      // now instead...
-      "@typescript-eslint/no-confusing-void-expression": "off",
-
       // TODO: These rules allow us to really standardize our codebase, but they
-      // also do sweeping changes to the whole codebase which is very noisy. We
-      // should do it in one sweep sometime in the future.
+      // Also do sweeping changes to the whole codebase which is very noisy. We
+      // Should do it in one sweep sometime in the future.
       "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
-      // extension)
+      // Extension)
 
       // Possible Problems
       "array-callback-return": [
@@ -69,41 +61,34 @@ export default config(
         },
       ],
       "no-await-in-loop": "error",
-      "no-constant-binary-expression": "error",
-      "no-new-native-nonconstructor": "error",
+      "no-constructor-return": "error",
+      "no-duplicate-imports": "error",
+      "no-inner-declarations": [
+        "warn",
+        "both",
+        { blockScopedFunctions: "disallow" },
+      ],
       "no-promise-executor-return": "error",
       "no-self-compare": "error",
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
-      "no-duplicate-imports": "error",
+      "no-useless-assignment": "error",
       "require-atomic-updates": "error",
 
       // Suggestions
+      "accessor-pairs": "warn",
       "arrow-body-style": "warn",
+      "block-scoped-var": "warn",
       curly: "error",
       "default-case-last": "warn",
-      "dot-notation": "warn",
       eqeqeq: ["error", "always", { null: "always" }],
+      "func-name-matching": "warn",
+      "func-names": "warn",
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
+      "grouped-accessor-pairs": ["warn", "getBeforeSet"],
       "guard-for-in": "error",
       "logical-assignment-operators": "warn",
-      "operator-assignment": "warn",
-      "object-shorthand": "warn",
-      "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
-      "prefer-const": "error",
-      "prefer-exponentiation-operator": "error",
-      "prefer-named-capture-group": "warn",
-      "prefer-numeric-literals": "error",
-      "prefer-object-spread": "error",
-      "prefer-promise-reject-errors": ["error", { allowEmptyReject: false }],
-      "prefer-regex-literals": ["error", { disallowRedundantWrapping: true }],
-      "prefer-spread": "error",
-      "prefer-template": "error",
-      "require-await": "error",
-      "require-unicode-regexp": "warn",
-      "symbol-description": "warn",
-
       "no-alert": "error",
       "no-array-constructor": "error",
       "no-bitwise": "warn",
@@ -123,9 +108,9 @@ export default config(
       "no-lonely-if": "warn",
       "no-multi-assign": "error",
       "no-negated-condition": "warn",
-      "no-new": "error",
       "no-new-func": "error",
       "no-new-wrappers": "error",
+      "no-new": "error",
       "no-object-constructor": "error",
       "no-octal-escape": "error",
       "no-param-reassign": "error",
@@ -140,10 +125,40 @@ export default config(
       "no-useless-computed-key": "warn",
       "no-useless-concat": "warn",
       "no-useless-rename": "error",
+      "object-shorthand": "warn",
+      "operator-assignment": "warn",
+      "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
+      "prefer-const": "error",
+      "prefer-exponentiation-operator": "error",
+      "prefer-named-capture-group": "warn",
+      "prefer-numeric-literals": "error",
+      "prefer-object-spread": "error",
+      "prefer-promise-reject-errors": ["error", { allowEmptyReject: false }],
+      "prefer-regex-literals": ["error", { disallowRedundantWrapping: true }],
+      "prefer-spread": "error",
+      "prefer-template": "error",
+      "require-await": "error",
+      "require-unicode-regexp": "warn",
+      "symbol-description": "warn",
+
+      // Code Quality "Params"
+      // These rules help enforce that new additions are kept in the same style
+      // and quality as the rest of the codebase, they are here so that people
+      // get a yellow flag when what they are contributing is abnormal, but they
+      // should be treated as limitations; if something calls for exceeding
+      // these they should be disabled and a comment should be added to explain
+      // why.
+
+      complexity: ["warn", 9],
+      "max-depth": ["warn", 3],
+      "max-lines": ["warn", 350],
+      "max-lines-per-function": ["warn", 60],
+      "max-nested-callbacks": ["warn", 1],
+      "max-statements": ["warn", 12],
 
       // === JSDoc =============================================================
       // (We are assuming that the config is extended by JSDoc's:
-      // recommended-typescript extension)
+      // Recommended-typescript extension)
 
       // Correctness
       "jsdoc/check-param-names": "error",
@@ -151,7 +166,7 @@ export default config(
         "error",
         {
           // Non-standard JSDoc tags we use to generate documentation; see
-          // docs/src/lib/transform.ts.
+          // Docs/src/lib/transform.ts.
           definedTags: [
             "signature",
             "dataFirst",
@@ -194,8 +209,8 @@ export default config(
         {
           enableFixer: false,
           // We only require JSDoc for top-level function exports. Assuming
-          // that each function has overrides, we only require JSDocs for the
-          // overrides (which are TSDeclareFunction) and not the implementation
+          // That each function has overrides, we only require JSDocs for the
+          // Overrides (which are TSDeclareFunction) and not the implementation
           // (which is FunctionDeclaration).
           require: { FunctionDeclaration: false },
           contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
@@ -247,15 +262,15 @@ export default config(
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
-      // strict-type-checked, and stylistic-type-checked extensions)
+      // Strict-type-checked, and stylistic-type-checked extensions)
 
       // --- Overrides ---------------------------------------------------------
       // These are rules defined in the recommended extension that we needed to
-      // make changes to.
+      // Make changes to.
 
       // Types are actually stricter than interfaces because they can't be
-      // extended via declaration merging, meaning they are immune to some
-      // typing edge-cases that interfaces aren't; in @typescript-eslint's
+      // Extended via declaration merging, meaning they are immune to some
+      // Typing edge-cases that interfaces aren't; in @typescript-eslint's
       // "strict" extension this rule is defined the opposite way though(?!).
       "@typescript-eslint/consistent-type-definitions": ["warn", "type"],
 
@@ -268,10 +283,10 @@ export default config(
         "error",
         {
           // The default config for this rule doesn't provide *some* way of
-          // ignoring an unused argument, and we need one!
+          // Ignoring an unused argument, and we need one!
           argsIgnorePattern: "^_",
           // This allows removing props by destructuring an object, which is
-          // useful in arrow functions.
+          // Useful in arrow functions.
           ignoreRestSiblings: true,
         },
       ],
@@ -311,7 +326,7 @@ export default config(
       "@typescript-eslint/no-use-before-define": [
         "error",
         // We just want to ensure that types are defined before they are used,
-        // other than that we don't need this rule...
+        // Other than that we don't need this rule...
         { functions: false, variables: false },
       ],
       "@typescript-eslint/strict-boolean-expressions": [
@@ -374,7 +389,7 @@ export default config(
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
-      // flat/recommended extension)
+      // Flat/recommended extension)
 
       "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
@@ -388,6 +403,7 @@ export default config(
   {
     files: ["*.config.js", "*.config.ts"],
     rules: {
+      "max-lines": "off",
       "jsdoc/require-example": "off",
       "jsdoc/require-param": "off",
       "unicorn/filename-case": "off",
@@ -396,11 +412,27 @@ export default config(
   {
     files: ["src/**/*.test.ts"],
     rules: {
+      "max-lines": "off",
+      "max-nested-callbacks": "off",
+
+      // We should consider enabling these rules and adding some limitations to
+      // test files too so that tests are kept clean, simple, and easy to
+      // maintain.
+      "max-lines-per-function": "off",
+      "max-statements": "off",
+
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",
         { checkArguments: false, checkArrowFunctionBody: false },
       ],
+      // When our return type is just `undefined` (like `first([])`) this rule
+      // Considers the function as returning `void` (which is technically
+      // Correct because assigning a void function to a variable will result in
+      // `undefined`), but this is not an error, it's by design. I don't know
+      // What this rule expects us to do in those cases so turning it off for
+      // Now instead...
+      "@typescript-eslint/no-confusing-void-expression": "off",
     },
   },
   {

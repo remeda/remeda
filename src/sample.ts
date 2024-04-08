@@ -102,6 +102,7 @@ export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
 }
 
+// eslint-disable-next-line max-statements -- TODO: Can we simplify or split this?
 function sampleImplementation<T>(
   data: ReadonlyArray<T>,
   sampleSize: number,

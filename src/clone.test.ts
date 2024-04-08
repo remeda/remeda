@@ -147,6 +147,7 @@ describe("deep clone deep nested mixed objects", () => {
     eq(cloned, [[1], [[3]]]);
   });
 
+  // eslint-disable-next-line complexity -- Intentional
   it("clones array with mutual ref object", () => {
     const obj = { a: 1 };
     const list = [{ b: obj }, { b: obj }];
