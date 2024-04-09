@@ -84,10 +84,6 @@ export function setPathImplementation(
     return copy;
   }
 
-  if (data === null || data === undefined) {
-    throw new Error("Path doesn't exist in object!");
-  }
-
   const { [pivot]: currentValue, ...remaining } = data as Record<
     PropertyKey,
     unknown

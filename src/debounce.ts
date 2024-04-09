@@ -145,16 +145,20 @@ export function debounce<F extends (...args: any) => any>(
   let result: ReturnType<F> | undefined;
 
   const handleInvoke = (): void => {
-    if (latestCallArgs === undefined) {
-      // This should never happen! It means we forgot to clear a timeout!
-      return;
-    }
-
     if (maxWaitTimeoutId !== undefined) {
       // We are invoking the function so the wait is over...
       const timeoutId = maxWaitTimeoutId;
       maxWaitTimeoutId = undefined;
       clearTimeout(timeoutId);
+    }
+
+    /* v8 ignore next 7 -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing).*/
+    if (latestCallArgs === undefined) {
+      // If you see this error pop up when using this function please report
+      // it on the Remeda github page!
+      throw new Error(
+        "REMEDA[debounce]: latestCallArgs was unexpectedly undefined.",
+      );
     }
 
     const args = latestCallArgs;

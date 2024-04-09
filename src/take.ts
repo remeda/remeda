@@ -40,7 +40,7 @@ const takeImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
-    return () => ({ done: true, hasNext: false });
+    return emptyPipe;
   }
 
   let remaining = n;
@@ -49,3 +49,9 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
     return { done: remaining <= 0, hasNext: true, next: value };
   };
 }
+
+// We optimize the trivial case by memoizing both the returned object and the
+// function that returns it so that none of them need to be recreated on every
+// invocation.
+const LAZY_DONE = { done: true, hasNext: false } as const;
+const emptyPipe = (): typeof LAZY_DONE => LAZY_DONE;

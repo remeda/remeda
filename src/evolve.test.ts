@@ -1,4 +1,5 @@
 import { add } from "./add";
+import { constant } from "./constant";
 import { evolve } from "./evolve";
 import { identity } from "./identity";
 import { length } from "./length";
@@ -101,6 +102,14 @@ describe("data first", () => {
     // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
     evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
     expect(mock).toBeCalledTimes(0);
+  });
+
+  it("ignore transformers for non-object values", () => {
+    expect(
+      evolve({ a: "hello" } as { a: string | { b: string } }, {
+        a: { b: constant(3) },
+      }),
+    ).toStrictEqual({ a: "hello" });
   });
 });
 

@@ -1,3 +1,17 @@
+/* eslint-disable dot-notation -- This rule is turned off in PR #621 */
+
+const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
+
+type StringToPath<T extends string> = T extends ""
+  ? []
+  : T extends `[${infer Head}].${infer Tail}`
+    ? [Head, ...StringToPath<Tail>]
+    : T extends `.${infer Head}${infer Tail}`
+      ? [Head, ...StringToPath<Tail>]
+      : T extends `${infer Head}${infer Tail}`
+        ? [Head, ...StringToPath<Tail>]
+        : [T];
+
 /**
  * Converts a path string to an array of keys.
  *
@@ -10,31 +24,17 @@
 export function stringToPath<Path extends string>(
   path: Path,
 ): StringToPath<Path> {
-  return _stringToPath(path) as StringToPath<Path>;
-}
-
-function _stringToPath(path: string): Array<string> {
   if (path.length === 0) {
-    return [];
+    return [] as StringToPath<Path>;
   }
 
-  const match =
-    // eslint-disable-next-line prefer-named-capture-group
-    /^\[(.+?)\](.*)$/u.exec(path) ?? /^\.?([^.[\]]+)(.*)$/u.exec(path);
-  if (match !== null) {
-    const [, key, rest] = match;
-    // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?
-    return [key, ..._stringToPath(rest)];
-  }
-  return [path];
+  const match = PATH_RE.exec(path);
+  return (
+    match === null
+      ? [path]
+      : [
+          match.groups!["index"] ?? match.groups!["propName"]!,
+          ...stringToPath(match.groups!["rest"]!),
+        ]
+  ) as StringToPath<Path>;
 }
-
-export type StringToPath<T extends string> = T extends ""
-  ? []
-  : T extends `[${infer Head}].${infer Tail}`
-    ? [Head, ...StringToPath<Tail>]
-    : T extends `.${infer Head}${infer Tail}`
-      ? [Head, ...StringToPath<Tail>]
-      : T extends `${infer Head}${infer Tail}`
-        ? [Head, ...StringToPath<Tail>]
-        : [T];

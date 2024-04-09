@@ -43,14 +43,14 @@ export function heapMaybeInsert<T>(
   item: T,
 ): T | undefined {
   if (!hasAtLeast(heap, 1)) {
-    return;
+    return undefined;
   }
 
   const [head] = heap;
 
   if (compareFn(item, head) >= 0) {
     // The item shouldn't be inserted into the heap, the heap is unchanged.
-    return;
+    return undefined;
   }
 
   heap[0] = item;

@@ -109,18 +109,27 @@ describe("built-in types", () => {
     eq(cloned.getDay(), 5); // friday
   });
 
-  it.each([/x/u, /x/gu, /x/iu, /x/mu, /x/giu, /x/gmu, /x/imu, /x/gimu])(
-    "clones RegExp object",
-    (pattern) => {
-      const cloned = clone(pattern);
-      assert.notStrictEqual(cloned, pattern);
-      eq(cloned.constructor, RegExp);
-      eq(cloned.source, pattern.source);
-      eq(cloned.global, pattern.global);
-      eq(cloned.ignoreCase, pattern.ignoreCase);
-      eq(cloned.multiline, pattern.multiline);
-    },
-  );
+  it.each([
+    /x/u,
+    /x/gu,
+    /x/iu,
+    /x/mu,
+    /x/giu,
+    /x/gmu,
+    /x/imu,
+    /x/gimu,
+    /x/uy,
+    // eslint-disable-next-line require-unicode-regexp -- we want to test the negative case
+    /x/,
+  ])("clones RegExp object: %s", (pattern) => {
+    const cloned = clone(pattern);
+    assert.notStrictEqual(cloned, pattern);
+    eq(cloned.constructor, RegExp);
+    eq(cloned.source, pattern.source);
+    eq(cloned.global, pattern.global);
+    eq(cloned.ignoreCase, pattern.ignoreCase);
+    eq(cloned.multiline, pattern.multiline);
+  });
 });
 
 describe("deep clone deep nested mixed objects", () => {
@@ -168,5 +177,13 @@ describe("deep clone edge cases", () => {
 
     const list: any = [];
     assert.notStrictEqual(clone(list), list);
+  });
+});
+
+describe("deep clone using attached clone function", () => {
+  test("calls the clone function on the object if it exists", () => {
+    const cloneMock = vi.fn();
+    clone({ clone: cloneMock });
+    expect(cloneMock).toHaveBeenCalled();
   });
 });

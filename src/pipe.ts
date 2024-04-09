@@ -48,7 +48,7 @@ type LazyOp = ((input: unknown) => unknown) & {
   readonly lazy: ((...args: any) => LazyFn) & {
     readonly single: boolean;
   };
-  readonly lazyArgs?: ReadonlyArray<unknown>;
+  readonly lazyArgs: ReadonlyArray<unknown>;
 };
 
 /**
@@ -350,7 +350,7 @@ function _processItem(
 
 function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
-  const fn = lazy(...(lazyArgs ?? []));
+  const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
     isSingle: lazy.single,
     index: 0,

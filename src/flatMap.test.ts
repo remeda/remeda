@@ -1,9 +1,10 @@
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
+import { add } from "./add";
 import { find } from "./find";
 import { flatMap } from "./flatMap";
 import { pipe } from "./pipe";
 
-describe("data_first", () => {
+describe("dataFirst", () => {
   it("flatMap", () => {
     const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3]);
     expect(result).toEqual([2, 3, 4, 6]);
@@ -15,7 +16,7 @@ describe("data_first", () => {
   });
 });
 
-describe("data_last", () => {
+describe("dataLast", () => {
   it("flatMap", () => {
     const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
     expect(result).toEqual([2, 3, 4, 6]);
@@ -26,6 +27,10 @@ describe("data_last", () => {
       1, 2,
     ] as const);
     expect(result).toEqual([2, 3, 4, 6]);
+  });
+
+  it("works with non array outputs", () => {
+    expect(pipe([1, 2, 3], flatMap(add(1)))).toStrictEqual([2, 3, 4]);
   });
 
   describe("pipe", () => {
