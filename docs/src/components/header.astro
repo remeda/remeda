@@ -32,8 +32,16 @@ const { pathname } = Astro.url;
           pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
         ]}
       >
-        Docs
+        Documentation
       </a>
+
+      <a
+        href="/v1/"
+        class:list={[
+          "transition-colors hover:text-foreground/80",
+          pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
+        ]}>Migrate from v1</a
+      >
     </nav>
 
     <div class="-mr-2 ml-auto flex items-center gap-2">
