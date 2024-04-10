@@ -93,12 +93,12 @@ describe("at runtime", () => {
       expect(result).toStrictEqual([]);
     });
 
-    it("throws on negative sample size", () => {
-      expect(() => sample([1, 2, 3], -1 as number)).toThrow();
+    it("Treats negative sample sizes as 0", () => {
+      expect(sample([1, 2, 3], -1 as number)).toStrictEqual([]);
     });
 
-    it("throws on non-integer sample size", () => {
-      expect(() => sample([1, 2, 3], 0.5)).toThrow();
+    it("rounds non-integer sample sizes", () => {
+      expect(sample([1, 2, 3], 0.5)).toStrictEqual([1]);
     });
   });
 });
