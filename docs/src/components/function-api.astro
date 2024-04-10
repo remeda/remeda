@@ -11,6 +11,7 @@ const { method } = Astro.props;
 ---
 
 {
+  // TODO: signature shouldn't be nullish, we should fail the build instead!
   method.signature !== undefined && (
     <div class="flex flex-col gap-2">
       {method.tag !== undefined && <p>{method.tag}</p>}
