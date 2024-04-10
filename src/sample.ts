@@ -102,27 +102,18 @@ export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
 }
 
-// eslint-disable-next-line max-statements -- TODO: Can we simplify or split this?
 function sampleImplementation<T>(
   data: ReadonlyArray<T>,
   sampleSize: number,
 ): Array<T> {
-  if (sampleSize < 0) {
-    throw new RangeError(`sampleSize must cannot be negative: ${sampleSize}`);
-  }
-
-  if (!Number.isInteger(sampleSize)) {
-    throw new TypeError(`sampleSize must be an integer: ${sampleSize}`);
+  if (sampleSize <= 0) {
+    // Trivial
+    return [];
   }
 
   if (sampleSize >= data.length) {
     // Trivial
     return [...data];
-  }
-
-  if (sampleSize === 0) {
-    // Trivial
-    return [];
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.

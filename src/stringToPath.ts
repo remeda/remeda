@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation -- This rule is turned off in PR #621 */
-
 const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
 
 type StringToPath<T extends string> = T extends ""
