@@ -69,7 +69,7 @@ type PathValue3<
 > = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
  * @param object - The target object.
  * @param path - The path of the property to get.
