@@ -15,6 +15,13 @@ const { func } = Astro.props;
   <CardHeader>
     <FunctionDescription func={func} />
   </CardHeader>
+  {
+    Astro.slots.has("default") && (
+      <CardContent>
+        <slot />
+      </CardContent>
+    )
+  }
   <CardContent className="grid gap-6">
     {func.methods.map((method) => <FunctionApi method={method} />)}
   </CardContent>

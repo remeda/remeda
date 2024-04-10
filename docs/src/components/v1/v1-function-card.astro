@@ -1,0 +1,29 @@
+---
+import FunctionCard from "@/components/function-card.astro";
+import type { DocumentedFunction } from "@/lib/transform";
+import { getEntry } from "astro:content";
+import MigrationBox from "./migration-box.astro";
+
+const MIGRATION_COLLECTION = "v1-migration";
+
+type Props = {
+  readonly func: DocumentedFunction;
+};
+
+const { func } = Astro.props;
+
+const entry = await getEntry(MIGRATION_COLLECTION, func.name);
+const Migration = await entry?.render();
+---
+
+{
+  Migration !== undefined ? (
+    <FunctionCard func={func}>
+      <MigrationBox>
+        <Migration.Content />
+      </MigrationBox>
+    </FunctionCard>
+  ) : (
+    <FunctionCard func={func} />
+  )
+}

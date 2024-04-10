@@ -1,5 +1,5 @@
 ---
-import FunctionCard from "@/components/function-card.astro";
+import V1FunctionCard from "@/components/v1/v1-function-card.astro";
 import { Navbar } from "@/components/navbar";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
@@ -23,7 +23,7 @@ import { flat, map, pipe, values } from "remeda";
             CATEGORIZED,
             values,
             flat(),
-            map((func) => <FunctionCard func={func} />),
+            map((func) => <V1FunctionCard func={func} />),
           )
         }
       </div>

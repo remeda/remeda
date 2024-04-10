@@ -1,0 +1,14 @@
+---
+import Markdown from "../markdown.astro";
+---
+
+<div
+  class="flex flex-col gap-2 rounded-md border border-sky-100 bg-gradient-to-tl from-sky-50 to-sky-100 p-3 shadow-md"
+>
+  <h6 class="text-xs font-bold uppercase tracking-wider underline">
+    Changes in v2
+  </h6>
+  <Markdown>
+    <slot />
+  </Markdown>
+</div>
