@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { lazyDataLastImpl } from "./_lazyDataLastImpl";
 import type { LazyEvaluator } from "./pipe";
 
 /**
@@ -52,10 +53,7 @@ export function purry(
   }
 
   if (diff === 1) {
-    const ret = (data: unknown): unknown => fn(data, ...args);
-    return lazy === undefined
-      ? ret
-      : Object.assign(ret, { lazy, lazyArgs: args });
+    return lazyDataLastImpl(fn, args, lazy);
   }
 
   throw new Error("Wrong number of arguments");

@@ -27,6 +27,7 @@ export * from "./findLast";
 export * from "./findLastIndex";
 export * from "./first";
 export * from "./firstBy";
+export * from "./flat";
 export * from "./flatMap";
 export * from "./flatten";
 export * from "./flattenDeep";

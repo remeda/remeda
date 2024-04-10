@@ -7,6 +7,8 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 /**
  * Flattens `array` a single level deep.
  *
+ * ! **DEPRECATED** Use `R.flat(data)`. Will be removed in V2!
+ *
  * @param items - The target array.
  * @signature
  *   R.flatten(array)
@@ -14,12 +16,15 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
  *    R.flatten([[1, 2], [3], [4, 5]]) // => [1, 2, 3, 4, 5]
  * @dataFirst
  * @pipeable
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.flat(data)`. Will be removed in V2!
  */
 export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
 /**
  * Flattens `array` a single level deep.
+ *
+ * ! **DEPRECATED** Use `R.flat(data)`. Will be removed in V2!
  *
  * @signature
  *   R.flatten()(array)
@@ -30,7 +35,8 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
  *    ); // => [1, 2, 3, 4, 5]
  * @dataLast
  * @pipeable
- * @category Array
+ * @category Deprecated
+ * @deprecated Use `R.flat()`. Will be removed in V2!
  */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
