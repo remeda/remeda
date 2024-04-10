@@ -1,4 +1,4 @@
-import { _withPrecision } from "./_withPrecision";
+import { withPrecision } from "./internal/withPrecision";
 import { purry } from "./purry";
 
 /**
@@ -39,5 +39,5 @@ export function round(value: number, precision: number): number;
 export function round(precision: number): (value: number) => number;
 
 export function round(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_withPrecision(Math.round), args);
+  return purry(withPrecision(Math.round), args);
 }

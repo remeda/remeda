@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
+import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -77,5 +77,5 @@ export function sortedIndexWith<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_binarySearchCutoffIndex, args);
+  return purry(binarySearchCutoffIndex, args);
 }

@@ -39,10 +39,7 @@ async function getEntries(sourceDirectory: string): Promise<Array<string>> {
   const files = await ts.readdir(sourceDirectory);
   return files
     .filter(
-      (fileName) =>
-        fileName.endsWith(".ts") &&
-        !fileName.startsWith("_") &&
-        !fileName.endsWith(".test.ts"),
+      (fileName) => fileName.endsWith(".ts") && !fileName.endsWith(".test.ts"),
     )
     .map((fileName) => path.join(sourceDirectory, fileName));
 }

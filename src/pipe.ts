@@ -281,7 +281,7 @@ export function pipe(
     const accumulator: Array<unknown> = [];
 
     for (const value of output) {
-      const shouldExitEarly = _processItem(value, accumulator, lazySequence);
+      const shouldExitEarly = processItem(value, accumulator, lazySequence);
       if (shouldExitEarly) {
         break;
       }
@@ -294,7 +294,7 @@ export function pipe(
   return output;
 }
 
-function _processItem(
+function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: Array<unknown>,
@@ -318,7 +318,7 @@ function _processItem(
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
         for (const subItem of lazyResult.next as ReadonlyArray<unknown>) {
-          const subResult = _processItem(
+          const subResult = processItem(
             subItem,
             accumulator,
             lazySequence.slice(operationsIndex + 1),

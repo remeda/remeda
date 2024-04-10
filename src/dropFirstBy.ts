@@ -1,9 +1,9 @@
-import { heapify, heapMaybeInsert } from "./_heap";
+import { heapify, heapMaybeInsert } from "./internal/heap";
 import {
   purryOrderRulesWithArgument,
   type OrderRule,
-} from "./_purryOrderRules";
-import type { CompareFunction, NonEmptyArray } from "./_types";
+} from "./internal/purryOrderRules";
+import type { CompareFunction, NonEmptyArray } from "./internal/types";
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

@@ -1,4 +1,4 @@
-import type { NonEmptyArray } from "./_types";
+import type { NonEmptyArray } from "./internal/types";
 import { purry } from "./purry";
 
 /**
@@ -36,9 +36,8 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 
 export function last(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_last, args);
+  return purry(lastImplementation, args);
 }
 
-function _last<T>(array: ReadonlyArray<T>): T | undefined {
-  return array.at(-1);
-}
+const lastImplementation = <T>(array: ReadonlyArray<T>): T | undefined =>
+  array.at(-1);

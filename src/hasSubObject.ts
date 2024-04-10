@@ -44,10 +44,10 @@ export function hasSubObject<T, S extends Partial<T>>(
 ): (data: T) => data is Simplify<S & T>;
 
 export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_hasSubObject, args);
+  return purry(hasSubObjectImplementation, args);
 }
 
-function _hasSubObject<T extends object, S extends Partial<T>>(
+function hasSubObjectImplementation<T extends object, S extends Partial<T>>(
   data: T,
   subObject: S,
 ): data is Simplify<S & T> {

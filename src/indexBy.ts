@@ -1,4 +1,4 @@
-import type { ExactRecord } from "./_types";
+import type { ExactRecord } from "./internal/types";
 import { purry } from "./purry";
 
 /**

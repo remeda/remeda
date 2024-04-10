@@ -40,7 +40,6 @@ export default config(
       // TODO: These rules allow us to really standardize our codebase, but they
       // also do sweeping changes to the whole codebase which is very noisy. We
       // should do it in one sweep sometime in the future.
-      "no-underscore-dangle": "off",
       "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
 
@@ -123,6 +122,7 @@ export default config(
       "no-sequences": ["error", { allowInParentheses: false }],
       "no-useless-return": "warn",
       "no-undef-init": "warn",
+      "no-underscore-dangle": "error",
       "no-unneeded-ternary": "warn",
       "no-useless-call": "error",
       "no-useless-computed-key": "warn",
@@ -447,7 +447,7 @@ export default config(
     },
   },
   {
-    files: ["src/_*.ts"],
+    files: ["src/internal/*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
       "jsdoc/check-param-names": "off",

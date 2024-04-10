@@ -1,5 +1,5 @@
 import { chunk } from "./chunk";
-import type { NonEmptyArray } from "./_types";
+import type { NonEmptyArray } from "./internal/types";
 
 describe("data first", () => {
   test("equal size", () => {

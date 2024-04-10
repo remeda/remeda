@@ -43,10 +43,10 @@ export function splice<T>(
 ): (items: ReadonlyArray<T>) => Array<T>;
 
 export function splice(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_splice, args);
+  return purry(spliceImplementation, args);
 }
 
-function _splice<T>(
+function spliceImplementation<T>(
   items: ReadonlyArray<T>,
   start: number,
   deleteCount: number,

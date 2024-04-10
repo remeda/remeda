@@ -1,5 +1,5 @@
-import { _reduceLazy } from "./_reduceLazy";
-import type { IterableContainer, Mapped } from "./_types";
+import { reduceLazy } from "./internal/reduceLazy";
+import type { IterableContainer, Mapped } from "./internal/types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -81,7 +81,7 @@ const mapWithFeedbackImplementation = <T, U>(
     data: ReadonlyArray<T>,
   ) => U,
   initialValue: U,
-): Array<U> => _reduceLazy(data, lazyImplementation(reducer, initialValue));
+): Array<U> => reduceLazy(data, lazyImplementation(reducer, initialValue));
 
 const lazyImplementation = <T, U>(
   reducer: (

@@ -38,16 +38,15 @@ export function addProp<
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
 export function addProp(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_addProp, args);
+  return purry(addPropImplementation, args);
 }
 
-function _addProp<T extends Record<PropertyKey, unknown>, K extends string, V>(
+const addPropImplementation = <
+  T extends Record<PropertyKey, unknown>,
+  K extends string,
+  V,
+>(
   obj: T,
   prop: K,
   value: V,
-): T & { [x in K]: V } {
-  return {
-    ...obj,
-    [prop]: value,
-  };
-}
+): T & { [x in K]: V } => ({ ...obj, [prop]: value });

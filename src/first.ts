@@ -1,5 +1,5 @@
-import { _toSingle } from "./_toSingle";
-import type { IterableContainer } from "./_types";
+import { toSingle } from "./internal/toSingle";
+import type { IterableContainer } from "./internal/types";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -47,7 +47,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(...args: ReadonlyArray<unknown>): unknown {
-  return purry(firstImplementation, args, _toSingle(lazyImplementation));
+  return purry(firstImplementation, args, toSingle(lazyImplementation));
 }
 
 const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>

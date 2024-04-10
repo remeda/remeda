@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
 
-import { purryOn } from "./_purryOn";
+import { purryOn } from "./internal/purryOn";
 
 type Case<In, Out, Thru extends In = In> = readonly [
   when: ((data: In) => boolean) | ((data: In) => data is Thru),

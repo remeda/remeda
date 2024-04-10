@@ -2,7 +2,7 @@ import { type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 type MappedValues<T extends object, Value> = Simplify<{
