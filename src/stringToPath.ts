@@ -1,9 +1,19 @@
+type StringToPath<T extends string> = T extends ""
+  ? []
+  : T extends `${infer Head}[${infer Nest}].${infer Tail}`
+    ? [...StringToPath<Head>, Nest, ...StringToPath<Tail>]
+    : T extends `${infer Head}[${infer Nest}]`
+      ? [...StringToPath<Head>, Nest]
+      : T extends `${infer Head}.${infer Tail}`
+        ? [...StringToPath<Head>, ...StringToPath<Tail>]
+        : [T];
+
 /**
- * Converts a path string to an array of keys.
+ * Converts a path string to an array of string keys (including array index access keys).
  *
  * @param path - A string path.
  * @signature R.stringToPathArray(path)
- * @example R.stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
+ * @example R.stringToPathArray('a.b[0].c') // => ['a', 'b', '0', 'c']
  * @dataFirst
  * @category String
  */
@@ -28,13 +38,3 @@ function _stringToPath(path: string): Array<string> {
   }
   return [path];
 }
-
-export type StringToPath<T extends string> = T extends ""
-  ? []
-  : T extends `[${infer Head}].${infer Tail}`
-    ? [Head, ...StringToPath<Tail>]
-    : T extends `.${infer Head}${infer Tail}`
-      ? [Head, ...StringToPath<Tail>]
-      : T extends `${infer Head}${infer Tail}`
-        ? [Head, ...StringToPath<Tail>]
-        : [T];
