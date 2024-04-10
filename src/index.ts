@@ -29,8 +29,6 @@ export * from "./first";
 export * from "./firstBy";
 export * from "./flat";
 export * from "./flatMap";
-export * from "./flatten";
-export * from "./flattenDeep";
 export * from "./floor";
 export * from "./forEach";
 export * from "./forEachObj";
