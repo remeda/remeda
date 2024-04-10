@@ -98,7 +98,7 @@ describe("at runtime", () => {
     });
 
     it("rounds non-integer sample sizes", () => {
-      expect(sample([1, 2, 3], 0.5)).toStrictEqual([1]);
+      expect(sample([1, 2, 3], 0.5)).toHaveLength(1);
     });
   });
 });
