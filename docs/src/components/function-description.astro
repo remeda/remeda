@@ -1,0 +1,27 @@
+---
+import { FunctionTag } from "@/components/function-tag";
+import GithubSource from "@/components/github-source.astro";
+import Markdown from "@/components/markdown.astro";
+import { Badge } from "@/components/ui/badge";
+import { CardTitle } from "@/components/ui/card";
+import { getTags } from "@/lib/get-tags";
+import type { DocumentedFunction } from "@/lib/transform";
+
+type Props = {
+  readonly func: DocumentedFunction;
+};
+
+const { func } = Astro.props;
+---
+
+<>
+  <div class="flex items-center gap-2">
+    <CardTitle className="text-2xl">{func.name}</CardTitle>
+    <Badge className="ml-auto bg-primary text-primary-foreground">
+      {func.category}
+    </Badge>
+    {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
+    {func.sourceUrl !== undefined && <GithubSource url={func.sourceUrl} />}
+  </div>
+  {func.description !== undefined && <Markdown markdown={func.description} />}
+</>
