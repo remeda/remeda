@@ -119,6 +119,13 @@ describe("runtime", () => {
       expect(afterMock).toHaveBeenCalledTimes(4);
       expect(result).toStrictEqual(3);
     });
+
+    it("works lazily with trivial depth === 0", () => {
+      const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
+      const result = pipe(data, flat(0));
+      expect(result).toStrictEqual(data);
+      expect(result).not.toBe(data);
+    });
   });
 
   it("can go very very deep", () => {
