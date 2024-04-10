@@ -53,7 +53,7 @@ describe("last", () => {
       assertType<false>(data);
     });
 
-    test("more complex example", () => {
+    test("a bit more complex example", () => {
       const input = [["a", 1] as const, true, { foo: "bar" }] as const;
       const data = last(input);
       assertType<{ foo: "bar" }>(data);
