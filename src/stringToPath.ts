@@ -1,12 +1,14 @@
-type StringToPath<T extends string> = T extends ""
-  ? []
-  : T extends `${infer Head}[${infer Nest}].${infer Tail}`
-    ? [...StringToPath<Head>, Nest, ...StringToPath<Tail>]
-    : T extends `${infer Head}[${infer Nest}]`
-      ? [...StringToPath<Head>, Nest]
-      : T extends `${infer Head}.${infer Tail}`
-        ? [...StringToPath<Head>, ...StringToPath<Tail>]
-        : [T];
+type StringToPath<T extends string> = string extends T
+  ? Array<string>
+  : T extends ""
+    ? []
+    : T extends `${infer Head}[${infer Nest}].${infer Tail}`
+      ? [...StringToPath<Head>, Nest, ...StringToPath<Tail>]
+      : T extends `${infer Head}[${infer Nest}]`
+        ? [...StringToPath<Head>, Nest]
+        : T extends `${infer Head}.${infer Tail}`
+          ? [...StringToPath<Head>, ...StringToPath<Tail>]
+          : [T];
 
 /**
  * Converts a path string to an array of string keys (including array index access keys).
