@@ -28,7 +28,7 @@ type FirstBy<T extends IterableContainer> =
  *   R.firstBy(...rules)(data);
  * @example
  *   const max = R.pipe([1,2,3], R.firstBy([R.identity, "desc"])); // => 3;
- *   const min = R.pipe([1,2,3], R.firstBy([1,2,3])); // => 1;
+ *   const min = R.pipe([1,2,3], R.firstBy(R.identity)); // => 1;
  *
  *   const data = [{ a: "a" }, { a: "aa" }, { a: "aaa" }] as const;
  *   const maxBy = R.pipe(data, R.firstBy([(item) => item.a.length, "desc"])); // => { a: "aaa" };
