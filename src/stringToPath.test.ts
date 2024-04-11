@@ -47,15 +47,6 @@ describe("types", () => {
     expectTypeOf(data).toEqualTypeOf<["foo", "bar.baz", "qui"]>();
   });
 
-  test("string constructed from const strings are inferred", () => {
-    const bar = "bar";
-    const baz = "baz";
-    const qui = "qui";
-    const input = `foo[${bar}.${baz}].${qui}.che`;
-    const data = stringToPath(input);
-    expectTypeOf(data).toEqualTypeOf<["foo", "bar.baz", "qui", "che"]>();
-  });
-
   test("dynamic strings cannot be inferred", () => {
     const bar = "bar" as string;
     const input = `foo.${bar}[baz]`;

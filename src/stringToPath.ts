@@ -12,6 +12,7 @@ type StringToPath<T extends string> = string extends T
 
 /**
  * Converts a path string to an array of string keys (including array index access keys).
+ * For type-safe paths, make sure to pass string literals instead of general strings.
  *
  * @param path - A string path.
  * @signature R.stringToPathArray(path)
