@@ -25,7 +25,11 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
+export function isDeepEqual<T, S extends T = T>(
+  data: T,
+  other: T extends Exclude<T, S> ? S : never,
+): data is S;
+export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
 
 /**
  * Performs a deep *semantic* comparison between two values to determine if they
@@ -54,6 +58,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
 export function isDeepEqual<T, S extends T = T>(
   other: S,
 ): (data: T) => data is S;
+export function isDeepEqual<T, S extends T = T>(
+  other: T extends Exclude<T, S> ? S : never,
+): (data: T) => boolean;
 
 export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
