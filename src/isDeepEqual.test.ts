@@ -302,7 +302,7 @@ describe("typing", () => {
     }
   });
 
-  it("doesn't narrow when comparing an object to itself", () => {
+  it("doesn't narrow when comparing objects of the same type", () => {
     const data1 = { a: 1 } as { a: number };
     const data2 = { a: 2 } as { a: number };
     if (isDeepEqual(data1, data2)) {
