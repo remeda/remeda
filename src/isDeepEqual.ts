@@ -25,7 +25,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(
+export function isDeepEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
 ): data is S;
@@ -55,9 +55,7 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * @dataLast
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(
-  other: S,
-): (data: T) => data is S;
+export function isDeepEqual<T, S extends T>(other: S): (data: T) => data is S;
 export function isDeepEqual<T, S extends T = T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => boolean;
