@@ -1,5 +1,5 @@
 type StringToPath<T extends string> = string extends T
-  ? Array<string>
+  ? never
   : T extends ""
     ? []
     : T extends `${infer Head}[${infer Nest}].${infer Tail}`
@@ -12,7 +12,9 @@ type StringToPath<T extends string> = string extends T
 
 /**
  * Converts a path string to an array of string keys (including array index access keys).
- * For type-safe paths, make sure to pass string literals instead of general strings.
+ * !IMPORTANT!: Attempting to pass a simple `string` type will result in the result being inferred
+ * as `never`. This is intentional to help with type-safety as this function is primarily intended
+ * to help with other "object path access" functions like `pathOr` or `setPath`.
  *
  * @param path - A string path.
  * @signature R.stringToPathArray(path)
