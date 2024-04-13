@@ -155,6 +155,64 @@ describe("arrays", () => {
   });
 });
 
+describe("Maps", () => {
+  test("two empty Maps should be equal", () => {
+    expect(isDeepEqual(new Map(), new Map())).toBe(true);
+  });
+  it("two Maps with different size should not be equal", () => {
+    expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
+  });
+
+  it("two Maps with different keys shoud not be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", 1],
+          ["c", 2],
+        ]),
+        new Map([
+          ["a", 1],
+          ["b", 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("two maps with the same keys but with different values should not be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", 1],
+          ["b", 3],
+          ["c", 2],
+        ]),
+        new Map([
+          ["a", 1],
+          ["b", 2],
+          ["c", 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("two Maps with the same non primitives data should be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", { a: [1, 2, 3] }],
+          ["b", { a: [3] }],
+          ["c", { b: [4] }],
+        ]),
+        new Map([
+          ["a", { a: [1, 2, 3] }],
+          ["b", { a: [3] }],
+          ["c", { b: [4] }],
+        ]),
+      ),
+    ).toBe(true);
+  });
+});
+
 describe("Date objects", () => {
   test("equal date objects", () => {
     expect(

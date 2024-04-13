@@ -121,6 +121,31 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return data.toString() === (other as unknown as RegExp).toString();
   }
 
+  if (data instanceof Map) {
+    if (data.size !== (other as unknown as Map<unknown, unknown>).size) {
+      return false;
+    }
+
+    const keys = Array.from(data.keys());
+
+    for (const key of keys) {
+      if (!(other as unknown as Map<unknown, unknown>).has(key)) {
+        return false;
+      }
+
+      if (
+        !isDeepEqualImplementation(
+          data.get(key),
+          (other as unknown as Map<unknown, unknown>).get(key),
+        )
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // At this point we only know that the 2 objects share a prototype and are not
   // any of the previous types. They could be plain objects (Object.prototype),
   // they could be classes, they could be other built-ins, or they could be
