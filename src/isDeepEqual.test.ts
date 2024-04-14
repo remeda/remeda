@@ -181,6 +181,7 @@ describe("Maps", () => {
       ),
     ).toBe(false);
   });
+
   it("two maps with the same keys but with different values should not be equal", () => {
     expect(
       isDeepEqual(
