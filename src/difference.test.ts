@@ -3,19 +3,15 @@ import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
-const source = [1, 2, 3, 4] as const;
-const other = [2, 5, 3] as const;
-const expected = [1, 4] as const;
-
 describe("data_first", () => {
   test("should return difference", () => {
-    expect(difference(source, other)).toEqual(expected);
+    expect(difference([1, 2, 3, 4], [2, 5, 3])).toEqual([1, 4]);
   });
 });
 
 describe("data_last", () => {
   test("should return difference", () => {
-    expect(difference(other)(source)).toEqual(expected);
+    expect(difference([2, 5, 3])([1, 2, 3, 4])).toEqual([1, 4]);
   });
 
   test("lazy", () => {
@@ -40,8 +36,12 @@ describe("multiset", () => {
   });
 
   it("removes nothing on empty other array", () => {
+    expect(difference.multiset([1, 2, 3], [])).toStrictEqual([1, 2, 3]);
+  });
+
+  it("returns a shallow clone when nothing is removed", () => {
     const data = [1, 2, 3];
-    const result = difference.multiset(data, []);
+    const result = difference.multiset(data, [4, 5, 6]);
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
@@ -50,26 +50,28 @@ describe("multiset", () => {
     expect(difference.multiset([1], [1])).toStrictEqual([]);
   });
 
-  it("doesnt remove items that are not in the other array", () => {
+  it("doesn't remove items that are not in the other array", () => {
     expect(difference.multiset([1], [2])).toStrictEqual([1]);
   });
 
   it("maintains multi-set semantics (removes only one copy)", () => {
-    expect(difference.multiset([1, 1], [1])).toStrictEqual([1]);
+    expect(difference.multiset([1, 1, 2, 2], [1])).toStrictEqual([1, 2, 2]);
   });
 
-  it("works if the other array has too many copies", () => {
+  it("works if the other array has more copies than the input", () => {
     expect(difference.multiset([1], [1, 1])).toStrictEqual([]);
   });
 
   it("preserves the original order in source array", () => {
-    expect(difference.multiset([3, 1, 2, 2], [2])).toStrictEqual([3, 1, 2]);
+    expect(difference.multiset([3, 1, 2, 2, 4], [2])).toStrictEqual([
+      3, 1, 2, 4,
+    ]);
   });
 
   it("accounts and removes multiple copies", () => {
-    expect(difference.multiset([1, 2, 3, 1, 2, 3], [1, 2, 1, 2])).toStrictEqual(
-      [3, 3],
-    );
+    expect(
+      difference.multiset([1, 2, 3, 1, 2, 3, 1, 2, 3], [1, 2, 1, 2]),
+    ).toStrictEqual([3, 3, 1, 2, 3]);
   });
 
   it("works with strings", () => {

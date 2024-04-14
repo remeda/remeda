@@ -3,45 +3,56 @@ import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**
- * Excludes the values from `other` array.
+ * Excludes the values from `other` array. The output maintains the same order
+ * as the input. If either `array` or `other` contain multiple items with the
+ * same values, all occurrences of those values will be removed. If the exact
+ * number of copies should be observed (i.e. multi-set semantics), use
+ * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
+ * implementations yield the same result.
  *
- * ! **DEPRECATED**: The runtime implementation of this function handles duplicate values inconsistently. In v2 a new implementation would replace it; this implementation is accessible to v1 users via the `multiset` variant of this function (`R.difference.multiset`), or to maintain the same runtime implementation use `R.filter(array, R.isNot(R.isIncludedIn(other)))` instead.
+ * ! **DEPRECATED**: Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  *
- * @param array - The source array.
+ * @param data - The input items.
  * @param other - The values to exclude.
  * @signature
- *    R.difference(array, other)
+ *    R.difference(data, other)
+ *    R.difference.multiset(data, other)
  * @example
- *    R.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
+ *    R.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
+ *    R.difference([1, 1, 2, 2], [1]); // => [2, 2]
+ *    R.difference.multiset([1, 1, 2, 2], [1]); // => [1, 2, 2]
  * @dataFirst
  * @pipeable
- * @category Deprecated
- * @deprecated The runtime implementation of this function handles duplicate values inconsistently. In v2 a new implementation would replace it; this implementation is accessible to v1 users via the `multiset` variant of this function (`R.difference.multiset`), or to maintain the same runtime implementation use `R.filter(array, R.isNot(R.isIncludedIn(other)))` instead.
+ * @category Array
+ * @deprecated Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
 export function difference<T>(
-  array: ReadonlyArray<T>,
+  data: ReadonlyArray<T>,
   other: ReadonlyArray<T>,
 ): Array<T>;
 
 /**
- * Excludes the values from `other` array.
+ * Excludes the values from `other` array. The output maintains the same order
+ * as the input. If either `array` or `other` contain multiple items with the
+ * same values, all occurrences of those values will be removed. If the exact
+ * number of copies should be observed (i.e. multi-set semantics), use
+ * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
+ * implementations yield the same result.
  *
- * ! **DEPRECATED**: Use `R.filter(R.isNot(R.isIncludedIn(other)))`. Will be removed in v2!
+ * ! **DEPRECATED**: Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  *
  * @param other - The values to exclude.
  * @signature
- *    R.difference(other)(array)
+ *    R.difference(other)(data)
+ *    R.difference.multiset(other)(data)
  * @example
- *    R.difference([2, 5, 3])([1, 2, 3, 4]) // => [1, 4]
- *    R.pipe(
- *      [1, 2, 3, 4, 5, 6], // only 4 iterations
- *      R.difference([2, 3]),
- *      R.take(2)
- *    ) // => [1, 4]
- * @dataLast
+ *    R.pipe([1, 2, 3, 4], R.difference([2, 5, 3])); // => [1, 4]
+ *    R.pipe([1, 1, 2, 2], R.difference([1])); // => [2, 2]
+ *    R.pipe([1, 1, 2, 2], R.difference.multiset([1])); // => [1, 2, 2]
+ * @dataFirst
  * @pipeable
- * @category Deprecated
- * @deprecated Use `R.filter(R.isNot(R.isIncludedIn(other)))`. Will be removed in v2.
+ * @category Array
+ * @deprecated Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
 export function difference<T, K>(
   other: ReadonlyArray<T>,

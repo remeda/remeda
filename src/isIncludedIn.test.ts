@@ -1,5 +1,9 @@
+import { filter } from "./filter";
 import { isIncludedIn } from "./isIncludedIn";
+import { isNot } from "./isNot";
+import { map } from "./map";
 import { pipe } from "./pipe";
+import { take } from "./take";
 
 describe("dataFirst", () => {
   test("empty containers", () => {
@@ -214,6 +218,45 @@ describe("typing", () => {
       } else {
         expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
       }
+    });
+  });
+});
+
+// These tests are copy-pasted and adapted from existing tests of functions
+// that have been deprecated and removed from in v2. They validate that we
+// provide replacements for deprecated v1 functions. After v2 is out for a while
+// they could be removed.
+describe("legacy v1 replacements", () => {
+  describe("difference", () => {
+    describe("data_first", () => {
+      test("should return difference", () => {
+        expect(filter([1, 2, 3, 4], isNot(isIncludedIn([2, 5, 3])))).toEqual([
+          1, 4,
+        ]);
+      });
+    });
+
+    describe("data_last", () => {
+      test("should return difference", () => {
+        expect(filter(isNot(isIncludedIn([2, 5, 3])))([1, 2, 3, 4])).toEqual([
+          1, 4,
+        ]);
+      });
+
+      test("lazy", () => {
+        const count = vi.fn();
+        const result = pipe(
+          [1, 2, 3, 4, 5, 6],
+          map((x) => {
+            count();
+            return x;
+          }),
+          filter(isNot(isIncludedIn([2, 3]))),
+          take(2),
+        );
+        expect(count).toHaveBeenCalledTimes(4);
+        expect(result).toEqual([1, 4]);
+      });
     });
   });
 });
