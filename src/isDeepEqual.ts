@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
- * supported right now and might result in unexpected behavior. Please open an
- * issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are
+ * not supported right now and might result in unexpected behavior. Please open
+ * an issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -94,6 +94,10 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return false;
   }
 
+  if (data instanceof Set) {
+    return isDeepEqualSets(data, other as unknown as Set<unknown>);
+  }
+
   if (Array.isArray(data)) {
     if (data.length !== (other as ReadonlyArray<unknown>).length) {
       return false;
@@ -173,4 +177,29 @@ function isDeepEqualMaps(
   }
 
   return true;
+}
+
+function setToSortedArray(data: ReadonlySet<unknown>): ReadonlyArray<unknown> {
+  return Array.from(data.values()).sort((a, b) => {
+    const stringifiedA = JSON.stringify(a);
+    const stringifiedB = JSON.stringify(b);
+    return stringifiedA > stringifiedB
+      ? 1
+      : stringifiedA < stringifiedB
+        ? -1
+        : 0;
+  });
+}
+
+function isDeepEqualSets(
+  data: ReadonlySet<unknown>,
+  other: ReadonlySet<unknown>,
+): boolean {
+  if (data.size !== (other as unknown as Set<unknown>).size) {
+    return false;
+  }
+  return isDeepEqualImplementation(
+    setToSortedArray(data),
+    setToSortedArray(other),
+  );
 }
