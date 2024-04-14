@@ -121,21 +121,22 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Remeda                                      | Lodash         | Ramda          |
-| ------------------------------------------- | -------------- | -------------- |
-| `(arr, val) => [...arr, val]`               |                | `append`       |
-| `a?.b?.c`                                   | `path`         |                |
-| `n => a[n]`                                 | `nth`          | `nth`          |
-| `R.constant(undefined)`                     | `noop`         |                |
-| `R.filter(R.isIncludedIn(other))`           | `intersection` | `intersection` |
-| `R.filter(R.isNot(fn))`                     | `reject`       | `reject`       |
-| `R.filter(R.isNot(R.isIncludedIn(other)))`  | `difference`   | `difference`   |
-| `R.filter(R.isTruthy)`                      | `compact`      |                |
-| `R.firstBy([fn, "desc"])`                   | `maxBy`        | `maxBy`        |
-| `R.firstBy([R.identity, "desc"])`           | `max`          | `max`          |
-| `R.firstBy(fn)`                             | `minBy`        | `minBy`        |
-| `R.firstBy(R.identity)`                     | `min`          | `min`          |
-| `R.fromEntries.strict(R.zip(keys, values))` | `zipObj`       | `zipObj`       |
-| `str => str.split(/\s+/)`                   | `words`        |                |
-| `x => x.a ?? defaultValue`                  | `propOr`       |                |
-| `x => x.a === value`                        | `propEq`       |                |
+| Remeda                                                                                 | Lodash         | Ramda          |
+| -------------------------------------------------------------------------------------- | -------------- | -------------- |
+| `(arr, val) => [...arr, val]`                                                          |                | `append`       |
+| `a?.b?.c`                                                                              | `path`         |                |
+| `n => a[n]`                                                                            | `nth`          | `nth`          |
+| `R.constant(undefined)`                                                                | `noop`         |                |
+| `R.filter.indexed((item, index, array) => index === 0 \|\| item !== array[index - 1])` | `sortedUniq`   |                |
+| `R.filter(R.isIncludedIn(other))`                                                      | `intersection` | `intersection` |
+| `R.filter(R.isNot(fn))`                                                                | `reject`       | `reject`       |
+| `R.filter(R.isNot(R.isIncludedIn(other)))`                                             | `difference`   | `difference`   |
+| `R.filter(R.isTruthy)`                                                                 | `compact`      |                |
+| `R.firstBy([fn, "desc"])`                                                              | `maxBy`        | `maxBy`        |
+| `R.firstBy([R.identity, "desc"])`                                                      | `max`          | `max`          |
+| `R.firstBy(fn)`                                                                        | `minBy`        | `minBy`        |
+| `R.firstBy(R.identity)`                                                                | `min`          | `min`          |
+| `R.fromEntries.strict(R.zip(keys, values))`                                            | `zipObj`       | `zipObj`       |
+| `str => str.split(/\s+/)`                                                              | `words`        |                |
+| `x => x.a ?? defaultValue`                                                             | `propOr`       |                |
+| `x => x.a === value`                                                                   | `propEq`       |                |
