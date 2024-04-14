@@ -159,6 +159,7 @@ describe("Maps", () => {
   it("works on shallow equal maps", () => {
     expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 1]]))).toBe(true);
   });
+
   test("two empty Maps should be equal", () => {
     expect(isDeepEqual(new Map(), new Map())).toBe(true);
   });
