@@ -156,6 +156,9 @@ describe("arrays", () => {
 });
 
 describe("Maps", () => {
+  it("works on shallow equal maps", () => {
+    expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 1]]))).toBe(true);
+  });
   test("two empty Maps should be equal", () => {
     expect(isDeepEqual(new Map(), new Map())).toBe(true);
   });
@@ -163,7 +166,6 @@ describe("Maps", () => {
   it("two Maps with different size should not be equal", () => {
     expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
   });
-
   it("two Maps with different keys shoud not be equal", () => {
     expect(
       isDeepEqual(
@@ -178,7 +180,6 @@ describe("Maps", () => {
       ),
     ).toBe(false);
   });
-
   it("two maps with the same keys but with different values should not be equal", () => {
     expect(
       isDeepEqual(

@@ -125,7 +125,7 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     if (data.size !== (other as unknown as Map<unknown, unknown>).size) {
       return false;
     }
-
+    //TODO: fixe me in v2
     const keys = Array.from(data.keys());
 
     for (const key of keys) {
