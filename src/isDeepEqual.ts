@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets and TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior. Please open
- * an issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
+ * supported right now and might result in unexpected behavior. Please open an
+ * issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -38,9 +38,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior. Please open
- * an issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
+ * supported right now and might result in unexpected behavior. Please open an
+ * issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -62,29 +62,6 @@ export function isDeepEqual<T, S extends T = T>(
 
 export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
-}
-
-function isDeepEqualMaps(
-  data: ReadonlyMap<unknown, unknown>,
-  other: ReadonlyMap<unknown, unknown>,
-): boolean {
-  if (data.size !== other.size) {
-    return false;
-  }
-  //TODO: fixe me in v2
-  const keys = Array.from(data.keys());
-
-  for (const key of keys) {
-    if (!other.has(key)) {
-      return false;
-    }
-
-    if (!isDeepEqualImplementation(data.get(key), other.get(key))) {
-      return false;
-    }
-  }
-
-  return true;
 }
 
 function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
@@ -167,6 +144,30 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
 
     // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
     if (!isDeepEqualImplementation(data[key], other[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualMaps(
+  data: ReadonlyMap<unknown, unknown>,
+  other: ReadonlyMap<unknown, unknown>,
+): boolean {
+  if (data.size !== other.size) {
+    return false;
+  }
+
+  // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
+  const keys = Array.from(data.keys());
+
+  for (const key of keys) {
+    if (!other.has(key)) {
+      return false;
+    }
+
+    if (!isDeepEqualImplementation(data.get(key), other.get(key))) {
       return false;
     }
   }
