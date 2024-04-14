@@ -159,6 +159,7 @@ describe("Maps", () => {
   test("two empty Maps should be equal", () => {
     expect(isDeepEqual(new Map(), new Map())).toBe(true);
   });
+
   it("two Maps with different size should not be equal", () => {
     expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
   });
