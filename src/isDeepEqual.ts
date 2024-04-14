@@ -64,9 +64,9 @@ export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
 }
 
-function areMapsEqual<T extends Map<unknown, unknown>>(
-  data: T,
-  other: T,
+function isDeepEqualMaps(
+  data: Map<unknown, unknown>,
+  other: Map<unknown, unknown>,
 ): boolean {
   if (data.size !== other.size) {
     return false;
