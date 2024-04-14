@@ -259,4 +259,18 @@ describe("legacy v1 replacements", () => {
       });
     });
   });
+
+  describe("intersection", () => {
+    describe("data_first", () => {
+      test("intersection", () => {
+        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toEqual([2, 3]);
+      });
+    });
+
+    describe("data_last", () => {
+      test("intersection", () => {
+        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toEqual([2, 3]);
+      });
+    });
+  });
 });

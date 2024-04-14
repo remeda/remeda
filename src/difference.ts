@@ -1,4 +1,5 @@
 import { _reduceLazy } from "./_reduceLazy";
+import { lazyIdentityEvaluator } from "./_utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -100,6 +101,10 @@ const multisetImplementation = <T>(
 function multisetLazyImplementation<T>(
   other: ReadonlyArray<T>,
 ): LazyEvaluator<T> {
+  if (other.length === 0) {
+    return lazyIdentityEvaluator;
+  }
+
   // We need to build a more efficient data structure that would allow us to
   // keep track of the number of times we've seen a value in the other array.
   const remaining = new Map<T, number>();
@@ -111,7 +116,7 @@ function multisetLazyImplementation<T>(
     const copies = remaining.get(value);
 
     if (copies === undefined || copies === 0) {
-      // The item is either not part of the other array, or we've dropped enough
+      // The item is either not part of the other array or we've dropped enough
       // copies of it so we return it.
       return { done: false, hasNext: true, next: value };
     }
