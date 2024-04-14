@@ -7,7 +7,7 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects  are
+ * !IMPORTANT: Sets and TypedArrays, and symbol properties of objects  are
  * not supported right now and might result in unexpected behavior. Please open
  * an issue in the Remeda github project if you need support for these types.
  *
@@ -62,6 +62,29 @@ export function isDeepEqual<T, S extends T = T>(
 
 export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
+}
+
+function areMapsEqual<T extends Map<unknown, unknown>>(
+  data: T,
+  other: T,
+): data is T {
+  if (data.size !== other.size) {
+    return false;
+  }
+  //TODO: fixe me in v2
+  const keys = Array.from(data.keys());
+
+  for (const key of keys) {
+    if (!other.has(key)) {
+      return false;
+    }
+
+    if (!isDeepEqualImplementation(data.get(key), other.get(key))) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
@@ -122,28 +145,7 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   }
 
   if (data instanceof Map) {
-    if (data.size !== (other as unknown as Map<unknown, unknown>).size) {
-      return false;
-    }
-    //TODO: fixe me in v2
-    const keys = Array.from(data.keys());
-
-    for (const key of keys) {
-      if (!(other as unknown as Map<unknown, unknown>).has(key)) {
-        return false;
-      }
-
-      if (
-        !isDeepEqualImplementation(
-          data.get(key),
-          (other as unknown as Map<unknown, unknown>).get(key),
-        )
-      ) {
-        return false;
-      }
-    }
-
-    return true;
+    return areMapsEqual(data, other as unknown as Map<unknown, unknown>);
   }
 
   // At this point we only know that the 2 objects share a prototype and are not
