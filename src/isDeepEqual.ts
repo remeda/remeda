@@ -65,8 +65,8 @@ export function isDeepEqual(): unknown {
 }
 
 function isDeepEqualMaps(
-  data: Map<unknown, unknown>,
-  other: Map<unknown, unknown>,
+  data: Readonly<Map<unknown, unknown>>,
+  other: Readonly<Map<unknown, unknown>>,
 ): boolean {
   if (data.size !== other.size) {
     return false;
