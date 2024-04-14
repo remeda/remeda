@@ -11,7 +11,7 @@ import { purry } from "./purry";
  * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
  * implementations yield the same result.
  *
- * ! **DEPRECATED**: Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * ! **DEPRECATED**: Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  *
  * @param data - The input items.
  * @param other - The values to exclude.
@@ -25,7 +25,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * @deprecated Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
 export function difference<T>(
   data: ReadonlyArray<T>,
@@ -40,7 +40,7 @@ export function difference<T>(
  * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
  * implementations yield the same result.
  *
- * ! **DEPRECATED**: Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * ! **DEPRECATED**: Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  *
  * @param other - The values to exclude.
  * @signature
@@ -53,7 +53,7 @@ export function difference<T>(
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * @deprecated Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
 export function difference<T, K>(
   other: ReadonlyArray<T>,

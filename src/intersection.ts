@@ -11,7 +11,7 @@ import { purry } from "./purry";
  * `R.intersection.multiset` instead. If the arrays don't contain duplicates,
  * both implementations yield the same result.
  *
- * ! **DEPRECATED**: Use `R.intersection.multiset(data, other)` (or `R.filter(data, R.isIncludedIn(other))` to keep current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
+ * ! **DEPRECATED**: Use `R.intersection.multiset(data, other)` (or `R.filter(data, R.isIncludedIn(other))` to keep the current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
  *
  * @param data - The input items.
  * @param other - The items to compare against.
@@ -25,7 +25,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.intersection.multiset(data, other)` (or `R.filter(data, R.isIncludedIn(other))` to keep current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
+ * @deprecated Use `R.intersection.multiset(data, other)` (or `R.filter(data, R.isIncludedIn(other))` to keep the current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
  */
 export function intersection<T>(
   data: ReadonlyArray<T>,
@@ -40,7 +40,7 @@ export function intersection<T>(
  * `R.intersection.multiset` instead. If the arrays don't contain duplicates,
  * both implementations yield the same result.
  *
- * ! **DEPRECATED**: Use `R.intersection.multiset(other)` (or `R.filter(R.isIncludedIn(other))` to keep current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
+ * ! **DEPRECATED**: Use `R.intersection.multiset(other)` (or `R.filter(R.isIncludedIn(other))` to keep the current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
  *
  * @param other - The items to compare against.
  * @signature
@@ -53,7 +53,7 @@ export function intersection<T>(
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.intersection.multiset(other)` (or `R.filter(R.isIncludedIn(other))` to keep current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
+ * @deprecated Use `R.intersection.multiset(other)` (or `R.filter(R.isIncludedIn(other))` to keep the current runtime logic). `R.intersection.multiset` will replace `R.intersection` in v2!
  */
 export function intersection<T, K>(
   other: ReadonlyArray<T>,
