@@ -166,6 +166,7 @@ describe("Maps", () => {
   it("two Maps with different size should not be equal", () => {
     expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
   });
+
   it("two Maps with different keys shoud not be equal", () => {
     expect(
       isDeepEqual(
