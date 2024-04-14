@@ -145,7 +145,7 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   }
 
   if (data instanceof Map) {
-    return areMapsEqual(data, other as unknown as Map<unknown, unknown>);
+    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
   }
 
   // At this point we only know that the 2 objects share a prototype and are not
