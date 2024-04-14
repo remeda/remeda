@@ -38,7 +38,7 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Maps, Sets and TypedArrays, and symbol properties of objects  are
+ * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects  are
  * not supported right now and might result in unexpected behavior. Please open
  * an issue in the Remeda github project if you need support for these types.
  *
