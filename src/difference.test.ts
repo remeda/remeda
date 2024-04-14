@@ -1,4 +1,5 @@
 import { difference } from "./difference";
+import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -96,16 +97,13 @@ describe("multiset", () => {
 });
 
 test("lazy", () => {
-  const count = vi.fn();
+  const mock = vi.fn(identity);
   const result = pipe(
     [1, 2, 3, 4, 5, 6],
-    map((x) => {
-      count();
-      return x;
-    }),
+    map(mock),
     difference.multiset([2, 3]),
     take(2),
   );
-  expect(count).toHaveBeenCalledTimes(4);
+  expect(mock).toHaveBeenCalledTimes(4);
   expect(result).toEqual([1, 4]);
 });

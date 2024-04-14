@@ -1,3 +1,4 @@
+import { identity } from "./identity";
 import { intersection } from "./intersection";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -63,21 +64,25 @@ describe("multiset", () => {
         intersection.multiset([3, 2, 2, 2, 2, 2, 1], [1, 2, 3]),
       ).toStrictEqual([3, 2, 1]);
     });
+
+    it("returns a shallow copy even when all items match", () => {
+      const data = [1, 2, 3];
+      const result = intersection.multiset(data, [1, 2, 3]);
+      expect(result).toStrictEqual(data);
+      expect(result).not.toBe(data);
+    });
   });
 
   describe("piping", () => {
     test("lazy", () => {
-      const count = vi.fn();
+      const mock = vi.fn(identity);
       const result = pipe(
         [1, 2, 3, 4, 5, 6],
-        map((x) => {
-          count();
-          return x;
-        }),
+        map(mock),
         intersection.multiset([4, 2]),
         take(2),
       );
-      expect(count).toHaveBeenCalledTimes(4);
+      expect(mock).toHaveBeenCalledTimes(4);
       expect(result).toStrictEqual([2, 4]);
     });
   });
