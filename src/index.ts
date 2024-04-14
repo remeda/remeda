@@ -24,6 +24,7 @@ export * from "./dropLastWhile";
 export * from "./dropWhile";
 export * from "./entries";
 export * from "./equals";
+export * from "./every";
 export * from "./evolve";
 export * from "./filter";
 export * from "./find";
