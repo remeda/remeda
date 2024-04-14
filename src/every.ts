@@ -1,6 +1,3 @@
-// TODO: Fix ESlint issues
-/* eslint-disable jsdoc/require-example */
-/* eslint-disable jsdoc/require-description */
 import type {
   Pred,
   PredIndexed,
@@ -11,32 +8,64 @@ import type {
 import { purry } from "./purry";
 
 /**
+ * Checks if every element of `data` passed the predicate `predicate`.
+ *
  * @param data - The Array to check.
- * @param pred - A predicate function to run.
+ * @param predicate - A predicate function to run.
  * @returns A `boolean` indicating if every element in `data` passes the predicate `pred`.
+ * @signature
+ *    R.every(arr, predicate)
+ * @example
+ *    R.every([1, 2, 3], R.isNumber) // => true
+ *    R.every(['a', 0, 'b'], R.isString) // => false
  * @dataFirst
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function every<T, S extends T>(
   data: ReadonlyArray<T>,
-  pred: TypePred<T, S>,
+  predicate: TypePred<T, S>,
 ): data is Array<S>;
 export function every<T>(
   data: ReadonlyArray<T>,
-  pred: Pred<T, boolean>,
+  predicate: Pred<T, boolean>,
 ): boolean;
 
 /**
- * @param pred - A predicate function to run.
+ * Checks if every element of `data` passed the predicate `predicate`.
+ *
+ * NOTE: If you want to use this inside `conditional` predicates and preserve proper type inference,
+ * make sure to define the final type guard outside of the pipe. This is due to Typescript's limitation
+ * in generic type inference. See examples below for details.
+ *
+ * @param predicate - A predicate function to run.
+ * @returns A `boolean` indicating if every element in `data` passes the predicate `pred`.
+ * @signature
+ *    R.every(predicate)(data)
+ * @example
+ *    R.every(isNumber)([1, 2, 3]) // => true
+ *    R.every(isString)(['a', 0, 'b']) // => false
+ * @example
+ *    // using `R.every` as a type predicate within `conditional`
+ *    const allNumbers = R.every(R.isNumber);
+ *    const result = R.pipe(
+ *      R.conditional(
+ *        [allNumbers, val => {...}]
+ *                  // ^? number[]
+ *        ...
+ *      )
+ *    )
  * @dataLast
+ * @indexed
+ * @pipeable
  * @category Array
  */
 export function every<T, S extends T>(
-  pred: TypePred<T, S>,
+  predicate: TypePred<T, S>,
 ): (data: ReadonlyArray<T>) => data is Array<S>;
 export function every<T>(
-  // pred: Pred<T, boolean>,
-  pred: (input: T) => boolean,
+  predicate: (input: T) => boolean,
 ): (data: ReadonlyArray<T>) => boolean;
 
 export function every(): unknown {
@@ -45,25 +74,25 @@ export function every(): unknown {
 
 const _every =
   (indexed: boolean) =>
-  <T>(data: ReadonlyArray<T>, pred: PredIndexedOptional<T, boolean>) =>
+  <T>(data: ReadonlyArray<T>, predicate: PredIndexedOptional<T, boolean>) =>
     indexed
-      ? data.every((element, index, array) => pred(element, index, array))
-      : data.every((element) => pred(element));
+      ? data.every((element, index, array) => predicate(element, index, array))
+      : data.every((element) => predicate(element));
 
 export namespace every {
   export function indexed<T, S extends T>(
     data: ReadonlyArray<T>,
-    pred: TypePredIndexed<T, S>,
+    predicate: TypePredIndexed<T, S>,
   ): data is Array<S>;
   export function indexed<T>(
     data: ReadonlyArray<T>,
-    pred: PredIndexed<T, boolean>,
+    predicate: PredIndexed<T, boolean>,
   ): boolean;
   export function indexed<T, S extends T>(
-    pred: TypePredIndexed<T, S>,
+    predicate: TypePredIndexed<T, S>,
   ): (data: ReadonlyArray<T>) => data is Array<S>;
   export function indexed<T>(
-    pred: PredIndexed<T, boolean>,
+    predicate: PredIndexed<T, boolean>,
   ): (data: ReadonlyArray<T>) => boolean;
   export function indexed(): unknown {
     return purry(_every(true), arguments);
