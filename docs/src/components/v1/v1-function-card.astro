@@ -12,18 +12,12 @@ type Props = {
 
 const { func } = Astro.props;
 
-const entry = await getEntry(MIGRATION_COLLECTION, func.name);
+const entry = await getEntry(MIGRATION_COLLECTION, func.name.toLowerCase());
 const Migration = await entry?.render();
 ---
 
-{
-  Migration !== undefined ? (
-    <FunctionCard func={func}>
-      <MigrationBox>
-        <Migration.Content />
-      </MigrationBox>
-    </FunctionCard>
-  ) : (
-    <FunctionCard func={func} />
-  )
-}
+<FunctionCard func={func}>
+  <MigrationBox>
+    {Migration !== undefined ? <Migration.Content /> : <em>(none)</em>}
+  </MigrationBox>
+</FunctionCard>
