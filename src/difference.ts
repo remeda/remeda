@@ -5,27 +5,19 @@ import { purry } from "./purry";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
- * as the input. If either `array` or `other` contain multiple items with the
- * same values, all occurrences of those values will be removed. If the exact
- * number of copies should be observed (i.e. multi-set semantics), use
- * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
- * implementations yield the same result.
- *
- * ! **DEPRECATED**: Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * as the input. The inputs are treated as multi-sets/bags (multiple copies of
+ * items are treated as unique items).
  *
  * @param data - The input items.
  * @param other - The values to exclude.
  * @signature
  *    R.difference(data, other)
- *    R.difference.multiset(data, other)
  * @example
  *    R.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
- *    R.difference([1, 1, 2, 2], [1]); // => [2, 2]
- *    R.difference.multiset([1, 1, 2, 2], [1]); // => [1, 2, 2]
+ *    R.difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.difference.multiset(data, other)` (or `R.filter(data, R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
 export function difference<T>(
   data: ReadonlyArray<T>,
@@ -34,73 +26,33 @@ export function difference<T>(
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
- * as the input. If either `array` or `other` contain multiple items with the
- * same values, all occurrences of those values will be removed. If the exact
- * number of copies should be observed (i.e. multi-set semantics), use
- * `R.difference.multiset` instead. If the arrays don't contain duplicates, both
- * implementations yield the same result.
- *
- * ! **DEPRECATED**: Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
+ * as the input. The inputs are treated as multi-sets/bags (multiple copies of
+ * items are treated as unique items).
  *
  * @param other - The values to exclude.
  * @signature
  *    R.difference(other)(data)
- *    R.difference.multiset(other)(data)
  * @example
  *    R.pipe([1, 2, 3, 4], R.difference([2, 5, 3])); // => [1, 4]
- *    R.pipe([1, 1, 2, 2], R.difference([1])); // => [2, 2]
- *    R.pipe([1, 1, 2, 2], R.difference.multiset([1])); // => [1, 2, 2]
+ *    R.pipe([1, 1, 2, 2], R.difference([1])); // => [1, 2, 2]
  * @dataFirst
  * @pipeable
  * @category Array
- * @deprecated Use `R.difference.multiset(other)` (or `R.filter(R.isNot(R.isIncludedIn(other)))` to keep the current runtime logic). `R.difference.multiset` will replace `R.difference` in v2!
  */
-export function difference<T, K>(
+export function difference<T>(
   other: ReadonlyArray<T>,
-): (array: ReadonlyArray<K>) => Array<T>;
+): (data: ReadonlyArray<T>) => Array<T>;
 
-export function difference(): unknown {
-  return purry(_difference, arguments, difference.lazy);
+export function difference(...args: ReadonlyArray<unknown>): unknown {
+  return purry(differenceImplementation, args, lazyImplementation);
 }
 
-function _difference<T>(
+const differenceImplementation = <T>(
   array: ReadonlyArray<T>,
   other: ReadonlyArray<T>,
-): Array<T> {
-  const lazy = difference.lazy(other);
-  return _reduceLazy(array, lazy);
-}
+): Array<T> => _reduceLazy(array, lazyImplementation(other));
 
-export namespace difference {
-  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
-    const set = new Set(other);
-    return (value) =>
-      set.has(value)
-        ? { done: false, hasNext: false }
-        : { done: false, hasNext: true, next: value };
-  }
-
-  export function multiset<T>(
-    array: ReadonlyArray<T>,
-    other: ReadonlyArray<T>,
-  ): Array<T>;
-  export function multiset<T>(
-    other: ReadonlyArray<T>,
-  ): (data: ReadonlyArray<T>) => Array<T>;
-
-  export function multiset(): unknown {
-    return purry(multisetImplementation, arguments, multisetLazyImplementation);
-  }
-}
-
-const multisetImplementation = <T>(
-  array: ReadonlyArray<T>,
-  other: ReadonlyArray<T>,
-): Array<T> => _reduceLazy(array, multisetLazyImplementation(other));
-
-function multisetLazyImplementation<T>(
-  other: ReadonlyArray<T>,
-): LazyEvaluator<T> {
+function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
   if (other.length === 0) {
     return lazyIdentityEvaluator;
   }
