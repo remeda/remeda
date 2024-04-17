@@ -85,7 +85,7 @@ describe("typing", () => {
     const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
     expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
 
-    const narrow = pickBy({ a: 1 } as const, isDeepEqual(1 as const));
+    const narrow = pickBy({ a: 1 } as const, (x): x is 1 => true);
     expectTypeOf(narrow).toEqualTypeOf<{ a: 1 }>();
   });
 
