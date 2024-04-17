@@ -55,10 +55,10 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * @dataLast
  * @category Guard
  */
-export function isDeepEqual<T, S extends T>(other: S): (data: T) => data is S;
-export function isDeepEqual<T, S extends T = T>(
+export function isDeepEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
-): (data: T) => boolean;
+): (data: T) => data is S;
+export function isDeepEqual<S>(other: S): <T extends S = S>(data: T) => boolean;
 
 export function isDeepEqual(): unknown {
   return purry(isDeepEqualImplementation, arguments);
