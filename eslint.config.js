@@ -347,6 +347,7 @@ export default config(
                 "IArguments",
                 "Iterable",
                 "Promise",
+                "ReadonlyMap",
                 "RegExp",
               ],
             },

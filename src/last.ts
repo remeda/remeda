@@ -1,10 +1,11 @@
-import type { NonEmptyArray } from "./_types";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
+import type { LastArrayElement } from "./type-fest/last-array-element";
 
 /**
  * Gets the last element of `array`.
  *
- * @param array - The array.
+ * @param data - The array.
  * @signature
  *    R.last(array)
  * @example
@@ -14,8 +15,7 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
-export function last<T>(array: ReadonlyArray<T>): T | undefined;
+export function last<T extends IterableContainer>(data: T): LastArrayElement<T>;
 
 /**
  * Gets the last element of `array`.
@@ -33,7 +33,9 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  * @pipeable
  * @category Array
  */
-export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
+export function last<T extends IterableContainer>(): (
+  data: T,
+) => LastArrayElement<T>;
 
 export function last(...args: ReadonlyArray<unknown>): unknown {
   return purry(_last, args);
