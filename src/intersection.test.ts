@@ -2,7 +2,6 @@ import { identity } from "./identity";
 import { intersection } from "./intersection";
 import { map } from "./map";
 import { pipe } from "./pipe";
-import { take } from "./take";
 
 describe("runtime", () => {
   it("returns empty array trivially", () => {
@@ -52,13 +51,8 @@ describe("runtime", () => {
 
 describe("piping", () => {
   test("lazy", () => {
-    const mock = vi.fn(identity);
-    const result = pipe(
-      [1, 2, 3, 4, 5, 6],
-      map(mock),
-      intersection([4, 2]),
-      take(2),
-    );
+    const mock = vi.fn(identity());
+    const result = pipe([1, 2, 3, 4, 5, 6], map(mock), intersection([4, 2]));
     expect(mock).toHaveBeenCalledTimes(4);
     expect(result).toStrictEqual([2, 4]);
   });
