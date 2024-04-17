@@ -134,7 +134,7 @@ describe("typing", () => {
     const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
     expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
 
-    const narrow = omitBy({ a: 1 } as const, (x): x is 1 => true);
+    const narrow = omitBy({ a: 1 } as const, (_x): _x is 1 => true);
     // eslint-disable-next-line @typescript-eslint/ban-types -- Expected!
     expectTypeOf(narrow).toEqualTypeOf<{}>();
   });
