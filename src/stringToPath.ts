@@ -15,10 +15,13 @@ type StringToPath<T extends string> = string extends T
           : [T];
 
 /**
- * Converts a path string to an array of string keys (including array index access keys).
- * !IMPORTANT!: Attempting to pass a simple `string` type will result in the result being inferred
- * as `never`. This is intentional to help with type-safety as this function is primarily intended
- * to help with other "object path access" functions like `pathOr` or `setPath`.
+ * Converts a path string to an array of string keys (including array index
+ * access keys).
+ *
+ * ! IMPORTANT: Attempting to pass a simple `string` type will result in the
+ * result being inferred as `never`. This is intentional to help with type-
+ * safety as this function is primarily intended to help with other "object path
+ * access" functions like `pathOr` or `setPath`.
  *
  * @param path - A string path.
  * @signature R.stringToPathArray(path)
