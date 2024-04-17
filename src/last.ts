@@ -1,10 +1,20 @@
-import type { NonEmptyArray } from "./_types";
+import { type LastArrayElement } from "type-fest";
+import type { IterableContainer } from "./_types";
 import { purry } from "./purry";
+
+type Last<T extends IterableContainer> = LastArrayElement<
+  T,
+  // Type-fest's LastArrayElement assumes a looser typescript configuration
+  // where `noUncheckedIndexedAccess` is disabled. To support the stricter
+  // configuration we assume we need to assign the "LastArrayElement" param to
+  // `undefined`, but only if the array isn't empty.
+  T extends readonly [] ? never : undefined
+>;
 
 /**
  * Gets the last element of `array`.
  *
- * @param array - The array.
+ * @param data - The array.
  * @signature
  *    R.last(array)
  * @example
@@ -14,8 +24,7 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function last<T>(array: Readonly<NonEmptyArray<T>>): T;
-export function last<T>(array: ReadonlyArray<T>): T | undefined;
+export function last<T extends IterableContainer>(data: T): Last<T>;
 
 /**
  * Gets the last element of `array`.
@@ -33,7 +42,7 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  * @pipeable
  * @category Array
  */
-export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
+export function last(): <T extends IterableContainer>(data: T) => Last<T>;
 
 export function last(...args: ReadonlyArray<unknown>): unknown {
   return purry(_last, args);

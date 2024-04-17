@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Maps, Sets and TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior. Please open
- * an issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
+ * supported right now and might result in unexpected behavior. Please open an
+ * issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -25,7 +25,11 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
+export function isDeepEqual<T, S extends T>(
+  data: T,
+  other: T extends Exclude<T, S> ? S : never,
+): data is S;
+export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
 
 /**
  * Performs a deep *semantic* comparison between two values to determine if they
@@ -34,9 +38,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Maps, Sets and TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior. Please open
- * an issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
+ * supported right now and might result in unexpected behavior. Please open an
+ * issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -51,9 +55,10 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  * @dataLast
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(
-  other: S,
+export function isDeepEqual<T, S extends T>(
+  other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
+export function isDeepEqual<S>(other: S): <T extends S = S>(data: T) => boolean;
 
 export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isDeepEqualImplementation, args);
@@ -116,6 +121,10 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return data.toString() === (other as unknown as RegExp).toString();
   }
 
+  if (data instanceof Map) {
+    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
+  }
+
   // At this point we only know that the 2 objects share a prototype and are not
   // any of the previous types. They could be plain objects (Object.prototype),
   // they could be classes, they could be other built-ins, or they could be
@@ -138,6 +147,27 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
         other[key],
       )
     ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualMaps(
+  data: ReadonlyMap<unknown, unknown>,
+  other: ReadonlyMap<unknown, unknown>,
+): boolean {
+  if (data.size !== other.size) {
+    return false;
+  }
+
+  for (const [key, value] of data.entries()) {
+    if (!other.has(key)) {
+      return false;
+    }
+
+    if (!isDeepEqualImplementation(value, other.get(key))) {
       return false;
     }
   }

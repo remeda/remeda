@@ -1,3 +1,4 @@
+import { differenceWith } from "./differenceWith";
 import { isDeepEqual } from "./isDeepEqual";
 
 function func1(): void {
@@ -155,6 +156,69 @@ describe("arrays", () => {
   });
 });
 
+describe("Maps", () => {
+  it("works on shallow equal maps", () => {
+    expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 1]]))).toBe(true);
+  });
+
+  test("two empty Maps should be equal", () => {
+    expect(isDeepEqual(new Map(), new Map())).toBe(true);
+  });
+
+  it("two Maps with different size should not be equal", () => {
+    expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
+  });
+
+  it("two Maps with different keys shoud not be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", 1],
+          ["c", 2],
+        ]),
+        new Map([
+          ["a", 1],
+          ["b", 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("two maps with the same keys but with different values should not be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", 1],
+          ["b", 3],
+          ["c", 2],
+        ]),
+        new Map([
+          ["a", 1],
+          ["b", 2],
+          ["c", 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("two Maps with the same non primitives data should be equal", () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ["a", { a: [1, 2, 3] }],
+          ["b", { a: [3] }],
+          ["c", { b: [4] }],
+        ]),
+        new Map([
+          ["a", { a: [1, 2, 3] }],
+          ["b", { a: [3] }],
+          ["c", { b: [4] }],
+        ]),
+      ),
+    ).toBe(true);
+  });
+});
+
 describe("Date objects", () => {
   test("equal date objects", () => {
     expect(
@@ -257,10 +321,14 @@ describe("typing", () => {
 
     if (isDeepEqual(data, 1)) {
       expectTypeOf(data).toEqualTypeOf<number>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number | string>();
     }
 
     if (isDeepEqual(data, "hello")) {
       expectTypeOf(data).toEqualTypeOf<string>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number | string>();
     }
   });
 
@@ -268,6 +336,8 @@ describe("typing", () => {
     const data = 1 as number;
     if (isDeepEqual(data, 1 as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 
@@ -282,6 +352,37 @@ describe("typing", () => {
     >;
     if (isDeepEqual(data, [{ a: [1] }])) {
       expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<
+        Array<
+          | {
+              a: Array<number> | Array<string>;
+            }
+          | {
+              b: Array<boolean>;
+            }
+        >
+      >();
     }
+  });
+
+  it("doesn't narrow when comparing objects of the same type", () => {
+    const data1 = { a: 1 } as { a: number };
+    const data2 = { a: 2 } as { a: number };
+    if (isDeepEqual(data1, data2)) {
+      expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
+    } else {
+      expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
+    }
+  });
+
+  it("headless usage can infer types", () => {
+    // Tests the issue reported in: https://github.com/remeda/remeda/issues/641
+    const result = differenceWith(
+      ["a", "b", "c"],
+      ["a", "c", "d"],
+      isDeepEqual,
+    );
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 });

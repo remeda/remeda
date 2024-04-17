@@ -20,6 +20,7 @@ documentation when migrating._
 | [`conditional`](https://remedajs.com/docs/#conditional)             | [`cond`](https://lodash.com/docs/4.17.15#cond)                           | [`cond`](https://ramdajs.com/docs/#cond)                           |
 | [`constant`](https://remedajs.com/docs/#constant)                   | [`constant`](https://lodash.com/docs/4.17.15#constant)                   | [`always`](https://ramdajs.com/docs/#always)                       |
 | [`debounce`](https://remedajs.com/docs/#debounce)                   | [`debounce`](https://lodash.com/docs/4.17.15#debounce)                   |                                                                    |
+| [`difference`](https://remedajs.com/docs/#difference)               | [`difference`](https://lodash.com/docs/4.17.15#difference)               | [`difference`](https://ramdajs.com/docs/#difference)               |
 | [`differenceWith`](https://remedajs.com/docs/#differenceWith)       | [`differenceWith`](https://lodash.com/docs/4.17.15#differenceWith)       | [`differenceWith`](https://ramdajs.com/docs/#differenceWith)       |
 | [`divide`](https://remedajs.com/docs/#divide)                       | [`divide`](https://lodash.com/docs/4.17.15#divide)                       | [`divide`](https://ramdajs.com/docs/#divide)                       |
 | [`drop`](https://remedajs.com/docs/#drop)                           | [`drop`](https://lodash.com/docs/4.17.15#drop)                           | [`drop`](https://ramdajs.com/docs/#drop)                           |
@@ -34,9 +35,9 @@ documentation when migrating._
 | [`findLast`](https://remedajs.com/docs/#findLast)                   | [`findLast`](https://lodash.com/docs/4.17.15#findLast)                   | [`findLast`](https://ramdajs.com/docs/#findLast)                   |
 | [`findLastIndex`](https://remedajs.com/docs/#findLastIndex)         | [`findLastIndex`](https://lodash.com/docs/4.17.15#findLastIndex)         | [`findLastIndex`](https://ramdajs.com/docs/#findLastIndex)         |
 | [`first`](https://remedajs.com/docs/#first)                         | [`head`](https://lodash.com/docs/4.17.15#head)                           | [`head`](https://ramdajs.com/docs/#head)                           |
-| [`flatMap`](https://remedajs.com/docs/#flatMap)                     | [`flatMap`](https://lodash.com/docs/4.17.15#flatMap)                     | [`chain`](https://ramdajs.com/docs/#chain)                         |
 | [`flat`](https://remedajs.com/docs/#flat)                           | [`flatten`](https://lodash.com/docs/4.17.15#flatten)                     | [`flatten`](https://ramdajs.com/docs/#flatten)                     |
 | [`flat`](https://remedajs.com/docs/#flattenDeep)                    | [`flattenDeep`](https://lodash.com/docs/4.17.15#flattenDeep)             |                                                                    |
+| [`flatMap`](https://remedajs.com/docs/#flatMap)                     | [`flatMap`](https://lodash.com/docs/4.17.15#flatMap)                     | [`chain`](https://ramdajs.com/docs/#chain)                         |
 | [`floor`](https://remedajs.com/docs/#floor)                         | [`floor`](https://lodash.com/docs/4.17.15#floor)                         |                                                                    |
 | [`forEach`](https://remedajs.com/docs/#forEach)                     | [`forEach`](https://lodash.com/docs/4.17.15#forEach)                     | [`forEach`](https://ramdajs.com/docs/#forEach)                     |
 | [`forEachObj`](https://remedajs.com/docs/#forEachObj)               | [`forEach`](https://lodash.com/docs/4.17.15#forEach)                     | [`forEachObjIndexed`](https://ramdajs.com/docs/#forEachObjIndexed) |
@@ -44,6 +45,7 @@ documentation when migrating._
 | [`hasSubobject`](https://remedajs.com/docs/#hasSubobject)           | [`isMatch`](https://lodash.com/docs/4.17.15#isMatch)                     | [`where`](https://ramdajs.com/docs/#where)                         |
 | [`identity`](https://remedajs.com/docs/#identity)                   | [`identity`](https://lodash.com/docs/4.17.15#identity)                   | [`identity`](https://ramdajs.com/docs/#identity)                   |
 | [`indexBy`](https://remedajs.com/docs/#indexBy)                     | [`keyBy`](https://lodash.com/docs/4.17.15#keyBy)                         | [`indexBy`](https://ramdajs.com/docs/#indexBy)                     |
+| [`intersection`](https://remedajs.com/docs/#intersection)           | [`intersection`](https://lodash.com/docs/4.17.15#intersection)           | [`intersection`](https://ramdajs.com/docs/#intersection)           |
 | [`intersectionWith`](https://remedajs.com/docs/#intersectionWith)   | [`intersectionWith`](https://lodash.com/docs/4.17.15#intersectionWith)   | [`innerJoin`](https://ramdajs.com/docs/#innerJoin)                 |
 | [`invert`](https://remedajs.com/docs/#invert)                       | [`invert`](https://lodash.com/docs/4.17.15#invert)                       | [`invertObj`](https://ramdajs.com/docs/#invertObj)                 |
 | [`isDeepEqual`](https://remedajs.com/docs/#isDeepEqual)             | [`isEqual`](https://lodash.com/docs/4.17.15#isEqual)                     | [`equals`](https://ramdajs.com/docs/#equals)                       |
@@ -121,21 +123,20 @@ provide the exact functionality of the listed Lodash and Ramda functions.
 Be sure to consult each library's documentation and to check what features
 you are relying on when migrating._
 
-| Remeda                                      | Lodash         | Ramda          |
-| ------------------------------------------- | -------------- | -------------- |
-| `(arr, val) => [...arr, val]`               |                | `append`       |
-| `a?.b?.c`                                   | `path`         |                |
-| `n => a[n]`                                 | `nth`          | `nth`          |
-| `R.constant(undefined)`                     | `noop`         |                |
-| `R.filter(R.isIncludedIn(other))`           | `intersection` | `intersection` |
-| `R.filter(R.isNot(fn))`                     | `reject`       | `reject`       |
-| `R.filter(R.isNot(R.isIncludedIn(other)))`  | `difference`   | `difference`   |
-| `R.filter(R.isTruthy)`                      | `compact`      |                |
-| `R.firstBy([fn, "desc"])`                   | `maxBy`        | `maxBy`        |
-| `R.firstBy([R.identity, "desc"])`           | `max`          | `max`          |
-| `R.firstBy(fn)`                             | `minBy`        | `minBy`        |
-| `R.firstBy(R.identity)`                     | `min`          | `min`          |
-| `R.fromEntries.strict(R.zip(keys, values))` | `zipObj`       | `zipObj`       |
-| `str => str.split(/\s+/)`                   | `words`        |                |
-| `x => x.a ?? defaultValue`                  | `propOr`       |                |
-| `x => x.a === value`                        | `propEq`       |                |
+| Remeda                                                                         | Lodash       | Ramda    |
+| ------------------------------------------------------------------------------ | ------------ | -------- |
+| `(arr, val) => [...arr, val]`                                                  |              | `append` |
+| `a?.b?.c`                                                                      | `path`       |          |
+| `n => a[n]`                                                                    | `nth`        | `nth`    |
+| `R.constant(undefined)`                                                        | `noop`       |          |
+| `R.filter((item, index, array) => index === 0 \|\| item !== array[index - 1])` | `sortedUniq` |          |
+| `R.filter(R.isNot(fn))`                                                        | `reject`     | `reject` |
+| `R.filter(R.isTruthy)`                                                         | `compact`    |          |
+| `R.firstBy([fn, "desc"])`                                                      | `maxBy`      | `maxBy`  |
+| `R.firstBy([R.identity, "desc"])`                                              | `max`        | `max`    |
+| `R.firstBy(fn)`                                                                | `minBy`      | `minBy`  |
+| `R.firstBy(R.identity)`                                                        | `min`        | `min`    |
+| `R.fromEntries.strict(R.zip(keys, values))`                                    | `zipObj`     | `zipObj` |
+| `str => str.split(/\s+/)`                                                      | `words`      |          |
+| `x => x.a ?? defaultValue`                                                     | `propOr`     |          |
+| `x => x.a === value`                                                           | `propEq`     |          |
