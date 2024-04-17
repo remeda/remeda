@@ -55,10 +55,10 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * @dataLast
  * @category Guard
  */
-export function isDeepEqual<T, S extends T>(other: S): (data: T) => data is S;
-export function isDeepEqual<T, S extends T = T>(
+export function isDeepEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
-): (data: T) => boolean;
+): (data: T) => data is S;
+export function isDeepEqual<T, S extends T = T>(other: S): (data: T) => boolean;
 
 export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isDeepEqualImplementation, args);
@@ -162,15 +162,12 @@ function isDeepEqualMaps(
     return false;
   }
 
-  // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
-  const keys = Array.from(data.keys());
-
-  for (const key of keys) {
+  for (const [key, value] of data.entries()) {
     if (!other.has(key)) {
       return false;
     }
 
-    if (!isDeepEqualImplementation(data.get(key), other.get(key))) {
+    if (!isDeepEqualImplementation(value, other.get(key))) {
       return false;
     }
   }
