@@ -6,13 +6,13 @@ confusing results, and did not enable using the function for multi-set use
 cases.
 
 In V2 the default implementation now takes into account the duplication factor
-of the items in both data and operand arrays.
+of the items in both input arrays.
 
 If your data had no duplications the two implementations are **equivalent**.
 
-If you want to maintain the same runtime behavior when dealing with duplicates
+If you want to maintain the same runtime behavior for dealing with duplicates
 use [`filter`](/docs/#filter) with [`isNot`](/docs/#isNot) and
-[`isIncludedIn`](/docs/#isIncludedIn) as the predicate (see example below).
+[`isIncludedIn`](/docs/#isIncludedIn) as the predicate.
 
 ## Examples
 

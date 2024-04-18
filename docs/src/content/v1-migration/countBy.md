@@ -1,8 +1,8 @@
 # Removed
 
-Replaced with [`filter`](/docs/#filter) with the same predicate, followed by using the
-[`Array.prototype.length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length)
-prop or the [`length`](/docs/#length) utility function.
+Replaced with [`filter`](/docs/#filter) using the same predicate, followed by
+either the [`Array.prototype.length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length)
+prop, or using the [`length`](/docs/#length) utility function on the result.
 
 ## Examples
 

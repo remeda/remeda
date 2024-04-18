@@ -1,6 +1,6 @@
 # Removed
 
-Replaced with [`filter`](/docs/#filter) using [`isTruthy`](/docs/#isTruthy) as
+Replaced with [`filter`](/docs/#filter) with [`isTruthy`](/docs/#isTruthy) as
 the predicate.
 
 ## Examples

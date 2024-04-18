@@ -1,11 +1,12 @@
 # Typing
 
-The `strict` variant was promoted to the base type, and was refined further to
-exclude `symbol` keys, and to convert all number keys to `string`, to match the
-runtime return type of [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
-which is used as the implementation.
+If you weren't using the `strict` variant, The returned type is now stricter and
+more customized to your input type. The returned entries are typed according to
+to the keys in the input, with the values typed per-key.
 
 If you are already using `entries.strict` simply remove the `.strict` suffix.
+
+The return type now filters `symbol` keys, and casts `number` keys as strings.
 
 ## Examples
 

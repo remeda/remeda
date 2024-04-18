@@ -1,7 +1,7 @@
 # Removed
 
-Replaced with [`isDeepEqual`](/docs/#isDeepEqual), which can now also act as a
-guard (type-predicate) in certain cases.
+Replaced with [`isDeepEqual`](/docs/#isDeepEqual). isDeepEqual has a slightly
+different return type (in some cases) allowing it to narrow the result.
 
 ## Examples
 

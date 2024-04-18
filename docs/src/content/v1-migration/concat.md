@@ -1,7 +1,8 @@
 # Typing
 
-The return type was changed so that the shape of input tuples and arrays is
-maintained, and so the order of concatenation is maintained in the output.
+The return type was made stricter. If the 2 arrays have different types of
+items, or the inputs are tuples, the new output type maintains more of the shape
+of the input.
 
 ## Examples
 
