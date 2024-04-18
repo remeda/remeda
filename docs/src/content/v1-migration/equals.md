@@ -1,6 +1,6 @@
-# Removed
+# Renamed
 
-Replaced with [`isDeepEqual`](/docs/#isDeepEqual). isDeepEqual has a slightly
+Called [`isDeepEqual`](/docs/#isDeepEqual) instead. isDeepEqual has a slightly
 different return type (in some cases) allowing it to narrow the result.
 
 ## Examples
