@@ -2,11 +2,11 @@
 
 If you weren't using the `strict` variant, The returned type is now stricter and
 more reflective of the input type. The returned entries are typed according to
-to the keys in the input, with the values typed per-key.
+to the keys in the input, with the values typed per-key. If you are already
+using `entries.strict` simply remove the `.strict` suffix.
 
-If you are already using `entries.strict` simply remove the `.strict` suffix.
-
-The return type now filters `symbol` keys, and casts `number` keys as strings.
+Also, the return type now filters `symbol` keys, and casts `number` keys as
+strings.
 
 ## Examples
 
