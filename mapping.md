@@ -89,6 +89,7 @@ documentation when migrating._
 | [`set`](https://remedajs.com/docs/#set)                             | [`set`](https://lodash.com/docs/4.17.15#set)                             | [`assoc`](https://ramdajs.com/docs/#assoc)                         |
 | [`setPath`](https://remedajs.com/docs/#setPath)                     | [`set`](https://lodash.com/docs/4.17.15#set)                             | [`assocPath`](https://ramdajs.com/docs/#assocPath)                 |
 | [`shuffle`](https://remedajs.com/docs/#shuffle)                     | [`shuffle`](https://lodash.com/docs/4.17.15#shuffle)                     |                                                                    |
+| [`some`](https://remedajs.com/docs/#some)                           | [`some`](https://lodash.com/docs/4.17.15#some)                           |                                                                    |
 | [`sort`](https://remedajs.com/docs/#sort)                           |                                                                          | [`sort`](https://ramdajs.com/docs/#sort)                           |
 | [`sortBy`](https://remedajs.com/docs/#sortBy)                       | [`orderBy`](https://lodash.com/docs/4.17.15#orderBy)                     |                                                                    |
 | [`sortBy`](https://remedajs.com/docs/#sortBy)                       | [`sortBy`](https://lodash.com/docs/4.17.15#sortBy)                       | [`sortBy`](https://ramdajs.com/docs/#sortBy)                       |
