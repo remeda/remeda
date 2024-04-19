@@ -1,5 +1,6 @@
 import { conditional } from "./conditional";
 import { equals } from "./equals";
+import { every } from "./every";
 import { isNumber } from "./isNumber";
 import { isString } from "./isString";
 import { pipe } from "./pipe";
@@ -105,5 +106,42 @@ describe("typing", () => {
       conditional.defaultCase(() => 123 as const),
     );
     expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
+  });
+
+  // Known issue: using `every(typeGuard)` within `conditional` in `pipe` currently cannot narrow
+  // types correctly
+  // This test is passing like this and if the issue ever gets resolved, we'll find out because it gets
+  // broken. See discussion in https://github.com/remeda/remeda/issues/624 for details
+  it("can only infer types from `every` when type guard is defined separately", () => {
+    const input = [1, 2, 3] as Array<number | string>;
+
+    // incorrect narrowing when using `every` directly
+    const resultBroken = pipe(
+      input,
+      conditional([
+        every(isNumber),
+        (arr) => {
+          expectTypeOf(arr).toEqualTypeOf<Array<number | string>>();
+          return true;
+        },
+      ]),
+    );
+
+    expect(resultBroken).toBe(true);
+
+    const allNumbers = every(isNumber);
+    // correct narrowing when defining guard explicitly
+    const resultCorrect = pipe(
+      input,
+      conditional([
+        allNumbers,
+        (arr) => {
+          expectTypeOf(arr).toEqualTypeOf<Array<number>>();
+          return true;
+        },
+      ]),
+    );
+
+    expect(resultCorrect).toBe(true);
   });
 });

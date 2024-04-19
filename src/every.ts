@@ -35,10 +35,6 @@ export function every<T>(
 /**
  * Checks if every element of `data` passed the predicate `predicate`.
  *
- * NOTE: If you want to use this inside `conditional` predicates and preserve proper type inference,
- * make sure to define the final type guard outside of the pipe. This is due to Typescript's limitation
- * in generic type inference. See examples below for details.
- *
  * @param predicate - A predicate function to run.
  * @returns A `boolean` indicating if every element in `data` passes the predicate `pred`.
  * @signature
