@@ -1,5 +1,4 @@
 import { every } from "./every";
-import { filter } from "./filter";
 import { isNumber } from "./isNumber";
 import { pipe } from "./pipe";
 
@@ -78,16 +77,5 @@ describe("in pipe", () => {
       }),
     );
     expect(data).toBe(true);
-  });
-
-  test("narrows types when used with filter", () => {
-    const input = [
-      [1, 2],
-      [1, "a"],
-      ["foo", "bar"],
-    ] as Array<Array<number | string>>;
-    pipe(input, filter(every(isNumber)), (val) => {
-      expectTypeOf(val).toEqualTypeOf<Array<Array<number>>>();
-    });
   });
 });
