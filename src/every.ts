@@ -20,7 +20,6 @@ import { purry } from "./purry";
  *    R.every(['a', 0, 'b'], R.isString) // => false
  * @dataFirst
  * @indexed
- * @pipeable
  * @category Array
  */
 export function every<T, S extends T>(
@@ -54,7 +53,6 @@ export function every<T>(
  *    )
  * @dataLast
  * @indexed
- * @pipeable
  * @category Array
  */
 export function every<T, S extends T>(
