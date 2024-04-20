@@ -1,6 +1,23 @@
 import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
+import type { Mutable } from "./type-fest/internal";
+
+type DropAcc<
+  T extends ReadonlyArray<unknown>,
+  N extends number,
+  Acc extends ReadonlyArray<unknown> = T,
+  Dropped extends ReadonlyArray<unknown> = [],
+> = `${N}` extends `-${number}`
+  ? Mutable<T>
+  : Dropped["length"] extends N
+    ? Acc
+    : Acc extends readonly [...infer Head, infer Tail]
+      ? DropAcc<T, N, Head, [...Dropped, Tail]>
+      : [];
+
+type Drop<T extends ReadonlyArray<unknown>, N extends number> =
+  T extends Array<unknown> ? T : DropAcc<T, N>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -15,7 +32,10 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
+export function drop<T extends ReadonlyArray<unknown>, N extends number>(
+  array: T,
+  n: N,
+): Drop<T, N>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -29,13 +49,18 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @pipeable
  * @category Array
  */
-export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function drop<T extends ReadonlyArray<unknown>, N extends number>(
+  n: N,
+): (array: T) => Drop<T, N>;
 
 export function drop(): unknown {
   return purry(_drop, arguments, drop.lazy);
 }
 
-function _drop<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+function _drop<T extends ReadonlyArray<unknown>, N extends number>(
+  array: T,
+  n: N,
+): unknown {
   return _reduceLazy(array, drop.lazy(n));
 }
 
