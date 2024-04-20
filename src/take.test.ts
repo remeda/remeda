@@ -139,13 +139,13 @@ describe("typings", () => {
     expectTypeOf(take(longHeadReadonly, 6)).toEqualTypeOf<
       [number, string, boolean, ...Array<string>]
     >();
+  });
 
-    it("handles regular arrays", () => {
-      const input = [1, 2, 3];
-      expectTypeOf(take(input, 1)).toEqualTypeOf<Array<number>>();
-      expectTypeOf(take(input, -1)).toEqualTypeOf<[]>();
-      expectTypeOf(take(input, 10)).toEqualTypeOf<Array<number>>();
-    });
+  it("handles regular arrays", () => {
+    const input = [1, 2, 3];
+    expectTypeOf(take(input, 1)).toEqualTypeOf<Array<number>>();
+    expectTypeOf(take(input, -1)).toEqualTypeOf<[]>();
+    expectTypeOf(take(input, 10)).toEqualTypeOf<Array<number>>();
   });
 
   it("infers types in pipe", () => {
