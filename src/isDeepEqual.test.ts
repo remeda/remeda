@@ -1,3 +1,4 @@
+import { differenceWith } from "./differenceWith";
 import { isDeepEqual } from "./isDeepEqual";
 
 function func1(): void {
@@ -406,5 +407,15 @@ describe("typing", () => {
     } else {
       expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
     }
+  });
+
+  it("headless usage can infer types", () => {
+    // Tests the issue reported in: https://github.com/remeda/remeda/issues/641
+    const result = differenceWith(
+      ["a", "b", "c"],
+      ["a", "c", "d"],
+      isDeepEqual,
+    );
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 });
