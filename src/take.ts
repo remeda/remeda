@@ -1,4 +1,3 @@
-import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -57,7 +56,7 @@ export function take(...args: ReadonlyArray<unknown>): unknown {
 const takeImplementation = <T extends ReadonlyArray<unknown>, N extends number>(
   array: T,
   n: N,
-): unknown => _reduceLazy(array, lazyImplementation(n));
+): unknown => (n < 0 ? [] : array.slice(0, n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
