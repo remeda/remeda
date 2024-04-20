@@ -2,6 +2,21 @@ import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
+type TakeAcc<
+  T extends Array<unknown>,
+  N extends number,
+  Acc extends Array<unknown> = T,
+> = `${N}` extends `-${number}`
+  ? []
+  : Acc["length"] extends N
+    ? Acc
+    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Acc extends [...infer Head, infer _Tail]
+      ? TakeAcc<T, N, Head>
+      : T;
+
+type Take<T extends Array<unknown>, N extends number> = TakeAcc<T, N>;
+
 /**
  * Returns the first `n` elements of `array`.
  *
@@ -15,7 +30,10 @@ import { purry } from "./purry";
  * @pipeable
  * @category Array
  */
-export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
+export function take<T extends Array<unknown>, N extends number>(
+  array: T,
+  n: N,
+): Take<T, N>;
 
 /**
  * Returns the first `n` elements of `array`.
@@ -29,14 +47,18 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @pipeable
  * @category Array
  */
-export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function take<N extends number>(
+  n: N,
+): <T extends Array<unknown>>(array: T) => Take<T, N>;
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
   return purry(takeImplementation, args, lazyImplementation);
 }
 
-const takeImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
-  _reduceLazy(array, lazyImplementation(n));
+const takeImplementation = <T extends Array<unknown>, N extends number>(
+  array: T,
+  n: N,
+): unknown => _reduceLazy(array, lazyImplementation(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {

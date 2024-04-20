@@ -5,6 +5,14 @@ describe("data_first", () => {
   it("take", () => {
     expect(take([1, 2, 3, 4, 3, 2, 1], 3)).toEqual([1, 2, 3]);
   });
+
+  it("returns the whole array if N is greater than length", () => {
+    expect(take([1, 2, 3] as const, 10)).toEqual([1, 2, 3]);
+  });
+
+  it("returns an empty array if N is negative", () => {
+    expect(take([1, 2, 3] as const, -1)).toEqual([]);
+  });
 });
 
 describe("data_last", () => {
@@ -19,8 +27,19 @@ describe("data_last", () => {
 
 describe("typings", () => {
   it("infers tuple types properly", () => {
-    const result = take([1, 2, "foo", "bar"] as const, 3);
+    const valid = take([1, 2, "foo", "bar"] as const, 3);
+    expectTypeOf(valid).toEqualTypeOf<[1, 2, "foo"]>();
 
-    expectTypeOf(result).toEqualTypeOf<[1, 2, "foo"]>();
+    const negative = take([1, 2, 3] as const, -1);
+    expectTypeOf(negative).toEqualTypeOf<[]>();
+
+    const greater = take([1, 2, 3] as const, 10);
+    expectTypeOf(greater).toEqualTypeOf<[1, 2, 3]>();
+
+    const unknown = take([1, 2, 3], 2);
+    expectTypeOf(unknown).toEqualTypeOf<Array<number>>();
+
+    const dataLast = take(3)([1, 2, 3, 4, 5] as const);
+    expectTypeOf(dataLast).toEqualTypeOf<[1, 2, 3]>();
   });
 });
