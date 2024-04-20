@@ -131,28 +131,30 @@ describe("Sets", () => {
   test("two empty sets should be equal", () => {
     expect(isDeepEqual(new Set(), new Set())).toBe(true);
   });
-  test("two sets of different size should not be equal", () => {
+  test("two sets of the same lenght should not be equal", () => {
     expect(isDeepEqual(new Set([1]), new Set([1, 2]))).toBe(false);
   });
-  test("two sets with different primitive values shoud not be equal", () => {
-    expect(isDeepEqual(new Set([1, 2]), new Set([1, 3]))).toBe(false);
+  test("two sets of with different primitive content should not be equal", () => {
+    expect(isDeepEqual(new Set([1, 2, 4]), new Set([1, 2, 3]))).toBe(false);
   });
-  test("two sets with the same primitive values but out of order should be equal", () => {
-    expect(isDeepEqual(new Set([3, 1]), new Set([1, 3]))).toBe(true);
+  test("two sets of with the same primitive content should equal", () => {
+    expect(
+      isDeepEqual(new Set([{ a: 1 }, { b: 3 }]), new Set([{ b: 3 }, { a: 1 }])),
+    ).toBe(true);
   });
-  test("two sets with the same non primitve values out of order should be equal", () => {
+  test("two sets with duplicated non primitive content should not be equal", () => {
     expect(
       isDeepEqual(
-        new Set([
-          [{ a: 1 }, { b: 2 }],
-          [{ a: 1 }, { b: 2 }],
-          [{ c: 1 }, { d: 2 }],
-        ]),
-        new Set([
-          [{ c: 1 }, { d: 2 }],
-          [{ a: 1 }, { b: 2 }],
-          [{ a: 1 }, { b: 2 }],
-        ]),
+        new Set([{ a: 1 }, { b: 3 }, { a: 1 }]),
+        new Set([{ b: 3 }, { a: 1 }, { b: 3 }]),
+      ),
+    ).toBe(false);
+  });
+  test("two sets of Maps with the same values should be equal", () => {
+    expect(
+      isDeepEqual(
+        new Set([new Map([["a", 123]]), new Map([["b", 456]])]),
+        new Set([new Map([["b", 456]]), new Map([["a", 123]])]),
       ),
     ).toBe(true);
   });

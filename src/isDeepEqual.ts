@@ -179,27 +179,42 @@ function isDeepEqualMaps(
   return true;
 }
 
-function setToSortedArray(data: ReadonlySet<unknown>): ReadonlyArray<unknown> {
-  return Array.from(data.values()).sort((a, b) => {
-    const stringifiedA = JSON.stringify(a);
-    const stringifiedB = JSON.stringify(b);
-    return stringifiedA > stringifiedB
-      ? 1
-      : stringifiedA < stringifiedB
-        ? -1
-        : 0;
-  });
-}
-
 function isDeepEqualSets(
   data: ReadonlySet<unknown>,
   other: ReadonlySet<unknown>,
 ): boolean {
-  if (data.size !== (other as unknown as Set<unknown>).size) {
+  if (data.size !== other.size) {
     return false;
   }
-  return isDeepEqualImplementation(
-    setToSortedArray(data),
-    setToSortedArray(other),
-  );
+
+  // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
+  const dataArr = Array.from(data.values());
+  const otherMap = arrayToMap(Array.from(other.values()));
+  const otherKeys = Array.from(otherMap.keys());
+
+  let isFound = false;
+
+  for (const dataItem of dataArr) {
+    for (const otherKey of otherKeys) {
+      if (isDeepEqualImplementation(dataItem, otherMap.get(otherKey))) {
+        isFound = true;
+        otherMap.delete(otherKey);
+        break;
+      }
+    }
+    if (!isFound) {
+      return false;
+    }
+    isFound = false;
+  }
+
+  return true;
+}
+
+function arrayToMap(arr: ReadonlyArray<unknown>): Map<number, unknown> {
+  const map = new Map<number, unknown>();
+  for (let i = 0; i < arr.length; i++) {
+    map.set(i, arr[i]);
+  }
+  return map;
 }
