@@ -2,22 +2,17 @@ import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
-type Mutable<T> = {
-  -readonly [P in keyof T]: T[P];
-};
-
 type TakeAcc<
   T extends ReadonlyArray<unknown>,
   N extends number,
-  Acc extends ReadonlyArray<unknown> = T,
+  Acc extends ReadonlyArray<unknown> = [],
 > = `${N}` extends `-${number}`
   ? []
   : Acc["length"] extends N
     ? Acc
-    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Acc extends readonly [...infer Head, infer _Tail]
-      ? TakeAcc<T, N, Head>
-      : Mutable<T>;
+    : T extends readonly [infer Head, ...infer Tail]
+      ? TakeAcc<Tail, N, [...Acc, Head]>
+      : [...Acc, ...T];
 
 type Take<T extends ReadonlyArray<unknown>, N extends number> = TakeAcc<T, N>;
 
