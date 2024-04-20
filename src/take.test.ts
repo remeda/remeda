@@ -16,3 +16,11 @@ describe("data_last", () => {
     expect(pipe([1, 2, 3, 4, 3, 2, 1], take(0))).toEqual([]);
   });
 });
+
+describe("typings", () => {
+  it("infers tuple types properly", () => {
+    const result = take([1, 2, "foo", "bar"] as const, 3);
+
+    expectTypeOf(result).toEqualTypeOf<[1, 2, "foo"]>();
+  });
+});
