@@ -24,3 +24,8 @@ type InternalIsUnion<T, U = T> = (
     ? true
     : Result
   : never; // Should never happen
+
+// removes `readonly` from a type
+export type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+};

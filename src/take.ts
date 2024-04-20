@@ -1,10 +1,7 @@
 import { _reduceLazy } from "./_reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
-
-type Mutable<T> = {
-  -readonly [P in keyof T]: T[P];
-};
+import type { Mutable } from "./type-fest/internal";
 
 type TakeAcc<
   T extends ReadonlyArray<unknown>,
