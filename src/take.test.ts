@@ -38,8 +38,12 @@ describe("typings", () => {
 
     const unknown = take([1, 2, 3], 2);
     expectTypeOf(unknown).toEqualTypeOf<Array<number>>();
+  });
 
-    const dataLast = take(3)([1, 2, 3, 4, 5] as const);
-    expectTypeOf(dataLast).toEqualTypeOf<[1, 2, 3]>();
+  it("infers types in pipe", () => {
+    const input = [1, 2, 3, 4] as const;
+    const result = pipe(input, take(2));
+
+    expectTypeOf(result).toEqualTypeOf<[1, 2]>();
   });
 });
