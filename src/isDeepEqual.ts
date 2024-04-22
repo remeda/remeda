@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
- * supported right now and might result in unexpected behavior. Please open an
- * issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are
+ * not supported right now and might result in unexpected behavior. Please open
+ * an issue in the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -94,6 +94,10 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return false;
   }
 
+  if (data instanceof Set) {
+    return isDeepEqualSets(data, other as unknown as Set<unknown>);
+  }
+
   if (Array.isArray(data)) {
     if (data.length !== (other as ReadonlyArray<unknown>).length) {
       return false;
@@ -168,6 +172,36 @@ function isDeepEqualMaps(
     }
 
     if (!isDeepEqualImplementation(value, other.get(key))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualSets(
+  data: ReadonlySet<unknown>,
+  other: ReadonlySet<unknown>,
+): boolean {
+  if (data.size !== other.size) {
+    return false;
+  }
+
+  // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
+  const dataArr = Array.from(data.values());
+  const otherArr = Array.from(other.values());
+
+  for (const dataItem of dataArr) {
+    let isFound = false;
+
+    for (let i = 0; i < otherArr.length; i++) {
+      if (isDeepEqualImplementation(dataItem, otherArr[i])) {
+        isFound = true;
+        otherArr.splice(i, 1);
+        break;
+      }
+    }
+    if (!isFound) {
       return false;
     }
   }
