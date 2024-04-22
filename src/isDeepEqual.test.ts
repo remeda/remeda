@@ -159,6 +159,14 @@ describe("Sets", () => {
       ),
     ).toBe(true);
   });
+  test("two sets with more than two items that are all equal should be equal", () => {
+    expect(
+      isDeepEqual(
+        new Set([{ a: 1 }, { b: 3 }, { c: 4 }, { a: 1 }]),
+        new Set([{ b: 3 }, { c: 4 }, { a: 1 }, { a: 1 }]),
+      ),
+    ).toBe(true);
+  });
 });
 
 describe("arrays", () => {
