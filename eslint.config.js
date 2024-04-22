@@ -24,6 +24,9 @@ export default config(
     },
   },
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
+    },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
       // possible so we pass the callback directly without wrapping it with an
@@ -36,6 +39,14 @@ export default config(
       // This isn't very useful in a utility library, a lot of utilities need to
       // access arrays in a random-access way.
       "@typescript-eslint/no-non-null-assertion": "off",
+
+      // When our return type is just `undefined` (like `first([])`) this rule
+      // considers the function as returning `void` (which is technically
+      // correct because assigning a void function to a variable will result in
+      // `undefined`), but this is not an error, it's by design. I don't know
+      // what this rule expects us to do in those cases so turning it off for
+      // now instead...
+      "@typescript-eslint/no-confusing-void-expression": "off",
 
       // TODO: These rules allow us to really standardize our codebase, but they
       // also do sweeping changes to the whole codebase which is very noisy. We
@@ -58,60 +69,63 @@ export default config(
         },
       ],
       "no-await-in-loop": "error",
-      "no-constructor-return": "error",
-      "no-duplicate-imports": "error",
-      "no-inner-declarations": [
-        "warn",
-        "both",
-        { blockScopedFunctions: "disallow" },
-      ],
+      "no-constant-binary-expression": "error",
+      "no-new-native-nonconstructor": "error",
       "no-promise-executor-return": "error",
       "no-self-compare": "error",
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
-      "no-useless-assignment": "error",
+      "no-duplicate-imports": "error",
       "require-atomic-updates": "error",
 
       // Suggestions
-      "accessor-pairs": "warn",
       "arrow-body-style": "warn",
-      "block-scoped-var": "warn",
       curly: "error",
       "default-case-last": "warn",
+      "dot-notation": "warn",
       eqeqeq: ["error", "always", { null: "always" }],
-      "func-name-matching": "warn",
-      "func-names": "warn",
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
-      "grouped-accessor-pairs": ["warn", "getBeforeSet"],
       "guard-for-in": "error",
       "logical-assignment-operators": "warn",
-      "multiline-comment-style": ["warn", "separate-lines"],
-      "new-cap": "warn",
+      "operator-assignment": "warn",
+      "object-shorthand": "warn",
+      "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
+      "prefer-const": "error",
+      "prefer-exponentiation-operator": "error",
+      "prefer-named-capture-group": "warn",
+      "prefer-numeric-literals": "error",
+      "prefer-object-spread": "error",
+      "prefer-promise-reject-errors": ["error", { allowEmptyReject: false }],
+      "prefer-regex-literals": ["error", { disallowRedundantWrapping: true }],
+      "prefer-spread": "error",
+      "prefer-template": "error",
+      "require-await": "error",
+      "require-unicode-regexp": "warn",
+      "symbol-description": "warn",
+
       "no-alert": "error",
+      "no-array-constructor": "error",
       "no-bitwise": "warn",
       "no-caller": "error",
       "no-console": "error",
-      "no-div-regex": "warn",
       "no-else-return": ["warn", { allowElseIf: false }],
-      "no-eq-null": "error",
       "no-eval": "error",
       "no-extend-native": "error",
       "no-extra-bind": "error",
       "no-extra-label": "error",
       "no-implicit-coercion": ["error", { disallowTemplateShorthand: true }],
-      "no-implicit-globals": "error",
+      "no-implied-eval": "error",
       "no-iterator": "error",
       "no-label-var": "error",
       "no-labels": "error",
       "no-lone-blocks": "error",
       "no-lonely-if": "warn",
       "no-multi-assign": "error",
-      "no-multi-str": "error",
       "no-negated-condition": "warn",
+      "no-new": "error",
       "no-new-func": "error",
       "no-new-wrappers": "error",
-      "no-new": "error",
       "no-object-constructor": "error",
       "no-octal-escape": "error",
       "no-param-reassign": "error",
@@ -120,51 +134,12 @@ export default config(
       "no-return-assign": ["warn", "always"],
       "no-script-url": "error",
       "no-sequences": ["error", { allowInParentheses: false }],
-      "no-useless-return": "warn",
-      "no-undef-init": "warn",
-      "no-underscore-dangle": "error",
+      "no-throw-literal": "error",
       "no-unneeded-ternary": "warn",
       "no-useless-call": "error",
       "no-useless-computed-key": "warn",
       "no-useless-concat": "warn",
       "no-useless-rename": "error",
-      "no-var": "error",
-      "no-void": "error",
-      "object-shorthand": "warn",
-      "one-var": ["error", "never"],
-      "operator-assignment": "warn",
-      "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
-      "prefer-const": "error",
-      "prefer-exponentiation-operator": "error",
-      "prefer-named-capture-group": "warn",
-      "prefer-numeric-literals": "error",
-      "prefer-object-has-own": "error",
-      "prefer-object-spread": "error",
-      "prefer-regex-literals": ["error", { disallowRedundantWrapping: true }],
-      "prefer-rest-params": "error",
-      "prefer-spread": "error",
-      "prefer-template": "error",
-      radix: "error",
-      "require-unicode-regexp": "warn",
-      strict: "error",
-      "symbol-description": "warn",
-      "unicode-bom": ["error", "never"],
-      "vars-on-top": "warn",
-
-      // Code Quality "Params"
-      // These rules help enforce that new additions are kept in the same style
-      // and quality as the rest of the codebase, they are here so that people
-      // get a yellow flag when what they are contributing is abnormal, but they
-      // should be treated as limitations; if something calls for exceeding
-      // these they should be disabled and a comment should be added to explain
-      // why.
-
-      complexity: ["warn", 9],
-      "max-depth": ["warn", 3],
-      "max-lines": ["warn", 350],
-      "max-lines-per-function": ["warn", 60],
-      "max-nested-callbacks": ["warn", 1],
-      "max-statements": ["warn", 12],
 
       // === JSDoc =============================================================
       // (We are assuming that the config is extended by JSDoc's:
@@ -414,7 +389,6 @@ export default config(
   {
     files: ["*.config.js", "*.config.ts"],
     rules: {
-      "max-lines": "off",
       "jsdoc/require-example": "off",
       "jsdoc/require-param": "off",
       "unicorn/filename-case": "off",
@@ -423,23 +397,6 @@ export default config(
   {
     files: ["src/**/*.test.ts"],
     rules: {
-      "max-lines": "off",
-      "max-nested-callbacks": "off",
-
-      // We could consider enabling these rules and adding some limitations to
-      // test files too so that tests are kept clean, simple, and easy to
-      // maintain.
-      "max-lines-per-function": "off",
-      "max-statements": "off",
-
-      // When our return type is just `undefined` (like `first([])`) this rule
-      // considers the function as returning `void` (which is technically
-      // correct because assigning a void function to a variable will result in
-      // `undefined`), but this is not an error, it's by design. I don't know
-      // what this rule expects us to do in those cases so turning it off for
-      // now instead...
-      "@typescript-eslint/no-confusing-void-expression": "off",
-
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",
@@ -448,7 +405,7 @@ export default config(
     },
   },
   {
-    files: ["src/internal/*.ts"],
+    files: ["src/_*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
       "jsdoc/check-param-names": "off",
