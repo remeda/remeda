@@ -189,16 +189,15 @@ function isDeepEqualSets(
 
   // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
   const dataArr = Array.from(data.values());
-  const otherMap = arrayToMap(Array.from(other.values()));
-  const otherKeys = Array.from(otherMap.keys());
+  const otherArr = Array.from(other.values());
 
   for (const dataItem of dataArr) {
     let isFound = false;
 
-    for (const otherKey of otherKeys) {
-      if (isDeepEqualImplementation(dataItem, otherMap.get(otherKey))) {
+    for (let i = 0; i < otherArr.length; i++) {
+      if (isDeepEqualImplementation(dataItem, otherArr[i])) {
         isFound = true;
-        otherMap.delete(otherKey);
+        otherArr.splice(i, i);
         break;
       }
     }
@@ -208,12 +207,4 @@ function isDeepEqualSets(
   }
 
   return true;
-}
-
-function arrayToMap(arr: ReadonlyArray<unknown>): Map<number, unknown> {
-  const map = new Map<number, unknown>();
-  for (let i = 0; i < arr.length; i++) {
-    map.set(i, arr[i]);
-  }
-  return map;
 }
