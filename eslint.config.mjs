@@ -364,6 +364,7 @@ export default config(
                 "Promise",
                 "ReadonlyMap",
                 "RegExp",
+                "ReadonlySet",
               ],
             },
           ],
