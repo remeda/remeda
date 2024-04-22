@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: TypedArrays and symbol properties of objects are
- * not supported right now and might result in unexpected behavior. Please open
- * an issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
+ * right now and might result in unexpected behavior. Please open an issue in
+ * the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -38,9 +38,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Sets, TypedArrays, and symbol properties of objects are not
- * supported right now and might result in unexpected behavior. Please open an
- * issue in the Remeda github project if you need support for these types.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
+ * right now and might result in unexpected behavior. Please open an issue in
+ * the Remeda github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -94,27 +94,16 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return false;
   }
 
-  if (data instanceof Set) {
-    return isDeepEqualSets(data, other as unknown as Set<unknown>);
+  if (Array.isArray(data)) {
+    return isDeepEqualArrays(data, other as unknown as ReadonlyArray<unknown>);
   }
 
-  if (Array.isArray(data)) {
-    if (data.length !== (other as ReadonlyArray<unknown>).length) {
-      return false;
-    }
+  if (data instanceof Map) {
+    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
+  }
 
-    for (const [index, item] of data.entries()) {
-      if (
-        !isDeepEqualImplementation(
-          item,
-          (other as ReadonlyArray<unknown>)[index],
-        )
-      ) {
-        return false;
-      }
-    }
-
-    return true;
+  if (data instanceof Set) {
+    return isDeepEqualSets(data, other as unknown as Set<unknown>);
   }
 
   if (data instanceof Date) {
@@ -123,10 +112,6 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
 
   if (data instanceof RegExp) {
     return data.toString() === (other as unknown as RegExp).toString();
-  }
-
-  if (data instanceof Map) {
-    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
   }
 
   // At this point we only know that the 2 objects share a prototype and are not
@@ -151,6 +136,23 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
         other[key],
       )
     ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualArrays(
+  data: ReadonlyArray<unknown>,
+  other: ReadonlyArray<unknown>,
+): boolean {
+  if (data.length !== other.length) {
+    return false;
+  }
+
+  for (const [index, item] of data.entries()) {
+    if (!isDeepEqualImplementation(item, other[index])) {
       return false;
     }
   }
@@ -187,20 +189,23 @@ function isDeepEqualSets(
     return false;
   }
 
-  // TODO: Once we bump our typescript target we can iterate over the map keys and values directly.
-  const dataArr = Array.from(data.values());
-  const otherArr = Array.from(other.values());
+  // To ensure we only count each item once we need to "remember" which items of
+  // the other set we've already matched against. We do this by creating a copy
+  // of the other set and removing items from it as we find them in the data
+  // set.
+  const otherCopy = [...other];
 
-  for (const dataItem of dataArr) {
+  for (const dataItem of data) {
     let isFound = false;
 
-    for (let i = 0; i < otherArr.length; i++) {
-      if (isDeepEqualImplementation(dataItem, otherArr[i])) {
+    for (const [index, otherItem] of otherCopy.entries()) {
+      if (isDeepEqualImplementation(dataItem, otherItem)) {
         isFound = true;
-        otherArr.splice(i, 1);
+        otherCopy.splice(index, 1);
         break;
       }
     }
+
     if (!isFound) {
       return false;
     }
