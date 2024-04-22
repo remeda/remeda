@@ -192,9 +192,9 @@ function isDeepEqualSets(
   const otherMap = arrayToMap(Array.from(other.values()));
   const otherKeys = Array.from(otherMap.keys());
 
-  let isFound = false;
-
   for (const dataItem of dataArr) {
+    let isFound = false;
+
     for (const otherKey of otherKeys) {
       if (isDeepEqualImplementation(dataItem, otherMap.get(otherKey))) {
         isFound = true;
@@ -205,7 +205,6 @@ function isDeepEqualSets(
     if (!isFound) {
       return false;
     }
-    isFound = false;
   }
 
   return true;
