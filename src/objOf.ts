@@ -28,10 +28,12 @@ export function objOf<T, K extends string>(
 ): (value: T) => { [x in K]: T };
 
 export function objOf(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_objOf, args);
+  return purry(objOfImplementation, args);
 }
 
-function _objOf<T, K extends string>(value: T, key: K): { [x in K]: T } {
+const objOfImplementation = <T, K extends string>(
+  value: T,
+  key: K,
+): { [x in K]: T } =>
   // @ts-expect-error [ts2322] - I'm not sure how to get the type right here...
-  return { [key]: value };
-}
+  ({ [key]: value });

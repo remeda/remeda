@@ -1,4 +1,4 @@
-import type { NarrowedTo } from "./_types";
+import type { NarrowedTo } from "./internal/types";
 
 /**
  * A function that checks if the passed parameter is a bigint and narrows its

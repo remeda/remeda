@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Only<T extends IterableContainer> = T extends
@@ -45,9 +45,8 @@ export function only<T extends IterableContainer>(): (
 ) => Only<T>;
 
 export function only(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_only, args);
+  return purry(onlyImplementation, args);
 }
 
-function _only<T>(array: ReadonlyArray<T>): T | undefined {
-  return array.length === 1 ? array[0] : undefined;
-}
+const onlyImplementation = <T>(array: ReadonlyArray<T>): T | undefined =>
+  array.length === 1 ? array[0] : undefined;

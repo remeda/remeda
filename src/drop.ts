@@ -1,4 +1,4 @@
-import { _reduceLazy } from "./_reduceLazy";
+import { reduceLazy } from "./internal/reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -36,7 +36,7 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function dropImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return _reduceLazy(array, lazyImplementation(n));
+  return reduceLazy(array, lazyImplementation(n));
 }
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {

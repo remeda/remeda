@@ -4,9 +4,7 @@ import { first } from "./first";
 import { pipe } from "./pipe";
 
 function defaultTo<T>(d: T) {
-  return function (v: T | null | undefined) {
-    return v ?? d;
-  };
+  return (v: T | null | undefined) => v ?? d;
 }
 
 test("should return first", () => {

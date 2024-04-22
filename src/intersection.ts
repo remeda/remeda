@@ -1,5 +1,5 @@
-import { _reduceLazy } from "./_reduceLazy";
-import { lazyEmptyEvaluator } from "./_utilityEvaluators";
+import { reduceLazy } from "./internal/reduceLazy";
+import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -50,7 +50,7 @@ export function intersection(...args: ReadonlyArray<unknown>): unknown {
 const intersectionImplementation = <T, S>(
   data: ReadonlyArray<T>,
   other: ReadonlyArray<S>,
-): Array<S & T> => _reduceLazy(data, lazyImplementation(other));
+): Array<S & T> => reduceLazy(data, lazyImplementation(other));
 
 function lazyImplementation<T, S>(
   other: ReadonlyArray<S>,

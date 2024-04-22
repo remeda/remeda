@@ -30,9 +30,8 @@ export function divide(value: number, divisor: number): number;
 export function divide(divisor: number): (value: number) => number;
 
 export function divide(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_divide, args);
+  return purry(divideImplementation, args);
 }
 
-function _divide(value: number, divisor: number): number {
-  return value / divisor;
-}
+const divideImplementation = (value: number, divisor: number): number =>
+  value / divisor;

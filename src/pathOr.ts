@@ -145,10 +145,10 @@ export function pathOr<
 ): (object: T) => PathValue3<T, A, B, C>;
 
 export function pathOr(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_pathOr, args);
+  return purry(pathOrImplementation, args);
 }
 
-function _pathOr(
+function pathOrImplementation(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
   defaultValue: unknown,

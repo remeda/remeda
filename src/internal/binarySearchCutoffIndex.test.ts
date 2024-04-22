@@ -1,29 +1,29 @@
-import { _binarySearchCutoffIndex } from "./_binarySearchCutoffIndex";
+import { binarySearchCutoffIndex } from "./binarySearchCutoffIndex";
 
 describe("runtime correctness", () => {
   test("empty array", () => {
-    expect(_binarySearchCutoffIndex([], () => true)).toBe(0);
+    expect(binarySearchCutoffIndex([], () => true)).toBe(0);
   });
 
   test("single value, always false", () => {
-    expect(_binarySearchCutoffIndex([1], () => false)).toBe(0);
+    expect(binarySearchCutoffIndex([1], () => false)).toBe(0);
   });
 
   test("single value, always true", () => {
-    expect(_binarySearchCutoffIndex([1], () => true)).toBe(1);
+    expect(binarySearchCutoffIndex([1], () => true)).toBe(1);
   });
 
   test("multiple values, always false", () => {
-    expect(_binarySearchCutoffIndex([1, 2, 3, 4, 5], () => false)).toBe(0);
+    expect(binarySearchCutoffIndex([1, 2, 3, 4, 5], () => false)).toBe(0);
   });
 
   test("multiple values, always true", () => {
-    expect(_binarySearchCutoffIndex([1, 2, 3, 4, 5], () => true)).toBe(5);
+    expect(binarySearchCutoffIndex([1, 2, 3, 4, 5], () => true)).toBe(5);
   });
 
   test("fancy stuff", () => {
     expect(
-      _binarySearchCutoffIndex(
+      binarySearchCutoffIndex(
         ["a", "ab", "abc", "abcd", "abcde"],
         ({ length }) => length < 3,
       ),
@@ -168,7 +168,7 @@ function indicesSeen(
   predicate: (item: unknown, index: number) => boolean,
 ): ReadonlyArray<number> {
   const indices: Array<number> = [];
-  _binarySearchCutoffIndex(items, (pivot, index) => {
+  binarySearchCutoffIndex(items, (pivot, index) => {
     indices.push(index);
     return predicate(pivot, index);
   });

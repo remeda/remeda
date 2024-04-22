@@ -4,8 +4,8 @@
  * @see https://en.wikipedia.org/wiki/Quickselect
  */
 
-import { swapInPlace } from "./_swapInPlace";
-import type { CompareFunction } from "./_types";
+import { swapInPlace } from "./swapInPlace";
+import type { CompareFunction } from "./types";
 
 /**
  * Perform QuickSelect on the given data. Notice that the data would be cloned

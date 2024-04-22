@@ -1,10 +1,10 @@
-import { purryOrderRules, type OrderRule } from "./_purryOrderRules";
+import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
 import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
   ReorderedArray,
-} from "./_types";
+} from "./internal/types";
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the

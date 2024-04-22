@@ -1,4 +1,4 @@
-import { _toSingle } from "./_toSingle";
+import { toSingle } from "./internal/toSingle";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -75,7 +75,7 @@ export function find<T>(
 ): (data: ReadonlyArray<T>) => T | undefined;
 
 export function find(...args: ReadonlyArray<unknown>): unknown {
-  return purry(findImplementation, args, _toSingle(lazyImplementation));
+  return purry(findImplementation, args, toSingle(lazyImplementation));
 }
 
 const findImplementation = <T, S extends T>(

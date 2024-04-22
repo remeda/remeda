@@ -39,10 +39,10 @@ export function invert<T extends object>(object: T): Inverted<T>;
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
 export function invert(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_invert, args);
+  return purry(invertImplementation, args);
 }
 
-function _invert(
+function invertImplementation(
   data: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};

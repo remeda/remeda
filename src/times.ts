@@ -30,10 +30,10 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
 export function times(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_times, args);
+  return purry(timesImplementation, args);
 }
 
-function _times<T>(count: number, fn: (n: number) => T): Array<T> {
+function timesImplementation<T>(count: number, fn: (n: number) => T): Array<T> {
   if (count < 0) {
     throw new RangeError("n must be a non-negative number");
   }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { lazyDataLastImpl } from "./_lazyDataLastImpl";
+import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./pipe";
 
 /**

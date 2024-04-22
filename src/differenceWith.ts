@@ -1,4 +1,4 @@
-import { _reduceLazy } from "./_reduceLazy";
+import { reduceLazy } from "./internal/reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -65,7 +65,7 @@ function differenceWithImplementation<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ): Array<TFirst> {
-  return _reduceLazy(array, lazyImplementation(other, isEquals));
+  return reduceLazy(array, lazyImplementation(other, isEquals));
 }
 
 const lazyImplementation =

@@ -1,4 +1,4 @@
-import type { LazyResult } from "./pipe";
+import type { LazyResult } from "../pipe";
 
 const EMPTY_PIPE = { done: true, hasNext: false } as const;
 

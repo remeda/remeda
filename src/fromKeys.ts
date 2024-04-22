@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 // Takes a union of literals and creates a union of records with the value V for

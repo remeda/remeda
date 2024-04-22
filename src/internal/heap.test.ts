@@ -1,4 +1,4 @@
-import { heapMaybeInsert } from "./_heap";
+import { heapMaybeInsert } from "./heap";
 
 // TODO: This file only tests edge-cases which cannot be reached via the public
 // functions that use the heap functions. We can expand the testing for heap so

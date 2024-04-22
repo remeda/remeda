@@ -1,13 +1,13 @@
 import {
   purryOrderRulesWithArgument,
   type OrderRule,
-} from "./_purryOrderRules";
-import { quickSelect } from "./_quickSelect";
+} from "./internal/purryOrderRules";
+import { quickSelect } from "./internal/quickSelect";
 import type {
   CompareFunction,
   IterableContainer,
   NonEmptyArray,
-} from "./_types";
+} from "./internal/types";
 
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.

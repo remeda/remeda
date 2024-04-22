@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation -- This rule is turned off in PR #621 */
-
 const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
 
 type StringToPath<T extends string> = string extends T
@@ -27,7 +25,7 @@ type StringToPath<T extends string> = string extends T
  * @signature R.stringToPathArray(path)
  * @example R.stringToPathArray('a.b[0].c') // => ['a', 'b', '0', 'c']
  * @dataFirst
- * @category String
+ * @category Utility
  */
 export function stringToPath<Path extends string>(
   path: Path,
@@ -38,11 +36,11 @@ export function stringToPath<Path extends string>(
 
   const match = PATH_RE.exec(path);
   return (
-    match === null
+    match?.groups === undefined
       ? [path]
       : [
-          match.groups!["index"] ?? match.groups!["propName"]!,
-          ...stringToPath(match.groups!["rest"]!),
+          match.groups["index"] ?? match.groups["propName"]!,
+          ...stringToPath(match.groups["rest"]!),
         ]
   ) as StringToPath<Path>;
 }

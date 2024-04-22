@@ -2,7 +2,7 @@ import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only

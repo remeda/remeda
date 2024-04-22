@@ -41,10 +41,10 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
 export function tap<T, F extends (value: T) => unknown>(fn: F): (value: T) => T;
 
 export function tap(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_tap, args);
+  return purry(tapImplementation, args);
 }
 
-function _tap<T>(value: T, fn: (value: T) => void): T {
+function tapImplementation<T>(value: T, fn: (value: T) => void): T {
   fn(value);
   return value;
 }

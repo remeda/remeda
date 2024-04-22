@@ -1,4 +1,4 @@
-import { _reduceLazy } from "./_reduceLazy";
+import { reduceLazy } from "./internal/reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -40,7 +40,7 @@ export function unique(...args: ReadonlyArray<unknown>): unknown {
 }
 
 const uniqueImplementation = <T>(array: ReadonlyArray<T>): Array<T> =>
-  _reduceLazy(array, lazyImplementation());
+  reduceLazy(array, lazyImplementation());
 
 function lazyImplementation<T>(): LazyEvaluator<T> {
   const set = new Set<T>();

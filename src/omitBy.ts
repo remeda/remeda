@@ -2,7 +2,7 @@ import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated

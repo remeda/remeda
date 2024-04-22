@@ -41,12 +41,10 @@ export function allPass<T>(
 ): (data: T) => boolean;
 
 export function allPass(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_allPass, args);
+  return purry(allPassImplementation, args);
 }
 
-function _allPass<T>(
+const allPassImplementation = <T>(
   data: T,
   fns: ReadonlyArray<(data: T) => boolean>,
-): boolean {
-  return fns.every((fn) => fn(data));
-}
+): boolean => fns.every((fn) => fn(data));
