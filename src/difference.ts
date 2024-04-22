@@ -1,5 +1,5 @@
-import { lazyIdentityEvaluator } from "./_utilityEvaluators";
 import { reduceLazy } from "./internal/reduceLazy";
+import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 

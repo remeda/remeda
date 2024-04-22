@@ -1,5 +1,5 @@
 import { type LastArrayElement } from "type-fest";
-import { IterableContainer } from "./internal/types";
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Last<T extends IterableContainer> = LastArrayElement<

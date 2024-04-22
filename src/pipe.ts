@@ -1,4 +1,3 @@
-/* eslint-disable complexity, max-depth, max-lines, max-statements -- TODO: We should strive to simplify the pipe implementation! */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the op params, it'd be redundant */
 
