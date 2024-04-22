@@ -9,7 +9,7 @@ const { markdown } = Astro.props;
 ---
 
 <article
-  class="prose prose-sm prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none"
+  class="prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none"
   set:html={markdown === undefined ? undefined : asHtml(markdown)}
 >
   <slot />

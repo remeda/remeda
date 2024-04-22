@@ -78,7 +78,7 @@ function NavbarEntry({
 }: NavbarEntry & { readonly onSelect: (() => void) | undefined }): ReactNode {
   return (
     <a
-      href={`/docs/#${name}`}
+      href={`#${name}`}
       className={cn([
         buttonVariants({ variant: "ghost" }),
         "text-muted-foreground",
