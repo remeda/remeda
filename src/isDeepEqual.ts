@@ -197,7 +197,7 @@ function isDeepEqualSets(
     for (let i = 0; i < otherArr.length; i++) {
       if (isDeepEqualImplementation(dataItem, otherArr[i])) {
         isFound = true;
-        otherArr.splice(i, i);
+        otherArr.splice(i, 1);
         break;
       }
     }
