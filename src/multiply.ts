@@ -30,9 +30,8 @@ export function multiply(value: number, multiplicand: number): number;
 export function multiply(multiplicand: number): (value: number) => number;
 
 export function multiply(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_multiply, args);
+  return purry(multiplyImplementation, args);
 }
 
-function _multiply(value: number, multiplicand: number): number {
-  return value * multiplicand;
-}
+const multiplyImplementation = (value: number, multiplicand: number): number =>
+  value * multiplicand;

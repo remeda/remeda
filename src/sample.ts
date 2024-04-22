@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> =
@@ -106,22 +106,14 @@ function sampleImplementation<T>(
   data: ReadonlyArray<T>,
   sampleSize: number,
 ): Array<T> {
-  if (sampleSize < 0) {
-    throw new RangeError(`sampleSize must cannot be negative: ${sampleSize}`);
-  }
-
-  if (!Number.isInteger(sampleSize)) {
-    throw new TypeError(`sampleSize must be an integer: ${sampleSize}`);
+  if (sampleSize <= 0) {
+    // Trivial
+    return [];
   }
 
   if (sampleSize >= data.length) {
     // Trivial
     return [...data];
-  }
-
-  if (sampleSize === 0) {
-    // Trivial
-    return [];
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.

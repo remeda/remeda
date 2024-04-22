@@ -32,9 +32,8 @@ export function add(value: number, addend: number): number;
 export function add(addend: number): (value: number) => number;
 
 export function add(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_add, args);
+  return purry(addImplementation, args);
 }
 
-function _add(value: number, addend: number): number {
-  return value + addend;
-}
+const addImplementation = (value: number, addend: number): number =>
+  value + addend;

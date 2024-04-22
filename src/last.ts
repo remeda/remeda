@@ -1,5 +1,5 @@
 import { type LastArrayElement } from "type-fest";
-import type { IterableContainer } from "./_types";
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Last<T extends IterableContainer> = LastArrayElement<
@@ -45,9 +45,8 @@ export function last<T extends IterableContainer>(data: T): Last<T>;
 export function last(): <T extends IterableContainer>(data: T) => Last<T>;
 
 export function last(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_last, args);
+  return purry(lastImplementation, args);
 }
 
-function _last<T>(array: ReadonlyArray<T>): T | undefined {
-  return array.at(-1);
-}
+const lastImplementation = <T>(array: ReadonlyArray<T>): T | undefined =>
+  array.at(-1);

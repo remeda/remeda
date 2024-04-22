@@ -1,7 +1,7 @@
 import {
   type EnumerableStringKeyedValueOf,
   type IterableContainer,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 type Values<T extends object> = T extends IterableContainer

@@ -1,8 +1,8 @@
 import {
   purryOrderRulesWithArgument,
   type OrderRule,
-} from "./_purryOrderRules";
-import type { CompareFunction, NonEmptyArray } from "./_types";
+} from "./internal/purryOrderRules";
+import type { CompareFunction, NonEmptyArray } from "./internal/types";
 
 /**
  * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.

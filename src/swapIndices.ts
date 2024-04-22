@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import type { Joined } from "./join";
 import { purry } from "./purry";
 
@@ -153,48 +153,42 @@ export function swapIndices<K1 extends number, K2 extends number>(
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
 export function swapIndices(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_swapIndices, args);
+  return purry(swapIndicesImplementation, args);
 }
 
-function _swapIndices(
-  item: IterableContainer | string,
+const swapIndicesImplementation = (
+  data: IterableContainer | string,
   index1: number,
   index2: number,
-): unknown {
-  return typeof item === "string"
-    ? _swapString(item, index1, index2)
-    : _swapArray(item, index1, index2);
-}
+): unknown =>
+  typeof data === "string"
+    ? swapArray([...data], index1, index2).join("")
+    : swapArray(data, index1, index2);
 
-function _swapArray(
-  item: ReadonlyArray<unknown>,
+function swapArray(
+  data: ReadonlyArray<unknown>,
   index1: number,
   index2: number,
 ): Array<unknown> {
-  const result = [...item];
+  const result = [...data];
 
   if (Number.isNaN(index1) || Number.isNaN(index2)) {
     return result;
   }
 
-  const positiveIndexA = index1 < 0 ? item.length + index1 : index1;
-  const positiveIndexB = index2 < 0 ? item.length + index2 : index2;
+  const positiveIndexA = index1 < 0 ? data.length + index1 : index1;
+  const positiveIndexB = index2 < 0 ? data.length + index2 : index2;
 
-  if (positiveIndexA < 0 || positiveIndexA > item.length) {
+  if (positiveIndexA < 0 || positiveIndexA > data.length) {
     return result;
   }
 
-  if (positiveIndexB < 0 || positiveIndexB > item.length) {
+  if (positiveIndexB < 0 || positiveIndexB > data.length) {
     return result;
   }
 
-  result[positiveIndexA] = item[positiveIndexB];
-  result[positiveIndexB] = item[positiveIndexA];
+  result[positiveIndexA] = data[positiveIndexB];
+  result[positiveIndexB] = data[positiveIndexA];
 
   return result;
-}
-
-function _swapString(item: string, index1: number, index2: number): string {
-  const result = _swapArray([...item], index1, index2);
-  return result.join("");
 }

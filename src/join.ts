@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Joinable = bigint | boolean | number | string | null | undefined;

@@ -29,10 +29,8 @@ describe("intersectionWith", () => {
       expect(
         intersectionWith(
           other,
-          /*
-           * type inference doesn't work properly for the comparator's first parameter
-           * in data last variant
-           */
+          // type inference doesn't work properly for the comparator's first
+          // parameter in data last variant
           (a, b) => (a as (typeof source)[0]).id === b,
         )(source),
       ).toEqual(expected);

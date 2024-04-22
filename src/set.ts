@@ -30,12 +30,11 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
 export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
 
 export function set(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_set, args);
+  return purry(setImplementation, args);
 }
 
-function _set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
-  return {
-    ...obj,
-    [prop]: value,
-  };
-}
+const setImplementation = <T, K extends keyof T>(
+  obj: T,
+  prop: K,
+  value: T[K],
+): T => ({ ...obj, [prop]: value });

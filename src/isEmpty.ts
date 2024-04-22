@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { isArray } from "./isArray";
 import { isObjectType } from "./isObjectType";
 import { isString } from "./isString";

@@ -26,10 +26,10 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 
 export function shuffle(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_shuffle, args);
+  return purry(shuffleImplementation, args);
 }
 
-function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {
+function shuffleImplementation<T>(items: ReadonlyArray<T>): Array<T> {
   const result = [...items];
   for (let index = 0; index < items.length; index++) {
     const rand = index + Math.floor(Math.random() * (items.length - index));

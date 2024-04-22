@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =

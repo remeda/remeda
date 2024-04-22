@@ -7,7 +7,7 @@ import type {
   EnumerableStringKeyOf,
   EnumerableStringKeyedValueOf,
   ExactRecord,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 /**

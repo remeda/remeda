@@ -86,5 +86,6 @@ const findLastImplementation = <T, S extends T>(
       return item;
     }
   }
-  return;
+
+  return undefined;
 };

@@ -1,6 +1,6 @@
-import type { LazyEvaluator } from "./pipe";
+import type { LazyEvaluator } from "../pipe";
 
-export function _reduceLazy<T, K>(
+export function reduceLazy<T, K>(
   array: ReadonlyArray<T>,
   lazy: LazyEvaluator<T, K>,
 ): Array<K> {

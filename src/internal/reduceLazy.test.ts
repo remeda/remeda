@@ -1,11 +1,11 @@
-import { _reduceLazy } from "./_reduceLazy";
+import { reduceLazy } from "./reduceLazy";
 
 // _reduceLazy is tested via the functions that call it, but those tests lack
 // several edge cases which need to be tested on their own.
 describe("generic tests", () => {
   it("handles hasMany", () => {
     expect(
-      _reduceLazy([1, 2, 3], (value) => ({
+      reduceLazy([1, 2, 3], (value) => ({
         hasNext: true,
         hasMany: true,
         next: [value, value, value],

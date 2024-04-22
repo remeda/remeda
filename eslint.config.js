@@ -83,7 +83,6 @@ export default config(
       "arrow-body-style": "warn",
       curly: "error",
       "default-case-last": "warn",
-      "dot-notation": "warn",
       eqeqeq: ["error", "always", { null: "always" }],
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
       "guard-for-in": "error",
@@ -405,13 +404,10 @@ export default config(
     },
   },
   {
-    files: ["src/_*.ts"],
+    files: ["src/internal/*.ts"],
     rules: {
       // Skip some JSDoc rules for internal-only functions:
-      "jsdoc/check-param-names": "off",
-      "jsdoc/no-restricted-syntax": "off",
       "jsdoc/require-example": "off",
-      "jsdoc/require-jsdoc": "off",
       "jsdoc/require-param": "off",
     },
   },

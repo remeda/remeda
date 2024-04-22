@@ -41,12 +41,10 @@ export function anyPass<T>(
 ): (data: T) => boolean;
 
 export function anyPass(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_anyPass, args);
+  return purry(anyPassImplementation, args);
 }
 
-function _anyPass<T>(
+const anyPassImplementation = <T>(
   data: T,
   fns: ReadonlyArray<(data: T) => boolean>,
-): boolean {
-  return fns.some((fn) => fn(data));
-}
+): boolean => fns.some((fn) => fn(data));

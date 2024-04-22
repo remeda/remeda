@@ -1,7 +1,7 @@
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
-} from "./_types";
+} from "./internal/types";
 import { purry } from "./purry";
 
 /**

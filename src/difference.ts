@@ -1,5 +1,5 @@
-import { _reduceLazy } from "./_reduceLazy";
-import { lazyIdentityEvaluator } from "./_utilityEvaluators";
+import { reduceLazy } from "./internal/reduceLazy";
+import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -50,7 +50,7 @@ export function difference(...args: ReadonlyArray<unknown>): unknown {
 const differenceImplementation = <T>(
   array: ReadonlyArray<T>,
   other: ReadonlyArray<T>,
-): Array<T> => _reduceLazy(array, lazyImplementation(other));
+): Array<T> => reduceLazy(array, lazyImplementation(other));
 
 function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
   if (other.length === 0) {

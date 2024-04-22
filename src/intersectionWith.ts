@@ -1,4 +1,4 @@
-import { _reduceLazy } from "./_reduceLazy";
+import { reduceLazy } from "./internal/reduceLazy";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -69,7 +69,7 @@ const intersectionWithImplementation = <TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
   other: ReadonlyArray<TSecond>,
   comparator: Comparator<TFirst, TSecond>,
-): Array<TFirst> => _reduceLazy(array, lazyImplementation(other, comparator));
+): Array<TFirst> => reduceLazy(array, lazyImplementation(other, comparator));
 
 const lazyImplementation =
   <TFirst, TSecond>(

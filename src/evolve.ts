@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./_types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 /**
@@ -131,10 +131,10 @@ export function evolve<T extends object, E extends Evolver<T>>(
 ): (object: T) => Evolved<T, E>;
 
 export function evolve(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_evolve, args);
+  return purry(evolveImplementation, args);
 }
 
-function _evolve(data: unknown, evolver: GenericEvolver): unknown {
+function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {
   if (typeof data !== "object" || data === null) {
     return data;
   }
@@ -146,7 +146,7 @@ function _evolve(data: unknown, evolver: GenericEvolver): unknown {
       out[key] =
         typeof value === "function"
           ? value(out[key])
-          : _evolve(out[key], value);
+          : evolveImplementation(out[key], value);
     }
   }
 

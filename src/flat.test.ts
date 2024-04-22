@@ -1,5 +1,5 @@
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter.js";
-import type { NonEmptyArray } from "./_types";
+import type { NonEmptyArray } from "./internal/types.js";
 import { find } from "./find";
 import { flat } from "./flat";
 import { identity } from "./identity";

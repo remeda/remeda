@@ -1,4 +1,4 @@
-import type { IterableContainer, NonEmptyArray } from "./_types";
+import type { IterableContainer, NonEmptyArray } from "./internal/types";
 import { purry } from "./purry";
 
 type Chunked<T extends IterableContainer> = T[number] extends never
@@ -44,10 +44,13 @@ export function chunk<T extends IterableContainer>(
 ): (array: T) => Chunked<T>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
-  return purry(_chunk, args);
+  return purry(chunkImplementation, args);
 }
 
-function _chunk<T>(array: ReadonlyArray<T>, size: number): Array<Array<T>> {
+function chunkImplementation<T>(
+  array: ReadonlyArray<T>,
+  size: number,
+): Array<Array<T>> {
   const ret: Array<Array<T>> = [];
   for (let offset = 0; offset < array.length; offset += size) {
     ret.push(array.slice(offset, offset + size));
