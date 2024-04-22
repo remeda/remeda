@@ -70,11 +70,11 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
     "@eslint/js": "^8.57.0",
-    "eslint": "^8.57.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.12.7",
     "@vitest/coverage-v8": "^1.5.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsdoc": "^48.2.3",
     "eslint-plugin-unicorn": "^52.0.0",
