@@ -10,6 +10,6 @@ of the input.
 const a = [1, 2, 3] as const;
 const b = ["hello", "world"] as string[];
 
-const concatenated = R.concat(a, b);
+const concatenated = concat(a, b);
 //    ^? [1, 2, 3, ...string[]], was: (string | 1 | 2 | 3)[]
 ```

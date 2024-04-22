@@ -6,8 +6,8 @@ Called [`piped`](/docs/#piped) instead.
 
 ```ts
 // Was
-R.createPipe(map(mapper), filter(predicate));
+createPipe(map(mapper), filter(predicate));
 
 // Now
-R.piped(map(mapper), filter(predicate));
+piped(map(mapper), filter(predicate));
 ```

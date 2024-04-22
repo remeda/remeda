@@ -10,28 +10,28 @@ prop, or using the [`length`](/docs/#length) utility function on the result.
 
 ```ts
 // Was
-R.countBy([1, 2, 3, 4], (item) => item % 2 === 0);
+countBy([1, 2, 3, 4], (item) => item % 2 === 0);
 
 // Now
-R.filter([1, 2, 3, 4], (item) => item % 2 === 0).length;
+filter([1, 2, 3, 4], (item) => item % 2 === 0).length;
 
 // or
-R.length(R.filter([1, 2, 3, 4], (item) => item % 2 === 0));
+length(filter([1, 2, 3, 4], (item) => item % 2 === 0));
 ```
 
 ### dataLast
 
 ```ts
 // Was
-R.pipe(
+pipe(
   [1, 2, 3, 4],
-  R.countBy((item) => item % 2 === 0),
+  countBy((item) => item % 2 === 0),
 );
 
 // Now
-R.pipe(
+pipe(
   [1, 2, 3, 4],
-  R.filter((item) => item % 2 === 0),
-  R.length(),
+  filter((item) => item % 2 === 0),
+  length(),
 );
 ```

@@ -17,19 +17,19 @@ to warn against these issues.
 
 ```ts
 // This was previously unavailable
-dropWhile([1, 2, 3], (item, index) => item + (index % 2) === 0);
+fromKeys(["a", "b", "c"], (item, index) => `${item}${index}`);
 ```
 
 ### Potential bug
 
 ```ts
-function callback(value: number, index = 0): boolean {
-  return (value + index) % 2 === 1;
+function callback(item: string, index?: number): boolean {
+  return `${item}${index ?? ""}`;
 }
 
 // Bug
-dropWhile([1, 2, 3], callback); // => [1, 2, 3], Was: [2, 3]
+fromKeys(["a", "b", "c"], callback); // => { a: "a0", b: "b1", c: "c2" }, Was { a: "a", b: "b", c: "c" }
 
 // Fix
-dropWhile([1, 2, 3], (item) => callback(item)); // => [2, 3]
+fromKeys(["a", "b", "c"], (item) => callback(item)); // => { a: "a", b: "b", c: "c" }
 ```
