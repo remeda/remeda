@@ -7,7 +7,7 @@ function defaultTo<T>(d: T) {
   return (v: T | null | undefined) => v ?? d;
 }
 
-test("should return last", () => {
+test("should return first", () => {
   expect(first([1, 2, 3] as const)).toEqual(1);
 });
 

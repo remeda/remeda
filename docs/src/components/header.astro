@@ -13,7 +13,6 @@ const { pathname } = Astro.url;
 >
   <div class="container flex h-14 items-center gap-8">
     <a href="/" class="font-bold">Remeda</a>
-
     <nav class="flex items-center gap-8 text-sm">
       <a
         href="/"
@@ -24,7 +23,6 @@ const { pathname } = Astro.url;
       >
         Home
       </a>
-
       <a
         href="/docs/"
         class:list={[
@@ -32,10 +30,16 @@ const { pathname } = Astro.url;
           pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
         ]}
       >
-        Docs
+        Documentation
       </a>
+      <a
+        href="/v1/"
+        class:list={[
+          "transition-colors hover:text-foreground/80",
+          pathname === "/v1/" ? "text-foreground" : "text-foreground/60",
+        ]}>Migrate from v1</a
+      >
     </nav>
-
     <div class="-mr-2 ml-auto flex items-center gap-2">
       <a
         href="https://github.com/remeda/remeda"
@@ -45,9 +49,7 @@ const { pathname } = Astro.url;
         <GitHubLogoIcon />
         <span class="sr-only">GitHub</span>
       </a>
-
       <ThemeSwitcher client:load />
-
       <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
     </div>
   </div>
