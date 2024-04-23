@@ -37,7 +37,7 @@ forEachObj({ a: 1, b: 2 }, (value, key) => {
 });
 ```
 
-### Symbol Keys
+### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");

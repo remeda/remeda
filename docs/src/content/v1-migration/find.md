@@ -1,12 +1,12 @@
 # Typing
 
-When using with a type-predicate, the returned item would now be narrowed to the
-type of the type-predicate, similar to how `filter` with a type-predicate
-narrows the resulting items in the array.
-
 The `indexed` variant was removed; the base implementation takes the same
 parameters. If you are using `indexed` you can simply remove it without any
 other changes.
+
+When using with a type-predicate, the returned item would now be narrowed to the
+type of the type-predicate, similar to how `filter` with a type-predicate
+narrows the resulting items in the array.
 
 # Runtime
 
