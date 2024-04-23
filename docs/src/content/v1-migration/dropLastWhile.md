@@ -2,8 +2,8 @@
 
 The predicate function now takes 2 additional parameters: `index` - The index of
 the current element being processed in array, and `data` - the array the
-function was called upon (this is the same signature as the built-in
-`Array.prototype` method's predicates and mappers have).
+function was called upon (the same signature the callbacks the built-in
+`Array.prototype` functions have).
 
 If you are using a function _reference_ for the predicate (and not an inline
 arrow function), and that function accepts more than one param you might run

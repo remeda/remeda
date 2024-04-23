@@ -9,18 +9,18 @@ the predicate.
 
 ```ts
 // Was
-R.compact([1, null, 3]);
+compact([1, null, 3]);
 
 // Now
-R.filter([1, null, 3], R.isTruthy);
+filter([1, null, 3], isTruthy);
 ```
 
 ### dataLast
 
 ```ts
 // Was
-R.pipe([1, null, 3], R.compact);
+pipe([1, null, 3], compact);
 
 // Now
-R.pipe([1, null, 3], R.filter(R.isTruthy));
+pipe([1, null, 3], filter(isTruthy));
 ```

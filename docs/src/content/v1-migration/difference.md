@@ -20,38 +20,38 @@ use [`filter`](/docs/#filter) with [`isNot`](/docs/#isNot) and
 
 ```ts
 // Was
-R.difference([1, 2, 3], [2]); // => [1, 3]
+difference([1, 2, 3], [2]); // => [1, 3]
 
 // Now
-R.difference([1, 2, 3], [2]); // => [1, 3]
+difference([1, 2, 3], [2]); // => [1, 3]
 ```
 
 ### Duplicates
 
 ```ts
 // Was
-R.difference([1, 1, 2, 2], [1]); // => [2, 2]
+difference([1, 1, 2, 2], [1]); // => [2, 2]
 
 // Now
-R.difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
+difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
 ```
 
 ### Legacy (dataFirst)
 
 ```ts
 // Was
-R.difference([1, 1, 2, 2], [1]); // => [2, 2]
+difference([1, 1, 2, 2], [1]); // => [2, 2]
 
 // Now
-R.filter([1, 1, 2, 2], R.isNot(R.isIncludedIn([1]))); // => [2, 2]
+filter([1, 1, 2, 2], isNot(isIncludedIn([1]))); // => [2, 2]
 ```
 
 ### Legacy (dataLast)
 
 ```ts
 // Was
-R.pipe([1, 1, 2, 2], R.difference([1]));
+pipe([1, 1, 2, 2], difference([1]));
 
 // Now
-R.pipe([1, 1, 2, 2], R.filter(R.isNot(R.isIncludedIn([1]))));
+pipe([1, 1, 2, 2], filter(isNot(isIncludedIn([1]))));
 ```
