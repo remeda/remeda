@@ -28,8 +28,7 @@ predicate.
 const DATA1 = [] as (string | number)[];
 const DATA2 = [] as (number | boolean)[];
 
-// In the current implementation typescript would error for DATA2 because it
-// isn't the same type as DATA1, this would no longer error.
+// Was a type error, now okay:
 const intersected = intersection(DATA1, DATA2);
 //    ^? number[];
 ```
