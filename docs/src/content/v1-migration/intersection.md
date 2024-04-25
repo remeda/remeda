@@ -1,6 +1,6 @@
 # Typing
 
-The typing for the `other` operand was softened so that it could accept any
+The typing for the `other` operand was widened so that it could accept any
 value. This allows the returned type to be narrowed to items that are in the
 intersection (type-wise) of the two types.
 
