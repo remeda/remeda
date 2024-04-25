@@ -1,6 +1,6 @@
 # Typing
 
-If you weren't using the `strict` variant, The returned type is now stricter and
+If you weren't using the `strict` variant, the returned type is now stricter and
 more reflective of the input type. Instead of `string`, the keys are typed based
 on the input type (similar to how `keyof T` works), all number keys are cast
 as `strings`, and `symbol` keys are filtered out. For tuple inputs the returned
