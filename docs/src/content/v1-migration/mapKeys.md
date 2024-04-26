@@ -2,7 +2,8 @@
 
 The mapping function is no longer typed to accept symbol keys, it casts `number`
 keys as strings, and the values of `symbol` keys are also not part of the typing
-of the value parameter. Additionally, a third parameter was added with the whole
+of the value parameter (aligning with the result of [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
+on the input object). Additionally, a third parameter was added with the whole
 input object (this is similar to how the built-in `Array.prototype` functions
 take a third param with the whole input array). In the vast majority of cases
 this should not cause any changes.
