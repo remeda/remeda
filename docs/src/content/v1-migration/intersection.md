@@ -1,6 +1,6 @@
 # Typing
 
-The typing for the `other` operand was softened so that it could accept any
+The typing for the `other` operand was widened so that it could accept any
 value. This allows the returned type to be narrowed to items that are in the
 intersection (type-wise) of the two types.
 
@@ -28,8 +28,7 @@ predicate.
 const DATA1 = [] as (string | number)[];
 const DATA2 = [] as (number | boolean)[];
 
-// In the current implementation typescript would error for DATA2 because it
-// isn't the same type as DATA1, this would no longer error.
+// Was a type error, now okay:
 const intersected = intersection(DATA1, DATA2);
 //    ^? number[];
 ```

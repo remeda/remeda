@@ -32,10 +32,8 @@ const result = mapKeys(
   (key) => (key.length > 3 ? "yes" : "no"),
 );
 
-// We don't know in compile time if any of the entries in the input would result
-// in creating either a "yes" or "no" key and thus might not exist on the output
-// object, therefore it's a mistake to assume that the type of the prop would be
-// `string`.
+// It's possible none of the keys mapped to "yes", so the type here is
+// `string | undefined`:
 console.log(result.yes);
 //                 ^? string | undefined, Was: string
 ```
