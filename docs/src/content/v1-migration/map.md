@@ -72,8 +72,8 @@ const mapped = map(DATA as string[], (item) => item.length);
 const DATA = ["1", "2", "3"];
 
 // Bug
-map(DATA, Number.parseInt); // => [1, NaN, NaN], Was: [1, 2, 3]
+map(DATA, parseInt); // => [1, NaN, NaN], Was: [1, 2, 3]
 
 // Fix
-map(DATA, (raw) => Number.parseInt(raw)); // => [1, 2, 3]
+map(DATA, (raw) => parseInt(raw)); // => [1, 2, 3]
 ```

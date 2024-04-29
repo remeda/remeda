@@ -1,14 +1,13 @@
 # Typing
 
-The mapping function is typed to no longer accept `symbol` keys or their
+The predicate function is typed to no longer accept `symbol` keys or their
 corresponding values, and `number` keys will be cast as `string`, Aligning with
 the result of [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries)
 on the input object). In the vast majority of cases this should not cause any
 breakages.
 
-The return type would now be `Partial` when the mapped key is a literal union.
-This would fix a common bug where the return type could cause accessing non-
-existent properties (see example).
+Using a type-guard as the predicate will now narrow the resulting type (similar
+to how `filter` narrows the result).
 
 # Runtime
 
@@ -28,41 +27,41 @@ to warn against these issues.
 
 ```ts
 const mySymbol = Symbol("a");
-mapKeys({ [mySymbol]: "hello", a: 123, 456: true }, (key, value) => {
+pickBy({ [mySymbol]: "hello", a: 123, 456: true }, (key, value) => {
   // key: "a" | "456", Was symbol | "a" | 456;
   // value: number | boolean, Was string | number | boolean;
 });
 ```
 
-### Partial result
+### Narrowed return
 
 ```ts
-const result = mapKeys(
-  //  ^? Partial<Record<"yes" | "no", string>>, Was: Record<"yes" | "no", string>
-  { a: "hello" } as Record<string, string>,
-  (key) => (key.length > 3 ? "yes" : "no"),
-);
-
-// It's possible none of the keys mapped to "yes", so the type here is
-// `string | undefined`:
-console.log(result.yes);
-//                 ^? string | undefined, Was: string
+const DATA = { a: 123, b: 456 } as {
+  a: number;
+  b: number | string;
+  c?: number;
+  d: string;
+};
+const result = pickBy(DATA, isNumber);
+//    ^? { a: number, b?: number, c?: number }, Was: typeof DATA
 ```
 
 ### Potential bug
 
 ```ts
+const DATA = { hello: "world", helloworld: 123 };
+
 function callback(
-  key: string,
   value: string,
+  key: string,
   obj: Record<string, string> = {},
 ): boolean {
-  return `${key}${value}${Object.keys(obj).length}`;
+  return `${key}${value}` in obj;
 }
 
 // Bug
-mapKeys({ a: "hello" }, callback); // => { ahello1: "hello" }, Was: { ahello: "hello" }
+pickBy(DATA, callback); // => { hello: "world" }, Was: DATA
 
 // Fix
-mapKeys({ a: "hello" }, (key, value) => callback(key, value)); // => { ahello: "hello" }
+pickBy(DATA, (value, key) => callback(key, value)); // => DATA
 ```
