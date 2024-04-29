@@ -23,22 +23,8 @@ to warn against these issues.
 
 ```ts
 // Was
-partition.indexed(array, predicate);
+sortedIndexWith.indexed(array, predicate);
 
 // Now
-partition(array, predicate);
-```
-
-### Potential bug
-
-```ts
-function callback(value: number, index = 0): boolean {
-  return (value + index) % 2 === 0;
-}
-
-// Bug
-partition([1, 2, 3], callback); // => [[], [1, 2, 3]], Was: [[2], [1, 3]]
-
-// Fix
-partition([1, 2, 3], (item) => callback(item)); // => [[2], [1, 3]]
+sortedIndexWith(array, predicate);
 ```

@@ -12,10 +12,10 @@ also be a non-empty array). If you are already using `strict` simply remove the
 
 ```ts
 // Was
-sort.strict([1, 2, 3], (a, b) => a - b);
+sortBy.strict([1, 2, 3], identity());
 
 // Now
-sort([1, 2, 3], (a, b) => a - b);
+sortBy([1, 2, 3], identity());
 ```
 
 ### Preserves input shape
@@ -23,7 +23,7 @@ sort([1, 2, 3], (a, b) => a - b);
 ```ts
 const DATA = [1, true, "hello"] as [number, boolean, ...string[]];
 
-const result = sort(DATA, (a, b) => a - b);
+const result = sortBy(DATA, identity());
 //    ^? [number | boolean | string, number | boolean | string, ...(number | boolean | string)[]]
 //  Was: (number | boolean | string)[]
 ```
