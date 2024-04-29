@@ -1,8 +1,20 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
+  // We use prettier for pretty much anything it supports
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // TODO: The vscode plugin doesn't use the flat config by default (yet...)
+  "eslint.experimental.useFlatConfig": true,
+
+  // Our tests live next to the files they test, this clutters the folder
+  // structure so we "tuck them" under the file they test. This also comes with
+  // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.ts": "${capture}.test.ts"
   },
-  "eslint.experimental.useFlatConfig": true
+
+  // It's better to ensure that the project typescript is the one we use for the
+  // project so that people don't build for newer typescript features before we
+  // bump it in our project first.
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
