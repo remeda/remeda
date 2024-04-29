@@ -10,6 +10,9 @@ To achieve the legacy typing cast your object as a `Record<string, unknown>`.
 If you are already using the `strict` variant simply remove the `.strict`
 suffix.
 
+The "headless" dataLast form is no longer supported, use the functional style
+instead.
+
 ## Examples
 
 ### Strict
@@ -47,4 +50,14 @@ keys({ 123: "hello" }); // ["123"];
 ```ts
 const result = keys({ 123: "hello" } as Record<string, unknown>);
 //    ^? string[]
+```
+
+### No headless version
+
+```ts
+// Was
+pipe(DATA, keys);
+
+// Now
+pipe(DATA, keys());
 ```

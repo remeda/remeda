@@ -1,6 +1,7 @@
 # Typing
 
-If you are already using `entries.strict` simply remove the `.strict` suffix.
+If you are already using `fromEntries.strict` simply remove the `.strict`
+suffix.
 
 The returned type is now stricter and more reflective of the input type. The
 returned type supports more than just simple records of string and number keys,
