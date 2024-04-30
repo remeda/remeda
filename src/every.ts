@@ -1,11 +1,4 @@
-import type { PredIndexed } from "./_types";
 import { purry } from "./purry";
-
-type TypePredIndexed<T, S extends T> = (
-  input: T,
-  index: number,
-  array: ReadonlyArray<T>,
-) => input is S;
 
 /**
  * Checks if every element of `data` passed the predicate `predicate`.
@@ -24,11 +17,11 @@ type TypePredIndexed<T, S extends T> = (
  */
 export function every<T, S extends T>(
   data: ReadonlyArray<T>,
-  predicate: TypePredIndexed<T, S>,
+  predicate: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
 ): data is Array<S>;
 export function every<T>(
   data: ReadonlyArray<T>,
-  predicate: PredIndexed<T, boolean>,
+  predicate: (input: T, index: number, array: ReadonlyArray<T>) => boolean,
 ): boolean;
 
 /**
@@ -46,10 +39,10 @@ export function every<T>(
  * @category Array
  */
 export function every<T, S extends T>(
-  predicate: TypePredIndexed<T, S>,
+  predicate: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
 ): (data: ReadonlyArray<T>) => data is Array<S>;
 export function every<T>(
-  predicate: PredIndexed<T, boolean>,
+  predicate: (input: T, index: number, array: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => boolean;
 
 export function every(): unknown {
@@ -58,6 +51,6 @@ export function every(): unknown {
 
 const everyImplementation = <T>(
   data: ReadonlyArray<T>,
-  predicate: PredIndexed<T, boolean>,
-): boolean =>
-  data.every((element, index, array) => predicate(element, index, array));
+  predicate: (input: T, index: number, array: ReadonlyArray<T>) => boolean,
+  // eslint-disable-next-line unicorn/no-array-callback-reference
+): boolean => data.every(predicate);
