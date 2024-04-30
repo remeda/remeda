@@ -1,5 +1,11 @@
-import type { PredIndexed, TypePredIndexed } from "./_types";
+import type { PredIndexed } from "./_types";
 import { purry } from "./purry";
+
+type TypePredIndexed<T, S extends T> = (
+  input: T,
+  index: number,
+  array: ReadonlyArray<T>,
+) => input is S;
 
 /**
  * Checks if every element of `data` passed the predicate `predicate`.

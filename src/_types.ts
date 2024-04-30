@@ -12,20 +12,6 @@ export type PredIndexedOptional<T, K> = (
   array?: ReadonlyArray<T>,
 ) => K;
 
-export type TypePred<T, S extends T> = (input: T) => input is S;
-
-export type TypePredIndexed<T, S extends T> = (
-  input: T,
-  index: number,
-  array: ReadonlyArray<T>,
-) => input is S;
-
-export type TypePredIndexedOptional<T, S extends T> = (
-  input: T,
-  index?: number,
-  array?: ReadonlyArray<T>,
-) => input is S;
-
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
 export type Mapped<T extends IterableContainer, K> = {
