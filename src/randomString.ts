@@ -12,7 +12,6 @@ const ALPHABET =
  *   R.randomString(length)
  * @example
  *   R.randomString(5) // => aB92J
- *   R.pipe(5, R.randomString) // => aB92J
  * @dataFirst
  * @category String
  */
@@ -23,10 +22,9 @@ export function randomString(length: number): string;
  *
  * @returns The random string.
  * @signature
- *   R.randomString(length)
+ *   R.randomString()(length)
  * @example
- *   R.randomString(5) // => aB92J
- *   R.pipe(5, R.randomString) // => aB92J
+ *   R.pipe(5, R.randomString()) // => aB92J
  * @dataLast
  * @category String
  */

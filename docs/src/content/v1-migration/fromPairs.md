@@ -17,10 +17,12 @@ const DATA = [
 ] as const;
 
 // Was
-fromPairs(DATA); // => { a: 'b', c: 'd' } (type: Record<string, string>)
+const result = fromPairs(DATA);
+//    ^? Record<string, string>
 
 // Now
-fromEntries(DATA); // => { a: 'b', c: 'd' } (type: { a: 'b', c: 'd' })
+const result = fromEntries(DATA);
+//    ^? { a: 'b', c: 'd' }
 ```
 
 ### dataLast
@@ -32,10 +34,12 @@ const DATA = [
 ] as const;
 
 // Was
-pipe(DATA, fromPairs); // => { a: 'b', c: 'd' } (type: Record<string, string>)
+const result = pipe(DATA, fromPairs);
+//    ^? Record<string, string>
 
 // Now
-pipe(DATA, fromEntries()); // => { a: 'b', c: 'd' } (type: { a: 'b', c: 'd' })
+const result = pipe(DATA, fromEntries());
+//    ^? { a: 'b', c: 'd' }
 ```
 
 ### Strict variant

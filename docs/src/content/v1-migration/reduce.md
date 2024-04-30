@@ -6,10 +6,10 @@ other changes.
 
 # Runtime
 
-The mapper now takes 2 additional parameters: `index` - The index of the current
-element being processed in array, and `data` - the array the function was called
-upon (the same signature the callbacks the built-in `Array.prototype` functions
-have).
+The predicate function now takes 2 additional parameters: `index` - The index of
+the current element being processed in array, and `data` - the array the
+function was called upon (the same signature as the built-in
+[`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)).
 
 If you are using a function reference for the predicate (and not an inline arrow
 function), and that function accepts more than one param you might run into
@@ -23,18 +23,22 @@ to warn against these issues.
 
 ```ts
 // Was
-meanBy.indexed(array, mapper);
+reduce.indexed([1, 2, 3], (acc, item, index) => acc + item + index, 0);
 
 // Now
-meanBy(array, mapper);
+reduce([1, 2, 3], (acc, item, index) => acc + item + index, 0);
 ```
 
 ### Potential bug
 
 ```ts
+function callback(acc: number, item: number, index = 0): number {
+  return acc + item + index;
+}
+
 // Bug
-meanBy(["1", "2", "3"], parseInt); // => Nan, Was: 2
+reduce([1, 2, 3], callback, 0); // => 9, Was: 6
 
 // Fix
-meanBy(["1", "2", "3"], (item) => parseInt(item)); // => 2
+reduce([1, 2, 3], (acc, item) => callback(acc, item), 0); // => 6
 ```
