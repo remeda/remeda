@@ -46,7 +46,7 @@
     "dompurify": "^3.0.11",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-astro": "^0.33.1",
+    "eslint-plugin-astro": "^1.1.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
