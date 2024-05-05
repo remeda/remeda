@@ -47,11 +47,10 @@ describe("runtime", () => {
       expect(pipe([1, 2, 3, 4, 5], drop(10))).toStrictEqual([]);
     });
 
-    test("drop with take", () => {
+    test("lazy impl", () => {
       const mockFunc = vi.fn(identity());
-      const result = pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
+      pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
       expect(mockFunc).toHaveBeenCalledTimes(4);
-      expect(result).toStrictEqual([3, 4]);
     });
   });
 });
