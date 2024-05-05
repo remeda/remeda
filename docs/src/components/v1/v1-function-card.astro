@@ -2,7 +2,8 @@
 import FunctionCard from "@/components/function-card.astro";
 import type { DocumentedFunction } from "@/lib/transform";
 import { getEntry } from "astro:content";
-import MigrationBox from "./migration-box.astro";
+import { MigrationBox } from "./migration-box";
+import Markdown from "../markdown.astro";
 
 const MIGRATION_COLLECTION = "v1-migration";
 
@@ -14,10 +15,17 @@ const { func } = Astro.props;
 
 const entry = await getEntry(MIGRATION_COLLECTION, func.name.toLowerCase());
 const Migration = await entry?.render();
+const hasMigration = Migration !== undefined;
 ---
 
 <FunctionCard func={func}>
-  <MigrationBox>
-    {Migration !== undefined ? <Migration.Content /> : <em>(none)</em>}
+  <MigrationBox client:load hasMigration={hasMigration}>
+    {
+      hasMigration ? (
+        <Markdown>
+          <Migration.Content />
+        </Markdown>
+      ) : undefined
+    }
   </MigrationBox>
 </FunctionCard>

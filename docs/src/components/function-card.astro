@@ -3,9 +3,11 @@ import FunctionApi from "@/components/function-api.astro";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { DocumentedFunction } from "@/lib/transform";
 import FunctionDescription from "./function-description.astro";
+import type { ReactNode } from "react";
 
 type Props = {
   readonly func: DocumentedFunction;
+  children?: ReactNode;
 };
 
 const { func } = Astro.props;
