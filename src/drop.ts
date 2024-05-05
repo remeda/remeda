@@ -1,4 +1,4 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -35,11 +35,14 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
-function dropImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return reduceLazy(array, lazyImplementation(n));
-}
+const dropImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
+  n < 0 ? [...array] : array.slice(n);
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+  if (n <= 0) {
+    return lazyIdentityEvaluator;
+  }
+
   let left = n;
   return (value) => {
     if (left > 0) {

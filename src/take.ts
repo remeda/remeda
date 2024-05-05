@@ -1,4 +1,4 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -36,11 +36,11 @@ export function take(...args: ReadonlyArray<unknown>): unknown {
 }
 
 const takeImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
-  reduceLazy(array, lazyImplementation(n));
+  n < 0 ? [] : array.slice(0, n);
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
-    return emptyPipe;
+    return lazyEmptyEvaluator;
   }
 
   let remaining = n;
@@ -49,9 +49,3 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
     return { done: remaining <= 0, hasNext: true, next: value };
   };
 }
-
-// We optimize the trivial case by memoizing both the returned object and the
-// function that returns it so that none of them need to be recreated on every
-// invocation.
-const LAZY_DONE = { done: true, hasNext: false } as const;
-const emptyPipe = (): typeof LAZY_DONE => LAZY_DONE;
