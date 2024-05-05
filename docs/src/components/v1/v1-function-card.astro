@@ -22,7 +22,7 @@ const hasMigration = Migration !== undefined;
   <MigrationBox client:load hasMigration={hasMigration}>
     {
       hasMigration ? (
-        <Markdown>
+        <Markdown className="max-w-none prose-p:max-w-prose prose-h1:text-xl prose-h1:font-bold prose-h2:text-lg prose-h2:font-semibold prose-h2:mb-2 prose-h3:text-base prose-h3:font-semibold">
           <Migration.Content />
         </Markdown>
       ) : undefined
