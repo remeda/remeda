@@ -16,11 +16,14 @@ import "@/styles/globals.css";
     <meta name="generator" content={Astro.generator} />
     <title>Remeda</title>
     <ThemeScript />
+    <script>
+      import * as R from "remeda";
+      window.R = R;
+    </script>
   </head>
 
   <body>
     <Header />
-
     <div class="container">
       <slot />
     </div>
