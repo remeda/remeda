@@ -109,7 +109,7 @@ const result = R.pipe(
     console.log('iterate', x);
     return x;
   }),
-  R.uniq(),
+  R.unique(),
   R.take(3)
 ); // => [1, 2, 3]
 
