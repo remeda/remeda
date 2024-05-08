@@ -111,6 +111,7 @@ documentation when migrating._
 | [`unique`](https://remedajs.com/docs/#unique)                       | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
 | [`uniqueBy`](https://remedajs.com/docs/#uniqueBy)                   | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
 | [`uniqueWith`](https://remedajs.com/docs/#uniqueWith)               | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
+| [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 
 ## Helpful one-liners
 
