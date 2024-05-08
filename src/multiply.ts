@@ -13,6 +13,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
+export function multiply(value: bigint, multiplicand: bigint): bigint;
 export function multiply(value: number, multiplicand: number): number;
 
 /**
@@ -27,11 +28,15 @@ export function multiply(value: number, multiplicand: number): number;
  * @dataLast
  * @category Number
  */
+export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
 export function multiply(...args: ReadonlyArray<unknown>): unknown {
   return purry(multiplyImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and multiplicand would be of the same
+// type.
 const multiplyImplementation = (value: number, multiplicand: number): number =>
   value * multiplicand;

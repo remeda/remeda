@@ -14,6 +14,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
+export function subtract(value: bigint, subtrahend: bigint): bigint;
 export function subtract(value: number, subtrahend: number): number;
 
 /**
@@ -29,11 +30,15 @@ export function subtract(value: number, subtrahend: number): number;
  * @dataLast
  * @category Number
  */
+export function subtract(subtrahend: bigint): (value: bigint) => bigint;
 export function subtract(subtrahend: number): (value: number) => number;
 
 export function subtract(...args: ReadonlyArray<unknown>): unknown {
   return purry(subtractImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and subtrahend would be of the same
+// type.
 const subtractImplementation = (value: number, subtrahend: number): number =>
   value - subtrahend;

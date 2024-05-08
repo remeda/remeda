@@ -13,6 +13,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
+export function divide(value: bigint, divisor: bigint): bigint;
 export function divide(value: number, divisor: number): number;
 
 /**
@@ -27,11 +28,15 @@ export function divide(value: number, divisor: number): number;
  * @dataLast
  * @category Number
  */
+export function divide(divisor: bigint): (value: bigint) => bigint;
 export function divide(divisor: number): (value: number) => number;
 
 export function divide(...args: ReadonlyArray<unknown>): unknown {
   return purry(divideImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and divisor would be of the same
+// type.
 const divideImplementation = (value: number, divisor: number): number =>
   value / divisor;
