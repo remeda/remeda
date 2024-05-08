@@ -1,6 +1,5 @@
-import { reduceLazy } from "./internal/reduceLazy";
-import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
+import { purryFromLazy } from "./internal/purryFromLazy";
+import { type LazyEvaluator } from "./pipe";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 
@@ -48,13 +47,8 @@ export function uniqueWith<T>(
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
-  return purry(uniqueWithImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const uniqueWithImplementation = <T>(
-  data: ReadonlyArray<T>,
-  isEquals: IsEquals<T>,
-): Array<T> => reduceLazy(data, lazyImplementation(isEquals));
 
 const lazyImplementation =
   <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>

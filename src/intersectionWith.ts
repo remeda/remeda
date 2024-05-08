@@ -1,6 +1,5 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -62,14 +61,8 @@ export function intersectionWith<TFirst, TSecond>(
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
-  return purry(intersectionWithImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const intersectionWithImplementation = <TFirst, TSecond>(
-  array: ReadonlyArray<TFirst>,
-  other: ReadonlyArray<TSecond>,
-  comparator: Comparator<TFirst, TSecond>,
-): Array<TFirst> => reduceLazy(array, lazyImplementation(other, comparator));
 
 const lazyImplementation =
   <TFirst, TSecond>(

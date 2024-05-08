@@ -1,7 +1,6 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { purryFromLazy } from "./internal/purryFromLazy";
 import type { IterableContainer, Mapped } from "./internal/types";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 /**
  * Applies a function on each element of the array, using the result of the
@@ -69,19 +68,8 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
-  return purry(mapWithFeedbackImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const mapWithFeedbackImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  reducer: (
-    previousValue: U,
-    currentValue: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => U,
-  initialValue: U,
-): Array<U> => reduceLazy(data, lazyImplementation(reducer, initialValue));
 
 const lazyImplementation = <T, U>(
   reducer: (

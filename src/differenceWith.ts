@@ -1,6 +1,5 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -57,15 +56,7 @@ export function differenceWith<TFirst, TSecond>(
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
-  return purry(differenceWithImplementation, args, lazyImplementation);
-}
-
-function differenceWithImplementation<TFirst, TSecond>(
-  array: ReadonlyArray<TFirst>,
-  other: ReadonlyArray<TSecond>,
-  isEquals: IsEquals<TFirst, TSecond>,
-): Array<TFirst> {
-  return reduceLazy(array, lazyImplementation(other, isEquals));
+  return purryFromLazy(lazyImplementation, args);
 }
 
 const lazyImplementation =

@@ -44,12 +44,16 @@ type LazyFn = (
   items: ReadonlyArray<unknown>,
 ) => LazyResult<unknown>;
 
-type LazyOp = ((input: unknown) => unknown) & {
-  readonly lazy: ((...args: any) => LazyFn) & {
-    readonly single: boolean;
-  };
+type LazyMeta = {
+  readonly single?: boolean;
+};
+
+export type LazyDefinition = {
+  readonly lazy: LazyMeta & ((...args: any) => LazyFn);
   readonly lazyArgs: ReadonlyArray<unknown>;
 };
+
+type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 
 /**
  * Perform left-to-right function composition.
@@ -352,7 +356,7 @@ function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
   const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
-    isSingle: lazy.single,
+    isSingle: lazy.single ?? false,
     index: 0,
     items: [] as Array<unknown>,
   });
