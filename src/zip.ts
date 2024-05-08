@@ -1,4 +1,5 @@
 import type { IterableContainer } from "./internal/types";
+import { type LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
@@ -33,6 +34,7 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @example
  *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
+ * @pipeable
  * @category Array
  */
 export function zip<F extends IterableContainer, S extends IterableContainer>(
@@ -51,6 +53,7 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @example
  *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
+ * @pipeable
  * @category Array
  */
 export function zip<S extends IterableContainer>(
@@ -58,21 +61,26 @@ export function zip<S extends IterableContainer>(
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
 export function zip(...args: ReadonlyArray<unknown>): unknown {
-  return purry(zipImplementation, args);
+  return purry(zipImplementation, args, lazyImplementation);
 }
 
-function zipImplementation<
+const zipImplementation = <
   F extends IterableContainer,
   S extends IterableContainer,
->(first: F, second: S): Zipped<F, S> {
-  const resultLength =
-    first.length > second.length ? second.length : first.length;
+>(
+  first: F,
+  second: S,
+): Zipped<F, S> =>
+  (first.length < second.length
+    ? first.map((item, index) => [item, second[index]])
+    : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 
-  const result: Array<[F[number], S[number]]> = [];
-
-  for (let i = 0; i < resultLength; i++) {
-    result.push([first[i], second[i]]);
-  }
-
-  return result as Zipped<F, S>;
-}
+const lazyImplementation =
+  <F extends IterableContainer, S extends IterableContainer>(
+    second: S,
+  ): LazyEvaluator<F[number], [F[number], S[number]]> =>
+  (value, index) => ({
+    hasNext: true,
+    next: [value, second[index]],
+    done: index >= second.length - 1,
+  });
