@@ -1,5 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
+import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
 /**
@@ -66,7 +66,7 @@ function lazyImplementation<T, S>(
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've "used" enough
       // copies of it so we skip the remaining values.
-      return { done: false, hasNext: false };
+      return SKIP_ITEM;
     }
 
     // The item is equal to an item in the other array and there are still

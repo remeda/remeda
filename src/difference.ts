@@ -1,5 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
 /**
@@ -71,6 +71,6 @@ function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     // copies of it to "account" for so we skip this one and remove it from our
     // ongoing tally.
     remaining.set(value, copies - 1);
-    return { done: false, hasNext: false };
+    return SKIP_ITEM;
   };
 }

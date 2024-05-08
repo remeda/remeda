@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the op params, it'd be redundant */
 
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
+
 export type LazyEvaluator<T = unknown, R = T> = (
   item: T,
   index: number,
@@ -311,7 +313,7 @@ function processItem(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<any> = { done: false, hasNext: false };
+  let lazyResult: LazyResult<any> = SKIP_ITEM;
   let isDone = false;
   for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;

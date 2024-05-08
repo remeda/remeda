@@ -1,4 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
@@ -67,4 +68,4 @@ const lazyImplementation =
   (value) =>
     other.every((otherValue) => !isEquals(value, otherValue))
       ? { done: false, hasNext: true, next: value }
-      : { done: false, hasNext: false };
+      : SKIP_ITEM;

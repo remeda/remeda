@@ -1,4 +1,5 @@
 import { toSingle } from "./internal/toSingle";
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -90,4 +91,4 @@ const lazyImplementation =
   (value, index, data) =>
     predicate(value, index, data)
       ? { done: true, hasNext: true, next: value }
-      : { done: false, hasNext: false };
+      : SKIP_ITEM;

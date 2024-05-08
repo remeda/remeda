@@ -1,4 +1,4 @@
-import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
@@ -47,7 +47,7 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   return (value) => {
     if (left > 0) {
       left -= 1;
-      return { done: false, hasNext: false };
+      return SKIP_ITEM;
     }
     return { done: false, hasNext: true, next: value };
   };

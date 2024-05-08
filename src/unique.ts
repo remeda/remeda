@@ -1,4 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
 /**
@@ -42,7 +43,7 @@ function lazyImplementation<T>(): LazyEvaluator<T> {
   const set = new Set<T>();
   return (value) => {
     if (set.has(value)) {
-      return { done: false, hasNext: false };
+      return SKIP_ITEM;
     }
     set.add(value);
     return { done: false, hasNext: true, next: value };
