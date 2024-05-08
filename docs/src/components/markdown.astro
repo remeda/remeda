@@ -10,8 +10,6 @@ const { markdown, className } = Astro.props;
 ---
 
 <article
-  class={`prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none ${className}`}
+  class={`prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none ${className ?? ""}`}
   set:html={markdown === undefined ? undefined : asHtml(markdown)}
->
-  <slot />
-</article>
+/>
