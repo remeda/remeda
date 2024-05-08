@@ -16,7 +16,6 @@ import { pipe, type LazyDefinition, type LazyEvaluator } from "../pipe";
  * @see purry
  * @see pipe
  */
-
 export function purryFromLazy(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lazy: (...args: any) => LazyEvaluator,
