@@ -1,4 +1,3 @@
-import { findIndex } from "./findIndex";
 import { purry } from "./purry";
 
 /**
@@ -41,7 +40,7 @@ function splitWhenImplementation<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  const index = findIndex(data, predicate);
+  const index = data.findIndex(predicate);
   return index === -1
     ? [[...data], []]
     : [data.slice(0, index), data.slice(index)];
