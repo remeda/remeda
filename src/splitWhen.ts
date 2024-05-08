@@ -1,3 +1,4 @@
+import { findIndex } from "./findIndex";
 import { purry } from "./purry";
 
 /**
@@ -40,13 +41,8 @@ function splitWhenImplementation<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  let isSplit = false;
-
-  const out: [Array<T>, Array<T>] = [[], []];
-  for (const [index, item] of data.entries()) {
-    isSplit ||= predicate(item, index, data);
-    out[isSplit ? 1 : 0].push(item);
-  }
-
-  return out;
+  const index = findIndex(data, predicate);
+  return index === -1
+    ? [[...data], []]
+    : [data.slice(0, index), data.slice(index)];
 }
