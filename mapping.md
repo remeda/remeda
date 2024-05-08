@@ -24,8 +24,8 @@ documentation when migrating._
 | [`differenceWith`](https://remedajs.com/docs/#differenceWith)       | [`differenceWith`](https://lodash.com/docs/4.17.15#differenceWith)       | [`differenceWith`](https://ramdajs.com/docs/#differenceWith)       |
 | [`divide`](https://remedajs.com/docs/#divide)                       | [`divide`](https://lodash.com/docs/4.17.15#divide)                       | [`divide`](https://ramdajs.com/docs/#divide)                       |
 | [`drop`](https://remedajs.com/docs/#drop)                           | [`drop`](https://lodash.com/docs/4.17.15#drop)                           | [`drop`](https://ramdajs.com/docs/#drop)                           |
+| [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 | [`dropLastWhile`](https://remedajs.com/docs/#dropLastWhile)         | [`dropRightWhile`](https://lodash.com/docs/4.17.15#dropRightWhile)       | [`dropLastWhile`](https://ramdajs.com/docs/#dropLastWhile)         |
-| [`takeLast`](https://remedajs.com/docs/#takeLast)                   | [`takeRight`](https://lodash.com/docs/4.17.15#takeRight)                 | [`takeLast`](https://ramdajs.com/docs/#takeLast)                   |
 | [`dropWhile`](https://remedajs.com/docs/#dropWhile)                 | [`dropWhile`](https://lodash.com/docs/4.17.15#dropWhile)                 | [`dropWhile`](https://ramdajs.com/docs/#dropWhile)                 |
 | [`entries`](https://remedajs.com/docs/#entries)                     | [`toPairs`](https://lodash.com/docs/4.17.15#toPairs)                     | [`toPairs`](https://ramdajs.com/docs/#toPairs)                     |
 | [`evolve`](https://remedajs.com/docs/#evolve)                       |                                                                          | [`evolve`](https://ramdajs.com/docs/#evolve)                       |
@@ -104,6 +104,7 @@ documentation when migrating._
 | [`swapIndices`](https://remedajs.com/docs/#swapIndices)             |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`swapProps`](https://remedajs.com/docs/#swapProps)                 |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`take`](https://remedajs.com/docs/#take)                           | [`take`](https://lodash.com/docs/4.17.15#take)                           | [`take`](https://ramdajs.com/docs/#take)                           |
+| [`takeLast`](https://remedajs.com/docs/#takeLast)                   | [`takeRight`](https://lodash.com/docs/4.17.15#takeRight)                 | [`takeLast`](https://ramdajs.com/docs/#takeLast)                   |
 | [`takeLastWhile`](https://remedajs.com/docs/#takeLastWhile)         | [`takeRightWhile`](https://lodash.com/docs/4.17.15#takeRightWhile)       | [`takeLastWhile`](https://ramdajs.com/docs/#takeLastWhile)         |
 | [`takeWhile`](https://remedajs.com/docs/#takeWhile)                 | [`takeWhile`](https://lodash.com/docs/4.17.15#takeWhile)                 | [`takeWhile`](https://ramdajs.com/docs/#takeWhile)                 |
 | [`tap`](https://remedajs.com/docs/#tap)                             | [`tap`](https://lodash.com/docs/4.17.15#tap)                             | [`tap`](https://ramdajs.com/docs/#tap)                             |
@@ -111,7 +112,6 @@ documentation when migrating._
 | [`unique`](https://remedajs.com/docs/#unique)                       | [`uniq`](https://lodash.com/docs/4.17.15#uniq)                           | [`uniq`](https://ramdajs.com/docs/#uniq)                           |
 | [`uniqueBy`](https://remedajs.com/docs/#uniqueBy)                   | [`uniqBy`](https://lodash.com/docs/4.17.15#uniqBy)                       | [`uniqBy`](https://ramdajs.com/docs/#uniqBy)                       |
 | [`uniqueWith`](https://remedajs.com/docs/#uniqueWith)               | [`uniqWith`](https://lodash.com/docs/4.17.15#uniqWith)                   | [`uniqWith`](https://ramdajs.com/docs/#uniqWith)                   |
-| [`dropLast`](https://remedajs.com/docs/#dropLast)                   | [`dropRight`](https://lodash.com/docs/4.17.15#dropRight)                 | [`dropLast`](https://ramdajs.com/docs/#dropLast)                   |
 
 ## Helpful one-liners
 
