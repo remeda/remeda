@@ -42,7 +42,9 @@ function splitAtImplementation<T>(
   array: ReadonlyArray<T>,
   index: number,
 ): [Array<T>, Array<T>] {
-  const copy = [...array];
-  const tail = copy.splice(index);
-  return [copy, tail];
+  const effectiveIndex = Math.max(
+    Math.min(index < 0 ? array.length + index : index, array.length),
+    0,
+  );
+  return [array.slice(0, effectiveIndex), array.slice(effectiveIndex)];
 }
