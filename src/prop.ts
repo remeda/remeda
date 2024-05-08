@@ -31,10 +31,7 @@ export function prop(...args: ReadonlyArray<unknown>): unknown {
   return purry(propImplementation, args);
 }
 
-export function propImplementation<T, K extends keyof T>(
+export const propImplementation = <T, K extends keyof T>(
   data: T,
   key: K,
-): T[K] {
-  const { [key]: value } = data;
-  return value;
-}
+): T[K] => data[key];
