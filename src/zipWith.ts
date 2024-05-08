@@ -1,4 +1,6 @@
 import { type IterableContainer } from "./internal/types";
+import { type LazyEvaluator } from "./pipe";
+import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,
@@ -40,6 +42,7 @@ export function zipWith<TItem1, TItem2, Value>(
  * @example
  *   R.pipe(['1', '2', '3'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
+ * @pipeable
  * @category Array
  */
 export function zipWith<
@@ -60,6 +63,7 @@ export function zipWith<
  * @example
  *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
+ * @pipeable
  * @category Array
  */
 export function zipWith<
@@ -81,8 +85,11 @@ export function zipWith(
 
   if (typeof arg1 === "function") {
     // dataLast
-    return (data1: IterableContainer) =>
-      zipWithImplementation(data1, arg0, arg1);
+    return lazyDataLastImpl(
+      zipWithImplementation,
+      [arg0, arg1],
+      lazyImplementation,
+    );
   }
 
   // dataFirst. Notice that we assert that the arguments are defined to reduce
@@ -102,3 +109,14 @@ function zipWithImplementation<
     ? first.map((item, index) => fn(item, second[index], index, datum))
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
+
+const lazyImplementation =
+  <T1, T2 extends IterableContainer, Value>(
+    second: T2,
+    fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>,
+  ): LazyEvaluator<T1, Value> =>
+  (value, index, data) => ({
+    next: fn(value, second[index], index, [data, second]),
+    hasNext: true,
+    done: index >= second.length - 1,
+  });
