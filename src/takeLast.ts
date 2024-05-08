@@ -15,9 +15,9 @@ import { purry } from "./purry";
 export function takeLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
- * Removes last `n` elements from the `array`.
+ * Take the last `n` elements from the `array`.
  *
- * @param n - The number of elements to skip.
+ * @param n - The number of elements to take.
  * @signature
  *    R.takeLast(n)(array)
  * @example
