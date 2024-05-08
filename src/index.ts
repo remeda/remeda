@@ -121,6 +121,7 @@ export * from "./swapIndices";
 export * from "./swapProps";
 export * from "./take";
 export * from "./takeFirstBy";
+export * from "./takeLast.js";
 export * from "./takeLastWhile";
 export * from "./takeWhile";
 export * from "./tap";
