@@ -137,7 +137,7 @@ const lazyImplementation = (depth?: number): LazyEvaluator =>
       : (value) =>
           Array.isArray(value)
             ? {
-                next: flatImplementation(value, depth - 1),
+                next: value.flat(depth - 1),
                 hasNext: true,
                 hasMany: true,
                 done: false,
