@@ -23,22 +23,22 @@ to warn against these issues.
 
 ```ts
 // Was
-mapWithFeedback.indexed(array, mapper);
+mapToObj.indexed(array, mapper);
 
 // Now
-mapWithFeedback(array, mapper);
+mapToObj(array, mapper);
 ```
 
 ### Potential bug
 
 ```ts
-function sum(a: number, b = 0, c = 0) {
-  return a + b + c;
+function callback(key: string, index = 0) {
+  return [key, index];
 }
 
 // Bug
-mapWithFeedback([1, 2, 3], sum, 0); // => [1, 4, 9], Was: [1, 3, 6]
+mapToObj(["a", "b", "c"], callback); // => { a: 0, b: 1, c: 2 }, Was: { a: 0, b: 0, c: 0 }
 
 // Fix
-mapWithFeedback([1, 2, 3], (prev, current) => sum(prev, current), 0); // => [1, 3, 6]
+mapToObj(["a", "b", "c"], (item) => callback(item)); // => { a: 0, b: 0, c: 0 }
 ```

@@ -1,4 +1,3 @@
-import { splitAt } from "./splitAt";
 import { purry } from "./purry";
 
 /**
@@ -41,11 +40,8 @@ function splitWhenImplementation<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  for (const [index, item] of data.entries()) {
-    if (predicate(item, index, data)) {
-      return splitAt(data, index);
-    }
-  }
-
-  return [[...data], []];
+  const index = data.findIndex(predicate);
+  return index === -1
+    ? [[...data], []]
+    : [data.slice(0, index), data.slice(index)];
 }

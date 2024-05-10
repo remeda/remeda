@@ -104,6 +104,7 @@ documentation when migrating._
 | [`swapIndices`](https://remedajs.com/docs/#swapIndices)             |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`swapProps`](https://remedajs.com/docs/#swapProps)                 |                                                                          | [`swap`](https://ramdajs.com/docs/#swap)                           |
 | [`take`](https://remedajs.com/docs/#take)                           | [`take`](https://lodash.com/docs/4.17.15#take)                           | [`take`](https://ramdajs.com/docs/#take)                           |
+| [`takeLast`](https://remedajs.com/docs/#takeLast)                   | [`takeRight`](https://lodash.com/docs/4.17.15#takeRight)                 | [`takeLast`](https://ramdajs.com/docs/#takeLast)                   |
 | [`takeLastWhile`](https://remedajs.com/docs/#takeLastWhile)         | [`takeRightWhile`](https://lodash.com/docs/4.17.15#takeRightWhile)       | [`takeLastWhile`](https://ramdajs.com/docs/#takeLastWhile)         |
 | [`takeWhile`](https://remedajs.com/docs/#takeWhile)                 | [`takeWhile`](https://lodash.com/docs/4.17.15#takeWhile)                 | [`takeWhile`](https://ramdajs.com/docs/#takeWhile)                 |
 | [`tap`](https://remedajs.com/docs/#tap)                             | [`tap`](https://lodash.com/docs/4.17.15#tap)                             | [`tap`](https://ramdajs.com/docs/#tap)                             |

@@ -53,7 +53,7 @@ export function first(...args: ReadonlyArray<unknown>): unknown {
 const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>
   item;
 
-const lazyImplementation =
-  <T>(): LazyEvaluator<T> =>
-  // eslint-disable-next-line unicorn/consistent-function-scoping -- TODO
-  (value) => ({ done: true, hasNext: true, next: value });
+const lazyImplementation = (): LazyEvaluator => firstLazy;
+
+const firstLazy = <T>(value: T) =>
+  ({ hasNext: true, next: value, done: true }) as const;

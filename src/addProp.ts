@@ -15,7 +15,7 @@ import { purry } from "./purry";
  */
 export function addProp<
   T extends Record<PropertyKey, unknown>,
-  K extends string,
+  K extends PropertyKey,
   V,
 >(obj: T, prop: K, value: V): T & { [x in K]: V };
 
@@ -33,7 +33,7 @@ export function addProp<
  */
 export function addProp<
   T extends Record<PropertyKey, unknown>,
-  K extends string,
+  K extends PropertyKey,
   V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
@@ -43,7 +43,7 @@ export function addProp(...args: ReadonlyArray<unknown>): unknown {
 
 const addPropImplementation = <
   T extends Record<PropertyKey, unknown>,
-  K extends string,
+  K extends PropertyKey,
   V,
 >(
   obj: T,

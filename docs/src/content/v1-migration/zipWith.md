@@ -1,5 +1,9 @@
 # Runtime
 
+The order of parameters in the dataLast invocation has been flipped so that the
+second array to zip with is now the first parameter, and the zipping function is
+now the second param.
+
 The zipping function now takes 2 additional parameters: `index` - The index of
 the current element being processed in array, and `datum` - A 2-tuple of arrays
 the function was called upon (the same signature the callbacks the built-in
@@ -12,6 +16,22 @@ sent on each invocation of the function. We highly recommend using [unicorn/no-a
 to warn against these issues.
 
 ## Examples
+
+### Param reordered
+
+```ts
+// Was
+pipe(
+  [1, 2, 3],
+  zipWith((a, b) => a + b, [4, 5, 6]),
+);
+
+// Now
+pipe(
+  [1, 2, 3],
+  zipWith([4, 5, 6], (a, b) => a + b),
+);
+```
 
 ### New Params
 

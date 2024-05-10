@@ -1,7 +1,6 @@
-import { reduceLazy } from "./internal/reduceLazy";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
+import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -44,13 +43,8 @@ export function intersection<S>(
 ): <T>(data: ReadonlyArray<T>) => Array<S & T>;
 
 export function intersection(...args: ReadonlyArray<unknown>): unknown {
-  return purry(intersectionImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const intersectionImplementation = <T, S>(
-  data: ReadonlyArray<T>,
-  other: ReadonlyArray<S>,
-): Array<S & T> => reduceLazy(data, lazyImplementation(other));
 
 function lazyImplementation<T, S>(
   other: ReadonlyArray<S>,
@@ -72,7 +66,7 @@ function lazyImplementation<T, S>(
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've "used" enough
       // copies of it so we skip the remaining values.
-      return { done: false, hasNext: false };
+      return SKIP_ITEM;
     }
 
     // The item is equal to an item in the other array and there are still

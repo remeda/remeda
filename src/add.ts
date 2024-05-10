@@ -14,6 +14,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
+export function add(value: bigint, addend: bigint): bigint;
 export function add(value: number, addend: number): number;
 
 /**
@@ -29,11 +30,14 @@ export function add(value: number, addend: number): number;
  * @dataLast
  * @category Number
  */
+export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
 export function add(...args: ReadonlyArray<unknown>): unknown {
   return purry(addImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and addend would be of the same type.
 const addImplementation = (value: number, addend: number): number =>
   value + addend;

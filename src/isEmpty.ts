@@ -1,7 +1,4 @@
 import type { IterableContainer } from "./internal/types";
-import { isArray } from "./isArray";
-import { isObjectType } from "./isObjectType";
-import { isString } from "./isString";
 
 /**
  * A function that checks if the passed parameter is empty.
@@ -37,16 +34,22 @@ export function isEmpty(data: IterableContainer): data is [];
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
   data: T,
 ): data is Record<keyof T, never>;
-export function isEmpty(data: unknown): boolean {
+export function isEmpty(data: object | string | undefined): boolean {
   if (data === undefined) {
     return true;
   }
 
-  if (isArray(data) || isString(data)) {
+  if (typeof data === "string") {
     return data.length === 0;
   }
-  if (isObjectType(data)) {
-    return Object.keys(data).length === 0;
+
+  if (typeof data !== "object") {
+    return false;
   }
-  return false;
+
+  if (Array.isArray(data)) {
+    return data.length === 0;
+  }
+
+  return Object.keys(data).length === 0;
 }

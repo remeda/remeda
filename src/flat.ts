@@ -1,6 +1,7 @@
 import { type IsNumericLiteral } from "type-fest";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { IterableContainer } from "./internal/types";
+import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator, LazyResult } from "./pipe";
 
 // This is obvious and not likely to change, but it makes reading the code a
@@ -113,37 +114,35 @@ export function flat(
   depth?: number,
 ): unknown {
   if (typeof dataOrDepth === "object") {
-    // TODO: Use the built-in `Array.prototype.flat` in V2.
     return flatImplementation(dataOrDepth, depth);
   }
 
   return lazyDataLastImpl(
     flatImplementation,
-    [dataOrDepth, depth],
+    dataOrDepth === undefined ? [] : [dataOrDepth],
     lazyImplementation,
   );
 }
 
-const lazyImplementation = (depth = DEFAULT_DEPTH): LazyEvaluator =>
-  depth <= 0
-    ? lazyIdentity
-    : depth === 1
-      ? lazyShallow
+const flatImplementation = (
+  data: IterableContainer,
+  depth?: number,
+): IterableContainer => (depth === undefined ? data.flat() : data.flat(depth));
+
+const lazyImplementation = (depth?: number): LazyEvaluator =>
+  depth === undefined || depth === 1
+    ? lazyShallow
+    : depth <= 0
+      ? lazyIdentityEvaluator
       : (value) =>
           Array.isArray(value)
             ? {
-                next: flatImplementation(value, depth - 1),
+                next: value.flat(depth - 1),
                 hasNext: true,
                 hasMany: true,
                 done: false,
               }
             : { next: value, hasNext: true, done: false };
-
-// This function is pulled out so that we don't generate a new arrow function
-// each time. It acts as a lazy identity function by wrapping the value with a
-// lazy object.
-const lazyIdentity = <T>(value: T) =>
-  ({ next: value, hasNext: true, done: false }) as const;
 
 // This function is pulled out so that we don't generate a new arrow function
 // each time. Because it doesn't need to run with recursion it could be pulled
@@ -152,24 +151,3 @@ const lazyShallow = <T>(value: T): LazyResult<T> =>
   Array.isArray(value)
     ? { next: value, hasNext: true, hasMany: true, done: false }
     : { next: value, hasNext: true, done: false };
-
-function flatImplementation(
-  data: IterableContainer,
-  depth = DEFAULT_DEPTH,
-): IterableContainer {
-  if (depth <= 0) {
-    return [...data];
-  }
-
-  const output: Array<unknown> = [];
-
-  for (const item of data) {
-    if (Array.isArray(item)) {
-      output.push(...flatImplementation(item, depth - 1));
-    } else {
-      output.push(item);
-    }
-  }
-
-  return output;
-}

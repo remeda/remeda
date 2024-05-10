@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the op params, it'd be redundant */
 
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
+
 export type LazyEvaluator<T = unknown, R = T> = (
   item: T,
   index: number,
@@ -44,12 +46,16 @@ type LazyFn = (
   items: ReadonlyArray<unknown>,
 ) => LazyResult<unknown>;
 
-type LazyOp = ((input: unknown) => unknown) & {
-  readonly lazy: ((...args: any) => LazyFn) & {
-    readonly single: boolean;
-  };
+type LazyMeta = {
+  readonly single?: boolean;
+};
+
+export type LazyDefinition = {
+  readonly lazy: LazyMeta & ((...args: any) => LazyFn);
   readonly lazyArgs: ReadonlyArray<unknown>;
 };
+
+type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 
 /**
  * Perform left-to-right function composition.
@@ -307,7 +313,7 @@ function processItem(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<any> = { done: false, hasNext: false };
+  let lazyResult: LazyResult<any> = SKIP_ITEM;
   let isDone = false;
   for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
@@ -352,7 +358,7 @@ function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
   const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
-    isSingle: lazy.single,
+    isSingle: lazy.single ?? false,
     index: 0,
     items: [] as Array<unknown>,
   });

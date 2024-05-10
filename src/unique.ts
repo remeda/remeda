@@ -1,6 +1,6 @@
-import { reduceLazy } from "./internal/reduceLazy";
+import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -36,17 +36,14 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
-  return purry(uniqueImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const uniqueImplementation = <T>(array: ReadonlyArray<T>): Array<T> =>
-  reduceLazy(array, lazyImplementation());
 
 function lazyImplementation<T>(): LazyEvaluator<T> {
   const set = new Set<T>();
   return (value) => {
     if (set.has(value)) {
-      return { done: false, hasNext: false };
+      return SKIP_ITEM;
     }
     set.add(value);
     return { done: false, hasNext: true, next: value };

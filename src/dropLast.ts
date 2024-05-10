@@ -31,13 +31,7 @@ export function dropLast(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropLastImplementation, args);
 }
 
-function dropLastImplementation<T>(
+const dropLastImplementation = <T>(
   array: ReadonlyArray<T>,
   n: number,
-): Array<T> {
-  const copy = [...array];
-  if (n > 0) {
-    copy.splice(-n);
-  }
-  return copy;
-}
+): Array<T> => (n >= 0 ? array.slice(0, array.length - n) : [...array]);

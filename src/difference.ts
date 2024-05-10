@@ -1,7 +1,6 @@
-import { reduceLazy } from "./internal/reduceLazy";
-import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import { purryFromLazy } from "./internal/purryFromLazy";
+import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
-import { purry } from "./purry";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -44,13 +43,8 @@ export function difference<T>(
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
-  return purry(differenceImplementation, args, lazyImplementation);
+  return purryFromLazy(lazyImplementation, args);
 }
-
-const differenceImplementation = <T>(
-  array: ReadonlyArray<T>,
-  other: ReadonlyArray<T>,
-): Array<T> => reduceLazy(array, lazyImplementation(other));
 
 function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
   if (other.length === 0) {
@@ -77,6 +71,6 @@ function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     // copies of it to "account" for so we skip this one and remove it from our
     // ongoing tally.
     remaining.set(value, copies - 1);
-    return { done: false, hasNext: false };
+    return SKIP_ITEM;
   };
 }
