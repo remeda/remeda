@@ -36,7 +36,6 @@ export function clone(...args: ReadonlyArray<unknown>): unknown {
   return purry(cloneImplementation, args);
 }
 
-// from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 function cloneImplementation<T>(
   value: T,
   refFrom: Array<unknown> = [],
