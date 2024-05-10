@@ -2,6 +2,12 @@
 import Header from "@/components/header.astro";
 import ThemeScript from "@/components/theme-script.astro";
 import "@/styles/globals.css";
+
+type Props = {
+  readonly class?: string;
+};
+
+const class_ = Astro.props.class;
 ---
 
 <html lang="en">
@@ -17,12 +23,10 @@ import "@/styles/globals.css";
     <title>Remeda</title>
     <ThemeScript />
   </head>
-
   <body>
     <Header />
-
-    <div class="container">
+    <section class:list={["container", class_]}>
       <slot />
-    </div>
+    </section>
   </body>
 </html>

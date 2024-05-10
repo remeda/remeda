@@ -1,32 +1,37 @@
 ---
-import V1FunctionCard from "@/components/v1/v1-function-card.astro";
+import Markdown from "@/components/markdown.astro";
 import { Navbar } from "@/components/navbar";
+import V1FunctionCard from "@/components/v1/v1-function-card.astro";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
 import { NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
+import { Content as MigrationIntro } from "./v1-migration-intro.md";
 ---
 
-<Layout>
-  <div
-    class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
+<Layout
+  class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
+>
+  <aside
+    class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
   >
-    <aside
-      class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
-    >
-      <Navbar entries={NAVBAR_ENTRIES} client:load />
-    </aside>
-    <main class="h-full py-6">
-      <div class="space-y-6">
-        {
-          pipe(
-            CATEGORIZED,
-            values,
-            flat(),
-            map((func) => <V1FunctionCard func={func} />),
-          )
-        }
-      </div>
-    </main>
-  </div>
+    <Navbar entries={NAVBAR_ENTRIES} client:load />
+  </aside>
+  <main class="flex h-full flex-col gap-10 py-6">
+    <Markdown><MigrationIntro /></Markdown>
+    <ul class="flex flex-col gap-6">
+      {
+        pipe(
+          CATEGORIZED,
+          values,
+          flat(),
+          map((func) => (
+            <li>
+              <V1FunctionCard func={func} />
+            </li>
+          )),
+        )
+      }
+    </ul>
+  </main>
 </Layout>

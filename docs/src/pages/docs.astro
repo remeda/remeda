@@ -7,27 +7,28 @@ import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout>
-  <div
-    class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
+<Layout
+  class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
+>
+  <aside
+    class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
   >
-    <aside
-      class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
-    >
-      <Navbar entries={NAVBAR_ENTRIES} client:load />
-    </aside>
-
-    <main class="h-full py-6">
-      <div class="space-y-6">
-        {
-          pipe(
-            CATEGORIZED,
-            values,
-            flat(),
-            map((func) => <FunctionCard func={func} />),
-          )
-        }
-      </div>
-    </main>
-  </div>
+    <Navbar entries={NAVBAR_ENTRIES} client:load />
+  </aside>
+  <main class="h-full py-6">
+    <ul class="flex flex-col gap-6">
+      {
+        pipe(
+          CATEGORIZED,
+          values,
+          flat(),
+          map((func) => (
+            <li>
+              <FunctionCard func={func} />
+            </li>
+          )),
+        )
+      }
+    </ul>
+  </main>
 </Layout>

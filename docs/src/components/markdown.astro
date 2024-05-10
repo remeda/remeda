@@ -13,5 +13,8 @@ const { markdown, className } = Astro.props;
   class={`prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none ${className ?? ""}`}
   set:html={markdown === undefined ? undefined : asHtml(markdown)}
 >
-  <slot />
+  {
+    // Only use the slot if we haven't already set the inner HTML via `set:html`
+    markdown === undefined ? <slot /> : undefined
+  }
 </article>
