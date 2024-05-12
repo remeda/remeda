@@ -1,15 +1,8 @@
 import type { DocumentedFunction } from "./transform";
 
-export function getTags({
+export type Tag = "pipeable" | "indexed" | "strict";
+
+export const getTags = ({
   methods: [method],
-}: DocumentedFunction): ReadonlyArray<string> {
-  const { pipeable = false } = method ?? {};
-
-  const out = [];
-
-  if (pipeable) {
-    out.push("pipeable");
-  }
-
-  return out;
-}
+}: DocumentedFunction): ReadonlyArray<Tag> =>
+  method?.pipeable ?? false ? ["pipeable"] : [];

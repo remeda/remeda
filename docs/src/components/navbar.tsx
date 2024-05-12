@@ -1,13 +1,14 @@
-import { FunctionTag } from "@/components/function-tag";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import type { Tag } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
 import { useMemo, useState, type ReactNode } from "react";
+import { Badge } from "./ui/badge";
 
 interface NavbarEntry {
   readonly name: string;
-  readonly tags: ReadonlyArray<string>;
+  readonly tags: ReadonlyArray<Tag>;
 }
 
 export type NavbarCategory = readonly [
@@ -42,7 +43,7 @@ export function Navbar({
   }, [entries, query]);
 
   return (
-    <nav className="h-full">
+    <nav className="h-dvh">
       <Input
         placeholder="Type to filter"
         value={query}
@@ -50,8 +51,7 @@ export function Navbar({
           setQuery(value);
         }}
       />
-
-      <ScrollArea className="h-full" barClassName="pt-6 pb-10">
+      <ScrollArea className="h-full">
         <ul className="space-y-2 pb-10 pl-1 pr-4 pt-6">
           {filteredEntries.map(([category, entries]) => (
             <li key={category}>
@@ -59,7 +59,7 @@ export function Navbar({
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.name}>
-                    <NavbarEntry onSelect={onSelect} {...entry} />
+                    <NavbarItem onSelect={onSelect} {...entry} />
                   </li>
                 ))}
               </ul>
@@ -71,7 +71,7 @@ export function Navbar({
   );
 }
 
-function NavbarEntry({
+function NavbarItem({
   name,
   tags,
   onSelect,
@@ -89,9 +89,13 @@ function NavbarEntry({
       {name}
       <span className="flex items-center gap-1">
         {tags.map((tag) => (
-          <FunctionTag key={tag} tag={tag} className="px-1.5">
+          <Badge
+            key={tag}
+            variant={tag}
+            className="flex h-7 w-5 justify-center capitalize"
+          >
             {tag[0]}
-          </FunctionTag>
+          </Badge>
         ))}
       </span>
     </a>

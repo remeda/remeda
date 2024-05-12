@@ -1,22 +1,25 @@
+import type { Tag } from "../get-tags";
 import type { DocumentedFunction } from "./transform";
 
 export function getTags({
   methods: [method],
-}: DocumentedFunction): ReadonlyArray<string> {
-  const { pipeable = false, indexed = false, strict = false } = method ?? {};
-
-  const out = [];
-
-  if (pipeable) {
-    out.push("pipeable");
+}: DocumentedFunction): ReadonlyArray<Tag> {
+  if (method === undefined) {
+    return [];
   }
 
-  if (indexed) {
+  const out: Array<Tag> = [];
+
+  if (method.strict) {
+    out.push("strict");
+  }
+
+  if (method.indexed) {
     out.push("indexed");
   }
 
-  if (strict) {
-    out.push("strict");
+  if (method.pipeable) {
+    out.push("pipeable");
   }
 
   return out;

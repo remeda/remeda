@@ -7,16 +7,14 @@ import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout
-  class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
->
+<Layout class="gap-6 md:flex">
   <aside
-    class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
+    class="top-14 z-30 hidden h-[calc(100dvh-3.5rem)] w-full py-6 md:sticky md:block md:w-60"
   >
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
-  <main class="h-full py-6">
-    <ul class="flex flex-col gap-6">
+  <main>
+    <ul class="flex flex-col gap-6 py-6">
       {
         pipe(
           CATEGORIZED,
