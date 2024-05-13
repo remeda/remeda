@@ -7,11 +7,11 @@ import {
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import type { ReactNode } from "react";
 
-export const MigrationBox = ({
+export function MigrationBox({
   children,
 }: {
   readonly children: ReactNode;
-}): ReactNode => {
+}): ReactNode {
   return (
     <Collapsible className="flex flex-col gap-8 rounded-md border border-sky-100 bg-gradient-to-tl from-sky-50 to-sky-100 p-3 shadow-sm dark:border-sky-900 dark:from-sky-900 dark:to-sky-950">
       <div className="relative flex items-center">
@@ -28,4 +28,4 @@ export const MigrationBox = ({
       <CollapsibleContent className="pt-4">{children}</CollapsibleContent>
     </Collapsible>
   );
-};
+}

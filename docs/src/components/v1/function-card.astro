@@ -1,10 +1,11 @@
 ---
 import FunctionApi from "@/components/function-api.astro";
+import FunctionDescription from "@/components/function-description.astro";
 import Markdown from "@/components/markdown.astro";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getTags } from "@/lib/v1/get-tags";
 import type { DocumentedFunction } from "@/lib/v1/transform";
 import { getEntry } from "astro:content";
-import FunctionDescription from "./function-description.astro";
 import { MigrationBox } from "./migration-box";
 
 const MIGRATION_COLLECTION = "v1-migration";
@@ -21,7 +22,13 @@ const Migration = await entry?.render();
 
 <Card id={func.name} className="scroll-mt-20">
   <CardHeader>
-    <FunctionDescription func={func} />
+    <FunctionDescription
+      name={func.name}
+      category={func.category}
+      tags={getTags(func)}
+      description={func.description}
+      sourceUrl={func.sourceUrl}
+    />
   </CardHeader>
   {
     Migration !== undefined && (

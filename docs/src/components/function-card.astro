@@ -1,13 +1,12 @@
 ---
-import FunctionApi from "@/components/function-api.astro";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/transform";
+import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
-import type { ReactNode } from "react";
 
 type Props = {
   readonly func: DocumentedFunction;
-  readonly children?: ReactNode;
 };
 
 const { func } = Astro.props;
@@ -15,15 +14,14 @@ const { func } = Astro.props;
 
 <Card id={func.name} className="scroll-mt-20">
   <CardHeader>
-    <FunctionDescription func={func} />
+    <FunctionDescription
+      name={func.name}
+      category={func.category}
+      tags={getTags(func)}
+      description={func.description}
+      sourceUrl={func.sourceUrl}
+    />
   </CardHeader>
-  {
-    Astro.slots.has("default") && (
-      <CardContent>
-        <slot />
-      </CardContent>
-    )
-  }
   <CardContent className="grid gap-6">
     {func.methods.map((method) => <FunctionApi method={method} />)}
   </CardContent>
