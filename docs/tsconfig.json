@@ -6,9 +6,10 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "allowArbitraryExtensions": true,
     "plugins": [{ "name": "@astro/ts-plugin" }],
-
     "moduleDetection": "force",
     "lib": ["es2022", "dom", "dom.iterable"]
   }
