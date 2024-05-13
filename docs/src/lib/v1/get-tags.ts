@@ -11,15 +11,15 @@ export function getTags({
   const out: Array<Tag> = [];
 
   if (method.strict) {
-    out.push("strict");
+    out.push("Strict");
   }
 
   if (method.indexed) {
-    out.push("indexed");
+    out.push("Indexed");
   }
 
   if (method.pipeable) {
-    out.push("lazy");
+    out.push("Lazy");
   }
 
   return out;
