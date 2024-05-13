@@ -22,7 +22,9 @@ type Props = HTMLAttributes<"section">;
       initTheme();
     </script>
   </head>
-  <body class="min-w-screen flex min-h-dvh flex-col items-stretch gap-6">
+  <body
+    class="flex h-dvh w-screen flex-col items-stretch gap-6 overflow-hidden"
+  >
     <Header />
     <section {...Astro.props}>
       <slot />

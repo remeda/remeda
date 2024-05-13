@@ -43,7 +43,7 @@ export function Navbar({
   }, [entries, query]);
 
   return (
-    <nav className="h-full">
+    <nav className="flex h-full flex-col items-stretch gap-4 pb-6">
       <Input
         placeholder="Type to filter"
         value={query}
@@ -51,8 +51,8 @@ export function Navbar({
           setQuery(value);
         }}
       />
-      <ScrollArea className="h-full">
-        <ul className="space-y-2 pb-10 pl-1 pr-4 pt-6">
+      <ScrollArea className="flex-1">
+        <ul className="flex flex-col gap-2">
           {filteredEntries.map(([category, entries]) => (
             <li key={category}>
               <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>

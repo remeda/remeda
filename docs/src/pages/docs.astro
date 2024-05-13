@@ -1,32 +1,33 @@
 ---
 import FunctionCard from "@/components/function-card.astro";
 import { Navbar } from "@/components/navbar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/categorized";
 import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout class="flex-1 gap-6 px-4 md:flex">
-  <aside
-    class="top-20 z-30 hidden h-[calc(100dvh-3.5rem)] w-full md:sticky md:block md:w-60"
-  >
+<Layout class="flex flex-1 items-stretch gap-6 overflow-hidden px-4">
+  <aside class="hidden w-60 flex-none md:block">
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
-  <main>
-    <ul class="flex flex-col">
-      {
-        pipe(
-          CATEGORIZED,
-          values,
-          flat(),
-          map((func) => (
-            <li class="mb-6">
-              <FunctionCard func={func} />
-            </li>
-          )),
-        )
-      }
-    </ul>
+  <main class="flex-1 overflow-hidden">
+    <ScrollArea className="h-full" client:load>
+      <ul class="flex flex-col">
+        {
+          pipe(
+            CATEGORIZED,
+            values,
+            flat(),
+            map((func) => (
+              <li class="mb-6">
+                <FunctionCard func={func} />
+              </li>
+            )),
+          )
+        }
+      </ul>
+    </ScrollArea>
   </main>
 </Layout>

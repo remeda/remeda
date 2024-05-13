@@ -1,17 +1,21 @@
 ---
 import { asHtml } from "@/lib/as-html";
+import type { HTMLAttributes } from "astro/types";
 
-type Props = {
+type Props = HTMLAttributes<"article"> & {
   readonly markdown?: string;
-  readonly className?: string;
 };
 
-const { markdown, className } = Astro.props;
+const { markdown, ["class"]: class_ = "", ...props } = Astro.props;
 ---
 
 <article
-  class={`prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none ${className ?? ""}`}
+  class:list={[
+    "prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none",
+    class_,
+  ]}
   set:html={markdown === undefined ? undefined : asHtml(markdown)}
+  {...props}
 >
   {
     // Only use the slot if we haven't already set the inner HTML via `set:html`
