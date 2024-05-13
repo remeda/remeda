@@ -1,11 +1,11 @@
 ---
 import GithubSource from "@/components/github-source.astro";
 import Markdown from "@/components/markdown.astro";
+import { TagBadge } from "@/components/tag-badge";
 import { Badge } from "@/components/ui/badge";
 import { CardTitle } from "@/components/ui/card";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/transform";
-import { TagBadge } from "./tag-badge";
+import { getTags } from "@/lib/v1/get-tags";
+import type { DocumentedFunction } from "@/lib/v1/transform";
 
 type Props = {
   readonly func: DocumentedFunction;

@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Tag } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
 import { useMemo, useState, type ReactNode } from "react";
-import { Badge } from "./ui/badge";
+import { TagBadge } from "./tag-badge";
 
 interface NavbarEntry {
   readonly name: string;
@@ -89,13 +89,12 @@ function NavbarItem({
       {name}
       <span className="flex items-center gap-1">
         {tags.map((tag) => (
-          <Badge
+          <TagBadge
             key={tag}
-            variant={tag}
-            className="flex h-7 w-5 justify-center capitalize"
-          >
-            {tag[0]}
-          </Badge>
+            tag={tag}
+            abbreviated
+            className="flex h-7 w-5 justify-center"
+          />
         ))}
       </span>
     </a>

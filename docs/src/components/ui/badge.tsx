@@ -13,15 +13,6 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
-
-        // Our custom variants
-        pipeable:
-          "border-transparent bg-green-600 text-green-50 shadow hover:bg-green-600/80 dark:bg-green-500 dark:text-green-950",
-
-        indexed:
-          "border-transparent bg-sky-600 text-sky-50 shadow hover:bg-sky-600/80 dark:bg-sky-500 dark:text-sky-950",
-        strict:
-          "border-transparent bg-rose-600 text-rose-50 shadow hover:bg-rose-600/80 dark:bg-rose-500 dark:text-rose-950",
       },
     },
     defaultVariants: {
