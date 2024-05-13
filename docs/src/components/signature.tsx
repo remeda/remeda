@@ -10,15 +10,15 @@ import { Fragment, type ReactNode } from "react";
 
 type Method = DocumentedFunction["methods"][number];
 
-export const MethodSignature = ({
+export function MethodSignature({
   args,
   returns,
   children,
 }: {
-  children: ReactNode;
-  args: Method["args"];
-  returns: Method["returns"];
-}) => {
+  readonly children: ReactNode;
+  readonly args: Method["args"];
+  readonly returns: Method["returns"];
+}): ReactNode {
   return (
     <CollapsibleRoot>
       <div className="relative flex items-center">
@@ -58,4 +58,4 @@ export const MethodSignature = ({
       </CollapsibleContent>
     </CollapsibleRoot>
   );
-};
+}

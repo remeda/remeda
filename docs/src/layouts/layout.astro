@@ -1,6 +1,5 @@
 ---
 import Header from "@/components/header.astro";
-import ThemeScript from "@/components/theme-script.astro";
 import "@/styles/globals.css";
 
 type Props = {
@@ -21,7 +20,10 @@ const class_ = Astro.props.class;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Remeda</title>
-    <ThemeScript />
+    <script>
+      import { initTheme } from "@/lib/theme";
+      initTheme();
+    </script>
   </head>
   <body>
     <Header />

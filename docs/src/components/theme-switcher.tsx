@@ -6,30 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const setTheme = (theme: "light" | "dark" | "system") => {
-  const de = document.documentElement;
-
-  de.classList.remove("dark");
-
-  if (theme === "system") {
-    const { matches: prefersDark } = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    );
-
-    if (prefersDark) {
-      de.classList.add("dark");
-    }
-
-    localStorage.removeItem("theme");
-  } else {
-    if (theme === "dark") {
-      de.classList.add("dark");
-    }
-
-    localStorage.setItem("theme", theme);
-  }
-};
+import { useCallback, type ReactNode } from "react";
+import { switchTheme, type Theme } from "@/lib/theme";
 
 export function ThemeSwitcher() {
   return (
@@ -42,28 +20,22 @@ export function ThemeSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => {
-            setTheme("light");
-          }}
-        >
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            setTheme("dark");
-          }}
-        >
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            setTheme("system");
-          }}
-        >
-          System
-        </DropdownMenuItem>
+        <ThemeItem theme="light" />
+        <ThemeItem theme="dark" />
+        <ThemeItem theme="system" />
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function ThemeItem({ theme }: { readonly theme: Theme }): ReactNode {
+  const handleClick = useCallback(() => {
+    switchTheme(theme);
+  }, [theme]);
+
+  return (
+    <DropdownMenuItem className="capitalize" onClick={handleClick}>
+      {theme}
+    </DropdownMenuItem>
   );
 }
