@@ -8,47 +8,47 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 const { pathname } = Astro.url;
 ---
 
-<header class="flex-none border-b border-border/40 bg-background/95">
-  <div class="container flex h-14 items-center gap-8">
-    <a href="/" class="font-bold">Remeda</a>
-    <nav class="flex items-center gap-8 text-sm">
-      <a
-        href="/"
-        class:list={[
-          "transition-colors hover:text-foreground/80",
-          pathname === "/" ? "text-foreground" : "text-foreground/60",
-        ]}
-      >
-        Home
-      </a>
-      <a
-        href="/docs/"
-        class:list={[
-          "transition-colors hover:text-foreground/80",
-          pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
-        ]}
-      >
-        Documentation
-      </a>
-      <a
-        href="/v1/"
-        class:list={[
-          "transition-colors hover:text-foreground/80",
-          pathname === "/v1/" ? "text-foreground" : "text-foreground/60",
-        ]}>Documentation (V1)</a
-      >
-    </nav>
-    <div class="-mr-2 ml-auto flex items-center gap-2">
-      <a
-        href="https://github.com/remeda/remeda"
-        target="_blank"
-        class={buttonVariants({ variant: "ghost", size: "icon" })}
-      >
-        <GitHubLogoIcon />
-        <span class="sr-only">GitHub</span>
-      </a>
-      <ThemeSwitcher client:load />
-      <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
-    </div>
+<header
+  class="flex h-14 flex-none items-center gap-8 border-b border-border/40 bg-background/95 px-4"
+>
+  <a href="/" class="font-bold">Remeda</a>
+  <nav class="flex items-center gap-8 text-sm">
+    <a
+      href="/"
+      class:list={[
+        "transition-colors hover:text-foreground/80",
+        pathname === "/" ? "text-foreground" : "text-foreground/60",
+      ]}
+    >
+      Home
+    </a>
+    <a
+      href="/docs/"
+      class:list={[
+        "transition-colors hover:text-foreground/80",
+        pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
+      ]}
+    >
+      Documentation
+    </a>
+    <a
+      href="/v1/"
+      class:list={[
+        "transition-colors hover:text-foreground/80",
+        pathname === "/v1/" ? "text-foreground" : "text-foreground/60",
+      ]}>Documentation (V1)</a
+    >
+  </nav>
+  <div class="-mr-2 ml-auto flex items-center gap-2">
+    <a
+      href="https://github.com/remeda/remeda"
+      target="_blank"
+      class={buttonVariants({ variant: "ghost", size: "icon" })}
+    >
+      <GitHubLogoIcon />
+      <span class="sr-only">GitHub</span>
+    </a>
+    <ThemeSwitcher client:load />
+    <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
   </div>
 </header>
