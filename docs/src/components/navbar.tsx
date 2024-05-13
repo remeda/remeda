@@ -43,7 +43,7 @@ export function Navbar({
   }, [entries, query]);
 
   return (
-    <nav className="h-dvh">
+    <nav className="h-full">
       <Input
         placeholder="Type to filter"
         value={query}

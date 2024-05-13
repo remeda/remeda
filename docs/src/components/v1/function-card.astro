@@ -42,6 +42,16 @@ const Migration = await entry?.render();
     )
   }
   <CardContent className="grid gap-6">
-    {func.methods.map((method) => <FunctionApi method={method} />)}
+    {
+      func.methods.map((method) => (
+        <FunctionApi
+          args={method.args}
+          example={method.example}
+          returns={method.returns}
+          signature={method.signature}
+          tag={method.tag}
+        />
+      ))
+    }
   </CardContent>
 </Card>

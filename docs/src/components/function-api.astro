@@ -1,18 +1,20 @@
 ---
 import CodeBlock from "@/components/code-block.astro";
 import { MethodSignature } from "@/components/signature";
-import type { DocumentedFunction } from "@/lib/transform";
+import type { FunctionParam, FunctionReturn } from "@/lib/transform";
 
 // TODO: signature shouldn't be nullish, we should fail the build instead!
 const FALLBACK_SIGNATURE = "//! Missing Signature!";
 
 type Props = {
-  readonly method: DocumentedFunction["methods"][number];
+  readonly tag: string | undefined;
+  readonly signature: string | undefined;
+  readonly args: ReadonlyArray<FunctionParam>;
+  readonly returns: FunctionReturn;
+  readonly example: string | undefined;
 };
 
-const {
-  method: { args, example, returns, signature, tag },
-} = Astro.props;
+const { tag, signature, args, returns, example } = Astro.props;
 ---
 
 <div class="flex flex-col gap-2">

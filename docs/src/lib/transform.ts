@@ -77,23 +77,27 @@ const transformSignature = (
   signature: SetRequired<JSONOutput.SignatureReflection, "comment">,
 ) =>
   ({
-    ...transformComment(signature),
-    args: transformArgs(signature),
+    ...transformComment(signature.comment),
+    args: transformArgs(signature.parameters),
     returns: transformReturns(signature),
   }) as const;
 
-const transformComment = ({
-  comment,
-}: SetRequired<JSONOutput.SignatureReflection, "comment">) =>
+const transformComment = (comment: JSONOutput.Comment) =>
   ({
     tag: getFunctionCurriedVariant(comment),
     signature: tagContent(comment, "signature"),
-    pipeable: hasTag(comment, "pipeable"),
     example: tagContent(comment, "example"),
+    ...extractTags(comment),
   }) as const;
 
-const transformArgs = ({ parameters }: JSONOutput.SignatureReflection) =>
-  parameters === undefined ? [] : parameters.map(getParameter);
+const extractTags = (comment: JSONOutput.Comment) =>
+  ({
+    pipeable: hasTag(comment, "pipeable"),
+  }) as const;
+
+const transformArgs = (
+  parameters: Array<JSONOutput.ParameterReflection> | undefined,
+) => parameters?.map(getParameter) ?? [];
 
 const transformReturns = ({
   type,
