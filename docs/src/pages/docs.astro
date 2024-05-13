@@ -7,21 +7,21 @@ import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout class="gap-6 md:flex">
+<Layout class="flex-1 gap-6 px-4 md:flex">
   <aside
-    class="top-14 z-30 hidden h-[calc(100dvh-3.5rem)] w-full py-6 md:sticky md:block md:w-60"
+    class="top-20 z-30 hidden h-[calc(100dvh-3.5rem)] w-full md:sticky md:block md:w-60"
   >
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main>
-    <ul class="flex flex-col gap-6 py-6">
+    <ul class="flex flex-col">
       {
         pipe(
           CATEGORIZED,
           values,
           flat(),
           map((func) => (
-            <li>
+            <li class="mb-6">
               <FunctionCard func={func} />
             </li>
           )),

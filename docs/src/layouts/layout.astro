@@ -1,12 +1,9 @@
 ---
 import Header from "@/components/header.astro";
 import "@/styles/globals.css";
+import type { HTMLAttributes } from "astro/types";
 
-type Props = {
-  readonly class?: string;
-};
-
-const class_ = Astro.props.class;
+type Props = HTMLAttributes<"section">;
 ---
 
 <html lang="en">
@@ -25,9 +22,9 @@ const class_ = Astro.props.class;
       initTheme();
     </script>
   </head>
-  <body>
+  <body class="min-w-screen flex min-h-dvh flex-col items-stretch gap-6">
     <Header />
-    <section class:list={["container", class_]}>
+    <section {...Astro.props}>
       <slot />
     </section>
   </body>
