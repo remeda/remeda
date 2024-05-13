@@ -10,11 +10,11 @@ import { Content as MigrationIntro } from "./v1-migration-intro.md";
 ---
 
 <Layout class="flex flex-1 items-stretch gap-6 overflow-hidden">
-  <aside class="hidden w-60 pl-6 md:block">
+  <aside class="mt-6 hidden w-60 pl-6 md:block">
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main class="ml-6 flex-1 overflow-hidden overflow-y-auto pr-6 md:ml-0">
-    <Markdown><MigrationIntro /></Markdown>
+    <Markdown class="mt-6"><MigrationIntro /></Markdown>
     <ul>
       {
         pipe(
