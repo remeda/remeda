@@ -7,6 +7,9 @@ import { ReflectionKind, type JSONOutput } from "typedoc";
 import DATA from "@/data/data.json";
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
+export type FunctionSignature = ReturnType<typeof transformSignature>;
+export type FunctionParam = ReturnType<typeof getParameter>;
+export type FunctionReturn = ReturnType<typeof transformReturns>;
 
 export function transformProject(project: typeof DATA) {
   const { children } = project;
@@ -70,23 +73,36 @@ function transformCommentDisplayPart(
   return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
 }
 
-function transformSignature({
+const transformSignature = (
+  signature: SetRequired<JSONOutput.SignatureReflection, "comment">,
+) =>
+  ({
+    ...transformComment(signature),
+    args: transformArgs(signature),
+    returns: transformReturns(signature),
+  }) as const;
+
+const transformComment = ({
   comment,
-  parameters = [],
-  type,
-}: SetRequired<JSONOutput.SignatureReflection, "comment">) {
-  return {
+}: SetRequired<JSONOutput.SignatureReflection, "comment">) =>
+  ({
     tag: getFunctionCurriedVariant(comment),
     signature: tagContent(comment, "signature"),
     pipeable: hasTag(comment, "pipeable"),
     example: tagContent(comment, "example"),
-    args: parameters.map(getParameter),
-    returns: {
-      name: getReturnType(type),
-      description: tagContent(comment, "returns"),
-    },
-  };
-}
+  }) as const;
+
+const transformArgs = ({ parameters }: JSONOutput.SignatureReflection) =>
+  parameters === undefined ? [] : parameters.map(getParameter);
+
+const transformReturns = ({
+  type,
+  comment,
+}: SetRequired<JSONOutput.SignatureReflection, "comment">) =>
+  ({
+    name: getReturnType(type),
+    description: tagContent(comment, "returns"),
+  }) as const;
 
 function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
   if (hasTag(comment, "dataFirst")) {
@@ -120,13 +136,11 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
   const summarySegments = comment?.summary ?? [];
-  return {
-    name,
-    description:
-      summarySegments.length === 0
-        ? undefined
-        : summarySegments.map(({ text }) => text).join(""),
-  };
+  const description =
+    summarySegments.length === 0
+      ? undefined
+      : summarySegments.map(({ text }) => text).join("");
+  return { name, description } as const;
 }
 
 function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
