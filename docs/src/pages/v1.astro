@@ -7,30 +7,27 @@ import { CATEGORIZED } from "@/lib/v1/categorized";
 import { NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
 import { Content as MigrationIntro } from "./v1-migration-intro.md";
-import { ScrollArea } from "@/components/ui/scroll-area";
 ---
 
-<Layout class="flex flex-1 items-stretch gap-6 overflow-hidden px-4">
-  <aside class="hidden w-60 flex-none md:block">
+<Layout class="flex flex-1 items-stretch gap-6 overflow-hidden">
+  <aside class="hidden w-60 pl-6 md:block">
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
-  <main class="flex-1 overflow-hidden">
-    <ScrollArea className="h-full" client:load>
-      <Markdown class="mb-6"><MigrationIntro /></Markdown>
-      <ul class="flex flex-col">
-        {
-          pipe(
-            CATEGORIZED,
-            values,
-            flat(),
-            map((func) => (
-              <li class="mb-6">
-                <V1FunctionCard func={func} />
-              </li>
-            )),
-          )
-        }
-      </ul>
-    </ScrollArea>
+  <main class="ml-6 flex-1 overflow-hidden overflow-y-auto pr-6 md:ml-0">
+    <Markdown><MigrationIntro /></Markdown>
+    <ul>
+      {
+        pipe(
+          CATEGORIZED,
+          values,
+          flat(),
+          map((func) => (
+            <li class="my-6">
+              <V1FunctionCard func={func} />
+            </li>
+          )),
+        )
+      }
+    </ul>
   </main>
 </Layout>
