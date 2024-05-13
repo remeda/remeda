@@ -1,5 +1,5 @@
 import type { Tag } from "@/lib/get-tags";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Badge } from "./ui/badge";
 
 const TAG_COLOR = {
