@@ -7,11 +7,10 @@ The first "data-first" and "data-last" utility library designed especially for T
 [![NPM](https://img.shields.io/npm/v/remeda)](https://www.npmjs.org/package/remeda)
 ![Dependencies](https://img.shields.io/librariesio/release/npm/remeda)
 
-**Introduction:** [remedajs.com](https://remedajs.com/)
+**Introduction & features:** [remedajs.com](https://remedajs.com/)
 <br/>
 **Docs:** [remedajs.com/docs](https://remedajs.com/docs)
-<br/>
 
 **Migrating from v1:** [remedajs.com/v1](https://remedajs.com/v1)
 <br/>
-**Migrating from Lodash or Ramda:** [remedajs.com/mapping](https://remedajs.com/mapping)
+**For Lodash and Ramda users:** [remedajs.com/mapping](https://remedajs.com/mapping)
