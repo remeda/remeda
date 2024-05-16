@@ -1,0 +1,11 @@
+---
+import Markdown from "@/components/markdown.astro";
+import Layout from "@/layouts/layout.astro";
+import { Content as MappingContent } from "./mapping-content.md";
+---
+
+<Layout class="flex-1 overflow-y-auto">
+  <main class="container my-6 max-w-5xl">
+    <Markdown className="mt-6 max-w-none prose-p:max-w-prose"><MappingContent /></Markdown>
+  </main>
+</Layout>

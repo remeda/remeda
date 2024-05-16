@@ -30,7 +30,16 @@ const { pathname } = Astro.url;
           pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
         ]}
       >
-        Documentation
+        Docs
+      </a>
+      <a
+        href="/mapping/"
+        class:list={[
+          "transition-colors hover:text-foreground/80",
+          pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
+        ]}
+      >
+        Mapping
       </a>
       <a
         href="/v1/"
