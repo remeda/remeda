@@ -1,10 +1,10 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
+import DATA from "@/data/data.json";
 import { hasAtLeast, isDefined } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
-import DATA from "@/data/data.json";
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 export type FunctionSignature = ReturnType<typeof transformSignature>;
@@ -25,7 +25,7 @@ export function transformProject(project: typeof DATA) {
     project,
     functions
       .map((func) => transformFunction(func, functionNames))
-      .filter(isDefined.strict),
+      .filter(isDefined),
   );
 }
 

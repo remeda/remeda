@@ -5,11 +5,12 @@ import { Input } from "@shadcn/input";
 import { ScrollArea } from "@shadcn/scroll-area";
 import { useMemo, useState, type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
+import { VersionSelector } from "./version-selector";
 
-interface NavbarEntry {
+type NavbarEntry = {
   readonly name: string;
   readonly tags: ReadonlyArray<Tag>;
-}
+};
 
 export type NavbarCategory = readonly [
   category: string,
@@ -17,9 +18,11 @@ export type NavbarCategory = readonly [
 ];
 
 export function Navbar({
+  pathname,
   entries,
   onSelect,
 }: {
+  readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
   readonly onSelect?: () => void;
 }): ReactNode {
@@ -44,8 +47,9 @@ export function Navbar({
 
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
+      <VersionSelector pathname={pathname} />
       <Input
-        placeholder="Type to filter"
+        placeholder="Search"
         value={query}
         onChange={({ currentTarget: { value } }) => {
           setQuery(value);

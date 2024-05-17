@@ -5,8 +5,10 @@ import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
 
 export function MobileNav({
+  pathname,
   entries,
 }: {
+  readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +23,7 @@ export function MobileNav({
 
       <SheetContent className="pt-12">
         <Navbar
+          pathname={pathname}
           entries={entries}
           onSelect={() => {
             setIsOpen(false);

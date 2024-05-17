@@ -37,6 +37,10 @@ const { pathname } = Astro.url;
   </nav>
   <div class="-mr-2 ml-auto flex items-center gap-2">
     <ThemeSwitcher client:load />
-    <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
+    <MobileNav
+      pathname={pathname}
+      entries={NAVBAR_ENTRIES}
+      client:media="(max-width: 767px)"
+    />
   </div>
 </header>

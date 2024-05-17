@@ -1,10 +1,10 @@
-import { map, pipe, sortBy, toPairs } from "remeda";
+import { entries, map, pipe, sortBy } from "remeda";
 import { CATEGORIZED } from "./categorized";
 import { getTags } from "./get-tags";
 
 export const NAVBAR_ENTRIES = pipe(
   CATEGORIZED,
-  toPairs,
+  entries(),
   map(
     ([category, funcs]) =>
       [
