@@ -1,10 +1,11 @@
 ---
-import GithubSource from "@/components/github-source.astro";
-import Markdown from "@/components/markdown.astro";
-import { TagBadge } from "@/components/tag-badge";
 import { Badge } from "@/components/ui/badge";
 import { CardTitle } from "@/components/ui/card";
 import type { Tag } from "@/lib/get-tags";
+import GithubSource from "./github-source.astro";
+import Markdown from "./markdown.astro";
+import Prose from "./prose.astro";
+import { TagBadge } from "./tag-badge";
 
 type Props = {
   readonly name: string;
@@ -24,5 +25,11 @@ const { name, sourceUrl, category, description, tags } = Astro.props;
     <Badge className="h-8">{category}</Badge>
     {sourceUrl !== undefined && <GithubSource url={sourceUrl} />}
   </div>
-  {description !== undefined && <Markdown markdown={description} />}
+  {
+    description !== undefined && (
+      <Prose>
+        <Markdown markdown={description} />
+      </Prose>
+    )
+  }
 </>

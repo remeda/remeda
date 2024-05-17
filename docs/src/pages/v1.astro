@@ -1,12 +1,12 @@
 ---
-import Markdown from "@/components/markdown.astro";
 import { Navbar } from "@/components/navbar";
+import Prose from "@/components/prose.astro";
 import V1FunctionCard from "@/components/v1/function-card.astro";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
 import { NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
-import { flat, map, pipe, values } from "remeda";
 import { getEntry } from "astro:content";
+import { flat, map, pipe, values } from "remeda";
 
 const MIGRATION_COLLECTION = "wiki";
 
@@ -19,7 +19,7 @@ const { Content: MigrationIntroContent } = await entry?.render();
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
-    <Markdown><MigrationIntroContent /></Markdown>
+    <Prose><MigrationIntroContent /></Prose>
     {
       pipe(
         CATEGORIZED,
