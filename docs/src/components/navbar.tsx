@@ -10,7 +10,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type NavbarEntry = {
   readonly name: string;
-  readonly tags: ReadonlyArray<Tag>;
+  readonly tags?: ReadonlyArray<Tag>;
 };
 
 export type NavbarCategory = readonly [
@@ -21,10 +21,12 @@ export type NavbarCategory = readonly [
 export function Navbar({
   pathname,
   entries,
+  children,
   onSelect,
 }: {
   readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
+  readonly children?: ReactNode;
   readonly onSelect?: () => void;
 }): ReactNode {
   const [query, setQuery] = useState("");
@@ -62,13 +64,18 @@ export function Navbar({
       </div>
       <ScrollArea className="flex-1">
         <ul className="flex flex-col gap-2">
+          {children}
           {filteredEntries.map(([category, entries]) => (
             <li key={category}>
-              <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
+              <NavbarCategoryHeader>{category}</NavbarCategoryHeader>
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.name}>
-                    <NavbarItem onSelect={onSelect} {...entry} />
+                    <NavbarItem
+                      onSelect={onSelect}
+                      href={`#${entry.name}`}
+                      {...entry}
+                    />
                   </li>
                 ))}
               </ul>
@@ -80,14 +87,26 @@ export function Navbar({
   );
 }
 
-function NavbarItem({
+export function NavbarCategoryHeader({
+  children,
+}: {
+  readonly children: ReactNode;
+}): ReactNode {
+  return <h4 className="px-2 py-1 text-lg font-semibold">{children}</h4>;
+}
+
+export function NavbarItem({
   name,
+  href,
   tags,
   onSelect,
-}: NavbarEntry & { readonly onSelect: (() => void) | undefined }): ReactNode {
+}: NavbarEntry & {
+  readonly href: string;
+  readonly onSelect?: (() => void) | undefined;
+}): ReactNode {
   return (
     <a
-      href={`#${name}`}
+      href={href}
       className={cn([
         buttonVariants({ variant: "ghost" }),
         "text-muted-foreground",
@@ -96,8 +115,8 @@ function NavbarItem({
       onClick={onSelect}
     >
       {name}
-      <span className="flex items-center gap-1">
-        {tags.map((tag) => (
+      <span className="flex items-center gap-1 empty:hidden">
+        {tags?.map((tag) => (
           <TagBadge
             key={tag}
             tag={tag}
