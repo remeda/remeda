@@ -9,37 +9,23 @@ const { pathname } = Astro.url;
 ---
 
 <header
-  class="z-50 flex h-14 flex-none items-center gap-8 bg-background px-4 shadow-md"
+  class="z-50 flex h-14 flex-none items-center bg-background px-4 shadow-md"
 >
-  <a href="/" class="font-bold">Remeda</a>
-  <nav class="flex items-center gap-8 text-sm">
-    <a
-      href="/"
-      class:list={[
-        "transition-colors hover:text-foreground/80",
-        pathname === "/" ? "text-foreground" : "text-foreground/60",
-      ]}
-    >
-      Home
-    </a>
-    <a
-      href="/docs/"
-      class:list={[
-        "transition-colors hover:text-foreground/80",
-        pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
-      ]}
-    >
-      Documentation
-    </a>
-    <a
-      href="/v1/"
-      class:list={[
-        "transition-colors hover:text-foreground/80",
-        pathname === "/v1/" ? "text-foreground" : "text-foreground/60",
-      ]}>Documentation (V1)</a
-    >
-  </nav>
-  <div class="-mr-2 ml-auto flex items-center gap-2">
+  <nav class="flex flex-1 items-center gap-8 text-sm">
+    <a href="/" class="font-bold"> Remeda </a>
+    <div class="flex-1">
+      <a
+        href="/docs/"
+        class:list={[
+          "transition-colors hover:text-foreground/80",
+          pathname === "/docs/"
+            ? "font-semibold text-primary"
+            : "text-foreground/60",
+        ]}
+      >
+        Documentation
+      </a>
+    </div>
     <a
       href="https://github.com/remeda/remeda"
       target="_blank"
@@ -48,6 +34,8 @@ const { pathname } = Astro.url;
       <GitHubLogoIcon />
       <span class="sr-only">GitHub</span>
     </a>
+  </nav>
+  <div class="-mr-2 ml-auto flex items-center gap-2">
     <ThemeSwitcher client:load />
     <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
   </div>
