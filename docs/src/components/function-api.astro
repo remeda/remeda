@@ -1,7 +1,7 @@
 ---
-import CodeBlock from "@/components/code-block.astro";
-import { MethodSignature } from "@/components/signature";
 import type { FunctionParam, FunctionReturn } from "@/lib/transform";
+import CodeBlock from "./code-block.astro";
+import { MethodSignature } from "./signature";
 
 // TODO: signature shouldn't be nullish, we should fail the build instead!
 const FALLBACK_SIGNATURE = "//! Missing Signature!";
