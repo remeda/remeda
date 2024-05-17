@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Button } from "@shadcn/button";
+import { Sheet, SheetContent, SheetTrigger } from "@shadcn/sheet";
 import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
 

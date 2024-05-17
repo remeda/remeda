@@ -1,8 +1,8 @@
-import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Tag } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@shadcn/button";
+import { Input } from "@shadcn/input";
+import { ScrollArea } from "@shadcn/scroll-area";
 import { useMemo, useState, type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
 

@@ -1,13 +1,13 @@
+import { switchTheme, type Theme } from "@/lib/theme";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@shadcn/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@shadcn/dropdown-menu";
 import { useCallback, type ReactNode } from "react";
-import { switchTheme, type Theme } from "@/lib/theme";
 
 export function ThemeSwitcher() {
   return (
