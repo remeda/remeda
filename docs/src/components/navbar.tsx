@@ -6,6 +6,7 @@ import { ScrollArea } from "@shadcn/scroll-area";
 import { useMemo, useState, type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
 import { VersionSelector } from "./version-selector";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type NavbarEntry = {
   readonly name: string;
@@ -48,13 +49,17 @@ export function Navbar({
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
       <VersionSelector pathname={pathname} />
-      <Input
-        placeholder="Search"
-        value={query}
-        onChange={({ currentTarget: { value } }) => {
-          setQuery(value);
-        }}
-      />
+      <div className="relative">
+        <Input
+          className="peer pl-7"
+          placeholder="Search"
+          value={query}
+          onChange={({ currentTarget: { value } }) => {
+            setQuery(value);
+          }}
+        />
+        <MagnifyingGlassIcon className="absolute left-0 top-0 my-3 ml-2 text-muted-foreground" />
+      </div>
       <ScrollArea className="flex-1">
         <ul className="flex flex-col gap-2">
           {filteredEntries.map(([category, entries]) => (
