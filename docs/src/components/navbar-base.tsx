@@ -18,7 +18,7 @@ export type NavbarCategory = readonly [
   entries: ReadonlyArray<NavbarEntry>,
 ];
 
-export function Navbar({
+export function NavbarBase({
   pathname,
   entries,
   children,
