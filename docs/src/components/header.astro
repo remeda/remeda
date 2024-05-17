@@ -1,11 +1,15 @@
 ---
 import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
+import { NAVBAR_ENTRIES as V1_NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "@shadcn/button";
 import { MobileNav } from "./mobile-nav";
 import { ThemeSwitcher } from "./theme-switcher";
+import { values } from "remeda";
+import { VERSIONS } from "./version-selector";
 
 const { pathname } = Astro.url;
+const trimmed = pathname.replace(/\/$/, "");
 ---
 
 <header
@@ -18,7 +22,7 @@ const { pathname } = Astro.url;
         href="/docs/"
         class:list={[
           "transition-colors hover:text-foreground/80",
-          pathname === "/docs/"
+          values(VERSIONS).some(({ path }) => path === trimmed)
             ? "font-semibold text-primary"
             : "text-foreground/60",
         ]}
@@ -39,7 +43,9 @@ const { pathname } = Astro.url;
     <ThemeSwitcher client:load />
     <MobileNav
       pathname={pathname}
-      entries={NAVBAR_ENTRIES}
+      entries={pathname === VERSIONS.v1.path
+        ? V1_NAVBAR_ENTRIES
+        : NAVBAR_ENTRIES}
       client:media="(max-width: 767px)"
     />
   </div>
