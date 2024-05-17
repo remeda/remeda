@@ -6,7 +6,12 @@ import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
 import { NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
 import { flat, map, pipe, values } from "remeda";
-import { Content as MigrationIntro } from "./v1-migration-intro.md";
+import { getEntry } from "astro:content";
+
+const MIGRATION_COLLECTION = "wiki";
+
+const entry = await getEntry(MIGRATION_COLLECTION, "v1-migration-intro");
+const { Content: MigrationIntroContent } = await entry?.render();
 ---
 
 <Layout class="flex flex-1 items-stretch gap-6 overflow-hidden pl-6">
@@ -14,7 +19,7 @@ import { Content as MigrationIntro } from "./v1-migration-intro.md";
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
-    <Markdown><MigrationIntro /></Markdown>
+    <Markdown><MigrationIntroContent /></Markdown>
     {
       pipe(
         CATEGORIZED,
