@@ -9,25 +9,19 @@ import { flat, map, pipe, values } from "remeda";
 import { Content as MigrationIntro } from "./v1-migration-intro.md";
 ---
 
-<Layout class="flex flex-1 items-stretch gap-6 overflow-hidden">
-  <aside class="mt-6 hidden w-60 pl-6 md:block">
+<Layout class="flex flex-1 items-stretch gap-6 overflow-hidden pl-6">
+  <aside class="hidden w-60 py-6 md:block">
     <Navbar entries={NAVBAR_ENTRIES} client:load />
   </aside>
-  <main class="ml-6 flex-1 overflow-hidden overflow-y-auto pr-6 md:ml-0">
-    <Markdown class="mt-6"><MigrationIntro /></Markdown>
-    <ul>
-      {
-        pipe(
-          CATEGORIZED,
-          values,
-          flat(),
-          map((func) => (
-            <li class="my-6">
-              <V1FunctionCard func={func} />
-            </li>
-          )),
-        )
-      }
-    </ul>
+  <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
+    <Markdown><MigrationIntro /></Markdown>
+    {
+      pipe(
+        CATEGORIZED,
+        values,
+        flat(),
+        map((func) => <V1FunctionCard func={func} />),
+      )
+    }
   </main>
 </Layout>

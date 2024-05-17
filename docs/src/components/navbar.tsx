@@ -43,7 +43,7 @@ export function Navbar({
   }, [entries, query]);
 
   return (
-    <nav className="flex h-full flex-col items-stretch gap-4 pb-6">
+    <nav className="flex h-full flex-col items-stretch gap-4">
       <Input
         placeholder="Type to filter"
         value={query}
