@@ -1,29 +1,45 @@
 ---
 import { getNavbarEntries, type Categorized } from "@/lib/navbar-entries";
-import type { CollectionEntry } from "astro:content";
-import ContentArticles from "./content-articles.astro";
 import { Navbar } from "./navbar";
+import Prose from "@/components/prose.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const COLLECTION = "docs";
 
 type Props = {
   readonly categorized: Categorized;
-  readonly collectionQuery: (entry: CollectionEntry<"docs">) => boolean;
+  readonly collectionQuery: (
+    entry: CollectionEntry<typeof COLLECTION>,
+  ) => boolean;
 };
 
 const { categorized, collectionQuery } = Astro.props;
 
-const NAVBAR_ENTRIES = await getNavbarEntries(categorized, collectionQuery);
+const [navbarEntries, collection] = await Promise.all([
+  getNavbarEntries(categorized, collectionQuery),
+  getCollection(COLLECTION, collectionQuery),
+]);
+
+const renderedCollection = await Promise.all(
+  collection.map(async (entry) => ({
+    ...entry,
+    rendered: await entry.render(),
+  })),
+);
 ---
 
 <div class="flex flex-1 items-stretch gap-6 overflow-hidden pl-6">
   <aside class="hidden w-60 py-6 md:block">
-    <Navbar
-      pathname={Astro.url.pathname}
-      entries={NAVBAR_ENTRIES}
-      client:load
-    />
+    <Navbar pathname={Astro.url.pathname} entries={navbarEntries} client:load />
   </aside>
   <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
-    <ContentArticles collectionQuery={collectionQuery} />
+    {
+      renderedCollection.map(({ slug, rendered: { Content } }) => (
+        <Prose id={slug}>
+          <Content />
+        </Prose>
+      ))
+    }
     <slot />
   </main>
 </div>
