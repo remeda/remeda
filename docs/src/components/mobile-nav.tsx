@@ -2,7 +2,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@shadcn/button";
 import { Sheet, SheetContent, SheetTrigger } from "@shadcn/sheet";
 import { useState, type ReactNode } from "react";
-import { NavbarBase, type NavbarCategory } from "./navbar-base";
+import { Navbar, type NavbarCategory } from "./navbar";
 
 export function MobileNav({
   pathname,
@@ -22,7 +22,7 @@ export function MobileNav({
       </SheetTrigger>
 
       <SheetContent className="pt-12">
-        <NavbarBase
+        <Navbar
           pathname={pathname}
           entries={entries}
           onSelect={() => {

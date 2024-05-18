@@ -1,8 +1,0 @@
----
-import { NavbarBase } from "@/components/navbar-base";
-import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
-
-const { pathname } = Astro.url;
----
-
-<NavbarBase pathname={pathname} entries={NAVBAR_ENTRIES} client:load />

@@ -10,6 +10,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type NavbarEntry = {
   readonly name: string;
+  readonly href?: string;
   readonly tags?: ReadonlyArray<Tag>;
 };
 
@@ -18,7 +19,7 @@ export type NavbarCategory = readonly [
   entries: ReadonlyArray<NavbarEntry>,
 ];
 
-export function NavbarBase({
+export function Navbar({
   pathname,
   entries,
   children,
@@ -71,11 +72,7 @@ export function NavbarBase({
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.name}>
-                    <NavbarItem
-                      onSelect={onSelect}
-                      href={`#${entry.name}`}
-                      {...entry}
-                    />
+                    <NavbarItem onSelect={onSelect} {...entry} />
                   </li>
                 ))}
               </ul>
@@ -101,12 +98,11 @@ export function NavbarItem({
   tags,
   onSelect,
 }: NavbarEntry & {
-  readonly href: string;
   readonly onSelect?: (() => void) | undefined;
 }): ReactNode {
   return (
     <a
-      href={href}
+      href={href ?? `#${name}`}
       className={cn([
         buttonVariants({ variant: "ghost" }),
         "text-muted-foreground",
