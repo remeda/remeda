@@ -1,5 +1,5 @@
 ---
-import { getTags } from "@/lib/v1/get-tags";
+import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/v1/transform";
 import { Card, CardContent, CardHeader } from "@shadcn/card";
 import { getEntry } from "astro:content";
@@ -25,7 +25,7 @@ const Migration = await entry?.render();
     <FunctionDescription
       name={func.name}
       category={func.category}
-      tags={getTags(func)}
+      tags={getTags(func.methods)}
       description={func.description}
       sourceUrl={func.sourceUrl}
     />

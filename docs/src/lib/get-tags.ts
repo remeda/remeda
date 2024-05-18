@@ -1,8 +1,27 @@
-import type { DocumentedFunction } from "./transform";
+import type { SourceTags } from "./transform";
 
 export type Tag = "Lazy" | "Indexed" | "Strict";
 
-export const getTags = ({
-  methods: [method],
-}: DocumentedFunction): ReadonlyArray<Tag> =>
-  method?.pipeable ?? false ? ["Lazy"] : [];
+export function getTags([
+  method,
+]: ReadonlyArray<SourceTags>): ReadonlyArray<Tag> {
+  if (method === undefined) {
+    return [];
+  }
+
+  const out: Array<Tag> = [];
+
+  if (method.strict) {
+    out.push("Strict");
+  }
+
+  if (method.indexed) {
+    out.push("Indexed");
+  }
+
+  if (method.pipeable) {
+    out.push("Lazy");
+  }
+
+  return out;
+}

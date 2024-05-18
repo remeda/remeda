@@ -1,17 +1,17 @@
 ---
 import { Navbar } from "@/components/navbar";
-import Prose from "@/components/prose.astro";
 import V1FunctionCard from "@/components/v1/function-card.astro";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
-import { NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
-import { getEntry } from "astro:content";
+import { getNavbarEntries } from "@/lib/navbar-entries";
+import { type CollectionEntry } from "astro:content";
 import { flat, map, pipe, values } from "remeda";
+import ContentArticles from "@/components/content-articles.astro";
 
-const MIGRATION_COLLECTION = "wiki";
+const collectionQuery = ({ data: { isV1 } }: CollectionEntry<"docs">) =>
+  isV1 ?? false;
 
-const entry = await getEntry(MIGRATION_COLLECTION, "v1-migration-intro");
-const { Content: MigrationIntroContent } = await entry?.render();
+const NAVBAR_ENTRIES = await getNavbarEntries(CATEGORIZED, collectionQuery);
 
 const { pathname } = Astro.url;
 ---
@@ -21,7 +21,7 @@ const { pathname } = Astro.url;
     <Navbar pathname={pathname} entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
-    <Prose id="migration-intro"><MigrationIntroContent /></Prose>
+    <ContentArticles collectionQuery={collectionQuery} />
     {
       pipe(
         CATEGORIZED,

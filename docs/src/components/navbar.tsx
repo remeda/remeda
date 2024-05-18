@@ -9,8 +9,8 @@ import { VersionSelector } from "./version-selector";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type NavbarEntry = {
-  readonly name: string;
-  readonly href?: string;
+  readonly title: string;
+  readonly slug?: string;
   readonly tags?: ReadonlyArray<Tag>;
 };
 
@@ -41,7 +41,7 @@ export function Navbar({
             category,
             category.toLowerCase().startsWith(lowerCaseQuery)
               ? entries
-              : entries.filter(({ name }) =>
+              : entries.filter(({ title: name }) =>
                   name.toLowerCase().includes(lowerCaseQuery),
                 ),
           ] as const,
@@ -71,7 +71,7 @@ export function Navbar({
               <NavbarCategoryHeader>{category}</NavbarCategoryHeader>
               <ul>
                 {entries.map((entry) => (
-                  <li key={entry.name}>
+                  <li key={entry.title}>
                     <NavbarItem onSelect={onSelect} {...entry} />
                   </li>
                 ))}
@@ -93,8 +93,8 @@ export function NavbarCategoryHeader({
 }
 
 export function NavbarItem({
-  name,
-  href,
+  title,
+  slug,
   tags,
   onSelect,
 }: NavbarEntry & {
@@ -102,7 +102,7 @@ export function NavbarItem({
 }): ReactNode {
   return (
     <a
-      href={href ?? `#${name}`}
+      href={`#${slug ?? title}`}
       className={cn([
         buttonVariants({ variant: "ghost" }),
         "text-muted-foreground",
@@ -110,7 +110,7 @@ export function NavbarItem({
       ])}
       onClick={onSelect}
     >
-      {name}
+      {title}
       <span className="flex items-center gap-1 empty:hidden">
         {tags?.map((tag) => (
           <TagBadge

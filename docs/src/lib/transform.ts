@@ -11,6 +11,10 @@ export type FunctionSignature = ReturnType<typeof transformSignature>;
 export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
 
+export type SourceTags = Readonly<
+  Partial<Record<"pipeable" | "strict" | "indexed", boolean>>
+>;
+
 export function transformProject(project: typeof DATA) {
   const { children } = project;
   invariant(children !== undefined, "The typedoc output is empty!");
@@ -90,7 +94,7 @@ const transformComment = (comment: JSONOutput.Comment) =>
     ...extractTags(comment),
   }) as const;
 
-const extractTags = (comment: JSONOutput.Comment) =>
+const extractTags = (comment: JSONOutput.Comment): SourceTags =>
   ({
     pipeable: hasTag(comment, "pipeable"),
   }) as const;

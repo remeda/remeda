@@ -1,12 +1,19 @@
 ---
+import ContentArticles from "@/components/content-articles.astro";
 import FunctionCard from "@/components/function-card.astro";
 import { Navbar } from "@/components/navbar";
 import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/categorized";
-import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
+import { getNavbarEntries } from "@/lib/navbar-entries";
+import type { CollectionEntry } from "astro:content";
 import { flat, map, pipe, values } from "remeda";
 
 const { pathname } = Astro.url;
+
+const collectionQuery = ({ data: { isV1 } }: CollectionEntry<"docs">) =>
+  !(isV1 ?? false);
+
+const NAVBAR_ENTRIES = await getNavbarEntries(CATEGORIZED, collectionQuery);
 ---
 
 <Layout class="flex flex-1 items-stretch gap-6 overflow-hidden pl-6">
@@ -14,6 +21,7 @@ const { pathname } = Astro.url;
     <Navbar pathname={pathname} entries={NAVBAR_ENTRIES} client:load />
   </aside>
   <main class="flex-1 space-y-6 overflow-y-auto py-6 pr-6">
+    <ContentArticles collectionQuery={collectionQuery} />
     {
       pipe(
         CATEGORIZED,

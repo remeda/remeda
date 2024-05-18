@@ -17,7 +17,7 @@ const { func } = Astro.props;
     <FunctionDescription
       name={func.name}
       category={func.category}
-      tags={getTags(func)}
+      tags={getTags(func.methods)}
       description={func.description}
       sourceUrl={func.sourceUrl}
     />

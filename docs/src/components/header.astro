@@ -1,6 +1,7 @@
 ---
-import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
-import { NAVBAR_ENTRIES as V1_NAVBAR_ENTRIES } from "@/lib/v1/navbar-categories";
+import { CATEGORIZED } from "@/lib/categorized";
+import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
+import { getNavbarEntries } from "@/lib/navbar-entries";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "@shadcn/button";
 import { MobileNav } from "./mobile-nav";
@@ -10,6 +11,12 @@ import { VERSIONS } from "./version-selector";
 
 const { pathname } = Astro.url;
 const trimmed = pathname.replace(/\/$/, "");
+
+const isV1 = pathname === VERSIONS.v1.path;
+const NAVBAR_ENTRIES = await getNavbarEntries(
+  isV1 ? V1_CATEGORIZED : CATEGORIZED,
+  ({ data }) => isV1 === data.isV1,
+);
 ---
 
 <header
@@ -43,9 +50,7 @@ const trimmed = pathname.replace(/\/$/, "");
     <ThemeSwitcher client:load />
     <MobileNav
       pathname={pathname}
-      entries={pathname === VERSIONS.v1.path
-        ? V1_NAVBAR_ENTRIES
-        : NAVBAR_ENTRIES}
+      entries={NAVBAR_ENTRIES}
       client:media="(max-width: 767px)"
     />
   </div>
