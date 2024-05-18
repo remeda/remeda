@@ -5,15 +5,15 @@ import type { SourceTags } from "./transform";
 
 const COLLECTION = "docs";
 
-type CategoryItem = ReadonlyArray<{
+type FunctionItem = ReadonlyArray<{
   readonly name: string;
   readonly methods: ReadonlyArray<SourceTags>;
 }>;
 
-export type Categorized = Readonly<Record<string, CategoryItem>>;
+export type CategorizedFunctions = Readonly<Record<string, FunctionItem>>;
 
 export async function getNavbarEntries(
-  categorized: Categorized,
+  categorized: CategorizedFunctions,
   collectionQuery: (entry: CollectionEntry<typeof COLLECTION>) => boolean,
 ) {
   const contentEntries = pipe(

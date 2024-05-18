@@ -1,5 +1,8 @@
 ---
-import { getNavbarEntries, type Categorized } from "@/lib/navbar-entries";
+import {
+  getNavbarEntries,
+  type CategorizedFunctions,
+} from "@/lib/navbar-entries";
 import { Navbar } from "./navbar";
 import Prose from "@/components/prose.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -7,7 +10,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 const COLLECTION = "docs";
 
 type Props = {
-  readonly categorized: Categorized;
+  readonly categorized: CategorizedFunctions;
   readonly collectionQuery: (
     entry: CollectionEntry<typeof COLLECTION>,
   ) => boolean;
