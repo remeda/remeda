@@ -10,7 +10,7 @@ type CategoryItem = ReadonlyArray<{
   readonly methods: ReadonlyArray<SourceTags>;
 }>;
 
-type Categorized = Readonly<Record<string, CategoryItem>>;
+export type Categorized = Readonly<Record<string, CategoryItem>>;
 
 export async function getNavbarEntries(
   categorized: Categorized,

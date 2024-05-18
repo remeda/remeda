@@ -1,9 +1,6 @@
 ---
 import Header from "@/components/header.astro";
 import "@/styles/globals.css";
-import type { HTMLAttributes } from "astro/types";
-
-type Props = HTMLAttributes<"section">;
 ---
 
 <html lang="en">
@@ -24,8 +21,6 @@ type Props = HTMLAttributes<"section">;
   </head>
   <body class="flex h-dvh w-screen flex-col items-stretch overflow-hidden">
     <Header />
-    <section {...Astro.props}>
-      <slot />
-    </section>
+    <slot />
   </body>
 </html>
