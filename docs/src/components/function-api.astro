@@ -1,28 +1,36 @@
 ---
-import CodeBlock from "@/components/code-block.astro";
-import { MethodSignature } from "@/components/signature";
-import type { DocumentedFunction } from "@/lib/transform";
+import type { FunctionParam, FunctionReturn } from "@/lib/transform";
+import CodeBlock from "./code-block.astro";
+import { MethodSignature } from "./signature";
+
+// TODO: signature shouldn't be nullish, we should fail the build instead!
+const FALLBACK_SIGNATURE = "//! Missing Signature!";
 
 type Props = {
-  readonly method: DocumentedFunction["methods"][number];
+  readonly variant: string | undefined;
+  readonly signature: string | undefined;
+  readonly args: ReadonlyArray<FunctionParam>;
+  readonly returns: FunctionReturn;
+  readonly example: string | undefined;
 };
 
-const { method } = Astro.props;
+const { variant, signature, args, returns, example } = Astro.props;
 ---
 
-{
-  // TODO: signature shouldn't be nullish, we should fail the build instead!
-  method.signature !== undefined && (
-    <div class="flex flex-col gap-2">
-      {method.tag !== undefined && <p>{method.tag}</p>}
-      <MethodSignature args={method.args} returns={method.returns} client:load>
-        <CodeBlock code={method.signature} />
-      </MethodSignature>
-      {method.example !== undefined && (
-        <section class="text-xs lg:text-base">
-          <CodeBlock code={method.example} />
-        </section>
-      )}
-    </div>
-  )
-}
+<section class="flex flex-col gap-2">
+  {
+    variant !== undefined && (
+      <h6 class="text-sm font-bold text-secondary-foreground">{variant}</h6>
+    )
+  }
+  <MethodSignature args={args} returns={returns} client:load>
+    <CodeBlock code={signature ?? FALLBACK_SIGNATURE} />
+  </MethodSignature>
+  {
+    example !== undefined && (
+      <section class="text-xs lg:text-base">
+        <CodeBlock code={example} />
+      </section>
+    )
+  }
+</section>

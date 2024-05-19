@@ -22,7 +22,7 @@ export function transformProject(project: typeof DATA) {
     project,
     functions
       .map((func) => transformFunction(func, functionNames))
-      .filter(isDefined.strict),
+      .filter(isDefined),
   );
 }
 

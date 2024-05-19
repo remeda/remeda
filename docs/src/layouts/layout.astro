@@ -1,6 +1,5 @@
 ---
 import Header from "@/components/header.astro";
-import ThemeScript from "@/components/theme-script.astro";
 import "@/styles/globals.css";
 ---
 
@@ -15,14 +14,13 @@ import "@/styles/globals.css";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Remeda</title>
-    <ThemeScript />
+    <script>
+      import { initTheme } from "@/lib/theme";
+      initTheme();
+    </script>
   </head>
-
-  <body>
+  <body class="flex w-full flex-col items-stretch">
     <Header />
-
-    <div class="container">
-      <slot />
-    </div>
+    <slot />
   </body>
 </html>

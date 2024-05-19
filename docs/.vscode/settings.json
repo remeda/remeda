@@ -4,5 +4,8 @@
 
   // We need this to make prettier work with our "monorepo" structure where we
   // have 2 prettier configs and installations.
-  "prettier.configPath": "prettier.config.js"
+  "prettier.configPath": "prettier.config.js",
+
+  // Use project typescript:
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,0 +1,58 @@
+---
+import { Navbar } from "@/components/navbar";
+import Prose from "@/components/prose.astro";
+import { VersionSelector } from "@/components/version-selector";
+import {
+  getNavbarEntries,
+  type CategorizedFunctions,
+} from "@/lib/navbar-entries";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "./layout.astro";
+
+const COLLECTION = "docs";
+
+type Props = {
+  readonly categorized: CategorizedFunctions;
+  readonly collectionQuery: (
+    entry: CollectionEntry<typeof COLLECTION>,
+  ) => boolean;
+};
+
+const { categorized, collectionQuery } = Astro.props;
+
+const [navbarEntries, collection] = await Promise.all([
+  getNavbarEntries(categorized, collectionQuery),
+  getCollection(COLLECTION, collectionQuery),
+]);
+
+const renderedCollection = await Promise.all(
+  collection.map(async (entry) => ({
+    ...entry,
+    rendered: await entry.render(),
+  })),
+);
+
+const { pathname } = Astro.url;
+---
+
+<Layout>
+  <div class="flex flex-1 gap-8 p-8">
+    <aside
+      class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
+    >
+      <Navbar entries={navbarEntries} client:load>
+        <VersionSelector pathname={pathname} client:load /></Navbar
+      >
+    </aside>
+    <main class="flex-1 space-y-8">
+      {
+        renderedCollection.map(({ slug, rendered: { Content } }) => (
+          <Prose id={slug} class="scroll-mt-24">
+            <Content />
+          </Prose>
+        ))
+      }
+      <slot />
+    </main>
+  </div>
+</Layout>
