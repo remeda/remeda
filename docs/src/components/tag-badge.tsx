@@ -1,7 +1,7 @@
 import type { Tag } from "@/lib/get-tags";
+import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { Badge } from "./ui/badge";
-import { cn } from "@/lib/utils";
 
 const TAG_COLOR = {
   Lazy: "bg-green-600 text-green-50 hover:bg-green-600/80 dark:bg-green-500 dark:text-green-950",

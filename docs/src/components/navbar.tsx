@@ -1,12 +1,12 @@
 import type { Tag } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "@shadcn/button";
 import { Input } from "@shadcn/input";
 import { ScrollArea } from "@shadcn/scroll-area";
 import { useMemo, useState, type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
 import { VersionSelector } from "./version-selector";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type NavbarEntry = {
   readonly title: string;

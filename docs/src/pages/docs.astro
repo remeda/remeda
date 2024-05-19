@@ -1,23 +1,20 @@
 ---
-import DocsPage from "@/components/docs-page.astro";
+import DocsPage from "@/layouts/docs-page.astro";
 import FunctionCard from "@/components/function-card.astro";
-import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/categorized";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout>
-  <DocsPage
-    categorized={CATEGORIZED}
-    collectionQuery={({ data: { isV1 = false } }) => !isV1}
-  >
-    {
-      pipe(
-        CATEGORIZED,
-        values(),
-        flat(),
-        map((func) => <FunctionCard func={func} />),
-      )
-    }
-  </DocsPage>
-</Layout>
+<DocsPage
+  categorized={CATEGORIZED}
+  collectionQuery={({ data: { isV1 = false } }) => !isV1}
+>
+  {
+    pipe(
+      CATEGORIZED,
+      values(),
+      flat(),
+      map((func) => <FunctionCard func={func} />),
+    )
+  }
+</DocsPage>
