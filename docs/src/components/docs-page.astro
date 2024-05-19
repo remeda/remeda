@@ -31,8 +31,10 @@ const renderedCollection = await Promise.all(
 );
 ---
 
-<div class="flex flex-1 gap-8 p-8 pt-0">
-  <aside class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 md:block">
+<div class="flex flex-1 gap-8 p-8">
+  <aside
+    class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
+  >
     <Navbar pathname={Astro.url.pathname} entries={navbarEntries} client:load />
   </aside>
   <main class="flex-1 space-y-8">
