@@ -20,7 +20,7 @@ const entry = await getEntry(MIGRATION_COLLECTION, func.name.toLowerCase());
 const Migration = await entry?.render();
 ---
 
-<Card id={func.name} className="scroll-mt-20">
+<Card id={func.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
       name={func.name}
@@ -41,7 +41,7 @@ const Migration = await entry?.render();
       </CardContent>
     )
   }
-  <CardContent className="grid gap-6">
+  <CardContent className="grid gap-8">
     {
       func.methods.map((method) => (
         <FunctionApi

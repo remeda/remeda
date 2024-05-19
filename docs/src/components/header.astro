@@ -20,9 +20,9 @@ const NAVBAR_ENTRIES = await getNavbarEntries(
 ---
 
 <header
-  class="z-50 flex h-14 flex-none items-center bg-background px-4 shadow-md"
+  class="sticky top-0 z-50 flex h-16 flex-none items-center gap-2 border-b border-border/40 bg-background/95 px-8 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-  <nav class="flex flex-1 items-center gap-8 text-sm">
+  <nav class="flex flex-1 items-center gap-8">
     <a href="/" class="font-bold"> Remeda </a>
     <div class="flex-1">
       <a
@@ -46,12 +46,10 @@ const NAVBAR_ENTRIES = await getNavbarEntries(
       <span class="sr-only">GitHub</span>
     </a>
   </nav>
-  <div class="-mr-2 ml-auto flex items-center gap-2">
-    <ThemeSwitcher client:load />
-    <MobileNav
-      pathname={pathname}
-      entries={NAVBAR_ENTRIES}
-      client:media="(max-width: 767px)"
-    />
-  </div>
+  <ThemeSwitcher client:load />
+  <MobileNav
+    pathname={pathname}
+    entries={NAVBAR_ENTRIES}
+    client:media="(max-width: 767px)"
+  />
 </header>

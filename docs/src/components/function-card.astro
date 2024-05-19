@@ -12,7 +12,7 @@ type Props = {
 const { func } = Astro.props;
 ---
 
-<Card id={func.name} className="scroll-mt-20">
+<Card id={func.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
       name={func.name}
@@ -22,7 +22,7 @@ const { func } = Astro.props;
       sourceUrl={func.sourceUrl}
     />
   </CardHeader>
-  <CardContent className="grid gap-6">
+  <CardContent className="grid gap-8">
     {
       func.methods.map((method) => (
         <FunctionApi
