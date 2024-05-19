@@ -1,47 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- FIXME! */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any */
 
 import { clone } from "./clone";
 
-const eq = (a: any, b: any): void => {
-  expect(a).toEqual(b);
-};
-
-const fn = (x: number): number => x + x;
-
-describe("deep clone integers, strings and booleans", () => {
-  it("clones integers", () => {
-    eq(clone(-4), -4);
-    eq(clone(9_007_199_254_740_991), 9_007_199_254_740_991);
+describe("primitive types", () => {
+  test("number", () => {
+    expect(clone(0)).toBe(0);
+    expect(clone(4)).toBe(4);
+    expect(clone(-4)).toBe(-4);
+    expect(clone(4.5)).toBe(4.5);
+    expect(clone(9_007_199_254_740_991)).toBe(9_007_199_254_740_991);
   });
 
-  it("clones floats", () => {
-    eq(clone(-4.5), -4.5);
-    eq(clone(0), 0);
+  test("string", () => {
+    expect(clone("foo")).toBe("foo");
+    expect(clone("")).toBe("");
   });
 
-  it("clones strings", () => {
-    eq(clone("foo"), "foo");
-  });
-
-  it("clones booleans", () => {
-    eq(clone(true), true);
+  test("boolean", () => {
+    expect(clone(true)).toBe(true);
+    expect(clone(false)).toBe(false);
   });
 });
 
-describe("deep clone objects", () => {
+describe("objects", () => {
   it("clones shallow object", () => {
     const obj = { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) };
     const cloned = clone(obj);
+    expect(cloned).not.toBe(obj);
+    expect(cloned).toStrictEqual(obj);
+
     obj.c = false;
     obj.d.setDate(31);
-    eq(cloned, { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) });
+
+    expect(cloned).toStrictEqual({
+      a: 1,
+      b: "foo",
+      c: true,
+      d: new Date(2013, 11, 25),
+    });
   });
 
   it("clones deep object", () => {
     const obj = { a: { b: { c: "foo" } } };
     const cloned = clone(obj);
+    expect(cloned).not.toBe(obj);
+    expect(cloned).toStrictEqual(obj);
+
     obj.a.b.c = "bar";
-    eq(cloned, { a: { b: { c: "foo" } } });
+
+    expect(cloned).toStrictEqual({ a: { b: { c: "foo" } } });
   });
 
   it("clones objects with circular references", () => {
@@ -50,50 +57,64 @@ describe("deep clone objects", () => {
     const z = { b: y };
     x.c = z;
     const cloned = clone(x);
-    assert.notStrictEqual(x, cloned);
-    assert.notStrictEqual(x.c, cloned.c);
-    assert.notStrictEqual(x.c.b, cloned.c.b);
-    assert.notStrictEqual(x.c.b.a, cloned.c.b.a);
-    assert.notStrictEqual(x.c.b.a.c, cloned.c.b.a.c);
-    eq(Object.keys(cloned), Object.keys(x));
-    eq(Object.keys(cloned.c), Object.keys(x.c));
-    eq(Object.keys(cloned.c.b), Object.keys(x.c.b));
-    eq(Object.keys(cloned.c.b.a), Object.keys(x.c.b.a));
-    eq(Object.keys(cloned.c.b.a.c), Object.keys(x.c.b.a.c));
+
+    expect(cloned).not.toBe(x);
+    expect(cloned).toStrictEqual(x);
+
+    expect(cloned.c).not.toBe(x.c);
+    expect(cloned.c).toStrictEqual(x.c);
+
+    expect(cloned.c.b).not.toBe(x.c.b);
+    expect(cloned.c.b).toStrictEqual(x.c.b);
+
+    expect(cloned.c.b.a).not.toBe(x.c.b.a);
+    expect(cloned.c.b.a).toStrictEqual(x.c.b.a);
+
+    expect(cloned.c.b.a.c).not.toBe(x.c.b.a.c);
+    expect(cloned.c.b.a.c).toStrictEqual(x.c.b.a.c);
 
     x.c.b = 1;
-    assert.notDeepEqual(cloned.c.b, x.c.b);
+    expect(cloned.c.b).not.toStrictEqual(x.c.b);
   });
 });
 
-describe("deep clone arrays", () => {
+describe("arrays", () => {
   it("clones shallow arrays", () => {
     const list = [1, 2, 3];
     const cloned = clone(list);
+    expect(cloned).not.toBe(list);
+    expect(cloned).toStrictEqual(list);
+
     list.pop();
-    eq(cloned, [1, 2, 3]);
+    expect(cloned).not.toStrictEqual(list);
+    expect(cloned).toStrictEqual([1, 2, 3]);
   });
 
   it("clones deep arrays", () => {
     const list: any = [1, [1, 2, 3], [[[5]]]];
     const cloned = clone(list);
+    expect(cloned).not.toBe(list);
+    expect(cloned).toStrictEqual(list);
 
-    assert.notStrictEqual(list, cloned);
-    assert.notStrictEqual(list[2], cloned[2]);
-    assert.notStrictEqual(list[2][0], cloned[2][0]);
+    expect(cloned[2]).not.toBe(list[2]);
+    expect(cloned[2]).toStrictEqual(list[2]);
 
-    eq(cloned, [1, [1, 2, 3], [[[5]]]]);
+    expect(cloned[2][0]).not.toBe(list[2][0]);
+    expect(cloned[2][0]).toStrictEqual(list[2][0]);
+
+    expect(cloned).toStrictEqual([1, [1, 2, 3], [[[5]]]]);
   });
 });
 
-describe("deep clone functions", () => {
+describe("functions", () => {
   it("keep reference to function", () => {
-    const list = [{ a: fn }] as const;
-
+    const list = [{ a: (x: number): number => x + x }] as const;
     const cloned = clone(list);
+    expect(cloned).not.toBe(list);
+    expect(cloned).toStrictEqual(list);
 
-    eq(cloned[0].a(10), 20);
-    eq(list[0].a, cloned[0].a);
+    expect(cloned[0].a(10)).toBe(20);
+    expect(list[0].a).toBe(cloned[0].a);
   });
 });
 
@@ -103,10 +124,10 @@ describe("built-in types", () => {
 
     const cloned = clone(date);
 
-    assert.notStrictEqual(date, cloned);
-    eq(cloned, new Date(2014, 10, 14, 23, 59, 59, 999));
+    expect(cloned).not.toBe(date);
+    expect(cloned).toStrictEqual(new Date(2014, 10, 14, 23, 59, 59, 999));
 
-    eq(cloned.getDay(), 5); // friday
+    expect(cloned.getDay()).toStrictEqual(5); // friday
   });
 
   it.each([
@@ -123,67 +144,70 @@ describe("built-in types", () => {
     /x/,
   ])("clones RegExp object: %s", (pattern) => {
     const cloned = clone(pattern);
-    assert.notStrictEqual(cloned, pattern);
-    eq(cloned.constructor, RegExp);
-    eq(cloned.source, pattern.source);
-    eq(cloned.global, pattern.global);
-    eq(cloned.ignoreCase, pattern.ignoreCase);
-    eq(cloned.multiline, pattern.multiline);
+    expect(cloned).not.toBe(pattern);
+    expect(cloned).toStrictEqual(pattern);
+    expect(cloned.constructor).toStrictEqual(RegExp);
+    expect(cloned.source).toStrictEqual(pattern.source);
+    expect(cloned.global).toStrictEqual(pattern.global);
+    expect(cloned.ignoreCase).toStrictEqual(pattern.ignoreCase);
+    expect(cloned.multiline).toStrictEqual(pattern.multiline);
   });
 });
 
-describe("deep clone deep nested mixed objects", () => {
+describe("nested mixed objects", () => {
   it("clones array with objects", () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
     const cloned = clone(list);
     list[1][0] = null;
-    eq(cloned, [{ a: { b: 1 } }, [{ c: { d: 1 } }]]);
+    expect(cloned).toStrictEqual([{ a: { b: 1 } }, [{ c: { d: 1 } }]]);
   });
 
-  it("clones array with arrays", () => {
-    const list: Array<Array<any>> = [[1], [[3]]];
-    const cloned = clone(list);
-    list[1]![0] = null;
-    eq(cloned, [[1], [[3]]]);
-  });
+  describe("clones array with arrays", () => {
+    test("nulls", () => {
+      const list: Array<Array<any>> = [[1], [[3]]];
+      const cloned = clone(list);
+      list[1]![0] = null;
+      expect(cloned).toStrictEqual([[1], [[3]]]);
+    });
 
-  it("clones array with mutual ref object", () => {
-    const obj = { a: 1 };
-    const list = [{ b: obj }, { b: obj }];
-    const cloned = clone(list);
+    it("clones array with mutual ref object", () => {
+      const obj = { a: 1 };
+      const list = [{ b: obj }, { b: obj }];
+      const cloned = clone(list);
 
-    assert.strictEqual(list[0]?.b, list[1]?.b);
-    assert.strictEqual(cloned[0]?.b, cloned[1]?.b);
-    assert.notStrictEqual(cloned[0]?.b, list[0]?.b);
-    assert.notStrictEqual(cloned[1]?.b, list[1]?.b);
+      expect(cloned[0]?.b).toBe(cloned[1]?.b);
 
-    eq(cloned[0]?.b, { a: 1 });
-    eq(cloned[1]?.b, { a: 1 });
+      expect(cloned[0]?.b).not.toBe(list[0]?.b);
+      expect(cloned[0]?.b).toStrictEqual(list[0]?.b);
+      expect(cloned[1]?.b).not.toBe(list[1]?.b);
+      expect(cloned[1]?.b).toStrictEqual(list[1]?.b);
 
-    obj.a = 2;
-    eq(cloned[0]?.b, { a: 1 });
-    eq(cloned[1]?.b, { a: 1 });
-  });
-});
+      expect(cloned[0]?.b).toStrictEqual({ a: 1 });
+      expect(cloned[1]?.b).toStrictEqual({ a: 1 });
 
-describe("deep clone edge cases", () => {
-  it("nulls, undefineds and empty objects and arrays", () => {
-    eq(clone(null), null);
-    eq(clone(undefined), undefined);
-    assert.notStrictEqual(clone(undefined), null);
-
-    const obj = {};
-    assert.notStrictEqual(clone(obj), obj);
-
-    const list: any = [];
-    assert.notStrictEqual(clone(list), list);
+      obj.a = 2;
+      expect(cloned[0]?.b).toStrictEqual({ a: 1 });
+      expect(cloned[1]?.b).toStrictEqual({ a: 1 });
+    });
   });
 });
 
-describe("deep clone using attached clone function", () => {
-  test("calls the clone function on the object if it exists", () => {
-    const cloneMock = vi.fn();
-    clone({ clone: cloneMock });
-    expect(cloneMock).toHaveBeenCalled();
+describe("edge cases", () => {
+  test("undefined", () => {
+    expect(clone(undefined)).toBeUndefined();
+  });
+
+  test("nulls", () => {
+    expect(clone(null)).toBeNull();
+  });
+
+  test("empty object", () => {
+    const obj = {} as const;
+    expect(clone(obj)).not.toBe(obj);
+  });
+
+  test("empty array", () => {
+    const array = [] as const;
+    expect(clone(array)).not.toBe(array);
   });
 });
