@@ -7,7 +7,7 @@ import { flat, map, pipe, values } from "remeda";
 
 <DocsPage
   categorized={CATEGORIZED}
-  collectionQuery={({ data: { isV1 = false } }) => !isV1}
+  collectionQuery={({ id }) => !id.startsWith("v1/")}
 >
   {
     pipe(

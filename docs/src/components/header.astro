@@ -17,7 +17,7 @@ const isViewingDocs = values(VERSIONS).some(({ path }) => path === trimmed);
 const isV1 = pathname === VERSIONS.v1.path;
 const navbarEntries = await getNavbarEntries(
   isV1 ? V1_CATEGORIZED : CATEGORIZED,
-  ({ data }) => isV1 === data.isV1,
+  ({ id }) => isV1 === id.startsWith("v1/"),
 );
 ---
 

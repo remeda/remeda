@@ -1,9 +1,6 @@
 ---
 title: "Minimum Versions"
 category: "Migrating to v2"
-
-isV1: true
-
 slug: "migration-minimum-versions"
 ---
 
