@@ -10,10 +10,12 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { VERSIONS } from "./version-selector";
 
 const { pathname } = Astro.url;
+
 const trimmed = pathname.replace(/\/$/, "");
+const isViewingDocs = values(VERSIONS).some(({ path }) => path === trimmed);
 
 const isV1 = pathname === VERSIONS.v1.path;
-const NAVBAR_ENTRIES = await getNavbarEntries(
+const navbarEntries = await getNavbarEntries(
   isV1 ? V1_CATEGORIZED : CATEGORIZED,
   ({ data }) => isV1 === data.isV1,
 );
@@ -29,9 +31,7 @@ const NAVBAR_ENTRIES = await getNavbarEntries(
         href="/docs/"
         class:list={[
           "transition-colors hover:text-foreground/80",
-          values(VERSIONS).some(({ path }) => path === trimmed)
-            ? "font-semibold text-primary"
-            : "text-foreground/60",
+          isViewingDocs ? "font-semibold text-primary" : "text-foreground/60",
         ]}
       >
         Documentation
@@ -49,7 +49,7 @@ const NAVBAR_ENTRIES = await getNavbarEntries(
   <ThemeSwitcher client:load />
   <MobileNav
     pathname={pathname}
-    entries={NAVBAR_ENTRIES}
+    entries={navbarEntries}
     client:media="(max-width: 767px)"
   />
 </header>
