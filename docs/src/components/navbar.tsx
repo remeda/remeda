@@ -6,7 +6,6 @@ import { Input } from "@shadcn/input";
 import { ScrollArea } from "@shadcn/scroll-area";
 import { useMemo, useState, type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
-import { VersionSelector } from "./version-selector";
 
 type NavbarEntry = {
   readonly title: string;
@@ -20,12 +19,10 @@ export type NavbarCategory = readonly [
 ];
 
 export function Navbar({
-  pathname,
   entries,
   children,
   onSelect,
 }: {
-  readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
   readonly children?: ReactNode;
   readonly onSelect?: () => void;
@@ -41,8 +38,8 @@ export function Navbar({
             category,
             category.toLowerCase().startsWith(lowerCaseQuery)
               ? entries
-              : entries.filter(({ title: name }) =>
-                  name.toLowerCase().includes(lowerCaseQuery),
+              : entries.filter(({ title }) =>
+                  title.toLowerCase().includes(lowerCaseQuery),
                 ),
           ] as const,
       )
@@ -51,7 +48,7 @@ export function Navbar({
 
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
-      <VersionSelector pathname={pathname} />
+      {children}
       <div className="relative">
         <Input
           className="peer pl-7"
@@ -65,10 +62,9 @@ export function Navbar({
       </div>
       <ScrollArea className="flex-1">
         <ul className="flex flex-col gap-2">
-          {children}
           {filteredEntries.map(([category, entries]) => (
             <li key={category}>
-              <NavbarCategoryHeader>{category}</NavbarCategoryHeader>
+              <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.title}>
@@ -84,15 +80,7 @@ export function Navbar({
   );
 }
 
-export function NavbarCategoryHeader({
-  children,
-}: {
-  readonly children: ReactNode;
-}): ReactNode {
-  return <h4 className="px-2 py-1 text-lg font-semibold">{children}</h4>;
-}
-
-export function NavbarItem({
+function NavbarItem({
   title,
   slug,
   tags,

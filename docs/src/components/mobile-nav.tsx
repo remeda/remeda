@@ -3,6 +3,7 @@ import { Button } from "@shadcn/button";
 import { Sheet, SheetContent, SheetTrigger } from "@shadcn/sheet";
 import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
+import { VersionSelector } from "./version-selector";
 
 export function MobileNav({
   pathname,
@@ -23,12 +24,13 @@ export function MobileNav({
 
       <SheetContent className="pt-12">
         <Navbar
-          pathname={pathname}
           entries={entries}
           onSelect={() => {
             setIsOpen(false);
           }}
-        />
+        >
+          <VersionSelector pathname={pathname} />
+        </Navbar>
       </SheetContent>
     </Sheet>
   );

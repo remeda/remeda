@@ -1,6 +1,7 @@
 ---
 import { Navbar } from "@/components/navbar";
 import Prose from "@/components/prose.astro";
+import { VersionSelector } from "@/components/version-selector";
 import {
   getNavbarEntries,
   type CategorizedFunctions,
@@ -30,6 +31,8 @@ const renderedCollection = await Promise.all(
     rendered: await entry.render(),
   })),
 );
+
+const { pathname } = Astro.url;
 ---
 
 <Layout>
@@ -37,11 +40,9 @@ const renderedCollection = await Promise.all(
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
-      <Navbar
-        pathname={Astro.url.pathname}
-        entries={navbarEntries}
-        client:load
-      />
+      <Navbar entries={navbarEntries} client:load>
+        <VersionSelector pathname={pathname} client:load /></Navbar
+      >
     </aside>
     <main class="flex-1 space-y-8">
       {
