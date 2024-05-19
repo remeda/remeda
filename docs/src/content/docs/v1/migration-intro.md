@@ -4,7 +4,7 @@ category: "Migrating to v2"
 
 isV1: true
 
-slug: "v1-migration-intro"
+slug: "migration-intro"
 ---
 
 # Migrating to v2
