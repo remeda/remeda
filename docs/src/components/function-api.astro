@@ -20,9 +20,7 @@ const { variant, signature, args, returns, example } = Astro.props;
 <section class="flex flex-col gap-2">
   {
     variant !== undefined && (
-      <h6 class="text-sm font-bold text-secondary-foreground underline">
-        {variant}
-      </h6>
+      <h6 class="text-sm font-bold text-secondary-foreground">{variant}</h6>
     )
   }
   <MethodSignature args={args} returns={returns} client:load>
