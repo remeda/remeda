@@ -26,7 +26,7 @@
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
-    "astro": "^4.8.5",
+    "astro": "^4.8.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
