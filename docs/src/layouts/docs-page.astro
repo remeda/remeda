@@ -8,6 +8,7 @@ import {
 } from "@/lib/navbar-entries";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "./layout.astro";
+import { map, pipe, sortBy } from "remeda";
 
 const COLLECTION = "docs";
 
@@ -25,11 +26,14 @@ const [navbarEntries, collection] = await Promise.all([
   getCollection(COLLECTION, collectionQuery),
 ]);
 
-const renderedCollection = await Promise.all(
-  collection.map(async (entry) => ({
+const renderedCollection = await pipe(
+  collection,
+  sortBy(({ data: { priority } }) => priority ?? Infinity),
+  map(async (entry) => ({
     ...entry,
     rendered: await entry.render(),
   })),
+  async ($) => await Promise.all($),
 );
 
 const { pathname } = Astro.url;

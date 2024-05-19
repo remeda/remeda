@@ -2,6 +2,7 @@
 title: "Intro"
 category: "Migrating to v2"
 slug: "migration-intro"
+priority: 00
 ---
 
 # Migrating to v2
