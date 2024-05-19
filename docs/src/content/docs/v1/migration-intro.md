@@ -1,12 +1,34 @@
 ---
-title: "Migrating to v2"
-category: "Guides"
+title: "Intro"
+category: "Migrating to v2"
 
 isV1: true
 
 slug: "v1-migration-intro"
 ---
 
-# Testing
+# Migrating to v2
 
-123
+v2 is the first major version release of Remeda in almost 2 years. We took this
+opportunity to gather as many **breaking changes** as possible into a single
+release, focusing on modernization and simplification. What this release
+_doesn't_ do is change any major aspect of Remeda's architecture. Almost half of
+Remeda's exported functions don't have _any_ changes at all, neither to their
+runtime or to their typing!
+
+## Migrating
+
+The remaining functions require mostly slight changes to how they are called
+(like removing a "variant" suffix: e.g. `map` instead of `map.indexed`). Some
+function have parameters or return types changed; these could require fixes
+either up or down stream from where the function is called. Some functions might
+require no changes at all in your project, but have changes to their runtime
+behavior.
+
+To ease the process we are providing a **function-by-function** migration guide
+describing the changes to that function, offers examples of possible breakages
+and how to fix them, and in some cases ways to maintain the previous behaviors.
+
+We recommend first updating to the latest v1 version, fixing any deprecation
+errors, and then updating to the latest version of Remeda and use this guide to
+fix any remaining issues.
