@@ -1,10 +1,10 @@
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Button } from "@shadcn/button";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@shadcn/collapsible";
+} from "@/components/ui/collapsible";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import type { ReactNode } from "react";
 
 export function MigrationBox({

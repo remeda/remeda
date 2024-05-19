@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@shadcn/select";
+} from "@/components/ui/select";
 import { useCallback, useMemo, type ReactNode } from "react";
 import { entries, keys, map, only, pickBy, pipe } from "remeda";
 

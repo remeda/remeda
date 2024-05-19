@@ -1,11 +1,11 @@
-import type { FunctionParam, FunctionReturn } from "@/lib/transform";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Button } from "@shadcn/button";
+import { Button } from "@/components/ui/button";
 import {
   CollapsibleContent,
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
-} from "@shadcn/collapsible";
+} from "@/components/ui/collapsible";
+import type { FunctionParam, FunctionReturn } from "@/lib/transform";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
 
 export function MethodSignature({
