@@ -19,11 +19,11 @@ runtime or to their typing!
 ## Migrating
 
 The remaining functions require mostly slight changes to how they are called
-(like removing a "variant" suffix: e.g. `map` instead of `map.indexed`). Some
-function have parameters or return types changed; these could require fixes
-either up or down stream from where the function is called. Some functions might
-require no changes at all in your project, but have changes to their runtime
-behavior.
+(like removing a variant suffix like "indexed": e.g. `map.indexed` is now just
+`map`). Some function have parameters or return types changed; these could
+require fixes either up or down stream from where the function is called. Some
+functions might require no changes at all in your project, but have changes to
+their runtime behavior.
 
 To ease the process we are providing a **function-by-function** migration guide
 describing the changes to that function, offers examples of possible breakages
