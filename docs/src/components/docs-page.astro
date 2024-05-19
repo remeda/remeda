@@ -38,7 +38,7 @@ const renderedCollection = await Promise.all(
   <main class="flex-1 space-y-8">
     {
       renderedCollection.map(({ slug, rendered: { Content } }) => (
-        <Prose id={slug}>
+        <Prose id={slug} class="scroll-mt-24">
           <Content />
         </Prose>
       ))
