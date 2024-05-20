@@ -1,27 +1,35 @@
 ---
-import { FunctionTag } from "@/components/function-tag";
-import GithubSource from "@/components/github-source.astro";
-import Markdown from "@/components/markdown.astro";
 import { Badge } from "@/components/ui/badge";
 import { CardTitle } from "@/components/ui/card";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/transform";
+import type { Tag } from "@/lib/get-tags";
+import GithubSource from "./github-source.astro";
+import Markdown from "./markdown.astro";
+import Prose from "./prose.astro";
+import { TagBadge } from "./tag-badge";
 
 type Props = {
-  readonly func: DocumentedFunction;
+  readonly name: string;
+  readonly category: string | undefined;
+  readonly sourceUrl: string | undefined;
+  readonly description: string | undefined;
+  readonly tags: ReadonlyArray<Tag>;
 };
 
-const { func } = Astro.props;
+const { name, sourceUrl, category, description, tags } = Astro.props;
 ---
 
 <>
   <div class="flex items-center gap-2">
-    <CardTitle className="text-2xl">{func.name}</CardTitle>
-    <Badge className="ml-auto bg-primary text-primary-foreground">
-      {func.category}
-    </Badge>
-    {getTags(func).map((tag) => <FunctionTag tag={tag} />)}
-    {func.sourceUrl !== undefined && <GithubSource url={func.sourceUrl} />}
+    <CardTitle className="flex-1 text-2xl">{name}</CardTitle>
+    {tags.map((tag) => <TagBadge tag={tag} className="h-8" />)}
+    <Badge className="h-8">{category}</Badge>
+    {sourceUrl !== undefined && <GithubSource url={sourceUrl} />}
   </div>
-  {func.description !== undefined && <Markdown markdown={func.description} />}
+  {
+    description !== undefined && (
+      <Prose>
+        <Markdown markdown={description} />
+      </Prose>
+    )
+  }
 </>

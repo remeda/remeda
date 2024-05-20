@@ -2,16 +2,10 @@
 import { asHtml } from "@/lib/as-html";
 
 type Props = {
-  readonly markdown?: string;
-  readonly className?: string;
+  readonly markdown: string;
 };
 
-const { markdown, className } = Astro.props;
+const { markdown } = Astro.props;
 ---
 
-<article
-  class={`prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none ${className ?? ""}`}
-  set:html={markdown === undefined ? undefined : asHtml(markdown)}
->
-  <slot />
-</article>
+<Fragment set:html={asHtml(markdown)} />

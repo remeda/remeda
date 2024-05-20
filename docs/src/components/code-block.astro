@@ -4,13 +4,13 @@ import { format, type Options } from "prettier";
 
 export const THEME = "poimandres";
 
-interface Props {
-  code: string;
-}
-
 const PRETTIER_OPTIONS = {
   parser: "typescript",
 } as const satisfies Options;
+
+type Props = {
+  readonly code: string;
+};
 
 const { code } = Astro.props;
 
