@@ -1,0 +1,10 @@
+---
+import Prose from "@/components/prose.astro";
+import Layout from "./layout.astro";
+---
+
+<Layout class="flex-1 overflow-y-auto">
+  <main class="container my-6 max-w-5xl">
+    <Prose class="mt-6 max-w-none prose-p:max-w-prose"><slot /></Prose>
+  </main>
+</Layout>

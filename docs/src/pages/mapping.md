@@ -1,3 +1,7 @@
+---
+layout: ../layouts/mapping.astro
+---
+
 # Mapping for Lodash and Ramda
 
 _Remeda functions are not necessarily drop-in replacements for the
