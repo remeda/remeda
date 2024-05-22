@@ -33,6 +33,10 @@ map.indexed(DATA, (item, index) => item + index);
 map(DATA, (item, index) => item + index);
 ```
 
+Object-based functions (like `mapKeys`) also got the same treatment, where
+the callbacks are called with the prop's `key` as the 2nd param (instead of the
+numerical `index` of arrays).
+
 ### Migration
 
 For calls that used the indexed variant simply remove the `.indexed` suffix. For

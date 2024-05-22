@@ -1,11 +1,13 @@
 ---
-title: "Renamed and Removed"
+title: "Object Keys"
 category: "Migrating to v2"
-slug: "migration-removed"
-priority: 40
+slug: "migration-keys"
+priority: 50
 ---
 
 # Renamed and Removed
+
+Some functions have been removed, and some have been renamed.
 
 ## Removed
 
