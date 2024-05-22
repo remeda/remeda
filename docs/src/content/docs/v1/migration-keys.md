@@ -5,61 +5,38 @@ slug: "migration-keys"
 priority: 50
 ---
 
-# Renamed and Removed
+# Object Keys
 
-Some functions have been removed, and some have been renamed.
+Most of the functions that provided a way to traverse `object`s relied on the
+built-in [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries).
+This function has a limitation on what props it
+iterates upon (enumerates):
 
-## Removed
+- `number` keys are casted as `string`.
+- `symbol` keys are ignored.
 
-In order to offer the best possible functions we deemed several functions as
-redundant when they could be easily replaced with other existing functions
-resulting in code of the same length; in all these cases the replacement is a
-composite of 2 other functions.
+To properly reflect this we had to change the typing for both the callback
+functions, and to the return types; functions which returned an object would
+either drop the symbol keys (if constructing a new object), or copy them as-is
+(if cloning the original object). To provide more utility, `omit` and `omitBy`
+**implementation** has been changed to preserve symbol keys.
 
-```ts
-// Was
-compact(DATA);
+It's important to note that only the **types** have changed here, the runtime
+behavior remains the same.
 
-// Now
-filter(DATA, isTruthy);
-```
+Read more here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties
 
-Other functions were removed because their logic was either split into several
-other functions, or merged into a more general purpose tool to allow better code
-reuse and better typing.
+### Migration
 
-```ts
-// Was
-flatten(DATA);
-flattenDeep(DATA);
+The biggest differences are due to the change in how we handle `symbol` keys.
+`symbol` usage is rare and if you don't know you use it in your project you most
+likely don't.
 
-// Now
-flat(DATA);
-flat(DATA, 10);
-```
+Number keys require a little more attention, especially if you are checking or
+using the keys by value (and not just passing them around). Because only types
+have changed (and not the runtime behavior) you might run into new typescript
+(or eslint) warnings and errors due to surfacing _previously existing issues_.
 
-## Renamed
-
-Remeda took a lot of it's early inspiration from Lodash and Ramda. A lot of
-functions were named similar to their equivalent in those libraries; but
-these names don't always align with the names chosen by the ECMAScript standard.
-We chose to prefer the standard names.
-
-```ts
-// Was
-pipe(DATA, toPairs(), ..., fromPairs());
-
-// Now
-pipe(DATA, entries(), ..., fromEntries())
-```
-
-We also decided to improve some names by dropping abbreviations and partial
-spellings in favor of proper English words.
-
-```ts
-// Was
-uniq(DATA);
-
-// Now
-unique(DATA);
-```
+Notice that number keys were **always** cast as strings in JavaScript, and that
+`myObj[0]` and `myObj["0"]` access the same prop. This change will not construct
+your objects differently than they used to be.

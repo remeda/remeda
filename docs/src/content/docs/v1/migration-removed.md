@@ -61,3 +61,10 @@ uniq(DATA);
 // Now
 unique(DATA);
 ```
+
+### Migration
+
+The latest versions of Remeda v1 have all renamed and removed functions
+deprecated with suggestions for how to migrate. Doing this while still in v1
+would make it easier to replace them one-by-one. Otherwise this document has a
+deprecated section with migration instructions too.
