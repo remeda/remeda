@@ -12,7 +12,7 @@ priority: 40
 In order to offer the best possible functions we deemed several functions as
 redundant when they could be easily replaced with other existing functions
 resulting in code of the same length; in all these cases the replacement is a
-composite of 2 other functions.
+composite of at most 3 functions.
 
 ```ts
 // Was

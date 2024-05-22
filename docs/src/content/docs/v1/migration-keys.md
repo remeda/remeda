@@ -19,7 +19,7 @@ To properly reflect this we had to change the typing for both the callback
 functions, and to the return types; functions which returned an object would
 either drop the symbol keys (if constructing a new object), or copy them as-is
 (if cloning the original object). To provide more utility, `omit` and `omitBy`
-**implementation** has been changed to preserve symbol keys.
+**implementation** has been changed to _preserve_ symbol keys.
 
 It's important to note that only the **types** have changed here, the runtime
 behavior remains the same.
