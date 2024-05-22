@@ -108,6 +108,10 @@ not at the place the function is called.
   to debug the resulting type (in most cases we already wrap the types with
   Simplify).
 
+**Important**: The types might have edge cases that we didn't forsee and test
+against. If you feel that the computed type is _wrong_ please [report it over on
+GitHub](https://github.com/remeda/remeda/issues).
+
 ```ts
 // Downstream bugs revealed:
 
@@ -133,3 +137,20 @@ const castedOutput = map(["1", "2", "3"] as const, (x) =>
   Number.parseInt(x),
 ) as number[];
 ```
+
+## Lazy (_Internal_)
+
+The `lazy` variant _wasn't documented_ but still existed on many functions.
+Unlike the previous variants, it wasn't another implementation of the function,
+but a tool used internally by the `purry` and `pipe` functions to allow lazy
+evaluation of functions. This abstraction was completely removed.
+
+### Migration
+
+If you exported a `lazy` prop from your **internal** functions to make them lazy
+within Remeda's `pipe`, Use `purry` with the lazy implementation as the 3rd
+parameter instead.
+
+We consider this API internal and thus don't provide documentation or export
+the types and utilities that would make it easier to work with (the ones we use
+internally). If you need these APIs please [open an issue over on GitHub](https://github.com/remeda/remeda/issues).
