@@ -45,10 +45,10 @@ function signature **no longer matches** the callback signature typescript would
 complain about the type mismatch. _In a more complex case though,_ if the
 function signature **does match** then it will now be called with additional
 parameters and might compute results differently. This is very rare and can only
-happen if the callback function already accepted an **optional `number`** or
-**`number | undefined`** as it's **second** parameter. To fix this simply wrap
-the callback with an inline function that takes a single parameter. ESLint's
-Unicorn plugin's [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md) is recommended to detect potential cases
+happen if the callback function already accepted an _optional_ `number` or
+`number | undefined` as it's **second** parameter. To fix this simply wrap the
+callback with an inline function that takes a single parameter. ESLint's Unicorn
+plugin's [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md) is recommended to detect potential cases
 of this issue.
 
 ```ts
