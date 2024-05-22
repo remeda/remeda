@@ -33,7 +33,7 @@ Previous versions of TypeScript might still be able to import and use some of
 our functions (if their typing doesn't rely on anything more modern), but those
 cases will not be supported.
 
-## Module Import
+## Importing
 
 Remeda v2 builds its distribution files using [`tsup`](https://tsup.egoist.dev/)
 (replacing the bare `tsc` build of the previous version), with full support for
