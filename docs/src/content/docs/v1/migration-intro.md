@@ -16,9 +16,8 @@ their runtime or to their typing!
 
 ## Migrating
 
-For functions that have breaking changes done to them, the vast majority might
-not require any changes in your project, or only slight changes to how they are
-called.
+In the vast majority of cases there are no expected changes required to your
+project, beyond slight changes to how some functions are called.
 
 Other function have **parameter types** or **return types** changed; these could
 require fixes either _up_ or _down stream_ from where the function is called.
