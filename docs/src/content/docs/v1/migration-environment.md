@@ -9,15 +9,14 @@ priority: 10
 
 ## Runtime ≥ ES2022
 
-Previously Remeda compiled down to a target of **ES5** (and **ES2017** lib).
-This meant that certain modern javascript features (like object and array
-spreading) had to be polyfilled and shipped together with each function that
-used them. It also meant that we couldn't use certain features, like built-in
-iterators (like `Array.prototype.entries`) or `bigint`s, couldn't be used at
-all.
+Previously, Remeda compiled down to a target of **ES5** (and **ES2017** lib).
+This meant that modern JavaScript features (like object and array spreading) had
+to be polyfilled and shipped with each function that used them. It also meant
+that we couldn't use certain features, like built-in iterators (e.g.,
+`Array.prototype.entries`) or `bigint`s.
 
-v2 is compiled with a target of **ES2022** (and **ES2022** lib, too) which is
-supported by all currently maintained Node.JS versions (18+) and by [_~93.8%_](https://caniuse.com/mdn-javascript_builtins_array_at,mdn-javascript_builtins_object_hasown)
+v2 is compiled with a target of **ES2022** (and **ES2022** lib), which is
+supported by all currently maintained Node.js versions (18+) and by [_~93.8%_](https://caniuse.com/mdn-javascript_builtins_array_at,mdn-javascript_builtins_object_hasown)
 of all browsers.
 
 Browsers and runtimes that don't support ES2022 might still be able to use some
