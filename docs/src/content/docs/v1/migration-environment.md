@@ -34,7 +34,7 @@ cases will not be supported.
 
 ## Importing
 
-Remeda v2 builds its distribution files using [`tsup`](https://tsup.egoist.dev/)
+Remeda v2 builds its packaged files using [`tsup`](https://tsup.egoist.dev/)
 (replacing the bare `tsc` build of the previous version), with full support for
 tree-shaking, code splitting, and minification. The output config is validated
 using both [`attw`](https://arethetypeswrong.github.io/) and [`publint`](https://publint.dev/).
