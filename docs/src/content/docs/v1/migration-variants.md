@@ -1,11 +1,11 @@
 ---
-title: "Variants"
+title: "Removed Variants"
 category: "Migrating to v2"
 slug: "migration-variants"
 priority: 20
 ---
 
-# Variants
+# Removed Variants
 
 In v1 Remeda offered several "variants" of the base runtime implementation and
 of the base typing via props added to the exported function. These have been
@@ -59,4 +59,77 @@ map(DATA, Number.parseInt); //=> [1, NaN, NaN]
 
 // Fix:
 map(DATA, (item) => Number.parseInt(item)); //=> [1, 2, 3]
+```
+
+## Strict
+
+We sometimes come up with improved typing for a function's return value. The
+type is often more complex and makes more assumptions on the inputs, making it
+incompatible with the existing type. In these cases we created a `strict`
+variant which had the same runtime implementation, but with improved typing. In
+v2 we made all strict variants the default, removing the original base typing.
+
+This change can result in downstream assumptions on types to break or become
+invalid. In most cases we believe these to be valid typing issues which are
+being surfaced for the first time because of the improved typing.
+
+```ts
+const DATA = ["1", "2", "3"] as const;
+
+const was = map(DATA, (item) => Number.parseInt(item));
+//    ^? number[];
+
+const now = map(DATA, (item) => Number.parseInt(item));
+//    ^? [number, number, number]
+```
+
+### Migration
+
+For calls that used the strict variant simply remove the `.strict` suffix. For
+the rest, you _most likely_ don't need to do anything.
+
+If you encounter new typescript issues following this change we recommend first
+checking if this issue is the result of the better typing. Notice that if you
+use inferred typing a lot the issue might only surface further downstream and
+not at the place the function is called.
+
+**To bypass the issue or workaround them**:
+
+- The function-specific migration guides below also suggest possible type
+  assertions that could be used to get the "legacy" types back.
+- Simplify the types by using the typescript `satisfies` keyword instead of
+  `as const`.
+- You can use explicit, less specific types, in the generics of the functions to
+  force them to a specific type instead of the inferred type.
+- Most of the new types should be extendable by the old types, meaning you can
+  cast the _output_ to the type you expect in order to simplify the result.
+- Some new types might be hard to read and understand via the IDE's tooltips, in
+  those cases you can use Type-Fest's [`Simplify`](https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts)
+  to debug the resulting type (in most cases we already wrap the types with
+  Simplify).
+
+```ts
+// Downstream bugs revealed:
+
+// @ts-expect-error [ts(2493)]Tuple type '[number]' of length '1' has no element at index '1'.
+const [, buggy] = map(["1"] as const, (x) => Number.parseInt(x));
+
+// Get the legacy behavior:
+
+const strict = map(["1", "2", "3"] as const, (x) => Number.parseInt(x));
+//    ^? [number, number, number]
+
+const satisfied = map(["1", "2", "3"] satisfies `${number}`[], (x) =>
+  //  ^? number[];
+  Number.parseInt(x),
+);
+
+const casted = map(["1", "2", "3"] as `${number}`[], (x) =>
+  //  ^? number[];
+  Number.parseInt(x),
+);
+
+const castedOutput = map(["1", "2", "3"] as const, (x) =>
+  Number.parseInt(x),
+) as number[];
 ```
