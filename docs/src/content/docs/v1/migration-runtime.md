@@ -5,7 +5,7 @@ slug: "migration-reimplementations"
 priority: 60
 ---
 
-# Re-Implementation
+# Re-Implementations
 
 Several functions had their (runtime) implementation changed, including changes
 to their semantics, so that they'd return a different result in v2, for some
