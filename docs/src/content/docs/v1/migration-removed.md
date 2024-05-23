@@ -9,10 +9,10 @@ priority: 40
 
 ## Removed
 
-In order to offer the best possible functions we deemed several functions as
-redundant when they could be easily replaced with other existing functions
-resulting in code of the same length; in all these cases the replacement is a
-composite of at most 3 functions.
+To offer the best possible functions, we deemed several functions as redundant
+when they could be easily replaced with other existing functions, resulting in
+code of the same length. In all these cases, the replacement is a composite of
+at most three functions.
 
 ```ts
 // Was
@@ -23,8 +23,8 @@ filter(DATA, isTruthy);
 ```
 
 Other functions were removed because their logic was either split into several
-other functions, or merged into a more general purpose tool to allow better code
-reuse and better typing.
+other functions or merged into a more general-purpose tool to allow better code
+reuse and improved typing.
 
 ```ts
 // Was
@@ -38,10 +38,10 @@ flat(DATA, 10);
 
 ## Renamed
 
-Remeda took a lot of it's early inspiration from Lodash and Ramda. A lot of
-functions were named similar to their equivalent in those libraries; but
-these names don't always align with the names chosen by the ECMAScript standard.
-We chose to prefer the standard names.
+Remeda took a lot of its early inspiration from Lodash and Ramda. Many functions
+were named similarly to their equivalents in those libraries, but these names
+don't always align with the names chosen by the ECMAScript standard. We chose to
+prefer the standard names.
 
 ```ts
 // Was
@@ -66,5 +66,5 @@ unique(DATA);
 
 The latest versions of Remeda v1 have all renamed and removed functions
 deprecated with suggestions for how to migrate. Doing this while still in v1
-would make it easier to replace them one-by-one. Otherwise this document has a
+would make it easier to replace them one-by-one. Otherwise, this document has a
 deprecated section with migration instructions too.
