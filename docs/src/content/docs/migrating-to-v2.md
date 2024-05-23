@@ -1,12 +1,15 @@
 ---
-title: "Migrating to v2"
+title: "Intro"
 category: "Guides"
 ---
 
-# 🆕 Remeda v2 🥳
+# Remeda
 
-We've just released v2!
+Welcome to the Remeda documentation and API reference. Below you'll find the
+full reference for all functions exported by Remeda.
 
-is your project on v1? Check out our [migration guide](/v1#migration-intro).
+## Previous Versions
+
+Is your project on using version 1.x.x? Check out our [migration guide](/v1#migration-intro).
 
 ---
