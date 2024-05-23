@@ -36,6 +36,10 @@ flat(DATA);
 flat(DATA, 10);
 ```
 
+The functions are: `compact`, `countBy`, `flatMapToObj`, `flatten`,
+`flattenDeep`, `isObject`, `maxBy`, `minBy`, `noop`, `reject`, `type`, _and_
+`zipObj`.
+
 ## Renamed
 
 Remeda took a lot of its early inspiration from Lodash and Ramda. Many functions
@@ -61,6 +65,9 @@ uniq(DATA);
 // Now
 unique(DATA);
 ```
+
+The functions are: `createPipe`, `equals`, `fromPairs`, `isNil`, `toPairs`,
+`uniq`, `uniqBy`, _and_ `uniqWith`.
 
 ### Migration
 
