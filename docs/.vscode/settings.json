@@ -7,5 +7,8 @@
   "prettier.configPath": "prettier.config.js",
 
   // Use project typescript:
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // This makes sense:
+  "cSpell.words": ["Remeda"]
 }

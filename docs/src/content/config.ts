@@ -18,7 +18,7 @@ export const collections = {
       /**
        * The priority defines the sorting order *within* the category.
        */
-      priority: z.number().positive().int().optional(),
+      priority: z.number().nonnegative().int().optional(),
     }),
   }),
 
