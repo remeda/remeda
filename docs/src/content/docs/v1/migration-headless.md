@@ -5,7 +5,7 @@ slug: "migration-headless"
 priority: 30
 ---
 
-# Headless dataLast
+# Headless Data Last
 
 A few single-param functions in v1 did not offer a properly curried "dataLast"
 implementation, and instead suggested people use a "headless" version of them
