@@ -128,6 +128,13 @@ const satisfied = map(["1", "2", "3"] satisfies `${number}`[], (x) =>
   Number.parseInt(x),
 );
 
+const generalized = map<`${number}`[], number[]>(
+  ["1", "2", "3"] as const,
+  (x) =>
+    //  ^? number[]
+    Number.parseInt(x),
+);
+
 const casted = map(["1", "2", "3"] as `${number}`[], (x) =>
   //  ^? number[];
   Number.parseInt(x),
