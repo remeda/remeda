@@ -38,3 +38,6 @@ most likely don't.
 using the keys by value (and not just passing them around). Because only types
 have changed (and not the runtime behavior), you might run into new TypeScript
 (or ESLint) warnings and errors due to surfacing _previously existing issues_.
+
+The affected functions are: `entries`, `evolve`, `forEachObj`, `keys`,
+`mapKeys`, `mapValues`, `omit`, `omitBy`, _and_ `pickBy`.
