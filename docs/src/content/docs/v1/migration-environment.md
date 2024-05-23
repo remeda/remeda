@@ -7,6 +7,11 @@ priority: 10
 
 # Environment
 
+Remeda v2 is built for modern environments. Browsers and runtimes that don't
+support the minimum requirements might still be able to use some functions (if
+their implementation doesn't rely on anything more modern), but those cases will
+not be supported.
+
 ## Runtime ≥ ES2022
 
 Previously, Remeda compiled down to a target of **ES5** (and **ES2017** lib).
@@ -19,18 +24,10 @@ v2 is compiled with a target of **ES2022** (and **ES2022** lib), which is
 supported by all currently maintained Node.js versions (18+) and by [_~93.8%_](https://caniuse.com/mdn-javascript_builtins_array_at,mdn-javascript_builtins_object_hasown)
 of all browsers.
 
-Browsers and runtimes that don't support ES2022 might still be able to use some
-functions (if their implementation doesn't rely on anything more modern), but
-those cases will not be supported.
-
 ## TypeScript ≥ 5.1
 
 The minimum TypeScript version our exported types are tested against is **5.1**,
 up from **4.2** in v1.
-
-Previous versions of TypeScript might still be able to import and use some of
-our functions (if their typing doesn't rely on anything more modern), but those
-cases will not be supported.
 
 ## Importing
 
