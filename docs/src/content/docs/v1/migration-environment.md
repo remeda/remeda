@@ -29,6 +29,10 @@ of all browsers.
 The minimum TypeScript version our exported types are tested against is **5.1**,
 up from **4.2** in v1.
 
+We currently **don't** use any new language features that were only added in
+recent versions of TypeScript, but we might want to use them in the future
+without requiring a breaking change.
+
 ## Importing
 
 Remeda v2 builds its packaged files using [`tsup`](https://tsup.egoist.dev/)
