@@ -5,11 +5,12 @@ category: "Guides"
 
 # Remeda
 
-Welcome to the Remeda documentation and API reference. Below you'll find the
-full reference for all functions exported by Remeda.
+Welcome to the Remeda documentation and API reference. Below, you'll find the
+complete reference for all functions exported by Remeda.
 
 ## Previous Versions
 
-Is your project on using version 1.x.x? Check out our [migration guide](/v1#migration-intro).
+Are you using version 1.x.x? Visit our [migration guide](/v1#migration-intro) to
+help you transition to the latest version.
 
 ---
