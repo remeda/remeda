@@ -10,39 +10,87 @@ Fully written in TypeScript for powerful, type-safe, and functional utilities.
 
 <InstallCommands />
 
-## Why?
+## Expansive
 
-There are no good utility libraries that work well with TypeScript. When working
-with Lodash or Ramda you have to annotate types manually most of the time.
-Remeda is written and tested in TypeScript and that means there won't be any
-problems with custom typings.
-
-## What's "data-first" and "data-last"?
-
-Functional programming is nice, and it makes the code more readable. However
-there are situations where you don't need "pipes", and you want to call just a
-single function.
+Remeda offers a wide range of common everyday utility functions so that you
+don't have to deal with the minutiae of writing them yourself. We ensure that
+our algorithms are efficient, optimized, and cover all edge cases properly. We
+offer a wide range of functions, from simple utilities like
+[`partition`](/docs#partition) and building objects with
+[`pullObject`](/docs#pullObject), to _complex_ algorithms like
+[`takeFirstBy`](/docs#takeFirstBy).
 
 ```ts
-// Remeda
-R.pick(obj, ["firstName", "lastName"]);
+type User = {
+  firstName: string;
+  lastName: string;
+  lastLogin: number;
+};
+
+decalre const USERS: User[];
+
+R.sortBy(
+  USERS,
+  [R.prop("lastLogin"), "desc"],
+  R.prop("lastName"),
+  R.prop("firstName"),
+);
+```
+
+## Fully Typed
+
+Libraries like Lodash and Ramda are written in JavaScript, with types added
+later. Remeda, on the other hand, is fully written in TypeScript! This means
+types are deeply integrated into the code, allowing us to shift the focus from
+runtime errors to compile-time errors, so you catch errors in your IDE and CI,
+not in your logs, **and not in production**.
+
+We strive to provide the best possible real-life types for all functions, often
+going beyond what is offered by the TypeScript library, so you don't need to use
+other libraries like 'type-fest' and 'ts-reset' just to get the types you
+expected.
+
+```ts
+const DATA = [1, 2, 3] as const;
+
+const builtin = DATA.map(DATA, (x) => x.toString());
+//    ^? string[]
+
+const withRemeda = R.map(DATA, (x) => x.toString());
+//    ^? [string, string, string]
+```
+
+## Functional
+
+Functional programming is beneficial, making code more readable. However, there
+are situations where you don't need "pipes" and want to call just a single
+function. In Remeda, **all** functions have automatic currying built-in. This
+means the same imported function can be called either regularly (what we call
+_dataFirst_) or with the first parameter, _data_, omitted (what we call
+_dataLast_). When a dataLast invocation is detected, Remeda creates a curried
+version of that function on-the-fly, with all other parameters bound to it. This
+allows you to use the same function in both functional and imperative styles,
+without additional imports. It also means you can gradually adopt a functional
+style where it makes sense without compromising readability when it doesn't.
+
+```ts
+// Lodash
+_.pick(obj, ["firstName", "lastName"]);
 
 // Ramda
 R.pick(["firstName", "lastName"], obj);
 
-// Lodash
-_.pick(obj, ["firstName", "lastName"]);
+// In Remeda you get both!
+R.pick(obj, ["firstName", "lastName"]); // dataFirst
+R.pipe(obj, R.pick(["firstName", "lastName"])); // dataLast
 ```
 
-For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda
-supports it. Keep reading along!
+In the above example, the "dataFirst" approach is more natural and programmer-
+friendly because when you type the second argument, you get auto-complete from
+the IDE. It's not possible to get auto-complete in Ramda because the data
+argument is not provided.
 
-In the above example, "data-first" approach is more natural and more programmer
-friendly because when you type the second argument, you get the auto-complete
-from the IDE. It's not possible to get the auto-complete in Ramda because the
-data argument is not provided.
-
-"data-last" approach is helpful when writing data transformations aka pipes.
+The "dataLast" approach is helpful when writing data transformations, aka pipes.
 
 ```ts
 const DATA = [
@@ -79,28 +127,17 @@ _.flow(
 )(DATA); // broken typings in TS :(
 ```
 
-Mixing paradigms can be cumbersome in Lodash because it requires importing two
-different methods. Remeda implements all methods in two versions, and the
-correct overload is picked based on the number of provided arguments. The
-"data-last" version must always have one argument less than the "data-first"
-version.
+## Lazy Evaluation
 
-```ts
-// Remeda
-R.pick(obj, ["firstName", "lastName"]); // data-first
-R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
+You might have noticed the [`pipe`](/docs#pipe) function in the above example.
+The pipe function allows you to structure complex data transformations in the
+order they will be computed, avoiding the need to name intermediate variables or
+having confusingly deep nesting that needs to be read from the center outwards.
 
-R.pick(["firstName", "lastName"], obj); // error, this won't work!
-R.pick(["firstName", "lastName"])(obj); // this will work but the types cannot be inferred
-```
-
-## Lazy evaluation
-
-Many functions support lazy evaluation when using `pipe` or `piped`. These
-functions have a **Lazy** tag in the documentation.
-
-Lazy evaluation is not supported in Ramda and only partially supported in
-lodash.
+But the Remeda pipe function has an additional benefit. It automatically detects
+Remeda functions that could be computed **lazily** and optimizes those parts of
+the pipe without you having to do anything. This means that expensive
+computations can be deferred until they are actually needed.
 
 ```ts
 // Get first 3 unique values
@@ -122,3 +159,20 @@ const result = R.pipe(
 // iterate 2
 // iterate 3
 ```
+
+## Trustworthy!
+
+All this wouldn't be worth much if it didn't work. That's why Remeda has an
+extensive test suite that offers 100% coverage. We also test all functions on
+all supported Node versions to make sure we never regress. Our tests cover not
+just runtime behavior but also types!
+
+We use the strictest TypeScript settings and extensive linting to ensure that
+nothing slips through the cracks.
+
+## Community
+
+Remeda is provided with an MIT license and is open to contributions from the
+community. We are always looking for new contributors and are happy to help you
+get started. If you have any questions or want to contribute, feel free to reach
+out to us over on [`GitHub`](https://github.com/remeda/remeda).
