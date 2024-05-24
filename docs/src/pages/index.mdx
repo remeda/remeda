@@ -1,0 +1,124 @@
+---
+layout: ../layouts/wiki.astro
+---
+
+import InstallCommands from "@/components/install-commands.astro";
+
+# Remeda
+
+Fully written in TypeScript for powerful, type-safe, and functional utilities.
+
+<InstallCommands />
+
+## Why?
+
+There are no good utility libraries that work well with TypeScript. When working
+with Lodash or Ramda you have to annotate types manually most of the time.
+Remeda is written and tested in TypeScript and that means there won't be any
+problems with custom typings.
+
+## What's "data-first" and "data-last"?
+
+Functional programming is nice, and it makes the code more readable. However
+there are situations where you don't need "pipes", and you want to call just a
+single function.
+
+```ts
+// Remeda
+R.pick(obj, ["firstName", "lastName"]);
+
+// Ramda
+R.pick(["firstName", "lastName"], obj);
+
+// Lodash
+_.pick(obj, ["firstName", "lastName"]);
+```
+
+For readers looking for data-last forms like `R.filter(fn)(array)`, Remeda
+supports it. Keep reading along!
+
+In the above example, "data-first" approach is more natural and more programmer
+friendly because when you type the second argument, you get the auto-complete
+from the IDE. It's not possible to get the auto-complete in Ramda because the
+data argument is not provided.
+
+"data-last" approach is helpful when writing data transformations aka pipes.
+
+```ts
+const DATA = [
+  { name: "john", age: 20, gender: "m" },
+  { name: "marry", age: 22, gender: "f" },
+  { name: "samara", age: 24, gender: "f" },
+  { name: "paula", age: 24, gender: "f" },
+  { name: "bill", age: 33, gender: "m" },
+];
+
+// Remeda
+R.pipe(
+  DATA,
+  R.filter((x) => x.gender === "f"),
+  R.groupBy((x) => x.age),
+);
+
+// Ramda
+R.pipe(
+  R.filter((x) => x.gender === "f"),
+  R.groupBy((x) => x.age),
+)(DATA); // broken typings in TS :(
+
+// Lodash
+_(DATA)
+  .filter((x) => x.gender === "f")
+  .groupBy((x) => x.age)
+  .value();
+
+// Lodash-fp
+_.flow(
+  _.filter((x) => x.gender === "f"),
+  _.groupBy((x) => x.age),
+)(DATA); // broken typings in TS :(
+```
+
+Mixing paradigms can be cumbersome in Lodash because it requires importing two
+different methods. Remeda implements all methods in two versions, and the
+correct overload is picked based on the number of provided arguments. The
+"data-last" version must always have one argument less than the "data-first"
+version.
+
+```ts
+// Remeda
+R.pick(obj, ["firstName", "lastName"]); // data-first
+R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
+
+R.pick(["firstName", "lastName"], obj); // error, this won't work!
+R.pick(["firstName", "lastName"])(obj); // this will work but the types cannot be inferred
+```
+
+## Lazy evaluation
+
+Many functions support lazy evaluation when using `pipe` or `piped`. These
+functions have a **Lazy** tag in the documentation.
+
+Lazy evaluation is not supported in Ramda and only partially supported in
+lodash.
+
+```ts
+// Get first 3 unique values
+const DATA = [1, 2, 2, 3, 3, 4, 5, 6];
+
+const result = R.pipe(
+  DATA,
+  R.map((x) => {
+    console.log("iterate", x);
+    return x;
+  }),
+  R.unique(),
+  R.take(3),
+); // => [1, 2, 3]
+
+// Console output:
+// iterate 1
+// iterate 2
+// iterate 2
+// iterate 3
+```

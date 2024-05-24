@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
+    "@astrojs/mdx": "^3.0.1",
     "@astrojs/react": "^3.3.4",
     "@astrojs/tailwind": "^5.1.0",
     "@radix-ui/react-collapsible": "^1.0.3",
