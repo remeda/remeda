@@ -1,0 +1,23 @@
+---
+type Props = {
+  readonly href: string;
+  readonly additionalHrefs?: readonly string[];
+};
+
+const { href, additionalHrefs = [] } = Astro.props;
+
+const { pathname } = Astro.url;
+
+const trimmed = pathname.replace(/\/$/, "");
+const isActive = [href, ...additionalHrefs].some((path) => path === trimmed);
+---
+
+<a
+  href={href}
+  class:list={[
+    "transition-colors hover:text-foreground/80",
+    isActive ? "font-semibold text-primary" : "text-foreground/60",
+  ]}
+>
+  <slot />
+</a>
