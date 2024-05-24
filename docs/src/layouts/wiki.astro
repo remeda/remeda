@@ -1,9 +1,12 @@
 ---
-import Layout from "./layout.astro";
+import Prose from "@/components/prose.astro";
+import BaseLayout from "./base.astro";
 ---
 
-<Layout>
-  <main class="container prose prose-slate max-w-4xl p-6 dark:prose-invert">
-    <slot />
+<BaseLayout>
+  <main>
+    <Prose class="container max-w-4xl p-6">
+      <slot />
+    </Prose>
   </main>
-</Layout>
+</BaseLayout>

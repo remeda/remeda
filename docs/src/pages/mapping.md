@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/mapping.astro
+layout: ../layouts/wiki.astro
 ---
 
 # Mapping for Lodash and Ramda
