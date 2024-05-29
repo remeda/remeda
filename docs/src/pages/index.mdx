@@ -17,17 +17,21 @@ don't have to deal with the minutiae of writing them yourself. We ensure that
 our algorithms are efficient, optimized, and cover all edge cases properly. We
 offer a wide range of functions, from simple utilities like
 [`partition`](/docs#partition) and building objects with
-[`pullObject`](/docs#pullObject), to _complex_ algorithms like
+[`pullObject`](/docs#pullObject), to complex algorithms like
 [`takeFirstBy`](/docs#takeFirstBy).
 
 ```ts
+import * as R from "remeda";
+// Or import the function directly:
+// import { sortBy } from "remeda";
+
 type User = {
   firstName: string;
   lastName: string;
   lastLogin: number;
 };
 
-decalre const USERS: User[];
+declare const USERS: User[];
 
 R.sortBy(
   USERS,
@@ -66,8 +70,8 @@ Functional programming is beneficial, making code more readable. However, there
 are situations where you don't need "pipes" and want to call just a single
 function. In Remeda, **all** functions have automatic currying built-in. This
 means the same imported function can be called either regularly (what we call
-_dataFirst_) or with the first parameter, _data_, omitted (what we call
-_dataLast_). When a dataLast invocation is detected, Remeda creates a curried
+_data-first_) or with the first parameter, _data_, omitted (what we call
+_data-last_). When a data-last invocation is detected, Remeda creates a curried
 version of that function on-the-fly, with all other parameters bound to it. This
 allows you to use the same function in both functional and imperative styles,
 without additional imports. It also means you can gradually adopt a functional
@@ -81,16 +85,17 @@ _.pick(obj, ["firstName", "lastName"]);
 R.pick(["firstName", "lastName"], obj);
 
 // In Remeda you get both!
-R.pick(obj, ["firstName", "lastName"]); // dataFirst
-R.pipe(obj, R.pick(["firstName", "lastName"])); // dataLast
+R.pick(obj, ["firstName", "lastName"]); // data-first
+R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
 ```
 
-In the above example, the "dataFirst" approach is more natural and programmer-
+In the above example, the "data-first" approach is more natural and programmer-
 friendly because when you type the second argument, you get auto-complete from
 the IDE. It's not possible to get auto-complete in Ramda because the data
 argument is not provided.
 
-The "dataLast" approach is helpful when writing data transformations, aka pipes.
+The "data-last" approach is helpful when writing data transformations, aka
+pipes.
 
 ```ts
 const DATA = [
@@ -105,14 +110,16 @@ const DATA = [
 R.pipe(
   DATA,
   R.filter((x) => x.gender === "f"),
+  //              ^? 😔 'x' is of type 'unknown'
   R.groupBy((x) => x.age),
+  //                 ^? 😔 Property 'age' does not exist on type 'P'
 );
 
 // Ramda
 R.pipe(
   R.filter((x) => x.gender === "f"),
   R.groupBy((x) => x.age),
-)(DATA); // broken typings in TS :(
+)(DATA);
 
 // Lodash
 _(DATA)
@@ -120,11 +127,13 @@ _(DATA)
   .groupBy((x) => x.age)
   .value();
 
-// Lodash-fp
+// lodash/fp
 _.flow(
   _.filter((x) => x.gender === "f"),
+  //              ^? 😔 'x' is of type 'unknown'
   _.groupBy((x) => x.age),
-)(DATA); // broken typings in TS :(
+  //                 ^? 😔 Property 'age' does not exist on type 'P'
+)(DATA);
 ```
 
 ## 🔧 Lazy Evaluation
