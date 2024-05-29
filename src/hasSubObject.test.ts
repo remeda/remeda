@@ -1,4 +1,4 @@
-import { hasSubObject } from "./hasSubObject";
+import { type HasSubObjectBrand, hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
 
 describe("data first", () => {
@@ -96,15 +96,35 @@ describe("typing", () => {
       const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, {})) {
+        expectTypeOf(obj).toEqualTypeOf<
+          HasSubObjectBrand & { a?: string; b?: number }
+        >();
+      } else {
+        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+      }
+
+      if (hasSubObject(obj, obj)) {
+        expectTypeOf(obj).toEqualTypeOf<
+          HasSubObjectBrand & { a?: string; b?: number }
+        >();
+      } else {
         expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
       }
 
       if (hasSubObject(obj, { a: "a" })) {
-        expectTypeOf(obj).toEqualTypeOf<{ a: string; b?: number }>();
+        expectTypeOf(obj).toEqualTypeOf<
+          HasSubObjectBrand & { a: string; b?: number }
+        >();
+      } else {
+        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
       }
 
       if (hasSubObject(obj, { a: "a" } as const)) {
-        expectTypeOf(obj).toEqualTypeOf<{ a: "a"; b?: number }>();
+        expectTypeOf(obj).toEqualTypeOf<
+          HasSubObjectBrand & { readonly a: "a"; b?: number }
+        >();
+      } else {
+        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
       }
     });
   });
