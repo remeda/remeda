@@ -1,0 +1,187 @@
+---
+layout: ../layouts/wiki.astro
+---
+
+import InstallCommands from "@/components/install-commands.astro";
+
+# Remeda
+
+Fully written in TypeScript for powerful, type-safe, and functional utilities.
+
+<InstallCommands />
+
+## 🧰 Expansive
+
+Remeda offers a wide range of common everyday utility functions so that you
+don't have to deal with the minutiae of writing them yourself. We ensure that
+our algorithms are efficient, optimized, and cover all edge cases properly. We
+offer a wide range of functions, from simple utilities like
+[`partition`](/docs#partition) and building objects with
+[`pullObject`](/docs#pullObject), to complex algorithms like
+[`takeFirstBy`](/docs#takeFirstBy).
+
+```ts
+import * as R from "remeda";
+// Or import the function directly:
+// import { sortBy } from "remeda";
+
+type User = {
+  firstName: string;
+  lastName: string;
+  lastLogin: number;
+};
+
+declare const USERS: User[];
+
+R.sortBy(
+  USERS,
+  [R.prop("lastLogin"), "desc"],
+  R.prop("lastName"),
+  R.prop("firstName"),
+);
+```
+
+## 👷 Fully Typed
+
+Libraries like Lodash and Ramda are written in JavaScript, with types added
+later. Remeda, on the other hand, is fully written in TypeScript! This means
+types are deeply integrated into the code, allowing us to shift the focus from
+runtime errors to compile-time errors, so you catch errors in your IDE and CI,
+not in your logs, **and not in production**.
+
+We strive to provide the best possible real-life types for all functions, often
+going beyond what is offered by the TypeScript library, so you don't need to use
+other libraries like 'type-fest' and 'ts-reset' just to get the types you
+expected.
+
+```ts
+const DATA = [1, 2, 3] as const;
+
+const builtin = DATA.map(DATA, (x) => x.toString());
+//    ^? string[]
+
+const withRemeda = R.map(DATA, (x) => x.toString());
+//    ^? [string, string, string]
+```
+
+## 🦾 Functional
+
+Functional programming is beneficial, making code more readable. However, there
+are situations where you don't need "pipes" and want to call just a single
+function. In Remeda, **all** functions have automatic currying built-in. This
+means the same imported function can be called either regularly (what we call
+_data-first_) or with the first parameter, _data_, omitted (what we call
+_data-last_). When a data-last invocation is detected, Remeda creates a curried
+version of that function on-the-fly, with all other parameters bound to it. This
+allows you to use the same function in both functional and imperative styles,
+without additional imports. It also means you can gradually adopt a functional
+style where it makes sense without compromising readability when it doesn't.
+
+```ts
+// Lodash
+_.pick(obj, ["firstName", "lastName"]);
+
+// Ramda
+R.pick(["firstName", "lastName"], obj);
+
+// In Remeda you get both!
+R.pick(obj, ["firstName", "lastName"]); // data-first
+R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
+```
+
+In the above example, the "data-first" approach is more natural and programmer-
+friendly because when you type the second argument, you get auto-complete from
+the IDE. It's not possible to get auto-complete in Ramda because the data
+argument is not provided.
+
+The "data-last" approach is helpful when writing data transformations, aka
+pipes.
+
+```ts
+const DATA = [
+  { name: "john", age: 20, gender: "m" },
+  { name: "marry", age: 22, gender: "f" },
+  { name: "samara", age: 24, gender: "f" },
+  { name: "paula", age: 24, gender: "f" },
+  { name: "bill", age: 33, gender: "m" },
+];
+
+// Remeda
+R.pipe(
+  DATA,
+  R.filter((x) => x.gender === "f"),
+  //              ^? 😔 'x' is of type 'unknown'
+  R.groupBy((x) => x.age),
+  //                 ^? 😔 Property 'age' does not exist on type 'P'
+);
+
+// Ramda
+R.pipe(
+  R.filter((x) => x.gender === "f"),
+  R.groupBy((x) => x.age),
+)(DATA);
+
+// Lodash
+_(DATA)
+  .filter((x) => x.gender === "f")
+  .groupBy((x) => x.age)
+  .value();
+
+// lodash/fp
+_.flow(
+  _.filter((x) => x.gender === "f"),
+  //              ^? 😔 'x' is of type 'unknown'
+  _.groupBy((x) => x.age),
+  //                 ^? 😔 Property 'age' does not exist on type 'P'
+)(DATA);
+```
+
+## 🔧 Efficient
+
+You might have noticed the [`pipe`](/docs#pipe) function in the above example.
+The pipe function allows you to structure complex data transformations in the
+order they will be computed, avoiding the need to name intermediate variables or
+having confusingly deep nesting that needs to be read from the center outwards.
+
+But the Remeda pipe function has an additional benefit. It automatically detects
+Remeda functions that could be computed **lazily** and optimizes those parts of
+the pipe without you having to do anything. This means that expensive
+computations can be deferred until they are actually needed.
+
+```ts
+// Get first 3 unique values
+const DATA = [1, 2, 2, 3, 3, 4, 5, 6];
+
+const result = R.pipe(
+  DATA,
+  R.map((x) => {
+    console.log("iterate", x);
+    return x;
+  }),
+  R.unique(),
+  R.take(3),
+); // => [1, 2, 3]
+
+// Console output:
+// iterate 1
+// iterate 2
+// iterate 2
+// iterate 3
+```
+
+## 🔬 Trustworthy!
+
+All this wouldn't be worth much if it didn't work. That's why Remeda has an
+extensive test suite that offers 100% coverage. We also test all functions on
+all supported Node versions to make sure we never regress. Our tests cover not
+just runtime behavior but also types!
+
+We use the strictest TypeScript settings and extensive linting to ensure that
+nothing slips through the cracks.
+
+## 🥳 Collabrative
+
+Remeda is provided with an MIT license and is open to contributions from the
+community. We are always looking for new contributors and are happy to help you
+get started. If you have any questions or want to contribute, feel free to reach
+out to us over on [`GitHub`](https://github.com/remeda/remeda).

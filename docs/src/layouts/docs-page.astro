@@ -7,7 +7,7 @@ import {
   type CategorizedFunctions,
 } from "@/lib/navbar-entries";
 import { getCollection, type CollectionEntry } from "astro:content";
-import Layout from "./layout.astro";
+import BaseLayout from "./base.astro";
 import { map, pipe, sortBy } from "remeda";
 
 const COLLECTION = "docs";
@@ -39,7 +39,7 @@ const renderedCollection = await pipe(
 const { pathname } = Astro.url;
 ---
 
-<Layout>
+<BaseLayout>
   <div class="flex flex-1 gap-8 p-8">
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
@@ -59,4 +59,4 @@ const { pathname } = Astro.url;
       <slot />
     </main>
   </div>
-</Layout>
+</BaseLayout>

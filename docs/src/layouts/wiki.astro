@@ -1,0 +1,12 @@
+---
+import Prose from "@/components/prose.astro";
+import BaseLayout from "./base.astro";
+---
+
+<BaseLayout>
+  <main class="p-6">
+    <Prose class="container max-w-4xl">
+      <slot />
+    </Prose>
+  </main>
+</BaseLayout>
