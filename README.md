@@ -2,8 +2,8 @@
 
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
-![GitHub CI](https://img.shields.io/github/actions/workflow/status/remeda/remeda/ci.yml?branch=beta&label=github-ci)
-[![Codecov](https://img.shields.io/codecov/c/github/remeda/remeda/beta)](https://codecov.io/gh/remeda/remeda)
+![GitHub CI](https://img.shields.io/github/actions/workflow/status/remeda/remeda/ci.yml?branch=main&label=github-ci)
+[![Codecov](https://img.shields.io/codecov/c/github/remeda/remeda/main)](https://codecov.io/gh/remeda/remeda)
 [![NPM](https://img.shields.io/npm/v/remeda)](https://www.npmjs.org/package/remeda)
 ![Dependencies](https://img.shields.io/librariesio/release/npm/remeda)
 
@@ -15,12 +15,12 @@ Migrating from Lodash or Ramda? Check the function mapping on [remedajs.com/mapp
 
 ## Features
 
-* First-class TypeScript support, with types that are as specific as possible. 
-* Supports data-first (`R.filter(array, fn)`) and data-last (`R.filter(fn)(array)`) approaches.
-* Lazy evaluation support with `pipe` and `piped`.
-* Runtime and types are both extensively tested, with full code coverage.
-* Tree-shakable, supports CJS and ESM.
-* Fully documented with JSDoc, supports in-editor function documentation.
+- First-class TypeScript support, with types that are as specific as possible.
+- Supports data-first (`R.filter(array, fn)`) and data-last (`R.filter(fn)(array)`) approaches.
+- Lazy evaluation support with `pipe` and `piped`.
+- Runtime and types are both extensively tested, with full code coverage.
+- Tree-shakable, supports CJS and ESM.
+- Fully documented with JSDoc, supports in-editor function documentation.
 
 ## Getting started
 
