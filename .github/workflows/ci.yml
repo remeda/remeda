@@ -3,8 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
-      - beta
+      - main
   pull_request:
 
 jobs:
@@ -127,7 +126,7 @@ jobs:
       - typecheck-source
       - typecheck-outputs
       - test
-    if: github.repository == 'remeda/remeda' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/beta')
+    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
