@@ -27,6 +27,8 @@ module.exports = {
 
   rules: {
     "unicorn/prevent-abbreviations": "off",
+    "unicorn/switch-case-braces": ["error", "avoid"],
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
   },
 
   overrides: [

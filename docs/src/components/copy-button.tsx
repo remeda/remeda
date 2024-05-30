@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 
 const COPIED_TIMEOUT = 2000;
 
-interface CopyButtonProps {
-  value: string;
-  className?: string;
-}
-
-export function CopyButton({ value, className }: CopyButtonProps) {
+export function CopyButton({
+  value,
+  className,
+}: {
+  readonly value: string;
+  readonly className?: string;
+}): ReactNode {
   const [hasCopied, setHasCopied] = useState(false);
 
   const handleClick = useCallback(() => {

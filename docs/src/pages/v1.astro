@@ -1,0 +1,20 @@
+---
+import DocsPage from "@/layouts/docs-page.astro";
+import V1FunctionCard from "@/components/v1/function-card.astro";
+import { CATEGORIZED } from "@/lib/v1/categorized";
+import { flat, map, pipe, values } from "remeda";
+---
+
+<DocsPage
+  categorized={CATEGORIZED}
+  collectionQuery={({ id }) => id.startsWith("v1/")}
+>
+  {
+    pipe(
+      CATEGORIZED,
+      values(),
+      flat(),
+      map((func) => <V1FunctionCard func={func} />),
+    )
+  }
+</DocsPage>

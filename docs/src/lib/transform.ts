@@ -1,12 +1,19 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
+import DATA from "@/data/data.json";
 import { hasAtLeast, isDefined } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
-import DATA from "@/data/data.json";
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
+export type FunctionSignature = ReturnType<typeof transformSignature>;
+export type FunctionParam = ReturnType<typeof getParameter>;
+export type FunctionReturn = ReturnType<typeof transformReturns>;
+
+export type SourceTags = Readonly<
+  Partial<Record<"pipeable" | "strict" | "indexed", boolean>>
+>;
 
 export function transformProject(project: typeof DATA) {
   const { children } = project;
@@ -22,7 +29,7 @@ export function transformProject(project: typeof DATA) {
     project,
     functions
       .map((func) => transformFunction(func, functionNames))
-      .filter(isDefined.strict),
+      .filter(isDefined),
   );
 }
 
@@ -70,25 +77,40 @@ function transformCommentDisplayPart(
   return functionNames.has(codeContent) ? `[${text}](#${codeContent})` : text;
 }
 
-function transformSignature({
-  comment,
-  parameters = [],
-  type,
-}: SetRequired<JSONOutput.SignatureReflection, "comment">) {
-  return {
+const transformSignature = (
+  signature: SetRequired<JSONOutput.SignatureReflection, "comment">,
+) =>
+  ({
+    ...transformComment(signature.comment),
+    args: transformArgs(signature.parameters),
+    returns: transformReturns(signature),
+  }) as const;
+
+const transformComment = (comment: JSONOutput.Comment) =>
+  ({
     tag: getFunctionCurriedVariant(comment),
     signature: tagContent(comment, "signature"),
-    indexed: hasTag(comment, "indexed"),
-    pipeable: hasTag(comment, "pipeable"),
-    strict: hasTag(comment, "strict"),
     example: tagContent(comment, "example"),
-    args: parameters.map(getParameter),
-    returns: {
-      name: getReturnType(type),
-      description: tagContent(comment, "returns"),
-    },
-  };
-}
+    ...extractTags(comment),
+  }) as const;
+
+const extractTags = (comment: JSONOutput.Comment): SourceTags =>
+  ({
+    pipeable: hasTag(comment, "pipeable"),
+  }) as const;
+
+const transformArgs = (
+  parameters: Array<JSONOutput.ParameterReflection> | undefined,
+) => parameters?.map(getParameter) ?? [];
+
+const transformReturns = ({
+  type,
+  comment,
+}: SetRequired<JSONOutput.SignatureReflection, "comment">) =>
+  ({
+    name: getReturnType(type),
+    description: tagContent(comment, "returns"),
+  }) as const;
 
 function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
   if (hasTag(comment, "dataFirst")) {
@@ -122,13 +144,11 @@ function getReturnType(type: JSONOutput.SomeType | undefined) {
 
 function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
   const summarySegments = comment?.summary ?? [];
-  return {
-    name,
-    description:
-      summarySegments.length === 0
-        ? undefined
-        : summarySegments.map(({ text }) => text).join(""),
-  };
+  const description =
+    summarySegments.length === 0
+      ? undefined
+      : summarySegments.map(({ text }) => text).join("");
+  return { name, description } as const;
 }
 
 function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {

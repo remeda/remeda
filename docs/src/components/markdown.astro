@@ -1,14 +1,11 @@
 ---
 import { asHtml } from "@/lib/as-html";
 
-interface Props {
-  markdown: string;
-}
+type Props = {
+  readonly markdown: string;
+};
 
 const { markdown } = Astro.props;
 ---
 
-<article
-  class="prose prose-sm prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none"
-  set:html={asHtml(markdown)}
-/>
+<Fragment set:html={asHtml(markdown)} />

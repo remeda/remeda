@@ -1,33 +1,20 @@
 ---
+import DocsPage from "@/layouts/docs-page.astro";
 import FunctionCard from "@/components/function-card.astro";
-import { Navbar } from "@/components/navbar";
-import Layout from "@/layouts/layout.astro";
 import { CATEGORIZED } from "@/lib/categorized";
-import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
-import { flatten, map, pipe, values } from "remeda";
+import { flat, map, pipe, values } from "remeda";
 ---
 
-<Layout>
-  <div
-    class="items-start md:grid md:grid-cols-[240px_minmax(0,1fr)] md:gap-6 lg:gap-10"
-  >
-    <aside
-      class="top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full py-6 md:sticky md:block"
-    >
-      <Navbar entries={NAVBAR_ENTRIES} client:load />
-    </aside>
-
-    <main class="h-full py-6">
-      <div class="space-y-6">
-        {
-          pipe(
-            CATEGORIZED,
-            values,
-            flatten(),
-            map((func) => <FunctionCard func={func} />),
-          )
-        }
-      </div>
-    </main>
-  </div>
-</Layout>
+<DocsPage
+  categorized={CATEGORIZED}
+  collectionQuery={({ id }) => !id.startsWith("v1/")}
+>
+  {
+    pipe(
+      CATEGORIZED,
+      values(),
+      flat(),
+      map((func) => <FunctionCard func={func} />),
+    )
+  }
+</DocsPage>
