@@ -10,5 +10,5 @@
   },
 
   "excludeNotDocumented": true,
-  "sourceLinkTemplate": "https://github.com/remeda/remeda/blob/master/{path}"
+  "sourceLinkTemplate": "https://github.com/remeda/remeda/blob/main/{path}"
 }
