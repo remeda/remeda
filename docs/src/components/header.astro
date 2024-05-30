@@ -1,54 +1,44 @@
 ---
-import { MobileNav } from "@/components/mobile-nav";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { buttonVariants } from "@/components/ui/button";
-import { NAVBAR_ENTRIES } from "@/lib/navbar-categories";
+import { CATEGORIZED } from "@/lib/categorized";
+import { getNavbarEntries } from "@/lib/navbar-entries";
+import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { MobileNav } from "./mobile-nav";
+import NavLink from "./nav-link.astro";
+import { ThemeSwitcher } from "./theme-switcher";
+import { VERSIONS } from "./version-selector";
 
 const { pathname } = Astro.url;
+
+const isV1 = pathname === VERSIONS.v1.path;
+const navbarEntries = await getNavbarEntries(
+  isV1 ? V1_CATEGORIZED : CATEGORIZED,
+  ({ id }) => isV1 === id.startsWith("v1/"),
+);
 ---
 
 <header
-  class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+  class="sticky top-0 z-50 flex h-16 flex-none items-center gap-2 bg-background/95 px-4 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-8"
 >
-  <div class="container flex h-14 items-center gap-8">
+  <nav class="flex flex-1 items-center gap-4 text-xs sm:gap-8 sm:text-base">
     <a href="/" class="font-bold">Remeda</a>
-
-    <nav class="flex items-center gap-8 text-sm">
-      <a
-        href="/"
-        class:list={[
-          "transition-colors hover:text-foreground/80",
-          pathname === "/" ? "text-foreground" : "text-foreground/60",
-        ]}
-      >
-        Home
-      </a>
-
-      <a
-        href="/docs/"
-        class:list={[
-          "transition-colors hover:text-foreground/80",
-          pathname === "/docs/" ? "text-foreground" : "text-foreground/60",
-        ]}
-      >
-        Docs
-      </a>
-    </nav>
-
-    <div class="-mr-2 ml-auto flex items-center gap-2">
-      <a
-        href="https://github.com/remeda/remeda"
-        target="_blank"
-        class={buttonVariants({ variant: "ghost", size: "icon" })}
-      >
-        <GitHubLogoIcon />
-        <span class="sr-only">GitHub</span>
-      </a>
-
-      <ThemeSwitcher client:load />
-
-      <MobileNav entries={NAVBAR_ENTRIES} client:media="(max-width: 767px)" />
-    </div>
-  </div>
+    <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
+    <NavLink href="/mapping">Lodash/Ramda</NavLink>
+    <div class="flex-1"></div>
+    <a
+      href="https://github.com/remeda/remeda"
+      target="_blank"
+      class={buttonVariants({ variant: "ghost", size: "icon" })}
+    >
+      <GitHubLogoIcon />
+      <span class="sr-only">GitHub</span>
+    </a>
+  </nav>
+  <ThemeSwitcher client:load />
+  <MobileNav
+    pathname={pathname}
+    entries={navbarEntries}
+    client:media="(max-width: 767px)"
+  />
 </header>

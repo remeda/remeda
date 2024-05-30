@@ -1,12 +1,15 @@
-import { Navbar, type NavbarCategory } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useState, type ReactNode } from "react";
+import { Navbar, type NavbarCategory } from "./navbar";
+import { VersionSelector } from "./version-selector";
 
 export function MobileNav({
+  pathname,
   entries,
 }: {
+  readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +28,9 @@ export function MobileNav({
           onSelect={() => {
             setIsOpen(false);
           }}
-        />
+        >
+          <VersionSelector pathname={pathname} />
+        </Navbar>
       </SheetContent>
     </Sheet>
   );

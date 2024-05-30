@@ -1,5 +1,0 @@
-{
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.configPath": "prettier.config.js",
-  "typescript.tsdk": "node_modules/typescript/lib"
-}
