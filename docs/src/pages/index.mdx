@@ -57,7 +57,7 @@ expected.
 ```ts
 const DATA = [1, 2, 3] as const;
 
-const builtin = DATA.map(DATA, (x) => x.toString());
+const builtin = DATA.map((x) => x.toString());
 //    ^? string[]
 
 const withRemeda = R.map(DATA, (x) => x.toString());
