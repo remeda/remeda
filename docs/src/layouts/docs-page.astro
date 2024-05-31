@@ -48,7 +48,7 @@ const { pathname } = Astro.url;
         <VersionSelector pathname={pathname} client:load /></Navbar
       >
     </aside>
-    <main class="flex-1 space-y-8">
+    <main class="flex-1 space-y-8 overflow-hidden">
       {
         renderedCollection.map(({ slug, rendered: { Content } }) => (
           <Prose id={slug} class="scroll-mt-24">

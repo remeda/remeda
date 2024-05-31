@@ -15,7 +15,7 @@ const isActive = [href, ...additionalHrefs].some((path) => path === trimmed);
 <a
   href={href}
   class:list={[
-    "transition-colors hover:text-foreground/80",
+    "truncate transition-colors hover:text-foreground/80",
     isActive ? "font-semibold text-primary" : "text-foreground/60",
   ]}
 >
