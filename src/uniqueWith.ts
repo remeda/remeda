@@ -18,7 +18,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *      R.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
- * @category Array
+ * @category Object
  * @lazy
  */
 export function uniqueWith<T>(
