@@ -12,7 +12,7 @@ export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
 
 export type SourceTags = Readonly<
-  Partial<Record<"pipeable" | "strict" | "indexed", boolean>>
+  Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
 >;
 
 export function transformProject(project: typeof DATA) {
@@ -96,7 +96,7 @@ const transformComment = (comment: JSONOutput.Comment) =>
 
 const extractTags = (comment: JSONOutput.Comment): SourceTags =>
   ({
-    pipeable: hasTag(comment, "pipeable"),
+    lazy: hasTag(comment, "lazy"),
   }) as const;
 
 const transformArgs = (

@@ -19,7 +19,7 @@ export function getTags([
     out.push("Indexed");
   }
 
-  if (method.pipeable) {
+  if (method.pipeable ?? method.lazy) {
     out.push("Lazy");
   }
 
