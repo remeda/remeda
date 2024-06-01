@@ -23,7 +23,7 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      (a, b) => a.id === b,
  *    ) // => [{ id: 3, name: 'Emma' }]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
@@ -49,7 +49,7 @@ export function intersectionWith<TFirst, TSecond>(
  *        { id: 3, name: 'Emma' },
  *      ]); // => [{ id: 3, name: 'Emma' }]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(

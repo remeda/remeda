@@ -18,7 +18,7 @@ import { purry } from "./purry";
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function filter<T, S extends T>(
@@ -45,7 +45,7 @@ export function filter<T>(
  * @example
  *    R.pipe([1, 2, 3], R.filter(x => x % 2 === 1)) // => [1, 3]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function filter<T, S extends T>(

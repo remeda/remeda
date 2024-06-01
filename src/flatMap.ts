@@ -19,7 +19,7 @@ import { purry } from "./purry";
  * @example
  *    R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function flatMap<T, U>(
@@ -48,7 +48,7 @@ export function flatMap<T, U>(
  * @example
  *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function flatMap<T, U>(

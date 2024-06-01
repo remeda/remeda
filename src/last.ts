@@ -21,7 +21,6 @@ type Last<T extends IterableContainer> = LastArrayElement<
  *    R.last([1, 2, 3]) // => 3
  *    R.last([]) // => undefined
  * @dataFirst
- * @pipeable
  * @category Array
  */
 export function last<T extends IterableContainer>(data: T): Last<T>;
@@ -39,7 +38,6 @@ export function last<T extends IterableContainer>(data: T): Last<T>;
  *      x => x + 1
  *    ); // => 17
  * @dataLast
- * @pipeable
  * @category Array
  */
 export function last(): <T extends IterableContainer>(data: T) => Last<T>;

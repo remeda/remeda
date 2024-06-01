@@ -12,7 +12,7 @@ import type { LazyEvaluator } from "./pipe";
  * @example
  *    R.unique([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function unique<T>(array: ReadonlyArray<T>): Array<T>;
@@ -30,7 +30,7 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
  *      R.take(3)
  *    ) // => [1, 2, 5]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;

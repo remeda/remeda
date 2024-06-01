@@ -16,7 +16,7 @@ import type { LazyEvaluator } from "./pipe";
  *     (obj) => obj.n,
  *    ) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function uniqueBy<T, K>(
@@ -38,7 +38,7 @@ export function uniqueBy<T, K>(
  *      R.take(3)
  *    ) // => [{n: 1}, {n: 2}, {n: 5}]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function uniqueBy<T, K>(

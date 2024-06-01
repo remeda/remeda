@@ -19,7 +19,7 @@ import { purry } from "./purry";
  *      console.log(x)
  *    });
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function forEach<T>(
@@ -47,7 +47,7 @@ export function forEach<T>(
  *      })
  *    ) // => [1, 2, 3]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function forEach<T>(

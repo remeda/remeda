@@ -34,7 +34,7 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @example
  *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function zip<F extends IterableContainer, S extends IterableContainer>(
@@ -53,7 +53,7 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @example
  *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function zip<S extends IterableContainer>(

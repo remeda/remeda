@@ -27,7 +27,7 @@ import { purry } from "./purry";
  * @example
  *    R.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function find<T, S extends T>(
@@ -65,7 +65,7 @@ export function find<T>(
  *      R.find(n => n % 2 === 0)
  *    ) // => 4
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function find<T, S extends T>(

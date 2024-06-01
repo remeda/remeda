@@ -12,7 +12,7 @@ import { purry } from "./purry";
  * @example
  *    R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
@@ -26,7 +26,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @example
  *    R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;

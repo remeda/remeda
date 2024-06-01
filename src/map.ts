@@ -18,7 +18,7 @@ import { purry } from "./purry";
  *    R.map([0, 0], R.add(1)); // => [1, 1]
  *    R.map([0, 0], (value, index) => value + index); // => [0, 1]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function map<T extends IterableContainer, U>(
@@ -41,7 +41,7 @@ export function map<T extends IterableContainer, U>(
  *    R.pipe([0, 0], R.map(R.add(1))); // => [1, 1]
  *    R.pipe([0, 0], R.map((value, index) => value + index)); // => [0, 1]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function map<T extends IterableContainer, U>(

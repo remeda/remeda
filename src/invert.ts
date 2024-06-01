@@ -19,7 +19,6 @@ type Inverted<T extends object> = Simplify<{
  * @example
  *    R.invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
- * @pipeable
  * @category Object
  */
 export function invert<T extends object>(object: T): Inverted<T>;
@@ -33,7 +32,6 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * @example
  *    R.pipe({ a: "d", b: "e", c: "f" }, R.invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast
- * @pipeable
  * @category Object
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;

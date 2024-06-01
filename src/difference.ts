@@ -15,7 +15,7 @@ import type { LazyEvaluator } from "./pipe";
  *    R.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
  *    R.difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function difference<T>(
@@ -35,7 +35,7 @@ export function difference<T>(
  *    R.pipe([1, 2, 3, 4], R.difference([2, 5, 3])); // => [1, 4]
  *    R.pipe([1, 1, 2, 2], R.difference([1])); // => [1, 2, 2]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function difference<T>(
