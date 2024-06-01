@@ -22,7 +22,6 @@ type Only<T extends IterableContainer> = T extends
  *    R.only([1]) // => 1
  *    R.only([1, 2]) // => undefined
  * @dataFirst
- * @pipeable
  * @category Array
  */
 export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
@@ -37,7 +36,6 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  *    R.pipe([1], R.only()); // => 1
  *    R.pipe([1, 2], R.only()); // => undefined
  * @dataLast
- * @pipeable
  * @category Array
  */
 export function only<T extends IterableContainer>(): (

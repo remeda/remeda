@@ -18,7 +18,6 @@ type Values<T extends object> = T extends IterableContainer
  *    R.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
  *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
  * @dataFirst
- * @pipeable
  * @category Object
  */
 export function values<T extends object>(data: T): Values<T>;
@@ -37,7 +36,6 @@ export function values<T extends object>(data: T): Values<T>;
  *      R.first(),
  *    ) // => 'x'
  * @dataLast
- * @pipeable
  * @category Object
  */
 export function values(): <T extends object>(data: T) => Values<T>;

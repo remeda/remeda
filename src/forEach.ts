@@ -19,8 +19,8 @@ import { purry } from "./purry";
  *      console.log(x)
  *    });
  * @dataFirst
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function forEach<T>(
   data: ReadonlyArray<T>,
@@ -47,8 +47,8 @@ export function forEach<T>(
  *      })
  *    ) // => [1, 2, 3]
  * @dataLast
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function forEach<T>(
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,

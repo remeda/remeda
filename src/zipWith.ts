@@ -42,8 +42,8 @@ export function zipWith<TItem1, TItem2, Value>(
  * @example
  *   R.pipe(['1', '2', '3'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function zipWith<
   T1 extends IterableContainer,
@@ -63,8 +63,8 @@ export function zipWith<
  * @example
  *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function zipWith<
   T1 extends IterableContainer,

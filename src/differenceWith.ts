@@ -20,8 +20,8 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      R.equals,
  *    ) // => [{a: 1}, {a: 4}]
  * @dataFirst
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function differenceWith<TFirst, TSecond>(
   array: ReadonlyArray<TFirst>,
@@ -48,8 +48,8 @@ export function differenceWith<TFirst, TSecond>(
  *      R.take(2),
  *    ) // => [{a: 1}, {a: 4}]
  * @dataLast
- * @pipeable
  * @category Array
+ * @lazy
  */
 export function differenceWith<TFirst, TSecond>(
   other: ReadonlyArray<TSecond>,
