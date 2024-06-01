@@ -19,9 +19,11 @@ const navbarEntries = await getNavbarEntries(
 ---
 
 <header
-  class="sticky top-0 z-50 flex h-16 flex-none items-center gap-2 bg-background/95 px-4 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-8"
+  class="sticky top-0 z-50 flex h-16 flex-none items-center bg-background/95 px-3 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-8"
 >
-  <nav class="flex flex-1 items-center gap-4 text-xs sm:gap-8 sm:text-base">
+  <nav
+    class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"
+  >
     <a href="/" class="font-bold">Remeda</a>
     <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
     <NavLink href="/mapping">Lodash/Ramda</NavLink>
