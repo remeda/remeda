@@ -18,8 +18,8 @@ import { purry } from "./purry";
  * @example
  *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function filter<T, S extends T>(
   data: ReadonlyArray<T>,
@@ -45,8 +45,8 @@ export function filter<T>(
  * @example
  *    R.pipe([1, 2, 3], R.filter(x => x % 2 === 1)) // => [1, 3]
  * @dataLast
- * @category Array
  * @lazy
+ * @category Array
  */
 export function filter<T, S extends T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,

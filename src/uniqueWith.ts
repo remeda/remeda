@@ -18,8 +18,8 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *      R.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
- * @category Object
  * @lazy
+ * @category Object
  */
 export function uniqueWith<T>(
   data: ReadonlyArray<T>,
@@ -42,8 +42,8 @@ export function uniqueWith<T>(
  *      R.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
- * @category Object
  * @lazy
+ * @category Object
  */
 export function uniqueWith<T>(
   isEquals: IsEquals<T>,

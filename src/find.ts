@@ -27,8 +27,8 @@ import { purry } from "./purry";
  * @example
  *    R.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function find<T, S extends T>(
   data: ReadonlyArray<T>,
@@ -65,8 +65,8 @@ export function find<T>(
  *      R.find(n => n % 2 === 0)
  *    ) // => 4
  * @dataLast
- * @category Array
  * @lazy
+ * @category Array
  */
 export function find<T, S extends T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,

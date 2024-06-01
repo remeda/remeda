@@ -15,8 +15,8 @@ import type { LazyEvaluator } from "./pipe";
  *    R.intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
  *    R.intersection([1, 1, 2, 2], [1]); // => [1]
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function intersection<T, S>(
   data: ReadonlyArray<T>,
@@ -35,8 +35,8 @@ export function intersection<T, S>(
  *    R.pipe([1, 2, 3], R.intersection([2, 3, 5])); // => [2, 3]
  *    R.pipe([1, 1, 2, 2], R.intersection([1])); // => [1]
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function intersection<S>(
   other: ReadonlyArray<S>,

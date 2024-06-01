@@ -22,8 +22,8 @@ import type { LazyEvaluator } from "./pipe";
  *      100,
  *    ); // => [101, 103, 106, 110, 115]
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   data: T,
@@ -54,8 +54,8 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  *      R.mapWithFeedback((prev, x) => prev + x, 100),
  *    ); // => [101, 103, 106, 110, 115]
  * @dataLast
- * @category Array
  * @lazy
+ * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   callbackfn: (

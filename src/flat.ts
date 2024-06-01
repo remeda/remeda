@@ -77,8 +77,8 @@ type FlatSimpleArrayItems<
  *   R.flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
  *   R.flat([[[1]], [[2]]], 2); // => [1, 2]
  * @dataFirst
- * @category Array
  * @lazy
+ * @category Array
  */
 export function flat<
   T extends IterableContainer,
@@ -102,8 +102,8 @@ export function flat<
  *   R.pipe([[1, 2], [3, 4], [5], [[6]]], R.flat()); // => [1, 2, 3, 4, 5, [6]]
  *   R.pipe([[[1]], [[2]]], R.flat(2)); // => [1, 2]
  * @dataLast
- * @category Array
  * @lazy
+ * @category Array
  */
 export function flat<Depth extends number = typeof DEFAULT_DEPTH>(
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
