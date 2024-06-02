@@ -2,7 +2,17 @@
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
 import { getCollection } from "astro:content";
-import { flat, groupBy, map, mapValues, pipe, values } from "remeda";
+import {
+  entries,
+  flat,
+  fromEntries,
+  groupBy,
+  map,
+  mapValues,
+  pipe,
+  sortBy,
+  values,
+} from "remeda";
 
 const COLLECTION = "mapping";
 const LIBRARY = "lodash";
@@ -15,6 +25,9 @@ const categorized = pipe(
   mapping,
   groupBy(({ data: { category } }) => category),
   mapValues(map(({ id }) => ({ name: id.replace(REGEX, "$1") }))),
+  entries(),
+  sortBy(([category]) => category),
+  fromEntries(),
 );
 ---
 
