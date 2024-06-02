@@ -23,15 +23,19 @@ const mappedUrl = mappingUrl(library, name);
   <CardHeader>
     <div class="flex items-center gap-2">
       <CardTitle className="inline-flex flex-1 items-center gap-2 text-2xl"
-        ><a class="text-primary underline" href={mappedUrl}>{name}</a>{
+        >{name}
+        <a class="text-base text-primary hover:underline" href={mappedUrl}
+          >[{library}]</a
+        >{
           entry?.data.remeda !== undefined && (
             <>
-              <ArrowRightIcon className="size-6" />{" "}
+              <ArrowRightIcon className="size-6" />
+              {entry.data.remeda}
               <a
-                class="text-primary underline"
+                class="text-base text-primary hover:underline"
                 href={`/docs#${entry.data.remeda}`}
               >
-                {entry.data.remeda}
+                [remeda]
               </a>
             </>
           )
@@ -40,13 +44,13 @@ const mappedUrl = mappingUrl(library, name);
       <Badge className="h-8">{entry?.data.category}</Badge>
     </div>
   </CardHeader>
-  <CardContent className="grid gap-8">
-    {
-      rendered !== undefined && (
+  {
+    entry?.body !== "" && rendered !== undefined && (
+      <CardContent>
         <Prose class="empty:hidden">
           <rendered.Content />
         </Prose>
-      )
-    }
-  </CardContent>
+      </CardContent>
+    )
+  }
 </Card>
