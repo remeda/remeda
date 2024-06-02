@@ -1,0 +1,35 @@
+---
+import MappingFunctionCard from "@/components/mapping-function-card.astro";
+import DocsPage from "@/layouts/docs-page.astro";
+import { getCollection } from "astro:content";
+import { flat, groupBy, map, mapValues, pipe, values } from "remeda";
+
+const COLLECTION = "mapping";
+const LIBRARY = "lodash";
+
+const mapping = await getCollection(COLLECTION, ({ id }) =>
+  id.startsWith(`${LIBRARY}/`),
+);
+
+const categorized = pipe(
+  mapping,
+  groupBy(({ data: { category } }) => category),
+  mapValues((funcs) =>
+    map(funcs, ({ slug }) => ({ name: slug.split("/")[1]! })),
+  ),
+);
+---
+
+<DocsPage
+  categorized={categorized}
+  collectionQuery={({ id }) => id.startsWith("lodash/")}
+>
+  {
+    pipe(
+      categorized,
+      values(),
+      flat(),
+      map(({ name }) => <MappingFunctionCard name={name} library={LIBRARY} />),
+    )
+  }
+</DocsPage>

@@ -5,12 +5,14 @@ import type { SourceTags } from "./transform";
 
 const COLLECTION = "docs";
 
-type FunctionItem = ReadonlyArray<{
+type FunctionItem = {
   readonly name: string;
-  readonly methods: ReadonlyArray<SourceTags>;
-}>;
+  readonly methods?: ReadonlyArray<SourceTags>;
+};
 
-export type CategorizedFunctions = Readonly<Record<string, FunctionItem>>;
+export type CategorizedFunctions = Readonly<
+  Record<string, ReadonlyArray<FunctionItem>>
+>;
 
 export async function getNavbarEntries(
   categorized: CategorizedFunctions,
@@ -42,7 +44,7 @@ export async function getNavbarEntries(
           category,
           map(funcs, ({ name: title, methods }) => ({
             title,
-            tags: getTags(methods),
+            tags: methods === undefined ? [] : getTags(methods),
           })),
         ] as const,
     ),

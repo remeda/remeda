@@ -23,4 +23,12 @@ export const collections = {
   }),
 
   "v1-migration": defineCollection({ type: "content" }),
+
+  mapping: defineCollection({
+    type: "content",
+    schema: z.object({
+      category: z.string().min(1),
+      remeda: z.string().min(1).optional(),
+    }),
+  }),
 };
