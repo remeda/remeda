@@ -104,6 +104,23 @@ describe("typing", () => {
     });
   });
 
+  describe("branded types", () => {
+    test("should infer types correctly in the mapper", () => {
+      type Branded<K, T> = K & { _type: T };
+      type UserID = Branded<string, "UserId">;
+
+      const userValues: Record<UserID, number> = {
+        ["U1" as UserID]: 1,
+        ["U2" as UserID]: 2,
+      };
+
+      mapValues(userValues, (value, key) => {
+        expectTypeOf(value).toEqualTypeOf<number>();
+        expectTypeOf(key).toEqualTypeOf<`${UserID}`>();
+      });
+    });
+  });
+
   test("symbols are filtered out", () => {
     const mySymbol = Symbol("mySymbol");
     const result = mapValues({ [mySymbol]: 1, a: "hello" }, constant(true));
