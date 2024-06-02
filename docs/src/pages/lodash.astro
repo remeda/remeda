@@ -7,16 +7,14 @@ import { flat, groupBy, map, mapValues, pipe, values } from "remeda";
 const COLLECTION = "mapping";
 const LIBRARY = "lodash";
 
-const mapping = await getCollection(COLLECTION, ({ id }) =>
-  id.startsWith(`${LIBRARY}/`),
-);
+const REGEX = new RegExp(`^${LIBRARY}\/(?<name>.*)\.mdx?$`, "ui");
+
+const mapping = await getCollection(COLLECTION, ({ id }) => REGEX.test(id));
 
 const categorized = pipe(
   mapping,
   groupBy(({ data: { category } }) => category),
-  mapValues((funcs) =>
-    map(funcs, ({ slug }) => ({ name: slug.split("/")[1]! })),
-  ),
+  mapValues(map(({ id }) => ({ name: id.replace(REGEX, "$1") }))),
 );
 ---
 

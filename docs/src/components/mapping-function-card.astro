@@ -6,6 +6,8 @@ import Prose from "./prose.astro";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { mappingUrl } from "@/lib/mappings";
 
+const COLLECTION = "mapping";
+
 type Props = {
   readonly name: string;
   readonly library: string;
@@ -13,7 +15,7 @@ type Props = {
 
 const { name, library } = Astro.props;
 
-const entry = await getEntry("mapping", `${library}/${name}`);
+const entry = await getEntry(COLLECTION, `${library}/${name}`.toLowerCase());
 const rendered = await entry?.render();
 
 const mappedUrl = mappingUrl(library, name);
