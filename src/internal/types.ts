@@ -20,6 +20,27 @@ export type Mapped<T extends IterableContainer, K> = {
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 /**
+ * We define a Simple record as one that doesn't define it's properties beyond
+ * their general type. This is the case for string and number keys (and their
+ * combination). Another way of thinking about simple records is that the number
+ * of properties are unbound (they can be empty, or they can have 1000 props).
+ *
+ * TODO: Template string literals (e.g. `prefix_${number}`) should also be
+ * considered simple, but we don't know how to check for them...
+ */
+export type IfSimpleRecord<
+  T,
+  TypeIfSimpleRecord = true,
+  TypeIfNotSimpleRecord = false,
+> = string extends keyof T
+  ? TypeIfSimpleRecord
+  : number extends keyof T
+    ? TypeIfSimpleRecord
+    : number | string extends keyof T
+      ? TypeIfSimpleRecord
+      : TypeIfNotSimpleRecord;
+
+/**
  * A union of all keys of T which are not symbols, and where number keys are
  * converted to strings, following the definition of `Object.keys` and
  * `Object.entries`.
@@ -37,6 +58,15 @@ export type EnumerableStringKeyOf<T> = `${Exclude<keyof T, symbol>}`;
 export type EnumerableStringKeyedValueOf<T> = {
   [K in keyof T]-?: K extends symbol ? never : T[K];
 }[keyof T];
+
+/**
+ * This is the type you'd get from doing:
+ * `Object.fromEntries(Object.entries(x))`.
+ */
+export type ReconstructedRecord<T> = Record<
+  EnumerableStringKeyOf<T>,
+  EnumerableStringKeyedValueOf<T>
+>;
 
 /**
  * An extension of Extract for type predicates which falls back to the base
@@ -63,18 +93,16 @@ export type CompareFunction<T> = (a: T, b: T) => number;
 // to those with a a union of literal values (e.g. 'cat' | 'dog') when using
 // 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
 // the latter are implicitly `Required`.
-// TODO: Support template string literals (e.g. `prefix_${number}`)
-export type ExactRecord<Key extends PropertyKey, Value> =
-  // If either string, number or symbol extend Key it means that Key is at least
-  // as wide as them, so we don't need to wrap the returned record with Partial.
-  string extends Key
-    ? Record<Key, Value>
-    : number extends Key
-      ? Record<Key, Value>
-      : // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-        // because we can't statically know what values the mapper would return on
-        // a specific input
-        Partial<Record<Key, Value>>;
+export type ExactRecord<Key extends PropertyKey, Value> = IfSimpleRecord<
+  Record<Key, Value>,
+  // If either string or number extend Key it means that Key is at least as wide
+  // as them, so we don't need to wrap the returned record with Partial.
+  Record<Key, Value>,
+  // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+  // because we can't statically know what values the mapper would return on
+  // a specific input.
+  Partial<Record<Key, Value>>
+>;
 
 export type ReorderedArray<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];

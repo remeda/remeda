@@ -2,6 +2,8 @@ import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
+  type IfSimpleRecord,
+  type ReconstructedRecord,
 } from "./internal/types";
 import { purry } from "./purry";
 
@@ -18,9 +20,13 @@ type PickSymbolKeys<T extends object> = {
 // filtered out. This means that we effectively make all (enumerable) keys
 // optional.
 type PartialEnumerableKeys<T extends object> = Simplify<
-  PickSymbolKeys<T> & {
-    -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
-  }
+  IfSimpleRecord<
+    T,
+    ReconstructedRecord<T>,
+    PickSymbolKeys<T> & {
+      -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
+    }
+  >
 >;
 
 // When the predicate is a type-guard we have more information to work with when

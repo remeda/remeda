@@ -162,4 +162,25 @@ describe("typing", () => {
       optionalNullish?: string;
     }>();
   });
+
+  // @see https://github.com/remeda/remeda/issues/696
+  describe("Records with non-narrowing predicates (Issue #696)", () => {
+    test("string keys", () => {
+      const data = {} as Record<string, string>;
+      const result = pickBy(data, constant(true));
+      expectTypeOf(result).toEqualTypeOf(data);
+    });
+
+    test("number keys", () => {
+      const data = {} as Record<number, string>;
+      const result = pickBy(data, constant(true));
+      expectTypeOf(result).toEqualTypeOf<Record<`${number}`, string>>();
+    });
+
+    test("combined numbers and strings", () => {
+      const data = {} as Record<number | string, string>;
+      const result = pickBy(data, constant(true));
+      expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
+    });
+  });
 });
