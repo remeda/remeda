@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEntry } from "astro:content";
 import { Badge } from "./ui/badge";
 import Prose from "./prose.astro";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { mappingUrl } from "@/lib/mappings";
 
 type Props = {
   readonly name: string;
@@ -13,23 +15,32 @@ const { name, library } = Astro.props;
 
 const entry = await getEntry("mapping", `${library}/${name}`);
 const rendered = await entry?.render();
+
+const mappedUrl = mappingUrl(library, name);
 ---
 
 <Card id={name} className="scroll-mt-24">
   <CardHeader>
     <div class="flex items-center gap-2">
-      <CardTitle className="flex-1 text-2xl">{name}</CardTitle>
+      <CardTitle className="inline-flex flex-1 items-center gap-2 text-2xl"
+        ><a class="text-primary underline" href={mappedUrl}>{name}</a>{
+          entry?.data.remeda !== undefined && (
+            <>
+              <ArrowRightIcon className="size-6" />{" "}
+              <a
+                class="text-primary underline"
+                href={`/docs#${entry.data.remeda}`}
+              >
+                {entry.data.remeda}
+              </a>
+            </>
+          )
+        }</CardTitle
+      >
       <Badge className="h-8">{entry?.data.category}</Badge>
     </div>
   </CardHeader>
   <CardContent className="grid gap-8">
-    {
-      entry?.data.remeda !== undefined && (
-        <Prose>
-          Use <a href={`/docs#${entry.data.remeda}`}>{entry.data.remeda}</a>
-        </Prose>
-      )
-    }
     {
       rendered !== undefined && (
         <Prose class="empty:hidden">
