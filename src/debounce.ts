@@ -87,7 +87,7 @@ type DebounceOptions = {
  * @signature
  *   R.debounce(func, options);
  * @example
- *   const debouncer = debounce(identity, { timing: 'trailing', waitMs: 1000 });
+ *   const debouncer = debounce(identity(), { timing: 'trailing', waitMs: 1000 });
  *   const result1 = debouncer.call(1); // => undefined
  *   const result2 = debouncer.call(2); // => undefined
  *   // after 1 second

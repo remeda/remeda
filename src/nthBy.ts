@@ -21,7 +21,7 @@ import type {
  * @signature
  *   R.nthBy(data, index, ...rules);
  * @example
- *   R.nthBy([2,1,4,5,3,], 2, identity); // => 3
+ *   R.nthBy([2,1,4,5,3,], 2, identity()); // => 3
  * @dataFirst
  * @category Array
  */
@@ -42,7 +42,7 @@ export function nthBy<T extends IterableContainer>(
  * @signature
  *   R.nthBy(index, ...rules)(data);
  * @example
- *   R.pipe([2,1,4,5,3,], R.nthBy(2, identity)); // => 3
+ *   R.pipe([2,1,4,5,3,], R.nthBy(2, identity())); // => 3
  * @dataLast
  * @category Array
  */
