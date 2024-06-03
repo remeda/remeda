@@ -6,11 +6,12 @@
   "author": "Łukasz Sentkiewicz",
   "type": "module",
   "scripts": {
-    "build": "astro check && astro build",
+    "build": "astro check && npm run build:scripts && astro build",
     "build:all": "npm run clean && npm run typedoc && npm run build",
     "build:debug": "npm run build && open-cli node_modules/.cache/bundleVisualizer.html",
-    "check": "npx tsc && astro check",
-    "clean": "rm -rf dist && rm -f src/data/data.json",
+    "build:scripts": "vite build --config vite.scripts.config.ts",
+    "check": "tsc && astro check",
+    "clean": "rm -rf dist && rm -f src/data/data.json && rm -rf public/dist",
     "dev": "astro dev",
     "preview": "astro preview",
     "typedoc": "typedoc --json src/data/data.json"
@@ -32,7 +33,7 @@
     "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "remeda": "^2.0.0",
+    "remeda": "^2.0.3",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
