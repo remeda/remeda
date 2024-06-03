@@ -28,7 +28,9 @@ export default defineConfig({
   publicDir: false,
 });
 
-async function getSourceFiles(directory: string): Promise<string> {
+async function getSourceFiles(
+  directory: string,
+): Promise<Record<string, string>> {
   const sourceDir = path.resolve(import.meta.dirname, directory);
   // @ts-expect-error [ts2322] - TODO: Our typing for pullObject (and fromKeys!) make the results Partial even for simple records!
   return pipe(
