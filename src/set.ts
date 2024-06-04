@@ -4,8 +4,8 @@ import { purry } from "./purry";
 /**
  * Sets the `value` at `prop` of `object`.
  *
- * To add a new property to an object, or to override it's type use `addProp`
- * instead.
+ * To add a new property to an object, or to override its type, use `addProp`
+ * instead, and to set a property within a nested object use `setPath`.
  *
  * @param obj - The target method.
  * @param prop - The property name.
