@@ -1,4 +1,17 @@
+import type { Simplify } from "type-fest";
+import type { IsSingleLiteral } from "./internal/types";
 import { purry } from "./purry";
+
+type SetPropValue<T, K extends keyof T, V extends Required<T>[K]> = Simplify<
+  Omit<T, K> &
+    (IsSingleLiteral<K> extends true
+      ? // If it's a single literal we need to remove the optionality because it
+        // is ensured that the prop would always we set.
+        { -readonly [P in K]-?: V }
+      : // But for any other situation the prop might not be the one that was
+        // set, so we need to maintain both it's type, and it's optionality.
+        { -readonly [P in K]: T[P] | V })
+>;
 
 /**
  * Sets the `value` at `prop` of `object`.
@@ -13,7 +26,11 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
+export function set<T, K extends keyof T, V extends Required<T>[K]>(
+  obj: T,
+  prop: K,
+  value: V,
+): SetPropValue<T, K, V>;
 
 /**
  * Sets the `value` at `prop` of `object`.
@@ -27,14 +44,17 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
  * @dataLast
  * @category Object
  */
-export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
+export function set<T, K extends keyof T, V extends Required<T>[K]>(
+  prop: K,
+  value: V,
+): (obj: T) => SetPropValue<T, K, V>;
 
 export function set(...args: ReadonlyArray<unknown>): unknown {
   return purry(setImplementation, args);
 }
 
-const setImplementation = <T, K extends keyof T>(
+const setImplementation = <T, K extends keyof T, V extends Required<T>[K]>(
   obj: T,
   prop: K,
-  value: T[K],
-): T => ({ ...obj, [prop]: value });
+  value: V,
+): SetPropValue<T, K, V> => ({ ...obj, [prop]: value });

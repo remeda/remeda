@@ -1,4 +1,4 @@
-import type { IsAny, IsNever } from "type-fest";
+import type { IsAny, IsLiteral, IsNever } from "type-fest";
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
@@ -107,6 +107,11 @@ export type ExactRecord<Key extends PropertyKey, Value> = IfSimpleRecord<
 export type ReorderedArray<T extends IterableContainer> = {
   -readonly [P in keyof T]: T[number];
 };
+
+// This type attempts to detect when a type is a single literal value (e.g.
+// "cat"), and not anything else (e.g. "cat" | "dog", string, etc...)
+export type IsSingleLiteral<K> =
+  IsLiteral<K> extends true ? (IsUnion<K> extends true ? false : true) : false;
 
 // TODO [2024-10-01]: This type is copied from type-fest because it isn't
 // exported. It's part of the "internal" types. We should check back in a while
