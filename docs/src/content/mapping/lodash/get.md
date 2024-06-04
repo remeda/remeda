@@ -3,10 +3,10 @@ category: Object
 remeda: pathOr
 ---
 
-- In Lodash the `get` function supports 2 ways to define the path parameter: a
-  string representation of the path (similar to XPath: e.g. `a.b[0].c`), and an
-  array representation of the path (e.g. `['a', 'b', 0, 'c']`). In Remeda only
-  the array representation is accepted. Use the helper function
+- In Lodash the `get` function supports two ways of defining the path parameter:
+  a string representation of the path (similar to XPath: e.g. `a.b[0].c`), and
+  an array representation of the path (e.g. `['a', 'b', 0, 'c']`). In Remeda
+  only the array representation is accepted. Use the helper function
   [`stringToPath`](/docs#stringToPath) to translate string paths to array paths.
 - In order to provide good types, the Remeda `pathOr` function is limited to
   paths of length 3 or less. Longer paths are not supported.
