@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "parcel-bundler": "^1.6.1",
-    "remeda": "^1.0.0"
+    "remeda": "latest"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "latest"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
