@@ -1,8 +1,9 @@
 import type { Merge } from "type-fest";
+import type { Brand } from "./internal/types";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
-export type HasSubObjectBrand = { __remeda: "hasSubObject" };
+export type HasSubObjectBrand = Brand<"hasSubObject">;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
