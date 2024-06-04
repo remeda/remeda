@@ -16,6 +16,9 @@ type SetPropValue<T, K extends keyof T, V extends Required<T>[K]> = Simplify<
 /**
  * Sets the `value` at `prop` of `object`.
  *
+ * To add a new property to an object, or to override it's type use `addProp`
+ * instead.
+ *
  * @param obj - The target method.
  * @param prop - The property name.
  * @param value - The value to set.
@@ -34,6 +37,9 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
 
 /**
  * Sets the `value` at `prop` of `object`.
+ *
+ * To add a new property to an object, or to override it's type use `addProp`
+ * instead.
  *
  * @param prop - The property name.
  * @param value - The value to set.
