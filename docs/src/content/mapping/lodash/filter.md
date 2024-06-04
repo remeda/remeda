@@ -1,4 +1,4 @@
 ---
-category: Array
+category: Collection
 remeda: filter
 ---
