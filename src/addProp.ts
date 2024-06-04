@@ -4,7 +4,7 @@ import { purry } from "./purry";
  * Add a new property to an object.
  *
  * The function doesn't do any checks on the input object. If the property
- * already exists it will be overridden, and the type of the new value is not
+ * already exists it will be overwritten, and the type of the new value is not
  * checked against the previous type.
  *
  * Use `set` to override values explicitly with better protections.
@@ -29,7 +29,7 @@ export function addProp<
  * Add a new property to an object.
  *
  * The function doesn't do any checks on the input object. If the property
- * already exists it will be overridden, and the type of the new value is not
+ * already exists it will be overwritten, and the type of the new value is not
  * checked against the previous type.
  *
  * Use `set` to override values explicitly with better protections.
