@@ -1,4 +1,4 @@
 ---
 category: Object
-remeda: entries
+remeda: mapValues
 ---
