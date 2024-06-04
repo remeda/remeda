@@ -38,7 +38,7 @@ describe("typing", () => {
     });
   });
 
-  it("redefines the prop type", () => {
+  it("narrows the prop type", () => {
     const result = set({} as { a?: string }, "a", "hello" as const);
     expectTypeOf(result).toEqualTypeOf<{ a: "hello" }>();
   });
