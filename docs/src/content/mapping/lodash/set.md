@@ -33,6 +33,10 @@ set(data, ["b"], 456);
 set(data, "deep[0].z", false);
 set(data, ["deep", 0, "z"], false);
 
+// ❌ Not supported:
+set(data, "deep[0].newProp", 123);
+set(data, ["deep", 0, "newProp"], 123);
+
 // Remeda
 data = set(data, "a", "world");
 data = set(data, "a", "foo");
