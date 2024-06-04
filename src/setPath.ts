@@ -25,6 +25,8 @@ type ValueAtPath<T, TPath extends Path<T>> = TPath extends readonly [
 /**
  * Sets the value at `path` of `object`.
  *
+ * For simple cases where the path is only one level deep, prefer `set` instead.
+ *
  * @param data - The target method.
  * @param path - The array of properties.
  * @param value - The value to set.
