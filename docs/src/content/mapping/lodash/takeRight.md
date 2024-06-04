@@ -1,0 +1,4 @@
+---
+category: Array
+remead: takeLast
+---
