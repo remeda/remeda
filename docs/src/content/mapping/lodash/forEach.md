@@ -12,20 +12,37 @@ remeda: forEach
   feature isn't available. You can build a [`pipe`](/docs#pipe) that would
   replicate this logic.
 
+### Array
+
 ```ts
 // Lodash
 forEach([1, 2, 3], (item) => console.log(item));
-forEach({ a: 1, b: 2, c: 3 }, (value) => console.log(value));
-forEach([1, 2, 3], (item) => (item === 2 ? false : console.log(item)));
 
 // Remeda
 forEach([1, 2, 3], (item) => {
   console.log(item);
 });
+```
+
+### Object
+
+```ts
+// Lodash
+forEach({ a: 1, b: 2, c: 3 }, (value) => console.log(value));
+
+// Remeda
 forEachObj({ a: 1, b: 2, c: 3 }, (value) => {
   console.log(value);
 });
+```
 
+### Early exit
+
+```ts
+// Lodash
+forEach([1, 2, 3], (item) => (item === 2 ? false : console.log(item)));
+
+// Remeda
 // ❌ You can't return a value in a forEach callback in Remeda:
 forEach([1, 2, 3], (item) => (item === 2 ? false : console.log(item)));
 

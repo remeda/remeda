@@ -5,7 +5,8 @@ category: Collection
 _Not provided by Remeda._
 
 This function could be recreated in Remeda via a composition of
-[`map`](/docs#map), and [`flat`](/docs#flat) with a large depth parameter.
+[`map`](/docs#map), and [`flat`](/docs#flat) with a **large, const** depth
+parameter.
 
 ```ts
 // Lodash

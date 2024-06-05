@@ -25,7 +25,7 @@ pipe(DATA, sample(1 /* size */), first());
 
 // Or with native accessors
 sample(DATA, 1 /* size */)[0];
-sample(DATA, 1 /* size */).at(0);
+sample(DATA, 1 /* size */).at(0)!;
 const [result] = sample(DATA, 1 /* size */);
 ```
 
@@ -36,10 +36,6 @@ const [result] = sample(DATA, 1 /* size */);
 sample(DATA);
 
 // Native
-const sampleIndex = Math.floor(Math.random() * DATA.length);
-
-DATA[sampleIndex];
-
-// Or
-DATA.at(sampleIndex);
+DATA[Math.floor(Math.random() * DATA.length)]!;
+DATA.at(Math.floor(Math.random() * DATA.length))!;
 ```

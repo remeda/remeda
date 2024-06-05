@@ -11,15 +11,23 @@ remeda: sample
 
 ```ts
 // Lodash
-sampleSize([1, 2, 3]);
-sampleSize([1, 2, 3], 2);
+sampleSize(DATA);
 
 // Remeda
-sample([1, 2, 3], 1);
+sample(DATA, 1);
+```
 
-// ❌ The result isn't shuffled, it will always maintain the order of the input.
-sample([1, 2, 3], 2);
+```ts
+// Lodash
+sampleSize(DATA, 2);
 
-// ✅ Add the `shuffle` function after sample if the order is important.
-shuffle(sample([1, 2, 3], 2));
+// Remeda
+// ❌ The result isn't shuffled!
+sample(DATA, 2);
+
+// ✅ Add `shuffle` after `sample` (if order is important).
+shuffle(sample(DATA, 2));
+
+// Or with a pipe
+pipe(DATA, sample(2), shuffle());
 ```
