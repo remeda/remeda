@@ -1,5 +1,5 @@
+import { type Join } from "type-fest";
 import type { IterableContainer } from "./internal/types";
-import type { Joined } from "./join";
 import { purry } from "./purry";
 
 /**
@@ -64,11 +64,10 @@ type SwapArrayInternal<
     ]
   : T;
 
-type SwapString<
-  T extends string,
-  K1 extends number,
-  K2 extends number,
-> = Joined<SwapArray<CharactersTuple<T>, K1, K2>, "">;
+type SwapString<T extends string, K1 extends number, K2 extends number> = Join<
+  SwapArray<CharactersTuple<T>, K1, K2>,
+  ""
+>;
 
 type SwapArray<
   T extends IterableContainer,
