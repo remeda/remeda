@@ -4,11 +4,10 @@ category: Collection
 
 _Not provided by Remeda._
 
-This function could be recreated in Remeda via a combination of several
-utilities: [`groupBy`](/docs#groupBy), [`mapValues`](/docs#mapValues), and
-[`length`](/docs#length). We acknowledge that the composed solution is less
-efficient; if you need this function please open an issue at the Remeda github
-project to get it added.
+This function could be recreated in Remeda via a composition of [`groupBy`](/docs#groupBy),
+[`mapValues`](/docs#mapValues), and [`length`](/docs#length). We acknowledge
+that this is less efficient than a singular implementation; if you need this
+function please open an issue at the Remeda GitHub project to get it added.
 
 ```ts
 // Lodash
