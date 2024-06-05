@@ -33,16 +33,8 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # Collection
 
-- countBy
-- every
-- flatMapDeep
-- flatMapDepth
 - forEachRight
-- includes
 - invokeMap
-- reduceRight
-- sample
-- some
 
 # Date
 
