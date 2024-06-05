@@ -12,8 +12,8 @@ This function could be recreated in Remeda via a composition of
 flatMapDeep(DATA, mappingFunction);
 
 // Remeda
-flat(map(DATA, mappingFunction), depth);
+flat(map(DATA, mappingFunction), 10 /* depth */);
 
 // Or as a pipe
-pipe(DATA, map(mappingFunction), flat(depth));
+pipe(DATA, map(mappingFunction), flat(10 /* depth */));
 ```
