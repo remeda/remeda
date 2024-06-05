@@ -3,7 +3,9 @@ import type { Brand } from "./internal/types";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
-export type HasSubObjectBrand = Brand<"hasSubObject">;
+declare const hasSubObjectBrandId: unique symbol;
+
+export type HasSubObjectBrand = Brand<typeof hasSubObjectBrandId>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
