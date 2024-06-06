@@ -17,9 +17,14 @@ type Props = {
   readonly collectionQuery: (
     entry: CollectionEntry<typeof COLLECTION>,
   ) => boolean;
+  readonly showVersionSelector?: boolean;
 };
 
-const { categorized, collectionQuery } = Astro.props;
+const {
+  categorized,
+  collectionQuery,
+  showVersionSelector = false,
+} = Astro.props;
 
 const [navbarEntries, collection] = await Promise.all([
   getNavbarEntries(categorized, collectionQuery),
@@ -45,7 +50,11 @@ const { pathname } = Astro.url;
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
       <Navbar entries={navbarEntries} client:load>
-        <VersionSelector pathname={pathname} client:load /></Navbar
+        {
+          showVersionSelector && (
+            <VersionSelector pathname={pathname} client:load />
+          )
+        }</Navbar
       >
     </aside>
     <main class="flex-1 space-y-8 overflow-hidden">
