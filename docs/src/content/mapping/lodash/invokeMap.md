@@ -3,8 +3,8 @@ category: Collection
 remeda: map
 ---
 
-- `map` can be used instead of `invokeMap` by using **functions** instead of
-  (string) function _names_.
+- `map` can be used instead of `invokeMap` by using a callback functions instead
+  of (string) function _names_.
 - If you need to invoke functions dynamically via a provided function name,
   narrow the name first (so you can handle errors explicitly), and then use the
   name to access the object.
