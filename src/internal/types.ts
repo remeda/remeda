@@ -2,7 +2,7 @@ import type { IsAny, IsNever } from "type-fest";
 
 declare const __brand: unique symbol;
 
-export type Brand<T> = { [__brand]: T };
+export type Branded<T, Brand extends symbol> = T & { [__brand]: Brand };
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 

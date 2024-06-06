@@ -1,11 +1,14 @@
 import type { Merge } from "type-fest";
-import type { Brand } from "./internal/types";
+import type { Branded } from "./internal/types";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
-declare const hasSubObjectBrandId: unique symbol;
+declare const HAS_SUB_OBJECT_BRAND: unique symbol;
 
-export type HasSubObjectBrand = Brand<typeof hasSubObjectBrandId>;
+type HasSubObjectGuard<T, S> = Branded<
+  Merge<T, S>,
+  typeof HAS_SUB_OBJECT_BRAND
+>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -26,7 +29,7 @@ export type HasSubObjectBrand = Brand<typeof hasSubObjectBrandId>;
 export function hasSubObject<T, S extends Partial<T>>(
   data: Merge<T, S> | T,
   subObject: S,
-): data is HasSubObjectBrand & Merge<T, S>;
+): data is HasSubObjectGuard<T, S>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -45,7 +48,7 @@ export function hasSubObject<T, S extends Partial<T>>(
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-): (data: Merge<T, S> | T) => data is HasSubObjectBrand & Merge<T, S>;
+): (data: Merge<T, S> | T) => data is HasSubObjectGuard<T, S>;
 
 export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
   return purry(hasSubObjectImplementation, args);
@@ -54,7 +57,7 @@ export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
 function hasSubObjectImplementation<T extends object, S extends Partial<T>>(
   data: Merge<T, S> | T,
   subObject: S,
-): data is HasSubObjectBrand & Merge<T, S> {
+): data is HasSubObjectGuard<T, S> {
   for (const [key, value] of Object.entries(subObject)) {
     if (!Object.hasOwn(data, key)) {
       return false;
