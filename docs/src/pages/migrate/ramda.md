@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/wiki.astro
+layout: ../../layouts/wiki.astro
 ---
 
 # Mapping for Ramda
