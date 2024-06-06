@@ -31,8 +31,10 @@ const mappedUrl = mappingUrl(library, name);
     <div class="flex items-center gap-2">
       <CardTitle className="inline-flex flex-1 items-center gap-2 text-2xl"
         >{name}
-        <a class="text-base text-primary hover:underline" href={mappedUrl}
-          >[{library}]</a
+        <a
+          target="_blank"
+          class="text-base text-primary hover:underline"
+          href={mappedUrl}>[{library}]</a
         >{
           entry.data.remeda !== undefined && (
             <>

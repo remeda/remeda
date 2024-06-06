@@ -31,11 +31,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - xorWith
 - zipObjectDeep
 
-# Collection
-
-- forEachRight
-- invokeMap
-
 # Date
 
 - now
