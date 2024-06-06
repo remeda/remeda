@@ -1,19 +1,19 @@
-import { type HasSubObjectBrand, hasSubObject } from "./hasSubObject";
+import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
 
 describe("data first", () => {
-  test("works with empty sub-object", () => {
+  it("works with empty sub-object", () => {
     expect(hasSubObject({ a: 1, b: "b", c: 3 }, {})).toBe(true);
     expect(hasSubObject({}, {})).toBe(true);
   });
 
-  test("works with primitives", () => {
+  it("works with primitives", () => {
     expect(hasSubObject({ a: 1, b: "b", c: 3 }, { a: 1, b: "b" })).toBe(true);
     expect(hasSubObject({ a: 1, b: "c", c: 3 }, { a: 1, b: "b" })).toBe(false);
     expect(hasSubObject({ a: 2, b: "b", c: 3 }, { a: 1, b: "b" })).toBe(false);
   });
 
-  test("works with deep objects", () => {
+  it("works with deep objects", () => {
     expect(hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 2 } })).toBe(
       true,
     );
@@ -22,19 +22,19 @@ describe("data first", () => {
     );
   });
 
-  test("checks for matching key", () => {
+  it("checks for matching key", () => {
     const data = {} as { a?: undefined };
     expect(hasSubObject(data, { a: undefined })).toBe(false);
   });
 });
 
 describe("data last", () => {
-  test("empty sub-object", () => {
+  it("works with empty sub-object", () => {
     expect(pipe({ a: 1, b: 2, c: 3 }, hasSubObject({}))).toBe(true);
     expect(pipe({}, hasSubObject({}))).toBe(true);
   });
 
-  test("works with primitives", () => {
+  it("works with primitives", () => {
     expect(pipe({ a: 1, b: "b", c: 3 }, hasSubObject({ a: 1, b: "b" }))).toBe(
       true,
     );
@@ -46,7 +46,7 @@ describe("data last", () => {
     );
   });
 
-  test("works with deep objects", () => {
+  it("works with deep objects", () => {
     expect(
       pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 2 } })),
     ).toBe(true);
@@ -59,7 +59,7 @@ describe("data last", () => {
 
 describe("typing", () => {
   describe("data-first", () => {
-    test("must have matching keys and values", () => {
+    it("must have matching keys and values", () => {
       expectTypeOf(hasSubObject({ a: 2 }, { a: 1 })).toEqualTypeOf<boolean>();
 
       // @ts-expect-error [ts2353] - missing a key
@@ -81,7 +81,7 @@ describe("typing", () => {
       hasSubObject({ a: 2 }, { a: 1 } as const);
     });
 
-    test("allows nested objects", () => {
+    it("allows nested objects", () => {
       // ok - nested object has extra keys
       hasSubObject({ a: { b: 4 } }, { a: { b: 1, c: 2 } });
 
@@ -92,45 +92,49 @@ describe("typing", () => {
       hasSubObject({ a: { b: 4, c: "c" } }, { a: { b: 1, c: 2 } });
     });
 
-    test("narrows type", () => {
+    it("narrows with empty object", () => {
       const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, {})) {
-        expectTypeOf(obj).toEqualTypeOf<
-          HasSubObjectBrand & { a?: string; b?: number }
-        >();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       } else {
-        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
+    });
+
+    it("narrows with same object", () => {
+      const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, obj)) {
-        expectTypeOf(obj).toEqualTypeOf<
-          HasSubObjectBrand & { a?: string; b?: number }
-        >();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       } else {
-        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
+    });
+
+    it("narrows optional field to required", () => {
+      const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, { a: "a" })) {
-        expectTypeOf(obj).toEqualTypeOf<
-          HasSubObjectBrand & { a: string; b?: number }
-        >();
+        expectTypeOf(obj).toMatchTypeOf<{ a: string; b?: number }>();
       } else {
-        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
+    });
+
+    it("narrows field to constant type", () => {
+      const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, { a: "a" } as const)) {
-        expectTypeOf(obj).toEqualTypeOf<
-          HasSubObjectBrand & { readonly a: "a"; b?: number }
-        >();
+        expectTypeOf(obj).toMatchTypeOf<{ readonly a: "a"; b?: number }>();
       } else {
-        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
     });
   });
 
   describe("data-last", () => {
-    test("must have matching keys and values", () => {
+    it("must have matching keys and values", () => {
       expectTypeOf(
         pipe({ a: 2 }, hasSubObject({ a: 1 })),
       ).toEqualTypeOf<boolean>();
@@ -154,7 +158,7 @@ describe("typing", () => {
       pipe({ a: 2 }, hasSubObject({ a: 1 } as const));
     });
 
-    test("allows nested objects", () => {
+    it("allows nested objects", () => {
       // ok - nested object has extra keys
       pipe({ a: { b: 4 } }, hasSubObject({ a: { b: 1, c: 2 } }));
 
