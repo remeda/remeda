@@ -9,9 +9,11 @@ import { isEmpty } from "remeda";
 export function MobileNav({
   pathname,
   entries,
+  showVersionSelector = false,
 }: {
   readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
+  readonly showVersionSelector?: boolean;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,7 +35,7 @@ export function MobileNav({
             setIsOpen(false);
           }}
         >
-          <VersionSelector pathname={pathname} />
+          {showVersionSelector && <VersionSelector pathname={pathname} />}
         </Navbar>
       </SheetContent>
     </Sheet>
