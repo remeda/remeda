@@ -1,43 +1,25 @@
 ---
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { getCollection } from "astro:content";
-import {
-  entries,
-  flat,
-  fromEntries,
-  groupBy,
-  map,
-  mapValues,
-  pipe,
-  sortBy,
-  values,
-} from "remeda";
+import { getMappingEntries } from "@/lib/mappings";
+import { entries, flatMap, pipe, sortBy } from "remeda";
 
-const COLLECTION = "mapping";
 const LIBRARY = "lodash";
 
-const REGEX = new RegExp(`^${LIBRARY}\/(?<name>.*)\.mdx?$`, "ui");
+const mappingEntries = await getMappingEntries(LIBRARY);
 
-const mapping = await getCollection(COLLECTION, ({ id }) => REGEX.test(id));
-
-const categorized = pipe(
-  mapping,
-  groupBy(({ data: { category } }) => category),
-  mapValues(map(({ id }) => ({ name: id.replace(REGEX, "$1") }))),
+const forDisplay = pipe(
+  mappingEntries,
   entries(),
   sortBy(([category]) => category),
-  fromEntries(),
+  flatMap(([, functions]) => functions),
 );
 ---
 
-<DocsPage categorized={categorized}>
+<DocsPage categorized={mappingEntries}>
   {
-    pipe(
-      categorized,
-      values(),
-      flat(),
-      map(({ name }) => <MappingFunctionCard name={name} library={LIBRARY} />),
-    )
+    forDisplay.map(({ name }) => (
+      <MappingFunctionCard name={name} library={LIBRARY} />
+    ))
   }
 </DocsPage>
