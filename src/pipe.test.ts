@@ -1,4 +1,6 @@
 import { filter } from "./filter";
+import { flat } from "./flat";
+import { flatMap } from "./flatMap";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -114,5 +116,40 @@ describe("lazy", () => {
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);
     expect(result).toEqual([100, 200]);
+  });
+
+  it("lazy take + flat", () => {
+    const result = pipe(
+      [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+      ],
+      take(1),
+      flat(),
+    );
+    expect(result).toEqual([1, 2]);
+  });
+
+  it("lazy take + flatMap", () => {
+    const result = pipe(
+      [
+        [
+          [1, 2],
+          [2, 3],
+        ],
+        [
+          [4, 5],
+          [5, 6],
+        ],
+        [
+          [7, 8],
+          [8, 9],
+        ],
+      ],
+      take(2),
+      flatMap((x) => x[1]),
+    );
+    expect(result).toEqual([2, 3, 5, 6]);
   });
 });
