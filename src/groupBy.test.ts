@@ -176,6 +176,56 @@ describe("typing", () => {
     >();
   });
 
+  test("symbol", () => {
+    const mySymbol = Symbol("mySymbol");
+    const data = groupBy(
+      [
+        { [mySymbol]: "cat", b: 123 },
+        { [mySymbol]: "dog", b: 456 },
+      ],
+      () => mySymbol,
+    );
+    expectTypeOf(data).toEqualTypeOf<
+      Partial<
+        Record<
+          typeof mySymbol,
+          NonEmptyArray<{ [mySymbol]: string; b: number }>
+        >
+      >
+    >();
+  });
+
+  test("branded string", () => {
+    type Branded<K, T> = K & { _type: T };
+    type UserID = Branded<string, "UserId">;
+
+    const data = groupBy(
+      [
+        { owner: "U1" as UserID, name: "Phone" },
+        { owner: "U2" as UserID, name: "Pencil" },
+      ],
+      (x) => x.owner,
+    );
+    expectTypeOf(data).toEqualTypeOf<
+      Record<UserID, NonEmptyArray<{ owner: UserID; name: string }>>
+    >();
+  });
+
+  test("template string", () => {
+    type UserID = `UserID_${number}`;
+
+    const data = groupBy(
+      [
+        { owner: "UserID_1" as UserID, name: "Phone" },
+        { owner: "UserID_2" as UserID, name: "Pencil" },
+      ],
+      (x) => x.owner,
+    );
+    expectTypeOf(data).toEqualTypeOf<
+      Record<UserID, NonEmptyArray<{ owner: UserID; name: string }>>
+    >();
+  });
+
   describe("Filtering on undefined grouper result", () => {
     test("regular", () => {
       const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>

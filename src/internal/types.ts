@@ -1,4 +1,13 @@
-import type { IsAny, IsLiteral, IsNever, Simplify } from "type-fest";
+import {
+  type IsSymbolLiteral,
+  type IsAny,
+  type IsLiteral,
+  type IsNever,
+  type IsNumericLiteral,
+  type IsStringLiteral,
+  type Simplify,
+  type Split,
+} from "type-fest";
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
@@ -20,25 +29,44 @@ export type Mapped<T extends IterableContainer, K> = {
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 /**
- * We define a Simple record as one that doesn't define it's properties beyond
- * their general type. This is the case for string and number keys (and their
- * combination). Another way of thinking about simple records is that the number
- * of properties are unbound (they can be empty, or they can have 1000 props).
- *
- * TODO: Template string literals (e.g. `prefix_${number}`) should also be
- * considered simple, but we don't know how to check for them...
+ * Checks if a type is a bounded string, i.e. a type that only has a finite
+ * number of strings that are that type.
+ */
+type IsBoundedString<T> = T extends string
+  ? Split<T, "">[number] extends infer U
+    ? [`${number}`] extends [U]
+      ? false
+      : [string] extends [U]
+        ? false
+        : true
+    : never
+  : never;
+
+/**
+ * Checks if a type is a bounded key: a union of bounded strings, numeric
+ * literals, or symbol literals.
+ */
+type IsBoundedKey<T> = T extends unknown
+  ? IsStringLiteral<T> extends true
+    ? IsBoundedString<T>
+    : IsNumericLiteral<T> extends true
+      ? true
+      : IsSymbolLiteral<T>
+  : never;
+
+/**
+ * Check if a type is a simple record. A simple record is one that has an
+ * unbounded number of properties. For example, a record with a union of string
+ * or number keys is simple, and so is a record with `prefix_${number}` keys.
  */
 export type IfSimpleRecord<
   T,
   TypeIfSimpleRecord = true,
   TypeIfNotSimpleRecord = false,
-> = string extends keyof T
-  ? TypeIfSimpleRecord
-  : number extends keyof T
-    ? TypeIfSimpleRecord
-    : number | string extends keyof T
-      ? TypeIfSimpleRecord
-      : TypeIfNotSimpleRecord;
+> =
+  IsBoundedKey<keyof T> extends true
+    ? TypeIfNotSimpleRecord
+    : TypeIfSimpleRecord;
 
 /**
  * A union of all keys of T which are not symbols, and where number keys are
