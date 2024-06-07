@@ -1,0 +1,28 @@
+---
+import { CATEGORIZED } from "@/lib/categorized";
+import { getNavbarEntries } from "@/lib/navbar-entries";
+import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
+import { MobileNav } from "./mobile-nav";
+import { VERSIONS } from "./version-selector";
+import { getArticlesForPath } from "@/lib/docs";
+
+const { pathname } = Astro.url;
+
+const normalizedPathname = pathname.replace(/\/$/, "");
+
+const entries =
+  normalizedPathname === VERSIONS.v1.path
+    ? V1_CATEGORIZED
+    : normalizedPathname === VERSIONS.latest.path
+      ? CATEGORIZED
+      : {};
+
+const articles = await getArticlesForPath(pathname);
+const navbarEntries = getNavbarEntries(entries, articles);
+---
+
+<MobileNav
+  pathname={pathname}
+  entries={navbarEntries}
+  client:media="(max-width: 767px)"
+/>

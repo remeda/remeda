@@ -25,7 +25,6 @@ export function VersionSelector({
 }: {
   readonly pathname: string;
 }): ReactNode {
-  console.log(pathname);
   const current = useMemo(() => {
     const trimmed = pathname.replace(/\/$/, "");
     return pipe(

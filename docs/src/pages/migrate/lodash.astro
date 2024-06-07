@@ -31,10 +31,7 @@ const categorized = pipe(
 );
 ---
 
-<DocsPage
-  categorized={categorized}
-  collectionQuery={({ id }) => id.startsWith("lodash/")}
->
+<DocsPage categorized={categorized}>
   {
     pipe(
       categorized,

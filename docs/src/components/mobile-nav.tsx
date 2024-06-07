@@ -4,6 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
 import { VersionSelector } from "./version-selector";
+import { isEmpty } from "remeda";
 
 export function MobileNav({
   pathname,
@@ -14,6 +15,10 @@ export function MobileNav({
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
 
+  if (isEmpty(entries)) {
+    return;
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <SheetTrigger asChild>
@@ -21,7 +26,6 @@ export function MobileNav({
           <HamburgerMenuIcon />
         </Button>
       </SheetTrigger>
-
       <SheetContent className="pt-12">
         <Navbar
           entries={entries}

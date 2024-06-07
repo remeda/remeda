@@ -2,37 +2,29 @@
 import { Navbar } from "@/components/navbar";
 import Prose from "@/components/prose.astro";
 import { VersionSelector } from "@/components/version-selector";
+import { getArticlesForPath } from "@/lib/docs";
 import {
   getNavbarEntries,
   type CategorizedFunctions,
 } from "@/lib/navbar-entries";
-import { getCollection, type CollectionEntry } from "astro:content";
-import BaseLayout from "./base.astro";
 import { map, pipe, sortBy } from "remeda";
-
-const COLLECTION = "docs";
+import BaseLayout from "./base.astro";
 
 type Props = {
   readonly categorized: CategorizedFunctions;
-  readonly collectionQuery: (
-    entry: CollectionEntry<typeof COLLECTION>,
-  ) => boolean;
   readonly showVersionSelector?: boolean;
 };
 
-const {
-  categorized,
-  collectionQuery,
-  showVersionSelector = false,
-} = Astro.props;
+const { categorized, showVersionSelector = false } = Astro.props;
 
-const [navbarEntries, collection] = await Promise.all([
-  getNavbarEntries(categorized, collectionQuery),
-  getCollection(COLLECTION, collectionQuery),
-]);
+const { pathname } = Astro.url;
 
-const renderedCollection = await pipe(
-  collection,
+const articles = await getArticlesForPath(pathname);
+
+const navbarEntries = getNavbarEntries(categorized, articles);
+
+const renderedArticles = await pipe(
+  articles,
   sortBy(({ data: { priority } }) => priority ?? Infinity),
   map(async (entry) => ({
     ...entry,
@@ -40,8 +32,6 @@ const renderedCollection = await pipe(
   })),
   async ($) => await Promise.all($),
 );
-
-const { pathname } = Astro.url;
 ---
 
 <BaseLayout>
@@ -59,7 +49,7 @@ const { pathname } = Astro.url;
     </aside>
     <main class="flex-1 space-y-8 overflow-hidden">
       {
-        renderedCollection.map(({ slug, rendered: { Content } }) => (
+        renderedArticles.map(({ slug, rendered: { Content } }) => (
           <Prose id={slug} class="scroll-mt-24">
             <Content />
           </Prose>
