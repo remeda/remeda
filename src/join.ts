@@ -1,33 +1,8 @@
-import type { IterableContainer } from "./internal/types";
+import type { Join } from "type-fest";
 import { purry } from "./purry";
 
-type Joinable = bigint | boolean | number | string | null | undefined;
-
-export type Joined<T extends IterableContainer, Glue extends string> =
-  // Empty tuple
-  T[number] extends never
-    ? ""
-    : // Single item tuple (could be optional too!)
-      T extends readonly [Joinable?]
-      ? `${NullishCoalesce<T[0], "">}`
-      : // Tuple with non-rest element (head)
-        T extends readonly [infer First, ...infer Tail]
-        ? `${NullishCoalesce<First, "">}${Glue}${Joined<Tail, Glue>}`
-        : // Tuple with non-rest element (tail)
-          T extends readonly [...infer Head, infer Last]
-          ? `${Joined<Head, Glue>}${Glue}${NullishCoalesce<Last, "">}`
-          : // Arrays and tuple rest-elements, we can't say anything about the output
-            string;
-
-// `undefined` and `null` are special-cased by join. In typescript
-// `${undefined}` === 'undefined' (and similarly for null), but specifically in
-// the builtin `join` method, they should result in an empty string!
-// @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join#description
-type NullishCoalesce<T, Fallback> = T extends Joinable
-  ? T extends null | undefined
-    ? Fallback | NonNullable<T>
-    : T
-  : never;
+// Copied from type-fest, from the Join type.
+type JoinableItem = bigint | boolean | number | string | null | undefined;
 
 /**
  * Joins the elements of the array by: casting them to a string and
@@ -49,9 +24,9 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<Joinable> | [],
+  T extends ReadonlyArray<JoinableItem> | [],
   Glue extends string,
->(data: T, glue: Glue): Joined<T, Glue>;
+>(data: T, glue: Glue): Join<T, Glue>;
 
 /**
  * Joins the elements of the array by: casting them to a string and
@@ -72,9 +47,9 @@ export function join<
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<Joinable> | [],
+  T extends ReadonlyArray<JoinableItem> | [],
   Glue extends string,
->(glue: Glue): (data: T) => Joined<T, Glue>;
+>(glue: Glue): (data: T) => Join<T, Glue>;
 
 export function join(...args: ReadonlyArray<unknown>): unknown {
   return purry(joinImplementation, args);
