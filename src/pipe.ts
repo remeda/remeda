@@ -332,7 +332,7 @@ function processItem(
             return true;
           }
         }
-        return false;
+        return isDone;
       }
       currentItem = lazyResult.next;
     }
@@ -348,10 +348,7 @@ function processItem(
   if (lazyResult.hasNext) {
     accumulator.push(currentItem);
   }
-  if (isDone) {
-    return true;
-  }
-  return false;
+  return isDone;
 }
 
 function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
