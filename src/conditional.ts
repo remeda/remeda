@@ -7,6 +7,8 @@ type Case<In, Out, Thru extends In = In> = readonly [
   then: (data: Thru) => Out,
 ];
 
+export const conditional = Object.assign(conditionalImpl, { defaultCase });
+
 /**
  * Executes a transformer function based on the first matching predicate,
  * functioning like a series of `if...else if...` statements. It sequentially
@@ -51,7 +53,7 @@ type Case<In, Out, Thru extends In = In> = readonly [
  * @dataLast
  * @category Function
  */
-export function conditional<
+function conditionalImpl<
   T,
   Return0,
   Return1 = never,
@@ -141,7 +143,7 @@ export function conditional<
  * @dataFirst
  * @category Function
  */
-export function conditional<
+function conditionalImpl<
   T,
   Return0,
   Return1 = never,
@@ -187,7 +189,7 @@ export function conditional<
   | Return8
   | Return9;
 
-export function conditional(...args: ReadonlyArray<unknown>): unknown {
+function conditionalImpl(...args: ReadonlyArray<unknown>): unknown {
   return purryOn(isCase, conditionalImplementation, args);
 }
 
@@ -219,37 +221,34 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace conditional {
-  /**
-   * A simplified case that accepts all data. Put this as the last case to
-   * prevent an exception from being thrown when none of the previous cases
-   * match.
-   * If this is not the last case it will short-circuit anything after it.
-   *
-   * @param then - You only need to provide the transformer, the predicate is
-   * implicit. @default () => undefined, which is how Lodash and Ramda handle
-   * the final fallback case.
-   * @example
-   *   const nameOrId = 3 as string | number;
-   *   R.conditional(
-   *     nameOrId,
-   *     [R.isString, (name) => `Hello ${name}`],
-   *     [R.isNumber, (id) => `Hello ID: ${id}`],
-   *     R.conditional.defaultCase(
-   *       (something) => `Hello something (${JSON.stringify(something)})`,
-   *     ),
-   *   ); //=> 'Hello ID: 3'
-   */
-  export function defaultCase(): Case<unknown, undefined>;
-  export function defaultCase<In, Then extends (param: In) => unknown>(
-    then: Then,
-  ): Case<In, ReturnType<Then>>;
-  export function defaultCase(
-    then: (data: unknown) => unknown = trivialDefaultCase,
-  ): Case<unknown, unknown> {
-    return [acceptAnything, then];
-  }
+/**
+ * A simplified case that accepts all data. Put this as the last case to
+ * prevent an exception from being thrown when none of the previous cases
+ * match.
+ * If this is not the last case it will short-circuit anything after it.
+ *
+ * @param then - You only need to provide the transformer, the predicate is
+ * implicit. @default () => undefined, which is how Lodash and Ramda handle
+ * the final fallback case.
+ * @example
+ *   const nameOrId = 3 as string | number;
+ *   R.conditional(
+ *     nameOrId,
+ *     [R.isString, (name) => `Hello ${name}`],
+ *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     R.conditional.defaultCase(
+ *       (something) => `Hello something (${JSON.stringify(something)})`,
+ *     ),
+ *   ); //=> 'Hello ID: 3'
+ */
+function defaultCase(): Case<unknown, undefined>;
+function defaultCase<In, Then extends (param: In) => unknown>(
+  then: Then,
+): Case<In, ReturnType<Then>>;
+function defaultCase(
+  then: (data: unknown) => unknown = trivialDefaultCase,
+): Case<unknown, unknown> {
+  return [acceptAnything, then];
 }
 
 // We memoize this so it isn't recreated on every invocation of `defaultCase`.
