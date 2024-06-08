@@ -7,7 +7,10 @@ type Case<In, Out, Thru extends In = In> = readonly [
   then: (data: Thru) => Out,
 ];
 
-export const conditional = Object.assign(conditionalImpl, { defaultCase });
+// We package the defaultCase helper into the function itself so that we
+// encapsulate everything into a single export.
+const conditionalPlus = Object.assign(conditional, { defaultCase });
+export { conditionalPlus as conditional };
 
 /**
  * Executes a transformer function based on the first matching predicate,
@@ -53,7 +56,7 @@ export const conditional = Object.assign(conditionalImpl, { defaultCase });
  * @dataLast
  * @category Function
  */
-function conditionalImpl<
+function conditional<
   T,
   Return0,
   Return1 = never,
@@ -143,7 +146,7 @@ function conditionalImpl<
  * @dataFirst
  * @category Function
  */
-function conditionalImpl<
+function conditional<
   T,
   Return0,
   Return1 = never,
@@ -189,7 +192,7 @@ function conditionalImpl<
   | Return8
   | Return9;
 
-function conditionalImpl(...args: ReadonlyArray<unknown>): unknown {
+function conditional(...args: ReadonlyArray<unknown>): unknown {
   return purryOn(isCase, conditionalImplementation, args);
 }
 
