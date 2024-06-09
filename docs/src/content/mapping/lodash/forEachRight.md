@@ -10,7 +10,7 @@ _Not provided by Remeda._
   objects.
 - The order in which object properties are iterated over is well-defined, but
   might not be the order you expect ([MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#description)); nevertheless, [`entries`](/docs#entries) maintains the same
-  order, and could be used to replicate `forEachObj`.
+  order, and could be used to replicate `forEachRight`.
 - If the native solution doesn't suffice please open an issue at Remeda's
   GitHub project so we can learn about your use-case.
 
