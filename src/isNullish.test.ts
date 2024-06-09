@@ -10,7 +10,7 @@ describe("runtime", () => {
     expect(isNullish(undefined)).toBe(true);
   });
 
-  it("doesn't accept anything else", () => {
+  it("rejects anything else", () => {
     for (const data of ALL_TYPES_DATA_PROVIDER) {
       if (data === null || data === undefined) {
         continue;
