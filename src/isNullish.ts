@@ -1,3 +1,5 @@
+import { type NarrowedTo } from "./internal/types";
+
 /**
  * A function that checks if the passed parameter is either `null` or
  * `undefined` and narrows its type accordingly.
@@ -13,6 +15,8 @@
  *    R.isNullish('somethingElse') //=> false
  * @category Guard
  */
-export function isNullish<T>(data: T): data is Extract<T, null | undefined> {
+export function isNullish<T>(
+  data: T | null | undefined,
+): data is NarrowedTo<T, null | undefined> {
   return data === null || data === undefined;
 }
