@@ -33,32 +33,6 @@ export type Mapped<T extends IterableContainer, K> = {
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 /**
- * Checks if a type is a bounded string, i.e. a type that only has a finite
- * number of strings that are that type.
- */
-type IsBoundedString<T> = T extends string
-  ? Split<T, "">[number] extends infer U
-    ? [`${number}`] extends [U]
-      ? false
-      : [string] extends [U]
-        ? false
-        : true
-    : never
-  : never;
-
-/**
- * Checks if a type is a bounded key: a union of bounded strings, numeric
- * literals, or symbol literals.
- */
-type IsBoundedKey<T> = T extends unknown
-  ? IsStringLiteral<T> extends true
-    ? IsBoundedString<T>
-    : IsNumericLiteral<T> extends true
-      ? true
-      : IsSymbolLiteral<T>
-  : never;
-
-/**
  * Check if a type is a simple record. A simple record is one that has an
  * unbounded number of properties. For example, a record with a union of string
  * or number keys is simple, and so is a record with `prefix_${number}` keys.
@@ -71,6 +45,42 @@ export type IfSimpleRecord<
   IsBoundedKey<keyof T> extends true
     ? TypeIfNotSimpleRecord
     : TypeIfSimpleRecord;
+
+/**
+ * Checks if a type is a bounded key: a union of bounded strings, numeric
+ * literals, or symbol literals.
+ */
+type IsBoundedKey<T> =
+  // `extends unknown` is always going to be the case and is used to convert any
+  // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
+  T extends unknown
+    ? IsStringLiteral<T> extends true
+      ? IsBoundedString<T>
+      : IsNumericLiteral<T> extends true
+        ? true
+        : IsSymbolLiteral<T>
+    : never;
+
+/**
+ * Checks if a type is a bounded string, i.e. a type that only has a finite
+ * number of strings that are that type.
+ *
+ * Most relevant for template literals: IsBoundedString<`${1 | 2}_${3 | 4}`> is
+ * true, and IsBoundedString<`${1 | 2}_${number}`> is false.
+ */
+type IsBoundedString<T> = T extends string
+  ? // Let U be the union of the types of each character in T.
+    // (T[number] alone doesn't work because that's just string.)
+    Split<T, "">[number] extends infer U
+    ? // Eliminate unbounded cases, where a character can be any number or any
+      // string. Otherwise, we assume it's bounded.
+      [`${number}`] extends [U]
+      ? false
+      : [string] extends [U]
+        ? false
+        : true
+    : false
+  : false;
 
 /**
  * A union of all keys of T which are not symbols, and where number keys are
