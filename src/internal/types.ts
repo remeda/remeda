@@ -1,5 +1,9 @@
 import type { IsAny, IsLiteral, IsNever, Simplify } from "type-fest";
 
+declare const __brand: unique symbol;
+
+export type Branded<T, Brand extends symbol> = T & { [__brand]: Brand };
+
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
 export type Mapped<T extends IterableContainer, K> = {
