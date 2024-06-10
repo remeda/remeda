@@ -49,6 +49,8 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: ReadonlyArray<unknown>): unknown {
+  // eslint-disable-next-line no-console
+  console.log("TESTING");
   return purry(mapImplementation, args, lazyImplementation);
 }
 
