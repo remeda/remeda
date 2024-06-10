@@ -1,4 +1,5 @@
 import { filter } from "./filter";
+import { flat } from "./flat";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -114,5 +115,18 @@ describe("lazy", () => {
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);
     expect(result).toEqual([100, 200]);
+  });
+
+  it("lazy early exit with hasMany", () => {
+    const result = pipe(
+      [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+      ],
+      take(1),
+      flat(),
+    );
+    expect(result).toEqual([1, 2]);
   });
 });

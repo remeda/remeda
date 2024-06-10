@@ -1,6 +1,14 @@
-import type { Simplify } from "type-fest";
+import type { Merge } from "type-fest";
+import type { Branded } from "./internal/types";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
+
+declare const HAS_SUB_OBJECT_BRAND: unique symbol;
+
+type HasSubObjectGuard<T, S> = Branded<
+  Merge<T, S>,
+  typeof HAS_SUB_OBJECT_BRAND
+>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -19,10 +27,9 @@ import { purry } from "./purry";
  * @category Guard
  */
 export function hasSubObject<T, S extends Partial<T>>(
-  data: T,
+  data: Merge<T, S> | T,
   subObject: S,
-): // TODO: want to use data is Merge<T, S> here, but it's a typescript error. fix after we allow @ts-expect-error in the build process
-data is Simplify<S & T>;
+): data is HasSubObjectGuard<T, S>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -41,16 +48,16 @@ data is Simplify<S & T>;
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-): (data: T) => data is Simplify<S & T>;
+): (data: Merge<T, S> | T) => data is HasSubObjectGuard<T, S>;
 
 export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
   return purry(hasSubObjectImplementation, args);
 }
 
 function hasSubObjectImplementation<T extends object, S extends Partial<T>>(
-  data: T,
+  data: Merge<T, S> | T,
   subObject: S,
-): data is Simplify<S & T> {
+): data is HasSubObjectGuard<T, S> {
   for (const [key, value] of Object.entries(subObject)) {
     if (!Object.hasOwn(data, key)) {
       return false;
