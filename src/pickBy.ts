@@ -2,7 +2,7 @@ import { type IfNever, type Simplify } from "type-fest";
 import {
   type EnumerableStringKeyOf,
   type EnumerableStringKeyedValueOf,
-  type IfSimpleRecord,
+  type IfBoundedRecord,
   type ReconstructedRecord,
 } from "./internal/types";
 import { purry } from "./purry";
@@ -16,12 +16,12 @@ type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 // part of the output and which wouldn't so we can only safely downgrade the
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = Simplify<
-  IfSimpleRecord<
+  IfBoundedRecord<
     T,
-    ReconstructedRecord<T>,
     {
       -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
-    }
+    },
+    ReconstructedRecord<T>
   >
 >;
 
