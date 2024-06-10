@@ -3,7 +3,7 @@ category: Array
 remeda: reverse
 ---
 
-Lodash mutate's the input but in Remeda a new array is returned instead.
+Lodash mutates the input but in Remeda a new array is returned instead.
 
 ```ts
 // Lodash

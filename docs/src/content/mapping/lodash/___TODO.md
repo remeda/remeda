@@ -7,3 +7,6 @@
 
 3. Guide: most `iteratee` functions in lodash only take one argument, we usually
    take 3 params (index, data).
+
+4. `pick`, `pickBy`, `omit`, and `omitBy` handle symbol keys differently. We
+   need to compare this with how Lodash does it and document any differences.

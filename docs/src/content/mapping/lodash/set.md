@@ -13,9 +13,9 @@ remeda: setPath
   objects.
 - For better type-safety, Remeda offers two additional functions to handle
   paths of length **1**. Use [`set`](/docs#set) to update an existing prop in an
-  object (best type-safety and with IDE type-ahead); and
-  [`addProp`](/docs#addProp) To add a new prop to the object (or to override
-  it's _type_)
+  object (best type-safety and with IDE type-ahead), and
+  [`addProp`](/docs#addProp) to add a new prop to the object (or to override
+  its _type_)
 - In Lodash `set` _mutates_ the input object. In Remeda a **new** object is
   returned instead. The input object is never mutated.
 
