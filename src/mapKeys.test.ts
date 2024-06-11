@@ -105,4 +105,20 @@ describe("typing", () => {
     const result = mapKeys({ a: "b" }, constant(123));
     expectTypeOf(result).toEqualTypeOf<Partial<Record<123, string>>>();
   });
+
+  test("union of records", () => {
+    const dataFirst = mapKeys(
+      {} as Record<number, string> | Record<string, string>,
+      constant("hello" as string),
+    );
+
+    expectTypeOf(dataFirst).toEqualTypeOf<Record<string, string>>();
+
+    const dataLast = pipe(
+      {} as Record<number, string> | Record<string, string>,
+      mapKeys(constant("hello" as string)),
+    );
+
+    expectTypeOf(dataLast).toEqualTypeOf<Record<string, string>>();
+  });
 });
