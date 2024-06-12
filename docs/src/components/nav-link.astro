@@ -2,14 +2,21 @@
 type Props = {
   readonly href: string;
   readonly additionalHrefs?: readonly string[];
+  readonly directory?: boolean;
 };
 
-const { href, additionalHrefs = [] } = Astro.props;
+const {
+  href,
+  additionalHrefs = [],
+  directory: isDirectory = false,
+} = Astro.props;
 
 const { pathname } = Astro.url;
 
 const trimmed = pathname.replace(/\/$/, "");
-const isActive = [href, ...additionalHrefs].some((path) => path === trimmed);
+const isActive = [href, ...additionalHrefs].some((path) =>
+  isDirectory ? trimmed.startsWith(path) : path === trimmed,
+);
 ---
 
 <a

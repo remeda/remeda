@@ -1,21 +1,9 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
-import { CATEGORIZED } from "@/lib/categorized";
-import { getNavbarEntries } from "@/lib/navbar-entries";
-import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { MobileNav } from "./mobile-nav";
+import DocsPageNav from "./docs-page-nav.astro";
 import NavLink from "./nav-link.astro";
 import { ThemeSwitcher } from "./theme-switcher";
-import { VERSIONS } from "./version-selector";
-
-const { pathname } = Astro.url;
-
-const isV1 = pathname === VERSIONS.v1.path;
-const navbarEntries = await getNavbarEntries(
-  isV1 ? V1_CATEGORIZED : CATEGORIZED,
-  ({ id }) => isV1 === id.startsWith("v1/"),
-);
 ---
 
 <header
@@ -26,7 +14,7 @@ const navbarEntries = await getNavbarEntries(
   >
     <a href="/" class="font-bold">Remeda</a>
     <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
-    <NavLink href="/mapping">Lodash/Ramda</NavLink>
+    <NavLink directory href="/migrate">Migration Guides</NavLink>
     <div class="flex-1"></div>
     <a
       href="https://github.com/remeda/remeda"
@@ -38,9 +26,5 @@ const navbarEntries = await getNavbarEntries(
     </a>
   </nav>
   <ThemeSwitcher client:load />
-  <MobileNav
-    pathname={pathname}
-    entries={navbarEntries}
-    client:media="(max-width: 767px)"
-  />
+  <DocsPageNav />
 </header>

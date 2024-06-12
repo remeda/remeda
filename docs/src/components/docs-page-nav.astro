@@ -1,0 +1,37 @@
+---
+import { CATEGORIZED } from "@/lib/categorized";
+import { getNavbarEntries } from "@/lib/navbar-entries";
+import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
+import { MobileNav } from "./mobile-nav";
+import { VERSIONS } from "./version-selector";
+import { getArticlesForPath } from "@/lib/docs";
+import { getMappingEntries } from "@/lib/mappings";
+
+const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)$/iu;
+
+const { pathname } = Astro.url;
+const normalizedPathname = pathname.replace(/\/$/, "");
+
+const migrationLibrary = MIGRATION_REGEXP.exec(pathname)?.groups?.library;
+
+const entries =
+  migrationLibrary !== undefined
+    ? await getMappingEntries(migrationLibrary)
+    : normalizedPathname === VERSIONS.v1.path
+      ? V1_CATEGORIZED
+      : normalizedPathname === VERSIONS.latest.path
+        ? CATEGORIZED
+        : undefined;
+
+const articles = await getArticlesForPath(pathname);
+
+const navbarEntries =
+  entries === undefined ? [] : getNavbarEntries(entries, articles);
+---
+
+<MobileNav
+  showVersionSelector={migrationLibrary === undefined}
+  pathname={pathname}
+  entries={navbarEntries}
+  client:media="(max-width: 767px)"
+/>

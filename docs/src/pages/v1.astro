@@ -5,10 +5,7 @@ import { CATEGORIZED } from "@/lib/v1/categorized";
 import { flat, map, pipe, values } from "remeda";
 ---
 
-<DocsPage
-  categorized={CATEGORIZED}
-  collectionQuery={({ id }) => id.startsWith("v1/")}
->
+<DocsPage showVersionSelector categorized={CATEGORIZED}>
   {
     pipe(
       CATEGORIZED,

@@ -1,23 +1,23 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry } from "astro:content";
 import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import { getTags } from "./get-tags";
 import type { SourceTags } from "./transform";
 
-const COLLECTION = "docs";
-
-type FunctionItem = ReadonlyArray<{
+type FunctionItem = {
   readonly name: string;
-  readonly methods: ReadonlyArray<SourceTags>;
-}>;
+  readonly methods?: ReadonlyArray<SourceTags>;
+};
 
-export type CategorizedFunctions = Readonly<Record<string, FunctionItem>>;
+export type CategorizedFunctions = Readonly<
+  Record<string, ReadonlyArray<FunctionItem>>
+>;
 
-export async function getNavbarEntries(
+export function getNavbarEntries(
   categorized: CategorizedFunctions,
-  collectionQuery: (entry: CollectionEntry<typeof COLLECTION>) => boolean,
+  collection: ReadonlyArray<CollectionEntry<"docs-articles">>,
 ) {
   const contentEntries = pipe(
-    await getCollection(COLLECTION, collectionQuery),
+    collection,
     groupBy(({ data: { category } }) => category),
     entries(),
     map(
@@ -42,7 +42,7 @@ export async function getNavbarEntries(
           category,
           map(funcs, ({ name: title, methods }) => ({
             title,
-            tags: getTags(methods),
+            tags: methods === undefined ? [] : getTags(methods),
           })),
         ] as const,
     ),

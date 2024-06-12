@@ -1,0 +1,4 @@
+---
+category: Number
+remeda: clamp
+---

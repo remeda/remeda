@@ -1,0 +1,4 @@
+---
+category: Function
+remeda: debounce
+---

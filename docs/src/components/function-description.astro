@@ -12,7 +12,7 @@ type Props = {
   readonly category: string | undefined;
   readonly sourceUrl: string | undefined;
   readonly description: string | undefined;
-  readonly tags: ReadonlyArray<Tag>;
+  readonly tags?: ReadonlyArray<Tag>;
 };
 
 const { name, sourceUrl, category, description, tags } = Astro.props;
@@ -21,7 +21,7 @@ const { name, sourceUrl, category, description, tags } = Astro.props;
 <>
   <div class="flex items-center gap-2">
     <CardTitle className="flex-1 text-2xl">{name}</CardTitle>
-    {tags.map((tag) => <TagBadge tag={tag} className="h-8" />)}
+    {tags?.map((tag) => <TagBadge tag={tag} className="h-8" />)}
     <Badge className="h-8">{category}</Badge>
     {sourceUrl !== undefined && <GithubSource url={sourceUrl} />}
   </div>

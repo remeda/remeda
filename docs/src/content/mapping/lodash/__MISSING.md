@@ -1,0 +1,188 @@
+TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#/
+
+# Array
+
+- differenceBy
+- fill
+- flattenDepth
+- indexOf
+- initial
+- intersectionBy
+- lastIndexOf
+- pull
+- pullAll
+- pullAllBy
+- pullAllWith
+- pullAt
+- remove
+- slice
+- sortedIndexOf
+- sortedLastIndexOf
+- sortedUniqBy
+- tail
+- union
+- unionBy
+- unionWith
+- unzip
+- unzipWith
+- without
+- xor
+- xorBy
+- xorWith
+- zipObjectDeep
+
+# Date
+
+- now
+
+# Function
+
+- A lot...
+
+# Lang
+
+- castArray
+- clone
+- cloneDeepWith
+- cloneWith
+- conformsTo
+- eq
+- gt
+- gte
+- isArguments
+- All the type-guards we already have!
+- isArrayBuffer
+- isArrayLike
+- isArrayLikeObject
+- isBuffer
+- isElement
+- isEqualWith
+- isFinite
+- isInteger
+- isLength
+- isMap
+- isMatch
+- isMatchWith
+- isNaN
+- isNative
+- isObject
+- isSafeInteger
+- isSet
+- isTypedArray
+- isWeakMap
+- isWeakSet
+- lt
+- lte
+- toArray
+- toFinite
+- toInteger
+- toLength
+- toNumber
+- toPlainObject
+- toSafeInteger
+- toString
+
+# Math
+
+- mean
+
+# Number
+
+- inRange
+- random
+
+# Object
+
+- assignIn
+- assignInWith
+- assignWith
+- at
+- create
+- defaults
+- defaultsDeep
+- findKey
+- findLastKey
+- forIn
+- forInRight
+- forOwnRight
+- functions
+- functionsIn
+- has
+- hasIn
+- invertBy
+- invoke
+- keysIn
+- merge
+- mergeWith
+- result
+- setWith
+- toPairsIn
+- unset
+- update
+- updateWith
+
+# Seq
+
+- chain
+- thru
+
+# String
+
+- camelCase
+- capitalize
+- deburr
+- endsWith
+- escape
+- escapeRegExp
+- kebabCase
+- lowerCase
+- lowerFirst
+- pad
+- padEnd
+- padStart
+- parseInt
+- repeat
+- replace
+- snakeCase
+- split
+- startCase
+- startsWith
+- template
+- toLower
+- toUpper
+- trim
+- trimEnd
+- trimStart
+- truncate
+- unescape
+- upperCase
+- upperFirst
+
+# Util
+
+- attempt
+- bindAll
+- conforms
+- defaultTo
+- flowRight
+- iteratee
+- matches
+- matchesProperty
+- method
+- methodOf
+- mixin
+- noConflict
+- nthArg
+- over
+- overEvery
+- overSome
+- property
+- propertyOf
+- rangeRight
+- runInContext
+- stubArray
+- stubFalse
+- stubObject
+- stubString
+- stubTrue
+- uniqueId

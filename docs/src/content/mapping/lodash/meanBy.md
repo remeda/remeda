@@ -1,0 +1,4 @@
+---
+category: Math
+remeda: meanBy
+---
