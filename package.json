@@ -59,7 +59,7 @@
     "typeCheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
-    "type-fest": "^4.18.2"
+    "type-fest": "^4.20.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",

@@ -1,4 +1,14 @@
-import type { IsAny, IsLiteral, IsNever, Simplify } from "type-fest";
+import {
+  type IsAny,
+  type IsLiteral,
+  type IsNever,
+  type IsNumericLiteral,
+  type IsStringLiteral,
+  type IsSymbolLiteral,
+  type KeysOfUnion,
+  type Simplify,
+  type Split,
+} from "type-fest";
 
 declare const __brand: unique symbol;
 
@@ -24,25 +34,58 @@ export type Mapped<T extends IterableContainer, K> = {
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 /**
- * We define a Simple record as one that doesn't define it's properties beyond
- * their general type. This is the case for string and number keys (and their
- * combination). Another way of thinking about simple records is that the number
- * of properties are unbound (they can be empty, or they can have 1000 props).
+ * Check if a type is guaranteed to be a bounded record: a record with a finite
+ * set of keys.
  *
- * TODO: Template string literals (e.g. `prefix_${number}`) should also be
- * considered simple, but we don't know how to check for them...
+ * @example
+ *     IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
+ *     IfBoundedRecord<Record<string | number, unknown>>; //=> false
+ *     IfBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
  */
-export type IfSimpleRecord<
+export type IfBoundedRecord<
   T,
-  TypeIfSimpleRecord = true,
-  TypeIfNotSimpleRecord = false,
-> = string extends keyof T
-  ? TypeIfSimpleRecord
-  : number extends keyof T
-    ? TypeIfSimpleRecord
-    : number | string extends keyof T
-      ? TypeIfSimpleRecord
-      : TypeIfNotSimpleRecord;
+  TypeIfBoundedRecord = true,
+  TypeIfUnboundedRecord = false,
+> =
+  IsBoundedKey<KeysOfUnion<T>> extends true
+    ? TypeIfBoundedRecord
+    : TypeIfUnboundedRecord;
+
+/**
+ * Checks if a type is a bounded key: a union of bounded strings, numeric
+ * literals, or symbol literals.
+ */
+type IsBoundedKey<T> =
+  // `extends unknown` is always going to be the case and is used to convert any
+  // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
+  T extends unknown
+    ? IsStringLiteral<T> extends true
+      ? IsBoundedString<T>
+      : IsNumericLiteral<T> extends true
+        ? true
+        : IsSymbolLiteral<T>
+    : never;
+
+/**
+ * Checks if a type is a bounded string: a type that only has a finite
+ * number of strings that are that type.
+ *
+ * Most relevant for template literals: IsBoundedString<`${1 | 2}_${3 | 4}`> is
+ * true, and IsBoundedString<`${1 | 2}_${number}`> is false.
+ */
+type IsBoundedString<T> = T extends string
+  ? // Let U be the union of the types of each character in T.
+    // (T[number] alone doesn't work because that's just string.)
+    Split<T, "">[number] extends infer U
+    ? // Eliminate unbounded cases, where a character can be any number or any
+      // string. Otherwise, we assume it's bounded.
+      [`${number}`] extends [U]
+      ? false
+      : [string] extends [U]
+        ? false
+        : true
+    : false
+  : false;
 
 /**
  * A union of all keys of T which are not symbols, and where number keys are
@@ -93,19 +136,18 @@ export type NarrowedTo<T, Base> =
  */
 export type CompareFunction<T> = (a: T, b: T) => number;
 
-// Records keyed with generic `string` and `number` have different semantics
-// to those with a a union of literal values (e.g. 'cat' | 'dog') when using
-// 'noUncheckedIndexedAccess', the former being implicitly `Partial` whereas
-// the latter are implicitly `Required`.
-export type ExactRecord<Key extends PropertyKey, Value> = IfSimpleRecord<
+// Records with an unbounded set of keys have different semantics to those with
+// a bounded set of keys when using 'noUncheckedIndexedAccess', the former
+// being implicitly `Partial` whereas the latter are implicitly `Required`.
+export type ExactRecord<Key extends PropertyKey, Value> = IfBoundedRecord<
   Record<Key, Value>,
-  // If either string or number extend Key it means that Key is at least as wide
-  // as them, so we don't need to wrap the returned record with Partial.
-  Record<Key, Value>,
-  // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+  // If the key is bounded, e.g. 'cat' | 'dog', the result is partial
   // because we can't statically know what values the mapper would return on
   // a specific input.
-  Partial<Record<Key, Value>>
+  Partial<Record<Key, Value>>,
+  // If the key is unbounded, it means that Key is at least as wide
+  // as them, so we don't need to wrap the returned record with Partial.
+  Record<Key, Value>
 >;
 
 export type ReorderedArray<T extends IterableContainer> = {
