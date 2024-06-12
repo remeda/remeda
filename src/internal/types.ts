@@ -34,12 +34,13 @@ export type Mapped<T extends IterableContainer, K> = {
 export type IterableContainer<T = unknown> = ReadonlyArray<T> | readonly [];
 
 /**
- * Check if a type is guaranteed to be a bounded record: a record with a fixed
+ * Check if a type is guaranteed to be a bounded record: a record with a finite
  * set of keys.
  *
- * For example, a record with a union of string or number keys is unbounded,
- * and so is a record with keys like `prefix_${number}`, but a record with keys
- * like "a" | 1 is bounded.
+ * @example
+ *     IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
+ *     IfBoundedRecord<Record<string | number, unknown>>; //=> false
+ *     IfBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
  */
 export type IfBoundedRecord<
   T,
