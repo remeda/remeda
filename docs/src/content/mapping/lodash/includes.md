@@ -35,7 +35,6 @@ isIncludedIn(1, values({ a: 1, b: 2 }));
 ### Strings
 
 ```ts
-// Lodash
 const DATA = "Hello, World!";
 
 // Lodash
