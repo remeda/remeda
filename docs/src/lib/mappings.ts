@@ -12,6 +12,9 @@ import {
 
 const COLLECTION = "mapping";
 
+export const LIBRARIES = ["lodash", "ramda"] as const;
+type Library = (typeof LIBRARIES)[number];
+
 export async function getMappingEntries(library: string) {
   const fileNameRegExp = new RegExp(`^${library}/(?<name>.*).mdx?$`, "ui");
 
@@ -32,15 +35,12 @@ export async function getMappingEntries(library: string) {
   );
 }
 
-export function mappingUrl(library: string, name: string): string | undefined {
+export function mappingUrl(library: Library, name: string): string {
   switch (library) {
     case "lodash":
       return `https://lodash.com/docs/4.17.15#${name}`;
 
     case "ramda":
       return `https://ramdajs.com/docs/#${name}`;
-
-    default:
-      return;
   }
 }
