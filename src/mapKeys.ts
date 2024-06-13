@@ -10,18 +10,6 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
-type KeyMapperKey<T> =
-  T extends Record<infer K, unknown>
-    ? EnumerableStringKeyOf<{ [P in K]: unknown }>
-    : never;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type InferredRecordValue<T> = T extends Record<any, infer V> ? V : never;
-
-type KeyMapperValue<T> = InferredRecordValue<{
-  [K in keyof T]: EnumerableStringKeyedValueOf<T>;
-}>;
-
 /**
  * Maps keys of `object` and keeps the same values.
  *
@@ -36,8 +24,12 @@ type KeyMapperValue<T> = InferredRecordValue<{
  */
 export function mapKeys<T extends {}, S extends PropertyKey>(
   data: T,
-  keyMapper: (key: KeyMapperKey<T>, value: KeyMapperValue<T>, data: T) => S,
-): ExactRecord<S, KeyMapperValue<T>>;
+  keyMapper: (
+    key: EnumerableStringKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    data: T,
+  ) => S,
+): ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
 
 /**
  * Maps keys of `object` and keeps the same values.
@@ -51,8 +43,12 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
  * @category Object
  */
 export function mapKeys<T extends {}, S extends PropertyKey>(
-  keyMapper: (key: KeyMapperKey<T>, value: KeyMapperValue<T>, data: T) => S,
-): (data: T) => ExactRecord<S, KeyMapperValue<T>>;
+  keyMapper: (
+    key: EnumerableStringKeyOf<T>,
+    value: EnumerableStringKeyedValueOf<T>,
+    data: T,
+  ) => S,
+): (data: T) => ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
 
 export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapKeysImplementation, args);

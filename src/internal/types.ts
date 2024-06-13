@@ -8,6 +8,7 @@ import {
   type KeysOfUnion,
   type Simplify,
   type Split,
+  type EmptyObject,
 } from "type-fest";
 
 declare const __brand: unique symbol;
@@ -96,15 +97,25 @@ type IsBoundedString<T> = T extends string
  *
  * @see EnumerableStringKeyedValueOf
  */
-export type EnumerableStringKeyOf<T> = `${Exclude<keyof T, symbol>}`;
+export type EnumerableStringKeyOf<T> =
+  T extends Record<infer K, unknown> ? `${Exclude<K, symbol>}` : never;
+
+/**
+ * Extracts the value type from an object type T.
+ */
+export type InferredRecordValue<T> = T extends EmptyObject
+  ? T[keyof T]
+  : T extends Record<PropertyKey, infer V>
+    ? V
+    : never;
 
 /**
  * A union of all values of properties in T which are not keyed by a symbol,
  * following the definition of `Object.values` and `Object.entries`.
  */
-export type EnumerableStringKeyedValueOf<T> = {
+export type EnumerableStringKeyedValueOf<T> = InferredRecordValue<{
   [K in keyof T]-?: K extends symbol ? never : T[K];
-}[keyof T];
+}>;
 
 /**
  * This is the type you'd get from doing:
