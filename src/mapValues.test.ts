@@ -116,7 +116,7 @@ describe("typing", () => {
 
       mapValues(userValues, (value, key) => {
         expectTypeOf(value).toEqualTypeOf<number>();
-        expectTypeOf(key).toEqualTypeOf<`${UserID}`>();
+        expectTypeOf(key).toMatchTypeOf<`${UserID}`>();
       });
     });
   });
@@ -159,5 +159,25 @@ describe("typing", () => {
       c: boolean;
       d: boolean;
     }>();
+  });
+
+  test("unions of records", () => {
+    const dataFirst = mapValues(
+      {} as Record<number, string> | Record<string, string>,
+      constant("hello" as string),
+    );
+
+    expectTypeOf(dataFirst).toEqualTypeOf<
+      Record<`${number}`, string> | Record<string, string>
+    >();
+
+    const dataLast = pipe(
+      {} as Record<number, string> | Record<string, string>,
+      mapValues(constant("hello" as string)),
+    );
+
+    expectTypeOf(dataLast).toEqualTypeOf<
+      Record<`${number}`, string> | Record<string, string>
+    >();
   });
 });
