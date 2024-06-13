@@ -13,9 +13,10 @@ import BaseLayout from "./base.astro";
 type Props = {
   readonly categorized: CategorizedFunctions;
   readonly showVersionSelector?: boolean;
+  readonly title?: string;
 };
 
-const { categorized, showVersionSelector = false } = Astro.props;
+const { categorized, showVersionSelector = false, title } = Astro.props;
 
 const { pathname } = Astro.url;
 
@@ -40,6 +41,11 @@ const renderedArticles = await pipe(
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
       <Navbar entries={navbarEntries} client:load>
+        {
+          title !== undefined && (
+            <h2 class="text-lg font-bold capitalize">{title}</h2>
+          )
+        }
         {
           showVersionSelector && (
             <VersionSelector pathname={pathname} client:load />
