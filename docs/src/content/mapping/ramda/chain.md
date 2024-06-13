@@ -1,0 +1,4 @@
+---
+category: List
+remeda: flatMap
+---

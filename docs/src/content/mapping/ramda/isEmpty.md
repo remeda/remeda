@@ -1,0 +1,4 @@
+---
+category: Logic
+remeda: isEmpty
+---
