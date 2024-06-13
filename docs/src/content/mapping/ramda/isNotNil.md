@@ -1,4 +1,4 @@
 ---
-category: Logic
+category: Type
 remeda: isNonNullish
 ---

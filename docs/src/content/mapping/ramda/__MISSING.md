@@ -90,3 +90,84 @@
 - update
 - without
 - xprod
+
+# Logic
+
+- and
+- both
+- complement
+- defaultTo
+- either
+- ifElse
+- isNotEmpty
+- or
+- pathSatisfies
+- propSatisfies
+- unless
+- until
+- when
+- xor
+
+# Math
+
+- mathMod
+- median
+- modulo
+
+# Object
+
+- dissoc
+- dissocPath
+- eqProps
+- has
+- hasIn
+- hasPath
+- invert
+- keysIn
+- lens
+- lensIndex
+- lensPath
+- lensProp
+- mergeDeepLeft
+- mergeDeepWith
+- mergeDeepWithKey
+- mergeLeft
+- mergeWith
+- mergeWithKey
+- modify
+- modifyPath
+- over
+- path
+- paths
+- pickAll
+- project
+- propOr
+- props
+- toPairsIn
+- unwind
+- valuesIn
+- view
+- whereAny
+- whereEq
+
+# Relation
+
+- countBy
+- eqBy
+- gt
+- gte
+- identical
+- lt
+- lte
+- pathEq
+- propEq
+- symmetricDifference
+- symmetricDifferenceWith
+- union
+- unionWith
+
+# Type
+
+- type
+- is
+- propIs
