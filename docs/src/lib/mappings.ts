@@ -1,5 +1,14 @@
 import { getCollection } from "astro:content";
-import { pipe, groupBy, mapValues, map, pick, piped, prop } from "remeda";
+import {
+  sortBy,
+  pipe,
+  groupBy,
+  mapValues,
+  map,
+  pick,
+  piped,
+  prop,
+} from "remeda";
 
 const COLLECTION = "mapping";
 
@@ -8,6 +17,7 @@ export async function getMappingEntries(library: string) {
 
   return pipe(
     await getCollection(COLLECTION, ({ id }) => id.startsWith(library)),
+    sortBy(({ id }) => id.toLocaleLowerCase()),
     groupBy(({ data: { category } }) => category),
     mapValues(
       map(
