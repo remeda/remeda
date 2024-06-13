@@ -27,6 +27,9 @@ export function mappingUrl(library: string, name: string): string | undefined {
     case "lodash":
       return `https://lodash.com/docs/4.17.15#${name}`;
 
+    case "ramda":
+      return `https://ramdajs.com/docs/#${name}`;
+
     default:
       return;
   }
