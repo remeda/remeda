@@ -37,7 +37,9 @@ export function MobileNav({
             setIsOpen(false);
           }}
         >
-          {title && <h2 className="text-lg font-bold capitalize">{title}</h2>}
+          {title !== undefined && (
+            <h2 className="text-lg font-bold capitalize">{title}</h2>
+          )}
           {showVersionSelector && <VersionSelector pathname={pathname} />}
         </Navbar>
       </SheetContent>
