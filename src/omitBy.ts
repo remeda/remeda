@@ -19,15 +19,19 @@ type PickSymbolKeys<T extends object> = {
 // would be omitted from the output, so we need to assume any of them could be
 // filtered out. This means that we effectively make all (enumerable) keys
 // optional.
-type PartialEnumerableKeys<T extends object> = Simplify<
-  IfBoundedRecord<
-    T,
-    PickSymbolKeys<T> & {
-      -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
-    },
-    ReconstructedRecord<T>
-  >
->;
+type PartialEnumerableKeys<T extends object> = T extends unknown
+  ? Simplify<
+      IfBoundedRecord<
+        T,
+        PickSymbolKeys<T> & {
+          -readonly [P in keyof T as P extends symbol
+            ? never
+            : P]?: Required<T>[P];
+        },
+        ReconstructedRecord<T>
+      >
+    >
+  : unknown;
 
 // When the predicate is a type-guard we have more information to work with when
 // constructing the type of the output object. We can safely remove any property
