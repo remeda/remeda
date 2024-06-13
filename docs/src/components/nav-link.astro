@@ -3,12 +3,14 @@ type Props = {
   readonly href: string;
   readonly additionalHrefs?: readonly string[];
   readonly directory?: boolean;
+  readonly ["as"]?: "span" | "a";
 };
 
 const {
   href,
   additionalHrefs = [],
   directory: isDirectory = false,
+  as: asHtmlElement = "a",
 } = Astro.props;
 
 const { pathname } = Astro.url;
@@ -17,14 +19,21 @@ const trimmed = pathname.replace(/\/$/, "");
 const isActive = [href, ...additionalHrefs].some((path) =>
   isDirectory ? trimmed.startsWith(path) : path === trimmed,
 );
+
+const classList = [
+  "truncate transition-colors hover:text-foreground/80",
+  isActive ? "font-semibold text-primary" : "text-foreground/60",
+] as const;
 ---
 
-<a
-  href={href}
-  class:list={[
-    "truncate transition-colors hover:text-foreground/80",
-    isActive ? "font-semibold text-primary" : "text-foreground/60",
-  ]}
->
-  <slot />
-</a>
+{
+  asHtmlElement === "a" ? (
+    <a href={href} class:list={classList}>
+      <slot />
+    </a>
+  ) : (
+    <span class:list={classList}>
+      <slot />
+    </span>
+  )
+}
