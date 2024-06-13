@@ -70,4 +70,22 @@ describe("typing", () => {
       expectTypeOf(value).toEqualTypeOf<boolean | string>();
     });
   });
+
+  test("union of records", () => {
+    forEachObj(
+      {} as Record<number, string> | Record<string, number>,
+      (value, key) => {
+        expectTypeOf(key).toEqualTypeOf<string>();
+        expectTypeOf(value).toEqualTypeOf<number | string>();
+      },
+    );
+
+    pipe(
+      {} as Record<number, string> | Record<string, number>,
+      forEachObj((value, key) => {
+        expectTypeOf(key).toEqualTypeOf<string>();
+        expectTypeOf(value).toEqualTypeOf<number | string>();
+      }),
+    );
+  });
 });
