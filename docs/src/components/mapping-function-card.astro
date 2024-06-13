@@ -4,7 +4,7 @@ import { getEntry } from "astro:content";
 import { Badge } from "./ui/badge";
 import Prose from "./prose.astro";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { mappingUrl } from "@/lib/mappings";
+import { mappingUrl, type Library } from "@/lib/mappings";
 import GithubEdit from "./github-edit.astro";
 import invariant from "tiny-invariant";
 
@@ -12,7 +12,7 @@ const COLLECTION = "mapping";
 
 type Props = {
   readonly name: string;
-  readonly library: string;
+  readonly library: Library;
 };
 
 const { name, library } = Astro.props;

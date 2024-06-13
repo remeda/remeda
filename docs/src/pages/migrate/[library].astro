@@ -1,8 +1,8 @@
 ---
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { getMappingEntries, LIBRARIES } from "@/lib/mappings";
-import { entries, flatMap, pipe, sortBy } from "remeda";
+import { getLibraries, getMappingEntries } from "@/lib/mappings";
+import { map, entries, objOf, flatMap, pipe, sortBy, piped } from "remeda";
 
 const { library } = Astro.params;
 
@@ -15,8 +15,8 @@ const forDisplay = pipe(
   flatMap(([, functions]) => functions),
 );
 
-export const getStaticPaths = () =>
-  LIBRARIES.map((library) => ({ params: { library } }));
+export const getStaticPaths = async () =>
+  map(await getLibraries(), piped(objOf("library"), objOf("params")));
 ---
 
 <DocsPage categorized={mappingEntries}>
