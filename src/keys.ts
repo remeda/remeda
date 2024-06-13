@@ -50,7 +50,9 @@ type IndicesAfterSpread<
       : Iterations["length"];
 
 type ObjectKeys<T> =
-  T extends Record<PropertyKey, never> ? [] : Array<EnumerableStringKeyOf<T>>;
+  T extends Record<PropertyKey, never>
+    ? []
+    : Array<EnumerableStringKeyOf<Required<T>>>;
 
 /**
  * Returns a new array containing the keys of the array or object.
