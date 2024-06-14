@@ -54,9 +54,10 @@ describe("typing", () => {
   });
 
   it("should correctly type union of Records", () => {
-    const result = values<Record<number, string> | Record<string, string>>({
+    const result = values({
       a: "b",
-    });
+    } as Record<number, string> | Record<string, string>);
+
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
