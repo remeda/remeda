@@ -98,7 +98,9 @@ type IsBoundedString<T> = T extends string
  * @see EnumerableStringKeyedValueOf
  */
 export type EnumerableStringKeyOf<T> =
-  T extends Record<infer K, unknown> ? `${Exclude<K, symbol>}` : never;
+  Required<T> extends Record<infer K, unknown>
+    ? `${Exclude<K, symbol>}`
+    : never;
 
 /**
  * Extracts the value type from an object type T.
