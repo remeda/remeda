@@ -113,19 +113,14 @@ describe("typing", () => {
     });
 
     test("unions of records", () => {
-      const dataFirst = keys(
-        {} as Record<number, string> | Record<string, string>,
-      );
+      const data = {} as Record<number, unknown> | Record<string, unknown>;
 
+      const dataFirst = keys(data);
       expectTypeOf(dataFirst).toEqualTypeOf<
         Array<`${number}`> | Array<string>
       >();
 
-      const dataLast = pipe(
-        {} as Record<number, string> | Record<string, string>,
-        keys(),
-      );
-
+      const dataLast = pipe(data, keys());
       expectTypeOf(dataLast).toEqualTypeOf<
         Array<`${number}`> | Array<string>
       >();
