@@ -72,16 +72,15 @@ describe("typing", () => {
   });
 
   test("union of records", () => {
-    forEachObj(
-      {} as Record<number, string> | Record<string, number>,
-      (value, key) => {
-        expectTypeOf(key).toEqualTypeOf<string>();
-        expectTypeOf(value).toEqualTypeOf<number | string>();
-      },
-    );
+    const data = {} as Record<number, string> | Record<string, number>;
+
+    forEachObj(data, (value, key) => {
+      expectTypeOf(key).toEqualTypeOf<string>();
+      expectTypeOf(value).toEqualTypeOf<number | string>();
+    });
 
     pipe(
-      {} as Record<number, string> | Record<string, number>,
+      data,
       forEachObj((value, key) => {
         expectTypeOf(key).toEqualTypeOf<string>();
         expectTypeOf(value).toEqualTypeOf<number | string>();
