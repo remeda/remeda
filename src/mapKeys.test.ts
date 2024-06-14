@@ -107,18 +107,12 @@ describe("typing", () => {
   });
 
   test("union of records", () => {
-    const dataFirst = mapKeys(
-      {} as Record<number, string> | Record<string, string>,
-      constant("hello" as string),
-    );
+    const data = {} as Record<number, string> | Record<string, string>;
 
+    const dataFirst = mapKeys(data, constant("hello" as string));
     expectTypeOf(dataFirst).toEqualTypeOf<Record<string, string>>();
 
-    const dataLast = pipe(
-      {} as Record<number, string> | Record<string, string>,
-      mapKeys(constant("hello" as string)),
-    );
-
+    const dataLast = pipe(data, mapKeys(constant("hello" as string)));
     expectTypeOf(dataLast).toEqualTypeOf<Record<string, string>>();
   });
 });
