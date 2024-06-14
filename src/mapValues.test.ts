@@ -116,6 +116,7 @@ describe("typing", () => {
 
       mapValues(userValues, (value, key) => {
         expectTypeOf(value).toEqualTypeOf<number>();
+        // TODO: If possible, use `toEqualTypeOf`
         expectTypeOf(key).toMatchTypeOf<`${UserID}`>();
       });
     });
