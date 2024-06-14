@@ -103,7 +103,7 @@ export type EnumerableStringKeyOf<T> =
 /**
  * Extracts the value type from an object type T.
  */
-export type InferredRecordValue<T> = T extends EmptyObject
+export type ValuesOf<T> = T extends EmptyObject
   ? T[keyof T]
   : T extends Record<PropertyKey, infer V>
     ? V
@@ -113,7 +113,7 @@ export type InferredRecordValue<T> = T extends EmptyObject
  * A union of all values of properties in T which are not keyed by a symbol,
  * following the definition of `Object.values` and `Object.entries`.
  */
-export type EnumerableStringKeyedValueOf<T> = InferredRecordValue<{
+export type EnumerableStringKeyedValueOf<T> = ValuesOf<{
   [K in keyof T]-?: K extends symbol ? never : T[K];
 }>;
 
