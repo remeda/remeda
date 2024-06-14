@@ -34,7 +34,7 @@ type PartialEnumerableKeys<T extends object> =
           ReconstructedRecord<T>
         >
       >
-    : unknown;
+    : never;
 
 // When the predicate is a type-guard we have more information to work with when
 // constructing the type of the output object. We can safely remove any property
