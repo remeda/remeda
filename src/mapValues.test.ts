@@ -1,4 +1,5 @@
 import { constant } from "./constant";
+import { type Branded } from "./internal/types";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";
 
@@ -106,8 +107,7 @@ describe("typing", () => {
 
   describe("branded types", () => {
     test("should infer types correctly in the mapper", () => {
-      type Branded<K, T> = K & { _type: T };
-      type UserID = Branded<string, "UserId">;
+      type UserID = Branded<string, symbol>;
 
       const userValues: Record<UserID, number> = {
         ["U1" as UserID]: 1,
@@ -116,8 +116,7 @@ describe("typing", () => {
 
       mapValues(userValues, (value, key) => {
         expectTypeOf(value).toEqualTypeOf<number>();
-        // TODO: If possible, use `toEqualTypeOf`
-        expectTypeOf(key).toMatchTypeOf<`${UserID}`>();
+        expectTypeOf(key).toEqualTypeOf<`${UserID}`>();
       });
     });
   });
