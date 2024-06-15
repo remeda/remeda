@@ -55,10 +55,10 @@ describe("typing", () => {
 
   it("should correctly type union of Records", () => {
     const result = values({
-      a: "b",
-    } as Record<number, string> | Record<string, string>);
+      a: "cat",
+    } as Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">);
 
-    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+    expectTypeOf(result).toEqualTypeOf<Array<"cat"> | Array<"dog">>();
   });
 
   it("should correctly type typed objects", () => {
