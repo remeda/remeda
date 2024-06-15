@@ -1,0 +1,4 @@
+---
+category: Type
+remeda: isNonNullish
+---

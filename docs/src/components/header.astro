@@ -4,6 +4,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
 import NavLink from "./nav-link.astro";
 import { ThemeSwitcher } from "./theme-switcher";
+import MigrationSelector from "./migration-selector.astro";
 ---
 
 <header
@@ -14,7 +15,10 @@ import { ThemeSwitcher } from "./theme-switcher";
   >
     <a href="/" class="font-bold">Remeda</a>
     <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
-    <NavLink directory href="/migrate">Migration Guides</NavLink>
+    <MigrationSelector
+      ><NavLink directory as="span" href="/migrate">Migration Guides</NavLink
+      ></MigrationSelector
+    >
     <div class="flex-1"></div>
     <a
       href="https://github.com/remeda/remeda"

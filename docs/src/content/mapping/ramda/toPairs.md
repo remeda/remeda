@@ -1,0 +1,4 @@
+---
+category: Object
+remeda: entries
+---
