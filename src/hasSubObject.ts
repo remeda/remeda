@@ -76,7 +76,7 @@ type HasSubObjectSubObject<
  * @category Guard
  */
 export function hasSubObject<
-  T extends Record<string, unknown>,
+  T extends Record<PropertyKey, unknown>,
   S extends HasSubObjectSubObject<S, T>,
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S>;
 
@@ -95,7 +95,7 @@ export function hasSubObject<
  * @dataLast
  * @category Guard
  */
-export function hasSubObject<S extends Record<string, unknown>>(
+export function hasSubObject<S extends Record<PropertyKey, unknown>>(
   subObject: S,
 ): <T extends HasSubObjectData<T, S>>(
   data: T,
@@ -106,8 +106,8 @@ export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function hasSubObjectImplementation<
-  T extends Record<string, unknown>,
-  S extends Record<string, unknown>,
+  T extends Record<PropertyKey, unknown>,
+  S extends Record<PropertyKey, unknown>,
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S> {
   for (const [key, value] of Object.entries(subObject)) {
     if (!Object.hasOwn(data, key)) {
