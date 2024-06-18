@@ -2,17 +2,17 @@
 
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
-[![GitHub License](https://img.shields.io/github/license/remeda/remeda)](https://github.com/remeda/remeda?tab=MIT-1-ov-file#readme)
-![GitHub top language](https://img.shields.io/github/languages/top/remeda/remeda)
-[![Codecov](https://codecov.io/gh/remeda/remeda/branch/main/graph/badge.svg)](https://codecov.io/gh/remeda/remeda)
-[![GitHub branch status](https://img.shields.io/github/checks-status/remeda/remeda/main?logo=github)](https://github.com/remeda/remeda/actions/workflows)
-[![NPM Downloads](https://img.shields.io/npm/dm/remeda?logo=npm)](https://npmtrends.com/remeda)
-[![Commits](https://img.shields.io/github/commit-activity/y/remeda/remeda?logo=github)](https://github.com/remeda/remeda/commits/main/)
-[![All contributors](https://img.shields.io/github/contributors/remeda/remeda?logo=github)](https://github.com/remeda/remeda/graphs/contributors)
-![GitHub Repo stars](https://img.shields.io/github/stars/remeda/remeda?logo=github)
-[![NPM](https://img.shields.io/npm/v/remeda?logo=npm)](https://www.npmjs.org/package/remeda)
-[![GitHub Release Date](https://img.shields.io/github/release-date/remeda/remeda?logo=npm)](https://github.com/remeda/remeda/releases)
-[![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/remeda)](https://libraries.io/npm/remeda/sourcerank)
+[![GitHub License](https://img.shields.io/github/license/remeda/remeda?style=flat-square)](https://github.com/remeda/remeda?tab=MIT-1-ov-file#readme)
+![GitHub top language](https://img.shields.io/github/languages/top/remeda/remeda?logo=typescript&style=flat-square)
+[![NPM](https://img.shields.io/npm/v/remeda?logo=npm&style=flat-square)](https://www.npmjs.org/package/remeda)
+[![NPM Downloads](https://img.shields.io/npm/dm/remeda?logo=npm&style=flat-square)](https://npmtrends.com/remeda)
+![GitHub Repo stars](https://img.shields.io/github/stars/remeda/remeda?logo=github&style=flat-square)
+[![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/remeda?logo=librariesdotio&style=flat-square)](https://libraries.io/npm/remeda/sourcerank)<br />
+[![Codecov](https://img.shields.io/codecov/c/github/remeda/remeda?logo=codecov&style=flat-square)](https://codecov.io/gh/remeda/remeda)
+[![GitHub branch status](https://img.shields.io/github/checks-status/remeda/remeda/main?logo=github&style=flat-square)](https://github.com/remeda/remeda/actions/workflows)
+[![GitHub Release Date](https://img.shields.io/github/release-date/remeda/remeda?logo=npm&style=flat-square)](https://github.com/remeda/remeda/releases)
+[![Commits](https://img.shields.io/github/commit-activity/y/remeda/remeda?logo=github&style=flat-square)](https://github.com/remeda/remeda/commits/main/)
+[![All contributors](https://img.shields.io/github/contributors/remeda/remeda?logo=github&style=flat-square)](https://github.com/remeda/remeda/graphs/contributors)
 
 
 ## Documentation
