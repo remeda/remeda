@@ -113,6 +113,7 @@ export * from "./sortedIndexWith";
 export * from "./sortedLastIndex";
 export * from "./sortedLastIndexBy";
 export * from "./splice";
+export * from "./split";
 export * from "./splitAt";
 export * from "./splitWhen";
 export * from "./stringToPath";

@@ -166,6 +166,16 @@
 - union
 - unionWith
 
+# String
+
+- match
+- replace
+- test
+- toLower
+- toString
+- toUpper
+- trim
+
 # Type
 
 - type
