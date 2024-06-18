@@ -12,7 +12,6 @@ The first "data-first" and "data-last" utility library designed especially for T
 ![GitHub Repo stars](https://img.shields.io/github/stars/remeda/remeda?logo=github)
 [![NPM](https://img.shields.io/npm/v/remeda?logo=npm)](https://www.npmjs.org/package/remeda)
 [![GitHub Release Date](https://img.shields.io/github/release-date/remeda/remeda?logo=npm)](https://github.com/remeda/remeda/releases)
-[![GitHub repo file or directory count (in path)](https://img.shields.io/github/directory-file-count/remeda/remeda/src?type=file&extension=ts)](https://github.com/remeda/remeda/tree/main/src)
 [![Libraries.io SourceRank](https://img.shields.io/librariesio/sourcerank/npm/remeda)](https://libraries.io/npm/remeda/sourcerank)
 
 
