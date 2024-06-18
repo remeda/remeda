@@ -53,6 +53,14 @@ describe("typing", () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
+  it("should correctly type union of Records", () => {
+    const result = values({
+      a: "cat",
+    } as Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">);
+
+    expectTypeOf(result).toEqualTypeOf<Array<"cat"> | Array<"dog">>();
+  });
+
   it("should correctly type typed objects", () => {
     const result = values<{ type: "cat" | "dog"; age: number }>({
       type: "cat",

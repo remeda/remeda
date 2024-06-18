@@ -1,4 +1,10 @@
-import { type Branded, type IfBoundedRecord } from "./types";
+import { type EmptyObject } from "type-fest";
+import {
+  type Branded,
+  type IfBoundedRecord,
+  type EnumerableStringKeyedValueOf,
+  type EnumerableStringKeyOf,
+} from "./types";
 
 declare const SymbolFoo: unique symbol;
 declare const SymbolBar: unique symbol;
@@ -154,5 +160,149 @@ describe("IfBoundedRecord", () => {
         Record<`${string}_${number}_${string}_${number}_${string}`, unknown>
       >
     >().toEqualTypeOf<false>();
+  });
+});
+
+describe("EnumerableStringKeyOf", () => {
+  test("string keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<string, unknown>>
+    >().toEqualTypeOf<string>();
+  });
+
+  test("number keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<number, unknown>>
+    >().toEqualTypeOf<`${number}`>();
+  });
+
+  test("union of records", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<
+        Record<`prefix_${string}`, unknown> | Record<number, unknown>
+      >
+    >().toEqualTypeOf<`${number}` | `prefix_${string}`>();
+  });
+
+  test("union keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<number | `prefix_${string}`, unknown>>
+    >().toEqualTypeOf<`${number}` | `prefix_${string}`>();
+  });
+
+  test("symbol keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<string | symbol, unknown>>
+    >().toEqualTypeOf<string>();
+
+    expectTypeOf<
+      EnumerableStringKeyOf<{ [SymbolFoo]: number; a: unknown }>
+    >().toEqualTypeOf<"a">();
+
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<string | typeof SymbolFoo, unknown>>
+    >().toEqualTypeOf<string>();
+  });
+
+  test("optional keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<{ a: unknown; b?: unknown }>
+    >().toEqualTypeOf<"a" | "b">();
+  });
+
+  test("branded types", () => {
+    expectTypeOf<
+      EnumerableStringKeyOf<Record<Branded<string, symbol>, unknown>>
+    >().toEqualTypeOf<`${Branded<string, symbol>}`>();
+  });
+});
+
+describe("EnumerableStringKeyedValueOf", () => {
+  test("string values", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<Record<PropertyKey, string>>
+    >().toEqualTypeOf<string>();
+  });
+
+  test("number values", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<Record<PropertyKey, number>>
+    >().toEqualTypeOf<number>();
+  });
+
+  test("union of records", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<
+        Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">
+      >
+    >().toEqualTypeOf<"cat" | "dog">();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<
+        Record<PropertyKey, number> | Record<PropertyKey, string>
+      >
+    >().toEqualTypeOf<number | string>();
+  });
+
+  test("union values", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<Record<PropertyKey, number | string>>
+    >().toEqualTypeOf<number | string>();
+  });
+
+  test("literal values", () => {
+    expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1 }>>().toEqualTypeOf<1>();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{ a: "1" | "2" | 1 }>
+    >().toEqualTypeOf<"1" | "2" | 1>();
+  });
+
+  test("optional values", () => {
+    expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1; b?: 4 }>>().toEqualTypeOf<
+      1 | 4
+    >();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{ a: string; b?: number }>
+    >().toEqualTypeOf<number | string>();
+  });
+
+  test("nullish and undefined values", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{
+        a: string | undefined;
+        b: string | null;
+      }>
+    >().toEqualTypeOf<string | null | undefined>();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{
+        a?: number | null;
+        b?: number | null | undefined;
+      }>
+    >().toEqualTypeOf<number | null | undefined>();
+  });
+
+  test("symbol keys", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{ [SymbolFoo]: string }>
+    >().toEqualTypeOf<never>();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<{ [SymbolFoo]: string; b: "1" }>
+    >().toEqualTypeOf<"1">();
+
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<
+        Record<PropertyKey | typeof SymbolFoo, string>
+      >
+    >().toEqualTypeOf<string>();
+  });
+
+  test("empty object", () => {
+    expectTypeOf<
+      EnumerableStringKeyedValueOf<EmptyObject>
+    >().toEqualTypeOf<never>();
   });
 });

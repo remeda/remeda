@@ -182,5 +182,18 @@ describe("typing", () => {
       const result = pickBy(data, constant(true));
       expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
     });
+
+    test("union of records", () => {
+      const data = {} as Record<number, string> | Record<string, string>;
+      const dataFirst = pickBy(data, constant(true));
+      expectTypeOf(dataFirst).toEqualTypeOf<
+        Record<`${number}`, string> | Record<string, string>
+      >();
+
+      const dataLast = pipe(data, pickBy(constant(true)));
+      expectTypeOf(dataLast).toEqualTypeOf<
+        Record<`${number}`, string> | Record<string, string>
+      >();
+    });
   });
 });

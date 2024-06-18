@@ -15,15 +15,17 @@ type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
 // whole object to a Partial of the input.
-type EnumeratedPartial<T> = Simplify<
-  IfBoundedRecord<
-    T,
-    {
-      -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
-    },
-    ReconstructedRecord<T>
-  >
->;
+type EnumeratedPartial<T> = T extends unknown
+  ? Simplify<
+      IfBoundedRecord<
+        T,
+        {
+          -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
+        },
+        ReconstructedRecord<T>
+      >
+    >
+  : never;
 
 // When the predicate is a type-guard we have more information to work with when
 // constructing the type of the output object. We can safely remove any property

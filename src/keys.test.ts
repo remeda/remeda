@@ -1,4 +1,5 @@
 import { keys } from "./keys";
+import { pipe } from "./pipe";
 
 describe("runtime", () => {
   describe("dataFirst", () => {
@@ -109,6 +110,20 @@ describe("typing", () => {
     test("empty record (const)", () => {
       const result = keys({} as const);
       expectTypeOf(result).toEqualTypeOf<[]>();
+    });
+
+    test("unions of records", () => {
+      const data = {} as Record<number, unknown> | Record<string, unknown>;
+
+      const dataFirst = keys(data);
+      expectTypeOf(dataFirst).toEqualTypeOf<
+        Array<`${number}`> | Array<string>
+      >();
+
+      const dataLast = pipe(data, keys());
+      expectTypeOf(dataLast).toEqualTypeOf<
+        Array<`${number}`> | Array<string>
+      >();
     });
 
     test("simple (required) object", () => {
