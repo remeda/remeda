@@ -1,5 +1,6 @@
 import type { Simplify } from "type-fest";
 import { add } from "./add";
+import { constant } from "./constant";
 import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
 
@@ -71,74 +72,74 @@ describe("runtime", () => {
       [symbol]: "symbol",
     });
   });
-});
 
-describe("dataLast", () => {
-  it("works on trivially empty arrays", () => {
-    expect(
-      pipe(
-        [] as Array<string>,
-        fromKeys((item) => `${item}_`),
-      ),
-    ).toEqual({});
-  });
+  describe("dataLast", () => {
+    it("works on trivially empty arrays", () => {
+      expect(
+        pipe(
+          [] as Array<string>,
+          fromKeys((item) => `${item}_`),
+        ),
+      ).toEqual({});
+    });
 
-  it("works on regular arrays", () => {
-    expect(
-      pipe(
-        ["a"],
-        fromKeys((item) => `${item}_`),
-      ),
-    ).toEqual({ a: "a_" });
-  });
+    it("works on regular arrays", () => {
+      expect(
+        pipe(
+          ["a"],
+          fromKeys((item) => `${item}_`),
+        ),
+      ).toEqual({ a: "a_" });
+    });
 
-  it("works with duplicates", () => {
-    expect(
-      pipe(
-        ["a", "a"],
-        fromKeys((item) => `${item}_`),
-      ),
-    ).toEqual({ a: "a_" });
-  });
+    it("works with duplicates", () => {
+      expect(
+        pipe(
+          ["a", "a"],
+          fromKeys((item) => `${item}_`),
+        ),
+      ).toEqual({ a: "a_" });
+    });
 
-  it("uses the last value", () => {
-    let counter = 0;
-    expect(
-      pipe(
-        ["a", "a"],
-        fromKeys(() => {
-          counter += 1;
-          return counter;
-        }),
-      ),
-    ).toEqual({ a: 2 });
-  });
+    it("uses the last value", () => {
+      let counter = 0;
+      expect(
+        pipe(
+          ["a", "a"],
+          fromKeys(() => {
+            counter += 1;
+            return counter;
+          }),
+        ),
+      ).toEqual({ a: 2 });
+    });
 
-  it("works with number keys", () => {
-    expect(pipe([123], fromKeys(add(1)))).toEqual({ 123: 124 });
-  });
+    it("works with number keys", () => {
+      expect(pipe([123], fromKeys(add(1)))).toEqual({ 123: 124 });
+    });
 
-  it("works with symbols", () => {
-    const symbol = Symbol("a");
-    expect(
-      pipe(
-        [symbol],
-        fromKeys(() => 1),
-      ),
-    ).toEqual({ [symbol]: 1 });
-  });
+    it("works with symbols", () => {
+      const symbol = Symbol("a");
+      expect(
+        pipe(
+          [symbol],
+          fromKeys(() => 1),
+        ),
+      ).toEqual({ [symbol]: 1 });
+    });
 
-  it("works with a mix of key types", () => {
-    const symbol = Symbol("a");
-    expect(
-      pipe(
-        ["a", 123, symbol],
-        fromKeys((item) => typeof item),
-      ),
-    ).toEqual({
-      a: "string",
-      123: "number",
-      [symbol]: "symbol",
+    it("works with a mix of key types", () => {
+      const symbol = Symbol("a");
+      expect(
+        pipe(
+          ["a", 123, symbol],
+          fromKeys((item) => typeof item),
+        ),
+      ).toEqual({
+        a: "string",
+        123: "number",
+        [symbol]: "symbol",
+      });
     });
   });
 });
@@ -147,11 +148,11 @@ describe("typing", () => {
   test("empty array", () => {
     const data = [] as const;
 
-    const dataFirst = fromKeys(data, getVal);
+    const dataFirst = fromKeys(data, constant(1));
     // eslint-disable-next-line @typescript-eslint/ban-types -- That's just what we return
     expectTypeOf(dataFirst).toEqualTypeOf<{}>();
 
-    const dataLast = pipe(data, fromKeys(getVal));
+    const dataLast = pipe(data, fromKeys(constant(1)));
     // eslint-disable-next-line @typescript-eslint/ban-types -- That's just what we return
     expectTypeOf(dataLast).toEqualTypeOf<{}>();
   });
@@ -159,10 +160,10 @@ describe("typing", () => {
   test("fixed tuple", () => {
     const data = ["cat", "dog"] as const;
 
-    const dataFirst = fromKeys(data, getVal);
+    const dataFirst = fromKeys(data, constant(1));
     expectTypeOf(dataFirst).toEqualTypeOf<Record<"cat" | "dog", number>>();
 
-    const dataLast = pipe(data, fromKeys(getVal));
+    const dataLast = pipe(data, fromKeys(constant(1)));
     expectTypeOf(dataLast).toEqualTypeOf<Record<"cat" | "dog", number>>();
   });
 
@@ -170,30 +171,30 @@ describe("typing", () => {
     test("regular array", () => {
       const data = [] as Array<string>;
 
-      const dataFirst = fromKeys(data, getVal);
-      expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<string, number>>>();
+      const dataFirst = fromKeys(data, constant(1));
+      expectTypeOf(dataFirst).toEqualTypeOf<Record<string, number>>();
 
-      const dataLast = pipe(data, fromKeys(getVal));
-      expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<string, number>>>();
+      const dataLast = pipe(data, fromKeys(constant(1)));
+      expectTypeOf(dataLast).toEqualTypeOf<Record<string, number>>();
     });
 
     test("non-empty array", () => {
       const data = ["cat"] as [string, ...Array<string>];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<Record<string, number>>();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<Record<string, number>>();
     });
 
     test("fixed tuple", () => {
       const data = ["cat", "dog"] as [string, string];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<Record<string, number>>();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<Record<string, number>>();
     });
   });
@@ -202,12 +203,12 @@ describe("typing", () => {
     test("regular array", () => {
       const data = [] as Array<"cat" | "dog">;
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
         Partial<Record<"cat" | "dog", number>>
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
         Partial<Record<"cat" | "dog", number>>
       >();
@@ -216,7 +217,7 @@ describe("typing", () => {
     test("non-empty array", () => {
       const data = ["cat"] as ["cat" | "dog", ...Array<"mouse" | "pig">];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
         Simplify<
           Partial<Record<"mouse" | "pig", number>> &
@@ -224,7 +225,7 @@ describe("typing", () => {
         >
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
         Simplify<
           Partial<Record<"mouse" | "pig", number>> &
@@ -236,7 +237,7 @@ describe("typing", () => {
     test("fixed tuple", () => {
       const data = ["cat", "mouse"] as ["cat" | "dog", "mouse" | "pig"];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
         Simplify<
           ({ cat: number } | { dog: number }) &
@@ -244,7 +245,7 @@ describe("typing", () => {
         >
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
         Simplify<
           ({ cat: number } | { dog: number }) &
@@ -258,14 +259,14 @@ describe("typing", () => {
     test("regular array", () => {
       const data = [] as Array<`prefix_${number}`>;
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
-        Partial<Record<`prefix_${number}`, number>>
+        Record<`prefix_${number}`, number>
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
-        Partial<Record<`prefix_${number}`, number>>
+        Record<`prefix_${number}`, number>
       >();
     });
 
@@ -275,12 +276,12 @@ describe("typing", () => {
         ...Array<`prefix_${number}`>,
       ];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
         Record<`prefix_${number}`, number>
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
         Record<`prefix_${number}`, number>
       >();
@@ -292,12 +293,12 @@ describe("typing", () => {
         `${number}_suffix`,
       ];
 
-      const dataFirst = fromKeys(data, getVal);
+      const dataFirst = fromKeys(data, constant(1));
       expectTypeOf(dataFirst).toEqualTypeOf<
         Record<`${number}_suffix` | `prefix_${number}`, number>
       >();
 
-      const dataLast = pipe(data, fromKeys(getVal));
+      const dataLast = pipe(data, fromKeys(constant(1)));
       expectTypeOf(dataLast).toEqualTypeOf<
         Record<`${number}_suffix` | `prefix_${number}`, number>
       >();
@@ -307,42 +308,40 @@ describe("typing", () => {
       test("regular array", () => {
         const data = [] as Array<number>;
 
-        const dataFirst = fromKeys(data, getVal);
-        expectTypeOf(dataFirst).toEqualTypeOf<
-          Partial<Record<number, number>>
-        >();
+        const dataFirst = fromKeys(data, constant(1));
+        expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
 
-        const dataLast = pipe(data, fromKeys(getVal));
-        expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<number, number>>>();
+        const dataLast = pipe(data, fromKeys(constant(1)));
+        expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
       });
 
       test("non-empty array", () => {
         const data = [1] as [number, ...Array<number>];
 
-        const dataFirst = fromKeys(data, getVal);
+        const dataFirst = fromKeys(data, constant(1));
         expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
 
-        const dataLast = pipe(data, fromKeys(getVal));
+        const dataLast = pipe(data, fromKeys(constant(1)));
         expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
       });
 
       test("fixed tuple", () => {
         const data = [1, 2] as [number, number];
 
-        const dataFirst = fromKeys(data, getVal);
+        const dataFirst = fromKeys(data, constant(1));
         expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
 
-        const dataLast = pipe(data, fromKeys(getVal));
+        const dataLast = pipe(data, fromKeys(constant(1)));
         expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
       });
 
       test("literals", () => {
         const data = [1, 2, 3] as const;
 
-        const dataFirst = fromKeys(data, getVal);
+        const dataFirst = fromKeys(data, constant(1));
         expectTypeOf(dataFirst).toEqualTypeOf<Record<1 | 2 | 3, number>>();
 
-        const dataLast = pipe(data, fromKeys(getVal));
+        const dataLast = pipe(data, fromKeys(constant(1)));
         expectTypeOf(dataLast).toEqualTypeOf<Record<1 | 2 | 3, number>>();
       });
     });
@@ -351,18 +350,14 @@ describe("typing", () => {
   test("typescript doesn't choke on huge literal unions", () => {
     const data = [] as Array<`${Letter}${Letter}`>;
 
-    const dataFirst = fromKeys(data, getVal);
+    const dataFirst = fromKeys(data, constant(1));
     expectTypeOf(dataFirst).toEqualTypeOf<
       Partial<Record<`${Letter}${Letter}`, number>>
     >();
 
-    const dataLast = pipe(data, fromKeys(getVal));
+    const dataLast = pipe(data, fromKeys(constant(1)));
     expectTypeOf(dataLast).toEqualTypeOf<
       Partial<Record<`${Letter}${Letter}`, number>>
     >();
   });
 });
-
-function getVal(): number {
-  return 1;
-}
