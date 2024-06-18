@@ -174,30 +174,30 @@ describe("typing", () => {
     const data = ["a", "b"];
 
     const dataFirst = pullObject(data, identity(), constant("value"));
-    expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<string, string>>>();
+    expectTypeOf(dataFirst).toEqualTypeOf<Record<string, string>>();
 
     const dataLast = pipe(data, pullObject(identity(), constant("value")));
-    expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<string, string>>>();
+    expectTypeOf(dataLast).toEqualTypeOf<Record<string, string>>();
   });
 
   test("number keys", () => {
     const data = [1, 2];
 
     const dataFirst = pullObject(data, identity(), constant(3));
-    expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<number, number>>>();
+    expectTypeOf(dataFirst).toEqualTypeOf<Record<number, number>>();
 
     const dataLast = pipe(data, pullObject(identity(), constant(3)));
-    expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<number, number>>>();
+    expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
   });
 
   test("symbol keys", () => {
     const data = [Symbol("a"), Symbol("b")];
 
     const dataFirst = pullObject(data, identity(), constant(Symbol("c")));
-    expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<symbol, symbol>>>();
+    expectTypeOf(dataFirst).toEqualTypeOf<Record<symbol, symbol>>();
 
     const dataLast = pipe(data, pullObject(identity(), constant(Symbol("c"))));
-    expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<symbol, symbol>>>();
+    expectTypeOf(dataLast).toEqualTypeOf<Record<symbol, symbol>>();
   });
 
   test("number constants", () => {
@@ -249,16 +249,12 @@ describe("typing", () => {
       (item) => `prefix_${item}`,
       constant("value"),
     );
-    expectTypeOf(dataFirst).toEqualTypeOf<
-      Partial<Record<`prefix_${number}`, string>>
-    >();
+    expectTypeOf(dataFirst).toEqualTypeOf<Record<`prefix_${number}`, string>>();
 
     const dataLast = pipe(
       data,
       pullObject((item) => `prefix_${item}`, constant("value")),
     );
-    expectTypeOf(dataLast).toEqualTypeOf<
-      Partial<Record<`prefix_${number}`, string>>
-    >();
+    expectTypeOf(dataLast).toEqualTypeOf<Record<`prefix_${number}`, string>>();
   });
 });
