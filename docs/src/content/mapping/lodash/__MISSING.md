@@ -50,7 +50,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - gt
 - gte
 - isArguments
-- All the type-guards we already have!
 - isArrayBuffer
 - isArrayLike
 - isArrayLikeObject
@@ -65,10 +64,13 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - isMatchWith
 - isNaN
 - isNative
+- isNull
 - isObject
+- isRegExp
 - isSafeInteger
 - isSet
 - isTypedArray
+- isUndefined
 - isWeakMap
 - isWeakSet
 - lt
