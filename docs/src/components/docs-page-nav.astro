@@ -7,7 +7,7 @@ import { VERSIONS } from "./version-selector";
 import { getArticlesForPath } from "@/lib/docs";
 import { getMappingEntries } from "@/lib/mappings";
 
-const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)$/iu;
+const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)\/?$/iu;
 
 const { pathname } = Astro.url;
 const normalizedPathname = pathname.replace(/\/$/, "");
