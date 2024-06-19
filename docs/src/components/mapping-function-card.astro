@@ -1,12 +1,13 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getEntry } from "astro:content";
-import { Badge } from "./ui/badge";
-import Prose from "./prose.astro";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { mappingUrl, type Library } from "@/lib/mappings";
-import GithubEdit from "./github-edit.astro";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { getEntry } from "astro:content";
 import invariant from "tiny-invariant";
+import GithubEdit from "./github-edit.astro";
+import Prose from "./prose.astro";
+import SmartLink from "./smart-link.astro";
+import { Badge } from "./ui/badge";
 
 const COLLECTION = "mapping";
 
@@ -28,29 +29,27 @@ const mappedUrl = mappingUrl(library, name);
 
 <Card id={name} className="scroll-mt-24">
   <CardHeader>
-    <div class="flex items-center gap-2">
-      <CardTitle className="inline-flex flex-1 items-center gap-2 text-2xl"
-        >{name}
-        <a
-          target="_blank"
-          class="text-base text-primary hover:underline"
-          href={mappedUrl}>[{library}]</a
-        >{
-          entry.data.remeda !== undefined && (
-            <>
-              <ArrowRightIcon className="size-6" />
-              {entry.data.remeda}
-              <a
-                class="text-base text-primary hover:underline"
-                href={`/docs#${entry.data.remeda}`}
-              >
-                [remeda]
-              </a>
-            </>
-          )
-        }</CardTitle
+    <div class="flex gap-2 overflow-hidden">
+      <CardTitle
+        className="flex flex-1 flex-wrap items-center gap-2 overflow-hidden text-2xl"
       >
-      <Badge className="h-8">{entry.data.category}</Badge>
+        <div class="flex items-center gap-2">
+          {name}
+          <SmartLink href={mappedUrl}>[{library}]</SmartLink>
+        </div>
+        {
+          entry.data.remeda !== undefined && (
+            <div class="flex items-center gap-2 overflow-hidden">
+              <ArrowRightIcon className="size-5" />
+              <span class="truncate">{entry.data.remeda}</span>
+              <SmartLink href={`/docs#${entry.data.remeda}`}>
+                [remeda]
+              </SmartLink>
+            </div>
+          )
+        }
+      </CardTitle>
+      <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
       <GithubEdit entry={entry} />
     </div>
   </CardHeader>
