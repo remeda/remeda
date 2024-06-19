@@ -9,9 +9,9 @@ import {
   piped,
   prop,
   sortBy,
+  split,
   unique,
 } from "remeda";
-import type { Split } from "type-fest";
 
 const COLLECTION = "mapping";
 
@@ -27,14 +27,7 @@ export type Library = Awaited<ReturnType<typeof getLibraries>>[number];
 export const getLibraries = async () =>
   pipe(
     await getCollection(COLLECTION),
-    map(
-      piped(
-        prop("id"),
-        // TODO: Add split to remeda!
-        ($) => $.split("/") as Split<typeof $, "/">,
-        first(),
-      ),
-    ),
+    map(piped(prop("id"), split("/"), first())),
     unique(),
   );
 
