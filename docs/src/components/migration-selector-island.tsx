@@ -17,7 +17,9 @@ export function MigrationSelectorIsland({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button type="button">{children}</button>
+        <button type="button" className="truncate">
+          {children}
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {libraries.map((library) => (
