@@ -20,9 +20,9 @@ const { name, sourceUrl, category, description, tags } = Astro.props;
 
 <>
   <div class="flex items-center gap-2">
-    <CardTitle className="flex-1 text-2xl">{name}</CardTitle>
+    <CardTitle className="flex-1 overflow-hidden text-2xl">{name}</CardTitle>
     {tags?.map((tag) => <TagBadge tag={tag} className="h-8" />)}
-    <Badge className="h-8">{category}</Badge>
+    <Badge className="hidden h-8 sm:flex">{category}</Badge>
     {sourceUrl !== undefined && <GithubSource url={sourceUrl} />}
   </div>
   {
