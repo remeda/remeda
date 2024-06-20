@@ -16,12 +16,4 @@ export default defineConfig({
     mdx(),
     sitemap(),
   ],
-
-  vite: {
-    plugins: [
-      visualizer({
-        filename: "node_modules/.cache/bundleVisualizer.html",
-      }),
-    ],
-  },
 });
