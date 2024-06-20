@@ -7,6 +7,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   site: "https://remedajs.com",
+
   integrations: [
     react(),
     tailwind({
@@ -15,6 +16,7 @@ export default defineConfig({
     mdx(),
     sitemap(),
   ],
+
   vite: {
     plugins: [
       visualizer({
