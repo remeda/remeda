@@ -2,17 +2,15 @@
 
 We're always looking for new contributors and are happy to help you get started! Some ideas:
 
-- Add a test for a function.
+- Add a test to a function, testing something that we haven't tested yet.
 - Improve a function's documentation.
-- Work on any issue tagged [good first issue](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
-- Work on any issue tagged [help wanted](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
+- Fix a bug or an edge case.
+- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%good+first+issue%22).
+- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%help+wanted%22).
 
 ## Getting started
 
-Requirements:
-
-- Node.js `>=18.20.0`
-- npm `>=10.7.0`
+We use `npm` as the package manager. We recommend using [`nvm`](https://github.com/nvm-sh/nvm) to manage `Node.js` and `npm` versions.
 
 Install dependencies:
 
@@ -22,17 +20,23 @@ cd remeda
 npm install
 ```
 
-Run a test, and watch for changes:
+Run tests and watch for changes:
 
 ```bash
-npm test -i src/file.test.ts
+npm test # every test
+npm test -i src/file.test.ts # specific test
 ```
 
-We have a pre-commit script that will format and lint the project.
+We have a pre-commit script that will format and lint the project, but if you want to run it manually:
+
+```bash
+npm run prettier # format
+npm run lint # lint
+```
 
 ## Documentation
 
-Help us make the documentation better! See [`docs/README.md`](https://github.com/remeda/remeda/blob/main/docs/README.md).
+Most of the content in the documentation is generated from the JSDoc comments. If you want to work on the design of the docs website or the migration guides, see [`docs/README.md`](https://github.com/remeda/remeda/blob/main/docs/README.md).
 
 ## Guidelines
 
@@ -40,7 +44,7 @@ Help us make the documentation better! See [`docs/README.md`](https://github.com
 
 When adding a new function, remember to:
 
-- Add a Typedoc comment with a description, parameters, signature, an example, and tags.
+- Add a JSDoc comment with a description, parameters, signature, an example, and tags.
 - Add tests for runtime, typing, data-first, and data-last forms.
   - For data-last tests, prefer tests using `pipe`, as this better matches real-world usage.
 - Add exports to `src/index.ts`.
