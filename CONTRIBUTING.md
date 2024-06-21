@@ -48,13 +48,63 @@ When adding a new function, remember to:
 - Add tests for runtime, typing, data-first, and data-last forms.
   - For data-last tests, prefer tests using `pipe`, as this better matches real-world usage.
 - Add exports to `src/index.ts`.
-- Add Lodash and Ramda equivalents to `docs/src/content/mapping`.
+- Check for equivalent functions in [Lodash](https://lodash.com/docs/4.17.15) and [Ramda](https://ramdajs.com/docs/), and add them to `docs/src/content/mapping`.
 
-### Input types to consider
+### Writing types
 
-Check which of these types are relevant and write tests for them.
+TODO: using `type-fest`, prefer `<T extends IterableContainer>(data: T)` over `<T>(data: ReadonlyArray<T>)`, and `<T extends object>(data: T)` over `<T>(data: Readonly<Record<string, T>>)`
 
-Most of these types will be irrelevant! Use your judgment to pick the ones that are likely to come up in a real use case.
+### Writing tests
+
+The tests for `file.ts` live in `file.test.ts`. Some guidelines:
+
+- We have separate tests for runtime and typing, and within we have separate tests for data-first and data-last forms. Typically this looks like
+
+```ts
+describe("runtime", () => {
+  describe("data-first", () => {
+    test("something", () => {
+      expect(/* ... */).toBe(/* ... */);
+    });
+  });
+
+  describe("data-last", () => {
+    test("something", () => {
+      expect(/* ... */).toBe(/* ... */);
+    });
+  });
+});
+
+describe("typing", () => {
+  describe("data-first", () => {
+    test("something", () => {
+      expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
+    });
+  });
+
+  describe("data-last", () => {
+    test("something", () => {
+      expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
+    });
+  });
+});
+```
+
+- Each `test` block should test one thing. Most of the time this means having only one `expect` per `test`.
+- We test for types using [`expectTypeOf`](https://vitest.dev/api/expect-typeof), rather than [`assertType`](https://vitest.dev/api/assert-type.html).
+- We also test for type errors. Prefer [`ts-expect-error`, rather than `@ts-ignore`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#ts-ignore-or-ts-expect-error):
+
+```ts
+test("doesn't accept non-literal depths", () => {
+  // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
+  flat([], 1 as number);
+});
+```
+
+- When testing types, cover as many use-cases as possible.
+
+<details>
+<summary>Some types to consider:</summary>
 
 - Numbers
   - Number type (`number`)
@@ -106,14 +156,16 @@ Most of these types will be irrelevant! Use your judgment to pick the ones that 
 - `readonly` versions of the above
 - `null` and `undefined`
 
+</details>
+
 ### Design philosophy
 
-**No type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience. The exception is `piped`.
+**No type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience.
 
 **Have good output types.** One reason Remeda provide "one-liner" functions is if we can have better output types than the defaults. While `data.filter(item => typeof item === 'number')` works, `filter(data, isNumber)` gives a better output type. This is why we have type guards, `hasAtLeast`, `prop`, etc.
 
 **Readability counts.** The other reason Remeda provides one-liner functions is if they make things more readable. Compare `map((item) => item + 3)` to `map(add(3))`, where we don't need to come up with a name for `item`. This is why we have `constant`, `doNothing`, `identity`, etc.
 
-**Prefer composition.** We don't provide simple compositions of functions. Having a smaller surface area makes it easier for users to remember Remeda's functions, and easier for us to maintain. We don't have `reject` because it's the same as `filter(isNot)`. An exception is when the composition would be less readable; this is why we have `sum`, even if it's the same as `sumBy(identity)`.
+**Prefer composition.** We don't provide simple compositions of functions. Having a smaller surface area makes it easier for users to remember Remeda's functions, and easier for us to maintain. We don't have `reject` because it's the same as `filter(isNot)`, and we don't have `zipObject` because it's the same as `fromEntries(zip)`.
 
-**Minimal implementations.** Implementations should, as much as possible, be small and self-contained. Importing an individual function should add less than 500 B to the bundle size in most cases.
+**Minimal implementations.** Implementations should be small and self-contained. Importing an individual function should add less than 500 B to the bundle size in most cases.
