@@ -14,7 +14,6 @@ The first "data-first" and "data-last" utility library designed especially for T
 [![Commits](https://img.shields.io/github/commit-activity/y/remeda/remeda?logo=github&style=flat-square)](https://github.com/remeda/remeda/commits/main/)
 [![All contributors](https://img.shields.io/github/contributors/remeda/remeda?logo=github&style=flat-square)](https://github.com/remeda/remeda/graphs/contributors)
 
-
 ## Documentation
 
 Read the full docs and API reference on [remedajs.com/docs](https://remedajs.com/docs).
