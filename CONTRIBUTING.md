@@ -30,6 +30,10 @@ npm test -i src/file.test.ts
 
 We have a pre-commit script that will format and lint the project.
 
+## Documentation
+
+Help us make the documentation better! See [`docs/README.md`](https://github.com/remeda/remeda/blob/main/docs/README.md).
+
 ## Guidelines
 
 ### Adding a new function
@@ -98,20 +102,14 @@ Most of these types will be irrelevant! Use your judgment to pick the ones that 
 - `readonly` versions of the above
 - `null` and `undefined`
 
-### Philosophy
+### Design philosophy
 
-**Type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience. The exception is `piped`.
+**No type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience. The exception is `piped`.
 
 **Have good output types.** One reason Remeda provide "one-liner" functions is if we can have better output types than the defaults. While `data.filter(item => typeof item === 'number')` works, `filter(data, isNumber)` gives a better output type. This is why we have type guards, `hasAtLeast`, `prop`, etc.
 
-This 
-
 **Readability counts.** The other reason Remeda provides one-liner functions is if they make things more readable. Compare `map((item) => item + 3)` to `map(add(3))`, where we don't need to come up with a name for `item`. This is why we have `constant`, `doNothing`, `identity`, etc.
 
-**Prefer composition.** We don't provide simple compositions of functions, because we prefer users 
+**Prefer composition.** We don't provide simple compositions of functions. Having a smaller surface area makes it easier for users to remember Remeda's functions, and easier for us to maintain. We don't have `reject` because it's the same as `filter(isNot)`. An exception is when the composition would be less readable; this is why we have `sum`, even if it's the same as `sumBy(identity)`.
 
-An exception is when the composition would be less readable. This is why we have `sum`, even if it's the same as `sumBy(identity)`.
-
-## Documentation
-
-Help us make the documentation better! See [`docs/README.md`](https://github.com/remeda/remeda/blob/main/docs/README.md).
+**Minimal implementations.** Implementations should, as much as possible, be small and self-contained. Importing an individual function should add less than 500 B to the bundle size in most cases.
