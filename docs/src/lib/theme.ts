@@ -4,6 +4,9 @@ const LOCAL_STORAGE_KEY = "theme";
 
 const DARK_THEME_CLASS = "dark";
 
+const ALGOLIA_DOCSEARCH_DARK_THEME_DATA_ATTRIBUTE = "theme";
+const ALGOLIA_DOCSEARCH_DARK_THEME_VALUE = "dark";
+
 export function initTheme(): void {
   const storedTheme = getStoredTheme();
 
@@ -50,15 +53,14 @@ function setDarkMode(isEnabled = true): void {
   const { documentElement } = document;
 
   if (isEnabled) {
-    // Used by tailwind
     documentElement.classList.add(DARK_THEME_CLASS);
-    // Used by Algolia DocSearch
-    documentElement.dataset.theme = "dark";
+
+    documentElement.dataset[ALGOLIA_DOCSEARCH_DARK_THEME_DATA_ATTRIBUTE] =
+      ALGOLIA_DOCSEARCH_DARK_THEME_VALUE;
   } else {
-    // Used by tailwind
     documentElement.classList.remove(DARK_THEME_CLASS);
-    // Used by Algolia DocSearch
-    delete documentElement.dataset.theme;
+
+    delete documentElement.dataset[ALGOLIA_DOCSEARCH_DARK_THEME_DATA_ATTRIBUTE];
   }
 }
 
