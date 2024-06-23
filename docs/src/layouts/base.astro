@@ -1,6 +1,12 @@
 ---
 import Header from "@/components/header.astro";
 import "@/styles/globals.css";
+
+type Props = {
+  readonly title?: string | undefined;
+};
+
+const { title } = Astro.props;
 ---
 
 <html lang="en">
@@ -13,7 +19,12 @@ import "@/styles/globals.css";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>Remeda</title>
+    <link
+      rel="preconnect"
+      href="https://416K8H7DAR-dsn.algolia.net"
+      crossorigin
+    />
+    <title>{`${title === undefined ? "" : `${title} - `}Remeda`}</title>
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
   <body class="container flex flex-col items-stretch px-0">

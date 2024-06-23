@@ -3,7 +3,7 @@ title: "Intro"
 category: "Guides"
 ---
 
-# Remeda
+# Intro
 
 Welcome to the Remeda documentation and API reference. Below, you'll find the
 complete reference for all functions exported by Remeda.

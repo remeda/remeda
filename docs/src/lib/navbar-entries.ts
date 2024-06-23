@@ -8,8 +8,8 @@ type FunctionItem = {
   readonly methods?: ReadonlyArray<SourceTags>;
 };
 
-export type CategorizedFunctions = Readonly<
-  Record<string, ReadonlyArray<FunctionItem>>
+export type CategorizedFunctions = ReadonlyArray<
+  readonly [category: string, functions: ReadonlyArray<FunctionItem>]
 >;
 
 export function getNavbarEntries(
@@ -35,12 +35,11 @@ export function getNavbarEntries(
 
   const functionEntries = pipe(
     categorized,
-    entries(),
     map(
-      ([category, funcs]) =>
+      ([category, functions]) =>
         [
           category,
-          map(funcs, ({ name: title, methods }) => ({
+          map(functions, ({ name: title, methods }) => ({
             title,
             tags: methods === undefined ? [] : getTags(methods),
           })),

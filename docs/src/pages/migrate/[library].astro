@@ -1,28 +1,28 @@
 ---
+import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
 import { getLibraries, getMappingEntries } from "@/lib/mappings";
-import { map, entries, objOf, flatMap, pipe, sortBy, piped } from "remeda";
+import { map, objOf, piped, sortBy } from "remeda";
 
 const { library } = Astro.params;
 
 const mappingEntries = await getMappingEntries(library);
 
-const forDisplay = pipe(
-  mappingEntries,
-  entries(),
-  sortBy(([category]) => category),
-  flatMap(([, functions]) => functions),
-);
+const forDisplay = sortBy(mappingEntries, ([category]) => category);
 
 export const getStaticPaths = async () =>
   map(await getLibraries(), piped(objOf("library"), objOf("params")));
 ---
 
-<DocsPage categorized={mappingEntries} title={library}>
+<DocsPage categorized={mappingEntries} title={`Migrate: ${library}`}>
   {
-    forDisplay.map(({ name }) => (
-      <MappingFunctionCard name={name} library={library} />
+    forDisplay.map(([category, functions]) => (
+      <DocsSection title={category}>
+        {functions.map(({ name }) => (
+          <MappingFunctionCard name={name} library={library} />
+        ))}
+      </DocsSection>
     ))
   }
 </DocsPage>
