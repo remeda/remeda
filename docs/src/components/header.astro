@@ -4,7 +4,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
 import MigrationSelector from "./migration-selector.astro";
 import NavLink from "./nav-link.astro";
-import Search from "./search.astro";
+import { Search } from "./search";
 import { ThemeSwitcher } from "./theme-switcher";
 ---
 
@@ -20,7 +20,7 @@ import { ThemeSwitcher } from "./theme-switcher";
       <NavLink directory as="span" href="/migrate"> Migration Guides </NavLink>
     </MigrationSelector>
     <div class="flex-1"></div>
-    <Search />
+    <Search client:only="react" />
     <a
       href="https://github.com/remeda/remeda"
       target="_blank"
