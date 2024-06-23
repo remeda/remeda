@@ -1,10 +1,8 @@
 import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Tag } from "@/lib/get-tags";
 import { cn } from "@/lib/utils";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useMemo, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
 
 type NavbarEntry = {
@@ -27,42 +25,12 @@ export function Navbar({
   readonly children?: ReactNode;
   readonly onSelect?: () => void;
 }): ReactNode {
-  const [query, setQuery] = useState("");
-
-  const filteredEntries = useMemo(() => {
-    const lowerCaseQuery = query.toLowerCase();
-    return entries
-      .map(
-        ([category, entries]) =>
-          [
-            category,
-            category.toLowerCase().startsWith(lowerCaseQuery)
-              ? entries
-              : entries.filter(({ title }) =>
-                  title.toLowerCase().includes(lowerCaseQuery),
-                ),
-          ] as const,
-      )
-      .filter(([, entries]) => entries.length > 0);
-  }, [entries, query]);
-
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
       {children}
-      <div className="relative">
-        <Input
-          className="peer pl-7"
-          placeholder="Search"
-          value={query}
-          onChange={({ currentTarget: { value } }) => {
-            setQuery(value);
-          }}
-        />
-        <MagnifyingGlassIcon className="absolute left-0 top-0 my-3 ml-2 text-muted-foreground" />
-      </div>
       <ScrollArea className="flex-1">
         <ul className="flex flex-col gap-2">
-          {filteredEntries.map(([category, entries]) => (
+          {entries.map(([category, entries]) => (
             <li key={category}>
               <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
               <ul>
