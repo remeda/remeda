@@ -19,7 +19,7 @@ export const getStaticPaths = async () =>
   map(await getLibraries(), piped(objOf("library"), objOf("params")));
 ---
 
-<DocsPage categorized={mappingEntries} title={library}>
+<DocsPage categorized={mappingEntries} title={`Migrate: ${library}`}>
   {
     forDisplay.map(({ name }) => (
       <MappingFunctionCard name={name} library={library} />

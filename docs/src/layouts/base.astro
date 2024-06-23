@@ -1,6 +1,13 @@
 ---
 import Header from "@/components/header.astro";
 import "@/styles/globals.css";
+
+type Props = {
+  readonly title?: string | undefined;
+};
+
+const { title } = Astro.props;
+const effectiveTitle = `${title === undefined ? "" : `${title} - `}Remeda`;
 ---
 
 <html lang="en">
@@ -18,7 +25,7 @@ import "@/styles/globals.css";
       href="https://416K8H7DAR-dsn.algolia.net"
       crossorigin
     />
-    <title>Remeda</title>
+    <title>{effectiveTitle}</title>
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
   <body class="container flex flex-col items-stretch px-0">
