@@ -5,43 +5,27 @@ const LOCAL_STORAGE_KEY = "theme";
 const DARK_THEME_CLASS = "dark";
 
 export function initTheme(): void {
-  const {
-    documentElement: { classList },
-  } = document;
-
   const storedTheme = getStoredTheme();
 
   const prefersDarkMediaQuery = window.matchMedia(
     "(prefers-color-scheme: dark)",
   );
 
-  if (
+  setDarkMode(
     storedTheme === "dark" ||
-    (storedTheme === null && prefersDarkMediaQuery.matches)
-  ) {
-    classList.add(DARK_THEME_CLASS);
-  } else {
-    classList.remove(DARK_THEME_CLASS);
-  }
+      (storedTheme === null && prefersDarkMediaQuery.matches),
+  );
 
   prefersDarkMediaQuery.addEventListener(
     "change",
     ({ matches: prefersDark }) => {
-      if (prefersDark && getStoredTheme() !== null) {
-        classList.add(DARK_THEME_CLASS);
-      } else {
-        classList.remove(DARK_THEME_CLASS);
-      }
+      setDarkMode(prefersDark && getStoredTheme() !== null);
     },
   );
 }
 
 export function switchTheme(theme: Theme): void {
-  const {
-    documentElement: { classList },
-  } = document;
-
-  classList.remove("dark");
+  setDarkMode(false);
 
   if (theme === "system") {
     const { matches: prefersDark } = window.matchMedia(
@@ -49,16 +33,32 @@ export function switchTheme(theme: Theme): void {
     );
 
     if (prefersDark) {
-      classList.add(DARK_THEME_CLASS);
+      setDarkMode();
     }
 
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   } else {
     if (theme === "dark") {
-      classList.add(DARK_THEME_CLASS);
+      setDarkMode();
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEY, theme);
+  }
+}
+
+function setDarkMode(isEnabled = true): void {
+  const { documentElement } = document;
+
+  if (isEnabled) {
+    // Used by tailwind
+    documentElement.classList.add(DARK_THEME_CLASS);
+    // Used by Algolia DocSearch
+    documentElement.dataset.theme = "dark";
+  } else {
+    // Used by tailwind
+    documentElement.classList.remove(DARK_THEME_CLASS);
+    // Used by Algolia DocSearch
+    delete documentElement.dataset.theme;
   }
 }
 
