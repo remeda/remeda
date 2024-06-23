@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import {
+  entries,
   first,
   groupBy,
   map,
@@ -12,6 +13,7 @@ import {
   split,
   unique,
 } from "remeda";
+import type { CategorizedFunctions } from "./navbar-entries";
 
 const COLLECTION = "mapping";
 
@@ -31,7 +33,9 @@ export const getLibraries = async () =>
     unique(),
   );
 
-export async function getMappingEntries(library: string) {
+export async function getMappingEntries(
+  library: string,
+): Promise<CategorizedFunctions> {
   const fileNameRegExp = new RegExp(`^${library}/(?<name>.*).mdx?$`, "ui");
 
   return pipe(
@@ -51,6 +55,7 @@ export async function getMappingEntries(library: string) {
         ),
       ),
     ),
+    entries(),
   );
 }
 

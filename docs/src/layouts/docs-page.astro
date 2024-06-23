@@ -7,8 +7,9 @@ import {
   getNavbarEntries,
   type CategorizedFunctions,
 } from "@/lib/navbar-entries";
-import { map, pipe, sortBy } from "remeda";
+import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import BaseLayout from "./base.astro";
+import DocsSection from "@/components/docs-section.astro";
 
 type Props = {
   readonly categorized: CategorizedFunctions;
@@ -24,14 +25,18 @@ const articles = await getArticlesForPath(pathname);
 
 const navbarEntries = getNavbarEntries(categorized, articles);
 
-const renderedArticles = await pipe(
-  articles,
-  sortBy(({ data: { priority } }) => priority ?? Infinity),
-  map(async (entry) => ({
-    ...entry,
-    rendered: await entry.render(),
-  })),
-  async ($) => await Promise.all($),
+const renderedArticles = pipe(
+  await pipe(
+    articles,
+    sortBy(({ data: { priority } }) => priority ?? Infinity),
+    map(async (entry) => ({
+      ...entry,
+      rendered: await entry.render(),
+    })),
+    async ($) => await Promise.all($),
+  ),
+  groupBy(({ data: { category } }) => category),
+  entries(),
 );
 ---
 
@@ -42,23 +47,25 @@ const renderedArticles = await pipe(
     >
       <Navbar entries={navbarEntries} client:load>
         {
-          title !== undefined && (
-            <h2 class="text-lg font-bold capitalize">{title}</h2>
-          )
-        }
-        {
           showVersionSelector && (
             <VersionSelector pathname={pathname} client:load />
           )
-        }</Navbar
-      >
+        }
+      </Navbar>
     </aside>
     <main class="flex-1 space-y-3 overflow-hidden sm:space-y-8">
+      <h1 class="mb-12 text-3xl font-thin capitalize tracking-widest">
+        {title}
+      </h1>
       {
-        renderedArticles.map(({ slug, rendered: { Content } }) => (
-          <Prose id={slug} class="scroll-mt-24">
-            <Content />
-          </Prose>
+        renderedArticles.map(([category, articles]) => (
+          <DocsSection title={category}>
+            {articles.map(({ slug, rendered: { Content } }) => (
+              <Prose id={slug} class="scroll-mt-24">
+                <Content />
+              </Prose>
+            ))}
+          </DocsSection>
         ))
       }
       <slot />

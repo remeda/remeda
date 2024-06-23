@@ -7,7 +7,6 @@ type Props = {
 };
 
 const { title } = Astro.props;
-const effectiveTitle = `${title === undefined ? "" : `${title} - `}Remeda`;
 ---
 
 <html lang="en">
@@ -25,7 +24,7 @@ const effectiveTitle = `${title === undefined ? "" : `${title} - `}Remeda`;
       href="https://416K8H7DAR-dsn.algolia.net"
       crossorigin
     />
-    <title>{effectiveTitle}</title>
+    <title>{`${title === undefined ? "" : `${title} - `}Remeda`}</title>
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
   <body class="container flex flex-col items-stretch px-0">

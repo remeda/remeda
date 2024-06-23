@@ -1,17 +1,18 @@
 ---
-import DocsPage from "@/layouts/docs-page.astro";
+import DocsSection from "@/components/docs-section.astro";
 import V1FunctionCard from "@/components/v1/function-card.astro";
+import DocsPage from "@/layouts/docs-page.astro";
 import { CATEGORIZED } from "@/lib/v1/categorized";
-import { flat, map, pipe, values } from "remeda";
 ---
 
-<DocsPage title="v1 (Legacy)" showVersionSelector categorized={CATEGORIZED}>
+<DocsPage showVersionSelector title="v1 (Legacy)" categorized={CATEGORIZED}>
   {
-    pipe(
-      CATEGORIZED,
-      values(),
-      flat(),
-      map((func) => <V1FunctionCard func={func} />),
-    )
+    CATEGORIZED.map(([category, functions]) => (
+      <DocsSection title={category}>
+        {functions.map((func) => (
+          <V1FunctionCard func={func} />
+        ))}
+      </DocsSection>
+    ))
   }
 </DocsPage>

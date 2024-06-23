@@ -1,13 +1,13 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { mappingUrl, type Library } from "@/lib/mappings";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getEntry } from "astro:content";
 import invariant from "tiny-invariant";
 import GithubEdit from "./github-edit.astro";
 import Prose from "./prose.astro";
-import SmartLink from "./smart-link.astro";
 import { Badge } from "./ui/badge";
+import { buttonVariants } from "./ui/button";
 
 const COLLECTION = "mapping";
 
@@ -30,36 +30,36 @@ const mappedUrl = mappingUrl(library, name);
 <Card id={name} className="scroll-mt-24">
   <CardHeader>
     <div class="flex gap-2 overflow-hidden">
-      <CardTitle
-        className="flex flex-1 flex-wrap items-center gap-2 overflow-hidden text-2xl"
-      >
-        <div class="flex items-center gap-2">
-          {name}
-          <SmartLink href={mappedUrl}>[{library}]</SmartLink>
-        </div>
-        {
-          entry.data.remeda !== undefined && (
-            <div class="flex items-center gap-2 overflow-hidden">
-              <ArrowRightIcon className="size-5" />
-              <span class="truncate">{entry.data.remeda}</span>
-              <SmartLink href={`/docs#${entry.data.remeda}`}>
-                [remeda]
-              </SmartLink>
-            </div>
-          )
-        }
+      <CardTitle className="flex-1 truncate text-2xl">
+        {name}
       </CardTitle>
+      <a
+        class={buttonVariants({ variant: "secondary", size: "sm" })}
+        href={mappedUrl}
+      >
+        <ExternalLinkIcon />
+      </a>
       <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
       <GithubEdit entry={entry} />
     </div>
   </CardHeader>
-  {
-    entry.body !== "" && (
-      <CardContent>
+  <CardContent className="space-y-3">
+    {
+      entry.data.remeda !== undefined && (
+        <h6 class="flex items-center gap-1 text-xl font-medium">
+          <ArrowRightIcon className="ms-2 size-5" />
+          <a href={`/docs#${entry.data.remeda}`} class="truncate text-primary">
+            {entry.data.remeda}
+          </a>
+        </h6>
+      )
+    }
+    {
+      entry.body !== "" && (
         <Prose>
           <Content />
         </Prose>
-      </CardContent>
-    )
-  }
+      )
+    }
+  </CardContent>
 </Card>

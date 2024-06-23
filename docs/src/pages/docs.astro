@@ -1,17 +1,18 @@
 ---
-import DocsPage from "@/layouts/docs-page.astro";
+import DocsSection from "@/components/docs-section.astro";
 import FunctionCard from "@/components/function-card.astro";
+import DocsPage from "@/layouts/docs-page.astro";
 import { CATEGORIZED } from "@/lib/categorized";
-import { flat, map, pipe, values } from "remeda";
 ---
 
 <DocsPage showVersionSelector title="Documentation" categorized={CATEGORIZED}>
   {
-    pipe(
-      CATEGORIZED,
-      values(),
-      flat(),
-      map((func) => <FunctionCard func={func} />),
-    )
+    CATEGORIZED.map(([category, functions]) => (
+      <DocsSection title={category}>
+        {functions.map((func) => (
+          <FunctionCard func={func} />
+        ))}
+      </DocsSection>
+    ))
   }
 </DocsPage>
