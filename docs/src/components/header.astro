@@ -2,9 +2,10 @@
 import { buttonVariants } from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
-import NavLink from "./nav-link.astro";
-import { ThemeSwitcher } from "./theme-switcher";
 import MigrationSelector from "./migration-selector.astro";
+import NavLink from "./nav-link.astro";
+import Search from "./search.astro";
+import { ThemeSwitcher } from "./theme-switcher";
 ---
 
 <header
@@ -19,6 +20,7 @@ import MigrationSelector from "./migration-selector.astro";
       <NavLink directory as="span" href="/migrate"> Migration Guides </NavLink>
     </MigrationSelector>
     <div class="flex-1"></div>
+    <Search />
     <a
       href="https://github.com/remeda/remeda"
       target="_blank"
