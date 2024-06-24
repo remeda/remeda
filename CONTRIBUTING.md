@@ -47,7 +47,7 @@ When adding a new function, remember to:
 - Add a JSDoc comment with a description, parameters, signature, an example, and tags.
   - This will end up as the documentation on the website.
 - Add tests for runtime, typing, data-first, and data-last forms.
-  - See the [Writing tests](#writing-tests) for guidelines on writing tests.
+  - See [Writing tests](#writing-tests) for guidelines on writing tests.
 - Add exports to `src/index.ts`.
 - Check for equivalent functions in [Lodash](https://lodash.com/docs/4.17.15) and [Ramda](https://ramdajs.com/docs/), and add them to `docs/src/content/mapping`.
 
