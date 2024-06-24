@@ -5,12 +5,12 @@ We're always looking for new contributors and are happy to help you get started!
 - Add a test to a function, testing something that we haven't tested yet.
 - Improve a function's documentation.
 - Fix a bug or an edge case.
-- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%good+first+issue%22).
-- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%help+wanted%22).
+- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%good+first+issue%22)
+- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%help+wanted%22)
 
 ## Getting started
 
-We use `npm` as the package manager. We recommend using [`nvm`](https://github.com/nvm-sh/nvm) to manage `Node.js` and `npm` versions.
+We use `npm` as the package manager. We recommend using [`nvm`](https://github.com/nvm-sh/nvm) to manage `Node.js` and `npm` versions. If you're not using `nvm`, the `.nvmrc` has the recommended Node version.
 
 Install dependencies:
 
@@ -45,31 +45,76 @@ Most of the content in the documentation is generated from the JSDoc comments. I
 When adding a new function, remember to:
 
 - Add a JSDoc comment with a description, parameters, signature, an example, and tags.
+  - This will end up as the documentation on the website.
 - Add tests for runtime, typing, data-first, and data-last forms.
-  - For data-last tests, prefer tests using `pipe`, as this better matches real-world usage.
+  - See the [Writing tests](#writing-tests) for guidelines on writing tests.
 - Add exports to `src/index.ts`.
 - Check for equivalent functions in [Lodash](https://lodash.com/docs/4.17.15) and [Ramda](https://ramdajs.com/docs/), and add them to `docs/src/content/mapping`.
 
 ### Writing types
 
-TODO: using `type-fest`, prefer `<T extends IterableContainer>(data: T)` over `<T>(data: ReadonlyArray<T>)`, and `<T extends object>(data: T)` over `<T>(data: Readonly<Record<string, T>>)`
+We pay careful attention to types. Some tips for writing good types:
+
+- We use [`type-fest`](https://github.com/sindresorhus/type-fest) as our type utility library. We also have type utilities in [`internal/types`](src/internal/types.ts).
+- We use the [`Simplify`](https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts) type from `type-fest` for simplifying some output types.
+- We generally use the `IterableContainer` type from `internal/types` for input arrays. Similarly, we generally use the `object` type for input objects.
+
+<details>
+<summary>Examples:</summary>
+
+An example with an array:
+
+```ts
+const data = ["a", 1] as [string, number];
+
+// ❌ `T` can be too wide:
+function functionName<T>(data: ReadonlyArray<T>) {}
+
+functionName(data); // inside functionName, data[0] has type string | number
+
+// ✅ `T` is more specific:
+function functionName<T extends IterableContainer>(data: T) {}
+
+functionName(data); // inside functionName, data[0] has type string
+```
+
+An example with an object:
+
+```ts
+const data = { a: "a", b: 1 };
+
+// ❌ `T` can be too wide:
+function functionName<T>(data: Readonly<Record<PropertyKey, T>>) {}
+
+functionName(data); // inside functionName, data.a has type string | number
+
+// ✅ `T` is more specific:
+function functionName<T extends object>(data: T) {}
+
+functionName(data); // inside functionName, data.a has type string
+```
+
+</details>
 
 ### Writing tests
 
-The tests for `file.ts` live in `file.test.ts`. Some guidelines:
+The tests for `fileName.ts` live in `fileName.test.ts`. Some guidelines:
 
-- We have separate tests for runtime and typing, and within we have separate tests for data-first and data-last forms. Typically this looks like
+- We have separate tests for runtime and typing, and within we have separate tests for data-first and data-last forms.
+
+<details>
+<summary>This typically looks like this:</summary>
 
 ```ts
 describe("runtime", () => {
   describe("data-first", () => {
-    test("something", () => {
+    test("test description", () => {
       expect(/* ... */).toBe(/* ... */);
     });
   });
 
   describe("data-last", () => {
-    test("something", () => {
+    test("test description", () => {
       expect(/* ... */).toBe(/* ... */);
     });
   });
@@ -77,22 +122,26 @@ describe("runtime", () => {
 
 describe("typing", () => {
   describe("data-first", () => {
-    test("something", () => {
+    test("test description", () => {
       expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
     });
   });
 
   describe("data-last", () => {
-    test("something", () => {
+    test("test description", () => {
       expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
     });
   });
 });
 ```
 
+</details>
+
+- For data-last tests, both runtime and typing, prefer tests using `pipe`. This better matches real-world usage.
 - Each `test` block should test one thing. Most of the time this means having only one `expect` per `test`.
+- Tests should provide 100% coverage; the Codecov bot will comment on your PR with a coverage report.
 - We test for types using [`expectTypeOf`](https://vitest.dev/api/expect-typeof), rather than [`assertType`](https://vitest.dev/api/assert-type.html).
-- We also test for type errors. Prefer [`ts-expect-error`, rather than `@ts-ignore`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#ts-ignore-or-ts-expect-error):
+- We also test for _meaningful_ type errors. Prefer [`ts-expect-error`, rather than `@ts-ignore`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#ts-ignore-or-ts-expect-error):
 
 ```ts
 test("doesn't accept non-literal depths", () => {
@@ -101,6 +150,7 @@ test("doesn't accept non-literal depths", () => {
 });
 ```
 
+- We don't test runtime behavior for type errors, as we can only guarantee behavior when the types are correct.
 - When testing types, cover as many use-cases as possible.
 
 <details>
