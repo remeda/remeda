@@ -5,8 +5,8 @@ We're always looking for new contributors and are happy to help you get started!
 - Add a test to a function, testing something that we haven't tested yet.
 - Improve a function's documentation.
 - Fix a bug or an edge case.
-- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%good+first+issue%22)
-- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%help+wanted%22)
+- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
 
 ## Getting started
 
