@@ -29,6 +29,14 @@ npm run build:all
 npm run preview
 ```
 
+## Documentation Site Structure
+
+Content for the function documentation comes from Typedoc.
+
+Content for the guides in front of the function documentation is in [`src/content/docs-articles`](src/content/docs-articles).
+
+Content for the migration guides is in [`src/content/mapping`](src/content/mapping).
+
 ## VSCode Integration
 
 For a seamless development experience, open the `docs` directory as a top-level project in VSCode:

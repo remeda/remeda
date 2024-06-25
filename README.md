@@ -20,6 +20,8 @@ Read the full docs and API reference on [remedajs.com/docs](https://remedajs.com
 
 Migrating from other libraries? Check out our migration guides for [Lodash](https://remedajs.com/migrate/lodash) and [Ramda](https://remedajs.com/migrate/ramda)!
 
+Interested in contributing? Read the [contributing guide](CONTRIBUTING.md).
+
 ## Features
 
 - First-class TypeScript support, with types that are as specific as possible.
