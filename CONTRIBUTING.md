@@ -2,9 +2,10 @@
 
 We're always looking for new contributors and are happy to help you get started! Some ideas:
 
-- Add a test to a function, testing something that we haven't tested yet.
+- Add a test to a function, like an interesting edge case we haven't thought about.
 - Improve a function's documentation.
 - Fix a bug or an edge case.
+- Improve the documentation's migration guides.
 - Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 - Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
 
@@ -68,14 +69,16 @@ An example with an array:
 const data = ["a", 1] as [string, number];
 
 // ❌ `T` can be too wide:
-function functionName<T>(data: ReadonlyArray<T>) {}
+function functionName<T>(data: ReadonlyArray<T>): ReadonlyArray<T> {}
 
 functionName(data); // inside functionName, data[0] has type string | number
+// output has type ReadonlyArray<string | number>
 
 // ✅ `T` is more specific:
-function functionName<T extends IterableContainer>(data: T) {}
+function functionName<T extends IterableContainer>(data: T): T {}
 
 functionName(data); // inside functionName, data[0] has type string
+// output has type [string, number]
 ```
 
 An example with an object:
