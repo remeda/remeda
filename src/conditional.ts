@@ -6,8 +6,8 @@ import { type GuardType } from "./internal/types";
 type Case<
   In,
   Out,
-  CaseFn extends (x: In) => boolean = (x: In) => boolean,
-> = readonly [when: CaseFn, then: (x: GuardType<CaseFn, In> & In) => Out];
+  When extends (x: In) => boolean = (x: In) => boolean,
+> = readonly [when: When, then: (x: GuardType<When, In> & In) => Out];
 
 // We package the defaultCase helper into the function itself so that we
 // encapsulate everything into a single export.
