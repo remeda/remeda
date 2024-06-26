@@ -1,11 +1,13 @@
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
 
 import { purryOn } from "./internal/purryOn";
+import { type GuardType } from "./internal/types";
 
-type Case<In, Out, Thru extends In = In> = readonly [
-  when: ((data: In) => boolean) | ((data: In) => data is Thru),
-  then: (data: Thru) => Out,
-];
+type Case<
+  In,
+  Out,
+  When extends (x: In) => boolean = (x: In) => boolean,
+> = readonly [when: When, then: (x: GuardType<When, In> & In) => Out];
 
 // We package the defaultCase helper into the function itself so that we
 // encapsulate everything into a single export.
@@ -58,6 +60,16 @@ export { conditionalPlus as conditional };
  */
 function conditional<
   T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Fn8 extends (x: T) => boolean,
+  Fn9 extends (x: T) => boolean,
   Return0,
   Return1 = never,
   Return2 = never,
@@ -68,27 +80,17 @@ function conditional<
   Return7 = never,
   Return8 = never,
   Return9 = never,
-  Thru0 extends T = T,
-  Thru1 extends T = T,
-  Thru2 extends T = T,
-  Thru3 extends T = T,
-  Thru4 extends T = T,
-  Thru5 extends T = T,
-  Thru6 extends T = T,
-  Thru7 extends T = T,
-  Thru8 extends T = T,
-  Thru9 extends T = T,
 >(
-  case0: Case<T, Return0, Thru0>,
-  case1?: Case<T, Return1, Thru1>,
-  case2?: Case<T, Return2, Thru2>,
-  case3?: Case<T, Return3, Thru3>,
-  case4?: Case<T, Return4, Thru4>,
-  case5?: Case<T, Return5, Thru5>,
-  case6?: Case<T, Return6, Thru6>,
-  case7?: Case<T, Return7, Thru7>,
-  case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>,
+  case0: Case<T, Return0, Fn0>,
+  case1?: Case<T, Return1, Fn1>,
+  case2?: Case<T, Return2, Fn2>,
+  case3?: Case<T, Return3, Fn3>,
+  case4?: Case<T, Return4, Fn4>,
+  case5?: Case<T, Return5, Fn5>,
+  case6?: Case<T, Return6, Fn6>,
+  case7?: Case<T, Return7, Fn7>,
+  case8?: Case<T, Return8, Fn8>,
+  case9?: Case<T, Return9, Fn9>,
 ): (
   data: T,
 ) =>
@@ -148,6 +150,16 @@ function conditional<
  */
 function conditional<
   T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Fn8 extends (x: T) => boolean,
+  Fn9 extends (x: T) => boolean,
   Return0,
   Return1 = never,
   Return2 = never,
@@ -158,28 +170,18 @@ function conditional<
   Return7 = never,
   Return8 = never,
   Return9 = never,
-  Thru0 extends T = T,
-  Thru1 extends T = T,
-  Thru2 extends T = T,
-  Thru3 extends T = T,
-  Thru4 extends T = T,
-  Thru5 extends T = T,
-  Thru6 extends T = T,
-  Thru7 extends T = T,
-  Thru8 extends T = T,
-  Thru9 extends T = T,
 >(
   data: T,
-  case0: Case<T, Return0, Thru0>,
-  case1?: Case<T, Return1, Thru1>,
-  case2?: Case<T, Return2, Thru2>,
-  case3?: Case<T, Return3, Thru3>,
-  case4?: Case<T, Return4, Thru4>,
-  case5?: Case<T, Return5, Thru5>,
-  case6?: Case<T, Return6, Thru6>,
-  case7?: Case<T, Return7, Thru7>,
-  case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>,
+  case0: Case<T, Return0, Fn0>,
+  case1?: Case<T, Return1, Fn1>,
+  case2?: Case<T, Return2, Fn2>,
+  case3?: Case<T, Return3, Fn3>,
+  case4?: Case<T, Return4, Fn4>,
+  case5?: Case<T, Return5, Fn5>,
+  case6?: Case<T, Return6, Fn6>,
+  case7?: Case<T, Return7, Fn7>,
+  case8?: Case<T, Return8, Fn8>,
+  case9?: Case<T, Return9, Fn9>,
 ):
   | Return0
   | Return1
