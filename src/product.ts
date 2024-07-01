@@ -1,6 +1,7 @@
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
-type Product<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
+type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
   // Non-empty bigint arrays will always result in a bigint product.
   T extends [bigint, ...ReadonlyArray<unknown>]
     ? bigint
@@ -24,7 +25,7 @@ type Product<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
  * @category Number
  */
 export function product<
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): Product<T>;
 
 /**
@@ -40,7 +41,7 @@ export function product<
  * @category Number
  */
 export function product(): <
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(
   data: T,
 ) => Product<T>;
@@ -50,7 +51,7 @@ export function product(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function productImplementation<
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] {
   let out = typeof data[0] === "bigint" ? 1n : 1;
   for (const value of data) {

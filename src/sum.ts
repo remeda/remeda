@@ -1,6 +1,7 @@
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
-type Sum<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
+type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
   // Non-empty bigint arrays will always result in a bigint sum.
   T extends [bigint, ...ReadonlyArray<unknown>]
     ? bigint
@@ -23,7 +24,7 @@ type Sum<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
  * @category Number
  */
 export function sum<
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): Sum<T>;
 
 /**
@@ -38,7 +39,7 @@ export function sum<
  * @category Number
  */
 export function sum(): <
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(
   data: T,
 ) => Sum<T>;
@@ -48,7 +49,7 @@ export function sum(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function sumImplementation<
-  T extends ReadonlyArray<bigint> | ReadonlyArray<number>,
+  T extends IterableContainer<bigint> | ReadonlyArray<number>,
 >(data: T): T[number] {
   let out = typeof data[0] === "bigint" ? 0n : 0;
   for (const value of data) {
