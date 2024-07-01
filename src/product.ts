@@ -1,5 +1,14 @@
-import { type NonEmptyArray } from "./internal/types";
 import { purry } from "./purry";
+
+type Product<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
+  // Non-empty bigint arrays will always result in a bigint product.
+  T extends [bigint, ...ReadonlyArray<unknown>]
+    ? bigint
+    : // But an empty bigint array would result in a non-bigint 1.
+      T[number] extends bigint
+      ? bigint | 1
+      : // Non-bigint arrays are always handled correctly.
+        number;
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
@@ -14,8 +23,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
-export function product(data: ReadonlyArray<number>): number;
-export function product(data: Readonly<NonEmptyArray<bigint>>): bigint;
+export function product<
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+>(data: T): Product<T>;
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
@@ -29,8 +39,11 @@ export function product(data: Readonly<NonEmptyArray<bigint>>): bigint;
  * @dataLast
  * @category Number
  */
-export function product(): (data: ReadonlyArray<number>) => number;
-export function product(): (data: Readonly<NonEmptyArray<bigint>>) => bigint;
+export function product(): <
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+>(
+  data: T,
+) => Product<T>;
 
 export function product(...args: ReadonlyArray<unknown>): unknown {
   return purry(productImplementation, args);

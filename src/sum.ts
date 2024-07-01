@@ -1,5 +1,14 @@
-import { type NonEmptyArray } from "./internal/types";
 import { purry } from "./purry";
+
+type Sum<T extends ReadonlyArray<bigint> | ReadonlyArray<number> | []> =
+  // Non-empty bigint arrays will always result in a bigint sum.
+  T extends [bigint, ...ReadonlyArray<unknown>]
+    ? bigint
+    : // But an empty bigint array would result in a non-bigint 0.
+      T[number] extends bigint
+      ? bigint | 0
+      : // Non-bigint arrays are always handled correctly.
+        number;
 
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
@@ -13,8 +22,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Number
  */
-export function sum(data: ReadonlyArray<number>): number;
-export function sum(data: Readonly<NonEmptyArray<bigint>>): bigint;
+export function sum<
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+>(data: T): Sum<T>;
 
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
@@ -27,8 +37,11 @@ export function sum(data: Readonly<NonEmptyArray<bigint>>): bigint;
  * @dataLast
  * @category Number
  */
-export function sum(): (data: ReadonlyArray<number>) => number;
-export function sum(): (data: Readonly<NonEmptyArray<bigint>>) => bigint;
+export function sum(): <
+  T extends ReadonlyArray<bigint> | ReadonlyArray<number> | [],
+>(
+  data: T,
+) => Sum<T>;
 
 export function sum(...args: ReadonlyArray<unknown>): unknown {
   return purry(sumImplementation, args);
