@@ -93,6 +93,18 @@ describe("typing", () => {
     });
   });
 
+  describe("dataLast", () => {
+    test("numbers", () => {
+      const result = pipe([1, 2, 3] as const, product());
+      expectTypeOf(result).toEqualTypeOf<number>();
+    });
+
+    test("bigints", () => {
+      const result = pipe([1n, 2n, 3n] as const, product());
+      expectTypeOf(result).toEqualTypeOf<bigint>();
+    });
+  });
+
   it("doesn't allow mixed arrays", () => {
     expect(() =>
       // @ts-expect-error [ts2345] - Can't product bigints and numbers...
