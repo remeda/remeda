@@ -17,6 +17,14 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
  *
+ * Works for both `number` and `bigint` arrays, but not arrays that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
+ * the type of the array; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty` to guard against this case.
+ *
  * @param data - The array of numbers.
  * @signature
  *   R.sum(data);
@@ -32,6 +40,14 @@ export function sum<
 
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
+ *
+ * Works for both `number` and `bigint` arrays, but not arrays that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
+ * the type of the array; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty`to guard against this case.
  *
  * @signature
  *   R.sum()(data);

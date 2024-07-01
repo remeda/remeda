@@ -18,6 +18,14 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
  * Compute the product of the numbers in the array, or return 1 for an empty
  * array.
  *
+ * Works for both `number` and `bigint` arrays, but not arrays that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 1 (`number`) regardless of
+ * the type of the array; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty` to guard against this case.
+ *
  * @param data - The array of numbers.
  * @signature
  *   R.product(data);
@@ -34,6 +42,14 @@ export function product<
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
  * array.
+ *
+ * Works for both `number` and `bigint` arrays, but not arrays that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 1 (`number`) regardless of
+ * the type of the array; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty` to guard against this case.
  *
  * @signature
  *   R.product()(data);
