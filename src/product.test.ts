@@ -45,8 +45,12 @@ describe("typing", () => {
   });
 
   it("doesn't allow mixed arrays", () => {
-    // @ts-expect-error [ts2345] - Can't compute the product if bigints and numbers...
-    product([1, 2n]);
+    expect(() =>
+      // @ts-expect-error [ts2345] - Can't product bigints and numbers...
+      product([1, 2n]),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[TypeError: Cannot mix BigInt and other types, use explicit conversions]`,
+    );
   });
 });
 
