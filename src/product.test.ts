@@ -66,7 +66,7 @@ describe("typing", () => {
     });
   });
 
-  describe("numbers", () => {
+  describe("bigints", () => {
     test("arbitrary arrays", () => {
       const result = product([] as Array<bigint>);
       expectTypeOf(result).toEqualTypeOf<bigint | 1>();

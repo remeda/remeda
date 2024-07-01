@@ -64,7 +64,7 @@ describe("typing", () => {
     });
   });
 
-  describe("numbers", () => {
+  describe("bigints", () => {
     test("arbitrary arrays", () => {
       const result = sum([] as Array<bigint>);
       expectTypeOf(result).toEqualTypeOf<bigint | 0>();
