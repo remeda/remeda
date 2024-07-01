@@ -31,6 +31,7 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
  *   R.product(data);
  * @example
  *   R.product([1, 2, 3]); // => 6
+ *   R.product([1n, 2n, 3n]); // => 6n
  *   R.product([]); // => 1
  * @dataFirst
  * @category Number
@@ -55,6 +56,7 @@ export function product<
  *   R.product()(data);
  * @example
  *   R.pipe([1, 2, 3], R.product()); // => 6
+ *   R.pipe([1n, 2n, 3n], R.product()); // => 6n
  *   R.pipe([], R.product()); // => 1
  * @dataLast
  * @category Number

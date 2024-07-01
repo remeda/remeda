@@ -30,6 +30,7 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
  *   R.sum(data);
  * @example
  *   R.sum([1, 2, 3]); // => 6
+ *   R.sum([1n, 2n, 3n]); // => 6n
  *   R.sum([]); // => 0
  * @dataFirst
  * @category Number
@@ -53,6 +54,7 @@ export function sum<
  *   R.sum()(data);
  * @example
  *   R.pipe([1, 2, 3], R.sum()); // => 6
+ *   R.pipe([1n, 2n, 3n], R.sum()); // => 6n
  *   R.pipe([], R.sum()); // => 0
  * @dataLast
  * @category Number
