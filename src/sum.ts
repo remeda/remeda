@@ -49,7 +49,7 @@ export function sum(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function sumImplementation<
-  T extends IterableContainer<bigint> | ReadonlyArray<number>,
+  T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] {
   let out = typeof data[0] === "bigint" ? 0n : 0;
   for (const value of data) {
