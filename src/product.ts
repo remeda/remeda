@@ -2,14 +2,17 @@ import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
-  // Non-empty bigint arrays will always result in a bigint product.
-  T extends [bigint, ...ReadonlyArray<unknown>]
-    ? bigint
-    : // But an empty bigint array would result in a non-bigint 1.
-      T[number] extends bigint
-      ? bigint | 1
-      : // Non-bigint arrays are always handled correctly.
-        number;
+  // Empty arrays would always result in a product of (a non-bigint) 1
+  T extends readonly []
+    ? 1
+    : // Non-empty bigint arrays will always result in a bigint product.
+      T extends readonly [bigint, ...ReadonlyArray<unknown>]
+      ? bigint
+      : // But an empty bigint array would result in a non-bigint 1.
+        T[number] extends bigint
+        ? bigint | 1
+        : // Non-bigint arrays are always handled correctly.
+          number;
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
