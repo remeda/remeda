@@ -66,11 +66,11 @@
     "@eslint/js": "^8.57.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.7",
+    "@types/node": "^20.14.9",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^48.2.12",
+    "eslint-plugin-jsdoc": "^48.5.0",
     "eslint-plugin-unicorn": "^54.0.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
@@ -79,7 +79,7 @@
     "semantic-release": "^24.0.0",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2",
-    "typescript-eslint": "^7.13.1",
+    "typescript-eslint": "^7.14.1",
     "vitest": "^1.6.0"
   }
 }
