@@ -26,16 +26,11 @@ const { title } = Astro.props;
     />
     <title>{`${title === undefined ? "" : `${title} - `}Remeda`}</title>
     <script is:inline src="/dist/scripts/init-theme.js"></script>
-    <script type="module">
-      import * as R from "https://esm.sh/remeda";
-      window.R = R;
-      console.log(
-        "Use variable R right here to access the latest version of the library",
-      );
-    </script>
   </head>
   <body class="container flex flex-col items-stretch px-0">
     <Header />
     <slot />
+    <script is:inline fetchpriority="low" src="/sandbox.js" type="module"
+    ></script>
   </body>
 </html>
