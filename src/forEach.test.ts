@@ -19,8 +19,8 @@ describe("runtime", () => {
     const data = [1, 2, 3];
     const cb = vi.fn();
 
-    // Because the callback is used before the data, we need to tell forEach
-    // what the expected type for the result is.
+    // Because the callback is used before forEach "sees" `data`, we need to
+    // explicitly tell it the how to type the `data` param..
     const result = forEach<typeof data>(cb)(data);
 
     expect(cb).toHaveBeenCalledWith(1, 0, data);
