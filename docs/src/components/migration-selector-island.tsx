@@ -22,6 +22,9 @@ export function MigrationSelectorIsland({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuItem>
+          <a href={`/v1`}>Migrate from 1.x to 2.x</a>
+        </DropdownMenuItem>
         {libraries.map((library) => (
           <DropdownMenuItem key={library} className="capitalize">
             <a href={`/migrate/${library}`}>{library}</a>
