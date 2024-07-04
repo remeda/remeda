@@ -25,6 +25,8 @@ import type { NarrowedTo } from "./internal/types";
  * @dataFirst
  * @category Guard
  */
-export const isObjectType = <T>(
+export function isObjectType<T>(
   data: T | object,
-): data is NarrowedTo<T, object> => typeof data === "object" && data !== null;
+): data is NarrowedTo<T, object> {
+  return typeof data === "object" && data !== null;
+}
