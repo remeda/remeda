@@ -1,14 +1,18 @@
 import * as R from "https://esm.sh/remeda";
 
-const NOTICE = "font-family: sans-serif; font-size: 16px";
-const CODE = "font-family: monospace; font-size: 16px; font-weight: 500";
+const NORMAL_STYLE = "font-family: sans-serif; font-size: 1rem";
+const BOLD_STYLE =
+  "font-family: sans-serif; font-size: 1.25rem; font-weight: 600";
+// The console's default style is mono-spaced font...
+const CODE_STYLE = "";
 
 window.R = R;
 
 console.log(
-  "%cYou can try out Remeda right here with the %cR%c global.",
-  NOTICE,
-  CODE,
-  NOTICE,
+  "%cYou can try out %cRemeda%c right here via the global const %cR",
+  NORMAL_STYLE,
+  BOLD_STYLE,
+  NORMAL_STYLE,
+  BOLD_STYLE,
 );
-console.log("%ce.g. %cR.add(5, 10)%c", NOTICE, CODE, NOTICE);
+console.log("%ce.g. %cR.add(5, 10)", NORMAL_STYLE, CODE_STYLE);
