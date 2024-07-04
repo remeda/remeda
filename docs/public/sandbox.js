@@ -1,19 +1,14 @@
 import * as R from "https://esm.sh/remeda";
 
+const SANS_SERIF = "font-family: sans-serif; font-size: 16px";
+const MONOSPACE = "font-family: monospace; font-size: 16px";
+
 window.R = R;
 
-const sansSerif = "font-family: sans-serif; font-size: 16px";
-const monospace = "font-family: monospace; font-size: 16px";
-
 console.log(
-  "%cYou can use Remeda with the %cR%c global.",
-  sansSerif,
-  monospace,
-  sansSerif,
+  "%cYou can try out Remeda right here with the %cR%c global.",
+  SANS_SERIF,
+  MONOSPACE,
+  SANS_SERIF,
 );
-console.log(
-  "%cTry typing %cR.add(5, 10)%c here:",
-  sansSerif,
-  monospace,
-  sansSerif,
-);
+console.log("%ce.g. %cR.add(5, 10)%c", SANS_SERIF, MONOSPACE, SANS_SERIF);
