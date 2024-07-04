@@ -10,8 +10,12 @@ import { purry } from "./purry";
  * @param count - A value between `0` and `n - 1`. Increments after each function call.
  * @param fn - The function to invoke. Passed one argument, the current value of `n`.
  * @returns An array containing the return values of all calls to `fn`.
- * @example times(5, identity()); //=> [0, 1, 2, 3, 4]
+ * @signature
+ *    R.times(count, fn)
+ * @example
+ *    R.times(5, R.identity()); //=> [0, 1, 2, 3, 4]
  * @dataFirst
+ * @category Other
  */
 export function times<T>(count: number, fn: (n: number) => T): Array<T>;
 
@@ -24,8 +28,12 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  *
  * @param fn - The function to invoke. Passed one argument, the current value of `n`.
  * @returns An array containing the return values of all calls to `fn`.
- * @example times(identity())(5); //=> [0, 1, 2, 3, 4]
+ * @signature
+ *    R.times(fn)(count)
+ * @example
+ *    R.times(R.identity())(5); //=> [0, 1, 2, 3, 4]
  * @dataLast
+ * @category Other
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
