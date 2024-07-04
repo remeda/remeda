@@ -30,5 +30,7 @@ const { title } = Astro.props;
   <body class="container flex flex-col items-stretch px-0">
     <Header />
     <slot />
+    <script is:inline fetchpriority="low" src="/sandbox.js" type="module"
+    ></script>
   </body>
 </html>
