@@ -22,7 +22,7 @@ declare DATA: MyType;
 const cloned = clone(DATA);
 
 // Now
-const cloned DATA.clone();
+const cloned = DATA.clone();
 ```
 
 ### Headless
