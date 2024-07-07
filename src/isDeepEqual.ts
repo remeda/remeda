@@ -14,6 +14,9 @@ import { purry } from "./purry";
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
  *
+ * See: `isEqual` if you don't need a deep comparison and just want to check
+ * for simple (`===`, `Object.is`) equality.
+ *
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
@@ -44,6 +47,9 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
+ *
+ * See: `isEqual` if you don't need a deep comparison and just want to check
+ * for simple (`===`, `Object.is`) equality.
  *
  * @param other - The second value to compare.
  * @signature
