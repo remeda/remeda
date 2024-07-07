@@ -14,8 +14,11 @@ import { purry } from "./purry";
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
  *
- * See `isDeepEqual` for a semantic comparison that allows comparing arrays and
- * objects "by-value".
+ * See:
+ * - `isDeepEqual` for a semantic comparison that allows comparing arrays and
+ * objects "by-value", and recurses for every item.
+ * - `isShallowEqual` if you need to compare arrays and objects "by-value" but
+ * don't want to recurse into their values.
  *
  * @param data - The first value to compare.
  * @param other - The second value to compare.
@@ -44,8 +47,11 @@ export function isEqual<T, S extends T = T>(data: T, other: S): boolean;
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
  *
- * See `isDeepEqual` for a semantic comparison that allows comparing arrays and
- * objects "by-value".
+ * See:
+ * - `isDeepEqual` for a semantic comparison that allows comparing arrays and
+ * objects "by-value", and recurses for every item.
+ * - `isShallowEqual` if you need to compare arrays and objects "by-value" but
+ * don't want to recurse into their values.
  *
  * @param other - The second value to compare.
  * @signature

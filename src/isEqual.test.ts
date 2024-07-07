@@ -2,39 +2,37 @@ import { differenceWith } from "./differenceWith";
 import { isEqual } from "./isEqual";
 
 describe("runtime", () => {
-  describe("trivial cases", () => {
+  describe("primitives", () => {
     test("undefined", () => {
-      const data = undefined;
-      expect(isEqual(data, undefined)).toBe(true);
+      expect(isEqual(undefined, undefined)).toBe(true);
     });
 
     test("null", () => {
-      const data = null;
-      expect(isEqual(data, null)).toBe(true);
+      expect(isEqual(null, null)).toBe(true);
     });
 
     test("string", () => {
-      const data = "a";
-      expect(isEqual(data, "a")).toBe(true);
+      expect(isEqual("a", "a")).toBe(true);
+      expect(isEqual("a", "b")).toBe(false);
     });
 
     test("number", () => {
-      const data = 1;
-      expect(isEqual(data, 1)).toBe(true);
+      expect(isEqual(1, 1)).toBe(true);
+      expect(isEqual(1, 2)).toBe(false);
     });
 
     test("boolean", () => {
-      const data = true;
-      expect(isEqual(data, true)).toBe(true);
+      expect(isEqual(true, true)).toBe(true);
+      expect(isEqual(true, false)).toBe(false);
     });
 
     test("bigint", () => {
-      const data = 1n;
-      expect(isEqual(data, 1n)).toBe(true);
+      expect(isEqual(1n, 1n)).toBe(true);
+      expect(isEqual(1n, 2n)).toBe(false);
     });
   });
 
-  describe("non-deep equality", () => {
+  describe("objects", () => {
     test("arrays", () => {
       const data = [1, 2, 3];
       expect(isEqual(data, [1, 2, 3])).toBe(false);
@@ -44,24 +42,6 @@ describe("runtime", () => {
     test("objects", () => {
       const data = { a: 1, b: 2 };
       expect(isEqual(data, { a: 1, b: 2 })).toBe(false);
-      expect(isEqual(data, data)).toBe(true);
-    });
-
-    test("regex", () => {
-      const data = /a/u;
-      expect(isEqual(data, /a/u)).toBe(false);
-      expect(isEqual(data, data)).toBe(true);
-    });
-
-    test("dates", () => {
-      const data = new Date();
-      expect(isEqual(data, new Date())).toBe(false);
-      expect(isEqual(data, data)).toBe(true);
-    });
-
-    test("promises", () => {
-      const data = Promise.resolve(1);
-      expect(isEqual(data, Promise.resolve(1))).toBe(false);
       expect(isEqual(data, data)).toBe(true);
     });
 
@@ -80,6 +60,26 @@ describe("runtime", () => {
     test("sets", () => {
       const data = new Set([1, 2, 3]);
       expect(isEqual(data, new Set([1, 2, 3]))).toBe(false);
+      expect(isEqual(data, data)).toBe(true);
+    });
+  });
+
+  describe("built-ins", () => {
+    test("regex", () => {
+      const data = /a/u;
+      expect(isEqual(data, /a/u)).toBe(false);
+      expect(isEqual(data, data)).toBe(true);
+    });
+
+    test("dates", () => {
+      const data = new Date();
+      expect(isEqual(data, new Date())).toBe(false);
+      expect(isEqual(data, data)).toBe(true);
+    });
+
+    test("promises", () => {
+      const data = Promise.resolve(1);
+      expect(isEqual(data, Promise.resolve(1))).toBe(false);
       expect(isEqual(data, data)).toBe(true);
     });
   });

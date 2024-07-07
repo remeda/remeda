@@ -62,6 +62,7 @@ export * from "./isNumber";
 export * from "./isObjectType";
 export * from "./isPlainObject";
 export * from "./isPromise";
+export * from "./isShallowEqual";
 export * from "./isString";
 export * from "./isSymbol";
 export * from "./isTruthy";
