@@ -106,12 +106,12 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
     return isSetShallowEqual(a, b);
   }
 
-  const keysA = Object.keys(a);
-  if (keysA.length !== Object.keys(b).length) {
+  const keys = Object.keys(a);
+  if (keys.length !== Object.keys(b).length) {
     return false;
   }
 
-  for (const key of keysA) {
+  for (const key of keys) {
     if (!Object.prototype.hasOwnProperty.call(b, key)) {
       return false;
     }
