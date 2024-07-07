@@ -26,8 +26,15 @@ type TimesArray<
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param count - A value between `0` and `n - 1`. Increments after each function call.
- * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * NOTE: The function returns a strict tuple with exactly N elements in it, but
+ * for very large literals TypeScript might not be able to compute it, for those
+ * cases cast the number to a primitive `number` (e.g. `1000 as number`) to
+ * bypass the refined typing.
+ *
+ * @param count - A value between `0` and `n - 1`. Increments after each
+ * function call.
+ * @param fn - The function to invoke. Passed one argument, the current value of
+ * `n`.
  * @returns An array containing the return values of all calls to `fn`.
  * @signature
  *    R.times(count, fn)
@@ -48,7 +55,13 @@ export function times<T, N extends number>(
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * NOTE: The function returns a strict tuple with exactly N elements in it, but
+ * for very large literals TypeScript might not be able to compute it, for those
+ * cases cast the number to a primitive `number` (e.g. `1000 as number`) to
+ * bypass the refined typing.
+ *
+ * @param fn - The function to invoke. Passed one argument, the current value of
+ * `n`.
  * @returns An array containing the return values of all calls to `fn`.
  * @signature
  *    R.times(fn)(count)
