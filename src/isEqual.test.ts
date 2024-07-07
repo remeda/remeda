@@ -32,7 +32,9 @@ describe("runtime", () => {
       const data = 1n;
       expect(isEqual(data, 1n)).toBe(true);
     });
+  });
 
+  describe("non-deep equality", () => {
     test("arrays", () => {
       const data = [1, 2, 3];
       expect(isEqual(data, [1, 2, 3])).toBe(false);
