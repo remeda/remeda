@@ -47,6 +47,7 @@ describe("runtime", () => {
       expect(isShallowEqual(data, data)).toBe(true);
 
       expect(isShallowEqual(data, { a: 1 })).toBe(false);
+      expect(isShallowEqual(data, { a: 1, c: 3 })).toBe(false);
     });
 
     test("uint arrays", () => {
