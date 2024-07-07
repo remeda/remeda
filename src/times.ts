@@ -42,13 +42,22 @@ export function times(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function timesImplementation<T>(count: number, fn: (n: number) => T): Array<T> {
-  if (count < 0) {
-    throw new RangeError("n must be a non-negative number");
+  if (count < 1) {
+    // We prefer to return trivial results on trivial inputs vs throwing errors.
+    return [];
   }
 
-  const res = [];
+  // eslint-disable-next-line unicorn/no-new-array -- This is the most efficient way to create the array, check out the benchmarks in the PR that added this comment.
+  const res = new Array<T>(
+    // Non-integer numbers would cause `new Array` to throw, but it makes more
+    // sense to simply round them down to the nearest integer instead; but
+    // rounding has some performance implications so we only do it when we have
+    // to.
+    Number.isInteger(count) ? count : Math.floor(count),
+  );
+
   for (let i = 0; i < count; i++) {
-    res.push(fn(i));
+    res[i] = fn(i);
   }
 
   return res;
