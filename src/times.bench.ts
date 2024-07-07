@@ -115,6 +115,18 @@ describe.each([[10], [100], [1000], [10_000], [-10], [10.5]])(
       },
       BENCH_OPTIONS,
     );
+
+    bench(
+      "final impl",
+      () => {
+        try {
+          finalImplementation(length, mapper);
+        } catch {
+          // do nothing
+        }
+      },
+      BENCH_OPTIONS,
+    );
   },
 );
 
@@ -249,6 +261,30 @@ function sparseArrayWithSafeCheckedFloor<T>(
   );
 
   for (let i = 0; i < count; i++) {
+    res[i] = fn(i);
+  }
+
+  return res;
+}
+
+function finalImplementation<T>(
+  count: number,
+  fn: (index: number) => T,
+): Array<T> {
+  if (count < 1) {
+    // We prefer to return trivial results on trivial inputs vs throwing errors.
+    return [];
+  }
+
+  // Non-integer numbers would cause `new Array` to throw, but it makes more
+  // sense to simply round them down to the nearest integer instead; but
+  // rounding has some performance implications so we only do it when we have to
+  const length = Number.isInteger(count) ? count : Math.floor(count);
+
+  // eslint-disable-next-line unicorn/no-new-array -- This is the most efficient way to create the array, check out the benchmarks in the PR that added this comment.
+  const res = new Array<T>(length);
+
+  for (let i = 0; i < length; i++) {
     res[i] = fn(i);
   }
 
