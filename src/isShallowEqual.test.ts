@@ -64,6 +64,15 @@ describe("runtime", () => {
       expect(isShallowEqual(data, data)).toBe(true);
 
       expect(isShallowEqual(data, new Map([["a", 2]]))).toBe(false);
+      expect(
+        isShallowEqual(
+          data,
+          new Map([
+            ["a", 1],
+            ["b", 2],
+          ]),
+        ),
+      ).toBe(false);
     });
 
     test("sets", () => {
@@ -72,6 +81,7 @@ describe("runtime", () => {
       expect(isShallowEqual(data, data)).toBe(true);
 
       expect(isShallowEqual(data, new Set([1, 2]))).toBe(false);
+      expect(isShallowEqual(data, new Set([4, 5, 6]))).toBe(false);
     });
   });
 
