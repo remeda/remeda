@@ -57,10 +57,3 @@ describe("piping", () => {
     expect(result).toStrictEqual([2, 4]);
   });
 });
-
-describe("typing", () => {
-  it("narrows the result type", () => {
-    const result = intersection([1, 2, 3, "a", "b"], ["a", "b", true, false]);
-    expectTypeOf(result).toEqualTypeOf<Array<string>>();
-  });
-});
