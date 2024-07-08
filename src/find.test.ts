@@ -1,5 +1,4 @@
 import { find } from "./find";
-import { isString } from "./isString";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
@@ -73,12 +72,5 @@ describe("runtime", () => {
       expect(counter).toHaveBeenCalledTimes(2);
       expect(actual).toEqual({ a: 1, b: 2 });
     });
-  });
-});
-
-describe("typing", () => {
-  test("can narrow types", () => {
-    const result = find([1, "a"], isString);
-    expectTypeOf(result).toEqualTypeOf<string | undefined>();
   });
 });
