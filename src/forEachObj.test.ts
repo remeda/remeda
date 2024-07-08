@@ -35,12 +35,8 @@ describe("runtime", () => {
   });
 
   test("dataLast", () => {
-    const data = {
-      a: 1,
-      b: 2,
-      c: 3,
-    };
-    const cb = vi.fn<[number, string, typeof data]>();
+    const data = { a: 1, b: 2, c: 3 };
+    const cb = vi.fn();
 
     expect(pipe(data, forEachObj(cb))).toBe(data);
     expect(cb).toHaveBeenCalledWith(1, "a", data);
