@@ -1,12 +1,10 @@
 import { doNothing } from "./doNothing";
 
-describe("typing", () => {
-  test("supported in any api", () => {
-    mockApi({
-      onMixOfParams: doNothing(),
-      onNoParams: doNothing(),
-      onVariadicParams: doNothing(),
-    });
+test("supported in any api", () => {
+  mockApi({
+    onMixOfParams: doNothing(),
+    onNoParams: doNothing(),
+    onVariadicParams: doNothing(),
   });
 });
 

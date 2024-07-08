@@ -2,57 +2,55 @@ import { filter } from "./filter";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
-describe("runtime", () => {
-  describe("data_first", () => {
-    it("filter", () => {
-      const result = filter([1, 2, 3], (x) => x % 2 === 1);
-      expect(result).toEqual([1, 3]);
-    });
-
-    it("data_first with typescript guard", () => {
-      const result = filter([1, 2, 3, "abc", true], isNumber);
-      expect(result).toEqual([1, 2, 3]);
-    });
-
-    it("filter indexed", () => {
-      const result = filter([1, 2, 3], (x, i) => x % 2 === 1 && i !== 1);
-      expect(result).toEqual([1, 3]);
-    });
+describe("data_first", () => {
+  it("filter", () => {
+    const result = filter([1, 2, 3], (x) => x % 2 === 1);
+    expect(result).toEqual([1, 3]);
   });
 
-  describe("data_last", () => {
-    it("filter", () => {
-      const counter = vi.fn((x: unknown) => x);
-      const result = pipe(
-        [1, 2, 3],
-        filter((x) => x % 2 === 1),
-        map(counter),
-      );
-      expect(counter).toHaveBeenCalledTimes(2);
-      expect(result).toEqual([1, 3]);
-    });
+  it("data_first with typescript guard", () => {
+    const result = filter([1, 2, 3, "abc", true], isNumber);
+    expect(result).toEqual([1, 2, 3]);
+  });
 
-    it("filter with typescript guard", () => {
-      const counter = vi.fn((x: unknown) => x);
-      const result = pipe(
-        [1, 2, 3, false, "text"],
-        filter(isNumber),
-        map(counter),
-      );
-      expect(counter).toHaveBeenCalledTimes(3);
-      expect(result).toEqual([1, 2, 3]);
-    });
+  it("filter indexed", () => {
+    const result = filter([1, 2, 3], (x, i) => x % 2 === 1 && i !== 1);
+    expect(result).toEqual([1, 3]);
+  });
+});
 
-    it("filter indexed", () => {
-      const counter = vi.fn((x: unknown) => x);
-      const result = pipe(
-        [1, 2, 3],
-        filter((x, i) => x % 2 === 1 && i !== 1),
-        map(counter),
-      );
-      expect(counter).toHaveBeenCalledTimes(2);
-      expect(result).toEqual([1, 3]);
-    });
+describe("data_last", () => {
+  it("filter", () => {
+    const counter = vi.fn((x: unknown) => x);
+    const result = pipe(
+      [1, 2, 3],
+      filter((x) => x % 2 === 1),
+      map(counter),
+    );
+    expect(counter).toHaveBeenCalledTimes(2);
+    expect(result).toEqual([1, 3]);
+  });
+
+  it("filter with typescript guard", () => {
+    const counter = vi.fn((x: unknown) => x);
+    const result = pipe(
+      [1, 2, 3, false, "text"],
+      filter(isNumber),
+      map(counter),
+    );
+    expect(counter).toHaveBeenCalledTimes(3);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it("filter indexed", () => {
+    const counter = vi.fn((x: unknown) => x);
+    const result = pipe(
+      [1, 2, 3],
+      filter((x, i) => x % 2 === 1 && i !== 1),
+      map(counter),
+    );
+    expect(counter).toHaveBeenCalledTimes(2);
+    expect(result).toEqual([1, 3]);
   });
 });
 
