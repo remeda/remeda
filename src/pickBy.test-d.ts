@@ -1,99 +1,87 @@
 import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";
-import { isNullish } from "./isNullish";
+import { isDefined } from "./isDefined";
+import { isNonNull } from "./isNonNull";
+import { isNonNullish } from "./isNonNullish";
 import { isString } from "./isString";
-import { omitBy } from "./omitBy";
+import { pickBy } from "./pickBy";
 import { pipe } from "./pipe";
 
 describe("data first", () => {
-  test("it should omit props", () => {
-    const result = omitBy({ a: 1, b: 2, A: 3, B: 4 } as const, constant(true));
-    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
+  test("it should pick props", () => {
+    const data = { a: 1, b: 2, A: 3, B: 4 };
+    const result = pickBy(data, constant(true));
+    expectTypeOf(result).toEqualTypeOf<Partial<typeof data>>();
   });
 
   test("allow partial type", () => {
-    const result = omitBy(
-      {} as Partial<{ a: string; b: number }>,
-      constant(true),
-    );
+    const result = pickBy({} as { a?: string; b?: number }, constant(true));
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
 
 describe("data last", () => {
-  test("it should omit props", () => {
-    const result = pipe(
-      { a: 1, b: 2, A: 3, B: 4 } as const,
-      omitBy(constant(true)),
-    );
-    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
+  test("it should pick props", () => {
+    const data = { a: 1, b: 2, A: 3, B: 4 };
+    const result = pipe(data, pickBy(constant(true)));
+    expectTypeOf(result).toEqualTypeOf<Partial<typeof data>>();
   });
 
   test("allow partial type", () => {
     const result = pipe(
-      {} as Partial<{ a: string; b: number }>,
-      omitBy(constant(true)),
+      {} as { a?: string; b?: number },
+      pickBy(constant(true)),
     );
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
 
-test("symbols are passed through", () => {
-  const requiredSymbol = Symbol("required");
-  const optionalSymbol = Symbol("optional");
-  const result = omitBy(
-    {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
-    constant(true),
-  );
-  expectTypeOf(result).toEqualTypeOf<{
-    [requiredSymbol]: number;
-    [optionalSymbol]?: boolean;
-    a?: string;
-  }>();
+test("symbols are filtered out", () => {
+  const mySymbol = Symbol("mySymbol");
+  const result = pickBy({ [mySymbol]: 1, a: 123 }, constant(true));
+  expectTypeOf(result).toEqualTypeOf<{ a?: number }>();
 });
 
 test("symbols are not passed to the predicate", () => {
-  omitBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
+  pickBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
     return true;
   });
 });
 
-test("number keys are passed as strings to the predicate", () => {
-  omitBy({ 123: "hello" }, (_, key) => {
-    expectTypeOf(key).toEqualTypeOf<"123">();
-    return true;
-  });
+test("Makes wide types partial", () => {
+  const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+  expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
+
+  const narrow = pickBy({ a: 1 } as const, (_x): _x is 1 => true);
+  expectTypeOf(narrow).toEqualTypeOf<{ a: 1 }>();
 });
 
-test("handles type-predicates", () => {
-  const result = omitBy(
+test("works with type-guards", () => {
+  const mySymbol = Symbol("test");
+  const result = pickBy(
     {} as {
-      a: string;
-      b: number;
-      optionalA?: string;
-      optionalB?: number;
-      union: number | string;
-      optionalUnion?: number | string;
+      a: number;
+      b: string;
+      [mySymbol]: string;
+      literalUnion: "cat" | "dog";
+      optionalA: number;
+      optionalB?: string;
+      optionalLiteralUnion?: "cat" | "dog";
+      partialMatch: "cat" | "dog" | 3;
+      partialOptionalMatch?: "cat" | "dog" | 3;
     },
     isString,
   );
   expectTypeOf(result).toEqualTypeOf<{
-    b: number;
-    optionalB?: number;
-    union?: number;
-    optionalUnion?: number;
+    b: string;
+    literalUnion: "cat" | "dog";
+    optionalB?: string;
+    optionalLiteralUnion?: "cat" | "dog";
+    partialMatch?: "cat" | "dog";
+    partialOptionalMatch?: "cat" | "dog";
   }>();
-});
-
-test("Makes wide types partial", () => {
-  const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
-  expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
-
-  const narrow = omitBy({ a: 1 } as const, (_x): _x is 1 => true);
-  // eslint-disable-next-line @typescript-eslint/ban-types -- Expected!
-  expectTypeOf(narrow).toEqualTypeOf<{}>();
 });
 
 test("Works well with nullish type-guards", () => {
@@ -107,8 +95,7 @@ test("Works well with nullish type-guards", () => {
     optionalNullable?: string | null;
     optionalNullish?: string | null | undefined;
   };
-
-  const resultDefined = omitBy(data, isUndefined);
+  const resultDefined = pickBy(data, isDefined);
   expectTypeOf(resultDefined).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -120,7 +107,7 @@ test("Works well with nullish type-guards", () => {
     optionalNullish?: string | null;
   }>();
 
-  const resultNonNull = omitBy(data, isNull);
+  const resultNonNull = pickBy(data, isNonNull);
   expectTypeOf(resultNonNull).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -132,7 +119,7 @@ test("Works well with nullish type-guards", () => {
     optionalNullish?: string | undefined;
   }>();
 
-  const resultNonNullish = omitBy(data, isNullish);
+  const resultNonNullish = pickBy(data, isNonNullish);
   expectTypeOf(resultNonNullish).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -149,39 +136,32 @@ test("Works well with nullish type-guards", () => {
 describe("Records with non-narrowing predicates (Issue #696)", () => {
   test("string keys", () => {
     const data = {} as Record<string, string>;
-    const result = omitBy(data, constant(true));
+    const result = pickBy(data, constant(true));
     expectTypeOf(result).toEqualTypeOf(data);
   });
 
   test("number keys", () => {
     const data = {} as Record<number, string>;
-    const result = omitBy(data, constant(true));
+    const result = pickBy(data, constant(true));
     expectTypeOf(result).toEqualTypeOf<Record<`${number}`, string>>();
   });
 
   test("combined numbers and strings", () => {
     const data = {} as Record<number | string, string>;
-    const result = omitBy(data, constant(true));
+    const result = pickBy(data, constant(true));
     expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
   });
 
   test("union of records", () => {
     const data = {} as Record<number, string> | Record<string, string>;
-
-    const dataFirst = omitBy(data, constant(true));
+    const dataFirst = pickBy(data, constant(true));
     expectTypeOf(dataFirst).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
 
-    const dataLast = pipe(data, omitBy(constant(true)));
+    const dataLast = pipe(data, pickBy(constant(true)));
     expectTypeOf(dataLast).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
   });
 });
-
-const isUndefined = <T>(value: T | undefined): value is undefined =>
-  value === undefined;
-
-const isNull = <T>(value: T | null): value is null =>
-  typeof value === "object" && value === null;
