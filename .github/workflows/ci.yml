@@ -60,16 +60,16 @@ jobs:
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: npm run build
+        run: npm run build -- --dts-only
 
       - name: 📘 Install Typescript
         run: npm install -D typescript@${{ matrix.typescript-version }}
 
-      - name: 🔎 Type check
-        run: npm run typecheck:dist
-
       - name: Type tests
         run: npm run test:typing
+
+      - name: 🔎 Type check
+        run: npm run typecheck:dist
 
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
