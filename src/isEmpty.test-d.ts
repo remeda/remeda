@@ -8,7 +8,6 @@ test("does not accept invalid input types", () => {
   isEmpty(false);
 
   // @ts-expect-error [ts2769] null is not a valid input type
-  // eslint-disable-next-line unicorn/no-null -- Intentional
   isEmpty(null);
 
   // @ts-expect-error [ts2769] undefined is only allowed with strings

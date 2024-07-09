@@ -90,7 +90,6 @@ describe("tuple item types", () => {
   });
 
   it("null", () => {
-    // eslint-disable-next-line unicorn/no-null -- Intentional
     const array: [null, null] = [null, null];
     const result = join(array, ",");
     expectTypeOf(result).toEqualTypeOf<",">();
