@@ -34,15 +34,15 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
-          - "~5.5.0"
-          - "~5.4.0"
-          - "~5.3.0"
-          - "~5.2.0"
+          - "5.5"
+          - "5.4"
+          - "5.3"
+          - "5.2"
           # This is the current lowest version of typescript we support. Do not
           # change this without bumping a major version. We support up to 4
           # versions back from the latest version of typescript at time of a
           # major release.
-          - "~5.1.0"
+          - "5.1"
 
     steps:
       - name: ⬇️ Checkout repo
