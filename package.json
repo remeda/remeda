@@ -54,10 +54,10 @@
     "prepare": "husky",
     "prettier": "prettier . --write",
     "release": "semantic-release",
-    "test": "vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
-    "test:runtime": "vitest",
+    "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
+    "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
-    "typecheck": "tsc",
+    "typecheck": "tsc --project tsconfig.source.json",
     "typecheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
