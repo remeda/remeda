@@ -10,7 +10,7 @@
   // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "*.ts": "${capture}.*.ts"
+    "*.ts": "${capture}.test.ts"
   },
 
   // It's better to ensure that the project typescript is the one we use for the
