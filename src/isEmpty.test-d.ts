@@ -9,7 +9,7 @@ test("does not accept invalid input types", () => {
 
   // @ts-expect-error [ts2769] null is not a valid input type
   // eslint-disable-next-line unicorn/no-null -- Intentional
-  expect(() => isEmpty(null)).toThrow();
+  isEmpty(null);
 
   // @ts-expect-error [ts2769] undefined is only allowed with strings
   isEmpty([] as ReadonlyArray<string> | undefined);

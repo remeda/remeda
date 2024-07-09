@@ -73,12 +73,8 @@ describe("dataLast", () => {
 });
 
 it("doesn't allow mixed arrays", () => {
-  expect(() =>
-    // @ts-expect-error [ts2345] - Can't sum bigints and numbers...
-    sum([1, 2n]),
-  ).toThrowErrorMatchingInlineSnapshot(
-    `[TypeError: Cannot mix BigInt and other types, use explicit conversions]`,
-  );
+  // @ts-expect-error [ts2345] - Can't sum bigints and numbers...
+  sum([1, 2n]);
 });
 
 describe("KNOWN ISSUES", () => {

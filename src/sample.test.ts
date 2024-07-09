@@ -101,6 +101,48 @@ describe("edge cases", () => {
   });
 });
 
+describe("sampleSize === n", () => {
+  it("empty array", () => {
+    const array: [] = [];
+    const result = sample(array, 0);
+    expect(result).toStrictEqual([]);
+  });
+
+  it("empty readonly array", () => {
+    const array: readonly [] = [];
+    const result = sample(array, 0);
+    expect(result).toStrictEqual([]);
+  });
+});
+
+describe("sampleSize > n", () => {
+  it("empty array", () => {
+    const array: [] = [];
+    const result = sample(array, 10);
+    expect(result).toStrictEqual([]);
+  });
+
+  it("empty readonly array", () => {
+    const array: readonly [] = [];
+    const result = sample(array, 10);
+    expect(result).toStrictEqual([]);
+  });
+});
+
+describe("non-const sampleSize", () => {
+  it("empty array", () => {
+    const array: [] = [];
+    const result = sample(array, 5 as number);
+    expect(result).toStrictEqual([]);
+  });
+
+  it("empty readonly array", () => {
+    const array: readonly [] = [];
+    const result = sample(array, 5 as number);
+    expect(result).toStrictEqual([]);
+  });
+});
+
 function generateRandomArray(): NonEmptyArray<number> {
   // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!

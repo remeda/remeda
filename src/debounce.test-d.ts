@@ -83,7 +83,7 @@ test("argument typing to be good (with defaults)", () => {
   debouncer.call("a", 1, true);
 });
 
-test("argument typing to be good (with rest param)", async () => {
+test("argument typing to be good (with rest param)", () => {
   const debouncer = debounce(
     (a: string, ...flags: ReadonlyArray<boolean>) =>
       `${a}${flags.map((flag) => (flag ? "y" : "n")).join(",")}`,
@@ -105,12 +105,6 @@ test("argument typing to be good (with rest param)", async () => {
   debouncer.call("a");
   debouncer.call("a", true);
   debouncer.call("a", true, false);
-
-  await sleep(64);
-
-  expect(
-    debouncer.call("a", true, true, false, false, true, false, true),
-  ).toEqual("ay,y,n,n,y,n,y");
 });
 
 it("doesn't accept maxWaitMs when timing is 'leading'", () => {
@@ -119,9 +113,3 @@ it("doesn't accept maxWaitMs when timing is 'leading'", () => {
   // @ts-expect-error [ts2769]: maxWaitMs not supported!
   debounce(identity(), { timing: "leading", maxWaitMs: 32 });
 });
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}

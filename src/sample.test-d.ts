@@ -173,14 +173,12 @@ describe("sampleSize === n", () => {
     const array: [] = [];
     const result = sample(array, 0);
     expectTypeOf(result).toEqualTypeOf<[]>();
-    expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 0);
     expectTypeOf(result).toEqualTypeOf<typeof array>();
-    expect(result).toStrictEqual([]);
   });
 
   it("on arrays", () => {
@@ -307,14 +305,12 @@ describe("sampleSize > n", () => {
     const array: [] = [];
     const result = sample(array, 10);
     expectTypeOf(result).toEqualTypeOf<[]>();
-    expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 10);
     expectTypeOf(result).toEqualTypeOf<typeof array>();
-    expect(result).toStrictEqual([]);
   });
 
   it("on arrays", () => {
@@ -625,14 +621,12 @@ describe("non-const sampleSize", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<[]>();
-    expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<typeof array>();
-    expect(result).toStrictEqual([]);
   });
 
   it("on arrays", () => {

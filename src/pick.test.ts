@@ -7,19 +7,6 @@ test("dataFirst", () => {
   expect(result).toStrictEqual({ a: 1, d: 4 });
 });
 
-test("support inherited properties", () => {
-  class BaseClass {
-    testProp(): string {
-      return "abc";
-    }
-  }
-  class TestClass extends BaseClass {}
-  const testClass = new TestClass();
-  expectTypeOf(pick(testClass, ["testProp"])).toEqualTypeOf<{
-    testProp: () => string;
-  }>();
-});
-
 test("dataLast", () => {
   const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(["a", "d"]));
   expect(result).toEqual({ a: 1, d: 4 });

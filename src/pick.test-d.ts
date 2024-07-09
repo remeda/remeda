@@ -47,3 +47,16 @@ test("multiple keys", () => {
 
   expectTypeOf(result).toEqualTypeOf<Pick<Data, "aProp" | "bProp">>();
 });
+
+test("support inherited properties", () => {
+  class BaseClass {
+    testProp(): string {
+      return "abc";
+    }
+  }
+  class TestClass extends BaseClass {}
+  const testClass = new TestClass();
+  expectTypeOf(pick(testClass, ["testProp"])).toEqualTypeOf<{
+    testProp: () => string;
+  }>();
+});
