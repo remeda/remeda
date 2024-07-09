@@ -54,9 +54,11 @@
     "prepare": "husky",
     "prettier": "prettier . --write",
     "release": "semantic-release",
-    "test": "vitest",
-    "typeCheck": "tsc",
-    "typeCheck:dist": "tsc --project tsconfig.dist.json"
+    "test": "vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
+    "test:runtime": "vitest",
+    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
+    "typecheck": "tsc",
+    "typecheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
     "type-fest": "^4.21.0"
