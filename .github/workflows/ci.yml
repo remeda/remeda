@@ -114,8 +114,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  prettier:
-    name: 💄 Formatting (prettier)
+  formatting:
+    name: 💄 Formatting
     needs:
       - typecheck
     runs-on: ubuntu-latest
