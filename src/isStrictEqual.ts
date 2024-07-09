@@ -46,6 +46,9 @@ export function isStrictEqual<T, S extends T = T>(data: T, other: S): boolean;
  * `NaN !== NaN`), and `isEqual(-0, 0) === true` (whereas
  * `Object.is(-0, 0) === false`).
  *
+ * The result would be narrowed to the second value so that the function can be
+ * used as a type guard.
+ *
  * See:
  * - `isDeepEqual` for a semantic comparison that allows comparing arrays and
  * objects "by-value", and recurses for every item.
