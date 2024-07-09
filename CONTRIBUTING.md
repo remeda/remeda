@@ -101,39 +101,41 @@ functionName(data); // inside functionName, data.a has type string
 
 ### Writing tests
 
-The tests for `fileName.ts` live in `fileName.test.ts`. Some guidelines:
+Runtime tests for `fileName.ts` live in `fileName.test.ts`, and typing tests live in `fileName.test-d.ts`. Some guidelines:
 
-- We have separate tests for runtime and typing, and within we have separate tests for data-first and data-last forms.
+- We have separate tests for data-first and data-last forms.
 
 <details>
 <summary>This typically looks like this:</summary>
 
 ```ts
-describe("runtime", () => {
-  describe("data-first", () => {
-    test("test description", () => {
-      expect(/* ... */).toBe(/* ... */);
-    });
-  });
+// <functionName>.test.ts
 
-  describe("data-last", () => {
-    test("test description", () => {
-      expect(/* ... */).toBe(/* ... */);
-    });
+describe("data-first", () => {
+  test("test description", () => {
+    expect(/* ... */).toBe(/* ... */);
   });
 });
 
-describe("typing", () => {
-  describe("data-first", () => {
-    test("test description", () => {
-      expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
-    });
+describe("data-last", () => {
+  test("test description", () => {
+    expect(/* ... */).toBe(/* ... */);
   });
+});
+```
 
-  describe("data-last", () => {
-    test("test description", () => {
-      expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
-    });
+```ts
+// <functionName>.test-d.ts
+
+describe("data-first", () => {
+  test("test description", () => {
+    expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
+  });
+});
+
+describe("data-last", () => {
+  test("test description", () => {
+    expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
   });
 });
 ```
