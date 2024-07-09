@@ -1,10 +1,12 @@
 import { purry } from "./purry";
 
 /**
- * Performs a _shallow_ *semantic* comparison between two values to determine if
+ * Performs a *shallow structural* comparison between two values to determine if
  * they are equivalent. For primitive values this is equivalent to `===`, for
- * arrays, an identity check would be performed on every item, in order, and for
- * objects props will be matched and checked for identity.
+ * arrays, a **strict equality** check would be performed on every item, in
+ * order, and for objects props will be matched and checked for **strict
+ * equality**; Unlike `isDeepEqual` where the function also *recurses* into each
+ * item and value.
  *
  * !IMPORTANT: symbol properties of objects are not supported right now and
  * might result in unexpected behavior. Please open an issue in the Remeda
@@ -41,10 +43,12 @@ export function isShallowEqual<T, S extends T>(
 export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
 
 /**
- * Performs a _shallow_ *semantic* comparison between two values to determine if
+ * Performs a *shallow structural* comparison between two values to determine if
  * they are equivalent. For primitive values this is equivalent to `===`, for
- * arrays, an identity check would be performed on every item, in order, and for
- * objects props will be matched and checked for identity.
+ * arrays, a **strict equality** check would be performed on every item, in
+ * order, and for objects props will be matched and checked for **strict
+ * equality**; Unlike `isDeepEqual` where the function also *recurses* into each
+ * item and value.
  *
  * !IMPORTANT: symbol properties of objects are not supported right now and
  * might result in unexpected behavior. Please open an issue in the Remeda

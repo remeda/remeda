@@ -1,11 +1,13 @@
 import { purry } from "./purry";
 
 /**
- * Performs a *structural* comparison between two values to determine if they
- * are equivalent. For primitive values this is equivalent to `===`, for arrays
- * the check would be performed on every item recursively, in order, and for
- * objects all props will be compared recursively. The built-in Date and RegExp
- * are special-cased and will be compared by their values.
+ * Performs a *deep structural* comparison between two values to determine if
+ * they are equivalent. For primitive values this is equivalent to `===`, for
+ * arrays the check would be performed on every item recursively, in order, and
+ * for objects all props will be compared recursively.
+ *
+ * The built-in Date and  RegExp are special-cased and will be compared by their
+ * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
@@ -38,11 +40,13 @@ export function isDeepEqual<T, S extends T>(
 export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
 
 /**
- * Performs a _deep_ *semantic* comparison between two values to determine if
+ * Performs a *deep structural* comparison between two values to determine if
  * they are equivalent. For primitive values this is equivalent to `===`, for
  * arrays the check would be performed on every item recursively, in order, and
- * for objects all props will be compared recursively. The built-in Date and
- * RegExp are special-cased and will be compared by their values.
+ * for objects all props will be compared recursively.
+ *
+ * The built-in Date and  RegExp are special-cased and will be compared by their
+ * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
