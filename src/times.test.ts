@@ -1,28 +1,26 @@
 import { constant } from "./constant";
+import { identity } from "./identity";
+import { multiply } from "./multiply";
+import { pipe } from "./pipe";
 import { times } from "./times";
-
-const one = () => 1 as const;
-const mul1 = (idx: number): number => idx;
-const mul2 = (idx: number): number => idx * 2;
 
 describe("times", () => {
   describe("data_first", () => {
-    it("throws error on invalid idx", () => {
-      expect(() => times(-1, constant(undefined))).toThrow();
-      expect(() => times(-1000, constant(undefined))).toThrow();
-      expect(() =>
-        times(Number.MIN_SAFE_INTEGER, constant(undefined)),
-      ).toThrow();
+    it("returns a trivial empty array for non-positive values", () => {
+      const zeroResult = times(0, identity());
+      expect(zeroResult).toStrictEqual([]);
+
+      const negativeResult = times(-1000, identity());
+      expect(negativeResult).toStrictEqual([]);
+
+      // Make sure that the array returned is new, and not the same copy.
+      expect(zeroResult).not.toBe(negativeResult);
+
+      expect(times(-5.5, identity())).toStrictEqual([]);
     });
 
-    it("returns empty array", () => {
-      const res = times(0, constant(undefined));
-      expect(res).toEqual([]);
-    });
-
-    it("returns arr with fn result", () => {
-      expect(times(1, one)).toEqual([1]);
-      expect(times(5, one)).toEqual([1, 1, 1, 1, 1]);
+    it("creates an array of the correct length", () => {
+      expect(times(123 as number, constant(1))).toHaveLength(123);
     });
 
     it("passes idx to fn", () => {
@@ -36,33 +34,36 @@ describe("times", () => {
     });
 
     it("returns fn results as arr", () => {
-      expect(times(5, mul1)).toEqual([0, 1, 2, 3, 4]);
-      expect(times(5, mul2)).toEqual([0, 2, 4, 6, 8]);
+      expect(times(5, identity())).toStrictEqual([0, 1, 2, 3, 4]);
+      expect(times(5, multiply(2))).toStrictEqual([0, 2, 4, 6, 8]);
+    });
+
+    it("rounds down non-integer numbers", () => {
+      expect(times(5.5, identity())).toStrictEqual([0, 1, 2, 3, 4]);
     });
   });
 
   describe("data_last", () => {
-    it("throws error on invalid idx", () => {
-      const noopTimes = times(constant(undefined));
-      expect(() => noopTimes(-1)).toThrow();
-      expect(() => noopTimes(-1000)).toThrow();
-      expect(() => noopTimes(Number.MIN_SAFE_INTEGER)).toThrow();
+    it("returns a trivial empty array for non-positive values", () => {
+      const zeroResult = pipe(0, times(identity()));
+      expect(zeroResult).toStrictEqual([]);
+
+      const negativeResult = pipe(-1000, times(identity()));
+      expect(negativeResult).toStrictEqual([]);
+
+      // Make sure that the array returned is new, and not the same copy.
+      expect(zeroResult).not.toBe(negativeResult);
+
+      expect(pipe(-5.5, times(identity()))).toStrictEqual([]);
     });
 
-    it("returns empty array", () => {
-      const res = times(constant(undefined))(0);
-      expect(res).toEqual([]);
-    });
-
-    it("returns arr with fn result", () => {
-      const oneTime = times(one);
-      expect(oneTime(1)).toEqual([1]);
-      expect(oneTime(5)).toEqual([1, 1, 1, 1, 1]);
+    it("creates an array of the correct length", () => {
+      expect(pipe(123 as number, times(constant(1)))).toHaveLength(123);
     });
 
     it("passes idx to fn", () => {
       const fn = vi.fn();
-      times(fn)(5);
+      pipe(5, times(fn));
       expect(fn).toHaveBeenCalledWith(0);
       expect(fn).toHaveBeenCalledWith(1);
       expect(fn).toHaveBeenCalledWith(2);
@@ -71,8 +72,85 @@ describe("times", () => {
     });
 
     it("returns fn results as arr", () => {
-      expect(times(mul1)(5)).toEqual([0, 1, 2, 3, 4]);
-      expect(times(mul2)(5)).toEqual([0, 2, 4, 6, 8]);
+      expect(pipe(5, times(identity()))).toStrictEqual([0, 1, 2, 3, 4]);
+      expect(pipe(5, times(multiply(2)))).toStrictEqual([0, 2, 4, 6, 8]);
     });
+
+    it("rounds down non-integer numbers", () => {
+      expect(pipe(5.5, times(identity()))).toStrictEqual([0, 1, 2, 3, 4]);
+    });
+  });
+});
+
+describe("typing", () => {
+  it("works with 0", () => {
+    const result = times(0, identity());
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  it("works with non-literals", () => {
+    const result = times(10 as number, identity());
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  });
+
+  it("works with positive integer literals", () => {
+    const result = times(10, identity());
+    expectTypeOf(result).toEqualTypeOf<
+      [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+      ]
+    >();
+  });
+
+  it("works with negative integers", () => {
+    const result = times(-10, identity());
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  it("works with non-integer positive literals", () => {
+    const result = times(10.5, identity());
+    expectTypeOf(result).toEqualTypeOf<
+      [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+      ]
+    >();
+  });
+
+  it("works with non-integer negative literals", () => {
+    const result = times(-10.5, identity());
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  it("works with literal unions", () => {
+    const result = times(1 as 1 | 3, identity());
+    expectTypeOf(result).toEqualTypeOf<[number, number, number] | [number]>();
+  });
+
+  it("could be 'disabled' with large literals", () => {
+    const result = times(10_000, identity());
+    // The result is a tuple of our max length supported for a literal, with an
+    // array tail for the rest of the items...
+    expectTypeOf(result).toMatchTypeOf<Array<number>>();
+    expectTypeOf(result[0]).toEqualTypeOf<number>();
+    expectTypeOf(result[45]).toEqualTypeOf<number>();
+    expectTypeOf(result[56]).toEqualTypeOf<number | undefined>();
   });
 });
