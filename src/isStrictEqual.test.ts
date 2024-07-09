@@ -97,7 +97,7 @@ describe("runtime", () => {
       expect(isStrictEqual(0, 0)).toBe(true);
     });
 
-    it("doesn't coalesce falsy values", () => {
+    it("fails on loose equality", () => {
       expect(isStrictEqual("" as unknown, 0)).toBe(false);
       expect(isStrictEqual("" as unknown, false)).toBe(false);
       expect(isStrictEqual(0 as unknown, false)).toBe(false);
