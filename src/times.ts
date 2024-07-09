@@ -1,4 +1,10 @@
+import { type GreaterThan } from "type-fest";
 import { purry } from "./purry";
+
+// This number was picked by trial-and-error until typescript stops failing with
+// "Type instantiation is excessively deep and possibly infinite. (ts2589)".
+// See the type tests for more information.
+type MAX_LITERAL_SIZE = 46;
 
 type TimesArray<
   T,
@@ -13,11 +19,15 @@ type TimesArray<
     : `${N}` extends `${infer K extends number}.${number}`
       ? // N is not an integer, we "floor" the number.
         TimesArray<T, K, Iteration>
-      : N extends Iteration["length"]
-        ? // We finished building the output tuple
-          []
-        : // Add another item to the tuple and recurse.
-          [T, ...TimesArray<T, N, [unknown, ...Iteration]>];
+      : GreaterThan<N, MAX_LITERAL_SIZE> extends true
+        ? // We can't build a literal tuple beyond this size, after that we
+          // can't add more items to the tuple so we add a rest element instead.
+          [...TimesArray<T, MAX_LITERAL_SIZE, Iteration>, ...Array<T>]
+        : N extends Iteration["length"]
+          ? // We finished building the output tuple
+            []
+          : // Add another item to the tuple and recurse.
+            [T, ...TimesArray<T, N, [unknown, ...Iteration]>];
 
 /**
  * Calls an input function `n` times, returning an array containing the results
@@ -25,11 +35,6 @@ type TimesArray<
  *
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
- *
- * NOTE: The function returns a strict tuple with exactly N elements in it, but
- * for very large literals TypeScript might not be able to compute it, for those
- * cases cast the number to a primitive `number` (e.g. `1000 as number`) to
- * bypass the refined typing.
  *
  * @param count - A value between `0` and `n - 1`. Increments after each
  * function call.
@@ -54,11 +59,6 @@ export function times<T, N extends number>(
  *
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
- *
- * NOTE: The function returns a strict tuple with exactly N elements in it, but
- * for very large literals TypeScript might not be able to compute it, for those
- * cases cast the number to a primitive `number` (e.g. `1000 as number`) to
- * bypass the refined typing.
  *
  * @param fn - The function to invoke. Passed one argument, the current value of
  * `n`.

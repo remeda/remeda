@@ -145,11 +145,12 @@ describe("typing", () => {
   });
 
   it("could be 'disabled' with large literals", () => {
-    const largeNumber = 10_000;
-
-    // @ts-expect-error [ts(2589)] - Intentionally bringing typescript to it's limits
-    times(largeNumber, identity());
-
-    times(largeNumber as number, identity());
+    const result = times(10_000, identity());
+    // The result is a tuple of our max length supported for a literal, with an
+    // array tail for the rest of the items...
+    expectTypeOf(result).toMatchTypeOf<Array<number>>();
+    expectTypeOf(result[0]).toEqualTypeOf<number>();
+    expectTypeOf(result[45]).toEqualTypeOf<number>();
+    expectTypeOf(result[56]).toEqualTypeOf<number | undefined>();
   });
 });
