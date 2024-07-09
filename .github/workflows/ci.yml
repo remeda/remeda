@@ -65,10 +65,10 @@ jobs:
       - name: 📘 Install Typescript
         run: npm install -D typescript@${{ matrix.typescript-version }}
 
-      - name: Type tests
+      - name: 📋 Type tests
         run: npm run test:typing
 
-      - name: 🔎 Type check
+      - name: 🚚 Check Outputs
         run: npm run typecheck:dist
 
   test-runtime:
