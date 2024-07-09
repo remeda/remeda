@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  typecheck-source:
-    name: 👷 Typecheck Source
+  typecheck:
+    name: 👷 Typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -25,10 +25,10 @@ jobs:
       - name: 🔎 Type check
         run: npm run typecheck
 
-  typecheck-outputs:
-    name: 🚚 Typecheck Outputs / ${{ matrix.typescript-version }}
+  test-typing:
+    name: 📋 Tests\Types [TypeScript ${{ matrix.typescript-version }}]
     needs:
-      - typecheck-source
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -71,10 +71,10 @@ jobs:
       - name: Type tests
         run: npm run test:typing
 
-  test:
-    name: 🧪 Test [Node ${{ matrix.node }}]
+  test-runtime:
+    name: 🧪 Tests\Runtime [Node ${{ matrix.node }}]
     needs:
-      - typecheck-source
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -100,7 +100,7 @@ jobs:
   lint:
     name: 🧹 Lint
     needs:
-      - typecheck-source
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -117,7 +117,7 @@ jobs:
   prettier:
     name: 💄 Formatting (prettier)
     needs:
-      - typecheck-source
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -133,8 +133,8 @@ jobs:
 
   publish:
     needs:
-      - typecheck-outputs
-      - test
+      - test-typing
+      - test-runtime
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
