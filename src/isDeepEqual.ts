@@ -6,7 +6,7 @@ import { purry } from "./purry";
  * arrays the check would be performed on every item recursively, in order, and
  * for objects all props will be compared recursively.
  *
- * The built-in Date and  RegExp are special-cased and will be compared by their
+ * The built-in Date and RegExp are special-cased and will be compared by their
  * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
@@ -45,7 +45,7 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
  * arrays the check would be performed on every item recursively, in order, and
  * for objects all props will be compared recursively.
  *
- * The built-in Date and  RegExp are special-cased and will be compared by their
+ * The built-in Date and RegExp are special-cased and will be compared by their
  * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
