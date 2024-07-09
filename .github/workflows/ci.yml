@@ -135,6 +135,9 @@ jobs:
     needs:
       - test-typing
       - test-runtime
+      - lint
+      - formatting
+
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
