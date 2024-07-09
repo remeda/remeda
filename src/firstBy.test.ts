@@ -1,4 +1,3 @@
-import type { NonEmptyArray } from "./internal/types";
 import { firstBy } from "./firstBy";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
@@ -136,25 +135,5 @@ describe("runtime (dataLast)", () => {
     expect(
       pipe([new Date(), new Date(1), new Date(2)], firstBy(identity())),
     ).toEqual(new Date(1));
-  });
-});
-
-describe("typing", () => {
-  it("can return undefined on arrays", () => {
-    const data: ReadonlyArray<number> = [1, 2, 3];
-    const result = firstBy(data, identity());
-    expectTypeOf(result).toBeNullable();
-  });
-
-  it("can't return undefined on non-empty array", () => {
-    const data: NonEmptyArray<number> = [1, 2, 3];
-    const result = firstBy(data, identity());
-    expectTypeOf(result).not.toBeNullable();
-  });
-
-  it("only returns null on the empty array", () => {
-    const data = [] as const;
-    const result = firstBy(data, identity());
-    expectTypeOf(result).toBeUndefined();
   });
 });

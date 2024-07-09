@@ -34,6 +34,7 @@ export function isEmpty(data: IterableContainer): data is [];
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
   data: T,
 ): data is Record<keyof T, never>;
+
 export function isEmpty(data: object | string | undefined): boolean {
   if (data === undefined) {
     return true;
@@ -41,10 +42,6 @@ export function isEmpty(data: object | string | undefined): boolean {
 
   if (typeof data === "string") {
     return data.length === 0;
-  }
-
-  if (typeof data !== "object") {
-    return false;
   }
 
   if (Array.isArray(data)) {

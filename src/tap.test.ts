@@ -1,14 +1,10 @@
 import { filter } from "./filter";
 import { map } from "./map";
+import { multiply } from "./multiply";
 import { pipe } from "./pipe";
 import { tap } from "./tap";
 
 const DATA = [1] as const;
-
-// (same as console.log)
-function foo(x: unknown): unknown {
-  return x;
-}
 
 describe("data first", () => {
   it("should call function with input value", () => {
@@ -47,9 +43,8 @@ describe("data last", () => {
         filter((n) => n > 0),
         tap((data) => {
           expect(data).toStrictEqual([2]);
-          expectTypeOf(data).toEqualTypeOf<Array<number>>();
         }),
-        map((n) => n * 2),
+        map(multiply(2)),
       ),
     ).toStrictEqual([4]);
   });
@@ -60,11 +55,13 @@ describe("data last", () => {
         [-1, 2],
         filter((n) => n > 0),
         tap(foo),
-        map((n) => {
-          expectTypeOf(n).toEqualTypeOf<number>();
-          return n * 2;
-        }),
+        map(multiply(2)),
       ),
     ).toStrictEqual([4]);
   });
 });
+
+// (same as console.log)
+function foo(x: unknown): unknown {
+  return x;
+}

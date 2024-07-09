@@ -54,23 +54,25 @@
     "prepare": "husky",
     "prettier": "prettier . --write",
     "release": "semantic-release",
-    "test": "vitest",
-    "typeCheck": "tsc",
-    "typeCheck:dist": "tsc --project tsconfig.dist.json"
+    "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
+    "test:runtime": "tsc --project tsconfig.tests.json && vitest",
+    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
+    "typecheck": "tsc --project tsconfig.source.json",
+    "typecheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
-    "type-fest": "^4.20.1"
+    "type-fest": "^4.21.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
     "@eslint/js": "^8.57.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.9",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@types/node": "^20.14.10",
+    "@vitest/coverage-v8": "^2.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^48.5.0",
+    "eslint-plugin-jsdoc": "^48.5.2",
     "eslint-plugin-unicorn": "^54.0.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
@@ -78,8 +80,8 @@
     "publint": "^0.2.8",
     "semantic-release": "^24.0.0",
     "tsup": "^8.1.0",
-    "typescript": "^5.5.2",
-    "typescript-eslint": "^7.14.1",
-    "vitest": "^1.6.0"
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^7.16.0",
+    "vitest": "^2.0.1"
   }
 }

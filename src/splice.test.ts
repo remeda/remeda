@@ -1,31 +1,30 @@
 import { pipe } from "./pipe";
 import { splice } from "./splice";
 
-describe("at runtime", () => {
-  describe("typical cases", (): void => {
-    test("removing a element", (): void => {
-      expect(splice([1, 2, 3], 0, 1, [])).toEqual([2, 3]);
-    });
-
-    test("inserting a element", (): void => {
-      expect(splice([1, 2, 3], 0, 0, [4])).toEqual([4, 1, 2, 3]);
-    });
-
-    test("removing elements and inserting elements", (): void => {
-      expect(splice([1, 2, 3], 0, 2, [4, 5])).toEqual([4, 5, 3]);
-    });
+describe("typical cases", (): void => {
+  test("removing a element", (): void => {
+    expect(splice([1, 2, 3], 0, 1, [])).toEqual([2, 3]);
   });
 
-  test("immutability", () => {
-    const data = [1, 2, 3];
-    const result = splice(data, 0, 0, []);
-    expect(result).toEqual(data);
-    expect(result).not.toBe(data);
+  test("inserting a element", (): void => {
+    expect(splice([1, 2, 3], 0, 0, [4])).toEqual([4, 1, 2, 3]);
   });
 
-  describe("regression test including edge cases", () => {
-    // prettier-ignore
-    const testCases = [
+  test("removing elements and inserting elements", (): void => {
+    expect(splice([1, 2, 3], 0, 2, [4, 5])).toEqual([4, 5, 3]);
+  });
+});
+
+test("immutability", () => {
+  const data = [1, 2, 3];
+  const result = splice(data, 0, 0, []);
+  expect(result).toEqual(data);
+  expect(result).not.toBe(data);
+});
+
+describe("regression test including edge cases", () => {
+  // prettier-ignore
+  const testCases = [
       // items: multiple elements
       //              start: < 0
       //                         deleteCount: < 0
@@ -101,41 +100,16 @@ describe("at runtime", () => {
       { items: [   ], start:  1, deleteCount:  1, replacement: [3], expected: [3] },
     ] as const;
 
-    test.each(testCases)(
-      "splice($items, $start, $deleteCount, $replacement) -> $expected",
-      ({ items, start, deleteCount, replacement, expected }) => {
-        expect(splice(items, start, deleteCount, replacement)).toEqual(
-          expected,
-        );
-      },
-    );
-  });
-
-  test("a purried data-last implementation", () => {
-    expect(pipe([1, 2, 3, 4, 5, 6, 7, 8], splice(2, 3, [9, 10]))).toEqual([
-      1, 2, 9, 10, 6, 7, 8,
-    ]);
-  });
+  test.each(testCases)(
+    "splice($items, $start, $deleteCount, $replacement) -> $expected",
+    ({ items, start, deleteCount, replacement, expected }) => {
+      expect(splice(items, start, deleteCount, replacement)).toEqual(expected);
+    },
+  );
 });
 
-describe("typing", () => {
-  it("reflects the type of `items` in the return value", () => {
-    const items: Array<number> = [];
-    const result = splice(items, 0, 0, []);
-    expectTypeOf(result).toEqualTypeOf<Array<number>>();
-  });
-
-  it("reflects the type of `replacement` in the return value", () => {
-    const replacement: Array<number> = [];
-    const result = splice([], 0, 0, replacement);
-    expectTypeOf(result).toEqualTypeOf<Array<number>>();
-  });
-
-  it("reflects the type of `replacement` in the return value (data-last)", () => {
-    const replacement: Array<number> = [];
-    const result = splice(0, 0, replacement);
-    expectTypeOf(result).toEqualTypeOf<
-      (items: ReadonlyArray<number>) => Array<number>
-    >();
-  });
+test("a purried data-last implementation", () => {
+  expect(pipe([1, 2, 3, 4, 5, 6, 7, 8], splice(2, 3, [9, 10]))).toEqual([
+    1, 2, 9, 10, 6, 7, 8,
+  ]);
 });

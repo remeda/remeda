@@ -7,22 +7,42 @@ on:
   pull_request:
 
 jobs:
-  typecheck-outputs:
-    name: 🚚 Typecheck Outputs / ${{ matrix.typescript-version }}
+  typecheck:
+    name: 👷 Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🔎 Type check
+        run: npm run typecheck
+
+  test-typing:
+    name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
+    needs:
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         typescript-version:
-          - "~5.5.0"
-          - "~5.4.0"
-          - "~5.3.0"
-          - "~5.2.0"
+          - "5.5"
+          - "5.4"
+          - "5.3"
+          - "5.2"
           # This is the current lowest version of typescript we support. Do not
           # change this without bumping a major version. We support up to 4
           # versions back from the latest version of typescript at time of a
           # major release.
-          - "~5.1.0"
+          - "5.1"
 
     steps:
       - name: ⬇️ Checkout repo
@@ -36,40 +56,25 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      # Order is important here, we build with the typescript version defined
-      # in package.json, before we overrite it for the tests.
       # TODO: We are rebuilding everything several times, our builds aren't very
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: npm run build
+        run: npm run build -- --dts-only
 
       - name: 📘 Install Typescript
         run: npm install -D typescript@${{ matrix.typescript-version }}
 
-      - name: 🔎 Type check
-        run: npm run typeCheck:dist
+      - name: 📋 Type tests
+        run: npm run test:typing
 
-  typecheck-source:
-    name: 👷 Typecheck Source
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+      - name: 🚚 Check Outputs
+        run: npm run typecheck:dist
 
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🔎 Type check
-        run: npm run typeCheck
-
-  test:
-    name: 🧪 Test [Node ${{ matrix.node }}]
+  test-runtime:
+    name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
+    needs:
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -90,10 +95,12 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: npm run test
+        run: npm run test:runtime
 
   lint:
     name: 🧹 Lint
+    needs:
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -107,8 +114,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  prettier:
-    name: 💄 Formatting (prettier)
+  formatting:
+    name: 💄 Formatting
+    needs:
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -124,9 +133,11 @@ jobs:
 
   publish:
     needs:
-      - typecheck-source
-      - typecheck-outputs
-      - test
+      - test-typing
+      - test-runtime
+      - lint
+      - formatting
+
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:

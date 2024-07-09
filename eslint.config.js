@@ -395,7 +395,7 @@ export default config(
     },
   },
   {
-    files: ["src/**/*.test.ts"],
+    files: ["src/**/*.test.ts", "src/**/*.test-d.ts"],
     rules: {
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
