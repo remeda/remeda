@@ -10,16 +10,16 @@ import { purry } from "./purry";
  * might result in unexpected behavior. Please open an issue in the Remeda
  * github project if you need support for these types.
  *
- * !IMPORTANT: All built-in objects (Promise, Date, RegExp) are shallowly equal,
- * even when they are semantically different (e.g. resolved promises). Use
- * `isDeepEqual` instead.
+ * !IMPORTANT: Promise, Date, and RegExp, are shallowly equal, even when they
+ * are semantically different (e.g. resolved promises); but `isDeepEqual` does
+ * compare the latter 2 semantically by-value.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
  *
  * See:
- * - `isEqual` if you don't need a deep comparison and just want to check for
- * simple (`===`, `Object.is`) equality.
+ * - `isStrictEqual` if you don't need a deep comparison and just want to check
+ * for simple (`===`, `Object.is`) equality.
  * - `isDeepEqual` for a recursively deep check of arrays and objects.
  *
  * @param data - The first value to compare.
@@ -58,8 +58,8 @@ export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
  * used as a type guard.
  *
  * See:
- * - `isEqual` if you don't need a deep comparison and just want to check for
- * simple (`===`, `Object.is`) equality.
+ * - `isStrictEqual` if you don't need a deep comparison and just want to check
+ * for simple (`===`, `Object.is`) equality.
  * - `isDeepEqual` for a recursively deep check of arrays and objects.
  *
  * @param other - The second value to compare.
