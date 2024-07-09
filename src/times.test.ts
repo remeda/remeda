@@ -1,6 +1,6 @@
+import { constant } from "./constant";
 import { times } from "./times";
 
-const noop = (): undefined => undefined;
 const one = () => 1 as const;
 const mul1 = (idx: number): number => idx;
 const mul2 = (idx: number): number => idx * 2;
@@ -8,13 +8,15 @@ const mul2 = (idx: number): number => idx * 2;
 describe("times", () => {
   describe("data_first", () => {
     it("throws error on invalid idx", () => {
-      expect(() => times(-1, noop)).toThrow();
-      expect(() => times(-1000, noop)).toThrow();
-      expect(() => times(Number.MIN_SAFE_INTEGER, noop)).toThrow();
+      expect(() => times(-1, constant(undefined))).toThrow();
+      expect(() => times(-1000, constant(undefined))).toThrow();
+      expect(() =>
+        times(Number.MIN_SAFE_INTEGER, constant(undefined)),
+      ).toThrow();
     });
 
     it("returns empty array", () => {
-      const res = times(0, noop);
+      const res = times(0, constant(undefined));
       expect(res).toEqual([]);
     });
 
@@ -41,14 +43,14 @@ describe("times", () => {
 
   describe("data_last", () => {
     it("throws error on invalid idx", () => {
-      const noopTimes = times(noop);
+      const noopTimes = times(constant(undefined));
       expect(() => noopTimes(-1)).toThrow();
       expect(() => noopTimes(-1000)).toThrow();
       expect(() => noopTimes(Number.MIN_SAFE_INTEGER)).toThrow();
     });
 
     it("returns empty array", () => {
-      const res = times(noop)(0);
+      const res = times(constant(undefined))(0);
       expect(res).toEqual([]);
     });
 

@@ -1,12 +1,5 @@
 import { isDeepEqual } from "./isDeepEqual";
 
-function func1(): void {
-  // (intentionally empty)
-}
-function func2(): void {
-  // (intentionally empty)
-}
-
 describe("scalars", () => {
   test("equal numbers", () => {
     expect(isDeepEqual(1, 1)).toBe(true);
@@ -360,3 +353,13 @@ describe("sample objects", () => {
     ).toBe(true);
   });
 });
+
+/* v8 ignore next 3 -- We only need the function pointer, we never call it! */
+function func1(): void {
+  throw new Error("This function should never be called!");
+}
+
+/* v8 ignore next 3 -- We only need the function pointer, we never call it! */
+function func2(): void {
+  throw new Error("This function should never be called!");
+}

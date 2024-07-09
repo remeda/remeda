@@ -1,5 +1,7 @@
 import type { NonEmptyArray } from "./internal/types";
 import { sample } from "./sample";
+import { times } from "./times";
+import { unique } from "./unique";
 
 describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
   it.each(allIndices(array))(
@@ -144,9 +146,8 @@ describe("non-const sampleSize", () => {
 });
 
 function generateRandomArray(): NonEmptyArray<number> {
-  // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!
-  return [...new Set(Array.from({ length: 100 }).map(() => Math.random()))];
+  return unique(times(100, Math.random));
 }
 
 const allIndices = (array: ReadonlyArray<unknown>): Array<number> =>

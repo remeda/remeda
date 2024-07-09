@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type --
+/* eslint-disable @typescript-eslint/explicit-function-return-type --
  * purry is all about functions, so we need to turn these off to make it easy
  * to write the tests.
  */
@@ -7,12 +7,6 @@ import { type LazyEvaluator } from "../pipe";
 import { purryFromLazy } from "./purryFromLazy";
 
 test("throws on wrong number of arguments", () => {
-  const zeroArgsLazyImpl = (): LazyEvaluator => () =>
-    ({ done: true, hasNext: false }) as const;
-
-  const zeroArgsPurried = (...args: ReadonlyArray<unknown>) =>
-    purryFromLazy(zeroArgsLazyImpl, args);
-
   expect(() =>
     zeroArgsPurried(
       // The first argument to the lazy purried function will always be an
@@ -25,3 +19,12 @@ test("throws on wrong number of arguments", () => {
     ),
   ).toThrowError("Wrong number of arguments");
 });
+
+const zeroArgsPurried = (...args: ReadonlyArray<unknown>) =>
+  purryFromLazy(zeroArgsLazyImpl, args);
+
+/* v8 ignore next 4 -- We only need the function pointer, we never call it! */
+const zeroArgsLazyImpl = () => evaluator;
+const evaluator: LazyEvaluator = () => {
+  throw new Error("unreachable");
+};

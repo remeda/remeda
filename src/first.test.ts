@@ -3,10 +3,6 @@ import { filter } from "./filter";
 import { first } from "./first";
 import { pipe } from "./pipe";
 
-function defaultTo<T>(d: T) {
-  return (v: T | null | undefined) => v ?? d;
-}
-
 test("should return first", () => {
   expect(first([1, 2, 3] as const)).toEqual(1);
 });
@@ -30,7 +26,7 @@ describe("pipe", () => {
       counter.fn(),
       filter((x) => x > 3),
       first(),
-      defaultTo(0),
+      assertIsDefined,
       (x) => x + 1,
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
@@ -50,7 +46,7 @@ describe("pipe", () => {
       [[1, 2, 3], [4, 5], [6]] as const,
       counter.fn(),
       first(),
-      defaultTo<ReadonlyArray<number>>([]),
+      assertIsDefined,
       first(),
     );
     expect(counter.count).toHaveBeenCalledTimes(1);
@@ -65,7 +61,7 @@ describe("pipe", () => {
       counter1.fn(),
       filter((arr) => arr.length === 4),
       first(),
-      defaultTo<ReadonlyArray<number>>([]),
+      assertIsDefined<ReadonlyArray<number>>,
       counter2.fn(),
       filter((x) => x % 2 === 1),
       first(),
@@ -171,3 +167,5 @@ test("readonly tuple with last", () => {
   const result = first(arr);
   expect(result).toEqual("a");
 });
+
+const assertIsDefined = <T>(v: T | null | undefined): T => v!;
