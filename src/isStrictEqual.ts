@@ -6,8 +6,8 @@ import { purry } from "./purry";
  * it is done by-reference (i.e., they point to the same object in memory).
  *
  * Under the hood we use **both** the [`===` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)
- * and [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). This means that `isEqual(NaN, NaN) === true` (whereas
- * `NaN !== NaN`), and `isEqual(-0, 0) === true` (whereas
+ * and [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). This means that `isStrictEqual(NaN, NaN) === true`
+ * (whereas `NaN !== NaN`), and `isStrictEqual(-0, 0) === true` (whereas
  * `Object.is(-0, 0) === false`).
  *
  * The result would be narrowed to the second value so that the function can be
@@ -22,11 +22,11 @@ import { purry } from "./purry";
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    R.isEqual(data, other)
+ *    R.isStrictEqual(data, other)
  * @example
- *    R.isEqual(1, 1) //=> true
- *    R.isEqual(1, '1') //=> false
- *    R.isEqual([1, 2, 3], [1, 2, 3]) //=> false
+ *    R.isStrictEqual(1, 1) //=> true
+ *    R.isStrictEqual(1, '1') //=> false
+ *    R.isStrictEqual([1, 2, 3], [1, 2, 3]) //=> false
  * @dataFirst
  * @category Guard
  */
@@ -42,8 +42,8 @@ export function isStrictEqual<T, S extends T = T>(data: T, other: S): boolean;
  * it is done by-reference (i.e., they point to the same object in memory).
  *
  * Under the hood we use **both** the [`===` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality)
- * and [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). This means that `isEqual(NaN, NaN) === true` (whereas
- * `NaN !== NaN`), and `isEqual(-0, 0) === true` (whereas
+ * and [`Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is). This means that `isStrictEqual(NaN, NaN) === true`
+ * (whereas `NaN !== NaN`), and `isStrictEqual(-0, 0) === true` (whereas
  * `Object.is(-0, 0) === false`).
  *
  * The result would be narrowed to the second value so that the function can be
@@ -57,11 +57,11 @@ export function isStrictEqual<T, S extends T = T>(data: T, other: S): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    R.isEqual(other)(data)
+ *    R.isStrictEqual(other)(data)
  * @example
- *    R.pipe(1, R.isEqual(1)); //=> true
- *    R.pipe(1, R.isEqual('1')); //=> false
- *    R.pipe([1, 2, 3], R.isEqual([1, 2, 3])); //=> false
+ *    R.pipe(1, R.isStrictEqual(1)); //=> true
+ *    R.pipe(1, R.isStrictEqual('1')); //=> false
+ *    R.pipe([1, 2, 3], R.isStrictEqual([1, 2, 3])); //=> false
  * @dataLast
  * @category Guard
  */
