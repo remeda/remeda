@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { type GuardType } from "./internal/types";
 
 /**
@@ -17,22 +19,30 @@ import { type GuardType } from "./internal/types";
  */
 export function branch<
   T,
-  Predicate extends (data: T) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
+  Args extends Array<any>,
+  Predicate extends (data: T, ...args: Args) => boolean,
+  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
 >(
   predicate: Predicate,
   onTrue: OnTrue,
-): (data: T) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
+): (
+  data: T,
+  ...args: Args
+) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function branch<
   T,
-  Predicate extends (data: T) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
-  OnFalse extends (data: Exclude<T, GuardType<Predicate>>) => unknown,
+  Args extends Array<any>,
+  Predicate extends (data: T, ...args: Args) => boolean,
+  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
+  OnFalse extends (
+    data: Exclude<T, GuardType<Predicate>>,
+    ...args: Args
+  ) => unknown,
 >(
   predicate: Predicate,
   onTrue: OnTrue,
   onFalse: OnFalse,
-): (data: T) => ReturnType<OnFalse> | ReturnType<OnTrue>;
+): (data: T, ...args: Args) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
  * Picks which mapping function to run based on the result of the predicate.
@@ -61,39 +71,82 @@ export function branch<
 ): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function branch<
   T,
-  Predicate extends (data: T) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
-  OnFalse extends (data: Exclude<T, GuardType<Predicate>>) => unknown,
+  Args extends Array<any>,
+  Predicate extends (data: T, ...args: Args) => boolean,
+  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
+  OnFalse extends (
+    data: Exclude<T, GuardType<Predicate>>,
+    ...args: Args
+  ) => unknown,
 >(
   data: T,
   predicate: Predicate,
   onTrue: OnTrue,
   onFalse: OnFalse,
+  ...args: Args
 ): ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 export function branch(...args: ReadonlyArray<unknown>): unknown {
   // To support an optional third argument we need to build our own heuristic
-  // currying function:
-  // We know that data-last invocations could either have 2 or 3 arguments and
-  // that data-first invocations could either have 3 or 4 arguments which means
-  // we need to handle the 3 arguments case uniquely. We know that if the first
-  // argument is not a function it isn't a predicate, so it has to be the data.
-  // This might be wrong in some instances and cause issues for users, but it
-  // should be very rare. We can consider restricting the input types of the
-  // data to prevent this, but typing that is hard and might not be worth it.
-  return args.length === 2 ||
-    (args.length === 3 && typeof args[0] === "function")
-    ? (data: unknown) =>
+  // currying function and can't rely on the logic in `purry`.
+
+  if (args.length === 2) {
+    // The data-last, no-else, overload is the only signature we offer with 2
+    // arguments.
+
+    return (data: unknown, ...callArgs: ReadonlyArray<unknown>) =>
+      // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+      branchImplementation(data, ...args, ...callArgs);
+  }
+
+  if (args.length === 3) {
+    // We only have an issue when the function is invoked with 3 params, as it
+    // could either be the data-last, with-else, overload, or the data-first,
+    // no-else, overload. We need another check to decide what to do here...
+
+    if (typeof args[0] !== "function") {
+      // We know that if the first argument is not a function it isn't a
+      // predicate, so it has to be the data and we'll assume it's the data-
+      // first call.
+
+      // !IMPORTANT! This means that when functions are used as the data param
+      // with the data-first, no-else, signature we will wrongly assume it's a
+      // data-last call.
+
+      return (data: unknown, ...callArgs: ReadonlyArray<unknown>) =>
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        branchImplementation(data, ...args)
-    : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-      branchImplementation(...args);
+        branchWithElseImplementation(data, ...args, ...callArgs);
+    }
+
+    // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+    return branchImplementation(...args);
+  }
+
+  // The data-first, with-else, overload is the only signature we offer that
+  // takes 4 (or more!) arguments.
+
+  // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+  return branchWithElseImplementation(...args);
 }
 
-const branchImplementation = <T, WhenTrue, WhenFalse>(
+const branchImplementation = <T, Args extends Array<any>, WhenTrue, WhenFalse>(
   data: T,
-  predicate: (data: T) => boolean,
-  onTrue: (data: T) => WhenTrue,
-  onFalse?: (data: T) => WhenFalse,
+  predicate: (data: T, ...args: Args) => boolean,
+  onTrue: (data: T, ...args: Args) => WhenTrue,
+  ...args: Args
 ): T | WhenFalse | WhenTrue =>
-  predicate(data) ? onTrue(data) : onFalse === undefined ? data : onFalse(data);
+  predicate(data, ...args) ? onTrue(data, ...args) : data;
+
+const branchWithElseImplementation = <
+  T,
+  Args extends Array<any>,
+  WhenTrue,
+  WhenFalse,
+>(
+  data: T,
+  predicate: (data: T, ...args: Args) => boolean,
+  onTrue: (data: T, ...args: Args) => WhenTrue,
+  onFalse: (data: T, ...args: Args) => WhenFalse,
+  ...args: Args
+): T | WhenFalse | WhenTrue =>
+  predicate(data, ...args) ? onTrue(data, ...args) : onFalse(data, ...args);
