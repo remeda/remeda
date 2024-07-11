@@ -1,16 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-type NarrowedWith<
-  F extends (...args: ReadonlyArray<any>) => any,
-  WhenFalse,
-> = F extends (data: any, ...args: ReadonlyArray<any>) => data is infer Narrow
-  ? Narrow
-  : WhenFalse;
-
-type MaybeRejectedBy<
-  T,
-  Predicate extends (...args: ReadonlyArray<any>) => any,
-> = Exclude<T, NarrowedWith<Predicate, never>>;
+import { type GuardType } from "./internal/types";
 
 /**
  * Picks which mapping function to run based on the result of the predicate.
@@ -30,16 +18,16 @@ type MaybeRejectedBy<
 export function branch<
   T,
   Predicate extends (data: T) => boolean,
-  OnTrue extends (data: NarrowedWith<Predicate, T>) => any,
+  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
 >(
   predicate: Predicate,
   onTrue: OnTrue,
-): (data: T) => MaybeRejectedBy<T, Predicate> | ReturnType<OnTrue>;
+): (data: T) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function branch<
   T,
   Predicate extends (data: T) => boolean,
-  OnTrue extends (data: NarrowedWith<Predicate, T>) => any,
-  OnFalse extends (data: MaybeRejectedBy<T, Predicate>) => any,
+  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
+  OnFalse extends (data: Exclude<T, GuardType<Predicate>>) => unknown,
 >(
   predicate: Predicate,
   onTrue: OnTrue,
@@ -65,17 +53,17 @@ export function branch<
 export function branch<
   T,
   Predicate extends (data: T) => boolean,
-  OnTrue extends (data: NarrowedWith<Predicate, T>) => any,
+  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
 >(
   data: T,
   predicate: Predicate,
   onTrue: OnTrue,
-): MaybeRejectedBy<T, Predicate> | ReturnType<OnTrue>;
+): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function branch<
   T,
   Predicate extends (data: T) => boolean,
-  OnTrue extends (data: NarrowedWith<Predicate, T>) => any,
-  OnFalse extends (data: MaybeRejectedBy<T, Predicate>) => any,
+  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
+  OnFalse extends (data: Exclude<T, GuardType<Predicate>>) => unknown,
 >(
   data: T,
   predicate: Predicate,
