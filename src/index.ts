@@ -2,6 +2,7 @@ export * from "./add";
 export * from "./addProp";
 export * from "./allPass";
 export * from "./anyPass";
+export * from "./branch";
 export * from "./ceil";
 export * from "./chunk";
 export * from "./clamp";
