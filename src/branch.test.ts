@@ -106,3 +106,36 @@ it("acts as a coalesce tool", () => {
     ),
   ).toEqual([0, 1, 2, "missing", 4, "missing", 6]);
 });
+
+describe("known issues", () => {
+  it("can't handle functions as the data param (without else)", () => {
+    const data = constant("hello") as (() => string) | undefined;
+
+    const predicateMock = vi.fn(constant(true));
+    const mapperMock = vi.fn(constant("world"));
+
+    const result = branch(data, predicateMock, mapperMock);
+
+    expect(result).not.toBe("world");
+    expect(result).toBeTypeOf("function");
+
+    // The function prepared a curried function for us to call, but none of the
+    // function arguments were actually called yet because it hasn't been
+    // invoked yet.
+    expect(predicateMock).not.toHaveBeenCalled();
+    expect(mapperMock).not.toHaveBeenCalled();
+  });
+
+  it("handles functions as the data param (when else is present)", () => {
+    const data = constant("hello") as (() => string) | undefined;
+
+    const predicateMock = vi.fn(constant(true));
+    const mapperMock = vi.fn(constant("world"));
+
+    const result = branch(data, predicateMock, mapperMock, constant("else"));
+
+    expect(result).toBe("world");
+    expect(predicateMock).toHaveBeenCalled();
+    expect(mapperMock).toHaveBeenCalled();
+  });
+});
