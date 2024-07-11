@@ -96,9 +96,7 @@
 - and
 - both
 - complement
-- defaultTo
 - either
-- ifElse
 - isNotEmpty
 - or
 - pathSatisfies

@@ -164,7 +164,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - attempt
 - bindAll
 - conforms
-- defaultTo
 - flowRight
 - iteratee
 - matches
