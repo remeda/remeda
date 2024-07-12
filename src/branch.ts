@@ -18,6 +18,8 @@ import { type GuardType } from "./internal/types";
  * are taken as variadic arguments; but in data-last calls, they are when the
  * curried function itself is called.
  *
+ * For more complex cases check out `conditional`.
+ *
  * @param predicate - Function to decide which branch to run. If a type
  * predicate, it narrows types for both branches and the return value.
  * @param onTrue - Function to run when the predicate returns `true`.
@@ -70,6 +72,8 @@ export function branch<
  * Additional arguments are passed to all functions. In data-first calls, they
  * are taken as variadic arguments; but in data-last calls, they are when the
  * curried function itself is called.
+ *
+ * For more complex cases check out `conditional`.
  *
  * @param data - The data to be passed to all functions, as the first param.
  * @param predicate - The function that decides which of the 2 branches would
