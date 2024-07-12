@@ -104,7 +104,7 @@ export function branch(...args: ReadonlyArray<unknown>): unknown {
     // could either be the data-last, with-else, overload, or the data-first,
     // no-else, overload. We need another check to decide what to do here...
 
-    if (typeof args[0] !== "function") {
+    if (typeof args[0] === "function") {
       // We know that if the first argument is not a function it isn't a
       // predicate, so it has to be the data and we'll assume it's the data-
       // first call.
