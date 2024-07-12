@@ -3,17 +3,32 @@
 import { type GuardType } from "./internal/types";
 
 /**
- * Picks which mapping function to run based on the result of the predicate.
+ * Run a function conditionally based on the result of a predicate, similar to
+ * the built-in [ternary (`?:`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+ * operator. When the optional "else" branch is not provided, the data will be
+ * passed through (equivalent to using `identity` for that branch).
  *
- * @param predicate - A function that takes the data as it's first param and
- * returns a boolean. When true `onTrue` will be called on the same data. If a
- * type-guard is provided the types will be refined when passed to `onTrue` and
- * in the return type.
- * @param onTrue - A function to be called when the predicate is `true`.
+ * If the predicate provided is a type-predicate (returns `x is T`) then the
+ * types for both branches and the return types will be refined.
+ *
+ * If additional arguments are passed to the function, they will also be passed
+ * to all 3 functions. For data-first invocations these will be taken as the
+ * variadic (rest) argument of the call, but for data-last invocations these
+ * will be taken from the invocation of the function. This allows handling of
+ * more complex APIs implicitly via the signature (see example).
+ *
+ * @param predicate - The function that decides which of the 2 branches would
+ * run. If a type-predicate is provided, then the types of both branches and the
+ * return value would be narrowed.
+ * @param onTrue - The function that would run when the predicate returns
+ * `true`.
  * @signature
+ *   branch(predicate, onTrue)(data)
  *   branch(predicate, onTrue, onFalse)(data)
  * @example
+ *   pipe(data, branch(isNullish, constant(42)));
  *   pipe(data, branch((x) => x > 3, add(1), multiply(2));
+ *   map(data, branch(isNullish, (x, index) => x + index));
  * @dataLast
  * @category Function
  */
@@ -45,19 +60,34 @@ export function branch<
 ): (data: T, ...args: Args) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
- * Picks which mapping function to run based on the result of the predicate.
+ * Run a function conditionally based on the result of a predicate, similar to
+ * the built-in [ternary (`?:`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+ * operator. When the optional "else" branch is not provided, the data will be
+ * passed through (equivalent to using `identity` for that branch).
  *
- * @param data - The data to be passed to the functions.
- * @param predicate - A function that takes the data as it's first param and
- * returns a boolean. When true `onTrue` will be called on the same data. If a
- * type-guard is provided the types will be refined when passed to `onTrue` and
- * in the return type.
- * @param onTrue - A function to be called when the predicate is `true`.
+ * If the predicate provided is a type-predicate (returns `x is T`) then the
+ * types for both branches and the return types will be refined.
+ *
+ * If additional arguments are passed to the function, they will also be passed
+ * to all 3 functions. For data-first invocations these will be taken as the
+ * variadic (rest) argument of the call, but for data-last invocations these
+ * will be taken from the invocation of the function. This allows handling of
+ * more complex APIs implicitly via the signature (see example).
+ *
+ * @param data - The data to be passed to all functions, as the first param.
+ * @param predicate - The function that decides which of the 2 branches would
+ * run. If a type-predicate is provided, then the types of both branches and the
+ * return value would be narrowed.
+ * @param onTrue - The function that would run when the predicate returns
+ * `true`.
  * @signature
- *   branch(predicate, onTrue, onFalse)(data)
+ *   branch(data, predicate, onTrue)
+ *   branch(data, predicate, onTrue, onFalse, ...extraArgs)
  * @example
- *   pipe(data, branch((x) => x > 3, add(1), multiply(2));
- * @dataFirst
+ *   branch(data, isNullish, constant(42));
+ *   branch(data, (x) => x > 3, add(1), multiply(2));
+ *   branch(data, isString, (x, radix) => parseInt(x, radix), identity(), 10);
+ * @dataLast
  * @category Function
  */
 export function branch<
