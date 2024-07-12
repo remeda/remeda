@@ -3,25 +3,21 @@
 import { type GuardType } from "./internal/types";
 
 /**
- * Run a function conditionally based on the result of a predicate, similar to
- * the built-in [ternary (`?:`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
- * operator. When the optional "else" branch is not provided, the data will be
- * passed through (equivalent to using `identity` for that branch).
+ * Conditionally run a function based on a predicate, similar to
+ * the [ternary `?:`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+ * operator. If the optional `onFalse` function is not provided, the data will
+ * be passed through.
  *
- * If the predicate provided is a type-predicate (returns `x is T`) then the
- * types for both branches and the return types will be refined.
+ * Supports type predicates to refine the types for both branches and the return
+ * value.
  *
- * If additional arguments are passed to the function, they will also be passed
- * to all 3 functions. For data-first invocations these will be taken as the
- * variadic (rest) argument of the call, but for data-last invocations these
- * will be taken from the invocation of the function. This allows handling of
- * more complex APIs implicitly via the signature (see example).
+ * Additional arguments are passed to all functions. In data-first calls, they
+ * are taken as variadic arguments; but in data-last calls, they are when the
+ * curried function itself is called.
  *
- * @param predicate - The function that decides which of the 2 branches would
- * run. If a type-predicate is provided, then the types of both branches and the
- * return value would be narrowed.
- * @param onTrue - The function that would run when the predicate returns
- * `true`.
+ * @param predicate - Function to decide which branch to run. If a type
+ * predicate, it narrows types for both branches and the return value.
+ * @param onTrue - Function to run when the predicate returns `true`.
  * @signature
  *   branch(predicate, onTrue)(data)
  *   branch(predicate, onTrue, onFalse)(data)
@@ -60,19 +56,17 @@ export function branch<
 ): (data: T, ...args: Args) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
- * Run a function conditionally based on the result of a predicate, similar to
- * the built-in [ternary (`?:`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
- * operator. When the optional "else" branch is not provided, the data will be
- * passed through (equivalent to using `identity` for that branch).
+ * Conditionally run a function based on a predicate, similar to
+ * the [ternary `?:`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
+ * operator. If the optional `onFalse` function is not provided, the data will
+ * be passed through.
  *
- * If the predicate provided is a type-predicate (returns `x is T`) then the
- * types for both branches and the return types will be refined.
+ * Supports type predicates to refine the types for both branches and the return
+ * value.
  *
- * If additional arguments are passed to the function, they will also be passed
- * to all 3 functions. For data-first invocations these will be taken as the
- * variadic (rest) argument of the call, but for data-last invocations these
- * will be taken from the invocation of the function. This allows handling of
- * more complex APIs implicitly via the signature (see example).
+ * Additional arguments are passed to all functions. In data-first calls, they
+ * are taken as variadic arguments; but in data-last calls, they are when the
+ * curried function itself is called.
  *
  * @param data - The data to be passed to all functions, as the first param.
  * @param predicate - The function that decides which of the 2 branches would
