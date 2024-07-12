@@ -1,4 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any --
+ * function inference is stricter and doesn't work well when the arguments
+ * aren't typed as `any` in the generic type declaration.
+ */
 
 import { type GuardType } from "./internal/types";
 
