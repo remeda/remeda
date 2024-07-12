@@ -1,6 +1,8 @@
 import { branch } from "./branch";
 import { constant } from "./constant";
+import { identity } from "./identity";
 import { isString } from "./isString";
+import { map } from "./map";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
@@ -20,6 +22,28 @@ describe("dataFirst", () => {
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
       });
+
+      it("passes extra args to the functions (workaround)", () => {
+        const data = "hello" as number | string;
+        branch(
+          data,
+          constant(true),
+          (x, a, b, c) => {
+            expectTypeOf(x).toEqualTypeOf(data);
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          // The no-else signature doesn't allow for extra params to be passed
+          // so we need to use the with-else signature and pass identity which
+          // is what the no-else signature does with the else branch.
+          identity(),
+          // Extra args:
+          1 as const,
+          "cat" as const,
+          { a: 123 } as const,
+        );
+      });
     });
 
     describe("type-guards", () => {
@@ -36,6 +60,28 @@ describe("dataFirst", () => {
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
+      });
+
+      it("passes extra args to the functions (workaround)", () => {
+        const data = "hello" as number | string;
+        branch(
+          data,
+          isString,
+          (x, a, b, c) => {
+            expectTypeOf(x).toEqualTypeOf<string>();
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          // The no-else signature doesn't allow for extra params to be passed
+          // so we need to use the with-else signature and pass identity which
+          // is what the no-else signature does with the else branch.
+          identity(),
+          // Extra args:
+          1 as const,
+          "cat" as const,
+          { a: 123 } as const,
+        );
       });
     });
   });
@@ -66,6 +112,30 @@ describe("dataFirst", () => {
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
+
+      it("passes extra args to the functions (workaround)", () => {
+        const data = "hello" as number | string;
+        branch(
+          data,
+          constant(true),
+          (x, a, b, c) => {
+            expectTypeOf(x).toEqualTypeOf(data);
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          (x, a, b, c) => {
+            expectTypeOf(x).toEqualTypeOf(data);
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          // Extra args:
+          1 as const,
+          "cat" as const,
+          { a: 123 } as const,
+        );
+      });
     });
 
     describe("type-guards", () => {
@@ -95,6 +165,32 @@ describe("dataFirst", () => {
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
+
+      it("passes extra args to the functions (workaround)", () => {
+        const data = "hello" as number | string;
+        branch(
+          data,
+          isString,
+          (x, a, b, c) => {
+            // Narrowed
+            expectTypeOf(x).toEqualTypeOf<string>();
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          (x, a, b, c) => {
+            // Also narrowed!
+            expectTypeOf(x).toEqualTypeOf<number>();
+            expectTypeOf(a).toEqualTypeOf<1>();
+            expectTypeOf(b).toEqualTypeOf<"cat">();
+            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          },
+          // Extra args:
+          1 as const,
+          "cat" as const,
+          { a: 123 } as const,
+        );
+      });
     });
   });
 });
@@ -119,6 +215,18 @@ describe("dataLast", () => {
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
       });
+
+      it("passes extra args to the functions", () => {
+        const data = [] as Array<number | string>;
+        map(
+          data,
+          branch(constant(true), (x, index, array) => {
+            expectTypeOf(x).toEqualTypeOf<number | string>();
+            expectTypeOf(index).toEqualTypeOf<number>();
+            expectTypeOf(array).toEqualTypeOf<typeof data>();
+          }),
+        );
+      });
     });
 
     describe("type-guards", () => {
@@ -139,6 +247,18 @@ describe("dataLast", () => {
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
       });
+    });
+
+    it("passes extra args to the functions", () => {
+      const data = [] as Array<number | string>;
+      map(
+        data,
+        branch(isString, (x, index, array) => {
+          expectTypeOf(x).toEqualTypeOf<string>();
+          expectTypeOf(index).toEqualTypeOf<number>();
+          expectTypeOf(array).toEqualTypeOf<typeof data>();
+        }),
+      );
     });
   });
 
@@ -172,6 +292,26 @@ describe("dataLast", () => {
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
+
+      it("passes extra args to the functions", () => {
+        const data = [] as Array<number | string>;
+        map(
+          data,
+          branch(
+            constant(true),
+            (x, index, array) => {
+              expectTypeOf(x).toEqualTypeOf<number | string>();
+              expectTypeOf(index).toEqualTypeOf<number>();
+              expectTypeOf(array).toEqualTypeOf<typeof data>();
+            },
+            (x, index, array) => {
+              expectTypeOf(x).toEqualTypeOf<number | string>();
+              expectTypeOf(index).toEqualTypeOf<number>();
+              expectTypeOf(array).toEqualTypeOf<typeof data>();
+            },
+          ),
+        );
+      });
     });
 
     describe("type-guards", () => {
@@ -201,18 +341,125 @@ describe("dataLast", () => {
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
+
+      it("passes extra args to the functions", () => {
+        const data = [] as Array<number | string>;
+        map(
+          data,
+          branch(
+            isString,
+            (x, index, array) => {
+              // Narrowed!
+              expectTypeOf(x).toEqualTypeOf<string>();
+              expectTypeOf(index).toEqualTypeOf<number>();
+              expectTypeOf(array).toEqualTypeOf<typeof data>();
+            },
+            (x, index, array) => {
+              // Also narrowed!
+              expectTypeOf(x).toEqualTypeOf<number>();
+              expectTypeOf(index).toEqualTypeOf<number>();
+              expectTypeOf(array).toEqualTypeOf<typeof data>();
+            },
+          ),
+        );
+      });
     });
   });
 });
 
 describe("typing mismatches", () => {
-  test("predicate enforces data param when explicitly stated", () => {
+  test("Predicate enforces data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The predicate can't take an undefined value
     branch(1 as number | undefined, (x: number) => x > 3, constant(3));
   });
 
-  test("mappers enforce data param when explicitly stated", () => {
+  test("Mappers enforce data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The mapper can't take an undefined value
     branch(1 as number | undefined, constant(true), (x: number) => x + 1);
   });
+
+  test("Type of extra args enforced (data-first)", () => {
+    branch(
+      1,
+      constant(true),
+      // @ts-expect-error [ts2345] -- The extra arg is not a boolean
+      (x: number, _: boolean) => x,
+      (x: number, _: boolean) => x,
+      "hello",
+    );
+  });
+
+  test("Number of extra args enforced (data-first)", () => {
+    branch(
+      1,
+      constant(true),
+      // @ts-expect-error [ts2345] -- Not enough extra args
+      (x: number, _a: boolean, _b: boolean, _c: boolean) => x,
+      (x: number, _a: boolean, _b: boolean, _c: boolean) => x,
+      true,
+      false,
+    );
+  });
+
+  test("Type of extra args enforced (data-last)", () => {
+    map(
+      [] as Array<string>,
+      branch(
+        constant(true),
+        // @ts-expect-error [ts2345] -- The extra arg is not a boolean
+        (x: string, _: boolean) => x,
+      ),
+    );
+  });
+
+  test("Number of extra args enforced (data-last)", () => {
+    map(
+      [] as Array<string>,
+      branch(
+        constant(true),
+        // @ts-expect-error [ts2345] -- Not enough extra args
+        (
+          x: string,
+          _index: number,
+          _data: ReadonlyArray<string>,
+          _isSomething: boolean,
+        ) => x,
+      ),
+    );
+  });
 });
+
+describe("recipes", () => {
+  it("handles api response union response objects", () => {
+    someApi({
+      onFoo: branch(
+        isErrorPayload,
+        ({ error }) => handleError(error),
+        ({ data }) => handleSuccess(data),
+      ),
+    });
+  });
+});
+
+// Some API that returns a union of objects for different response states
+declare function someApi(options: {
+  readonly onFoo: (payload: Payload) => void;
+}): void;
+type Payload =
+  | ErrorPayload
+  | {
+      readonly status: "ok";
+      readonly data: string;
+    };
+type ErrorPayload = {
+  readonly status: "error";
+  readonly error: Error;
+};
+
+// A pivoting function, in TypeScript 5.5 these might be inferred for a lot of
+// cases and could be inlined.
+declare function isErrorPayload(payload: Payload): payload is ErrorPayload;
+
+// Our handlers for the different states
+declare function handleError(error: Error): void;
+declare function handleSuccess(data: string): void;
