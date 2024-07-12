@@ -26,7 +26,7 @@ import { type GuardType } from "./internal/types";
  *   branch(predicate, onTrue, onFalse)(data)
  * @example
  *   pipe(data, branch(isNullish, constant(42)));
- *   pipe(data, branch((x) => x > 3, add(1), multiply(2));
+ *   pipe(data, branch((x) => x > 3, add(1), multiply(2)));
  *   map(data, branch(isNullish, (x, index) => x + index));
  * @dataLast
  * @category Function
