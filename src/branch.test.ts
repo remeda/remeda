@@ -1,6 +1,5 @@
 import { branch } from "./branch";
 import { constant } from "./constant";
-import { identity } from "./identity";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
@@ -23,16 +22,12 @@ describe("dataFirst", () => {
       ).toBe("hello");
     });
 
-    it("passes extra args to the functions (workaround)", () => {
+    it("passes extra args to the functions", () => {
       expect(
         branch(
           "123",
           isString,
           (x, radix) => Number.parseInt(x, radix),
-          // The no-else signature doesn't allow for extra params to be passed
-          // so we need to use the with-else signature and pass identity which
-          // is what the no-else signature does with the else branch.
-          identity(),
           // Extra args:
           10 /* radix */,
         ),
@@ -63,8 +58,10 @@ describe("dataFirst", () => {
         branch(
           123,
           (x) => x % 2 === 0,
-          (x, offset) => x + offset,
-          (x, offset) => x + offset + 1,
+          {
+            onTrue: (x, offset) => x + offset,
+            onFalse: (x, offset) => x + offset + 1,
+          },
           // Extra args:
           100,
         ),
@@ -111,11 +108,10 @@ describe("dataLast", () => {
       expect(
         pipe(
           "hello",
-          branch(
-            isStrictEqual("olleh"),
-            constant("was true"),
-            constant("was false"),
-          ),
+          branch(isStrictEqual("olleh"), {
+            onTrue: constant("was true"),
+            onFalse: constant("was false"),
+          }),
         ),
       ).toBe("was false");
     });
@@ -125,11 +121,10 @@ describe("dataLast", () => {
     expect(
       map(
         [1, 2, 3, 4],
-        branch(
-          (x) => x % 2 === 0,
-          (x, index) => x + index,
-          (x, index) => `${x}${index}`,
-        ),
+        branch((x) => x % 2 === 0, {
+          onTrue: (x, index) => x + index,
+          onFalse: (x, index) => `${x}${index}`,
+        }),
       ),
     ).toStrictEqual(["10", 3, "32", 7]);
   });
@@ -186,38 +181,5 @@ describe("recipes", () => {
         ),
       ),
     ).toStrictEqual([42, 42, 42, 1]);
-  });
-});
-
-describe("known issues", () => {
-  it("can't handle functions as the data param (without else)", () => {
-    const data = constant("hello") as (() => string) | undefined;
-
-    const predicateMock = vi.fn(constant(true));
-    const mapperMock = vi.fn(constant("world"));
-
-    const result = branch(data, predicateMock, mapperMock);
-
-    expect(result).not.toBe("world");
-    expect(result).toBeTypeOf("function");
-
-    // The function prepared a curried function for us to call, but none of the
-    // function arguments were actually called yet because it hasn't been
-    // invoked yet.
-    expect(predicateMock).not.toHaveBeenCalled();
-    expect(mapperMock).not.toHaveBeenCalled();
-  });
-
-  it("handles functions as the data param (when else is present)", () => {
-    const data = constant("hello") as (() => string) | undefined;
-
-    const predicateMock = vi.fn(constant(true));
-    const mapperMock = vi.fn(constant("world"));
-
-    const result = branch(data, predicateMock, mapperMock, constant("else"));
-
-    expect(result).toBe("world");
-    expect(predicateMock).toHaveBeenCalled();
-    expect(mapperMock).toHaveBeenCalled();
   });
 });

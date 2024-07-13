@@ -24,41 +24,52 @@ import { type GuardType } from "./internal/types";
  * predicate, it narrows types for both branches and the return value.
  * @param onTrue - Function to run when the predicate returns `true`.
  * @signature
- *   branch(predicate, onTrue)(data)
- *   branch(predicate, onTrue, onFalse)(data)
+ *   branch(predicate, onTrue)(data, ...extraArgs)
+ *   branch(predicate, { onTrue, onFalse })(data, ...extraArgs)
  * @example
  *   pipe(data, branch(isNullish, constant(42)));
- *   pipe(data, branch((x) => x > 3, add(1), multiply(2)));
+ *   pipe(data, branch((x) => x > 3, { onTrue: add(1), onFalse: multiply(2) }));
  *   map(data, branch(isNullish, (x, index) => x + index));
  * @dataLast
  * @category Function
  */
 export function branch<
   T,
-  Args extends Array<any>,
-  Predicate extends (data: T, ...args: Args) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
+  ExtraArgs extends Array<any>,
+  Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
+  OnTrue extends (
+    data: GuardType<Predicate, T>,
+    ...extraArgs: ExtraArgs
+  ) => unknown,
 >(
   predicate: Predicate,
   onTrue: OnTrue,
 ): (
   data: T,
-  ...args: Args
+  ...extraArgs: ExtraArgs
 ) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function branch<
   T,
-  Args extends Array<any>,
-  Predicate extends (data: T, ...args: Args) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
+  ExtraArgs extends Array<any>,
+  Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
+  OnTrue extends (
+    data: GuardType<Predicate, T>,
+    ...extraArgs: ExtraArgs
+  ) => unknown,
   OnFalse extends (
     data: Exclude<T, GuardType<Predicate>>,
-    ...args: Args
+    ...extraArgs: ExtraArgs
   ) => unknown,
 >(
   predicate: Predicate,
-  onTrue: OnTrue,
-  onFalse: OnFalse,
-): (data: T, ...args: Args) => ReturnType<OnFalse> | ReturnType<OnTrue>;
+  branches: {
+    readonly onTrue: OnTrue;
+    readonly onFalse: OnFalse;
+  },
+): (
+  data: T,
+  ...extraArgs: ExtraArgs
+) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
  * Conditionally run a function based on a predicate, returning it's result (similar to
@@ -81,103 +92,83 @@ export function branch<
  * return value would be narrowed.
  * @param onTrue - The function that would run when the predicate returns
  * `true`.
+ * @param extraArgs - Additional arguments. These would be passed as is to the
+ * `predicate`, `onTrue`, and `onFalse` functions.
  * @signature
- *   branch(data, predicate, onTrue)
- *   branch(data, predicate, onTrue, onFalse, ...extraArgs)
+ *   branch(data, predicate, onTrue, ...extraArgs)
+ *   branch(data, predicate, { onTrue, onFalse }, ...extraArgs)
  * @example
  *   branch(data, isNullish, constant(42));
- *   branch(data, (x) => x > 3, add(1), multiply(2));
- *   branch(data, isString, (x, radix) => parseInt(x, radix), identity(), 10);
+ *   branch(data, (x) => x > 3, { onTrue: add(1), onFalse: multiply(2) });
+ *   branch(data, isString, (x, radix) => parseInt(x, radix), 10);
  * @dataLast
  * @category Function
  */
 export function branch<
   T,
-  Predicate extends (data: T) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>) => unknown,
->(
-  data: T,
-  predicate: Predicate,
-  onTrue: OnTrue,
-): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
-export function branch<
-  T,
-  Args extends Array<any>,
-  Predicate extends (data: T, ...args: Args) => boolean,
-  OnTrue extends (data: GuardType<Predicate, T>, ...args: Args) => unknown,
-  OnFalse extends (
-    data: Exclude<T, GuardType<Predicate>>,
-    ...args: Args
+  ExtraArgs extends Array<any>,
+  Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
+  OnTrue extends (
+    data: GuardType<Predicate, T>,
+    ...extraArgs: ExtraArgs
   ) => unknown,
 >(
   data: T,
   predicate: Predicate,
   onTrue: OnTrue,
-  onFalse: OnFalse,
-  ...args: Args
+  ...extraArgs: ExtraArgs
+): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
+export function branch<
+  T,
+  ExtraArgs extends Array<any>,
+  Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
+  OnTrue extends (
+    data: GuardType<Predicate, T>,
+    ...extraArgs: ExtraArgs
+  ) => unknown,
+  OnFalse extends (
+    data: Exclude<T, GuardType<Predicate>>,
+    ...extraArgs: ExtraArgs
+  ) => unknown,
+>(
+  data: T,
+  predicate: Predicate,
+  branches: {
+    readonly onTrue: OnTrue;
+    readonly onFalse: OnFalse;
+  },
+  ...extraArgs: ExtraArgs
 ): ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 export function branch(...args: ReadonlyArray<unknown>): unknown {
-  // To support an optional third argument we need to build our own heuristic
-  // currying function and can't rely on the logic in `purry`.
-
-  if (args.length === 2) {
-    // The data-last, no-else, overload is the only signature we offer with 2
-    // arguments.
-
-    return (data: unknown, ...callArgs: ReadonlyArray<unknown>) =>
-      // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-      branchImplementation(data, ...args, ...callArgs);
-  }
-
-  if (args.length === 3) {
-    // We only have an issue when the function is invoked with 3 params, as it
-    // could either be the data-last, with-else, overload, or the data-first,
-    // no-else, overload. We need another check to decide what to do here...
-
-    if (typeof args[0] === "function") {
-      // We know that if the first argument is not a function it isn't a
-      // predicate, so it has to be the data and we'll assume it's the data-
-      // first call.
-
-      // !IMPORTANT! This means that when functions are used as the data param
-      // with the data-first, no-else, signature we will wrongly assume it's a
-      // data-last call.
-
-      return (data: unknown, ...callArgs: ReadonlyArray<unknown>) =>
+  return args.length === 2
+    ? (data: unknown, ...extraArgs: ReadonlyArray<unknown>) =>
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        branchWithElseImplementation(data, ...args, ...callArgs);
-    }
-
-    // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-    return branchImplementation(...args);
-  }
-
-  // The data-first, with-else, overload is the only signature we offer that
-  // takes 4 (or more!) arguments.
-
-  // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-  return branchWithElseImplementation(...args);
+        branchImplementation(data, ...args, ...extraArgs)
+    : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
+      branchImplementation(...args);
 }
 
-const branchImplementation = <T, Args extends Array<any>, WhenTrue, WhenFalse>(
-  data: T,
-  predicate: (data: T, ...args: Args) => boolean,
-  onTrue: (data: T, ...args: Args) => WhenTrue,
-  ...args: Args
-): T | WhenFalse | WhenTrue =>
-  predicate(data, ...args) ? onTrue(data, ...args) : data;
-
-const branchWithElseImplementation = <
+const branchImplementation = <
   T,
-  Args extends Array<any>,
+  ExtraArgs extends Array<any>,
   WhenTrue,
   WhenFalse,
 >(
   data: T,
-  predicate: (data: T, ...args: Args) => boolean,
-  onTrue: (data: T, ...args: Args) => WhenTrue,
-  onFalse: (data: T, ...args: Args) => WhenFalse,
-  ...args: Args
+  predicate: (data: T, ...extraArgs: ExtraArgs) => boolean,
+  onTrueOrBranches:
+    | ((data: T, ...extraArgs: ExtraArgs) => WhenTrue)
+    | {
+        readonly onTrue: (data: T, ...extraArgs: ExtraArgs) => WhenTrue;
+        readonly onFalse: (data: T, ...extraArgs: ExtraArgs) => WhenFalse;
+      },
+  ...extraArgs: ExtraArgs
 ): T | WhenFalse | WhenTrue =>
-  predicate(data, ...args) ? onTrue(data, ...args) : onFalse(data, ...args);
+  predicate(data, ...extraArgs)
+    ? typeof onTrueOrBranches === "function"
+      ? onTrueOrBranches(data, ...extraArgs)
+      : onTrueOrBranches.onTrue(data, ...extraArgs)
+    : typeof onTrueOrBranches === "function"
+      ? data
+      : onTrueOrBranches.onFalse(data, ...extraArgs);

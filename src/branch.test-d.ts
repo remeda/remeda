@@ -1,6 +1,5 @@
 import { branch } from "./branch";
 import { constant } from "./constant";
-import { identity } from "./identity";
 import { isString } from "./isString";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -23,7 +22,7 @@ describe("dataFirst", () => {
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
       });
 
-      it("passes extra args to the functions (workaround)", () => {
+      it("passes extra args to the functions", () => {
         const data = "hello" as number | string;
         branch(
           data,
@@ -34,10 +33,6 @@ describe("dataFirst", () => {
             expectTypeOf(b).toEqualTypeOf<"cat">();
             expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
           },
-          // The no-else signature doesn't allow for extra params to be passed
-          // so we need to use the with-else signature and pass identity which
-          // is what the no-else signature does with the else branch.
-          identity(),
           // Extra args:
           1 as const,
           "cat" as const,
@@ -73,10 +68,6 @@ describe("dataFirst", () => {
             expectTypeOf(b).toEqualTypeOf<"cat">();
             expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
           },
-          // The no-else signature doesn't allow for extra params to be passed
-          // so we need to use the with-else signature and pass identity which
-          // is what the no-else signature does with the else branch.
-          identity(),
           // Extra args:
           1 as const,
           "cat" as const,
@@ -90,26 +81,22 @@ describe("dataFirst", () => {
     describe("simple predicates", () => {
       test("mapper's param is not narrowed", () => {
         const data = "hello" as number | string;
-        branch(
-          data,
-          constant(true),
-          (x) => {
+        branch(data, constant(true), {
+          onTrue: (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           },
-          (x) => {
+          onFalse: (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           },
-        );
+        });
       });
 
       it("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
-        const result = branch(
-          data,
-          constant(true),
-          constant("cat" as const),
-          constant("dog" as const),
-        );
+        const result = branch(data, constant(true), {
+          onTrue: constant("cat" as const),
+          onFalse: constant("dog" as const),
+        });
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
@@ -118,17 +105,19 @@ describe("dataFirst", () => {
         branch(
           data,
           constant(true),
-          (x, a, b, c) => {
-            expectTypeOf(x).toEqualTypeOf(data);
-            expectTypeOf(a).toEqualTypeOf<1>();
-            expectTypeOf(b).toEqualTypeOf<"cat">();
-            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
-          },
-          (x, a, b, c) => {
-            expectTypeOf(x).toEqualTypeOf(data);
-            expectTypeOf(a).toEqualTypeOf<1>();
-            expectTypeOf(b).toEqualTypeOf<"cat">();
-            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          {
+            onTrue: (x, a, b, c) => {
+              expectTypeOf(x).toEqualTypeOf(data);
+              expectTypeOf(a).toEqualTypeOf<1>();
+              expectTypeOf(b).toEqualTypeOf<"cat">();
+              expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+            },
+            onFalse: (x, a, b, c) => {
+              expectTypeOf(x).toEqualTypeOf(data);
+              expectTypeOf(a).toEqualTypeOf<1>();
+              expectTypeOf(b).toEqualTypeOf<"cat">();
+              expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+            },
           },
           // Extra args:
           1 as const,
@@ -141,28 +130,24 @@ describe("dataFirst", () => {
     describe("type-guards", () => {
       it("narrows the mapper's param", () => {
         const data = "hello" as number | string;
-        branch(
-          data,
-          isString,
-          (x) => {
+        branch(data, isString, {
+          onTrue: (x) => {
             // Narrowed
             expectTypeOf(x).toEqualTypeOf<string>();
           },
-          (x) => {
+          onFalse: (x) => {
             // Also narrowed!
             expectTypeOf(x).toEqualTypeOf<number>();
           },
-        );
+        });
       });
 
       it("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
-        const result = branch(
-          data,
-          isString,
-          constant("cat" as const),
-          constant("dog" as const),
-        );
+        const result = branch(data, isString, {
+          onTrue: constant("cat" as const),
+          onFalse: constant("dog" as const),
+        });
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
@@ -171,19 +156,21 @@ describe("dataFirst", () => {
         branch(
           data,
           isString,
-          (x, a, b, c) => {
-            // Narrowed
-            expectTypeOf(x).toEqualTypeOf<string>();
-            expectTypeOf(a).toEqualTypeOf<1>();
-            expectTypeOf(b).toEqualTypeOf<"cat">();
-            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
-          },
-          (x, a, b, c) => {
-            // Also narrowed!
-            expectTypeOf(x).toEqualTypeOf<number>();
-            expectTypeOf(a).toEqualTypeOf<1>();
-            expectTypeOf(b).toEqualTypeOf<"cat">();
-            expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+          {
+            onTrue: (x, a, b, c) => {
+              // Narrowed
+              expectTypeOf(x).toEqualTypeOf<string>();
+              expectTypeOf(a).toEqualTypeOf<1>();
+              expectTypeOf(b).toEqualTypeOf<"cat">();
+              expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+            },
+            onFalse: (x, a, b, c) => {
+              // Also narrowed!
+              expectTypeOf(x).toEqualTypeOf<number>();
+              expectTypeOf(a).toEqualTypeOf<1>();
+              expectTypeOf(b).toEqualTypeOf<"cat">();
+              expectTypeOf(c).toEqualTypeOf<{ readonly a: 123 }>();
+            },
           },
           // Extra args:
           1 as const,
@@ -268,15 +255,14 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(
-            constant(true),
-            (x) => {
+          branch(constant(true), {
+            onTrue: (x) => {
               expectTypeOf(x).toEqualTypeOf(data);
             },
-            (x) => {
+            onFalse: (x) => {
               expectTypeOf(x).toEqualTypeOf(data);
             },
-          ),
+          }),
         );
       });
 
@@ -284,11 +270,10 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
-          branch(
-            constant(true),
-            constant("cat" as const),
-            constant("dog" as const),
-          ),
+          branch(constant(true), {
+            onTrue: constant("cat" as const),
+            onFalse: constant("dog" as const),
+          }),
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
@@ -297,19 +282,18 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          branch(
-            constant(true),
-            (x, index, array) => {
+          branch(constant(true), {
+            onTrue: (x, index, array) => {
               expectTypeOf(x).toEqualTypeOf<number | string>();
               expectTypeOf(index).toEqualTypeOf<number>();
               expectTypeOf(array).toEqualTypeOf<typeof data>();
             },
-            (x, index, array) => {
+            onFalse: (x, index, array) => {
               expectTypeOf(x).toEqualTypeOf<number | string>();
               expectTypeOf(index).toEqualTypeOf<number>();
               expectTypeOf(array).toEqualTypeOf<typeof data>();
             },
-          ),
+          }),
         );
       });
     });
@@ -319,17 +303,16 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(
-            isString,
-            (x) => {
+          branch(isString, {
+            onTrue: (x) => {
               // Narrowed
               expectTypeOf(x).toEqualTypeOf<string>();
             },
-            (x) => {
+            onFalse: (x) => {
               // Also narrowed!
               expectTypeOf(x).toEqualTypeOf<number>();
             },
-          ),
+          }),
         );
       });
 
@@ -337,7 +320,10 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
-          branch(isString, constant("cat" as const), constant("dog" as const)),
+          branch(isString, {
+            onTrue: constant("cat" as const),
+            onFalse: constant("dog" as const),
+          }),
         );
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
@@ -346,21 +332,20 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          branch(
-            isString,
-            (x, index, array) => {
+          branch(isString, {
+            onTrue: (x, index, array) => {
               // Narrowed!
               expectTypeOf(x).toEqualTypeOf<string>();
               expectTypeOf(index).toEqualTypeOf<number>();
               expectTypeOf(array).toEqualTypeOf<typeof data>();
             },
-            (x, index, array) => {
+            onFalse: (x, index, array) => {
               // Also narrowed!
               expectTypeOf(x).toEqualTypeOf<number>();
               expectTypeOf(index).toEqualTypeOf<number>();
               expectTypeOf(array).toEqualTypeOf<typeof data>();
             },
-          ),
+          }),
         );
       });
     });
@@ -432,11 +417,10 @@ describe("typing mismatches", () => {
 describe("recipes", () => {
   it("handles api response union response objects", () => {
     someApi({
-      onFoo: branch(
-        isErrorPayload,
-        ({ error }) => handleError(error),
-        ({ data }) => handleSuccess(data),
-      ),
+      onFoo: branch(isErrorPayload, {
+        onTrue: ({ error }) => handleError(error),
+        onFalse: ({ data }) => handleSuccess(data),
+      }),
     });
   });
 });
