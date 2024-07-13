@@ -44,12 +44,10 @@ describe("dataFirst", () => {
 
     it("returns the else path when false", () => {
       expect(
-        branch(
-          "hello",
-          isStrictEqual("olleh"),
-          constant("was true"),
-          constant("was false"),
-        ),
+        branch("hello", isStrictEqual("olleh"), {
+          onTrue: constant("was true"),
+          onFalse: constant("was false"),
+        }),
       ).toBe("was false");
     });
 
@@ -141,12 +139,10 @@ it("can return other types", () => {
   ).toBe(42);
 
   expect(
-    branch(
-      "hello",
-      isStrictEqual("olleh"),
-      constant(42),
-      constant({ a: "hello" }),
-    ),
+    branch("hello", isStrictEqual("olleh"), {
+      onTrue: constant(42),
+      onFalse: constant({ a: "hello" }),
+    }),
   ).toStrictEqual({ a: "hello" });
 });
 
