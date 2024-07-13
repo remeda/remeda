@@ -6,10 +6,10 @@
 import { type GuardType } from "./internal/types";
 
 /**
- * Conditionally run a function based on a predicate, similar to
- * the [ternary `?:`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
- * operator. If the optional `onFalse` function is not provided, the data will
- * be passed through.
+ * Conditionally run a function based on a predicate, returning it's result (similar to
+ * the [`?:` (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator).)
+ * If the optional `onFalse` function is not provided, the data will be passed
+ * through in those cases.
  *
  * Supports type predicates to refine the types for both branches and the return
  * value.
@@ -61,10 +61,10 @@ export function branch<
 ): (data: T, ...args: Args) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
- * Conditionally run a function based on a predicate, similar to
- * the [ternary `?:`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator)
- * operator. If the optional `onFalse` function is not provided, the data will
- * be passed through.
+ * Conditionally run a function based on a predicate, returning it's result (similar to
+ * the [`?:` (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator).)
+ * If the optional `onFalse` function is not provided, the data will be passed
+ * through in those cases.
  *
  * Supports type predicates to refine the types for both branches and the return
  * value.
