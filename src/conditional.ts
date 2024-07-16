@@ -21,7 +21,7 @@ export { conditionalPlus as conditional };
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
- * For simpler cases you should also consider using `branch` instead.
+ * For simpler cases you should also consider using `when` instead.
  *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback
@@ -114,7 +114,7 @@ function conditional<
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
- * For simpler cases you should also consider using `branch` instead.
+ * For simpler cases you should also consider using `when` instead.
  *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback
