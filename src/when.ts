@@ -20,20 +20,20 @@ import { type GuardType } from "./internal/types";
  *
  * For more complex cases check out `conditional`.
  *
- * @param predicate - Function to decide which branch to run. If a type
- * predicate, it narrows types for both branches and the return value.
+ * @param predicate - Decides if the `onTrue` mapper should run or not. If it's
+ * a type predicate it also narrows types for the mappers and the return value.
  * @param onTrue - Function to run when the predicate returns `true`.
  * @signature
- *   branch(predicate, onTrue)(data, ...extraArgs)
- *   branch(predicate, { onTrue, onFalse })(data, ...extraArgs)
+ *   when(predicate, onTrue)(data, ...extraArgs)
+ *   when(predicate, { onTrue, onFalse })(data, ...extraArgs)
  * @example
- *   pipe(data, branch(isNullish, constant(42)));
- *   pipe(data, branch((x) => x > 3, { onTrue: add(1), onFalse: multiply(2) }));
- *   map(data, branch(isNullish, (x, index) => x + index));
+ *   pipe(data, when(isNullish, constant(42)));
+ *   pipe(data, when((x) => x > 3, { onTrue: add(1), onFalse: multiply(2) }));
+ *   map(data, when(isNullish, (x, index) => x + index));
  * @dataLast
  * @category Function
  */
-export function branch<
+export function when<
   T,
   ExtraArgs extends Array<any>,
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
@@ -48,7 +48,7 @@ export function branch<
   data: T,
   ...extraArgs: ExtraArgs
 ) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
-export function branch<
+export function when<
   T,
   ExtraArgs extends Array<any>,
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
@@ -87,24 +87,23 @@ export function branch<
  * For more complex cases check out `conditional`.
  *
  * @param data - The data to be passed to all functions, as the first param.
- * @param predicate - The function that decides which of the 2 branches would
- * run. If a type-predicate is provided, then the types of both branches and the
- * return value would be narrowed.
+ * @param predicate - Decides if the `onTrue` mapper should run or not. If it's
+ * a type predicate it also narrows types for the mappers and the return value.
  * @param onTrue - The function that would run when the predicate returns
  * `true`.
  * @param extraArgs - Additional arguments. These would be passed as is to the
  * `predicate`, `onTrue`, and `onFalse` functions.
  * @signature
- *   branch(data, predicate, onTrue, ...extraArgs)
- *   branch(data, predicate, { onTrue, onFalse }, ...extraArgs)
+ *   when(data, predicate, onTrue, ...extraArgs)
+ *   when(data, predicate, { onTrue, onFalse }, ...extraArgs)
  * @example
- *   branch(data, isNullish, constant(42));
- *   branch(data, (x) => x > 3, { onTrue: add(1), onFalse: multiply(2) });
- *   branch(data, isString, (x, radix) => parseInt(x, radix), 10);
- * @dataLast
+ *   when(data, isNullish, constant(42));
+ *   when(data, (x) => x > 3, { onTrue: add(1), onFalse: multiply(2) });
+ *   when(data, isString, (x, radix) => parseInt(x, radix), 10);
+ * @dataFirst
  * @category Function
  */
-export function branch<
+export function when<
   T,
   ExtraArgs extends Array<any>,
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
@@ -118,7 +117,7 @@ export function branch<
   onTrue: OnTrue,
   ...extraArgs: ExtraArgs
 ): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
-export function branch<
+export function when<
   T,
   ExtraArgs extends Array<any>,
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
@@ -140,16 +139,16 @@ export function branch<
   ...extraArgs: ExtraArgs
 ): ReturnType<OnFalse> | ReturnType<OnTrue>;
 
-export function branch(...args: ReadonlyArray<unknown>): unknown {
+export function when(...args: ReadonlyArray<unknown>): unknown {
   return args.length === 2
     ? (data: unknown, ...extraArgs: ReadonlyArray<unknown>) =>
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-        branchImplementation(data, ...args, ...extraArgs)
+        whenImplementation(data, ...args, ...extraArgs)
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
-      branchImplementation(...args);
+      whenImplementation(...args);
 }
 
-const branchImplementation = <
+const whenImplementation = <
   T,
   ExtraArgs extends Array<any>,
   WhenTrue,

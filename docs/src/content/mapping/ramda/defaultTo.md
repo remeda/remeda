@@ -1,9 +1,9 @@
 ---
 category: Logic
-remeda: branch
+remeda: when
 ---
 
-- Use Remeda's [`branch`] with [`isNullish`](/docs#isNullish) as the predicate
+- Use Remeda's [`when`] with [`isNullish`](/docs#isNullish) as the predicate
   and the fallback value wrapped with [`constant`](/docs#constant).
 - For defaulting `NaN` values use the built-in [`Number.isNaN`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)
   instead.
@@ -16,7 +16,7 @@ remeda: branch
 defaultTo(DATA, 10);
 
 // Remeda
-branch(DATA, isNullish, constant(10));
+when(DATA, isNullish, constant(10));
 ```
 
 ### NaN
@@ -26,7 +26,7 @@ branch(DATA, isNullish, constant(10));
 defaultTo(DATA, 10);
 
 // Remeda
-branch(DATA, Number.isNaN, constant(10));
+when(DATA, Number.isNaN, constant(10));
 ```
 
 ### Both
@@ -36,7 +36,7 @@ branch(DATA, Number.isNaN, constant(10));
 defaultTo(DATA, 10);
 
 // Remeda
-branch(
+when(
   DATA,
   (x) => x === undefined || x === null || Number.isNaN(x),
   constant(10),

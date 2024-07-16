@@ -1,22 +1,22 @@
-import { branch } from "./branch";
 import { constant } from "./constant";
 import { isString } from "./isString";
 import { map } from "./map";
 import { pipe } from "./pipe";
+import { when } from "./when";
 
 describe("dataFirst", () => {
   describe("no else", () => {
     describe("simple predicates", () => {
       test("mapper param is not narrowed", () => {
         const data = "hello" as number | string;
-        branch(data, constant(true), (x) => {
+        when(data, constant(true), (x) => {
           expectTypeOf(x).toEqualTypeOf(data);
         });
       });
 
       it("return type is not narrowed ", () => {
         const data = "hello" as number | string;
-        const result = branch(data, constant(true), constant({ a: 1 }));
+        const result = when(data, constant(true), constant({ a: 1 }));
         // The result contains both the input type, and the result of the
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
@@ -24,7 +24,7 @@ describe("dataFirst", () => {
 
       it("passes extra args to the functions", () => {
         const data = "hello" as number | string;
-        branch(
+        when(
           data,
           constant(true),
           (x, a, b, c) => {
@@ -44,14 +44,14 @@ describe("dataFirst", () => {
     describe("type-guards", () => {
       it("narrows the mapper's param", () => {
         const data = "hello" as number | string;
-        branch(data, isString, (x) => {
+        when(data, isString, (x) => {
           expectTypeOf(x).toEqualTypeOf<string>();
         });
       });
 
       it("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
-        const result = branch(data, isString, constant("cat" as const));
+        const result = when(data, isString, constant("cat" as const));
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
@@ -59,7 +59,7 @@ describe("dataFirst", () => {
 
       it("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
-        branch(
+        when(
           data,
           isString,
           (x, a, b, c) => {
@@ -81,7 +81,7 @@ describe("dataFirst", () => {
     describe("simple predicates", () => {
       test("mapper's param is not narrowed", () => {
         const data = "hello" as number | string;
-        branch(data, constant(true), {
+        when(data, constant(true), {
           onTrue: (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           },
@@ -93,7 +93,7 @@ describe("dataFirst", () => {
 
       it("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
-        const result = branch(data, constant(true), {
+        const result = when(data, constant(true), {
           onTrue: constant("cat" as const),
           onFalse: constant("dog" as const),
         });
@@ -102,7 +102,7 @@ describe("dataFirst", () => {
 
       it("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
-        branch(
+        when(
           data,
           constant(true),
           {
@@ -130,7 +130,7 @@ describe("dataFirst", () => {
     describe("type-guards", () => {
       it("narrows the mapper's param", () => {
         const data = "hello" as number | string;
-        branch(data, isString, {
+        when(data, isString, {
           onTrue: (x) => {
             // Narrowed
             expectTypeOf(x).toEqualTypeOf<string>();
@@ -144,7 +144,7 @@ describe("dataFirst", () => {
 
       it("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
-        const result = branch(data, isString, {
+        const result = when(data, isString, {
           onTrue: constant("cat" as const),
           onFalse: constant("dog" as const),
         });
@@ -153,7 +153,7 @@ describe("dataFirst", () => {
 
       it("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
-        branch(
+        when(
           data,
           isString,
           {
@@ -189,7 +189,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(constant(true), (x) => {
+          when(constant(true), (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           }),
         );
@@ -197,7 +197,7 @@ describe("dataLast", () => {
 
       it("return type is not narrowed ", () => {
         const data = "hello" as number | string;
-        const result = pipe(data, branch(constant(true), constant({ a: 1 })));
+        const result = pipe(data, when(constant(true), constant({ a: 1 })));
         // The result contains both the input type, and the result of the
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
@@ -207,7 +207,7 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          branch(constant(true), (x, index, array) => {
+          when(constant(true), (x, index, array) => {
             expectTypeOf(x).toEqualTypeOf<number | string>();
             expectTypeOf(index).toEqualTypeOf<number>();
             expectTypeOf(array).toEqualTypeOf<typeof data>();
@@ -221,7 +221,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(isString, (x) => {
+          when(isString, (x) => {
             expectTypeOf(x).toEqualTypeOf<string>();
           }),
         );
@@ -229,7 +229,7 @@ describe("dataLast", () => {
 
       it("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
-        const result = pipe(data, branch(isString, constant("cat" as const)));
+        const result = pipe(data, when(isString, constant("cat" as const)));
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
@@ -240,7 +240,7 @@ describe("dataLast", () => {
       const data = [] as Array<number | string>;
       map(
         data,
-        branch(isString, (x, index, array) => {
+        when(isString, (x, index, array) => {
           expectTypeOf(x).toEqualTypeOf<string>();
           expectTypeOf(index).toEqualTypeOf<number>();
           expectTypeOf(array).toEqualTypeOf<typeof data>();
@@ -255,7 +255,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(constant(true), {
+          when(constant(true), {
             onTrue: (x) => {
               expectTypeOf(x).toEqualTypeOf(data);
             },
@@ -270,7 +270,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
-          branch(constant(true), {
+          when(constant(true), {
             onTrue: constant("cat" as const),
             onFalse: constant("dog" as const),
           }),
@@ -282,7 +282,7 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          branch(constant(true), {
+          when(constant(true), {
             onTrue: (x, index, array) => {
               expectTypeOf(x).toEqualTypeOf<number | string>();
               expectTypeOf(index).toEqualTypeOf<number>();
@@ -303,7 +303,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          branch(isString, {
+          when(isString, {
             onTrue: (x) => {
               // Narrowed
               expectTypeOf(x).toEqualTypeOf<string>();
@@ -320,7 +320,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
-          branch(isString, {
+          when(isString, {
             onTrue: constant("cat" as const),
             onFalse: constant("dog" as const),
           }),
@@ -332,7 +332,7 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          branch(isString, {
+          when(isString, {
             onTrue: (x, index, array) => {
               // Narrowed!
               expectTypeOf(x).toEqualTypeOf<string>();
@@ -355,16 +355,16 @@ describe("dataLast", () => {
 describe("typing mismatches", () => {
   test("Predicate enforces data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The predicate can't take an undefined value
-    branch(1 as number | undefined, (x: number) => x > 3, constant(3));
+    when(1 as number | undefined, (x: number) => x > 3, constant(3));
   });
 
   test("Mappers enforce data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The mapper can't take an undefined value
-    branch(1 as number | undefined, constant(true), (x: number) => x + 1);
+    when(1 as number | undefined, constant(true), (x: number) => x + 1);
   });
 
   test("Type of extra args enforced (data-first)", () => {
-    branch(
+    when(
       1,
       constant(true),
       // @ts-expect-error [ts2345] -- The extra arg is not a boolean
@@ -375,7 +375,7 @@ describe("typing mismatches", () => {
   });
 
   test("Number of extra args enforced (data-first)", () => {
-    branch(
+    when(
       1,
       constant(true),
       // @ts-expect-error [ts2345] -- Not enough extra args
@@ -389,7 +389,7 @@ describe("typing mismatches", () => {
   test("Type of extra args enforced (data-last)", () => {
     map(
       [] as Array<string>,
-      branch(
+      when(
         constant(true),
         // @ts-expect-error [ts2345] -- The extra arg is not a boolean
         (x: string, _: boolean) => x,
@@ -400,7 +400,7 @@ describe("typing mismatches", () => {
   test("Number of extra args enforced (data-last)", () => {
     map(
       [] as Array<string>,
-      branch(
+      when(
         constant(true),
         // @ts-expect-error [ts2345] -- Not enough extra args
         (
@@ -417,7 +417,7 @@ describe("typing mismatches", () => {
 describe("recipes", () => {
   it("handles api response union response objects", () => {
     someApi({
-      onFoo: branch(isErrorPayload, {
+      onFoo: when(isErrorPayload, {
         onTrue: ({ error }) => handleError(error),
         onFalse: ({ data }) => handleSuccess(data),
       }),

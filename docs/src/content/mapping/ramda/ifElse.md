@@ -1,6 +1,6 @@
 ---
 category: Logic
-remeda: branch
+remeda: when
 ---
 
 - Remeda supports both if-like statements, and if-else-like statements (which is
@@ -18,10 +18,10 @@ remeda: branch
 ifElse(predicate, onTrue, onFalse)(data);
 
 // Remeda
-branch(data, predicate, { onTrue, onFalse });
+when(data, predicate, { onTrue, onFalse });
 
 // Or in a pipe
-pipe(data, branch(predicate, { onTrue, onFalse }));
+pipe(data, when(predicate, { onTrue, onFalse }));
 ```
 
 ### if
@@ -30,10 +30,10 @@ pipe(data, branch(predicate, { onTrue, onFalse }));
 ifElse(predicate, onTrue, identity)(data);
 
 // Remeda
-branch(data, predicate, onTrue);
+when(data, predicate, onTrue);
 
 // Or in a pipe
-pipe(data, branch(predicate, onTrue));
+pipe(data, when(predicate, onTrue));
 ```
 
 ### extra args
@@ -50,7 +50,7 @@ map(data, mapper);
 // Remeda
 map(
   data,
-  branch(
+  when(
     (x) => x === undefined,
     (_, index) => `item_${index}`,
   ),

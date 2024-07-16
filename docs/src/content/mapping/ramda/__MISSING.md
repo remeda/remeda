@@ -103,7 +103,6 @@
 - propSatisfies
 - unless
 - until
-- when
 - xor
 
 # Math
