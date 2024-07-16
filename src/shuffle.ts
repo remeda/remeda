@@ -1,3 +1,4 @@
+import { type IterableContainer, type ReorderedArray } from "./internal/types";
 import { purry } from "./purry";
 
 /**
@@ -11,7 +12,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
+export function shuffle<T extends IterableContainer>(
+  items: T,
+): ReorderedArray<T>;
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
@@ -23,7 +26,9 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  * @dataLast
  * @category Array
  */
-export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
+export function shuffle(): <T extends IterableContainer>(
+  items: T,
+) => ReorderedArray<T>;
 
 export function shuffle(...args: ReadonlyArray<unknown>): unknown {
   return purry(shuffleImplementation, args);
