@@ -1,13 +1,59 @@
+import { type IntRange } from "type-fest";
 import type { IterableContainer, NonEmptyArray } from "./internal/types";
 import { purry } from "./purry";
 
-type Chunked<T extends IterableContainer> = T[number] extends never
-  ? []
-  : T extends
-        | readonly [...Array<unknown>, unknown]
-        | readonly [unknown, ...Array<unknown>]
-    ? NonEmptyArray<NonEmptyArray<T[number]>>
-    : Array<NonEmptyArray<T[number]>>;
+type Chunked<T extends IterableContainer, N extends number> = number extends N
+  ? T[number] extends never
+    ? []
+    : T extends
+          | readonly [...Array<unknown>, unknown]
+          | readonly [unknown, ...Array<unknown>]
+      ? NonEmptyArray<NonEmptyArray<T[number]>>
+      : Array<NonEmptyArray<T[number]>>
+  : ChunkedCounted<T, N>;
+
+type ChunkedCounted<
+  T extends IterableContainer,
+  N extends number,
+  Output extends Array<Array<unknown>> = [],
+> = T["length"] extends 0
+  ? Output
+  : T extends readonly [infer Head, ...infer Rest]
+    ? ChunkedCounted<
+        Rest,
+        N,
+        Output extends [
+          ...infer Previous extends Array<Array<unknown>>,
+          infer Current extends Array<unknown>,
+        ]
+          ? Current["length"] extends N
+            ? [...Previous, Current, [Head]]
+            : [...Previous, [...Current, Head]]
+          : [[Head]]
+      >
+    : Output extends [
+          ...infer Previous extends Array<Array<unknown>>,
+          infer Current extends Array<unknown>,
+        ]
+      ? Current["length"] extends N
+        ? [
+            ...Output,
+            ...Array<NTuple<T[number], N>>,
+            AtMostArray<T[number], N> | NTuple<T[number], N>,
+          ]
+        : ChunkedCounted<T, N, [...Previous, [...Current, T[number]]]>
+      : [
+          ...Array<NTuple<T[number], N>>,
+          AtMostArray<T[number], N> | NTuple<T[number], N>,
+        ];
+
+type NTuple<
+  T,
+  N extends number,
+  Output extends Array<T> = [],
+> = Output["length"] extends N ? Output : NTuple<T, N, [T, ...Output]>;
+
+type AtMostArray<T, N extends number> = NTuple<T, IntRange<1, N>>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -22,10 +68,10 @@ type Chunked<T extends IterableContainer> = T[number] extends never
  * @dataFirst
  * @category Array
  */
-export function chunk<T extends IterableContainer>(
+export function chunk<T extends IterableContainer, const N extends number>(
   array: T,
-  size: number,
-): Chunked<T>;
+  size: N,
+): Chunked<T, N>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -39,9 +85,9 @@ export function chunk<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function chunk<T extends IterableContainer>(
-  size: number,
-): (array: T) => Chunked<T>;
+export function chunk<const N extends number>(
+  size: N,
+): <T extends IterableContainer>(array: T) => Chunked<T, N>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
   return purry(chunkImplementation, args);
