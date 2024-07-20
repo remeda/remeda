@@ -51,6 +51,12 @@ function chunkImplementation<T>(
   array: ReadonlyArray<T>,
   size: number,
 ): Array<Array<T>> {
+  if (size < 1) {
+    throw new RangeError(
+      `chunk: A chunk size of '${size}' would result in an infinite array`,
+    );
+  }
+
   const ret: Array<Array<T>> = [];
   for (let offset = 0; offset < array.length; offset += size) {
     ret.push(array.slice(offset, offset + size));
