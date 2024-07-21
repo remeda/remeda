@@ -239,6 +239,11 @@ export type GuardType<T, Fallback = never> = T extends (
  * Creates an array with exactly N elements in it, with a possible Prefix.
  *
  * The prefix doesn't need to be made with items of type T.
+ *
+ * !IMPORTANT! - Non literal N is not supported and would result in the wrong
+ * type.
+ * !IMPORTANT! - If the prefix is longer than N the type would recurse
+ * infinitely.
  */
 export type NTuple<
   T,
