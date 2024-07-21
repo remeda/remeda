@@ -4,6 +4,7 @@ import {
   type IfBoundedRecord,
   type EnumerableStringKeyedValueOf,
   type EnumerableStringKeyOf,
+  type NTuple,
 } from "./types";
 
 declare const SymbolFoo: unique symbol;
@@ -304,5 +305,41 @@ describe("EnumerableStringKeyedValueOf", () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<EmptyObject>
     >().toEqualTypeOf<never>();
+  });
+});
+
+describe("NTuple", () => {
+  test("size 0", () => {
+    expectTypeOf<NTuple<string, 0>>().toEqualTypeOf<[]>();
+  });
+
+  test("simple size", () => {
+    expectTypeOf<NTuple<string, 3>>().toEqualTypeOf<[string, string, string]>();
+  });
+
+  test("with prefix smaller than N", () => {
+    expectTypeOf<NTuple<string, 3, [boolean]>>().toEqualTypeOf<
+      [boolean, string, string]
+    >();
+  });
+
+  test("with prefix equal to N", () => {
+    expectTypeOf<
+      NTuple<string, 3, [boolean, boolean, boolean]>
+    >().toEqualTypeOf<[boolean, boolean, boolean]>();
+  });
+
+  describe("UNSUPPORTED CASES", () => {
+    test("non-literal size", () => {
+      // @ts-expect-error [ts2344] - We don't support non-literal sizes to reduce the load needed to compute it.
+      expectTypeOf<NTuple<string, number>>().toEqualTypeOf<Array<string>>();
+    });
+
+    test("with prefix larger than N", () => {
+      expectTypeOf<
+        // @ts-expect-error [ts2589] - This case causes an infinite loop
+        NTuple<string, 1, [boolean, boolean, boolean]>
+      >().toEqualTypeOf<[]>();
+    });
   });
 });

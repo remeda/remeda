@@ -234,3 +234,14 @@ export type GuardType<T, Fallback = never> = T extends (
 ) => x is infer U
   ? U
   : Fallback;
+
+/**
+ * Creates an array with exactly N elements in it, with a possible Prefix.
+ *
+ * The prefix doesn't need to be made with items of type T.
+ */
+export type NTuple<
+  T,
+  N extends number,
+  Prefix extends Array<unknown> = [],
+> = Prefix["length"] extends N ? Prefix : NTuple<T, N, [...Prefix, T]>;
