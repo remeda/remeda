@@ -123,51 +123,49 @@ describe("literal size", () => {
   });
 
   describe("mixed type prefix arrays", () => {
-    describe("mutable array", () => {
-      test("prefix is shorter than chunk size", () => {
-        const data = [1] as [number, ...Array<boolean>];
-        const result = chunk(data, 2);
-        expectTypeOf(result).toEqualTypeOf<
-          | [
-              [number, boolean],
-              ...Array<[boolean, boolean]>,
-              [boolean, boolean] | [boolean],
-            ]
-          | [[number, boolean] | [number]]
-        >();
-      });
-
-      test("prefix is same size as chunk size", () => {
-        const data = [1, 2] as [number, number, ...Array<boolean>];
-        const result = chunk(data, 2);
-        expectTypeOf(result).toEqualTypeOf<
-          [
-            [number, number],
+    test("prefix is shorter than chunk size", () => {
+      const data = [1] as [number, ...Array<boolean>];
+      const result = chunk(data, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        | [
+            [number, boolean],
             ...Array<[boolean, boolean]>,
             [boolean, boolean] | [boolean],
           ]
-        >();
-      });
+        | [[number, boolean] | [number]]
+      >();
+    });
 
-      test("prefix is longer than chunk size", () => {
-        const data = [1, 2, 3] as [number, number, number, ...Array<boolean>];
-        const result = chunk(data, 2);
-        expectTypeOf(result).toEqualTypeOf<
-          | [
-              [number, number],
-              [number, boolean],
-              ...Array<[boolean, boolean]>,
-              [boolean, boolean] | [boolean],
-            ]
-          | [[number, number], [number, boolean] | [number]]
-        >();
-      });
+    test("prefix is same size as chunk size", () => {
+      const data = [1, 2] as [number, number, ...Array<boolean>];
+      const result = chunk(data, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        [
+          [number, number],
+          ...Array<[boolean, boolean]>,
+          [boolean, boolean] | [boolean],
+        ]
+      >();
+    });
+
+    test("prefix is longer than chunk size", () => {
+      const data = [1, 2, 3] as [number, number, number, ...Array<boolean>];
+      const result = chunk(data, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        | [
+            [number, number],
+            [number, boolean],
+            ...Array<[boolean, boolean]>,
+            [boolean, boolean] | [boolean],
+          ]
+        | [[number, number], [number, boolean] | [number]]
+      >();
     });
   });
 });
 
 describe("KNOWN ISSUES", () => {
-  test("tuple with rest middle", () => {
+  test("array with both a prefix and suffix", () => {
     const input = [123, 456] as [number, ...Array<boolean>, number];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<
@@ -181,12 +179,34 @@ describe("KNOWN ISSUES", () => {
     >();
   });
 
-  test("tuple with rest head", () => {
-    const input = [456] as [...Array<boolean>, number];
-    const result = chunk(input, 2);
-    expectTypeOf(result).toEqualTypeOf<
-      // @ts-expect-error [ts2344] - We don't return the correct type for this case!
-      [...Array<[boolean, boolean]>, [boolean, number] | [number]]
-    >();
+  describe("mixed type suffix arrays", () => {
+    test("suffix is shorter than chunk size", () => {
+      const input = [1] as [...Array<boolean>, number];
+      const result = chunk(input, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        // @ts-expect-error [ts2344] - We don't return the correct type for this case!
+        [...Array<[boolean, boolean]>, [boolean, number] | [number]]
+      >();
+    });
+
+    test("suffix is same size as chunk size", () => {
+      const input = [1, 2] as [...Array<boolean>, number, number];
+      const result = chunk(input, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        // @ts-expect-error [ts2344] - We don't return the correct type for this case!
+        | [...Array<[boolean, boolean]>, [boolean, number], [number]]
+        | [...Array<[boolean, boolean]>, [number, number]]
+      >();
+    });
+
+    test("suffix is larger than chunk size", () => {
+      const input = [1, 2, 3] as [...Array<boolean>, number, number, number];
+      const result = chunk(input, 2);
+      expectTypeOf(result).toEqualTypeOf<
+        // @ts-expect-error [ts2344] - We don't return the correct type for this case!
+        | [...Array<[boolean, boolean]>, [boolean, number], [number, number]]
+        | [...Array<[boolean, boolean]>, [number, number], [number]]
+      >();
+    });
   });
 });
