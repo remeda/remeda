@@ -134,7 +134,7 @@ type BoundedArray<
  * @dataFirst
  * @category Array
  */
-export function chunk<T extends IterableContainer, const N extends number>(
+export function chunk<T extends IterableContainer, N extends number>(
   array: T,
   size: N,
 ): Chunked<T, N>;
@@ -151,7 +151,7 @@ export function chunk<T extends IterableContainer, const N extends number>(
  * @dataLast
  * @category Array
  */
-export function chunk<const N extends number>(
+export function chunk<N extends number>(
   size: N,
 ): <T extends IterableContainer>(array: T) => Chunked<T, N>;
 
