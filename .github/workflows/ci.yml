@@ -79,7 +79,7 @@ jobs:
     strategy:
       matrix:
         node:
-          - 22
+          - 22.5.1
           - 20
           - 18
     steps:
