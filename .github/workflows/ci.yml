@@ -79,6 +79,9 @@ jobs:
     strategy:
       matrix:
         node:
+          # TODO: Remove the subversion from v22 once the github machines
+          # stop using 22.5.0 when "22" is used, as that version has a
+          # broken npm. Also do this to the .nvmrc file!
           - 22.5.1
           - 20
           - 18
