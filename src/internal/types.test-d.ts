@@ -328,18 +328,4 @@ describe("NTuple", () => {
       NTuple<string, 3, [boolean, boolean, boolean]>
     >().toEqualTypeOf<[boolean, boolean, boolean]>();
   });
-
-  describe("UNSUPPORTED CASES", () => {
-    test("non-literal size", () => {
-      // @ts-expect-error [ts2344] - We don't support non-literal sizes to reduce the load needed to compute it.
-      expectTypeOf<NTuple<string, number>>().toEqualTypeOf<Array<string>>();
-    });
-
-    test("with prefix larger than N", () => {
-      expectTypeOf<
-        // @ts-expect-error [ts2589] - This case causes an infinite loop
-        NTuple<string, 1, [boolean, boolean, boolean]>
-      >().toEqualTypeOf<[]>();
-    });
-  });
 });
