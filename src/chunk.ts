@@ -1,4 +1,9 @@
-import { type IfNever, type IntRange, type ValueOf } from "type-fest";
+import {
+  type IfNever,
+  type IntRange,
+  type Subtract,
+  type ValueOf,
+} from "type-fest";
 import type {
   IterableContainer,
   NonEmptyArray,
@@ -13,26 +18,31 @@ type Chunked<
 > = T extends readonly []
   ? []
   : number extends N
-    ? T extends
-        | readonly [...Array<unknown>, unknown]
-        | readonly [unknown, ...Array<unknown>]
-      ? NonEmptyArray<NonEmptyArray<T[number]>>
-      : Array<NonEmptyArray<T[number]>>
-    : ChunkedWithLiteral<T, N>;
+    ? ChunkedWithNumber<T>
+    : ChunkedWithLiteral<
+        TupleParts<T>["prefix"],
+        TupleParts<T>["item"],
+        TupleParts<T>["suffix"],
+        N
+      >;
 
-type ChunkedWithLiteral<T, N extends number> =
-  TupleParts<T> extends {
-    prefix: infer Prefix extends Array<unknown>;
-    item: infer Item;
-    suffix: infer Suffix extends Array<unknown>;
-  }
-    ? IfNever<
-        Item,
-        FixedSizeChunked<Prefix, N>,
-        | VariableSizeChunked<FixedSizeChunked<Prefix, N>, N, Item, Suffix>
-        | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never)
-      >
-    : "ERROR: Failed to split input array into it's parts";
+type ChunkedWithNumber<T extends IterableContainer> = T extends
+  | readonly [...Array<unknown>, unknown]
+  | readonly [unknown, ...Array<unknown>]
+  ? NonEmptyArray<NonEmptyArray<T[number]>>
+  : Array<NonEmptyArray<T[number]>>;
+
+type ChunkedWithLiteral<
+  Prefix extends Array<unknown>,
+  Item,
+  Suffix extends Array<unknown>,
+  N extends number,
+> = IfNever<
+  Item,
+  FixedSizeChunked<Prefix, N>,
+  | VariableSizeChunked<FixedSizeChunked<Prefix, N>, N, Item, Suffix>
+  | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never)
+>;
 
 type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
   infer Head,
@@ -64,8 +74,8 @@ type VariableSizeChunked<
   ?
       | ValueOf<{
           [K in
-            | IntRange<0, NumMissingItems<LastPrefixChunk, N>>
-            | NumMissingItems<LastPrefixChunk, N>]: [
+            | IntRange<0, Subtract<N, LastPrefixChunk["length"]>>
+            | Subtract<N, LastPrefixChunk["length"]>]: [
             ...PrefixFullChunks,
             ...FixedSizeChunked<
               [...LastPrefixChunk, ...NTuple<RestItem, K>, ...Suffix],
@@ -77,7 +87,7 @@ type VariableSizeChunked<
           ...PrefixFullChunks,
           [
             ...LastPrefixChunk,
-            ...NTuple<RestItem, NumMissingItems<LastPrefixChunk, N>>,
+            ...NTuple<RestItem, Subtract<N, LastPrefixChunk["length"]>>,
           ],
           ...Array<NTuple<RestItem, N>>,
           ...ChunkedSuffixes<Suffix, N, RestItem>,
@@ -90,20 +100,12 @@ type ChunkedSuffixes<T extends Array<unknown>, N extends number, Filler> =
     infer Last extends Array<unknown>,
   ]
     ? ValueOf<{
-        [K in IntRange<0, NumMissingItems<Last, N>>]: FixedSizeChunked<
+        [K in IntRange<0, Subtract<N, Last["length"]>>]: FixedSizeChunked<
           [...NTuple<Filler, K>, ...T],
           N
         >;
       }>
     : [ValueOf<{ [K in IntRange<1, N> | N]: NTuple<Filler, K, T> }>];
-
-type NumMissingItems<
-  T extends Array<unknown>,
-  N extends number,
-  Iteration extends Array<unknown> = [],
-> = [...Iteration, ...T]["length"] extends N
-  ? Iteration["length"]
-  : NumMissingItems<T, N, [unknown, ...Iteration]>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
