@@ -248,8 +248,8 @@ export type GuardType<T, Fallback = never> = T extends (
 export type NTuple<
   T,
   N extends number,
-  Prefix extends Array<unknown> = [],
-> = Prefix["length"] extends N ? Prefix : NTuple<T, N, [...Prefix, T]>;
+  Result extends Array<unknown> = [],
+> = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
 
 /**
  * Takes an array and returns the types that make up it's parts. The suffix is

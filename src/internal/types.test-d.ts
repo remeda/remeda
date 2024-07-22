@@ -311,74 +311,162 @@ describe("EnumerableStringKeyedValueOf", () => {
 
 describe("NTuple", () => {
   test("size 0", () => {
-    expectTypeOf<NTuple<string, 0>>().toEqualTypeOf<[]>();
+    const result = nTuple("foo", 0);
+    expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  test("simple size", () => {
-    expectTypeOf<NTuple<string, 3>>().toEqualTypeOf<[string, string, string]>();
-  });
-
-  test("with prefix smaller than N", () => {
-    expectTypeOf<NTuple<string, 3, [boolean]>>().toEqualTypeOf<
-      [boolean, string, string]
-    >();
-  });
-
-  test("with prefix equal to N", () => {
-    expectTypeOf<
-      NTuple<string, 3, [boolean, boolean, boolean]>
-    >().toEqualTypeOf<[boolean, boolean, boolean]>();
+  test("non-trivial size", () => {
+    const result = nTuple("foo", 3);
+    expectTypeOf(result).toEqualTypeOf<[string, string, string]>();
   });
 });
 
 describe("TupleParts", () => {
-  test("empty array", () => {
-    expectTypeOf<TupleParts<[]>>().toEqualTypeOf<{
-      prefix: [];
-      item: never;
-      suffix: [];
-    }>();
+  describe("mutable", () => {
+    test("empty array", () => {
+      const data = [] as [];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("regular array", () => {
+      const data = [] as Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test("fixed tuple", () => {
+      const data = [1, 2, 3] as [1, 2, 3];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("array with prefix", () => {
+      const data = ["a"] as [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test("array with suffix", () => {
+      const data = ["a"] as [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test("array with prefix and suffix", () => {
+      const data = [1, "a"] as [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
   });
 
-  test("regular array", () => {
-    expectTypeOf<TupleParts<Array<number>>>().toEqualTypeOf<{
-      prefix: [];
-      item: number;
-      suffix: [];
-    }>();
+  describe("readonly", () => {
+    test("empty array", () => {
+      const data = [] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("regular array", () => {
+      const data = [] as ReadonlyArray<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test("fixed tuple", () => {
+      const data = [1, 2, 3] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("array with prefix", () => {
+      const data = ["a"] as readonly [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test("array with suffix", () => {
+      const data = ["a"] as readonly [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test("array with prefix and suffix", () => {
+      const data = [1, "a"] as readonly [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
   });
 
-  test("fixed tuple", () => {
-    expectTypeOf<TupleParts<[1, 2, 3]>>().toEqualTypeOf<{
-      prefix: [1, 2, 3];
-      item: never;
-      suffix: [];
-    }>();
-  });
+  describe("unions", () => {
+    test("union of arrays", () => {
+      const data = [] as Array<boolean> | Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: []; item: number; suffix: [] }
+      >();
+    });
 
-  test("array with prefix", () => {
-    expectTypeOf<TupleParts<[string, ...Array<boolean>]>>().toEqualTypeOf<{
-      prefix: [string];
-      item: boolean;
-      suffix: [];
-    }>();
-  });
-
-  test("array with suffix", () => {
-    expectTypeOf<TupleParts<[...Array<boolean>, string]>>().toEqualTypeOf<{
-      prefix: [];
-      item: boolean;
-      suffix: [string];
-    }>();
-  });
-
-  test("array with prefix and suffix", () => {
-    expectTypeOf<
-      TupleParts<[number, ...Array<boolean>, string]>
-    >().toEqualTypeOf<{
-      prefix: [number];
-      item: boolean;
-      suffix: [string];
-    }>();
+    test("mixed unions", () => {
+      const data = [] as Array<boolean> | [number, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: [number, string]; item: never; suffix: [] }
+      >();
+    });
   });
 });
+
+declare function nTuple<T, N extends number>(x: T, n: N): NTuple<T, N>;
+
+declare function tupleParts<T>(x: T): TupleParts<T>;
