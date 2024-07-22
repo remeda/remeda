@@ -5,6 +5,7 @@ import {
   type EnumerableStringKeyedValueOf,
   type EnumerableStringKeyOf,
   type NTuple,
+  type TupleParts,
 } from "./types";
 
 declare const SymbolFoo: unique symbol;
@@ -327,5 +328,57 @@ describe("NTuple", () => {
     expectTypeOf<
       NTuple<string, 3, [boolean, boolean, boolean]>
     >().toEqualTypeOf<[boolean, boolean, boolean]>();
+  });
+});
+
+describe("TupleParts", () => {
+  test("empty array", () => {
+    expectTypeOf<TupleParts<[]>>().toEqualTypeOf<{
+      prefix: [];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("regular array", () => {
+    expectTypeOf<TupleParts<Array<number>>>().toEqualTypeOf<{
+      prefix: [];
+      item: number;
+      suffix: [];
+    }>();
+  });
+
+  test("fixed tuple", () => {
+    expectTypeOf<TupleParts<[1, 2, 3]>>().toEqualTypeOf<{
+      prefix: [1, 2, 3];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("array with prefix", () => {
+    expectTypeOf<TupleParts<[string, ...Array<boolean>]>>().toEqualTypeOf<{
+      prefix: [string];
+      item: boolean;
+      suffix: [];
+    }>();
+  });
+
+  test("array with suffix", () => {
+    expectTypeOf<TupleParts<[...Array<boolean>, string]>>().toEqualTypeOf<{
+      prefix: [];
+      item: boolean;
+      suffix: [string];
+    }>();
+  });
+
+  test("array with prefix and suffix", () => {
+    expectTypeOf<
+      TupleParts<[number, ...Array<boolean>, string]>
+    >().toEqualTypeOf<{
+      prefix: [number];
+      item: boolean;
+      suffix: [string];
+    }>();
   });
 });

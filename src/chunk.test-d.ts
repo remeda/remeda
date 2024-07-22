@@ -132,7 +132,8 @@ describe("literal size", () => {
             ...Array<[boolean, boolean]>,
             [boolean, boolean] | [boolean],
           ]
-        | [[number, boolean] | [number]]
+        | [[number, boolean]]
+        | [[number]]
       >();
     });
 
@@ -140,11 +141,12 @@ describe("literal size", () => {
       const data = [1, 2] as [number, number, ...Array<boolean>];
       const result = chunk(data, 2);
       expectTypeOf(result).toEqualTypeOf<
-        [
-          [number, number],
-          ...Array<[boolean, boolean]>,
-          [boolean, boolean] | [boolean],
-        ]
+        | [
+            [number, number],
+            ...Array<[boolean, boolean]>,
+            [boolean, boolean] | [boolean],
+          ]
+        | [[number, number]]
       >();
     });
 
@@ -158,7 +160,8 @@ describe("literal size", () => {
             ...Array<[boolean, boolean]>,
             [boolean, boolean] | [boolean],
           ]
-        | [[number, number], [number, boolean] | [number]]
+        | [[number, number], [number, boolean]]
+        | [[number, number], [number]]
       >();
     });
   });

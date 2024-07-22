@@ -1,8 +1,9 @@
-import { type IntRange, type ValueOf } from "type-fest";
+import { type IfNever, type IntRange, type ValueOf } from "type-fest";
 import type {
   IterableContainer,
   NonEmptyArray,
   NTuple,
+  TupleParts,
 } from "./internal/types";
 import { purry } from "./purry";
 
@@ -16,110 +17,90 @@ type Chunked<T extends IterableContainer, N extends number> = number extends N
       : Array<NonEmptyArray<T[number]>>
   : ChunkedWithLiteral<T, N>;
 
-/**
- * When N is literal we can create a much more refined return type for chunk by
- * ensuring that the output chunks are exactly of size N. We also take the input
- * shape itself (and not just the items in the array) to make further assurances
- * on the output type.
- */
-type ChunkedWithLiteral<
-  T extends IterableContainer,
-  N extends number,
-  Output extends Array<Array<unknown>> = [],
-> = T["length"] extends 0
-  ? // If we consume the whole input (or it was empty to begin with) Output
-    // contains the exact chunks.
-    Output
-  : T extends readonly [infer Head, ...infer Rest]
-    ? // While the input has a prefix we remove the prefix and add it to the
-      // output recursively.
-      ChunkedWithLiteral<
-        Rest,
-        N,
-        Output extends [
-          ...infer Previous extends Array<Array<unknown>>,
-          infer Current extends Array<unknown>,
-        ]
-          ? // When Output isn't empty we are already in the middle of a chunk
-            // so we can look into it and decide where to put the next item.
-            Current["length"] extends N
-            ? [
-                // If the current chunk is already full we start the next chunk
-                ...Previous,
-                Current,
-                [Head],
-              ]
-            : [
-                // Otherwise we add the item to the last chunk and continue.
-                ...Previous,
-                [...Current, Head],
-              ]
-          : [
-              // But if output is empty we are in the first iteration of our
-              // recursion and need to create the initial chunk.
-              [Head],
-            ]
+type ChunkedWithLiteral<T, N extends number> =
+  TupleParts<T> extends {
+    prefix: infer Prefix extends Array<unknown>;
+    item: infer Item;
+    suffix: infer Suffix extends Array<unknown>;
+  }
+    ? IfNever<
+        Item,
+        FixedSizeChunked<Prefix, N>,
+        | VariableSizeChunked<FixedSizeChunked<Prefix, N>, N, Item, Suffix>
+        | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never)
       >
-    : // If the input is a simple array (or we reached the rest param of the
-      // tuple) we no longer need to recurse. Instead we now need to build the
-      // output based on what Output already contains.
-      Output extends [
-          ...infer Previous extends Array<Array<unknown>>,
-          infer Current extends Array<unknown>,
-        ]
-      ? // If Output contains anything it means that there are elements at the
-        // start of the input that we need to address when building the output.
-        Current["length"] extends N
-        ? [
-            // If the last chunk is full it means that output represents a fixed
-            // preset of chunks that are ensured to always be part of the
-            // output.
-            ...Output,
-            ...Array<NTuple<T[number], N>>,
-            BoundedArray<T[number], N>,
-          ]
-        : // The most complex output is when the last chunk isn't full yet. It
-          // requires us to split the output type into 2 possible outputs:
-          | [
-                // When the input is longer and would make Output the *first*
-                // element in our output array.
-                ...Previous,
-                NTuple<T[number], N, Current>,
-                ...Array<NTuple<T[number], N>>,
-                BoundedArray<T[number], N>,
-              ]
-            | [
-                // When the input would contain up to N elements, so that the
-                // Output we already built represents the *last* (and only)
-                // element of the output
-                ...Previous,
-                BoundedArray<T[number], N, Current>,
-              ]
-      :
-          | [
-              // If the output is empty we are dealing with a simple array, this
-              // is the "classic" chunk output where our output contains a set
-              // of chunks of exactly N elements, followed by a final element
-              // which might contain between 1 and N elements.
-              ...Array<NTuple<T[number], N>>,
-              BoundedArray<T[number], N>,
-            ]
-          // Or it could either be empty (when the array is empty)
-          | [];
+    : "ERROR: Failed to split input array into it's parts";
 
-/**
- * Creates a union of arrays of length 1 to N (inclusive) with elements of type
- * T. It also takes an optional Prefix that would be taken into account when
- * computing the length of the arrays.
- *
- * N is assumed to be a single literal value. Prefix is assumed to be a fixed-
- * sized tuple.
- */
-type BoundedArray<
-  T,
+type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? FixedSizeChunked<
+      Rest,
+      N,
+      Result extends [
+        ...infer Previous extends Array<Array<unknown>>,
+        infer Current extends Array<unknown>,
+      ]
+        ? Current["length"] extends N
+          ? [...Previous, Current, [Head]]
+          : [...Previous, [...Current, Head]]
+        : [[Head]]
+    >
+  : Result;
+
+type VariableSizeChunked<
+  ChunkedPrefix,
   N extends number,
-  Prefix extends Array<unknown> = [],
-> = ValueOf<{ [K in IntRange<1, N> | N]: NTuple<T, K, Prefix> }>;
+  RestItem,
+  Suffix extends Array<unknown>,
+> = ChunkedPrefix extends [
+  ...infer PrefixFullChunks extends Array<Array<unknown>>,
+  infer LastPrefixChunk extends Array<unknown>,
+]
+  ?
+      | ValueOf<{
+          [K in
+            | IntRange<0, NumMissingItems<LastPrefixChunk, N>>
+            | NumMissingItems<LastPrefixChunk, N>]: [
+            ...PrefixFullChunks,
+            ...FixedSizeChunked<
+              [...LastPrefixChunk, ...NTuple<RestItem, K>, ...Suffix],
+              N
+            >,
+          ];
+        }>
+      | [
+          ...PrefixFullChunks,
+          [
+            ...LastPrefixChunk,
+            ...NTuple<RestItem, NumMissingItems<LastPrefixChunk, N>>,
+          ],
+          ...Array<NTuple<RestItem, N>>,
+          ...ChunkedSuffixes<Suffix, N, RestItem>,
+        ]
+  : [...Array<NTuple<RestItem, N>>, ...ChunkedSuffixes<Suffix, N, RestItem>];
+
+type ChunkedSuffixes<T extends Array<unknown>, N extends number, Filler> =
+  FixedSizeChunked<T, N> extends [
+    ...Array<unknown>,
+    infer Last extends Array<unknown>,
+  ]
+    ? ValueOf<{
+        [K in IntRange<0, NumMissingItems<Last, N>>]: FixedSizeChunked<
+          [...NTuple<Filler, K>, ...T],
+          N
+        >;
+      }>
+    : [ValueOf<{ [K in IntRange<1, N> | N]: NTuple<Filler, K, T> }>];
+
+type NumMissingItems<
+  T extends Array<unknown>,
+  N extends number,
+  Iteration extends Array<unknown> = [],
+> = [...Iteration, ...T]["length"] extends N
+  ? Iteration["length"]
+  : NumMissingItems<T, N, [unknown, ...Iteration]>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
