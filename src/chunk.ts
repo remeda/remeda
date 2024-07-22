@@ -7,15 +7,18 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
-type Chunked<T extends IterableContainer, N extends number> = number extends N
-  ? T[number] extends never
-    ? []
-    : T extends
-          | readonly [...Array<unknown>, unknown]
-          | readonly [unknown, ...Array<unknown>]
+type Chunked<
+  T extends IterableContainer,
+  N extends number,
+> = T extends readonly []
+  ? []
+  : number extends N
+    ? T extends
+        | readonly [...Array<unknown>, unknown]
+        | readonly [unknown, ...Array<unknown>]
       ? NonEmptyArray<NonEmptyArray<T[number]>>
       : Array<NonEmptyArray<T[number]>>
-  : ChunkedWithLiteral<T, N>;
+    : ChunkedWithLiteral<T, N>;
 
 type ChunkedWithLiteral<T, N extends number> =
   TupleParts<T> extends {
