@@ -375,4 +375,36 @@ describe("literal size", () => {
       });
     });
   });
+
+  describe("max literal chunk size", () => {
+    test("below max", () => {
+      const [[firstItem, secondItem, ...otherItems]] = chunk(
+        ["abc", true] as [string, ...Array<number>, boolean],
+        200,
+      );
+      expectTypeOf(firstItem).toEqualTypeOf<string>();
+      expectTypeOf(secondItem).toEqualTypeOf<boolean | number>();
+      expectTypeOf(otherItems[197]).toEqualTypeOf<
+        boolean | number | undefined
+      >();
+      // @ts-expect-error [ts2339] - This item doesn't exist!
+      expectTypeOf(otherItems[198]).toEqualTypeOf<undefined>();
+    });
+  });
+
+  test("above max", () => {
+    const result = chunk(
+      ["abc", true] as [string, ...Array<number>, boolean],
+      1000,
+    );
+    expectTypeOf(result).toEqualTypeOf<
+      // These are simple non-empty arrays
+      [
+        [boolean | number | string, ...Array<boolean | number | string>],
+        ...Array<
+          [boolean | number | string, ...Array<boolean | number | string>]
+        >,
+      ]
+    >();
+  });
 });

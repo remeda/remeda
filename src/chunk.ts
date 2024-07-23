@@ -14,6 +14,14 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
+// This prevents typescript from failing on complex arrays and large chunks. It
+// allows the typing to remain useful even when very large chunks are needed,
+// without loosing fidelity on smaller ones. It was chosen by trial-and-error,
+// and given some more wiggle room because the complexity of the array also
+// plays a role in when typescript fails to recurse.
+// See the type tests for an example.
+type MAX_LITERAL_SIZE = 350;
+
 type Chunked<
   T extends IterableContainer,
   N extends number,
@@ -22,7 +30,9 @@ type Chunked<
   : IsNumericLiteral<N> extends true
     ? LessThan<N, 1> extends true
       ? never
-      : [...ChunkedWithLiteral<TupleParts<T>, N>]
+      : LessThan<N, MAX_LITERAL_SIZE> extends true
+        ? [...ChunkedWithLiteral<TupleParts<T>, N>]
+        : ChunkedWithNumber<T>
     : ChunkedWithNumber<T>;
 
 type ChunkedWithLiteral<
