@@ -22,7 +22,7 @@ import { purry } from "./purry";
 // See the type tests for an example.
 type MAX_LITERAL_SIZE = 350;
 
-type Chunked<
+type Chunk<
   T extends IterableContainer,
   N extends number,
 > = T extends readonly []
@@ -31,98 +31,172 @@ type Chunked<
     ? LessThan<N, 1> extends true
       ? never
       : LessThan<N, MAX_LITERAL_SIZE> extends true
-        ? [...ChunkedWithLiteral<TupleParts<T>, N>]
-        : ChunkedWithNumber<T>
-    : ChunkedWithNumber<T>;
+        ? // The spread here is used as a form of "Simplify" for arrays; without
+          // it our return type isn't useful.
+          [...LiteralChunk<T, N>]
+        : GenericChunk<T>
+    : GenericChunk<T>;
 
-type ChunkedWithLiteral<
-  T extends {
-    prefix: Array<unknown>;
-    item: unknown;
-    suffix: Array<unknown>;
-  },
+type LiteralChunk<
+  T,
   N extends number,
+  // TupleParts allows us to optimize the algorithm by taking all items up to
+  // the rest param, all items after the rest param, and the type of the rest
+  // param, in a single recursive scan, so that all other parts of our algorithm
+  // don't need to recurse again in order to handle them.
+  Parts extends TupleParts<T> = TupleParts<T>,
 > =
-  | VariableSizeChunked<
-      FixedSizeChunked<T["prefix"], N>,
-      T["item"],
-      T["suffix"],
+  | ChunkInfinite<
+      // Our result will always have the prefix tuple chunked the same way, so
+      // we compute it once here and send it to the main logic below
+      ChunkFinite<Parts["prefix"], N>,
+      Parts["item"],
+      Parts["suffix"],
       N
     >
-  | ([...T["prefix"], ...T["suffix"]]["length"] extends 0 ? [] : never);
+  // If both the prefix and suffix tuples are empty then our input is a simple
+  // array of the form `Array<Item>`. This means it could also be empty, so we
+  // need to add the empty output to our return type.
+  | ([...Parts["prefix"], ...Parts["suffix"]]["length"] extends 0 ? [] : never);
 
-type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
-  infer Head,
-  ...infer Rest,
-]
-  ? FixedSizeChunked<
+/**
+ * This type **only** works if the input array `T` is a finite tuple (
+ * `[number, "abc", true, { a: "hello" }]` etc..., and it doesn't contain a rest
+ * parameter). For these inputs the chunked output could be computed as literal
+ * finite tuples too.
+ */
+type ChunkFinite<
+  T,
+  N extends number,
+  // Important! Result is initialized with an empty array (and not `[[]]`)
+  // because the result of `chunk` on an empty array is `[]` and not `[[]]`.
+  Result = [],
+> = T extends readonly [infer Head, ...infer Rest]
+  ? // We continue consuming the input tuple recursively item by item.
+    ChunkFinite<
       Rest,
       N,
       Result extends [
         ...infer Previous extends Array<Array<unknown>>,
         infer Current extends Array<unknown>,
       ]
-        ? Current["length"] extends N
-          ? [...Previous, Current, [Head]]
-          : [...Previous, [...Current, Head]]
-        : [[Head]]
+        ? // We take a look at the last chunk in the result, this is the
+          // "current" chunk where new items would be added, all chunks before
+          // it are already full.
+          Current["length"] extends N
+          ? // The current chunk is full, create a new chunk and put Head in it.
+            [...Previous, Current, [Head]]
+          : // The current chunk is not full yet, so we add Head to it.
+            [...Previous, [...Current, Head]]
+        : // This would only happen on the first iteration, when result is
+          // still empty. In this case we create the first chunk and put Head
+          // in it.
+          [[Head]]
     >
-  : Result;
+  : // We know T is a finite tuple, so the only case where we would reach this
+    // is when T is empty, and in that case our results array contains the whole
+    // input chunked by N.
+    Result;
 
-type VariableSizeChunked<
-  T,
+/**
+ * Here lies the main complexity of building the chunk type. It takes the prefix
+ * chunks, the rest param item type, and the suffix (not chunked!) and it
+ * creates all possible combinations of adding items to the prefix and suffix
+ * for all possible scenarios for how many items the rest param "represents".
+ */
+type ChunkInfinite<
+  PrefixChunks,
   Item,
   Suffix extends Array<unknown>,
   N extends number,
 > = IfNever<
   Item,
-  T,
-  T extends [
+  // The rest param is never when there is no rest param, the whole array is
+  // a finite tuple and is represented already by the prefix chunks. Suffix is
+  // assumed to be empty in this case.
+  PrefixChunks,
+  PrefixChunks extends [
     ...infer PrefixFullChunks extends Array<Array<unknown>>,
     infer LastPrefixChunk extends Array<unknown>,
   ]
-    ?
-        | ValueOf<{
-            [K in InclusiveIntRange<
+    ? // When our prefix chunks are not empty it means we need to look at all
+      // combinations of mixing the prefix, the suffix, and different counts of
+      // the rest param until we cover all possible scenarios.
+      | ValueOf<{
+            // We want to iterate over all possible padding sizes we can add to
+            // the last prefix chunk until we reach N
+            // (`0..N-LastPrefixChunk.length`). We need to do this because until
+            // the last prefix chunk is full, we need to consider the suffix
+            // being part of it too...
+            [Padding in IntRangeInclusive<
               0,
               Subtract<N, LastPrefixChunk["length"]>
             >]: [
               ...PrefixFullChunks,
-              ...FixedSizeChunked<
-                [...LastPrefixChunk, ...NTuple<Item, K>, ...Suffix],
+              ...ChunkFinite<
+                // Create a new array that would **not** contain a rest param
+                // (so it's finite) made of the last prefix chunk, padding from
+                // the rest param, and the suffix.
+                [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
                 N
               >,
             ];
           }>
+        // Additionally, we need to consider the case where the last prefix
+        // chunk **is** full, and follow it with an array of chunks of the rest
+        // param (and only them), and then followed by all possible variations
+        // of the suffix chunks.
         | [
             ...PrefixFullChunks,
             [
+              // Fully padded last prefix chunk
               ...LastPrefixChunk,
               ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
             ],
             ...Array<NTuple<Item, N>>,
-            ...ChunkedSuffixes<Suffix, Item, N>,
+            ...SuffixChunk<Suffix, Item, N>,
           ]
-    : [...Array<NTuple<Item, N>>, ...ChunkedSuffixes<Suffix, Item, N>]
+    : // When our prefix chunks are empty we only need to handle the suffix
+      [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>]
 >;
 
-type ChunkedSuffixes<
+/**
+ * This type assumes it takes a finite tuple that represents the suffix of our
+ * input array. It builds all possible combinations of adding items to the
+ * **head** of the suffix in order to pad the suffix until the last chunk is
+ * full.
+ */
+type SuffixChunk<
   T extends Array<unknown>,
   Item,
   N extends number,
 > = T extends readonly []
-  ? [ValueOf<{ [K in InclusiveIntRange<1, N>]: NTuple<Item, K> }>]
+  ? // If we don't have a suffix we simply create a single chunk with all
+    // possible non-empty sub-arrays of `Item` up to size `N`.
+    [ValueOf<{ [K in IntRangeInclusive<1, N>]: NTuple<Item, K> }>]
   : ValueOf<{
-      [K in IntRange<0, N>]: FixedSizeChunked<[...NTuple<Item, K>, ...T], N>;
+      // When suffix isn't empty we pad the head of the suffix and compute it's
+      // chunks for all possible padding sizes.
+      [Padding in IntRange<0, N>]: ChunkFinite<
+        [...NTuple<Item, Padding>, ...T],
+        N
+      >;
     }>;
 
-type ChunkedWithNumber<T extends IterableContainer> = T extends
+/**
+ * This is the legacy type used when we don't know what N is. We can only adjust
+ * our output based on if we know for sure that the array is empty or not.
+ */
+type GenericChunk<T extends IterableContainer> = T extends
   | readonly [...Array<unknown>, unknown]
   | readonly [unknown, ...Array<unknown>]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : Array<NonEmptyArray<T[number]>>;
 
-type InclusiveIntRange<From extends number, To extends number> =
+/**
+ * Type-fest's IntRange doesn't include the `To` value, but we need it!
+ */
+type IntRangeInclusive<From extends number, To extends number> =
   | IntRange<From, To>
   | To;
 
@@ -142,7 +216,7 @@ type InclusiveIntRange<From extends number, To extends number> =
 export function chunk<T extends IterableContainer, N extends number>(
   array: T,
   size: N,
-): Chunked<T, N>;
+): Chunk<T, N>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -158,7 +232,7 @@ export function chunk<T extends IterableContainer, N extends number>(
  */
 export function chunk<N extends number>(
   size: N,
-): <T extends IterableContainer>(array: T) => Chunked<T, N>;
+): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
   return purry(chunkImplementation, args);
