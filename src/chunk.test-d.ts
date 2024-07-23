@@ -16,44 +16,50 @@ describe("edge-cases", () => {
 describe("regular (non-literal) size", () => {
   describe("mutable", () => {
     test("empty tuple", () => {
-      const input = [] as [];
-      const result = chunk(input, 2 as number);
+      const result = chunk([] as [], 2 as number);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
     test("array", () => {
-      const input = [] as Array<number>;
-      const result = chunk(input, 2 as number);
+      const result = chunk([] as Array<number>, 2 as number);
       expectTypeOf(result).toEqualTypeOf<Array<NonEmptyArray<number>>>();
     });
 
     test("tuple", () => {
-      const input = [123, 456, 789] as [number, number, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456, 789] as [number, number, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest tail", () => {
-      const input = [123, 456] as [number, ...Array<number>];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as [number, ...Array<number>],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest middle", () => {
-      const input = [123, 456] as [number, ...Array<number>, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as [number, ...Array<number>, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest head", () => {
-      const input = [123, 456] as [...Array<number>, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as [...Array<number>, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
@@ -62,44 +68,50 @@ describe("regular (non-literal) size", () => {
 
   describe("readonly", () => {
     test("empty tuple", () => {
-      const input = [] as const;
-      const result = chunk(input, 2 as number);
+      const result = chunk([] as const, 2 as number);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
     test("array", () => {
-      const input = [] as ReadonlyArray<number>;
-      const result = chunk(input, 2 as number);
+      const result = chunk([] as ReadonlyArray<number>, 2 as number);
       expectTypeOf(result).toEqualTypeOf<Array<NonEmptyArray<number>>>();
     });
 
     test("tuple", () => {
-      const input = [123, 456, 789] as readonly [number, number, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456, 789] as readonly [number, number, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest tail", () => {
-      const input = [123, 456] as readonly [number, ...Array<number>];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as readonly [number, ...Array<number>],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest middle", () => {
-      const input = [123, 456] as readonly [number, ...Array<number>, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as readonly [number, ...Array<number>, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
     });
 
     test("tuple with rest head", () => {
-      const input = [123, 456] as readonly [...Array<number>, number];
-      const result = chunk(input, 2 as number);
+      const result = chunk(
+        [123, 456] as readonly [...Array<number>, number],
+        2 as number,
+      );
       expectTypeOf(result).toEqualTypeOf<
         NonEmptyArray<NonEmptyArray<number>>
       >();
@@ -110,30 +122,26 @@ describe("regular (non-literal) size", () => {
 describe("literal size", () => {
   describe("mutable", () => {
     test("empty tuple", () => {
-      const input = [] as [];
-      const result = chunk(input, 2);
+      const result = chunk([] as [], 2);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
     test("array", () => {
-      const input = [] as Array<number>;
-      const result = chunk(input, 2);
+      const result = chunk([] as Array<number>, 2);
       expectTypeOf(result).toEqualTypeOf<
         [...Array<[number, number]>, [number, number] | [number]] | []
       >();
     });
 
     test("tuple", () => {
-      const input = [123, 456, 789] as [number, number, number];
-      const result = chunk(input, 2);
+      const result = chunk([123, 456, 789] as [number, number, number], 2);
       expectTypeOf(result).toEqualTypeOf<[[number, number], [number]]>();
     });
 
     describe("infinite tuples (rest/spread item)", () => {
       describe("prefix arrays", () => {
         test("prefix is shorter than chunk size", () => {
-          const data = [1] as [number, ...Array<boolean>];
-          const result = chunk(data, 2);
+          const result = chunk([1] as [number, ...Array<boolean>], 2);
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, boolean],
@@ -148,8 +156,10 @@ describe("literal size", () => {
         });
 
         test("prefix is same size as chunk size", () => {
-          const data = [1, 2] as [number, number, ...Array<boolean>];
-          const result = chunk(data, 2);
+          const result = chunk(
+            [1, 2] as [number, number, ...Array<boolean>],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, number],
@@ -161,8 +171,10 @@ describe("literal size", () => {
         });
 
         test("prefix is longer than chunk size", () => {
-          const data = [1, 2, 3] as [number, number, number, ...Array<boolean>];
-          const result = chunk(data, 2);
+          const result = chunk(
+            [1, 2, 3] as [number, number, number, ...Array<boolean>],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, number],
@@ -180,8 +192,7 @@ describe("literal size", () => {
 
       describe("suffix arrays", () => {
         test("suffix is shorter than chunk size", () => {
-          const input = [1] as [...Array<boolean>, number];
-          const result = chunk(input, 2);
+          const result = chunk([1] as [...Array<boolean>, number], 2);
           expectTypeOf(result).toEqualTypeOf<
             | [...Array<[boolean, boolean]>, [boolean, number]]
             | [...Array<[boolean, boolean]>, [number]]
@@ -189,8 +200,10 @@ describe("literal size", () => {
         });
 
         test("suffix is same size as chunk size", () => {
-          const input = [1, 2] as [...Array<boolean>, number, number];
-          const result = chunk(input, 2);
+          const result = chunk(
+            [1, 2] as [...Array<boolean>, number, number],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [...Array<[boolean, boolean]>, [boolean, number], [number]]
             | [...Array<[boolean, boolean]>, [number, number]]
@@ -198,13 +211,10 @@ describe("literal size", () => {
         });
 
         test("suffix is larger than chunk size", () => {
-          const input = [1, 2, 3] as [
-            ...Array<boolean>,
-            number,
-            number,
-            number,
-          ];
-          const result = chunk(input, 2);
+          const result = chunk(
+            [1, 2, 3] as [...Array<boolean>, number, number, number],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 ...Array<[boolean, boolean]>,
@@ -217,8 +227,10 @@ describe("literal size", () => {
       });
 
       test("both prefix and suffix", () => {
-        const input = [123, "abc"] as [number, ...Array<boolean>, string];
-        const result = chunk(input, 2);
+        const result = chunk(
+          [123, "abc"] as [number, ...Array<boolean>, string],
+          2,
+        );
         expectTypeOf(result).toEqualTypeOf<
           | [[number, boolean], ...Array<[boolean, boolean]>, [boolean, string]]
           | [[number, boolean], ...Array<[boolean, boolean]>, [string]]
@@ -234,36 +246,34 @@ describe("literal size", () => {
 
   describe("readonly", () => {
     test("empty tuple", () => {
-      const input = [] as const;
-      const result = chunk(input, 2);
+      const result = chunk([] as const, 2);
       expectTypeOf(result).toEqualTypeOf<[]>();
     });
 
     test("array", () => {
-      const input = [] as ReadonlyArray<number>;
-      const result = chunk(input, 2);
+      const result = chunk([] as ReadonlyArray<number>, 2);
       expectTypeOf(result).toEqualTypeOf<
         [...Array<[number, number]>, [number, number] | [number]] | []
       >();
     });
 
     test("tuple", () => {
-      const input = [123, 456, 789] as readonly [number, number, number];
-      const result = chunk(input, 2);
+      const result = chunk(
+        [123, 456, 789] as readonly [number, number, number],
+        2,
+      );
       expectTypeOf(result).toEqualTypeOf<[[number, number], [number]]>();
     });
 
     test("const", () => {
-      const input = [123, 456, 789] as const;
-      const result = chunk(input, 2);
+      const result = chunk([123, 456, 789] as const, 2);
       expectTypeOf(result).toEqualTypeOf<[[123, 456], [789]]>();
     });
 
     describe("infinite tuples (rest/spread item)", () => {
       describe("prefix arrays", () => {
         test("prefix is shorter than chunk size", () => {
-          const data = [1] as readonly [number, ...Array<boolean>];
-          const result = chunk(data, 2);
+          const result = chunk([1] as readonly [number, ...Array<boolean>], 2);
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, boolean],
@@ -278,8 +288,10 @@ describe("literal size", () => {
         });
 
         test("prefix is same size as chunk size", () => {
-          const data = [1, 2] as readonly [number, number, ...Array<boolean>];
-          const result = chunk(data, 2);
+          const result = chunk(
+            [1, 2] as readonly [number, number, ...Array<boolean>],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, number],
@@ -291,13 +303,10 @@ describe("literal size", () => {
         });
 
         test("prefix is longer than chunk size", () => {
-          const data = [1, 2, 3] as readonly [
-            number,
-            number,
-            number,
-            ...Array<boolean>,
-          ];
-          const result = chunk(data, 2);
+          const result = chunk(
+            [1, 2, 3] as readonly [number, number, number, ...Array<boolean>],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 [number, number],
@@ -315,8 +324,7 @@ describe("literal size", () => {
 
       describe("suffix arrays", () => {
         test("suffix is shorter than chunk size", () => {
-          const input = [1] as readonly [...Array<boolean>, number];
-          const result = chunk(input, 2);
+          const result = chunk([1] as readonly [...Array<boolean>, number], 2);
           expectTypeOf(result).toEqualTypeOf<
             | [...Array<[boolean, boolean]>, [boolean, number]]
             | [...Array<[boolean, boolean]>, [number]]
@@ -324,8 +332,10 @@ describe("literal size", () => {
         });
 
         test("suffix is same size as chunk size", () => {
-          const input = [1, 2] as readonly [...Array<boolean>, number, number];
-          const result = chunk(input, 2);
+          const result = chunk(
+            [1, 2] as readonly [...Array<boolean>, number, number],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [...Array<[boolean, boolean]>, [boolean, number], [number]]
             | [...Array<[boolean, boolean]>, [number, number]]
@@ -333,13 +343,10 @@ describe("literal size", () => {
         });
 
         test("suffix is larger than chunk size", () => {
-          const input = [1, 2, 3] as readonly [
-            ...Array<boolean>,
-            number,
-            number,
-            number,
-          ];
-          const result = chunk(input, 2);
+          const result = chunk(
+            [1, 2, 3] as readonly [...Array<boolean>, number, number, number],
+            2,
+          );
           expectTypeOf(result).toEqualTypeOf<
             | [
                 ...Array<[boolean, boolean]>,
@@ -352,12 +359,10 @@ describe("literal size", () => {
       });
 
       test("both prefix and suffix", () => {
-        const input = [123, "abc"] as readonly [
-          number,
-          ...Array<boolean>,
-          string,
-        ];
-        const result = chunk(input, 2);
+        const result = chunk(
+          [123, "abc"] as readonly [number, ...Array<boolean>, string],
+          2,
+        );
         expectTypeOf(result).toEqualTypeOf<
           | [[number, boolean], ...Array<[boolean, boolean]>, [boolean, string]]
           | [[number, boolean], ...Array<[boolean, boolean]>, [string]]
