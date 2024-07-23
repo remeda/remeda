@@ -37,12 +37,9 @@ type ChunkedWithLiteral<
   Item,
   Suffix extends Array<unknown>,
   N extends number,
-> = IfNever<
-  Item,
-  FixedSizeChunked<Prefix, N>,
-  | VariableSizeChunked<FixedSizeChunked<Prefix, N>, N, Item, Suffix>
-  | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never)
->;
+> =
+  | VariableSizeChunked<FixedSizeChunked<Prefix, N>, Item, Suffix, N>
+  | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never);
 
 type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
   infer Head,
@@ -64,35 +61,39 @@ type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
 
 type VariableSizeChunked<
   ChunkedPrefix,
-  N extends number,
   RestItem,
   Suffix extends Array<unknown>,
-> = ChunkedPrefix extends [
-  ...infer PrefixFullChunks extends Array<Array<unknown>>,
-  infer LastPrefixChunk extends Array<unknown>,
-]
-  ?
-      | ValueOf<{
-          [K in
-            | IntRange<0, Subtract<N, LastPrefixChunk["length"]>>
-            | Subtract<N, LastPrefixChunk["length"]>]: [
+  N extends number,
+> = IfNever<
+  RestItem,
+  ChunkedPrefix,
+  ChunkedPrefix extends [
+    ...infer PrefixFullChunks extends Array<Array<unknown>>,
+    infer LastPrefixChunk extends Array<unknown>,
+  ]
+    ?
+        | ValueOf<{
+            [K in
+              | IntRange<0, Subtract<N, LastPrefixChunk["length"]>>
+              | Subtract<N, LastPrefixChunk["length"]>]: [
+              ...PrefixFullChunks,
+              ...FixedSizeChunked<
+                [...LastPrefixChunk, ...NTuple<RestItem, K>, ...Suffix],
+                N
+              >,
+            ];
+          }>
+        | [
             ...PrefixFullChunks,
-            ...FixedSizeChunked<
-              [...LastPrefixChunk, ...NTuple<RestItem, K>, ...Suffix],
-              N
-            >,
-          ];
-        }>
-      | [
-          ...PrefixFullChunks,
-          [
-            ...LastPrefixChunk,
-            ...NTuple<RestItem, Subtract<N, LastPrefixChunk["length"]>>,
-          ],
-          ...Array<NTuple<RestItem, N>>,
-          ...ChunkedSuffixes<Suffix, N, RestItem>,
-        ]
-  : [...Array<NTuple<RestItem, N>>, ...ChunkedSuffixes<Suffix, N, RestItem>];
+            [
+              ...LastPrefixChunk,
+              ...NTuple<RestItem, Subtract<N, LastPrefixChunk["length"]>>,
+            ],
+            ...Array<NTuple<RestItem, N>>,
+            ...ChunkedSuffixes<Suffix, N, RestItem>,
+          ]
+    : [...Array<NTuple<RestItem, N>>, ...ChunkedSuffixes<Suffix, N, RestItem>]
+>;
 
 type ChunkedSuffixes<T extends Array<unknown>, N extends number, Filler> =
   FixedSizeChunked<T, N> extends [
