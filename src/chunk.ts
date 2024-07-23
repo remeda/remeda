@@ -2,6 +2,7 @@ import {
   type IfNever,
   type IntRange,
   type IsNumericLiteral,
+  type LessThan,
   type Subtract,
   type ValueOf,
 } from "type-fest";
@@ -19,7 +20,9 @@ type Chunked<
 > = T extends readonly []
   ? []
   : IsNumericLiteral<N> extends true
-    ? [...ChunkedWithLiteral<TupleParts<T>, N>]
+    ? LessThan<N, 1> extends true
+      ? never
+      : [...ChunkedWithLiteral<TupleParts<T>, N>]
     : ChunkedWithNumber<T>;
 
 type ChunkedWithLiteral<

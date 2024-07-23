@@ -1,6 +1,18 @@
 import { chunk } from "./chunk";
 import { type NonEmptyArray } from "./internal/types";
 
+describe("edge-cases", () => {
+  test("0 chunk size", () => {
+    const result = chunk([1, 2, 3], 0);
+    expectTypeOf(result).toEqualTypeOf<never>();
+  });
+
+  test("negative chunk size", () => {
+    const result = chunk([1, 2, 3], -10);
+    expectTypeOf(result).toEqualTypeOf<never>();
+  });
+});
+
 describe("regular (non-literal) size", () => {
   describe("mutable", () => {
     test("empty tuple", () => {

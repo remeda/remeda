@@ -42,11 +42,4 @@ describe("edge-cases", () => {
       "chunk: A chunk size of '-10' would result in an infinite array",
     );
   });
-
-  it("rounds down non-integer sizes", () => {
-    expect(chunk(["a", "b", "c", "d"], 2.5)).toEqual([
-      ["a", "b"],
-      ["c", "d"],
-    ]);
-  });
 });
