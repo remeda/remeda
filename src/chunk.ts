@@ -1,6 +1,7 @@
 import {
   type IfNever,
   type IntRange,
+  type IsNumericLiteral,
   type Subtract,
   type ValueOf,
 } from "type-fest";
@@ -17,29 +18,25 @@ type Chunked<
   N extends number,
 > = T extends readonly []
   ? []
-  : number extends N
-    ? ChunkedWithNumber<T>
-    : ChunkedWithLiteral<
-        TupleParts<T>["prefix"],
-        TupleParts<T>["item"],
-        TupleParts<T>["suffix"],
-        N
-      >;
-
-type ChunkedWithNumber<T extends IterableContainer> = T extends
-  | readonly [...Array<unknown>, unknown]
-  | readonly [unknown, ...Array<unknown>]
-  ? NonEmptyArray<NonEmptyArray<T[number]>>
-  : Array<NonEmptyArray<T[number]>>;
+  : IsNumericLiteral<N> extends true
+    ? [...ChunkedWithLiteral<TupleParts<T>, N>]
+    : ChunkedWithNumber<T>;
 
 type ChunkedWithLiteral<
-  Prefix extends Array<unknown>,
-  Item,
-  Suffix extends Array<unknown>,
+  T extends {
+    prefix: Array<unknown>;
+    item: unknown;
+    suffix: Array<unknown>;
+  },
   N extends number,
 > =
-  | VariableSizeChunked<FixedSizeChunked<Prefix, N>, Item, Suffix, N>
-  | ([...Prefix, ...Suffix]["length"] extends 0 ? [] : never);
+  | VariableSizeChunked<
+      FixedSizeChunked<T["prefix"], N>,
+      T["item"],
+      T["suffix"],
+      N
+    >
+  | ([...T["prefix"], ...T["suffix"]]["length"] extends 0 ? [] : never);
 
 type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
   infer Head,
@@ -60,25 +57,26 @@ type FixedSizeChunked<T, N extends number, Result = []> = T extends readonly [
   : Result;
 
 type VariableSizeChunked<
-  ChunkedPrefix,
-  RestItem,
+  T,
+  Item,
   Suffix extends Array<unknown>,
   N extends number,
 > = IfNever<
-  RestItem,
-  ChunkedPrefix,
-  ChunkedPrefix extends [
+  Item,
+  T,
+  T extends [
     ...infer PrefixFullChunks extends Array<Array<unknown>>,
     infer LastPrefixChunk extends Array<unknown>,
   ]
     ?
         | ValueOf<{
-            [K in
-              | IntRange<0, Subtract<N, LastPrefixChunk["length"]>>
-              | Subtract<N, LastPrefixChunk["length"]>]: [
+            [K in InclusiveIntRange<
+              0,
+              Subtract<N, LastPrefixChunk["length"]>
+            >]: [
               ...PrefixFullChunks,
               ...FixedSizeChunked<
-                [...LastPrefixChunk, ...NTuple<RestItem, K>, ...Suffix],
+                [...LastPrefixChunk, ...NTuple<Item, K>, ...Suffix],
                 N
               >,
             ];
@@ -87,26 +85,33 @@ type VariableSizeChunked<
             ...PrefixFullChunks,
             [
               ...LastPrefixChunk,
-              ...NTuple<RestItem, Subtract<N, LastPrefixChunk["length"]>>,
+              ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
             ],
-            ...Array<NTuple<RestItem, N>>,
-            ...ChunkedSuffixes<Suffix, N, RestItem>,
+            ...Array<NTuple<Item, N>>,
+            ...ChunkedSuffixes<Suffix, Item, N>,
           ]
-    : [...Array<NTuple<RestItem, N>>, ...ChunkedSuffixes<Suffix, N, RestItem>]
+    : [...Array<NTuple<Item, N>>, ...ChunkedSuffixes<Suffix, Item, N>]
 >;
 
-type ChunkedSuffixes<T extends Array<unknown>, N extends number, Filler> =
-  FixedSizeChunked<T, N> extends [
-    ...Array<unknown>,
-    infer Last extends Array<unknown>,
-  ]
-    ? ValueOf<{
-        [K in IntRange<0, Subtract<N, Last["length"]>>]: FixedSizeChunked<
-          [...NTuple<Filler, K>, ...T],
-          N
-        >;
-      }>
-    : [ValueOf<{ [K in IntRange<1, N> | N]: NTuple<Filler, K, T> }>];
+type ChunkedSuffixes<
+  T extends Array<unknown>,
+  Item,
+  N extends number,
+> = T extends readonly []
+  ? [ValueOf<{ [K in InclusiveIntRange<1, N>]: NTuple<Item, K> }>]
+  : ValueOf<{
+      [K in IntRange<0, N>]: FixedSizeChunked<[...NTuple<Item, K>, ...T], N>;
+    }>;
+
+type ChunkedWithNumber<T extends IterableContainer> = T extends
+  | readonly [...Array<unknown>, unknown]
+  | readonly [unknown, ...Array<unknown>]
+  ? NonEmptyArray<NonEmptyArray<T[number]>>
+  : Array<NonEmptyArray<T[number]>>;
+
+type InclusiveIntRange<From extends number, To extends number> =
+  | IntRange<From, To>
+  | To;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
