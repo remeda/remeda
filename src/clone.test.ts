@@ -152,6 +152,20 @@ describe("built-in types", () => {
     expect(cloned.ignoreCase).toStrictEqual(pattern.ignoreCase);
     expect(cloned.multiline).toStrictEqual(pattern.multiline);
   });
+
+  it("clones File objects", async () => {
+    const content = "Hello, World!";
+    const file = new File([content], "foo.txt", { type: "text/plain" });
+    const cloned = clone(file);
+
+    expect(cloned.size).toBe(file.size);
+    expect(cloned.type).toBe(file.type);
+    expect(await cloned.text()).toBe(content);
+
+    // These aren't cloned!
+    expect(cloned.name).toBe(undefined);
+    expect(cloned.lastModified).toBe(undefined);
+  });
 });
 
 describe("nested mixed objects", () => {

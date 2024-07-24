@@ -50,7 +50,8 @@ function cloneImplementation<T>(
     typeof value !== "object" ||
     value === null ||
     value instanceof Date ||
-    value instanceof RegExp
+    value instanceof RegExp ||
+    value instanceof File
   ) {
     // We can use the built-in deep cloning function.
     return structuredClone(value);
