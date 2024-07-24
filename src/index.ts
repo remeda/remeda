@@ -131,6 +131,7 @@ export * from "./takeLastWhile";
 export * from "./takeWhile";
 export * from "./tap";
 export * from "./times";
+export * from "./toLowerCase";
 export * from "./unique";
 export * from "./uniqueBy";
 export * from "./uniqueWith";
