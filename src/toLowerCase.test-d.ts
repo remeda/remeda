@@ -28,7 +28,7 @@ describe("data-first", () => {
   });
 
   test("on template literal type", () => {
-    const result = toLowerCase("prefix_123" as `PREFIX_${number}`);
+    const result = toLowerCase("PREFIX_123" as `PREFIX_${number}`);
     expectTypeOf(result).toEqualTypeOf<`prefix_${Lowercase<`${number}`>}`>();
   });
 });
