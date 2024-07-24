@@ -149,8 +149,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - startCase
 - startsWith
 - template
-- toLower
-- toUpper
 - trim
 - trimEnd
 - trimStart
