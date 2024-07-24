@@ -5,7 +5,7 @@ import { takeLastWhile } from "./takeLastWhile";
 describe("data-first", () => {
   test("empty array", () => {
     const result = takeLastWhile([] as [], constant(true));
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {
@@ -59,7 +59,7 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("empty array", () => {
     const result = pipe([] as [], takeLastWhile(constant(true)));
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {

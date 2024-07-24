@@ -5,7 +5,7 @@ import { takeWhile } from "./takeWhile";
 describe("data-first", () => {
   test("empty array", () => {
     const result = takeWhile([] as [], constant(true));
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {
@@ -59,7 +59,7 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("empty array", () => {
     const result = pipe([] as [], takeWhile(constant(true)));
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {

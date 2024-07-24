@@ -4,7 +4,7 @@ import { takeLast } from "./takeLast";
 describe("data-first", () => {
   test("empty array", () => {
     const result = takeLast([] as [], 2);
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {
@@ -46,7 +46,7 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("empty array", () => {
     const result = pipe([] as [], takeLast(2));
-    expect(result).toEqual([]);
+    expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test("regular array", () => {
