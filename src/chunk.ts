@@ -239,7 +239,7 @@ export function chunk(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function chunkImplementation<T>(
-  array: ReadonlyArray<T>,
+  data: ReadonlyArray<T>,
   size: number,
 ): Array<Array<T>> {
   if (size < 1) {
@@ -248,9 +248,27 @@ function chunkImplementation<T>(
     );
   }
 
-  const ret: Array<Array<T>> = [];
-  for (let offset = 0; offset < array.length; offset += size) {
-    ret.push(array.slice(offset, offset + size));
+  if (size >= data.length) {
+    // Optimized for when there is only one chunk.
+    return [[...data]];
   }
-  return ret;
+
+  const chunks = Math.ceil(data.length / size);
+
+  // eslint-disable-next-line unicorn/no-new-array -- This is OK, a sparse array allows us to handle very large arrays more efficiently.
+  const result = new Array<Array<T>>(chunks);
+
+  if (size === 1) {
+    // Optimized for when we don't need slice.
+    for (const [index, item] of data.entries()) {
+      result[index] = [item];
+    }
+  } else {
+    for (let index = 0; index < chunks; index += 1) {
+      const start = index * size;
+      result[index] = data.slice(start, start + size);
+    }
+  }
+
+  return result;
 }
