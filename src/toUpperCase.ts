@@ -10,7 +10,7 @@ import { purry } from "./purry";
  * @signature
  *   R.toUpperCase(data);
  * @example
- *   R.toUpperCase("Hello World"); // "hello world"
+ *   R.toUpperCase("Hello World"); // "HELLO WORLD"
  * @dataFirst
  * @category String
  */
@@ -25,7 +25,7 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  * @signature
  *   R.toUpperCase()(data);
  * @example
- *   R.pipe("Hello World", R.toUpperCase()); // "hello world"
+ *   R.pipe("Hello World", R.toUpperCase()); // "HELLO WORLD"
  * @dataLast
  * @category String
  */
