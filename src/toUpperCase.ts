@@ -6,6 +6,8 @@ import { purry } from "./purry";
  * for the runtime, and the built-in [`Uppercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype)
  * utility type for typing.
  *
+ * For different casings see: `toLowerCase`, `capitalize`, and `uncapitalize`.
+ *
  * @param data - A string.
  * @signature
  *   R.toUpperCase(data);
@@ -21,6 +23,8 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  * input. Uses the built-in [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
  * for the runtime, and the built-in [`Uppercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype)
  * utility type for typing.
+ *
+ * For different casings see: `toLowerCase`, `capitalize`, and `uncapitalize`.
  *
  * @signature
  *   R.toUpperCase()(data);
