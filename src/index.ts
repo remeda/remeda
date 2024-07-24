@@ -134,6 +134,7 @@ export * from "./tap";
 export * from "./times";
 export * from "./toLowerCase";
 export * from "./toUpperCase";
+export * from "./uncapitalize";
 export * from "./unique";
 export * from "./uniqueBy";
 export * from "./uniqueWith";
