@@ -248,6 +248,10 @@ function chunkImplementation<T>(
     );
   }
 
+  if (data.length === 0) {
+    return [];
+  }
+
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
     return [[...data]];

@@ -42,4 +42,18 @@ describe("edge-cases", () => {
       "chunk: A chunk size of '-10' would result in an infinite array",
     );
   });
+
+  test("size > data.length", () => {
+    const data = [1, 2, 3] as const;
+    const result = chunk(data, 10);
+    expect(result).toStrictEqual([data]);
+    // We expect the result to be a shallow clone
+    expect(result[0]).not.toBe(data);
+  });
+
+  test("chunk of size 1", () => {
+    const data = [1, 2, 3, 4, 5] as const;
+    const result = chunk(data, 1);
+    expect(result).toStrictEqual([[1], [2], [3], [4], [5]]);
+  });
 });
