@@ -26,3 +26,7 @@ test("returns false for a non-empty object", () => {
 test("returns true for undefined", () => {
   expect(isEmpty(undefined)).toBe(true);
 });
+
+test("returns true for null", () => {
+  expect(isEmpty(null)).toBe(true);
+});

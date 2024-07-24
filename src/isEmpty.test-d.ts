@@ -6,15 +6,6 @@ test("does not accept invalid input types", () => {
 
   // @ts-expect-error [ts2769] boolean is not a valid input type
   isEmpty(false);
-
-  // @ts-expect-error [ts2769] null is not a valid input type
-  isEmpty(null);
-
-  // @ts-expect-error [ts2769] undefined is only allowed with strings
-  isEmpty([] as ReadonlyArray<string> | undefined);
-
-  // @ts-expect-error [ts2769] undefined is only allowed with strings
-  isEmpty({} as Record<string, string> | undefined);
 });
 
 describe("strings are narrowed correctly", () => {

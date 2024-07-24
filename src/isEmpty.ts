@@ -3,8 +3,8 @@ import type { IterableContainer } from "./internal/types";
 /**
  * A function that checks if the passed parameter is empty.
  *
- * `undefined` is also considered empty, but only when it's in a union with a
- * `string` or string-like type.
+ * `undefined` and `null` is also considered empty, but only when it's in a union with an
+ * `object`, `string` or string-like type.
  *
  * This guard doesn't work negated because of typescript limitations! If you
  * need to check that an array is *not* empty, use `R.hasAtLeast(data, 1)`
@@ -25,18 +25,18 @@ import type { IterableContainer } from "./internal/types";
  *    R.isEmpty({ length: 0 }) //=> false
  * @category Guard
  */
-export function isEmpty<T extends string | undefined>(
+export function isEmpty<T extends string | null | undefined>(
   data: T,
 ): data is
   | ("" extends T ? "" : never)
   | (undefined extends T ? undefined : never);
 export function isEmpty(data: IterableContainer): data is [];
-export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
-  data: T,
-): data is Record<keyof T, never>;
+export function isEmpty<
+  T extends Readonly<Record<PropertyKey, unknown>> | null | undefined,
+>(data: T): data is Record<keyof T, never>;
 
-export function isEmpty(data: object | string | undefined): boolean {
-  if (data === undefined) {
+export function isEmpty(data: object | string | null | undefined): boolean {
+  if (data === null || data === undefined) {
     return true;
   }
 
