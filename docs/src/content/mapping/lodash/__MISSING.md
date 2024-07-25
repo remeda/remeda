@@ -130,6 +130,7 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # String
 
+- capitalize
 - deburr
 - endsWith
 - escape
@@ -152,7 +153,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - truncate
 - unescape
 - upperCase
-- upperFirst
 
 # Util
 
