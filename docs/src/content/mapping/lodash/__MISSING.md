@@ -137,7 +137,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - escapeRegExp
 - kebabCase
 - lowerCase
-- lowerFirst
 - pad
 - padEnd
 - padStart
