@@ -119,6 +119,7 @@ export * from "./splice";
 export * from "./split";
 export * from "./splitAt";
 export * from "./splitWhen";
+export * from "./startsWith";
 export * from "./stringToPath";
 export * from "./subtract";
 export * from "./sum";
