@@ -10,7 +10,7 @@ const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * and `uncapitalize`.
+ * `uncapitalize`, and `toPascalCase`.
  *
  * @param data - A string.
  * @signature
@@ -28,7 +28,7 @@ export function toCamelCase<T extends string>(data: T): CamelCase<T>;
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * and `uncapitalize`.
+ * `uncapitalize`, and `toPascalCase`.
  *
  * @signature
  *   R.toCamelCase()(data);
