@@ -6,7 +6,8 @@ import { purry } from "./purry";
  * for the runtime, and the built-in [`Uncapitalize`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#Uncapitalizestringtype)
  * utility type for typing.
  *
- * For different casings see: `toLowerCase`, `toUpperCase`, and `capitalize`.
+ * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
+ * and `toCamelCase`.
  *
  * @param data - A string.
  * @signature
@@ -24,7 +25,8 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * for the runtime, and the built-in [`Uncapitalize`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#Uncapitalizestringtype)
  * utility type for typing.
  *
- * For different casings see: `toLowerCase`, `toUpperCase`, and `capitalize`.
+ * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
+ * and `toCamelCase`.
  *
  * @signature
  *   R.uncapitalize()(data);

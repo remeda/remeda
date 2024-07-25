@@ -5,7 +5,13 @@ import { purry } from "./purry";
  * for the runtime, and the built-in [`Lowercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#lowercasestringtype)
  * utility type for typing.
  *
- * For different casings see: `toUpperCase`, `capitalize`, and `uncapitalize`.
+ * For other case manipulations see: `toUpperCase`, `capitalize`,
+ * `uncapitalize`, and `toCamelCase`.
+ *
+ * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * If the output is intended for display (on a browser) consider using
+ * [the `text-transform: lowercase;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
+ * instead!
  *
  * @param data - A string.
  * @signature
@@ -22,7 +28,13 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
  * for the runtime, and the built-in [`Lowercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#lowercasestringtype)
  * utility type for typing.
  *
- * For different casings see: `toUpperCase`, `capitalize`, and `uncapitalize`.
+ * For other case manipulations see: `toUpperCase`, `capitalize`,
+ * `uncapitalize`, and `toCamelCase`.
+ *
+ * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * If the output is intended for display (on a browser) consider using
+ * [the `text-transform" lowercase;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
+ * instead!
  *
  * @signature
  *   R.toLowerCase()(data);
