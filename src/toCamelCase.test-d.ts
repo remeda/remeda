@@ -1,4 +1,28 @@
+import { pipe } from "./pipe";
 import { toCamelCase } from "./toCamelCase";
+
+describe("data-last", () => {
+  test("without options", () => {
+    const result = pipe("hello world" as const, toCamelCase());
+    expectTypeOf(result).toEqualTypeOf<"helloWorld">();
+  });
+
+  test("with options (preserveConsecutiveUppercase: true)", () => {
+    const result = pipe(
+      "fooBAR" as const,
+      toCamelCase({ preserveConsecutiveUppercase: true }),
+    );
+    expectTypeOf(result).toEqualTypeOf<"fooBAR">();
+  });
+
+  test("with options (preserveConsecutiveUppercase: false)", () => {
+    const result = pipe(
+      "fooBAR" as const,
+      toCamelCase({ preserveConsecutiveUppercase: false }),
+    );
+    expectTypeOf(result).toEqualTypeOf<"fooBar">();
+  });
+});
 
 describe("tests copied from type-fest's tests", () => {
   test("pascal", () => {
@@ -69,6 +93,50 @@ describe("tests copied from type-fest's tests", () => {
   test("screaming kebab case", () => {
     const result = toCamelCase("FOO-BAR");
     expectTypeOf(result).toEqualTypeOf<"fooBar">();
+  });
+
+  test("preserveConsecutiveUppercase: fooBAR", () => {
+    const data = "fooBAR";
+    const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
+    expectTypeOf(whenTrue).toEqualTypeOf<"fooBAR">();
+
+    const whenFalse = toCamelCase(data, {
+      preserveConsecutiveUppercase: false,
+    });
+    expectTypeOf(whenFalse).toEqualTypeOf<"fooBar">();
+  });
+
+  test("preserveConsecutiveUppercase: fooBAR", () => {
+    const data = "fooBARBiz";
+    const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
+    expectTypeOf(whenTrue).toEqualTypeOf<"fooBARBiz">();
+
+    const whenFalse = toCamelCase(data, {
+      preserveConsecutiveUppercase: false,
+    });
+    expectTypeOf(whenFalse).toEqualTypeOf<"fooBarBiz">();
+  });
+
+  test("preserveConsecutiveUppercase: fooBAR", () => {
+    const data = "foo BAR-Biz_BUZZ";
+    const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
+    expectTypeOf(whenTrue).toEqualTypeOf<"fooBARBizBUZZ">();
+
+    const whenFalse = toCamelCase(data, {
+      preserveConsecutiveUppercase: false,
+    });
+    expectTypeOf(whenFalse).toEqualTypeOf<"fooBarBizBuzz">();
+  });
+
+  test("preserveConsecutiveUppercase: fooBAR", () => {
+    const data = "foo\tBAR-Biz_BUZZ";
+    const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
+    expectTypeOf(whenTrue).toEqualTypeOf<"fooBARBizBUZZ">();
+
+    const whenFalse = toCamelCase(data, {
+      preserveConsecutiveUppercase: false,
+    });
+    expectTypeOf(whenFalse).toEqualTypeOf<"fooBarBizBuzz">();
   });
 });
 

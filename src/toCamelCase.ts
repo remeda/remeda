@@ -1,8 +1,16 @@
 import { type CamelCase } from "type-fest";
 import { splitWords } from "./internal/splitWords";
-import { purry } from "./purry";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
+
+type CamelCaseOptions = {
+  readonly preserveConsecutiveUppercase?: boolean;
+};
+
+const DEFAULT_OPTIONS = {
+  // Same as type-fest's default.
+  preserveConsecutiveUppercase: true,
+} as const satisfies CamelCaseOptions;
 
 /**
  * Convert a text to camelCase by splitting it into words, un-capitalizing the
@@ -13,6 +21,8 @@ const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
  * `uncapitalize`, and `toPascalCase`.
  *
  * @param data - A string.
+ * @param options - Used to disable the default behavior of preserving
+ * consecutive uppercase characters. This is optional.
  * @signature
  *   R.toCamelCase(data);
  * @example
@@ -20,7 +30,10 @@ const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
  * @dataFirst
  * @category String
  */
-export function toCamelCase<T extends string>(data: T): CamelCase<T>;
+export function toCamelCase<
+  T extends string,
+  Options extends CamelCaseOptions = typeof DEFAULT_OPTIONS,
+>(data: T, options?: Options): CamelCase<T, Options>;
 
 /**
  * Convert a text to camelCase by splitting it into words, un-capitalizing the
@@ -30,6 +43,8 @@ export function toCamelCase<T extends string>(data: T): CamelCase<T>;
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, and `toPascalCase`.
  *
+ * @param options - Used to disable the default behavior of preserving
+ * consecutive uppercase characters. This is optional.
  * @signature
  *   R.toCamelCase()(data);
  * @example
@@ -37,15 +52,27 @@ export function toCamelCase<T extends string>(data: T): CamelCase<T>;
  * @dataLast
  * @category String
  */
-export function toCamelCase(): <T extends string>(data: T) => CamelCase<T>;
+export function toCamelCase<
+  Options extends CamelCaseOptions = typeof DEFAULT_OPTIONS,
+>(options?: Options): <T extends string>(data: T) => CamelCase<T, Options>;
 
-export function toCamelCase(...args: ReadonlyArray<unknown>): unknown {
-  return purry(toCamelCaseImplementation, args);
+export function toCamelCase(
+  dataOrOptions: CamelCaseOptions | string,
+  options?: CamelCaseOptions,
+): unknown {
+  return typeof dataOrOptions === "string"
+    ? toCamelCaseImplementation(dataOrOptions, options)
+    : (data: string) => toCamelCaseImplementation(data, dataOrOptions);
 }
 
 // Based on the type definition from type-fest.
 // @see https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts#L76-L80
-const toCamelCaseImplementation = <T extends string>(data: T): CamelCase<T> =>
+const toCamelCaseImplementation = (
+  data: string,
+  {
+    preserveConsecutiveUppercase = DEFAULT_OPTIONS.preserveConsecutiveUppercase,
+  }: CamelCaseOptions = {},
+): string =>
   splitWords(
     LOWER_CASE_CHARACTER_RE.test(data)
       ? data
@@ -61,6 +88,6 @@ const toCamelCaseImplementation = <T extends string>(data: T): CamelCase<T> =>
             ? // The first word is uncapitalized, the rest are capitalized
               word[0]?.toLowerCase()
             : word[0]?.toUpperCase()) ?? ""
-        }${word.slice(1)}`,
+        }${preserveConsecutiveUppercase ? word.slice(1) : word.slice(1).toLowerCase()}`,
     )
-    .join("") as CamelCase<T>;
+    .join("");

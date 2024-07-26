@@ -1,4 +1,23 @@
+import { pipe } from "./pipe";
 import { toCamelCase } from "./toCamelCase";
+
+describe("data-last", () => {
+  test("without options", () => {
+    expect(pipe("hello world", toCamelCase())).toBe("helloWorld");
+  });
+
+  test("with options (preserveConsecutiveUppercase: true)", () => {
+    expect(
+      pipe("fooBAR", toCamelCase({ preserveConsecutiveUppercase: true })),
+    ).toBe("fooBAR");
+  });
+
+  test("with options (preserveConsecutiveUppercase: false)", () => {
+    expect(
+      pipe("fooBAR", toCamelCase({ preserveConsecutiveUppercase: false })),
+    ).toBe("fooBar");
+  });
+});
 
 describe("tests copied from type-fest's tests", () => {
   test("pascal", () => {
@@ -56,4 +75,29 @@ describe("tests copied from type-fest's tests", () => {
   test("screaming kebab case", () => {
     expect(toCamelCase("FOO-BAR")).toBe("fooBar");
   });
+
+  test.each([
+    { input: "fooBAR", whenTrue: "fooBAR", whenFalse: "fooBar" },
+    { input: "fooBARBiz", whenTrue: "fooBARBiz", whenFalse: "fooBarBiz" },
+    {
+      input: "foo BAR-Biz_BUZZ",
+      whenTrue: "fooBARBizBUZZ",
+      whenFalse: "fooBarBizBuzz",
+    },
+    {
+      input: "foo\tBAR-Biz_BUZZ",
+      whenTrue: "fooBARBizBUZZ",
+      whenFalse: "fooBarBizBuzz",
+    },
+  ])(
+    "preserveConsecutiveUppercase: $input",
+    ({ input, whenTrue, whenFalse }) => {
+      expect(toCamelCase(input, { preserveConsecutiveUppercase: true })).toBe(
+        whenTrue,
+      );
+      expect(toCamelCase(input, { preserveConsecutiveUppercase: false })).toBe(
+        whenFalse,
+      );
+    },
+  );
 });
