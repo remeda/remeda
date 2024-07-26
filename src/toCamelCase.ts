@@ -18,7 +18,9 @@ const DEFAULT_OPTIONS = {
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toPascalCase`.
+ * and `uncapitalize`.
+ *
+ * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param data - A string.
  * @param options - Used to disable the default behavior of preserving
@@ -41,7 +43,9 @@ export function toCamelCase<
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toPascalCase`.
+ * and `uncapitalize`.
+ *
+ * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param options - Used to disable the default behavior of preserving
  * consecutive uppercase characters. This is optional.

@@ -7,7 +7,7 @@ import { purry } from "./purry";
  * utility type for typing.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
- * `toCamelCase`, and `toPascalCase`.
+ * and `toCamelCase`.
  *
  * @param data - A string.
  * @signature
@@ -26,7 +26,7 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * utility type for typing.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
- * `toCamelCase`, and `toPascalCase`.
+ * and `toCamelCase`.
  *
  * @signature
  *   R.uncapitalize()(data);
