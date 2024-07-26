@@ -1,7 +1,7 @@
 import { purry } from "./purry";
 
 /**
- * Determines whether the starts begins with the provided prefix, and refines
+ * Determines whether the string begins with the provided prefix, and refines
  * the output if possible. Uses the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
  *
  * @param data - The input string.
@@ -21,7 +21,7 @@ export function startsWith<T extends string, Prefix extends string>(
 export function startsWith(data: string, prefix: string): boolean;
 
 /**
- * Determines whether the starts begins with the provided prefix, and refines
+ * Determines whether the string begins with the provided prefix, and refines
  * the output if possible. Uses the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
  *
  * @param prefix - The prefix to check for.

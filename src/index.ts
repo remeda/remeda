@@ -20,6 +20,7 @@ export * from "./dropFirstBy";
 export * from "./dropLast";
 export * from "./dropLastWhile";
 export * from "./dropWhile";
+export * from "./endsWith";
 export * from "./entries";
 export * from "./evolve";
 export * from "./filter";
