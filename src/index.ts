@@ -96,6 +96,7 @@ export * from "./product";
 export * from "./prop";
 export * from "./pullObject";
 export * from "./purry";
+export * from "./randomInt";
 export * from "./randomString";
 export * from "./range";
 export * from "./rankBy";

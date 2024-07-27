@@ -37,11 +37,19 @@ test("Invalid range", () => {
 });
 
 test("BigInt", () => {
-  expect(randomInt(0n, 10n)).toBeGreaterThanOrEqual(0);
-  expect(randomInt(0n, 10n)).toBeLessThanOrEqual(10);
+  expect(randomInt(0n, 10n)).toBeGreaterThanOrEqual(0n);
+  expect(randomInt(0n, 10n)).toBeLessThanOrEqual(10n);
 });
 
-test("Random integer", () => {
+test("Integer", () => {
   expect(randomInt(0, 10)).toBeGreaterThanOrEqual(0);
   expect(randomInt(0, 10)).toBeLessThanOrEqual(10);
+
+  expect(randomInt(10)).toBeGreaterThanOrEqual(0);
+  expect(randomInt(10)).toBeLessThanOrEqual(10);
+});
+
+test("Negative integers", () => {
+  expect(randomInt(-10, 10)).toBeGreaterThanOrEqual(-10);
+  expect(randomInt(-10, 10)).toBeLessThanOrEqual(10);
 });
