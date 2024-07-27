@@ -11,7 +11,7 @@
  *   R.randomInt(1, 10) // => 5
  *   R.randomInt(1n, 10n) // => 7n
  *   R.randomInt(10) // => 5
- *   R.randomInt(10N) // => 7n
+ *   R.randomInt(10n) // => 7n
  * @dataFirst
  * @category Number
  */
