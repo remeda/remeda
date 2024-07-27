@@ -34,6 +34,10 @@ test("Invalid range", () => {
   expect(() => randomInt(10, 0)).toThrow(
     new RangeError("to(0) should be greater than from(10)"),
   );
+
+  expect(() => randomInt(10, 10)).toThrow(
+    new RangeError("to(10) should be greater than from(10)"),
+  );
 });
 
 test("BigInt", () => {

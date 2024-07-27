@@ -54,7 +54,7 @@ export function randomInt<T extends bigint | number>(
     throw new TypeError(`to(${upper}) is not an integer`);
   }
 
-  if (upper < lower) {
+  if (upper <= lower) {
     throw new RangeError(`to(${upper}) should be greater than from(${lower})`);
   }
 
