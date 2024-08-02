@@ -1,9 +1,8 @@
 import core from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
-// @ts-expect-error [ts7016] -- I don't know why typing is broken here...
-import { configs as unicornConfigs } from "eslint-plugin-unicorn";
-import { config, configs as typescriptConfigs } from "typescript-eslint";
 import jsdoc from "eslint-plugin-jsdoc";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import { config, configs as typescriptConfigs } from "typescript-eslint";
 
 export default config(
   {
@@ -13,8 +12,7 @@ export default config(
   jsdoc.configs["flat/recommended-typescript"],
   ...typescriptConfigs.strictTypeChecked,
   ...typescriptConfigs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- I don't know why typing is broken for unicorn...
-  unicornConfigs["flat/recommended"],
+  eslintPluginUnicorn.configs["flat/recommended"],
   prettierConfig,
   {
     languageOptions: {
