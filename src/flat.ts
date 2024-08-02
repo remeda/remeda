@@ -4,10 +4,6 @@ import type { IterableContainer } from "./internal/types";
 import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator, LazyResult } from "./pipe";
 
-// This is obvious and not likely to change, but it makes reading the code a
-// little easier as the constant has a name.
-type DefaultDepth = 1;
-
 type FlatArray<
   T,
   Depth extends number,
@@ -80,10 +76,7 @@ type FlatSimpleArrayItems<
  * @lazy
  * @category Array
  */
-export function flat<
-  T extends IterableContainer,
-  Depth extends number = DefaultDepth,
->(
+export function flat<T extends IterableContainer, Depth extends number = 1>(
   data: T,
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
 ): FlatArray<T, Depth>;
@@ -105,7 +98,7 @@ export function flat<
  * @lazy
  * @category Array
  */
-export function flat<Depth extends number = DefaultDepth>(
+export function flat<Depth extends number = 1>(
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
 ): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 
