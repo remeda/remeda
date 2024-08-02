@@ -48,9 +48,6 @@ test("BigInt", () => {
 test("Integer", () => {
   expect(randomInt(0, 10)).toBeGreaterThanOrEqual(0);
   expect(randomInt(0, 10)).toBeLessThanOrEqual(10);
-
-  expect(randomInt(10)).toBeGreaterThanOrEqual(0);
-  expect(randomInt(10)).toBeLessThanOrEqual(10);
 });
 
 test("Negative integers", () => {

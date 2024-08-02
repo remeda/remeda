@@ -1,66 +1,50 @@
 /**
- * Generate a random integer between `from` and `to`.
+ * Generate an inclusive random integer between `from` and `to`.
  *
  * @param from - The minimum value.
  * @param to - The maximum value.
  * @returns The random integer.
  * @signature
  *   R.randomInt(from, to)
- *   R.randomInt(to)
  * @example
  *   R.randomInt(1, 10) // => 5
  *   R.randomInt(1n, 10n) // => 7n
- *   R.randomInt(10) // => 5
- *   R.randomInt(10n) // => 7n
  * @dataFirst
  * @category Number
  */
 export function randomInt<T extends bigint | number>(
   from: T,
-  to?: Widen<T>,
+  to: Widen<T>,
 ): Widen<T> {
-  let lower: bigint | number;
-  let upper: bigint | number;
-
-  if (to === undefined) {
-    lower = typeof from === "bigint" ? 0n : 0;
-    upper = from;
-  } else {
-    lower = from;
-    upper = to;
-  }
-
-  if (typeof lower === "bigint" && typeof upper === "bigint") {
+  if (typeof from === "bigint" && typeof to === "bigint") {
     return BigInt(
-      Math.floor(
-        Number(upper - lower + BigInt(1)) * Math.random() + Number(lower),
-      ),
+      Math.floor(Number(to - from + BigInt(1)) * Math.random() + Number(from)),
     ) as never;
   }
 
-  if (!Number.isFinite(lower)) {
-    throw new TypeError(`from(${lower}) is not a finite number`);
+  if (!Number.isFinite(from)) {
+    throw new TypeError(`from(${from}) is not a finite number`);
   }
 
-  if (!Number.isFinite(upper)) {
-    throw new TypeError(`to(${upper!}) is not a finite number`);
+  if (!Number.isFinite(to)) {
+    throw new TypeError(`to(${to}) is not a finite number`);
   }
 
-  if (!Number.isInteger(lower)) {
-    throw new TypeError(`from(${lower}) is not an integer`);
+  if (!Number.isInteger(from)) {
+    throw new TypeError(`from(${from}) is not an integer`);
   }
 
-  if (!Number.isInteger(upper)) {
-    throw new TypeError(`to(${upper}) is not an integer`);
+  if (!Number.isInteger(to)) {
+    throw new TypeError(`to(${to}) is not an integer`);
   }
 
-  if (upper <= lower) {
-    throw new RangeError(`to(${upper}) should be greater than from(${lower})`);
+  if (to <= from) {
+    throw new RangeError(`to(${to}) should be greater than from(${from})`);
   }
 
   // Cast the values to numbers since TypeScript can't infer it properly.
-  const _from = lower as number;
-  const _to = upper as number;
+  const _from = from as number;
+  const _to = to as number;
 
   return Math.floor(Math.random() * (_to - _from + 1) + _from) as never;
 }

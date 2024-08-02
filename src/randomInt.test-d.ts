@@ -12,8 +12,3 @@ test("Returns the same type as the params", () => {
   expectTypeOf(randomInt(0, 10)).toEqualTypeOf<number>();
   expectTypeOf(randomInt(0n, 10n)).toEqualTypeOf<bigint>();
 });
-
-test("Accepts one argument", () => {
-  expectTypeOf(randomInt(10)).toEqualTypeOf<number>();
-  expectTypeOf(randomInt(10n)).toEqualTypeOf<bigint>();
-});
