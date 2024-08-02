@@ -68,11 +68,11 @@ export function isStrictEqual<T>(data: T, other: T): boolean;
 export function isStrictEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
-export function isStrictEqual<S>(other: S): (data: S) => boolean;
+export function isStrictEqual<T>(other: T): (data: T) => boolean;
 
 export function isStrictEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isStrictlyEqualImplementation, args);
 }
 
-const isStrictlyEqualImplementation = <S>(data: unknown, other: S): data is S =>
+const isStrictlyEqualImplementation = <T>(data: unknown, other: T): data is T =>
   data === other || Object.is(data, other);
