@@ -6,7 +6,7 @@ import type { LazyEvaluator, LazyResult } from "./pipe";
 
 // This is obvious and not likely to change, but it makes reading the code a
 // little easier as the constant has a name.
-const DEFAULT_DEPTH = 1;
+type DefaultDepth = 1;
 
 type FlatArray<
   T,
@@ -82,7 +82,7 @@ type FlatSimpleArrayItems<
  */
 export function flat<
   T extends IterableContainer,
-  Depth extends number = typeof DEFAULT_DEPTH,
+  Depth extends number = DefaultDepth,
 >(
   data: T,
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
@@ -105,7 +105,7 @@ export function flat<
  * @lazy
  * @category Array
  */
-export function flat<Depth extends number = typeof DEFAULT_DEPTH>(
+export function flat<Depth extends number = DefaultDepth>(
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
 ): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 

@@ -21,8 +21,8 @@ export const identity = (): typeof identityImplementation =>
   // e.g. `identity()` and not `identity`, just like the API for `constant(1)`.
   identityImplementation;
 
-const identityImplementation = <T, Args extends ReadonlyArray<unknown>>(
+const identityImplementation = <T>(
   value: T,
   // Ignore any extra arguments provided to the function call
-  ..._args: Args
+  ..._args: ReadonlyArray<unknown>
 ): T => value;

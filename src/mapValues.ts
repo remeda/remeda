@@ -61,9 +61,9 @@ export function mapValues(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapValuesImplementation, args);
 }
 
-function mapValuesImplementation<T extends Record<string, unknown>, S>(
+function mapValuesImplementation<T extends Record<string, unknown>>(
   data: T,
-  valueMapper: (value: unknown, key: string, data: T) => S,
+  valueMapper: (value: unknown, key: string, data: T) => unknown,
 ): Record<string, unknown> {
   const out: Record<string, unknown> = {};
 

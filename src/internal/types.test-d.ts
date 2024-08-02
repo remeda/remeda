@@ -9,6 +9,7 @@ import {
 } from "./types";
 
 declare const SymbolFoo: unique symbol;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const SymbolBar: unique symbol;
 
 describe("IfBoundedRecord", () => {

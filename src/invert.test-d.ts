@@ -56,6 +56,6 @@ test("symbol values are fine", () => {
 test("only symbol keys", () => {
   const mySymbol = Symbol("my");
   const result = invert({ [mySymbol]: 4 });
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();
 });

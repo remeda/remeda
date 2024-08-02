@@ -19,9 +19,9 @@ import type { LazyEvaluator } from "./pipe";
  * @lazy
  * @category Array
  */
-export function uniqueBy<T, K>(
+export function uniqueBy<T>(
   data: ReadonlyArray<T>,
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
 ): Array<T>;
 
 /**
@@ -41,8 +41,8 @@ export function uniqueBy<T, K>(
  * @lazy
  * @category Array
  */
-export function uniqueBy<T, K>(
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+export function uniqueBy<T>(
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {

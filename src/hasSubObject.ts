@@ -3,6 +3,7 @@ import type { Branded } from "./internal/types";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const HAS_SUB_OBJECT_BRAND: unique symbol;
 
 type HasSubObjectGuard<T, S> = Simplify<

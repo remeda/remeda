@@ -96,7 +96,7 @@ test("symbols are ignored by the mapper", () => {
 
 test("objects with just symbol keys are still well defined", () => {
   const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();
 });
 

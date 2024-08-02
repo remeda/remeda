@@ -26,9 +26,9 @@ type ZippingFunction<
  */
 export function zipWith<TItem1, TItem2, Value>(
   fn: ZippingFunction<ReadonlyArray<TItem1>, ReadonlyArray<TItem2>, Value>,
-): <T1 extends IterableContainer<TItem1>, T2 extends IterableContainer<TItem2>>(
-  first: T1,
-  second: T2,
+): (
+  first: IterableContainer<TItem1>,
+  second: IterableContainer<TItem2>,
 ) => Array<Value>;
 
 /**
