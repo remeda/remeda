@@ -68,7 +68,7 @@
     "@eslint/js": "^8.57.0",
     "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.0.2",
     "@vitest/coverage-v8": "^2.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
