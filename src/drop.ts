@@ -1,3 +1,4 @@
+import { type ArraySlice } from "type-fest";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
@@ -18,7 +19,7 @@ import { purry } from "./purry";
 export function drop<const T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
-): Drop<T, N>;
+): ArraySlice<T, N, T["length"]>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -34,7 +35,7 @@ export function drop<const T extends Array<unknown>, N extends number>(
  */
 export function drop<const T extends Array<unknown>, N extends number>(
   n: N,
-): (array: T) => Drop<T, N>;
+): (array: T) => ArraySlice<T, N, T["length"]>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
@@ -43,7 +44,8 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
 const dropImplementation = <const T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
-): Drop<T, N> => (n < 0 ? [...array] : array.slice(n)) as never;
+): ArraySlice<T, N, T["length"]> =>
+  (n < 0 ? [...array] : array.slice(n)) as never;
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
@@ -59,17 +61,3 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
     return { done: false, hasNext: true, next: value };
   };
 }
-
-type Drop<
-  Arr extends Array<unknown>,
-  Count extends number,
-  Removed extends Array<unknown> = [],
-> = `${Count}` extends `-${number}`
-  ? Arr
-  : Arr extends []
-    ? Arr
-    : Count extends Removed["length"]
-      ? Arr
-      : Arr extends [unknown, ...infer Rest]
-        ? Drop<Rest, Count, [...Removed, null]>
-        : Array<Arr[number]>;
