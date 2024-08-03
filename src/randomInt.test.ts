@@ -1,8 +1,8 @@
 import { randomInt } from "./randomInt";
 
 test("Infinity", () => {
-  expect(() => randomInt(Infinity, Infinity + 10)).toThrow(
-    new TypeError("from(Infinity) is not a finite number"),
+  expect(() => randomInt(-Infinity, Infinity)).toThrow(
+    new TypeError("from(-Infinity) is not a finite number"),
   );
 
   expect(() => randomInt(10, Infinity)).toThrow(
@@ -36,6 +36,14 @@ test("Invalid range", () => {
   );
 
   expect(() => randomInt(10, 10)).toThrow(
+    new RangeError("to(10) should be greater than from(10)"),
+  );
+
+  expect(() => randomInt(10n, 0n)).toThrow(
+    new RangeError("to(0) should be greater than from(10)"),
+  );
+
+  expect(() => randomInt(10n, 10n)).toThrow(
     new RangeError("to(10) should be greater than from(10)"),
   );
 });

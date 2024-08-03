@@ -16,6 +16,10 @@ export function randomInt<T extends bigint | number>(
   from: T,
   to: Widen<T>,
 ): Widen<T> {
+  if (to <= from) {
+    throw new RangeError(`to(${to}) should be greater than from(${from})`);
+  }
+
   if (typeof from === "bigint" && typeof to === "bigint") {
     return BigInt(
       Math.floor(Number(to - from + BigInt(1)) * Math.random() + Number(from)),
@@ -36,10 +40,6 @@ export function randomInt<T extends bigint | number>(
 
   if (!Number.isInteger(to)) {
     throw new TypeError(`to(${to}) is not an integer`);
-  }
-
-  if (to <= from) {
-    throw new RangeError(`to(${to}) should be greater than from(${from})`);
   }
 
   // Cast the values to numbers since TypeScript can't infer it properly.
