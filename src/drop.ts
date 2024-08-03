@@ -19,7 +19,7 @@ import { purry } from "./purry";
 export function drop<const T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
-): ArraySlice<T, N, T["length"]>;
+): Drop<T, N>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -33,9 +33,7 @@ export function drop<const T extends Array<unknown>, N extends number>(
  * @lazy
  * @category Array
  */
-export function drop<const T extends Array<unknown>, N extends number>(
-  n: N,
-): (array: T) => ArraySlice<T, N, T["length"]>;
+export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
@@ -44,8 +42,7 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
 const dropImplementation = <const T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
-): ArraySlice<T, N, T["length"]> =>
-  (n < 0 ? [...array] : array.slice(n)) as never;
+): Drop<T, N> => (n < 0 ? [...array] : array.slice(n)) as never;
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
@@ -61,3 +58,9 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
     return { done: false, hasNext: true, next: value };
   };
 }
+
+// `ArraySlice<[1, 2, 3], number>` returns `never`, so we handle
+// this case by returning `Array<1 | 2 | 3>` instead.
+type Drop<T extends Array<unknown>, N extends number> = number extends N
+  ? Array<T[number]>
+  : ArraySlice<T, N, T["length"]>;
