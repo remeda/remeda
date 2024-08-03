@@ -34,17 +34,15 @@ export function randomInt<T extends bigint | number>(
     throw new TypeError(`to(${to}) is not a finite number`);
   }
 
-  if (!Number.isInteger(from)) {
-    throw new TypeError(`from(${from}) is not an integer`);
-  }
-
-  if (!Number.isInteger(to)) {
-    throw new TypeError(`to(${to}) is not an integer`);
-  }
-
   // Cast the values to numbers since TypeScript can't infer it properly.
   const _from = from as number;
   const _to = to as number;
+
+  if (Math.floor(_from) === Math.floor(_to)) {
+    throw new RangeError(
+      `there are no integers between from(${from}) and to(${to})`,
+    );
+  }
 
   return Math.floor(Math.random() * (_to - _from + 1) + _from) as never;
 }

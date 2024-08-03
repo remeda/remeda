@@ -20,16 +20,6 @@ test("NaN", () => {
   );
 });
 
-test("Non-integer", () => {
-  expect(() => randomInt(0.5, 10)).toThrow(
-    new TypeError("from(0.5) is not an integer"),
-  );
-
-  expect(() => randomInt(0, 10.5)).toThrow(
-    new TypeError("to(10.5) is not an integer"),
-  );
-});
-
 test("Invalid range", () => {
   expect(() => randomInt(10, 0)).toThrow(
     new RangeError("to(0) should be greater than from(10)"),
@@ -37,6 +27,10 @@ test("Invalid range", () => {
 
   expect(() => randomInt(10, 10)).toThrow(
     new RangeError("to(10) should be greater than from(10)"),
+  );
+
+  expect(() => randomInt(1.5, 1.6)).toThrow(
+    new RangeError("there are no integers between from(1.5) and to(1.6)"),
   );
 
   expect(() => randomInt(10n, 0n)).toThrow(
