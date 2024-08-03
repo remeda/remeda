@@ -110,9 +110,9 @@ const DATA = [
 R.pipe(
   DATA,
   R.filter((x) => x.gender === "f"),
-  //              ^? 😔 'x' is of type 'unknown'
+  //              ^? (parameter) x: { name: string, age: number; gender: string }
   R.groupBy((x) => x.age),
-  //                 ^? 😔 Property 'age' does not exist on type 'P'
+  //                 ^? (property) age: number
 );
 
 // Ramda
