@@ -132,7 +132,7 @@ _.flow(
   _.filter((x) => x.gender === "f"),
   //              ^? 😔 'x' is of type 'unknown'
   _.groupBy((x) => x.age),
-  //                 ^? 😔 Property 'age' does not exist on type 'P'
+  //               ^? 😔 'x' is of type 'unknown'
 )(DATA);
 ```
 
