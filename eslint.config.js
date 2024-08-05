@@ -1,23 +1,24 @@
-import core from "@eslint/js";
+import eslint from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
-import { config, configs as typescriptConfigs } from "typescript-eslint";
+import tseslint from "typescript-eslint";
 
-export default config(
+export default tseslint.config(
   {
     ignores: ["coverage", "dist", "docs", "examples"],
   },
-  core.configs.recommended,
+  eslint.configs.recommended,
   jsdoc.configs["flat/recommended-typescript"],
-  ...typescriptConfigs.strictTypeChecked,
-  ...typescriptConfigs.stylisticTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs["flat/recommended"],
   prettierConfig,
   {
     languageOptions: {
       parserOptions: {
-        project: true,
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
