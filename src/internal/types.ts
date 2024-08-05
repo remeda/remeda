@@ -276,12 +276,12 @@ export type TupleParts<
       : never;
 
 /**
- * The result of running a function that would dedup an array (e.g. `unique`).
+ * The result of running a function that would dedupe an array (e.g. `unique`).
  *
  * There are certain traits of the output which are unique to a deduped array
  * that allow us to create a better type; see comments inline.
  */
-export type DeDupped<T extends IterableContainer> = T extends readonly []
+export type Deduped<T extends IterableContainer> = T extends readonly []
   ? // An empty input is an empty output.
     []
   : T extends readonly [infer Head, ...infer Rest]
