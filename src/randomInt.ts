@@ -1,5 +1,25 @@
+import type { IntRange, GreaterThan, LessThan } from "type-fest";
+
+type RandomInt<From extends number, To extends number> =
+  IsFloat<From> extends true
+    ? number
+    : IsFloat<To> extends true
+      ? number
+      : GreaterThan<From, To> extends true
+        ? never
+        : GreaterThan<From, 0> extends true
+          ? LessThan<To, 1000> extends true
+            ? // type-fest's `InRange` supports only numbers between 0 and 1000 (exclusive)
+              IntRange<From, To> | To
+            : number
+          : number;
+
+type IsFloat<T extends number> = `${T}` extends `${number}.${number}`
+  ? true
+  : false;
+
 /**
- * Generate an inclusive random integer between `from` and `to`.
+ * Generate a random integer between `from` and `to` (inclusive).
  *
  * @param from - The minimum value.
  * @param to - The maximum value.
@@ -8,43 +28,24 @@
  *   R.randomInt(from, to)
  * @example
  *   R.randomInt(1, 10) // => 5
- *   R.randomInt(1n, 10n) // => 7n
+ *   R.randomInt(1.5, 1.6) // => 1
  * @dataFirst
  * @category Number
  */
-export function randomInt<T extends bigint | number>(
-  from: T,
-  to: Widen<T>,
-): Widen<T> {
-  if (to <= from) {
-    throw new RangeError(`to(${to}) should be greater than from(${from})`);
-  }
-
-  if (typeof from === "bigint" && typeof to === "bigint") {
-    return BigInt(
-      Math.floor(Number(to - from + BigInt(1)) * Math.random() + Number(from)),
-    ) as never;
-  }
-
-  if (!Number.isFinite(from)) {
-    throw new TypeError(`from(${from}) is not a finite number`);
-  }
-
-  if (!Number.isFinite(to)) {
-    throw new TypeError(`to(${to}) is not a finite number`);
-  }
-
-  // Cast the values to numbers since TypeScript can't infer it properly.
-  const _from = from as number;
-  const _to = to as number;
-
-  if (Math.floor(_from) === Math.floor(_to)) {
+export function randomInt<From extends number, To extends number>(
+  from: From,
+  to: To,
+): RandomInt<From, To> {
+  if (to < from) {
     throw new RangeError(
-      `there are no integers between from(${from}) and to(${to})`,
+      `randomInt: to(${to}) should be greater than from(${from})`,
     );
   }
 
-  return Math.floor(Math.random() * (_to - _from + 1) + _from) as never;
-}
+  const fromCeiled = Math.ceil(from);
+  const toFloored = Math.floor(to);
 
-type Widen<T> = T extends bigint ? bigint : number;
+  return Math.floor(
+    Math.random() * (toFloored - fromCeiled + 1) + fromCeiled,
+  ) as RandomInt<From, To>;
+}
