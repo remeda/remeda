@@ -50,7 +50,7 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
-const dropImplementation = <const T extends Array<unknown>, N extends number>(
+const dropImplementation = <T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
 ): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
