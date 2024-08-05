@@ -274,3 +274,12 @@ export type TupleParts<
           suffix: Suffix;
         }
       : never;
+
+export type Unique<T extends IterableContainer> = T extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? [Head, ...Array<Rest[number]>]
+  : T extends readonly [...Array<unknown>, unknown]
+    ? [T[number], ...Array<T[number]>]
+    : Array<T[number]>;
