@@ -34,4 +34,4 @@ export function takeLast(...args: ReadonlyArray<unknown>): unknown {
 const takeLastImplementation = <T>(
   array: ReadonlyArray<T>,
   n: number,
-): Array<T> => (n >= 0 ? array.slice(array.length - n) : []);
+): Array<T> => (n > 0 ? array.slice(Math.max(0, array.length - n)) : []);
