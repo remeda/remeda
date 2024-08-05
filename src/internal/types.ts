@@ -1,4 +1,5 @@
 import {
+  type EmptyObject,
   type IsAny,
   type IsLiteral,
   type IsNever,
@@ -8,7 +9,6 @@ import {
   type KeysOfUnion,
   type Simplify,
   type Split,
-  type EmptyObject,
 } from "type-fest";
 
 declare const __brand: unique symbol;
@@ -275,11 +275,24 @@ export type TupleParts<
         }
       : never;
 
-export type Unique<T extends IterableContainer> = T extends readonly [
-  infer Head,
-  ...infer Rest,
-]
-  ? [Head, ...Array<Rest[number]>]
-  : T extends readonly [...Array<unknown>, unknown]
-    ? [T[number], ...Array<T[number]>]
-    : Array<T[number]>;
+/**
+ * The result of running a function that would dedup an array (e.g. `unique`).
+ *
+ * There are certain traits of the output which are unique to a deduped array
+ * that allow us to create a better type; see comments inline.
+ */
+export type DeDupped<T extends IterableContainer> = T extends readonly []
+  ? // An empty input is an empty output.
+    []
+  : T extends readonly [infer Head, ...infer Rest]
+    ? // The first item in the array is always part of the output, if our array
+      // has a first item, we can copy it over. The rest of the array is made of
+      // whatever comes after that item.
+      [Head, ...Array<Rest[number]>]
+    : T extends readonly [...Array<unknown>, unknown]
+      ? // If we don't know what the first item is, but we know that the array
+        // is non empty, we can at least say that the output is non-empty as
+        // well.
+        NonEmptyArray<T[number]>
+      : // If it's just a simple array the output is one too.
+        Array<T[number]>;

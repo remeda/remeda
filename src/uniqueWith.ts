@@ -1,5 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { type IterableContainer, type Unique } from "./internal/types";
+import { type DeDupped, type IterableContainer } from "./internal/types";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { type LazyEvaluator } from "./pipe";
 
@@ -25,7 +25,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
 export function uniqueWith<T extends IterableContainer>(
   data: T,
   isEquals: IsEquals<T[number]>,
-): Unique<T>;
+): DeDupped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -48,7 +48,7 @@ export function uniqueWith<T extends IterableContainer>(
  */
 export function uniqueWith<T extends IterableContainer>(
   isEquals: IsEquals<T[number]>,
-): (data: T) => Unique<T>;
+): (data: T) => DeDupped<T>;
 
 export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
   return purryFromLazy(lazyImplementation, args);

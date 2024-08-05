@@ -1,5 +1,5 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { type IterableContainer, type Unique } from "./internal/types";
+import { type DeDupped, type IterableContainer } from "./internal/types";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
@@ -16,7 +16,7 @@ import type { LazyEvaluator } from "./pipe";
  * @lazy
  * @category Array
  */
-export function unique<T extends IterableContainer>(data: T): Unique<T>;
+export function unique<T extends IterableContainer>(data: T): DeDupped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -34,7 +34,7 @@ export function unique<T extends IterableContainer>(data: T): Unique<T>;
  * @lazy
  * @category Array
  */
-export function unique(): <T extends IterableContainer>(data: T) => Unique<T>;
+export function unique(): <T extends IterableContainer>(data: T) => DeDupped<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
   return purryFromLazy(lazyImplementation, args);
