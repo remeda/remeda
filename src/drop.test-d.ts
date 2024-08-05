@@ -3,7 +3,9 @@ import { pipe } from "./pipe";
 
 describe("data first", () => {
   it("works on regular inputs", () => {
-    expectTypeOf(drop([1, 2, 3, 4, 5], 2)).toEqualTypeOf<[3, 4, 5]>();
+    expectTypeOf(drop([1, 2, 3, 4, 5], 2)).toEqualTypeOf<
+      [number, number, number]
+    >();
   });
 
   it("works on empty arrays", () => {
@@ -11,7 +13,7 @@ describe("data first", () => {
   });
 
   it("works with negative numbers", () => {
-    expectTypeOf(drop([1, 2, 3, 4, 5], -1)).toEqualTypeOf<[5]>();
+    expectTypeOf(drop([1, 2, 3], -1)).toEqualTypeOf<[number, number, number]>();
   });
 
   it("works when dropping more than the length of the array", () => {
@@ -19,12 +21,14 @@ describe("data first", () => {
   });
 
   it("works with generalized typed arrays", () => {
-    expectTypeOf(drop([] as Array<number>, 2)).toEqualTypeOf<[]>();
+    expectTypeOf(drop([] as Array<number | string>, 2)).toEqualTypeOf<
+      Array<number | string>
+    >();
   });
 
   it("works with generalized typed count", () => {
-    expectTypeOf(drop([1, 2, 3], 2 as number)).toEqualTypeOf<
-      Array<1 | 2 | 3>
+    expectTypeOf(drop([1, "2", true], 2 as number)).toEqualTypeOf<
+      Array<boolean | number | string>
     >();
   });
 });

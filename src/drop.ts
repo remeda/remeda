@@ -2,6 +2,15 @@ import { type ArraySlice } from "type-fest";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
+import { type IterableContainer } from "./internal/types";
+
+type Drop<T extends IterableContainer, N extends number> = number extends N
+  ? Array<T[number]>
+  : `${N}` extends `-${number}`
+    ? T
+    : number extends T["length"]
+      ? Array<T[number]>
+      : ArraySlice<T, N, T["length"]>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -16,7 +25,7 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function drop<const T extends Array<unknown>, N extends number>(
+export function drop<T extends IterableContainer, N extends number>(
   array: T,
   n: N,
 ): Drop<T, N>;
@@ -33,7 +42,9 @@ export function drop<const T extends Array<unknown>, N extends number>(
  * @lazy
  * @category Array
  */
-export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function drop<N extends number>(
+  n: N,
+): <T extends IterableContainer>(data: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
@@ -42,7 +53,7 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
 const dropImplementation = <const T extends Array<unknown>, N extends number>(
   array: T,
   n: N,
-): Drop<T, N> => (n < 0 ? [...array] : array.slice(n)) as never;
+): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
@@ -58,9 +69,3 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
     return { done: false, hasNext: true, next: value };
   };
 }
-
-// `ArraySlice<[1, 2, 3], number>` returns `never`, so we handle
-// this case by returning `Array<1 | 2 | 3>` instead.
-type Drop<T extends Array<unknown>, N extends number> = number extends N
-  ? Array<T[number]>
-  : ArraySlice<T, N, T["length"]>;
