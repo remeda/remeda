@@ -29,6 +29,7 @@ const DEFAULT_OPTIONS = {
  *   R.toCamelCase(data);
  * @example
  *   R.toCamelCase("hello world"); // "helloWorld"
+ *   R.toCamelCase("__HELLO_WORLD__"); // "helloWorld"
  * @dataFirst
  * @category String
  */
@@ -55,6 +56,7 @@ export function toCamelCase<
  *   R.toCamelCase()(data);
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
+ *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
  * @dataLast
  * @category String
  */
