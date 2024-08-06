@@ -47,6 +47,8 @@
   ],
   "scripts": {
     "build": "tsup",
+    "check": "tsc --project tsconfig.source.json",
+    "check:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/ .",
@@ -56,30 +58,28 @@
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
-    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
-    "typecheck": "tsc --project tsconfig.source.json",
-    "typecheck:dist": "tsc --project tsconfig.dist.json"
+    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.21.0"
+    "type-fest": "^4.23.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",
     "@eslint/js": "^8.57.0",
-    "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.10",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/node": "^22.0.2",
     "@vitest/coverage-v8": "^2.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^48.5.2",
-    "eslint-plugin-unicorn": "^54.0.0",
-    "husky": "^9.0.11",
+    "eslint-plugin-jsdoc": "^48.10.2",
+    "eslint-plugin-unicorn": "^55.0.0",
+    "husky": "^9.1.4",
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
     "publint": "^0.2.8",
     "semantic-release": "^24.0.0",
-    "tsup": "^8.1.0",
+    "tsup": "^8.2.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.16.0",
     "vitest": "^2.0.1"

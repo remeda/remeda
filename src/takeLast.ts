@@ -40,4 +40,5 @@ export function takeLast(...args: ReadonlyArray<unknown>): unknown {
 const takeLastImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]> => (n >= 0 ? array.slice(array.length - n) : []);
+): Array<T[number]> =>
+  n > 0 ? array.slice(Math.max(0, array.length - n)) : [];

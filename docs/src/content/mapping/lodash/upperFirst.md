@@ -1,0 +1,4 @@
+---
+category: String
+remeda: capitalize
+---

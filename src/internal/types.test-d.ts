@@ -1,9 +1,13 @@
 import { type EmptyObject } from "type-fest";
 import {
   type Branded,
-  type IfBoundedRecord,
+  type Deduped,
   type EnumerableStringKeyedValueOf,
   type EnumerableStringKeyOf,
+  type IfBoundedRecord,
+  type IterableContainer,
+  type NTuple,
+  type TupleParts,
 } from "./types";
 
 declare const SymbolFoo: unique symbol;
@@ -306,3 +310,262 @@ describe("EnumerableStringKeyedValueOf", () => {
     >().toEqualTypeOf<never>();
   });
 });
+
+describe("NTuple", () => {
+  test("size 0", () => {
+    const result = nTuple("foo", 0);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test("non-trivial size", () => {
+    const result = nTuple("foo", 3);
+    expectTypeOf(result).toEqualTypeOf<[string, string, string]>();
+  });
+});
+
+describe("TupleParts", () => {
+  describe("mutable", () => {
+    test("empty array", () => {
+      const data = [] as [];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("regular array", () => {
+      const data = [] as Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test("fixed tuple", () => {
+      const data = [1, 2, 3] as [1, 2, 3];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("array with prefix", () => {
+      const data = ["a"] as [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test("array with suffix", () => {
+      const data = ["a"] as [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test("array with prefix and suffix", () => {
+      const data = [1, "a"] as [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+  });
+
+  describe("readonly", () => {
+    test("empty array", () => {
+      const data = [] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("regular array", () => {
+      const data = [] as ReadonlyArray<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test("fixed tuple", () => {
+      const data = [1, 2, 3] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test("array with prefix", () => {
+      const data = ["a"] as readonly [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test("array with suffix", () => {
+      const data = ["a"] as readonly [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test("array with prefix and suffix", () => {
+      const data = [1, "a"] as readonly [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+  });
+
+  describe("unions", () => {
+    test("union of arrays", () => {
+      const data = [] as Array<boolean> | Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: []; item: number; suffix: [] }
+      >();
+    });
+
+    test("mixed unions", () => {
+      const data = [] as Array<boolean> | [number, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: [number, string]; item: never; suffix: [] }
+      >();
+    });
+  });
+});
+
+describe("DeDupped", () => {
+  describe("mutable", () => {
+    test("empty array", () => {
+      const result = deduped([] as []);
+      expectTypeOf(result).toEqualTypeOf<[]>();
+    });
+
+    test("simple array", () => {
+      const result = deduped([1, 2, 3] as Array<number>);
+      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    });
+
+    test("array with prefix", () => {
+      const result = deduped(["a"] as [string, ...Array<number>]);
+      expectTypeOf(result).toEqualTypeOf<[string, ...Array<number>]>();
+    });
+
+    test("array with suffix", () => {
+      const result = deduped(["a"] as [...Array<number>, string]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number | string, ...Array<number | string>]
+      >();
+    });
+
+    test("array with both prefix and suffix", () => {
+      const result = deduped(["a", true] as [
+        string,
+        ...Array<number>,
+        boolean,
+      ]);
+      expectTypeOf(result).toEqualTypeOf<
+        [string, ...Array<boolean | number>]
+      >();
+    });
+
+    test("union of arrays", () => {
+      const result = deduped(["a"] as
+        | [number, ...Array<number>]
+        | [string, ...Array<string>]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number, ...Array<number>] | [string, ...Array<string>]
+      >();
+    });
+  });
+
+  describe("readonly", () => {
+    test("empty array", () => {
+      const result = deduped([] as const);
+      expectTypeOf(result).toEqualTypeOf<[]>();
+    });
+
+    test("simple array", () => {
+      const result = deduped([1, 2, 3] as ReadonlyArray<number>);
+      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    });
+
+    test("array with prefix", () => {
+      const result = deduped(["a"] as readonly [string, ...Array<number>]);
+      expectTypeOf(result).toEqualTypeOf<[string, ...Array<number>]>();
+    });
+
+    test("array with suffix", () => {
+      const result = deduped(["a"] as readonly [...Array<number>, string]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number | string, ...Array<number | string>]
+      >();
+    });
+
+    test("array with both prefix and suffix", () => {
+      const result = deduped(["a", true] as readonly [
+        string,
+        ...Array<number>,
+        boolean,
+      ]);
+      expectTypeOf(result).toEqualTypeOf<
+        [string, ...Array<boolean | number>]
+      >();
+    });
+
+    test("union of arrays", () => {
+      const result = deduped(["a"] as
+        | readonly [number, ...Array<number>]
+        | readonly [string, ...Array<string>]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number, ...Array<number>] | [string, ...Array<string>]
+      >();
+    });
+
+    test("constant tuple", () => {
+      const result = deduped([1, 2, 3] as const);
+      expectTypeOf(result).toEqualTypeOf<[1, ...Array<2 | 3>]>();
+    });
+  });
+});
+
+declare function nTuple<T, N extends number>(x: T, n: N): NTuple<T, N>;
+
+declare function tupleParts<T>(x: T): TupleParts<T>;
+
+declare function deduped<T extends IterableContainer>(data: T): Deduped<T>;
