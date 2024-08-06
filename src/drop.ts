@@ -55,15 +55,15 @@ export function drop<T extends IterableContainer, N extends number>(
  */
 export function drop<N extends number>(
   n: N,
-): <T extends IterableContainer>(data: T) => Drop<T, N>;
+): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
-const dropImplementation = <T extends IterableContainer, N extends number>(
+const dropImplementation = <T extends IterableContainer>(
   array: T,
-  n: N,
+  n: number,
 ): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
