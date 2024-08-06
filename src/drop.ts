@@ -1,7 +1,27 @@
-import { type IterableContainer } from "./internal/types";
+import type { IfNever } from "type-fest";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
+import {
+  type NTuple,
+  type TupleParts,
+  type IterableContainer,
+} from "./internal/types";
+
+type Drop<T extends IterableContainer, N extends number> = number extends N
+  ? Array<T[number]>
+  : `${N}` extends `-${number}`
+    ? T
+    : [
+        ...(TupleParts<T>["prefix"] extends [...NTuple<unknown, N>, ...infer V]
+          ? V
+          : []),
+        ...IfNever<
+          TupleParts<T>["item"],
+          [],
+          Array<TupleParts<T>["item"] | TupleParts<T>["suffix"][number]>
+        >,
+      ];
 
 /**
  * Removes first `n` elements from the `array`.
@@ -16,10 +36,10 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function drop<T extends IterableContainer>(
+export function drop<T extends IterableContainer, N extends number>(
   array: T,
-  n: number,
-): Array<T[number]>;
+  n: N,
+): Drop<T, N>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -33,9 +53,9 @@ export function drop<T extends IterableContainer>(
  * @lazy
  * @category Array
  */
-export function drop(
-  n: number,
-): <T extends IterableContainer>(array: T) => Array<T[number]>;
+export function drop<N extends number>(
+  n: N,
+): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
