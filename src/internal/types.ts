@@ -276,10 +276,18 @@ export type TupleParts<
       : never;
 
 /**
- * The result of running a function that would dedupe an array (e.g. `unique`).
+ * The result of running a function that would dedupe an array (`unique`,
+ * `uniqueBy`, and `uniqueWith`).
  *
  * There are certain traits of the output which are unique to a deduped array
  * that allow us to create a better type; see comments inline.
+ *
+ * !Note: We can build better types for each of the unique functions
+ * _separately_ by taking advantage of _other_ characteristics that are unique
+ * to each one (e.g. in `unique` we know that each item that has a disjoint type
+ * to all previous items would be part of the output, even when it isn't the
+ * first), but to make this utility the most useful we kept it simple and
+ * generic for now.
  */
 export type Deduped<T extends IterableContainer> = T extends readonly []
   ? // An empty input is an empty output.
