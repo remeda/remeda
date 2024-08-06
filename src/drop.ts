@@ -1,3 +1,4 @@
+import { type IterableContainer } from "./internal/types";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
@@ -15,7 +16,10 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
+export function drop<T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]>;
 
 /**
  * Removes first `n` elements from the `array`.
@@ -29,14 +33,18 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @lazy
  * @category Array
  */
-export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function drop(
+  n: number,
+): <T extends IterableContainer>(array: T) => Array<T[number]>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
-const dropImplementation = <T>(array: ReadonlyArray<T>, n: number): Array<T> =>
-  n < 0 ? [...array] : array.slice(n);
+const dropImplementation = <T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {

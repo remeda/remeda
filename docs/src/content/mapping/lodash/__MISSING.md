@@ -129,15 +129,12 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # String
 
-- camelCase
 - capitalize
 - deburr
-- endsWith
 - escape
 - escapeRegExp
 - kebabCase
 - lowerCase
-- lowerFirst
 - pad
 - padEnd
 - padStart
@@ -146,17 +143,13 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - replace
 - snakeCase
 - startCase
-- startsWith
 - template
-- toLower
-- toUpper
 - trim
 - trimEnd
 - trimStart
 - truncate
 - unescape
 - upperCase
-- upperFirst
 
 # Util
 

@@ -1,3 +1,4 @@
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 /**
@@ -14,10 +15,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function dropWhile<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T>;
+export function dropWhile<T extends IterableContainer>(
+  data: T,
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): Array<T[number]>;
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -32,18 +33,18 @@ export function dropWhile<T>(
  * @dataLast
  * @category Array
  */
-export function dropWhile<T>(
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function dropWhile<T extends IterableContainer>(
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): (data: T) => Array<T[number]>;
 
 export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropWhileImplementation, args);
 }
 
-function dropWhileImplementation<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T> {
+function dropWhileImplementation<T extends IterableContainer>(
+  data: T,
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): Array<T[number]> {
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);

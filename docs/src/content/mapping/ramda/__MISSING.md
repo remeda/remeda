@@ -171,9 +171,7 @@
 - match
 - replace
 - test
-- toLower
 - toString
-- toUpper
 - trim
 
 # Type
