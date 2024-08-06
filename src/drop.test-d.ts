@@ -31,11 +31,26 @@ describe("data first", () => {
       Array<boolean | number | string>
     >();
   });
+
+  it("works with prefix arrays", () => {
+    const result = drop(
+      ["hello", "world"] as [string, string, ...Array<string>],
+      1,
+    );
+    expectTypeOf(result).toEqualTypeOf<[string, ...Array<string>]>();
+  });
+
+  it("works with suffix arrays", () => {
+    const result = drop([true, 123] as [...Array<string>, boolean, number], 1);
+    expectTypeOf(result).toEqualTypeOf<Array<boolean | number | string>>();
+  });
 });
 
 describe("data last", () => {
   it("works on regular inputs", () => {
-    expectTypeOf(pipe([1, 2, 3, 4, 5], drop(2))).toEqualTypeOf<Array<number>>();
+    expectTypeOf(pipe([1, 2, 3, 4, 5] as Array<number>, drop(2))).toEqualTypeOf<
+      Array<number>
+    >();
   });
 
   it("works on empty arrays", () => {
@@ -45,14 +60,14 @@ describe("data last", () => {
   });
 
   it("works with negative numbers", () => {
-    expectTypeOf(pipe([1, 2, 3, 4, 5], drop(-1))).toEqualTypeOf<
-      Array<number>
-    >();
+    expectTypeOf(
+      pipe([1, 2, 3, 4, 5] as Array<number>, drop(-1)),
+    ).toEqualTypeOf<Array<number>>();
   });
 
   it("works when dropping more than the length of the array", () => {
-    expectTypeOf(pipe([1, 2, 3, 4, 5], drop(10))).toEqualTypeOf<
-      Array<number>
-    >();
+    expectTypeOf(
+      pipe([1, 2, 3, 4, 5] as Array<number>, drop(10)),
+    ).toEqualTypeOf<Array<number>>();
   });
 });

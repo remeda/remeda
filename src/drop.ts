@@ -1,16 +1,27 @@
-import { type ArraySlice } from "type-fest";
+import type { IfNever } from "type-fest";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
-import { type IterableContainer } from "./internal/types";
+import {
+  type NTuple,
+  type TupleParts,
+  type IterableContainer,
+} from "./internal/types";
 
 type Drop<T extends IterableContainer, N extends number> = number extends N
   ? Array<T[number]>
   : `${N}` extends `-${number}`
     ? T
-    : number extends T["length"]
-      ? Array<T[number]>
-      : ArraySlice<T, N, T["length"]>;
+    : [
+        ...(TupleParts<T>["prefix"] extends [...NTuple<unknown, N>, ...infer V]
+          ? V
+          : []),
+        ...IfNever<
+          TupleParts<T>["item"],
+          [],
+          Array<TupleParts<T>["item"] | TupleParts<T>["suffix"][number]>
+        >,
+      ];
 
 /**
  * Removes first `n` elements from the `array`.
@@ -50,7 +61,7 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
-const dropImplementation = <T extends Array<unknown>, N extends number>(
+const dropImplementation = <T extends IterableContainer, N extends number>(
   array: T,
   n: N,
 ): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
