@@ -36,14 +36,14 @@ export function randomInt<From extends number, To extends number>(
   from: From,
   to: To,
 ): RandomInt<From, To> {
-  if (to < from) {
-    throw new RangeError(
-      `randomInt: to(${to}) should be greater than from(${from})`,
-    );
-  }
-
   const fromCeiled = Math.ceil(from);
   const toFloored = Math.floor(to);
+
+  if (toFloored < fromCeiled) {
+    throw new RangeError(
+      `randomInt: to(${toFloored}) should be greater than from(${fromCeiled})`,
+    );
+  }
 
   return Math.floor(
     Math.random() * (toFloored - fromCeiled + 1) + fromCeiled,
