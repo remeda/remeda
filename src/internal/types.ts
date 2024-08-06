@@ -1,4 +1,5 @@
 import {
+  type EmptyObject,
   type IsAny,
   type IsLiteral,
   type IsNever,
@@ -8,7 +9,6 @@ import {
   type KeysOfUnion,
   type Simplify,
   type Split,
-  type EmptyObject,
 } from "type-fest";
 
 declare const __brand: unique symbol;
@@ -234,3 +234,73 @@ export type GuardType<T, Fallback = never> = T extends (
 ) => x is infer U
   ? U
   : Fallback;
+
+/**
+ * An array with *exactly* N elements in it.
+ *
+ * Only literal N values are supported. For very large N the type might result
+ * in a recurse depth error. For negative N the type would result in an infinite
+ * recursion. None of these have protections because this is an internal type!
+ */
+export type NTuple<
+  T,
+  N extends number,
+  Result extends Array<unknown> = [],
+> = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
+
+/**
+ * Takes an array and returns the types that make up it's parts. The suffix is
+ * anything before the rest parameter (if any), the prefix is anything after the
+ * rest parameter (if any), and the item is the type of the rest parameter.
+ *
+ * The output could be used to reconstruct the input: `[
+ *   ...TupleParts<T>["prefix"],
+ *   ...Array<TupleParts<T>["item"]>,
+ *   ...TupleParts<T>["suffix"],
+ * ]`.
+ */
+export type TupleParts<
+  T,
+  Prefix extends Array<unknown> = [],
+  Suffix extends Array<unknown> = [],
+> = T extends readonly [infer Head, ...infer Tail]
+  ? TupleParts<Tail, [...Prefix, Head], Suffix>
+  : T extends readonly [...infer Head, infer Tail]
+    ? TupleParts<Head, Prefix, [Tail, ...Suffix]>
+    : T extends ReadonlyArray<infer Item>
+      ? {
+          prefix: Prefix;
+          item: Item;
+          suffix: Suffix;
+        }
+      : never;
+
+/**
+ * The result of running a function that would dedupe an array (`unique`,
+ * `uniqueBy`, and `uniqueWith`).
+ *
+ * There are certain traits of the output which are unique to a deduped array
+ * that allow us to create a better type; see comments inline.
+ *
+ * !Note: We can build better types for each of the unique functions
+ * _separately_ by taking advantage of _other_ characteristics that are unique
+ * to each one (e.g. in `unique` we know that each item that has a disjoint type
+ * to all previous items would be part of the output, even when it isn't the
+ * first), but to make this utility the most useful we kept it simple and
+ * generic for now.
+ */
+export type Deduped<T extends IterableContainer> = T extends readonly []
+  ? // An empty input is an empty output.
+    []
+  : T extends readonly [infer Head, ...infer Rest]
+    ? // The first item in the array is always part of the output, if our array
+      // has a first item, we can copy it over. The rest of the array is made of
+      // whatever comes after that item.
+      [Head, ...Array<Rest[number]>]
+    : T extends readonly [...Array<unknown>, unknown]
+      ? // If we don't know what the first item is, but we know that the array
+        // is non empty, we can at least say that the output is non-empty as
+        // well.
+        NonEmptyArray<T[number]>
+      : // If it's just a simple array the output is one too.
+        Array<T[number]>;

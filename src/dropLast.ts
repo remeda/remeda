@@ -34,4 +34,5 @@ export function dropLast(...args: ReadonlyArray<unknown>): unknown {
 const dropLastImplementation = <T>(
   array: ReadonlyArray<T>,
   n: number,
-): Array<T> => (n >= 0 ? array.slice(0, array.length - n) : [...array]);
+): Array<T> =>
+  n > 0 ? array.slice(0, Math.max(0, array.length - n)) : [...array];
