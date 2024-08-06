@@ -28,6 +28,8 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
  * and `toCamelCase`.
  *
+ * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ *
  * @signature
  *   R.uncapitalize()(data);
  * @example

@@ -45,6 +45,8 @@ export function toCamelCase<
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * and `uncapitalize`.
  *
+ * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param options - Used to disable the default behavior of preserving
