@@ -1,10 +1,10 @@
 import eslint from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
@@ -20,10 +20,9 @@ export default tseslint.config(
     ],
   },
   eslint.configs.recommended,
+  ...eslintPluginAstro.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  ...eslintPluginAstro.configs.recommended,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   eslintPluginReact.configs.flat.recommended,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
