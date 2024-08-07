@@ -17,23 +17,76 @@ describe("data-first", () => {
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
-  test("prefix array", () => {
+  test("prefixed array", () => {
     const result = drop([1] as [number, ...Array<boolean>], 2);
     expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
-  test("suffix array", () => {
+  test("suffixed array", () => {
     const result = drop([1] as [...Array<boolean>, number], 2);
     expectTypeOf(result).toEqualTypeOf<
       [...Array<boolean>, number] | [] | [number]
     >();
   });
 
-  test("array with suffix and prefix", () => {
-    const result = drop([1, "a"] as [number, ...Array<boolean>, string], 2);
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean>, string] | [] | [string]
-    >();
+  describe("arrays with a prefix (2) and a suffix (2)", () => {
+    test("N === 0 (no drop)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        0,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        [number, number, ...Array<boolean>, string, string]
+      >();
+    });
+
+    test("N === 1 (drop from the prefix)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        1,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        [number, ...Array<boolean>, string, string]
+      >();
+    });
+
+    test("N === 2 (remove the prefix)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        2,
+      );
+      expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string, string]>();
+    });
+
+    test("N === 3 (drop the whole prefix, remove from the suffix)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        3,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        [...Array<boolean>, string, string] | [string, string] | [string]
+      >();
+    });
+
+    test("N === 4 (drop the whole prefix, drop the whole suffix)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        4,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        [...Array<boolean>, string, string] | [] | [string, string] | [string]
+      >();
+    });
+
+    test("N > 4 (drop more than the constant parts of the array)", () => {
+      const result = drop(
+        [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
+        5,
+      );
+      expectTypeOf(result).toEqualTypeOf<
+        [...Array<boolean>, string, string] | [] | [string, string] | [string]
+      >();
+    });
   });
 
   test("tuple", () => {
