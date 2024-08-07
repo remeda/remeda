@@ -1,22 +1,26 @@
-import type { IntRange, GreaterThan, LessThan } from "type-fest";
+import type {
+  IntRange,
+  GreaterThan,
+  GreaterThanOrEqual,
+  Or,
+  IsNever,
+  NonNegativeInteger,
+  IsEqual,
+} from "type-fest";
 
 type RandomInt<From extends number, To extends number> =
-  IsFloat<From> extends true
+  Or<
+    IsNever<NonNegativeInteger<From>>,
+    IsNever<NonNegativeInteger<To>>
+  > extends true
     ? number
-    : IsFloat<To> extends true
-      ? number
+    : IsEqual<From, To> extends true
+      ? From
       : GreaterThan<From, To> extends true
         ? never
-        : GreaterThan<From, 0> extends true
-          ? LessThan<To, 1000> extends true
-            ? // type-fest's `InRange` supports only numbers between 0 and 1000 (exclusive)
-              IntRange<From, To> | To
-            : number
-          : number;
-
-type IsFloat<T extends number> = `${T}` extends `${number}.${number}`
-  ? true
-  : false;
+        : GreaterThanOrEqual<To, 1000> extends true
+          ? number
+          : IntRange<From, To> | To;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).
@@ -41,7 +45,7 @@ export function randomInt<From extends number, To extends number>(
 
   if (toFloored < fromCeiled) {
     throw new RangeError(
-      `randomInt: to(${toFloored}) should be greater than from(${fromCeiled})`,
+      `randomInt: The range [${from},${to}] contains no integer`,
     );
   }
 
