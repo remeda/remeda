@@ -142,7 +142,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - parseInt
 - repeat
 - replace
-- snakeCase
 - startCase
 - template
 - trim

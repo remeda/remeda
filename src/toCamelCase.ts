@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS = {
  * first word, capitalizing the rest, then joining them back together. This is
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
- * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
+ * For other case manipulations see: `toSnakeCase`, `toLowerCase`, `toUpperCase`, `capitalize`,
  * and `uncapitalize`.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
@@ -43,7 +43,7 @@ export function toCamelCase<
  * first word, capitalizing the rest, then joining them back together. This is
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
- * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
+ * For other case manipulations see: `toSnakeCase`, `toLowerCase`, `toUpperCase`, `capitalize`,
  * and `uncapitalize`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
