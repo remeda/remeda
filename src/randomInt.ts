@@ -32,7 +32,7 @@ type RandomInt<From extends number, To extends number> =
  *   R.randomInt(from, to)
  * @example
  *   R.randomInt(1, 10) // => 5
- *   R.randomInt(1.5, 1.6) // => 1
+ *   R.randomInt(1.5, 2.6) // => 1
  * @dataFirst
  * @category Number
  */
