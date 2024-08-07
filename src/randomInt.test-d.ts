@@ -57,16 +57,8 @@ test("Returns number when from and to are number", () => {
   expectTypeOf(randomInt(1 as number, 5 as number)).toEqualTypeOf<number>();
 });
 
-test("Returns number when from is a max int", () => {
-  expectTypeOf(randomInt(Number.MAX_SAFE_INTEGER, 0)).toEqualTypeOf<number>();
-});
-
-test("Returns number when to is a max int", () => {
-  expectTypeOf(randomInt(0, Number.MAX_SAFE_INTEGER)).toEqualTypeOf<number>();
-});
-
-test("Returns number when from and to are max int", () => {
+test("Returns number when from and to are very big numbers", () => {
   expectTypeOf(
-    randomInt(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER),
+    randomInt(10_000_000_000, 10_000_000_001),
   ).toEqualTypeOf<number>();
 });

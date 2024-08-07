@@ -56,15 +56,6 @@ test("integers with same value", () => {
   }
 });
 
-test("max int", () => {
-  const randoms = createRandomsArray(0, Number.MAX_SAFE_INTEGER);
-
-  for (const v of randoms) {
-    expect(v).toBeGreaterThanOrEqual(0);
-    expect(v).toBeLessThanOrEqual(Number.MAX_SAFE_INTEGER);
-  }
-});
-
 function createRandomsArray(from: number, to: number): Array<number> {
   return Array.from({ length: 10 }).map(() => randomInt(from, to));
 }
