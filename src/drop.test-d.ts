@@ -1,5 +1,5 @@
-import { pipe } from "./pipe";
 import { drop } from "./drop";
+import { pipe } from "./pipe";
 
 describe("data-first", () => {
   test("empty array", () => {
@@ -24,12 +24,16 @@ describe("data-first", () => {
 
   test("suffix array", () => {
     const result = drop([1] as [...Array<boolean>, number], 2);
-    expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
+    expectTypeOf(result).toEqualTypeOf<
+      [...Array<boolean>, number] | [] | [number]
+    >();
   });
 
   test("array with suffix and prefix", () => {
     const result = drop([1, "a"] as [number, ...Array<boolean>, string], 2);
-    expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+    expectTypeOf(result).toEqualTypeOf<
+      [...Array<boolean>, string] | [] | [string]
+    >();
   });
 
   test("tuple", () => {
@@ -76,7 +80,9 @@ describe("data-last", () => {
 
   test("suffix array", () => {
     const result = pipe([1] as [...Array<boolean>, number], drop(2));
-    expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
+    expectTypeOf(result).toEqualTypeOf<
+      [...Array<boolean>, number] | [] | [number]
+    >();
   });
 
   test("array with suffix and prefix", () => {
@@ -84,7 +90,9 @@ describe("data-last", () => {
       [1, "a"] as [number, ...Array<boolean>, string],
       drop(2),
     );
-    expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+    expectTypeOf(result).toEqualTypeOf<
+      [...Array<boolean>, string] | [] | [string]
+    >();
   });
 
   test("tuple", () => {

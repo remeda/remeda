@@ -1,27 +1,48 @@
-import type { IfNever } from "type-fest";
+import { type IfNever, type Subtract } from "type-fest";
+import {
+  type IterableContainer,
+  type NTuple,
+  type TupleParts,
+} from "./internal/types";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
-import {
-  type NTuple,
-  type TupleParts,
-  type IterableContainer,
-} from "./internal/types";
 
 type Drop<T extends IterableContainer, N extends number> = number extends N
   ? Array<T[number]>
   : `${N}` extends `-${number}`
     ? T
-    : [
-        ...(TupleParts<T>["prefix"] extends [...NTuple<unknown, N>, ...infer V]
-          ? V
-          : []),
-        ...IfNever<
+    : TupleParts<T>["prefix"] extends [
+          ...NTuple<unknown, N>,
+          ...infer Remaining,
+        ]
+      ? [
+          ...Remaining,
+          ...IfNever<TupleParts<T>["item"], [], Array<TupleParts<T>["item"]>>,
+          ...TupleParts<T>["suffix"],
+        ]
+      : IfNever<
           TupleParts<T>["item"],
           [],
-          Array<TupleParts<T>["item"] | TupleParts<T>["suffix"][number]>
-        >,
-      ];
+          0 extends TupleParts<T>["suffix"]["length"]
+            ? Array<TupleParts<T>["item"]>
+            :
+                | DropUpTo<
+                    TupleParts<T>["suffix"],
+                    Subtract<N, TupleParts<T>["prefix"]["length"]>
+                  >
+                | [...Array<TupleParts<T>["item"]>, ...TupleParts<T>["suffix"]]
+        >;
+
+type DropUpTo<
+  T,
+  N,
+  Dropped extends ReadonlyArray<unknown> = [],
+> = Dropped["length"] extends N
+  ? T
+  : T extends [unknown, ...infer Rest]
+    ? DropUpTo<Rest, N, [...Dropped, unknown]> | T
+    : T;
 
 /**
  * Removes first `n` elements from the `array`.
