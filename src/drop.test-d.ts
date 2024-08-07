@@ -100,13 +100,13 @@ describe("data-first", () => {
   });
 
   test("negative count", () => {
-    const result = drop([1] as Array<number>, -1);
+    const result = drop([] as Array<number>, -1);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   test("generalized typed count", () => {
-    const result = drop([1] as Array<number>, 1 as number);
-    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    const result = drop(["a", 1, true] as const, 1 as number);
+    expectTypeOf(result).toEqualTypeOf<Array<"a" | 1 | true>>();
   });
 });
 
