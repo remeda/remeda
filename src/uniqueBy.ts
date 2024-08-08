@@ -20,9 +20,9 @@ import type { LazyEvaluator } from "./pipe";
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer, K>(
+export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (item: T[number], index: number, data: T) => K,
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): Deduped<T>;
 
 /**
@@ -42,8 +42,8 @@ export function uniqueBy<T extends IterableContainer, K>(
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer, K>(
-  keyFunction: (item: T[number], index: number, data: T) => K,
+export function uniqueBy<T extends IterableContainer>(
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
