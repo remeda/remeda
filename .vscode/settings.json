@@ -2,9 +2,6 @@
   // We use prettier for pretty much anything it supports
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-  // TODO: The vscode plugin doesn't use the flat config by default (yet...)
-  "eslint.experimental.useFlatConfig": true,
-
   // Our tests live next to the files they test, this clutters the folder
   // structure so we "tuck them" under the file they test. This also comes with
   // several built-in patterns that are useful (like package-lock.json).

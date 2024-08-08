@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types --
+/* eslint-disable @typescript-eslint/no-empty-object-type --
  * We want to match the typing of the built-in Object.entries as much as
  * possible!
  */

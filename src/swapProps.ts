@@ -47,14 +47,10 @@ export function swapProps(...args: ReadonlyArray<unknown>): unknown {
   return purry(swapPropsImplementation, args);
 }
 
-function swapPropsImplementation<
-  T extends object,
-  K1 extends keyof T,
-  K2 extends keyof T,
->(
+function swapPropsImplementation<T extends object>(
   obj: T,
-  key1: K1,
-  key2: K2,
+  key1: keyof T,
+  key2: keyof T,
 ): {
   [K in PropertyKey]: unknown;
 } {
