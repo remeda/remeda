@@ -146,7 +146,6 @@ describe("non-const sampleSize", () => {
 });
 
 function generateRandomArray(): NonEmptyArray<number> {
-  // @ts-expect-error [ts2322]: we know this array isn't empty!
   return unique(times(100, Math.random));
 }
 

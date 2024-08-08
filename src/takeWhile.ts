@@ -1,3 +1,4 @@
+import { type IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 /**
@@ -12,10 +13,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function takeWhile<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T>;
+export function takeWhile<T extends IterableContainer>(
+  data: T,
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): Array<T[number]>;
 
 /**
  * Returns elements from the array until predicate returns false.
@@ -28,19 +29,19 @@ export function takeWhile<T>(
  * @dataLast
  * @category Array
  */
-export function takeWhile<T>(
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (array: ReadonlyArray<T>) => Array<T>;
+export function takeWhile<T extends IterableContainer>(
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): (array: T) => Array<T[number]>;
 
 export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
   return purry(takeWhileImplementation, args);
 }
 
-function takeWhileImplementation<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T> {
-  const ret: Array<T> = [];
+function takeWhileImplementation<T extends IterableContainer>(
+  data: T,
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): Array<T[number]> {
+  const ret: Array<T[number]> = [];
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       break;

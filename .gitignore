@@ -1,6 +1,9 @@
 dist
 node_modules/
 
+# Vitests's temporary tsconfig file
+tsconfig.vitest-temp.json
+
 # Coverage directory used by vitest
 coverage
 

@@ -23,7 +23,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🔎 Type check
-        run: npm run typecheck
+        run: npm run check
 
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
@@ -69,7 +69,7 @@ jobs:
         run: npm run test:typing
 
       - name: 🚚 Check Outputs
-        run: npm run typecheck:dist
+        run: npm run check:dist
 
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
