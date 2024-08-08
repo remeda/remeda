@@ -1,10 +1,10 @@
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginAstro from "eslint-plugin-astro";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
   {
@@ -19,16 +19,26 @@ export default tseslint.config(
       "src/env.d.ts",
     ],
   },
+
   eslint.configs.recommended,
-  ...eslintPluginAstro.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
   eslintPluginReact.configs.flat.recommended,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
   eslintPluginReact.configs.flat["jsx-runtime"],
   eslintPluginUnicorn.configs["flat/recommended"],
   eslintConfigPrettier,
+
+  {
+    plugins: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- react don't export types :(
+      "react-hooks": reactHooks,
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
+    rules: reactHooks.configs.recommended.rules,
+  },
+
   {
     languageOptions: {
       globals: {
@@ -43,13 +53,19 @@ export default tseslint.config(
         ecmaFeatures: { jsx: true },
       },
     },
+
     settings: {
       react: {
         version: "detect",
       },
     },
   },
+
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: "error",
+    },
+
     rules: {
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": ["error", "avoid"],
