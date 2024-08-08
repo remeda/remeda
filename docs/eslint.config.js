@@ -1,10 +1,11 @@
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginReact from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
   {
@@ -27,6 +28,7 @@ export default tseslint.config(
   eslintPluginReact.configs.flat.recommended,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
   eslintPluginReact.configs.flat["jsx-runtime"],
+  jsxA11y.flatConfigs.strict,
   eslintPluginUnicorn.configs["flat/recommended"],
   eslintConfigPrettier,
 
@@ -81,6 +83,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/consistent-type-definitions": "off",
       "react/prop-types": "off",
+      "jsx-a11y/heading-has-content": "off",
     },
   },
 );
