@@ -47,6 +47,8 @@
   ],
   "scripts": {
     "build": "tsup",
+    "check": "tsc --project tsconfig.source.json",
+    "check:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/ .",
@@ -56,9 +58,7 @@
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
-    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
-    "typecheck": "tsc --project tsconfig.source.json",
-    "typecheck:dist": "tsc --project tsconfig.dist.json"
+    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
     "type-fest": "^4.23.0"

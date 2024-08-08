@@ -4,7 +4,7 @@ export default {
   // array) so that no matter what file or how many, we will always run the same
   // command.
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types -- this is stupid...
-  "*.ts?(x)": () => "npm run typecheck",
+  "*.ts?(x)": () => "npm run check",
 
   // Javascript and Typescript (including commonJs and esm variants)
   "*.@(js|jsx|ts|tsx|cjs|mjs)": ["eslint --fix", "prettier --write"],
