@@ -96,16 +96,13 @@
 - and
 - both
 - complement
-- defaultTo
 - either
-- ifElse
 - isNotEmpty
 - or
 - pathSatisfies
 - propSatisfies
 - unless
 - until
-- when
 - xor
 
 # Math

@@ -21,6 +21,8 @@ export { conditionalPlus as conditional };
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
+ * For simpler cases you should also consider using `when` instead.
+ *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback
  * `undefined` value when none of the cases match; and instead will **throw** an
@@ -111,6 +113,8 @@ function conditional<
  * evaluates each case and, upon finding a truthy predicate, runs the
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
+ *
+ * For simpler cases you should also consider using `when` instead.
  *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback
