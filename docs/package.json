@@ -13,9 +13,9 @@
     "check": "tsc && astro check",
     "clean": "rm -rf dist && rm -f src/data/data.json && rm -rf public/dist",
     "dev": "astro dev",
+    "lint": "eslint",
     "preview": "astro preview",
-    "typedoc": "typedoc --json src/data/data.json",
-    "lint": "eslint"
+    "typedoc": "typedoc --json src/data/data.json"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",
