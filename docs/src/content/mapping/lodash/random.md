@@ -1,11 +1,18 @@
 ---
 category: Number
-remeda: randomInt
+remeda: randomInteger
 ---
 
-- In Lodash, the `random` function supports generating either a random floating-point number or a random integer. In Remeda, only random integers are supported. If you need a floating-point random number, refer to the "You don't need Lodash" [random](https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#/?id=_random) section for a simple solution.
+- When Lodash's `random` function is called with a non-integer param it returns
+  any number, not just integers (e.g. 2.5)! Remeda's `randomInteger` function
+  always returns integers, effectively rounding the parameters to fit the range
+  of possible integers.
+- If you want to generate any number in the range (and not just integers) see
+  the solutions provided in [_"You don't need Lodash"_](https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#/?id=_random).
+- Lodash's `random` parameters are optional. In Remeda all parameters are
+  required.
 
-- In Lodash, the `random` function supports accepting a single argument, which is the upper bound of the random number. In Remeda, the `randomInt` function requires both the lower and upper bounds as arguments.
+### Two integer params
 
 ```ts
 // Lodash
@@ -13,10 +20,34 @@ random(1, 10);
 
 // Remeda
 randomInt(1, 10);
+```
 
+### Single integer param
+
+```ts
 // Lodash
 random(10);
 
 // Remeda
 randomInt(0, 10);
+```
+
+### No params
+
+```ts
+// Lodash
+random();
+
+// Remeda
+randomInt(0, 1);
+```
+
+### Not supported: floating-point numbers
+
+```ts
+random(1.5, 3.5);
+random(1.5);
+random(10, true);
+random(5, 10, true);
+random(true);
 ```
