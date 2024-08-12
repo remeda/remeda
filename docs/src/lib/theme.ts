@@ -60,7 +60,7 @@ function setDarkMode(isEnabled = true): void {
   } else {
     documentElement.classList.remove(DARK_THEME_CLASS);
 
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- intentional, this is the best way to remove the attribute.
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- Intentional! This is the idiomatic way to remove a data attribute.
     delete documentElement.dataset[ALGOLIA_DOCSEARCH_DARK_THEME_DATA_ATTRIBUTE];
   }
 }
