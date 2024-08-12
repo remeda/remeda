@@ -68,3 +68,11 @@ R.pipe(
 ### Getting help
 
 Questions, bug reports, and feature requests are tracked in [GitHub issues](https://github.com/remeda/remeda/issues).
+
+### Thanks to all our contributors!
+
+<a href="https://github.com/remeda/remeda/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=remeda/remeda" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
