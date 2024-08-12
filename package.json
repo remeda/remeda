@@ -51,7 +51,7 @@
     "check:dist": "tsc --project tsconfig.dist.json",
     "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
-    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/ .",
+    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
     "prepare": "husky",
     "prettier": "prettier . --write",
@@ -65,14 +65,14 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.4",
-    "@eslint/js": "^9.8.0",
+    "@eslint/js": "^9.9.0",
     "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.1.0",
+    "@types/node": "^22.2.0",
     "@vitest/coverage-v8": "^2.0.5",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^50.0.0",
+    "eslint-plugin-jsdoc": "^50.0.1",
     "eslint-plugin-unicorn": "^55.0.0",
     "husky": "^9.1.4",
     "lint-staged": "^15.2.8",
@@ -81,7 +81,7 @@
     "semantic-release": "^24.0.0",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.0.1",
+    "typescript-eslint": "^8.1.0",
     "vitest": "^2.0.5"
   }
 }
