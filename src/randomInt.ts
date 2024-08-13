@@ -8,7 +8,7 @@ import type {
   IsEqual,
 } from "type-fest";
 
-type RandomInteger<From extends number, To extends number> =
+type RandomInt<From extends number, To extends number> =
   Or<
     IsNever<NonNegativeInteger<From>>,
     IsNever<NonNegativeInteger<To>>
@@ -43,10 +43,10 @@ type RandomInteger<From extends number, To extends number> =
  * @dataFirst
  * @category Number
  */
-export function randomInteger<From extends number, To extends number>(
+export function randomInt<From extends number, To extends number>(
   from: From,
   to: To,
-): RandomInteger<From, To> {
+): RandomInt<From, To> {
   const fromCeiled = Math.ceil(from);
   const toFloored = Math.floor(to);
 
@@ -58,5 +58,5 @@ export function randomInteger<From extends number, To extends number>(
 
   return Math.floor(
     Math.random() * (toFloored - fromCeiled + 1) + fromCeiled,
-  ) as RandomInteger<From, To>;
+  ) as RandomInt<From, To>;
 }
