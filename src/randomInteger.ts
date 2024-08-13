@@ -52,7 +52,7 @@ export function randomInteger<From extends number, To extends number>(
 
   if (toFloored < fromCeiled) {
     throw new RangeError(
-      `randomInt: The range [${from},${to}] contains no integer`,
+      `randomInteger: The range [${from},${to}] contains no integer`,
     );
   }
 
