@@ -1,15 +1,15 @@
-import { randomInt } from "./randomInt";
+import { randomInteger } from "./randomInteger";
 
 const ITERATIONS = 1000;
 
 test("from is greater than to", () => {
-  expect(() => randomInt(10, 0)).toThrow(
+  expect(() => randomInteger(10, 0)).toThrow(
     new RangeError("randomInt: The range [10,0] contains no integer"),
   );
 });
 
 test("from and to are decimals with same whole number", () => {
-  expect(() => expect(randomInt(1.5, 1.6))).toThrow(
+  expect(() => expect(randomInteger(1.5, 1.6))).toThrow(
     new RangeError("randomInt: The range [1.5,1.6] contains no integer"),
   );
 });
@@ -50,6 +50,6 @@ test("integers with same value", () => {
 
 function* randomInts(from: number, to: number): Generator<number> {
   for (let i = 0; i < ITERATIONS; i += 1) {
-    yield randomInt(from, to);
+    yield randomInteger(from, to);
   }
 }

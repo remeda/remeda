@@ -1,10 +1,10 @@
 ---
 category: Number
-remeda: randomInt
+remeda: randomInteger
 ---
 
 - When Lodash's `random` function is called with a non-integer param it returns
-  any number, not just integers (e.g. 2.5)! Remeda's `randomInt` function
+  any number, not just integers (e.g. 2.5)! Remeda's `randomInteger` function
   always returns integers, effectively rounding the parameters to fit the range
   of possible integers.
 - If you want to generate any number in the range (and not just integers) see
@@ -19,7 +19,7 @@ remeda: randomInt
 random(1, 10);
 
 // Remeda
-randomInt(1, 10);
+randomInteger(1, 10);
 ```
 
 ### Single integer param
@@ -29,7 +29,7 @@ randomInt(1, 10);
 random(10);
 
 // Remeda
-randomInt(0, 10);
+randomInteger(0, 10);
 ```
 
 ### No params
@@ -39,7 +39,7 @@ randomInt(0, 10);
 random();
 
 // Remeda
-randomInt(0, 1);
+randomInteger(0, 1);
 ```
 
 ### Not supported: floating-point numbers
