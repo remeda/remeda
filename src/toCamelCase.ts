@@ -27,9 +27,12 @@ const DEFAULT_OPTIONS = {
  * consecutive uppercase characters. This is optional.
  * @signature
  *   R.toCamelCase(data);
+ *   R.toCamelCase(data, { preserveConsecutiveUppercase });
  * @example
  *   R.toCamelCase("hello world"); // "helloWorld"
  *   R.toCamelCase("__HELLO_WORLD__"); // "helloWorld"
+ *   R.toCamelCase("HasHtml"); // "hasHTML"
+ *   R.toCamelCase("HasHtml", { preserveConsecutiveUppercase: false }); // "hasHtml"
  * @dataFirst
  * @category String
  */
@@ -54,9 +57,15 @@ export function toCamelCase<
  * consecutive uppercase characters. This is optional.
  * @signature
  *   R.toCamelCase()(data);
+ *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
  *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
+ *   R.pipe("HasHtml", R.toCamelCase()); // "hasHTML"
+ *   R.pipe(
+ *     "HasHtml",
+ *     R.toCamelCase({ preserveConsecutiveUppercase: false }),
+ *   ); // "hasHtml"
  * @dataLast
  * @category String
  */
