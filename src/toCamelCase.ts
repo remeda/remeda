@@ -24,8 +24,8 @@ const DEFAULT_OPTIONS = {
  *
  * @param data - A string.
  * @param options - An _optional_ object with an _optional_ prop
- * `preserveConsecutiveUppercase` that can be used to change the way sequences
- * of uppercase characters are treated. Defaults to `true`.
+ * `preserveConsecutiveUppercase` that can be used to change the way consecutive
+ * uppercase characters are handled. Defaults to `true`.
  * @signature
  *   R.toCamelCase(data);
  *   R.toCamelCase(data, { preserveConsecutiveUppercase });
@@ -55,8 +55,8 @@ export function toCamelCase<
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param options - An _optional_ object with an _optional_ prop
- * `preserveConsecutiveUppercase` that can be used to change the way sequences
- * of uppercase characters are treated. Defaults to `true`.
+ * `preserveConsecutiveUppercase` that can be used to change the way consecutive
+ * uppercase characters are handled. Defaults to `true`.
  * @signature
  *   R.toCamelCase()(data);
  *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
