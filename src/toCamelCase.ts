@@ -23,8 +23,9 @@ const DEFAULT_OPTIONS = {
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param data - A string.
- * @param options - Used to disable the default behavior of preserving
- * consecutive uppercase characters. This is optional.
+ * @param options - An _optional_ object with an _optional_ prop
+ * `preserveConsecutiveUppercase` that can be used to change the way sequences
+ * of uppercase characters are treated. Defaults to `true`.
  * @signature
  *   R.toCamelCase(data);
  *   R.toCamelCase(data, { preserveConsecutiveUppercase });
@@ -53,8 +54,9 @@ export function toCamelCase<
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
- * @param options - Used to disable the default behavior of preserving
- * consecutive uppercase characters. This is optional.
+ * @param options - An _optional_ object with an _optional_ prop
+ * `preserveConsecutiveUppercase` that can be used to change the way sequences
+ * of uppercase characters are treated. Defaults to `true`.
  * @signature
  *   R.toCamelCase()(data);
  *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
