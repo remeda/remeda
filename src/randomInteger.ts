@@ -25,14 +25,21 @@ type RandomInteger<From extends number, To extends number> =
 /**
  * Generate a random integer between `from` and `to` (inclusive).
  *
+ * !Important: This function uses [`Math.random()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random) under-the-hood, which has two major limitations:
+ * 1. It generates 2^52 possible values, so the bigger the range, the less
+ * uniform the distribution of values would be, and at ranges larger than that
+ * some values would never come up.
+ * 2. It is not cryptographically secure and should not be used for security
+ * scenarios.
+ *
  * @param from - The minimum value.
  * @param to - The maximum value.
  * @returns The random integer.
  * @signature
- *   R.randomInt(from, to)
+ *   R.randomInteger(from, to)
  * @example
- *   R.randomInt(1, 10) // => 5
- *   R.randomInt(1.5, 2.6) // => 2
+ *   R.randomInteger(1, 10) // => 5
+ *   R.randomInteger(1.5, 2.6) // => 2
  * @dataFirst
  * @category Number
  */
@@ -45,7 +52,7 @@ export function randomInteger<From extends number, To extends number>(
 
   if (toFloored < fromCeiled) {
     throw new RangeError(
-      `randomInt: The range [${from},${to}] contains no integer`,
+      `randomInteger: The range [${from},${to}] contains no integer`,
     );
   }
 

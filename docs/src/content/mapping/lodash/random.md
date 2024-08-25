@@ -19,7 +19,7 @@ remeda: randomInteger
 random(1, 10);
 
 // Remeda
-randomInt(1, 10);
+randomInteger(1, 10);
 ```
 
 ### Single integer param
@@ -29,7 +29,7 @@ randomInt(1, 10);
 random(10);
 
 // Remeda
-randomInt(0, 10);
+randomInteger(0, 10);
 ```
 
 ### No params
@@ -39,7 +39,7 @@ randomInt(0, 10);
 random();
 
 // Remeda
-randomInt(0, 1);
+randomInteger(0, 1);
 ```
 
 ### Not supported: floating-point numbers
