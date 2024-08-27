@@ -54,6 +54,7 @@ export function setPath<T, TPath extends Path<T>>(
 export function setPath<
   T,
   TPath extends Path<T>,
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO: This is solvable by inlining Value and wrapping the T parameter with `NoInfer` (e.g. `ValueAtPath<NoInfer<T>, TPath>); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
   Value extends ValueAtPath<T, TPath>,
 >(path: TPath, value: Value): (data: T) => T;
 
