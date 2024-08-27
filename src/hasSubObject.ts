@@ -2,7 +2,7 @@ import type { Simplify, Tagged } from "type-fest";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const HAS_SUB_OBJECT_BRAND: unique symbol;
 
 type HasSubObjectGuard<T, S> = Simplify<
