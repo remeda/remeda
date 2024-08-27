@@ -1,5 +1,9 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import { type Deduped, type IterableContainer } from "./internal/types";
+import {
+  type BrandedReturn,
+  type Deduped,
+  type IterableContainer,
+} from "./internal/types";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
 
@@ -50,12 +54,15 @@ export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
-function lazyImplementation<T, K>(
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+function lazyImplementation<T>(
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
 ): LazyEvaluator<T> {
-  const set = new Set<K>();
+  // @see https://github.com/typescript-eslint/typescript-eslint/issues/9885
+  const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
+
+  const set = new Set<ReturnType<typeof brandedKeyFunction>>();
   return (value, index, data) => {
-    const key = keyFunction(value, index, data);
+    const key = brandedKeyFunction(value, index, data);
     if (set.has(key)) {
       return SKIP_ITEM;
     }

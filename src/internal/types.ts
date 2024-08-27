@@ -14,7 +14,14 @@ import {
 
 declare const __brand: unique symbol;
 
-export type Branded<T, Brand extends symbol> = T & { [__brand]: Brand };
+export type Branded<T, Brand extends symbol = symbol> = T & {
+  [__brand]: Brand;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- The most generic function signature requires the usage of `any` instead of `unknown`
+export type BrandedReturn<F extends (...args: any) => any> = (
+  ...args: Parameters<F>
+) => Branded<ReturnType<F>>;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
