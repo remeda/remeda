@@ -10,18 +10,16 @@ import {
   type KeysOfUnion,
   type Simplify,
   type Split,
+  type Tagged,
 } from "type-fest";
 
-declare const __brand: unique symbol;
-
-export type Branded<T, Brand extends symbol = symbol> = T & {
-  [__brand]: Brand;
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
+declare const TagNameBrandedReturn: unique symbol;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- The most generic function signature requires the usage of `any` instead of `unknown`
 export type BrandedReturn<F extends (...args: any) => any> = (
   ...args: Parameters<F>
-) => Branded<ReturnType<F>>;
+) => Tagged<ReturnType<F>, typeof TagNameBrandedReturn, F>;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
