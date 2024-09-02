@@ -43,7 +43,7 @@ function randomBigIntImplementation(max: bigint): bigint {
   while (true) {
     // We use `crypto` for our RNG, it should be supported in all modern
     // environments we support.
-    const randomBytes = crypto.getRandomValues(new Uint8Array(maxBytes));
+    const randomBytes = random(maxBytes);
 
     const raw = asBigInt(randomBytes);
 
@@ -67,4 +67,15 @@ function asBigInt(bytes: Uint8Array): bigint {
     result = (result << 8n) + BigInt(byte);
   }
   return result;
+}
+
+function random(numBytes: number): Uint8Array {
+  if (typeof crypto === "undefined") {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports, unicorn/prefer-module
+    const { randomBytes } = require("node:crypto");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+    return Uint8Array.from(randomBytes(numBytes));
+  }
+
+  return crypto.getRandomValues(new Uint8Array(numBytes));
 }
