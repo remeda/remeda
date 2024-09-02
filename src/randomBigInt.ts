@@ -67,6 +67,8 @@ export function randomBigInt(from: bigint, to: bigint): bigint {
 function asBigInt(bytes: Iterable<number>): bigint {
   let result = 0n;
   for (const byte of bytes) {
+    // We build the bigint by shifting the current value by a byte, and putting
+    // the next byte in that "slot".
     result = (result << 8n) + BigInt(byte);
   }
   return result;
