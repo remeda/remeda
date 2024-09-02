@@ -54,9 +54,10 @@ export function randomBigInt(from: bigint, to: bigint): bigint {
     // to 0.
     const result = raw >> excessBits;
 
-    // The generated number might overflow if `max < 2 ** maxBits - 1` and can't
-    // be returned. To ensure that all possible results have the same
-    // probability, we ignore the value and try again.
+    // The generated number might overflow when `range < 2 ** maxBits - 1`, so
+    // it can't be returned. To ensure that all possible results have the same
+    // probability, we ignore the value entirely and try again (instead of
+    // trying to adapt it to the output range somehow).
     if (result <= range) {
       return result + from;
     }
