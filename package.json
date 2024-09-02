@@ -61,21 +61,21 @@
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.25.0"
+    "type-fest": "^4.26.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.4",
     "@eslint/js": "^9.9.1",
     "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.5.0",
+    "@types/node": "^22.5.2",
     "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsdoc": "^50.2.2",
     "eslint-plugin-unicorn": "^55.0.0",
     "husky": "^9.1.5",
-    "lint-staged": "^15.2.9",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "publint": "^0.2.10",
     "semantic-release": "^24.1.0",
