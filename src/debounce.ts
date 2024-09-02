@@ -3,9 +3,24 @@
  * generic type, it **has** to be `any`.
  */
 
+type DebounceOptions = {
+  readonly waitMs?: number;
+} & (
+  | {
+      readonly timing: "leading";
+      // Leading timings don't have a maxWaitMs because nothing is kept
+      // waiting...
+      readonly maxWaitMs?: never;
+    }
+  | {
+      readonly timing?: "both" | "trailing";
+      readonly maxWaitMs?: number;
+    }
+);
+
 type Debouncer<
   F extends (...args: any) => unknown,
-  IsNullable extends boolean = true,
+  Options extends DebounceOptions,
 > = {
   /**
    * Invoke the debounced function.
@@ -19,7 +34,9 @@ type Debouncer<
    */
   readonly call: (
     ...args: Parameters<F>
-  ) => ReturnType<F> | (true extends IsNullable ? undefined : never);
+  ) =>
+    | ReturnType<F>
+    | (Options["timing"] extends "both" | "leading" ? never : undefined);
 
   /**
    * Cancels any debounced functions without calling them, effectively resetting
@@ -45,11 +62,6 @@ type Debouncer<
   readonly cachedValue: ReturnType<F> | undefined;
 };
 
-type DebounceOptions = {
-  readonly waitMs?: number;
-  readonly maxWaitMs?: number;
-};
-
 /**
  * Wraps `func` with a debouncer object that "debounces" (delays) invocations of the function during a defined cool-down period (`waitMs`). It can be configured to invoke the function either at the start of the cool-down period, the end of it, or at both ends (`timing`).
  * It can also be configured to allow invocations during the cool-down period (`maxWaitMs`).
@@ -59,25 +71,25 @@ type DebounceOptions = {
  *
  * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
- * @param options - An object allowing further customization of the debouncer:
- * - `timing?: 'leading' | 'trailing' |'both'`. The default is `'trailing'`.
- *   `leading` would result in the function being invoked at the start of the
- *   cool-down period; `trailing` would result in the function being invoked at
- *   the end of the cool-down period (using the args from the last call to the
- *   debouncer). When `both` is selected the `trailing` invocation would only
- *   take place if there were more than one call to the debouncer during the
- *   cool-down period. **DEFAULT: 'trailing'**
- * - `waitMs?: number`. The length of the cool-down period in milliseconds. The
- *   debouncer would wait until this amount of time has passed without **any**
- *   additional calls to the debouncer before triggering the end-of-cool-down-
- *   period event. When this happens, the function would be invoked (if `timing`
- *   isn't `'leading'`) and the debouncer state would be reset. **DEFAULT: 0**
- * - `maxWaitMs?: number`. The length of time since a debounced call (a call
- *   that the debouncer prevented from being invoked) was made until it would be
- *   invoked. Because the debouncer can be continually triggered and thus never
- *   reach the end of the cool-down period, this allows the function to still
- *   be invoked occasionally. IMPORTANT: This param is ignored when `timing` is
- *   `'leading'`.
+ * @param options - An object allowing further customization of the debouncer.
+ * @param options.timing -
+ * - `leading` - The function is invoked at the start of the cool-down period.
+ * - `trailing` - The function is invoked at the end of the cool-down period
+ * (using the args from the last call to the debouncer).
+ * - `both` - When this is selected the `trailing` invocation would only take
+ * place if there was more than one call to the debouncer during the cool-down
+ * period. @default 'trailing'.
+ * @param options.waitMs - The length of the cool-down period in milliseconds.
+ * The debouncer would wait until this amount of time has passed without **any**
+ * additional calls to the debouncer before triggering the end-of-cool-down-
+ * period event. When this happens, the function would be invoked (if `timing`
+ * isn't `'leading'`) and the debouncer state would be reset. @default 0.
+ * @param options.maxWaitMs - The length of time since a debounced call (a call
+ * that the debouncer prevented from being invoked) was made until it would be
+ * invoked. Because the debouncer can be continually triggered and thus never
+ * reach the end of the cool-down period, this allows the function to still be
+ * invoked occasionally. IMPORTANT: This param is ignored when `timing` is
+ * `'leading'`.
  * @returns A debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
@@ -98,27 +110,13 @@ type DebounceOptions = {
  * @category Function
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
-export function debounce<F extends (...args: any) => any>(
+export function debounce<
+  F extends (...args: any) => any,
+  Options extends DebounceOptions,
+>(
   func: F,
-  options: DebounceOptions & { readonly timing?: "trailing" },
-): Debouncer<F>;
-export function debounce<F extends (...args: any) => any>(
-  func: F,
-  options:
-    | (DebounceOptions & { readonly timing: "both" })
-    | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
-): Debouncer<F, false /* call CAN'T return null */>;
-
-export function debounce<F extends (...args: any) => any>(
-  func: F,
-  {
-    waitMs,
-    timing = "trailing",
-    maxWaitMs,
-  }: DebounceOptions & {
-    readonly timing?: "both" | "leading" | "trailing";
-  },
-): Debouncer<F> {
+  { timing = "trailing", waitMs, maxWaitMs }: Options,
+): Debouncer<F, Options> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
       `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
@@ -204,6 +202,7 @@ export function debounce<F extends (...args: any) => any>(
   };
 
   return {
+    // @ts-expect-error [ts(2322)] - TypeScript can't infer that the return type matches the timing's expected return type. This is enforced in runtime instead.
     call: (...args) => {
       if (coolDownTimeoutId === undefined) {
         // This call is starting a new cool-down window!

@@ -1,31 +1,30 @@
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
-it("returns undefined on 'trailing' timing", () => {
-  const debouncer = debounce(() => "Hello, World!", {
-    waitMs: 32,
-    timing: "trailing",
+describe("call return type for different timings", () => {
+  test("default returns `undefined`", () => {
+    const debouncer = debounce(() => "Hello, World!", {});
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string | undefined>();
   });
-  const result = debouncer.call();
-  expectTypeOf(result).toEqualTypeOf<string | undefined>();
-});
 
-it("doesn't return undefined on 'leading' timing", () => {
-  const debouncer = debounce(() => "Hello, World!", {
-    waitMs: 32,
-    timing: "leading",
+  test("'trailing' returns `undefined`", () => {
+    const debouncer = debounce(() => "Hello, World!", { timing: "trailing" });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string | undefined>();
   });
-  const result = debouncer.call();
-  expectTypeOf(result).toEqualTypeOf<string>();
-});
 
-it("doesn't return undefined on 'both' timing", () => {
-  const debouncer = debounce(() => "Hello, World!", {
-    waitMs: 32,
-    timing: "both",
+  test("'leading' doesn't return `undefined`", () => {
+    const debouncer = debounce(() => "Hello, World!", { timing: "leading" });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string>();
   });
-  const result = debouncer.call();
-  expectTypeOf(result).toEqualTypeOf<string>();
+
+  test("'both' doesn't return `undefined`", () => {
+    const debouncer = debounce(() => "Hello, World!", { timing: "both" });
+    const result = debouncer.call();
+    expectTypeOf(result).toEqualTypeOf<string>();
+  });
 });
 
 test("argument typing to be good (all required)", () => {
