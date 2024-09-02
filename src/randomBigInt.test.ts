@@ -48,6 +48,14 @@ test("tiny ranges with huge numbers", () => {
   }
 });
 
+test("results are varied", () => {
+  const results = new Set<bigint>();
+  for (const v of randomBigInts(1n, 10n)) {
+    results.add(v);
+  }
+  expect(results).toHaveLength(10);
+});
+
 describe("crypto module polyfill", () => {
   beforeAll(() => {
     vi.stubGlobal("crypto", undefined);
@@ -93,6 +101,14 @@ describe("crypto module polyfill", () => {
       expect(v).toBeGreaterThanOrEqual(HUGE_NUMBER);
       expect(v).toBeLessThanOrEqual(HUGE_NUMBER + 1n);
     }
+  });
+
+  test("results are varied", () => {
+    const results = new Set<bigint>();
+    for (const v of randomBigInts(1n, 10n)) {
+      results.add(v);
+    }
+    expect(results).toHaveLength(10);
   });
 });
 
