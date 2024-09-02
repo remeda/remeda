@@ -59,7 +59,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-unicorn": "^55.0.0",
     "globals": "^15.9.0",
-    "jsdom": "^24.1.1",
+    "jsdom": "^25.0.0",
     "marked": "^14.1.0",
     "open-cli": "^8.0.0",
     "prettier": "^3.3.3",
