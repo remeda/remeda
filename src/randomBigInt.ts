@@ -70,12 +70,18 @@ function asBigInt(bytes: Uint8Array): bigint {
 }
 
 function random(numBytes: number): Uint8Array {
+  const output = new Uint8Array(numBytes);
+
   if (typeof crypto === "undefined") {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports, unicorn/prefer-module
-    const { randomBytes } = require("node:crypto");
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-    return Uint8Array.from(randomBytes(numBytes));
+    // Polyfill for environments without `crypto` support. The only env which
+    // requires this and we support is Node 18; once we drop support for it we
+    // can drop the polyfill.
+    for (let index = 0; index < numBytes; index += 1) {
+      output[index] = Math.floor(Math.random() * 256);
+    }
+  } else {
+    crypto.getRandomValues(output);
   }
 
-  return crypto.getRandomValues(new Uint8Array(numBytes));
+  return output;
 }
