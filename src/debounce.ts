@@ -1,7 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return --
- * Function inference doesn't work when `unknown` is used as the parameters
- * generic type, it **has** to be `any`.
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return --
+ * Our implementation is very generic and TypeScript has a hard time inferring
+ * and ensuring all our expected types work with the runtime logic.
  */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript requires args lists to be of type `any` to capture all possible functions; `unknown` is not enough. This type behaves differently than the built-in `Function` type (see `Parameters`, `ReturnType` etc...).
+type AnyFunction = (...args: any) => any;
 
 type DebounceOptions = {
   readonly waitMs?: number;
@@ -18,10 +21,7 @@ type DebounceOptions = {
     }
 );
 
-type Debouncer<
-  F extends (...args: any) => unknown,
-  Options extends DebounceOptions,
-> = {
+type Debouncer<F extends AnyFunction, Options extends DebounceOptions> = {
   /**
    * Invoke the debounced function.
    *
@@ -127,7 +127,7 @@ type Debouncer<
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<
-  F extends (...args: any) => any,
+  F extends AnyFunction,
   Options extends DebounceOptions,
 >(
   func: F,
