@@ -1,5 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript requires args lists to be of type `any` to capture all possible functions; `unknown` is not enough. This type behaves differently than the built-in `Function` type (see `Parameters`, `ReturnType` etc...).
-type AnyFunction = (...args: any) => any;
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { type ArrayTail } from "type-fest";
 
 type DebounceOptions = {
   readonly coolDownMs?: number;
@@ -17,7 +19,9 @@ type DebounceOptions = {
     }
 );
 
-type Debouncer<F extends AnyFunction> = {
+type Debouncer<
+  F extends (prev: ReturnType<F> | undefined, ...params: any) => ReturnType<F>,
+> = {
   /**
    * Invoke the debounced function.
    *
@@ -28,7 +32,7 @@ type Debouncer<F extends AnyFunction> = {
    * over, otherwise the function would always return the return type of the
    * debounced function.
    */
-  readonly call: (...args: Parameters<F>) => void;
+  readonly call: (...args: ArrayTail<Parameters<F>>) => void;
 
   /**
    * Cancels any debounced functions without calling them, effectively resetting
@@ -72,7 +76,8 @@ type Debouncer<F extends AnyFunction> = {
  * _This implementation is based on the Lodash implementation and on this
  * [CSS Tricks article](https://css-tricks.com/debouncing-throttling-explained-examples/)._.
  *
- * @param func - The function to debounce, the returned `call` function will
+ * @param prepare - TODO.
+ * @param execute - The function to debounce, the returned `call` function will
  * have the exact same signature.
  * @param options - An object allowing further customization of the debouncer.
  * @param options.timing -
@@ -117,10 +122,14 @@ type Debouncer<F extends AnyFunction> = {
  * @dataFirst
  * @category Function
  */
-export function debounce<F extends AnyFunction>(
-  func: F,
+export function debounce<
+  P extends (prev: ReturnType<P> | undefined, ...params: any) => ReturnType<P>,
+  F extends (params: ReturnType<P>) => void,
+>(
+  prepare: P,
+  execute: F,
   { timing = "trailing", coolDownMs, maxDelayMs, minGapMs }: DebounceOptions,
-): Debouncer<F> {
+): Debouncer<P> {
   // All these are part of the debouncer runtime state:
 
   // The timeout is the main object we use to tell if there's an active cool-
@@ -132,19 +141,19 @@ export function debounce<F extends AnyFunction>(
 
   // For 'trailing' invocations we need to keep the args around until we
   // actually invoke the function.
-  let latestCallArgs: Parameters<F> | undefined;
+  let preparedParam: ReturnType<P> | undefined;
 
   const invoke = (): void => {
-    const args = latestCallArgs;
-    if (args === undefined) {
+    const param = preparedParam;
+    if (param === undefined) {
       // There are no debounced calls to invoke.
       return;
     }
     // Make sure the args aren't accidentally used again
-    latestCallArgs = undefined;
+    preparedParam = undefined;
 
     // Invoke the function and store the results locally.
-    func(...args);
+    execute(param);
 
     // The gap starts when we invoke, and should run to completion without being
     // reset.
@@ -196,7 +205,7 @@ export function debounce<F extends AnyFunction>(
     invoke();
   };
 
-  const handleDebounce = (args: Parameters<F>): void => {
+  const handleDebounce = (args: ArrayTail<Parameters<P>>): void => {
     if (
       timing === "leading" &&
       (coolDownTimeoutId !== undefined || gapTimeoutId !== undefined)
@@ -206,7 +215,7 @@ export function debounce<F extends AnyFunction>(
 
     // We save the latest call args so that (if and) when we invoke the function
     // in the future, we have args to invoke it with.
-    latestCallArgs = args;
+    preparedParam = prepare(preparedParam, ...args);
   };
 
   return {
@@ -261,7 +270,7 @@ export function debounce<F extends AnyFunction>(
       clearTimeout(gapTimeoutId);
       gapTimeoutId = undefined;
 
-      latestCallArgs = undefined;
+      preparedParam = undefined;
     },
 
     flush: () => {
