@@ -1,27 +1,16 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { type ArrayTail } from "type-fest";
 
 type DebounceOptions = {
   readonly coolDownMs?: number;
   readonly minGapMs?: number;
-} & (
-  | {
-      readonly timing: "leading";
-      // Leading timings don't have a maxWaitMs because nothing is kept
-      // waiting...
-      readonly maxDelayMs?: never;
-    }
-  | {
-      readonly timing?: "both" | "trailing";
-      readonly maxDelayMs?: number;
-    }
-);
+  readonly maxDelayMs?: number;
+  readonly executeImmediately?: boolean;
+};
 
-type Debouncer<
-  F extends (prev: ReturnType<F> | undefined, ...params: any) => ReturnType<F>,
-> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
+type PrepareFunc = <T>(prev: T | undefined, ...params: any) => T;
+
+type Debouncer<F extends PrepareFunc> = {
   /**
    * Invoke the debounced function.
    *
@@ -32,6 +21,7 @@ type Debouncer<
    * over, otherwise the function would always return the return type of the
    * debounced function.
    */
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- This is OK for here...
   readonly call: (...args: ArrayTail<Parameters<F>>) => void;
 
   /**
@@ -80,7 +70,7 @@ type Debouncer<
  * @param execute - The function to debounce, the returned `call` function will
  * have the exact same signature.
  * @param options - An object allowing further customization of the debouncer.
- * @param options.timing -
+ * @param options.executeImmediately -
  * - `leading` - The function is invoked at the start of the cool-down period.
  * - `trailing` - The function is invoked at the end of the cool-down period
  * (using the args from the last call to the debouncer).
@@ -123,12 +113,17 @@ type Debouncer<
  * @category Function
  */
 export function debounce<
-  P extends (prev: ReturnType<P> | undefined, ...params: any) => ReturnType<P>,
+  P extends PrepareFunc,
   F extends (params: ReturnType<P>) => void,
 >(
   prepare: P,
   execute: F,
-  { timing = "trailing", coolDownMs, maxDelayMs, minGapMs }: DebounceOptions,
+  {
+    executeImmediately = false,
+    coolDownMs,
+    maxDelayMs,
+    minGapMs,
+  }: DebounceOptions,
 ): Debouncer<P> {
   // All these are part of the debouncer runtime state:
 
@@ -197,34 +192,19 @@ export function debounce<
     invoke();
   };
 
-  const handleStart = (): void => {
-    if (timing === "trailing") {
-      return;
-    }
-
-    invoke();
-  };
-
-  const handleDebounce = (args: ArrayTail<Parameters<P>>): void => {
-    if (
-      timing === "leading" &&
-      (coolDownTimeoutId !== undefined || gapTimeoutId !== undefined)
-    ) {
-      return;
-    }
-
-    // We save the latest call args so that (if and) when we invoke the function
-    // in the future, we have args to invoke it with.
-    preparedParam = prepare(preparedParam, ...args);
-  };
-
   return {
     call: (...args) => {
-      handleDebounce(args);
+      preparedParam = prepare(preparedParam, ...args);
 
-      if (coolDownTimeoutId === undefined && gapTimeoutId === undefined) {
-        // For the timings that require us to fire an event at the start o
-        setTimeout(handleStart, 0 /* immediate */);
+      if (
+        coolDownTimeoutId === undefined &&
+        gapTimeoutId === undefined &&
+        executeImmediately
+      ) {
+        // We are starting a new active windows after being idle, if the user
+        // wants us to execute immediately we schedule an invoke to run
+        // immediately.
+        setTimeout(invoke, 0 /* immediate */);
       }
 
       if (coolDownMs === undefined) {
