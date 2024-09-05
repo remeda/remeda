@@ -1,32 +1,6 @@
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
-describe("call return type for different timings", () => {
-  test("default returns `undefined`", () => {
-    const debouncer = debounce(() => "Hello, World!", {});
-    const result = debouncer.call();
-    expectTypeOf(result).toEqualTypeOf<string | undefined>();
-  });
-
-  test("'trailing' returns `undefined`", () => {
-    const debouncer = debounce(() => "Hello, World!", { timing: "trailing" });
-    const result = debouncer.call();
-    expectTypeOf(result).toEqualTypeOf<string | undefined>();
-  });
-
-  test("'leading' doesn't return `undefined`", () => {
-    const debouncer = debounce(() => "Hello, World!", { timing: "leading" });
-    const result = debouncer.call();
-    expectTypeOf(result).toEqualTypeOf<string>();
-  });
-
-  test("'both' doesn't return `undefined`", () => {
-    const debouncer = debounce(() => "Hello, World!", { timing: "both" });
-    const result = debouncer.call();
-    expectTypeOf(result).toEqualTypeOf<string>();
-  });
-});
-
 test("argument typing to be good (all required)", () => {
   const debouncer = debounce(
     (a: string, b: number, c: boolean) => `${a}${b}${c ? "y" : "n"}`,
@@ -107,8 +81,8 @@ test("argument typing to be good (with rest param)", () => {
 });
 
 it("doesn't accept maxWaitMs when timing is 'leading'", () => {
-  debounce(identity(), { timing: "trailing", maxWaitMs: 32 });
-  debounce(identity(), { timing: "both", maxWaitMs: 32 });
+  debounce(identity(), { timing: "trailing", maxDelayMs: 32 });
+  debounce(identity(), { timing: "both", maxDelayMs: 32 });
   // @ts-expect-error [ts2769]: maxWaitMs not supported!
-  debounce(identity(), { timing: "leading", maxWaitMs: 32 });
+  debounce(identity(), { timing: "leading", maxDelayMs: 32 });
 });
