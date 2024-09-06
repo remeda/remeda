@@ -4,7 +4,7 @@ type DebounceOptions = {
   readonly coolDownMs?: number;
   readonly minGapMs?: number;
   readonly maxDelayMs?: number;
-  readonly executeImmediately?: boolean;
+  readonly timing: "both" | "leading" | "trailing";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
@@ -70,7 +70,7 @@ type Debouncer<F extends PrepareFunc> = {
  * @param execute - The function to debounce, the returned `call` function will
  * have the exact same signature.
  * @param options - An object allowing further customization of the debouncer.
- * @param options.executeImmediately -
+ * @param options.timing -
  * - `leading` - The function is invoked at the start of the cool-down period.
  * - `trailing` - The function is invoked at the end of the cool-down period
  * (using the args from the last call to the debouncer).
@@ -118,12 +118,7 @@ export function debounce<
 >(
   prepare: P,
   execute: F,
-  {
-    executeImmediately = false,
-    coolDownMs,
-    maxDelayMs,
-    minGapMs,
-  }: DebounceOptions,
+  { timing = "trailing", coolDownMs, maxDelayMs, minGapMs }: DebounceOptions,
 ): Debouncer<P> {
   // All these are part of the debouncer runtime state:
 
@@ -196,15 +191,17 @@ export function debounce<
     call: (...args) => {
       preparedParam = prepare(preparedParam, ...args);
 
+      // Because `invoke` which might be called later modifies `gapTimeoutId` we
+      // need to store this value ahead of time so we can act on it's original
+      // value.
+      const isGapActive = gapTimeoutId !== undefined;
+
       if (
         coolDownTimeoutId === undefined &&
-        gapTimeoutId === undefined &&
-        executeImmediately
+        !isGapActive &&
+        timing !== "leading"
       ) {
-        // We are starting a new active windows after being idle, if the user
-        // wants us to execute immediately we schedule an invoke to run
-        // immediately.
-        setTimeout(invoke, 0 /* immediate */);
+        invoke();
       }
 
       if (coolDownMs === undefined) {
@@ -212,7 +209,7 @@ export function debounce<
         return;
       }
 
-      if (coolDownTimeoutId === undefined && gapTimeoutId !== undefined) {
+      if (coolDownTimeoutId === undefined && isGapActive) {
         // We are not in an active cool-down window but in a gap window. We
         // don't start a new cool-down window until we invoke the function
         // again.
