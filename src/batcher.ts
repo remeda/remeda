@@ -10,14 +10,12 @@ type Options = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
 type Reducer = <T>(accumulator: T | undefined, ...params: any) => T;
 
-type Batcher<F extends Reducer> = {
+type Foo<F extends Reducer> = {
   /**
-   * Call the function. This might result in the batcher `execute` function
-   * being called now or later, depending on it's configuration and it's current
-   * state.
+   * Call the function. This might result in the `execute` function being called
+   * now or later, depending on it's configuration and it's current state.
    *
-   * @param args - The args are defined by the `reduceArgs` function passed when
-   * the batcher was created.
+   * @param args - The args are defined by the `reduceArgs` function.
    */
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- This is OK for here...
   readonly call: (...args: ArrayTail<Parameters<F>>) => void;
@@ -114,7 +112,7 @@ export function batcher<R extends Reducer>(
   reduceArgs: R,
   execute: (data: ReturnType<R>) => void,
   { invokedAt = "end", burstCoolDownMs, maxBurstDurationMs, delayMs }: Options,
-): Batcher<R> {
+): Foo<R> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
   // to track the delay between invocations. Together we refer to the period
   // where any of these are active as a "moratorium period".
