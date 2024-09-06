@@ -189,18 +189,25 @@ export function debounce<
 
   return {
     call: (...args) => {
-      preparedParam = prepare(preparedParam, ...args);
-
       // Because `invoke` which might be called later modifies `gapTimeoutId` we
       // need to store this value ahead of time so we can act on it's original
       // value.
-      const isGapActive = gapTimeoutId !== undefined;
+      const isIdle =
+        coolDownTimeoutId === undefined && gapTimeoutId === undefined;
 
-      if (
-        coolDownTimeoutId === undefined &&
-        !isGapActive &&
-        timing !== "leading"
-      ) {
+      if (timing !== "leading" || isIdle) {
+        // These are calls that need to be prepared for a later invocation. They
+        // are made of all calls made when the batcher is idle, and all calls
+        // which are invoked at the **end** of a moratorium period ("trailing",
+        // and "both").
+        preparedParam = prepare(preparedParam, ...args);
+      }
+
+      if (timing !== "trailing" && isIdle) {
+        // These are calls that need to be invoked immediately. This is only
+        // relevant when the batcher is idle, and only for modes which allow
+        // invoking at the **start** of a moratorium period ("leading", and
+        // "both").
         invoke();
       }
 
@@ -209,7 +216,7 @@ export function debounce<
         return;
       }
 
-      if (coolDownTimeoutId === undefined && isGapActive) {
+      if (coolDownTimeoutId === undefined && !isIdle) {
         // We are not in an active cool-down window but in a gap window. We
         // don't start a new cool-down window until we invoke the function
         // again.
