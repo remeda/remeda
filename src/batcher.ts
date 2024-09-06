@@ -1,6 +1,6 @@
 import { type ArrayTail } from "type-fest";
 
-type BatcherOptions = {
+type Options = {
   readonly invokedAt?: "both" | "end" | "start";
   readonly burstCoolDownMs?: number;
   readonly maxBurstDurationMs?: number;
@@ -113,12 +113,7 @@ type Batcher<F extends Reducer> = {
 export function batcher<R extends Reducer>(
   reduceArgs: R,
   execute: (data: ReturnType<R>) => void,
-  {
-    invokedAt = "end",
-    burstCoolDownMs,
-    maxBurstDurationMs,
-    delayMs,
-  }: BatcherOptions,
+  { invokedAt = "end", burstCoolDownMs, maxBurstDurationMs, delayMs }: Options,
 ): Batcher<R> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
   // to track the delay between invocations. Together we refer to the period
