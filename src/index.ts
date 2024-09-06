@@ -2,6 +2,7 @@ export * from "./add";
 export * from "./addProp";
 export * from "./allPass";
 export * from "./anyPass";
+export * from "./batcher";
 export * from "./capitalize";
 export * from "./ceil";
 export * from "./chunk";

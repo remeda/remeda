@@ -275,30 +275,30 @@ describe("Additional functionality", () => {
 
   it("can check for inflight timers (trailing)", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
-    expect(debouncer.isIdle).toEqual(false);
+    expect(debouncer.isPending).toEqual(false);
 
     expect(debouncer.call("hello")).toBeUndefined();
-    expect(debouncer.isIdle).toEqual(true);
+    expect(debouncer.isPending).toEqual(true);
 
     await sleep(1);
-    expect(debouncer.isIdle).toEqual(true);
+    expect(debouncer.isPending).toEqual(true);
 
     await sleep(32);
-    expect(debouncer.isIdle).toEqual(false);
+    expect(debouncer.isPending).toEqual(false);
   });
 
   it("can check for inflight timers (trailing)", async () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
-    expect(debouncer.isIdle).toEqual(false);
+    expect(debouncer.isPending).toEqual(false);
 
     expect(debouncer.call("hello")).toEqual("hello");
-    expect(debouncer.isIdle).toEqual(true);
+    expect(debouncer.isPending).toEqual(true);
 
     await sleep(1);
-    expect(debouncer.isIdle).toEqual(true);
+    expect(debouncer.isPending).toEqual(true);
 
     await sleep(32);
-    expect(debouncer.isIdle).toEqual(false);
+    expect(debouncer.isPending).toEqual(false);
   });
 
   it("can flush before a cool-down", async () => {
