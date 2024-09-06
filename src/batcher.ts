@@ -1,22 +1,22 @@
 import { type ArrayTail } from "type-fest";
 
 type BatcherOptions = {
-  readonly coolDownMs?: number;
-  readonly minGapMs?: number;
-  readonly maxDelayMs?: number;
-  readonly timing: "both" | "leading" | "trailing";
+  readonly invokedAt?: "both" | "end" | "start";
+  readonly burstCoolDownMs?: number;
+  readonly maxBurstDurationMs?: number;
+  readonly delayMs?: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
-type PrepareFunc = <T>(prev: T | undefined, ...params: any) => T;
+type Reducer = <T>(accumulator: T | undefined, ...params: any) => T;
 
-type Batcher<F extends PrepareFunc> = {
+type Batcher<F extends Reducer> = {
   /**
    * Invoke the debounced function.
    *
    * @param args - Same as the args for the debounced function.
    * @returns The last computed value of the debounced function with the
-   * latest args provided to it. If `timing` does not include `leading` then the
+   * latest args provided to it. If `timing` does not include `start` then the
    * the function would return `undefined` until the first cool-down period is
    * over, otherwise the function would always return the return type of the
    * debounced function.
@@ -31,7 +31,7 @@ type Batcher<F extends PrepareFunc> = {
   readonly cancel: () => void;
 
   /**
-   * Similar to `cancel`, but would also trigger the `trailing` invocation if
+   * Similar to `cancel`, but would also trigger the `end` invocation if
    * the debouncer would run one at the end of the cool-down period.
    */
   readonly flush: () => void;
@@ -66,30 +66,30 @@ type Batcher<F extends PrepareFunc> = {
  * _This implementation is based on the Lodash implementation and on this
  * [CSS Tricks article](https://css-tricks.com/debouncing-throttling-explained-examples/)._.
  *
- * @param prepare - TODO.
+ * @param reduceArgs - TODO.
  * @param execute - The function to debounce, the returned `call` function will
  * have the exact same signature.
  * @param options - An object allowing further customization of the debouncer.
- * @param options.timing -
- * - `leading` - The function is invoked at the start of the cool-down period.
- * - `trailing` - The function is invoked at the end of the cool-down period
+ * @param options.invokedAt -
+ * - `start` - The function is invoked at the start of the cool-down period.
+ * - `end` - The function is invoked at the end of the cool-down period
  * (using the args from the last call to the debouncer).
- * - `both` - When this is selected the `trailing` invocation would only take
+ * - `both` - When this is selected the `end` invocation would only take
  * place if there was more than one call to the debouncer during the cool-down
- * period. @default 'trailing'.
- * @param options.coolDownMs - The length of the cool-down period in
+ * period. @default 'end'.
+ * @param options.burstCoolDownMs - The length of the cool-down period in
  * milliseconds. The debouncer would wait until this amount of time has passed
  * without **any** additional calls to the debouncer before triggering the end-
  * of-cool-down-period event. When this happens, the function would be invoked
- * (if `timing` isn't `'leading'`) and the debouncer state would be
+ * (if `timing` isn't `'start'`) and the debouncer state would be
  * reset. @default 0.
- * @param options.maxDelayMs - The length of time since a debounced call (a call
+ * @param options.maxBurstDurationMs - The length of time since a debounced call (a call
  * that the debouncer prevented from being invoked) was made until it would be
  * invoked. Because the debouncer can be continually triggered and thus never
  * reach the end of the cool-down period, this allows the function to still be
  * invoked occasionally. IMPORTANT: This param is ignored when `timing` is
- * `'leading'`.
- * @param options.minGapMs - TODO...
+ * `'start'`.
+ * @param options.delayMs - TODO.
  * @returns A debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
@@ -101,7 +101,7 @@ type Batcher<F extends PrepareFunc> = {
  * @example
  *   const debouncer = debounce(
  *     identity(),
- *     { timing: 'trailing', waitMs: 1000 },
+ *     { timing: 'end', waitMs: 1000 },
  *   );
  *   const result1 = debouncer.call(1); // => undefined
  *   const result2 = debouncer.call(2); // => undefined
@@ -112,158 +112,145 @@ type Batcher<F extends PrepareFunc> = {
  * @dataFirst
  * @category Function
  */
-export function batcher<
-  P extends PrepareFunc,
-  F extends (params: ReturnType<P>) => void,
->(
-  prepare: P,
-  execute: F,
-  { timing = "trailing", coolDownMs, maxDelayMs, minGapMs }: BatcherOptions,
-): Batcher<P> {
-  // All these are part of the debouncer runtime state:
+export function batcher<R extends Reducer>(
+  reduceArgs: R,
+  execute: (data: ReturnType<R>) => void,
+  {
+    invokedAt = "end",
+    burstCoolDownMs,
+    maxBurstDurationMs,
+    delayMs,
+  }: BatcherOptions,
+): Batcher<R> {
+  // We manage execution via 2 timeouts, one to track bursts of calls, and one
+  // to track the delay between invocations. Together we refer to the period
+  // where any of these are active as a "moratorium period".
+  let burstTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  let delayTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
-  // The timeout is the main object we use to tell if there's an active cool-
-  // down period or not.
-  let coolDownTimeoutId: ReturnType<typeof setTimeout> | undefined;
-  let coolDownStartTimestamp: number | undefined;
+  // Until invoked, all calls are reduced into a single value that would be sent
+  // to the executor on invocation.
+  let preparedData: ReturnType<R> | undefined;
 
-  let gapTimeoutId: ReturnType<typeof setTimeout> | undefined;
-
-  // For 'trailing' invocations we need to keep the args around until we
-  // actually invoke the function.
-  let preparedParam: ReturnType<P> | undefined;
+  // In order to be able to limit the total size of the burst (when
+  // `maxBurstDurationMs` is used) we need to track when the burst started.
+  let burstStartTimestamp: number | undefined;
 
   const invoke = (): void => {
-    const param = preparedParam;
+    const param = preparedData;
     if (param === undefined) {
-      // There are no debounced calls to invoke.
+      // There were no calls during both moratoriums periods.
       return;
     }
-    // Make sure the args aren't accidentally used again
-    preparedParam = undefined;
 
-    // Invoke the function and store the results locally.
+    // Make sure the args aren't accidentally used again
+    preparedData = undefined;
+
     execute(param);
 
-    // The gap starts when we invoke, and should run to completion without being
-    // reset.
-    if (minGapMs !== undefined) {
-      gapTimeoutId = setTimeout(handleGapEnd, minGapMs);
+    if (delayMs !== undefined) {
+      delayTimeoutId = setTimeout(handleDelayEnd, delayMs);
     }
   };
 
-  const handleGapEnd = (): void => {
-    // Reset the gap period state so it could be started again.
-    clearTimeout(gapTimeoutId);
-    gapTimeoutId = undefined;
+  const handleDelayEnd = (): void => {
+    // When called via a timeout the timeout is already cleared, but when called
+    // via `flush` we need to manually clear it.
+    clearTimeout(delayTimeoutId);
+    delayTimeoutId = undefined;
 
-    if (coolDownTimeoutId !== undefined) {
+    if (burstTimeoutId !== undefined) {
       // As long as one of the moratoriums is active we don't invoke the
       // function. Each moratorium end event handlers has a call to invoke, so
       // we are guaranteed to invoke the function eventually.
       return;
     }
 
-    // If we have a debounced call waiting to be invoked at the end of the
-    // gap period we need to invoke it now.
     invoke();
   };
 
-  const handleCoolDownEnd = (): void => {
-    // Reset the cool-down period state so it could be started again.
-    clearTimeout(coolDownTimeoutId);
-    coolDownTimeoutId = undefined;
-    coolDownStartTimestamp = undefined;
+  const handleBurstEnd = (): void => {
+    // When called via a timeout the timeout is already cleared, but when called
+    // via `flush` we need to manually clear it.
+    clearTimeout(burstTimeoutId);
+    burstTimeoutId = undefined;
+    burstStartTimestamp = undefined;
 
-    if (gapTimeoutId !== undefined) {
+    if (delayTimeoutId !== undefined) {
       // As long as one of the moratoriums is active we don't invoke the
       // function. Each moratorium end event handlers has a call to invoke, so
       // we are guaranteed to invoke the function eventually.
       return;
     }
 
-    // If we have a debounced call waiting to be invoked at the end of the
-    // cool-down period we need to invoke it now.
     invoke();
   };
 
   return {
     call: (...args) => {
-      // Because `invoke` which might be called later modifies `gapTimeoutId` we
-      // need to store this value ahead of time so we can act on it's original
-      // value.
+      // Because `invoke` which might be called later modifies `delayTimeoutId`
+      // we need to store this value ahead of time so we can act on it's
+      // original value.
       const isIdle =
-        coolDownTimeoutId === undefined && gapTimeoutId === undefined;
+        burstTimeoutId === undefined && delayTimeoutId === undefined;
 
-      if (timing !== "leading" || isIdle) {
-        // These are calls that need to be prepared for a later invocation. They
-        // are made of all calls made when the batcher is idle, and all calls
-        // which are invoked at the **end** of a moratorium period ("trailing",
-        // and "both").
-        preparedParam = prepare(preparedParam, ...args);
+      if (invokedAt !== "start" || isIdle) {
+        preparedData = reduceArgs(preparedData, ...args);
       }
 
-      if (timing !== "trailing" && isIdle) {
-        // These are calls that need to be invoked immediately. This is only
-        // relevant when the batcher is idle, and only for modes which allow
-        // invoking at the **start** of a moratorium period ("leading", and
-        // "both").
+      if (invokedAt !== "end" && isIdle) {
         invoke();
       }
 
-      if (coolDownMs === undefined) {
-        // We don't use the cool-down mechanism.
+      if (burstCoolDownMs === undefined) {
+        // The burst mechanism isn't used.
         return;
       }
 
-      if (coolDownTimeoutId === undefined && !isIdle) {
-        // We are not in an active cool-down window but in a gap window. We
-        // don't start a new cool-down window until we invoke the function
-        // again.
+      if (burstTimeoutId === undefined && !isIdle) {
+        // We are not in an active burst period but in a delay period. We
+        // don't start a new burst window until the next invoke.
         return;
       }
 
-      // The timeout tracking the cool-down period needs to be reset every
-      // time another call is made, so that it waits the full cool-down period
-      // before releasing the debounced call.
-      clearTimeout(coolDownTimeoutId);
+      // The timeout tracking the burst period needs to be reset every time
+      // another call is made so that it waits the full cool-down duration
+      // before it is released.
+      clearTimeout(burstTimeoutId);
 
-      coolDownStartTimestamp ??= Date.now();
+      burstStartTimestamp ??= Date.now();
 
-      const delayMs =
-        maxDelayMs === undefined
-          ? coolDownMs
+      const burstRemainingMs =
+        maxBurstDurationMs === undefined
+          ? burstCoolDownMs
           : Math.min(
-              coolDownMs,
+              burstCoolDownMs,
               // We need to account for the time already spent so that we
               // don't wait longer than the maxDelay.
-              maxDelayMs - (Date.now() - coolDownStartTimestamp),
+              maxBurstDurationMs - (Date.now() - burstStartTimestamp),
             );
 
-      coolDownTimeoutId = setTimeout(handleCoolDownEnd, delayMs);
+      burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
     },
 
     cancel: () => {
-      // Reset all "in-flight" state of the debouncer. Notice that we keep the
-      // cached value!
+      clearTimeout(burstTimeoutId);
+      burstTimeoutId = undefined;
+      burstStartTimestamp = undefined;
 
-      clearTimeout(coolDownTimeoutId);
-      coolDownTimeoutId = undefined;
-      coolDownStartTimestamp = undefined;
+      clearTimeout(delayTimeoutId);
+      delayTimeoutId = undefined;
 
-      clearTimeout(gapTimeoutId);
-      gapTimeoutId = undefined;
-
-      preparedParam = undefined;
+      preparedData = undefined;
     },
 
     flush: () => {
-      handleCoolDownEnd();
-      handleGapEnd();
+      handleBurstEnd();
+      handleDelayEnd();
     },
 
     get isIdle() {
-      return coolDownTimeoutId === undefined && gapTimeoutId === undefined;
+      return burstTimeoutId === undefined && delayTimeoutId === undefined;
     },
   };
 }
