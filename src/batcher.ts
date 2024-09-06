@@ -12,33 +12,31 @@ type Reducer = <T>(accumulator: T | undefined, ...params: any) => T;
 
 type Batcher<F extends Reducer> = {
   /**
-   * Invoke the debounced function.
+   * Call the function. This might result in the batcher `execute` function
+   * being called now or later, depending on it's configuration and it's current
+   * state.
    *
-   * @param args - Same as the args for the debounced function.
-   * @returns The last computed value of the debounced function with the
-   * latest args provided to it. If `timing` does not include `start` then the
-   * the function would return `undefined` until the first cool-down period is
-   * over, otherwise the function would always return the return type of the
-   * debounced function.
+   * @param args - The args are defined by the `reduceArgs` function passed when
+   * the batcher was created.
    */
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- This is OK for here...
   readonly call: (...args: ArrayTail<Parameters<F>>) => void;
 
   /**
-   * Cancels any debounced functions without calling them, effectively resetting
-   * the debouncer to the same state it is when initially created.
+   * Resets the batcher to it's initial state. Any calls made since the last
+   * invocation will be discarded.
    */
   readonly cancel: () => void;
 
   /**
-   * Similar to `cancel`, but would also trigger the `end` invocation if
-   * the debouncer would run one at the end of the cool-down period.
+   * Triggers an invocation regardless of the current state of the batcher.
+   * Like any other invocation, the batcher will also be reset to it's initial
+   * state afterwards.
    */
   readonly flush: () => void;
 
   /**
-   * Is `true` when there is an active cool-down period currently debouncing
-   * invocations.
+   * The batcher is in it's initial state and there are no active timers.
    */
   readonly isIdle: boolean;
 };
