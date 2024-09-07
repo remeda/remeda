@@ -1,6 +1,6 @@
 import { type ArrayTail } from "type-fest";
 
-type Options = {
+type TimingPolicy = {
   readonly invokedAt?: "both" | "end" | "start";
   readonly burstCoolDownMs?: number;
   readonly maxBurstDurationMs?: number;
@@ -8,9 +8,9 @@ type Options = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
-type Reducer = <T>(accumulator: T | undefined, ...params: any) => T;
+type ParametersReducer = <T>(accumulator: T | undefined, ...params: any) => T;
 
-type Foo<F extends Reducer> = {
+type Funnel<F extends ParametersReducer> = {
   /**
    * Call the function. This might result in the `execute` function being called
    * now or later, depending on it's configuration and it's current state.
@@ -21,98 +21,82 @@ type Foo<F extends Reducer> = {
   readonly call: (...args: ArrayTail<Parameters<F>>) => void;
 
   /**
-   * Resets the batcher to it's initial state. Any calls made since the last
+   * Resets the funnel to it's initial state. Any calls made since the last
    * invocation will be discarded.
    */
   readonly cancel: () => void;
 
   /**
-   * Triggers an invocation regardless of the current state of the batcher.
-   * Like any other invocation, the batcher will also be reset to it's initial
+   * Triggers an invocation regardless of the current state of the funnel.
+   * Like any other invocation, The funnel will also be reset to it's initial
    * state afterwards.
    */
   readonly flush: () => void;
 
   /**
-   * The batcher is in it's initial state and there are no active timers.
+   * The funnel is in it's initial state (there are no active timers).
    */
   readonly isIdle: boolean;
 };
 
 /**
- * Wraps `func` with a debouncer object that "debounces" (delays) invocations of
- * the function during a defined cool-down period (`waitMs`). It can be
- * configured to invoke the function either at the start of the cool-down
- * period, the end of it, or at both ends (`timing`).
- * It can also be configured to allow invocations during the cool-down period
- * (`maxWaitMs`).
- * It stores the latest call's arguments so they could be used at the end of the
- * cool-down period when invoking `func` (if configured to invoke the function
- * at the end of the cool-down period).
- * It stores the value returned by `func` whenever its invoked. This value is
- * returned on every call, and is accessible via the `cachedValue` property of
- * the debouncer. Its important to note that the value might be different from
- * the value that would be returned from running `func` with the current
- * arguments as it is a cached value from a previous invocation.
- * **Important**: The cool-down period defines the minimum between two
- * invocations, and not the maximum. The period will be **extended** each time a
- * call is made until a full cool-down period has elapsed without any additional
- * calls.
+ * TODO.
  *
- * _This implementation is based on the Lodash implementation and on this
- * [CSS Tricks article](https://css-tricks.com/debouncing-throttling-explained-examples/)._.
- *
- * @param reduceArgs - TODO.
- * @param execute - The function to debounce, the returned `call` function will
- * have the exact same signature.
- * @param options - An object allowing further customization of the debouncer.
- * @param options.invokedAt -
- * - `start` - The function is invoked at the start of the cool-down period.
- * - `end` - The function is invoked at the end of the cool-down period
- * (using the args from the last call to the debouncer).
- * - `both` - When this is selected the `end` invocation would only take
- * place if there was more than one call to the debouncer during the cool-down
- * period. @default 'end'.
- * @param options.burstCoolDownMs - The length of the cool-down period in
- * milliseconds. The debouncer would wait until this amount of time has passed
- * without **any** additional calls to the debouncer before triggering the end-
- * of-cool-down-period event. When this happens, the function would be invoked
- * (if `timing` isn't `'start'`) and the debouncer state would be
- * reset. @default 0.
- * @param options.maxBurstDurationMs - The length of time since a debounced call (a call
- * that the debouncer prevented from being invoked) was made until it would be
- * invoked. Because the debouncer can be continually triggered and thus never
- * reach the end of the cool-down period, this allows the function to still be
- * invoked occasionally. IMPORTANT: This param is ignored when `timing` is
- * `'start'`.
- * @param options.delayMs - TODO.
- * @returns A debouncer object. The main function is `call`. In addition to it
- * the debouncer comes with the following additional functions and properties:
- * - `cancel` method to cancel delayed `func` invocations
- * - `flush` method to end the cool-down period immediately.
- * - `cachedValue` the latest return value of an invocation (if one occurred).
- * - `isPending` flag to check if there is an inflight cool-down window.
+ * @param reduceArgs - Reduces the arguments from multiple calls into a single
+ * argument that would then be used when `execute` is invoked. The first
+ * argument is the previous value returned by `reduceArgs` (or `undefined` if
+ * this is the first call). The rest of the arguments are the arguments passed
+ * to `call`. This function defines the types for the arguments of `call`, and
+ * should have explicit types. The function is only called when a later
+ * invocation of `execute` is expected, when `policy.invokedAt` is `'start'` and
+ * there is an active period the function is skipped.
+ * @param execute - The main function that would be called based on the policy
+ * set by the `options` object. The function would take the result of
+ * `reduceArgs` called for each call to `call` since the last time it was
+ * invoked. If no calls where made in this period it will not be called at all.
+ * @param policy - The timing policy that defines when `execute` should be
+ * called following the calls to `call`.
+ * @param policy.invokedAt -
+ * - `start` - The function is invoked at the start of each period. Any
+ * subsequent calls while the funnel is active would be ignored.
+ * - `end` - The function is invoked at the end of each period.
+ * - `both` - The function is invoked both at the `start` and `end`
+ * timings. @default 'end'.
+ * @param policy.burstCoolDownMs - The maximum duration between calls that would
+ * be considered as the same burst. If a call is made within this duration the
+ * burst is extended to contain it. (aka "debounce" time).
+ * @param policy.maxBurstDurationMs - A maximum duration for a burst. When this
+ * is *not* defined the burst could last as long as there are `calls` being made
+ * within the `burstCoolDownMs` period. To prevent starvation of the `execute`
+ * function, the burst will be ended after this duration even if there are
+ * calls being made.
+ * @param policy.delayMs - A minimum duration between calls of `execute`. This
+ * is maintained regardless of the shape of the burst and is ensured even if the
+ * `maxBurstDurationMs` is reached before it. (aka "throttle" time).
+ * @returns A funnel with a `call` function that is used to trigger invocations.
+ * In addition to it the funnel also comes with the following functions and
+ * properties:
+ * - `cancel` - which resets the funnel to it's initial state, ignoring any
+ * pending calls.
+ * - `flush` - which triggers an invocation even if there are active timers, and
+ * then resets the funnel to it's initial state.
+ * - `isIdle` - which allows observing if there are any active timers.
  * @signature
- *   R.debounce(func, options);
+ *   R.funnel(reduceArgs, execute, policy);
  * @example
- *   const debouncer = debounce(
- *     identity(),
- *     { timing: 'end', waitMs: 1000 },
- *   );
- *   const result1 = debouncer.call(1); // => undefined
- *   const result2 = debouncer.call(2); // => undefined
- *   // after 1 second
- *   const result3 = debouncer.call(3); // => 2
- *   // after 1 second
- *   debouncer.cachedValue; // => 3
- * @dataFirst
+ *   // TODO
  * @category Function
  */
-export function batcher<R extends Reducer>(
+export function funnel<R extends ParametersReducer>(
   reduceArgs: R,
   execute: (data: ReturnType<R>) => void,
-  { invokedAt = "end", burstCoolDownMs, maxBurstDurationMs, delayMs }: Options,
-): Foo<R> {
+  {
+    invokedAt = "end",
+    burstCoolDownMs,
+    maxBurstDurationMs,
+    delayMs,
+  }: TimingPolicy,
+): Funnel<R> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
   // to track the delay between invocations. Together we refer to the period
   // where any of these are active as a "moratorium period".
