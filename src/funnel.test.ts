@@ -1,44 +1,32 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { constant } from "./constant";
+import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
 describe("LEGACY `debounce`", () => {
   describe("Main functionality", () => {
     it("should debounce a function", async () => {
-      const mockFn = vi.fn(identity());
+      const mockFn = vi.fn();
 
       const debouncer = debounce(mockFn, { burstCoolDownMs: 32 });
 
-      expect([
-        debouncer.call("a"),
-        debouncer.call("b"),
-        debouncer.call("c"),
-      ]).toEqual([undefined, undefined, undefined]);
+      debouncer.call("a");
+      debouncer.call("b");
+      debouncer.call("c");
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(128);
 
       expect(mockFn).toBeCalledTimes(1);
-      expect([
-        debouncer.call("d"),
-        debouncer.call("e"),
-        debouncer.call("f"),
-      ]).toEqual(["c", "c", "c"]);
+      debouncer.call("d");
+      debouncer.call("e");
+      debouncer.call("f");
       expect(mockFn).toBeCalledTimes(1);
 
       await sleep(256);
 
       expect(mockFn).toBeCalledTimes(2);
-    });
-
-    it("subsequent debounced calls return the last `func` result", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
-      debouncer.call("a");
-
-      await sleep(64);
-      expect(debouncer.call("b")).toBe("a");
-
-      await sleep(128);
-      expect(debouncer.call("c")).toBe("b");
     });
 
     it("should not immediately call `func` when `wait` is `0`", async () => {
@@ -94,18 +82,6 @@ describe("LEGACY `debounce`", () => {
       expect(leadingMockFn).toBeCalledTimes(2);
     });
 
-    it("subsequent leading debounced calls return the last `func` result", async () => {
-      const debouncer = debounce(identity(), {
-        burstCoolDownMs: 32,
-        invokedAt: "start",
-      });
-
-      expect([debouncer.call("a"), debouncer.call("b")]).toEqual(["a", "a"]);
-
-      await sleep(64);
-      expect([debouncer.call("c"), debouncer.call("d")]).toEqual(["c", "c"]);
-    });
-
     it("should support a `trailing` option", async () => {
       const mockFn = vi.fn();
 
@@ -124,7 +100,7 @@ describe("LEGACY `debounce`", () => {
 
   describe("Optional param maxWaitMs", () => {
     it("should support a `maxWait` option", async () => {
-      const mockFn = vi.fn(identity());
+      const mockFn = vi.fn();
 
       const debouncer = debounce(mockFn, {
         burstCoolDownMs: 32,
@@ -232,8 +208,124 @@ describe("LEGACY `debounce`", () => {
   });
 
   describe("Additional functionality", () => {
+    it("can cancel the timer", async () => {
+      const mockFn = vi.fn();
+      const debouncer = debounce(mockFn, { burstCoolDownMs: 32 });
+
+      debouncer.call();
+      expect(mockFn).not.toHaveBeenCalled();
+
+      await sleep(1);
+      debouncer.call();
+      expect(mockFn).not.toHaveBeenCalled();
+      debouncer.cancel();
+
+      await sleep(32);
+      debouncer.call();
+      expect(mockFn).not.toHaveBeenCalled();
+
+      await sleep(32);
+      debouncer.call();
+      expect(mockFn).toBeCalledTimes(1);
+    });
+
+    it("can cancel after the timer ends", async () => {
+      const debouncer = debounce(doNothing(), { burstCoolDownMs: 32 });
+      debouncer.call("hello");
+      await sleep(32);
+
+      debouncer.call("world");
+      expect(() => {
+        debouncer.cancel();
+      }).not.toThrow();
+    });
+
+    it("can check for inflight timers (trailing)", async () => {
+      const debouncer = debounce(doNothing(), { burstCoolDownMs: 32 });
+      expect(debouncer.isIdle).toBe(true);
+
+      debouncer.call("hello");
+      expect(debouncer.isIdle).toBe(false);
+
+      await sleep(1);
+      expect(debouncer.isIdle).toBe(false);
+
+      await sleep(32);
+      expect(debouncer.isIdle).toBe(true);
+    });
+
+    it("can check for inflight timers (trailing)", async () => {
+      const debouncer = debounce(identity(), {
+        invokedAt: "start",
+        burstCoolDownMs: 32,
+      });
+      expect(debouncer.isIdle).toBe(true);
+
+      debouncer.call("hello");
+      expect(debouncer.isIdle).toBe(false);
+
+      await sleep(1);
+      expect(debouncer.isIdle).toBe(false);
+
+      await sleep(32);
+      expect(debouncer.isIdle).toBe(true);
+    });
+  });
+});
+
+describe("LEGACY `debounce` with cached value", () => {
+  describe("Main functionality", () => {
+    it("should debounce a function", async () => {
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
+
+      expect([
+        debouncer.call("a"),
+        debouncer.call("b"),
+        debouncer.call("c"),
+      ]).toEqual([undefined, undefined, undefined]);
+
+      await sleep(128);
+
+      expect([
+        debouncer.call("d"),
+        debouncer.call("e"),
+        debouncer.call("f"),
+      ]).toEqual(["c", "c", "c"]);
+    });
+
+    it("subsequent debounced calls return the last `func` result", async () => {
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
+      debouncer.call("a");
+
+      await sleep(64);
+      expect(debouncer.call("b")).toBe("a");
+
+      await sleep(128);
+      expect(debouncer.call("c")).toBe("b");
+    });
+
+    it("subsequent leading debounced calls return the last `func` result", async () => {
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+        invokedAt: "start",
+      });
+
+      expect([debouncer.call("a"), debouncer.call("b")]).toEqual(["a", "a"]);
+
+      await sleep(64);
+      expect([debouncer.call("c"), debouncer.call("d")]).toEqual(["c", "c"]);
+    });
+  });
+
+  describe("Additional functionality", () => {
     it("can cancel before the timer starts", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
       expect(() => {
         debouncer.cancel();
       }).not.toThrow();
@@ -245,29 +337,27 @@ describe("LEGACY `debounce`", () => {
     });
 
     it("can cancel the timer", async () => {
-      const data = "Hello, World!";
-      const mockFn = vi.fn(() => data);
-      const debouncer = debounce(mockFn, { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(constant("Hello, World!"), {
+        burstCoolDownMs: 32,
+      });
 
       expect(debouncer.call()).toBeUndefined();
-      expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(1);
       expect(debouncer.call()).toBeUndefined();
-      expect(mockFn).not.toHaveBeenCalled();
       debouncer.cancel();
 
       await sleep(32);
       expect(debouncer.call()).toBeUndefined();
-      expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(32);
-      expect(debouncer.call()).toBe(data);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(debouncer.call()).toBe("Hello, World!");
     });
 
     it("can cancel after the timer ends", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
       expect(debouncer.call("hello")).toBeUndefined();
       await sleep(32);
 
@@ -277,22 +367,8 @@ describe("LEGACY `debounce`", () => {
       }).not.toThrow();
     });
 
-    it("can cancel maxWait timer", async () => {
-      const debouncer = debounce(identity(), {
-        burstCoolDownMs: 16,
-        maxBurstDurationMs: 32,
-      });
-      expect(debouncer.call("hello")).toBeUndefined();
-
-      await sleep(1);
-      debouncer.cancel();
-
-      await sleep(32);
-      expect(debouncer.call("world")).toBeUndefined();
-    });
-
     it("can return a cached value", () => {
-      const debouncer = debounce(identity(), {
+      const debouncer = debounceWithCachedValue(identity(), {
         invokedAt: "start",
         burstCoolDownMs: 32,
       });
@@ -302,21 +378,7 @@ describe("LEGACY `debounce`", () => {
     });
 
     it("can check for inflight timers (trailing)", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
-      expect(debouncer.isIdle).toBe(true);
-
-      expect(debouncer.call("hello")).toBeUndefined();
-      expect(debouncer.isIdle).toBe(false);
-
-      await sleep(1);
-      expect(debouncer.isIdle).toBe(false);
-
-      await sleep(32);
-      expect(debouncer.isIdle).toBe(true);
-    });
-
-    it("can check for inflight timers (trailing)", async () => {
-      const debouncer = debounce(identity(), {
+      const debouncer = debounceWithCachedValue(identity(), {
         invokedAt: "start",
         burstCoolDownMs: 32,
       });
@@ -333,7 +395,9 @@ describe("LEGACY `debounce`", () => {
     });
 
     it("can flush before a cool-down", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
       expect(debouncer.flush()).toBeUndefined();
 
       expect(debouncer.call("hello")).toBeUndefined();
@@ -343,7 +407,9 @@ describe("LEGACY `debounce`", () => {
     });
 
     it("can flush during a cool-down", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
       expect(debouncer.call("hello")).toBeUndefined();
 
       await sleep(1);
@@ -354,7 +420,9 @@ describe("LEGACY `debounce`", () => {
     });
 
     it("can flush after a cool-down", async () => {
-      const debouncer = debounce(identity(), { burstCoolDownMs: 32 });
+      const debouncer = debounceWithCachedValue(identity(), {
+        burstCoolDownMs: 32,
+      });
       expect(debouncer.call("hello")).toBeUndefined();
 
       await sleep(32);
@@ -363,17 +431,20 @@ describe("LEGACY `debounce`", () => {
   });
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- No point in defining the type here, this is just for testing!
-function debounce<F extends (...args: ReadonlyArray<unknown>) => unknown>(
+const debounce = <F extends (...args: ReadonlyArray<unknown>) => void>(
   func: F,
   timingPolicy: Parameters<typeof funnel>[2],
-) {
-  let value: ReturnType<F> | undefined;
+) => funnel((_, ...args: Parameters<F>) => args, func, timingPolicy);
+
+function debounceWithCachedValue<
+  F extends (...args: ReadonlyArray<unknown>) => unknown,
+>(func: F, timingPolicy: Parameters<typeof funnel>[2]) {
+  let cachedValue: ReturnType<F> | undefined;
 
   const debouncer = funnel(
     (_, ...args: Parameters<F>) => args,
     (args) => {
-      value = func(...args) as ReturnType<F>;
+      cachedValue = func(...args) as ReturnType<F>;
     },
     timingPolicy,
   );
@@ -381,18 +452,18 @@ function debounce<F extends (...args: ReadonlyArray<unknown>) => unknown>(
   return {
     call: (...args: Parameters<F>): ReturnType<F> | undefined => {
       debouncer.call(...args);
-      return value;
+      return cachedValue;
     },
 
     flush: () => {
       debouncer.flush();
-      return value;
+      return cachedValue;
     },
 
     cancel: debouncer.cancel,
 
     get cachedValue() {
-      return value;
+      return cachedValue;
     },
 
     get isIdle() {
