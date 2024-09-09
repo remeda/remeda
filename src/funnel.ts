@@ -40,51 +40,70 @@ type Funnel<F extends ParametersReducer> = {
 };
 
 /**
- * TODO.
+ * Creates a "funnel" function controls the timing and execution of the main
+ * callback function (`execute`). It's primary usage is to synchronize multiple
+ * consecutive (and usually fast-paced) calls of a callback so that they are
+ * "re-shaped" to a specific batching strategy and timing policy. This is useful
+ * when you don't control the rate of calls, like DOM events, network traffic
+ * handlers, and more! This can be used to implement debouncing, throttling,
+ * batching, leaky bucket, etc...
  *
- * @param reduceArgs - Reduces the arguments from multiple calls into a single
- * argument that would then be used when `execute` is invoked. The first
- * argument is the previous value returned by `reduceArgs` (or `undefined` if
- * this is the first call). The rest of the arguments are the arguments passed
- * to `call`. This function defines the types for the arguments of `call`, and
- * should have explicit types. The function is only called when a later
- * invocation of `execute` is expected, when `policy.invokedAt` is `'start'` and
- * there is an active period the function is skipped.
- * @param execute - The main function that would be called based on the policy
- * set by the `options` object. The function would take the result of
- * `reduceArgs` called for each call to `call` since the last time it was
- * invoked. If no calls where made in this period it will not be called at all.
- * @param policy - The timing policy that defines when `execute` should be
- * called following the calls to `call`.
- * @param policy.invokedAt -
- * - `start` - The function is invoked at the start of each period. Any
- * subsequent calls while the funnel is active would be ignored.
- * - `end` - The function is invoked at the end of each period.
- * - `both` - The function is invoked both at the `start` and `end`
- * timings. @default 'end'.
- * @param policy.burstCoolDownMs - The maximum duration between calls that would
- * be considered as the same burst. If a call is made within this duration the
- * burst is extended to contain it. (aka "debounce" time).
- * @param policy.maxBurstDurationMs - A maximum duration for a burst. When this
- * is *not* defined the burst could last as long as there are `calls` being made
- * within the `burstCoolDownMs` period. To prevent starvation of the `execute`
- * function, the burst will be ended after this duration even if there are
- * calls being made.
- * @param policy.delayMs - A minimum duration between calls of `execute`. This
- * is maintained regardless of the shape of the burst and is ensured even if the
- * `maxBurstDurationMs` is reached before it. (aka "throttle" time).
+ * Typing is inferred from the type of the `reduceArgs` function. Use
+ * **explicit** types for the parameters and return type to ensure that
+ * everything _else_ is well-typed.
+ *
+ * Notice that this function constructs a funnel **object**, and does **not**
+ * execute anything when called. The returned object should be used to execute
+ * the funnel via the it's `call` method.
+ *
+ * @param reduceArgs - A function that takes the previous value returned by
+ * `reduceArgs` (or `undefined` if this is the first call) and the current
+ * arguments passed to `call`, and returns a new combined value. This function
+ * defines the input type for the `execute` function. This function should be
+ * fast and simple as it is called often. It should defer heavy operations to
+ * the `execute` function.
+ * @param execute - The main function that would be invoked occasionally based
+ * on `timingPolicy`. The function would take the latest result of
+ * `reduceArgs`; if no calls where made since the last time it was invoked it
+ * will not be invoked. If a return value is needed, it should be passed via a
+ * reference or via closure to the outer scope of the funnel.
+ * @param timingPolicy - An object that defines when `execute` should be
+ * invoked, relative to the calls of `call`.
+ * @param timingPolicy.invokedAt - At what "edges" of the funnel's activity
+ * window should `execute` be invoked. `start` means at the transition from
+ * being idle to active, e.g. immediately when `call` is invoked; (this will be
+ * invoked within the same execution frame!). `end` happens when the idle switch
+ * _back_ from active to idle; (this will never be invoked within the same
+ * execution frame, even if the timeouts are defined as 0ms). @default 'end'.
+ * @param timingPolicy.burstCoolDownMs - The maximum duration (in milliseconds)
+ * between calls that will be considered part of the same "burst". If a new call
+ * is made within this duration, the burst is **extended** (aka "debounce"
+ * time).
+ * @param timingPolicy.maxBurstDurationMs - A maximum duration (in milliseconds)
+ * for a "burst". Define this to prevent cases of starvation where a burst is
+ * constantly extended because of incoming calls within the `burstCoolDownMs`.
+ * @param timingPolicy.delayMs - A minimum duration between calls of `execute`.
+ * This is maintained regardless of the shape of the burst and is ensured even
+ * if the `maxBurstDurationMs` is reached before it. (aka "throttle" time).
  * @returns A funnel with a `call` function that is used to trigger invocations.
  * In addition to it the funnel also comes with the following functions and
  * properties:
- * - `cancel` - which resets the funnel to it's initial state, ignoring any
- * pending calls.
- * - `flush` - which triggers an invocation even if there are active timers, and
- * then resets the funnel to it's initial state.
- * - `isIdle` - which allows observing if there are any active timers.
+ * - `cancel` - Resets the funnel to it's initial state, discarding the current
+ * `reducedArgs` result without calling `execute` on it.
+ * - `flush` - Triggers an invocation even if there are active timers, and then
+ * resets the funnel to it's initial state.
+ * - `isIdle` - Checks if there are any active timers.
  * @signature
  *   R.funnel(reduceArgs, execute, policy);
  * @example
- *   // TODO
+ *   const debouncer = R.funnel(
+ *     (acc, value: string) => value,
+ *     (value) => { console.log(value); },
+ *     { burstCoolDownMs: 100 },
+ *   );
+ *
+ *   debouncer.call("hello");
+ *   debouncer.call("world");
  * @category Function
  */
 export function funnel<R extends ParametersReducer>(
