@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type -- We want to use the typing returned from funnel itself. */
+
 import { constant } from "./constant";
 import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
