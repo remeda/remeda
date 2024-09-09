@@ -40,13 +40,12 @@ type Funnel<F extends ParametersReducer> = {
 };
 
 /**
- * Creates a "funnel" function controls the timing and execution of the main
- * callback function (`execute`). It's primary usage is to synchronize multiple
- * consecutive (and usually fast-paced) calls of a callback so that they are
- * "re-shaped" to a specific batching strategy and timing policy. This is useful
- * when you don't control the rate of calls, like DOM events, network traffic
- * handlers, and more! This can be used to implement debouncing, throttling,
- * batching, leaky bucket, etc...
+ * Creates a funnel that controls the timing and execution of a callback
+ * function (`execute`). Its main purpose is to manage multiple consecutive
+ * (usually fast-paced) calls, reshaping them according to a defined batching
+ * strategy and timing policy. This is useful when handling uncontrolled call
+ * rates, such as DOM events or network traffic. It can implement strategies
+ * like debouncing, throttling, batching, and more.
  *
  * Typing is inferred from the type of the `reduceArgs` function. Use
  * **explicit** types for the parameters and return type to ensure that
@@ -56,12 +55,13 @@ type Funnel<F extends ParametersReducer> = {
  * execute anything when called. The returned object should be used to execute
  * the funnel via the it's `call` method.
  *
- * @param reduceArgs - A function that takes the previous value returned by
- * `reduceArgs` (or `undefined` if this is the first call) and the current
- * arguments passed to `call`, and returns a new combined value. This function
- * defines the input type for the `execute` function. This function should be
- * fast and simple as it is called often. It should defer heavy operations to
- * the `execute` function.
+ * @param reduceArgs - Combines the arguments passed to `call` with the value
+ * computed on the previous call (or `undefined` on the first time). The goal of
+ * the function is to extract and summarize the data needed for `execute`,
+ * reducing multiple argument values into a single value. It should be fast and
+ * simple as it is called often. It should defer heavy operations to the
+ * `execute` function. If it returns `undefined` the `execute` function will not
+ * be called.
  * @param execute - The main function that would be invoked occasionally based
  * on `timingPolicy`. The function would take the latest result of
  * `reduceArgs`; if no calls where made since the last time it was invoked it
