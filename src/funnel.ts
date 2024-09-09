@@ -1,5 +1,3 @@
-import { type ArrayTail } from "type-fest";
-
 type TimingPolicy = {
   readonly invokedAt?: "both" | "end" | "start";
   readonly burstCoolDownMs?: number;
@@ -8,17 +6,17 @@ type TimingPolicy = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
-type ParametersReducer = <T>(accumulator: T | undefined, ...params: any) => T;
+type RestArguments = Array<any>;
 
-type Funnel<F extends ParametersReducer> = {
+type Funnel<Args extends RestArguments> = {
   /**
    * Call the function. This might result in the `execute` function being called
    * now or later, depending on it's configuration and it's current state.
    *
    * @param args - The args are defined by the `reduceArgs` function.
    */
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- This is OK for here...
-  readonly call: (...args: ArrayTail<Parameters<F>>) => void;
+
+  readonly call: (...args: Args) => void;
 
   /**
    * Resets the funnel to it's initial state. Any calls made since the last
@@ -106,16 +104,16 @@ type Funnel<F extends ParametersReducer> = {
  *   debouncer.call("world");
  * @category Function
  */
-export function funnel<R extends ParametersReducer>(
-  reduceArgs: R,
-  execute: (data: ReturnType<R>) => void,
+export function funnel<Args extends RestArguments, R>(
+  reduceArgs: (accumulator: R | undefined, ...params: Args) => R,
+  execute: (data: R) => void,
   {
     invokedAt = "end",
     burstCoolDownMs,
     maxBurstDurationMs,
     delayMs,
   }: TimingPolicy,
-): Funnel<R> {
+): Funnel<Args> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
   // to track the delay between invocations. Together we refer to the period
   // where any of these are active as a "moratorium period".
@@ -124,7 +122,7 @@ export function funnel<R extends ParametersReducer>(
 
   // Until invoked, all calls are reduced into a single value that would be sent
   // to the executor on invocation.
-  let preparedData: ReturnType<R> | undefined;
+  let preparedData: R | undefined;
 
   // In order to be able to limit the total size of the burst (when
   // `maxBurstDurationMs` is used) we need to track when the burst started.
@@ -212,7 +210,9 @@ export function funnel<R extends ParametersReducer>(
       // before it is released.
       clearTimeout(burstTimeoutId);
 
-      burstStartTimestamp ??= Date.now();
+      const now = Date.now();
+
+      burstStartTimestamp ??= now;
 
       const burstRemainingMs =
         maxBurstDurationMs === undefined
@@ -221,8 +221,17 @@ export function funnel<R extends ParametersReducer>(
               burstCoolDownMs,
               // We need to account for the time already spent so that we
               // don't wait longer than the maxDelay.
-              maxBurstDurationMs - (Date.now() - burstStartTimestamp),
+              maxBurstDurationMs - (now - burstStartTimestamp),
             );
+
+      // console.log(
+      //   now,
+      //   burstStartTimestamp,
+      //   burstRemainingMs,
+      //   maxBurstDurationMs,
+      //   now - burstStartTimestamp,
+      //   (maxBurstDurationMs ?? 0) - (now - burstStartTimestamp),
+      // );
 
       burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
     },
