@@ -1,3 +1,5 @@
+import type { NarrowedTo } from "./internal/types";
+
 /**
  * A function that checks if the passed parameter is a Promise and narrows its type accordingly.
  *
@@ -11,6 +13,8 @@
  *    R.isPromise('somethingElse') //=> false
  * @category Guard
  */
-export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {
+export function isPromise<T>(
+  data: Readonly<PromiseLike<unknown>> | T,
+): data is NarrowedTo<T, PromiseLike<unknown>> {
   return data instanceof Promise;
 }

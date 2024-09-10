@@ -1,6 +1,5 @@
-import { type EmptyObject } from "type-fest";
+import { type EmptyObject, type Tagged } from "type-fest";
 import {
-  type Branded,
   type Deduped,
   type EnumerableStringKeyedValueOf,
   type EnumerableStringKeyOf,
@@ -11,6 +10,7 @@ import {
 } from "./types";
 
 declare const SymbolFoo: unique symbol;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const SymbolBar: unique symbol;
 
 describe("IfBoundedRecord", () => {
@@ -122,11 +122,11 @@ describe("IfBoundedRecord", () => {
 
   test("branded types", () => {
     expectTypeOf<
-      IfBoundedRecord<Record<Branded<string, symbol>, unknown>>
+      IfBoundedRecord<Record<Tagged<string, symbol>, unknown>>
     >().toEqualTypeOf<false>();
 
     expectTypeOf<
-      IfBoundedRecord<Record<Branded<number, symbol>, unknown>>
+      IfBoundedRecord<Record<Tagged<number, symbol>, unknown>>
     >().toEqualTypeOf<false>();
   });
 
@@ -216,8 +216,8 @@ describe("EnumerableStringKeyOf", () => {
 
   test("branded types", () => {
     expectTypeOf<
-      EnumerableStringKeyOf<Record<Branded<string, symbol>, unknown>>
-    >().toEqualTypeOf<`${Branded<string, symbol>}`>();
+      EnumerableStringKeyOf<Record<Tagged<string, symbol>, unknown>>
+    >().toEqualTypeOf<`${Tagged<string, symbol>}`>();
   });
 });
 

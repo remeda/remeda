@@ -35,11 +35,11 @@ test("empty array", () => {
   const data = [] as const;
 
   const dataFirst = fromKeys(data, constant(1));
-  // eslint-disable-next-line @typescript-eslint/ban-types -- That's just what we return
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- That's just what we return
   expectTypeOf(dataFirst).toEqualTypeOf<{}>();
 
   const dataLast = pipe(data, fromKeys(constant(1)));
-  // eslint-disable-next-line @typescript-eslint/ban-types -- That's just what we return
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- That's just what we return
   expectTypeOf(dataLast).toEqualTypeOf<{}>();
 });
 

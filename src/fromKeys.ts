@@ -8,7 +8,7 @@ import { purry } from "./purry";
 type ExactlyOneKey<T, V> = T extends PropertyKey ? { [P in T]: V } : never;
 
 type FromKeys<T extends IterableContainer, V> = T extends readonly []
-  ? // eslint-disable-next-line @typescript-eslint/ban-types -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...
+  ? // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...
     {}
   : T extends readonly [infer Head, ...infer Rest]
     ? ExactlyOneKey<Head, V> & FromKeys<Rest, V>

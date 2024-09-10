@@ -1,5 +1,5 @@
+import { type Tagged } from "type-fest";
 import { constant } from "./constant";
-import { type Branded } from "./internal/types";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";
 
@@ -67,7 +67,7 @@ describe("indexed signature", () => {
 
 describe("branded types", () => {
   test("should infer types correctly in the mapper", () => {
-    type UserID = Branded<string, symbol>;
+    type UserID = Tagged<string, symbol>;
 
     const userValues: Record<UserID, number> = {
       ["U1" as UserID]: 1,
@@ -96,7 +96,7 @@ test("symbols are ignored by the mapper", () => {
 
 test("objects with just symbol keys are still well defined", () => {
   const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();
 });
 

@@ -34,7 +34,7 @@ export function isStrictEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
 ): data is S;
-export function isStrictEqual<T, S extends T = T>(data: T, other: S): boolean;
+export function isStrictEqual<T>(data: T, other: T): boolean;
 
 /**
  * Determines whether two values are *functionally identical* in all contexts.
@@ -68,15 +68,11 @@ export function isStrictEqual<T, S extends T = T>(data: T, other: S): boolean;
 export function isStrictEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
-export function isStrictEqual<S>(
-  other: S,
-): <T extends S = S>(data: T) => boolean;
+export function isStrictEqual<T>(other: T): (data: T) => boolean;
 
 export function isStrictEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isStrictlyEqualImplementation, args);
 }
 
-const isStrictlyEqualImplementation = <T, S>(
-  data: S | T,
-  other: S,
-): data is S => data === other || Object.is(data, other);
+const isStrictlyEqualImplementation = <T>(data: unknown, other: T): data is T =>
+  data === other || Object.is(data, other);
