@@ -44,7 +44,7 @@ export function randomBigInt(from: bigint, to: bigint): bigint {
   // The number of bits we need to ignore in the random bitmap we generate.
   const excessBits = BigInt(8 - (maxBits % 8));
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- The code is more readable like this way than to when using a do..while loop.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- It's more readable than using a do..while loop.
   while (true) {
     // We use `crypto` for our RNG, it should be supported in all modern
     // environments we support.
