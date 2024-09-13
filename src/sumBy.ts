@@ -13,7 +13,7 @@ import { purry } from "./purry";
  *    ) // 9
  *
  *    R.pipe(
- *      [{a: 5}, {a: 1}, {a: 3}],
+ *      [{a: 5n}, {a: 1n}, {a: 3n}],
  *      R.sumBy(x => x.a)
  *    ) // 9n
  *
@@ -82,8 +82,9 @@ const sumByImplementation = <T>(
       sum = summand;
       continue;
     }
-    // we use an `as number` here to let TypeScript
-    // treats `sum` and `summand` as the same type
+    // we use 'as number' to ensure TypeScript treats
+    // 'sum' and 'summand' as the same type,
+    // which could be a bigint.
     (sum as number) += summand as number;
   }
   return sum ?? 0;
