@@ -294,11 +294,7 @@ export default tseslint.config(
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
-      // strict-type-checked, and stylistic-type-checked extensions)
-
-      // --- Overrides ---------------------------------------------------------
-      // These are rules defined in the recommended extension that we needed to
-      // make changes to.
+      // strictTypeChecked, and stylisticTypeChecked configs)
 
       // Types are actually stricter than interfaces because they can't be
       // extended via declaration merging, meaning they are immune to some
@@ -325,10 +321,7 @@ export default tseslint.config(
         },
       ],
 
-      // --- Optional ----------------------------------------------------------
-      // These aren't enabled by default
-
-      // Style & Conventions
+      "@typescript-eslint/class-methods-use-this": "warn",
       "@typescript-eslint/prefer-destructuring": "warn",
       "@typescript-eslint/promise-function-async": "error",
       "@typescript-eslint/no-use-before-define": [
@@ -346,16 +339,35 @@ export default tseslint.config(
           allowNullableObject: false,
         },
       ],
-
-      // Security & Correctness
+      "@typescript-eslint/consistent-type-exports": "warn",
+      "@typescript-eslint/default-param-last": "error",
       "@typescript-eslint/explicit-function-return-type": [
         "error",
         { allowExpressions: true },
       ],
+      "@typescript-eslint/explicit-member-accessibility": "warn",
       "@typescript-eslint/explicit-module-boundary-types": [
         "warn",
         { allowTypedFunctionExpressions: false },
       ],
+      "@typescript-eslint/method-signature-style": "error",
+      "@typescript-eslint/no-import-type-side-effects": "warn",
+      "@typescript-eslint/no-loop-func": "error",
+      "@typescript-eslint/no-magic-numbers": [
+        "warn",
+        {
+          ignore: [-1, 0, 1, 2],
+          ignoreNumericLiteralTypes: true,
+        },
+      ],
+      "@typescript-eslint/no-shadow": "error",
+      "@typescript-eslint/no-unnecessary-parameter-property-assignment": "warn",
+      "@typescript-eslint/no-unnecessary-qualifier": "warn",
+      "@typescript-eslint/parameter-properties": [
+        "warn",
+        { prefer: "parameter-property" },
+      ],
+      "@typescript-eslint/prefer-enum-initializers": "warn",
       "@typescript-eslint/prefer-readonly-parameter-types": [
         "error",
         {
@@ -379,6 +391,7 @@ export default tseslint.config(
         },
       ],
       "@typescript-eslint/no-useless-empty-export": "error",
+      "@typescript-eslint/prefer-readonly": "warn",
       "@typescript-eslint/require-array-sort-compare": "error",
       "@typescript-eslint/switch-exhaustiveness-check": [
         "error",
@@ -387,30 +400,6 @@ export default tseslint.config(
           requireDefaultForNonUnion: true,
         },
       ],
-      "@typescript-eslint/default-param-last": "error",
-      "@typescript-eslint/method-signature-style": "error",
-      "@typescript-eslint/no-loop-func": "error",
-      "@typescript-eslint/no-shadow": "error",
-
-      "@typescript-eslint/class-methods-use-this": "warn",
-      "@typescript-eslint/consistent-type-exports": "warn",
-      "@typescript-eslint/explicit-member-accessibility": "warn",
-      "@typescript-eslint/no-import-type-side-effects": "warn",
-      "@typescript-eslint/no-magic-numbers": [
-        "warn",
-        {
-          ignore: [-1, 0, 1, 2],
-          ignoreNumericLiteralTypes: true,
-        },
-      ],
-      "@typescript-eslint/no-unnecessary-parameter-property-assignment": "warn",
-      "@typescript-eslint/no-unnecessary-qualifier": "warn",
-      "@typescript-eslint/parameter-properties": [
-        "warn",
-        { prefer: "parameter-property" },
-      ],
-      "@typescript-eslint/prefer-enum-initializers": "warn",
-      "@typescript-eslint/prefer-readonly": "warn",
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
