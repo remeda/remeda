@@ -55,7 +55,7 @@ export default tseslint.config(
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
-      // extension)
+      // config)
 
       // Possible Problems
       "array-callback-return": [
@@ -403,8 +403,9 @@ export default tseslint.config(
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
-      // flat/recommended extension)
+      // flat/recommended config)
 
+      "unicorn/better-regex": "warn",
       "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
       "unicorn/filename-case": ["error", { case: "camelCase" }],
