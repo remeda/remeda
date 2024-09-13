@@ -340,7 +340,6 @@ export default tseslint.config(
         },
       ],
       "@typescript-eslint/consistent-type-exports": "warn",
-      "@typescript-eslint/default-param-last": "error",
       "@typescript-eslint/explicit-function-return-type": [
         "error",
         { allowExpressions: true },
@@ -350,9 +349,7 @@ export default tseslint.config(
         "warn",
         { allowTypedFunctionExpressions: false },
       ],
-      "@typescript-eslint/method-signature-style": "error",
       "@typescript-eslint/no-import-type-side-effects": "warn",
-      "@typescript-eslint/no-loop-func": "error",
       "@typescript-eslint/no-magic-numbers": [
         "warn",
         {
@@ -360,7 +357,6 @@ export default tseslint.config(
           ignoreNumericLiteralTypes: true,
         },
       ],
-      "@typescript-eslint/no-shadow": "error",
       "@typescript-eslint/no-unnecessary-parameter-property-assignment": "warn",
       "@typescript-eslint/no-unnecessary-qualifier": "warn",
       "@typescript-eslint/parameter-properties": [
@@ -400,6 +396,10 @@ export default tseslint.config(
           requireDefaultForNonUnion: true,
         },
       ],
+      "@typescript-eslint/default-param-last": "error",
+      "@typescript-eslint/method-signature-style": "error",
+      "@typescript-eslint/no-loop-func": "error",
+      "@typescript-eslint/no-shadow": "error",
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
