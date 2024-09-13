@@ -11,6 +11,13 @@ import { purry } from "./purry";
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      R.sumBy(x => x.a)
  *    ) // 9
+ *
+ *    R.pipe(
+ *      [{a: 5}, {a: 1}, {a: 3}],
+ *      R.sumBy(x => x.a)
+ *    ) // 9n
+ *
+ *    R.pipe([] as {a: bigint}[], R.sumBy(x => x.a)) // 0
  * @dataLast
  * @category Array
  */
@@ -18,6 +25,10 @@ import { purry } from "./purry";
 export function sumBy<T>(
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
 ): (items: ReadonlyArray<T>) => number;
+
+export function sumBy<T>(
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint,
+): (items: ReadonlyArray<T>) => bigint | 0;
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
@@ -31,6 +42,13 @@ export function sumBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 9
+ *
+ *    R.sumBy(
+ *      [{a: 5n}, {a: 1n}, {a: 3n}],
+ *      x => x.a
+ *    ) // 9n
+ *
+ *   R.sumBy([] as {a: bigint}[], x => x.a)
  * @dataFirst
  * @category Array
  */
@@ -40,18 +58,33 @@ export function sumBy<T>(
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
 ): number;
 
+export function sumBy<T>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint,
+): bigint | 0;
+
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(sumByImplementation, args);
 }
 
 const sumByImplementation = <T>(
   array: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): number => {
-  let sum = 0;
+  callbackfn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => bigint | number,
+): bigint | number => {
+  let sum: bigint | number | undefined;
   for (const [index, item] of array.entries()) {
     const summand = callbackfn(item, index, array);
-    sum += summand;
+    if (sum === undefined) {
+      sum = summand;
+      continue;
+    }
+    // we use an `as number` here to let TypeScript
+    // treats `sum` and `summand` as the same type
+    (sum as number) += summand as number;
   }
-  return sum;
+  return sum ?? 0;
 };
