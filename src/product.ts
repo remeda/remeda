@@ -1,4 +1,4 @@
-import { type IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
@@ -74,6 +74,7 @@ export function product(...args: ReadonlyArray<unknown>): unknown {
 function productImplementation<
   T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] {
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- The rule differentiates 1 and 1n :(
   let out = typeof data[0] === "bigint" ? 1n : 1;
   for (const value of data) {
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.

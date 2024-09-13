@@ -260,7 +260,6 @@ export function pipe(
 
   let operationIndex = 0;
   while (operationIndex < operations.length) {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     const lazyOperation = lazyOperations[operationIndex];
     if (lazyOperation === undefined || !isIterable(output)) {
       const operation = operations[operationIndex]!;
@@ -271,7 +270,6 @@ export function pipe(
 
     const lazySequence: Array<PreparedLazyOperation> = [];
     for (let index = operationIndex; index < operations.length; index++) {
-      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       const lazyOp = lazyOperations[index];
       if (lazyOp === undefined) {
         break;

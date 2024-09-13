@@ -1,8 +1,8 @@
-import { type IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
-  // Empty arrays would always result in a product of (a non-bigint) 1
+  // Empty arrays would always result in a sum of (a non-bigint) 0.
   T extends readonly []
     ? 0
     : // Non-empty bigint arrays will always result in a bigint sum.
@@ -72,6 +72,7 @@ export function sum(...args: ReadonlyArray<unknown>): unknown {
 function sumImplementation<
   T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] {
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- The rule differentiates 0 and 0n :(
   let out = typeof data[0] === "bigint" ? 0n : 0;
   for (const value of data) {
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.

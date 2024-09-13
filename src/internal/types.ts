@@ -1,16 +1,16 @@
-import {
-  type EmptyObject,
-  type IfNever,
-  type IsAny,
-  type IsLiteral,
-  type IsNever,
-  type IsNumericLiteral,
-  type IsStringLiteral,
-  type IsSymbolLiteral,
-  type KeysOfUnion,
-  type Simplify,
-  type Split,
-  type Tagged,
+import type {
+  EmptyObject,
+  IfNever,
+  IsAny,
+  IsLiteral,
+  IsNever,
+  IsNumericLiteral,
+  IsStringLiteral,
+  IsSymbolLiteral,
+  KeysOfUnion,
+  Simplify,
+  Split,
+  Tagged,
 } from "type-fest";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol

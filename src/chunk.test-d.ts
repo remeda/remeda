@@ -1,5 +1,5 @@
 import { chunk } from "./chunk";
-import { type NonEmptyArray } from "./internal/types";
+import type { NonEmptyArray } from "./internal/types";
 
 describe("edge-cases", () => {
   test("0 chunk size", () => {
