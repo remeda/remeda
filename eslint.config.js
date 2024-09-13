@@ -93,8 +93,6 @@ export default tseslint.config(
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
       "grouped-accessor-pairs": "warn",
       "guard-for-in": "error",
-      "id-denylist": "warn",
-      "id-match": "warn",
       "logical-assignment-operators": "warn",
       "new-cap": "warn",
       "operator-assignment": "warn",
