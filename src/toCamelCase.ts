@@ -1,4 +1,4 @@
-import { type CamelCase } from "type-fest";
+import type { CamelCase } from "type-fest";
 import { splitWords } from "./internal/splitWords";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;

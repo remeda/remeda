@@ -4,6 +4,8 @@
 // for the negative precision limit, too.
 const MAX_PRECISION = 15;
 
+const RADIX = 10;
+
 export function withPrecision(roundingFn: (value: number) => number) {
   return (value: number, precision: number): number => {
     if (precision === 0) {
@@ -11,7 +13,9 @@ export function withPrecision(roundingFn: (value: number) => number) {
     }
 
     if (!Number.isInteger(precision)) {
-      throw new TypeError(`precision must be an integer: ${precision}`);
+      throw new TypeError(
+        `precision must be an integer: ${precision.toString()}`,
+      );
     }
 
     if (precision > MAX_PRECISION || precision < -MAX_PRECISION) {
@@ -22,7 +26,7 @@ export function withPrecision(roundingFn: (value: number) => number) {
       return roundingFn(value);
     }
 
-    const multiplier = 10 ** precision;
+    const multiplier = RADIX ** precision;
     return roundingFn(value * multiplier) / multiplier;
   };
 }

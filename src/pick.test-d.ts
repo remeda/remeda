@@ -50,7 +50,7 @@ test("multiple keys", () => {
 
 test("support inherited properties", () => {
   class BaseClass {
-    testProp(): string {
+    public testProp(): string {
       return "abc";
     }
   }

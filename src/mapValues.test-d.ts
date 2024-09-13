@@ -1,4 +1,4 @@
-import { type Tagged } from "type-fest";
+import type { Tagged } from "type-fest";
 import { constant } from "./constant";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";

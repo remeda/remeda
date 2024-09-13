@@ -1,4 +1,4 @@
-import { type IsNumericLiteral } from "type-fest";
+import type { IsNumericLiteral } from "type-fest";
 import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 

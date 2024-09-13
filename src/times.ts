@@ -1,4 +1,4 @@
-import { type GreaterThan } from "type-fest";
+import type { GreaterThan } from "type-fest";
 import { purry } from "./purry";
 
 // This number was picked by trial-and-error until typescript stops failing with

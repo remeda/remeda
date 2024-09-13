@@ -1,4 +1,4 @@
-import { type IsEqual, type Join } from "type-fest";
+import type { IsEqual, Join } from "type-fest";
 import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 

@@ -1,4 +1,4 @@
-import { type IsLiteral } from "type-fest";
+import type { IsLiteral } from "type-fest";
 import type { IsUnion, IterableContainer } from "./internal/types";
 
 /**
