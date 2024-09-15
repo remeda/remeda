@@ -224,15 +224,6 @@ export function funnel<Args extends RestArguments, R>(
               maxBurstDurationMs - (now - burstStartTimestamp),
             );
 
-      // console.log(
-      //   now,
-      //   burstStartTimestamp,
-      //   burstRemainingMs,
-      //   maxBurstDurationMs,
-      //   now - burstStartTimestamp,
-      //   (maxBurstDurationMs ?? 0) - (now - burstStartTimestamp),
-      // );
-
       burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
     },
 
