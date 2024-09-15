@@ -13,11 +13,22 @@ import type {
   Tagged,
 } from "type-fest";
 
-/** Used for reporting type errors in a more useful way than `never`. */
+/**
+ * Used for reporting type errors in a more useful way than `never`. Use
+ * numbers for things that should never happen.
+ *
+ * We should only use this for types that can't return a raw `string`; we want
+ * this to get caught during type-checking.
+ */
 export type RemedaTypeError<
   Function extends string,
-  Message extends string,
-> = `RemedaTypeError(${Function}): ${Message}.`;
+  Message extends string | number,
+> = Message extends string
+  ? `RemedaTypeError(${Function}): ${Message}.`
+  : RemedaTypeError<
+      Function,
+      `Internal error ${Message}. Please open a GitHub issue.`
+    >;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const TAG_NAME_BRANDED_RETURN: unique symbol;
@@ -261,9 +272,9 @@ export type NTuple<
 > = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
 
 /**
- * Takes an array and returns the types that make up it's parts. The suffix is
- * anything before the rest parameter (if any), the prefix is anything after the
- * rest parameter (if any), and the item is the type of the rest parameter.
+ * Takes an array and returns the types that make up its parts. The prefix is
+ * anything before the rest parameter (if any), the suffix is anything after
+ * the rest parameter (if any), and the item is the type of the rest parameter.
  *
  * The output could be used to reconstruct the input: `[
  *   ...TupleParts<T>["prefix"],

@@ -4,7 +4,7 @@
  */
 import type { IterableContainer, RemedaTypeError } from "./internal/types";
 
-type PartialRightBindError<Message extends string> = [
+type PartialRightBindError<Message extends string | number> = [
   RemedaTypeError<"partialRightBind", Message>,
 ];
 
@@ -15,49 +15,62 @@ type RemoveSuffix<
   ? T
   : T["length"] extends 0
     ? PartialRightBindError<"Too many args provided to function">
-    : T extends [...infer TRest, infer TLast]
-      ? Suffix extends [...infer SuffixRest, infer SuffixLast]
-        ? SuffixLast extends TLast
+    : T extends readonly [...infer TRest, infer TLast]
+      ? Suffix extends readonly [...infer SuffixRest, infer SuffixLast]
+        ? // Both T and Suffix have a non-rest last.
+          SuffixLast extends TLast
           ? RemoveSuffix<TRest, SuffixRest>
           : PartialRightBindError<"Argument of the wrong type provided to function">
-        : Suffix extends Array<TLast>
-          ? [...RemoveSuffix<TRest, Suffix>, TLast?]
-          : never
-      : T extends [...infer TRest, (infer TLast)?]
-        ? Suffix extends [...infer SuffixRest, infer SuffixLast]
-          ? SuffixLast extends TLast
+        : Suffix extends ReadonlyArray<TLast>
+          ? // T has a non-rest last, Suffix is an array.
+            // Suffix could possibly be empty, so this has to be TLast?.
+            [...RemoveSuffix<TRest, Suffix>, TLast?]
+          : // Suffix is e.g. [string, ...Array<number>]. We can't do a
+            // type-level suffix removal, so we return an error.
+            PartialRightBindError<"Can't infer type of provided args">
+      : // T has an optional or rest parameter last. If T is a parameter list,
+        // this can only happen if we have optional arguments or a rest param;
+        // both cases are similar.
+        T extends readonly [...infer TRest, (infer TLast)?]
+        ? Suffix extends readonly [...infer SuffixRest, infer SuffixLast]
+          ? // Suffix has a non-rest last.
+            SuffixLast extends TLast
             ? RemoveSuffix<TRest, SuffixRest>
             : PartialRightBindError<"Argument of the wrong type provided to function">
-          : Suffix extends TRest
-            ? TRest
-            : never
-        : never;
+          : Suffix extends readonly [...TRest, TLast?]
+            ? // Suffix is an array. It must match *both* the optional type
+              // and the rest param.
+              TRest
+            : PartialRightBindError<"Argument of the wrong type provided to function">
+        : // We got passed a parameter list that isn't what we expected; this
+          // is an internal error.
+          PartialRightBindError<1>;
 
 type PartiallyRightBound<
   F extends (...args: any) => any,
-  T extends IterableContainer,
-> = (...rest: RemoveSuffix<Parameters<F>, T>) => ReturnType<F>;
+  Partial extends IterableContainer,
+> = (...rest: RemoveSuffix<Parameters<F>, Partial>) => ReturnType<F>;
 
 /**
- * Creates a function that calls `func` with `data` put after the arguments
+ * Creates a function that calls `func` with `partial` put after the arguments
  * it receives.
  *
- * @param data - The arguments to put after.
  * @param func - The function to wrap.
+ * @param partial - The arguments to put after.
  * @returns A partially bound function.
  * @signature
- *    R.partialRightBind(data, func)
+ *    R.partialRightBind(func, partial)
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partialRightBind([2, 3], fn)
+ *    const partialFn = R.partialRightBind(fn, [2, 3])
  *    partialFn(1) // => 1, 2, and 3
  * @dataFirst
  * @category Function
  * @see partialBind
  */
 export function partialRightBind<
-  T extends IterableContainer,
   F extends (...args: any) => any,
->(data: T, func: F): PartiallyRightBound<F, T> {
-  return (...rest) => func(...rest, ...data);
+  T extends IterableContainer,
+>(func: F, partial: T): PartiallyRightBound<F, T> {
+  return (...rest) => func(...rest, ...partial);
 }

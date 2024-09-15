@@ -1,100 +1,185 @@
 /* eslint-disable unicorn/consistent-function-scoping */
 import { partialRightBind } from "./partialRightBind";
 
-const fn = (x: number, y: number, z: number): string => `${x}, ${y}, and ${z}`;
-
-test("should correctly type 0 partial args", () => {
-  expectTypeOf(partialRightBind([], fn)).toEqualTypeOf<
-    (x: number, y: number, z: number) => string
-  >();
-});
-
-test("should correctly type 1 partial arg", () => {
-  expectTypeOf(partialRightBind([3], fn)).toEqualTypeOf<
-    (x: number, y: number) => string
-  >();
-});
-
-test("should correctly type all partial args", () => {
-  expectTypeOf(partialRightBind([1, 2, 3], fn)).toEqualTypeOf<() => string>();
-});
-
-it("should not accept wrong arg type", () => {
-  expectTypeOf(partialRightBind([123], (x: string) => x)).toEqualTypeOf<
-    (
-      x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
-    ) => string
-  >();
-});
-
-it("should not accept too many args", () => {
-  expectTypeOf(partialRightBind([123, 456], (x: number) => x)).toEqualTypeOf<
-    (
-      x: "RemedaTypeError(partialRightBind): Too many args provided to function.",
-    ) => number
-  >();
-});
-
-it("should allow refined types", () => {
-  expectTypeOf(
-    partialRightBind([123], (x: string | number) => x),
-  ).toEqualTypeOf<() => string | number>();
-});
-
-it("should support optional params", () => {
-  const foo = (x = true): boolean => x;
-  expectTypeOf(partialRightBind([true], foo)).toEqualTypeOf<() => boolean>();
-});
-
-it("should support optional params after non-optional ones", () => {
-  const foo = (x: string, y: number, z = true): string =>
+describe("simple case (all required, no rest params)", () => {
+  const fn = (x: number, y: number, z: number | string): string =>
     `${x}, ${y}, and ${z}`;
 
-  expectTypeOf(partialRightBind([], foo)).toEqualTypeOf<
-    (x: string, y: number, z?: boolean) => string
-  >();
+  test("should correctly type 0 partial args", () => {
+    expectTypeOf(partialRightBind(fn, [])).toEqualTypeOf<
+      (x: number, y: number, z: number | string) => string
+    >();
+  });
 
-  expectTypeOf(partialRightBind([false], foo)).toEqualTypeOf<
-    (x: string, y: number) => string
-  >();
-  expectTypeOf(partialRightBind([123, false], foo)).toEqualTypeOf<
-    (x: string) => string
-  >();
-  expectTypeOf(partialRightBind(["hello", 123, false], foo)).toEqualTypeOf<
-    () => string
-  >();
+  test("should correctly type 1 partial arg", () => {
+    expectTypeOf(partialRightBind(fn, [3])).toEqualTypeOf<
+      (x: number, y: number) => string
+    >();
+  });
 
-  expectTypeOf(partialRightBind([123], foo)).toEqualTypeOf<
-    // @ts-expect-error [ts2344]: unclear how to make this work...
-    (x: string) => string
-  >();
+  test("should correctly type all partial args", () => {
+    expectTypeOf(partialRightBind(fn, [1, 2, 3])).toEqualTypeOf<() => string>();
+  });
+
+  test("should allow refined types", () => {
+    expectTypeOf(partialRightBind(fn, [1, 2, "c"])).toEqualTypeOf<
+      () => string
+    >();
+  });
+
+  test("should not accept wrong arg type", () => {
+    expectTypeOf(partialRightBind(fn, ["b", "c"])).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+      ) => string
+    >();
+  });
+
+  test("should not accept too many args", () => {
+    expectTypeOf(partialRightBind(fn, [1, 2, 3, 4])).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Too many args provided to function.",
+      ) => string
+    >();
+  });
+
+  test("should not accept array typed partial", () => {
+    expectTypeOf(partialRightBind(fn, [] as Array<number>)).toEqualTypeOf<
+      (
+        w: "RemedaTypeError(partialRightBind): Too many args provided to function.",
+        x?: number,
+        y?: number,
+        z?: number | string,
+      ) => string
+    >();
+  });
+
+  test("should not accept tuple typed partial with prefix", () => {
+    expectTypeOf(
+      partialRightBind(fn, ["a", 1] as [string, ...Array<number>]),
+    ).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Can't infer type of provided args.",
+        y?: number | string,
+      ) => string
+    >();
+  });
 });
 
-it("should support variadic params", () => {
+describe("optional params", () => {
+  const fn = (x: string, y = 123, z = true): string => `${x}, ${y}, and ${z}`;
+
+  test("should correctly type 0 partial args", () => {
+    expectTypeOf(partialRightBind(fn, [])).toEqualTypeOf<
+      (x: string, y?: number, z?: boolean) => string
+    >();
+  });
+
+  test("should correctly type 1 partial arg", () => {
+    expectTypeOf(partialRightBind(fn, [false])).toEqualTypeOf<
+      (x: string, y?: number) => string
+    >();
+  });
+
+  test("should correctly type 2 partial args", () => {
+    expectTypeOf(partialRightBind(fn, [undefined, false])).toEqualTypeOf<
+      (x: string) => string
+    >();
+  });
+
+  test("should correctly type all partial args", () => {
+    expectTypeOf(
+      partialRightBind(fn, ["hello", undefined, false]),
+    ).toEqualTypeOf<() => string>();
+  });
+});
+
+describe("simple rest param case", () => {
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-  const foo = (...parts: Array<string>): string => parts.join("");
+  const fn = (...parts: Array<string>): string => parts.join("");
 
-  expectTypeOf(partialRightBind([], foo)).toEqualTypeOf<
-    (...parts: ReadonlyArray<string>) => string
-  >();
-  expectTypeOf(partialRightBind(["hello"], foo)).toEqualTypeOf<
-    (...parts: ReadonlyArray<string>) => string
-  >();
-  expectTypeOf(partialRightBind([123], foo)).toEqualTypeOf<
-    (
-      x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
-    ) => string
-  >();
-  expectTypeOf(
-    partialRightBind(["hello", "world"] as [string, ...Array<string>], foo),
-  ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+  test("should correctly type 0 partial args", () => {
+    expectTypeOf(partialRightBind(fn, [])).toEqualTypeOf<
+      (...parts: ReadonlyArray<string>) => string
+    >();
+  });
+
+  test("should correctly type 1 partial arg", () => {
+    expectTypeOf(partialRightBind(fn, ["hello"])).toEqualTypeOf<
+      (...parts: ReadonlyArray<string>) => string
+    >();
+  });
+
+  test("should not accept wrong arg type", () => {
+    expectTypeOf(partialRightBind(fn, [1])).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+      ) => string
+    >();
+  });
+
+  test("should accept tuple typed partial arg", () => {
+    expectTypeOf(partialRightBind(fn, [] as [...Array<string>])).toEqualTypeOf<
+      (...parts: ReadonlyArray<string>) => string
+    >();
+  });
+
+  test("should accept tuple typed partial arg with prefix", () => {
+    expectTypeOf(
+      partialRightBind(fn, ["hello"] as [string, ...Array<string>]),
+    ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+  });
+
+  test("should accept tuple typed partial arg with prefix and suffix", () => {
+    expectTypeOf(
+      partialRightBind(fn, ["hello", "world"] as [
+        string,
+        ...Array<string>,
+        string,
+      ]),
+    ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+  });
+
+  test("should not accept tuple typed partial arg with incorrect prefix", () => {
+    expectTypeOf(
+      partialRightBind(fn, [1, "hello"] as [number?, ...Array<string>]),
+    ).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+      ) => string
+    >();
+  });
+
+  test("should not accept tuple typed partial arg with incorrect suffix", () => {
+    expectTypeOf(
+      partialRightBind(fn, ["hello", 1] as [...Array<string>, number]),
+    ).toEqualTypeOf<
+      (
+        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+      ) => string
+    >();
+  });
 });
 
-it("should support readonly variadic params", () => {
-  const foo = (...parts: ReadonlyArray<string>): string => parts.join("");
+describe("KNOWN ISSUES", () => {
+  test("does not support readonly rest params", () => {
+    const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 
-  expectTypeOf(partialRightBind([], foo)).toEqualTypeOf<
-    // @ts-expect-error [ts2344]: blocked on typescript #37193
-    (...parts: ReadonlyArray<string>) => string
-  >();
+    expectTypeOf(partialRightBind(fn, [])).toEqualTypeOf<
+      // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
+      (...parts: ReadonlyArray<string>) => string
+    >();
+  });
+
+  describe("does not support optional AND rest params", () => {
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+    const fn = (x: string, y = 123, ...parts: Array<string>): string =>
+      `${x}, ${y}, and ${parts.join("")}`;
+
+    expectTypeOf(partialRightBind(fn, ["hello"])).toEqualTypeOf<
+      // @ts-expect-error [ts2344]: I don't think this is possible on the type-level?
+      // We don't know whether "hello" is in x or parts.
+      (x: string, y?: number, ...parts: ReadonlyArray<string>) => string
+    >();
+  });
 });

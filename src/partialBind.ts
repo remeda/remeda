@@ -4,7 +4,7 @@
  */
 import type { IterableContainer, RemedaTypeError } from "./internal/types";
 
-type PartialBindError<Message extends string> = [
+type PartialBindError<Message extends string | number> = [
   RemedaTypeError<"partialBind", Message>,
 ];
 
@@ -15,49 +15,62 @@ type RemovePrefix<
   ? T
   : T["length"] extends 0
     ? PartialBindError<"Too many args provided to function">
-    : T extends [infer THead, ...infer TRest]
-      ? Prefix extends [infer PrefixHead, ...infer PrefixRest]
-        ? PrefixHead extends THead
+    : T extends readonly [infer THead, ...infer TRest]
+      ? Prefix extends readonly [infer PrefixHead, ...infer PrefixRest]
+        ? // Both T and Prefix have a non-rest head.
+          PrefixHead extends THead
           ? RemovePrefix<TRest, PrefixRest>
           : PartialBindError<"Argument of the wrong type provided to function">
-        : Prefix extends Array<THead>
-          ? [THead?, ...RemovePrefix<TRest, Prefix>]
-          : never
-      : T extends [(infer THead)?, ...infer TRest]
-        ? Prefix extends [infer PrefixHead, ...infer PrefixRest]
-          ? PrefixHead extends THead
+        : Prefix extends ReadonlyArray<THead>
+          ? // T has a non-rest head, Prefix is an array.
+            // Prefix could possibly be empty, so this has to be THead?.
+            [THead?, ...RemovePrefix<TRest, Prefix>]
+          : // Prefix is e.g. [...Array<number>, string]. We can't do a
+            // type-level prefix removal, so we return an error.
+            PartialBindError<"Can't infer type of provided args">
+      : // T has an optional or rest parameter head. If T is a parameter list,
+        // this can only happen if we have optional arguments or a rest param;
+        // both cases are similar.
+        T extends readonly [(infer THead)?, ...infer TRest]
+        ? Prefix extends readonly [infer PrefixHead, ...infer PrefixRest]
+          ? // Prefix has a non-rest head.
+            PrefixHead extends THead
             ? RemovePrefix<TRest, PrefixRest>
             : PartialBindError<"Argument of the wrong type provided to function">
-          : Prefix extends TRest
-            ? TRest
-            : never
-        : never;
+          : Prefix extends readonly [THead?, ...TRest]
+            ? // Prefix is an array. It must match *both* the optional type
+              // and the rest param.
+              TRest
+            : PartialBindError<"Argument of the wrong type provided to function">
+        : // We got passed a parameter list that isn't what we expected; this
+          // is an internal error.
+          PartialBindError<1>;
 
 type PartiallyBound<
   F extends (...args: any) => any,
-  T extends IterableContainer,
-> = (...rest: RemovePrefix<Parameters<F>, T>) => ReturnType<F>;
+  Partial extends IterableContainer,
+> = (...rest: RemovePrefix<Parameters<F>, Partial>) => ReturnType<F>;
 
 /**
- * Creates a function that calls `func` with `data` put before the arguments
+ * Creates a function that calls `func` with `partial` put before the arguments
  * it receives.
  *
- * @param data - The arguments to put before.
  * @param func - The function to wrap.
+ * @param partial - The arguments to put before.
  * @returns A partially bound function.
  * @signature
- *    R.partialBind(data, func)
+ *    R.partialBind(func, partial)
  * @example
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partialBind([1, 2], fn)
+ *    const partialFn = R.partialBind(fn, [1, 2])
  *    partialFn(3) // => 1, 2, and 3
  * @dataFirst
  * @category Function
  * @see partialRightBind
  */
 export function partialBind<
-  T extends IterableContainer,
   F extends (...args: any) => any,
->(data: T, func: F): PartiallyBound<F, T> {
-  return (...rest) => func(...data, ...rest);
+  T extends IterableContainer,
+>(func: F, partial: T): PartiallyBound<F, T> {
+  return (...rest) => func(...partial, ...rest);
 }
