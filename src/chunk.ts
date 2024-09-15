@@ -1,10 +1,10 @@
-import {
-  type IfNever,
-  type IntRange,
-  type IsNumericLiteral,
-  type LessThan,
-  type Subtract,
-  type ValueOf,
+import type {
+  IfNever,
+  IntRange,
+  IsNumericLiteral,
+  LessThan,
+  Subtract,
+  ValueOf,
 } from "type-fest";
 import type {
   IterableContainer,
@@ -244,7 +244,7 @@ function chunkImplementation<T>(
 ): Array<Array<T>> {
   if (size < 1) {
     throw new RangeError(
-      `chunk: A chunk size of '${size}' would result in an infinite array`,
+      `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
     );
   }
 

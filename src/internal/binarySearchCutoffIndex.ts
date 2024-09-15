@@ -17,7 +17,6 @@ export function binarySearchCutoffIndex<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number {
   let lowIndex = 0;
-  // eslint-disable-next-line @typescript-eslint/prefer-destructuring
   let highIndex = array.length;
 
   while (lowIndex < highIndex) {

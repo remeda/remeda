@@ -1,4 +1,4 @@
-import { type IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
 /**

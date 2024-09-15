@@ -66,11 +66,14 @@ export function partition(...args: ReadonlyArray<unknown>): unknown {
 const partitionImplementation = <T, S extends T>(
   data: ReadonlyArray<T>,
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): [Array<T>, Array<T>] => {
-  const ret: [Array<T>, Array<T>] = [[], []];
+): [Array<S>, Array<T>] => {
+  const ret: [Array<S>, Array<T>] = [[], []];
   for (const [index, item] of data.entries()) {
-    const matches = predicate(item, index, data);
-    ret[matches ? 0 : 1].push(item);
+    if (predicate(item, index, data)) {
+      ret[0].push(item);
+    } else {
+      ret[1].push(item);
+    }
   }
   return ret;
 };

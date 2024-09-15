@@ -1,6 +1,6 @@
 export class TestClass {
   // eslint-disable-next-line @typescript-eslint/class-literal-property-style -- Maybe we can just accept the auto-fixer here...?
-  get foo(): string {
+  public get foo(): string {
     return "a";
   }
 }
@@ -16,7 +16,6 @@ export const TYPES_DATA_PROVIDER = {
   },
   instance: new TestClass(),
   map: new Map<string, string>(),
-  // eslint-disable-next-line unicorn/no-null -- Intentional
   null: null,
   number: 5 as number,
   object: { a: "asd" },

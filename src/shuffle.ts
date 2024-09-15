@@ -1,4 +1,4 @@
-import { type IterableContainer, type ReorderedArray } from "./internal/types";
+import type { IterableContainer, ReorderedArray } from "./internal/types";
 import { purry } from "./purry";
 
 /**

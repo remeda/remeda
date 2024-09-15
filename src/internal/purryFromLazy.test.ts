@@ -3,7 +3,7 @@
  * to write the tests.
  */
 
-import { type LazyEvaluator } from "../pipe";
+import type { LazyEvaluator } from "../pipe";
 import { purryFromLazy } from "./purryFromLazy";
 
 test("throws on wrong number of arguments", () => {

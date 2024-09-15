@@ -38,7 +38,11 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  * @dataLast
  * @category Other
  */
-export function tap<T, F extends (value: T) => unknown>(fn: F): (value: T) => T;
+export function tap<
+  T,
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO: This is solvable by inlining F and wrapping the T parameter with `NoInfer` (e.g. `(value: NoInfer<T>) => unknown`); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
+  F extends (value: T) => unknown,
+>(fn: F): (value: T) => T;
 
 export function tap(...args: ReadonlyArray<unknown>): unknown {
   return purry(tapImplementation, args);
