@@ -1,9 +1,59 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return */
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
+
+function debounceWithCachedValue<F extends (...args: any) => any>(
+  func: F,
+  wait = 0,
+  {
+    leading = false,
+    trailing = true,
+    maxWait,
+  }: {
+    readonly leading?: boolean;
+    readonly trailing?: boolean;
+    readonly maxWait?: number;
+  } = {},
+) {
+  let cachedValue: ReturnType<F> | undefined;
+
+  const debouncer = funnel(
+    (_, ...args: Parameters<F>) => args,
+    (args) => {
+      cachedValue = func(...args) as ReturnType<F>;
+    },
+    {
+      burstCoolDownMs: wait,
+      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+    },
+  );
+
+  return {
+    call: (...args: Parameters<F>): ReturnType<F> | undefined => {
+      debouncer.call(...args);
+      return cachedValue;
+    },
+
+    flush: () => {
+      debouncer.flush();
+      return cachedValue;
+    },
+
+    cancel: debouncer.cancel,
+
+    get cachedValue() {
+      return cachedValue;
+    },
+
+    get isIdle() {
+      return debouncer.isIdle;
+    },
+  };
+}
 
 describe("Main functionality", () => {
   it("should debounce a function", async () => {
@@ -144,54 +194,3 @@ describe("Additional functionality", () => {
     expect(debouncer.flush()).toBe("hello");
   });
 });
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-function-return-type
-function debounceWithCachedValue<F extends (...args: any) => any>(
-  func: F,
-  wait = 0,
-  {
-    leading = false,
-    trailing = true,
-    maxWait,
-  }: {
-    readonly leading?: boolean;
-    readonly trailing?: boolean;
-    readonly maxWait?: number;
-  } = {},
-) {
-  let cachedValue: ReturnType<F> | undefined;
-
-  const debouncer = funnel(
-    (_, ...args: Parameters<F>) => args,
-    (args) => {
-      cachedValue = func(...args) as ReturnType<F>;
-    },
-    {
-      burstCoolDownMs: wait,
-      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
-    },
-  );
-
-  return {
-    call: (...args: Parameters<F>): ReturnType<F> | undefined => {
-      debouncer.call(...args);
-      return cachedValue;
-    },
-
-    flush: () => {
-      debouncer.flush();
-      return cachedValue;
-    },
-
-    cancel: debouncer.cancel,
-
-    get cachedValue() {
-      return cachedValue;
-    },
-
-    get isIdle() {
-      return debouncer.isIdle;
-    },
-  };
-}

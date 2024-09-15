@@ -427,6 +427,7 @@ export default tseslint.config(
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     rules: {
       "@typescript-eslint/class-methods-use-this": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "jsdoc/require-example": "off",

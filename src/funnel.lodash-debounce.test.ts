@@ -1,7 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters */
+
 import { sleep } from "../test/sleep";
 import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
+
+const debounce = <F extends (...args: any) => void>(
+  func: F,
+  wait = 0,
+  {
+    leading = false,
+    trailing = true,
+    maxWait,
+  }: {
+    readonly leading?: boolean;
+    readonly trailing?: boolean;
+    readonly maxWait?: number;
+  } = {},
+) =>
+  funnel((_, ...args: ReadonlyArray<unknown>) => args, func, {
+    burstCoolDownMs: wait,
+    ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+    invokedAt: trailing ? (leading ? "both" : "end") : "start",
+  });
 
 describe("Main functionality", () => {
   it("should debounce a function", async () => {
@@ -257,24 +278,3 @@ describe("Additional functionality", () => {
     expect(debouncer.isIdle).toBe(true);
   });
 });
-
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/no-explicit-any
-const debounce = <F extends (...args: any) => void>(
-  func: F,
-  wait = 0,
-  {
-    leading = false,
-    trailing = true,
-    maxWait,
-  }: {
-    readonly leading?: boolean;
-    readonly trailing?: boolean;
-    readonly maxWait?: number;
-  } = {},
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-) =>
-  funnel((_, ...args: ReadonlyArray<unknown>) => args, func, {
-    burstCoolDownMs: wait,
-    ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-    invokedAt: trailing ? (leading ? "both" : "end") : "start",
-  });
