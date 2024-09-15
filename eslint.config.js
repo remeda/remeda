@@ -1,23 +1,24 @@
-import core from "@eslint/js";
+import eslint from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
-import { config, configs as typescriptConfigs } from "typescript-eslint";
+import tseslint from "typescript-eslint";
 
-export default config(
+export default tseslint.config(
   {
     ignores: ["coverage", "dist", "docs", "examples"],
   },
-  core.configs.recommended,
+  eslint.configs.recommended,
   jsdoc.configs["flat/recommended-typescript"],
-  ...typescriptConfigs.strictTypeChecked,
-  ...typescriptConfigs.stylisticTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs["flat/recommended"],
   prettierConfig,
   {
     languageOptions: {
       parserOptions: {
-        project: true,
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
@@ -54,7 +55,7 @@ export default config(
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
-      // extension)
+      // config)
 
       // Possible Problems
       "array-callback-return": [
@@ -67,76 +68,125 @@ export default config(
         },
       ],
       "no-await-in-loop": "error",
-      "no-constant-binary-expression": "error",
-      "no-new-native-nonconstructor": "error",
+      "no-constructor-return": "error",
+      "no-inner-declarations": "error",
       "no-promise-executor-return": "error",
       "no-self-compare": "error",
       "no-template-curly-in-string": "warn",
       "no-unmodified-loop-condition": "error",
       "no-unreachable-loop": "error",
       "no-duplicate-imports": "error",
+      "no-useless-assignment": "error",
       "require-atomic-updates": "error",
 
       // Suggestions
+      "accessor-pairs": "warn",
       "arrow-body-style": "warn",
+      "block-scoped-var": "warn",
+      complexity: "warn",
+      "consistent-this": "warn",
       curly: "error",
       "default-case-last": "warn",
       eqeqeq: ["error", "always", { null: "always" }],
+      "func-name-matching": "warn",
+      "func-names": "warn",
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
+      "grouped-accessor-pairs": "warn",
       "guard-for-in": "error",
       "logical-assignment-operators": "warn",
+      "new-cap": "warn",
       "operator-assignment": "warn",
       "object-shorthand": "warn",
+      "one-var": ["warn", "never"],
       "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
       "prefer-const": "error",
       "prefer-exponentiation-operator": "error",
       "prefer-named-capture-group": "warn",
       "prefer-numeric-literals": "error",
+      "prefer-object-has-own": "warn",
       "prefer-object-spread": "error",
-      "prefer-promise-reject-errors": ["error", { allowEmptyReject: false }],
       "prefer-regex-literals": ["error", { disallowRedundantWrapping: true }],
+      "prefer-rest-params": "warn",
       "prefer-spread": "error",
       "prefer-template": "error",
-      "require-await": "error",
+      radix: "warn",
       "require-unicode-regexp": "warn",
+      "sort-vars": "warn",
+      strict: "warn",
       "symbol-description": "warn",
+      "vars-on-top": "warn",
+      yoda: "warn",
 
       "no-alert": "error",
-      "no-array-constructor": "error",
       "no-bitwise": "warn",
       "no-caller": "error",
       "no-console": "error",
+      "no-div-regex": "warn",
       "no-else-return": ["warn", { allowElseIf: false }],
+      "no-eq-null": "warn",
       "no-eval": "error",
       "no-extend-native": "error",
       "no-extra-bind": "error",
       "no-extra-label": "error",
       "no-implicit-coercion": ["error", { disallowTemplateShorthand: true }],
-      "no-implied-eval": "error",
+      "no-implicit-globals": "warn",
       "no-iterator": "error",
       "no-label-var": "error",
       "no-labels": "error",
       "no-lone-blocks": "error",
       "no-lonely-if": "warn",
       "no-multi-assign": "error",
+      "no-multi-str": "warn",
       "no-negated-condition": "warn",
       "no-new": "error",
       "no-new-func": "error",
       "no-new-wrappers": "error",
       "no-object-constructor": "error",
-      "no-octal-escape": "error",
-      "no-param-reassign": "error",
-      "no-plusplus": ["warn", { allowForLoopAfterthoughts: true }],
       "no-proto": "error",
       "no-return-assign": ["warn", "always"],
       "no-script-url": "error",
       "no-sequences": ["error", { allowInParentheses: false }],
-      "no-throw-literal": "error",
+      "no-undef-init": "warn",
+      "no-underscore-dangle": "warn",
       "no-unneeded-ternary": "warn",
       "no-useless-call": "error",
       "no-useless-computed-key": "warn",
       "no-useless-concat": "warn",
       "no-useless-rename": "error",
+      "no-useless-return": "warn",
+      "no-var": "warn",
+      "no-void": ["warn", { allowAsStatement: true }],
+
+      // These rules have better versions in typescript-eslint. The main purpose
+      // of putting them here is to help us detect cases where we enable them
+      // accidentally instead of the typescript rule; the fact that they are
+      // here doesn't mean they are enabled by any of the eslint default
+      // configs.
+      "class-methods-use-this": "off",
+      "consistent-return": "off",
+      "default-param-last": "off",
+      "dot-notation": "off",
+      "init-declarations": "off",
+      "max-params": "off",
+      "no-array-constructor": "off",
+      "no-dupe-class-members": "off",
+      "no-empty-function": "off",
+      "no-implied-eval": "off",
+      "no-invalid-this": "off",
+      "no-loop-func": "off",
+      "no-magic-numbers": "off",
+      "no-redeclare": "off",
+      "no-restricted-imports": "off",
+      "no-return-await": "off",
+      "no-shadow": "off",
+      "no-throw-literal": "off",
+      "no-unused-expressions": "off",
+      "no-unused-vars": "off",
+      "no-use-before-define": "off",
+      "no-useless-constructor": "off",
+      "prefer-destructuring": "off",
+      "prefer-promise-reject-errors": "off",
+      "require-await": "off",
 
       // === JSDoc =============================================================
       // (We are assuming that the config is extended by JSDoc's:
@@ -244,11 +294,7 @@ export default config(
 
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
-      // strict-type-checked, and stylistic-type-checked extensions)
-
-      // --- Overrides ---------------------------------------------------------
-      // These are rules defined in the recommended extension that we needed to
-      // make changes to.
+      // strictTypeChecked, and stylisticTypeChecked configs)
 
       // Types are actually stricter than interfaces because they can't be
       // extended via declaration merging, meaning they are immune to some
@@ -263,48 +309,21 @@ export default config(
 
       "@typescript-eslint/no-unused-vars": [
         "error",
+        // These options are copied from: https://typescript-eslint.io/rules/no-unused-vars/#benefits-over-typescript
         {
-          // The default config for this rule doesn't provide *some* way of
-          // ignoring an unused argument, and we need one!
+          args: "all",
           argsIgnorePattern: "^_",
-          // This allows removing props by destructuring an object, which is
-          // useful in arrow functions.
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
           ignoreRestSiblings: true,
         },
       ],
 
-      "@typescript-eslint/restrict-template-expressions": [
-        "error",
-        {
-          allowNumber: true,
-
-          allowAny: false,
-          allowArray: false,
-          allowBoolean: false,
-          allowNever: false,
-          allowNullish: false,
-          allowRegExp: false,
-        },
-      ],
-
-      // --- Optional ----------------------------------------------------------
-      // These aren't enabled by default
-
-      // Style & Conventions
-      "prefer-destructuring": "off",
-      "@typescript-eslint/prefer-destructuring": [
-        "warn",
-        {
-          VariableDeclarator: { array: true, object: true },
-          AssignmentExpression: { array: false, object: false },
-        },
-        { enforceForRenamedProperties: true },
-      ],
-      "@typescript-eslint/sort-type-constituents": "warn",
+      "@typescript-eslint/class-methods-use-this": "warn",
+      "@typescript-eslint/prefer-destructuring": "warn",
       "@typescript-eslint/promise-function-async": "error",
-      "no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-expressions": "error",
-      "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": [
         "error",
         // We just want to ensure that types are defined before they are used,
@@ -320,16 +339,31 @@ export default config(
           allowNullableObject: false,
         },
       ],
-
-      // Security & Correctness
+      "@typescript-eslint/consistent-type-exports": "warn",
       "@typescript-eslint/explicit-function-return-type": [
         "error",
         { allowExpressions: true },
       ],
+      "@typescript-eslint/explicit-member-accessibility": "warn",
       "@typescript-eslint/explicit-module-boundary-types": [
         "warn",
         { allowTypedFunctionExpressions: false },
       ],
+      "@typescript-eslint/no-import-type-side-effects": "warn",
+      "@typescript-eslint/no-magic-numbers": [
+        "warn",
+        {
+          ignore: [-1, 0, 1, 2],
+          ignoreNumericLiteralTypes: true,
+        },
+      ],
+      "@typescript-eslint/no-unnecessary-parameter-property-assignment": "warn",
+      "@typescript-eslint/no-unnecessary-qualifier": "warn",
+      "@typescript-eslint/parameter-properties": [
+        "warn",
+        { prefer: "parameter-property" },
+      ],
+      "@typescript-eslint/prefer-enum-initializers": "warn",
       "@typescript-eslint/prefer-readonly-parameter-types": [
         "error",
         {
@@ -353,28 +387,25 @@ export default config(
         },
       ],
       "@typescript-eslint/no-useless-empty-export": "error",
-      "@typescript-eslint/prefer-regexp-exec": "error",
+      "@typescript-eslint/prefer-readonly": "warn",
       "@typescript-eslint/require-array-sort-compare": "error",
       "@typescript-eslint/switch-exhaustiveness-check": [
         "error",
-        { requireDefaultForNonUnion: true },
+        {
+          allowDefaultCaseForExhaustiveSwitch: false,
+          requireDefaultForNonUnion: true,
+        },
       ],
-      "default-param-last": "off",
       "@typescript-eslint/default-param-last": "error",
-      "no-return-await": "off",
-      "@typescript-eslint/return-await": ["error", "always"],
       "@typescript-eslint/method-signature-style": "error",
-      "no-loop-func": "off",
       "@typescript-eslint/no-loop-func": "error",
-      "@typescript-eslint/no-require-imports": "error",
-      "no-shadow": "off",
       "@typescript-eslint/no-shadow": "error",
-      "@typescript-eslint/no-unsafe-unary-minus": "error",
 
       // === Unicorn ==========================================================
       // (We are assuming that the config is extended by unicorns's:
-      // flat/recommended extension)
+      // flat/recommended config)
 
+      "unicorn/better-regex": "warn",
       "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
       "unicorn/filename-case": ["error", { case: "camelCase" }],
@@ -393,8 +424,11 @@ export default config(
     },
   },
   {
-    files: ["src/**/*.test.ts", "src/**/*.test-d.ts"],
+    files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     rules: {
+      "@typescript-eslint/class-methods-use-this": "off",
+      "@typescript-eslint/no-magic-numbers": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",

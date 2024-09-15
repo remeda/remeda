@@ -92,7 +92,7 @@ test("Makes wide types partial", () => {
   expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
 
   const narrow = omitBy({ a: 1 } as const, (_x): _x is 1 => true);
-  // eslint-disable-next-line @typescript-eslint/ban-types -- Expected!
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(narrow).toEqualTypeOf<{}>();
 });
 
@@ -180,8 +180,7 @@ describe("Records with non-narrowing predicates (Issue #696)", () => {
   });
 });
 
-const isUndefined = <T>(value: T | undefined): value is undefined =>
-  value === undefined;
+const isUndefined = (value: unknown): value is undefined => value === undefined;
 
-const isNull = <T>(value: T | null): value is null =>
+const isNull = (value: unknown): value is null =>
   typeof value === "object" && value === null;

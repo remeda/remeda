@@ -40,7 +40,7 @@ export function isShallowEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
 ): data is S;
-export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
+export function isShallowEqual<T>(data: T, other: T): boolean;
 
 /**
  * Performs a *shallow structural* comparison between two values to determine if
@@ -80,9 +80,7 @@ export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
 export function isShallowEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
-export function isShallowEqual<S>(
-  other: S,
-): <T extends S = S>(data: T) => boolean;
+export function isShallowEqual<T>(other: T): (data: T) => boolean;
 
 export function isShallowEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isShallowEqualImplementation, args);
@@ -116,7 +114,7 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
   }
 
   for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+    if (!Object.hasOwn(b, key)) {
       return false;
     }
 

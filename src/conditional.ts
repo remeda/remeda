@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
 
 import { purryOn } from "./internal/purryOn";
-import { type GuardType } from "./internal/types";
+import type { GuardType } from "./internal/types";
 
 type Case<
   In,

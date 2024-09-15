@@ -1,14 +1,6 @@
-import { type Join } from "type-fest";
+import type { IsEqual, Join } from "type-fest";
 import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
-
-/**
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
- */
-type isEqual<A, B> =
-  (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
-    ? true
-    : false;
 
 type Difference<A extends number, B extends number> =
   TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
@@ -16,7 +8,7 @@ type Difference<A extends number, B extends number> =
     : never;
 
 type isLessThan<A extends number, B extends number> =
-  isEqual<A, B> extends true
+  IsEqual<A, B> extends true
     ? false
     : 0 extends A
       ? true

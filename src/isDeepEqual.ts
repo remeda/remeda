@@ -37,7 +37,7 @@ export function isDeepEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
 ): data is S;
-export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
+export function isDeepEqual<T>(data: T, other: T): boolean;
 
 /**
  * Performs a *deep structural* comparison between two values to determine if
@@ -74,13 +74,13 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
 export function isDeepEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
-export function isDeepEqual<S>(other: S): <T extends S = S>(data: T) => boolean;
+export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
 export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
   return purry(isDeepEqualImplementation, args);
 }
 
-function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
+function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   if (data === other) {
     return true;
   }

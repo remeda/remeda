@@ -1,20 +1,25 @@
-import {
-  type EmptyObject,
-  type IfNever,
-  type IsAny,
-  type IsLiteral,
-  type IsNever,
-  type IsNumericLiteral,
-  type IsStringLiteral,
-  type IsSymbolLiteral,
-  type KeysOfUnion,
-  type Simplify,
-  type Split,
+import type {
+  EmptyObject,
+  IfNever,
+  IsAny,
+  IsLiteral,
+  IsNever,
+  IsNumericLiteral,
+  IsStringLiteral,
+  IsSymbolLiteral,
+  KeysOfUnion,
+  Simplify,
+  Split,
+  Tagged,
 } from "type-fest";
 
-declare const __brand: unique symbol;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
+declare const TAG_NAME_BRANDED_RETURN: unique symbol;
 
-export type Branded<T, Brand extends symbol> = T & { [__brand]: Brand };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- The most generic function signature requires the usage of `any` instead of `unknown`
+export type BrandedReturn<F extends (...args: any) => any> = (
+  ...args: Parameters<F>
+) => Tagged<ReturnType<F>, typeof TAG_NAME_BRANDED_RETURN, F>;
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 

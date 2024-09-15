@@ -1,9 +1,9 @@
-import { type IsInteger, type IsNegative, type Subtract } from "type-fest";
-import {
-  type CoercedArray,
-  type IterableContainer,
-  type NTuple,
-  type TupleParts,
+import type { IsInteger, IsNegative, Subtract } from "type-fest";
+import type {
+  CoercedArray,
+  IterableContainer,
+  NTuple,
+  TupleParts,
 } from "./internal/types";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";
