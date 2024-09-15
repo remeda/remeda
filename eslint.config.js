@@ -429,6 +429,8 @@ export default tseslint.config(
       "@typescript-eslint/class-methods-use-this": "off",
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
+      "jsdoc/require-example": "off",
+      "jsdoc/require-param": "off",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": [
         "warn",
