@@ -3,23 +3,26 @@ import { expectTypeOf } from "vitest";
 import { pipe } from "./pipe";
 
 test("empty array", () => {
-  const result = sumBy([], BigInt);
-  expectTypeOf(result).toEqualTypeOf<0>();
+  const result1 = sumBy([], BigInt);
+  expectTypeOf(result1).toEqualTypeOf<0>();
+
+  const result2 = sumBy([], toNumber);
+  expectTypeOf(result2).toEqualTypeOf<number>();
 });
 
 describe("numbers", () => {
   test("arbitrary arrays", () => {
-    const result = sumBy([] as Array<number>, toNumber);
+    const result = sumBy([] as Array<unknown>, toNumber);
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = sumBy([] as ReadonlyArray<number>, toNumber);
+    const result = sumBy([] as ReadonlyArray<unknown>, toNumber);
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sumBy([1, 2] as [number, ...Array<number>], toNumber);
+    const result = sumBy([1, 2] as [unknown, ...Array<unknown>], toNumber);
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
@@ -29,7 +32,7 @@ describe("numbers", () => {
   });
 
   test("fixed-size tuples", () => {
-    const result = sumBy([1, 2] as [number, number], toNumber);
+    const result = sumBy([1, 2] as [unknown, unknown], toNumber);
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 });
@@ -46,7 +49,7 @@ describe("bigints", () => {
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sumBy([1n, 2n] as [bigint, ...Array<bigint>], toBigInt);
+    const result = sumBy([1n, 2n] as [unknown, ...Array<unknown>], toBigInt);
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 
@@ -56,7 +59,7 @@ describe("bigints", () => {
   });
 
   test("fixed-size tuples", () => {
-    const result = sumBy([1n, 2n] as [bigint, bigint], toBigInt);
+    const result = sumBy([1n, 2n] as [unknown, unknown], toBigInt);
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 });

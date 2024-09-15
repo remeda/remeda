@@ -1,7 +1,7 @@
 import { purry } from "./purry";
 import { type IterableContainer } from "./internal/types";
 
-type SumBy<T, TS extends IterableContainer<T>> = TS extends []
+type SumByBigInt<T, TS extends IterableContainer<T>> = TS extends []
   ? 0
   : TS extends readonly [T, ...ReadonlyArray<T>]
     ? bigint
@@ -38,7 +38,7 @@ export function sumBy<
   TS extends IterableContainer<T> = IterableContainer<T>,
 >(
   callbackfn: (value: T, index: number, data: TS) => bigint,
-): (items: TS) => SumBy<T, TS>;
+): (items: TS) => SumByBigInt<T, TS>;
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
@@ -74,7 +74,7 @@ export function sumBy<
 >(
   data: TS,
   callbackfn: (value: T, index: number, data: TS) => bigint,
-): SumBy<T, TS>;
+): SumByBigInt<T, TS>;
 
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(sumByImplementation, args);
