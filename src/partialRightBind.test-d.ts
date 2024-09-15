@@ -10,8 +10,8 @@ test("should correctly type 0 partial args", () => {
 });
 
 test("should correctly type 1 partial arg", () => {
-  expectTypeOf(partialRightBind([1], fn)).toEqualTypeOf<
-    (y: number, z: number) => string
+  expectTypeOf(partialRightBind([3], fn)).toEqualTypeOf<
+    (x: number, y: number) => string
   >();
 });
 
