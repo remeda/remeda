@@ -3,7 +3,7 @@
  * aren't typed as `any` in the generic type declaration.
  */
 
-import { type GuardType } from "./internal/types";
+import type { GuardType } from "./internal/types";
 
 /**
  * Conditionally run a function based on a predicate, returning it's result (similar to
