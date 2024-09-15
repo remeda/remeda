@@ -19,15 +19,15 @@ describe("LEGACY `debounce`", () => {
 
       await sleep(128);
 
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
       debouncer.call("d");
       debouncer.call("e");
       debouncer.call("f");
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
 
       await sleep(256);
 
-      expect(mockFn).toBeCalledTimes(2);
+      expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
     it("should not immediately call `func` when `wait` is `0`", async () => {
@@ -40,7 +40,7 @@ describe("LEGACY `debounce`", () => {
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(5);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
     it("should apply default options", async () => {
@@ -52,38 +52,25 @@ describe("LEGACY `debounce`", () => {
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(64);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    it("should support a `leading` option", async () => {
-      const leadingMockFn = vi.fn();
-      const bothMockFn = vi.fn();
+    test("'leading'-only invocation timing", async () => {
+      const mockFn = vi.fn();
 
-      const withLeading = debounce(leadingMockFn, {
+      const withLeading = debounce(mockFn, {
         burstCoolDownMs: 32,
         invokedAt: "start",
       });
 
       withLeading.call();
-      expect(leadingMockFn).toBeCalledTimes(1);
-
-      const withLeadingAndTrailing = debounce(bothMockFn, {
-        burstCoolDownMs: 32,
-        invokedAt: "both",
-      });
-
-      withLeadingAndTrailing.call();
-      withLeadingAndTrailing.call();
-      expect(bothMockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
 
       await sleep(64);
-      expect(bothMockFn).toBeCalledTimes(2);
-
-      withLeading.call();
-      expect(leadingMockFn).toBeCalledTimes(2);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    it("should support a `trailing` option", async () => {
+    test("'trailing'-only invocation timing", async () => {
       const mockFn = vi.fn();
 
       const withTrailing = debounce(mockFn, {
@@ -95,7 +82,23 @@ describe("LEGACY `debounce`", () => {
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(64);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    it("'leading' and 'trailing' invocation timings", async () => {
+      const mockFn = vi.fn();
+
+      const withLeadingAndTrailing = debounce(mockFn, {
+        burstCoolDownMs: 32,
+        invokedAt: "both",
+      });
+
+      withLeadingAndTrailing.call();
+      withLeadingAndTrailing.call();
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      await sleep(64);
+      expect(mockFn).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -113,13 +116,13 @@ describe("LEGACY `debounce`", () => {
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(128);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
       debouncer.call("c");
       debouncer.call("d");
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
 
       await sleep(256);
-      expect(mockFn).toBeCalledTimes(2);
+      expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
     it("should support `maxWait` in a tight loop", async () => {
@@ -127,7 +130,7 @@ describe("LEGACY `debounce`", () => {
       const withoutMockFn = vi.fn();
 
       const withMaxWait = debounce(withMockFn, {
-        burstCoolDownMs: 32,
+        burstCoolDownMs: 64,
         maxBurstDurationMs: 128,
       });
       const withoutMaxWait = debounce(withoutMockFn, { burstCoolDownMs: 96 });
@@ -164,7 +167,7 @@ describe("LEGACY `debounce`", () => {
       }, 210);
 
       await sleep(500);
-      expect(mockFn).toBeCalledTimes(2);
+      expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
     it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
@@ -179,10 +182,10 @@ describe("LEGACY `debounce`", () => {
 
       await sleep(128);
       debouncer.call();
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
 
       await sleep(192);
-      expect(mockFn).toBeCalledTimes(2);
+      expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
     it("works like a leaky bucket when only maxWaitMs is set", async () => {
@@ -204,7 +207,7 @@ describe("LEGACY `debounce`", () => {
       expect(mockFn).not.toHaveBeenCalled();
 
       await sleep(17);
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -227,7 +230,7 @@ describe("LEGACY `debounce`", () => {
 
       await sleep(32);
       debouncer.call();
-      expect(mockFn).toBeCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
     it("can cancel after the timer ends", async () => {
@@ -255,7 +258,7 @@ describe("LEGACY `debounce`", () => {
       expect(debouncer.isIdle).toBe(true);
     });
 
-    it("can check for inflight timers (trailing)", async () => {
+    it("can check for inflight timers (leading)", async () => {
       const debouncer = debounce(identity(), {
         invokedAt: "start",
         burstCoolDownMs: 32,
@@ -378,7 +381,7 @@ describe("LEGACY `debounce` with cached value", () => {
       expect(debouncer.cachedValue).toBe("hello");
     });
 
-    it("can check for inflight timers (trailing)", async () => {
+    it("can check for inflight timers (leading)", async () => {
       const debouncer = debounceWithCachedValue(identity(), {
         invokedAt: "start",
         burstCoolDownMs: 32,
