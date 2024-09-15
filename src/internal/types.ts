@@ -13,6 +13,12 @@ import type {
   Tagged,
 } from "type-fest";
 
+/** Used for reporting type errors in a more useful way than `never`. */
+export type RemedaTypeError<
+  Function extends string,
+  Message extends string,
+> = `RemedaTypeError(${Function}): ${Message}.`;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const TAG_NAME_BRANDED_RETURN: unique symbol;
 
