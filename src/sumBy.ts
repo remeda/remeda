@@ -88,8 +88,12 @@ const sumByImplementation = <T>(
     data: ReadonlyArray<T>,
   ) => bigint | number,
 ): bigint | number => {
+  if (array.length === 0) {
+    return 0;
+  }
+
   const [head, ...tail] = array;
-  let sum = array.length === 0 ? 0 : callbackfn(head!, 0, array);
+  let sum = callbackfn(head!, 0, array);
 
   for (const [index, item] of tail.entries()) {
     const summand = callbackfn(item, index + 1, array);
