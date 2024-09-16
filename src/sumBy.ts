@@ -12,7 +12,14 @@ type SumBy<
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
- * Returns 0 if the length of the array is 0.
+ *
+ * Works for both `number` and `bigint` predicates, but not predicates that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
+ * the type of the predicate; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty` to guard against this case.
  *
  * @param callbackfn - Predicate function.
  * @signature
@@ -39,7 +46,14 @@ export function sumBy<T extends IterableContainer>(
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
- * Returns 0 if the length of the array is 0.
+ *
+ * Works for both `number` and `bigint` predicates, but not predicates that contain both
+ * types.
+ *
+ * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
+ * the type of the predicate; to avoid adding this to the return type for cases
+ * where the array is known to be non-empty you can use `hasAtLeast` or
+ * `isEmpty` to guard against this case.
  *
  * @param data - The array.
  * @param callbackfn - Predicate function.
@@ -50,13 +64,10 @@ export function sumBy<T extends IterableContainer>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 9
- *
  *    R.sumBy(
  *      [{a: 5n}, {a: 1n}, {a: 3n}],
  *      x => x.a
  *    ) // 9n
- *
- *   R.sumBy([] as {a: bigint}[], x => x.a)
  * @dataFirst
  * @category Array
  */
