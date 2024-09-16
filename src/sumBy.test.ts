@@ -48,6 +48,10 @@ describe("data last", () => {
     ).toEqual(15n);
   });
 
+  it("should return 0 for an empty array", () => {
+    expect(pipe([], sumBy(prop("a")))).toBe(0);
+  });
+
   test("indexed", () => {
     const actual = pipe(
       [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
