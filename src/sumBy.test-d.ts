@@ -14,6 +14,16 @@ test("empty array", () => {
   expectTypeOf(result2).toEqualTypeOf<0>();
 });
 
+test("disallow mixed predicate", () => {
+  const toNumberOrBigint = constant<bigint | number>(1);
+  // @ts-expect-error [ts2769]: Type `number | bigint` is not assignable to type number
+  // Type `number | bigint` is not assignable to type bigint
+  sumBy([1, 2, 3], toNumberOrBigint);
+  // @ts-expect-error [ts2769]: Type `number | bigint` is not assignable to type number
+  // Type `number | bigint` is not assignable to type bigint
+  pipe([1, 2, 3], sumBy(toNumberOrBigint));
+});
+
 describe("numbers", () => {
   test("arbitrary arrays", () => {
     const result = sumBy([] as Array<unknown>, toNumber);
