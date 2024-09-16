@@ -25,7 +25,7 @@ describe("data first", () => {
   });
 
   it("should return 0 for an empty array", () => {
-    expect(sumBy([] as Array<{ a: bigint }>, prop("a"))).toBe(0);
+    expect(sumBy([], prop("a"))).toBe(0);
   });
 });
 
@@ -46,10 +46,6 @@ describe("data last", () => {
         sumBy(prop("a")),
       ),
     ).toEqual(15n);
-  });
-
-  it("should return 0 for an empty array", () => {
-    expect(pipe([] as Array<{ a: bigint }>, sumBy(prop("a")))).toBe(0);
   });
 
   test("indexed", () => {

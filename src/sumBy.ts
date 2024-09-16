@@ -1,14 +1,18 @@
 import { purry } from "./purry";
 import { type IterableContainer } from "./internal/types";
 
-type SumByBigInt<T, TS extends IterableContainer<T>> = TS extends []
+type SumBy<
+  T extends IterableContainer,
+  U extends bigint | number,
+> = T extends readonly []
   ? 0
-  : TS extends readonly [T, ...ReadonlyArray<T>]
-    ? bigint
-    : bigint | 0;
+  : T extends readonly [unknown, ...ReadonlyArray<unknown>]
+    ? U
+    : U | 0;
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ * Returns 0 if the length of the array is 0.
  *
  * @param callbackfn - Predicate function.
  * @signature
@@ -23,25 +27,19 @@ type SumByBigInt<T, TS extends IterableContainer<T>> = TS extends []
  *      [{a: 5n}, {a: 1n}, {a: 3n}],
  *      R.sumBy(x => x.a)
  *    ) // 9n
- *
- *    R.pipe([] as {a: bigint}[], R.sumBy(x => x.a)) // 0
  * @dataLast
  * @category Array
  */
-
-export function sumBy<T>(
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): (items: ReadonlyArray<T>) => number;
-
-export function sumBy<
-  T,
-  TS extends IterableContainer<T> = IterableContainer<T>,
->(
-  callbackfn: (value: T, index: number, data: TS) => bigint,
-): (items: TS) => SumByBigInt<T, TS>;
+export function sumBy<T extends IterableContainer>(
+  callbackfn: (value: T[number], index: number, data: T) => number,
+): (items: T) => SumBy<T, number>;
+export function sumBy<T extends IterableContainer>(
+  callbackfn: (value: T[number], index: number, data: T) => bigint,
+): (items: T) => SumBy<T, bigint>;
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ * Returns 0 if the length of the array is 0.
  *
  * @param data - The array.
  * @param callbackfn - Predicate function.
@@ -63,18 +61,14 @@ export function sumBy<
  * @category Array
  */
 
-export function sumBy<T>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): number;
-
-export function sumBy<
-  T,
-  TS extends IterableContainer<T> = IterableContainer<T>,
->(
-  data: TS,
-  callbackfn: (value: T, index: number, data: TS) => bigint,
-): SumByBigInt<T, TS>;
+export function sumBy<T extends IterableContainer>(
+  data: T,
+  callbackfn: (value: T[number], index: number, data: T) => number,
+): SumBy<T, number>;
+export function sumBy<T extends IterableContainer>(
+  data: T,
+  callbackfn: (value: T[number], index: number, data: T) => bigint,
+): SumBy<T, bigint>;
 
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(sumByImplementation, args);
@@ -88,15 +82,19 @@ const sumByImplementation = <T>(
     data: ReadonlyArray<T>,
   ) => bigint | number,
 ): bigint | number => {
-  if (array.length === 0) {
+  const iter = array.entries();
+
+  const firstEntry = iter.next();
+  if (firstEntry.done === true) {
     return 0;
   }
 
-  const [head, ...tail] = array;
-  let sum = callbackfn(head!, 0, array);
-
-  for (const [index, item] of tail.entries()) {
-    const summand = callbackfn(item, index + 1, array);
+  const {
+    value: [, firstValue],
+  } = firstEntry;
+  let sum = callbackfn(firstValue, 0, array);
+  for (const [index, item] of iter) {
+    const summand = callbackfn(item, index, array);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands

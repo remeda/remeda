@@ -1,13 +1,17 @@
 import { sumBy } from "./sumBy";
 import { expectTypeOf } from "vitest";
 import { pipe } from "./pipe";
+import { constant } from "./constant";
+
+const toNumber = constant(1);
+const toBigInt = constant(1n);
 
 test("empty array", () => {
   const result1 = sumBy([], BigInt);
   expectTypeOf(result1).toEqualTypeOf<0>();
 
   const result2 = sumBy([], toNumber);
-  expectTypeOf(result2).toEqualTypeOf<number>();
+  expectTypeOf(result2).toEqualTypeOf<0>();
 });
 
 describe("numbers", () => {
@@ -74,12 +78,14 @@ describe("dataLast", () => {
     const result = pipe([1n, 2n, 3n] as const, sumBy(toBigInt));
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
+
+  test("empty array number", () => {
+    const result = pipe([] as const, sumBy(toNumber));
+    expectTypeOf(result).toEqualTypeOf<0>();
+  });
+
+  test("empty array bigint", () => {
+    const result = pipe([] as const, sumBy(toBigInt));
+    expectTypeOf(result).toEqualTypeOf<0>();
+  });
 });
-
-function toNumber(_value: unknown): number {
-  return 1;
-}
-
-function toBigInt(_value: unknown): bigint {
-  return 1n;
-}
