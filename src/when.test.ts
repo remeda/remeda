@@ -25,13 +25,13 @@ describe("dataFirst", () => {
     it("passes extra args to the functions", () => {
       expect(
         when(
-          "123",
+          "20",
           isString,
           (x, radix) => Number.parseInt(x, radix),
           // Extra args:
-          10 /* radix */,
+          16 /* radix */,
         ),
-      ).toBe(123);
+      ).toBe(32);
     });
   });
 
