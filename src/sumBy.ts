@@ -96,7 +96,7 @@ const sumByImplementation = <T>(
   const iter = array.entries();
 
   const firstEntry = iter.next();
-  if (firstEntry.done === true) {
+  if (firstEntry.done ?? false) {
     return 0;
   }
 
