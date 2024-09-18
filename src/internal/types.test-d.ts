@@ -1,12 +1,12 @@
-import { type EmptyObject, type Tagged } from "type-fest";
-import {
-  type Deduped,
-  type EnumerableStringKeyedValueOf,
-  type EnumerableStringKeyOf,
-  type IfBoundedRecord,
-  type IterableContainer,
-  type NTuple,
-  type TupleParts,
+import type { EmptyObject, Tagged } from "type-fest";
+import type {
+  Deduped,
+  EnumerableStringKeyedValueOf,
+  EnumerableStringKeyOf,
+  IfBoundedRecord,
+  IterableContainer,
+  NTuple,
+  TupleParts,
 } from "./types";
 
 declare const SymbolFoo: unique symbol;

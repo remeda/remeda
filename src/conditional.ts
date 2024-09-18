@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
 
 import { purryOn } from "./internal/purryOn";
-import { type GuardType } from "./internal/types";
+import type { GuardType } from "./internal/types";
 
 type Case<
   In,
@@ -20,6 +20,8 @@ export { conditionalPlus as conditional };
  * evaluates each case and, upon finding a truthy predicate, runs the
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
+ *
+ * For simpler cases you should also consider using `when` instead.
  *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback
@@ -111,6 +113,8 @@ function conditional<
  * evaluates each case and, upon finding a truthy predicate, runs the
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
+ *
+ * For simpler cases you should also consider using `when` instead.
  *
  * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
  * Ramda, the Remeda implementation does **NOT** return a default/fallback

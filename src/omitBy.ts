@@ -1,9 +1,9 @@
-import { type IfNever, type Simplify } from "type-fest";
-import {
-  type EnumerableStringKeyOf,
-  type EnumerableStringKeyedValueOf,
-  type IfBoundedRecord,
-  type ReconstructedRecord,
+import type { IfNever, Simplify } from "type-fest";
+import type {
+  EnumerableStringKeyOf,
+  EnumerableStringKeyedValueOf,
+  IfBoundedRecord,
+  ReconstructedRecord,
 } from "./internal/types";
 import { purry } from "./purry";
 

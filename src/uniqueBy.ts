@@ -1,8 +1,8 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import {
-  type BrandedReturn,
-  type Deduped,
-  type IterableContainer,
+import type {
+  BrandedReturn,
+  Deduped,
+  IterableContainer,
 } from "./internal/types";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import type { LazyEvaluator } from "./pipe";

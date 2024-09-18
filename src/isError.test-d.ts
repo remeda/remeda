@@ -6,7 +6,7 @@ import {
 import { isError } from "./isError";
 
 class MyError extends Error {
-  constructor() {
+  public constructor() {
     super();
     this.name = "MyError";
   }

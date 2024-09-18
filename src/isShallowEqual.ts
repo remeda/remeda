@@ -114,7 +114,7 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
   }
 
   for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+    if (!Object.hasOwn(b, key)) {
       return false;
     }
 

@@ -1,6 +1,6 @@
-import {
-  type EnumerableStringKeyedValueOf,
-  type IterableContainer,
+import type {
+  EnumerableStringKeyedValueOf,
+  IterableContainer,
 } from "./internal/types";
 import { purry } from "./purry";
 

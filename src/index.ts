@@ -144,5 +144,6 @@ export * from "./unique";
 export * from "./uniqueBy";
 export * from "./uniqueWith";
 export * from "./values";
+export * from "./when";
 export * from "./zip";
 export * from "./zipWith";

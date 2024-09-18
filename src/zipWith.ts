@@ -1,5 +1,5 @@
-import { type IterableContainer } from "./internal/types";
-import { type LazyEvaluator } from "./pipe";
+import type { IterableContainer } from "./internal/types";
+import type { LazyEvaluator } from "./pipe";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 
 type ZippingFunction<

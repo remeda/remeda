@@ -1,5 +1,5 @@
 import { groupBy } from "./groupBy";
-import { type NonEmptyArray } from "./internal/types";
+import type { NonEmptyArray } from "./internal/types";
 import { prop } from "./prop";
 
 test("Union of string literals", () => {

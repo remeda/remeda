@@ -8,6 +8,9 @@ import type {
   IsEqual,
 } from "type-fest";
 
+// This limitation is defined by type-fest
+type MaxLiteral = 1000;
+
 type RandomInteger<From extends number, To extends number> =
   Or<
     IsNever<NonNegativeInteger<From>>,
@@ -18,7 +21,7 @@ type RandomInteger<From extends number, To extends number> =
       ? From
       : GreaterThan<From, To> extends true
         ? never
-        : GreaterThanOrEqual<To, 1000> extends true
+        : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
           : IntRange<From, To> | To;
 
@@ -52,7 +55,7 @@ export function randomInteger<From extends number, To extends number>(
 
   if (toFloored < fromCeiled) {
     throw new RangeError(
-      `randomInteger: The range [${from},${to}] contains no integer`,
+      `randomInteger: The range [${from.toString()},${to.toString()}] contains no integer`,
     );
   }
 
