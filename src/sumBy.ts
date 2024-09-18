@@ -11,13 +11,13 @@ type SumBy<
     : U | 0;
 
 /**
- * Returns the sum of the elements of an array using the provided predicate.
+ * Returns the sum of the elements of an array using the provided mapper.
  *
- * Works for both `number` and `bigint` predicates, but not predicates that contain both
+ * Works for both `number` and `bigint` mappers, but not mappers that contain both
  * types.
  *
  * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
- * the type of the predicate; to avoid adding this to the return type for cases
+ * the type of the mapper; to avoid adding this to the return type for cases
  * where the array is known to be non-empty you can use `hasAtLeast` or
  * `isEmpty` to guard against this case.
  *
