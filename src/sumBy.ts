@@ -47,7 +47,7 @@ export function sumBy<T extends IterableContainer>(
 /**
  * Returns the sum of the elements of an array using the provided predicate.
  *
- * Works for both `number` and `bigint` predicates, but not predicates that contain both
+ * Works for both `number` and `bigint` predicates, but not predicates that can return both
  * types.
  *
  * IMPORTANT: The result for empty arrays would be 0 (`number`) regardless of
