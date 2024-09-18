@@ -10,7 +10,7 @@ test("empty array", () => {
   expectTypeOf(result2).toEqualTypeOf<0>();
 });
 
-test("disallow mixed predicate", () => {
+test("disallow mixed mapper", () => {
   const toNumberOrBigint = constant(1 as bigint | number);
   // @ts-expect-error [ts2769]: Type `number | bigint` is not assignable to type number
   // Type `number | bigint` is not assignable to type bigint
