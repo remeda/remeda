@@ -98,7 +98,7 @@ describe("regression test including edge cases", () => {
       { items: [   ], start:  1, deleteCount:  0, replacement: [3], expected: [3] },
       { items: [   ], start:  1, deleteCount:  1, replacement: [ ], expected: [] },
       { items: [   ], start:  1, deleteCount:  1, replacement: [3], expected: [3] },
-    ] as const;
+    ];
 
   test.each(testCases)(
     "splice($items, $start, $deleteCount, $replacement) -> $expected",
