@@ -255,15 +255,24 @@ export type NTuple<
 > = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
 
 /**
- * Takes an array and returns the types that make up it's parts. The suffix is
+ * Takes an array and returns the types that make up its parts. The suffix is
  * anything before the rest parameter (if any), the prefix is anything after the
  * rest parameter (if any), and the item is the type of the rest parameter.
  *
  * The output could be used to reconstruct the input: `[
  *   ...TupleParts<T>["prefix"],
- *   ...Array<TupleParts<T>["item"]>,
+ *   ...CoercedArray<TupleParts<T>["item"]>,
  *   ...TupleParts<T>["suffix"],
  * ]`.
+ *
+ * Optionals in a tuple are always considered to be part of the rest parameter.
+ *
+ * @example
+ *    TupleParts<[number, boolean?, ...Array<Date>, string]> = {
+ *      prefix: [number],
+ *      item: boolean | Date,
+ *      suffix: [string],
+ *    };
  */
 export type TupleParts<
   T,

@@ -1,26 +1,91 @@
-import type { And, ArraySplice, IsNegative, Sum } from "type-fest";
-import type { IterableContainer } from "./internal/types";
+import type {
+  ArraySplice,
+  GreaterThan,
+  IsNegative,
+  Subtract,
+  Sum,
+} from "type-fest";
+import type {
+  CoercedArray,
+  IterableContainer,
+  TupleParts,
+} from "./internal/types";
 import { purry } from "./purry";
+
+type FixedLengthSplice<
+  T extends IterableContainer,
+  Start extends number,
+  DeleteCount extends number,
+  Replacement extends IterableContainer,
+  PositiveStart extends number = IsNegative<Start> extends false
+    ? Start
+    : number extends T["length"]
+      ? // Can't compute negative start index.
+        number
+      : Sum<T["length"], Start> extends infer SumResult extends number
+        ? number extends SumResult
+          ? // type-fest Sum returns number when the sum is negative.
+            0
+          : SumResult
+        : never,
+  ClampedDeleteCount extends number = IsNegative<DeleteCount> extends true
+    ? 0
+    : number extends T["length"]
+      ? // Don't bother clamping in this case.
+        number
+      : GreaterThan<Sum<PositiveStart, DeleteCount>, T["length"]> extends true
+        ? Subtract<
+            T["length"],
+            PositiveStart
+          > extends infer SubtractResult extends number
+          ? number extends SubtractResult
+            ? // type-fest Subtract returns number when the difference is negative.
+              0
+            : SubtractResult
+          : never
+        : DeleteCount,
+> = ArraySplice<T, PositiveStart, ClampedDeleteCount, Replacement>;
 
 type Splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
   Replacement extends IterableContainer,
-  PositiveStart extends number = And<
-    number extends T["length"] ? false : true,
-    IsNegative<Start>
-  > extends true
-    ? // If Start is negative, *and* T is not a variable-length tuple, we can
-      // compute PositiveStart = T["length"] + Start.
-      Sum<T["length"], Start> extends infer SumResult extends number
-      ? number extends SumResult
-        ? // type-fest Sum returns number when the sum is negative.
-          0
-        : SumResult
-      : never
-    : Start,
-> = ArraySplice<T, PositiveStart, DeleteCount, Replacement>;
+> = TupleParts<T>["item"] extends never
+  ? FixedLengthSplice<T, Start, DeleteCount, Replacement>
+  : IsNegative<Start> extends true
+    ? // type-fest Sum returns number when the sum is negative.
+      number extends Sum<TupleParts<T>["suffix"]["length"], Start>
+      ? // Splice cuts into the variable-length part.
+        T
+      : // Splice is solely in the suffix.
+        [
+          ...TupleParts<T>["prefix"],
+          ...CoercedArray<TupleParts<T>["item"]>,
+          ...FixedLengthSplice<
+            TupleParts<T>["suffix"],
+            Start,
+            DeleteCount,
+            Replacement
+          >,
+        ]
+    : GreaterThan<
+          Sum<Start, DeleteCount>,
+          TupleParts<T>["prefix"]["length"]
+        > extends true
+      ? // Splice cuts into the variable-length part.
+        T
+      : // Splice is solely in the prefix.
+        [
+          ...FixedLengthSplice<
+            TupleParts<T>["prefix"],
+            Start,
+            DeleteCount,
+            Replacement
+          >,
+          ...CoercedArray<TupleParts<T>["item"]>,
+          ...TupleParts<T>["suffix"],
+        ];
 
 /**
  * Removes elements from an array and inserts new elements in their place.
