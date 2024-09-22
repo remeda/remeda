@@ -1,5 +1,5 @@
 import { purry } from "./purry";
-import { type IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 
 type SumBy<
   T extends IterableContainer,

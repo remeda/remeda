@@ -287,7 +287,7 @@ describe("Additional functionality", () => {
     expect(debouncer.isPending).toEqual(false);
   });
 
-  it("can check for inflight timers (trailing)", async () => {
+  it("can check for inflight timers (leading)", async () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
     expect(debouncer.isPending).toEqual(false);
 

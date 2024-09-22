@@ -30,11 +30,6 @@ test("trivial literals", () => {
   expectTypeOf(result).toEqualTypeOf<["a"]>();
 });
 
-test("trivial literals", () => {
-  const result = split("a", ",");
-  expectTypeOf(result).toEqualTypeOf<["a"]>();
-});
-
 test("string contains separator", () => {
   const result = split(",", ",");
   expectTypeOf(result).toEqualTypeOf<["", ""]>();

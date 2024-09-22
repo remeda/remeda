@@ -17,13 +17,11 @@ it("works on a single level of nesting", () => {
 });
 
 it("stops after the first level of nesting (depth === 1)", () => {
-  const result = flat([] as Array<Array<Array<string>>>, 1);
-  expectTypeOf(result).toEqualTypeOf<Array<Array<string>>>();
-});
+  const threeDeepResult = flat([] as Array<Array<Array<string>>>, 1);
+  expectTypeOf(threeDeepResult).toEqualTypeOf<Array<Array<string>>>();
 
-it("stops after the first level of nesting (depth === 1)", () => {
-  const result = flat([] as Array<Array<Array<Array<string>>>>, 1);
-  expectTypeOf(result).toEqualTypeOf<Array<Array<Array<string>>>>();
+  const fourDeepResult = flat([] as Array<Array<Array<Array<string>>>>, 1);
+  expectTypeOf(fourDeepResult).toEqualTypeOf<Array<Array<Array<string>>>>();
 });
 
 it("works with mixed types", () => {
@@ -107,7 +105,7 @@ it("works on tuples inside arrays", () => {
   expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
 });
 
-it("works on tuples inside arrays", () => {
+it("works on arrays inside tuples", () => {
   const result = flat([1, [], 4] as [1, Array<[2, 3]>, 4], 2);
   expectTypeOf(result).toEqualTypeOf<[1, ...Array<2 | 3>, 4]>();
 });

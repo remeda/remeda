@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import vitest from "@vitest/eslint-plugin";
 import prettierConfig from "eslint-config-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
@@ -424,8 +425,41 @@ export default tseslint.config(
     },
   },
   {
-    files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
+    files: ["src/**/*.test.ts", "test/**/*.*"],
+    plugins: {
+      vitest,
+    },
     rules: {
+      ...vitest.configs.recommended.rules,
+      "@typescript-eslint/class-methods-use-this": "off",
+      "@typescript-eslint/no-magic-numbers": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": [
+        "warn",
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
+  },
+  {
+    // Type Tests
+    files: ["src/**/*.test-d.ts"],
+    plugins: {
+      vitest,
+    },
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      "vitest/expect-expect": "off",
       "@typescript-eslint/class-methods-use-this": "off",
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",

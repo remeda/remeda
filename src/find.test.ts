@@ -17,7 +17,7 @@ describe("data first", () => {
     ).toEqual({ a: 1, b: 2 });
   });
 
-  test("indexed ", () => {
+  test("indexed", () => {
     expect(
       find(
         [

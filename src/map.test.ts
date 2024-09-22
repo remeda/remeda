@@ -17,16 +17,16 @@ describe("data_first", () => {
   });
 });
 
-describe("data_last", () => {
-  it("map", () => {
+describe("data-last", () => {
+  it("passes the value to the mapper as its first argument", () => {
     expect(pipe([1, 2, 3], map(multiply(2)))).toEqual([2, 4, 6]);
   });
 
-  it("map", () => {
+  it("passes the index to the mapper as its second argument", () => {
     expect(
       pipe(
         [0, 0, 0],
-        map((_, i) => i),
+        map((_, index) => index),
       ),
     ).toEqual([0, 1, 2]);
   });

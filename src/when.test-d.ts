@@ -14,7 +14,7 @@ describe("dataFirst", () => {
         });
       });
 
-      it("return type is not narrowed ", () => {
+      it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), constant({ a: 1 }));
         // The result contains both the input type, and the result of the
@@ -195,7 +195,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("return type is not narrowed ", () => {
+      it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(constant(true), constant({ a: 1 })));
         // The result contains both the input type, and the result of the
