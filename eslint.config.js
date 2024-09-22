@@ -425,7 +425,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["src/**/*.test.ts", "test/**/*.*"],
+    files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
       vitest,
     },
@@ -435,6 +435,33 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
+      // I don't agree with this rule, `it` and `test` should be used based on
+      // the situation. Some times we are testing a specific behavior or trait,
+      // and sometimes we have a specific flow, input, or edge-case that needs
+      // to be tested against.
+      "vitest/consistent-test-it": "off",
+
+      // This rule's docs don't provide justification for enabling it and what
+      // value it adds. Going by the rule just adds another level of indentation
+      // without really adding any interesting semantics.
+      "vitest/require-top-level-describe": "off",
+
+      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
+      // valuable and doesn't improve the quality of the tests. We can consider
+      // enabling some (or all of) those options and see if it makes the tests
+      // better without the code being a mess.
+      "vitest/prefer-expect-assertions": "off",
+
+      // These aren't valuable when writing tests, they'll just make the tests
+      // harder to read and maintain.
+      "@typescript-eslint/no-magic-numbers": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "unicorn/no-null": "off",
+    },
+  },
+  {
+    files: ["src/**/*.test.ts"],
+    rules: {
       // The range of things that are acceptable for truthy and falsy is wider
       // than just the boolean `true` and `false`. We prefer our tests only pass
       // on the narrowest cases.
@@ -446,40 +473,16 @@ export default tseslint.config(
       // some weird setup.
       "vitest/no-hooks": "off",
 
-      // I don't agree with this rule, `it` and `test` should be used based on
-      // the situation. Some times we are testing a specific behavior or trait,
-      // and sometimes we have a specific flow, input, or edge-case that needs
-      // to be tested against.
-      "vitest/consistent-test-it": "off",
-
-      // Wrapping tests with a describe just because is stupid, it adds another
-      // level of indentation without really adding any interesting semantics.
-      "vitest/require-top-level-describe": "off",
-
-      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
-      // valuable and doesn't improve the quality of the tests. We can consider
-      // enabling some (or all of) those options and see if it makes the tests
-      // better without the code being a mess.
-      "vitest/prefer-expect-assertions": "off",
-
       // TODO: This rule might be useful to guide people to break tests into
-      // smaller tests that only test one thing, but there's no reasonable value
-      // we can configure it to that won't end up feeling arbitrary and noisy.
+      // smaller tests that only expect one thing, but there's no reasonable
+      // max value we can configure it to that won't end up feeling arbitrary
+      // and noisy.
       "vitest/max-expects": "off",
-
-      // These aren't valuable when writing tests, they'll just make the tests
-      // harder to read and maintain.
-      "@typescript-eslint/no-magic-numbers": "off",
-      "@typescript-eslint/restrict-template-expressions": "off",
-      "unicorn/no-null": "off",
     },
   },
   {
     // Type Tests
     files: ["src/**/*.test-d.ts"],
-    plugins: {
-      vitest,
-    },
     settings: {
       vitest: {
         typecheck: true,
@@ -491,11 +494,6 @@ export default tseslint.config(
       },
     },
     rules: {
-      ...vitest.configs.all.rules,
-      // The `all` config doesn't actually contain all the rules, its missing
-      // all the recommended ones...
-      ...vitest.configs.recommended.rules,
-
       // A lot of our type tests use @ts-expect-error as the primary way to test
       // that function params are typed correctly. This isn't detected properly
       // by this rule and there's no way to configure it to work; so we disable
@@ -509,28 +507,6 @@ export default tseslint.config(
       // because there's no risk of the code not running, the type-checker will
       // check both branches.
       "vitest/no-conditional-in-test": "off",
-
-      // I don't agree with this rule, `it` and `test` should be used based on
-      // the situation. Some times we are testing a specific behavior or trait,
-      // and sometimes we have a specific flow, input, or edge-case that needs
-      // to be tested against.
-      "vitest/consistent-test-it": "off",
-
-      // Wrapping tests with a describe just because is stupid, it adds another
-      // level of indentation without really adding any interesting semantics.
-      "vitest/require-top-level-describe": "off",
-
-      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
-      // valuable and doesn't improve the quality of the tests. We can consider
-      // enabling some (or all of) those options and see if it makes the tests
-      // better without the code being a mess.
-      "vitest/prefer-expect-assertions": "off",
-
-      // These aren't valuable when writing tests, they'll just make the tests
-      // harder to read and maintain.
-      "@typescript-eslint/no-magic-numbers": "off",
-      "@typescript-eslint/restrict-template-expressions": "off",
-      "unicorn/no-null": "off",
     },
   },
   {
