@@ -430,7 +430,33 @@ export default tseslint.config(
       vitest,
     },
     rules: {
-      ...vitest.configs.recommended.rules,
+      ...vitest.configs.all.rules,
+
+      // TODO: 1178 instances
+      "vitest/prefer-expect-assertions": "off",
+
+      // TODO: 640 instances
+      "vitest/consistent-test-it": "off",
+
+      // TODO: 289 instances
+      "vitest/require-top-level-describe": "off",
+
+      // TODO: 273 instances
+      "vitest/prefer-strict-equal": "off",
+
+      // TODO: 28 instances
+      "vitest/max-expects": "off",
+
+      // The range of things that are acceptable for truthy and falsy is wider
+      // than just the boolean `true` and `false`. We prefer our tests to only
+      // pass with in the narrowest cases.
+      "vitest/prefer-to-be-truthy": "off",
+      "vitest/prefer-to-be-falsy": "off",
+
+      // It's rare that hooks are even needed, but in those cases it's probably
+      // preferable to use them as they make it clear that the tests relies on
+      // some weird setup.
+      "vitest/no-hooks": "off",
 
       // These aren't valuable when writing tests, they'll just make the tests
       // harder to read and maintain.
