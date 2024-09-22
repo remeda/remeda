@@ -4,6 +4,7 @@ import { doNothing } from "./doNothing";
 
 it("does nothing when called with no arguments", () => {
   const doesNothing = doNothing();
+
   expect(() => {
     doesNothing();
   }).not.toThrow();
@@ -11,6 +12,7 @@ it("does nothing when called with no arguments", () => {
 
 it("ignores any parameters sent to the function", () => {
   const doesNothing = doNothing();
+
   expect(() => {
     doesNothing(1);
   }).not.toThrow();

@@ -7,7 +7,7 @@ describe("dataFirst", () => {
   });
 
   test("length 1 array", () => {
-    expect(only([1])).toEqual(1);
+    expect(only([1])).toBe(1);
   });
 
   test("length 2 array", () => {
@@ -21,7 +21,7 @@ describe("data last", () => {
   });
 
   test("length 1 array", () => {
-    expect(pipe([1], only())).toEqual(1);
+    expect(pipe([1], only())).toBe(1);
   });
 
   test("length 2 array", () => {

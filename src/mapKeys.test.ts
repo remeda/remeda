@@ -25,12 +25,14 @@ test("symbols are not passed to the mapper", () => {
   mapKeys({ [Symbol("mySymbol")]: 1, a: "hello" }, (key, value) => {
     expect(key).toBe("a");
     expect(value).toBe("hello");
+
     return key;
   });
 });
 
 test("symbols returned from the mapper are not ignored", () => {
   const mySymbol = Symbol("mySymbol");
+
   expect(mapKeys({ a: 1 }, constant(mySymbol))).toStrictEqual({
     [mySymbol]: 1,
   });
@@ -40,6 +42,7 @@ test("number keys are converted to strings", () => {
   mapKeys({ 123: 456 }, (key, value) => {
     expect(key).toBe("123");
     expect(value).toBe(456);
+
     return key;
   });
 });

@@ -56,6 +56,7 @@ test("with take", () => {
     }),
     take(2),
   );
+
   expect(count).toHaveBeenCalledTimes(2);
   expect(result).toEqual([1, 2]);
 });

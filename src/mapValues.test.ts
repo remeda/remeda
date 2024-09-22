@@ -27,6 +27,7 @@ test("symbols are not passed to the mapper", () => {
   mapValues({ [Symbol("mySymbol")]: 1, a: "hello" }, (value, key) => {
     expect(value).toBe("hello");
     expect(key).toBe("a");
+
     return "world";
   });
 });
@@ -35,6 +36,7 @@ test("number keys are converted to string in the mapper", () => {
   mapValues({ 123: 456 }, (value, key) => {
     expect(value).toBe(456);
     expect(key).toBe("123");
+
     return "world";
   });
 });

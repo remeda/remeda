@@ -64,6 +64,7 @@ describe("data last", () => {
       map(counter),
       find(({ b }, idx) => b === 2 && idx === 1),
     );
+
     expect(counter).toHaveBeenCalledTimes(2);
     expect(actual).toEqual({ a: 1, b: 2 });
   });

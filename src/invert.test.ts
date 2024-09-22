@@ -32,6 +32,7 @@ describe("data first", () => {
 
   test("symbol values are fine", () => {
     const mySymbol = Symbol("my");
+
     expect(invert({ a: mySymbol })).toEqual({ [mySymbol]: "a" });
   });
 });

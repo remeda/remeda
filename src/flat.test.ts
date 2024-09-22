@@ -39,6 +39,7 @@ describe("dataFirst", () => {
   it("clones the array on depth 0", () => {
     const data = [1, 2, 3];
     const result = flat(data, 0);
+
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
@@ -46,6 +47,7 @@ describe("dataFirst", () => {
   it("clones the array when no nested items", () => {
     const data = [1, 2, 3];
     const result = flat(data, 1);
+
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
@@ -95,9 +97,10 @@ describe("dataLast", () => {
       map(afterMock),
       find((x) => x - 1 === 2),
     );
+
     expect(beforeMock).toHaveBeenCalledTimes(2);
     expect(afterMock).toHaveBeenCalledTimes(3);
-    expect(result).toStrictEqual(3);
+    expect(result).toBe(3);
   });
 
   it("works lazily (deep)", () => {
@@ -110,14 +113,16 @@ describe("dataLast", () => {
       map(afterMock),
       find((x) => x - 1 === 2),
     );
+
     expect(beforeMock).toHaveBeenCalledTimes(2);
     expect(afterMock).toHaveBeenCalledTimes(4);
-    expect(result).toStrictEqual(3);
+    expect(result).toBe(3);
   });
 
   it("works lazily with trivial depth === 0", () => {
     const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
     const result = pipe(data, flat(0));
+
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
@@ -133,7 +138,7 @@ it("can go very very deep", () => {
 // as flat that existed in previous versions of Remeda. We copy the tests so
 // that we can ensure that the new function is equivalent. In the future these
 // can be deleted.
-describe("LEGACY", () => {
+describe("lEGACY", () => {
   describe("`flatten` equivalent (depth = 1)", () => {
     test("flatten", () => {
       expect(flat([[1, 2], 3, [4, 5]])).toStrictEqual([1, 2, 3, 4, 5]);
@@ -169,9 +174,10 @@ describe("LEGACY", () => {
           counter2.fn(),
           find((x) => x - 1 === 2),
         );
+
         expect(counter1.count).toHaveBeenCalledTimes(2);
         expect(counter2.count).toHaveBeenCalledTimes(3);
-        expect(result).toStrictEqual(3);
+        expect(result).toBe(3);
       });
     });
   });
@@ -203,9 +209,10 @@ describe("LEGACY", () => {
         counter2.fn(),
         find((x) => x - 1 === 2),
       );
+
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(3);
-      expect(result).toStrictEqual(3);
+      expect(result).toBe(3);
     });
   });
 });

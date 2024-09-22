@@ -34,6 +34,7 @@ describe("data_last", () => {
       uniqueWith(isDeepEqual),
       take(3),
     );
+
     expect(counter.count).toHaveBeenCalledTimes(4);
     expect(result).toEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
   });
@@ -47,6 +48,7 @@ describe("data_last", () => {
       take(3),
       uniqueWith(isDeepEqual),
     );
+
     expect(counter.count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([{ a: 1 }, { a: 2 }]);
   });

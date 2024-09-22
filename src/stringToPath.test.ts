@@ -18,6 +18,7 @@ test("should handle short path with only bracket access", () => {
 
 test("should handle bracket access at the end", () => {
   const res = stringToPath("foo.bar[3]");
+
   expect(res).toEqual(["foo", "bar", "3"]);
 });
 

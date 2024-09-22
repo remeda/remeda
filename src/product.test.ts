@@ -31,9 +31,10 @@ describe("dataLast", () => {
   });
 });
 
-describe("KNOWN ISSUES", () => {
-  it("Returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
+describe("kNOWN ISSUES", () => {
+  it("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
     const result = product([] as Array<bigint>);
+
     expect(result).toBe(1);
   });
 });

@@ -104,10 +104,11 @@ it("complex variadic number array", () => {
     123,
     true,
   ];
+
   expect(map(input, identity())).toEqual(input);
 });
 
-describe("Indexed", () => {
+describe("indexed", () => {
   it("number array", () => {
     expect(map([1, 2, 3], (x, index) => x + index)).toEqual([1, 3, 5]);
   });

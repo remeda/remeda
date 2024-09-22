@@ -8,7 +8,8 @@ import { take } from "./take";
 
 it("should pipe a single operation", () => {
   const result = pipe(1, (x) => x * 2);
-  expect(result).toEqual(2);
+
+  expect(result).toBe(2);
 });
 
 it("should pipe operations", () => {
@@ -17,7 +18,8 @@ it("should pipe operations", () => {
     (x) => x * 2,
     (x) => x * 3,
   );
-  expect(result).toEqual(6);
+
+  expect(result).toBe(6);
 });
 
 describe("lazy", () => {
@@ -31,6 +33,7 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(2);
     expect(result).toEqual([10, 20]);
   });
@@ -46,6 +49,7 @@ describe("lazy", () => {
       filter((x) => (x / 10) % 2 === 1),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([10, 30]);
   });
@@ -61,6 +65,7 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(2);
     expect(result).toEqual([10, 20]);
   });
@@ -76,6 +81,7 @@ describe("lazy", () => {
       (x) => x,
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([10, 20]);
   });
@@ -91,6 +97,7 @@ describe("lazy", () => {
       take(2),
       take(1),
     );
+
     expect(count).toHaveBeenCalledTimes(1);
     expect(result).toEqual([10]);
   });
@@ -112,6 +119,7 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);
     expect(result).toEqual([100, 200]);
@@ -127,6 +135,7 @@ describe("lazy", () => {
       take(1),
       flat(),
     );
+
     expect(result).toEqual([1, 2]);
   });
 });

@@ -3,7 +3,7 @@ import { pipe } from "./pipe";
 
 describe("data first", () => {
   test("array", () => {
-    expect(length([0, 1, 2, 3, 4])).toEqual(5);
+    expect(length([0, 1, 2, 3, 4])).toBe(5);
   });
 
   test("iterable", () => {
@@ -16,13 +16,13 @@ describe("data first", () => {
           yield 3;
         },
       }),
-    ).toEqual(4);
+    ).toBe(4);
   });
 });
 
 describe("curried", () => {
   test("array", () => {
-    expect(pipe([0, 1, 2, 3, 4], length())).toEqual(5);
+    expect(pipe([0, 1, 2, 3, 4], length())).toBe(5);
   });
 
   test("iterable", () => {
@@ -38,6 +38,6 @@ describe("curried", () => {
         },
         length(),
       ),
-    ).toEqual(4);
+    ).toBe(4);
   });
 });

@@ -24,12 +24,14 @@ describe("dataFirst", () => {
 
   it("only tests reference equality: (arrays)", () => {
     const arr = [1];
+
     expect(isIncludedIn([1], [arr])).toBe(false);
     expect(isIncludedIn(arr, [arr])).toBe(true);
   });
 
   it("only tests reference equality: (objects)", () => {
     const obj = { a: 1 };
+
     expect(isIncludedIn({ a: 1 }, [obj])).toBe(false);
     expect(isIncludedIn(obj, [obj])).toBe(true);
   });
@@ -54,12 +56,14 @@ describe("dataLast", () => {
 
   it("only tests reference equality: (arrays)", () => {
     const arr = [1];
+
     expect(pipe([1], isIncludedIn([arr]))).toBe(false);
     expect(pipe(arr, isIncludedIn([arr]))).toBe(true);
   });
 
   it("only tests reference equality: (objects)", () => {
     const obj = { a: 1 };
+
     expect(pipe({ a: 1 }, isIncludedIn([obj]))).toBe(false);
     expect(pipe(obj, isIncludedIn([obj]))).toBe(true);
   });
@@ -67,6 +71,7 @@ describe("dataLast", () => {
   describe("dataLast memoization", () => {
     it("returns correct result when called multiple times with the same container", () => {
       const isIncludedInContainer = isIncludedIn([1, 2, 3]);
+
       expect(isIncludedInContainer(2)).toBe(true);
       expect(isIncludedInContainer(4)).toBe(false);
     });
@@ -74,6 +79,7 @@ describe("dataLast", () => {
     it("returns correct result when called with different containers", () => {
       const isIncludedInContainer1 = isIncludedIn([1, 2, 3]);
       const isIncludedInContainer2 = isIncludedIn([4, 5, 6]);
+
       expect(isIncludedInContainer1(2)).toBe(true);
       expect(isIncludedInContainer2(2)).toBe(false);
       expect(isIncludedInContainer1(4)).toBe(false);
@@ -129,6 +135,7 @@ describe("legacy v1 replacements", () => {
           filter(isNot(isIncludedIn([2, 3]))),
           take(2),
         );
+
         expect(count).toHaveBeenCalledTimes(4);
         expect(result).toEqual([1, 4]);
       });

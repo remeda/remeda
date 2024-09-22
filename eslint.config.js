@@ -431,21 +431,12 @@ export default tseslint.config(
     },
     rules: {
       ...vitest.configs.all.rules,
-
-      // TODO: 1178 instances
-      "vitest/prefer-expect-assertions": "off",
-
-      // TODO: 640 instances
-      "vitest/consistent-test-it": "off",
-
-      // TODO: 289 instances
-      "vitest/require-top-level-describe": "off",
+      // The `all` config doesn't actually contain all the rules, its missing
+      // all the recommended ones...
+      ...vitest.configs.recommended.rules,
 
       // TODO: 273 instances
       "vitest/prefer-strict-equal": "off",
-
-      // TODO: 28 instances
-      "vitest/max-expects": "off",
 
       // The range of things that are acceptable for truthy and falsy is wider
       // than just the boolean `true` and `false`. We prefer our tests to only
@@ -457,6 +448,27 @@ export default tseslint.config(
       // preferable to use them as they make it clear that the tests relies on
       // some weird setup.
       "vitest/no-hooks": "off",
+
+      // I don't agree with this rule, `it` and `test` should be used based on
+      // the situation. Some times we are testing a specific behavior or trait,
+      // and sometimes we have a specific flow, input, or edge-case that needs
+      // to be tested against.
+      "vitest/consistent-test-it": "off",
+
+      // Wrapping tests with a describe just because is stupid, it adds another
+      // level of indentation without really adding any interesting semantics.
+      "vitest/require-top-level-describe": "off",
+
+      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
+      // valuable and doesn't improve the quality of the tests. We can consider
+      // enabling some (or all of) those options and see if it makes the tests
+      // better without the code being a mess.
+      "vitest/prefer-expect-assertions": "off",
+
+      // TODO: This rule might be useful to guide people to break tests into
+      // smaller tests that only test one thing, but there's no reasonable value
+      // we can configure it to that won't end up feeling arbitrary and noisy.
+      "vitest/max-expects": "off",
 
       // These aren't valuable when writing tests, they'll just make the tests
       // harder to read and maintain.

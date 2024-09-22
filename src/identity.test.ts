@@ -6,11 +6,13 @@ import { times } from "./times";
 
 test("works", () => {
   const id = identity();
+
   expect(id("hello")).toBe("hello");
 });
 
 test("works with more than one argument", () => {
   const id = identity();
+
   expect(id(1)).toBe(1);
   expect(id(1, 2)).toBe(1);
   expect(id(1, "a")).toBe(1);
@@ -20,6 +22,7 @@ test("works with more than one argument", () => {
 test("works with variadic arguments", () => {
   const data = [1, 2, 3] as const;
   const id = identity();
+
   expect(id(...data)).toBe(data[0]);
 });
 

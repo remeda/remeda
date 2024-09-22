@@ -9,6 +9,7 @@ it("should split array", () => {
 
 it("should with no matches", () => {
   const n = 1232;
+
   expect(splitWhen([1, 2, 3, 1, 2, 3], (x) => x === n)).toEqual([
     [1, 2, 3, 1, 2, 3],
     [],

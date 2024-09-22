@@ -18,6 +18,7 @@ describe("typical cases", (): void => {
 test("immutability", () => {
   const data = [1, 2, 3];
   const result = splice(data, 0, 0, []);
+
   expect(result).toEqual(data);
   expect(result).not.toBe(data);
 });

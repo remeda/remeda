@@ -16,6 +16,7 @@ describe("pipe", () => {
       unique(),
       take(3),
     );
+
     expect(counter.count).toHaveBeenCalledTimes(4);
     expect(result).toEqual([1, 2, 5]);
   });
@@ -29,6 +30,7 @@ describe("pipe", () => {
       take(3),
       unique(),
     );
+
     expect(counter.count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([1, 2]);
   });

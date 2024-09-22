@@ -42,6 +42,7 @@ describe("data_last", () => {
       differenceWith([{ a: 2 }, { a: 3 }], isDeepEqual),
       take(2),
     );
+
     expect(counter.count).toHaveBeenCalledTimes(4);
     expect(result).toEqual([{ a: 1 }, { a: 4 }]);
   });

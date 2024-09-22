@@ -14,6 +14,7 @@ it("rejects anything else", () => {
     if (data === null || data === undefined) {
       continue;
     }
+
     expect(isNullish(data)).toBe(false);
   }
 });

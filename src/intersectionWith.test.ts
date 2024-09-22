@@ -24,6 +24,7 @@ describe("intersectionWith", () => {
       );
     });
   });
+
   describe("data last", () => {
     it("returns the new array of intersecting values based on a custom comparator", () => {
       expect(
@@ -35,6 +36,7 @@ describe("intersectionWith", () => {
         )(source),
       ).toEqual(expected);
     });
+
     it("checks if items are equal based on remeda's imported util function as a comparator", () => {
       expect(
         pipe(
@@ -61,6 +63,7 @@ describe("intersectionWith", () => {
         intersectionWith([{ a: 2 }, { a: 3 }, { a: 4 }], isDeepEqual),
         take(2),
       );
+
       expect(counter.count).toHaveBeenCalledTimes(3);
       expect(result).toEqual([{ a: 2 }, { a: 3 }]);
     });
