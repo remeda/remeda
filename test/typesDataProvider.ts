@@ -1,5 +1,5 @@
 export class TestClass {
-  // eslint-disable-next-line @typescript-eslint/class-literal-property-style -- Maybe we can just accept the auto-fixer here...?
+  // eslint-disable-next-line @typescript-eslint/class-literal-property-style, @typescript-eslint/class-methods-use-this -- This is fine for a test (I hope...)
   public get foo(): string {
     return "a";
   }

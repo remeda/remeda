@@ -431,14 +431,12 @@ export default tseslint.config(
     },
     rules: {
       ...vitest.configs.recommended.rules,
-      "@typescript-eslint/class-methods-use-this": "off",
+
+      // These aren't valuable when writing tests, they'll just make the tests
+      // harder to read and maintain.
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-useless-undefined": [
-        "warn",
-        { checkArguments: false, checkArrowFunctionBody: false },
-      ],
     },
   },
   {
@@ -459,15 +457,19 @@ export default tseslint.config(
     },
     rules: {
       ...vitest.configs.recommended.rules,
+
+      // A lot of our type tests use @ts-expect-error as the primary way to test
+      // that function params are typed correctly. This isn't detected properly
+      // by this rule and there's no way to configure it to work; so we disable
+      // it for now... There might be other ways to write the tests so that they
+      // conform to this rule.
       "vitest/expect-expect": "off",
-      "@typescript-eslint/class-methods-use-this": "off",
+
+      // These aren't valuable when writing tests, they'll just make the tests
+      // harder to read and maintain.
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-useless-undefined": [
-        "warn",
-        { checkArguments: false, checkArrowFunctionBody: false },
-      ],
     },
   },
   {
