@@ -5,7 +5,7 @@ describe("data first", () => {
     const actual = objOf(10, "a");
 
     expect(actual.a).toBe(10);
-    expect(actual).toEqual({ a: 10 });
+    expect(actual).toStrictEqual({ a: 10 });
   });
 });
 
@@ -14,6 +14,6 @@ describe("data last", () => {
     const actual = objOf("a")(10);
 
     expect(actual.a).toBe(10);
-    expect(actual).toEqual({ a: 10 });
+    expect(actual).toStrictEqual({ a: 10 });
   });
 });

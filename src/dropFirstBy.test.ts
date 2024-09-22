@@ -6,7 +6,7 @@ describe("runtime (dataFirst)", () => {
   it("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
-    expect(dropFirstBy(data, 2, identity())).toEqual([5, 6, 4, 3, 7]);
+    expect(dropFirstBy(data, 2, identity())).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
   it("handles empty arrays gracefully", () => {
@@ -32,7 +32,7 @@ describe("runtime (dataFirst)", () => {
     const result = dropFirstBy(data, 0, identity());
 
     expect(result).not.toBe(data);
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   it("works with complex compare rules", () => {
@@ -49,7 +49,7 @@ describe("runtime (dataFirst)", () => {
       "aaaaa",
     ];
 
-    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toEqual([
+    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toStrictEqual([
       "bbbbb",
       "aaa",
       "bbb",
@@ -70,7 +70,7 @@ describe("runtime (dataLast)", () => {
         data,
         dropFirstBy(2, (x) => x),
       ),
-    ).toEqual([5, 6, 4, 3, 7]);
+    ).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
   it("handles empty arrays gracefully", () => {
@@ -114,7 +114,7 @@ describe("runtime (dataLast)", () => {
     );
 
     expect(result).not.toBe(data);
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   it("works with complex compare rules", () => {
@@ -140,6 +140,6 @@ describe("runtime (dataLast)", () => {
           (x) => x,
         ),
       ),
-    ).toEqual(["bbbbb", "aaa", "bbb", "bbbb", "aaaa", "bb", "aaaaa"]);
+    ).toStrictEqual(["bbbbb", "aaa", "bbb", "bbbb", "aaaa", "bb", "aaaaa"]);
   });
 });

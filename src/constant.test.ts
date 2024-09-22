@@ -16,14 +16,14 @@ test("returns identity (doesn't clone)", () => {
   const emptyObj = constant(obj);
   const firstInvocation = emptyObj();
 
-  expect(firstInvocation).toEqual({});
+  expect(firstInvocation).toStrictEqual({});
   expect(firstInvocation).toBe(obj);
 
   obj.a = true;
 
-  expect(firstInvocation).toEqual({ a: true });
+  expect(firstInvocation).toStrictEqual({ a: true });
 
-  expect(emptyObj()).toEqual({ a: true });
+  expect(emptyObj()).toStrictEqual({ a: true });
   expect(emptyObj()).toBe(obj);
 });
 
@@ -45,7 +45,9 @@ test("works with variadic arguments", () => {
 });
 
 test("can be put in a pipe", () => {
-  expect(pipe([1, 2, 3], constant([2, 3, 4]), map(add(1)))).toEqual([3, 4, 5]);
+  expect(pipe([1, 2, 3], constant([2, 3, 4]), map(add(1)))).toStrictEqual([
+    3, 4, 5,
+  ]);
 });
 
 test("can completely change the type of the pipe", () => {
@@ -55,7 +57,7 @@ test("can completely change the type of the pipe", () => {
 });
 
 test("can be used as a fill function (with times)", () => {
-  expect(times(10, constant("a"))).toEqual([
+  expect(times(10, constant("a"))).toStrictEqual([
     "a",
     "a",
     "a",

@@ -35,7 +35,7 @@ describe("lazy", () => {
     );
 
     expect(count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("lazy map + filter + take", () => {
@@ -51,7 +51,7 @@ describe("lazy", () => {
     );
 
     expect(count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([10, 30]);
+    expect(result).toStrictEqual([10, 30]);
   });
 
   it("lazy after 1st op", () => {
@@ -67,7 +67,7 @@ describe("lazy", () => {
     );
 
     expect(count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("break lazy", () => {
@@ -83,7 +83,7 @@ describe("lazy", () => {
     );
 
     expect(count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("multiple take", () => {
@@ -99,7 +99,7 @@ describe("lazy", () => {
     );
 
     expect(count).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([10]);
+    expect(result).toStrictEqual([10]);
   });
 
   it("multiple lazy", () => {
@@ -122,7 +122,7 @@ describe("lazy", () => {
 
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([100, 200]);
+    expect(result).toStrictEqual([100, 200]);
   });
 
   it("lazy early exit with hasMany", () => {
@@ -136,6 +136,6 @@ describe("lazy", () => {
       flat(),
     );
 
-    expect(result).toEqual([1, 2]);
+    expect(result).toStrictEqual([1, 2]);
   });
 });

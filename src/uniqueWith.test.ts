@@ -17,13 +17,13 @@ const expected = [{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }];
 
 describe("data_first", () => {
   test("should return uniq", () => {
-    expect(uniqueWith(source, isDeepEqual)).toEqual(expected);
+    expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
 });
 
 describe("data_last", () => {
   test("should return uniq", () => {
-    expect(uniqueWith(isDeepEqual)(source)).toEqual(expected);
+    expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
   });
 
   it("lazy", () => {
@@ -36,7 +36,7 @@ describe("data_last", () => {
     );
 
     expect(counter.count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
+    expect(result).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
   });
 
   it("take before uniq", () => {
@@ -50,6 +50,6 @@ describe("data_last", () => {
     );
 
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([{ a: 1 }, { a: 2 }]);
+    expect(result).toStrictEqual([{ a: 1 }, { a: 2 }]);
   });
 });

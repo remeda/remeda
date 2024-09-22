@@ -435,9 +435,6 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
-      // TODO: 273 instances
-      "vitest/prefer-strict-equal": "off",
-
       // The range of things that are acceptable for truthy and falsy is wider
       // than just the boolean `true` and `false`. We prefer our tests to only
       // pass with in the narrowest cases.

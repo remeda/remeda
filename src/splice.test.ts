@@ -3,15 +3,15 @@ import { splice } from "./splice";
 
 describe("typical cases", (): void => {
   test("removing a element", (): void => {
-    expect(splice([1, 2, 3], 0, 1, [])).toEqual([2, 3]);
+    expect(splice([1, 2, 3], 0, 1, [])).toStrictEqual([2, 3]);
   });
 
   test("inserting a element", (): void => {
-    expect(splice([1, 2, 3], 0, 0, [4])).toEqual([4, 1, 2, 3]);
+    expect(splice([1, 2, 3], 0, 0, [4])).toStrictEqual([4, 1, 2, 3]);
   });
 
   test("removing elements and inserting elements", (): void => {
-    expect(splice([1, 2, 3], 0, 2, [4, 5])).toEqual([4, 5, 3]);
+    expect(splice([1, 2, 3], 0, 2, [4, 5])).toStrictEqual([4, 5, 3]);
   });
 });
 
@@ -19,7 +19,7 @@ test("immutability", () => {
   const data = [1, 2, 3];
   const result = splice(data, 0, 0, []);
 
-  expect(result).toEqual(data);
+  expect(result).toStrictEqual(data);
   expect(result).not.toBe(data);
 });
 
@@ -104,13 +104,15 @@ describe("regression test including edge cases", () => {
   test.each(testCases)(
     "splice($items, $start, $deleteCount, $replacement) -> $expected",
     ({ items, start, deleteCount, replacement, expected }) => {
-      expect(splice(items, start, deleteCount, replacement)).toEqual(expected);
+      expect(splice(items, start, deleteCount, replacement)).toStrictEqual(
+        expected,
+      );
     },
   );
 });
 
 test("a purried data-last implementation", () => {
-  expect(pipe([1, 2, 3, 4, 5, 6, 7, 8], splice(2, 3, [9, 10]))).toEqual([
+  expect(pipe([1, 2, 3, 4, 5, 6, 7, 8], splice(2, 3, [9, 10]))).toStrictEqual([
     1, 2, 9, 10, 6, 7, 8,
   ]);
 });

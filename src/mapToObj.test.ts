@@ -5,13 +5,13 @@ describe("data_first", () => {
   it("mapToObj", () => {
     const result = mapToObj([1, 2, 3], (x) => [String(x), x * 2]);
 
-    expect(result).toEqual({ 1: 2, 2: 4, 3: 6 });
+    expect(result).toStrictEqual({ 1: 2, 2: 4, 3: 6 });
   });
 
   it("indexed", () => {
     const result = mapToObj([0, 0, 0], (_, i) => [i, i]);
 
-    expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
+    expect(result).toStrictEqual({ 0: 0, 1: 1, 2: 2 });
   });
 });
 
@@ -22,7 +22,7 @@ describe("data_last", () => {
       mapToObj((x) => [String(x), x * 2]),
     );
 
-    expect(result).toEqual({ 1: 2, 2: 4, 3: 6 });
+    expect(result).toStrictEqual({ 1: 2, 2: 4, 3: 6 });
   });
 
   it("indexed", () => {
@@ -31,6 +31,6 @@ describe("data_last", () => {
       mapToObj((_, i) => [i, i]),
     );
 
-    expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
+    expect(result).toStrictEqual({ 0: 0, 1: 1, 2: 2 });
   });
 });

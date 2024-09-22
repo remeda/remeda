@@ -48,5 +48,5 @@ test("number keys are converted to strings", () => {
 });
 
 test("numbers returned from the mapper are used as-is", () => {
-  expect(mapKeys({ a: "b" }, constant(123))).toEqual({ 123: "b" });
+  expect(mapKeys({ a: "b" }, constant(123))).toStrictEqual({ 123: "b" });
 });

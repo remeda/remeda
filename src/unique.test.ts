@@ -4,7 +4,7 @@ import { take } from "./take";
 import { unique } from "./unique";
 
 it("unique", () => {
-  expect(unique([1, 2, 2, 5, 1, 6, 7] as const)).toEqual([1, 2, 5, 6, 7]);
+  expect(unique([1, 2, 2, 5, 1, 6, 7] as const)).toStrictEqual([1, 2, 5, 6, 7]);
 });
 
 describe("pipe", () => {
@@ -18,7 +18,7 @@ describe("pipe", () => {
     );
 
     expect(counter.count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([1, 2, 5]);
+    expect(result).toStrictEqual([1, 2, 5]);
   });
 
   it("take before unique", () => {
@@ -32,6 +32,6 @@ describe("pipe", () => {
     );
 
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([1, 2]);
+    expect(result).toStrictEqual([1, 2]);
   });
 });

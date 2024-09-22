@@ -2,9 +2,9 @@ import { round } from "./round";
 
 describe("data-first", () => {
   test("should work with positive precision", () => {
-    expect(round(8123.4317, 3)).toEqual(8123.432);
-    expect(round(483.222_43, 1)).toEqual(483.2);
-    expect(round(123.4317, 5)).toEqual(123.4317);
+    expect(round(8123.4317, 3)).toBe(8123.432);
+    expect(round(483.222_43, 1)).toBe(483.2);
+    expect(round(123.4317, 5)).toBe(123.4317);
   });
 
   test("should work with negative precision", () => {
@@ -40,7 +40,7 @@ describe("data-first", () => {
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {
-        expect(round(val, precision)).toStrictEqual(val);
+        expect(round(val, precision)).toBe(val);
       }
     },
   );
@@ -48,9 +48,9 @@ describe("data-first", () => {
 
 describe("data-last", () => {
   test("should work with positive precision", () => {
-    expect(round(3)(8123.4317)).toEqual(8123.432);
-    expect(round(1)(483.222_43)).toEqual(483.2);
-    expect(round(5)(123.4317)).toEqual(123.4317);
+    expect(round(3)(8123.4317)).toBe(8123.432);
+    expect(round(1)(483.222_43)).toBe(483.2);
+    expect(round(5)(123.4317)).toBe(123.4317);
   });
 
   test("should work with negative precision", () => {
@@ -86,7 +86,7 @@ describe("data-last", () => {
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {
-        expect(round(precision)(val)).toStrictEqual(val);
+        expect(round(precision)(val)).toBe(val);
       }
     },
   );

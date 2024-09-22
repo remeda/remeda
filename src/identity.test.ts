@@ -27,9 +27,9 @@ test("works with variadic arguments", () => {
 });
 
 test("can be put in a pipe", () => {
-  expect(pipe([1, 2, 3], identity(), map(add(1)))).toEqual([2, 3, 4]);
+  expect(pipe([1, 2, 3], identity(), map(add(1)))).toStrictEqual([2, 3, 4]);
 });
 
 test("can be used as a fill function (with times)", () => {
-  expect(times(10, identity())).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  expect(times(10, identity())).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });

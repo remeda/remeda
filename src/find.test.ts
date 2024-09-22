@@ -14,7 +14,7 @@ describe("data first", () => {
         ],
         ({ b }) => b === 2,
       ),
-    ).toEqual({ a: 1, b: 2 });
+    ).toStrictEqual({ a: 1, b: 2 });
   });
 
   test("indexed", () => {
@@ -28,7 +28,7 @@ describe("data first", () => {
         ],
         ({ b }, idx) => b === 2 && idx === 1,
       ),
-    ).toEqual({ a: 1, b: 2 });
+    ).toStrictEqual({ a: 1, b: 2 });
   });
 });
 
@@ -48,7 +48,7 @@ describe("data last", () => {
     );
 
     expect(counter).toHaveBeenCalledTimes(2);
-    expect(actual).toEqual({ a: 1, b: 2 });
+    expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
 
   test("indexed", () => {
@@ -66,6 +66,6 @@ describe("data last", () => {
     );
 
     expect(counter).toHaveBeenCalledTimes(2);
-    expect(actual).toEqual({ a: 1, b: 2 });
+    expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
 });

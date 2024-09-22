@@ -14,7 +14,7 @@ describe("data first", () => {
         ],
         ({ a }) => a === 1,
       ),
-    ).toEqual([
+    ).toStrictEqual([
       [
         { a: 1, b: 1 },
         { a: 1, b: 2 },
@@ -25,7 +25,7 @@ describe("data first", () => {
   });
 
   test("partition with type guard", () => {
-    expect(partition([1, "a", 2, "b"], isNumber)).toEqual([
+    expect(partition([1, "a", 2, "b"], isNumber)).toStrictEqual([
       [1, 2],
       ["a", "b"],
     ]);
@@ -37,7 +37,7 @@ describe("data first", () => {
         [1, "a", 2, "b"],
         partition((value): value is number => typeof value === "number"),
       ),
-    ).toEqual([
+    ).toStrictEqual([
       [1, 2],
       ["a", "b"],
     ]);
@@ -54,7 +54,7 @@ describe("data first", () => {
         ],
         (_, index) => index !== 2,
       ),
-    ).toEqual([
+    ).toStrictEqual([
       [
         { a: 1, b: 1 },
         { a: 1, b: 2 },
@@ -77,7 +77,7 @@ describe("data last", () => {
         ],
         partition(({ a }) => a === 1),
       ),
-    ).toEqual([
+    ).toStrictEqual([
       [
         { a: 1, b: 1 },
         { a: 1, b: 2 },
@@ -98,7 +98,7 @@ describe("data last", () => {
         ],
         partition((_, index) => index !== 2),
       ),
-    ).toEqual([
+    ).toStrictEqual([
       [
         { a: 1, b: 1 },
         { a: 1, b: 2 },

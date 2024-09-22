@@ -11,7 +11,7 @@ describe("main functionality", () => {
       debouncer.call("a"),
       debouncer.call("b"),
       debouncer.call("c"),
-    ]).toEqual([undefined, undefined, undefined]);
+    ]).toStrictEqual([undefined, undefined, undefined]);
     expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(128);
@@ -21,7 +21,7 @@ describe("main functionality", () => {
       debouncer.call("d"),
       debouncer.call("e"),
       debouncer.call("f"),
-    ]).toEqual(["c", "c", "c"]);
+    ]).toStrictEqual(["c", "c", "c"]);
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(256);
@@ -106,11 +106,17 @@ describe("main functionality", () => {
   it("subsequent leading debounced calls return the last `func` result", async () => {
     const debouncer = debounce(identity(), { waitMs: 32, timing: "leading" });
 
-    expect([debouncer.call("a"), debouncer.call("b")]).toEqual(["a", "a"]);
+    expect([debouncer.call("a"), debouncer.call("b")]).toStrictEqual([
+      "a",
+      "a",
+    ]);
 
     await sleep(64);
 
-    expect([debouncer.call("c"), debouncer.call("d")]).toEqual(["c", "c"]);
+    expect([debouncer.call("c"), debouncer.call("d")]).toStrictEqual([
+      "c",
+      "c",
+    ]);
   });
 
   it("should support a `trailing` option", async () => {
@@ -271,7 +277,7 @@ describe("additional functionality", () => {
 
     await sleep(32);
 
-    expect(debouncer.call()).toEqual(data);
+    expect(debouncer.call()).toStrictEqual(data);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 

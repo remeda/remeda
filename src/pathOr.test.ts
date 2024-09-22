@@ -38,7 +38,7 @@ describe("data first", () => {
   });
 
   test("should return value (2 level deep)", () => {
-    expect(pathOr(obj, ["a", "b"] as const, { c: 0 })).toEqual({ c: 1 });
+    expect(pathOr(obj, ["a", "b"] as const, { c: 0 })).toStrictEqual({ c: 1 });
   });
 
   test("should return default value (2 level deep)", () => {

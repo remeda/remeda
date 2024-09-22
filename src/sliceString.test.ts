@@ -17,7 +17,7 @@ describe("dataFirst", () => {
     });
 
     test("alphabet, 0 indexStart", () => {
-      expect(sliceString(ALPHABET, 0)).toEqual(ALPHABET);
+      expect(sliceString(ALPHABET, 0)).toStrictEqual(ALPHABET);
     });
 
     test("alphabet, >0 indexStart, <len", () => {
@@ -33,7 +33,7 @@ describe("dataFirst", () => {
     });
 
     test("alphabet, <0 indexStart, <-len", () => {
-      expect(sliceString(ALPHABET, -100)).toEqual(ALPHABET);
+      expect(sliceString(ALPHABET, -100)).toStrictEqual(ALPHABET);
     });
   });
 
@@ -51,7 +51,7 @@ describe("dataFirst", () => {
     });
 
     test("alphabet, 0 indexStart, >indexStart indexEnd >len", () => {
-      expect(sliceString(ALPHABET, 0, 100)).toEqual(ALPHABET);
+      expect(sliceString(ALPHABET, 0, 100)).toStrictEqual(ALPHABET);
     });
 
     test("alphabet, 0 indexStart, <indexStart indexEnd >-len", () => {
@@ -107,7 +107,7 @@ describe("dataLast", () => {
     });
 
     test("alphabet, 0 indexStart", () => {
-      expect(sliceString(0)(ALPHABET)).toEqual(ALPHABET);
+      expect(sliceString(0)(ALPHABET)).toStrictEqual(ALPHABET);
     });
 
     test("alphabet, >0 indexStart, <len", () => {
@@ -123,7 +123,7 @@ describe("dataLast", () => {
     });
 
     test("alphabet, <0 indexStart, <-len", () => {
-      expect(sliceString(-100)(ALPHABET)).toEqual(ALPHABET);
+      expect(sliceString(-100)(ALPHABET)).toStrictEqual(ALPHABET);
     });
   });
 
@@ -141,7 +141,7 @@ describe("dataLast", () => {
     });
 
     test("alphabet, 0 indexStart, >indexStart indexEnd >len", () => {
-      expect(sliceString(0, 100)(ALPHABET)).toEqual(ALPHABET);
+      expect(sliceString(0, 100)(ALPHABET)).toStrictEqual(ALPHABET);
     });
 
     test("alphabet, 0 indexStart, <indexStart indexEnd >-len", () => {
