@@ -436,8 +436,8 @@ export default tseslint.config(
       ...vitest.configs.recommended.rules,
 
       // The range of things that are acceptable for truthy and falsy is wider
-      // than just the boolean `true` and `false`. We prefer our tests to only
-      // pass with in the narrowest cases.
+      // than just the boolean `true` and `false`. We prefer our tests only pass
+      // on the narrowest cases.
       "vitest/prefer-to-be-truthy": "off",
       "vitest/prefer-to-be-falsy": "off",
 
