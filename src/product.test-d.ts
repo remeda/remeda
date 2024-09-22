@@ -77,8 +77,8 @@ it("doesn't allow mixed arrays", () => {
   product([1, 2n]);
 });
 
-describe("KNOWN ISSUES", () => {
-  it("Returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
+describe("kNOWN ISSUES", () => {
+  it("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
     const result = product([] as Array<bigint>);
     expectTypeOf(result).toEqualTypeOf<bigint | 1>();
   });

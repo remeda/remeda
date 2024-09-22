@@ -49,7 +49,7 @@ it("keeps the typing of trivial tuples", () => {
   expectTypeOf(result).toEqualTypeOf<[1, 2]>();
 });
 
-it("Works on simple tuples", () => {
+it("works on simple tuples", () => {
   const result = flat(
     [
       [1, 2],

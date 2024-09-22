@@ -77,8 +77,8 @@ it("doesn't allow mixed arrays", () => {
   sum([1, 2n]);
 });
 
-describe("KNOWN ISSUES", () => {
-  it("Returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
+describe("kNOWN ISSUES", () => {
+  it("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
     const result = sum([] as Array<bigint>);
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });

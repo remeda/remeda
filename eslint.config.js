@@ -491,6 +491,9 @@ export default tseslint.config(
       },
     },
     rules: {
+      ...vitest.configs.all.rules,
+      // The `all` config doesn't actually contain all the rules, its missing
+      // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
       // A lot of our type tests use @ts-expect-error as the primary way to test
@@ -499,6 +502,29 @@ export default tseslint.config(
       // it for now... There might be other ways to write the tests so that they
       // conform to this rule.
       "vitest/expect-expect": "off",
+
+      // When testing type-predicates (guards) we need to test what happens to
+      // the input type after the predicate succeeds and/or fails; we can only
+      // do that using conditionals. This rule doesn't matter for type tests
+      // because there's no risk of the code not running, the type-checker will
+      // check both branches.
+      "vitest/no-conditional-in-test": "off",
+
+      // I don't agree with this rule, `it` and `test` should be used based on
+      // the situation. Some times we are testing a specific behavior or trait,
+      // and sometimes we have a specific flow, input, or edge-case that needs
+      // to be tested against.
+      "vitest/consistent-test-it": "off",
+
+      // Wrapping tests with a describe just because is stupid, it adds another
+      // level of indentation without really adding any interesting semantics.
+      "vitest/require-top-level-describe": "off",
+
+      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
+      // valuable and doesn't improve the quality of the tests. We can consider
+      // enabling some (or all of) those options and see if it makes the tests
+      // better without the code being a mess.
+      "vitest/prefer-expect-assertions": "off",
 
       // These aren't valuable when writing tests, they'll just make the tests
       // harder to read and maintain.
