@@ -138,7 +138,7 @@ it("can go very very deep", () => {
 // as flat that existed in previous versions of Remeda. We copy the tests so
 // that we can ensure that the new function is equivalent. In the future these
 // can be deleted.
-describe("lEGACY", () => {
+describe("LEGACY", () => {
   describe("`flatten` equivalent (depth = 1)", () => {
     test("flatten", () => {
       expect(flat([[1, 2], 3, [4, 5]])).toStrictEqual([1, 2, 3, 4, 5]);

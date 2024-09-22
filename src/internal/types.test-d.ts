@@ -13,7 +13,7 @@ declare const SymbolFoo: unique symbol;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare const SymbolBar: unique symbol;
 
-describe("ifBoundedRecord", () => {
+describe("IfBoundedRecord", () => {
   test("string", () => {
     expectTypeOf<
       IfBoundedRecord<Record<string, unknown>>
@@ -167,7 +167,7 @@ describe("ifBoundedRecord", () => {
   });
 });
 
-describe("enumerableStringKeyOf", () => {
+describe("EnumerableStringKeyOf", () => {
   test("string keys", () => {
     expectTypeOf<
       EnumerableStringKeyOf<Record<string, unknown>>
@@ -221,7 +221,7 @@ describe("enumerableStringKeyOf", () => {
   });
 });
 
-describe("enumerableStringKeyedValueOf", () => {
+describe("EnumerableStringKeyedValueOf", () => {
   test("string values", () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<Record<PropertyKey, string>>
@@ -311,7 +311,7 @@ describe("enumerableStringKeyedValueOf", () => {
   });
 });
 
-describe("nTuple", () => {
+describe("NTuple", () => {
   test("size 0", () => {
     const result = nTuple("foo", 0);
     expectTypeOf(result).toEqualTypeOf<[]>();
@@ -323,7 +323,7 @@ describe("nTuple", () => {
   });
 });
 
-describe("tupleParts", () => {
+describe("TupleParts", () => {
   describe("mutable", () => {
     test("empty array", () => {
       const data = [] as [];
@@ -469,7 +469,7 @@ describe("tupleParts", () => {
   });
 });
 
-describe("deDupped", () => {
+describe("DeDupped", () => {
   describe("mutable", () => {
     test("empty array", () => {
       const result = deduped([] as []);

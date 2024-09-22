@@ -435,6 +435,11 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
+      "vitest/prefer-lowercase-title": [
+        "warn",
+        { ignoreTopLevelDescribe: true },
+      ],
+
       // I don't agree with this rule, `it` and `test` should be used based on
       // the situation. Some times we are testing a specific behavior or trait,
       // and sometimes we have a specific flow, input, or edge-case that needs

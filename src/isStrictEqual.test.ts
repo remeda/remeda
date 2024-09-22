@@ -91,7 +91,7 @@ describe("built-ins", () => {
 });
 
 describe("special cases", () => {
-  test("naN", () => {
+  test("literal NaN", () => {
     // eslint-disable-next-line unicorn/prefer-number-properties
     expect(isStrictEqual(NaN, NaN)).toBe(true);
     expect(isStrictEqual(Number.NaN, Number.NaN)).toBe(true);

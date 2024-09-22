@@ -74,7 +74,7 @@ describe("scalars", () => {
   });
 });
 
-describe("objects", () => {
+describe("Objects", () => {
   test("empty objects are equal", () => {
     expect(isDeepEqual({}, {})).toBe(true);
   });
@@ -152,7 +152,7 @@ describe("objects", () => {
   });
 });
 
-describe("sets", () => {
+describe("Sets", () => {
   test("two empty sets should be equal", () => {
     expect(isDeepEqual(new Set(), new Set())).toBe(true);
   });
@@ -199,7 +199,7 @@ describe("sets", () => {
   });
 });
 
-describe("arrays", () => {
+describe("Arrays", () => {
   test("two empty arrays are equal", () => {
     expect(isDeepEqual([], [])).toBe(true);
   });
@@ -233,7 +233,7 @@ describe("arrays", () => {
   });
 });
 
-describe("maps", () => {
+describe("Maps", () => {
   it("works on shallow equal maps", () => {
     expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 1]]))).toBe(true);
   });
@@ -296,7 +296,7 @@ describe("maps", () => {
   });
 });
 
-describe("date objects", () => {
+describe("Dates", () => {
   test("equal date objects", () => {
     expect(
       isDeepEqual(
@@ -331,7 +331,7 @@ describe("date objects", () => {
   });
 });
 
-describe("regExp objects", () => {
+describe("RegExp", () => {
   test("equal RegExp objects", () => {
     expect(isDeepEqual(/foo/u, /foo/u)).toBe(true);
   });

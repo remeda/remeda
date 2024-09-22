@@ -29,7 +29,7 @@ it("accepts null prototypes", () => {
   expect(isObjectType(Object.create(null))).toBe(true);
 });
 
-test("aLL_TYPES_DATA_PROVIDER", () => {
+test("everything from ALL_TYPES_DATA_PROVIDER", () => {
   expect(ALL_TYPES_DATA_PROVIDER.filter(isObjectType)).toMatchInlineSnapshot(`
       [
         [

@@ -29,7 +29,7 @@ describe("dataLast", () => {
   });
 });
 
-describe("kNOWN ISSUES", () => {
+describe("KNOWN ISSUES", () => {
   it("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
     const result = sum([] as Array<bigint>);
 
