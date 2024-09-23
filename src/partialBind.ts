@@ -20,14 +20,14 @@ type RemovePrefix<
         ? // Both T and Prefix have a non-rest head.
           PrefixHead extends THead
           ? RemovePrefix<TRest, PrefixRest>
-          : PartialBindError<"Argument of the wrong type provided to function">
+          : PartialBindError<"Given type does not match positional argument">
         : Prefix extends ReadonlyArray<THead>
           ? // T has a non-rest head, Prefix is an array.
             // Prefix could possibly be empty, so this has to be THead?.
             [THead?, ...RemovePrefix<TRest, Prefix>]
           : // Prefix is e.g. [...Array<number>, string]. We can't do a
             // type-level prefix removal, so we return an error.
-            PartialBindError<"Can't infer type of provided args">
+            PartialBindError<"Can't construct signature from provided args">
       : // T has an optional or rest parameter head. If T is a parameter list,
         // this can only happen if we have optional arguments or a rest param;
         // both cases are similar.
@@ -36,20 +36,20 @@ type RemovePrefix<
           ? // Prefix has a non-rest head.
             PrefixHead extends THead
             ? RemovePrefix<TRest, PrefixRest>
-            : PartialBindError<"Argument of the wrong type provided to function">
+            : PartialBindError<"Given type does not match optional or rest argument">
           : Prefix extends readonly [THead?, ...TRest]
             ? // Prefix is an array. It must match *both* the optional type
               // and the rest param.
               TRest
-            : PartialBindError<"Argument of the wrong type provided to function">
+            : PartialBindError<"Given type does not match optional and rest argument">
         : // We got passed a parameter list that isn't what we expected; this
           // is an internal error.
           PartialBindError<1>;
 
 type PartiallyBound<
   F extends (...args: any) => any,
-  Partial extends IterableContainer,
-> = (...rest: RemovePrefix<Parameters<F>, Partial>) => ReturnType<F>;
+  PrefixArgs extends IterableContainer,
+> = (...rest: RemovePrefix<Parameters<F>, PrefixArgs>) => ReturnType<F>;
 
 /**
  * Creates a function that calls `func` with `partial` put before the arguments
@@ -66,11 +66,11 @@ type PartiallyBound<
  *    partialFn(3) // => 1, 2, and 3
  * @dataFirst
  * @category Function
- * @see partialRightBind
+ * @see partialLastBind
  */
 export function partialBind<
   F extends (...args: any) => any,
-  T extends IterableContainer,
->(func: F, partial: T): PartiallyBound<F, T> {
+  PrefixArgs extends IterableContainer,
+>(func: F, partial: PrefixArgs): PartiallyBound<F, PrefixArgs> {
   return (...rest) => func(...partial, ...rest);
 }
