@@ -55,6 +55,65 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
   };
 }
 
+describe("Lodash: test/debounce.spec.js", () => {
+  it("should debounce a function", async () => {
+    const debounced = debounceWithCachedValue(identity(), 32);
+
+    expect(debounced.call("a")).toBeUndefined();
+    expect(debounced.call("b")).toBeUndefined();
+    expect(debounced.call("c")).toBeUndefined();
+
+    await sleep(128);
+
+    expect(debounced.call("d")).toBe("c");
+    expect(debounced.call("e")).toBe("c");
+    expect(debounced.call("f")).toBe("c");
+  });
+
+  it("subsequent debounced calls return the last `func` result", async () => {
+    const debounced = debounceWithCachedValue(identity(), 32);
+    debounced.call("a");
+
+    await sleep(64);
+
+    expect(debounced.call("b")).not.toBe("b");
+
+    await sleep(128);
+
+    expect(debounced.call("c")).not.toBe("c");
+  });
+
+  it("subsequent leading debounced calls return the last `func` result", async () => {
+    const debounced = debounceWithCachedValue(identity(), 32, {
+      leading: true,
+      trailing: false,
+    });
+
+    expect(debounced.call("a")).toBe("a");
+    expect(debounced.call("b")).toBe("a");
+
+    await sleep(64);
+
+    expect(debounced.call("c")).toBe("c");
+    expect(debounced.call("d")).toBe("c");
+  });
+
+  // it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+  //   let callCount = 0;
+  //   const debounced = debounceWithCachedValue(() => ++callCount < 2, 32, {
+  //     leading: true,
+  //     maxWait: 64,
+  //   });
+  //   while (!(debounced.call() ?? false)) {
+  //     // eslint-disable-next-line no-await-in-loop
+  //     await sleep(0);
+  //   }
+  //   await sleep(64);
+
+  //   expect(callCount).toBe(2);
+  // });
+});
+
 describe("Main functionality", () => {
   it("should debounce a function", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
