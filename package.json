@@ -64,25 +64,25 @@
     "type-fest": "^4.26.1"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.2",
-    "@eslint/js": "^9.10.0",
+    "@arethetypeswrong/cli": "^0.16.4",
+    "@eslint/js": "^9.11.1",
     "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.6.1",
     "@vitest/coverage-v8": "^2.1.1",
     "@vitest/eslint-plugin": "^1.1.4",
-    "eslint": "^9.10.0",
+    "eslint": "^9.11.1",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^50.2.2",
+    "eslint-plugin-jsdoc": "^50.2.4",
     "eslint-plugin-unicorn": "^55.0.0",
-    "husky": "^9.1.5",
+    "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
-    "publint": "^0.2.10",
+    "publint": "^0.2.11",
     "semantic-release": "^24.1.0",
     "tsup": "^8.2.4",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.6.0",
+    "typescript-eslint": "^8.7.0",
     "vitest": "^2.1.1"
   }
 }
