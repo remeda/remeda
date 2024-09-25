@@ -180,24 +180,25 @@ describe("Lodash: test/debounce.spec.js", () => {
     await sleep(1);
 
     expect(mockWithout).toHaveBeenCalledTimes(0);
-    expect(mockWith).toHaveBeenCalled();
+    expect(mockWith).toHaveBeenCalledWith();
   });
 
-  // it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
-  //   const mockFn = vi.fn();
+  // eslint-disable-next-line vitest/no-disabled-tests -- TODO: This test might be broken because lodash is broken and the test was over-fitted to their implementation.
+  it.skip("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
+    const mockFn = vi.fn();
 
-  //   const debounced = debounce(mockFn, 200, { maxWait: 200 });
-  //   debounced.call();
-  //   await sleep(190);
-  //   debounced.call();
-  //   await sleep(200);
-  //   debounced.call();
-  //   await sleep(210);
-  //   debounced.call();
-  //   await sleep(500);
+    const debounced = debounce(mockFn, 200, { maxWait: 200 });
+    debounced.call();
+    await sleep(190);
+    debounced.call();
+    await sleep(200);
+    debounced.call();
+    await sleep(210);
+    debounced.call();
+    await sleep(500);
 
-  //   expect(mockFn).toHaveBeenCalledTimes(2);
-  // });
+    expect(mockFn).toHaveBeenCalledTimes(2);
+  });
 
   it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
     const mockFn = vi.fn();
@@ -240,14 +241,17 @@ describe("Main functionality", () => {
     debouncer.call();
     debouncer.call();
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(128);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
+
     debouncer.call();
     debouncer.call();
     debouncer.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(256);
@@ -262,9 +266,11 @@ describe("Main functionality", () => {
 
     debouncer.call();
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(5);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
@@ -274,9 +280,11 @@ describe("Main functionality", () => {
     const debouncer = debounce(mockFn, 32);
 
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(64);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
@@ -289,9 +297,11 @@ describe("Main functionality", () => {
     });
 
     withLeading.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(64);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
@@ -304,9 +314,11 @@ describe("Main functionality", () => {
     });
 
     withTrailing.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(64);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
@@ -320,9 +332,11 @@ describe("Main functionality", () => {
 
     withLeadingAndTrailing.call();
     withLeadingAndTrailing.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(64);
+
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });
@@ -335,15 +349,20 @@ describe("Optional param maxWaitMs", () => {
 
     debouncer.call();
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(128);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
+
     debouncer.call();
     debouncer.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(256);
+
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
@@ -361,7 +380,8 @@ describe("Optional param maxWaitMs", () => {
     }
 
     await sleep(1);
-    expect(withMockFn).toHaveBeenCalled();
+
+    expect(withMockFn).toHaveBeenCalledWith();
     expect(withoutMockFn).not.toHaveBeenCalled();
   });
 
@@ -383,6 +403,7 @@ describe("Optional param maxWaitMs", () => {
     }, 210);
 
     await sleep(500);
+
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
@@ -395,9 +416,11 @@ describe("Optional param maxWaitMs", () => {
 
     await sleep(128);
     debouncer.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(192);
+
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
@@ -407,6 +430,7 @@ describe("Optional param maxWaitMs", () => {
     const debouncer = debounce(mockFn, 32, { maxWait: 32 });
 
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(16);
@@ -414,9 +438,11 @@ describe("Optional param maxWaitMs", () => {
     // Without maxWaitMs this call would cause the actual invocation to be
     // postponed for a full window.
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(17);
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 });
@@ -427,19 +453,24 @@ describe("Additional functionality", () => {
     const debouncer = debounce(mockFn, 32);
 
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(1);
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
+
     debouncer.cancel();
 
     await sleep(32);
     debouncer.call();
+
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(32);
     debouncer.call();
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
@@ -449,6 +480,7 @@ describe("Additional functionality", () => {
     await sleep(32);
 
     debouncer.call();
+
     expect(() => {
       debouncer.cancel();
     }).not.toThrow();
@@ -456,15 +488,19 @@ describe("Additional functionality", () => {
 
   it("can check for inflight timers (trailing)", async () => {
     const debouncer = debounce(doNothing(), 32);
+
     expect(debouncer.isIdle).toBe(true);
 
     debouncer.call();
+
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(1);
+
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(32);
+
     expect(debouncer.isIdle).toBe(true);
   });
 
@@ -473,15 +509,19 @@ describe("Additional functionality", () => {
       leading: true,
       trailing: false,
     });
+
     expect(debouncer.isIdle).toBe(true);
 
     debouncer.call();
+
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(1);
+
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(32);
+
     expect(debouncer.isIdle).toBe(true);
   });
 });

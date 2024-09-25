@@ -98,20 +98,21 @@ describe("Lodash: test/debounce.spec.js", () => {
     expect(debounced.call("d")).toBe("c");
   });
 
-  // it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
-  //   let callCount = 0;
-  //   const debounced = debounceWithCachedValue(() => ++callCount < 2, 32, {
-  //     leading: true,
-  //     maxWait: 64,
-  //   });
-  //   while (!(debounced.call() ?? false)) {
-  //     // eslint-disable-next-line no-await-in-loop
-  //     await sleep(0);
-  //   }
-  //   await sleep(64);
+  // eslint-disable-next-line vitest/no-disabled-tests -- TODO: This test might be broken because lodash is broken and the test was over-fitted to their implementation.
+  it.skip("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+    let callCount = 0;
+    const debounced = debounceWithCachedValue(() => ++callCount < 2, 32, {
+      leading: true,
+      maxWait: 64,
+    });
+    while (!(debounced.call() ?? false)) {
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(0);
+    }
+    await sleep(64);
 
-  //   expect(callCount).toBe(2);
-  // });
+    expect(callCount).toBe(2);
+  });
 });
 
 describe("Main functionality", () => {
@@ -122,7 +123,7 @@ describe("Main functionality", () => {
       debouncer.call("a"),
       debouncer.call("b"),
       debouncer.call("c"),
-    ]).toEqual([undefined, undefined, undefined]);
+    ]).toStrictEqual([undefined, undefined, undefined]);
 
     await sleep(128);
 
@@ -130,7 +131,7 @@ describe("Main functionality", () => {
       debouncer.call("d"),
       debouncer.call("e"),
       debouncer.call("f"),
-    ]).toEqual(["c", "c", "c"]);
+    ]).toStrictEqual(["c", "c", "c"]);
   });
 
   it("subsequent debounced calls return the last `func` result", async () => {
@@ -138,9 +139,11 @@ describe("Main functionality", () => {
     debouncer.call("a");
 
     await sleep(64);
+
     expect(debouncer.call("b")).toBe("a");
 
     await sleep(128);
+
     expect(debouncer.call("c")).toBe("b");
   });
 
@@ -150,21 +153,30 @@ describe("Main functionality", () => {
       trailing: false,
     });
 
-    expect([debouncer.call("a"), debouncer.call("b")]).toEqual(["a", "a"]);
+    expect([debouncer.call("a"), debouncer.call("b")]).toStrictEqual([
+      "a",
+      "a",
+    ]);
 
     await sleep(64);
-    expect([debouncer.call("c"), debouncer.call("d")]).toEqual(["c", "c"]);
+
+    expect([debouncer.call("c"), debouncer.call("d")]).toStrictEqual([
+      "c",
+      "c",
+    ]);
   });
 });
 
 describe("Additional functionality", () => {
   it("can cancel before the timer starts", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
+
     expect(() => {
       debouncer.cancel();
     }).not.toThrow();
 
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
     expect(debouncer.call("world")).toBe("hello");
@@ -176,19 +188,25 @@ describe("Additional functionality", () => {
     expect(debouncer.call()).toBeUndefined();
 
     await sleep(1);
+
     expect(debouncer.call()).toBeUndefined();
+
     debouncer.cancel();
 
     await sleep(32);
+
     expect(debouncer.call()).toBeUndefined();
 
     await sleep(32);
+
     expect(debouncer.call()).toBe("Hello, World!");
   });
 
   it("can cancel after the timer ends", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
+
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
     expect(debouncer.call("world")).toBe("hello");
@@ -202,6 +220,7 @@ describe("Additional functionality", () => {
       leading: true,
       trailing: false,
     });
+
     expect(debouncer.cachedValue).toBeUndefined();
     expect(debouncer.call("hello")).toBe("hello");
     expect(debouncer.cachedValue).toBe("hello");
@@ -212,23 +231,28 @@ describe("Additional functionality", () => {
       leading: true,
       trailing: false,
     });
+
     expect(debouncer.isIdle).toBe(true);
 
     expect(debouncer.call("hello")).toBe("hello");
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(1);
+
     expect(debouncer.isIdle).toBe(false);
 
     await sleep(32);
+
     expect(debouncer.isIdle).toBe(true);
   });
 
   it("can flush before a cool-down", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
+
     expect(debouncer.flush()).toBeUndefined();
 
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
     expect(debouncer.call("world")).toBe("hello");
@@ -236,20 +260,25 @@ describe("Additional functionality", () => {
 
   it("can flush during a cool-down", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
+
     expect(debouncer.call("hello")).toBeUndefined();
 
     await sleep(1);
+
     expect(debouncer.call("world")).toBeUndefined();
 
     await sleep(1);
+
     expect(debouncer.flush()).toBe("world");
   });
 
   it("can flush after a cool-down", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
+
     expect(debouncer.call("hello")).toBeUndefined();
 
     await sleep(32);
+
     expect(debouncer.flush()).toBe("hello");
   });
 });

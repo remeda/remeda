@@ -461,9 +461,10 @@ export default tseslint.config(
       // harder to read and maintain.
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
-      "jsdoc/require-example": "off",
-      "jsdoc/require-param": "off",
       "unicorn/no-null": "off",
+
+      // TODO: Describe this exemption...
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
   {
