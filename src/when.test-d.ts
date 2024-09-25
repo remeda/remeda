@@ -14,7 +14,7 @@ describe("dataFirst", () => {
         });
       });
 
-      it("return type is not narrowed ", () => {
+      it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), constant({ a: 1 }));
         // The result contains both the input type, and the result of the
@@ -195,7 +195,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("return type is not narrowed ", () => {
+      it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(constant(true), constant({ a: 1 })));
         // The result contains both the input type, and the result of the
@@ -353,17 +353,17 @@ describe("dataLast", () => {
 });
 
 describe("typing mismatches", () => {
-  test("Predicate enforces data param when explicitly stated", () => {
+  test("predicate enforces data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The predicate can't take an undefined value
     when(1 as number | undefined, (x: number) => x > 3, constant(3));
   });
 
-  test("Mappers enforce data param when explicitly stated", () => {
+  test("mappers enforce data param when explicitly stated", () => {
     // @ts-expect-error [ts2769] -- The mapper can't take an undefined value
     when(1 as number | undefined, constant(true), (x: number) => x + 1);
   });
 
-  test("Type of extra args enforced (data-first)", () => {
+  test("type of extra args enforced (data-first)", () => {
     when(
       1,
       constant(true),
@@ -374,7 +374,7 @@ describe("typing mismatches", () => {
     );
   });
 
-  test("Number of extra args enforced (data-first)", () => {
+  test("number of extra args enforced (data-first)", () => {
     when(
       1,
       constant(true),
@@ -386,7 +386,7 @@ describe("typing mismatches", () => {
     );
   });
 
-  test("Type of extra args enforced (data-last)", () => {
+  test("type of extra args enforced (data-last)", () => {
     map(
       [] as Array<string>,
       when(
@@ -397,7 +397,7 @@ describe("typing mismatches", () => {
     );
   });
 
-  test("Number of extra args enforced (data-last)", () => {
+  test("number of extra args enforced (data-last)", () => {
     map(
       [] as Array<string>,
       when(

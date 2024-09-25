@@ -26,6 +26,7 @@ describe("objects", () => {
   it("clones shallow object", () => {
     const obj = { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) };
     const cloned = clone(obj);
+
     expect(cloned).not.toBe(obj);
     expect(cloned).toStrictEqual(obj);
 
@@ -43,6 +44,7 @@ describe("objects", () => {
   it("clones deep object", () => {
     const obj = { a: { b: { c: "foo" } } };
     const cloned = clone(obj);
+
     expect(cloned).not.toBe(obj);
     expect(cloned).toStrictEqual(obj);
 
@@ -74,6 +76,7 @@ describe("objects", () => {
     expect(cloned.c.b.a.c).toStrictEqual(x.c.b.a.c);
 
     x.c.b = 1;
+
     expect(cloned.c.b).not.toStrictEqual(x.c.b);
   });
 });
@@ -82,10 +85,12 @@ describe("arrays", () => {
   it("clones shallow arrays", () => {
     const list = [1, 2, 3];
     const cloned = clone(list);
+
     expect(cloned).not.toBe(list);
     expect(cloned).toStrictEqual(list);
 
     list.pop();
+
     expect(cloned).not.toStrictEqual(list);
     expect(cloned).toStrictEqual([1, 2, 3]);
   });
@@ -93,6 +98,7 @@ describe("arrays", () => {
   it("clones deep arrays", () => {
     const list: any = [1, [1, 2, 3], [[[5]]]];
     const cloned = clone(list);
+
     expect(cloned).not.toBe(list);
     expect(cloned).toStrictEqual(list);
 
@@ -110,6 +116,7 @@ describe("functions", () => {
   it("keep reference to function", () => {
     const list = [{ a: (x: number): number => x + x }] as const;
     const cloned = clone(list);
+
     expect(cloned).not.toBe(list);
     expect(cloned).toStrictEqual(list);
 
@@ -127,7 +134,7 @@ describe("built-in types", () => {
     expect(cloned).not.toBe(date);
     expect(cloned).toStrictEqual(new Date(2014, 10, 14, 23, 59, 59, 999));
 
-    expect(cloned.getDay()).toStrictEqual(5); // friday
+    expect(cloned.getDay()).toBe(5); // friday
   });
 
   it.each([
@@ -144,6 +151,7 @@ describe("built-in types", () => {
     /x/,
   ])("clones RegExp object: %s", (pattern) => {
     const cloned = clone(pattern);
+
     expect(cloned).not.toBe(pattern);
     expect(cloned).toStrictEqual(pattern);
     expect(cloned.constructor).toStrictEqual(RegExp);
@@ -159,6 +167,7 @@ describe("nested mixed objects", () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
     const cloned = clone(list);
     list[1][0] = null;
+
     expect(cloned).toStrictEqual([{ a: { b: 1 } }, [{ c: { d: 1 } }]]);
   });
 
@@ -167,6 +176,7 @@ describe("nested mixed objects", () => {
       const list: Array<Array<any>> = [[1], [[3]]];
       const cloned = clone(list);
       list[1]![0] = null;
+
       expect(cloned).toStrictEqual([[1], [[3]]]);
     });
 
@@ -186,6 +196,7 @@ describe("nested mixed objects", () => {
       expect(cloned[1]?.b).toStrictEqual({ a: 1 });
 
       obj.a = 2;
+
       expect(cloned[0]?.b).toStrictEqual({ a: 1 });
       expect(cloned[1]?.b).toStrictEqual({ a: 1 });
     });
@@ -203,11 +214,13 @@ describe("edge cases", () => {
 
   test("empty object", () => {
     const obj = {} as const;
+
     expect(clone(obj)).not.toBe(obj);
   });
 
   test("empty array", () => {
     const array = [] as const;
+
     expect(clone(array)).not.toBe(array);
   });
 });

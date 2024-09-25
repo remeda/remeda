@@ -3,39 +3,42 @@ import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
 
 it("works on trivially empty arrays", () => {
-  expect(fromKeys([] as Array<string>, (item) => `${item}_`)).toEqual({});
+  expect(fromKeys([] as Array<string>, (item) => `${item}_`)).toStrictEqual({});
 });
 
 it("works on regular arrays", () => {
-  expect(fromKeys(["a"], (item) => `${item}_`)).toEqual({ a: "a_" });
+  expect(fromKeys(["a"], (item) => `${item}_`)).toStrictEqual({ a: "a_" });
 });
 
 it("works with duplicates", () => {
-  expect(fromKeys(["a", "a"], (item) => `${item}_`)).toEqual({ a: "a_" });
+  expect(fromKeys(["a", "a"], (item) => `${item}_`)).toStrictEqual({ a: "a_" });
 });
 
 it("uses the last value", () => {
   let counter = 0;
+
   expect(
     fromKeys(["a", "a"], () => {
       counter += 1;
       return counter;
     }),
-  ).toEqual({ a: 2 });
+  ).toStrictEqual({ a: 2 });
 });
 
 it("works with number keys", () => {
-  expect(fromKeys([123], add(1))).toEqual({ 123: 124 });
+  expect(fromKeys([123], add(1))).toStrictEqual({ 123: 124 });
 });
 
 it("works with symbols", () => {
   const symbol = Symbol("a");
-  expect(fromKeys([symbol], () => 1)).toEqual({ [symbol]: 1 });
+
+  expect(fromKeys([symbol], () => 1)).toStrictEqual({ [symbol]: 1 });
 });
 
 it("works with a mix of key types", () => {
   const symbol = Symbol("a");
-  expect(fromKeys(["a", 123, symbol], (item) => typeof item)).toEqual({
+
+  expect(fromKeys(["a", 123, symbol], (item) => typeof item)).toStrictEqual({
     a: "string",
     123: "number",
     [symbol]: "symbol",
@@ -49,7 +52,7 @@ describe("dataLast", () => {
         [] as Array<string>,
         fromKeys((item) => `${item}_`),
       ),
-    ).toEqual({});
+    ).toStrictEqual({});
   });
 
   it("works on regular arrays", () => {
@@ -58,7 +61,7 @@ describe("dataLast", () => {
         ["a"],
         fromKeys((item) => `${item}_`),
       ),
-    ).toEqual({ a: "a_" });
+    ).toStrictEqual({ a: "a_" });
   });
 
   it("works with duplicates", () => {
@@ -67,11 +70,12 @@ describe("dataLast", () => {
         ["a", "a"],
         fromKeys((item) => `${item}_`),
       ),
-    ).toEqual({ a: "a_" });
+    ).toStrictEqual({ a: "a_" });
   });
 
   it("uses the last value", () => {
     let counter = 0;
+
     expect(
       pipe(
         ["a", "a"],
@@ -80,31 +84,33 @@ describe("dataLast", () => {
           return counter;
         }),
       ),
-    ).toEqual({ a: 2 });
+    ).toStrictEqual({ a: 2 });
   });
 
   it("works with number keys", () => {
-    expect(pipe([123], fromKeys(add(1)))).toEqual({ 123: 124 });
+    expect(pipe([123], fromKeys(add(1)))).toStrictEqual({ 123: 124 });
   });
 
   it("works with symbols", () => {
     const symbol = Symbol("a");
+
     expect(
       pipe(
         [symbol],
         fromKeys(() => 1),
       ),
-    ).toEqual({ [symbol]: 1 });
+    ).toStrictEqual({ [symbol]: 1 });
   });
 
   it("works with a mix of key types", () => {
     const symbol = Symbol("a");
+
     expect(
       pipe(
         ["a", 123, symbol],
         fromKeys((item) => typeof item),
       ),
-    ).toEqual({
+    ).toStrictEqual({
       a: "string",
       123: "number",
       [symbol]: "symbol",

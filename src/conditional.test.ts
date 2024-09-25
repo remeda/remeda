@@ -13,7 +13,7 @@ describe("runtime (dataFirst)", () => {
         "Jokic",
         conditional.defaultCase(() => "hello"),
       ),
-    ).toEqual("hello");
+    ).toBe("hello");
   });
 
   it("works with a single case", () => {
@@ -61,6 +61,7 @@ describe("runtime (dataLast)", () => {
         [isDeepEqual("Jokic"), () => "mvp"],
       ),
     );
+
     expect(value).toBe("center");
   });
 });

@@ -97,6 +97,7 @@ describe("dataLast", () => {
       [[number, string], [number, string], [number, string]]
     >();
   });
+
   test("tuples", () => {
     const actual = pipe(
       [1, 2, 3] as [1, 2, 3],
@@ -104,6 +105,7 @@ describe("dataLast", () => {
     );
     expectTypeOf(actual).toEqualTypeOf<[[1, "a"], [2, "b"], [3, "c"]]>();
   });
+
   test("variadic tuples", () => {
     const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
     const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];

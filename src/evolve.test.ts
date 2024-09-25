@@ -40,6 +40,7 @@ describe("data first", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = evolve(data, { n: add(1) });
+
     expect(data).toStrictEqual({ n: 100 });
     expect(result).toStrictEqual(expected);
     expect(result).not.toBe(expected);
@@ -100,7 +101,8 @@ describe("data first", () => {
     const mySymbol = Symbol("a");
     // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
     evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });
-    expect(mock).toBeCalledTimes(0);
+
+    expect(mock).toHaveBeenCalledTimes(0);
   });
 
   it("ignore transformers for non-object values", () => {
@@ -144,6 +146,7 @@ describe("data last", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = pipe(data, evolve({ n: add(1) }));
+
     expect(data).toStrictEqual({ n: 100 });
     expect(result).toStrictEqual(expected);
     expect(result).not.toBe(expected);

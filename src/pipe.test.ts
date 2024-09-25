@@ -8,7 +8,8 @@ import { take } from "./take";
 
 it("should pipe a single operation", () => {
   const result = pipe(1, (x) => x * 2);
-  expect(result).toEqual(2);
+
+  expect(result).toBe(2);
 });
 
 it("should pipe operations", () => {
@@ -17,7 +18,8 @@ it("should pipe operations", () => {
     (x) => x * 2,
     (x) => x * 3,
   );
-  expect(result).toEqual(6);
+
+  expect(result).toBe(6);
 });
 
 describe("lazy", () => {
@@ -31,8 +33,9 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("lazy map + filter + take", () => {
@@ -46,8 +49,9 @@ describe("lazy", () => {
       filter((x) => (x / 10) % 2 === 1),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([10, 30]);
+    expect(result).toStrictEqual([10, 30]);
   });
 
   it("lazy after 1st op", () => {
@@ -61,8 +65,9 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("break lazy", () => {
@@ -76,8 +81,9 @@ describe("lazy", () => {
       (x) => x,
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([10, 20]);
+    expect(result).toStrictEqual([10, 20]);
   });
 
   it("multiple take", () => {
@@ -91,8 +97,9 @@ describe("lazy", () => {
       take(2),
       take(1),
     );
+
     expect(count).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([10]);
+    expect(result).toStrictEqual([10]);
   });
 
   it("multiple lazy", () => {
@@ -112,9 +119,10 @@ describe("lazy", () => {
       }),
       take(2),
     );
+
     expect(count).toHaveBeenCalledTimes(4);
     expect(count2).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([100, 200]);
+    expect(result).toStrictEqual([100, 200]);
   });
 
   it("lazy early exit with hasMany", () => {
@@ -127,6 +135,7 @@ describe("lazy", () => {
       take(1),
       flat(),
     );
-    expect(result).toEqual([1, 2]);
+
+    expect(result).toStrictEqual([1, 2]);
   });
 });

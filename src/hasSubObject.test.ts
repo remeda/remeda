@@ -24,6 +24,7 @@ describe("data first", () => {
 
   it("checks for matching key", () => {
     const data = {} as { a?: undefined };
+
     expect(hasSubObject(data, { a: undefined })).toBe(false);
   });
 });

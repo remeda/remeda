@@ -50,6 +50,7 @@ test("multiple keys", () => {
 
 test("support inherited properties", () => {
   class BaseClass {
+    // eslint-disable-next-line @typescript-eslint/class-methods-use-this -- This is fine...
     public testProp(): string {
       return "abc";
     }

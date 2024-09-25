@@ -30,26 +30,26 @@ const DATA = [
 ];
 
 describe("dataFirst", () => {
-  test("SortProjection", () => {
+  test("sortProjection", () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = sortBy(items, prop("a"));
     expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
   });
 
-  test("SortPair", () => {
+  test("sortPair", () => {
     const actual = sortBy(DATA, [(x) => x.active, "desc"]);
     expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();
   });
 });
 
 describe("dataLast", () => {
-  test("SortProjection", () => {
+  test("sortProjection", () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = pipe(items, sortBy(prop("a")));
     expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
   });
 
-  test("SortPair", () => {
+  test("sortPair", () => {
     const actual = pipe(
       DATA,
       sortBy([prop("weight"), "asc"], [prop("color"), "desc"]),
