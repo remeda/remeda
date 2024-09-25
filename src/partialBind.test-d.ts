@@ -1,5 +1,11 @@
-/* eslint-disable unicorn/consistent-function-scoping */
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
 import { partialBind } from "./partialBind";
+import type { RemedaTypeError } from "./internal/types";
+
+type PartialBindError<Message extends string | number> = RemedaTypeError<
+  "partialBind",
+  Message
+>;
 
 describe("simple case (all required, no rest params)", () => {
   const fn = (x: number, y: number, z: number | string): string =>
@@ -18,26 +24,20 @@ describe("simple case (all required, no rest params)", () => {
   });
 
   test("should correctly type all partial args", () => {
-    expectTypeOf(partialBind(fn, [1, 2, 3])).toEqualTypeOf<() => string>();
-  });
-
-  test("should allow refined types", () => {
     expectTypeOf(partialBind(fn, [1, 2, "a"])).toEqualTypeOf<() => string>();
   });
 
   test("should not accept wrong arg type", () => {
     expectTypeOf(partialBind(fn, ["a"])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match positional argument">,
       ) => string
     >();
   });
 
   test("should not accept too many args", () => {
     expectTypeOf(partialBind(fn, [1, 2, 3, 4])).toEqualTypeOf<
-      (
-        x: "RemedaTypeError(partialBind): Too many args provided to function.",
-      ) => string
+      (x: PartialBindError<"Too many args provided to function">) => string
     >();
   });
 
@@ -50,7 +50,7 @@ describe("simple case (all required, no rest params)", () => {
         // @ts-expect-error [ts1016]: This *is* the produced type, with a
         // required param after optional params. The resulting function type
         // is unusable anyway.
-        w: "RemedaTypeError(partialBind): Too many args provided to function.",
+        w: PartialBindError<"Too many args provided to function">,
       ) => string
     >();
   });
@@ -60,7 +60,7 @@ describe("simple case (all required, no rest params)", () => {
       partialBind(fn, [1, "a"] as [...Array<number>, string]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Can't infer type of provided args.",
+        x: PartialBindError<"Can't construct signature from provided args">,
       ) => string
     >();
   });
@@ -95,7 +95,6 @@ describe("optional params", () => {
 });
 
 describe("simple rest param case", () => {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   const fn = (...parts: Array<string>): string => parts.join("");
 
   test("should correctly type 0 partial args", () => {
@@ -113,7 +112,7 @@ describe("simple rest param case", () => {
   test("should not accept wrong arg type", () => {
     expectTypeOf(partialBind(fn, [1])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match optional or rest argument">,
       ) => string
     >();
   });
@@ -141,7 +140,7 @@ describe("simple rest param case", () => {
       partialBind(fn, [1, "hello"] as [number?, ...Array<string>]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match optional and rest argument">,
       ) => string
     >();
   });
@@ -151,14 +150,13 @@ describe("simple rest param case", () => {
       partialBind(fn, ["hello", 1] as [...Array<string>, number]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match optional and rest argument">,
       ) => string
     >();
   });
 });
 
 describe("optional and rest param case", () => {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   const fn = (x: string, y = 123, ...parts: Array<string>): string =>
     `${x}, ${y}, and ${parts.join("")}`;
 
@@ -189,7 +187,7 @@ describe("optional and rest param case", () => {
   test("should not accept wrong required arg type", () => {
     expectTypeOf(partialBind(fn, [1])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match positional argument">,
       ) => string
     >();
   });
@@ -198,7 +196,7 @@ describe("optional and rest param case", () => {
     // This is correct; "hello" would be the second argument of fn.
     expectTypeOf(partialBind(fn, ["hello", "world"])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match optional or rest argument">,
       ) => string
     >();
   });
@@ -206,7 +204,7 @@ describe("optional and rest param case", () => {
   test("should not accept wrong rest arg type", () => {
     expectTypeOf(partialBind(fn, ["hello", 123, 1])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        x: PartialBindError<"Given type does not match optional or rest argument">,
       ) => string
     >();
   });
@@ -218,7 +216,7 @@ describe("optional and rest param case", () => {
         // @ts-expect-error [ts1016]: This *is* the produced type, with a
         // required param after optional params. The resulting function type
         // is unusable anyway.
-        y: "RemedaTypeError(partialBind): Argument of the wrong type provided to function.",
+        y: PartialBindError<"Given type does not match optional and rest argument">,
       ) => string
     >();
   });

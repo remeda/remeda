@@ -1,5 +1,11 @@
-/* eslint-disable unicorn/consistent-function-scoping */
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
 import { partialLastBind } from "./partialLastBind";
+import type { RemedaTypeError } from "./internal/types";
+
+type PartialLastBindError<Message extends string | number> = RemedaTypeError<
+  "partialLastBind",
+  Message
+>;
 
 describe("simple case (all required, no rest params)", () => {
   const fn = (x: number, y: number, z: number | string): string =>
@@ -18,10 +24,6 @@ describe("simple case (all required, no rest params)", () => {
   });
 
   test("should correctly type all partial args", () => {
-    expectTypeOf(partialLastBind(fn, [1, 2, 3])).toEqualTypeOf<() => string>();
-  });
-
-  test("should allow refined types", () => {
     expectTypeOf(partialLastBind(fn, [1, 2, "c"])).toEqualTypeOf<
       () => string
     >();
@@ -30,23 +32,21 @@ describe("simple case (all required, no rest params)", () => {
   test("should not accept wrong arg type", () => {
     expectTypeOf(partialLastBind(fn, ["b", "c"])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+        x: PartialLastBindError<"Given type does not match positional argument">,
       ) => string
     >();
   });
 
   test("should not accept too many args", () => {
     expectTypeOf(partialLastBind(fn, [1, 2, 3, 4])).toEqualTypeOf<
-      (
-        x: "RemedaTypeError(partialRightBind): Too many args provided to function.",
-      ) => string
+      (x: PartialLastBindError<"Too many args provided to function">) => string
     >();
   });
 
   test("should not accept array typed partial", () => {
     expectTypeOf(partialLastBind(fn, [] as Array<number>)).toEqualTypeOf<
       (
-        w: "RemedaTypeError(partialRightBind): Too many args provided to function.",
+        w: PartialLastBindError<"Too many args provided to function">,
         x?: number,
         y?: number,
         z?: number | string,
@@ -59,7 +59,7 @@ describe("simple case (all required, no rest params)", () => {
       partialLastBind(fn, ["a", 1] as [string, ...Array<number>]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialRightBind): Can't infer type of provided args.",
+        x: PartialLastBindError<"Can't construct signature from provided args">,
         y?: number | string,
       ) => string
     >();
@@ -95,7 +95,6 @@ describe("optional params", () => {
 });
 
 describe("simple rest param case", () => {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   const fn = (...parts: Array<string>): string => parts.join("");
 
   test("should correctly type 0 partial args", () => {
@@ -113,7 +112,7 @@ describe("simple rest param case", () => {
   test("should not accept wrong arg type", () => {
     expectTypeOf(partialLastBind(fn, [1])).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+        x: PartialLastBindError<"Given type does not match optional or rest argument">,
       ) => string
     >();
   });
@@ -145,7 +144,7 @@ describe("simple rest param case", () => {
       partialLastBind(fn, [1, "hello"] as [number?, ...Array<string>]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+        x: PartialLastBindError<"Given type does not match optional and rest argument">,
       ) => string
     >();
   });
@@ -155,7 +154,7 @@ describe("simple rest param case", () => {
       partialLastBind(fn, ["hello", 1] as [...Array<string>, number]),
     ).toEqualTypeOf<
       (
-        x: "RemedaTypeError(partialRightBind): Argument of the wrong type provided to function.",
+        x: PartialLastBindError<"Given type does not match optional or rest argument">,
       ) => string
     >();
   });
@@ -172,7 +171,6 @@ describe("KNOWN ISSUES", () => {
   });
 
   describe("does not support optional AND rest params", () => {
-    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
     const fn = (x: string, y = 123, ...parts: Array<string>): string =>
       `${x}, ${y}, and ${parts.join("")}`;
 
