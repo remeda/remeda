@@ -12,39 +12,40 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
+type IfLiteral<N extends number, Fallback> = number extends N ? Fallback : N;
+
+type PositiveIndex<T extends IterableContainer, N extends number> =
+  IsNegative<N> extends false
+    ? N
+    : number extends T["length"]
+      ? number
+      : IfLiteral<Sum<T["length"], N>, 0>;
+
+type ClampedLength<
+  T extends IterableContainer,
+  Offset extends number,
+  Length extends number,
+> =
+  IsNegative<Length> extends true
+    ? 0
+    : number extends T["length"]
+      ? number
+      : GreaterThan<Sum<Offset, Length>, T["length"]> extends true
+        ? IfLiteral<Subtract<T["length"], Offset>, 0>
+        : Length;
+
 type FixedLengthSplice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
   Replacement extends IterableContainer,
-  PositiveStart extends number = IsNegative<Start> extends false
-    ? Start
-    : number extends T["length"]
-      ? // Can't compute negative start index.
-        number
-      : Sum<T["length"], Start> extends infer SumResult extends number
-        ? number extends SumResult
-          ? // type-fest Sum returns number when the sum is negative.
-            0
-          : SumResult
-        : never,
-  ClampedDeleteCount extends number = IsNegative<DeleteCount> extends true
-    ? 0
-    : number extends T["length"]
-      ? // Don't bother clamping in this case.
-        number
-      : GreaterThan<Sum<PositiveStart, DeleteCount>, T["length"]> extends true
-        ? Subtract<
-            T["length"],
-            PositiveStart
-          > extends infer SubtractResult extends number
-          ? number extends SubtractResult
-            ? // type-fest Subtract returns number when the difference is negative.
-              0
-            : SubtractResult
-          : never
-        : DeleteCount,
-> = ArraySplice<T, PositiveStart, ClampedDeleteCount, Replacement>;
+  PositiveStart extends number = PositiveIndex<T, Start>,
+> = ArraySplice<
+  T,
+  PositiveStart,
+  ClampedLength<T, PositiveStart, DeleteCount>,
+  Replacement
+>;
 
 type Splice<
   T extends IterableContainer,
