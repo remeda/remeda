@@ -119,12 +119,12 @@ describe("object types", () => {
     expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 
-  test("Record with literal union", () => {
+  test("record with literal union", () => {
     const result = keys({ a: 1, b: 2 } as Record<"a" | "b", number>);
     expectTypeOf(result).toEqualTypeOf<Array<"a" | "b">>();
   });
 
-  test("Record with template string literal", () => {
+  test("record with template string literal", () => {
     const result = keys({ param_123: "hello", param_456: "world" } as Record<
       `param_${number}`,
       string

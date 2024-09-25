@@ -66,7 +66,7 @@ describe("copied from the type-fest tests", () => {
     { input: "BBBBa", output: ["BBB", "Ba"] },
     { input: "BBBBB", output: ["BBBBB"] },
   ])("case changes: $input", ({ input, output }) => {
-    expect(splitWords(input)).toEqual(output);
+    expect(splitWords(input)).toStrictEqual(output);
   });
 
   test.each([
@@ -92,7 +92,7 @@ describe("copied from the type-fest tests", () => {
     { input: "hello WORLD-lowercase", output: ["hello", "WORLD", "lowercase"] },
     { input: "hello WORLD Uppercase", output: ["hello", "WORLD", "Uppercase"] },
   ])("white spaces: $input", ({ input, output }) => {
-    expect(splitWords(input)).toEqual(output);
+    expect(splitWords(input)).toStrictEqual(output);
   });
 
   test.each([
@@ -109,6 +109,6 @@ describe("copied from the type-fest tests", () => {
       output: ["item", "0", "item", "1", "item", "2"],
     },
   ])("digits: $input", ({ input, output }) => {
-    expect(splitWords(input)).toEqual(output);
+    expect(splitWords(input)).toStrictEqual(output);
   });
 });

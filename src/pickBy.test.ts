@@ -19,6 +19,7 @@ test("dataLast", () => {
 
 test("symbols are filtered out", () => {
   const mySymbol = Symbol("mySymbol");
+
   expect(pickBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({});
 });
 
@@ -26,6 +27,7 @@ test("symbols are not passed to the predicate", () => {
   const mock = vi.fn();
   const data = { [Symbol("mySymbol")]: 1, a: "hello" };
   pickBy(data, mock);
-  expect(mock).toBeCalledTimes(1);
-  expect(mock).toBeCalledWith("hello", "a", data);
+
+  expect(mock).toHaveBeenCalledTimes(1);
+  expect(mock).toHaveBeenCalledWith("hello", "a", data);
 });

@@ -23,6 +23,7 @@ describe("data first", () => {
   test("returns a shallow clone when all items are taken", () => {
     const data = [1, 2, 3, 4, 5];
     const result = take(data, 5);
+
     expect(result).toStrictEqual([1, 2, 3, 4, 5]);
     expect(result).not.toBe(data);
   });
@@ -48,6 +49,7 @@ describe("data last", () => {
   test("lazy implementation", () => {
     const mockFunc = vi.fn(identity());
     pipe([1, 2, 3, 4, 5], map(mockFunc), take(2));
+
     expect(mockFunc).toHaveBeenCalledTimes(2);
   });
 });

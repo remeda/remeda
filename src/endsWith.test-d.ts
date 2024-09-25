@@ -109,6 +109,7 @@ describe("data-last", () => {
 
   test("template literal data that matches", () => {
     const [yes, no] = partition([] as Array<`${number}_bar`>, endsWith("bar"));
+    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_bar`>>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
@@ -137,6 +138,7 @@ describe("data-last", () => {
       [] as Array<`${boolean}_dog` | `${number}_cat`>,
       endsWith("t"),
     );
+    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_cat`>>();
     expectTypeOf(no).toEqualTypeOf<Array<`${boolean}_dog`>>();
   });

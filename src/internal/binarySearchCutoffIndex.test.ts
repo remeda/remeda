@@ -55,7 +55,7 @@ describe("binary search correctness via the index", () => {
         ],
         (_, index) => index < 0,
       ),
-    ).toEqual([8, 4, 2, 1, 0]);
+    ).toStrictEqual([8, 4, 2, 1, 0]);
   });
 
   test("after 4 items", () => {
@@ -81,7 +81,7 @@ describe("binary search correctness via the index", () => {
         ],
         (_, index) => index < 4,
       ),
-    ).toEqual([8, 4, 2, 3]);
+    ).toStrictEqual([8, 4, 2, 3]);
   });
 
   test("after 8 items", () => {
@@ -107,7 +107,7 @@ describe("binary search correctness via the index", () => {
         ],
         (_, index) => index < 8,
       ),
-    ).toEqual([8, 4, 6, 7]);
+    ).toStrictEqual([8, 4, 6, 7]);
   });
 
   test("after 12 items", () => {
@@ -133,7 +133,7 @@ describe("binary search correctness via the index", () => {
         ],
         (_, index) => index < 12,
       ),
-    ).toEqual([8, 12, 10, 11]);
+    ).toStrictEqual([8, 12, 10, 11]);
   });
 
   test("after 20 items", () => {
@@ -159,7 +159,7 @@ describe("binary search correctness via the index", () => {
         ],
         (_, index) => index < 20,
       ),
-    ).toEqual([8, 12, 14, 15]);
+    ).toStrictEqual([8, 12, 14, 15]);
   });
 });
 

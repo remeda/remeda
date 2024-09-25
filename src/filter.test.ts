@@ -5,17 +5,20 @@ import { pipe } from "./pipe";
 describe("data_first", () => {
   it("filter", () => {
     const result = filter([1, 2, 3], (x) => x % 2 === 1);
-    expect(result).toEqual([1, 3]);
+
+    expect(result).toStrictEqual([1, 3]);
   });
 
   it("data_first with typescript guard", () => {
     const result = filter([1, 2, 3, "abc", true], isNumber);
-    expect(result).toEqual([1, 2, 3]);
+
+    expect(result).toStrictEqual([1, 2, 3]);
   });
 
   it("filter indexed", () => {
     const result = filter([1, 2, 3], (x, i) => x % 2 === 1 && i !== 1);
-    expect(result).toEqual([1, 3]);
+
+    expect(result).toStrictEqual([1, 3]);
   });
 });
 
@@ -27,8 +30,9 @@ describe("data_last", () => {
       filter((x) => x % 2 === 1),
       map(counter),
     );
+
     expect(counter).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([1, 3]);
+    expect(result).toStrictEqual([1, 3]);
   });
 
   it("filter with typescript guard", () => {
@@ -38,8 +42,9 @@ describe("data_last", () => {
       filter(isNumber),
       map(counter),
     );
+
     expect(counter).toHaveBeenCalledTimes(3);
-    expect(result).toEqual([1, 2, 3]);
+    expect(result).toStrictEqual([1, 2, 3]);
   });
 
   it("filter indexed", () => {
@@ -49,8 +54,9 @@ describe("data_last", () => {
       filter((x, i) => x % 2 === 1 && i !== 1),
       map(counter),
     );
+
     expect(counter).toHaveBeenCalledTimes(2);
-    expect(result).toEqual([1, 3]);
+    expect(result).toStrictEqual([1, 3]);
   });
 });
 

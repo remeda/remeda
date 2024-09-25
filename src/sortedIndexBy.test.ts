@@ -143,7 +143,9 @@ describe("runtime correctness", () => {
 describe("binary search correctness via indexed", () => {
   test("empty array", () => {
     // The value function always gets called for the item with index `undefined`
-    expect(indicesSeen([], { age: 21 }, ({ age }) => age)).toEqual([undefined]);
+    expect(indicesSeen([], { age: 21 }, ({ age }) => age)).toStrictEqual([
+      undefined,
+    ]);
   });
 
   test("before all", () => {
@@ -170,7 +172,7 @@ describe("binary search correctness via indexed", () => {
         { age: 20 },
         ({ age }) => age,
       ),
-    ).toEqual([undefined, 8, 4, 2, 1, 0]);
+    ).toStrictEqual([undefined, 8, 4, 2, 1, 0]);
   });
 
   test("after all", () => {
@@ -197,7 +199,7 @@ describe("binary search correctness via indexed", () => {
         { age: 40 },
         ({ age }) => age,
       ),
-    ).toEqual([undefined, 8, 12, 14, 15]);
+    ).toStrictEqual([undefined, 8, 12, 14, 15]);
   });
 
   test("inside the array", () => {
@@ -224,7 +226,7 @@ describe("binary search correctness via indexed", () => {
         { age: 27 },
         ({ age }) => age,
       ),
-    ).toEqual([undefined, 8, 4, 6, 5]);
+    ).toStrictEqual([undefined, 8, 4, 6, 5]);
   });
 
   test("with duplicates", () => {
@@ -251,7 +253,7 @@ describe("binary search correctness via indexed", () => {
         { age: 27 },
         ({ age }) => age,
       ),
-    ).toEqual([undefined, 8, 4, 2, 1, 0]);
+    ).toStrictEqual([undefined, 8, 4, 2, 1, 0]);
   });
 });
 

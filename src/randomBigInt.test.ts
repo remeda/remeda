@@ -53,6 +53,7 @@ test("results are varied", () => {
   for (const v of randomBigInts(1n, 10n)) {
     results.add(v);
   }
+
   expect(results).toHaveLength(10);
 });
 
@@ -108,6 +109,7 @@ describe("crypto module polyfill", () => {
     for (const v of randomBigInts(1n, 10n)) {
       results.add(v);
     }
+
     expect(results).toHaveLength(10);
   });
 });

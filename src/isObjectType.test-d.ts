@@ -60,7 +60,7 @@ test("should work as type guard in filter", () => {
   >();
 });
 
-test("Can narrow down `any`", () => {
+test("can narrow down `any`", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
   const data = { hello: "world" } as any;
   if (isObjectType(data)) {

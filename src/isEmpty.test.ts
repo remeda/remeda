@@ -3,6 +3,7 @@ import { isEmpty } from "./isEmpty";
 test("returns true for an empty array", () => {
   expect(isEmpty([])).toBe(true);
 });
+
 test("returns false for a non-empty array", () => {
   expect(isEmpty([1, 2, 3])).toBe(false);
 });

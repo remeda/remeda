@@ -14,5 +14,6 @@ it("should skip symbol keys", () => {
 
 it("shouldn't skip symbol values", () => {
   const mySymbol = Symbol("mySymbol");
+
   expect(values({ a: mySymbol })).toStrictEqual([mySymbol]);
 });

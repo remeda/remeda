@@ -1,7 +1,7 @@
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
-describe("Main functionality", () => {
+describe("main functionality", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn(identity());
 
@@ -11,22 +11,22 @@ describe("Main functionality", () => {
       debouncer.call("a"),
       debouncer.call("b"),
       debouncer.call("c"),
-    ]).toEqual([undefined, undefined, undefined]);
-    expect(mockFn).toBeCalledTimes(0);
+    ]).toStrictEqual([undefined, undefined, undefined]);
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(128);
 
-    expect(mockFn).toBeCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledTimes(1);
     expect([
       debouncer.call("d"),
       debouncer.call("e"),
       debouncer.call("f"),
-    ]).toEqual(["c", "c", "c"]);
-    expect(mockFn).toBeCalledTimes(1);
+    ]).toStrictEqual(["c", "c", "c"]);
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(256);
 
-    expect(mockFn).toBeCalledTimes(2);
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   it("subsequent debounced calls return the last `func` result", async () => {
@@ -34,10 +34,12 @@ describe("Main functionality", () => {
     debouncer.call("a");
 
     await sleep(64);
-    expect(debouncer.call("b")).toEqual("a");
+
+    expect(debouncer.call("b")).toBe("a");
 
     await sleep(128);
-    expect(debouncer.call("c")).toEqual("b");
+
+    expect(debouncer.call("c")).toBe("b");
   });
 
   it("should not immediately call `func` when `wait` is `0`", async () => {
@@ -47,10 +49,12 @@ describe("Main functionality", () => {
 
     debouncer.call();
     debouncer.call();
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(5);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   it("should apply default options", async () => {
@@ -59,10 +63,12 @@ describe("Main functionality", () => {
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
     debouncer.call();
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(64);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   it("should support a `leading` option", async () => {
@@ -75,7 +81,8 @@ describe("Main functionality", () => {
     });
 
     withLeading.call();
-    expect(leadingMockFn).toBeCalledTimes(1);
+
+    expect(leadingMockFn).toHaveBeenCalledTimes(1);
 
     const withLeadingAndTrailing = debounce(bothMockFn, {
       waitMs: 32,
@@ -84,22 +91,32 @@ describe("Main functionality", () => {
 
     withLeadingAndTrailing.call();
     withLeadingAndTrailing.call();
-    expect(bothMockFn).toBeCalledTimes(1);
+
+    expect(bothMockFn).toHaveBeenCalledTimes(1);
 
     await sleep(64);
-    expect(bothMockFn).toBeCalledTimes(2);
+
+    expect(bothMockFn).toHaveBeenCalledTimes(2);
 
     withLeading.call();
-    expect(leadingMockFn).toBeCalledTimes(2);
+
+    expect(leadingMockFn).toHaveBeenCalledTimes(2);
   });
 
   it("subsequent leading debounced calls return the last `func` result", async () => {
     const debouncer = debounce(identity(), { waitMs: 32, timing: "leading" });
 
-    expect([debouncer.call("a"), debouncer.call("b")]).toEqual(["a", "a"]);
+    expect([debouncer.call("a"), debouncer.call("b")]).toStrictEqual([
+      "a",
+      "a",
+    ]);
 
     await sleep(64);
-    expect([debouncer.call("c"), debouncer.call("d")]).toEqual(["c", "c"]);
+
+    expect([debouncer.call("c"), debouncer.call("d")]).toStrictEqual([
+      "c",
+      "c",
+    ]);
   });
 
   it("should support a `trailing` option", async () => {
@@ -108,14 +125,16 @@ describe("Main functionality", () => {
     const withTrailing = debounce(mockFn, { waitMs: 32, timing: "trailing" });
 
     withTrailing.call();
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(64);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Optional param maxWaitMs", () => {
+describe("optional param maxWaitMs", () => {
   it("should support a `maxWait` option", async () => {
     const mockFn = vi.fn(identity());
 
@@ -123,16 +142,21 @@ describe("Optional param maxWaitMs", () => {
 
     debouncer.call("a");
     debouncer.call("b");
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(128);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
     debouncer.call("c");
     debouncer.call("d");
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(256);
-    expect(mockFn).toBeCalledTimes(2);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   it("should support `maxWait` in a tight loop", async () => {
@@ -149,8 +173,9 @@ describe("Optional param maxWaitMs", () => {
     }
 
     await sleep(1);
-    expect(withoutMockFn).toBeCalledTimes(0);
-    expect(withMockFn).not.toBeCalledTimes(0);
+
+    expect(withoutMockFn).toHaveBeenCalledTimes(0);
+    expect(withMockFn).not.toHaveBeenCalledTimes(0);
   });
 
   it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
@@ -171,7 +196,8 @@ describe("Optional param maxWaitMs", () => {
     }, 210);
 
     await sleep(500);
-    expect(mockFn).toBeCalledTimes(2);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
@@ -183,10 +209,12 @@ describe("Optional param maxWaitMs", () => {
 
     await sleep(128);
     debouncer.call();
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(192);
-    expect(mockFn).toBeCalledTimes(2);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   it("works like a leaky bucket when only maxWaitMs is set", async () => {
@@ -195,31 +223,36 @@ describe("Optional param maxWaitMs", () => {
     const debouncer = debounce(mockFn, { maxWaitMs: 32 });
 
     debouncer.call();
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(16);
 
     // Without maxWaitMs this call would cause the actual invocation to be
     // postponed for a full window.
     debouncer.call();
-    expect(mockFn).toBeCalledTimes(0);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(17);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Additional functionality", () => {
+describe("additional functionality", () => {
   it("can cancel before the timer starts", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
+
     expect(() => {
       debouncer.cancel();
     }).not.toThrow();
 
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
-    expect(debouncer.call("world")).toEqual("hello");
+    expect(debouncer.call("world")).toBe("hello");
   });
 
   it("can cancel the timer", async () => {
@@ -228,28 +261,34 @@ describe("Additional functionality", () => {
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
     expect(debouncer.call()).toBeUndefined();
-    expect(mockFn).toBeCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(1);
+
     expect(debouncer.call()).toBeUndefined();
-    expect(mockFn).toBeCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
     debouncer.cancel();
 
     await sleep(32);
+
     expect(debouncer.call()).toBeUndefined();
-    expect(mockFn).toBeCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(32);
-    expect(debouncer.call()).toEqual(data);
-    expect(mockFn).toBeCalledTimes(1);
+
+    expect(debouncer.call()).toStrictEqual(data);
+    expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   it("can cancel after the timer ends", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
+
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
-    expect(debouncer.call("world")).toEqual("hello");
+    expect(debouncer.call("world")).toBe("hello");
     expect(() => {
       debouncer.cancel();
     }).not.toThrow();
@@ -257,83 +296,101 @@ describe("Additional functionality", () => {
 
   it("can cancel maxWait timer", async () => {
     const debouncer = debounce(identity(), { waitMs: 16, maxWaitMs: 32 });
+
     expect(debouncer.call("hello")).toBeUndefined();
 
     await sleep(1);
     debouncer.cancel();
 
     await sleep(32);
+
     expect(debouncer.call("world")).toBeUndefined();
   });
 
   it("can return a cached value", () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
+
     expect(debouncer.cachedValue).toBeUndefined();
-    expect(debouncer.call("hello")).toEqual("hello");
-    expect(debouncer.cachedValue).toEqual("hello");
+    expect(debouncer.call("hello")).toBe("hello");
+    expect(debouncer.cachedValue).toBe("hello");
   });
 
   it("can check for inflight timers (trailing)", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
-    expect(debouncer.isPending).toEqual(false);
+
+    expect(debouncer.isPending).toBe(false);
 
     expect(debouncer.call("hello")).toBeUndefined();
-    expect(debouncer.isPending).toEqual(true);
+    expect(debouncer.isPending).toBe(true);
 
     await sleep(1);
-    expect(debouncer.isPending).toEqual(true);
+
+    expect(debouncer.isPending).toBe(true);
 
     await sleep(32);
-    expect(debouncer.isPending).toEqual(false);
+
+    expect(debouncer.isPending).toBe(false);
   });
 
-  it("can check for inflight timers (trailing)", async () => {
+  it("can check for inflight timers (leading)", async () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
-    expect(debouncer.isPending).toEqual(false);
 
-    expect(debouncer.call("hello")).toEqual("hello");
-    expect(debouncer.isPending).toEqual(true);
+    expect(debouncer.isPending).toBe(false);
+
+    expect(debouncer.call("hello")).toBe("hello");
+    expect(debouncer.isPending).toBe(true);
 
     await sleep(1);
-    expect(debouncer.isPending).toEqual(true);
+
+    expect(debouncer.isPending).toBe(true);
 
     await sleep(32);
-    expect(debouncer.isPending).toEqual(false);
+
+    expect(debouncer.isPending).toBe(false);
   });
 
   it("can flush before a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
+
     expect(debouncer.flush()).toBeUndefined();
 
     expect(debouncer.call("hello")).toBeUndefined();
+
     await sleep(32);
 
-    expect(debouncer.call("world")).toEqual("hello");
+    expect(debouncer.call("world")).toBe("hello");
   });
 
   it("can flush during a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
+
     expect(debouncer.call("hello")).toBeUndefined();
 
     await sleep(1);
+
     expect(debouncer.call("world")).toBeUndefined();
 
     await sleep(1);
-    expect(debouncer.flush()).toEqual("world");
+
+    expect(debouncer.flush()).toBe("world");
   });
 
   it("can flush after a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
+
     expect(debouncer.call("hello")).toBeUndefined();
 
     await sleep(32);
-    expect(debouncer.flush()).toEqual("hello");
+
+    expect(debouncer.flush()).toBe("hello");
   });
 });
 
 describe("errors", () => {
   it("prevents maxWaitMs to be less then waitMs", () => {
-    expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrow();
+    expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrow(
+      "debounce: maxWaitMs (16) cannot be less than waitMs (32)",
+    );
   });
 });
 

@@ -8,6 +8,7 @@ import { heapMaybeInsert } from "./heap";
 describe("heapMaybeInsert", () => {
   test("it works trivially on an empty heap", () => {
     const heap = [] as Array<number>;
+
     expect(heapMaybeInsert(heap, (a, b) => a - b, 1)).toBeUndefined();
   });
 });
