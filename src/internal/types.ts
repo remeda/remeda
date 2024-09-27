@@ -13,27 +13,25 @@ import type {
   Tagged,
 } from "type-fest";
 
+/* v8 ignore next 2 */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for RemedaTypeError
 const RemedaErrorSymbol = Symbol("RemedaError");
 
 /**
  * Used for reporting type errors in a more useful way than `never`. Use
  * numbers for things that should never happen.
- *
- * We should only use this for types that can't return a raw `string`; we want
- * this to get caught during type-checking.
  */
 export type RemedaTypeError<
-  Function extends string,
+  FunctionName extends string,
   Message extends string | number,
 > = Message extends string
   ? Tagged<
       typeof RemedaErrorSymbol,
-      `RemedaTypeError(${Function}): ${Message}.`
+      `RemedaTypeError(${FunctionName}): ${Message}.`
     >
   : RemedaTypeError<
-      Function,
-      `Internal error ${Message}. Please open a GitHub issue.`
+      FunctionName,
+      `Internal error ${Message}. Please open a Remeda GitHub issue.`
     >;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol

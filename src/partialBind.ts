@@ -71,6 +71,6 @@ type PartiallyBound<
 export function partialBind<
   F extends (...args: any) => any,
   PrefixArgs extends IterableContainer,
->(func: F, partial: PrefixArgs): PartiallyBound<F, PrefixArgs> {
+>(func: F, ...partial: PrefixArgs): PartiallyBound<F, PrefixArgs> {
   return (...rest) => func(...partial, ...rest);
 }

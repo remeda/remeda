@@ -71,6 +71,6 @@ type PartiallyLastBound<
 export function partialLastBind<
   F extends (...args: any) => any,
   SuffixArgs extends IterableContainer,
->(func: F, partial: SuffixArgs): PartiallyLastBound<F, SuffixArgs> {
+>(func: F, ...partial: SuffixArgs): PartiallyLastBound<F, SuffixArgs> {
   return (...rest) => func(...rest, ...partial);
 }

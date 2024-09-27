@@ -1,4 +1,4 @@
 ---
 category: Function
-remeda: partial
+remeda: partialBind
 ---
