@@ -25,16 +25,19 @@ describe("mapped type", () => {
       expectTypeOf(key).toEqualTypeOf<string>();
     });
   });
+
   test("should work with number keys", () => {
     mapValues({} as { [K in number]: unknown }, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`${number}`>();
     });
   });
+
   test("should work with template literal string keys", () => {
     mapValues({} as { [K in `prefix${string}`]: unknown }, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
     });
   });
+
   test("should not work with symbol keys", () => {
     mapValues({} as { [K in symbol]: unknown }, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<never>();
@@ -48,16 +51,19 @@ describe("indexed signature", () => {
       expectTypeOf(key).toEqualTypeOf<string>();
     });
   });
+
   test("should work with number keys", () => {
     mapValues({} as Record<number, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`${number}`>();
     });
   });
+
   test("should work with template literal string keys", () => {
     mapValues({} as Record<`prefix${string}`, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
     });
   });
+
   test("should not work with symbol keys", () => {
     mapValues({} as Record<symbol, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<never>();

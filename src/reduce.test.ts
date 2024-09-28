@@ -3,7 +3,7 @@ import { reduce } from "./reduce";
 
 describe("data first", () => {
   test("reduce", () => {
-    expect(reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100)).toEqual(115);
+    expect(reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100)).toBe(115);
   });
 
   test("indexed", () => {
@@ -16,12 +16,13 @@ describe("data first", () => {
         (acc, x, index, items) => {
           expect(index).toBe(i);
           expect(items).toBe(data);
+
           i += 1;
           return acc + x;
         },
         100,
       ),
-    ).toEqual(115);
+    ).toBe(115);
   });
 });
 
@@ -32,6 +33,6 @@ describe("data last", () => {
         [1, 2, 3, 4, 5],
         reduce((acc, x) => acc + x, 100),
       ),
-    ).toEqual(115);
+    ).toBe(115);
   });
 });

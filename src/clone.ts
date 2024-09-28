@@ -6,7 +6,8 @@
 import { purry } from "./purry";
 
 /**
- * Creates a deep copy of the value. Supported types. Functions are assigned by
+ * Creates a deep copy of the value. Supported types: `Array`, `Object`,
+ * `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by
  * reference rather than copied.
  *
  * @param data - The object to clone.
@@ -20,7 +21,8 @@ import { purry } from "./purry";
 export function clone<T>(data: T): T;
 
 /**
- * Creates a deep copy of the value. Supported types. Functions are assigned by
+ * Creates a deep copy of the value. Supported types: `Array`, `Object`,
+ * `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by
  * reference rather than copied.
  *
  * @signature

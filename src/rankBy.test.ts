@@ -16,6 +16,7 @@ describe("runtime (dataFirst)", () => {
 
   it("can rank items not in the array", () => {
     const data = [5, 1, 3] as const;
+
     expect(rankBy(data, 0, identity())).toBe(0);
     expect(rankBy(data, 2, identity())).toBe(1);
     expect(rankBy(data, 4, identity())).toBe(2);
@@ -23,6 +24,7 @@ describe("runtime (dataFirst)", () => {
 
   it("finds items ranked at the end of the array", () => {
     const data = [5, 1, 3] as const;
+
     expect(rankBy(data, 6, identity())).toBe(3);
   });
 });

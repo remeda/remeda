@@ -25,38 +25,41 @@ const obj: SampleType = {
 describe("data first", () => {
   test("should return default value (input undefined)", () => {
     type MaybeSampleType = SampleType | undefined;
-    expect(pathOr(undefined as MaybeSampleType, ["x"], 2)).toEqual(2);
+
+    expect(pathOr(undefined as MaybeSampleType, ["x"], 2)).toBe(2);
   });
 
   test("should return value", () => {
-    expect(pathOr(obj, ["y"] as const, 2)).toEqual(10);
+    expect(pathOr(obj, ["y"] as const, 2)).toBe(10);
   });
 
   test("should return default value", () => {
-    expect(pathOr(obj, ["x"] as const, 2)).toEqual(2);
+    expect(pathOr(obj, ["x"] as const, 2)).toBe(2);
   });
 
   test("should return value (2 level deep)", () => {
-    expect(pathOr(obj, ["a", "b"] as const, { c: 0 })).toEqual({ c: 1 });
+    expect(pathOr(obj, ["a", "b"] as const, { c: 0 })).toStrictEqual({ c: 1 });
   });
 
   test("should return default value (2 level deep)", () => {
-    expect(pathOr(obj, ["a", "z"] as const, 3)).toEqual(3);
+    expect(pathOr(obj, ["a", "z"] as const, 3)).toBe(3);
   });
 
   test("should return value (3 level deep)", () => {
-    expect(pathOr(obj, ["a", "b", "c"] as const, 0)).toEqual(1);
+    expect(pathOr(obj, ["a", "b", "c"] as const, 0)).toBe(1);
   });
 });
 
 describe("data last", () => {
   test("1 level", () => {
-    expect(pipe(obj, pathOr(["x"], 1))).toEqual(1);
+    expect(pipe(obj, pathOr(["x"], 1))).toBe(1);
   });
+
   test("2 level", () => {
-    expect(pipe(obj, pathOr(["a", "z"], 1))).toEqual(1);
+    expect(pipe(obj, pathOr(["a", "z"], 1))).toBe(1);
   });
+
   test("3 level", () => {
-    expect(pipe(obj, pathOr(["a", "b", "d"] as const, 1))).toEqual(1);
+    expect(pipe(obj, pathOr(["a", "b", "d"] as const, 1))).toBe(1);
   });
 });

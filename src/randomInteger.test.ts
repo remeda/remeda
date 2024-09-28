@@ -9,7 +9,7 @@ test("from is greater than to", () => {
 });
 
 test("from and to are decimals with same whole number", () => {
-  expect(() => expect(randomInteger(1.5, 1.6))).toThrow(
+  expect(() => randomInteger(1.5, 1.6)).toThrow(
     new RangeError("randomInteger: The range [1.5,1.6] contains no integer"),
   );
 });

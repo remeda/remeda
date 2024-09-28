@@ -24,6 +24,7 @@ describe("data first", () => {
   test("returns a shallow clone when no items are dropped", () => {
     const data = [1, 2, 3, 4, 5];
     const result = drop(data, 0);
+
     expect(result).toStrictEqual([1, 2, 3, 4, 5]);
     expect(result).not.toBe(data);
   });
@@ -49,6 +50,7 @@ describe("data last", () => {
   test("lazy impl", () => {
     const mockFunc = vi.fn(identity());
     pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
+
     expect(mockFunc).toHaveBeenCalledTimes(4);
   });
 });

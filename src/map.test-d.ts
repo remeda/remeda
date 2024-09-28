@@ -67,7 +67,7 @@ it("nonempty readonly (head) number array", () => {
   expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
 });
 
-describe("Indexed", () => {
+describe("indexed", () => {
   it("number array", () => {
     const result = map([1, 2, 3] as Array<number>, (x, index) => x + index);
     expectTypeOf(result).toEqualTypeOf<Array<number>>();

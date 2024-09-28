@@ -5,16 +5,18 @@ import { pipe } from "./pipe";
 describe("runtime (dataFirst)", () => {
   it("works", () => {
     const data = [2, 1, 3];
-    expect(nthBy(data, 0, identity())).toEqual(1);
-    expect(nthBy(data, 1, identity())).toEqual(2);
-    expect(nthBy(data, 2, identity())).toEqual(3);
+
+    expect(nthBy(data, 0, identity())).toBe(1);
+    expect(nthBy(data, 1, identity())).toBe(2);
+    expect(nthBy(data, 2, identity())).toBe(3);
   });
 
   it("handles negative indexes", () => {
     const data = [2, 1, 3];
-    expect(nthBy(data, -1, identity())).toEqual(3);
-    expect(nthBy(data, -2, identity())).toEqual(2);
-    expect(nthBy(data, -3, identity())).toEqual(1);
+
+    expect(nthBy(data, -1, identity())).toBe(3);
+    expect(nthBy(data, -2, identity())).toBe(2);
+    expect(nthBy(data, -3, identity())).toBe(1);
   });
 
   it("handles overflows gracefully", () => {
@@ -24,30 +26,33 @@ describe("runtime (dataFirst)", () => {
 
   it("works with complex order rules", () => {
     const data = ["aaaa", "b", "bb", "a", "aaa", "bbbb", "aa", "bbb"] as const;
-    expect(nthBy(data, 0, (a) => a.length, identity())).toEqual("a");
-    expect(nthBy(data, 1, (a) => a.length, identity())).toEqual("b");
-    expect(nthBy(data, 2, (a) => a.length, identity())).toEqual("aa");
-    expect(nthBy(data, 3, (a) => a.length, identity())).toEqual("bb");
-    expect(nthBy(data, 4, (a) => a.length, identity())).toEqual("aaa");
-    expect(nthBy(data, 5, (a) => a.length, identity())).toEqual("bbb");
-    expect(nthBy(data, 6, (a) => a.length, identity())).toEqual("aaaa");
-    expect(nthBy(data, 7, (a) => a.length, identity())).toEqual("bbbb");
+
+    expect(nthBy(data, 0, (a) => a.length, identity())).toBe("a");
+    expect(nthBy(data, 1, (a) => a.length, identity())).toBe("b");
+    expect(nthBy(data, 2, (a) => a.length, identity())).toBe("aa");
+    expect(nthBy(data, 3, (a) => a.length, identity())).toBe("bb");
+    expect(nthBy(data, 4, (a) => a.length, identity())).toBe("aaa");
+    expect(nthBy(data, 5, (a) => a.length, identity())).toBe("bbb");
+    expect(nthBy(data, 6, (a) => a.length, identity())).toBe("aaaa");
+    expect(nthBy(data, 7, (a) => a.length, identity())).toBe("bbbb");
   });
 });
 
 describe("runtime (dataLast)", () => {
   it("works", () => {
     const data = [2, 1, 3];
-    expect(pipe(data, nthBy(0, identity()))).toEqual(1);
-    expect(pipe(data, nthBy(1, identity()))).toEqual(2);
-    expect(pipe(data, nthBy(2, identity()))).toEqual(3);
+
+    expect(pipe(data, nthBy(0, identity()))).toBe(1);
+    expect(pipe(data, nthBy(1, identity()))).toBe(2);
+    expect(pipe(data, nthBy(2, identity()))).toBe(3);
   });
 
   it("handles negative indexes", () => {
     const data = [2, 1, 3];
-    expect(pipe(data, nthBy(-1, identity()))).toEqual(3);
-    expect(pipe(data, nthBy(-2, identity()))).toEqual(2);
-    expect(pipe(data, nthBy(-3, identity()))).toEqual(1);
+
+    expect(pipe(data, nthBy(-1, identity()))).toBe(3);
+    expect(pipe(data, nthBy(-2, identity()))).toBe(2);
+    expect(pipe(data, nthBy(-3, identity()))).toBe(1);
   });
 
   it("handles overflows gracefully", () => {
@@ -57,53 +62,54 @@ describe("runtime (dataLast)", () => {
 
   it("works with complex order rules", () => {
     const data = ["aaaa", "b", "bb", "a", "aaa", "bbbb", "aa", "bbb"] as const;
+
     expect(
       pipe(
         data,
         nthBy(0, (a) => a.length, identity()),
       ),
-    ).toEqual("a");
+    ).toBe("a");
     expect(
       pipe(
         data,
         nthBy(1, (a) => a.length, identity()),
       ),
-    ).toEqual("b");
+    ).toBe("b");
     expect(
       pipe(
         data,
         nthBy(2, (a) => a.length, identity()),
       ),
-    ).toEqual("aa");
+    ).toBe("aa");
     expect(
       pipe(
         data,
         nthBy(3, (a) => a.length, identity()),
       ),
-    ).toEqual("bb");
+    ).toBe("bb");
     expect(
       pipe(
         data,
         nthBy(4, (a) => a.length, identity()),
       ),
-    ).toEqual("aaa");
+    ).toBe("aaa");
     expect(
       pipe(
         data,
         nthBy(5, (a) => a.length, identity()),
       ),
-    ).toEqual("bbb");
+    ).toBe("bbb");
     expect(
       pipe(
         data,
         nthBy(6, (a) => a.length, identity()),
       ),
-    ).toEqual("aaaa");
+    ).toBe("aaaa");
     expect(
       pipe(
         data,
         nthBy(7, (a) => a.length, identity()),
       ),
-    ).toEqual("bbbb");
+    ).toBe("bbbb");
   });
 });

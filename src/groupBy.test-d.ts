@@ -2,7 +2,7 @@ import { groupBy } from "./groupBy";
 import type { NonEmptyArray } from "./internal/types";
 import { prop } from "./prop";
 
-test("Union of string literals", () => {
+test("union of string literals", () => {
   const data = groupBy(
     [
       { a: "cat", b: 123 },
@@ -24,7 +24,7 @@ test("Union of string literals", () => {
   >();
 });
 
-test("Union of number literals", () => {
+test("union of number literals", () => {
   const data = groupBy(
     [
       { a: "cat", b: 123 },
@@ -102,7 +102,7 @@ test("string | number", () => {
   >();
 });
 
-describe("Filtering on undefined grouper result", () => {
+describe("filtering on undefined grouper result", () => {
   test("regular", () => {
     const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? "even" : undefined,

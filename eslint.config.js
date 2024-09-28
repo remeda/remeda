@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import vitest from "@vitest/eslint-plugin";
 import prettierConfig from "eslint-config-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
@@ -425,15 +426,92 @@ export default tseslint.config(
   },
   {
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
+    plugins: {
+      vitest,
+    },
     rules: {
-      "@typescript-eslint/class-methods-use-this": "off",
+      ...vitest.configs.all.rules,
+      // The `all` config doesn't actually contain all the rules, its missing
+      // all the recommended ones...
+      ...vitest.configs.recommended.rules,
+
+      "vitest/prefer-lowercase-title": [
+        "warn",
+        { ignoreTopLevelDescribe: true },
+      ],
+
+      // I don't agree with this rule, `it` and `test` should be used based on
+      // the situation. Some times we are testing a specific behavior or trait,
+      // and sometimes we have a specific flow, input, or edge-case that needs
+      // to be tested against.
+      "vitest/consistent-test-it": "off",
+
+      // This rule's docs don't provide justification for enabling it and what
+      // value it adds. Going by the rule just adds another level of indentation
+      // without really adding any interesting semantics.
+      "vitest/require-top-level-describe": "off",
+
+      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
+      // valuable and doesn't improve the quality of the tests. We can consider
+      // enabling some (or all of) those options and see if it makes the tests
+      // better without the code being a mess.
+      "vitest/prefer-expect-assertions": "off",
+
+      // These aren't valuable when writing tests, they'll just make the tests
+      // harder to read and maintain.
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-useless-undefined": [
-        "warn",
-        { checkArguments: false, checkArrowFunctionBody: false },
-      ],
+    },
+  },
+  {
+    files: ["src/**/*.test.ts"],
+    rules: {
+      // The range of things that are acceptable for truthy and falsy is wider
+      // than just the boolean `true` and `false`. We prefer our tests only pass
+      // on the narrowest cases.
+      "vitest/prefer-to-be-truthy": "off",
+      "vitest/prefer-to-be-falsy": "off",
+
+      // It's rare that hooks are even needed, but in those cases it's probably
+      // preferable to use them as they make it clear that the tests relies on
+      // some weird setup.
+      "vitest/no-hooks": "off",
+
+      // TODO: This rule might be useful to guide people to break tests into
+      // smaller tests that only expect one thing, but there's no reasonable
+      // max value we can configure it to that won't end up feeling arbitrary
+      // and noisy.
+      "vitest/max-expects": "off",
+    },
+  },
+  {
+    // Type Tests
+    files: ["src/**/*.test-d.ts"],
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
+    rules: {
+      // A lot of our type tests use @ts-expect-error as the primary way to test
+      // that function params are typed correctly. This isn't detected properly
+      // by this rule and there's no way to configure it to work; so we disable
+      // it for now... There might be other ways to write the tests so that they
+      // conform to this rule.
+      "vitest/expect-expect": "off",
+
+      // When testing type-predicates (guards) we need to test what happens to
+      // the input type after the predicate succeeds and/or fails; we can only
+      // do that using conditionals. This rule doesn't matter for type tests
+      // because there's no risk of the code not running, the type-checker will
+      // check both branches.
+      "vitest/no-conditional-in-test": "off",
     },
   },
   {

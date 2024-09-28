@@ -13,12 +13,13 @@ test("single index", () => {
 });
 
 test("should handle short path with only bracket access", () => {
-  expect(stringToPath("foo[bar]")).toEqual(["foo", "bar"]);
+  expect(stringToPath("foo[bar]")).toStrictEqual(["foo", "bar"]);
 });
 
 test("should handle bracket access at the end", () => {
   const res = stringToPath("foo.bar[3]");
-  expect(res).toEqual(["foo", "bar", "3"]);
+
+  expect(res).toStrictEqual(["foo", "bar", "3"]);
 });
 
 test("should convert a string to a deeply nested path", () => {

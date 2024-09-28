@@ -30,7 +30,7 @@ describe("data-first", () => {
   });
 
   describe("arrays with a prefix (2) and a suffix (2)", () => {
-    test("N === 0 (no drop)", () => {
+    test("n === 0 (no drop)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         0,
@@ -40,7 +40,7 @@ describe("data-first", () => {
       >();
     });
 
-    test("N === 1 (drop from the prefix)", () => {
+    test("n === 1 (drop from the prefix)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         1,
@@ -50,7 +50,7 @@ describe("data-first", () => {
       >();
     });
 
-    test("N === 2 (remove the prefix)", () => {
+    test("n === 2 (remove the prefix)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         2,
@@ -58,7 +58,7 @@ describe("data-first", () => {
       expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string, string]>();
     });
 
-    test("N === 3 (drop the whole prefix, remove from the suffix)", () => {
+    test("n === 3 (drop the whole prefix, remove from the suffix)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         3,
@@ -68,7 +68,7 @@ describe("data-first", () => {
       >();
     });
 
-    test("N === 4 (drop the whole prefix, drop the whole suffix)", () => {
+    test("n === 4 (drop the whole prefix, drop the whole suffix)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         4,
@@ -78,7 +78,7 @@ describe("data-first", () => {
       >();
     });
 
-    test("N > 4 (drop more than the constant parts of the array)", () => {
+    test("n > 4 (drop more than the constant parts of the array)", () => {
       const result = drop(
         [1, 2, "a", "b"] as [number, number, ...Array<boolean>, string, string],
         5,

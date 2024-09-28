@@ -50,7 +50,7 @@ test("symbols are not passed to the predicate", () => {
   });
 });
 
-test("Makes wide types partial", () => {
+test("makes wide types partial", () => {
   const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
   expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
 
@@ -84,7 +84,7 @@ test("works with type-guards", () => {
   }>();
 });
 
-test("Works well with nullish type-guards", () => {
+test("works well with nullish type-guards", () => {
   const data = {} as {
     required: string;
     optional?: string;
@@ -133,7 +133,7 @@ test("Works well with nullish type-guards", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/696
-describe("Records with non-narrowing predicates (Issue #696)", () => {
+describe("records with non-narrowing predicates (Issue #696)", () => {
   test("string keys", () => {
     const data = {} as Record<string, string>;
     const result = pickBy(data, constant(true));
