@@ -1,6 +1,8 @@
 import type {
   ArraySplice,
   GreaterThan,
+  IfNever,
+  IsLiteral,
   IsNegative,
   Subtract,
   Sum,
@@ -9,17 +11,24 @@ import type {
   CoercedArray,
   IterableContainer,
   TupleParts,
+  WidenLiteral,
 } from "./internal/types";
 import { purry } from "./purry";
 
 type IfLiteral<N extends number, Fallback> = number extends N ? Fallback : N;
 
-type PositiveIndex<T extends IterableContainer, N extends number> =
-  IsNegative<N> extends false
-    ? N
+type PositiveIndex<
+  T extends IterableContainer,
+  N extends number,
+> = N extends unknown
+  ? IsNegative<N> extends false
+    ? GreaterThan<N, T["length"]> extends true
+      ? T["length"]
+      : N
     : number extends T["length"]
       ? number
-      : IfLiteral<Sum<T["length"], N>, 0>;
+      : IfLiteral<Sum<T["length"], N>, 0>
+  : never;
 
 type ClampedLength<
   T extends IterableContainer,
@@ -40,25 +49,34 @@ type FixedLengthSplice<
   DeleteCount extends number,
   Replacement extends IterableContainer,
   PositiveStart extends number = PositiveIndex<T, Start>,
-> = ArraySplice<
-  T,
-  PositiveStart,
-  ClampedLength<T, PositiveStart, DeleteCount>,
-  Replacement
->;
+> = PositiveStart extends unknown
+  ? ArraySplice<
+      T,
+      PositiveStart,
+      ClampedLength<T, PositiveStart, DeleteCount>,
+      Replacement
+    >
+  : never;
 
-type Splice<
+/** Widen a tuple into an array type. */
+type WidenTuple<T extends IterableContainer> =
+  T extends ReadonlyArray<infer Item>
+    ? IfNever<Item, ReadonlyArray<unknown>, CoercedArray<WidenLiteral<Item>>>
+    : never;
+
+type LiteralNumberSplice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends IterableContainer,
+  Replacement extends WidenTuple<T>,
 > = TupleParts<T>["item"] extends never
   ? FixedLengthSplice<T, Start, DeleteCount, Replacement>
   : IsNegative<Start> extends true
     ? // type-fest Sum returns number when the sum is negative.
       number extends Sum<TupleParts<T>["suffix"]["length"], Start>
       ? // Splice cuts into the variable-length part.
-        T
+        // TODO: Is a better type is possible? See tests.
+        WidenTuple<T>
       : // Splice is solely in the suffix.
         [
           ...TupleParts<T>["prefix"],
@@ -75,7 +93,8 @@ type Splice<
           TupleParts<T>["prefix"]["length"]
         > extends true
       ? // Splice cuts into the variable-length part.
-        T
+        // TODO: Is a better type is possible? See tests.
+        WidenTuple<T>
       : // Splice is solely in the prefix.
         [
           ...FixedLengthSplice<
@@ -87,6 +106,15 @@ type Splice<
           ...CoercedArray<TupleParts<T>["item"]>,
           ...TupleParts<T>["suffix"],
         ];
+
+type Splice<
+  T extends IterableContainer,
+  Start extends number,
+  DeleteCount extends number,
+  Replacement extends WidenTuple<T>,
+> = [IsLiteral<Start>, IsLiteral<DeleteCount>] extends [true, true]
+  ? LiteralNumberSplice<T, Start, DeleteCount, Replacement>
+  : WidenTuple<T>;
 
 /**
  * Removes elements from an array and inserts new elements in their place.
@@ -112,7 +140,7 @@ export function splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends IterableContainer,
+  Replacement extends WidenTuple<T>,
 >(
   items: T,
   start: Start,
@@ -140,16 +168,15 @@ export function splice<
  * @category Array
  */
 export function splice<
+  T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends IterableContainer,
+  Replacement extends WidenTuple<T>,
 >(
   start: Start,
   deleteCount: DeleteCount,
   replacement: Replacement,
-): <T extends IterableContainer>(
-  items: T,
-) => Splice<T, Start, DeleteCount, Replacement>;
+): (items: T) => Splice<T, Start, DeleteCount, Replacement>;
 
 export function splice(...args: ReadonlyArray<unknown>): unknown {
   return purry(spliceImplementation, args);

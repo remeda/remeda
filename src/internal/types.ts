@@ -2,8 +2,10 @@ import type {
   EmptyObject,
   IfNever,
   IsAny,
+  IsEqual,
   IsLiteral,
   IsNever,
+  IsBooleanLiteral,
   IsNumericLiteral,
   IsStringLiteral,
   IsSymbolLiteral,
@@ -198,10 +200,30 @@ export type UpsertProp<T, K extends PropertyKey, V> = Simplify<
         })
 >;
 
-// This type attempts to detect when a type is a single literal value (e.g.
-// "cat"), and not anything else (e.g. "cat" | "dog", string, etc...)
+/**
+ * This type attempts to detect when a type is a single literal value (e.g.
+ * "cat"), and not anything else (e.g. "cat" | "dog", string, etc...).
+ */
 type IsSingleLiteral<K> =
   IsLiteral<K> extends true ? (IsUnion<K> extends true ? false : true) : false;
+
+/**
+ * Widen a literal type.
+ *
+ * @example WidenLiteral<"cat" | "dog"> //=> string
+ * @example WidenLiteral<"cat" | 1> //=> string | number
+ */
+export type WidenLiteral<K> = K extends unknown
+  ? // `extends unknown` is always going to be the case and is used to convert any
+    // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
+    IsNumericLiteral<K> extends true
+    ? number
+    : IsBooleanLiteral<K> extends true
+      ? boolean
+      : IsStringLiteral<K> extends true
+        ? string
+        : K
+  : never;
 
 // TODO [2024-10-01]: This type is copied from type-fest because it isn't
 // exported. It's part of the "internal" types. We should check back in a while
@@ -255,9 +277,9 @@ export type NTuple<
 > = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
 
 /**
- * Takes an array and returns the types that make up its parts. The suffix is
- * anything before the rest parameter (if any), the prefix is anything after the
- * rest parameter (if any), and the item is the type of the rest parameter.
+ * Takes an array and returns the types that make up its parts. The prefix is
+ * anything before the rest parameter (if any), the suffix is anything after
+ * the rest parameter (if any), and the item is the type of the rest parameter.
  *
  * The output could be used to reconstruct the input: `[
  *   ...TupleParts<T>["prefix"],
@@ -265,12 +287,12 @@ export type NTuple<
  *   ...TupleParts<T>["suffix"],
  * ]`.
  *
- * Optionals in a tuple are always considered to be part of the rest parameter.
+ * Optionals in a tuple are always considered to be part of the prefix.
  *
  * @example
  *    TupleParts<[number, boolean?, ...Array<Date>, string]> = {
- *      prefix: [number],
- *      item: boolean | Date,
+ *      prefix: [number, boolean?],
+ *      item: Date,
  *      suffix: [string],
  *    };
  */
@@ -282,13 +304,27 @@ export type TupleParts<
   ? TupleParts<Tail, [...Prefix, Head], Suffix>
   : T extends readonly [...infer Head, infer Tail]
     ? TupleParts<Head, Prefix, [Tail, ...Suffix]>
-    : T extends ReadonlyArray<infer Item>
-      ? {
-          prefix: Prefix;
-          item: Item;
-          suffix: Suffix;
-        }
-      : never;
+    : // We need to distinguish between e.g. [number? ...Array<string>] and
+      // Array<number | string>.
+      IsTupleRestOnly<T> extends false
+      ? // This is the [number? ...Array<string>] case.
+        T extends readonly [(infer MaybeHead)?, ...infer Tail]
+        ? TupleParts<Tail, [...Prefix, MaybeHead?], Suffix>
+        : never
+      : // This is the Array<number | string> case.
+        T extends ReadonlyArray<infer Item>
+        ? {
+            prefix: Prefix;
+            item: Item;
+            suffix: Suffix;
+          }
+        : never;
+/** Helper type for `TupleParts`. */
+type IsTupleRestOnly<T> = T extends readonly []
+  ? true
+  : T extends readonly [unknown?, ...infer Tail]
+    ? IsEqual<Readonly<T>, Readonly<Tail>>
+    : false;
 
 /**
  * `never[]` and `[]` are not the same type, and in some cases they aren't
