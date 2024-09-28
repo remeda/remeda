@@ -61,14 +61,14 @@ type FixedLengthSplice<
 /** Widen a tuple into an array type. */
 type WidenTuple<T extends IterableContainer> =
   T extends ReadonlyArray<infer Item>
-    ? IfNever<Item, ReadonlyArray<unknown>, ReadonlyArray<WidenLiteral<Item>>>
+    ? IfNever<Item, ReadonlyArray<unknown>, Array<WidenLiteral<Item>>>
     : never;
 
 type LiteralNumberSplice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends WidenTuple<T>,
+  Replacement extends Readonly<WidenTuple<T>>,
 > = TupleParts<T>["item"] extends never
   ? FixedLengthSplice<T, Start, DeleteCount, Replacement>
   : IsNegative<Start> extends true
@@ -111,7 +111,7 @@ type Splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends WidenTuple<T>,
+  Replacement extends Readonly<WidenTuple<T>>,
 > = [IsLiteral<Start>, IsLiteral<DeleteCount>] extends [true, true]
   ? LiteralNumberSplice<T, Start, DeleteCount, Replacement>
   : WidenTuple<T>;
@@ -140,7 +140,7 @@ export function splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends WidenTuple<T>,
+  Replacement extends Readonly<WidenTuple<T>>,
 >(
   items: T,
   start: Start,
@@ -171,7 +171,7 @@ export function splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends WidenTuple<T>,
+  Replacement extends Readonly<WidenTuple<T>>,
 >(
   start: Start,
   deleteCount: DeleteCount,
@@ -182,12 +182,12 @@ export function splice(...args: ReadonlyArray<unknown>): unknown {
   return purry(spliceImplementation, args);
 }
 
-function spliceImplementation<T>(
-  items: ReadonlyArray<T>,
+function spliceImplementation(
+  items: IterableContainer,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): Array<T> {
+  replacement: IterableContainer,
+): IterableContainer {
   // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
   const result = [...items];
   result.splice(start, deleteCount, ...replacement);
