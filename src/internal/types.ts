@@ -295,29 +295,64 @@ export type TupleParts<
   ? TupleParts<Tail, [...Prefix, Head], Suffix>
   : T extends readonly [...infer Head, infer Tail]
     ? TupleParts<Head, Prefix, [Tail, ...Suffix]>
-    : IsTupleRestOnly<T> extends true
-      ? // This is the Array<number | string> case.
+    : // We need to distinguish between e.g. [number? ...Array<string>] and
+      // Array<number | string>.
+      IsTupleRestOnly<T> extends false
+      ? // This is the [number? ...Array<string>] case.
+        T extends readonly [(infer MaybeHead)?, ...infer Tail]
+        ? TupleParts<Tail, [...Prefix, MaybeHead?], Suffix>
+        : never
+      : // This is the Array<number | string> case.
         T extends ReadonlyArray<infer Item>
         ? {
             prefix: Prefix;
             item: Item;
             suffix: Suffix;
           }
-        : never
-      : // This is the [number? ...Array<string>] case.
-        T extends readonly [(infer MaybeHead)?, ...infer Tail]
-        ? TupleParts<Tail, [...Prefix, MaybeHead?], Suffix>
         : never;
-
-/**
- * Helper type for `TupleParts`, to distinguish between e.g.
- * [number? ...Array<string>] and Array<number | string>.
- */
+/** Helper type for `TupleParts`. */
 type IsTupleRestOnly<T> = T extends readonly []
   ? true
   : T extends readonly [unknown?, ...infer Tail]
     ? IsEqual<Readonly<T>, Readonly<Tail>>
     : false;
+
+/** The union of all possible ways to write a tuple as [...left, ...right]. */
+export type TupleSplits<Tuple extends IterableContainer> =
+  // Use a distributive conditional type, in case T is a union:
+  Tuple extends infer T
+    ? TupleParts<T> extends {
+        prefix: infer Prefix extends ReadonlyArray<unknown>;
+        item: infer Item;
+        suffix: infer Suffix extends ReadonlyArray<unknown>;
+      }
+      ? // Three cases: split is in the prefix, in the item, or in the suffix.
+        | FixedTupleSplits<Prefix, [...CoercedArray<Item>, ...Suffix]>
+          | {
+              left: [...Prefix, ...CoercedArray<Item>];
+              right: [...CoercedArray<Item>, ...Suffix];
+            }
+          | (FixedTupleSplits<Suffix> extends infer U
+              ? U extends {
+                  left: infer L extends ReadonlyArray<unknown>;
+                  right: infer R;
+                }
+                ? { left: [...Prefix, ...CoercedArray<Item>, ...L]; right: R }
+                : never
+              : never)
+      : never
+    : never;
+/** Helper type for `TupleSplits`, for tuples without rest params. */
+type FixedTupleSplits<
+  L extends IterableContainer,
+  R extends IterableContainer = [],
+> = L extends readonly []
+  ? { left: L; right: R }
+  : L extends readonly [...infer LHead, infer LTail]
+    ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail, ...R]>
+    : L extends readonly [...infer LHead, (infer LTail)?]
+      ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail?, ...R]>
+      : never;
 
 /**
  * `never[]` and `[]` are not the same type, and in some cases they aren't

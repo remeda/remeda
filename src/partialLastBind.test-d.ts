@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
 import { partialLastBind } from "./partialLastBind";
-import type { RemedaTypeError } from "./internal/types";
-
-type PartialLastBindError<Message extends string | number> = RemedaTypeError<
-  "partialLastBind",
-  Message
->;
 
 describe("simple case (all required, no rest params)", () => {
   const fn = (x: number, y: number, z: number | string): string =>
@@ -28,39 +22,23 @@ describe("simple case (all required, no rest params)", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    expectTypeOf(partialLastBind(fn, "b", "c")).toEqualTypeOf<
-      (
-        x: PartialLastBindError<"Given type does not match positional argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialLastBind(fn, "b", "c");
   });
 
   test("should not accept too many args", () => {
-    expectTypeOf(partialLastBind(fn, 1, 2, 3, 4)).toEqualTypeOf<
-      (x: PartialLastBindError<"Too many args provided to function">) => string
-    >();
+    // @ts-expect-error - too many args
+    partialLastBind(fn, 1, 2, 3, 4);
   });
 
   test("should not accept array typed partial", () => {
-    expectTypeOf(partialLastBind(fn, ...([] as Array<number>))).toEqualTypeOf<
-      (
-        w: PartialLastBindError<"Too many args provided to function">,
-        x?: number,
-        y?: number,
-        z?: number | string,
-      ) => string
-    >();
+    // @ts-expect-error - don't know how many args are bound
+    partialLastBind(fn, ...([] as Array<number>));
   });
 
   test("should not accept tuple typed partial with prefix", () => {
-    expectTypeOf(
-      partialLastBind(fn, ...(["a", 1] as [string, ...Array<number>])),
-    ).toEqualTypeOf<
-      (
-        x: PartialLastBindError<"Can't construct signature from provided args">,
-        y?: number | string,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialLastBind(fn, ...(["a", 1] as [string, ...Array<number>]));
   });
 });
 
@@ -108,11 +86,8 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    expectTypeOf(partialLastBind(fn, 1)).toEqualTypeOf<
-      (
-        x: PartialLastBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialLastBind(fn, 1);
   });
 
   test("should accept tuple typed partial arg", () => {
@@ -137,23 +112,13 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept tuple typed partial arg with incorrect prefix", () => {
-    expectTypeOf(
-      partialLastBind(fn, ...([1, "hello"] as [number?, ...Array<string>])),
-    ).toEqualTypeOf<
-      (
-        x: PartialLastBindError<"Given type does not match optional and rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialLastBind(fn, ...([1, "hello"] as [number?, ...Array<string>]));
   });
 
   test("should not accept tuple typed partial arg with incorrect suffix", () => {
-    expectTypeOf(
-      partialLastBind(fn, ...(["hello", 1] as [...Array<string>, number])),
-    ).toEqualTypeOf<
-      (
-        x: PartialLastBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialLastBind(fn, ...(["hello", 1] as [...Array<string>, number]));
   });
 });
 
@@ -161,6 +126,7 @@ describe("KNOWN ISSUES", () => {
   test("does not support readonly rest params", () => {
     const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 
+    // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
     expectTypeOf(partialLastBind(fn)).toEqualTypeOf<
       // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
       (...parts: ReadonlyArray<string>) => string

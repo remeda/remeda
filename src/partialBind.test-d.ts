@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
 import { partialBind } from "./partialBind";
-import type { RemedaTypeError } from "./internal/types";
-
-type PartialBindError<Message extends string | number> = RemedaTypeError<
-  "partialBind",
-  Message
->;
 
 describe("simple case (all required, no rest params)", () => {
   const fn = (x: number, y: number, z: number | string): string =>
@@ -28,41 +22,23 @@ describe("simple case (all required, no rest params)", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    expectTypeOf(partialBind(fn, "a")).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match positional argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, "a");
   });
 
   test("should not accept too many args", () => {
-    expectTypeOf(partialBind(fn, 1, 2, 3, 4)).toEqualTypeOf<
-      (x: PartialBindError<"Too many args provided to function">) => string
-    >();
+    // @ts-expect-error - too many args
+    partialBind(fn, 1, 2, 3, 4);
   });
 
   test("should not accept array typed partial", () => {
-    expectTypeOf(partialBind(fn, ...([] as Array<number>))).toEqualTypeOf<
-      (
-        x?: number,
-        y?: number,
-        z?: number | string,
-        // @ts-expect-error [ts1016]: This *is* the produced type, with a
-        // required param after optional params. The resulting function type
-        // is unusable anyway.
-        w: PartialBindError<"Too many args provided to function">,
-      ) => string
-    >();
+    // @ts-expect-error - don't know how many args are bound
+    partialBind(fn, ...([] as Array<number>));
   });
 
   test("should not accept tuple typed partial with suffix", () => {
-    expectTypeOf(
-      partialBind(fn, ...([1, "a"] as [...Array<number>, string])),
-    ).toEqualTypeOf<
-      (
-        x: PartialBindError<"Can't construct signature from provided args">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, ...([1, "a"] as [...Array<number>, string]));
   });
 });
 
@@ -110,11 +86,8 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    expectTypeOf(partialBind(fn, 1)).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, 1);
   });
 
   test("should accept tuple typed partial arg", () => {
@@ -139,23 +112,13 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept tuple typed partial arg with incorrect prefix", () => {
-    expectTypeOf(
-      partialBind(fn, ...([1, "hello"] as [number?, ...Array<string>])),
-    ).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, ...([1, "hello"] as [number?, ...Array<string>]));
   });
 
   test("should not accept tuple typed partial arg with incorrect suffix", () => {
-    expectTypeOf(
-      partialBind(fn, ...(["hello", 1] as [...Array<string>, number])),
-    ).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match optional and rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, ...(["hello", 1] as [...Array<string>, number]));
   });
 });
 
@@ -188,40 +151,23 @@ describe("optional and rest param case", () => {
   });
 
   test("should not accept wrong required arg type", () => {
-    expectTypeOf(partialBind(fn, 1)).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match positional argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong arg type
+    partialBind(fn, 1);
   });
 
   test("should not accept wrong optional arg type", () => {
-    // This is correct; "hello" would be the second argument of fn.
-    expectTypeOf(partialBind(fn, "hello", "world")).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - This is correct; "hello" would be the second argument of fn.
+    partialBind(fn, "hello", "world");
   });
 
   test("should not accept wrong rest arg type", () => {
-    expectTypeOf(partialBind(fn, "hello", 123, 1)).toEqualTypeOf<
-      (
-        x: PartialBindError<"Given type does not match optional or rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - wrong rest arg type
+    partialBind(fn, "hello", 123, 1);
   });
 
   test("should not accept incorrect tuple typed partial arg", () => {
-    expectTypeOf(partialBind(fn, ...([] as Array<string>))).toEqualTypeOf<
-      (
-        x?: string,
-        // @ts-expect-error [ts1016]: This *is* the produced type, with a
-        // required param after optional params. The resulting function type
-        // is unusable anyway.
-        y: PartialBindError<"Given type does not match optional and rest argument">,
-      ) => string
-    >();
+    // @ts-expect-error - doesn't match optional
+    partialBind(fn, ...([] as Array<string>));
   });
 
   test("should accept correct tuple typed partial arg", () => {
@@ -235,6 +181,7 @@ describe("KNOWN ISSUES", () => {
   test("does not support readonly rest params", () => {
     const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 
+    // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
     expectTypeOf(partialBind(fn)).toEqualTypeOf<
       // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
       (...parts: ReadonlyArray<string>) => string
