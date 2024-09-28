@@ -61,7 +61,7 @@ type FixedLengthSplice<
 /** Widen a tuple into an array type. */
 type WidenTuple<T extends IterableContainer> =
   T extends ReadonlyArray<infer Item>
-    ? IfNever<Item, ReadonlyArray<unknown>, CoercedArray<WidenLiteral<Item>>>
+    ? IfNever<Item, ReadonlyArray<unknown>, ReadonlyArray<WidenLiteral<Item>>>
     : never;
 
 type LiteralNumberSplice<
