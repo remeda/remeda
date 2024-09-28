@@ -70,7 +70,7 @@ describe("dataFirst", () => {
     ).toStrictEqual({ a: "world" });
   });
 
-  test("Guaranteed to run on each item", () => {
+  test("guaranteed to run on each item", () => {
     const data = ["a", "a", "a", "a", "a", "a"];
 
     const keyFn = vi.fn(identity());
@@ -152,7 +152,7 @@ describe("dataLast", () => {
     ).toStrictEqual({ a: "world" });
   });
 
-  test("Guaranteed to run on each item", () => {
+  test("guaranteed to run on each item", () => {
     const data = ["a", "a", "a", "a", "a", "a"];
 
     const keyFn = vi.fn(identity());

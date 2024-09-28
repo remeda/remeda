@@ -28,7 +28,7 @@ test("empty array", () => {
   expect(fromEntries([])).toStrictEqual({});
 });
 
-test("Single entry", () => {
+test("single entry", () => {
   expect(fromEntries([["a", 1]])).toStrictEqual({ a: 1 });
 });
 

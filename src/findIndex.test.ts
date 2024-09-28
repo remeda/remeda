@@ -18,7 +18,7 @@ describe("data last", () => {
         [10, 20, 30],
         findIndex((x) => x === 20),
       ),
-    ).toEqual(1);
+    ).toBe(1);
   });
 
   test("not found", () => {
@@ -27,6 +27,6 @@ describe("data last", () => {
         [2, 3, 4],
         findIndex((x) => x === 20),
       ),
-    ).toEqual(-1);
+    ).toBe(-1);
   });
 });

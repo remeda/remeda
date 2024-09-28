@@ -16,13 +16,13 @@ describe("uniqueBy", () => {
   ] as const;
 
   it("handles uniq by identity", () => {
-    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity())).toEqual([
+    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity())).toStrictEqual([
       1, 2, 5, 6, 7,
     ]);
   });
 
   it("returns people with uniq names", () => {
-    expect(uniqueBy(people, (p) => p.name)).toEqual([
+    expect(uniqueBy(people, (p) => p.name)).toStrictEqual([
       { name: "John", age: 42 },
       { name: "Jörn", age: 30 },
       { name: "Sarah", age: 33 },
@@ -32,7 +32,7 @@ describe("uniqueBy", () => {
   });
 
   it("returns people with uniq ages", () => {
-    expect(uniqueBy(people, (p) => p.age)).toEqual([
+    expect(uniqueBy(people, (p) => p.age)).toStrictEqual([
       { name: "John", age: 42 },
       { name: "Jörn", age: 30 },
       { name: "Sarah", age: 33 },
@@ -42,7 +42,7 @@ describe("uniqueBy", () => {
   });
 
   it("returns people with uniq first letter of name", () => {
-    expect(uniqueBy(people, (p) => p.name.slice(0, 1))).toEqual([
+    expect(uniqueBy(people, (p) => p.name.slice(0, 1))).toStrictEqual([
       { name: "John", age: 42 },
       { name: "Sarah", age: 33 },
       { name: "Kim", age: 22 },
@@ -61,7 +61,7 @@ describe("uniqueBy", () => {
       );
 
       expect(counter.count).toHaveBeenCalledTimes(4);
-      expect(result).toEqual([1, 2, 5]);
+      expect(result).toStrictEqual([1, 2, 5]);
     });
 
     it("get executed 3 times when take before uniqueBy", () => {
@@ -74,7 +74,7 @@ describe("uniqueBy", () => {
       );
 
       expect(counter.count).toHaveBeenCalledTimes(3);
-      expect(result).toEqual([1, 2]);
+      expect(result).toStrictEqual([1, 2]);
     });
   });
 });

@@ -21,7 +21,9 @@ describe("data first", () => {
     );
 
     const [item] = results;
+
     expect(item).toStrictEqual({ "1": 1, "2": 2, "3": 3, "4": 4, "5": 5 });
+
     for (const result of results) {
       expect(result).toBe(item);
     }
@@ -30,6 +32,7 @@ describe("data first", () => {
   it("if an empty array is provided, it should never iterate, returning a new empty array.", () => {
     const data: Array<unknown> = [];
     const result = mapWithFeedback(data, (acc) => acc, "value");
+
     expect(result).toStrictEqual([]);
     expect(result).not.toBe(data);
   });
@@ -67,6 +70,7 @@ describe("data last", () => {
       mapWithFeedback((acc, x) => acc + x, 100),
       take(2),
     );
+
     expect(counter).toHaveBeenCalledTimes(2);
   });
 
@@ -81,6 +85,7 @@ describe("data last", () => {
         return acc + x;
       }, 100),
     );
+
     expect(indices).toStrictEqual([0, 1, 2, 3, 4]);
     expect(lazyItems).toStrictEqual([
       [1],

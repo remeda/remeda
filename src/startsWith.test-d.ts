@@ -115,6 +115,7 @@ describe("data-last", () => {
       [] as Array<`foo_${number}`>,
       startsWith("foo"),
     );
+    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`foo_${number}`>>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
@@ -143,6 +144,7 @@ describe("data-last", () => {
       [] as Array<`cat_${number}` | `dog_${boolean}`>,
       startsWith("c"),
     );
+    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`cat_${number}`>>();
     expectTypeOf(no).toEqualTypeOf<Array<`dog_${boolean}`>>();
   });

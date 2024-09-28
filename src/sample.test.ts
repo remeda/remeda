@@ -8,6 +8,7 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     "returns the right number of items",
     (sampleSize) => {
       const result = sample(array, sampleSize);
+
       expect(result).toHaveLength(sampleSize);
     },
   );
@@ -35,11 +36,13 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
       const [item] = sample(array, 1);
       collector.add(item);
     }
+
     expect(collector.size).toBeGreaterThan(1);
   });
 
   it.each(allIndices(array))("doesn't return repetitions", (sampleSize) => {
     const result = sample(array, sampleSize);
+
     expect(result).toHaveLength(new Set(result).size);
   });
 
@@ -52,7 +55,9 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
       // in the input array.
 
       const currentInputIndex = array.indexOf(item);
+
       expect(currentInputIndex).toBeGreaterThan(lastInputIndex);
+
       lastInputIndex = currentInputIndex;
     }
   });
@@ -62,6 +67,7 @@ describe("identity", () => {
   it("for full (=== n) sample size", () => {
     const array = [1, 2, 3];
     const result = sample(array, 3);
+
     expect(result).toStrictEqual(array);
     expect(result).not.toBe(array);
   });
@@ -69,6 +75,7 @@ describe("identity", () => {
   it("for large (> n) sample sizes", () => {
     const array = [1, 2, 3];
     const result = sample(array, 10);
+
     expect(result).toStrictEqual(array);
     expect(result).not.toBe(array);
   });
@@ -76,6 +83,7 @@ describe("identity", () => {
   it("on empty arrays", () => {
     const array: Array<number> = [];
     const result = sample(array, 1);
+
     expect(result).toStrictEqual(array);
     expect(result).not.toBe(array);
   });
@@ -83,6 +91,7 @@ describe("identity", () => {
   it("on empty arrays and sample size 0", () => {
     const array: Array<number> = [];
     const result = sample(array, 0);
+
     expect(result).toStrictEqual(array);
     expect(result).not.toBe(array);
   });
@@ -91,10 +100,11 @@ describe("identity", () => {
 describe("edge cases", () => {
   it("works on empty arrays", () => {
     const result = sample([], 1);
+
     expect(result).toStrictEqual([]);
   });
 
-  it("Treats negative sample sizes as 0", () => {
+  it("treats negative sample sizes as 0", () => {
     expect(sample([1, 2, 3], -1 as number)).toStrictEqual([]);
   });
 
@@ -107,12 +117,14 @@ describe("sampleSize === n", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 0);
+
     expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 0);
+
     expect(result).toStrictEqual([]);
   });
 });
@@ -121,12 +133,14 @@ describe("sampleSize > n", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 10);
+
     expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 10);
+
     expect(result).toStrictEqual([]);
   });
 });
@@ -135,12 +149,14 @@ describe("non-const sampleSize", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
+
     expect(result).toStrictEqual([]);
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 5 as number);
+
     expect(result).toStrictEqual([]);
   });
 });

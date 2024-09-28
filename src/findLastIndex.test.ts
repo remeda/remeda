@@ -7,7 +7,7 @@ describe("data first", () => {
   });
 
   test("findLast first value", () => {
-    expect(findLastIndex([1, 2, 3, 4], (x) => x === 1)).toEqual(0);
+    expect(findLastIndex([1, 2, 3, 4], (x) => x === 1)).toBe(0);
   });
 
   test("findLastIndex -1", () => {
@@ -22,7 +22,7 @@ describe("data last", () => {
         [1, 2, 3, 4],
         findLastIndex((x) => x % 2 === 1),
       ),
-    ).toEqual(2);
+    ).toBe(2);
   });
 
   test("not found", () => {

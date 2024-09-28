@@ -43,6 +43,7 @@ it("maintains order for multiple copies", () => {
 it("returns a shallow copy even when all items match", () => {
   const data = [1, 2, 3];
   const result = intersection(data, [1, 2, 3]);
+
   expect(result).toStrictEqual(data);
   expect(result).not.toBe(data);
 });
@@ -51,6 +52,7 @@ describe("piping", () => {
   test("lazy", () => {
     const mock = vi.fn(identity());
     const result = pipe([1, 2, 3, 4, 5, 6], map(mock), intersection([4, 2]));
+
     expect(mock).toHaveBeenCalledTimes(4);
     expect(result).toStrictEqual([2, 4]);
   });

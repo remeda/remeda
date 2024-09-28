@@ -2,34 +2,34 @@ import { ALL_TYPES_DATA_PROVIDER, TestClass } from "../test/typesDataProvider";
 import { isObjectType } from "./isObjectType";
 
 it("accepts simple objects", () => {
-  expect(isObjectType({ a: 123 })).toEqual(true);
+  expect(isObjectType({ a: 123 })).toBe(true);
 });
 
 it("accepts trivial empty objects", () => {
-  expect(isObjectType({})).toEqual(true);
+  expect(isObjectType({})).toBe(true);
 });
 
 it("rejects strings", () => {
-  expect(isObjectType("asd")).toEqual(false);
+  expect(isObjectType("asd")).toBe(false);
 });
 
 it("rejects null", () => {
-  expect(isObjectType(null)).toEqual(false);
+  expect(isObjectType(null)).toBe(false);
 });
 
 it("accepts arrays", () => {
-  expect(isObjectType([1, 2, 3])).toEqual(true);
+  expect(isObjectType([1, 2, 3])).toBe(true);
 });
 
 it("accepts classes", () => {
-  expect(isObjectType(new TestClass())).toEqual(true);
+  expect(isObjectType(new TestClass())).toBe(true);
 });
 
 it("accepts null prototypes", () => {
-  expect(isObjectType(Object.create(null))).toEqual(true);
+  expect(isObjectType(Object.create(null))).toBe(true);
 });
 
-test("ALL_TYPES_DATA_PROVIDER", () => {
+test("everything from ALL_TYPES_DATA_PROVIDER", () => {
   expect(ALL_TYPES_DATA_PROVIDER.filter(isObjectType)).toMatchInlineSnapshot(`
       [
         [
