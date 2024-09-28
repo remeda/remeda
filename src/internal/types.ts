@@ -1,5 +1,6 @@
 import type {
   EmptyObject,
+  IsEqual,
   IfNever,
   IsAny,
   IsLiteral,
@@ -294,13 +295,29 @@ export type TupleParts<
   ? TupleParts<Tail, [...Prefix, Head], Suffix>
   : T extends readonly [...infer Head, infer Tail]
     ? TupleParts<Head, Prefix, [Tail, ...Suffix]>
-    : T extends ReadonlyArray<infer Item>
-      ? {
-          prefix: Prefix;
-          item: Item;
-          suffix: Suffix;
-        }
-      : never;
+    : IsTupleRestOnly<T> extends true
+      ? // This is the Array<number | string> case.
+        T extends ReadonlyArray<infer Item>
+        ? {
+            prefix: Prefix;
+            item: Item;
+            suffix: Suffix;
+          }
+        : never
+      : // This is the [number? ...Array<string>] case.
+        T extends readonly [(infer MaybeHead)?, ...infer Tail]
+        ? TupleParts<Tail, [...Prefix, MaybeHead?], Suffix>
+        : never;
+
+/**
+ * Helper type for `TupleParts`, to distinguish between e.g.
+ * [number? ...Array<string>] and Array<number | string>.
+ */
+type IsTupleRestOnly<T> = T extends readonly []
+  ? true
+  : T extends readonly [unknown?, ...infer Tail]
+    ? IsEqual<Readonly<T>, Readonly<Tail>>
+    : false;
 
 /**
  * `never[]` and `[]` are not the same type, and in some cases they aren't
