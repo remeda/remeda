@@ -208,6 +208,8 @@ export default tseslint.config(
             "lazy",
             "strict",
             "category",
+            "copyDoc",
+            "pasteDoc",
           ],
         },
       ],
@@ -249,14 +251,17 @@ export default tseslint.config(
           contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
         },
       ],
-      "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
-      "jsdoc/require-param": "warn",
+      "jsdoc/require-description": ["error", { exemptedBy: ["pasteDoc"] }],
+      "jsdoc/require-example": [
+        "warn",
+        { enableFixer: false, exemptedBy: ["pasteDoc"] },
+      ],
+      "jsdoc/require-param": ["warn", { exemptedBy: ["pasteDoc"] }],
       // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-returns": "off",
+      "jsdoc/require-returns": ["off", { exemptedBy: ["pasteDoc"] }],
       // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-throws": "off",
-      "jsdoc/require-yields": "error",
+      "jsdoc/require-throws": ["off", { exemptedBy: ["pasteDoc"] }],
+      "jsdoc/require-yields": ["error", { exemptedBy: ["pasteDoc"] }],
 
       // Style
       "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
@@ -275,6 +280,8 @@ export default tseslint.config(
           tagSequence: [
             {
               tags: [
+                "copyDoc",
+                "pasteDoc",
                 "param",
                 "returns",
                 "signature",
@@ -417,7 +424,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["*.config.js", "*.config.ts"],
+    files: ["*.config.js", "*.config.ts", "scripts/**/*.*"],
     rules: {
       "jsdoc/require-example": "off",
       "jsdoc/require-param": "off",

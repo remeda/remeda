@@ -1,4 +1,4 @@
-import ts from "node:fs/promises";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { defineConfig } from "tsup";
 
@@ -36,7 +36,7 @@ export default defineConfig(async () => ({
  * regular glob.
  */
 async function getEntries(sourceDirectory: string): Promise<Array<string>> {
-  const files = await ts.readdir(sourceDirectory);
+  const files = await fs.readdir(sourceDirectory);
   return files
     .filter(
       (fileName) =>
