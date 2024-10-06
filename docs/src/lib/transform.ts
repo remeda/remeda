@@ -204,8 +204,7 @@ function createCategoriesLookup(
       continue;
     }
 
-    // TODO: We can enforce that only a predefined set of categories is
-    // acceptable and break the build on any unknown categories
+    // TODO: We can enforce that only a predefined set of categories is acceptable and break the build on any unknown categories
     for (const id of children) {
       result.set(id, title);
     }
