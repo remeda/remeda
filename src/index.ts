@@ -77,6 +77,7 @@ export * from "./mapKeys";
 export * from "./mapToObj";
 export * from "./mapValues";
 export * from "./mapWithFeedback";
+export * from "./mean";
 export * from "./meanBy";
 export * from "./merge";
 export * from "./mergeAll";
