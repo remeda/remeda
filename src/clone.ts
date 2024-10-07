@@ -7,7 +7,7 @@ import { purry } from "./purry";
 
 /**
  * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
- * `Array`, `number`, `string`, `boolean`, `Date`, `RegExp`. Functions are
+ * `Array`, `number`, `string`, `boolean`, `Date`, and `RegExp`. Functions are
  * assigned by reference rather than copied. Class instances or any other
  * built-in type that isn't mentioned above are not supported (but might
  * work).
