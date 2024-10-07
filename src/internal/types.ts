@@ -23,6 +23,8 @@ export type BrandedReturn<F extends (...args: any) => any> = (
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
+export type NonEmptyReadonlyArray<T> = readonly [T, ...ReadonlyArray<T>];
+
 export type Mapped<T extends IterableContainer, K> = {
   -readonly [P in keyof T]: K;
 };
