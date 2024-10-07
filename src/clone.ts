@@ -6,9 +6,11 @@
 import { purry } from "./purry";
 
 /**
- * Creates a deep copy of the value. Supported types: `Array`, `Object`,
- * `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by
- * reference rather than copied.
+ * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
+ * `Array`, `number`, `string`, `boolean`, `Date`, `RegExp`. Functions are
+ * assigned by reference rather than copied. Class instances or any other
+ * built-in type that isn't mentioned above are not supported (but might
+ * work).
  *
  * @param data - The object to clone.
  * @signature
@@ -21,9 +23,11 @@ import { purry } from "./purry";
 export function clone<T>(data: T): T;
 
 /**
- * Creates a deep copy of the value. Supported types: `Array`, `Object`,
- * `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by
- * reference rather than copied.
+ * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
+ * `Array`, `number`, `string`, `boolean`, `Date`, `RegExp`. Functions are
+ * assigned by reference rather than copied. Class instances or any other
+ * built-in type that isn't mentioned above are not supported (but might
+ * work).
  *
  * @signature
  *   R.clone()(data)
