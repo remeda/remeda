@@ -76,7 +76,7 @@ function meanImplementation<
   T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] | undefined {
   if (data.length === 0) {
-    return;
+    return undefined;
   }
 
   const dataSum = sum(data);
