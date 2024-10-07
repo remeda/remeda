@@ -1,19 +1,19 @@
-import type { IterableContainer } from "./internal/types";
+import type {
+  IterableContainer,
+  NonEmptyArray,
+  NonEmptyReadonlyArray,
+} from "./internal/types";
 import { purry } from "./purry";
 import { sum } from "./sum";
 
 type Mean<T extends IterableContainer<bigint> | IterableContainer<number>> =
-  // Empty arrays would always result in undefined.
-  T extends readonly []
-    ? undefined
-    : // Non-empty bigint arrays will always result in bigint.
-      T extends readonly [bigint, ...ReadonlyArray<unknown>]
-      ? bigint
-      : // But an empty bigint array would result in undefined.
-        T[number] extends bigint
+  T extends NonEmptyArray<bigint> | NonEmptyReadonlyArray<bigint>
+    ? bigint
+    : T extends NonEmptyArray<number> | NonEmptyReadonlyArray<number>
+      ? number
+      : T extends [] | readonly []
         ? undefined
-        : // Non-bigint arrays are always handled correctly.
-          number;
+        : number | undefined;
 
 /**
  * Returns the mean of the elements of an array.
