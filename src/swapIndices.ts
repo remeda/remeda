@@ -66,12 +66,7 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 > =
-  // TODO: Because of limitations on the typescript version used in Remeda we
-  // can't build a proper Absolute number type so we can't implement proper
-  // typing for negative indices and have to opt for a less- strict type
-  // instead.
-  // Check out the history for the PR that introduced this TODO to see how it
-  // could be implemented.
+  // TODO: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less- strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
   IsNonNegative<K1> extends false
     ? Array<T[number]>
     : IsNonNegative<K2> extends false

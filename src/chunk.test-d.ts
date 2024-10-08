@@ -148,8 +148,7 @@ describe("literal size", () => {
                 ...Array<[boolean, boolean]>,
                 [boolean, boolean] | [boolean],
               ]
-            // TODO: Ideally the following two lines should be folded into a
-            // single line: `[[number] | [number, boolean]]`
+            // TODO: Ideally the following two lines should be folded into a single line: `[[number] | [number, boolean]]`
             | [[number, boolean]]
             | [[number]]
           >();
@@ -182,8 +181,7 @@ describe("literal size", () => {
                 ...Array<[boolean, boolean]>,
                 [boolean, boolean] | [boolean],
               ]
-            // TODO: Ideally the following two lines should be folded into a
-            // single line: `[[number, number], [number] | [number, boolean]]`
+            // TODO: Ideally the following two lines should be folded into a single line: `[[number, number], [number] | [number, boolean]]`
             | [[number, number], [number, boolean]]
             | [[number, number], [number]]
           >();
@@ -234,9 +232,7 @@ describe("literal size", () => {
         expectTypeOf(result).toEqualTypeOf<
           | [[number, boolean], ...Array<[boolean, boolean]>, [boolean, string]]
           | [[number, boolean], ...Array<[boolean, boolean]>, [string]]
-          // TODO: This is the same type as the previous line (for an empty
-          // array), but it's hard to build the types to be aware of it because
-          // they come from different branches of the type.
+          // TODO: This is the same type as the previous line (for an empty array), but it's hard to build the types to be aware of it because they come from different branches of the type.
           | [[number, boolean], [string]]
           | [[number, string]]
         >();
@@ -280,8 +276,7 @@ describe("literal size", () => {
                 ...Array<[boolean, boolean]>,
                 [boolean, boolean] | [boolean],
               ]
-            // TODO: Ideally the following two lines should be folded into a
-            // single line: `[[number] | [number, boolean]]`
+            // TODO: Ideally the following two lines should be folded into a single line: `[[number] | [number, boolean]]`
             | [[number, boolean]]
             | [[number]]
           >();
@@ -314,8 +309,7 @@ describe("literal size", () => {
                 ...Array<[boolean, boolean]>,
                 [boolean, boolean] | [boolean],
               ]
-            // TODO: Ideally the following two lines should be folded into a
-            // single line: `[[number, number], [number] | [number, boolean]]`
+            // TODO: Ideally the following two lines should be folded into a single line: `[[number, number], [number] | [number, boolean]]`
             | [[number, number], [number, boolean]]
             | [[number, number], [number]]
           >();
@@ -366,9 +360,7 @@ describe("literal size", () => {
         expectTypeOf(result).toEqualTypeOf<
           | [[number, boolean], ...Array<[boolean, boolean]>, [boolean, string]]
           | [[number, boolean], ...Array<[boolean, boolean]>, [string]]
-          // TODO: This is the same type as the previous line (for an empty
-          // array), but it's hard to build the types to be aware of it because
-          // they come from different branches of the type.
+          // TODO: This is the same type as the previous line (for an empty array), but it's hard to build the types to be aware of it because they come from different branches of the type.
           | [[number, boolean], [string]]
           | [[number, string]]
         >();

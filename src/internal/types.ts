@@ -205,9 +205,7 @@ export type UpsertProp<T, K extends PropertyKey, V> = Simplify<
 type IsSingleLiteral<K> =
   IsLiteral<K> extends true ? (IsUnion<K> extends true ? false : true) : false;
 
-// TODO: This type is copied from type-fest because it isn't
-// exported. It's part of the "internal" types. We should check back in a while
-// to see if this type is added to the public offering.
+// TODO: This type is copied from type-fest because it isn't exported. It's part of the "internal" types. We should check back in a while to see if this type is added to the public offering.
 export type IsUnion<T> = InternalIsUnion<T>;
 type InternalIsUnion<T, U = T> = (
   IsNever<T> extends true

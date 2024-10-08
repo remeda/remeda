@@ -60,6 +60,5 @@ describe("data_last", () => {
   });
 });
 
-// TODO: The Remeda `isNumber` utility isn't narrowing our types correctly for
-// our tests here.
+// TODO: The Remeda `isNumber` utility isn't narrowing our types correctly for our tests here.
 const isNumber = <T>(x: T): x is Extract<T, number> => typeof x === "number";

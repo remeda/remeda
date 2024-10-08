@@ -18,9 +18,7 @@ type Drop<T extends IterableContainer, N extends number> =
         // fallback to the "legacy" typing where we convert our output to a
         // simple array. This is also the case when N is not a literal value
         // (e.g. it is `number`).
-        // TODO: We can improve this type by returning a union of all possible
-        // dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> |
-        // Drop<T, 3> | ...).
+        // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
         Array<T[number]>
       : // We have an non-negative integer N so we start chopping up the array.
         // first we take a look at its prefix:
