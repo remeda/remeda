@@ -1,5 +1,6 @@
 import type {
   EmptyObject,
+  IsEqual,
   IfNever,
   IsAny,
   IsLiteral,
@@ -12,6 +13,27 @@ import type {
   Split,
   Tagged,
 } from "type-fest";
+
+/* v8 ignore next 2 */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for RemedaTypeError
+const RemedaErrorSymbol = Symbol("RemedaError");
+
+/**
+ * Used for reporting type errors in a more useful way than `never`. Use
+ * numbers for things that should never happen.
+ */
+export type RemedaTypeError<
+  FunctionName extends string,
+  Message extends string | number,
+> = Message extends string
+  ? Tagged<
+      typeof RemedaErrorSymbol,
+      `RemedaTypeError(${FunctionName}): ${Message}.`
+    >
+  : RemedaTypeError<
+      FunctionName,
+      `Internal error ${Message}. Please open a Remeda GitHub issue.`
+    >;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const TAG_NAME_BRANDED_RETURN: unique symbol;
@@ -257,9 +279,9 @@ export type NTuple<
 > = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;
 
 /**
- * Takes an array and returns the types that make up it's parts. The suffix is
- * anything before the rest parameter (if any), the prefix is anything after the
- * rest parameter (if any), and the item is the type of the rest parameter.
+ * Takes an array and returns the types that make up its parts. The prefix is
+ * anything before the rest parameter (if any), the suffix is anything after
+ * the rest parameter (if any), and the item is the type of the rest parameter.
  *
  * The output could be used to reconstruct the input: `[
  *   ...TupleParts<T>["prefix"],
@@ -275,12 +297,63 @@ export type TupleParts<
   ? TupleParts<Tail, [...Prefix, Head], Suffix>
   : T extends readonly [...infer Head, infer Tail]
     ? TupleParts<Head, Prefix, [Tail, ...Suffix]>
-    : T extends ReadonlyArray<infer Item>
-      ? {
-          prefix: Prefix;
-          item: Item;
-          suffix: Suffix;
-        }
+    : // We need to distinguish between e.g. [number? ...Array<string>] and
+      // Array<number | string>.
+      IsTupleRestOnly<T> extends false
+      ? // This is the [number? ...Array<string>] case.
+        T extends readonly [(infer MaybeHead)?, ...infer Tail]
+        ? TupleParts<Tail, [...Prefix, MaybeHead?], Suffix>
+        : never
+      : // This is the Array<number | string> case.
+        T extends ReadonlyArray<infer Item>
+        ? {
+            prefix: Prefix;
+            item: Item;
+            suffix: Suffix;
+          }
+        : never;
+/** Helper type for `TupleParts`. */
+type IsTupleRestOnly<T> = T extends readonly []
+  ? true
+  : T extends readonly [unknown?, ...infer Tail]
+    ? IsEqual<Readonly<T>, Readonly<Tail>>
+    : false;
+
+/** The union of all possible ways to write a tuple as [...left, ...right]. */
+export type TupleSplits<Tuple extends IterableContainer> =
+  // Use a distributive conditional type, in case T is a union:
+  Tuple extends infer T
+    ? TupleParts<T> extends {
+        prefix: infer Prefix extends ReadonlyArray<unknown>;
+        item: infer Item;
+        suffix: infer Suffix extends ReadonlyArray<unknown>;
+      }
+      ? // Three cases: split is in the prefix, in the item, or in the suffix.
+        | FixedTupleSplits<Prefix, [...CoercedArray<Item>, ...Suffix]>
+          | {
+              left: [...Prefix, ...CoercedArray<Item>];
+              right: [...CoercedArray<Item>, ...Suffix];
+            }
+          | (FixedTupleSplits<Suffix> extends infer U
+              ? U extends {
+                  left: infer L extends ReadonlyArray<unknown>;
+                  right: infer R;
+                }
+                ? { left: [...Prefix, ...CoercedArray<Item>, ...L]; right: R }
+                : never
+              : never)
+      : never
+    : never;
+/** Helper type for `TupleSplits`, for tuples without rest params. */
+type FixedTupleSplits<
+  L extends IterableContainer,
+  R extends IterableContainer = [],
+> = L extends readonly []
+  ? { left: L; right: R }
+  : L extends readonly [...infer LHead, infer LTail]
+    ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail, ...R]>
+    : L extends readonly [...infer LHead, (infer LTail)?]
+      ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail?, ...R]>
       : never;
 
 /**
