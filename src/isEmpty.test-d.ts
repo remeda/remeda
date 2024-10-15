@@ -56,6 +56,19 @@ describe("objects", () => {
       expectTypeOf(data).toEqualTypeOf<Partial<Record<"a" | "b", number>>>();
     }
   });
+
+  test("interfaces", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- Intentional
+    interface MyInterface {
+      a: number;
+    }
+    const data = { a: 123 } as MyInterface;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<"a", never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<MyInterface>();
+    }
+  });
 });
 
 describe("strings", () => {
