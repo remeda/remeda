@@ -733,8 +733,7 @@ describe("non-const sampleSize", () => {
     ];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });
@@ -749,8 +748,7 @@ describe("non-const sampleSize", () => {
     ];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });
