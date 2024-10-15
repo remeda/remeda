@@ -38,12 +38,12 @@ describe("numbers", () => {
 describe("bigints", () => {
   test("arbitrary arrays", () => {
     const result = median([] as Array<bigint>);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
   });
 
   test("arbitrary readonly arrays", () => {
     const result = median([] as ReadonlyArray<bigint>);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
   });
 
   test("arbitrary non-empty arrays", () => {
@@ -85,12 +85,12 @@ describe("dataLast", () => {
 
   test("arbitrary bigint arrays", () => {
     const result = pipe([] as Array<bigint>, median());
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
   });
 
   test("arbitrary readonly bigint arrays", () => {
     const result = pipe([] as ReadonlyArray<bigint>, median());
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
+    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
   });
 });
 

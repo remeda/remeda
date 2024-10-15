@@ -12,7 +12,9 @@ type Median<T extends IterableContainer<bigint> | IterableContainer<number>> =
       ? number
       : T extends [] | readonly []
         ? undefined
-        : number | undefined;
+        : T[number] extends bigint
+          ? bigint | undefined
+          : number | undefined;
 
 /**
  * Returns the median of the elements of an array.
