@@ -3,11 +3,7 @@ import type {
   NonEmptyArray,
   NonEmptyReadonlyArray,
 } from "./internal/types";
-import { isBigInt } from "./isBigInt";
-import { isNumber } from "./isNumber";
-import { mean } from "./mean";
 import { purry } from "./purry";
-import { sort } from "./sort";
 
 type Median<T extends IterableContainer<bigint> | IterableContainer<number>> =
   T extends NonEmptyArray<bigint> | NonEmptyReadonlyArray<bigint>
@@ -83,7 +79,7 @@ function medianImplementation<
   }
 
   // Sort taking into account bigint values
-  const sortedData = sort(data, (a, b) => (a > b ? 1 : a < b ? -1 : 0));
+  const sortedData = [...data].sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
 
   const middleIndex = Math.floor(sortedData.length / 2);
 
@@ -93,11 +89,11 @@ function medianImplementation<
   }
 
   // For even length, return the mean of the two middle elements
-  const middleElements = [sortedData[middleIndex - 1], sortedData[middleIndex]];
+  const firstMiddle = sortedData[middleIndex];
+  const secondMiddle = sortedData[middleIndex - 1];
 
-  if (middleElements.every(isBigInt) || middleElements.every(isNumber)) {
-    return mean(middleElements);
-  }
-
-  throw new Error("median: invalid types or unexpected input encountered");
+  return typeof firstMiddle === "bigint" && typeof secondMiddle === "bigint"
+    ? // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+      firstMiddle + secondMiddle / 2n
+    : ((firstMiddle as number) + (secondMiddle as number)) / 2;
 }
