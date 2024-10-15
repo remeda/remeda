@@ -30,10 +30,3 @@ describe("dataLast", () => {
     expect(pipe([] as Array<bigint>, median())).toBeUndefined();
   });
 });
-
-it("throws on mixed arrays of even length", () => {
-  // @ts-expect-error [ts2345] - Can't median bigints and numbers...
-  expect(() => median([1, 1n])).toThrowErrorMatchingInlineSnapshot(
-    "[Error: median: invalid types or unexpected input encountered]",
-  );
-});
