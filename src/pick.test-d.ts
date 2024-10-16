@@ -1,5 +1,4 @@
-import { identity } from "./identity";
-import { mapValues } from "./mapValues";
+import { keys } from "./keys";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
@@ -23,11 +22,11 @@ describe("data first", () => {
     const raw = pick(data, ["foo"]);
     expectTypeOf(raw).toEqualTypeOf<{ foo: string }>();
 
-    const wrapped = mapValues(pick(data, ["foo"]), identity());
-    expectTypeOf(wrapped).toEqualTypeOf<{ foo: string }>();
+    const wrapped = keys(pick(data, ["foo"]));
+    expectTypeOf(wrapped).toEqualTypeOf<Array<"foo">>();
 
-    const withConstKeys = mapValues(pick(data, ["foo"] as const), identity());
-    expectTypeOf(withConstKeys).toEqualTypeOf<{ foo: string }>();
+    const withConstKeys = keys(pick(data, ["foo"] as const));
+    expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
   });
 });
 
