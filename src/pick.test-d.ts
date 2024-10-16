@@ -1,3 +1,5 @@
+import { identity } from "./identity";
+import { mapValues } from "./mapValues";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
@@ -13,6 +15,19 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<
       Pick<{ a: number } | { a?: number; b: string }, "a">
     >();
+  });
+
+  it("infers the key types from the keys array (issue 886)", () => {
+    const data = { foo: "hello", bar: "world" };
+
+    const raw = pick(data, ["foo"]);
+    expectTypeOf(raw).toEqualTypeOf<{ foo: string }>();
+
+    const wrapped = mapValues(pick(data, ["foo"]), identity());
+    expectTypeOf(wrapped).toEqualTypeOf<{ foo: string }>();
+
+    const withConstKeys = mapValues(pick(data, ["foo"] as const), identity());
+    expectTypeOf(withConstKeys).toEqualTypeOf<{ foo: string }>();
   });
 });
 
