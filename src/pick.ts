@@ -34,14 +34,14 @@ export function pick(...args: ReadonlyArray<unknown>): unknown {
   return purry(pickImplementation, args);
 }
 
-function pickImplementation<T extends object, K extends keyof T>(
-  object: T,
-  names: ReadonlyArray<K>,
-): Pick<T, K> {
-  const out: Partial<Pick<T, K>> = {};
-  for (const name of names) {
-    if (name in object) {
-      out[name] = object[name];
+function pickImplementation<
+  T extends object,
+  Keys extends ReadonlyArray<keyof T>,
+>(object: T, keys: Keys): Pick<T, Keys[number]> {
+  const out: Partial<Pick<T, Keys[number]>> = {};
+  for (const key of keys) {
+    if (key in object) {
+      out[key] = object[key];
     }
   }
   // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.
