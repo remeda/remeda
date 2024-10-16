@@ -16,7 +16,8 @@ describe("data first", () => {
     >();
   });
 
-  it("infers the key types from the keys array (issue 886)", () => {
+  // @see https://github.com/remeda/remeda/issues/886
+  it("infers the key types from the keys array", () => {
     const data = { foo: "hello", bar: "world" };
 
     const raw = pick(data, ["foo"]);
