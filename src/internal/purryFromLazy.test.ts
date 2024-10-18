@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type --
- * purry is all about functions, so we need to turn these off to make it easy
- * to write the tests.
- */
-
 import type { LazyEvaluator } from "../pipe";
 import { purryFromLazy } from "./purryFromLazy";
 
