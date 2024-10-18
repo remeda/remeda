@@ -8,16 +8,17 @@ import type {
   TupleSplits,
 } from "./internal/types";
 
-type PartialLastBindError<Message extends string | number> = [
-  RemedaTypeError<"partialLastBind", Message>,
-];
+type PartialLastBindError<Message extends string | number> = RemedaTypeError<
+  "partialLastBind",
+  Message
+>;
 
 type TupleSuffix<T extends IterableContainer> = TupleSplits<T>["right"];
 
 type RemoveSuffix<
   T extends IterableContainer,
   Suffix extends TupleSuffix<T>,
-> = Suffix["length"] extends 0
+> = Suffix extends readonly []
   ? T
   : T extends readonly [...infer TRest, infer TLast]
     ? Suffix extends readonly [...infer SuffixRest, infer _SuffixLast]
@@ -39,14 +40,11 @@ type RemoveSuffix<
         // is an internal error.
         PartialLastBindError<1>;
 
-type PartiallyLastBound<
-  F extends (...args: any) => any,
-  SuffixArgs extends TupleSuffix<Parameters<F>>,
-> = (...rest: RemoveSuffix<Parameters<F>, SuffixArgs>) => ReturnType<F>;
-
 /**
  * Creates a function that calls `func` with `partial` put after the arguments
  * it receives.
+ *
+ * Note this doesn't support functions with both optional and rest parameters.
  *
  * @param func - The function to wrap.
  * @param partial - The arguments to put after.
@@ -64,6 +62,9 @@ type PartiallyLastBound<
 export function partialLastBind<
   F extends (...args: any) => any,
   SuffixArgs extends TupleSuffix<Parameters<F>>,
->(func: F, ...partial: SuffixArgs): PartiallyLastBound<F, SuffixArgs> {
+>(
+  func: F,
+  ...partial: SuffixArgs
+): (...rest: RemoveSuffix<Parameters<F>, SuffixArgs>) => ReturnType<F> {
   return (...rest) => func(...rest, ...partial);
 }

@@ -310,7 +310,7 @@ export type TupleParts<
             suffix: Suffix;
           }
         : never;
-/** Helper type for `TupleParts`. */
+/** Helper type for `TupleParts`. Checks if T = ReadonlyArray<U> for some U. */
 type IsTupleRestOnly<T> = T extends readonly []
   ? true
   : T extends readonly [unknown?, ...infer Tail]
@@ -346,13 +346,15 @@ export type TupleSplits<Tuple extends IterableContainer> =
 type FixedTupleSplits<
   L extends IterableContainer,
   R extends IterableContainer = [],
-> = L extends readonly []
-  ? { left: L; right: R }
-  : L extends readonly [...infer LHead, infer LTail]
-    ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail, ...R]>
-    : L extends readonly [...infer LHead, (infer LTail)?]
-      ? { left: L; right: R } | FixedTupleSplits<LHead, [LTail?, ...R]>
-      : never;
+> =
+  | { left: L; right: R }
+  | (L extends readonly []
+      ? never
+      : L extends readonly [...infer LHead, infer LTail]
+        ? FixedTupleSplits<LHead, [LTail, ...R]>
+        : L extends readonly [...infer LHead, (infer LTail)?]
+          ? FixedTupleSplits<LHead, [LTail?, ...R]>
+          : never);
 
 /**
  * `never[]` and `[]` are not the same type, and in some cases they aren't

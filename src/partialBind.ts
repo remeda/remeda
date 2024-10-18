@@ -8,16 +8,17 @@ import type {
   TupleSplits,
 } from "./internal/types";
 
-type PartialBindError<Message extends string | number> = [
-  RemedaTypeError<"partialBind", Message>,
-];
+type PartialBindError<Message extends string | number> = RemedaTypeError<
+  "partialBind",
+  Message
+>;
 
 type TuplePrefix<T extends IterableContainer> = TupleSplits<T>["left"];
 
 type RemovePrefix<
   T extends IterableContainer,
   Prefix extends TuplePrefix<T>,
-> = Prefix["length"] extends 0
+> = Prefix extends readonly []
   ? T
   : T extends readonly [infer THead, ...infer TRest]
     ? Prefix extends readonly [infer _PrefixHead, ...infer PrefixRest]
@@ -39,11 +40,6 @@ type RemovePrefix<
         // an internal error.
         PartialBindError<1>;
 
-type PartiallyBound<
-  F extends (...args: any) => any,
-  PrefixArgs extends TuplePrefix<Parameters<F>>,
-> = (...rest: RemovePrefix<Parameters<F>, PrefixArgs>) => ReturnType<F>;
-
 /**
  * Creates a function that calls `func` with `partial` put before the arguments
  * it receives.
@@ -64,6 +60,9 @@ type PartiallyBound<
 export function partialBind<
   F extends (...args: any) => any,
   PrefixArgs extends TuplePrefix<Parameters<F>>,
->(func: F, ...partial: PrefixArgs): PartiallyBound<F, PrefixArgs> {
+>(
+  func: F,
+  ...partial: PrefixArgs
+): (...rest: RemovePrefix<Parameters<F>, PrefixArgs>) => ReturnType<F> {
   return (...rest) => func(...partial, ...rest);
 }

@@ -22,22 +22,22 @@ describe("simple case (all required, no rest params)", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, "a");
   });
 
   test("should not accept too many args", () => {
-    // @ts-expect-error - too many args
+    // @ts-expect-error [ts2345] - too many args
     partialBind(fn, 1, 2, 3, 4);
   });
 
   test("should not accept array typed partial", () => {
-    // @ts-expect-error - don't know how many args are bound
+    // @ts-expect-error [ts2345] - don't know how many args are bound
     partialBind(fn, ...([] as Array<number>));
   });
 
   test("should not accept tuple typed partial with suffix", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, ...([1, "a"] as [...Array<number>, string]));
   });
 });
@@ -86,7 +86,7 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept wrong arg type", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, 1);
   });
 
@@ -112,12 +112,12 @@ describe("simple rest param case", () => {
   });
 
   test("should not accept tuple typed partial arg with incorrect prefix", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, ...([1, "hello"] as [number?, ...Array<string>]));
   });
 
   test("should not accept tuple typed partial arg with incorrect suffix", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, ...(["hello", 1] as [...Array<string>, number]));
   });
 });
@@ -151,22 +151,22 @@ describe("optional and rest param case", () => {
   });
 
   test("should not accept wrong required arg type", () => {
-    // @ts-expect-error - wrong arg type
+    // @ts-expect-error [ts2345] - wrong arg type
     partialBind(fn, 1);
   });
 
   test("should not accept wrong optional arg type", () => {
-    // @ts-expect-error - This is correct; "hello" would be the second argument of fn.
+    // @ts-expect-error [ts2345] - This is correct; "hello" would be the second argument of fn.
     partialBind(fn, "hello", "world");
   });
 
   test("should not accept wrong rest arg type", () => {
-    // @ts-expect-error - wrong rest arg type
+    // @ts-expect-error [ts2345] - wrong rest arg type
     partialBind(fn, "hello", 123, 1);
   });
 
   test("should not accept incorrect tuple typed partial arg", () => {
-    // @ts-expect-error - doesn't match optional
+    // @ts-expect-error [ts2345] - doesn't match optional
     partialBind(fn, ...([] as Array<string>));
   });
 
@@ -181,7 +181,7 @@ describe("KNOWN ISSUES", () => {
   test("does not support readonly rest params", () => {
     const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 
-    // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
+    // @ts-expect-error [ts2345]: blocked on https://github.com/microsoft/TypeScript/issues/37193
     expectTypeOf(partialBind(fn)).toEqualTypeOf<
       // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
       (...parts: ReadonlyArray<string>) => string
