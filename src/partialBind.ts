@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/no-unsafe-return --
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return --
  * Function inference doesn't work when `unknown` is used as the parameters
  * generic type, it **has** to be `any`.
  */
@@ -60,9 +60,12 @@ type RemovePrefix<
 export function partialBind<
   F extends (...args: any) => any,
   PrefixArgs extends TuplePrefix<Parameters<F>>,
+  RemovedPrefix extends RemovePrefix<Parameters<F>, PrefixArgs>,
 >(
   func: F,
   ...partial: PrefixArgs
-): (...rest: RemovePrefix<Parameters<F>, PrefixArgs>) => ReturnType<F> {
+): (
+  ...rest: RemovedPrefix extends IterableContainer ? RemovedPrefix : never
+) => ReturnType<F> {
   return (...rest) => func(...partial, ...rest);
 }

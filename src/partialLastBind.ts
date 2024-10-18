@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/no-unsafe-return --
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return --
  * Function inference doesn't work when `unknown` is used as the parameters
  * generic type, it **has** to be `any`.
  */
@@ -62,9 +62,12 @@ type RemoveSuffix<
 export function partialLastBind<
   F extends (...args: any) => any,
   SuffixArgs extends TupleSuffix<Parameters<F>>,
+  RemovedSuffix extends RemoveSuffix<Parameters<F>, SuffixArgs>,
 >(
   func: F,
   ...partial: SuffixArgs
-): (...rest: RemoveSuffix<Parameters<F>, SuffixArgs>) => ReturnType<F> {
+): (
+  ...rest: RemovedSuffix extends IterableContainer ? RemovedSuffix : never
+) => ReturnType<F> {
   return (...rest) => func(...rest, ...partial);
 }
