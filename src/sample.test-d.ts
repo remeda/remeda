@@ -101,12 +101,7 @@ describe("sampleSize < n", () => {
     ];
     const result = sample(array, 4);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 elements. Only when the tuple has 4 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
       | [boolean | number | string, boolean | string]
@@ -123,12 +118,7 @@ describe("sampleSize < n", () => {
     ];
     const result = sample(array, 4);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 elements. Only when the tuple has 4 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
       | [boolean | number | string, boolean | string]
@@ -229,12 +219,7 @@ describe("sampleSize === n", () => {
     ];
     const result = sample(array, 5);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 and 4 elements. Only when the return tuple has 5 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string, string]
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
@@ -252,12 +237,7 @@ describe("sampleSize === n", () => {
     ];
     const result = sample(array, 5);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 and 4 elements. Only when the return tuple has 5 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string, string]
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
@@ -393,12 +373,7 @@ describe("sampleSize > n", () => {
     ];
     const result = sample(array, 10);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3-9 elements. Only when the return tuple has 10 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [
           boolean | number | string,
           boolean | string,
@@ -466,12 +441,7 @@ describe("sampleSize > n", () => {
     ];
     const result = sample(array, 10);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3-9 elements. Only when the return tuple has 10 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [
           boolean | number | string,
           boolean | string,
@@ -763,8 +733,7 @@ describe("non-const sampleSize", () => {
     ];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });
@@ -779,8 +748,7 @@ describe("non-const sampleSize", () => {
     ];
     const result = sample(array, 5 as number);
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });

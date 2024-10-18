@@ -1,23 +1,77 @@
 import { isEmpty } from "./isEmpty";
 
-test("does not accept invalid input types", () => {
-  // @ts-expect-error [ts2769] number is not a valid input type
-  isEmpty(2);
+describe("invalid types", () => {
+  test("number", () => {
+    // @ts-expect-error [ts2769] number is not a valid input type
+    isEmpty(2);
+  });
 
-  // @ts-expect-error [ts2769] boolean is not a valid input type
-  isEmpty(false);
+  test("boolean", () => {
+    // @ts-expect-error [ts2769] boolean is not a valid input type
+    isEmpty(false);
+  });
 
-  // @ts-expect-error [ts2769] null is not a valid input type
-  isEmpty(null);
+  test("null", () => {
+    // @ts-expect-error [ts2769] null is not a valid input type
+    isEmpty(null);
+  });
 
-  // @ts-expect-error [ts2769] undefined is only allowed with strings
-  isEmpty([] as ReadonlyArray<string> | undefined);
+  test("optional arrays", () => {
+    // @ts-expect-error [ts2769] undefined is only allowed with strings
+    isEmpty([] as ReadonlyArray<string> | undefined);
+  });
 
-  // @ts-expect-error [ts2769] undefined is only allowed with strings
-  isEmpty({} as Record<string, string> | undefined);
+  test("optional objects", () => {
+    // @ts-expect-error [ts2769] undefined is only allowed with strings
+    isEmpty({} as Record<string, string> | undefined);
+  });
 });
 
-describe("strings are narrowed correctly", () => {
+describe("objects", () => {
+  test("infinite record", () => {
+    const data = {} as Record<string, string>;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<string, never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Record<string, string>>();
+    }
+  });
+
+  test("required record", () => {
+    const data = { a: 123, b: 456 } as Record<"a" | "b", number>;
+    if (isEmpty(data)) {
+      // @ts-expect-error [ts2554] -- This is a mistake, the type should be
+      // narrowed to never because the object can never be empty.
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Record<"a" | "b", number>>();
+    }
+  });
+
+  test("partial record", () => {
+    const data = {} as Partial<Record<"a" | "b", number>>;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<"a" | "b", never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Partial<Record<"a" | "b", number>>>();
+    }
+  });
+
+  test("interfaces", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- Intentional
+    interface MyInterface {
+      a: number;
+    }
+    const data = { a: 123 } as MyInterface;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<"a", never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<MyInterface>();
+    }
+  });
+});
+
+describe("strings", () => {
   test("just undefined", () => {
     const data = undefined;
     if (isEmpty(data)) {

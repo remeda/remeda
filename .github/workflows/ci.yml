@@ -80,6 +80,7 @@ jobs:
     strategy:
       matrix:
         node:
+          - 23
           - 22
           - 20
           - 18

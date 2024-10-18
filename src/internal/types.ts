@@ -45,6 +45,8 @@ export type BrandedReturn<F extends (...args: any) => any> = (
 
 export type NonEmptyArray<T> = [T, ...Array<T>];
 
+export type NonEmptyReadonlyArray<T> = readonly [T, ...ReadonlyArray<T>];
+
 export type Mapped<T extends IterableContainer, K> = {
   -readonly [P in keyof T]: K;
 };
@@ -225,9 +227,7 @@ export type UpsertProp<T, K extends PropertyKey, V> = Simplify<
 type IsSingleLiteral<K> =
   IsLiteral<K> extends true ? (IsUnion<K> extends true ? false : true) : false;
 
-// TODO [2024-10-01]: This type is copied from type-fest because it isn't
-// exported. It's part of the "internal" types. We should check back in a while
-// to see if this type is added to the public offering.
+// TODO: This type is copied from type-fest because it isn't exported. It's part of the "internal" types. We should check back in a while to see if this type is added to the public offering.
 export type IsUnion<T> = InternalIsUnion<T>;
 type InternalIsUnion<T, U = T> = (
   IsNever<T> extends true
