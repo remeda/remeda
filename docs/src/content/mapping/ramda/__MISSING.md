@@ -34,9 +34,7 @@
 - of
 - on
 - otherwise
-- partial
 - partialObject
-- partialRight
 - pipeWith
 - promap
 - thunkify
