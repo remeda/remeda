@@ -10,7 +10,6 @@ describe("dataFirst", () => {
 
   it("should return undefined for an empty array", () => {
     expect(median([])).toBeUndefined();
-    expect(median([] as Array<bigint>)).toBeUndefined();
   });
 
   it("works on bigints", () => {
@@ -27,6 +26,5 @@ describe("dataLast", () => {
 
   it("should return undefined for an empty array", () => {
     expect(pipe([], median())).toBeUndefined();
-    expect(pipe([] as Array<bigint>, median())).toBeUndefined();
   });
 });

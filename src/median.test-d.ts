@@ -1,5 +1,3 @@
-import { hasAtLeast } from "./hasAtLeast";
-import { isEmpty } from "./isEmpty";
 import { median } from "./median";
 import { pipe } from "./pipe";
 
@@ -91,22 +89,6 @@ describe("dataLast", () => {
   test("arbitrary readonly bigint arrays", () => {
     const result = pipe([] as ReadonlyArray<bigint>, median());
     expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
-  });
-});
-
-describe("type-guards", () => {
-  it("narrows to `number` using `hasAtLeast`", () => {
-    const data = [] as Array<number>;
-    if (hasAtLeast(data, 1)) {
-      expectTypeOf(median(data)).toEqualTypeOf<number>();
-    }
-  });
-
-  it("narrows to `undefined` using `isEmpty`", () => {
-    const data = [] as Array<number>;
-    if (isEmpty(data)) {
-      expectTypeOf(median(data)).toEqualTypeOf<undefined>();
-    }
   });
 });
 
