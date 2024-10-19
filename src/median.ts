@@ -100,8 +100,9 @@ function medianImplementation<
   const firstMiddle = sortedData[middleIndex];
   const secondMiddle = sortedData[middleIndex - 1];
 
-  return typeof firstMiddle === "bigint" && typeof secondMiddle === "bigint"
+  return typeof firstMiddle === "bigint"
     ? // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-      firstMiddle + secondMiddle / 2n
-    : ((firstMiddle as number) + (secondMiddle as number)) / 2;
+      (firstMiddle + (secondMiddle as bigint)) / 2n
+    : // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+      ((firstMiddle as number) + (secondMiddle as number)) / 2;
 }
