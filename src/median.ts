@@ -86,6 +86,7 @@ function medianImplementation<
   }
 
   // Sort taking into account bigint values
+  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   const sortedData = [...data].sort(numberAndBigIntComparator);
 
   const middleIndex = Math.floor(sortedData.length / 2);
