@@ -22,6 +22,8 @@ type Median<T extends IterableContainer<bigint> | IterableContainer<number>> =
  * Works for both `number` and `bigint` arrays, but not arrays that contain both
  * types.
  *
+ * Regarding `bigint` arrays, the result is rounded down (truncated) when the array has an even number of elements. This happens because `bigint` is unable to represent fractional values.
+ *
  * IMPORTANT: The result for empty arrays would be `undefined`, regardless of
  * the type of the array. This approach improves type-checking and ensures that
  * cases where `NaN` might occur are handled properly. To avoid adding this to
@@ -47,6 +49,8 @@ export function median<
  *
  * Works for both `number` and `bigint` arrays, but not arrays that contain both
  * types.
+ *
+ * Regarding `bigint` arrays, the result is rounded down (truncated) when the array has an even number of elements. This happens because `bigint` is unable to represent fractional values.
  *
  * IMPORTANT: The result for empty arrays would be `undefined`, regardless of
  * the type of the array. This approach improves type-checking and ensures that

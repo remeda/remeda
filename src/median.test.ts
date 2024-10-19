@@ -14,6 +14,7 @@ describe("dataFirst", () => {
 
   it("works on bigints", () => {
     expect(median([6n, 10n, 11n])).toBe(10n);
+    expect(median([1n, 1n, 3n, 4n])).toBe(2n);
   });
 });
 
@@ -26,5 +27,11 @@ describe("dataLast", () => {
 
   it("should return undefined for an empty array", () => {
     expect(pipe([], median())).toBeUndefined();
+  });
+});
+
+describe("special cases", () => {
+  it("should round down the result of even length bigint array", () => {
+    expect(median([1n, 2n, 3n, 9n])).toBe(2n);
   });
 });
