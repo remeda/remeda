@@ -89,12 +89,12 @@ function medianImplementation<
   // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   const sortedData = [...data].sort(numberAndBigIntComparator);
 
-  const middleIndex = Math.floor(sortedData.length / 2);
-
   // For odd length, return the middle element
   if (sortedData.length % 2 !== 0) {
-    return sortedData[middleIndex];
+    return sortedData[(sortedData.length - 1) / 2];
   }
+
+  const middleIndex = Math.floor(sortedData.length / 2);
 
   // For even length, return the mean of the two middle elements
   const firstMiddle = sortedData[middleIndex];
