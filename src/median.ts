@@ -73,6 +73,11 @@ export function median(...args: ReadonlyArray<unknown>): unknown {
   return purry(medianImplementation, args);
 }
 
+const numberAndBigIntComparator = (
+  a: number | bigint,
+  b: number | bigint,
+): number => (a > b ? 1 : a < b ? -1 : 0);
+
 function medianImplementation<
   T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] | undefined {
@@ -81,7 +86,7 @@ function medianImplementation<
   }
 
   // Sort taking into account bigint values
-  const sortedData = [...data].sort((a, b) => (a > b ? 1 : a < b ? -1 : 0));
+  const sortedData = [...data].sort(numberAndBigIntComparator);
 
   const middleIndex = Math.floor(sortedData.length / 2);
 
