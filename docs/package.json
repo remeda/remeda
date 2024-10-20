@@ -7,15 +7,14 @@
   "type": "module",
   "scripts": {
     "build": "astro check && npm run build:scripts && astro build",
-    "build:all": "npm run clean && npm run typedoc && npm run build",
+    "build:all": "npm run clean && typedoc && npm run build",
     "build:debug": "npm run build && open-cli node_modules/.cache/bundleVisualizer.html",
     "build:scripts": "vite build --config vite.scripts.config.ts",
     "check": "tsc && astro check",
     "clean": "rm -rf dist && rm -f src/data/data.json && rm -rf public/dist",
     "dev": "astro dev",
     "lint": "eslint",
-    "preview": "astro preview",
-    "typedoc": "typedoc --json src/data/data.json"
+    "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",

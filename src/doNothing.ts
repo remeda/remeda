@@ -20,12 +20,13 @@
  * @dataLast
  * @category Function
  */
-export const doNothing = (): typeof doesNothing =>
+export function doNothing(): typeof doesNothing {
   // Notice that the exported identity function is just the "factory" for the
   // function. We do it this way so that all "Function" utilities have a similar
   // API where the function is called, and not just used "headless". e.g.
   // `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
-  doesNothing;
+  return doesNothing;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- There is no other way to make typescript infer the function arguments "backwards" in data-last invocations without the Args type parameter. @see: https://github.com/typescript-eslint/typescript-eslint/issues/9887
 function doesNothing<Args extends ReadonlyArray<unknown>>(
