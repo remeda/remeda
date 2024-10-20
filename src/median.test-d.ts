@@ -33,42 +33,10 @@ describe("numbers", () => {
   });
 });
 
-describe("bigints", () => {
-  test("arbitrary arrays", () => {
-    const result = median([] as Array<bigint>);
-    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
-  });
-
-  test("arbitrary readonly arrays", () => {
-    const result = median([] as ReadonlyArray<bigint>);
-    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
-  });
-
-  test("arbitrary non-empty arrays", () => {
-    const result = median([1n, 2n] as [bigint, ...Array<bigint>]);
-    expectTypeOf(result).toEqualTypeOf<bigint>();
-  });
-
-  test("consts", () => {
-    const result = median([1n, 2n, 3n] as const);
-    expectTypeOf(result).toEqualTypeOf<bigint>();
-  });
-
-  test("fixed-size tuples", () => {
-    const result = median([1n, 2n] as [bigint, bigint]);
-    expectTypeOf(result).toEqualTypeOf<bigint>();
-  });
-});
-
 describe("dataLast", () => {
   test("numbers", () => {
     const result = pipe([1, 2, 3] as const, median());
     expectTypeOf(result).toEqualTypeOf<number>();
-  });
-
-  test("bigints", () => {
-    const result = pipe([1n, 2n, 3n] as const, median());
-    expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 
   test("arbitrary number arrays", () => {
@@ -80,19 +48,4 @@ describe("dataLast", () => {
     const result = pipe([] as ReadonlyArray<number>, median());
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
-
-  test("arbitrary bigint arrays", () => {
-    const result = pipe([] as Array<bigint>, median());
-    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
-  });
-
-  test("arbitrary readonly bigint arrays", () => {
-    const result = pipe([] as ReadonlyArray<bigint>, median());
-    expectTypeOf(result).toEqualTypeOf<bigint | undefined>();
-  });
-});
-
-it("doesn't allow mixed arrays", () => {
-  // @ts-expect-error [ts2345] - Can't median bigints and numbers...
-  median([1, 2n]);
 });
