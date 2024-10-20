@@ -17,12 +17,13 @@ type IdentityFunction = <T>(firstParameter: T, ...rest: any) => T;
  *    R.map([1,2,3], R.identity()); // => [1,2,3]
  * @category Function
  */
-export const identity = (): IdentityFunction =>
+export function identity(): IdentityFunction {
   // Notice that the exported identity function is just the "factory" for the
   // identity function. We do it this way so that all "Function" utilities have
   // a similar API where the function is called, and not just used "headless".
   // e.g. `identity()` and not `identity`, just like the API for `constant(1)`.
-  identityImplementation;
+  return identityImplementation;
+}
 
 const identityImplementation: IdentityFunction = (firstParameter) =>
   firstParameter;
