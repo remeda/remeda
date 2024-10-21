@@ -1,17 +1,9 @@
-import type {
-  IterableContainer,
-  NonEmptyArray,
-  NonEmptyReadonlyArray,
-} from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 
-type Median<T extends IterableContainer<number>> = T extends
-  | NonEmptyArray<number>
-  | NonEmptyReadonlyArray<number>
-  ? number
-  : T extends [] | readonly []
-    ? undefined
-    : number | undefined;
+type Median<T extends IterableContainer<number>> =
+  | (T extends readonly [] ? never : number)
+  | (T extends readonly [unknown, ...Array<unknown>] ? never : undefined);
 
 /**
  * Returns the median of the elements of an array.
