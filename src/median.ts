@@ -80,7 +80,7 @@ function medianImplementation<T extends IterableContainer<number>>(
   }
 
   // For even length, return the mean of the two middle elements
-  const middleIndex = Math.floor(sortedData.length / 2);
+  const middleIndex = sortedData.length / 2;
 
   return (sortedData[middleIndex]! + sortedData[middleIndex - 1]!) / 2;
 }
