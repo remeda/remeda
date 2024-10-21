@@ -6,7 +6,7 @@ test("empty arrays", () => {
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-describe("numbers", () => {
+describe("dataFirst", () => {
   test("arbitrary arrays", () => {
     const result = median([] as Array<number>);
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
