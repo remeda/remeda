@@ -44,6 +44,9 @@ type RemovePrefix<
  * Creates a function that calls `func` with `partial` put before the arguments
  * it receives.
  *
+ * Can be thought of as "freezing" some portion of a function's arguments,
+ * resulting in a new function with a simplified signature.
+ *
  * @param func - The function to wrap.
  * @param partial - The arguments to put before.
  * @returns A partially bound function.
@@ -53,6 +56,9 @@ type RemovePrefix<
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
  *    const partialFn = R.partialBind(fn, [1, 2])
  *    partialFn(3) // => 1, 2, and 3
+ *
+ *    const logWithPrefix = R.partialBind(console.log, ["[prefix]"])
+ *    logWithPrefix("hello") // => "[prefix] hello"
  * @dataFirst
  * @category Function
  * @see partialLastBind

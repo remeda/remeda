@@ -42,9 +42,13 @@ type RemoveSuffix<
 
 /**
  * Creates a function that calls `func` with `partial` put after the arguments
- * it receives.
+ * it receives. Note that this doesn't support functions with both optional
+ * and rest parameters.
  *
- * Note this doesn't support functions with both optional and rest parameters.
+ * Can be thought of as "freezing" some portion of a function's arguments,
+ * resulting in a new function with a simplified signature.
+ *
+ * Useful for converting a data-first function to a data-last one.
  *
  * @param func - The function to wrap.
  * @param partial - The arguments to put after.
@@ -55,6 +59,15 @@ type RemoveSuffix<
  *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
  *    const partialFn = R.partialLastBind(fn, [2, 3])
  *    partialFn(1) // => 1, 2, and 3
+ *
+ *    const parseBinary = R.partialLastBind(parseInt, ["2"])
+ *    parseBinary("101") // => 5
+ *
+ *    R.pipe(
+ *      { a: 1 },
+ *      // instead of (arg) => JSON.stringify(arg, null, 2)
+ *      R.partialLastBind(JSON.stringify, [null, 2]),
+ *    ) // => '{\n  "a": 1\n}'
  * @dataFirst
  * @category Function
  * @see partialBind
