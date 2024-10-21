@@ -106,7 +106,6 @@
 # Math
 
 - mathMod
-- median
 - modulo
 
 # Object
