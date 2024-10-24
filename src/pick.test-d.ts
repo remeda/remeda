@@ -1,3 +1,4 @@
+import { keys } from "./keys";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
@@ -13,6 +14,20 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<
       Pick<{ a: number } | { a?: number; b: string }, "a">
     >();
+  });
+
+  // @see https://github.com/remeda/remeda/issues/886
+  it("infers the key types from the keys array", () => {
+    const data = { foo: "hello", bar: "world" };
+
+    const raw = pick(data, ["foo"]);
+    expectTypeOf(raw).toEqualTypeOf<{ foo: string }>();
+
+    const wrapped = keys(pick(data, ["foo"]));
+    expectTypeOf(wrapped).toEqualTypeOf<Array<"foo">>();
+
+    const withConstKeys = keys(pick(data, ["foo"] as const));
+    expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
   });
 });
 

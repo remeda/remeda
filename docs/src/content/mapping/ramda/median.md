@@ -1,4 +1,4 @@
 ---
 category: Math
-remeda: mean
+remeda: median
 ---
