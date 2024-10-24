@@ -1,15 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any, jsdoc/require-param, jsdoc/require-example --
+ * These aren't useful for a reference implementation for a legacy library!
+ */
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
-// We need some non-trivial duration to use in all our tests, to abstract the
-// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
-// positive integer, the actual value doesn't matter. The number represents MS.
-const UT = 32;
-
+/**
+ * A reference implementation of the Lodash `debounce` function using the
+ * Remeda `funnel` function. While migrating from Lodash you can copy this
+ * function as-is into your code base and use it as a drop-in replacement; but
+ * we recommend eventually inlining the call to `funnel` so you can adjust the
+ * function to your specific needs.
+ *
+ * This is a more complex implementation which respects Lodash capability to
+ * track the return value of the callback function. In most cases you are more
+ * likely to prefer the simpler reference implementation `debounce` which can
+ * be found in the other test file.
+ *
+ * The following tests in this file are based on the Lodash tests for debounce.
+ * They have been adapted to work with our testing framework, have been fixed
+ * or expanded slightly were it felt necessary, and have been modernized for
+ * better readability. Tests that are unrelated to the cache capability have
+ * been removed to avoid duplication with the other test file.
+ *
+ * Note that this means that wherever Lodash offered a concrete spec, we made
+ * sure our reference implementation maintains the same spec, but there might
+ * be untested use-cases that would have differing runtime behaviors.
+ *
+ * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
+ * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
+ * @see Lodash Tests: https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
+ */
 function debounceWithCachedValue<F extends (...args: any) => any>(
   func: F,
   wait = 0,
@@ -59,6 +82,11 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
     },
   };
 }
+
+// We need some non-trivial duration to use in all our tests, to abstract the
+// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
+// positive integer, the actual value doesn't matter. The number represents MS.
+const UT = 32;
 
 // @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
 describe("Lodash: test/debounce.spec.js", () => {

@@ -1,15 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters, jsdoc/require-param, jsdoc/require-example --
+ * These aren't useful for a reference implementation for a legacy library!
+ */
 
 import { sleep } from "../test/sleep";
 import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 
-// We need some non-trivial duration to use in all our tests, to abstract the
-// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
-// positive integer, the actual value doesn't matter. The number represents MS.
-const UT = 32;
-
-const debounce = <F extends (...args: any) => void>(
+/**
+ * A reference implementation of the Lodash `debounce` function using the
+ * Remeda `funnel` function. While migrating from Lodash you can copy this
+ * function as-is into your code base and use it as a drop-in replacement; but
+ * we recommend eventually inlining the call to `funnel` so you can adjust the
+ * function to your specific needs.
+ *
+ * This is a simplified implementation which ignores the Lodash capability to
+ * track the return value of the callback function, but it is most likely the
+ * more common use-case. For a more complete (and more complex) implementation
+ * that also does that see the reference implementation for
+ * `debounceWithCachedValue` in the other test file.
+ *
+ * The following tests in this file are based on the Lodash tests for debounce.
+ * They have been adapted to work with our testing framework, have been fixed
+ * or expanded slightly were it felt necessary, and have been modernized for
+ * better readability.
+ *
+ * Note that this means that wherever Lodash offered a concrete spec, we made
+ * sure our reference implementation maintains the same spec, but there might
+ * be untested use-cases that would have differing runtime behaviors.
+ *
+ * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
+ * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
+ * @see Lodash Tests: https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
+ */
+function debounce<F extends (...args: any) => void>(
   func: F,
   wait = 0,
   {
@@ -21,8 +44,8 @@ const debounce = <F extends (...args: any) => void>(
     readonly trailing?: boolean;
     readonly maxWait?: number;
   } = {},
-) =>
-  funnel(
+) {
+  return funnel(
     (_, ...args: ReadonlyArray<unknown>) => args,
     // In Lodash you can disable both the trailing and leading edges of the
     // debounce window, effectively causing the function to never be invoked.
@@ -36,8 +59,13 @@ const debounce = <F extends (...args: any) => void>(
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
+}
 
-// @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
+// We need some non-trivial duration to use in all our tests, to abstract the
+// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
+// positive integer, the actual value doesn't matter. The number represents MS.
+const UT = 32;
+
 describe("Lodash: test/debounce.spec.js", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn();
@@ -249,9 +277,9 @@ describe("Additional tests missing from Lodash", () => {
   it("works like a leaky bucket when only maxWaitMs is set", async () => {
     const mockFn = vi.fn();
 
-    const debouncer = debounce(mockFn, UT, { maxWait: UT });
+    const debounced = debounce(mockFn, UT, { maxWait: UT });
 
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -259,7 +287,7 @@ describe("Additional tests missing from Lodash", () => {
 
     // Without maxWaitMs this call would cause the actual invocation to be
     // postponed for a full window.
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -272,78 +300,78 @@ describe("Additional tests missing from Lodash", () => {
 describe("Features not tested by Lodash", () => {
   it("can cancel the timer", async () => {
     const mockFn = vi.fn();
-    const debouncer = debounce(mockFn, UT);
+    const debounced = debounce(mockFn, UT);
 
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(1);
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).not.toHaveBeenCalled();
 
-    debouncer.cancel();
+    debounced.cancel();
 
     await sleep(UT);
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).not.toHaveBeenCalled();
 
     await sleep(UT);
-    debouncer.call();
+    debounced.call();
 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   it("can cancel after the timer ends", async () => {
-    const debouncer = debounce(doNothing(), UT);
-    debouncer.call();
+    const debounced = debounce(doNothing(), UT);
+    debounced.call();
     await sleep(UT);
 
-    debouncer.call();
+    debounced.call();
 
     expect(() => {
-      debouncer.cancel();
+      debounced.cancel();
     }).not.toThrow();
   });
 
   it("can check for inflight timers (trailing)", async () => {
-    const debouncer = debounce(doNothing(), UT);
+    const debounced = debounce(doNothing(), UT);
 
-    expect(debouncer.isIdle).toBe(true);
+    expect(debounced.isIdle).toBe(true);
 
-    debouncer.call();
+    debounced.call();
 
-    expect(debouncer.isIdle).toBe(false);
+    expect(debounced.isIdle).toBe(false);
 
     await sleep(1);
 
-    expect(debouncer.isIdle).toBe(false);
+    expect(debounced.isIdle).toBe(false);
 
     await sleep(UT);
 
-    expect(debouncer.isIdle).toBe(true);
+    expect(debounced.isIdle).toBe(true);
   });
 
   it("can check for inflight timers (leading)", async () => {
-    const debouncer = debounce(doNothing(), UT, {
+    const debounced = debounce(doNothing(), UT, {
       leading: true,
       trailing: false,
     });
 
-    expect(debouncer.isIdle).toBe(true);
+    expect(debounced.isIdle).toBe(true);
 
-    debouncer.call();
+    debounced.call();
 
-    expect(debouncer.isIdle).toBe(false);
+    expect(debounced.isIdle).toBe(false);
 
     await sleep(1);
 
-    expect(debouncer.isIdle).toBe(false);
+    expect(debounced.isIdle).toBe(false);
 
     await sleep(UT);
 
-    expect(debouncer.isIdle).toBe(true);
+    expect(debounced.isIdle).toBe(true);
   });
 });
