@@ -3,6 +3,7 @@ import { purry } from "./purry";
 /**
  * Adds two numbers.
  *
+ * @copyDoc
  * @param value - The number.
  * @param addend - The number to add to the value.
  * @signature
@@ -15,22 +16,22 @@ import { purry } from "./purry";
  * @category Number
  */
 export function add(value: bigint, addend: bigint): bigint;
+/** @pasteDoc */
 export function add(value: number, addend: number): number;
 
 /**
- * Adds two numbers.
- *
- * @param addend - The number to add to the value.
+ * @pasteDoc
  * @signature
  *    R.add(addend)(value);
- * @example
- *    R.add(5)(10) // => 15
- *    R.add(-5)(10) // => 5
- *    R.map([1, 2, 3, 4], R.add(1)) // => [2, 3, 4, 5]
  * @dataLast
- * @category Number
  */
 export function add(addend: bigint): (value: bigint) => bigint;
+/**
+ * @pasteDoc
+ * @signature
+ *    R.add(addend)(value);
+ * @dataLast
+ */
 export function add(addend: number): (value: number) => number;
 
 export function add(...args: ReadonlyArray<unknown>): unknown {
