@@ -184,19 +184,18 @@ describe("Lodash: test/debounce.spec.js", () => {
     expect(mockWith).toHaveBeenCalledWith();
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests -- TODO: This test might be broken because lodash is broken and the test was over-fitted to their implementation.
-  it.skip("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
+  it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, 200, { maxWait: 200 });
     debounced.call();
     await sleep(190);
     debounced.call();
-    await sleep(200);
+    await sleep(10);
     debounced.call();
-    await sleep(210);
+    await sleep(10);
     debounced.call();
-    await sleep(500);
+    await sleep(290);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
