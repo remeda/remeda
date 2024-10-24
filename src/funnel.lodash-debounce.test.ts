@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/explicit-function-return-type */
 
 import { sleep } from "../test/sleep";
 import { doNothing } from "./doNothing";
@@ -16,7 +16,6 @@ const debounce = <F extends (...args: any) => void>(
     readonly trailing?: boolean;
     readonly maxWait?: number;
   } = {},
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we want the inferred type
 ) =>
   funnel(
     (_, ...args: ReadonlyArray<unknown>) => args,
@@ -33,6 +32,7 @@ const debounce = <F extends (...args: any) => void>(
     },
   );
 
+// @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
 describe("Lodash: test/debounce.spec.js", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn();

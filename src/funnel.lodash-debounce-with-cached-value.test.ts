@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/explicit-function-return-type */
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we want the inferred type
 function debounceWithCachedValue<F extends (...args: any) => any>(
   func: F,
   wait = 0,
@@ -56,6 +55,7 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
   };
 }
 
+// @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
 describe("Lodash: test/debounce.spec.js", () => {
   it("should debounce a function", async () => {
     const debounced = debounceWithCachedValue(identity(), 32);
