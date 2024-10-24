@@ -16,6 +16,7 @@ const debounce = <F extends (...args: any) => void>(
     readonly trailing?: boolean;
     readonly maxWait?: number;
   } = {},
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we want the inferred type
 ) =>
   funnel(
     (_, ...args: ReadonlyArray<unknown>) => args,

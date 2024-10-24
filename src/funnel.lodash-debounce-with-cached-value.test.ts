@@ -5,6 +5,7 @@ import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we want the inferred type
 function debounceWithCachedValue<F extends (...args: any) => any>(
   func: F,
   wait = 0,

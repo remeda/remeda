@@ -454,7 +454,6 @@ export default tseslint.config(
 
       // These aren't valuable when writing tests, they'll just make the tests
       // harder to read and maintain.
-      "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "unicorn/no-null": "off",
