@@ -233,62 +233,7 @@ describe("Lodash: test/debounce.spec.js", () => {
   });
 });
 
-describe("Main functionality", () => {
-  it("should debounce a function", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn, 32);
-
-    debouncer.call();
-    debouncer.call();
-    debouncer.call();
-
-    expect(mockFn).not.toHaveBeenCalled();
-
-    await sleep(128);
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-
-    debouncer.call();
-    debouncer.call();
-    debouncer.call();
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-
-    await sleep(256);
-
-    expect(mockFn).toHaveBeenCalledTimes(2);
-  });
-
-  it("should not immediately call `func` when `wait` is `0`", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn);
-
-    debouncer.call();
-    debouncer.call();
-
-    expect(mockFn).not.toHaveBeenCalled();
-
-    await sleep(5);
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-
-  it("should apply default options", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn, 32);
-
-    debouncer.call();
-
-    expect(mockFn).not.toHaveBeenCalled();
-
-    await sleep(64);
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-
+describe("Additional tests missing from Lodash", () => {
   test("'leading'-only invocation timing", async () => {
     const mockFn = vi.fn();
 
@@ -340,90 +285,6 @@ describe("Main functionality", () => {
 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
-});
-
-describe("Optional param maxWaitMs", () => {
-  it("should support a `maxWait` option", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn, 32, { maxWait: 64 });
-
-    debouncer.call();
-    debouncer.call();
-
-    expect(mockFn).not.toHaveBeenCalled();
-
-    await sleep(128);
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-
-    debouncer.call();
-    debouncer.call();
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-
-    await sleep(256);
-
-    expect(mockFn).toHaveBeenCalledTimes(2);
-  });
-
-  it("should support `maxWait` in a tight loop", async () => {
-    const withMockFn = vi.fn();
-    const withoutMockFn = vi.fn();
-
-    const withMaxWait = debounce(withMockFn, 64, { maxWait: 128 });
-    const withoutMaxWait = debounce(withoutMockFn, 96);
-
-    const start = Date.now();
-    while (Date.now() - start < 320) {
-      withMaxWait.call();
-      withoutMaxWait.call();
-    }
-
-    await sleep(1);
-
-    expect(withMockFn).toHaveBeenCalledWith();
-    expect(withoutMockFn).not.toHaveBeenCalled();
-  });
-
-  it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn, 200, { maxWait: 200 });
-
-    debouncer.call();
-
-    setTimeout(() => {
-      debouncer.call();
-    }, 190);
-    setTimeout(() => {
-      debouncer.call();
-    }, 200);
-    setTimeout(() => {
-      debouncer.call();
-    }, 210);
-
-    await sleep(500);
-
-    expect(mockFn).toHaveBeenCalledTimes(2);
-  });
-
-  it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
-    const mockFn = vi.fn();
-
-    const debouncer = debounce(mockFn, 32, { maxWait: 64 });
-
-    debouncer.call();
-
-    await sleep(128);
-    debouncer.call();
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-
-    await sleep(192);
-
-    expect(mockFn).toHaveBeenCalledTimes(2);
-  });
 
   it("works like a leaky bucket when only maxWaitMs is set", async () => {
     const mockFn = vi.fn();
@@ -448,7 +309,7 @@ describe("Optional param maxWaitMs", () => {
   });
 });
 
-describe("Additional functionality", () => {
+describe("Features not tested by Lodash", () => {
   it("can cancel the timer", async () => {
     const mockFn = vi.fn();
     const debouncer = debounce(mockFn, 32);

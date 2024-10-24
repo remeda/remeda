@@ -116,59 +116,7 @@ describe("Lodash: test/debounce.spec.js", () => {
   });
 });
 
-describe("Main functionality", () => {
-  it("should debounce a function", async () => {
-    const debouncer = debounceWithCachedValue(identity(), 32);
-
-    expect([
-      debouncer.call("a"),
-      debouncer.call("b"),
-      debouncer.call("c"),
-    ]).toStrictEqual([undefined, undefined, undefined]);
-
-    await sleep(128);
-
-    expect([
-      debouncer.call("d"),
-      debouncer.call("e"),
-      debouncer.call("f"),
-    ]).toStrictEqual(["c", "c", "c"]);
-  });
-
-  it("subsequent debounced calls return the last `func` result", async () => {
-    const debouncer = debounceWithCachedValue(identity(), 32);
-    debouncer.call("a");
-
-    await sleep(64);
-
-    expect(debouncer.call("b")).toBe("a");
-
-    await sleep(128);
-
-    expect(debouncer.call("c")).toBe("b");
-  });
-
-  it("subsequent leading debounced calls return the last `func` result", async () => {
-    const debouncer = debounceWithCachedValue(identity(), 32, {
-      leading: true,
-      trailing: false,
-    });
-
-    expect([debouncer.call("a"), debouncer.call("b")]).toStrictEqual([
-      "a",
-      "a",
-    ]);
-
-    await sleep(64);
-
-    expect([debouncer.call("c"), debouncer.call("d")]).toStrictEqual([
-      "c",
-      "c",
-    ]);
-  });
-});
-
-describe("Additional functionality", () => {
+describe("Features not tested by Lodash", () => {
   it("can cancel before the timer starts", async () => {
     const debouncer = debounceWithCachedValue(identity(), 32);
 
