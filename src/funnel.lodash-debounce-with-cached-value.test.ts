@@ -76,6 +76,10 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
     },
   );
 
+  // Lodash uses a legacy JS-isms to attach helper functions to the main
+  // callback of `debounce`. In Remeda we return a proper object where the
+  // callback is one of the available properties. Here we destructure and then
+  // reconstruct the object to fit the Lodash API.
   return Object.assign(
     (...args: Parameters<F>) => {
       call(...args);

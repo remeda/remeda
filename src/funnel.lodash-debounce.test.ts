@@ -122,8 +122,7 @@ describe("The Lodash spec", () => {
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
-    // Yield execution to allow the timeouts in the debouncer to run.
-    await sleep(0);
+    await yieldExecution();
 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
@@ -239,8 +238,7 @@ describe("The Lodash spec", () => {
     expect(mockWithout).toHaveBeenCalledTimes(0);
     expect(mockWith).toHaveBeenCalledTimes(0);
 
-    // Yield execution to allow the timeouts in the debouncer to run.
-    await sleep(0);
+    await yieldExecution();
 
     expect(mockWithout).toHaveBeenCalledTimes(0);
     expect(mockWith).toHaveBeenCalledTimes(1);
@@ -281,8 +279,8 @@ describe("The Lodash spec", () => {
     const debounced = debounce(mockFn, UT, { leading: true, maxWait: 2 * UT });
     while (mockFn.mock.calls.length < 2) {
       debounced(DATA, "a");
-      // eslint-disable-next-line no-await-in-loop -- In Lodash, when the maxWait is reached, the callback is invoked within the same execution frame (without a setTimeout). In Remeda we use a setTimeout even when it's effective delay is 0ms. This means that we fail the lodash test if we constantly yield the execution frame within a busy loop, so that the timeout gets a chance to run
-      await sleep(0);
+      // eslint-disable-next-line no-await-in-loop
+      await yieldExecution();
     }
     await sleep(2 * UT);
 
@@ -322,12 +320,12 @@ describe("Features not tested by Lodash", () => {
       const debounced = debounce(mockFn, UT);
 
       debounced();
-      await sleep(0);
+      await yieldExecution();
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
       debounced.cancel();
-      await sleep(0);
+      await yieldExecution();
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -357,12 +355,12 @@ describe("Features not tested by Lodash", () => {
       expect(mockFn).toHaveBeenCalledTimes(0);
 
       debounced();
-      await sleep(0);
+      await yieldExecution();
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
       debounced.flush();
-      await sleep(0);
+      await yieldExecution();
 
       expect(mockFn).toHaveBeenCalledTimes(1);
     });
@@ -378,3 +376,9 @@ describe("Features not tested by Lodash", () => {
     });
   });
 });
+
+/**
+ * Funnel relies on letting the timeouts run. To ensure that happens the tests
+ * need to yield execution.
+ */
+const yieldExecution = async () => await sleep(0);
