@@ -150,7 +150,7 @@ describe("The Lodash spec", () => {
     expect(mockFn).toHaveBeenCalledWith();
   });
 
-  test("should trigger a second throttled call as soon as possible", async () => {
+  it("should trigger a second throttled call as soon as possible", async () => {
     const mockFn = vi.fn();
     const throttled = throttle(mockFn, 4 * UT, { leading: false });
     throttled();
@@ -168,7 +168,7 @@ describe("The Lodash spec", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  test("should apply default options", async () => {
+  it("should apply default options", async () => {
     const mockFn = vi.fn();
     const throttled = throttle(mockFn, UT, {});
     throttled();
@@ -181,7 +181,7 @@ describe("The Lodash spec", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  test("should support a `leading` option", () => {
+  it("should support a `leading` option", () => {
     const mockWith = vi.fn();
     const mockWithout = vi.fn();
     const withLeading = throttle(mockWith, UT, { leading: true });
@@ -194,7 +194,7 @@ describe("The Lodash spec", () => {
     expect(mockWithout).toHaveBeenCalledTimes(0);
   });
 
-  test("should support a `trailing` option", async () => {
+  it("should support a `trailing` option", async () => {
     const mockWith = vi.fn();
     const mockWithout = vi.fn();
     const withTrailing = throttle(mockWith, 2 * UT, { trailing: true });
@@ -215,7 +215,7 @@ describe("The Lodash spec", () => {
     expect(mockWithout).toHaveBeenCalledTimes(1);
   });
 
-  test("should not update `lastCalled`, at the end of the timeout, when `trailing` is `false`", async () => {
+  it("should not update `lastCalled`, at the end of the timeout, when `trailing` is `false`", async () => {
     const mockFn = vi.fn();
     const throttled = throttle(mockFn, 64, { trailing: false });
     throttled();
