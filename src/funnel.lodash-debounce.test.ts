@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters, jsdoc/require-param, jsdoc/require-example --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any, jsdoc/require-param, jsdoc/require-example --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -32,6 +32,7 @@ import { funnel } from "./funnel";
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
  * @see Lodash Tests: https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
+ * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L374-L399
  */
 function debounce<F extends (...args: any) => void>(
   func: F,
@@ -46,8 +47,14 @@ function debounce<F extends (...args: any) => void>(
     readonly maxWait?: number;
   } = {},
 ) {
-  return funnel(
-    (_, ...args: ReadonlyArray<unknown>) => args,
+  const {
+    call,
+    isIdle: _isIdle,
+    ...rest
+  } = funnel(
+    // Debounce stores the latest args it was called with for the next
+    // invocation of the callback.
+    (_, ...args: Parameters<F>) => args,
     // In Lodash you can disable both the trailing and leading edges of the
     // debounce window, effectively causing the function to never be invoked.
     // Remeda uses the invokedAt enum exactly to avoid this situation; so to
@@ -60,6 +67,7 @@ function debounce<F extends (...args: any) => void>(
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
+  return Object.assign(call, rest);
 }
 
 // We need some non-trivial duration to use in all our tests, to abstract the
@@ -74,9 +82,9 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, UT);
-    debounced.call();
-    debounced.call();
-    debounced.call();
+    debounced();
+    debounced();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -84,9 +92,9 @@ describe("Lodash: test/debounce.spec.js", () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    debounced.call();
-    debounced.call();
-    debounced.call();
+    debounced();
+    debounced();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -99,8 +107,8 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, 0);
-    debounced.call();
-    debounced.call();
+    debounced();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -114,7 +122,7 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, UT, {});
-    debounced.call();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -138,9 +146,9 @@ describe("Lodash: test/debounce.spec.js", () => {
       leading: true,
       trailing: true,
     });
-    withLeading.call();
-    withLeadingAndTrailing.call();
-    withLeadingAndTrailing.call();
+    withLeading();
+    withLeadingAndTrailing();
+    withLeadingAndTrailing();
 
     expect(mockWithLeading).toHaveBeenCalledTimes(1);
     expect(mockWithLeadingAndTrailing).toHaveBeenCalledTimes(1);
@@ -150,7 +158,7 @@ describe("Lodash: test/debounce.spec.js", () => {
     expect(mockWithLeading).toHaveBeenCalledTimes(1);
     expect(mockWithLeadingAndTrailing).toHaveBeenCalledTimes(2);
 
-    withLeading.call();
+    withLeading();
 
     expect(mockWithLeading).toHaveBeenCalledTimes(2);
   });
@@ -161,8 +169,8 @@ describe("Lodash: test/debounce.spec.js", () => {
 
     const withTrailing = debounce(mockWith, UT, { trailing: true });
     const withoutTrailing = debounce(mockWithout, UT, { trailing: false });
-    withTrailing.call();
-    withoutTrailing.call();
+    withTrailing();
+    withoutTrailing();
 
     expect(mockWith).toHaveBeenCalledTimes(0);
     expect(mockWithout).toHaveBeenCalledTimes(0);
@@ -177,8 +185,8 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
-    debounced.call();
-    debounced.call();
+    debounced();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -186,8 +194,8 @@ describe("Lodash: test/debounce.spec.js", () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    debounced.call();
-    debounced.call();
+    debounced();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -204,8 +212,8 @@ describe("Lodash: test/debounce.spec.js", () => {
     const withoutMaxWait = debounce(mockWithout, 3 * UT);
     const end = Date.now() + 10 * UT;
     while (Date.now() < end) {
-      withMaxWait.call();
-      withoutMaxWait.call();
+      withMaxWait();
+      withoutMaxWait();
     }
 
     // There's a bug in the Lodash test where they take the result before the
@@ -232,13 +240,13 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, 6 * UT, { maxWait: 6 * UT });
-    debounced.call();
+    debounced();
     await sleep(5.5 * UT);
-    debounced.call();
+    debounced();
     await sleep(0.5 * UT);
-    debounced.call();
+    debounced();
     await sleep(0.5 * UT);
-    debounced.call();
+    debounced();
     await sleep(9.5 * UT);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
@@ -248,9 +256,9 @@ describe("Lodash: test/debounce.spec.js", () => {
     const mockFn = vi.fn();
 
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
-    debounced.call();
+    debounced();
     await sleep(4 * UT);
-    debounced.call();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -265,7 +273,7 @@ describe("Lodash: test/debounce.spec.js", () => {
 
     const debounced = debounce(mockFn, UT, { leading: true, maxWait: 2 * UT });
     while (mockFn.mock.calls.length < 2) {
-      debounced.call(DATA, "a");
+      debounced(DATA, "a");
       // eslint-disable-next-line no-await-in-loop -- In Lodash, when the maxWait is reached, the callback is invoked within the same execution frame (without a setTimeout). In Remeda we use a setTimeout even when it's effective delay is 0ms. This means that we fail the lodash test if we constantly yield the execution frame within a busy loop, so that the timeout gets a chance to run
       await sleep(0);
     }
@@ -282,7 +290,7 @@ describe("Additional tests missing from Lodash", () => {
 
     const debounced = debounce(mockFn, UT, { maxWait: UT });
 
-    debounced.call();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -290,7 +298,7 @@ describe("Additional tests missing from Lodash", () => {
 
     // Without maxWaitMs this call would cause the actual invocation to be
     // postponed for a full window.
-    debounced.call();
+    debounced();
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
@@ -306,34 +314,27 @@ describe("Features not tested by Lodash", () => {
       const mockFn = vi.fn();
       const debounced = debounce(mockFn, UT);
 
-      debounced.call();
-
-      expect(mockFn).toHaveBeenCalledTimes(0);
-
-      await sleep(1);
-      debounced.call();
+      debounced();
+      await sleep(0);
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
       debounced.cancel();
-
-      await sleep(UT);
-      debounced.call();
+      await sleep(0);
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(UT);
-      debounced.call();
+      await sleep(2 * UT);
 
-      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenCalledTimes(0);
     });
 
     it("can cancel after the timer ends", async () => {
       const debounced = debounce(doNothing(), UT);
-      debounced.call();
+      debounced();
       await sleep(UT);
 
-      debounced.call();
+      debounced();
 
       expect(() => {
         debounced.cancel();
@@ -341,44 +342,32 @@ describe("Features not tested by Lodash", () => {
     });
   });
 
-  describe("isIdle", () => {
-    it("can check for inflight timers (trailing)", async () => {
-      const debounced = debounce(doNothing(), UT);
+  describe("flush", () => {
+    it("can force an execution", async () => {
+      const mockFn = vi.fn();
+      const debounced = debounce(mockFn, UT);
 
-      expect(debounced.isIdle).toBe(true);
+      expect(mockFn).toHaveBeenCalledTimes(0);
 
-      debounced.call();
+      debounced();
+      await sleep(0);
 
-      expect(debounced.isIdle).toBe(false);
+      expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(1);
+      debounced.flush();
+      await sleep(0);
 
-      expect(debounced.isIdle).toBe(false);
-
-      await sleep(UT);
-
-      expect(debounced.isIdle).toBe(true);
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    it("can check for inflight timers (leading)", async () => {
-      const debounced = debounce(doNothing(), UT, {
-        leading: true,
-        trailing: false,
-      });
+    it("can flush after the timer ends", async () => {
+      const debounced = debounce(doNothing(), UT);
+      debounced();
+      await sleep(2 * UT);
 
-      expect(debounced.isIdle).toBe(true);
-
-      debounced.call();
-
-      expect(debounced.isIdle).toBe(false);
-
-      await sleep(1);
-
-      expect(debounced.isIdle).toBe(false);
-
-      await sleep(UT);
-
-      expect(debounced.isIdle).toBe(true);
+      expect(() => {
+        debounced.flush();
+      }).not.toThrow();
     });
   });
 });
