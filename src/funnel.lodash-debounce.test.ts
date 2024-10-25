@@ -30,9 +30,9 @@ import { funnel } from "./funnel";
  * use-cases that would have differing runtime behaviors.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
- * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
- * @see Lodash Tests: https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
- * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L374-L399
+ * @see Lodash Implementation: https://github.com/lodash/lodash/blob/4.17.21/lodash.js#L10372
+ * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187
+ * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L374
  */
 function debounce<F extends (...args: any) => void>(
   func: F,
@@ -49,24 +49,35 @@ function debounce<F extends (...args: any) => void>(
 ) {
   const {
     call,
+    // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in
+    // Lodash v5) information.
     isIdle: _isIdle,
     ...rest
   } = funnel(
     // Debounce stores the latest args it was called with for the next
     // invocation of the callback.
     (_, ...args: Parameters<F>) => args,
-    // In Lodash you can disable both the trailing and leading edges of the
-    // debounce window, effectively causing the function to never be invoked.
-    // Remeda uses the invokedAt enum exactly to avoid this situation; so to
-    // simulate Lodash we need to only pass the callback when at least one of
-    // them is enabled.
-    trailing || leading ? func : doNothing(),
+    trailing || leading
+      ? // Funnel provides more control over the args, but lodash simply passes
+        // them through, to replicate this behavior we need to spread the args
+        // array we maintain via the reducer above.
+        (args) => func(...args)
+      : // In Lodash you can disable both the trailing and leading edges of the
+        // debounce window, effectively causing the function to never be
+        // invoked. Remeda uses the invokedAt enum exactly to prevent such a
+        // situation; so to simulate Lodash we need to only pass the callback
+        // when at least one of them is enabled.
+        doNothing(),
     {
       burstCoolDownMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
+  // Lodash uses a legacy JS-isms to attach helper functions to the main
+  // callback of `debounce`. In Remeda we return a proper object where the
+  // callback is one of the available properties. Here we destructure and then
+  // reconstruct the object to fit the Lodash API.
   return Object.assign(call, rest);
 }
 
@@ -77,24 +88,24 @@ function debounce<F extends (...args: any) => void>(
 // The number is in milliseconds.
 const UT = 16;
 
-describe("Lodash: test/debounce.spec.js", () => {
+describe("The Lodash spec", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, UT);
-    debounced();
-    debounced();
-    debounced();
+    debounced("a");
+    debounced("b");
+    debounced("c");
 
     expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(4 * UT);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith("c");
 
-    debounced();
-    debounced();
-    debounced();
+    debounced("d");
+    debounced("e");
+    debounced("f");
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -105,7 +116,6 @@ describe("Lodash: test/debounce.spec.js", () => {
 
   it("should not immediately call `func` when `wait` is `0`", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, 0);
     debounced();
     debounced();
@@ -120,7 +130,6 @@ describe("Lodash: test/debounce.spec.js", () => {
 
   it("should apply default options", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, UT, {});
     debounced();
 
@@ -134,12 +143,11 @@ describe("Lodash: test/debounce.spec.js", () => {
   it("should support a `leading` option", async () => {
     const mockWithLeading = vi.fn();
     const mockWithLeadingAndTrailing = vi.fn();
-
-    // This Lodash test configures both debouncers with the same timing
-    // options which doesn't seem to be the intent of the test based on the test
-    // name and the debouncer names. We fixed it in our test.
     const withLeading = debounce(mockWithLeading, UT, {
       leading: true,
+      // This Lodash test configures both debouncers with the same timing
+      // options which doesn't seem to be the intent of the test based on the test
+      // name and the debouncer names. We fixed it in our test.
       trailing: false,
     });
     const withLeadingAndTrailing = debounce(mockWithLeadingAndTrailing, UT, {
@@ -147,10 +155,12 @@ describe("Lodash: test/debounce.spec.js", () => {
       trailing: true,
     });
     withLeading();
+
+    expect(mockWithLeading).toHaveBeenCalledTimes(1);
+
     withLeadingAndTrailing();
     withLeadingAndTrailing();
 
-    expect(mockWithLeading).toHaveBeenCalledTimes(1);
     expect(mockWithLeadingAndTrailing).toHaveBeenCalledTimes(1);
 
     await sleep(2 * UT);
@@ -166,13 +176,14 @@ describe("Lodash: test/debounce.spec.js", () => {
   it("should support a `trailing` option", async () => {
     const mockWith = vi.fn();
     const mockWithout = vi.fn();
-
     const withTrailing = debounce(mockWith, UT, { trailing: true });
     const withoutTrailing = debounce(mockWithout, UT, { trailing: false });
     withTrailing();
-    withoutTrailing();
 
     expect(mockWith).toHaveBeenCalledTimes(0);
+
+    withoutTrailing();
+
     expect(mockWithout).toHaveBeenCalledTimes(0);
 
     await sleep(2 * UT);
@@ -183,7 +194,6 @@ describe("Lodash: test/debounce.spec.js", () => {
 
   it("should support a `maxWait` option", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
     debounced();
@@ -207,7 +217,6 @@ describe("Lodash: test/debounce.spec.js", () => {
   it("should support `maxWait` in a tight loop", async () => {
     const mockWith = vi.fn();
     const mockWithout = vi.fn();
-
     const withMaxWait = debounce(mockWith, 2 * UT, { maxWait: 4 * UT });
     const withoutMaxWait = debounce(mockWithout, 3 * UT);
     const end = Date.now() + 10 * UT;
@@ -230,7 +239,8 @@ describe("Lodash: test/debounce.spec.js", () => {
     expect(mockWithout).toHaveBeenCalledTimes(0);
     expect(mockWith).toHaveBeenCalledTimes(0);
 
-    await sleep(1);
+    // Yield execution to allow the timeouts in the debouncer to run.
+    await sleep(0);
 
     expect(mockWithout).toHaveBeenCalledTimes(0);
     expect(mockWith).toHaveBeenCalledTimes(1);
@@ -238,7 +248,6 @@ describe("Lodash: test/debounce.spec.js", () => {
 
   it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, 6 * UT, { maxWait: 6 * UT });
     debounced();
     await sleep(5.5 * UT);
@@ -254,7 +263,6 @@ describe("Lodash: test/debounce.spec.js", () => {
 
   it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
     const mockFn = vi.fn();
-
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
     await sleep(4 * UT);
@@ -270,7 +278,6 @@ describe("Lodash: test/debounce.spec.js", () => {
   it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
     const mockFn = vi.fn();
     const DATA = {};
-
     const debounced = debounce(mockFn, UT, { leading: true, maxWait: 2 * UT });
     while (mockFn.mock.calls.length < 2) {
       debounced(DATA, "a");
@@ -280,7 +287,7 @@ describe("Lodash: test/debounce.spec.js", () => {
     await sleep(2 * UT);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
-    expect(mockFn).toHaveBeenLastCalledWith([DATA, "a"]);
+    expect(mockFn).toHaveBeenLastCalledWith(DATA, "a");
   });
 });
 

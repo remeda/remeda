@@ -4,6 +4,7 @@
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
+import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
@@ -31,8 +32,9 @@ import { identity } from "./identity";
  * use-cases that would have differing runtime behaviors.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
- * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
- * @see Lodash Tests: https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
+ * @see Lodash Implementation: https://github.com/lodash/lodash/blob/4.17.21/lodash.js#L10372
+ * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187
+ * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L374
  */
 function debounceWithCachedValue<F extends (...args: any) => any>(
   func: F,
@@ -49,11 +51,24 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 ) {
   let cachedValue: ReturnType<F> | undefined;
 
-  const debouncer = funnel(
+  const { call, flush, cancel } = funnel(
+    // Debounce stores the latest args it was called with for the next
+    // invocation of the callback.
     (_, ...args: Parameters<F>) => args,
-    (args) => {
-      cachedValue = func(...args) as ReturnType<F>;
-    },
+    leading || trailing
+      ? // Funnel provides more control over the args, but lodash simply passes
+        // them through, to replicate this behavior we need to spread the args
+        // array we maintain via the reducer above.
+        (args) => {
+          // Every time the function is invoked the cached value is updated.
+          cachedValue = func(...args) as ReturnType<F>;
+        }
+      : // In Lodash you can disable both the trailing and leading edges of the
+        // debounce window, effectively causing the function to never be
+        // invoked. Remeda uses the invokedAt enum exactly to prevent such a
+        // situation; so to simulate Lodash we need to only pass the callback
+        // when at least one of them is enabled.
+        doNothing(),
     {
       burstCoolDownMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
@@ -61,27 +76,20 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
     },
   );
 
-  return {
-    call: (...args: Parameters<F>): ReturnType<F> | undefined => {
-      debouncer.call(...args);
+  return Object.assign(
+    (...args: Parameters<F>) => {
+      call(...args);
       return cachedValue;
     },
+    {
+      flush: () => {
+        flush();
+        return cachedValue;
+      },
 
-    flush: () => {
-      debouncer.flush();
-      return cachedValue;
+      cancel,
     },
-
-    cancel: debouncer.cancel,
-
-    get cachedValue() {
-      return cachedValue;
-    },
-
-    get isIdle() {
-      return debouncer.isIdle;
-    },
-  };
+  );
 }
 
 // We need some non-trivial duration to use in all our tests, to abstract the
@@ -92,32 +100,39 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 const UT = 16;
 
 // @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
-describe("Lodash: test/debounce.spec.js", () => {
+describe("The Lodash spec", () => {
   it("should debounce a function", async () => {
-    const debounced = debounceWithCachedValue(identity(), UT);
+    const mockFn = vi.fn(identity());
+    const debounced = debounceWithCachedValue(mockFn, UT);
 
-    expect(debounced.call("a")).toBeUndefined();
-    expect(debounced.call("b")).toBeUndefined();
-    expect(debounced.call("c")).toBeUndefined();
+    expect(debounced("a")).toBeUndefined();
+    expect(debounced("b")).toBeUndefined();
+    expect(debounced("c")).toBeUndefined();
+    expect(mockFn).toHaveBeenCalledTimes(0);
 
     await sleep(4 * UT);
 
-    expect(debounced.call("d")).toBe("c");
-    expect(debounced.call("e")).toBe("c");
-    expect(debounced.call("f")).toBe("c");
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(debounced("d")).toBe("c");
+    expect(debounced("e")).toBe("c");
+    expect(debounced("f")).toBe("c");
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    await sleep(4 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   it("subsequent debounced calls return the last `func` result", async () => {
     const debounced = debounceWithCachedValue(identity(), UT);
-    debounced.call("a");
+    debounced("a");
+    await sleep(2 * UT);
+
+    expect(debounced("b")).not.toBe("b");
 
     await sleep(2 * UT);
 
-    expect(debounced.call("b")).not.toBe("b");
-
-    await sleep(2 * UT);
-
-    expect(debounced.call("c")).not.toBe("c");
+    expect(debounced("c")).not.toBe("c");
   });
 
   it("subsequent leading debounced calls return the last `func` result", async () => {
@@ -126,16 +141,17 @@ describe("Lodash: test/debounce.spec.js", () => {
       trailing: false,
     });
 
-    expect(debounced.call("a")).toBe("a");
-    expect(debounced.call("b")).toBe("a");
+    expect(debounced("a")).toBe("a");
+    expect(debounced("b")).toBe("a");
 
     await sleep(2 * UT);
 
-    expect(debounced.call("c")).toBe("c");
-    expect(debounced.call("d")).toBe("c");
+    expect(debounced("c")).toBe("c");
+    expect(debounced("d")).toBe("c");
   });
 
   it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+    const DATA = {};
     const mockFn = vi.fn(constant(false));
 
     // In Lodash the test uses both `leading` and `trailing` timing options
@@ -148,13 +164,14 @@ describe("Lodash: test/debounce.spec.js", () => {
     // mockFn, and the test to fail.
     const debounced = debounceWithCachedValue(mockFn, UT, { maxWait: 2 * UT });
 
-    while (debounced.call() ?? true) {
+    while (debounced(DATA, "a") ?? true) {
       // eslint-disable-next-line no-await-in-loop -- We sleep to yield execution so that the timeouts in the debouncer have a chance to run.
       await sleep(0);
     }
     await sleep(2 * UT);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
+    expect(mockFn).toHaveBeenLastCalledWith(DATA, "a");
   });
 });
 
@@ -167,79 +184,44 @@ describe("Features not tested by Lodash", () => {
         debouncer.cancel();
       }).not.toThrow();
 
-      expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer.call("world")).toBe("hello");
+      expect(debouncer("world")).toBe("hello");
     });
 
     it("can cancel the timer", async () => {
       const debouncer = debounceWithCachedValue(constant("Hello, World!"), UT);
 
-      expect(debouncer.call()).toBeUndefined();
+      expect(debouncer()).toBeUndefined();
 
       await sleep(1);
 
-      expect(debouncer.call()).toBeUndefined();
+      expect(debouncer()).toBeUndefined();
 
       debouncer.cancel();
 
       await sleep(UT);
 
-      expect(debouncer.call()).toBeUndefined();
+      expect(debouncer()).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer.call()).toBe("Hello, World!");
+      expect(debouncer()).toBe("Hello, World!");
     });
 
     it("can cancel after the timer ends", async () => {
       const debouncer = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer.call("world")).toBe("hello");
+      expect(debouncer("world")).toBe("hello");
       expect(() => {
         debouncer.cancel();
       }).not.toThrow();
-    });
-  });
-
-  describe("cachedValue", () => {
-    it("can return a cached value", () => {
-      const debouncer = debounceWithCachedValue(identity(), UT, {
-        leading: true,
-        trailing: false,
-      });
-
-      expect(debouncer.cachedValue).toBeUndefined();
-      expect(debouncer.call("hello")).toBe("hello");
-      expect(debouncer.cachedValue).toBe("hello");
-    });
-  });
-
-  describe("isIdle", () => {
-    it("can check for inflight timers (leading)", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT, {
-        leading: true,
-        trailing: false,
-      });
-
-      expect(debouncer.isIdle).toBe(true);
-
-      expect(debouncer.call("hello")).toBe("hello");
-      expect(debouncer.isIdle).toBe(false);
-
-      await sleep(1);
-
-      expect(debouncer.isIdle).toBe(false);
-
-      await sleep(UT);
-
-      expect(debouncer.isIdle).toBe(true);
     });
   });
 
@@ -249,21 +231,21 @@ describe("Features not tested by Lodash", () => {
 
       expect(debouncer.flush()).toBeUndefined();
 
-      expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer.call("world")).toBe("hello");
+      expect(debouncer("world")).toBe("hello");
     });
 
     it("can flush during a cool-down", async () => {
       const debouncer = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer("hello")).toBeUndefined();
 
       await sleep(1);
 
-      expect(debouncer.call("world")).toBeUndefined();
+      expect(debouncer("world")).toBeUndefined();
 
       await sleep(1);
 
@@ -273,7 +255,7 @@ describe("Features not tested by Lodash", () => {
     it("can flush after a cool-down", async () => {
       const debouncer = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer("hello")).toBeUndefined();
 
       await sleep(UT);
 
