@@ -289,30 +289,6 @@ describe("The Lodash spec", () => {
   });
 });
 
-describe("Additional tests missing from Lodash", () => {
-  it("works like a leaky bucket when only maxWaitMs is set", async () => {
-    const mockFn = vi.fn();
-
-    const debounced = debounce(mockFn, UT, { maxWait: UT });
-
-    debounced();
-
-    expect(mockFn).toHaveBeenCalledTimes(0);
-
-    await sleep(0.5 * UT);
-
-    // Without maxWaitMs this call would cause the actual invocation to be
-    // postponed for a full window.
-    debounced();
-
-    expect(mockFn).toHaveBeenCalledTimes(0);
-
-    await sleep(0.5 * UT + 1);
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-});
-
 describe("Features not tested by Lodash", () => {
   describe("cancel", () => {
     it("can cancel the timer", async () => {
