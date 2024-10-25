@@ -10,7 +10,7 @@ import { identity } from "./identity";
 /**
  * A reference implementation of the Lodash `debounce` function using the
  * Remeda `funnel` function. While migrating from Lodash you can copy this
- * function as-is into your code base and use it as a drop-in replacement; but
+ * function as-is into your codebase and use it as a drop-in replacement; but
  * we recommend eventually inlining the call to `funnel` so you can adjust the
  * function to your specific needs.
  *
@@ -22,12 +22,13 @@ import { identity } from "./identity";
  * The following tests in this file are based on the Lodash tests for debounce.
  * They have been adapted to work with our testing framework, have been fixed
  * or expanded slightly were it felt necessary, and have been modernized for
- * better readability. Tests that are unrelated to the cache capability have
- * been removed to avoid duplication with the other test file.
+ * better readability. The names of the test cases have been preserved to ease
+ * comparing them to the original tests. Tests that are unrelated to the cache
+ * capability have been removed to avoid duplication with the other test file.
  *
- * Note that this means that wherever Lodash offered a concrete spec, we made
- * sure our reference implementation maintains the same spec, but there might
- * be untested use-cases that would have differing runtime behaviors.
+ * Note that this means that whenever Lodash offered a concrete spec, we made
+ * sure our reference implementation respects it, but there might be untested
+ * use-cases that would have differing runtime behaviors.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
@@ -132,24 +133,26 @@ describe("Lodash: test/debounce.spec.js", () => {
     expect(debounced.call("d")).toBe("c");
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests -- TODO: This test might be broken because lodash is broken and the test was over-fitted to their implementation.
-  it.skip("should invoke the trailing call with the correct arguments and `this` binding", async () => {
-    let callCount = 0;
-    const debounced = debounceWithCachedValue(
-      () => {
-        callCount += 1;
-        return callCount > 1;
-      },
-      UT,
-      { leading: true, maxWait: 2 * UT },
-    );
-    while (!(debounced.call() ?? false)) {
+  it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+    const mockFn = vi.fn(constant(false));
+
+    // In Lodash the test uses both `leading` and `trailing` timing options
+    // for this test, but it only works because the `leading` option in Lodash
+    // runs within the same execution frame as the call to the debouncer; the
+    // Lodash test also passes when the `leading` option is removed. For our
+    // implementation the "leading" option is delayed to the next execution
+    // frame, which, when used together with `maxWait` would cause the debouncer
+    // to see a "quiet window" and trigger an additional invocation of the
+    // mockFn, and the test to fail.
+    const debounced = debounceWithCachedValue(mockFn, UT, { maxWait: 2 * UT });
+
+    while (debounced.call() ?? true) {
       // eslint-disable-next-line no-await-in-loop -- We sleep to yield execution so that the timeouts in the debouncer have a chance to run.
       await sleep(0);
     }
     await sleep(2 * UT);
 
-    expect(callCount).toBe(2);
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });
 

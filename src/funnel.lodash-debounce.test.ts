@@ -22,11 +22,12 @@ import { funnel } from "./funnel";
  * The following tests in this file are based on the Lodash tests for debounce.
  * They have been adapted to work with our testing framework, have been fixed
  * or expanded slightly were it felt necessary, and have been modernized for
- * better readability.
+ * better readability. The names of the test cases have been preserved to ease
+ * comparing them to the original tests.
  *
- * Note that this means that wherever Lodash offered a concrete spec, we made
- * sure our reference implementation maintains the same spec, but there might
- * be untested use-cases that would have differing runtime behaviors.
+ * Note that this means that whenever Lodash offered a concrete spec, we made
+ * sure our reference implementation respects it, but there might be untested
+ * use-cases that would have differing runtime behaviors.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/v5-wip/src/debounce.ts
