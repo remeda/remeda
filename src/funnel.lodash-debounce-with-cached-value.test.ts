@@ -266,4 +266,18 @@ describe("Features not tested by Lodash", () => {
       expect(debouncer.flush()).toBe("hello");
     });
   });
+
+  it("does nothing when neither leading nor trailing are enabled", async () => {
+    const debouncer = debounceWithCachedValue(identity(), UT, {
+      leading: false,
+      trailing: false,
+    });
+
+    expect(debouncer("hello")).toBeUndefined();
+    expect(debouncer("world")).toBeUndefined();
+
+    await sleep(4 * UT);
+
+    expect(debouncer("goodbye")).toBeUndefined();
+  });
 });

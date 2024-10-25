@@ -375,6 +375,26 @@ describe("Features not tested by Lodash", () => {
       }).not.toThrow();
     });
   });
+
+  it("does nothing when neither leading nor trailing are enabled", async () => {
+    const mockFn = vi.fn();
+    const debounced = debounce(mockFn, UT, { leading: false, trailing: false });
+    debounced();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    debounced();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
 });
 
 /**
