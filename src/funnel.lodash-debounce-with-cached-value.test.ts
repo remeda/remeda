@@ -86,8 +86,10 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 
 // We need some non-trivial duration to use in all our tests, to abstract the
 // actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
-// positive integer, the actual value doesn't matter. The number represents MS.
-const UT = 32;
+// positive integer, the actual value doesn't matter (but the larger it is,
+// the longer the tests would take to run); the value used by Lodash is 32.
+// The number is in milliseconds.
+const UT = 16;
 
 // @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
 describe("Lodash: test/debounce.spec.js", () => {
@@ -157,117 +159,125 @@ describe("Lodash: test/debounce.spec.js", () => {
 });
 
 describe("Features not tested by Lodash", () => {
-  it("can cancel before the timer starts", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT);
+  describe("cancel", () => {
+    it("can cancel before the timer starts", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT);
 
-    expect(() => {
-      debouncer.cancel();
-    }).not.toThrow();
+      expect(() => {
+        debouncer.cancel();
+      }).not.toThrow();
 
-    expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer.call("hello")).toBeUndefined();
 
-    await sleep(UT);
+      await sleep(UT);
 
-    expect(debouncer.call("world")).toBe("hello");
-  });
-
-  it("can cancel the timer", async () => {
-    const debouncer = debounceWithCachedValue(constant("Hello, World!"), UT);
-
-    expect(debouncer.call()).toBeUndefined();
-
-    await sleep(1);
-
-    expect(debouncer.call()).toBeUndefined();
-
-    debouncer.cancel();
-
-    await sleep(UT);
-
-    expect(debouncer.call()).toBeUndefined();
-
-    await sleep(UT);
-
-    expect(debouncer.call()).toBe("Hello, World!");
-  });
-
-  it("can cancel after the timer ends", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT);
-
-    expect(debouncer.call("hello")).toBeUndefined();
-
-    await sleep(UT);
-
-    expect(debouncer.call("world")).toBe("hello");
-    expect(() => {
-      debouncer.cancel();
-    }).not.toThrow();
-  });
-
-  it("can return a cached value", () => {
-    const debouncer = debounceWithCachedValue(identity(), UT, {
-      leading: true,
-      trailing: false,
+      expect(debouncer.call("world")).toBe("hello");
     });
 
-    expect(debouncer.cachedValue).toBeUndefined();
-    expect(debouncer.call("hello")).toBe("hello");
-    expect(debouncer.cachedValue).toBe("hello");
-  });
+    it("can cancel the timer", async () => {
+      const debouncer = debounceWithCachedValue(constant("Hello, World!"), UT);
 
-  it("can check for inflight timers (leading)", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT, {
-      leading: true,
-      trailing: false,
+      expect(debouncer.call()).toBeUndefined();
+
+      await sleep(1);
+
+      expect(debouncer.call()).toBeUndefined();
+
+      debouncer.cancel();
+
+      await sleep(UT);
+
+      expect(debouncer.call()).toBeUndefined();
+
+      await sleep(UT);
+
+      expect(debouncer.call()).toBe("Hello, World!");
     });
 
-    expect(debouncer.isIdle).toBe(true);
+    it("can cancel after the timer ends", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT);
 
-    expect(debouncer.call("hello")).toBe("hello");
-    expect(debouncer.isIdle).toBe(false);
+      expect(debouncer.call("hello")).toBeUndefined();
 
-    await sleep(1);
+      await sleep(UT);
 
-    expect(debouncer.isIdle).toBe(false);
-
-    await sleep(UT);
-
-    expect(debouncer.isIdle).toBe(true);
+      expect(debouncer.call("world")).toBe("hello");
+      expect(() => {
+        debouncer.cancel();
+      }).not.toThrow();
+    });
   });
 
-  it("can flush before a cool-down", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT);
+  describe("cachedValue", () => {
+    it("can return a cached value", () => {
+      const debouncer = debounceWithCachedValue(identity(), UT, {
+        leading: true,
+        trailing: false,
+      });
 
-    expect(debouncer.flush()).toBeUndefined();
-
-    expect(debouncer.call("hello")).toBeUndefined();
-
-    await sleep(UT);
-
-    expect(debouncer.call("world")).toBe("hello");
+      expect(debouncer.cachedValue).toBeUndefined();
+      expect(debouncer.call("hello")).toBe("hello");
+      expect(debouncer.cachedValue).toBe("hello");
+    });
   });
 
-  it("can flush during a cool-down", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT);
+  describe("isIdle", () => {
+    it("can check for inflight timers (leading)", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT, {
+        leading: true,
+        trailing: false,
+      });
 
-    expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer.isIdle).toBe(true);
 
-    await sleep(1);
+      expect(debouncer.call("hello")).toBe("hello");
+      expect(debouncer.isIdle).toBe(false);
 
-    expect(debouncer.call("world")).toBeUndefined();
+      await sleep(1);
 
-    await sleep(1);
+      expect(debouncer.isIdle).toBe(false);
 
-    expect(debouncer.flush()).toBe("world");
+      await sleep(UT);
+
+      expect(debouncer.isIdle).toBe(true);
+    });
   });
 
-  it("can flush after a cool-down", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT);
+  describe("flush", () => {
+    it("can flush before a cool-down", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT);
 
-    expect(debouncer.call("hello")).toBeUndefined();
+      expect(debouncer.flush()).toBeUndefined();
 
-    await sleep(UT);
+      expect(debouncer.call("hello")).toBeUndefined();
 
-    expect(debouncer.flush()).toBe("hello");
+      await sleep(UT);
+
+      expect(debouncer.call("world")).toBe("hello");
+    });
+
+    it("can flush during a cool-down", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT);
+
+      expect(debouncer.call("hello")).toBeUndefined();
+
+      await sleep(1);
+
+      expect(debouncer.call("world")).toBeUndefined();
+
+      await sleep(1);
+
+      expect(debouncer.flush()).toBe("world");
+    });
+
+    it("can flush after a cool-down", async () => {
+      const debouncer = debounceWithCachedValue(identity(), UT);
+
+      expect(debouncer.call("hello")).toBeUndefined();
+
+      await sleep(UT);
+
+      expect(debouncer.flush()).toBe("hello");
+    });
   });
 });

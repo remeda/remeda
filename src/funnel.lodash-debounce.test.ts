@@ -64,8 +64,10 @@ function debounce<F extends (...args: any) => void>(
 
 // We need some non-trivial duration to use in all our tests, to abstract the
 // actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
-// positive integer, the actual value doesn't matter. The number represents MS.
-const UT = 32;
+// positive integer, the actual value doesn't matter (but the larger it is,
+// the longer the tests would take to run); the value used by Lodash is 32.
+// The number is in milliseconds.
+const UT = 16;
 
 describe("Lodash: test/debounce.spec.js", () => {
   it("should debounce a function", async () => {
