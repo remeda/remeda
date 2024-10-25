@@ -298,80 +298,84 @@ describe("Additional tests missing from Lodash", () => {
 });
 
 describe("Features not tested by Lodash", () => {
-  it("can cancel the timer", async () => {
-    const mockFn = vi.fn();
-    const debounced = debounce(mockFn, UT);
+  describe("cancel", () => {
+    it("can cancel the timer", async () => {
+      const mockFn = vi.fn();
+      const debounced = debounce(mockFn, UT);
 
-    debounced.call();
+      debounced.call();
 
-    expect(mockFn).not.toHaveBeenCalled();
+      expect(mockFn).toHaveBeenCalledTimes(0);
 
-    await sleep(1);
-    debounced.call();
+      await sleep(1);
+      debounced.call();
 
-    expect(mockFn).not.toHaveBeenCalled();
+      expect(mockFn).toHaveBeenCalledTimes(0);
 
-    debounced.cancel();
-
-    await sleep(UT);
-    debounced.call();
-
-    expect(mockFn).not.toHaveBeenCalled();
-
-    await sleep(UT);
-    debounced.call();
-
-    expect(mockFn).toHaveBeenCalledTimes(1);
-  });
-
-  it("can cancel after the timer ends", async () => {
-    const debounced = debounce(doNothing(), UT);
-    debounced.call();
-    await sleep(UT);
-
-    debounced.call();
-
-    expect(() => {
       debounced.cancel();
-    }).not.toThrow();
-  });
 
-  it("can check for inflight timers (trailing)", async () => {
-    const debounced = debounce(doNothing(), UT);
+      await sleep(UT);
+      debounced.call();
 
-    expect(debounced.isIdle).toBe(true);
+      expect(mockFn).toHaveBeenCalledTimes(0);
 
-    debounced.call();
+      await sleep(UT);
+      debounced.call();
 
-    expect(debounced.isIdle).toBe(false);
-
-    await sleep(1);
-
-    expect(debounced.isIdle).toBe(false);
-
-    await sleep(UT);
-
-    expect(debounced.isIdle).toBe(true);
-  });
-
-  it("can check for inflight timers (leading)", async () => {
-    const debounced = debounce(doNothing(), UT, {
-      leading: true,
-      trailing: false,
+      expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    expect(debounced.isIdle).toBe(true);
+    it("can cancel after the timer ends", async () => {
+      const debounced = debounce(doNothing(), UT);
+      debounced.call();
+      await sleep(UT);
 
-    debounced.call();
+      debounced.call();
 
-    expect(debounced.isIdle).toBe(false);
+      expect(() => {
+        debounced.cancel();
+      }).not.toThrow();
+    });
+  });
 
-    await sleep(1);
+  describe("isIdle", () => {
+    it("can check for inflight timers (trailing)", async () => {
+      const debounced = debounce(doNothing(), UT);
 
-    expect(debounced.isIdle).toBe(false);
+      expect(debounced.isIdle).toBe(true);
 
-    await sleep(UT);
+      debounced.call();
 
-    expect(debounced.isIdle).toBe(true);
+      expect(debounced.isIdle).toBe(false);
+
+      await sleep(1);
+
+      expect(debounced.isIdle).toBe(false);
+
+      await sleep(UT);
+
+      expect(debounced.isIdle).toBe(true);
+    });
+
+    it("can check for inflight timers (leading)", async () => {
+      const debounced = debounce(doNothing(), UT, {
+        leading: true,
+        trailing: false,
+      });
+
+      expect(debounced.isIdle).toBe(true);
+
+      debounced.call();
+
+      expect(debounced.isIdle).toBe(false);
+
+      await sleep(1);
+
+      expect(debounced.isIdle).toBe(false);
+
+      await sleep(UT);
+
+      expect(debounced.isIdle).toBe(true);
+    });
   });
 });
