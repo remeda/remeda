@@ -31,7 +31,6 @@ import { funnel } from "./funnel";
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#throttle
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/4.17.21/lodash.js#L10965
- * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L1347
  */
 function throttle<F extends (...args: any) => void>(
@@ -83,7 +82,7 @@ function throttle<F extends (...args: any) => void>(
 // The number is in milliseconds.
 const UT = 16;
 
-describe("The Lodash spec", () => {
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", () => {
   it("should throttle a function", async () => {
     const mockFn = vi.fn();
     const throttled = throttle(mockFn, UT);
@@ -145,7 +144,8 @@ describe("The Lodash spec", () => {
     while (Date.now() < end) {
       throttled();
     }
-    await yieldExecution();
+    // Yield execution to allow timeouts to run
+    await sleep(0);
 
     expect(mockFn).toHaveBeenCalledWith();
   });
@@ -229,8 +229,88 @@ describe("The Lodash spec", () => {
   });
 });
 
-/**
- * Funnel relies on letting the timeouts run. To ensure that happens the tests
- * need to yield execution.
- */
-const yieldExecution = async () => await sleep(0);
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
+  it("should use a default `wait` of `0`", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn);
+    throttled();
+    await sleep(UT);
+    throttled();
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
+  });
+
+  // eslint-disable-next-line vitest/no-disabled-tests -- FIXME!
+  it.skip("supports recursive calls", async () => {
+    const actual = [] as Array<string>;
+    const queue = ["a", "b", "c"];
+    const throttled = throttle((chr: string) => {
+      actual.push(chr);
+      const next = queue.shift();
+      if (next !== undefined) {
+        throttled(next);
+      }
+    }, UT);
+    throttled(queue.shift()!);
+
+    expect(actual).toStrictEqual(["a"]);
+
+    await sleep(8 * UT);
+
+    expect(actual).toStrictEqual(["a", "b", "c"]);
+  });
+
+  it("should support cancelling delayed calls", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn, UT, { leading: false });
+    throttled();
+    throttled.cancel();
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  it("should reset `lastCalled` after cancelling", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn, UT, { leading: true });
+    throttled();
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    throttled.cancel();
+    throttled();
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
+
+    throttled();
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(3);
+  });
+
+  it("should support flushing delayed calls", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn, UT, { leading: false });
+    throttled();
+    throttled.flush();
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn, UT);
+    throttled.cancel();
+    throttled.flush();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+});
