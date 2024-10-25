@@ -182,102 +182,102 @@ describe("The Lodash spec", () => {
 describe("Features not tested by Lodash", () => {
   describe("cancel", () => {
     it("can cancel before the timer starts", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT);
+      const debounced = debounceWithCachedValue(identity(), UT);
 
       expect(() => {
-        debouncer.cancel();
+        debounced.cancel();
       }).not.toThrow();
 
-      expect(debouncer("hello")).toBeUndefined();
+      expect(debounced("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer("world")).toBe("hello");
+      expect(debounced("world")).toBe("hello");
     });
 
     it("can cancel the timer", async () => {
-      const debouncer = debounceWithCachedValue(constant("Hello, World!"), UT);
+      const debounced = debounceWithCachedValue(constant("Hello, World!"), UT);
 
-      expect(debouncer()).toBeUndefined();
+      expect(debounced()).toBeUndefined();
 
       await sleep(1);
 
-      expect(debouncer()).toBeUndefined();
+      expect(debounced()).toBeUndefined();
 
-      debouncer.cancel();
-
-      await sleep(UT);
-
-      expect(debouncer()).toBeUndefined();
+      debounced.cancel();
 
       await sleep(UT);
 
-      expect(debouncer()).toBe("Hello, World!");
+      expect(debounced()).toBeUndefined();
+
+      await sleep(UT);
+
+      expect(debounced()).toBe("Hello, World!");
     });
 
     it("can cancel after the timer ends", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT);
+      const debounced = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer("hello")).toBeUndefined();
+      expect(debounced("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer("world")).toBe("hello");
+      expect(debounced("world")).toBe("hello");
       expect(() => {
-        debouncer.cancel();
+        debounced.cancel();
       }).not.toThrow();
     });
   });
 
   describe("flush", () => {
     it("can flush before a cool-down", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT);
+      const debounced = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer.flush()).toBeUndefined();
+      expect(debounced.flush()).toBeUndefined();
 
-      expect(debouncer("hello")).toBeUndefined();
+      expect(debounced("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer("world")).toBe("hello");
+      expect(debounced("world")).toBe("hello");
     });
 
     it("can flush during a cool-down", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT);
+      const debounced = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer("hello")).toBeUndefined();
-
-      await sleep(1);
-
-      expect(debouncer("world")).toBeUndefined();
+      expect(debounced("hello")).toBeUndefined();
 
       await sleep(1);
 
-      expect(debouncer.flush()).toBe("world");
+      expect(debounced("world")).toBeUndefined();
+
+      await sleep(1);
+
+      expect(debounced.flush()).toBe("world");
     });
 
     it("can flush after a cool-down", async () => {
-      const debouncer = debounceWithCachedValue(identity(), UT);
+      const debounced = debounceWithCachedValue(identity(), UT);
 
-      expect(debouncer("hello")).toBeUndefined();
+      expect(debounced("hello")).toBeUndefined();
 
       await sleep(UT);
 
-      expect(debouncer.flush()).toBe("hello");
+      expect(debounced.flush()).toBe("hello");
     });
   });
 
   it("does nothing when neither leading nor trailing are enabled", async () => {
-    const debouncer = debounceWithCachedValue(identity(), UT, {
+    const debounced = debounceWithCachedValue(identity(), UT, {
       leading: false,
       trailing: false,
     });
 
-    expect(debouncer("hello")).toBeUndefined();
-    expect(debouncer("world")).toBeUndefined();
+    expect(debounced("hello")).toBeUndefined();
+    expect(debounced("world")).toBeUndefined();
 
     await sleep(4 * UT);
 
-    expect(debouncer("goodbye")).toBeUndefined();
+    expect(debounced("goodbye")).toBeUndefined();
   });
 });
