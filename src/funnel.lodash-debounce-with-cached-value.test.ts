@@ -103,7 +103,6 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 // The number is in milliseconds.
 const UT = 16;
 
-// @see https://github.com/lodash/lodash/blob/v5-wip/test/debounce.spec.js
 describe("The Lodash spec", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn(identity());
