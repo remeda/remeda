@@ -49,7 +49,6 @@
     "build": "tsup",
     "check": "tsc --project tsconfig.source.json",
     "check:dist": "tsc --project tsconfig.dist.json",
-    "coverage": "vitest run --coverage",
     "docs:build": "cd docs && npm ci && npm run build:all",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
@@ -57,6 +56,7 @@
     "prettier": "prettier . --write",
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
+    "test:coverage": "vitest run --coverage",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
@@ -66,8 +66,8 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.16.4",
     "@eslint/js": "^9.11.1",
-    "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
+    "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.6.1",
     "@vitest/coverage-v8": "^2.1.1",
     "@vitest/eslint-plugin": "^1.1.4",
