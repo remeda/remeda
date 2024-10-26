@@ -175,6 +175,10 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     const mockWith = vi.fn();
     const mockWithout = vi.fn();
     const withTrailing = debounce(mockWith, UT, { trailing: true });
+    // The lodash test disabled `trailing` but doesn't enable `leading`
+    // resulting in a debouncer that has no effective timing policy. We handle
+    // this situation so we kept the test, but it might be have been what the
+    // test was supposed to test.
     const withoutTrailing = debounce(mockWithout, UT, { trailing: false });
     withTrailing();
 

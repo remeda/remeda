@@ -313,3 +313,19 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
+
+describe("Not tested by Lodash", () => {
+  it("should do nothing when `leading` and `trailing` are both `disabled`", async () => {
+    const mockFn = vi.fn();
+    const throttled = throttle(mockFn, UT, { leading: false, trailing: false });
+    throttled();
+    throttled();
+    throttled();
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+});
