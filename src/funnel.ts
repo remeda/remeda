@@ -32,7 +32,7 @@ type Funnel<Args extends RestArguments> = {
   readonly flush: () => void;
 
   /**
-   * The funnel is in it's initial state (there are no active timers).
+   * The funnel is in it's initial state (there are no active timeouts).
    */
   readonly isIdle: boolean;
 };
@@ -88,9 +88,9 @@ type Funnel<Args extends RestArguments> = {
  * properties:
  * - `cancel` - Resets the funnel to it's initial state, discarding the current
  * `reducedArgs` result without calling `execute` on it.
- * - `flush` - Triggers an invocation even if there are active timers, and then
- * resets the funnel to it's initial state.
- * - `isIdle` - Checks if there are any active timers.
+ * - `flush` - Triggers an invocation even if there are active timeouts, and
+ * then resets the funnel to it's initial state.
+ * - `isIdle` - Checks if there are any active timeouts.
  * @signature
  *   R.funnel(reduceArgs, execute, policy);
  * @example
@@ -180,51 +180,47 @@ export function funnel<Args extends RestArguments, R>(
 
   return {
     call: (...args) => {
-      // Because `invoke` which might be called later modifies `delayTimeoutId`
-      // we need to store this value ahead of time so we can act on it's
-      // original value.
-      const isIdle =
+      // We act based on the initial state of the timeouts before the call is
+      // handled and causes the timeouts to change.
+      const wasIdle =
         burstTimeoutId === undefined && delayTimeoutId === undefined;
 
-      if (invokedAt !== "start" || isIdle) {
+      if (invokedAt !== "start" || wasIdle) {
         preparedData = reduceArgs(preparedData, ...args);
       }
 
-      if (invokedAt !== "end" && isIdle) {
-        invoke();
-      }
-
-      if (burstCoolDownMs === undefined) {
-        // The burst mechanism isn't used.
-        return;
-      }
-
-      if (burstTimeoutId === undefined && !isIdle) {
+      if (burstTimeoutId === undefined && !wasIdle) {
         // We are not in an active burst period but in a delay period. We
         // don't start a new burst window until the next invoke.
         return;
       }
 
-      // The timeout tracking the burst period needs to be reset every time
-      // another call is made so that it waits the full cool-down duration
-      // before it is released.
-      clearTimeout(burstTimeoutId);
+      if (burstCoolDownMs !== undefined) {
+        // The timeout tracking the burst period needs to be reset every time
+        // another call is made so that it waits the full cool-down duration
+        // before it is released.
+        clearTimeout(burstTimeoutId);
 
-      const now = Date.now();
+        const now = Date.now();
 
-      burstStartTimestamp ??= now;
+        burstStartTimestamp ??= now;
 
-      const burstRemainingMs =
-        maxBurstDurationMs === undefined
-          ? burstCoolDownMs
-          : Math.min(
-              burstCoolDownMs,
-              // We need to account for the time already spent so that we
-              // don't wait longer than the maxDelay.
-              maxBurstDurationMs - (now - burstStartTimestamp),
-            );
+        const burstRemainingMs =
+          maxBurstDurationMs === undefined
+            ? burstCoolDownMs
+            : Math.min(
+                burstCoolDownMs,
+                // We need to account for the time already spent so that we
+                // don't wait longer than the maxDelay.
+                maxBurstDurationMs - (now - burstStartTimestamp),
+              );
 
-      burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
+        burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
+      }
+
+      if (invokedAt !== "end" && wasIdle) {
+        invoke();
+      }
     },
 
     cancel: () => {

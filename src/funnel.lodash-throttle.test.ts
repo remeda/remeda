@@ -68,7 +68,7 @@ function throttle<F extends (...args: any) => void>(
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
-  // Lodash uses a legacy JS-isms to attach helper functions to the main
+  // Lodash uses a legacy JS-ism to attach helper functions to the main
   // callback of `throttle`. In Remeda we return a proper object where the
   // callback is one of the available properties. Here we destructure and then
   // reconstruct the object to fit the Lodash API.
@@ -240,8 +240,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests -- FIXME!
-  it.skip("supports recursive calls", async () => {
+  it("supports recursive calls", async () => {
     const actual = [] as Array<string>;
     const queue = ["a", "b", "c"];
     const throttled = throttle((chr: string) => {
