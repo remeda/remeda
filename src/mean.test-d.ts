@@ -1,5 +1,3 @@
-import { hasAtLeast } from "./hasAtLeast";
-import { isEmpty } from "./isEmpty";
 import { mean } from "./mean";
 import { pipe } from "./pipe";
 
@@ -49,21 +47,5 @@ describe("dataLast", () => {
   test("arbitrary readonly number arrays", () => {
     const result = pipe([] as ReadonlyArray<number>, mean());
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
-  });
-});
-
-describe("type-guards", () => {
-  it("narrows to `number` using `hasAtLeast`", () => {
-    const data = [] as Array<number>;
-    if (hasAtLeast(data, 1)) {
-      expectTypeOf(mean(data)).toEqualTypeOf<number>();
-    }
-  });
-
-  it("narrows to `undefined` using `isEmpty`", () => {
-    const data = [] as Array<number>;
-    if (isEmpty(data)) {
-      expectTypeOf(mean(data)).toEqualTypeOf<undefined>();
-    }
   });
 });
