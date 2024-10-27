@@ -1,25 +1,15 @@
-import type {
-  IterableContainer,
-  NonEmptyArray,
-  NonEmptyReadonlyArray,
-} from "./internal/types";
+import type { IterableContainer } from "./internal/types";
 import { purry } from "./purry";
 import { sum } from "./sum";
 
-type Mean<T extends IterableContainer<bigint> | IterableContainer<number>> =
-  T extends NonEmptyArray<bigint> | NonEmptyReadonlyArray<bigint>
-    ? bigint
-    : T extends NonEmptyArray<number> | NonEmptyReadonlyArray<number>
-      ? number
-      : T extends [] | readonly []
-        ? undefined
-        : number | undefined;
+type Mean<T extends IterableContainer<number>> =
+  | (T extends readonly [] ? never : number)
+  | (T extends readonly [unknown, ...Array<unknown>] ? never : undefined);
 
 /**
  * Returns the mean of the elements of an array.
  *
- * Works for both `number` and `bigint` arrays, but not arrays that contain both
- * types.
+ * Only `number` arrays are supported, as `bigint` is unable to represent fractional values.
  *
  * IMPORTANT: The result for empty arrays would be `undefined`, regardless of
  * the type of the array. This approach improves type-checking and ensures that
@@ -32,20 +22,16 @@ type Mean<T extends IterableContainer<bigint> | IterableContainer<number>> =
  *   R.mean(data);
  * @example
  *   R.mean([1, 2, 3]); // => 2
- *   R.mean([1n, 2n, 3n]); // => 2n
  *   R.mean([]); // => undefined
  * @dataFirst
  * @category Number
  */
-export function mean<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
->(data: T): Mean<T>;
+export function mean<T extends IterableContainer<number>>(data: T): Mean<T>;
 
 /**
  * Returns the mean of the elements of an array.
  *
- * Works for both `number` and `bigint` arrays, but not arrays that contain both
- * types.
+ * Only `number` arrays are supported, as `bigint` is unable to represent fractional values.
  *
  * IMPORTANT: The result for empty arrays would be `undefined`, regardless of
  * the type of the array. This approach improves type-checking and ensures that
@@ -57,14 +43,11 @@ export function mean<
  *   R.mean()(data);
  * @example
  *   R.pipe([1, 2, 3], R.mean()); // => 2
- *   R.pipe([1n, 2n, 3n], R.mean()); // => 2n
  *   R.pipe([], R.mean()); // => undefined
  * @dataLast
  * @category Number
  */
-export function mean(): <
-  T extends IterableContainer<bigint> | IterableContainer<number>,
->(
+export function mean(): <T extends IterableContainer<number>>(
   data: T,
 ) => Mean<T>;
 
@@ -72,16 +55,12 @@ export function mean(...args: ReadonlyArray<unknown>): unknown {
   return purry(meanImplementation, args);
 }
 
-function meanImplementation<
-  T extends IterableContainer<bigint> | IterableContainer<number>,
->(data: T): T[number] | undefined {
+function meanImplementation<T extends IterableContainer<number>>(
+  data: T,
+): T[number] | undefined {
   if (data.length === 0) {
     return undefined;
   }
 
-  const dataSum = sum(data);
-
-  return typeof dataSum === "bigint"
-    ? dataSum / BigInt(data.length)
-    : dataSum / data.length;
+  return sum(data) / data.length;
 }
