@@ -5,7 +5,7 @@ remeda: map
 
 _Not provided by Remeda._
 
-- `pluck(k, data)` is equivalent to `map(data, prop(k))`. `map` and `prop`
+- `pluck(data, k)` is equivalent to `map(data, prop(k))`. `map` and `prop`
   are available in Remeda so the same conversion is viable using these
   functions.
 
