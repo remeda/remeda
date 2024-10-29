@@ -5,9 +5,9 @@ remeda: map
 
 _Not provided by Remeda._
 
-- The Ramda docs mention that `pluck(k, data)` is equivalent to
-  `R.map(R.prop(k), data)`. `map` and `prop` are available in Remeda so the same
-  conversion is viable using these functions.
+- `pluck(k, data)` is equivalent to `R.map(R.prop(k), data)`. `map` and `prop`
+  are available in Remeda so the same conversion is viable using these
+  functions.
 
 - When data is an **object** (and not an _array_) use `mapValues` instead.
 
