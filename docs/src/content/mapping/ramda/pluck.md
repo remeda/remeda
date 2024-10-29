@@ -27,7 +27,7 @@ map(DATA, prop("val"));
 const DATA = { a: { val: "hello" }, b: { val: "world" } };
 
 // Ramda
-R.pluck("val", DATA); //=> { a: 3, b: 5 };
+R.pluck("val", DATA); //=> { a: "hello", b: "world" };
 
 // Remeda
 mapValues(DATA, prop("val"));
