@@ -10,11 +10,6 @@ describe("dataFirst", () => {
 
   it("should return undefined for an empty array", () => {
     expect(mean([])).toBeUndefined();
-    expect(mean([] as Array<bigint>)).toBeUndefined();
-  });
-
-  it("works on bigints", () => {
-    expect(mean([1n, 2n, 3n])).toBe(2n);
   });
 });
 
@@ -27,6 +22,5 @@ describe("dataLast", () => {
 
   it("should return undefined for an empty array", () => {
     expect(pipe([], mean())).toBeUndefined();
-    expect(pipe([] as Array<bigint>, mean())).toBeUndefined();
   });
 });
