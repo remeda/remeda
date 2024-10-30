@@ -103,7 +103,7 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 // The number is in milliseconds.
 const UT = 16;
 
-describe("The Lodash spec", () => {
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () => {
   it("should debounce a function", async () => {
     const mockFn = vi.fn(identity());
     const debounced = debounceWithCachedValue(mockFn, UT);
@@ -178,7 +178,79 @@ describe("The Lodash spec", () => {
   });
 });
 
-describe("Features not tested by Lodash", () => {
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
+  // eslint-disable-next-line vitest/no-disabled-tests -- Possibly redundant with the next test, only add it if coverage requires it.
+  it.skip("should support cancelling delayed calls", async () => {
+    const mockFn = vi.fn(identity());
+    const debounced = debounceWithCachedValue(mockFn, UT, { leading: false });
+    debounced("a");
+    debounced.cancel();
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  it("should reset `lastCalled` after cancelling", async () => {
+    let callCount = 0;
+    const debounced = debounceWithCachedValue(
+      () => {
+        callCount += 1;
+        return callCount;
+      },
+      UT,
+      { leading: true },
+    );
+
+    expect(debounced()).toBe(1);
+
+    debounced.cancel();
+
+    expect(debounced()).toBe(2);
+
+    debounced();
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(3);
+  });
+
+  it("should support flushing delayed calls", async () => {
+    let callCount = 0;
+    const debounced = debounceWithCachedValue(
+      () => {
+        callCount += 1;
+        return callCount;
+      },
+      UT,
+      { leading: false },
+    );
+    debounced();
+
+    expect(debounced.flush()).toBe(1);
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(1);
+  });
+
+  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+    let callCount = 0;
+    const debounced = debounceWithCachedValue(() => {
+      callCount += 1;
+      return callCount;
+    }, UT);
+    debounced.cancel();
+
+    expect(debounced.flush()).toBeUndefined();
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(0);
+  });
+});
+
+// eslint-disable-next-line vitest/no-disabled-tests -- Possibly redundant with the Lodash tests, only introduce the tests that fill in coverage gaps.
+describe.skip("Features not tested by Lodash", () => {
   describe("cancel", () => {
     it("can cancel before the timer starts", async () => {
       const debounced = debounceWithCachedValue(identity(), UT);
