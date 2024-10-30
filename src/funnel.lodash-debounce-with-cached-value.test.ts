@@ -197,7 +197,6 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(debounced()).toBe(2);
 
     debounced();
-
     await sleep(2 * UT);
 
     expect(callCount).toBe(3);
@@ -223,18 +222,15 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should noop `cancel` and `flush` when nothing is queued", async () => {
-    let callCount = 0;
-    const debounced = debounceWithCachedValue(() => {
-      callCount += 1;
-      return callCount;
-    }, UT);
+    const mockFn = vi.fn(constant("hello"));
+    const debounced = debounceWithCachedValue(mockFn, UT);
     debounced.cancel();
 
     expect(debounced.flush()).toBeUndefined();
 
     await sleep(2 * UT);
 
-    expect(callCount).toBe(0);
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
 

@@ -3,6 +3,7 @@
  */
 
 import { sleep } from "../test/sleep";
+import { constant } from "./constant";
 import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
@@ -105,7 +106,6 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(throttled("b")).toBe("a");
 
     await sleep(2 * UT);
-
     const resultC = throttled("c");
     const resultD = throttled("d");
 
@@ -130,7 +130,6 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
   it("should support a `trailing` option", async () => {
     const mockWith = vi.fn(identity() as <T>(x: T) => T);
     const mockWithout = vi.fn(identity() as <T>(x: T) => T);
-
     const withTrailing = throttleWithCachedValue(mockWith, 2 * UT, {
       trailing: true,
     });
@@ -169,7 +168,6 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(throttled()).toBe(2);
 
     throttled();
-
     await sleep(2 * UT);
 
     expect(callCount).toBe(3);
@@ -195,18 +193,15 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should noop `cancel` and `flush` when nothing is queued", async () => {
-    let callCount = 0;
-    const throttled = throttleWithCachedValue(() => {
-      callCount += 1;
-      return callCount;
-    }, UT);
+    const mockFn = vi.fn(constant("hello"));
+    const throttled = throttleWithCachedValue(mockFn, UT);
     throttled.cancel();
 
     expect(throttled.flush()).toBeUndefined();
 
     await sleep(2 * UT);
 
-    expect(callCount).toBe(0);
+    expect(mockFn).toHaveBeenCalledTimes(0);
   });
 });
 
