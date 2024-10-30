@@ -46,35 +46,35 @@ describe("edge-cases", () => {
   test("delay timeouts don't cause an invocation in the middle of bursts", async () => {
     const mockFn = vi.fn();
     const foo = funnel(constant([]), mockFn, {
-      invokedAt: "end",
+      invokedAt: "both",
       burstCoolDownMs: 2 * UT,
       delayMs: UT,
     });
     foo.call();
 
-    expect(mockFn).toHaveBeenCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(UT);
     foo.call();
 
-    expect(mockFn).toHaveBeenCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(UT);
     foo.call();
 
-    expect(mockFn).toHaveBeenCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(UT);
     foo.call();
 
-    expect(mockFn).toHaveBeenCalledTimes(0);
-
-    await sleep(UT);
-
-    expect(mockFn).toHaveBeenCalledTimes(0);
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
     await sleep(UT);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
+
+    await sleep(UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });
