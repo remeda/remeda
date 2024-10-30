@@ -179,17 +179,6 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 });
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
-  // eslint-disable-next-line vitest/no-disabled-tests -- Possibly redundant with the next test, only add it if coverage requires it.
-  it.skip("should support cancelling delayed calls", async () => {
-    const mockFn = vi.fn(identity());
-    const debounced = debounceWithCachedValue(mockFn, UT, { leading: false });
-    debounced("a");
-    debounced.cancel();
-    await sleep(2 * UT);
-
-    expect(mockFn).toHaveBeenCalledTimes(0);
-  });
-
   it("should reset `lastCalled` after cancelling", async () => {
     let callCount = 0;
     const debounced = debounceWithCachedValue(
@@ -249,95 +238,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 });
 
-// eslint-disable-next-line vitest/no-disabled-tests -- Possibly redundant with the Lodash tests, only introduce the tests that fill in coverage gaps.
-describe.skip("Features not tested by Lodash", () => {
-  describe("cancel", () => {
-    it("can cancel before the timer starts", async () => {
-      const debounced = debounceWithCachedValue(identity(), UT);
-
-      expect(() => {
-        debounced.cancel();
-      }).not.toThrow();
-
-      expect(debounced("hello")).toBeUndefined();
-
-      await sleep(UT);
-
-      expect(debounced("world")).toBe("hello");
-    });
-
-    it("can cancel the timer", async () => {
-      const debounced = debounceWithCachedValue(constant("Hello, World!"), UT);
-
-      expect(debounced()).toBeUndefined();
-
-      await sleep(1);
-
-      expect(debounced()).toBeUndefined();
-
-      debounced.cancel();
-
-      await sleep(UT);
-
-      expect(debounced()).toBeUndefined();
-
-      await sleep(UT);
-
-      expect(debounced()).toBe("Hello, World!");
-    });
-
-    it("can cancel after the timer ends", async () => {
-      const debounced = debounceWithCachedValue(identity(), UT);
-
-      expect(debounced("hello")).toBeUndefined();
-
-      await sleep(UT);
-
-      expect(debounced("world")).toBe("hello");
-      expect(() => {
-        debounced.cancel();
-      }).not.toThrow();
-    });
-  });
-
-  describe("flush", () => {
-    it("can flush before a cool-down", async () => {
-      const debounced = debounceWithCachedValue(identity(), UT);
-
-      expect(debounced.flush()).toBeUndefined();
-
-      expect(debounced("hello")).toBeUndefined();
-
-      await sleep(UT);
-
-      expect(debounced("world")).toBe("hello");
-    });
-
-    it("can flush during a cool-down", async () => {
-      const debounced = debounceWithCachedValue(identity(), UT);
-
-      expect(debounced("hello")).toBeUndefined();
-
-      await sleep(1);
-
-      expect(debounced("world")).toBeUndefined();
-
-      await sleep(1);
-
-      expect(debounced.flush()).toBe("world");
-    });
-
-    it("can flush after a cool-down", async () => {
-      const debounced = debounceWithCachedValue(identity(), UT);
-
-      expect(debounced("hello")).toBeUndefined();
-
-      await sleep(UT);
-
-      expect(debounced.flush()).toBe("hello");
-    });
-  });
-
+describe("Features not tested by Lodash", () => {
   it("does nothing when neither leading nor trailing are enabled", async () => {
     const debounced = debounceWithCachedValue(identity(), UT, {
       leading: false,

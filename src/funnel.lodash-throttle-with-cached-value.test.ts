@@ -97,7 +97,7 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
 // The number is in milliseconds.
 const UT = 16;
 
-describe("The Lodash spec", () => {
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", () => {
   it("subsequent calls should return the result of the first call", async () => {
     const throttled = throttleWithCachedValue(identity(), UT);
 
@@ -147,5 +147,81 @@ describe("The Lodash spec", () => {
 
     expect(mockWith).toHaveBeenCalledTimes(2);
     expect(mockWithout).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
+  it("should reset `lastCalled` after cancelling", async () => {
+    let callCount = 0;
+    const throttled = throttleWithCachedValue(
+      () => {
+        callCount += 1;
+        return callCount;
+      },
+      UT,
+      { leading: true },
+    );
+
+    expect(throttled()).toBe(1);
+
+    throttled.cancel();
+
+    expect(throttled()).toBe(2);
+
+    throttled();
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(3);
+  });
+
+  it("should support flushing delayed calls", async () => {
+    let callCount = 0;
+    const throttled = throttleWithCachedValue(
+      () => {
+        callCount += 1;
+        return callCount;
+      },
+      UT,
+      { leading: false },
+    );
+    throttled();
+
+    expect(throttled.flush()).toBe(1);
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(1);
+  });
+
+  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+    let callCount = 0;
+    const throttled = throttleWithCachedValue(() => {
+      callCount += 1;
+      return callCount;
+    }, UT);
+    throttled.cancel();
+
+    expect(throttled.flush()).toBeUndefined();
+
+    await sleep(2 * UT);
+
+    expect(callCount).toBe(0);
+  });
+});
+
+describe("Features not tested by Lodash", () => {
+  it("does nothing when neither leading nor trailing are enabled", async () => {
+    const throttled = throttleWithCachedValue(identity(), UT, {
+      leading: false,
+      trailing: false,
+    });
+
+    expect(throttled("hello")).toBeUndefined();
+    expect(throttled("world")).toBeUndefined();
+
+    await sleep(4 * UT);
+
+    expect(throttled("goodbye")).toBeUndefined();
   });
 });
