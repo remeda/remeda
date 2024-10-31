@@ -337,11 +337,14 @@ describe("non-trivial (>0ms) timer duration", () => {
       await sleep(0.75 * UT);
       foo.call("c");
 
-      // Total time is approximately 1.8*UT
+      // Total time is approximately 1.5*UT, less than 2UT which is
+      // maxBurstDurationMs
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      // Wait until maxBurstDurationMs is reached
-      await sleep(0.5 * UT);
+      // We sleep less than burstCoolDownMs but more than our
+      // maxBurstDurationMs so that we validate that the burst is being ended
+      // prematurely.
+      await sleep(0.75 * UT);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c"]);
