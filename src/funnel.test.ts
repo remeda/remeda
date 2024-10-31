@@ -812,48 +812,120 @@ describe("disabled timers (no defined timeout durations)", () => {
 });
 
 describe("utility functions", () => {
-  test("flush triggers an immediate invocation", () => {
-    const mockFn = vi.fn();
-    const foo = funnel(ARGS_COLLECTOR, mockFn, {
-      invokedAt: "end",
-      burstCoolDownMs: UT,
-    });
-    foo.call("a");
-    foo.flush();
+  describe("flush", () => {
+    test("flush triggers an immediate invocation", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        burstCoolDownMs: UT,
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+      foo.flush();
 
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockFn).toHaveBeenLastCalledWith(["a"]);
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c"]);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    test("flush during active burst", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        burstCoolDownMs: 2 * UT,
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      await sleep(UT);
+
+      foo.flush();
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c"]);
+
+      await sleep(2 * UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+    });
   });
 
-  test("cancel prevents invocation", async () => {
-    const mockFn = vi.fn();
-    const foo = funnel(ARGS_COLLECTOR, mockFn, {
-      invokedAt: "end",
-      burstCoolDownMs: UT,
-    });
-    foo.call("a");
-    foo.cancel();
-    await sleep(2 * UT);
+  describe("cancel", () => {
+    test("cancel prevents invocation", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        burstCoolDownMs: UT,
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+      foo.cancel();
+      await sleep(UT);
 
-    expect(mockFn).toHaveBeenCalledTimes(0);
+      expect(mockFn).toHaveBeenCalledTimes(0);
+    });
+
+    test("cancel during delay period", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        delayMs: 2 * UT,
+      });
+      foo.call("a");
+
+      await sleep(UT);
+      foo.cancel();
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
+    });
   });
 
-  test("isIdle reflects the funnel's state", () => {
-    const mockFn = vi.fn();
-    const foo = funnel(ARGS_COLLECTOR, mockFn, {
-      invokedAt: "end",
-      burstCoolDownMs: UT,
+  describe("isIdle", () => {
+    test("isIdle reflects the funnel's state", () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        burstCoolDownMs: UT,
+      });
+
+      expect(foo.isIdle).toBe(true);
+
+      foo.call("a");
+
+      expect(foo.isIdle).toBe(false);
+
+      foo.cancel();
+
+      expect(foo.isIdle).toBe(true);
     });
 
-    expect(foo.isIdle).toBe(true);
+    test("isIdle works when burst duration is 0", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        invokedAt: "end",
+        burstCoolDownMs: 0,
+      });
 
-    foo.call("a");
+      expect(foo.isIdle).toBe(true);
 
-    expect(foo.isIdle).toBe(false);
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
 
-    foo.cancel();
+      expect(foo.isIdle).toBe(false);
 
-    expect(foo.isIdle).toBe(true);
+      await sleep(0);
+
+      expect(foo.isIdle).toBe(true);
+    });
   });
 });
 
