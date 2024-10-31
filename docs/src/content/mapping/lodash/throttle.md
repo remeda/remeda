@@ -3,12 +3,12 @@ category: Function
 remeda: funnel
 ---
 
-- `debounce` can be implemented using the `funnel` utility. A reference
+- `throttle` can be implemented using the `funnel` utility. A reference
   implementation is provided below, and a more expanded version with inline
-  documentation and tests is available in the test file [`funnel.lodash-debounce.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-debounce.test.ts).
+  documentation and tests is available in the test file [`funnel.lodash-throttle.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-throttle.test.ts).
 
 - A more complete reference implementation that also maintains Lodash's
-  capability to store the callback's return value is available below, and in [`funnel.lodash-debounce-with-cached-value.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-debounce-with-cached-value.test.ts).
+  capability to store the callback's return value is available below, and in [`funnel.lodash-throttle-with-cached-value.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-throttle-with-cached-value.test.ts).
 
 - These implementations can be copied as-is into your project, but might contain
   redundant parts which are not relevant for your specific use cases. By
@@ -18,18 +18,13 @@ remeda: funnel
 ### Reference
 
 ```ts
-function debounce<F extends (...args: any) => void>(
+function throttle<F extends (...args: any) => void>(
   func: F,
   wait = 0,
   {
-    leading = false,
+    leading = true,
     trailing = true,
-    maxWait,
-  }: {
-    readonly leading?: boolean;
-    readonly trailing?: boolean;
-    readonly maxWait?: number;
-  } = {},
+  }: { readonly leading?: boolean; readonly trailing?: boolean } = {},
 ) {
   const {
     call,
@@ -40,7 +35,7 @@ function debounce<F extends (...args: any) => void>(
     trailing || leading ? (args) => func(...args) : doNothing(),
     {
       burstCoolDownMs: wait,
-      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+      maxBurstDurationMs: wait,
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
@@ -51,18 +46,13 @@ function debounce<F extends (...args: any) => void>(
 ### With cached value
 
 ```ts
-function debounce<F extends (...args: any) => any>(
+function throttle<F extends (...args: any) => any>(
   func: F,
   wait = 0,
   {
-    leading = false,
+    leading = true,
     trailing = true,
-    maxWait,
-  }: {
-    readonly leading?: boolean;
-    readonly trailing?: boolean;
-    readonly maxWait?: number;
-  } = {},
+  }: { readonly leading?: boolean; readonly trailing?: boolean } = {},
 ) {
   let cachedValue: ReturnType<F> | undefined;
 
@@ -75,10 +65,11 @@ function debounce<F extends (...args: any) => any>(
       : doNothing(),
     {
       burstCoolDownMs: wait,
-      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+      maxBurstDurationMs: wait,
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
+
   return Object.assign(
     (...args: Parameters<F>) => {
       call(...args);
