@@ -67,7 +67,6 @@
 - move
 - none
 - pair
-- pluck
 - prepend
 - reduceBy
 - reduced
