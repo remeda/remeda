@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- We know! */
+
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
