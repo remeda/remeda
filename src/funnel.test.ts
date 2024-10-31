@@ -1,5 +1,6 @@
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
+import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 
 // We need some non-trivial duration to use in all our tests, to abstract the
@@ -75,9 +76,30 @@ describe("reducer behavior", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith([undefined, 1, "a", true]);
   });
+
+  test("reducer isn't called again when 'invokedAt: start'", async () => {
+    const mockFn = vi.fn(ARGS_COLLECTOR);
+    const foo = funnel(mockFn, doNothing(), {
+      invokedAt: "start",
+      burstCoolDownMs: UT,
+    });
+    foo.call("a");
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenLastCalledWith(undefined, "a");
+
+    foo.call("b");
+    foo.call("c");
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
 });
 
-describe("single timer enabled with non-trivial (>0ms) duration", () => {
+describe("non-trivial (>0ms) timer duration", () => {
   describe("delay timer", () => {
     test("invokedAt: start", async () => {
       const mockFn = vi.fn();
@@ -325,9 +347,126 @@ describe("single timer enabled with non-trivial (>0ms) duration", () => {
       expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c"]);
     });
   });
+
+  describe("both timers", () => {
+    test("delay is longer than burst", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        delayMs: 2 * UT,
+        burstCoolDownMs: UT,
+        invokedAt: "both",
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a"]);
+
+      await sleep(UT);
+      foo.call("d");
+      foo.call("e");
+      foo.call("f");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(["b", "c", "d", "e", "f"]);
+    });
+
+    test("burst is longer than delay", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        delayMs: UT,
+        burstCoolDownMs: 2 * UT,
+        invokedAt: "both",
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a"]);
+
+      await sleep(UT);
+      foo.call("d");
+      foo.call("e");
+      foo.call("f");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(["b", "c", "d", "e", "f"]);
+    });
+
+    test("burst and delay are equal", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        delayMs: UT,
+        burstCoolDownMs: UT,
+        invokedAt: "both",
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a"]);
+
+      await sleep(UT);
+      foo.call("d");
+      foo.call("e");
+      foo.call("f");
+
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(["b", "c"]);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(3);
+      expect(mockFn).toHaveBeenLastCalledWith(["d", "e", "f"]);
+    });
+
+    test("delay and maxBurstDurationMs are equal", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        delayMs: UT,
+        burstCoolDownMs: 2 * UT,
+        maxBurstDurationMs: UT,
+        invokedAt: "both",
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a"]);
+
+      await sleep(UT);
+      foo.call("d");
+      foo.call("e");
+      foo.call("f");
+
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(["b", "c"]);
+
+      await sleep(UT);
+
+      expect(mockFn).toHaveBeenCalledTimes(3);
+      expect(mockFn).toHaveBeenLastCalledWith(["d", "e", "f"]);
+    });
+  });
 });
 
-describe("zero timeouts", () => {
+describe("immediate (===0) timer durations", () => {
   describe("delay timer", () => {
     test("invokedAt: start", async () => {
       const mockFn = vi.fn();
@@ -519,6 +658,25 @@ describe("zero timeouts", () => {
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(["b"]);
+    });
+
+    test("burst timer with non-trivial maxBurstDuration", async () => {
+      const mockFn = vi.fn();
+      const foo = funnel(ARGS_COLLECTOR, mockFn, {
+        burstCoolDownMs: 0,
+        maxBurstDurationMs: UT,
+        invokedAt: "end",
+      });
+      foo.call("a");
+      foo.call("b");
+      foo.call("c");
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
+
+      await sleep(0);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c"]);
     });
   });
 
