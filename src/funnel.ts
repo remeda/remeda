@@ -53,6 +53,10 @@ type Funnel<Args extends RestArguments> = {
  * execute anything when called. The returned object should be used to execute
  * the funnel via the it's `call` method.
  *
+ * For debouncing: use `burstCoolDownMs` and any `invokedAt`.
+ * For throttling: use `delayMs` and `invokedAt: "start"`.
+ * For batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.reference-batch.test.ts).
+ *
  * @param reduceArgs - Combines the arguments passed to `call` with the value
  * computed on the previous call (or `undefined` on the first time). The goal of
  * the function is to extract and summarize the data needed for `execute`,
@@ -66,23 +70,31 @@ type Funnel<Args extends RestArguments> = {
  * will not be invoked. If a return value is needed, it should be passed via a
  * reference or via closure to the outer scope of the funnel.
  * @param timingPolicy - An object that defines when `execute` should be
- * invoked, relative to the calls of `call`.
+ * invoked, relative to the calls of `call`. A timer that isn't defined will
+ * **not** be enabled, 0 is not used a default fallback.
  * @param timingPolicy.invokedAt - At what "edges" of the funnel's activity
- * window should `execute` be invoked. `start` means at the transition from
- * being idle to active, e.g. immediately when `call` is invoked; (this will be
- * invoked within the same execution frame!). `end` happens when the idle switch
- * _back_ from active to idle; (this will never be invoked within the same
- * execution frame, even if the timeouts are defined as 0ms). @default 'end'.
- * @param timingPolicy.burstCoolDownMs - The maximum duration (in milliseconds)
- * between calls that will be considered part of the same "burst". If a new call
- * is made within this duration, the burst is **extended** (aka "debounce"
- * time).
- * @param timingPolicy.maxBurstDurationMs - A maximum duration (in milliseconds)
- * for a "burst". Define this to prevent cases of starvation where a burst is
- * constantly extended because of incoming calls within the `burstCoolDownMs`.
+ * window should `execute` be invoked. `start` means The function will be
+ * invoked immediately (withing the **same** execution frame!), and any
+ * subsequent calls would be ignored until the funnel is idle again. During
+ * this period `reduceArgs` will also not be called. `end` The function will
+ * **not** be invoked initially but the timer will be started. Any calls during
+ * this time would be passed to the reducer, and when the timers are done, the
+ * reduced result would trigger an invocation. When `both` is used The function
+ * will be invoked immediately, and then the funnel would behave as if it was
+ * in the 'end' state. @default 'end'.
+ * @param timingPolicy.burstCoolDownMs - The burst timer prevents subsequent
+ * calls in short succession to cause excessive invocations (aka "debounce").
+ * This duration represents the **minimum** amount of time that needs to pass
+ * between calls (the "quiet" part) in order for the subsequent call to **not**
+ * be considered part of the burst. In other words, as long as calls are faster
+ * than this, they are considered part of the burst.
+ * @param timingPolicy.maxBurstDurationMs - Bursts are extended every time a
+ * call is made within the burst period. This means that the burst period could
+ * be extended indefinitely. To prevent such cases, a maximum burst duration
+ * could be defined.
  * @param timingPolicy.delayMs - A minimum duration between calls of `execute`.
  * This is maintained regardless of the shape of the burst and is ensured even
- * if the `maxBurstDurationMs` is reached before it. (aka "throttle" time).
+ * if the `maxBurstDurationMs` is reached before it. (aka "throttle").
  * @returns A funnel with a `call` function that is used to trigger invocations.
  * In addition to it the funnel also comes with the following functions and
  * properties:
