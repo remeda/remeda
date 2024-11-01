@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation!
  */
 
+import { doNothing } from "./doNothing";
 import { fromKeys } from "./fromKeys";
 import { funnel } from "./funnel";
 
@@ -179,5 +180,24 @@ describe("showcase", () => {
     expect(shortResult).toBe(5);
     expect(mediumResult).toBe(6);
     expect(longResult).toBe(17);
+  });
+
+  test("error handling", async () => {
+    const failingApi = batch(
+      // We only need to type the `requests` param of the `executor` callback.
+      // All other types are derived from it.
+      async (requests: ReadonlyArray<[id: string]>) => {
+        if (requests.length > 1) {
+          throw new Error(`Batch too big! ${JSON.stringify(requests)}`);
+        }
+      },
+      doNothing(),
+    );
+
+    await expect(failingApi.call("a")).resolves.toBeUndefined();
+
+    await expect(
+      Promise.all([failingApi.call("hello"), failingApi.call("world")]),
+    ).rejects.toThrow('Batch too big! [["hello"],["world"]]');
   });
 });
