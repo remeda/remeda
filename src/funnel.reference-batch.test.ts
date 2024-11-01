@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type, @typescript-eslint/use-unknown-in-catch-callback-variable, @typescript-eslint/no-explicit-any, @typescript-eslint/prefer-readonly-parameter-types */
+/* eslint-disable unicorn/no-object-as-default-parameter, @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type, @typescript-eslint/use-unknown-in-catch-callback-variable, @typescript-eslint/no-explicit-any, @typescript-eslint/prefer-readonly-parameter-types */
 
 import { funnel } from "./funnel";
 
@@ -6,18 +6,14 @@ type PromiseCallbacks<T> = Parameters<
   ConstructorParameters<typeof Promise<T>>[0]
 >;
 
-// The default timing policy will build batches only within the same execution
-// frame, avoiding adding delays to the batched calls.
-const DEFAULT_TIMING_POLICY = {
-  invokedAt: "end",
-  burstCoolDownMs: 0,
-} as const satisfies Parameters<typeof funnel>[2];
-
 // @ts-expect-error [ts(6133)] -- soon...
 function batch<Params extends Array<any>, Response, Result>(
   executor: (params: ReadonlyArray<Params>) => Promise<Response>,
   extractor: (result: Response, ...params: Params) => Result,
-  timingPolicy: Parameters<typeof funnel>[2] = DEFAULT_TIMING_POLICY,
+  timingPolicy: Parameters<typeof funnel>[2] = {
+    invokedAt: "end",
+    burstCoolDownMs: 0,
+  },
 ) {
   const batchFunnel = funnel(
     // Reducer: Accumulates the parameters for each call, together with the
