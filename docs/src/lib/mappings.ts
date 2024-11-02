@@ -51,7 +51,7 @@ export async function getMappingEntries(
           prop("id"),
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We trust astro to be consistent with the id format.
           ($) => fileNameRegExp.exec($)!.groups!,
-          pick(["name"]),
+          pick(["name" as const]),
         ),
       ),
     ),
