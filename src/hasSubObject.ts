@@ -55,9 +55,8 @@ type HasSubObjectSubObject<
       : RData[Key] & RSubObject[Key] extends object
         ? RData[Key]
         : RSubObject[Key];
-}> & {
-  [Key in Exclude<keyof SubObject, keyof Data>]: never;
-};
+}> &
+  Record<Exclude<keyof SubObject, keyof Data>, never>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every

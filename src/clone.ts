@@ -67,7 +67,7 @@ function cloneImplementation<T>(
 
   // First we check if we've already cloned this value.
   const idx = refFrom.indexOf(value);
-  if (idx >= 0) {
+  if (idx !== -1) {
     return refTo[idx] as T;
   }
   // And if we haven't, we add it to our list of seen values so that it is kept
