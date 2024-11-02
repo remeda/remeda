@@ -5,7 +5,7 @@ import { purry } from "./purry";
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
 // @example ExactlyOneKey<"cat" | "dog", boolean> // { cat: boolean } | { dog: boolean }
-type ExactlyOneKey<T, V> = T extends PropertyKey ? { [P in T]: V } : never;
+type ExactlyOneKey<T, V> = T extends PropertyKey ? Record<T, V> : never;
 
 type FromKeys<T extends IterableContainer, V> = T extends readonly []
   ? // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...

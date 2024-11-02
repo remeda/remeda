@@ -12,6 +12,7 @@ import type {
   Simplify,
   Split,
   Tagged,
+  Writable,
 } from "type-fest";
 
 /* v8 ignore next 2 */
@@ -206,7 +207,7 @@ export type UpsertProp<T, K extends PropertyKey, V> = Simplify<
       ? // If it's a single literal we need to remove the optionality and set
         // the value as we know this prop would be exactly this value in the
         // output.
-        { -readonly [P in K]-?: V }
+        Writable<Required<Record<K, V>>>
       : // The key is either a broad type (`string`) or union of literals
         // ('cat' | 'dog') so we can't say anything for sure, we need to narrow
         // the types of all relevant props, this has 2 parts, for props already
