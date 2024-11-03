@@ -31,6 +31,37 @@ function throttle<F extends (...args: any) => void>(
     isIdle: _isIdle,
     ...rest
   } = funnel(
+    () => {
+      if (leading || trailing) {
+        func();
+      }
+    },
+    {
+      burstCoolDownMs: wait,
+      maxBurstDurationMs: wait,
+      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+    },
+  );
+  return Object.assign(call, rest);
+}
+```
+
+### With call arguments
+
+```ts
+function throttle<F extends (...args: any) => void>(
+  func: F,
+  wait = 0,
+  {
+    leading = true,
+    trailing = true,
+  }: { readonly leading?: boolean; readonly trailing?: boolean } = {},
+) {
+  const {
+    call,
+    isIdle: _isIdle,
+    ...rest
+  } = funnel(
     (args: Parameters<F>) => {
       if (leading || trailing) {
         func(...args);

@@ -36,6 +36,42 @@ function debounce<F extends (...args: any) => void>(
     isIdle: _isIdle,
     ...rest
   } = funnel(
+    () => {
+      if (leading || trailing) {
+        func();
+      }
+    },
+    {
+      burstCoolDownMs: wait,
+      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+    },
+  );
+  return Object.assign(call, rest);
+}
+```
+
+### With call arguments
+
+```ts
+function debounce<F extends (...args: any) => void>(
+  func: F,
+  wait = 0,
+  {
+    leading = false,
+    trailing = true,
+    maxWait,
+  }: {
+    readonly leading?: boolean;
+    readonly trailing?: boolean;
+    readonly maxWait?: number;
+  } = {},
+) {
+  const {
+    call,
+    isIdle: _isIdle,
+    ...rest
+  } = funnel(
     (args: Parameters<F>) => {
       if (leading || trailing) {
         func(...args);
