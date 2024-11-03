@@ -36,9 +36,13 @@ function debounce<F extends (...args: any) => void>(
     isIdle: _isIdle,
     ...rest
   } = funnel(
-    (_, ...args: Parameters<F>) => args,
-    trailing || leading ? (args) => func(...args) : doNothing(),
+    (args: Parameters<F>) => {
+      if (leading || trailing) {
+        func(...args);
+      }
+    },
     {
+      reducer: (_, ...args: Parameters<F>) => args,
       burstCoolDownMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
@@ -67,13 +71,13 @@ function debounce<F extends (...args: any) => any>(
   let cachedValue: ReturnType<F> | undefined;
 
   const { call, flush, cancel } = funnel(
-    (_, ...args: Parameters<F>) => args,
-    leading || trailing
-      ? (args) => {
-          cachedValue = func(...args) as ReturnType<F>;
-        }
-      : doNothing(),
+    (args: Parameters<F>) => {
+      if (leading || trailing) {
+        cachedValue = func(...args) as ReturnType<F>;
+      }
+    },
     {
+      reducer: (_, ...args: Parameters<F>) => args,
       burstCoolDownMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       invokedAt: trailing ? (leading ? "both" : "end") : "start",

@@ -6,9 +6,12 @@ import { doNothing } from "./doNothing";
 import { fromKeys } from "./fromKeys";
 import { funnel } from "./funnel";
 
-type PromiseCallbacks<T> = Parameters<
-  ConstructorParameters<typeof Promise<T>>[0]
->;
+type BatchRequest<Params extends Array<any>, Result> = {
+  readonly params: Params;
+  readonly promiseCallbacks: Readonly<
+    Parameters<ConstructorParameters<typeof Promise<Result>>[0]>
+  >;
+};
 
 /**
  * A reference implementation for a  batching utility function built on top of
@@ -25,7 +28,7 @@ type PromiseCallbacks<T> = Parameters<
  * can use it as the basis for a more complex implementation with additional
  * features.
  *
- * @param executor - The main function that takes a batch and returns an
+ * @param callback - The main function that takes a batch and returns an
  * aggregated response. The typing for the it's parameters will derive the
  * typing for the extractor and the `call` method.
  * @param extractor - A function that takes the aggregated response and extracts
@@ -38,35 +41,21 @@ type PromiseCallbacks<T> = Parameters<
  * response.
  */
 function batch<Params extends Array<any>, BatchResponse, Result>(
-  executor: (requests: ReadonlyArray<Params>) => Promise<BatchResponse>,
+  callback: (requests: ReadonlyArray<Params>) => Promise<BatchResponse>,
   extractor: (
     response: BatchResponse,
     index: number,
     ...params: Params
   ) => Result,
-  timingPolicy: Parameters<typeof funnel>[2] = {
+  timingPolicy: Omit<Parameters<typeof funnel>[1], "reducer"> = {
     invokedAt: "end",
     burstCoolDownMs: 0,
   },
 ) {
   const batchFunnel = funnel(
-    // Reducer: Accumulates the parameters for each call, together with the
-    // promise executor callbacks needed to resolve or reject the call.
-    (
-      batched,
-      promiseCallbacks: PromiseCallbacks<Result>,
-      ...params: Params
-    ) => [...(batched ?? []), { promiseCallbacks, params }],
-
-    // Executor: Passes all accumulated parameters to the executor and then
-    // extracts the response for each individual call via the extractor.
-    (
-      batched: ReadonlyArray<{
-        readonly params: Params;
-        readonly promiseCallbacks: PromiseCallbacks<Result>;
-      }>,
-    ) => {
-      executor(batched.map(({ params }) => params))
+    // Passes all accumulated parameters to the callback and then extracts the response for each individual call via the extractor.
+    (requests: ReadonlyArray<BatchRequest<Params, Result>>) => {
+      callback(requests.map(({ params }) => params))
         // On success we iterate again over all calls and allow the extractor
         // to pull a value out of the aggregated response for each one.
         .then((response) => {
@@ -76,7 +65,7 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
               params,
               promiseCallbacks: [resolve],
             },
-          ] of batched.entries()) {
+          ] of requests.entries()) {
             const result = extractor(response, index, ...params);
             resolve(result);
           }
@@ -86,21 +75,28 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
         .catch((error) => {
           for (const {
             promiseCallbacks: [, reject],
-          } of batched) {
+          } of requests) {
             reject(error);
           }
         });
     },
-
-    timingPolicy,
+    {
+      // Reducer: Accumulates the parameters for each call, together with the
+      // promise executor callbacks needed to resolve or reject the call.
+      reducer: (requests, request: BatchRequest<Params, Result>) => [
+        ...(requests ?? []),
+        request,
+      ],
+      ...timingPolicy,
+    },
   );
 
   return {
     ...batchFunnel,
 
     call: async (...params: Params) =>
-      new Promise<Result>((...callbacks) => {
-        batchFunnel.call(callbacks, ...params);
+      new Promise<Result>((...promiseCallbacks) => {
+        batchFunnel.call({ promiseCallbacks, params });
       }),
   };
 }

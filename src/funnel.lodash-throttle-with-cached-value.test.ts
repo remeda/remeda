@@ -4,7 +4,6 @@
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
-import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
@@ -47,24 +46,26 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
   let cachedValue: ReturnType<F> | undefined;
 
   const { call, flush, cancel } = funnel(
-    // Throttle stores the latest args it was called with for the next
-    // invocation of the callback.
-    (_, ...args: Parameters<F>) => args,
-    leading || trailing
-      ? // Funnel provides more control over the args, but lodash simply passes
-        // them through, to replicate this behavior we need to spread the args
-        // array we maintain via the reducer above.
-        (args) => {
-          // Every time the function is invoked the cached value is updated.
-          cachedValue = func(...args) as ReturnType<F>;
-        }
-      : // In Lodash you can disable both the trailing and leading edges of the
+    (args: Parameters<F>) => {
+      if (!leading && !trailing) {
+        // In Lodash you can disable both the trailing and leading edges of the
         // throttle window, effectively causing the function to never be
         // invoked. Remeda uses the invokedAt enum exactly to prevent such a
         // situation; so to simulate Lodash we need to only pass the callback
         // when at least one of them is enabled.
-        doNothing(),
+        return;
+      }
+
+      // Funnel provides more control over the args, but lodash simply passes
+      // them through, to replicate this behavior we need to spread the args
+      // array maintained via the reducer below.
+      // Also, every time the function is invoked the cached value is updated.
+      cachedValue = func(...args) as ReturnType<F>;
+    },
     {
+      // Throttle stores the latest args it was called with for the next
+      // invocation of the callback.
+      reducer: (_, ...args: Parameters<F>) => args,
       burstCoolDownMs: wait,
       maxBurstDurationMs: wait,
       invokedAt: trailing ? (leading ? "both" : "end") : "start",

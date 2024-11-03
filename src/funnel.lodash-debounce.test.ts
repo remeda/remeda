@@ -3,7 +3,6 @@
  */
 
 import { sleep } from "../test/sleep";
-import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 
 /**
@@ -53,26 +52,31 @@ function debounce<F extends (...args: any) => void>(
     isIdle: _isIdle,
     ...rest
   } = funnel(
-    // Debounce stores the latest args it was called with for the next
-    // invocation of the callback.
-    (_, ...args: Parameters<F>) => args,
-    trailing || leading
-      ? // Funnel provides more control over the args, but lodash simply passes
-        // them through, to replicate this behavior we need to spread the args
-        // array we maintain via the reducer above.
-        (args) => func(...args)
-      : // In Lodash you can disable both the trailing and leading edges of the
+    (args: Parameters<F>) => {
+      if (!trailing && !leading) {
+        // In Lodash you can disable both the trailing and leading edges of the
         // debounce window, effectively causing the function to never be
         // invoked. Remeda uses the invokedAt enum exactly to prevent such a
         // situation; so to simulate Lodash we need to only pass the callback
         // when at least one of them is enabled.
-        doNothing(),
+        return;
+      }
+
+      // Funnel provides more control over the args, but lodash simply passes
+      // them through, to replicate this behavior we need to spread the args
+      // array maintained via the reducer below.
+      func(...args);
+    },
     {
+      // Debounce stores the latest args it was called with for the next
+      // invocation of the callback.
+      reducer: (_, ...args: Parameters<F>) => args,
       burstCoolDownMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       invokedAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
+
   // Lodash uses a legacy JS-ism to attach helper functions to the main
   // callback of `debounce`. In Remeda we return a proper object where the
   // callback is one of the available properties. Here we destructure and then

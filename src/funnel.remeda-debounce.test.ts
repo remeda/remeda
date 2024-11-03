@@ -64,14 +64,14 @@ function debounce<F extends (...args: any) => any>(
   let cachedValue: ReturnType<F> | undefined;
 
   const debouncingFunnel = funnel(
-    // Debounce stores the latest args it was called with for the next
-    // invocation of the callback.
-    (_, ...args: Parameters<F>) => args,
-    (args) => {
+    (args: Parameters<F>) => {
       // Every time the function is invoked the cached value is updated.
       cachedValue = func(...args) as ReturnType<F>;
     },
     {
+      // Debounce stores the latest args it was called with for the next
+      // invocation of the callback.
+      reducer: (_, ...args: Parameters<F>) => args,
       invokedAt:
         timing === "leading" ? "start" : timing === "both" ? "both" : "end",
       burstCoolDownMs: waitMs ?? maxWaitMs ?? 0,
