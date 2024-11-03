@@ -18,7 +18,7 @@ const DEFAULT_OPTIONS = {
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toKebabCase`.
+ * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
@@ -50,7 +50,7 @@ export function toCamelCase<
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toKebabCase`.
+ * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *

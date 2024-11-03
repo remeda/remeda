@@ -143,6 +143,7 @@ export * from "./times";
 export * from "./toCamelCase";
 export * from "./toKebabCase";
 export * from "./toLowerCase";
+export * from "./toSnakeCase";
 export * from "./toUpperCase";
 export * from "./uncapitalize";
 export * from "./unique";

@@ -7,7 +7,7 @@ import { purry } from "./purry";
  * utility type for typing.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
- * `toCamelCase`, and `toKebabCase`.
+ * `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
@@ -28,7 +28,7 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * utility type for typing.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`, `capitalize`,
- * `toCamelCase`, and `toKebabCase`.
+ * `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
