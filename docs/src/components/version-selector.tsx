@@ -42,7 +42,7 @@ export function VersionSelector({
       }
 
       const url = VERSIONS[value].path;
-      window.location.href = url;
+      globalThis.location.href = url;
     },
     [current],
   );
