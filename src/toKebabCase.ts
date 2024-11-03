@@ -1,11 +1,5 @@
-import type { SplitWords } from "type-fest/source/split-words";
 import { splitWords } from "./internal/splitWords";
 import { purry } from "./purry";
-import type { Join } from "type-fest";
-
-type KebabCase<T extends string> = string extends T
-  ? string
-  : Lowercase<Join<SplitWords<T>, "-">>;
 
 /**
  * Convert a text to kebab-Case by splitting it into words and joining them back
@@ -25,7 +19,7 @@ type KebabCase<T extends string> = string extends T
  * @dataFirst
  * @category String
  */
-export function toKebabCase<T extends string>(data: T): KebabCase<T>;
+export function toKebabCase(data: string): string;
 
 /**
  * Convert a text to kebabCase by splitting it into words and joining them back
@@ -44,7 +38,7 @@ export function toKebabCase<T extends string>(data: T): KebabCase<T>;
  * @dataLast
  * @category String
  */
-export function toKebabCase(): <T extends string>(data: T) => KebabCase<T>;
+export function toKebabCase(): (data: string) => string;
 
 export function toKebabCase(...args: ReadonlyArray<unknown>): unknown {
   return purry(toKebabCaseImplementation, args);
