@@ -141,6 +141,7 @@ export * from "./takeWhile";
 export * from "./tap";
 export * from "./times";
 export * from "./toCamelCase";
+export * from "./toKebabCase";
 export * from "./toLowerCase";
 export * from "./toUpperCase";
 export * from "./uncapitalize";
