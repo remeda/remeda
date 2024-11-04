@@ -136,7 +136,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
     burstCoolDownMs,
     maxBurstDurationMs,
     delayMs,
-    reducer = () => "" as R,
+    reducer = voidReducer,
   }: FunnelOptions<Args, R>,
 ): Funnel<Args> {
   // We manage execution via 2 timeouts, one to track bursts of calls, and one
@@ -269,3 +269,12 @@ export function funnel<Args extends RestArguments = [], R = never>(
     },
   };
 }
+
+// We use the value provided by the reducer to also determine if a call
+// was done during a timeout period. This means that even when no reducer
+// is provided, we still need a dummy reducer that would return something
+// other than `undefined`. It is safe to cast this to R (which might be
+// anything) because the callback would never use it as it would be typed
+// as a zero-args function.
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- Intentional, so that it could be used as a default value above.
+const voidReducer = <R>(): R => "" as R;
