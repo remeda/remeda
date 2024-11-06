@@ -1,5 +1,6 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import type { IterableContainer, Mapped } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { Mapped } from "./internal/types/Mapped";
 import type { LazyEvaluator } from "./pipe";
 
 /**

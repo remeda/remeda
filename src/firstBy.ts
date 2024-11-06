@@ -1,10 +1,8 @@
-import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
-import type {
-  CompareFunction,
-  IterableContainer,
-  NonEmptyArray,
-} from "./internal/types";
 import { hasAtLeast } from "./hasAtLeast";
+import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
+import type { CompareFunction } from "./internal/types/CompareFunction";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 type FirstBy<T extends IterableContainer> =
   | T[number]

@@ -1,6 +1,6 @@
 import type { IsNumericLiteral } from "type-fest";
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import type { LazyEvaluator, LazyResult } from "./pipe";
 

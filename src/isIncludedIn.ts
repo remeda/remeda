@@ -1,5 +1,6 @@
 import type { IsLiteral } from "type-fest";
-import type { IsUnion, IterableContainer } from "./internal/types";
+import type { IsUnion } from "./internal/types/IsUnion";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * A "constant" tuple is a type that has a single runtime value that can fulfil

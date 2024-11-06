@@ -2,9 +2,9 @@
  * Heap related utilities.
  */
 
-import { swapInPlace } from "./swapInPlace";
-import type { CompareFunction } from "./types";
 import { hasAtLeast } from "../hasAtLeast";
+import { swapInPlace } from "./swapInPlace";
+import type { CompareFunction } from "./types/CompareFunction";
 
 /**
  * Mutates an array into a "max"-heap based on `compareFn` so that for any `item` in the heap, `compareFn(heap[0], item) > 0`.

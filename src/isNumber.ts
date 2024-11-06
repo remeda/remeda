@@ -1,4 +1,4 @@
-import type { NarrowedTo } from "./internal/types";
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
 
 /**
  * A function that checks if the passed parameter is a number and narrows its

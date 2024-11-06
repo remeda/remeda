@@ -2,11 +2,9 @@
  * Function inference doesn't work when `unknown` is used as the parameters
  * generic type, it **has** to be `any`.
  */
-import type {
-  IterableContainer,
-  RemedaTypeError,
-  TupleSplits,
-} from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
+import type { TupleSplits } from "./internal/types/TupleSplits";
 
 type PartialLastBindError<Message extends string | number> = RemedaTypeError<
   "partialLastBind",

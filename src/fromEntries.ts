@@ -1,5 +1,6 @@
 import type { Simplify } from "type-fest";
-import type { IterableContainer, RemedaTypeError } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
 type FromEntriesError<Message extends string> = RemedaTypeError<

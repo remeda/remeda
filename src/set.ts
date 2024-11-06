@@ -1,4 +1,4 @@
-import type { UpsertProp } from "./internal/types";
+import type { UpsertProp } from "./internal/types/UpsertProp";
 import { purry } from "./purry";
 
 /**

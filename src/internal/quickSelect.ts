@@ -5,7 +5,7 @@
  */
 
 import { swapInPlace } from "./swapInPlace";
-import type { CompareFunction } from "./types";
+import type { CompareFunction } from "./types/CompareFunction";
 
 /**
  * Perform QuickSelect on the given data. Notice that the data would be cloned
