@@ -4,7 +4,7 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
-type Values<T extends object> = T extends IterableContainer
+export type Values<T extends object> = T extends IterableContainer
   ? Array<T[number]>
   : Array<EnumerableStringKeyedValueOf<T>>;
 

@@ -4,7 +4,7 @@ import type {
 } from "./internal/types";
 import { purry } from "./purry";
 
-type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
+export type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
 // "mapping" each item "key" (which is actually an index) as its own value. This
