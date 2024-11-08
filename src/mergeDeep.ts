@@ -15,10 +15,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function mergeDeep<
-  Destination extends Record<string, unknown>,
-  Source extends Record<string, unknown>,
->(destination: Destination, source: Source): MergeDeep<Destination, Source>;
+export function mergeDeep<Destination extends object, Source extends object>(
+  destination: Destination,
+  source: Source,
+): MergeDeep<Destination, Source>;
 
 /**
  * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
@@ -35,18 +35,19 @@ export function mergeDeep<
  * @dataLast
  * @category Object
  */
-export function mergeDeep<
-  Destination extends Record<string, unknown>,
-  Source extends Record<string, unknown>,
->(source: Source): (target: Destination) => MergeDeep<Destination, Source>;
+export function mergeDeep<Source extends object>(
+  source: Source,
+): <Destination extends object>(
+  target: Destination,
+) => MergeDeep<Destination, Source>;
 
 export function mergeDeep(...args: ReadonlyArray<unknown>): unknown {
   return purry(mergeDeepImplementation, args);
 }
 
 function mergeDeepImplementation<
-  Destination extends Record<string, unknown>,
-  Source extends Record<string, unknown>,
+  Destination extends object,
+  Source extends object,
 >(destination: Destination, source: Source): MergeDeep<Destination, Source> {
   // At this point the output is already merged, simply not deeply merged.
   const output = { ...destination, ...source } as Record<
