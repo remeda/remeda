@@ -1,6 +1,6 @@
 import { firstBy } from "./firstBy";
 import { identity } from "./identity";
-import type { NonEmptyArray } from "./internal/types";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 it("can return undefined on arrays", () => {
   const data: ReadonlyArray<number> = [1, 2, 3];

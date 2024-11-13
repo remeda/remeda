@@ -1,4 +1,5 @@
-import type { CompareFunction, NonEmptyArray } from "./types";
+import type { CompareFunction } from "./types/CompareFunction";
+import type { NonEmptyArray } from "./types/NonEmptyArray";
 
 // We define the comparators in a global const so that they are only
 // instantiated once, and so we can couple a label (string) for them that could

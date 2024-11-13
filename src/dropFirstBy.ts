@@ -3,7 +3,8 @@ import {
   purryOrderRulesWithArgument,
   type OrderRule,
 } from "./internal/purryOrderRules";
-import type { CompareFunction, NonEmptyArray } from "./internal/types";
+import type { CompareFunction } from "./internal/types/CompareFunction";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

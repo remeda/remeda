@@ -1,7 +1,5 @@
-import type {
-  EnumerableStringKeyOf,
-  IterableContainer,
-} from "./internal/types";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;

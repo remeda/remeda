@@ -6,12 +6,10 @@ import type {
   Subtract,
   ValueOf,
 } from "type-fest";
-import type {
-  IterableContainer,
-  NonEmptyArray,
-  NTuple,
-  TupleParts,
-} from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import type { NTuple } from "./internal/types/NTuple";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 // This prevents typescript from failing on complex arrays and large chunks. It

@@ -1,7 +1,5 @@
-import type {
-  EnumerableStringKeyedValueOf,
-  IterableContainer,
-} from "./internal/types";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Values<T extends object> = T extends IterableContainer
@@ -16,7 +14,7 @@ type Values<T extends object> = T extends IterableContainer
  *    R.values(source)
  * @example
  *    R.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
- *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
+ *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'OOz']
  * @dataFirst
  * @category Object
  */

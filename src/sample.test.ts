@@ -1,4 +1,4 @@
-import type { NonEmptyArray } from "./internal/types";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { sample } from "./sample";
 import { times } from "./times";
 import { unique } from "./unique";

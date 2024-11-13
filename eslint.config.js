@@ -514,4 +514,10 @@ export default tseslint.config(
       "jsdoc/require-param": "off",
     },
   },
+  {
+    files: ["src/internal/types/*.ts"],
+    rules: {
+      "unicorn/filename-case": ["error", { case: "pascalCase" }],
+    },
+  },
 );
