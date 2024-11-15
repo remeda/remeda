@@ -1,3 +1,5 @@
+import type { Words } from "type-fest";
+
 // @see https://github.com/sindresorhus/type-fest/blob/main/source/internal/characters.d.ts#L5-L31
 const WHITESPACE = [
   "\u{9}", // '\t'
@@ -51,5 +53,8 @@ const WORD_SPLITTING_RE = new RegExp(
   "u",
 );
 
-export const splitWords = (data: string): Array<string> =>
+export const words = <S extends string>(
+  data: S,
+): string extends S ? Array<string> : Words<S> =>
+  // @ts-expect-error [ts2322] -- TypeScript can't infer this type...
   data.split(WORD_SPLITTING_RE).filter(({ length }) => length > 0);
