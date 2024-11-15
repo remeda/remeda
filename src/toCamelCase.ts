@@ -1,5 +1,5 @@
 import type { CamelCase } from "type-fest";
-import { splitWords } from "./internal/splitWords";
+import { words } from "./internal/words";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
 
@@ -94,7 +94,7 @@ const toCamelCaseImplementation = (
     preserveConsecutiveUppercase = DEFAULT_OPTIONS.preserveConsecutiveUppercase,
   }: CamelCaseOptions = {},
 ): string =>
-  splitWords(
+  words(
     LOWER_CASE_CHARACTER_RE.test(data)
       ? data
       : // If the text doesn't have **any** lower case characters we also lower

@@ -61,7 +61,7 @@
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.26.1"
+    "type-fest": "^4.27.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.16.4",

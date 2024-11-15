@@ -1,5 +1,10 @@
-import { splitWords } from "./internal/splitWords";
+import type { Join, Words } from "type-fest";
+import { words } from "./internal/words";
 import { purry } from "./purry";
+
+type KebabCase<S extends string> = string extends S
+  ? string
+  : Lowercase<Join<Words<S>, "-">>;
 
 /**
  * Convert a text to kebab-Case by splitting it into words and joining them back
@@ -19,7 +24,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category String
  */
-export function toKebabCase(data: string): string;
+export function toKebabCase<S extends string>(data: S): KebabCase<S>;
 
 /**
  * Convert a text to kebabCase by splitting it into words and joining them back
@@ -38,11 +43,15 @@ export function toKebabCase(data: string): string;
  * @dataLast
  * @category String
  */
-export function toKebabCase(): (data: string) => string;
+export function toKebabCase(): <S extends string>(data: S) => KebabCase<S>;
 
 export function toKebabCase(...args: ReadonlyArray<unknown>): unknown {
   return purry(toKebabCaseImplementation, args);
 }
 
-const toKebabCaseImplementation = (data: string): string =>
-  splitWords(data).join("-").toLowerCase();
+const toKebabCaseImplementation = <S extends string>(data: S): KebabCase<S> =>
+  // @ts-expect-error [ts2322] -- To avoid importing our own utilities for this
+  // we are using the built-in `join` and `toLowerCase` functions which aren't
+  // typed as well. This is equivalent to `toLowerCase(join(words(data), "-"))`
+  // which TypeScript infers correctly as KebabCase.
+  words(data).join("-").toLowerCase();
