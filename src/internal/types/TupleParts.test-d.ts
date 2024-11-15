@@ -8,6 +8,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: never;
       suffix: [];
     }>();
@@ -18,6 +20,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: number;
       suffix: [];
     }>();
@@ -28,6 +32,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [1, 2, 3];
+      required: [1, 2, 3];
+      optional: [];
       item: never;
       suffix: [];
     }>();
@@ -38,6 +44,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [string];
+      required: [string];
+      optional: [];
       item: boolean;
       suffix: [];
     }>();
@@ -48,6 +56,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: boolean;
       suffix: [string];
     }>();
@@ -58,6 +68,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number];
+      required: [number];
+      optional: [];
       item: boolean;
       suffix: [string];
     }>();
@@ -68,6 +80,8 @@ describe("mutable", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number, string?, number?];
+      required: [number];
+      optional: [string, number];
       item: boolean;
       suffix: [];
     }>();
@@ -80,6 +94,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: never;
       suffix: [];
     }>();
@@ -90,6 +106,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: number;
       suffix: [];
     }>();
@@ -100,6 +118,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [1, 2, 3];
+      required: [1, 2, 3];
+      optional: [];
       item: never;
       suffix: [];
     }>();
@@ -110,6 +130,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [string];
+      required: [string];
+      optional: [];
       item: boolean;
       suffix: [];
     }>();
@@ -120,6 +142,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
+      required: [];
+      optional: [];
       item: boolean;
       suffix: [string];
     }>();
@@ -130,6 +154,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number];
+      required: [number];
+      optional: [];
       item: boolean;
       suffix: [string];
     }>();
@@ -145,6 +171,8 @@ describe("readonly", () => {
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number, string?, number?];
+      required: [number];
+      optional: [string, number];
       item: boolean;
       suffix: [];
     }>();
@@ -156,8 +184,8 @@ describe("unions", () => {
     const data = [] as Array<boolean> | Array<number>;
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; item: boolean; suffix: [] }
-      | { prefix: []; item: number; suffix: [] }
+      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
+      | { prefix: []; required: []; optional: []; item: number; suffix: [] }
     >();
   });
 
@@ -165,8 +193,14 @@ describe("unions", () => {
     const data = [] as Array<boolean> | [number, string];
     const result = tupleParts(data);
     expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; item: boolean; suffix: [] }
-      | { prefix: [number, string]; item: never; suffix: [] }
+      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
+      | {
+          prefix: [number, string];
+          required: [number, string];
+          optional: [];
+          item: never;
+          suffix: [];
+        }
     >();
   });
 });
