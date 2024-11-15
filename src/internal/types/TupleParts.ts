@@ -8,9 +8,9 @@ import type { IsEqual } from "type-fest";
  *
  * NOTE: The prefix is split into 2 tuples where all items are non-optional so
  * that types that rely on the presence of a specific element can be built more
- * accurately. For backwards compatibility, the `prefix` accessor which hides
- * some of this complexity is also provided (but we might deprecate it in the
- * future).
+ * accurately.
+ *
+ * TODO: Some existing types use the `prefix` accessor which doesn't handle the optional part correctly. We need to fix each of those types before we can remove it.
  *
  * The output could be used to reconstruct the input: `[
  *   ...TupleParts<T>["required"],
