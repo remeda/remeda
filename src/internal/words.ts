@@ -48,17 +48,20 @@ export const words = <S extends string>(
 
   for (const character of data) {
     if (WORD_SEPARATORS.has(character)) {
-      // Separator encountered; flush the current word.
+      // Separator encountered; flush the current word & exclude the separator.
       flush();
       continue;
     }
 
     // Detect transitions:
     // 1. Lowercase to uppercase (e.g., "helloWorld")
-    if (word.length > 0 && /[a-z]$/u.test(word) && /[A-Z]/u.test(character)) {
+    if (/[a-z]$/u.test(word) && /[A-Z]/u.test(character)) {
       flush();
     }
     // 2. Uppercase to lowercase following multiple uppercase letters (e.g., "HELLOWorld")
+    // When the text transitions from 2 upper case letters to a lower case
+    // letter. (one upper case letter is considered part of the word, e.g.
+    // "Dog").
     else if (/[A-Z][A-Z]$/u.test(word) && /[a-z]/u.test(character)) {
       const lastCharacter = word.slice(-1);
       word = word.slice(0, -1);
@@ -66,10 +69,7 @@ export const words = <S extends string>(
       word = lastCharacter;
     }
     // 3. Digit to non-digit or non-digit to digit (e.g., "123abc" or "abc123")
-    else if (
-      (/\d$/u.test(word) && /\D/u.test(character)) ||
-      (/\D$/u.test(word) && /\d/u.test(character))
-    ) {
+    else if (/\d$/u.test(word) !== /\d/u.test(character)) {
       flush();
     }
 
