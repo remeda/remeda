@@ -31,30 +31,68 @@ const WHITESPACE = [
 ] as const;
 
 // @see https://github.com/sindresorhus/type-fest/blob/main/source/internal/characters.d.ts#L33
-const WORD_SEPARATORS = ["-", "_", ...WHITESPACE] as const;
+const WORD_SEPARATORS = new Set(["-", "_", ...WHITESPACE]);
 
-// We are basing our logic on the type definition of SplitWords from type-fest.
-// @see https://github.com/sindresorhus/type-fest/blob/main/source/split-words.d.ts
-const WORD_SPLITTING_RE = new RegExp(
-  [
-    // **on** any word separator, these would be removed from the output.
-    `[${WORD_SEPARATORS.join("")}]+`,
-    // When the text transitions from a non-digit to a digit.
-    String.raw`(?<=\D)(?=\d)`,
-    // When the text transitions from a digit to a non-digit.
-    String.raw`(?<=\d)(?=\D)`,
-    // When the text transitions from a lower case to upper case.
-    String.raw`(?<=[a-z])(?=[A-Z])`,
-    // When the text transitions from 2 upper case letters to a lower case
-    // letter. (one upper case letter is considered part of the word, e.g.
-    // "Dog").
-    String.raw`(?<=[A-Z])(?=[A-Z][a-z])`,
-  ].join("|"),
-  "u",
-);
+function splitWords(data: string): Array<string> {
+  const words: Array<string> = [];
+  let word = "";
+
+  const flush = (): void => {
+    if (word.length > 0) {
+      words.push(word);
+      word = "";
+    }
+  };
+
+  for (const character of data) {
+    if (WORD_SEPARATORS.has(character)) {
+      // Separator encountered; flush the current word.
+      flush();
+      continue;
+    }
+
+    // Detect transitions:
+    // 1. Lowercase to uppercase (e.g., "helloWorld")
+    if (
+      word.length > 0 &&
+      /[a-z]/u.test(word.at(-1)!) &&
+      /[A-Z]/u.test(character)
+    ) {
+      flush();
+    }
+    // 2. Uppercase to lowercase following multiple uppercase letters (e.g., "HELLOWorld")
+    else if (
+      word.length > 1 &&
+      /[A-Z]/u.test(word.at(-1)!) &&
+      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+      /[A-Z]/u.test(word.at(-2)!) &&
+      /[a-z]/u.test(character)
+    ) {
+      const lastCharacter = word.slice(-1);
+      word = word.slice(0, -1);
+      flush();
+      word = lastCharacter;
+    }
+    // 3. Digit to non-digit or non-digit to digit (e.g., "123abc" or "abc123")
+    else if (
+      (/\d/u.test(word.at(-1)!) && /\D/u.test(character)) ||
+      (/\D/u.test(word.at(-1)!) && /\d/u.test(character))
+    ) {
+      flush();
+    }
+
+    // Add the current character to the current word.
+    word += character;
+  }
+
+  // Flush any remaining word.
+  flush();
+
+  return words;
+}
 
 export const words = <S extends string>(
   data: S,
 ): string extends S ? Array<string> : Words<S> =>
   // @ts-expect-error [ts2322] -- TypeScript can't infer this type...
-  data.split(WORD_SPLITTING_RE).filter(({ length }) => length > 0);
+  splitWords(data);
