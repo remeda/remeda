@@ -18,7 +18,7 @@ test("should work as type guard", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | Uint8Array<ArrayBuffer>
       | boolean
       | number
       | string
@@ -44,7 +44,7 @@ test("should work as type guard in filter", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | Uint8Array<ArrayBuffer>
       | boolean
       | number
       | string

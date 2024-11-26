@@ -25,7 +25,7 @@ test("should work as type guard", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | Uint8Array<ArrayBuffer>
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]
@@ -52,7 +52,7 @@ test("should work as type guard in filter", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | Uint8Array<ArrayBuffer>
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]

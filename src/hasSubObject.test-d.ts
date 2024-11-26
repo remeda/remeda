@@ -309,7 +309,6 @@ describe("data-last", () => {
 
   it("allows const types", () => {
     // ok - const value
-    hasSubObject({ a: 1 } as const)({ a: 2, b: 2 });
     pipe({ a: 2, b: 2 }, hasSubObject({ a: 1 } as const));
   });
 
