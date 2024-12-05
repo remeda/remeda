@@ -10,6 +10,7 @@ export * from "./clone";
 export * from "./concat";
 export * from "./conditional";
 export * from "./constant";
+export * from "./countBy";
 export * from "./debounce";
 export * from "./difference";
 export * from "./differenceWith";
