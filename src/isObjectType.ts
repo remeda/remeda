@@ -1,4 +1,4 @@
-import type { NarrowedTo } from "./internal/types";
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
 
 /**
  * Checks if the given parameter is of type `"object"` via `typeof`, excluding `null`.

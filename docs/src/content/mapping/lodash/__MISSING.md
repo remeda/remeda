@@ -129,7 +129,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - deburr
 - escape
 - escapeRegExp
-- kebabCase
 - lowerCase
 - pad
 - padEnd
@@ -137,7 +136,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - parseInt
 - repeat
 - replace
-- snakeCase
 - startCase
 - template
 - trim

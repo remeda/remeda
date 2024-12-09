@@ -1,10 +1,8 @@
 import type { IfNever, Simplify } from "type-fest";
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  IfBoundedRecord,
-  ReconstructedRecord,
-} from "./internal/types";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
+import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only

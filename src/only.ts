@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Only<T extends IterableContainer> = T extends

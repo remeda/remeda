@@ -1,4 +1,5 @@
-import type { ExactRecord, IterableContainer } from "./internal/types";
+import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 /**

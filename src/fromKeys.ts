@@ -1,5 +1,6 @@
 import type { Simplify } from "type-fest";
-import type { ExactRecord, IterableContainer } from "./internal/types";
+import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 // Takes a union of literals and creates a union of records with the value V for

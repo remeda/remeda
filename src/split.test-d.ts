@@ -99,3 +99,8 @@ test("0 limit", () => {
   const result = split("a,b,c", ",", 0);
   expectTypeOf(result).toEqualTypeOf<[]>();
 });
+
+test("optional prefix separator on literal unions (issue: #921)", () => {
+  const result = split("a" as "a" | "-a", "-");
+  expectTypeOf(result).toEqualTypeOf<["a"] | ["", "a"]>();
+});

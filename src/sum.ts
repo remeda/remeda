@@ -1,4 +1,4 @@
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =

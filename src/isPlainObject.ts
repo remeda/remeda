@@ -1,4 +1,4 @@
-import type { NarrowedTo } from "./internal/types";
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
 
 /**
  * Checks if `data` is a "plain" object. A plain object is defined as an object with string keys and values of any type, including primitives, other objects, functions, classes, etc (aka struct/shape/record/simple). Technically, a plain object is one whose prototype is either `Object.prototype` or `null`, ensuring it does not inherit properties or methods from other object types.

@@ -1,10 +1,8 @@
 import type { IfNever, Simplify } from "type-fest";
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  IfBoundedRecord,
-  ReconstructedRecord,
-} from "./internal/types";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
+import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated

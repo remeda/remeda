@@ -1,10 +1,9 @@
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style -- The rule is misfiring here because Records don't work with recursive types. @see https://github.com/typescript-eslint/typescript-eslint/issues/10224
 type GenericEvolver = {
   readonly [P in string]: GenericEvolver | ((data: unknown) => unknown);
 };

@@ -1,5 +1,5 @@
 import type { IsEqual, Join } from "type-fest";
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Difference<A extends number, B extends number> =

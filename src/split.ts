@@ -5,29 +5,27 @@ import type {
   Split as SplitBase,
 } from "type-fest";
 
+// We can use the type-fest's split **only** if all the params are literals.
+// For all other cases it would return the wrong type so we use
+// `Array.prototype.split`s return type instead.
+type BuiltInReturnType = ReturnType<typeof String.prototype.split>;
+
 type Split<
   S extends string,
   Separator extends string,
   N extends number | undefined = undefined,
 > = string extends S
-  ? Array<string>
+  ? BuiltInReturnType
   : string extends Separator
-    ? Array<string>
+    ? BuiltInReturnType
     : number extends N
-      ? Array<string>
+      ? BuiltInReturnType
       : // TODO: We need a way to "floor" non-integer numbers, until then we return a lower fidelity type instead.
         IsFloat<N> extends true
-        ? Array<string>
-        : ArraySlice<
-            // We can use the base (type-fest) split **only** if all the params
-            // are literals. For all other cases it would return the wrong type
-            // so we fallback to the built-in Array.prototype.split return type.
-            SplitBase<S, Separator>,
-            0,
-            // `undefined` and negative numbers are treated as non-limited
-            // splits, which is what we'd get when using `never` for ArraySlice.
-            N extends number ? NonNegative<N> : never
-          >;
+        ? BuiltInReturnType
+        : N extends number
+          ? ArraySlice<SplitBase<S, Separator>, 0, NonNegative<N>>
+          : SplitBase<S, Separator>;
 
 /**
  * Takes a pattern and divides this string into an ordered list of substrings by

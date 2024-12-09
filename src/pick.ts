@@ -1,4 +1,21 @@
+import type { Simplify } from "type-fest";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
+
+type PickFromArray<T, Keys extends ReadonlyArray<keyof T>> = Simplify<
+  // The keys that are in the fixed parts of the Keys array will always be part
+  // of the result.
+  Pick<
+    T,
+    TupleParts<Keys>["required"][number] | TupleParts<Keys>["suffix"][number]
+  > &
+    // The keys in the optional parts of the Keys array might be part of the
+    // result or not, so we need to make this part of the result partial to
+    // reflect that.
+    Partial<
+      Pick<T, TupleParts<Keys>["optional"][number] | TupleParts<Keys>["item"]>
+    >
+>;
 
 /**
  * Creates an object composed of the picked `data` properties.
@@ -10,9 +27,10 @@ import { purry } from "./purry";
  * @dataLast
  * @category Object
  */
-export function pick<T extends object, Keys extends ReadonlyArray<keyof T>>(
-  keys: Keys,
-): (data: T) => Pick<T, Keys[number]>;
+export function pick<
+  T extends object,
+  const Keys extends ReadonlyArray<keyof T>,
+>(keys: Keys): (data: T) => PickFromArray<T, Keys>;
 
 /**
  * Creates an object composed of the picked `data` properties.
@@ -25,10 +43,10 @@ export function pick<T extends object, Keys extends ReadonlyArray<keyof T>>(
  * @dataFirst
  * @category Object
  */
-export function pick<T extends object, Keys extends ReadonlyArray<keyof T>>(
-  data: T,
-  keys: Keys,
-): Pick<T, Keys[number]>;
+export function pick<
+  T extends object,
+  const Keys extends ReadonlyArray<keyof T>,
+>(data: T, keys: Keys): PickFromArray<T, Keys>;
 
 export function pick(...args: ReadonlyArray<unknown>): unknown {
   return purry(pickImplementation, args);
@@ -37,7 +55,7 @@ export function pick(...args: ReadonlyArray<unknown>): unknown {
 function pickImplementation<
   T extends object,
   Keys extends ReadonlyArray<keyof T>,
->(object: T, keys: Keys): Pick<T, Keys[number]> {
+>(object: T, keys: Keys): PickFromArray<T, Keys> {
   const out: Partial<Pick<T, Keys[number]>> = {};
   for (const key of keys) {
     if (key in object) {

@@ -16,8 +16,7 @@ describe("data first", () => {
     >();
   });
 
-  // @see https://github.com/remeda/remeda/issues/886
-  it("infers the key types from the keys array", () => {
+  it("infers the key types from the keys array (issue #886)", () => {
     const data = { foo: "hello", bar: "world" };
 
     const raw = pick(data, ["foo"]);
@@ -28,6 +27,15 @@ describe("data first", () => {
 
     const withConstKeys = keys(pick(data, ["foo"] as const));
     expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
+  });
+
+  it("handles optional keys (issue #911)", () => {
+    const data = { foo: "hello", bar: "world" } as const;
+    const result = pick(data, [] as Array<keyof typeof data>);
+    expectTypeOf(result).toEqualTypeOf<{
+      readonly foo?: "hello";
+      readonly bar?: "world";
+    }>();
   });
 });
 

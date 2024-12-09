@@ -25,6 +25,4 @@ jobs:
         run: npm run test:coverage
 
       - name: 🗺️ Upload coverage
-        uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v5

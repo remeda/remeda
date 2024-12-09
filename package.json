@@ -61,28 +61,28 @@
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.26.1"
+    "type-fest": "^4.30.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.4",
-    "@eslint/js": "^9.14.0",
+    "@arethetypeswrong/cli": "^0.17.1",
+    "@eslint/js": "^9.16.0",
     "@types/eslint__js": "^8.42.3",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.8.6",
-    "@vitest/coverage-v8": "^2.1.4",
-    "@vitest/eslint-plugin": "^1.1.7",
-    "eslint": "^9.14.0",
+    "@types/node": "^22.10.1",
+    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/eslint-plugin": "^1.1.14",
+    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsdoc": "^50.4.3",
-    "eslint-plugin-unicorn": "^56.0.0",
-    "husky": "^9.1.6",
+    "eslint-plugin-jsdoc": "^50.6.0",
+    "eslint-plugin-unicorn": "^56.0.1",
+    "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.2",
     "publint": "^0.2.12",
     "semantic-release": "^24.2.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.12.2",
-    "vitest": "^2.1.4"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.17.0",
+    "vitest": "^2.1.8"
   }
 }
