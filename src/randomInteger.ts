@@ -23,7 +23,7 @@ type RandomInteger<From extends number, To extends number> =
         ? never
         : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
-          : IntRangeInclusive<To, From>;
+          : IntRangeInclusive<From, To>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).
