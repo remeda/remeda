@@ -145,7 +145,6 @@
 
 # Relation
 
-- countBy
 - eqBy
 - gt
 - gte

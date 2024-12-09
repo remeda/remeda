@@ -1,4 +1,4 @@
 ---
-category: Collection
+category: Relation
 remeda: countBy
 ---
