@@ -1,12 +1,12 @@
 import type {
   GreaterThan,
   GreaterThanOrEqual,
-  IntRange,
   IsEqual,
   IsNever,
   NonNegativeInteger,
   Or,
 } from "type-fest";
+import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 
 // This limitation is defined by type-fest
 type MaxLiteral = 1000;
@@ -23,12 +23,7 @@ type RandomInteger<From extends number, To extends number> =
         ? never
         : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
-          : // We don't use IntClosedRange from type-fest here because it runs
-            // less efficiently for simple cases like this and can cause 'Type
-            // instantiation is excessively deep and possibly infinite.
-            // ts(2589)' errors when the integers are large (even when the
-            // range itself is not).
-            IntRange<From, To> | To;
+          : IntRangeInclusive<To, From>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).

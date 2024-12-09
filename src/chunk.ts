@@ -1,12 +1,12 @@
 import type {
   IfNever,
-  IntClosedRange,
   IntRange,
   IsNumericLiteral,
   LessThan,
   Subtract,
   ValueOf,
 } from "type-fest";
+import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
@@ -127,7 +127,7 @@ type ChunkInfinite<
             // (`0..N-LastPrefixChunk.length`). We need to do this because until
             // the last prefix chunk is full, we need to consider the suffix
             // being part of it too...
-            [Padding in IntClosedRange<
+            [Padding in IntRangeInclusive<
               0,
               Subtract<N, LastPrefixChunk["length"]>
             >]: [
@@ -172,7 +172,7 @@ type SuffixChunk<
 > = T extends readonly []
   ? // If we don't have a suffix we simply create a single chunk with all
     // possible non-empty sub-arrays of `Item` up to size `N`.
-    [ValueOf<{ [K in IntClosedRange<1, N>]: NTuple<Item, K> }>]
+    [ValueOf<{ [K in IntRangeInclusive<1, N>]: NTuple<Item, K> }>]
   : ValueOf<{
       // When suffix isn't empty we pad the head of the suffix and compute it's
       // chunks for all possible padding sizes.
