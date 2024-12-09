@@ -14,9 +14,9 @@ function with an empty args list (e.g. `clone()`).
 ```ts
 type MyType = {
   readonly clone: () => MyType;
-}
+};
 
-declare DATA: MyType;
+declare const DATA: MyType;
 
 // Was
 const cloned = clone(DATA);
