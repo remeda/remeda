@@ -1,7 +1,7 @@
 import type {
   GreaterThan,
   GreaterThanOrEqual,
-  IntClosedRange,
+  IntRange,
   IsEqual,
   IsNever,
   NonNegativeInteger,
@@ -23,7 +23,12 @@ type RandomInteger<From extends number, To extends number> =
         ? never
         : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
-          : IntClosedRange<From, To>;
+          : // We don't use IntClosedRange from type-fest here because it runs
+            // less efficiently for simple cases like this and can cause 'Type
+            // instantiation is excessively deep and possibly infinite.
+            // ts(2589)' errors when the integers are large (even when the
+            // range itself is not).
+            IntRange<From, To> | To;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).
