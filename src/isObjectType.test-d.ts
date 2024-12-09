@@ -3,6 +3,7 @@ import {
   TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
   type TestClass,
+  type TypedArray,
 } from "../test/typesDataProvider";
 import { isObjectType } from "./isObjectType";
 
@@ -25,7 +26,7 @@ test("should work as type guard", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | TypedArray
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]
@@ -52,7 +53,7 @@ test("should work as type guard in filter", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | TypedArray
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]
