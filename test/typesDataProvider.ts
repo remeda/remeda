@@ -5,6 +5,9 @@ export class TestClass {
   }
 }
 
+const TYPED_ARRAY = new Uint8Array(1);
+export type TypedArray = typeof TYPED_ARRAY;
+
 export const TYPES_DATA_PROVIDER = {
   array: [1, 2, 3] as Array<number>,
   bigint: 1n,
@@ -25,7 +28,7 @@ export const TYPES_DATA_PROVIDER = {
   string: "text" as string,
   symbol: Symbol("symbol"),
   tuple: [1, 2, 3] as [number, number, number],
-  typedArray: new Uint8Array(1),
+  typedArray: TYPED_ARRAY,
   undefined,
 } as const;
 
