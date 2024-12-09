@@ -1,5 +1,6 @@
 import type {
   IfNever,
+  IntClosedRange,
   IntRange,
   IsNumericLiteral,
   LessThan,
@@ -126,7 +127,7 @@ type ChunkInfinite<
             // (`0..N-LastPrefixChunk.length`). We need to do this because until
             // the last prefix chunk is full, we need to consider the suffix
             // being part of it too...
-            [Padding in IntRangeInclusive<
+            [Padding in IntClosedRange<
               0,
               Subtract<N, LastPrefixChunk["length"]>
             >]: [
@@ -171,7 +172,7 @@ type SuffixChunk<
 > = T extends readonly []
   ? // If we don't have a suffix we simply create a single chunk with all
     // possible non-empty sub-arrays of `Item` up to size `N`.
-    [ValueOf<{ [K in IntRangeInclusive<1, N>]: NTuple<Item, K> }>]
+    [ValueOf<{ [K in IntClosedRange<1, N>]: NTuple<Item, K> }>]
   : ValueOf<{
       // When suffix isn't empty we pad the head of the suffix and compute it's
       // chunks for all possible padding sizes.
@@ -190,13 +191,6 @@ type GenericChunk<T extends IterableContainer> = T extends
   | readonly [unknown, ...Array<unknown>]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : Array<NonEmptyArray<T[number]>>;
-
-/**
- * Type-fest's IntRange doesn't include the `To` value, but we need it!
- */
-type IntRangeInclusive<From extends number, To extends number> =
-  | IntRange<From, To>
-  | To;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.

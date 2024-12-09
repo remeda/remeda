@@ -1,11 +1,11 @@
 import type {
-  IntRange,
   GreaterThan,
   GreaterThanOrEqual,
-  Or,
+  IntClosedRange,
+  IsEqual,
   IsNever,
   NonNegativeInteger,
-  IsEqual,
+  Or,
 } from "type-fest";
 
 // This limitation is defined by type-fest
@@ -23,7 +23,7 @@ type RandomInteger<From extends number, To extends number> =
         ? never
         : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
-          : IntRange<From, To> | To;
+          : IntClosedRange<From, To>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).
