@@ -17,5 +17,5 @@ test("prop standalone", () => {
 
   const byPropADataFirst = indexBy(input, standAlonePropA);
 
-  expect(byPropADataFirst).eqls({ "1": { a: 1 }, "2": { a: 2 } });
+  expect(byPropADataFirst).toStrictEqual({ "1": { a: 1 }, "2": { a: 2 } });
 });
