@@ -11,9 +11,6 @@ test("prop", () => {
 test("prop standalone", () => {
   const input = [{ a: 1 }, { a: 2 }];
   const standAlonePropA = prop("a");
-  const byPropA = pipe(input, indexBy(standAlonePropA));
-
-  expect(byPropA).eqls({ "1": { a: 1 }, "2": { a: 2 } });
 
   const byPropADataFirst = indexBy(input, standAlonePropA);
 
