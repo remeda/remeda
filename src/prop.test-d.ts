@@ -11,3 +11,17 @@ test("prop typing", () => {
   const doesntWork = pipe(input, sortBy(prop("a")));
   expectTypeOf(doesntWork).toEqualTypeOf<typeof input>();
 });
+
+test("prop typing standalone", () => {
+  const item = { a: 1 };
+  const input = [item, { a: 2 }];
+  const standAlonePropA = prop("a");
+  const valueA = standAlonePropA(item);
+  expectTypeOf(valueA).toEqualTypeOf<number>();
+  const valuesA = input.map(standAlonePropA);
+  expectTypeOf(valuesA).toEqualTypeOf<Array<number>>();
+
+  const standAlonePropB = prop("b");
+  // @ts-expect-error - b is not a key of typeof item
+  const valueB = standAlonePropB(item);
+});
