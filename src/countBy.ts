@@ -13,7 +13,7 @@ import { purry } from "./purry";
  * @example
  *    R.countBy(
  *      ["a", "b", "c", "B", "A", "a"],
- *      (x) => x.toLowerCase()
+ *      R.toLowerCase()
  *    ) // { a: 3, b: 2, c: 1 }
  * @dataFirst
  * @category Array
@@ -35,7 +35,7 @@ export function countBy<T, K extends PropertyKey>(
  * @example
  *    R.pipe(
  *      ["a", "b", "c", "B", "A", "a"],
- *      R.countBy((x) => x.toLowerCase())
+ *      R.countBy(R.toLowerCase())
  *    ) // { a: 3, b: 2, c: 1 }
  * @dataLast
  * @category Array
