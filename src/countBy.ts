@@ -1,7 +1,10 @@
 import { purry } from "./purry";
 
 /**
- * Categorize and count elements in an array using a defined callback function. The transformation function applies to each element in the array to determine its category and then counts how many elements fall into each category.
+ * Categorize and count elements in an array using a defined callback function.
+ * The transformation function applies to each element in the array to
+ * determine its category and then counts how many elements fall into
+ * each category.
  *
  * @param data - The array.
  * @param fn - The transformation function.
@@ -21,7 +24,10 @@ export function countBy<T, K extends PropertyKey>(
 ): Record<K, number>;
 
 /**
- * Categorize and count elements in an array using a defined callback function. The transformation function applies to each element in the array to determine its category and then counts how many elements fall into each category.
+ * Categorize and count elements in an array using a defined callback function.
+ * The transformation function applies to each element in the array to
+ * determine its category and then counts how many elements fall into
+ * each category.
  *
  * @param fn - The transformation function.
  * @signature
