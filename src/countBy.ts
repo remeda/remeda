@@ -9,7 +9,7 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param fn - The transformation function.
  * @signature
- *   R.countBy(array, fn)
+ *   R.countBy(data, fn)
  * @example
  *    R.countBy(
  *      ["a", "b", "c", "B", "A", "a"],
@@ -31,7 +31,7 @@ export function countBy<T, K extends PropertyKey>(
  *
  * @param fn - The transformation function.
  * @signature
- *   R.countBy(fn)(array)
+ *   R.countBy(fn)(data)
  * @example
  *    R.pipe(
  *      ["a", "b", "c", "B", "A", "a"],
