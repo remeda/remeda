@@ -27,6 +27,15 @@ describe("dataFirst", () => {
     expect(result).toStrictEqual({ A: 2, B: 1 });
   });
 
+  test("symbols", () => {
+    const mySymbolA = Symbol("mySymbolA");
+    const mySymbolB = Symbol("mySymbolB");
+    const data = [mySymbolA, mySymbolB, mySymbolA];
+    const result = countBy(data, (x) => x);
+
+    expect(result).toStrictEqual({ [mySymbolA]: 2, [mySymbolB]: 1 });
+  });
+
   test("mixed data types", () => {
     const mySymbol = Symbol("mySymbol");
     const data = [1, "a", 1, mySymbol, "A", mySymbol];
@@ -80,6 +89,18 @@ describe("dataLast", () => {
     );
 
     expect(result).toStrictEqual({ A: 2, B: 1 });
+  });
+
+  test("symbols", () => {
+    const mySymbolA = Symbol("mySymbolA");
+    const mySymbolB = Symbol("mySymbolB");
+    const data = [mySymbolA, mySymbolB, mySymbolA];
+    const result = pipe(
+      data,
+      countBy((x) => x),
+    );
+
+    expect(result).toStrictEqual({ [mySymbolA]: 2, [mySymbolB]: 1 });
   });
 
   test("mixed data types", () => {
