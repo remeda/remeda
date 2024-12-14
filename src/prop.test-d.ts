@@ -3,8 +3,7 @@ import { prop } from "./prop";
 import { sortBy } from "./sortBy";
 
 test("prop typing", () => {
-  const item = { a: 1 };
-  const input = [item];
+  const input = [{ a: 1 }];
 
   const works = sortBy(input, prop("a"));
   expectTypeOf(works).toEqualTypeOf<typeof input>();
