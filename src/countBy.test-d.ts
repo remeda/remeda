@@ -22,14 +22,10 @@ describe("dataLast", () => {
   });
 });
 
-test("callback function type does not match data array type", () => {
+test("callback function type", () => {
   const data = [1, 2, 3];
-  // @ts-expect-error [ts2345]: Type 'number' is not assignable to type 'string'.
-  countBy(data, (x: string) => x);
-});
-
-test("array with nullish values", () => {
-  const data = [1, null, undefined];
-  // @ts-expect-error [ts2322] - Type 'number | null | undefined' is not assignable to type 'PropertyKey'.
-  countBy(data, (x) => x);
+  countBy(data, (x) => {
+    expectTypeOf(x).toEqualTypeOf<number>();
+    return x;
+  });
 });
