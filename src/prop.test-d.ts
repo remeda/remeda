@@ -21,8 +21,11 @@ test("prop typing standalone", () => {
   expectTypeOf(valueA).toEqualTypeOf<number>();
   const valuesA = input.map(standAlonePropA);
   expectTypeOf(valuesA).toEqualTypeOf<Array<number>>();
+});
 
+test("prop expect error", () => {
   const standAlonePropB = prop("b");
+  const item = { a: 1 };
   // @ts-expect-error - b is not a key of typeof item
   const valueB = standAlonePropB(item);
   expectTypeOf(valueB).toEqualTypeOf<unknown>();
