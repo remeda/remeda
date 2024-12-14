@@ -20,7 +20,7 @@ import { purry } from "./purry";
  */
 export function countBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => K,
+  fn: (value: T, index: number, data: ReadonlyArray<T>) => K | undefined,
 ): Record<K, number>;
 
 /**
@@ -41,7 +41,7 @@ export function countBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function countBy<T, K extends PropertyKey>(
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => K,
+  fn: (value: T, index: number, data: ReadonlyArray<T>) => K | undefined,
 ): (data: ReadonlyArray<T>) => Record<K, number>;
 
 export function countBy(...args: ReadonlyArray<unknown>): unknown {
@@ -50,14 +50,20 @@ export function countBy(...args: ReadonlyArray<unknown>): unknown {
 
 const countByImplementation = <T>(
   data: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => PropertyKey,
+  fn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => PropertyKey | undefined,
 ): Record<PropertyKey, number> => {
-  const out: Record<PropertyKey, number> = {};
+  const out: Partial<Record<PropertyKey, number>> = {};
 
   for (const [index, item] of data.entries()) {
     const key = fn(item, index, data);
-    out[key] = (out[key] ?? 0) + 1;
+    if (key !== undefined) {
+      out[key] = (out[key] ?? 0) + 1;
+    }
   }
 
-  return out;
+  return out as Record<PropertyKey, number>;
 };
