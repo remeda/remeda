@@ -61,7 +61,8 @@ const countByImplementation = <T>(
   for (const [index, item] of data.entries()) {
     const key = fn(item, index, data);
     if (key !== undefined) {
-      out[key] = (out[key] ?? 0) + 1;
+      out[key] ??= 0;
+      out[key] += 1;
     }
   }
 
