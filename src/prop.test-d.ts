@@ -27,4 +27,5 @@ test("prop expect error", () => {
   const item = { a: 1 };
   // @ts-expect-error - b is not a key of typeof item
   const valueB = standAlonePropB(item);
+  expectTypeOf(valueB).toEqualTypeOf<unknown>();
 });
