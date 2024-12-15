@@ -1,4 +1,5 @@
 import { purry } from "./purry";
+import type { ExactRecord } from "./internal/types/ExactRecord";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -21,7 +22,7 @@ import { purry } from "./purry";
 export function countBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
   fn: (value: T, index: number, data: ReadonlyArray<T>) => K | undefined,
-): Record<K, number>;
+): ExactRecord<K, number>;
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -42,7 +43,7 @@ export function countBy<T, K extends PropertyKey>(
  */
 export function countBy<T, K extends PropertyKey>(
   fn: (value: T, index: number, data: ReadonlyArray<T>) => K | undefined,
-): (data: ReadonlyArray<T>) => Record<K, number>;
+): (data: ReadonlyArray<T>) => ExactRecord<K, number>;
 
 export function countBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(countByImplementation, args);
@@ -55,8 +56,8 @@ const countByImplementation = <T>(
     index: number,
     data: ReadonlyArray<T>,
   ) => PropertyKey | undefined,
-): Record<PropertyKey, number> => {
-  const out: Partial<Record<PropertyKey, number>> = {};
+): ExactRecord<PropertyKey, number> => {
+  const out: ExactRecord<PropertyKey, number> = {};
 
   for (const [index, item] of data.entries()) {
     const key = fn(item, index, data);
@@ -66,5 +67,5 @@ const countByImplementation = <T>(
     }
   }
 
-  return out as Record<PropertyKey, number>;
+  return out;
 };

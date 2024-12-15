@@ -29,3 +29,10 @@ test("callback function type", () => {
     return x;
   });
 });
+
+test("literal unions", () => {
+  const data = [] as Array<"cat" | "dog">;
+  const result = countBy(data, (x) => x);
+
+  expectTypeOf(result).toEqualTypeOf<Partial<Record<"cat" | "dog", number>>>();
+});
