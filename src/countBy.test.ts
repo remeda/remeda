@@ -126,8 +126,7 @@ describe("dataLast", () => {
 });
 
 test("empty array", () => {
-  const data = [] as Array<string>;
-  const result = countBy(data, (x) => x.toLowerCase());
+  const result = countBy([], (x) => x);
 
   expect(result).toStrictEqual({});
 });
