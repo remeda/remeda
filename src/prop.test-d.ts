@@ -1,3 +1,4 @@
+import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { sortBy } from "./sortBy";
@@ -13,17 +14,19 @@ test("prop typing", () => {
 });
 
 test("prop typing standalone", () => {
-  const item = { a: 1 };
-  const input = [item, { a: 2 }];
   const standAlonePropA = prop("a");
-  const valueA = standAlonePropA(item);
-  expectTypeOf(valueA).toEqualTypeOf<number>();
-  const valuesA = input.map(standAlonePropA);
-  expectTypeOf(valuesA).toEqualTypeOf<Array<number>>();
+  const result = standAlonePropA({ a: 1 });
+  expectTypeOf(result).toEqualTypeOf<number>();
+});
+
+test("as a callback function", () => {
+  const standAlonePropA = prop("a");
+  const result = map([{ a: 1 }, { a: 2 }], standAlonePropA);
+  expectTypeOf(result).toEqualTypeOf<[number, number]>();
 });
 
 test("prop expect error", () => {
   const standAlonePropB = prop("b");
-  // @ts-expect-error [ts2322] -- b is not a key of typeof item
+  // @ts-expect-error [ts2353] -- b is not a key of typeof item
   standAlonePropB({ a: 1 });
 });
