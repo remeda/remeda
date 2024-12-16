@@ -24,7 +24,6 @@ test("prop typing standalone", () => {
 
 test("prop expect error", () => {
   const standAlonePropB = prop("b");
-  const item = { a: 1 };
-  // @ts-expect-error - b is not a key of typeof item
-  const valueB = standAlonePropB(item);
+  // @ts-expect-error [ts2322] -- b is not a key of typeof item
+  standAlonePropB({ a: 1 });
 });
