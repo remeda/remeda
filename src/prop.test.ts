@@ -9,10 +9,10 @@ test("prop", () => {
 });
 
 test("prop standalone", () => {
-  const input = [{ a: 1 }, { a: 2 }];
   const standAlonePropA = prop("a");
 
-  const byPropADataFirst = indexBy(input, standAlonePropA);
-
-  expect(byPropADataFirst).toStrictEqual({ "1": { a: 1 }, "2": { a: 2 } });
+  expect(indexBy([{ a: 1 }, { a: 2 }], standAlonePropA)).toStrictEqual({
+    "1": { a: 1 },
+    "2": { a: 2 },
+  });
 });
