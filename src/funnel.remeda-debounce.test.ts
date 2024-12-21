@@ -72,10 +72,10 @@ function debounce<F extends (...args: any) => any>(
       // Debounce stores the latest args it was called with for the next
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
-      invokedAt:
+      triggerTiming:
         timing === "leading" ? "start" : timing === "both" ? "both" : "end",
-      burstCoolDownMs: waitMs ?? maxWaitMs ?? 0,
-      ...(maxWaitMs !== undefined && { maxBurstDurationMs: maxWaitMs }),
+      minQuietPeriodMs: waitMs ?? maxWaitMs ?? 0,
+      ...(maxWaitMs !== undefined && { maxGapMs: maxWaitMs }),
     },
   );
 

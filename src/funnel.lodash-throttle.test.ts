@@ -66,9 +66,9 @@ function throttle<F extends (...args: any) => void>(
       // Throttle stores the latest args it was called with for the next
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
-      maxBurstDurationMs: wait,
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      minQuietPeriodMs: wait,
+      maxGapMs: wait,
+      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
     },
   );
   // Lodash uses a legacy JS-ism to attach helper functions to the main

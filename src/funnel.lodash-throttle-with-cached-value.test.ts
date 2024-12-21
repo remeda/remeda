@@ -66,9 +66,9 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
       // Throttle stores the latest args it was called with for the next
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
-      maxBurstDurationMs: wait,
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      minQuietPeriodMs: wait,
+      maxGapMs: wait,
+      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
     },
   );
 

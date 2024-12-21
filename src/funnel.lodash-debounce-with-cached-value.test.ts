@@ -71,9 +71,9 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
       // Debounce stores the latest args it was called with for the next
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
-      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      minQuietPeriodMs: wait,
+      ...(maxWait !== undefined && { maxGapMs: maxWait }),
+      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
     },
   );
 
