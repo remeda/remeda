@@ -49,7 +49,6 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
   ) => Result,
   timingPolicy: Omit<Parameters<typeof funnel>[1], "reducer"> = {
     triggerTiming: "end",
-    minQuietPeriodMs: 0,
   },
 ) {
   const batchFunnel = funnel(
