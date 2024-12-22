@@ -316,7 +316,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       expect(mockFn).toHaveBeenLastCalledWith(["a", "b", "c", "d", "e", "f"]);
     });
 
-    test("maxGapMs limits the burst duration", async () => {
+    test("maxBurstDurationMs limits the burst duration", async () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -331,11 +331,11 @@ describe("non-trivial (>0ms) timer duration", () => {
       foo.call("c");
 
       // Total time is approximately 1.5*UT, less than 2UT which is
-      // maxGapMs
+      // maxBurstDurationMs
       expect(mockFn).toHaveBeenCalledTimes(0);
 
       // We sleep less than minQuietPeriodMs but more than our
-      // maxGapMs so that we validate that the burst is being ended
+      // maxBurstDurationMs so that we validate that the burst is being ended
       // prematurely.
       await sleep(0.75 * UT);
 
@@ -434,7 +434,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       expect(mockFn).toHaveBeenLastCalledWith(["d", "e", "f"]);
     });
 
-    test("delay and maxGapMs are equal", async () => {
+    test("delay and maxBurstDurationMs are equal", async () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -667,7 +667,7 @@ describe("immediate (===0) timer durations", () => {
       expect(mockFn).toHaveBeenLastCalledWith(["b"]);
     });
 
-    test("burst timer with non-trivial maxGap", async () => {
+    test("burst timer with non-trivial maxBurstDuration", async () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -706,7 +706,7 @@ describe("immediate (===0) timer durations", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test("maxGapMs = 0 limits the burst immediately", async () => {
+  test("maxBurstDurationMs = 0 limits the burst immediately", async () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,

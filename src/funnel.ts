@@ -112,10 +112,10 @@ type Funnel<Args extends RestArguments = []> = {
  * between calls (the "quiet" part) in order for the subsequent call to **not**
  * be considered part of the burst. In other words, as long as calls are faster
  * than this, they are considered part of the burst.
- * @param options.maxBurstDurationMs - Bursts are extended every time a call is made
- * within the burst period. This means that the burst period could be extended
- * indefinitely. To prevent such cases, a maximum burst duration could be
- * defined.
+ * @param options.maxBurstDurationMs - Bursts are extended every time a call is
+ * made within the burst period. This means that the burst period could be
+ * extended indefinitely. To prevent such cases, a maximum burst duration could
+ * be defined.
  * @param options.minGapMs - A minimum duration between calls of `execute`.
  * This is maintained regardless of the shape of the burst and is ensured even
  * if the `maxBurstDurationMs` is reached before it. (aka "throttle").
