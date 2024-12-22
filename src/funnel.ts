@@ -8,7 +8,7 @@ type FunnelOptions<Args extends RestArguments, R> = {
 // between them to ensure users can't configure the funnel in a way which would
 // cause it to never trigger.
 type FunnelTimingOptions =
-  | ({ readonly triggerTiming?: "end" } & (
+  | ({ readonly triggerAt?: "end" } & (
       | ({ readonly minGapMs: number } & RequireAtLeastOne<{
           readonly minQuietPeriodMs: number;
           readonly maxBurstDurationMs: number;
@@ -20,7 +20,7 @@ type FunnelTimingOptions =
         }
     ))
   | {
-      readonly triggerTiming: "start" | "both";
+      readonly triggerAt: "start" | "both";
       readonly minQuietPeriodMs?: number;
       readonly maxBurstDurationMs?: number;
       readonly minGapMs?: number;
@@ -78,8 +78,8 @@ type Funnel<Args extends RestArguments = []> = {
  * execute anything when called. The returned object should be used to execute
  * the funnel via the its `call` method.
  *
- * - Debouncing: use `minQuietPeriodMs` and any `triggerTiming`.
- * - Throttling: use `minGapMs` and `triggerTiming: "start"` or `"both"`.
+ * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`.
+ * - Throttling: use `minGapMs` and `triggerAt: "start"` or `"both"`.
  * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.reference-batch.test.ts).
  *
  * @param callback - The main function that would be invoked occasionally based
@@ -96,16 +96,16 @@ type Funnel<Args extends RestArguments = []> = {
  * `callback`. It should be fast and simple as it is called often and should
  * defer heavy operations to the `execute` function. If the final value
  * is `undefined`, `callback` will not be called.
- * @param options.triggerTiming - At what "edges" of the funnel's activity
- * window should `execute` be invoked. `start` means The function will be
- * invoked immediately (within the **same** execution frame!), and any
- * subsequent calls would be ignored until the funnel is idle again. During
- * this period `reducer` will also not be called. `end` The function will
- * **not** be invoked initially but the timer will be started. Any calls during
- * this time would be passed to the reducer, and when the timers are done, the
- * reduced result would trigger an invocation. When `both` is used The function
- * will be invoked immediately, and then the funnel would behave as if it was
- * in the 'end' state. @default 'end'.
+ * @param options.triggerAt - At what "edges" of the funnel's activity window
+ * should `execute` be invoked:
+ * - `start` - the function will be invoked  immediately (within the  **same**
+ * execution frame!), and any subsequent calls  would be ignored until the
+ * funnel is idle again. During this period `reducer` will also not be  called.
+ * - `end` - the function will **not** be invoked initially but the timer will
+ * be started. Any calls during this time would be passed to the reducer, and
+ * when the timers are done, the reduced result would trigger an invocation.
+ * - `both` - the function will be invoked immediately, and then the funnel
+ * would behave as if it was in the 'end' state. @default 'end'.
  * @param options.minQuietPeriodMs - The burst timer prevents subsequent calls
  * in short succession to cause excessive invocations (aka "debounce"). This
  * duration represents the **minimum** amount of time that needs to pass
@@ -143,7 +143,7 @@ type Funnel<Args extends RestArguments = []> = {
  *     () => {
  *       console.log("Callback executed!");
  *     },
- *     { minGapMs: 100, triggerTiming: "start" },
+ *     { minGapMs: 100, triggerAt: "start" },
  *   );
  *   throttle.call();
  *   throttle.call();
@@ -152,7 +152,7 @@ type Funnel<Args extends RestArguments = []> = {
 export function funnel<Args extends RestArguments = [], R = never>(
   callback: (data: R) => void,
   {
-    triggerTiming = "end",
+    triggerAt = "end",
     minQuietPeriodMs,
     maxBurstDurationMs,
     minGapMs,
@@ -230,7 +230,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
       const wasIdle =
         burstTimeoutId === undefined && intervalTimeoutId === undefined;
 
-      if (triggerTiming !== "start" || wasIdle) {
+      if (triggerAt !== "start" || wasIdle) {
         preparedData = reducer(preparedData, ...args);
       }
 
@@ -267,7 +267,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
         burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
       }
 
-      if (triggerTiming !== "end" && wasIdle) {
+      if (triggerAt !== "end" && wasIdle) {
         invoke();
       }
     },

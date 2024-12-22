@@ -70,9 +70,9 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
       maxBurstDurationMs: wait,
       ...(trailing
         ? leading
-          ? { triggerTiming: "both" }
-          : { triggerTiming: "end" }
-        : { triggerTiming: "start" }),
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
 

@@ -75,9 +75,9 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       ...(trailing
         ? leading
-          ? { triggerTiming: "both" }
-          : { triggerTiming: "end" }
-        : { triggerTiming: "start" }),
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
 

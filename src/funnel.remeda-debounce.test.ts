@@ -75,10 +75,10 @@ function debounce<F extends (...args: any) => any>(
       minQuietPeriodMs: waitMs ?? maxWaitMs ?? 0,
       ...(maxWaitMs !== undefined && { maxBurstDurationMs: maxWaitMs }),
       ...(timing === "leading"
-        ? { triggerTiming: "start" }
+        ? { triggerAt: "start" }
         : timing === "both"
-          ? { triggerTiming: "both" }
-          : { triggerTiming: "end" }),
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }),
     },
   );
 

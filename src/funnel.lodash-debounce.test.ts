@@ -75,9 +75,9 @@ function debounce<F extends (...args: any) => void>(
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
       ...(trailing
         ? leading
-          ? { triggerTiming: "both" }
-          : { triggerTiming: "end" }
-        : { triggerTiming: "start" }),
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
 

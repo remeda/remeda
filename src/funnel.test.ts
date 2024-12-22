@@ -22,7 +22,7 @@ describe("reducer behavior", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: constant("hello world"),
-      triggerTiming: "start",
+      triggerAt: "start",
       minQuietPeriodMs: UT,
     });
     foo.call();
@@ -39,7 +39,7 @@ describe("reducer behavior", () => {
     const foo = funnel(mockFn, {
       reducer: (total, item: number) => (total ?? 0) + item,
       minQuietPeriodMs: 2 * UT,
-      triggerTiming: "end",
+      triggerAt: "end",
     });
     foo.call(1);
     foo.call(2);
@@ -58,7 +58,7 @@ describe("reducer behavior", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: constant(undefined),
-      triggerTiming: "end",
+      triggerAt: "end",
       minQuietPeriodMs: UT,
     });
     foo.call();
@@ -76,7 +76,7 @@ describe("reducer behavior", () => {
         b,
         c,
       ],
-      triggerTiming: "start",
+      triggerAt: "start",
       minQuietPeriodMs: UT,
     });
     foo.call(1, "a", true);
@@ -89,7 +89,7 @@ describe("reducer behavior", () => {
     const mockFn = vi.fn(ARGS_COLLECTOR);
     const foo = funnel(doNothing(), {
       reducer: mockFn,
-      triggerTiming: "start",
+      triggerAt: "start",
       minQuietPeriodMs: UT,
     });
     foo.call("a");
@@ -114,7 +114,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "start",
+        triggerAt: "start",
         minGapMs: UT,
       });
       foo.call("a");
@@ -141,7 +141,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minGapMs: UT,
       });
       foo.call("a");
@@ -172,7 +172,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minGapMs: UT,
       });
       foo.call("a");
@@ -201,7 +201,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "start",
+        triggerAt: "start",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -228,7 +228,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -260,7 +260,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -290,7 +290,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -322,7 +322,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: UT,
         maxBurstDurationMs: 2 * UT,
-        triggerTiming: "end",
+        triggerAt: "end",
       });
       foo.call("a");
       await sleep(0.75 * UT);
@@ -351,7 +351,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         reducer: ARGS_COLLECTOR,
         minGapMs: 2 * UT,
         minQuietPeriodMs: UT,
-        triggerTiming: "both",
+        triggerAt: "both",
       });
       foo.call("a");
       foo.call("b");
@@ -379,7 +379,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
         minQuietPeriodMs: 2 * UT,
-        triggerTiming: "both",
+        triggerAt: "both",
       });
       foo.call("a");
       foo.call("b");
@@ -411,7 +411,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
         minQuietPeriodMs: UT,
-        triggerTiming: "both",
+        triggerAt: "both",
       });
       foo.call("a");
       foo.call("b");
@@ -441,7 +441,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         minGapMs: UT,
         minQuietPeriodMs: 2 * UT,
         maxBurstDurationMs: UT,
-        triggerTiming: "both",
+        triggerAt: "both",
       });
       foo.call("a");
       foo.call("b");
@@ -472,7 +472,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "start",
+        triggerAt: "start",
         minGapMs: 0,
       });
       foo.call("a");
@@ -502,7 +502,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minGapMs: 0,
       });
       foo.call("a");
@@ -530,7 +530,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minGapMs: 0,
         minQuietPeriodMs: UT,
       });
@@ -555,7 +555,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "start",
+        triggerAt: "start",
         minQuietPeriodMs: 0,
       });
       foo.call("a");
@@ -585,7 +585,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minQuietPeriodMs: 0,
       });
       foo.call("a");
@@ -617,7 +617,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: 0,
       });
       foo.call("a");
@@ -647,7 +647,7 @@ describe("immediate (===0) timer durations", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "both",
+        triggerAt: "both",
         minGapMs: UT,
         minQuietPeriodMs: 0,
       });
@@ -673,7 +673,7 @@ describe("immediate (===0) timer durations", () => {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: 0,
         maxBurstDurationMs: UT,
-        triggerTiming: "end",
+        triggerAt: "end",
       });
       foo.call("a");
       foo.call("b");
@@ -692,7 +692,7 @@ describe("immediate (===0) timer durations", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "both",
+      triggerAt: "both",
       minGapMs: 0,
       minQuietPeriodMs: 0,
     });
@@ -710,7 +710,7 @@ describe("immediate (===0) timer durations", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "end",
+      triggerAt: "end",
       minQuietPeriodMs: UT,
       maxBurstDurationMs: 0,
     });
@@ -725,7 +725,7 @@ describe("immediate (===0) timer durations", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "both",
+      triggerAt: "both",
       minGapMs: 0,
       minQuietPeriodMs: 0,
       maxBurstDurationMs: 0,
@@ -748,7 +748,7 @@ describe("default minQuietPeriodMs === 0 when minGapMs is not defined", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "start",
+      triggerAt: "start",
     });
     foo.call("a");
 
@@ -773,7 +773,7 @@ describe("default minQuietPeriodMs === 0 when minGapMs is not defined", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "both",
+      triggerAt: "both",
     });
     foo.call("a");
 
@@ -802,7 +802,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -822,7 +822,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: 2 * UT,
       });
       foo.call("a");
@@ -847,7 +847,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: UT,
       });
       foo.call("a");
@@ -863,7 +863,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "start",
+        triggerAt: "start",
         minGapMs: 2 * UT,
       });
       foo.call("a");
@@ -883,7 +883,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: UT,
       });
 
@@ -902,7 +902,7 @@ describe("utility functions", () => {
       const mockFn = vi.fn();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        triggerTiming: "end",
+        triggerAt: "end",
         minQuietPeriodMs: 0,
       });
 
@@ -926,7 +926,7 @@ describe("edge-cases", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "both",
+      triggerAt: "both",
       minQuietPeriodMs: UT,
       minGapMs: 2 * UT,
     });
@@ -963,7 +963,7 @@ describe("edge-cases", () => {
     const mockFn = vi.fn();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
-      triggerTiming: "both",
+      triggerAt: "both",
       minQuietPeriodMs: 2 * UT,
       minGapMs: UT,
     });

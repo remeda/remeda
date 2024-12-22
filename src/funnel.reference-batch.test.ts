@@ -88,7 +88,7 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
         request,
       ],
       maxBurstDurationMs,
-      triggerTiming: "end",
+      triggerAt: "end",
     },
   );
 

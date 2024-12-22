@@ -70,9 +70,9 @@ function throttle<F extends (...args: any) => void>(
       maxBurstDurationMs: wait,
       ...(trailing
         ? leading
-          ? { triggerTiming: "both" }
-          : { triggerTiming: "end" }
-        : { triggerTiming: "start" }),
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
   // Lodash uses a legacy JS-ism to attach helper functions to the main
