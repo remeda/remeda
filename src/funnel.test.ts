@@ -321,7 +321,7 @@ describe("non-trivial (>0ms) timer duration", () => {
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: UT,
-        maxGapMs: 2 * UT,
+        maxBurstDurationMs: 2 * UT,
         triggerTiming: "end",
       });
       foo.call("a");
@@ -440,7 +440,7 @@ describe("non-trivial (>0ms) timer duration", () => {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
         minQuietPeriodMs: 2 * UT,
-        maxGapMs: UT,
+        maxBurstDurationMs: UT,
         triggerTiming: "both",
       });
       foo.call("a");
@@ -672,7 +672,7 @@ describe("immediate (===0) timer durations", () => {
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: 0,
-        maxGapMs: UT,
+        maxBurstDurationMs: UT,
         triggerTiming: "end",
       });
       foo.call("a");
@@ -712,7 +712,7 @@ describe("immediate (===0) timer durations", () => {
       reducer: ARGS_COLLECTOR,
       triggerTiming: "end",
       minQuietPeriodMs: UT,
-      maxGapMs: 0,
+      maxBurstDurationMs: 0,
     });
     foo.call("a");
     await sleep(0);
@@ -728,7 +728,7 @@ describe("immediate (===0) timer durations", () => {
       triggerTiming: "both",
       minGapMs: 0,
       minQuietPeriodMs: 0,
-      maxGapMs: 0,
+      maxBurstDurationMs: 0,
     });
     foo.call("a");
     foo.call("b");

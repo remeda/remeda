@@ -72,8 +72,12 @@ function debounce<F extends (...args: any) => void>(
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
-      ...(maxWait !== undefined && { maxGapMs: maxWait }),
-      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
+      ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
+      ...(trailing
+        ? leading
+          ? { triggerTiming: "both" }
+          : { triggerTiming: "end" }
+        : { triggerTiming: "start" }),
     },
   );
 

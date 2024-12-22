@@ -97,3 +97,24 @@ describe("derive the reducer accumulator type from the executor param", () => {
     );
   });
 });
+
+describe("prevent bad options", () => {
+  test("minGapMs cannot be the only option with timing: end", () => {
+    funnel(
+      doNothing(),
+      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
+      { minGapMs: 100 },
+    );
+
+    funnel(
+      doNothing(),
+      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
+      { triggerTiming: "end", minGapMs: 100 },
+    );
+
+    // But it works with "start" and "both"
+
+    funnel(doNothing(), { triggerTiming: "start", minGapMs: 100 });
+    funnel(doNothing(), { triggerTiming: "both", minGapMs: 100 });
+  });
+});

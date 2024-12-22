@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,  @typescript-eslint/no-explicit-any,  @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/require-await,  @typescript-eslint/use-unknown-in-catch-callback-variable, jsdoc/require-example, unicorn/no-object-as-default-parameter --
+/* eslint-disable @typescript-eslint/explicit-function-return-type,  @typescript-eslint/no-explicit-any,  @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/require-await,  @typescript-eslint/use-unknown-in-catch-callback-variable, jsdoc/require-example --
  * These aren't useful for a reference implementation!
  */
 
@@ -14,12 +14,12 @@ type BatchRequest<Params extends Array<any>, Result> = {
 };
 
 /**
- * A reference implementation for a  batching utility function built on top of
- * the `funnel` general purpose execution utility function. It will accumulate
- * all params passed to an async `call` method within the defined timing policy
- * and then use an async executor to process them in one invocation. It then
- * extracts an individual result for each call which is used to resolve the
- * original call.
+ * A reference implementation for an async batching utility function built on
+ * top of the `funnel` general purpose execution utility function. It will
+ * accumulate all params passed to an async `call` method within the defined
+ * burst duration and then use an async executor to process them in one
+ * invocation. It then extracts an individual result for each call which is
+ * used to resolve the original call.
  *
  * This allows synchronizing multiple async calls while keeping each call site
  * isolated from the rest (for example, as react components).
@@ -35,8 +35,11 @@ type BatchRequest<Params extends Array<any>, Result> = {
  * from it the result for each individual call. The function is called with both
  * the index in the batch, and the params passed to the `call` method. This
  * allows handling APIs that return batch results as both objects and arrays.
- * @param timingPolicy - Same as the param for `funnel`, it defines the
- * time frames where the batch will accumulate calls and when it would trigger.
+ * @param maxBurstDurationMs - The period of time where the batcher would
+ * collect params before triggering the executor. When set to 0 the batcher
+ * does not incur any additional delays to the execution and would trigger at
+ * the next tick, just like a regular async function would. This is also the
+ * default value.
  * @returns A Funnel object with the `call` method augmented to support async
  * response.
  */
@@ -47,9 +50,7 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
     index: number,
     ...params: Params
   ) => Result,
-  timingPolicy: Omit<Parameters<typeof funnel>[1], "reducer"> = {
-    triggerTiming: "end",
-  },
+  maxBurstDurationMs = 0,
 ) {
   const batchFunnel = funnel(
     // Passes all accumulated parameters to the callback and then extracts the response for each individual call via the extractor.
@@ -86,7 +87,8 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
         ...(requests ?? []),
         request,
       ],
-      ...timingPolicy,
+      maxBurstDurationMs,
+      triggerTiming: "end",
     },
   );
 

@@ -67,8 +67,12 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
-      maxGapMs: wait,
-      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
+      maxBurstDurationMs: wait,
+      ...(trailing
+        ? leading
+          ? { triggerTiming: "both" }
+          : { triggerTiming: "end" }
+        : { triggerTiming: "start" }),
     },
   );
 

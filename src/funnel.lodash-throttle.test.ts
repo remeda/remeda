@@ -67,8 +67,12 @@ function throttle<F extends (...args: any) => void>(
       // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
-      maxGapMs: wait,
-      triggerTiming: trailing ? (leading ? "both" : "end") : "start",
+      maxBurstDurationMs: wait,
+      ...(trailing
+        ? leading
+          ? { triggerTiming: "both" }
+          : { triggerTiming: "end" }
+        : { triggerTiming: "start" }),
     },
   );
   // Lodash uses a legacy JS-ism to attach helper functions to the main

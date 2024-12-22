@@ -1,3 +1,5 @@
+import type { RequireAtLeastOne } from "type-fest";
+
 type FunnelOptions<Args extends RestArguments, R> = {
   readonly reducer?: (accumulator: R | undefined, ...params: Args) => R;
 } & FunnelTimingOptions;
@@ -6,37 +8,22 @@ type FunnelOptions<Args extends RestArguments, R> = {
 // between them to ensure users can't configure the funnel in a way which would
 // cause it to never trigger.
 type FunnelTimingOptions =
-  | {
-      readonly triggerTiming?: "end";
-      readonly minQuietPeriodMs?: never;
-
-      // minGapMs can never be defined when the timing is "end" and
-      // minQuietPeriodMs is not defined because it would cause the funnel to
-      // never trigger.
-      readonly minGapMs?: never;
-
-      // maxGap can never be defined when minQuietPeriodMs is not defined.
-      readonly maxGapMs?: never;
-    }
+  | ({ readonly triggerTiming?: "end" } & (
+      | ({ readonly minGapMs: number } & RequireAtLeastOne<{
+          readonly minQuietPeriodMs: number;
+          readonly maxBurstDurationMs: number;
+        }>)
+      | {
+          readonly minQuietPeriodMs?: number;
+          readonly maxBurstDurationMs?: number;
+          readonly minGapMs?: never;
+        }
+    ))
   | {
       readonly triggerTiming: "start" | "both";
-      readonly minQuietPeriodMs?: never;
-
-      // When the timing contains the "start" edge minGapMs is meaningful even
-      // when minQuietPeriodMs is not defined.
+      readonly minQuietPeriodMs?: number;
+      readonly maxBurstDurationMs?: number;
       readonly minGapMs?: number;
-
-      // maxGap can never be defined when minQuietPeriodMs is not defined.
-      readonly maxGapMs?: never;
-    }
-  | {
-      readonly triggerTiming?: "start" | "both" | "end";
-      readonly minQuietPeriodMs: number;
-
-      // When minQuietPeriodMs is defined, both minGapMs and maxGapMs are
-      // meaningful in all timings.
-      readonly minGapMs?: number;
-      readonly maxGapMs?: number;
     };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
@@ -125,13 +112,13 @@ type Funnel<Args extends RestArguments = []> = {
  * between calls (the "quiet" part) in order for the subsequent call to **not**
  * be considered part of the burst. In other words, as long as calls are faster
  * than this, they are considered part of the burst.
- * @param options.maxGapMs - Bursts are extended every time a call is made
+ * @param options.maxBurstDurationMs - Bursts are extended every time a call is made
  * within the burst period. This means that the burst period could be extended
  * indefinitely. To prevent such cases, a maximum burst duration could be
  * defined.
  * @param options.minGapMs - A minimum duration between calls of `execute`.
  * This is maintained regardless of the shape of the burst and is ensured even
- * if the `maxGapMs` is reached before it. (aka "throttle").
+ * if the `maxBurstDurationMs` is reached before it. (aka "throttle").
  * @returns A funnel with a `call` function that is used to trigger invocations.
  * In addition to it the funnel also comes with the following functions and
  * properties:
@@ -167,7 +154,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
   {
     triggerTiming = "end",
     minQuietPeriodMs,
-    maxGapMs,
+    maxBurstDurationMs,
     minGapMs,
     reducer = voidReducer,
   }: FunnelOptions<Args, R>,
@@ -183,7 +170,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
   let preparedData: R | undefined;
 
   // In order to be able to limit the total size of the burst (when
-  // `maxGapMs` is used) we need to track when the burst started.
+  // `maxBurstDurationMs` is used) we need to track when the burst started.
   let burstStartTimestamp: number | undefined;
 
   const invoke = (): void => {
@@ -253,7 +240,11 @@ export function funnel<Args extends RestArguments = [], R = never>(
         return;
       }
 
-      if (minQuietPeriodMs !== undefined || minGapMs === undefined) {
+      if (
+        minQuietPeriodMs !== undefined ||
+        maxBurstDurationMs !== undefined ||
+        minGapMs === undefined
+      ) {
         // The timeout tracking the burst period needs to be reset every time
         // another call is made so that it waits the full cool-down duration
         // before it is released.
@@ -264,13 +255,13 @@ export function funnel<Args extends RestArguments = [], R = never>(
         burstStartTimestamp ??= now;
 
         const burstRemainingMs =
-          maxGapMs === undefined
+          maxBurstDurationMs === undefined
             ? (minQuietPeriodMs ?? 0)
             : Math.min(
-                minQuietPeriodMs,
+                minQuietPeriodMs ?? maxBurstDurationMs,
                 // We need to account for the time already spent so that we
                 // don't wait longer than the maxDelay.
-                maxGapMs - (now - burstStartTimestamp),
+                maxBurstDurationMs - (now - burstStartTimestamp),
               );
 
         burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
