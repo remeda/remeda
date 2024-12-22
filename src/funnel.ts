@@ -82,25 +82,25 @@ type Funnel<Args extends RestArguments = []> = {
  * - Throttling: use `minGapMs` and `triggerAt: "start"` or `"both"`.
  * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.reference-batch.test.ts).
  *
- * @param callback - The main function that would be invoked occasionally based
+ * @param callback - The main function that would be invoked periodically based
  * on `options`. The function would take the latest result of the `reducer`; if
  * no calls where made since the last time it was invoked it will not be
- * invoked. If a return value is needed, it should be passed via a reference or
- * via closure to the outer scope of the funnel.
- * @param options - An object that defines when `execute` should be
- * invoked, relative to the calls of `call`. A timer that isn't defined will
- * **not** be enabled, 0 is not used a default fallback.
+ * invoked. (If a return value is needed, it should be passed via a reference or
+ * via closure to the outer scope of the funnel).
+ * @param options - An object that defines when `execute` should be invoked,
+ * relative to the calls of `call`. An empty/missing options object is
+ * equivalent to setting `minQuietPeriodMs` to `0`.
  * @param options.reducer - Combines the arguments passed to `call` with the
  * value computed on the previous call (or `undefined` on the first time). The
  * goal of the function is to extract and summarize the data needed for
  * `callback`. It should be fast and simple as it is called often and should
  * defer heavy operations to the `execute` function. If the final value
  * is `undefined`, `callback` will not be called.
- * @param options.triggerAt - At what "edges" of the funnel's activity window
- * should `execute` be invoked:
- * - `start` - the function will be invoked  immediately (within the  **same**
- * execution frame!), and any subsequent calls  would be ignored until the
- * funnel is idle again. During this period `reducer` will also not be  called.
+ * @param options.triggerAt - At what "edges" of the funnel's burst window
+ * would `execute` invoke:
+ * - `start` - the function will be invoked immediately (within the  **same**
+ * execution frame!), and any subsequent calls would be ignored until the funnel
+ * is idle again. During this period `reducer` will also not be called.
  * - `end` - the function will **not** be invoked initially but the timer will
  * be started. Any calls during this time would be passed to the reducer, and
  * when the timers are done, the reduced result would trigger an invocation.
@@ -111,11 +111,12 @@ type Funnel<Args extends RestArguments = []> = {
  * duration represents the **minimum** amount of time that needs to pass
  * between calls (the "quiet" part) in order for the subsequent call to **not**
  * be considered part of the burst. In other words, as long as calls are faster
- * than this, they are considered part of the burst.
+ * than this, they are considered part of the burst and the burst is extended.
  * @param options.maxBurstDurationMs - Bursts are extended every time a call is
  * made within the burst period. This means that the burst period could be
  * extended indefinitely. To prevent such cases, a maximum burst duration could
- * be defined.
+ * be defined. When `minQuietPeriodMs` is not defined and this option is, they
+ * will both share the same value.
  * @param options.minGapMs - A minimum duration between calls of `execute`.
  * This is maintained regardless of the shape of the burst and is ensured even
  * if the `maxBurstDurationMs` is reached before it. (aka "throttle").
