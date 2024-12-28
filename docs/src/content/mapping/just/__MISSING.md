@@ -2,7 +2,8 @@ Just is built into individual packages for each util. This makes it easier to
 know which functions people actually use and which aren't. Below is the list of
 all functions as listed in the just docs, with a priority number in parenthesis
 based on the number of monthly downloads based on: https://www.npmjs.com/search?page=0&q=keywords%3Ajust&sortBy=downloads_monthly&perPage=100. Use this number when deciding what parts of Just need a migration
-guide or need to be implemented in Remeda.
+guide or need to be implemented in Remeda. Utilities without a number have a
+priority of 40+ and are not widely used.
 
 # Collections
 
