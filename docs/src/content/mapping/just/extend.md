@@ -3,11 +3,12 @@ category: Objects
 remeda: merge
 ---
 
-- Just's `extend` performs an in-place merge, mutating the first argument, but
-  in Remeda functions never mutate the arguments. Because of this extra care
-  is needed when migrating.
+- Just's `extend` performs an **in-place** merge which mutates the first
+  argument. Remeda functions never mutate the arguments. Because of this extra
+  care is needed when migrating.
 - If you have the `deep` flag enabled use Remeda's [`mergeDeep`](/docs/#mergeDeep)
-  instead.
+  instead. Arrays are **not** merged deeply in Remeda, unlike `extend` which
+  clones arrays.
 - There is no equivalent function for merging of arrays. Extending arrays is
   only relevant for [sparse arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections#sparse_arrays)
   which are uncommon. For regular arrays `extend` is similar to [`splice`](/docs/#splice).
