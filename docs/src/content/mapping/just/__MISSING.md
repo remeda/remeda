@@ -18,7 +18,6 @@ priority of 40+ and are not widely used.
 
 - deep-map-values (34)
 - entries
-- extend (1)
 - filter-object
 - flip-object
 - has (38)
