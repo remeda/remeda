@@ -66,5 +66,8 @@ export function mappingUrl(library: Library, name: string): string {
 
     case "ramda":
       return `https://ramdajs.com/docs/#${name}`;
+
+    case "just":
+      return `https://anguscroll.com/just/just-${name}`;
   }
 }
