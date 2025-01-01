@@ -35,6 +35,7 @@ test("should work as type guard", () => {
 
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
+
   expectTypeOf(data).toEqualTypeOf<
     Array<
       | Array<number>

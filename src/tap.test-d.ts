@@ -22,6 +22,7 @@ it("should infer types after tapping function reference with parameter type any"
     tap(foo),
     map((n) => {
       expectTypeOf(n).toEqualTypeOf<number>();
+
       return n * 2;
     }),
   );

@@ -78,6 +78,7 @@ describe("data-first", () => {
       [isString, () => "hello" as const],
       conditional.defaultCase(),
     );
+
     expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
   });
 
@@ -87,6 +88,7 @@ describe("data-first", () => {
       [isString, () => "hello" as const],
       conditional.defaultCase(() => 123 as const),
     );
+
     expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
   });
 });

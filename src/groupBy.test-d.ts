@@ -32,6 +32,7 @@ test("union of number literals", () => {
     ] as const,
     prop("b"),
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Partial<
       Record<
@@ -53,6 +54,7 @@ test("string", () => {
     ] as const,
     (x): string => x.a,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       string,
@@ -72,6 +74,7 @@ test("number", () => {
     ] as const,
     (x): number => x.b,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       number,
@@ -91,6 +94,7 @@ test("string | number", () => {
     ] as const,
     (x): number | string => x.b,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       number | string,
@@ -107,6 +111,7 @@ describe("filtering on undefined grouper result", () => {
     const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? "even" : undefined,
     );
+
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 
@@ -115,6 +120,7 @@ describe("filtering on undefined grouper result", () => {
       ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
       (_, index) => (index % 2 === 0 ? "even" : undefined),
     );
+
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 });

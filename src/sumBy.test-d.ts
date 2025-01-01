@@ -4,9 +4,11 @@ import { constant } from "./constant";
 
 test("empty array", () => {
   const result1 = sumBy([], constant(1n));
+
   expectTypeOf(result1).toEqualTypeOf<0>();
 
   const result2 = sumBy([], constant(1));
+
   expectTypeOf(result2).toEqualTypeOf<0>();
 });
 
@@ -23,26 +25,31 @@ test("disallow mixed mapper", () => {
 describe("numbers", () => {
   test("arbitrary arrays", () => {
     const result = sumBy([] as Array<unknown>, constant(1));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary readonly arrays", () => {
     const result = sumBy([] as ReadonlyArray<unknown>, constant(1));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary non-empty arrays", () => {
     const result = sumBy([1, 2] as [unknown, ...Array<unknown>], constant(1));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("consts", () => {
     const result = sumBy([1, 2, 3] as const, constant(1));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("fixed-size tuples", () => {
     const result = sumBy([1, 2] as [unknown, unknown], constant(1));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 });
@@ -50,11 +57,13 @@ describe("numbers", () => {
 describe("bigints", () => {
   test("arbitrary arrays", () => {
     const result = sumBy([] as Array<unknown>, constant(1n));
+
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
   test("arbitrary readonly arrays", () => {
     const result = sumBy([] as ReadonlyArray<unknown>, constant(1n));
+
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
@@ -63,16 +72,19 @@ describe("bigints", () => {
       [1n, 2n] as [unknown, ...Array<unknown>],
       constant(1n),
     );
+
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 
   test("consts", () => {
     const result = sumBy([1n, 2n, 3n] as const, constant(1n));
+
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 
   test("fixed-size tuples", () => {
     const result = sumBy([1n, 2n] as [unknown, unknown], constant(1n));
+
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 });
@@ -80,21 +92,25 @@ describe("bigints", () => {
 describe("dataLast", () => {
   test("numbers", () => {
     const result = pipe([1, 2, 3] as const, sumBy(constant(1)));
+
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("bigints", () => {
     const result = pipe([1n, 2n, 3n] as const, sumBy(constant(1n)));
+
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
 
   test("empty array number", () => {
     const result = pipe([] as const, sumBy(constant(1)));
+
     expectTypeOf(result).toEqualTypeOf<0>();
   });
 
   test("empty array bigint", () => {
     const result = pipe([] as const, sumBy(constant(1n)));
+
     expectTypeOf(result).toEqualTypeOf<0>();
   });
 });

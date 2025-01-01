@@ -7,6 +7,7 @@ describe("mutable", () => {
   test("empty array", () => {
     const data = [] as [];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       left: [];
       right: [];
@@ -16,6 +17,7 @@ describe("mutable", () => {
   test("regular array", () => {
     const data = [] as Array<number>;
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -35,6 +37,7 @@ describe("mutable", () => {
   test("fixed tuple", () => {
     const data = [1, 2, 3] as [1, 2, 3];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [1, 2, 3];
@@ -58,6 +61,7 @@ describe("mutable", () => {
   test("array with prefix", () => {
     const data = ["a"] as [string, ...Array<boolean>];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -81,6 +85,7 @@ describe("mutable", () => {
   test("array with suffix", () => {
     const data = ["a"] as [...Array<boolean>, string];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -104,6 +109,7 @@ describe("mutable", () => {
   test("array with prefix and suffix", () => {
     const data = [1, "a"] as [number, ...Array<boolean>, string];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -131,6 +137,7 @@ describe("mutable", () => {
   test("array with optional prefixes", () => {
     const data = [1, "a"] as [number, string?, number?, ...Array<boolean>];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -164,6 +171,7 @@ describe("unions", () => {
   test("union of arrays", () => {
     const data = [] as Array<boolean> | Array<number>;
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];
@@ -195,6 +203,7 @@ describe("unions", () => {
   test("mixed unions", () => {
     const data = [] as Array<boolean> | [number, string];
     const result = tupleSplits(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | {
           left: [];

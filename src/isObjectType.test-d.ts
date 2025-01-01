@@ -43,6 +43,7 @@ test("should work even if data type is unknown", () => {
 
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
+
   expectTypeOf(data).toEqualTypeOf<
     Array<
       | Array<number>

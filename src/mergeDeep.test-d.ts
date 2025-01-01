@@ -5,6 +5,7 @@ it("trivially merges disjoint objects", () => {
     { foo: "bar" } as { foo: string },
     { bar: "baz" } as { bar: string },
   );
+
   expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
 });
 
@@ -13,6 +14,7 @@ it("merges fully overlapping types", () => {
     { foo: "bar" } as { foo: string },
     { foo: "baz" } as { foo: string },
   );
+
   expectTypeOf(result).toEqualTypeOf<{ foo: string }>();
 });
 
@@ -21,6 +23,7 @@ it("merges semi-overlapping types", () => {
     { foo: "bar", x: 1 } as { foo: string; x: number },
     { foo: "baz", y: 2 } as { foo: string; y: number },
   );
+
   expectTypeOf(result).toEqualTypeOf<{ foo: string; x: number; y: number }>();
 });
 
@@ -29,6 +32,7 @@ it("deeply merges", () => {
     { foo: { bar: "bar" } } as { foo: { bar: string } },
     { foo: { qux: "qux" } } as { foo: { qux: string } },
   );
+
   expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
 });
 
@@ -37,9 +41,11 @@ it("overrides types", () => {
   const b = { foo: "qux" } as { foo: string };
 
   const resultAB = mergeDeep(a, b);
+
   expectTypeOf(resultAB).toEqualTypeOf<{ foo: string }>();
 
   const resultBA = mergeDeep(b, a);
+
   expectTypeOf(resultBA).toEqualTypeOf<{ foo: { bar: string } }>();
 });
 
@@ -48,6 +54,7 @@ it("doesn't spread arrays", () => {
     { foo: ["bar"] } as const,
     { foo: ["baz"] } as const,
   );
+
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: readonly ["baz"] }>();
 });
 
@@ -60,6 +67,7 @@ it("doesn't recurse into arrays", () => {
       foo: Array<{ bar: string; y: number }>;
     },
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     foo: Array<{ bar: string; y: number }>;
   }>();
@@ -82,5 +90,6 @@ it("works with interfaces", () => {
     { a: "foo", b: 123 } as Foo,
     { a: "bar", c: true } as Bar,
   );
+
   expectTypeOf(result).toEqualTypeOf<{ a: string; b: number; c: boolean }>();
 });

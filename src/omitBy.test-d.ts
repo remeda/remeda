@@ -8,6 +8,7 @@ import { pipe } from "./pipe";
 describe("data first", () => {
   test("it should omit props", () => {
     const result = omitBy({ a: 1, b: 2, A: 3, B: 4 } as const, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
   });
 
@@ -16,6 +17,7 @@ describe("data first", () => {
       {} as Partial<{ a: string; b: number }>,
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
@@ -26,6 +28,7 @@ describe("data last", () => {
       { a: 1, b: 2, A: 3, B: 4 } as const,
       omitBy(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
   });
 
@@ -34,6 +37,7 @@ describe("data last", () => {
       {} as Partial<{ a: string; b: number }>,
       omitBy(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
@@ -45,6 +49,7 @@ test("symbols are passed through", () => {
     {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
     constant(true),
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     [requiredSymbol]: number;
     [optionalSymbol]?: boolean;
@@ -56,6 +61,7 @@ test("symbols are not passed to the predicate", () => {
   omitBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
+
     return true;
   });
 });
@@ -63,6 +69,7 @@ test("symbols are not passed to the predicate", () => {
 test("number keys are passed as strings to the predicate", () => {
   omitBy({ 123: "hello" }, (_, key) => {
     expectTypeOf(key).toEqualTypeOf<"123">();
+
     return true;
   });
 });
@@ -79,6 +86,7 @@ test("handles type-predicates", () => {
     },
     isString,
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     b: number;
     optionalB?: number;
@@ -89,9 +97,11 @@ test("handles type-predicates", () => {
 
 test("makes wide types partial", () => {
   const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+
   expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
 
   const narrow = omitBy({ a: 1 } as const, (_x): _x is 1 => true);
+
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(narrow).toEqualTypeOf<{}>();
 });
@@ -109,6 +119,7 @@ test("works well with nullish type-guards", () => {
   };
 
   const resultDefined = omitBy(data, isUndefined);
+
   expectTypeOf(resultDefined).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -121,6 +132,7 @@ test("works well with nullish type-guards", () => {
   }>();
 
   const resultNonNull = omitBy(data, isNull);
+
   expectTypeOf(resultNonNull).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -133,6 +145,7 @@ test("works well with nullish type-guards", () => {
   }>();
 
   const resultNonNullish = omitBy(data, isNullish);
+
   expectTypeOf(resultNonNullish).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -150,18 +163,21 @@ describe("records with non-narrowing predicates (Issue #696)", () => {
   test("string keys", () => {
     const data = {} as Record<string, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf(data);
   });
 
   test("number keys", () => {
     const data = {} as Record<number, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<`${number}`, string>>();
   });
 
   test("combined numbers and strings", () => {
     const data = {} as Record<number | string, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
   });
 
@@ -169,11 +185,13 @@ describe("records with non-narrowing predicates (Issue #696)", () => {
     const data = {} as Record<number, string> | Record<string, string>;
 
     const dataFirst = omitBy(data, constant(true));
+
     expectTypeOf(dataFirst).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
 
     const dataLast = pipe(data, omitBy(constant(true)));
+
     expectTypeOf(dataLast).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();

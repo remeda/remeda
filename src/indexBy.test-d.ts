@@ -11,6 +11,7 @@ describe("data-first", () => {
       ],
       prop("code"),
     );
+
     expectTypeOf(result).toEqualTypeOf<
       Record<number, { dir: string; code: number }>
     >();
@@ -24,6 +25,7 @@ describe("data-first", () => {
       ] as const,
       prop("code"),
     );
+
     expectTypeOf(result).toEqualTypeOf<
       Partial<
         Record<
@@ -45,6 +47,7 @@ describe("data-last", () => {
       ],
       indexBy(prop("code")),
     );
+
     expectTypeOf(result).toEqualTypeOf<
       Record<number, { dir: string; code: number }>
     >();
@@ -58,6 +61,7 @@ describe("data-last", () => {
       ] as const,
       indexBy(prop("code")),
     );
+
     expectTypeOf(result).toEqualTypeOf<
       Partial<
         Record<

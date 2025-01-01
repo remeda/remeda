@@ -68,5 +68,6 @@ it("headless usage can infer types", () => {
     ["a", "c", "d"],
     isShallowEqual,
   );
+
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });

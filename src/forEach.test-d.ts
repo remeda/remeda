@@ -4,6 +4,7 @@ import { pipe } from "./pipe";
 
 it("doesn't return anything on dataFirst invocations", () => {
   const result = forEach([1, 2, 3], doNothing());
+
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- Intentionally
   expectTypeOf(result).toEqualTypeOf<void>();
 });

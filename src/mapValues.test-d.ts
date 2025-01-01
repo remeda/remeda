@@ -90,6 +90,7 @@ describe("branded types", () => {
 test("symbols are filtered out", () => {
   const mySymbol = Symbol("mySymbol");
   const result = mapValues({ [mySymbol]: 1, a: "hello" }, constant(true));
+
   expectTypeOf(result).toEqualTypeOf<{ a: boolean }>();
 });
 
@@ -102,6 +103,7 @@ test("symbols are ignored by the mapper", () => {
 
 test("objects with just symbol keys are still well defined", () => {
   const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
+
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();
 });
@@ -110,6 +112,7 @@ test("number keys are converted to string in the mapper", () => {
   mapValues({ 123: 456 }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<number>();
     expectTypeOf(key).toEqualTypeOf<"123">();
+
     return "world";
   });
 });
@@ -119,6 +122,7 @@ test("maintains partiality", () => {
     {} as { a?: number; b?: string; c: number; d: string },
     constant(true),
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     a?: boolean;
     b?: boolean;
@@ -131,11 +135,13 @@ test("unions of records", () => {
   const data = {} as Record<number, unknown> | Record<string, unknown>;
 
   const dataFirst = mapValues(data, constant("hello" as string));
+
   expectTypeOf(dataFirst).toEqualTypeOf<
     Record<`${number}`, string> | Record<string, string>
   >();
 
   const dataLast = pipe(data, mapValues(constant("hello" as string)));
+
   expectTypeOf(dataLast).toEqualTypeOf<
     Record<`${number}`, string> | Record<string, string>
   >();

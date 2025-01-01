@@ -67,5 +67,6 @@ it("doesn't expand narrow types", () => {
 
 it("should work as type guard in filter", () => {
   const result = ALL_TYPES_DATA_PROVIDER.filter(isNullish);
+
   expectTypeOf(result).toEqualTypeOf<Array<null | undefined>>();
 });

@@ -9,6 +9,7 @@ describe("'call' method args", () => {
       reducer: (_: "test" | undefined) => "test" as const,
       triggerAt: "start",
     });
+
     expectTypeOf(foo.call).parameters.toEqualTypeOf<[]>();
   });
 
@@ -20,6 +21,7 @@ describe("'call' method args", () => {
 
       triggerAt: "start",
     });
+
     expectTypeOf(foo.call).parameters.toEqualTypeOf<
       [a: string, b: number, c: boolean]
     >();
@@ -31,6 +33,7 @@ describe("'call' method args", () => {
       reducer: (_: "test" | undefined, a?: string) => "test" as const,
       triggerAt: "start",
     });
+
     expectTypeOf(foo.call).parameters.toEqualTypeOf<[a?: string | undefined]>();
   });
 
@@ -43,6 +46,7 @@ describe("'call' method args", () => {
 
       triggerAt: "start",
     });
+
     expectTypeOf(foo.call).parameters.toEqualTypeOf<Array<string>>();
   });
 });
@@ -56,6 +60,7 @@ describe("derive the reducer accumulator type from the executor param", () => {
       {
         reducer: (reduced) => {
           expectTypeOf(reduced).toEqualTypeOf<number | undefined>();
+
           return reduced!;
         },
         triggerAt: "start",
@@ -73,6 +78,7 @@ describe("derive the reducer accumulator type from the executor param", () => {
           expectTypeOf(reduced).toEqualTypeOf<
             ReadonlyArray<number> | undefined
           >();
+
           return reduced!;
         },
         triggerAt: "start",
@@ -90,6 +96,7 @@ describe("derive the reducer accumulator type from the executor param", () => {
           expectTypeOf(reduced).toEqualTypeOf<
             { readonly a: number } | undefined
           >();
+
           return reduced!;
         },
         triggerAt: "start",
