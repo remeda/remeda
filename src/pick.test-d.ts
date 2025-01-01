@@ -11,6 +11,7 @@ describe("data first", () => {
   test("complex type", () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = pick(obj, ["a"]);
+
     expectTypeOf(result).toEqualTypeOf<
       Pick<{ a: number } | { a?: number; b: string }, "a">
     >();
@@ -20,18 +21,22 @@ describe("data first", () => {
     const data = { foo: "hello", bar: "world" };
 
     const raw = pick(data, ["foo"]);
+
     expectTypeOf(raw).toEqualTypeOf<{ foo: string }>();
 
     const wrapped = keys(pick(data, ["foo"]));
+
     expectTypeOf(wrapped).toEqualTypeOf<Array<"foo">>();
 
     const withConstKeys = keys(pick(data, ["foo"] as const));
+
     expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
   });
 
   it("handles optional keys (issue #911)", () => {
     const data = { foo: "hello", bar: "world" } as const;
     const result = pick(data, [] as Array<keyof typeof data>);
+
     expectTypeOf(result).toEqualTypeOf<{
       readonly foo?: "hello";
       readonly bar?: "world";
@@ -51,6 +56,7 @@ describe("data last", () => {
   test("complex type", () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = pipe(obj, pick(["a"]));
+
     expectTypeOf(result).toEqualTypeOf<
       Pick<{ a: number } | { a?: number; b: string }, "a">
     >();
@@ -80,6 +86,7 @@ test("support inherited properties", () => {
   }
   class TestClass extends BaseClass {}
   const testClass = new TestClass();
+
   expectTypeOf(pick(testClass, ["testProp"])).toEqualTypeOf<{
     testProp: () => string;
   }>();

@@ -22,6 +22,7 @@ describe("data first", () => {
         time: { elapsed: add(1), remaining: add(-1) },
       },
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       id: number;
       quartile: number;
@@ -31,6 +32,7 @@ describe("data first", () => {
 
   it("is not destructive and is immutable", () => {
     const result = evolve({ n: 100 }, { n: add(1) });
+
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
@@ -39,6 +41,7 @@ describe("data first", () => {
       { first: 1, nested: { second: 2, third: 3 } },
       { nested: { second: add(-1), third: add(1) } },
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       first: number;
       nested: { second: number; third: number };
@@ -61,6 +64,7 @@ describe("data first", () => {
         objAry: (x) => map(x, omit(["b"])),
       },
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       array: number;
       nestedObj: { a: { b: string } };
@@ -88,6 +92,7 @@ describe("data first", () => {
           time: (x) => x,
         },
       );
+
       expectTypeOf(result).toEqualTypeOf<{
         id: number;
         quartile: Array<number>;
@@ -114,6 +119,7 @@ describe("data first", () => {
           time: { elapsed: (x) => x, remaining: (x) => x },
         },
       );
+
       expectTypeOf(result).toEqualTypeOf<{
         id: number;
         quartile: Array<number>;
@@ -168,6 +174,7 @@ describe("data first", () => {
           arg2 === undefined && arg3 === undefined,
       },
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       arg2Optional: boolean;
       arg2arg3Optional: boolean;
@@ -210,6 +217,7 @@ describe("data last", () => {
         time: { elapsed: add(1), remaining: add(-1) },
       }),
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       id: number;
       quartile: number;
@@ -219,6 +227,7 @@ describe("data last", () => {
 
   it("is not destructive and is immutable", () => {
     const result = pipe({ n: 100 }, evolve({ n: add(1) }));
+
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
@@ -227,6 +236,7 @@ describe("data last", () => {
       { first: 1, nested: { second: 2, third: 3 } },
       evolve({ nested: { second: add(-1), third: add(1) } }),
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       first: number;
       nested: { second: number; third: number };
@@ -235,6 +245,7 @@ describe("data last", () => {
 
   it("ignores undefined transformations", () => {
     const result = pipe({ n: 0 }, evolve({}));
+
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
@@ -254,6 +265,7 @@ describe("data last", () => {
         objAry: (x) => map(x, omit(["b"])),
       }),
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       array: number;
       nestedObj: { a: { b: string } };
@@ -307,6 +319,7 @@ describe("data last", () => {
           arg2 === undefined && arg3 === undefined,
       }),
     );
+
     expectTypeOf(result).toEqualTypeOf<{
       arg2Optional: boolean;
       arg2arg3Optional: boolean;

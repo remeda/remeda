@@ -14,6 +14,7 @@ it("should work as type guard", () => {
 
 it("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNumber);
+
   expectTypeOf(data).toEqualTypeOf<Array<number>>();
 });
 

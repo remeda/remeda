@@ -6,6 +6,7 @@ describe("mutable", () => {
   test("empty array", () => {
     const data = [] as [];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -18,6 +19,7 @@ describe("mutable", () => {
   test("regular array", () => {
     const data = [] as Array<number>;
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -30,6 +32,7 @@ describe("mutable", () => {
   test("fixed tuple", () => {
     const data = [1, 2, 3] as [1, 2, 3];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [1, 2, 3];
       required: [1, 2, 3];
@@ -42,6 +45,7 @@ describe("mutable", () => {
   test("array with prefix", () => {
     const data = ["a"] as [string, ...Array<boolean>];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [string];
       required: [string];
@@ -54,6 +58,7 @@ describe("mutable", () => {
   test("array with suffix", () => {
     const data = ["a"] as [...Array<boolean>, string];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -66,6 +71,7 @@ describe("mutable", () => {
   test("array with prefix and suffix", () => {
     const data = [1, "a"] as [number, ...Array<boolean>, string];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number];
       required: [number];
@@ -78,6 +84,7 @@ describe("mutable", () => {
   test("array with optional prefixes", () => {
     const data = [1, "a"] as [number, string?, number?, ...Array<boolean>];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number, string?, number?];
       required: [number];
@@ -92,6 +99,7 @@ describe("readonly", () => {
   test("empty array", () => {
     const data = [] as const;
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -104,6 +112,7 @@ describe("readonly", () => {
   test("regular array", () => {
     const data = [] as ReadonlyArray<number>;
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -116,6 +125,7 @@ describe("readonly", () => {
   test("fixed tuple", () => {
     const data = [1, 2, 3] as const;
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [1, 2, 3];
       required: [1, 2, 3];
@@ -128,6 +138,7 @@ describe("readonly", () => {
   test("array with prefix", () => {
     const data = ["a"] as readonly [string, ...Array<boolean>];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [string];
       required: [string];
@@ -140,6 +151,7 @@ describe("readonly", () => {
   test("array with suffix", () => {
     const data = ["a"] as readonly [...Array<boolean>, string];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [];
       required: [];
@@ -152,6 +164,7 @@ describe("readonly", () => {
   test("array with prefix and suffix", () => {
     const data = [1, "a"] as readonly [number, ...Array<boolean>, string];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number];
       required: [number];
@@ -169,6 +182,7 @@ describe("readonly", () => {
       ...Array<boolean>,
     ];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<{
       prefix: [number, string?, number?];
       required: [number];
@@ -183,6 +197,7 @@ describe("unions", () => {
   test("union of arrays", () => {
     const data = [] as Array<boolean> | Array<number>;
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
       | { prefix: []; required: []; optional: []; item: number; suffix: [] }
@@ -192,6 +207,7 @@ describe("unions", () => {
   test("mixed unions", () => {
     const data = [] as Array<boolean> | [number, string];
     const result = tupleParts(data);
+
     expectTypeOf(result).toEqualTypeOf<
       | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
       | {

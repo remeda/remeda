@@ -10,6 +10,7 @@ describe("data first", () => {
   test("complex type", () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = omit(obj, ["a"]);
+
     expectTypeOf(result).toEqualTypeOf<
       Omit<{ a: number } | { a?: number; b: string }, "a">
     >();
@@ -28,6 +29,7 @@ describe("data last", () => {
   test("complex type", () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = pipe(obj, omit(["a"]));
+
     expectTypeOf(result).toEqualTypeOf<
       Omit<{ a: number } | { a?: number; b: string }, "a">
     >();

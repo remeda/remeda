@@ -85,30 +85,35 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("doesn't narrow on 'string' prefix", () => {
     const [yes, no] = partition([] as Array<string>, endsWith("bar" as string));
+
     expectTypeOf(yes).toEqualTypeOf<Array<string>>();
     expectTypeOf(no).toEqualTypeOf<Array<string>>();
   });
 
   test("const data that matches", () => {
     const [yes, no] = partition([] as Array<"foobar">, endsWith("bar"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<"foobar">>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
 
   test("const data that doesn't match", () => {
     const [yes, no] = partition([] as Array<"helloworld">, endsWith("bar"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<never>>();
     expectTypeOf(no).toEqualTypeOf<Array<"helloworld">>();
   });
 
   test("primitive string data", () => {
     const [yes, no] = partition([] as Array<string>, endsWith("bar"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<`${string}bar`>>();
     expectTypeOf(no).toEqualTypeOf<Array<string>>();
   });
 
   test("template literal data that matches", () => {
     const [yes, no] = partition([] as Array<`${number}_bar`>, endsWith("bar"));
+
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_bar`>>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
@@ -118,6 +123,7 @@ describe("data-last", () => {
       [] as Array<`${number}_bar`>,
       endsWith("world"),
     );
+
     expectTypeOf(yes).toEqualTypeOf<
       // These should be equivalent to `never` but TypeScript doesn't infer
       // that...
@@ -128,6 +134,7 @@ describe("data-last", () => {
 
   test("literal union", () => {
     const [yes, no] = partition([] as Array<"cat" | "dog">, endsWith("t"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<"cat">>();
     expectTypeOf(no).toEqualTypeOf<Array<"dog">>();
   });
@@ -137,6 +144,7 @@ describe("data-last", () => {
       [] as Array<`${boolean}_dog` | `${number}_cat`>,
       endsWith("t"),
     );
+
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_cat`>>();
     expectTypeOf(no).toEqualTypeOf<Array<`${boolean}_dog`>>();
   });

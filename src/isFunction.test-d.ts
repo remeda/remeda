@@ -14,11 +14,13 @@ it("should work as type guard", () => {
   let maybeFunction: string | ((a: number) => string) | undefined;
   if (isFunction(maybeFunction)) {
     maybeFunction(1);
+
     expectTypeOf(maybeFunction).toEqualTypeOf<(a: number) => string>();
   }
 });
 
 it("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isFunction);
+
   expectTypeOf(data).toEqualTypeOf<Array<() => void>>();
 });
