@@ -19,7 +19,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^3.1.9",
-    "@astrojs/react": "^3.6.3",
+    "@astrojs/react": "^4.1.2",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/tailwind": "^5.1.4",
     "@docsearch/react": "^3.8.2",
