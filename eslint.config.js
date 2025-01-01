@@ -427,10 +427,15 @@ export default tseslint.config(
     plugins: {
       vitest,
     },
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- vitest typing issues are causing this. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
     rules: {
+      // @ts-expect-error [ts18048] -- Looks like something broke in the types for the vitest plugin. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ...vitest.configs.all.rules,
       // The `all` config doesn't actually contain all the rules, its missing
       // all the recommended ones...
+      // @ts-expect-error [ts18048] -- Looks like something broke in the types for the vitest plugin. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ...vitest.configs.recommended.rules,
 
       "vitest/prefer-lowercase-title": [
@@ -486,7 +491,10 @@ export default tseslint.config(
       },
     },
     languageOptions: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- vitest typing issues are causing this. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
       globals: {
+        // @ts-expect-error [ts18048] -- Looks like something broke in the types for the vitest plugin. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- vitest typing issues are causing this. TODO: If this isn't fixed by the next update we should check if we are doing something wrong...
         ...vitest.environments.env.globals,
       },
     },
