@@ -120,6 +120,23 @@ describe("data-first", () => {
     );
   });
 
+  it("allows interfaces", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface AB {
+      a: number;
+      b: number;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface A {
+      a: number;
+    }
+
+    expectTypeOf(
+      hasSubObject({ a: 1, b: 2 } as AB, { a: 1 } as A),
+    ).toEqualTypeOf<boolean>();
+  });
+
   it("narrows with empty object", () => {
     const obj = {} as { a?: string; b?: number };
 
@@ -418,6 +435,22 @@ describe("data-last", () => {
       { a: { b: 1 as boolean | number } },
       hasSubObject({ a: { b: 1 as number | string } }),
     );
+  });
+
+  it("allows interfaces", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface AB {
+      a: number;
+      b: number;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface A {
+      a: number;
+    }
+
+    hasSubObject({ a: 1 } as A)({ a: 1, b: 2 } as AB);
+    pipe({ a: 1, b: 2 } as AB, hasSubObject({ a: 1 } as A));
   });
 
   it("narrows with empty object", () => {

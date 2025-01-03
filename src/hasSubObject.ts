@@ -75,7 +75,7 @@ type HasSubObjectSubObject<
  * @category Guard
  */
 export function hasSubObject<
-  T extends Record<PropertyKey, unknown>,
+  T extends object,
   S extends HasSubObjectSubObject<S, T>,
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S>;
 
@@ -94,7 +94,7 @@ export function hasSubObject<
  * @dataLast
  * @category Guard
  */
-export function hasSubObject<S extends Record<PropertyKey, unknown>>(
+export function hasSubObject<S extends object>(
   subObject: S,
 ): <T extends HasSubObjectData<T, S>>(
   data: T,
