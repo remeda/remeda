@@ -14,6 +14,7 @@
     "clean": "rm -rf dist && rm -f src/data/data.json && rm -rf public/dist",
     "dev": "astro dev",
     "lint": "eslint",
+    "prettier": "prettier --write .",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.4",
     "@eslint/js": "^9.17.0",
+    "@shikijs/twoslash": "1.24.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/eslint": "^9.6.1",
     "@types/eslint__js": "^8.42.3",

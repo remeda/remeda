@@ -55,6 +55,8 @@ other libraries like 'type-fest' and 'ts-reset' just to get the types you
 expected.
 
 ```ts
+import * as R from "remeda";
+// ---cut---
 const DATA = [1, 2, 3] as const;
 
 const builtin = DATA.map((x) => x.toString());
@@ -78,6 +80,7 @@ without additional imports. It also means you can gradually adopt a functional
 style where it makes sense without compromising readability when it doesn't.
 
 ```ts
+// @noErrors
 // Lodash
 _.pick(obj, ["firstName", "lastName"]);
 
@@ -98,6 +101,7 @@ The "data-last" approach is helpful when writing data transformations, aka
 pipes.
 
 ```ts
+// @noErrors
 const DATA = [
   { name: "john", age: 20, gender: "m" },
   { name: "marry", age: 22, gender: "f" },
@@ -149,6 +153,7 @@ the pipe without you having to do anything. This means that expensive
 computations can be deferred until they are actually needed.
 
 ```ts
+// @noErrors
 // Get first 3 unique values
 const DATA = [1, 2, 2, 3, 3, 4, 5, 6];
 
