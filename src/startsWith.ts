@@ -26,10 +26,10 @@ export function startsWith(data: string, prefix: string): boolean;
  *
  * @param prefix - The prefix to check for.
  * @signature
- *   R.startsWith(data, prefix);
+ *   R.startsWith(prefix)(data);
  * @example
- *   R.startsWith("hello world", "hello"); // true
- *   R.startsWith("hello world", "world"); // false
+ *   R.pipe("hello world", R.startsWith("hello")); // true
+ *   R.pipe("hello world", R.startsWith("world")); // false
  * @dataLast
  * @category String
  */

@@ -26,10 +26,10 @@ export function endsWith(data: string, suffix: string): boolean;
  *
  * @param suffix - The prefix to check for.
  * @signature
- *   R.endsWith(data, suffix);
+ *   R.endsWith(suffix)(data);
  * @example
- *   R.endsWith("hello world", "hello"); // false
- *   R.endsWith("hello world", "world"); // true
+ *   R.pipe("hello world", R.endsWith("hello")); // false
+ *   R.pipe("hello world", R.endsWith("world")); // true
  * @dataLast
  * @category String
  */

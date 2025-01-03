@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
 import DATA from "@/data/data.json";
-import { hasAtLeast, isDefined } from "remeda";
+import { hasAtLeast, isDefined, uniqueBy } from "remeda";
 import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
@@ -58,7 +58,10 @@ function transformFunction(
           .map((part) => transformCommentDisplayPart(part, functionNames))
           .join("");
 
-  const methods = signaturesWithComments.map(transformSignature);
+  const methods = uniqueBy(
+    signaturesWithComments.map(transformSignature),
+    ({ signature }) => signature,
+  );
 
   const sourceUrl = sources?.[0]?.url;
 
