@@ -5,14 +5,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Library } from "@/lib/mappings";
+import { ALL_LIBRARIES } from "@/lib/mappings";
 import type { ReactNode } from "react";
 
 export function MigrationSelectorIsland({
-  libraries,
   children,
 }: {
-  readonly libraries: ReadonlyArray<Library>;
   readonly children: ReactNode;
 }) {
   return (
@@ -27,7 +25,7 @@ export function MigrationSelectorIsland({
           <a href={`/v1`}>Remeda@1.61.0</a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        {libraries.map((library) => (
+        {ALL_LIBRARIES.map((library) => (
           <DropdownMenuItem key={library} className="capitalize">
             <a href={`/migrate/${library}`}>{library}</a>
           </DropdownMenuItem>

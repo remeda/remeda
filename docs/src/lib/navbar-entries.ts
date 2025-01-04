@@ -27,7 +27,7 @@ export function getNavbarEntries(
           pipe(
             docs,
             sortBy(({ data: { priority } }) => priority ?? Infinity),
-            map(({ slug, data: { title } }) => ({ title, slug })),
+            map(({ id, data: { title } }) => ({ title, id })),
           ),
         ] as const,
     ),

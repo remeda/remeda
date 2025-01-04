@@ -2,17 +2,24 @@
 import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { getLibraries, getMappingEntries } from "@/lib/mappings";
-import { map, objOf, piped, sortBy } from "remeda";
+import { getMappingEntries } from "@/lib/mappings";
+import type { GetStaticPaths, InferGetStaticParamsType } from "astro";
+import { sortBy } from "remeda";
 
-const { library } = Astro.params;
+export const getStaticPaths = (async () =>
+  [
+    { params: { library: "lodash" } },
+    { params: { library: "ramda" } },
+    { params: { library: "just" } },
+  ] as const) satisfies GetStaticPaths;
+
+const { library } = Astro.params as InferGetStaticParamsType<
+  typeof getStaticPaths
+>;
 
 const mappingEntries = await getMappingEntries(library);
 
 const forDisplay = sortBy(mappingEntries, ([category]) => category);
-
-export const getStaticPaths = async () =>
-  map(await getLibraries(), piped(objOf("library"), objOf("params")));
 ---
 
 <DocsPage categorized={mappingEntries} title={`Migrate: ${library}`}>

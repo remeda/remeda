@@ -1,7 +1,7 @@
 ---
-title: "Object Keys"
-category: "Migrating to v2"
-slug: "migration-keys"
+title: Object Keys
+category: Migrating to v2
+slug: migration-keys
 priority: 50
 ---
 

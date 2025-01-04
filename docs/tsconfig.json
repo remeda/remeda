@@ -1,6 +1,7 @@
 {
   "extends": "astro/tsconfigs/strictest",
-  "include": ["src/**/*", "*.config.js", "*.config.ts"],
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

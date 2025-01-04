@@ -1,7 +1,7 @@
 ---
-title: "Removed Variants"
-category: "Migrating to v2"
-slug: "migration-variants"
+title: Removed Variants
+category: Migrating to v2
+slug: migration-variants
 priority: 20
 ---
 

@@ -1,7 +1,6 @@
 import { getCollection } from "astro:content";
 import {
   entries,
-  first,
   groupBy,
   map,
   mapValues,
@@ -10,28 +9,13 @@ import {
   piped,
   prop,
   sortBy,
-  split,
-  unique,
 } from "remeda";
 import type { CategorizedFunctions } from "./navbar-entries";
 
 const COLLECTION = "mapping";
 
-export type Library = Awaited<ReturnType<typeof getLibraries>>[number];
-
-/**
- * We use the collection itself as the source-of-truth for what libraries we
- * offer migration guides for. As long as there's a directory for a mapping, we
- * will consider that mapping to be available.
- *
- * @returns the list of all libraries with mappings in the collection.
- */
-export const getLibraries = async () =>
-  pipe(
-    await getCollection(COLLECTION),
-    map(piped(prop("id"), split("/"), first())),
-    unique(),
-  );
+export const ALL_LIBRARIES = ["lodash", "ramda", "just"] as const;
+export type Library = (typeof ALL_LIBRARIES)[number];
 
 export async function getMappingEntries(
   library: string,

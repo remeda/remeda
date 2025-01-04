@@ -1,7 +1,7 @@
 ---
-title: "Environment"
-category: "Migrating to v2"
-slug: "migration-environment"
+title: Environment
+category: Migrating to v2
+slug: migration-environment
 priority: 10
 ---
 

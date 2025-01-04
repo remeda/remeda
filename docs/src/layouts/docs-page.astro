@@ -1,4 +1,5 @@
 ---
+import DocsSection from "@/components/docs-section.astro";
 import { Navbar } from "@/components/navbar";
 import Prose from "@/components/prose.astro";
 import { VersionSelector } from "@/components/version-selector";
@@ -7,9 +8,9 @@ import {
   getNavbarEntries,
   type CategorizedFunctions,
 } from "@/lib/navbar-entries";
+import { render } from "astro:content";
 import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import BaseLayout from "./base.astro";
-import DocsSection from "@/components/docs-section.astro";
 
 type Props = {
   readonly categorized: CategorizedFunctions;
@@ -31,7 +32,7 @@ const renderedArticles = pipe(
     sortBy(({ data: { priority } }) => priority ?? Infinity),
     map(async (entry) => ({
       ...entry,
-      rendered: await entry.render(),
+      rendered: await render(entry),
     })),
     async ($) => await Promise.all($),
   ),
@@ -60,8 +61,8 @@ const renderedArticles = pipe(
       {
         renderedArticles.map(([category, articles]) => (
           <DocsSection title={category}>
-            {articles.map(({ slug, rendered: { Content } }) => (
-              <Prose id={slug} class="scroll-mt-24">
+            {articles.map(({ id, rendered: { Content } }) => (
+              <Prose id={id} class="scroll-mt-24">
                 <Content />
               </Prose>
             ))}

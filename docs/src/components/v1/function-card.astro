@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/v1/transform";
-import { getEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
 import FunctionApi from "../function-api.astro";
 import FunctionDescription from "../function-description.astro";
 import Prose from "../prose.astro";
@@ -17,7 +17,7 @@ type Props = {
 const { func } = Astro.props;
 
 const entry = await getEntry(MIGRATION_COLLECTION, func.name.toLowerCase());
-const Migration = await entry?.render();
+const Migration = entry === undefined ? undefined : await render(entry);
 ---
 
 <Card id={func.name} className="scroll-mt-24">

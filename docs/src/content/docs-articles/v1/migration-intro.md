@@ -1,7 +1,7 @@
 ---
-title: "Intro"
-category: "Migrating to v2"
-slug: "migration-intro"
+title: Intro
+category: Migrating to v2
+slug: migration-intro
 priority: 00
 ---
 
