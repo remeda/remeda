@@ -104,7 +104,7 @@ type SwappedIndices<
  *   swapIndices(data, index1, index2)
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
- *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
+ *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['a', 'c', 'b']
  *   swapIndices('abc', 0, 1) // => 'bac'
  * @dataFirst
  * @category Array
