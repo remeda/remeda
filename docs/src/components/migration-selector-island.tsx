@@ -5,7 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ALL_LIBRARIES } from "@/lib/mappings";
+import { ALL_LIBRARIES } from "@/lib/libraries";
 import type { ReactNode } from "react";
 
 export function MigrationSelectorIsland({
