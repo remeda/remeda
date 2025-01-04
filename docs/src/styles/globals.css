@@ -58,3 +58,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Makes twoslash annotations work: */
+.astro-code {
+  overflow: visible !important;
+}

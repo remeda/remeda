@@ -29,7 +29,7 @@ const { variant, signature, args, returns, example } = Astro.props;
   {
     example !== undefined && (
       <section class="text-xs lg:text-base">
-        <CodeBlock code={example} />
+        <CodeBlock code={example} twoslash />
       </section>
     )
   }

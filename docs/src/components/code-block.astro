@@ -1,6 +1,7 @@
 ---
 import { Code } from "astro:components";
 import { format, type Options } from "prettier";
+import { transformerTwoslash } from "@shikijs/twoslash";
 
 export const THEME = "poimandres";
 
@@ -10,11 +11,21 @@ const PRETTIER_OPTIONS = {
 
 type Props = {
   readonly code: string;
+  twoslash?: boolean;
 };
 
-const { code } = Astro.props;
+const { code, twoslash = false } = Astro.props;
 
-const formattedCode = await format(code, PRETTIER_OPTIONS);
+const formattedCode = await format(
+  twoslash
+    ? `
+      import * as R from "remeda";
+      // ---cut---
+      ${code}
+    `
+    : code,
+  PRETTIER_OPTIONS,
+);
 ---
 
 <style is:global>
@@ -23,4 +34,20 @@ const formattedCode = await format(code, PRETTIER_OPTIONS);
   }
 </style>
 
-<Code code={formattedCode} lang="typescript" theme={THEME} wrap />
+<Code
+  code={formattedCode}
+  lang="typescript"
+  theme={THEME}
+  transformers={twoslash
+    ? [
+        transformerTwoslash({
+          twoslashOptions: {
+            handbookOptions: {
+              noErrorValidation: true,
+            },
+          },
+        }),
+      ]
+    : []}
+  wrap
+/>
