@@ -9,7 +9,7 @@ export const collection = defineCollection({
     pattern: "**/[^_]*.md",
   }),
 
-  schema: z.object({
+  schema: z.strictObject({
     /**
      * The title would be used in the navbar.
      */

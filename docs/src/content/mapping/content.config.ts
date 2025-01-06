@@ -12,7 +12,7 @@ export const collection = defineCollection({
     generateId: ({ entry }) => entry.replace(/\.md$/, ""),
   }),
 
-  schema: z.object({
+  schema: z.strictObject({
     category: z.string().min(1),
     remeda: z.string().min(1).optional(),
   }),
