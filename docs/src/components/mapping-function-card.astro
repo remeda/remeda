@@ -19,7 +19,7 @@ const { name, library } = Astro.props;
 
 const contentId = `${library}/${name}`;
 const entry = await getEntry(mappingCollectionName, contentId);
-invariant(entry !== undefined, `No entry for slug: ${contentId}`);
+invariant(entry !== undefined, `No entry for content id: ${contentId}`);
 
 const { Content } = await render(entry);
 
