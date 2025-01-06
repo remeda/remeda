@@ -9,6 +9,9 @@ export const collections = {
     loader: glob({
       base: `${LEGACY_CONTENT_BASE_PATH}/docs-articles`,
       pattern: LEGACY_CONTENT_ARTICLE_GLOB,
+      // The default id takes the file name without the subdirectory which we
+      // use to match the content to the correct page.
+      generateId: ({ entry }) => entry.replace(/\.md$/, ""),
     }),
     schema: z.object({
       /**
