@@ -12,8 +12,9 @@ export function mappingUrl(library: string, name: string): string | undefined {
 
     case "just":
       return `https://anguscroll.com/just/just-${name}`;
-
-    default:
-      return;
   }
+
+  throw new Error(
+    `Library '${name}' does not have a URL template to map back to it's documentation page.`,
+  );
 }

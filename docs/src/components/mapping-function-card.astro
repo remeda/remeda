@@ -32,16 +32,12 @@ const mappedUrl = mappingUrl(library, name);
       <CardTitle className="flex-1 truncate text-2xl">
         {name}
       </CardTitle>
-      {
-        mappedUrl !== undefined && (
-          <a
-            class={buttonVariants({ variant: "secondary", size: "sm" })}
-            href={mappedUrl}
-          >
-            <ExternalLinkIcon />
-          </a>
-        )
-      }
+      <a
+        class={buttonVariants({ variant: "secondary", size: "sm" })}
+        href={mappedUrl}
+      >
+        <ExternalLinkIcon />
+      </a>
       <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
       <GithubEdit entry={entry} />
     </div>
