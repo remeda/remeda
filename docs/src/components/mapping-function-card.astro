@@ -1,10 +1,9 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { name as mappingCollectionName } from "@/content/mapping/content.config";
+import { getMappedEntry } from "@/lib/mapping/entry";
 import { mappingUrl } from "@/lib/mapping/urls";
 import { ArrowRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
-import { getEntry, render } from "astro:content";
-import invariant from "tiny-invariant";
+import { render } from "astro:content";
 import GithubEdit from "./github-edit.astro";
 import Prose from "./prose.astro";
 import { Badge } from "./ui/badge";
@@ -17,12 +16,8 @@ type Props = {
 
 const { name, library } = Astro.props;
 
-const contentId = `${library}/${name}`;
-const entry = await getEntry(mappingCollectionName, contentId);
-invariant(entry !== undefined, `No entry for content id: ${contentId}`);
-
+const entry = await getMappedEntry(library, name);
 const { Content } = await render(entry);
-
 const mappedUrl = mappingUrl(library, name);
 ---
 
