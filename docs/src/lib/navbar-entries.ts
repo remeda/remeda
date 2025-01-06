@@ -1,6 +1,5 @@
-import { name as docsArticlesCollectionName } from "@/content/docs-articles/content.config";
-import { type CollectionEntry } from "astro:content";
-import { entries, groupBy, map, pipe, sortBy } from "remeda";
+import { entries, groupBy, map, mapValues, pipe, piped, sortBy } from "remeda";
+import type { getArticlesForPath } from "./docs";
 import { getTags } from "./get-tags";
 import type { SourceTags } from "./transform";
 
@@ -15,23 +14,18 @@ export type CategorizedFunctions = ReadonlyArray<
 
 export function getNavbarEntries(
   categorized: CategorizedFunctions,
-  collection: ReadonlyArray<CollectionEntry<typeof docsArticlesCollectionName>>,
+  collection: Awaited<ReturnType<typeof getArticlesForPath>>,
 ) {
   const contentEntries = pipe(
     collection,
     groupBy(({ data: { category } }) => category),
-    entries(),
-    map(
-      ([category, docs]) =>
-        [
-          category,
-          pipe(
-            docs,
-            sortBy(({ data: { priority } }) => priority ?? Infinity),
-            map(({ id, data: { title } }) => ({ title, id })),
-          ),
-        ] as const,
+    mapValues(
+      piped(
+        sortBy(({ data: { priority } }) => priority ?? Infinity),
+        map(({ slug, data: { title } }) => ({ title, slug })),
+      ),
     ),
+    entries(),
   );
 
   const functionEntries = pipe(

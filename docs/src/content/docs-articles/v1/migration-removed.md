@@ -1,7 +1,6 @@
 ---
 title: Renamed and Removed
 category: Migrating to v2
-slug: migration-removed
 priority: 40
 ---
 

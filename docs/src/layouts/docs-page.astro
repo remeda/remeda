@@ -61,8 +61,8 @@ const renderedArticles = pipe(
       {
         renderedArticles.map(([category, articles]) => (
           <DocsSection title={category}>
-            {articles.map(({ id, rendered: { Content } }) => (
-              <Prose id={id} class="scroll-mt-24">
+            {articles.map(({ slug, rendered: { Content } }) => (
+              <Prose id={slug} class="scroll-mt-24">
                 <Content />
               </Prose>
             ))}

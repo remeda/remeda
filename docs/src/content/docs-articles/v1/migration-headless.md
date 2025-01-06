@@ -1,7 +1,6 @@
 ---
 title: Headless Invocation
 category: Migrating to v2
-slug: migration-headless
 priority: 30
 ---
 
