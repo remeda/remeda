@@ -30,6 +30,6 @@ export const collection = defineCollection({
      * We generate our own slugs programmatically based on the file name, we do
      * not support custom slugs.
      */
-    slug: z.never(),
+    slug: z.never().optional(),
   }),
 });
