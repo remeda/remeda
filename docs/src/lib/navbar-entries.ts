@@ -1,3 +1,4 @@
+import { name as docsArticlesCollectionName } from "@/content/docs-articles/content.config";
 import { type CollectionEntry } from "astro:content";
 import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import { getTags } from "./get-tags";
@@ -14,7 +15,7 @@ export type CategorizedFunctions = ReadonlyArray<
 
 export function getNavbarEntries(
   categorized: CategorizedFunctions,
-  collection: ReadonlyArray<CollectionEntry<"docs-articles">>,
+  collection: ReadonlyArray<CollectionEntry<typeof docsArticlesCollectionName>>,
 ) {
   const contentEntries = pipe(
     collection,

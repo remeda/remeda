@@ -1,5 +1,6 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { name as mappingCollectionName } from "@/content/mapping/content.config";
 import { mappingUrl, type Library } from "@/lib/libraries";
 import { ArrowRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getEntry, render } from "astro:content";
@@ -9,8 +10,6 @@ import Prose from "./prose.astro";
 import { Badge } from "./ui/badge";
 import { buttonVariants } from "./ui/button";
 
-const COLLECTION = "mapping";
-
 type Props = {
   readonly name: string;
   readonly library: Library;
@@ -19,7 +18,7 @@ type Props = {
 const { name, library } = Astro.props;
 
 const contentId = `${library}/${name}`.toLowerCase();
-const entry = await getEntry(COLLECTION, contentId);
+const entry = await getEntry(mappingCollectionName, contentId);
 invariant(entry !== undefined, `No entry for slug: ${contentId}`);
 
 const { Content } = await render(entry);

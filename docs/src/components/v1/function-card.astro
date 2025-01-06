@@ -1,5 +1,6 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { name as migrationCollectionName } from "@/content/v1-migration/content.config";
 import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/v1/transform";
 import { getCollection, render } from "astro:content";
@@ -7,8 +8,6 @@ import FunctionApi from "../function-api.astro";
 import FunctionDescription from "../function-description.astro";
 import Prose from "../prose.astro";
 import { MigrationBox } from "./migration-box";
-
-const MIGRATION_COLLECTION = "v1-migration";
 
 type Props = {
   readonly func: DocumentedFunction;
@@ -20,7 +19,7 @@ const { func } = Astro.props;
 // functions have a migration entry and getEntry logs an error if the entry is
 // not found, filling our build log with redundant errors.
 const [entry] = await getCollection(
-  MIGRATION_COLLECTION,
+  migrationCollectionName,
   ({ id }) => id === func.name,
 );
 const Migration = entry === undefined ? undefined : await render(entry);
