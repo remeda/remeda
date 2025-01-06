@@ -1,11 +1,14 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
+import { getAllMappedLibraries } from "@/lib/all-mapped-libraries";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
 import { MigrationSelectorIsland } from "./migration-selector-island";
 import NavLink from "./nav-link.astro";
 import { Search } from "./search";
 import { ThemeSwitcher } from "./theme-switcher";
+
+const libraries = await getAllMappedLibraries();
 ---
 
 <header
@@ -16,7 +19,7 @@ import { ThemeSwitcher } from "./theme-switcher";
   >
     <a href="/" class="font-bold">Remeda</a>
     <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
-    <MigrationSelectorIsland client:load>
+    <MigrationSelectorIsland libraries={libraries} client:load>
       <NavLink directory as="span" href="/migrate">Migration Guides</NavLink>
     </MigrationSelectorIsland>
     <div class="flex-1"></div>

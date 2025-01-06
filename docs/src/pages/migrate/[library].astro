@@ -2,22 +2,21 @@
 import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { ALL_LIBRARIES } from "@/lib/libraries";
+import { getAllMappedLibraries } from "@/lib/all-mapped-libraries";
 import { getMappingEntries } from "@/lib/mappings";
 import type { GetStaticPaths, InferGetStaticParamsType } from "astro";
 import { sortBy } from "remeda";
 
-export const getStaticPaths = (async () =>
-  ALL_LIBRARIES.map((library) => ({
-    params: { library },
-  }))) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => {
+  const libraries = await getAllMappedLibraries();
+  return libraries.map((library) => ({ params: { library } }));
+}) satisfies GetStaticPaths;
 
-const { library } = Astro.params as InferGetStaticParamsType<
-  typeof getStaticPaths
->;
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+
+const { library } = Astro.params as Params;
 
 const mappingEntries = await getMappingEntries(library);
-
 const forDisplay = sortBy(mappingEntries, ([category]) => category);
 ---
 

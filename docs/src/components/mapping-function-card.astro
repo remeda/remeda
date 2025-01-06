@@ -1,7 +1,7 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { name as mappingCollectionName } from "@/content/mapping/content.config";
-import { mappingUrl, type Library } from "@/lib/libraries";
+import { mappingUrl } from "@/lib/mapping-url";
 import { ArrowRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getEntry, render } from "astro:content";
 import invariant from "tiny-invariant";
@@ -12,7 +12,7 @@ import { buttonVariants } from "./ui/button";
 
 type Props = {
   readonly name: string;
-  readonly library: Library;
+  readonly library: string;
 };
 
 const { name, library } = Astro.props;
@@ -32,12 +32,16 @@ const mappedUrl = mappingUrl(library, name);
       <CardTitle className="flex-1 truncate text-2xl">
         {name}
       </CardTitle>
-      <a
-        class={buttonVariants({ variant: "secondary", size: "sm" })}
-        href={mappedUrl}
-      >
-        <ExternalLinkIcon />
-      </a>
+      {
+        mappedUrl !== undefined && (
+          <a
+            class={buttonVariants({ variant: "secondary", size: "sm" })}
+            href={mappedUrl}
+          >
+            <ExternalLinkIcon />
+          </a>
+        )
+      }
       <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
       <GithubEdit entry={entry} />
     </div>
