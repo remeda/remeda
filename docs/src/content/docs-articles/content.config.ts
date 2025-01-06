@@ -7,8 +7,9 @@ export const collection = defineCollection({
   loader: glob({
     base: import.meta.dirname,
     pattern: "**/[^_]*.md",
-    // The default id takes the file name without the subdirectory which we
-    // use to match the content to the correct page.
+    // We rely on the directory to be part of the ID to determine on which page
+    // the article should be rendered on, but the default ID generator uses the
+    // slug as the ID if it exists.
     generateId: ({ entry }) => entry.replace(/\.md$/, ""),
   }),
 

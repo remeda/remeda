@@ -1,6 +1,6 @@
 ---
-title: "Intro"
-category: "Guides"
+title: Intro
+category: Guides
 ---
 
 # Intro
