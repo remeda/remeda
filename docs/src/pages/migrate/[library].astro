@@ -2,8 +2,8 @@
 import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { getAllMappedLibraries } from "@/lib/all-mapped-libraries";
-import { getMappingEntries } from "@/lib/mappings";
+import { getMappingEntries } from "@/lib/mapping/entries";
+import { getAllMappedLibraries } from "@/lib/mapping/libraries";
 import type { GetStaticPaths, InferGetStaticParamsType } from "astro";
 import { sortBy } from "remeda";
 

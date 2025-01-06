@@ -1,11 +1,11 @@
 ---
 import { CATEGORIZED } from "@/lib/categorized";
+import { getArticlesForPath } from "@/lib/docs";
+import { getMappingEntries } from "@/lib/mapping/entries";
 import { getNavbarEntries } from "@/lib/navbar-entries";
 import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
 import { MobileNav } from "./mobile-nav";
 import { VERSIONS } from "./version-selector";
-import { getArticlesForPath } from "@/lib/docs";
-import { getMappingEntries } from "@/lib/mappings";
 
 const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)\/?$/iu;
 

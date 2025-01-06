@@ -13,7 +13,7 @@ import {
   split,
   when,
 } from "remeda";
-import type { CategorizedFunctions } from "./navbar-entries";
+import type { CategorizedFunctions } from "../navbar-entries";
 
 export async function getMappingEntries(
   library: string,
