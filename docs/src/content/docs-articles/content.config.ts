@@ -25,5 +25,11 @@ export const collection = defineCollection({
      * The priority defines the sorting order *within* the category.
      */
     priority: z.number().nonnegative().int().optional(),
+
+    /**
+     * We generate our own slugs programmatically based on the file name, we do
+     * not support custom slugs.
+     */
+    slug: z.never(),
   }),
 });
