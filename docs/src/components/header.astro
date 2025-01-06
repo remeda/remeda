@@ -2,7 +2,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
-import MigrationSelector from "./migration-selector.astro";
+import { MigrationSelectorIsland } from "./migration-selector-island";
 import NavLink from "./nav-link.astro";
 import { Search } from "./search";
 import { ThemeSwitcher } from "./theme-switcher";
@@ -16,9 +16,9 @@ import { ThemeSwitcher } from "./theme-switcher";
   >
     <a href="/" class="font-bold">Remeda</a>
     <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
-    <MigrationSelector>
+    <MigrationSelectorIsland client:load>
       <NavLink directory as="span" href="/migrate"> Migration Guides </NavLink>
-    </MigrationSelector>
+    </MigrationSelectorIsland>
     <div class="flex-1"></div>
     <Search client:only="react" />
     <a
