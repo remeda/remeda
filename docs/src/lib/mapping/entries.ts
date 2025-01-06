@@ -20,7 +20,7 @@ export async function getMappingEntries(
 ): Promise<CategorizedFunctions> {
   return pipe(
     await getCollection(mappingCollectionName, ({ id }) =>
-      id.startsWith(library),
+      id.startsWith(library + "/"),
     ),
     // The files will be sorted by whatever linux considers for ordering, but
     // that makes uppercase and lowercase letters be separated. We want to use
