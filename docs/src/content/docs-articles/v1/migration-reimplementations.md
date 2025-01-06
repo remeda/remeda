@@ -1,7 +1,6 @@
 ---
-title: "Re-Implementations"
-category: "Migrating to v2"
-slug: "migration-reimplementations"
+title: Re-Implementations
+category: Migrating to v2
 priority: 60
 ---
 

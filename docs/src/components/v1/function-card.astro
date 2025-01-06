@@ -1,14 +1,13 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { name as migrationCollectionName } from "@/content/v1-migration/content.config";
 import { getTags } from "@/lib/get-tags";
 import type { DocumentedFunction } from "@/lib/v1/transform";
-import { getEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
 import FunctionApi from "../function-api.astro";
 import FunctionDescription from "../function-description.astro";
 import Prose from "../prose.astro";
 import { MigrationBox } from "./migration-box";
-
-const MIGRATION_COLLECTION = "v1-migration";
 
 type Props = {
   readonly func: DocumentedFunction;
@@ -16,8 +15,14 @@ type Props = {
 
 const { func } = Astro.props;
 
-const entry = await getEntry(MIGRATION_COLLECTION, func.name.toLowerCase());
-const Migration = await entry?.render();
+// We use getCollection with a filter here instead of getEntry because not all
+// functions have a migration entry and getEntry logs an error if the entry is
+// not found, filling our build log with redundant errors.
+const [entry] = await getCollection(
+  migrationCollectionName,
+  ({ id }) => id === func.name,
+);
+const Migration = entry === undefined ? undefined : await render(entry);
 ---
 
 <Card id={func.name} className="scroll-mt-24">

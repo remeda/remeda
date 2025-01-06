@@ -1,4 +1,4 @@
 ---
 category: Array
-remead: takeLast
+remeda: takeLast
 ---
