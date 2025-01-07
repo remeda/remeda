@@ -1,8 +1,6 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
-import DATA from "@/data/data.json";
 import { hasAtLeast, isDefined, uniqueBy } from "remeda";
-import invariant from "tiny-invariant";
 import type { SetRequired } from "type-fest";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 
@@ -15,18 +13,18 @@ export type SourceTags = Readonly<
   Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
 >;
 
-export function transformProject(project: typeof DATA) {
-  const { children } = project;
-  invariant(children !== undefined, "The typedoc output is empty!");
-
-  const functions = children.filter(
+export function transformProject(
+  declarations: Array<JSONOutput.DeclarationReflection>,
+  categories: Array<JSONOutput.ReflectionCategory>,
+) {
+  const functions = declarations.filter(
     ({ kind }) => kind === ReflectionKind.Function,
   );
 
   const functionNames = new Set(functions.map(({ name }) => name));
 
   return addCategories(
-    project,
+    categories,
     functions
       .map((func) => transformFunction(func, functionNames))
       .filter(isDefined),
@@ -183,13 +181,9 @@ function tagContent(
 }
 
 function addCategories(
-  { categories }: JSONOutput.ProjectReflection,
+  categories: ReadonlyArray<JSONOutput.ReflectionCategory>,
   functions: ReadonlyArray<NonNullable<ReturnType<typeof transformFunction>>>,
 ) {
-  invariant(
-    categories !== undefined,
-    "Category data is missing from typedoc output!",
-  );
   const categoriesLookup = createCategoriesLookup(categories);
   return functions.map(({ id, ...item }) => ({
     ...item,
