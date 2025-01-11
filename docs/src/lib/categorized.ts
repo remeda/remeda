@@ -1,4 +1,4 @@
-import { entries, groupBy, pipe } from "remeda";
+import { entries, groupBy, pipe, prop } from "remeda";
 import { transformProject } from "./transform";
 import { getCollection } from "astro:content";
 import {
@@ -6,23 +6,23 @@ import {
   categoriesCollectionName,
 } from "@/content/functions/content.config";
 
+// We should probably throw instead so that the build would fail
 const MISSING_CATEGORY_FALLBACK = "Other";
 
-const [functions, categories] = await Promise.all([
-  getCollection(functionsCollectionName),
-  getCollection(categoriesCollectionName),
-]);
-
 export const CATEGORIZED = pipe(
-  transformProject(
-    functions.map(({ data }) => data),
-    categories.map(({ data }) => data),
-  ),
-  groupBy(
-    ({ category }) =>
-      category ??
-      // We should probably throw instead so that the build would fail
-      MISSING_CATEGORY_FALLBACK,
-  ),
+  await getFunctions(),
+  groupBy(({ category = MISSING_CATEGORY_FALLBACK }) => category),
   entries(),
 );
+
+async function getFunctions() {
+  const [declarationEntries, categoryEntries] = await Promise.all([
+    getCollection(functionsCollectionName),
+    getCollection(categoriesCollectionName),
+  ]);
+
+  const declaration = declarationEntries.map(prop("data"));
+  const categories = categoryEntries.map(prop("data"));
+
+  return transformProject(declaration, categories);
+}
