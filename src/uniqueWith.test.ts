@@ -20,7 +20,7 @@ describe("data_first", () => {
     expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
 
-  it("should return all unequivalent items respective to their identities", () => {
+  it("should return items that are not equal to themselves", () => {
     // test case based on https://github.com/remeda/remeda/issues/999
     const data = [
       { id: 1, reason: "No name" },
