@@ -58,15 +58,16 @@ export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
 const lazyImplementation =
   <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
   (value, index, data) => {
-    const otherIndex = data.findIndex((otherValue) =>
-      isEquals(value, otherValue),
+    const firstEqualIndex = data.findIndex(
+      (otherValue, otherIndex) =>
+        index === otherIndex || isEquals(value, otherValue),
     );
     // if there are no other matches, leave the result in.
-    if (otherIndex === -1) {
+    if (firstEqualIndex === -1) {
       return { done: false, hasNext: true, next: value };
     }
-    // skip items that have a match at a different index.
-    return otherIndex === index
+    // skip items that aren't at the first equal index.
+    return firstEqualIndex === index
       ? { done: false, hasNext: true, next: value }
       : SKIP_ITEM;
   };
