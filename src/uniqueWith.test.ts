@@ -19,6 +19,31 @@ describe("data_first", () => {
   test("should return uniq", () => {
     expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
+
+  it("should return all unequivalent items respective to their identities", () => {
+    // test case based on https://github.com/remeda/remeda/issues/999
+    const data = [
+      { id: 1, reason: "No name" },
+      { id: 1, reason: "No name" },
+      { reason: "No name" },
+      { reason: "No name" },
+    ];
+    const expectedResult = [
+      { id: 1, reason: "No name" },
+      { reason: "No name" },
+      { reason: "No name" },
+    ];
+
+    const result = uniqueWith(data, (errorA, errorB) => {
+      // the objects with no ids should effectively be ignored from removal of duplicates
+      if (errorA.id === undefined || errorB.id === undefined) {
+        return false;
+      }
+      return errorA.id === errorB.id;
+    });
+
+    expect(result).toStrictEqual(expectedResult);
+  });
 });
 
 describe("data_last", () => {
