@@ -62,10 +62,7 @@ const lazyImplementation =
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
     );
-    // if there are no other matches, leave the result in.
-    if (firstEqualIndex === -1) {
-      return { done: false, hasNext: true, next: value };
-    }
+
     // skip items that aren't at the first equal index.
     return firstEqualIndex === index
       ? { done: false, hasNext: true, next: value }
