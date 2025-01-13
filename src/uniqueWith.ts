@@ -55,16 +55,14 @@ export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
-const lazyImplementation = <T>(isEquals: IsEquals<T>): LazyEvaluator<T> => {
-  // the approach is to keep track of distinct entities and skip duplicates. we differentiate them by comparing each known distinct entity against the current value, adding the value to the entity list if there are no matches. worst case O(n^2) time complexity and O(n) space complexity.
-  const entities: Array<T> = [];
-  return (value) => {
-    for (const entity of entities) {
-      if (isEquals(entity, value)) {
-        return SKIP_ITEM;
-      }
+const lazyImplementation =
+  <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
+  (value, index, data) => {
+    const res = data.findIndex((otherValue) => isEquals(value, otherValue));
+    if (res === -1) {
+      return { done: false, hasNext: true, next: value };
     }
-    entities.push(value);
-    return { done: false, hasNext: true, next: value };
+    return res === index
+      ? { done: false, hasNext: true, next: value }
+      : SKIP_ITEM;
   };
-};
