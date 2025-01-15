@@ -26,7 +26,14 @@ export function withPrecision(roundingFn: (value: number) => number) {
       return roundingFn(value);
     }
 
-    const multiplier = RADIX ** precision;
-    return roundingFn(value * multiplier) / multiplier;
+    const multiplier = RADIX ** Math.abs(precision);
+
+    if (precision > 0) {
+      return roundingFn(value * multiplier) / multiplier;
+    }
+
+    // It is tricky to divide and multiple by a floating point number.
+    // Instead, it can use integers, but first divide and then multiply.
+    return roundingFn(value / multiplier) * multiplier;
   };
 }
