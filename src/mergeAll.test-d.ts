@@ -23,7 +23,7 @@ it("custom case", () => {
 });
 
 describe("optionality", () => {
-  it("should preserve optionality of fields", () => {
+  it("should preserve optionality of optional fields", () => {
     type A = { a: undefined };
     type B = { a: undefined; b?: string };
     const input: ReadonlyArray<A | B> = [];
@@ -50,7 +50,7 @@ describe("optionality", () => {
     expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
   });
 
-  it("should preserve optionality of fields that are shared across all union members", () => {
+  it("should preserve optionality of optional fields that are shared across all union members", () => {
     type A = { a?: number };
     type B = { a?: number };
     type C = { a?: number };
@@ -63,7 +63,7 @@ describe("optionality", () => {
     expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
   });
 
-  it("should prefer keeping optionality when the same field across all members of the union have different optionalities", () => {
+  it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
     type A = { a?: number };
     type B = { a: number };
     type C = { a?: number };
