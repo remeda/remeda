@@ -23,31 +23,35 @@ it("custom case", () => {
 });
 
 describe("optionality", () => {
-  it("should preserve optionality of optional fields", () => {
-    type A = { a: undefined };
-    type B = { a: undefined; b?: string };
-    const input: ReadonlyArray<A | B> = [];
+  describe("optionality conversion", () => {
+    it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
+      type A = { a: number; b: string };
+      type B = { a: number; c?: string; b: string };
+      type C = { a: number; d: string };
 
-    type ExpectedResultType = { a: undefined; b?: string } | object;
+      type ExpectedResultType =
+        | { a: number; b?: string; c?: string; d?: string }
+        | object;
 
-    const result = mergeAll(input);
+      const input: ReadonlyArray<A | B | C> = [];
+      const result = mergeAll(input);
 
-    expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
-  });
+      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+    });
 
-  it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
-    type A = { a: number; b: string };
-    type B = { a: number; c?: string; b: string };
-    type C = { a: number; d: string };
+    it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
+      type A = { a: string };
+      type B = { a: string; b: string | undefined; c: undefined };
+      const input: ReadonlyArray<A | B> = [];
 
-    type ExpectedResultType =
-      | { a: number; b?: string; c?: string; d?: string }
-      | object;
+      type ExpectedResultType =
+        | { a: string; b?: string | undefined; c?: undefined }
+        | object;
 
-    const input: ReadonlyArray<A | B | C> = [];
-    const result = mergeAll(input);
+      const result = mergeAll(input);
 
-    expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+    });
   });
 
   it("should preserve optionality of optional fields that are shared across all union members", () => {
