@@ -1,3 +1,36 @@
+import type { KeysOfUnion, SharedUnionFields, Simplify } from "type-fest";
+
+/**
+ * Gets the union of the field value types from the types of the union where the key exists.
+ */
+type PickUnionValue<T extends object, K extends KeysOfUnion<T>> =
+  T extends Partial<Record<K, unknown>> // if T contains K (distributed, can be optional)
+    ? T[K]
+    : never;
+
+/**
+ * Gets the complement of the keys of SharedUnionFields from a union.
+ */
+type SharedUnionFieldKeysComplement<T extends object> = Exclude<
+  KeysOfUnion<T>,
+  keyof SharedUnionFields<T>
+>;
+
+/**
+ * Gets the complement of SharedUnionFields from a union.
+ */
+type SharedUnionFieldsComplement<T extends object> = {
+  [K in SharedUnionFieldKeysComplement<T>]: PickUnionValue<T, K>;
+};
+
+/**
+ * Merges all types of the union into a single object type. Fields that are not shared among all types of the union become optional.
+ */
+type MergeUnion<T extends object> = SharedUnionFields<T> &
+  Partial<SharedUnionFieldsComplement<T>>;
+
+type MergeAll<T extends object> = Simplify<MergeUnion<T>> | object;
+
 /**
  * Merges a list of objects into a single object.
  *
@@ -17,9 +50,13 @@ export function mergeAll<A, B, C, D>(
 export function mergeAll<A, B, C, D, E>(
   array: readonly [A, B, C, D, E],
 ): A & B & C & D & E;
-export function mergeAll(array: ReadonlyArray<object>): object;
+export function mergeAll<T extends object>(
+  array: ReadonlyArray<T>,
+): MergeAll<T>;
 
-export function mergeAll(items: ReadonlyArray<object>): object {
+export function mergeAll<T extends object>(
+  items: ReadonlyArray<T>,
+): MergeAll<T> {
   let out = {};
 
   for (const item of items) {
