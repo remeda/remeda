@@ -5,12 +5,12 @@ import type { SharedUnionFieldsComplement } from "./internal/types/SharedUnionFi
 /**
  * Merges all types of the union into a single object type. Fields that are not shared among all types of the union become optional.
  */
-type MergeUnion<T extends object> = SharedUnionFields<T> &
+type MergeUnionWithOptionalComplement<T extends object> = SharedUnionFields<T> &
   Partial<SharedUnionFieldsComplement<T>>;
 
 type MergeAllArrayResult<T extends object> =
   IsUnion<T> extends true
-    ? Simplify<MergeUnion<T>> | Record<string, never>
+    ? Simplify<MergeUnionWithOptionalComplement<T>> | Record<string, never>
     : T | Record<string, never>;
 
 /**
