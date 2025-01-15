@@ -1,28 +1,6 @@
-import type { KeysOfUnion, SharedUnionFields, Simplify } from "type-fest";
+import type { SharedUnionFields, Simplify } from "type-fest";
 import type { IsUnion } from "./internal/types/IsUnion";
-
-/**
- * Gets the union of the field value types from the types of the union where the key exists.
- */
-type PickUnionValue<T extends object, K extends KeysOfUnion<T>> =
-  T extends Partial<Record<K, unknown>> // if T contains K (distributed, can be optional)
-    ? T[K]
-    : never;
-
-/**
- * Gets the complement of the keys of SharedUnionFields from a union.
- */
-type SharedUnionFieldKeysComplement<T extends object> = Exclude<
-  KeysOfUnion<T>,
-  keyof SharedUnionFields<T>
->;
-
-/**
- * Gets the complement of SharedUnionFields from a union.
- */
-type SharedUnionFieldsComplement<T extends object> = {
-  [K in SharedUnionFieldKeysComplement<T>]: PickUnionValue<T, K>;
-};
+import type { SharedUnionFieldsComplement } from "./internal/types/SharedUnionFieldsComplement";
 
 /**
  * Merges all types of the union into a single object type. Fields that are not shared among all types of the union become optional.
