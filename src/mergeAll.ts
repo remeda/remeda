@@ -30,7 +30,7 @@ type SharedUnionFieldsComplement<T extends object> = {
 type MergeUnion<T extends object> = SharedUnionFields<T> &
   Partial<SharedUnionFieldsComplement<T>>;
 
-type MergeAllResult<T extends object> =
+type MergeAllArrayResult<T extends object> =
   IsUnion<T> extends true
     ? Simplify<MergeUnion<T>> | Record<string, never>
     : T | Record<string, never>;
@@ -56,11 +56,11 @@ export function mergeAll<A, B, C, D, E>(
 ): A & B & C & D & E;
 export function mergeAll<T extends object>(
   array: ReadonlyArray<T>,
-): MergeAllResult<T>;
+): MergeAllArrayResult<T>;
 
 export function mergeAll<T extends object>(
   items: ReadonlyArray<T>,
-): MergeAllResult<T> {
+): MergeAllArrayResult<T> {
   let out = {};
 
   for (const item of items) {
