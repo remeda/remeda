@@ -31,7 +31,9 @@ type MergeUnion<T extends object> = SharedUnionFields<T> &
   Partial<SharedUnionFieldsComplement<T>>;
 
 type MergeAllResult<T extends object> =
-  IsUnion<T> extends true ? Simplify<MergeUnion<T>> | object : T | object;
+  IsUnion<T> extends true
+    ? Simplify<MergeUnion<T>> | Record<string, never>
+    : T | Record<string, never>;
 
 /**
  * Merges a list of objects into a single object.

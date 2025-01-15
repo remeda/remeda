@@ -15,7 +15,7 @@ it("custom case", () => {
         name?: string;
         optianalTitle?: string;
       }
-    | object;
+    | Record<string, never>;
 
   const mergedUserUnion = mergeAll(userUnionArray);
 
@@ -24,7 +24,7 @@ it("custom case", () => {
 
 it("should produce the same type when the type isn't a union", () => {
   type A = { a: string; b: number; c: boolean };
-  type ExpectedResultType = A | object;
+  type ExpectedResultType = A | Record<string, never>;
   const input: ReadonlyArray<A> = [];
   const result = mergeAll(input);
 
@@ -32,43 +32,14 @@ it("should produce the same type when the type isn't a union", () => {
 });
 
 describe("optionality", () => {
-  describe("optionality conversion", () => {
-    it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
-      type A = { a: number; b: string };
-      type B = { a: number; c?: string; b: string };
-      type C = { a: number; d: string };
+  it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
+    type A = { a: number; b: string };
+    type B = { a: number; c?: string; b: string };
+    type C = { a: number; d: string };
 
-      type ExpectedResultType =
-        | { a: number; b?: string; c?: string; d?: string }
-        | object;
-
-      const input: ReadonlyArray<A | B | C> = [];
-      const result = mergeAll(input);
-
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
-    });
-
-    it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
-      type A = { a: string };
-      type B = { a: string; b: string | undefined; c: undefined };
-      const input: ReadonlyArray<A | B> = [];
-
-      type ExpectedResultType =
-        | { a: string; b?: string | undefined; c?: undefined }
-        | object;
-
-      const result = mergeAll(input);
-
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
-    });
-  });
-
-  it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
-    type A = { a?: number };
-    type B = { a: number };
-    type C = { a?: number };
-
-    type ExpectedResultType = { a?: number } | object;
+    type ExpectedResultType =
+      | { a: number; b?: string; c?: string; d?: string }
+      | Record<string, never>;
 
     const input: ReadonlyArray<A | B | C> = [];
     const result = mergeAll(input);
@@ -76,12 +47,41 @@ describe("optionality", () => {
     expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
   });
 
-  it("should preserve optionality of optional fields that are shared across all union members when they are all of the same optionality", () => {
+  it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
+    type A = { a: string };
+    type B = { a: string; b: string | undefined; c: undefined };
+    const input: ReadonlyArray<A | B> = [];
+
+    type ExpectedResultType =
+      | { a: string; b?: string | undefined; c?: undefined }
+      | Record<string, never>;
+
+    const result = mergeAll(input);
+
+    expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+  });
+
+  it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
+    type A = { a?: number };
+    type B = { a: number };
+    type C = { a?: number };
+
+    type ExpectedResultType = { a?: number } | Record<string, never>;
+
+    const input: ReadonlyArray<A | B | C> = [];
+    const result = mergeAll(input);
+
+    expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+  });
+
+  it("should preserve optionality of fields that are shared across all union members when they are all of the same optionality", () => {
     type A = { a?: number; b: string; c: number };
     type B = { a?: number; b: string };
     type C = { a?: number; b: string };
 
-    type ExpectedResultType = { a?: number; b: string; c?: number } | object;
+    type ExpectedResultType =
+      | { a?: number; b: string; c?: number }
+      | Record<string, never>;
 
     const input: ReadonlyArray<A | B | C> = [];
     const result = mergeAll(input);
@@ -96,7 +96,9 @@ describe("should merge different types on same fields into a union", () => {
     type B = { a: string; b: string };
     const input: ReadonlyArray<A | B> = [];
 
-    type ExpectedResultType = { a: string | number; b: string } | object;
+    type ExpectedResultType =
+      | { a: string | number; b: string }
+      | Record<string, never>;
 
     const result = mergeAll(input);
 
@@ -110,7 +112,7 @@ describe("should merge different types on same fields into a union", () => {
 
     type ExpectedResultType =
       | { a: string | number | boolean | Date; b: string }
-      | object;
+      | Record<string, never>;
 
     const result = mergeAll(input);
 
@@ -130,7 +132,7 @@ describe("should merge different types on same fields into a union", () => {
 
     type ExpectedResultType =
       | { a: IntersectionA | IntersectionB; b: string }
-      | object;
+      | Record<string, never>;
 
     const result = mergeAll(input);
 
