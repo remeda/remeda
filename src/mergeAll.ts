@@ -32,6 +32,19 @@ export function mergeAll<A, B, C, D>(
 export function mergeAll<A, B, C, D, E>(
   array: readonly [A, B, C, D, E],
 ): A & B & C & D & E;
+
+
+/**
+ * Merges a list of objects into a single object. 
+ *
+ * @param array - The array of objects.
+ * @returns A new object merged with all of the objects in the list. If the list is empty, an empty object is returned.
+ * @signature
+ *    R.mergeAll(objects)
+ * @example
+ *    R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
+ * @category Array
+ */
 export function mergeAll<T extends object>(
   array: ReadonlyArray<T>,
 ): MergeAllArrayResult<T>;
