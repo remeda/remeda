@@ -1,4 +1,5 @@
 import type { KeysOfUnion, SharedUnionFields, Simplify } from "type-fest";
+import type { IsUnion } from "./internal/types/IsUnion";
 
 /**
  * Gets the union of the field value types from the types of the union where the key exists.
@@ -29,7 +30,8 @@ type SharedUnionFieldsComplement<T extends object> = {
 type MergeUnion<T extends object> = SharedUnionFields<T> &
   Partial<SharedUnionFieldsComplement<T>>;
 
-type MergeAllResult<T extends object> = Simplify<MergeUnion<T>> | object;
+type MergeAllResult<T extends object> =
+  IsUnion<T> extends true ? Simplify<MergeUnion<T>> | object : T | object;
 
 /**
  * Merges a list of objects into a single object.

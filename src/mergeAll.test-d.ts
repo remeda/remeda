@@ -22,6 +22,15 @@ it("custom case", () => {
   expectTypeOf(mergedUserUnion).toEqualTypeOf<ExpectedResultType>();
 });
 
+it("should produce the same type when the type isn't a union", () => {
+  type A = { a: string; b: number; c: boolean };
+  type ExpectedResultType = A | object;
+  const input: ReadonlyArray<A> = [];
+  const result = mergeAll(input);
+
+  expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+});
+
 describe("optionality", () => {
   describe("optionality conversion", () => {
     it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
@@ -54,9 +63,9 @@ describe("optionality", () => {
     });
   });
 
-  it("should preserve optionality of optional fields that are shared across all union members", () => {
+  it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
     type A = { a?: number };
-    type B = { a?: number };
+    type B = { a: number };
     type C = { a?: number };
 
     type ExpectedResultType = { a?: number } | object;
@@ -67,12 +76,12 @@ describe("optionality", () => {
     expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
   });
 
-  it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
-    type A = { a?: number };
-    type B = { a: number };
-    type C = { a?: number };
+  it("should preserve optionality of optional fields that are shared across all union members when they are all of the same optionality", () => {
+    type A = { a?: number; b: string; c: number };
+    type B = { a?: number; b: string };
+    type C = { a?: number; b: string };
 
-    type ExpectedResultType = { a?: number } | object;
+    type ExpectedResultType = { a?: number; b: string; c?: number } | object;
 
     const input: ReadonlyArray<A | B | C> = [];
     const result = mergeAll(input);
