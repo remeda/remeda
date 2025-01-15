@@ -35,7 +35,7 @@ describe("optionality", () => {
     expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
   });
 
-  it("should have non-optional fields shared across all members of the union remain non-optional, with the rest being optional regardless of their original optionality", () => {
+  it("should have non-optional fields shared across all members of the union remain non-optional, with the rest becoming optional regardless of their original optionality", () => {
     type A = { a: number; b: string };
     type B = { a: number; c?: string; b: string };
     type C = { a: number; d: string };
