@@ -9,9 +9,10 @@ type MergeUnionWithOptionalComplement<T extends object> = SharedUnionFields<T> &
   Partial<SharedUnionFieldsComplement<T>>;
 
 type MergeAllArrayResult<T extends object> =
-  IsUnion<T> extends true
-    ? Simplify<MergeUnionWithOptionalComplement<T>> | Record<string, never>
-    : T | Record<string, never>;
+  | (IsUnion<T> extends true
+      ? Simplify<MergeUnionWithOptionalComplement<T>>
+      : T)
+  | Record<string, never>;
 
 /**
  * Merges a list of objects into a single object.
@@ -33,9 +34,8 @@ export function mergeAll<A, B, C, D, E>(
   array: readonly [A, B, C, D, E],
 ): A & B & C & D & E;
 
-
 /**
- * Merges a list of objects into a single object. 
+ * Merges a list of objects into a single object.
  *
  * @param array - The array of objects.
  * @returns A new object merged with all of the objects in the list. If the list is empty, an empty object is returned.
