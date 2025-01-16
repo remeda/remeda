@@ -48,11 +48,11 @@ export function mergeAll<T extends object>(
   array: ReadonlyArray<T>,
 ): MergeAllArrayResult<T>;
 export function mergeAll<T extends object>(
-  items: ReadonlyArray<T>,
+  array: ReadonlyArray<T>,
 ): MergeAllArrayResult<T> {
   let out = {};
 
-  for (const item of items) {
+  for (const item of array) {
     out = { ...out, ...item };
   }
 
