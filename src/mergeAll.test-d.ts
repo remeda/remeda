@@ -1,3 +1,4 @@
+import type { EmptyObject } from "type-fest";
 import { mergeAll } from "./mergeAll";
 
 describe("array overload", () => {
@@ -16,7 +17,7 @@ describe("array overload", () => {
           name?: string;
           optianalTitle?: string;
         }
-      | Record<string, never>;
+      | EmptyObject;
 
     const mergedUserUnion = mergeAll(userUnionArray);
 
@@ -25,7 +26,7 @@ describe("array overload", () => {
 
   it("should produce the same type when the type isn't a union", () => {
     type A = { a: string; b: number; c: boolean };
-    type ExpectedResultType = A | Record<string, never>;
+    type ExpectedResultType = A | EmptyObject;
     const input: ReadonlyArray<A> = [];
     const result = mergeAll(input);
 
@@ -41,7 +42,7 @@ describe("array overload", () => {
 
       type ExpectedResultType =
         | { a?: number; b: string; c?: number; d?: boolean; e?: string }
-        | Record<string, never>;
+        | EmptyObject;
 
       const input: ReadonlyArray<A | B | C> = [];
       const result = mergeAll(input);
@@ -56,19 +57,20 @@ describe("array overload", () => {
 
       type ExpectedResultType =
         | { a: string; b?: string | undefined; c?: undefined }
-        | Record<string, never>;
+        | EmptyObject;
 
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
     });
 
-    it("should prefer optional over non-optional when the same field across all members of the union has different optionalities", () => {
+    it("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
       type A = { a?: number };
       type B = { a: number };
       type C = { a?: number };
+      // there is no "optionality union", we should prefer the safer option for these ambiguities
 
-      type ExpectedResultType = { a?: number } | Record<string, never>;
+      type ExpectedResultType = { a?: number } | EmptyObject;
 
       const input: ReadonlyArray<A | B | C> = [];
       const result = mergeAll(input);
@@ -83,9 +85,7 @@ describe("array overload", () => {
       type B = { a: string; b: string };
       const input: ReadonlyArray<A | B> = [];
 
-      type ExpectedResultType =
-        | { a: string | number; b: string }
-        | Record<string, never>;
+      type ExpectedResultType = { a: string | number; b: string } | EmptyObject;
 
       const result = mergeAll(input);
 
@@ -99,7 +99,7 @@ describe("array overload", () => {
 
       type ExpectedResultType =
         | { a: string | number | boolean | Date; b: string }
-        | Record<string, never>;
+        | EmptyObject;
 
       const result = mergeAll(input);
 
@@ -119,7 +119,7 @@ describe("array overload", () => {
 
       type ExpectedResultType =
         | { a: IntersectionA | IntersectionB; b: string }
-        | Record<string, never>;
+        | EmptyObject;
 
       const result = mergeAll(input);
 

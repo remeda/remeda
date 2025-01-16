@@ -1,4 +1,4 @@
-import type { SharedUnionFields, Simplify } from "type-fest";
+import type { EmptyObject, SharedUnionFields, Simplify } from "type-fest";
 import type { IsUnion } from "./internal/types/IsUnion";
 import type { SharedUnionFieldsComplement } from "./internal/types/SharedUnionFieldsComplement";
 
@@ -19,8 +19,8 @@ type MergeUnionWithOptionalSharedUnionFieldsComplement<T extends object> =
 type MergeAllArrayResult<T extends object> =
   | (IsUnion<T> extends true
       ? Simplify<MergeUnionWithOptionalSharedUnionFieldsComplement<T>>
-      : T)
-  | Record<string, never>;
+      : T) // if the input is a homogeneous non-empty array, we know the result type will just be the type of the contents of the array since the merges won't change any field types
+  | EmptyObject;
 
 /**
  * Merges a list of objects into a single object.
