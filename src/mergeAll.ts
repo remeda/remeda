@@ -15,7 +15,6 @@ type MergeUnionWithOptionalSharedUnionFieldsComplement<T extends object> =
 // If the array is empty, we know that the loop won't run so we'll just get the empty object.
 // Since we don't know the order of the items in the array, when we merge common fields, we don't know what the final type for the field will be, but we do know that it is one of the many possible types that are available across the members of the union for that field.
 // We represent these possibilities by combining the field's different types across the union members into a union.
-// It's important to distinguish between fields shared among all members of the union and fields that are only shared among some members of the union.
 type MergeAllArrayResult<T extends object> =
   | (IsUnion<T> extends true
       ? Simplify<MergeUnionWithOptionalSharedUnionFieldsComplement<T>>
@@ -28,11 +27,11 @@ type MergeAllArrayResult<T extends object> =
  * @param array - The array of objects.
  * @returns A new object merged with all of the objects in the list. If the list is empty, an empty object is returned.
  * @signature
- *    R.mergeAll(objects)
+ *    R.mergeAll(array)
  * @example
  *    R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
- * @example
  *    R.mergeAll([]) // => {}
+ * @dataFirst
  * @category Array
  */
 export function mergeAll<A>(array: readonly [A]): A;
