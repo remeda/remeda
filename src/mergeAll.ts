@@ -5,8 +5,8 @@ import type { SharedUnionFieldsComplement } from "./internal/types/SharedUnionFi
 /**
  * Merges all types of the union into a single object type. Fields that are not shared among all types of the union become optional.
  */
-type MergeUnionWithOptionalComplement<T extends object> = SharedUnionFields<T> &
-  Partial<SharedUnionFieldsComplement<T>>;
+type MergeUnionWithOptionalSharedUnionFieldsComplement<T extends object> =
+  SharedUnionFields<T> & Partial<SharedUnionFieldsComplement<T>>;
 
 // In the context of a heterogeneous array, the array may not have objects from every type of the union.
 // This means some fields may be missing in the final object, so we make them optional.
@@ -18,7 +18,7 @@ type MergeUnionWithOptionalComplement<T extends object> = SharedUnionFields<T> &
 // It's important to distinguish between fields shared among all members of the union and fields that are only shared among some members of the union.
 type MergeAllArrayResult<T extends object> =
   | (IsUnion<T> extends true
-      ? Simplify<MergeUnionWithOptionalComplement<T>>
+      ? Simplify<MergeUnionWithOptionalSharedUnionFieldsComplement<T>>
       : T)
   | Record<string, never>;
 
