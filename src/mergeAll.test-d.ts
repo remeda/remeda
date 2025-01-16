@@ -2,6 +2,16 @@ import { mergeAll } from "./mergeAll";
 
 describe("tuple overload", () => {
   describe("the fields of the rightmost item should have the greatest priority in overrides", () => {
+    it("1 types", () => {
+      type A1 = { a: 1; b: 1 };
+      const input: [A1] = [{ a: 1, b: 1 }];
+      type ExpectedType = { a: 1; b: 1 };
+
+      const result = mergeAll(input);
+
+      expectTypeOf(result).toEqualTypeOf<ExpectedType>();
+    });
+
     it("2 types", () => {
       type A1 = { a: 1; b: 1 };
       type A2 = { a: 2 };
