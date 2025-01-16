@@ -22,7 +22,7 @@ export function mergeAll<A, B, C, D>(
 ): MergeTuple<typeof array>;
 export function mergeAll<A, B, C, D, E>(
   array: readonly [A, B, C, D, E],
-): A & B & C & D & E;
+): MergeTuple<typeof array>;
 export function mergeAll(array: ReadonlyArray<object>): object;
 
 export function mergeAll(items: ReadonlyArray<object>): object {
