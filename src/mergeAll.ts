@@ -1,3 +1,5 @@
+import type { MergeTuple } from "./internal/types/MergeTuple";
+
 /**
  * Merges a list of objects into a single object.
  *
@@ -9,11 +11,15 @@
  * @category Array
  */
 export function mergeAll<A>(array: readonly [A]): A;
-export function mergeAll<A, B>(array: readonly [A, B]): A & B;
-export function mergeAll<A, B, C>(array: readonly [A, B, C]): A & B & C;
+export function mergeAll<A, B>(
+  array: readonly [A, B],
+): MergeTuple<typeof array>;
+export function mergeAll<A, B, C>(
+  array: readonly [A, B, C],
+): MergeTuple<typeof array>;
 export function mergeAll<A, B, C, D>(
   array: readonly [A, B, C, D],
-): A & B & C & D;
+): MergeTuple<typeof array>;
 export function mergeAll<A, B, C, D, E>(
   array: readonly [A, B, C, D, E],
 ): A & B & C & D & E;
