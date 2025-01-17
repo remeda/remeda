@@ -2,7 +2,10 @@
 
 import type {
   categoriesCollectionName,
+  Comment,
   functionsCollectionName,
+  Parameter,
+  Signature,
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
 import { hasAtLeast, isDefined, uniqueBy } from "remeda";
@@ -13,16 +16,6 @@ export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 export type FunctionSignature = ReturnType<typeof transformSignature>;
 export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
-
-type Sig = NonNullable<
-  InferEntrySchema<typeof functionsCollectionName>["signatures"]
->[number];
-
-type Signature = SetDefined<NonNullable<Sig>, "comment">;
-
-type BlockTags = NonNullable<Sig["comment"]>["blockTags"];
-
-type Param = NonNullable<NonNullable<Sig>["parameters"]>[number]["comment"];
 
 export type SourceTags = Readonly<
   Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
@@ -93,7 +86,7 @@ function transformFunction(
   return { id, name, description, methods, sourceUrl: source?.url };
 }
 
-const transformSignature = (signature: Signature) =>
+const transformSignature = (signature: SetDefined<Signature, "comment">) =>
   ({
     tag: hasTag(signature.comment.blockTags, "dataFirst")
       ? "Data First"
@@ -123,7 +116,7 @@ const transformReturns = ({ type, comment }: Signature) =>
     description: tagContent(comment.blockTags, "returns"),
   }) as const;
 
-function getParameter(name: string, comment: Param) {
+function getParameter(name: string, comment: Parameter["comment"]) {
   const summarySegments = comment?.summary ?? [];
   const description =
     summarySegments.length === 0
@@ -132,11 +125,14 @@ function getParameter(name: string, comment: Param) {
   return { name, description } as const;
 }
 
-const hasTag = (blockTags: BlockTags, tagName: string): boolean =>
-  blockTags.some(({ tag }) => tag === `@${tagName}`);
+const hasTag = (blockTags: Comment["blockTags"], tagName: string): boolean =>
+  blockTags?.some(({ tag }) => tag === `@${tagName}`) ?? false;
 
-function tagContent(blockTags: BlockTags, tagName: string): string | undefined {
-  const tag = blockTags.find(({ tag }) => tag === `@${tagName}`);
+function tagContent(
+  blockTags: Comment["blockTags"],
+  tagName: string,
+): string | undefined {
+  const tag = blockTags?.find(({ tag }) => tag === `@${tagName}`);
 
   if (tag === undefined) {
     return;

@@ -8,14 +8,32 @@ const PATH = path.join(import.meta.dirname, FILENAME);
 
 export const functionsCollectionName = "functions";
 
-export const SIGNATURE_SCHEMA = z.object({
+export type Comment = z.infer<typeof zComment>;
+const zComment = z
+  .object({
+    summary: z.array(
+      z.object({ kind: z.enum(["code", "text"]), text: z.string() }).strict(),
+    ),
+    blockTags: z
+      .array(
+        z
+          .object({
+            tag: z.string().startsWith("@"),
+            content: z.array(z.object({ text: z.string() })),
+          })
+          .strict(),
+      )
+      .optional(),
+  })
+  .strict();
+
+export type Parameter = z.infer<typeof zParameter>;
+const zParameter = z.object({ name: z.string(), comment: zComment.optional() });
+
+export type Signature = z.infer<typeof zSignature>;
+const zSignature = z.object({
   type: z.union([
-    z
-      .object({
-        type: z.literal("intrinsic"),
-        name: z.string(),
-      })
-      .strict(),
+    z.object({ type: z.literal("intrinsic"), name: z.string() }).strict(),
     z.object({
       type: z.enum([
         "array",
@@ -30,47 +48,8 @@ export const SIGNATURE_SCHEMA = z.object({
       ]),
     }),
   ]),
-  comment: z
-    .object({
-      summary: z.array(
-        z
-          .object({
-            kind: z.enum(["code", "text"]),
-            text: z.string(),
-          })
-          .strict(),
-      ),
-      blockTags: z.array(
-        z
-          .object({
-            tag: z.string().startsWith("@"),
-            content: z.array(
-              z.object({
-                text: z.string(),
-              }),
-            ),
-          })
-          .strict(),
-      ),
-    })
-    .strict(),
-  parameters: z
-    .array(
-      z.object({
-        name: z.string(),
-        comment: z
-          .object({
-            summary: z.array(
-              z.object({
-                text: z.string(),
-              }),
-            ),
-          })
-          .strict()
-          .optional(),
-      }),
-    )
-    .optional(),
+  comment: zComment,
+  parameters: z.array(zParameter).optional(),
 });
 
 export const functionsCollection = defineCollection({
@@ -86,12 +65,8 @@ export const functionsCollection = defineCollection({
       .number()
       .refine((kind): kind is ReflectionKind => kind in ReflectionKind),
     name: z.string(),
-    sources: z.array(
-      z.object({
-        url: z.string().url(),
-      }),
-    ),
-    signatures: z.array(SIGNATURE_SCHEMA),
+    sources: z.array(z.object({ url: z.string().url() })),
+    signatures: z.array(zSignature),
   }),
 });
 
@@ -105,9 +80,6 @@ export const categoriesCollection = defineCollection({
   }),
 
   schema: z
-    .object({
-      title: z.string(),
-      children: z.array(z.number()),
-    })
+    .object({ title: z.string(), children: z.array(z.number()) })
     .strict(),
 });
