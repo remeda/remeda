@@ -7,7 +7,8 @@ import type {
 import type { InferEntrySchema } from "astro:content";
 import { map, pipe, prop, uniqueBy } from "remeda";
 
-export type FunctionSignature = ReturnType<typeof transformSignature>;
+export type DocumentedFunction = ReturnType<typeof transformFunction>;
+export type FunctionSignature = DocumentedFunction["methods"][number];
 
 export const transformFunction = (
   {

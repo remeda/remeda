@@ -10,7 +10,7 @@ import { CATEGORIZED } from "@/lib/categorized";
     CATEGORIZED.map(([category, functions]) => (
       <DocsSection title={category}>
         {functions.map((func) => (
-          <FunctionCard func={func} />
+          <FunctionCard category={category} func={func} />
         ))}
       </DocsSection>
     ))

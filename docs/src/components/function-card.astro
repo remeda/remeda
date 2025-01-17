@@ -1,22 +1,23 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { DocumentedFunction } from "@/lib/categorized";
 import { getTags } from "@/lib/get-tags";
+import type { DocumentedFunction } from "@/lib/transform";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
+  readonly category: string;
   readonly func: DocumentedFunction;
 };
 
-const { func } = Astro.props;
+const { func, category } = Astro.props;
 ---
 
 <Card id={func.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
       name={func.name}
-      category={func.category}
+      category={category}
       tags={getTags(func.methods)}
       description={func.description}
       sourceUrl={func.sourceUrl}
