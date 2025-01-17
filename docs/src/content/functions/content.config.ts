@@ -1,5 +1,5 @@
 import { file } from "astro/loaders";
-import { defineCollection, z } from "astro:content";
+import { defineCollection, reference, z } from "astro:content";
 import path from "node:path";
 import { isNullish, map, piped, prop, when } from "remeda";
 import { ReflectionKind, type JSONOutput } from "typedoc";
@@ -95,6 +95,9 @@ export const categoriesCollection = defineCollection({
   }),
 
   schema: z
-    .object({ title: z.string(), children: z.array(z.number()) })
+    .object({
+      title: z.string(),
+      children: z.array(reference(functionsCollectionName)),
+    })
     .strict(),
 });

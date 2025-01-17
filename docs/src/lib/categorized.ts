@@ -1,28 +1,38 @@
-import { entries, groupBy, pipe, prop } from "remeda";
-import { transformProject } from "./transform";
-import { getCollection } from "astro:content";
 import {
-  functionsCollectionName,
   categoriesCollectionName,
+  functionsCollectionName,
 } from "@/content/functions/content.config";
+import { getCollection, getEntries } from "astro:content";
+import { addProp, filter, isDefined, map, pipe } from "remeda";
+import { transformFunction } from "./transform";
 
-// We should probably throw instead so that the build would fail
-const MISSING_CATEGORY_FALLBACK = "Other";
+export type DocumentedFunction = Awaited<
+  ReturnType<typeof getFunctions>
+>[number][1][number];
 
-export const CATEGORIZED = pipe(
-  await getFunctions(),
-  groupBy(({ category = MISSING_CATEGORY_FALLBACK }) => category),
-  entries(),
-);
+export const CATEGORIZED = await getFunctions();
 
 async function getFunctions() {
-  const [declarationEntries, categoryEntries] = await Promise.all([
-    getCollection(functionsCollectionName),
+  const [categoryEntries, allFunctionEntries] = await Promise.all([
     getCollection(categoriesCollectionName),
+    getCollection(functionsCollectionName),
   ]);
 
-  const declaration = declarationEntries.map(prop("data"));
-  const categories = categoryEntries.map(prop("data"));
+  const allNames = new Set(
+    ...map(allFunctionEntries, ({ data: { name } }) => name),
+  );
 
-  return transformProject(declaration, categories);
+  return await Promise.all(
+    map(categoryEntries, async ({ data: { title, children } }) => {
+      return [
+        title,
+        pipe(
+          await getEntries(children),
+          map(({ data }) => transformFunction(data, allNames)),
+          filter(isDefined),
+          map(addProp("category", title)),
+        ),
+      ] as const;
+    }),
+  );
 }

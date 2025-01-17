@@ -1,18 +1,16 @@
 /* eslint-disable unicorn/no-array-callback-reference */
 
 import type {
-  categoriesCollectionName,
   Comment,
   functionsCollectionName,
   Parameter,
   Signature,
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
-import { hasAtLeast, isDefined, uniqueBy } from "remeda";
+import { hasAtLeast, uniqueBy } from "remeda";
 import { ReflectionKind } from "typedoc";
 import { hasDefinedProp, type SetDefined } from "./has-defined-prop";
 
-export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 export type FunctionSignature = ReturnType<typeof transformSignature>;
 export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
@@ -21,33 +19,20 @@ export type SourceTags = Readonly<
   Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
 >;
 
-export function transformProject(
-  declarations: Array<InferEntrySchema<typeof functionsCollectionName>>,
-  categories: Array<InferEntrySchema<typeof categoriesCollectionName>>,
-) {
-  const functions = declarations.filter(
-    ({ kind }) => kind === ReflectionKind.Function,
-  );
-
-  const functionNames = new Set(functions.map(({ name }) => name));
-
-  return addCategories(
-    categories,
-    functions
-      .map((func) => transformFunction(func, functionNames))
-      .filter(isDefined),
-  );
-}
-
-function transformFunction(
+export function transformFunction(
   {
     id,
+    kind,
     name,
     sources: [source],
     signatures,
   }: InferEntrySchema<typeof functionsCollectionName>,
   functionNames: ReadonlySet<string>,
 ) {
+  if (kind !== ReflectionKind.Function) {
+    return;
+  }
+
   const signaturesWithComments = signatures.filter(hasDefinedProp("comment"));
   if (!hasAtLeast(signaturesWithComments, 1)) {
     return;
@@ -149,30 +134,4 @@ function tagContent(
   }
 
   return content.map(({ text }) => text).join("");
-}
-
-function addCategories(
-  categories: Array<InferEntrySchema<typeof categoriesCollectionName>>,
-  functions: ReadonlyArray<NonNullable<ReturnType<typeof transformFunction>>>,
-) {
-  const categoriesLookup = createCategoriesLookup(categories);
-  return functions.map(({ id, ...item }) => ({
-    ...item,
-    category: categoriesLookup.get(id),
-  }));
-}
-
-function createCategoriesLookup(
-  categories: Array<InferEntrySchema<typeof categoriesCollectionName>>,
-): ReadonlyMap<number, string> {
-  const result = new Map<number, string>();
-
-  for (const { children, title } of categories) {
-    // TODO: We can enforce that only a predefined set of categories is acceptable and break the build on any unknown categories
-    for (const id of children) {
-      result.set(id, title);
-    }
-  }
-
-  return result;
 }
