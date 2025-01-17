@@ -8,7 +8,6 @@ import type {
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
 import { hasAtLeast, uniqueBy } from "remeda";
-import { ReflectionKind } from "typedoc";
 import { hasDefinedProp, type SetDefined } from "./has-defined-prop";
 
 export type FunctionSignature = ReturnType<typeof transformSignature>;
@@ -22,17 +21,12 @@ export type SourceTags = Readonly<
 export function transformFunction(
   {
     id,
-    kind,
     name,
     sources: [source],
     signatures,
   }: InferEntrySchema<typeof functionsCollectionName>,
   functionNames: ReadonlySet<string>,
 ) {
-  if (kind !== ReflectionKind.Function) {
-    return;
-  }
-
   const signaturesWithComments = signatures.filter(hasDefinedProp("comment"));
   if (!hasAtLeast(signaturesWithComments, 1)) {
     return;

@@ -1,7 +1,7 @@
 import { file } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
 import path from "node:path";
-import { isNullish, map, piped, prop, when } from "remeda";
+import { filter, isNullish, map, piped, prop, when } from "remeda";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import dataFilePath from "./functions.json?url";
 import invariant from "tiny-invariant";
@@ -64,15 +64,13 @@ export const functionsCollection = defineCollection({
           `Data file ${DATA_FILE} is missing any declarations or references`,
         );
       }),
+      filter(({ kind }) => kind === ReflectionKind.Function),
       map((entry) => entry as unknown as Record<string, unknown>),
     ),
   }),
 
   schema: z.object({
     id: z.number(),
-    kind: z
-      .number()
-      .refine((kind): kind is ReflectionKind => kind in ReflectionKind),
     name: z.string(),
     sources: z.array(z.object({ url: z.string().url() })),
     signatures: z.array(zSignature),
