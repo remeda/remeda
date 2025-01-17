@@ -23,14 +23,14 @@ async function getFunctions() {
   );
 
   return await Promise.all(
-    map(categoryEntries, async ({ data: { title, children } }) => {
+    map(categoryEntries, async ({ data: { id, children } }) => {
       return [
-        title,
+        id,
         pipe(
           await getEntries(children),
           map(({ data }) => transformFunction(data, allNames)),
           filter(isDefined),
-          map(addProp("category", title)),
+          map(addProp("category", id)),
         ),
       ] as const;
     }),

@@ -4,6 +4,7 @@ import path from "node:path";
 import { isNullish, map, piped, prop, when } from "remeda";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import dataFilePath from "./functions.json?url";
+import invariant from "tiny-invariant";
 
 const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 
@@ -63,8 +64,7 @@ export const functionsCollection = defineCollection({
           `Data file ${DATA_FILE} is missing any declarations or references`,
         );
       }),
-      // TODO: This mapping doesn't *do* anything. It's only used to cast the items within the array so that astro accepts them as content datums. There might be a better way around this issue.
-      map((reflection) => reflection as unknown as Record<string, unknown>),
+      map((entry) => entry as unknown as Record<string, unknown>),
     ),
   }),
 
@@ -79,7 +79,7 @@ export const functionsCollection = defineCollection({
   }),
 });
 
-export const categoriesCollectionName = "functionCategories";
+export const categoriesCollectionName = "categories";
 
 export const categoriesCollection = defineCollection({
   loader: file(DATA_FILE, {
@@ -89,14 +89,17 @@ export const categoriesCollection = defineCollection({
       when(isNullish, () => {
         throw new Error(`Data file ${DATA_FILE} is missing any categories`);
       }),
-      // TODO: This mapping doesn't *do* anything. It's only used to cast the items within the array so that astro accepts them as content datums. There might be a better way around this issue.
-      map((reflection) => reflection as unknown as Record<string, unknown>),
+      map(({ title: id, children }) => {
+        invariant(children !== undefined, `Category ${id} has no children?!`);
+        // Astro expects reference types to be strings although it allows ids to be `numbers` :(
+        return { id, children: map(children, (id) => id.toString()) };
+      }),
     ),
   }),
 
   schema: z
     .object({
-      title: z.string(),
+      id: z.string(),
       children: z.array(reference(functionsCollectionName)),
     })
     .strict(),
