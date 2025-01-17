@@ -1,7 +1,10 @@
 import { file } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
+import path from "node:path";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import functionsJsonPath from "./functions.json?url";
+
+const PATH = path.join(import.meta.dirname, path.basename(functionsJsonPath));
 
 export const functionsCollectionName = "functions";
 
@@ -50,7 +53,7 @@ const zSignature = z.object({
 });
 
 export const functionsCollection = defineCollection({
-  loader: file(functionsJsonPath, {
+  loader: file(PATH, {
     parser: (text) =>
       (JSON.parse(text) as JSONOutput.ProjectReflection)
         .children as unknown as Array<Record<string, unknown>>,
@@ -70,7 +73,7 @@ export const functionsCollection = defineCollection({
 export const categoriesCollectionName = "functionCategories";
 
 export const categoriesCollection = defineCollection({
-  loader: file(functionsJsonPath, {
+  loader: file(PATH, {
     parser: (text) =>
       (JSON.parse(text) as JSONOutput.ProjectReflection)
         .categories as unknown as Array<Record<string, unknown>>,
