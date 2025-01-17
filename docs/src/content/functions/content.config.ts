@@ -8,54 +8,54 @@ const PATH = path.join(import.meta.dirname, FILENAME);
 
 export const functionsCollectionName = "functions";
 
-export const SIGNATURE_SCHEMA = z
-  .object({
-    type: z.union([
-      z
-        .object({
-          type: z.literal("intrinsic"),
-          name: z.string(),
-        })
-        .strict(),
-      z.object({
-        type: z.enum([
-          "array",
-          "indexedAccess",
-          "intersection",
-          "predicate",
-          "query",
-          "reference",
-          "reflection",
-          "tuple",
-          "union",
-        ]),
-      }),
-    ]),
-    comment: z
+export const SIGNATURE_SCHEMA = z.object({
+  type: z.union([
+    z
       .object({
-        summary: z.array(
-          z
-            .object({
-              kind: z.enum(["code", "text"]),
-              text: z.string(),
-            })
-            .strict(),
-        ),
-        blockTags: z.array(
-          z
-            .object({
-              tag: z.string().startsWith("@"),
-              content: z.array(
-                z.object({
-                  text: z.string(),
-                }),
-              ),
-            })
-            .strict(),
-        ),
+        type: z.literal("intrinsic"),
+        name: z.string(),
       })
       .strict(),
-    parameters: z.array(
+    z.object({
+      type: z.enum([
+        "array",
+        "indexedAccess",
+        "intersection",
+        "predicate",
+        "query",
+        "reference",
+        "reflection",
+        "tuple",
+        "union",
+      ]),
+    }),
+  ]),
+  comment: z
+    .object({
+      summary: z.array(
+        z
+          .object({
+            kind: z.enum(["code", "text"]),
+            text: z.string(),
+          })
+          .strict(),
+      ),
+      blockTags: z.array(
+        z
+          .object({
+            tag: z.string().startsWith("@"),
+            content: z.array(
+              z.object({
+                text: z.string(),
+              }),
+            ),
+          })
+          .strict(),
+      ),
+    })
+    .strict(),
+  parameters: z
+    .array(
       z.object({
         name: z.string(),
         comment: z
@@ -69,9 +69,9 @@ export const SIGNATURE_SCHEMA = z
           .strict()
           .optional(),
       }),
-    ),
-  })
-  .partial();
+    )
+    .optional(),
+});
 
 export const functionsCollection = defineCollection({
   loader: file(PATH, {

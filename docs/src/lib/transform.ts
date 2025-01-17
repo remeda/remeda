@@ -113,15 +113,13 @@ const transformSignature = (signature: Signature) =>
 const transformReturns = ({ type, comment }: Signature) =>
   ({
     name:
-      type === undefined
-        ? "Object"
-        : type.type === "intrinsic"
-          ? type.name
-          : type.type === "array"
-            ? "Array"
-            : type.type === "predicate"
-              ? "boolean"
-              : "Object",
+      type.type === "intrinsic"
+        ? type.name
+        : type.type === "array"
+          ? "Array"
+          : type.type === "predicate"
+            ? "boolean"
+            : "Object",
     description: tagContent(comment.blockTags, "returns"),
   }) as const;
 
