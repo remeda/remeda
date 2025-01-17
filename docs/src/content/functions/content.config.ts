@@ -1,6 +1,7 @@
 import { file } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
 import path from "node:path";
+import { isNullish, map, piped, prop, when } from "remeda";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import functionsJsonPath from "./functions.json?url";
 
@@ -8,8 +9,6 @@ const DATA_FILE = path.join(
   import.meta.dirname,
   path.basename(functionsJsonPath),
 );
-
-export const functionsCollectionName = "functions";
 
 export type Comment = z.infer<typeof zComment>;
 const zComment = z
@@ -55,11 +54,21 @@ const zSignature = z.object({
   parameters: z.array(zParameter).optional(),
 });
 
+export const functionsCollectionName = "functions";
+
 export const functionsCollection = defineCollection({
   loader: file(DATA_FILE, {
-    parser: (text) =>
-      (JSON.parse(text) as JSONOutput.ProjectReflection)
-        .children as unknown as Array<Record<string, unknown>>,
+    parser: piped(
+      ($) => JSON.parse($) as JSONOutput.ProjectReflection,
+      prop("children"),
+      when(isNullish, () => {
+        throw new Error(
+          `Data file ${DATA_FILE} is missing any declarations or references`,
+        );
+      }),
+      // TODO: This mapping doesn't *do* anything. It's only used to cast the items within the array so that astro accepts them as content datums. There might be a better way around this issue.
+      map((reflection) => reflection as unknown as Record<string, unknown>),
+    ),
   }),
 
   schema: z.object({
@@ -77,9 +86,15 @@ export const categoriesCollectionName = "functionCategories";
 
 export const categoriesCollection = defineCollection({
   loader: file(DATA_FILE, {
-    parser: (text) =>
-      (JSON.parse(text) as JSONOutput.ProjectReflection)
-        .categories as unknown as Array<Record<string, unknown>>,
+    parser: piped(
+      ($) => JSON.parse($) as JSONOutput.ProjectReflection,
+      prop("categories"),
+      when(isNullish, () => {
+        throw new Error(`Data file ${DATA_FILE} is missing any categories`);
+      }),
+      // TODO: This mapping doesn't *do* anything. It's only used to cast the items within the array so that astro accepts them as content datums. There might be a better way around this issue.
+      map((reflection) => reflection as unknown as Record<string, unknown>),
+    ),
   }),
 
   schema: z
