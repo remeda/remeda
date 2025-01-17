@@ -1,12 +1,11 @@
 import type { EmptyObject, SharedUnionFields, Simplify } from "type-fest";
-import type { IsUnion } from "./internal/types/IsUnion";
 import type { SharedUnionFieldsComplement } from "./internal/types/SharedUnionFieldsComplement";
 
 /**
  * Merges all types of the union into a single object type. Fields that are not shared among all types of the union become optional.
  */
-type MergeUnionWithOptionalSharedUnionFieldsComplement<T extends object> =
-  SharedUnionFields<T> & Partial<SharedUnionFieldsComplement<T>>;
+type MergeUnionAndPartializeSharedUnionFieldsComplement<T extends object> =
+  SharedUnionFields<T> & Partial<SharedUnionFieldsComplement<T>>; // for single-member "union", the complement would be an empty object. intersecting with it would be a no-op.
 
 // In the context of a heterogeneous array, the array may not have objects from every type of the union.
 // This means some fields may be missing in the final object, so we make them optional.
@@ -16,9 +15,7 @@ type MergeUnionWithOptionalSharedUnionFieldsComplement<T extends object> =
 // Since we don't know the order of the items in the array, when we merge common fields, we don't know what the final type for the field will be, but we do know that it is one of the many possible types that are available across the members of the union for that field.
 // We represent these possibilities by combining the field's different types across the union members into a union.
 type MergeAllArrayResult<T extends object> =
-  | (IsUnion<T> extends true
-      ? Simplify<MergeUnionWithOptionalSharedUnionFieldsComplement<T>>
-      : T) // if the input is a homogeneous non-empty array, we know the result type will just be the type of the contents of the array since the merges won't change any field types
+  | Simplify<MergeUnionAndPartializeSharedUnionFieldsComplement<T>>
   | EmptyObject;
 
 /**
