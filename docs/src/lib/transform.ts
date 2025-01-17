@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/no-array-callback-reference */
-
 import type {
   Comment,
   functionsCollectionName,
@@ -7,16 +5,12 @@ import type {
   Signature,
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
-import { hasAtLeast, uniqueBy } from "remeda";
+import { hasAtLeast, pipe, map, uniqueBy } from "remeda";
 import { hasDefinedProp, type SetDefined } from "./has-defined-prop";
 
 export type FunctionSignature = ReturnType<typeof transformSignature>;
 export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
-
-export type SourceTags = Readonly<
-  Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
->;
 
 export function transformFunction(
   {
@@ -57,9 +51,10 @@ export function transformFunction(
           })
           .join("");
 
-  const methods = uniqueBy(
-    signaturesWithComments.map(transformSignature),
-    ({ signature }) => signature,
+  const methods = pipe(
+    signaturesWithComments,
+    map(transformSignature),
+    uniqueBy(({ signature }) => signature),
   );
 
   return { id, name, description, methods, sourceUrl: source?.url };

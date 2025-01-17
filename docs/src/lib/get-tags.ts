@@ -1,6 +1,8 @@
-import type { SourceTags } from "./transform";
-
 export type Tag = "Lazy" | "Indexed" | "Strict";
+
+export type SourceTags = Readonly<
+  Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
+>;
 
 export function getTags([
   method,

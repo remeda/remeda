@@ -1,7 +1,7 @@
 import { entries, groupBy, map, mapValues, pipe, piped, sortBy } from "remeda";
 import type { getArticlesForPath } from "./docs";
+import type { SourceTags } from "./get-tags";
 import { getTags } from "./get-tags";
-import type { SourceTags } from "./transform";
 
 type FunctionItem = {
   readonly name: string;
