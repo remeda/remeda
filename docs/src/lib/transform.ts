@@ -86,24 +86,29 @@ function transformFunction(
   return { id, name, description, methods, sourceUrl: source?.url };
 }
 
-const transformSignature = (signature: SetDefined<Signature, "comment">) =>
+const transformSignature = ({
+  comment,
+  parameters,
+  type,
+}: SetDefined<Signature, "comment">) =>
   ({
-    tag: hasTag(signature.comment.blockTags, "dataFirst")
+    tag: hasTag(comment.blockTags, "dataFirst")
       ? "Data First"
-      : hasTag(signature.comment.blockTags, "dataLast")
+      : hasTag(comment.blockTags, "dataLast")
         ? "Data Last"
         : undefined,
-    signature: tagContent(signature.comment.blockTags, "signature"),
-    example: tagContent(signature.comment.blockTags, "example"),
-    lazy: hasTag(signature.comment.blockTags, "lazy"),
+    signature: tagContent(comment.blockTags, "signature"),
+    example: tagContent(comment.blockTags, "example"),
+    lazy: hasTag(comment.blockTags, "lazy"),
     args:
-      signature.parameters?.map(({ name, comment }) =>
-        getParameter(name, comment),
-      ) ?? [],
-    returns: transformReturns(signature),
+      parameters?.map(({ name, comment }) => getParameter(name, comment)) ?? [],
+    returns: transformReturns(type, comment.blockTags),
   }) as const;
 
-const transformReturns = ({ type, comment }: Signature) =>
+const transformReturns = (
+  type: Signature["type"],
+  blockTags: Comment["blockTags"],
+) =>
   ({
     name:
       type.type === "intrinsic"
@@ -113,7 +118,7 @@ const transformReturns = ({ type, comment }: Signature) =>
           : type.type === "predicate"
             ? "boolean"
             : "Object",
-    description: tagContent(comment.blockTags, "returns"),
+    description: tagContent(blockTags, "returns"),
   }) as const;
 
 function getParameter(name: string, comment: Parameter["comment"]) {
