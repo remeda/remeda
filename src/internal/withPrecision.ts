@@ -26,7 +26,13 @@ export function withPrecision(roundingFn: (value: number) => number) {
       return roundingFn(value);
     }
 
-    const multiplier = RADIX ** precision;
-    return roundingFn(value * multiplier) / multiplier;
+    if (precision > 0) {
+      const multiplier = RADIX ** precision;
+      return roundingFn(value * multiplier) / multiplier;
+    }
+
+    // Avoid losing precision by dividing first.
+    const divisor = RADIX ** -precision;
+    return roundingFn(value / divisor) * divisor;
   };
 }
