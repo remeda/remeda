@@ -3,12 +3,9 @@ import { defineCollection, z } from "astro:content";
 import path from "node:path";
 import { isNullish, map, piped, prop, when } from "remeda";
 import { ReflectionKind, type JSONOutput } from "typedoc";
-import functionsJsonPath from "./functions.json?url";
+import dataFilePath from "./functions.json?url";
 
-const DATA_FILE = path.join(
-  import.meta.dirname,
-  path.basename(functionsJsonPath),
-);
+const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 
 export type Comment = z.infer<typeof zComment>;
 const zComment = z
