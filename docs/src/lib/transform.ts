@@ -6,7 +6,7 @@ import type {
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
 import { hasAtLeast, isDefined, uniqueBy } from "remeda";
-import { ReflectionKind, type JSONOutput } from "typedoc";
+import { ReflectionKind } from "typedoc";
 import { hasDefinedProp, type SetDefined } from "./has-defined-prop";
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
@@ -50,15 +50,11 @@ function transformFunction(
   {
     id,
     name,
-    sources,
+    sources: [source],
     signatures,
   }: InferEntrySchema<typeof functionsCollectionName>,
   functionNames: ReadonlySet<string>,
 ) {
-  if (signatures === undefined) {
-    return;
-  }
-
   const signaturesWithComments = signatures.filter(hasDefinedProp("comment"));
   if (!hasAtLeast(signaturesWithComments, 1)) {
     return;
@@ -94,9 +90,7 @@ function transformFunction(
     ({ signature }) => signature,
   );
 
-  const sourceUrl = sources?.[0]?.url;
-
-  return { id, name, description, methods, sourceUrl };
+  return { id, name, description, methods, sourceUrl: source?.url };
 }
 
 const transformSignature = (signature: Signature) =>
@@ -140,17 +134,10 @@ function getParameter(name: string, comment: Param) {
   return { name, description } as const;
 }
 
-function hasTag(blockTags: BlockTags, tagName: string): boolean {
-  return blockTags === undefined
-    ? false
-    : blockTags.some(({ tag }) => tag === `@${tagName}`);
-}
+const hasTag = (blockTags: BlockTags, tagName: string): boolean =>
+  blockTags.some(({ tag }) => tag === `@${tagName}`);
 
 function tagContent(blockTags: BlockTags, tagName: string): string | undefined {
-  if (blockTags === undefined) {
-    return;
-  }
-
   const tag = blockTags.find(({ tag }) => tag === `@${tagName}`);
 
   if (tag === undefined) {
@@ -166,7 +153,7 @@ function tagContent(blockTags: BlockTags, tagName: string): string | undefined {
 }
 
 function addCategories(
-  categories: ReadonlyArray<JSONOutput.ReflectionCategory>,
+  categories: Array<InferEntrySchema<typeof categoriesCollectionName>>,
   functions: ReadonlyArray<NonNullable<ReturnType<typeof transformFunction>>>,
 ) {
   const categoriesLookup = createCategoriesLookup(categories);
@@ -177,15 +164,11 @@ function addCategories(
 }
 
 function createCategoriesLookup(
-  categories: ReadonlyArray<JSONOutput.ReflectionCategory>,
+  categories: Array<InferEntrySchema<typeof categoriesCollectionName>>,
 ): ReadonlyMap<number, string> {
   const result = new Map<number, string>();
 
   for (const { children, title } of categories) {
-    if (children === undefined) {
-      continue;
-    }
-
     // TODO: We can enforce that only a predefined set of categories is acceptable and break the build on any unknown categories
     for (const id of children) {
       result.set(id, title);
