@@ -23,42 +23,44 @@ export function transformFunction(
 ) {
   const signaturesWithComments = signatures.filter(hasDefinedProp("comment"));
   if (!hasAtLeast(signaturesWithComments, 1)) {
+    // TODO: Should we throw here instead?!
     return;
   }
 
-  const [
-    {
-      comment: { summary },
-    },
-  ] = signaturesWithComments;
-
-  const description =
-    summary.length === 0
-      ? undefined
-      : summary
-          .map(({ kind, text }) => {
-            if (kind !== "code") {
-              return text;
-            }
-
-            const codeContent = text.slice(1, -1);
-            if (!functionNames.has(codeContent)) {
-              return text;
-            }
-
-            // If this is a function name, link to its anchor:
-            return `[${text}](#${codeContent})`;
-          })
-          .join("");
-
-  const methods = pipe(
-    signaturesWithComments,
-    map(transformSignature),
-    uniqueBy(({ signature }) => signature),
-  );
-
-  return { id, name, description, methods, sourceUrl: source?.url };
+  return {
+    id,
+    name,
+    description: getDescription(signaturesWithComments[0], functionNames),
+    methods: pipe(
+      signaturesWithComments,
+      map(transformSignature),
+      uniqueBy(({ signature }) => signature),
+    ),
+    sourceUrl: source?.url,
+  };
 }
+
+const getDescription = (
+  { comment: { summary } }: SetDefined<Signature, "comment">,
+  functionNames: ReadonlySet<string>,
+) =>
+  summary.length === 0
+    ? undefined
+    : summary
+        .map(({ kind, text }) => {
+          if (kind !== "code") {
+            return text;
+          }
+
+          const codeContent = text.slice(1, -1);
+          if (!functionNames.has(codeContent)) {
+            return text;
+          }
+
+          // If this is a function name, link to its anchor:
+          return `[${text}](#${codeContent})`;
+        })
+        .join("");
 
 const transformSignature = ({
   comment,
