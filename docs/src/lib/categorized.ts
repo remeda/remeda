@@ -13,26 +13,26 @@ export type DocumentedFunction = Awaited<
 export const CATEGORIZED = await getFunctions();
 
 async function getFunctions() {
-  const [categoryEntries, allFunctionEntries] = await Promise.all([
+  const [categories, functions] = await Promise.all([
     getCollection(categoriesCollectionName),
     getCollection(functionsCollectionName),
   ]);
 
-  const allNames = new Set(
-    ...map(allFunctionEntries, ({ data: { name } }) => name),
-  );
+  const allNames = new Set(...map(functions, ({ data: { name } }) => name));
 
   return await Promise.all(
-    map(categoryEntries, async ({ data: { id, children } }) => {
-      return [
-        id,
-        pipe(
-          await getEntries(children),
-          map(({ data }) => transformFunction(data, allNames)),
-          filter(isDefined),
-          map(addProp("category", id)),
-        ),
-      ] as const;
-    }),
+    map(
+      categories,
+      async ({ data: { id, children } }) =>
+        [
+          id,
+          pipe(
+            await getEntries(children),
+            map(({ data }) => transformFunction(data, allNames)),
+            filter(isDefined),
+            map(addProp("category", id)),
+          ),
+        ] as const,
+    ),
   );
 }
