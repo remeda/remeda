@@ -8,20 +8,15 @@ import type { InferEntrySchema } from "astro:content";
 import { map, pipe, prop, uniqueBy } from "remeda";
 
 export type FunctionSignature = ReturnType<typeof transformSignature>;
-export type FunctionParam = ReturnType<typeof getParameter>;
-export type FunctionReturn = ReturnType<typeof transformReturns>;
 
 export const transformFunction = (
   {
-    id,
-    name,
     sources: [source],
     signatures,
+    ...rest
   }: InferEntrySchema<typeof functionsCollectionName>,
   functionNames: ReadonlySet<string>,
 ) => ({
-  id,
-  name,
   description: getDescription(signatures[0], functionNames),
   methods: pipe(
     signatures,
@@ -29,6 +24,7 @@ export const transformFunction = (
     uniqueBy(prop("signature")),
   ),
   sourceUrl: source?.url,
+  ...rest,
 });
 
 const getDescription = (
@@ -53,26 +49,21 @@ const getDescription = (
         })
         .join("");
 
-const transformSignature = ({ comment, parameters, type }: Signature) =>
-  ({
-    tag: hasTag(comment.blockTags, "dataFirst")
-      ? "Data First"
-      : hasTag(comment.blockTags, "dataLast")
-        ? "Data Last"
-        : undefined,
-    signature: tagContent(comment.blockTags, "signature"),
-    example: tagContent(comment.blockTags, "example"),
-    lazy: hasTag(comment.blockTags, "lazy"),
-    args:
-      parameters?.map(({ name, comment }) => getParameter(name, comment)) ?? [],
-    returns: transformReturns(type, comment.blockTags),
-  }) as const;
-
-const transformReturns = (
-  type: Signature["type"],
-  blockTags: Comment["blockTags"],
-) =>
-  ({
+const transformSignature = ({
+  comment: { blockTags },
+  parameters,
+  type,
+}: Signature) => ({
+  tag: hasTag(blockTags, "dataFirst")
+    ? "Data First"
+    : hasTag(blockTags, "dataLast")
+      ? "Data Last"
+      : undefined,
+  signature: tagContent(blockTags, "signature"),
+  example: tagContent(blockTags, "example"),
+  lazy: hasTag(blockTags, "lazy"),
+  args: parameters?.map(getParameter) ?? [],
+  returns: {
     name:
       type.type === "intrinsic"
         ? type.name
@@ -82,14 +73,15 @@ const transformReturns = (
             ? "boolean"
             : "Object",
     description: tagContent(blockTags, "returns"),
-  }) as const;
+  },
+});
 
-function getParameter(name: string, comment: Parameter["comment"]) {
+function getParameter({ name, comment }: Parameter) {
   const summarySegments = comment?.summary ?? [];
   const description =
     summarySegments.length === 0
       ? undefined
-      : summarySegments.map(({ text }) => text).join("");
+      : summarySegments.map(prop("text")).join("");
   return { name, description } as const;
 }
 
@@ -111,5 +103,5 @@ function tagContent(
     return undefined;
   }
 
-  return content.map(({ text }) => text).join("");
+  return content.map(prop("text")).join("");
 }

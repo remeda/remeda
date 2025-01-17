@@ -4,7 +4,7 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { FunctionParam, FunctionReturn } from "@/lib/transform";
+import type { FunctionSignature } from "@/lib/transform";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
 
@@ -14,8 +14,8 @@ export function MethodSignature({
   children,
 }: {
   readonly children: ReactNode;
-  readonly args: ReadonlyArray<FunctionParam>;
-  readonly returns: FunctionReturn;
+  readonly args: FunctionSignature["args"];
+  readonly returns: FunctionSignature["returns"];
 }): ReactNode {
   return (
     <CollapsibleRoot>
