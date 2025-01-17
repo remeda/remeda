@@ -5,14 +5,13 @@ import type {
   Signature,
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
-import { hasAtLeast, pipe, map, uniqueBy } from "remeda";
-import { hasDefinedProp, type SetDefined } from "./has-defined-prop";
+import { map, pipe, prop, uniqueBy } from "remeda";
 
 export type FunctionSignature = ReturnType<typeof transformSignature>;
 export type FunctionParam = ReturnType<typeof getParameter>;
 export type FunctionReturn = ReturnType<typeof transformReturns>;
 
-export function transformFunction(
+export const transformFunction = (
   {
     id,
     name,
@@ -20,28 +19,20 @@ export function transformFunction(
     signatures,
   }: InferEntrySchema<typeof functionsCollectionName>,
   functionNames: ReadonlySet<string>,
-) {
-  const signaturesWithComments = signatures.filter(hasDefinedProp("comment"));
-  if (!hasAtLeast(signaturesWithComments, 1)) {
-    // TODO: Should we throw here instead?!
-    return;
-  }
-
-  return {
-    id,
-    name,
-    description: getDescription(signaturesWithComments[0], functionNames),
-    methods: pipe(
-      signaturesWithComments,
-      map(transformSignature),
-      uniqueBy(({ signature }) => signature),
-    ),
-    sourceUrl: source?.url,
-  };
-}
+) => ({
+  id,
+  name,
+  description: getDescription(signatures[0], functionNames),
+  methods: pipe(
+    signatures,
+    map(transformSignature),
+    uniqueBy(prop("signature")),
+  ),
+  sourceUrl: source?.url,
+});
 
 const getDescription = (
-  { comment: { summary } }: SetDefined<Signature, "comment">,
+  { comment: { summary } }: Signature,
   functionNames: ReadonlySet<string>,
 ) =>
   summary.length === 0
@@ -62,11 +53,7 @@ const getDescription = (
         })
         .join("");
 
-const transformSignature = ({
-  comment,
-  parameters,
-  type,
-}: SetDefined<Signature, "comment">) =>
+const transformSignature = ({ comment, parameters, type }: Signature) =>
   ({
     tag: hasTag(comment.blockTags, "dataFirst")
       ? "Data First"

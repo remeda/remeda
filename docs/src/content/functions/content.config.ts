@@ -1,10 +1,10 @@
 import { file } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
 import path from "node:path";
-import { filter, isNullish, map, piped, prop, when } from "remeda";
+import { filter, hasAtLeast, isNullish, map, piped, prop, when } from "remeda";
+import invariant from "tiny-invariant";
 import { ReflectionKind, type JSONOutput } from "typedoc";
 import dataFilePath from "./functions.json?url";
-import invariant from "tiny-invariant";
 
 const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 
@@ -73,7 +73,8 @@ export const functionsCollection = defineCollection({
     id: z.number(),
     name: z.string(),
     sources: z.array(z.object({ url: z.string().url() })),
-    signatures: z.array(zSignature),
+    // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
+    signatures: z.array(zSignature).refine(hasAtLeast(1)),
   }),
 });
 

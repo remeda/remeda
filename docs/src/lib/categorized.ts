@@ -3,7 +3,7 @@ import {
   functionsCollectionName,
 } from "@/content/functions/content.config";
 import { getCollection, getEntries } from "astro:content";
-import { addProp, filter, isDefined, map, pipe } from "remeda";
+import { addProp, map, pipe } from "remeda";
 import { transformFunction } from "./transform";
 
 export type DocumentedFunction = Awaited<
@@ -29,7 +29,6 @@ async function getFunctions() {
           pipe(
             await getEntries(children),
             map(({ data }) => transformFunction(data, allNames)),
-            filter(isDefined),
             map(addProp("category", id)),
           ),
         ] as const,
