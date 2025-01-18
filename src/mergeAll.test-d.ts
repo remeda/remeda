@@ -10,27 +10,25 @@ describe("array overload", () => {
     type UserUnion = UserWithName | UserWithPhone | UserWithPhoneAsString;
     const userUnionArray: ReadonlyArray<UserUnion> = [];
 
-    type ExpectedResultType =
+    const mergedUserUnion = mergeAll(userUnionArray);
+
+    expectTypeOf(mergedUserUnion).toEqualTypeOf<
       | {
           id: string;
           phone?: string | number;
           name?: string;
           optianalTitle?: string;
         }
-      | EmptyObject;
-
-    const mergedUserUnion = mergeAll(userUnionArray);
-
-    expectTypeOf(mergedUserUnion).toEqualTypeOf<ExpectedResultType>();
+      | EmptyObject
+    >();
   });
 
   it("should produce the same type when the type isn't a union", () => {
     type A = { a: string; b: number; c: boolean };
-    type ExpectedResultType = A | EmptyObject;
     const input: ReadonlyArray<A> = [];
     const result = mergeAll(input);
 
-    expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+    expectTypeOf(result).toEqualTypeOf<A | EmptyObject>();
   });
 
   describe("optionality", () => {
@@ -40,14 +38,13 @@ describe("array overload", () => {
       type C = { a?: number; b: string; c: number; e: string };
       // the only real change is c and e becoming optional, because they aren't shared across all union members and they aren't already optional
 
-      type ExpectedResultType =
-        | { a?: number; b: string; c?: number; d?: boolean; e?: string }
-        | EmptyObject;
-
       const input: ReadonlyArray<A | B | C> = [];
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<
+        | { a?: number; b: string; c?: number; d?: boolean; e?: string }
+        | EmptyObject
+      >();
     });
 
     it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
@@ -55,13 +52,11 @@ describe("array overload", () => {
       type B = { a: string; b: string | undefined; c: undefined };
       const input: ReadonlyArray<A | B> = [];
 
-      type ExpectedResultType =
-        | { a: string; b?: string | undefined; c?: undefined }
-        | EmptyObject;
-
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<
+        { a: string; b?: string | undefined; c?: undefined } | EmptyObject
+      >();
     });
 
     it("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
@@ -70,12 +65,10 @@ describe("array overload", () => {
       type C = { a?: number };
       // there is no "optionality union", we should prefer the safer option for these ambiguities
 
-      type ExpectedResultType = { a?: number } | EmptyObject;
-
       const input: ReadonlyArray<A | B | C> = [];
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<{ a?: number } | EmptyObject>();
     });
   });
 
@@ -85,11 +78,11 @@ describe("array overload", () => {
       type B = { a: string; b: string };
       const input: ReadonlyArray<A | B> = [];
 
-      type ExpectedResultType = { a: string | number; b: string } | EmptyObject;
-
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<
+        { a: string | number; b: string } | EmptyObject
+      >();
     });
 
     it("when the fields are unions, they are combined into a single union", () => {
@@ -97,13 +90,11 @@ describe("array overload", () => {
       type B = { a: string | Date; b: string };
       const input: ReadonlyArray<A | B> = [];
 
-      type ExpectedResultType =
-        | { a: string | number | boolean | Date; b: string }
-        | EmptyObject;
-
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<
+        { a: string | number | boolean | Date; b: string } | EmptyObject
+      >();
     });
 
     it("when the field has two different intersections, it becomes the union of the intersections", () => {
@@ -117,13 +108,11 @@ describe("array overload", () => {
       type B = { a: IntersectionB; b: string };
       const input: ReadonlyArray<A | B> = [];
 
-      type ExpectedResultType =
-        | { a: IntersectionA | IntersectionB; b: string }
-        | EmptyObject;
-
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<ExpectedResultType>();
+      expectTypeOf(result).toEqualTypeOf<
+        { a: IntersectionA | IntersectionB; b: string } | EmptyObject
+      >();
     });
   });
 });
