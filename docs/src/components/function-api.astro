@@ -1,5 +1,5 @@
 ---
-import type { FunctionSignature } from "@/lib/transform";
+import type { extractArgs, extractReturns } from "@/lib/transform";
 import CodeBlock from "./code-block.astro";
 import { MethodSignature } from "./signature";
 
@@ -9,8 +9,8 @@ const FALLBACK_SIGNATURE = "//! Missing Signature!";
 type Props = {
   readonly variant: string | undefined;
   readonly signature: string | undefined;
-  readonly args: FunctionSignature["args"];
-  readonly returns: FunctionSignature["returns"];
+  readonly args: ReturnType<typeof extractArgs>;
+  readonly returns: ReturnType<typeof extractReturns>;
   readonly example: string | undefined;
 };
 

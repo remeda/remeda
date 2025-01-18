@@ -1,16 +1,19 @@
 ---
 import DocsSection from "@/components/docs-section.astro";
 import FunctionCard from "@/components/function-card.astro";
+import { categoriesCollectionName } from "@/content/functions/content.config";
 import DocsPage from "@/layouts/docs-page.astro";
-import { CATEGORIZED } from "@/lib/categorized";
+import { getCollection } from "astro:content";
+
+const categories = await getCollection(categoriesCollectionName);
 ---
 
-<DocsPage showVersionSelector title="Documentation" categorized={CATEGORIZED}>
+<DocsPage showVersionSelector title="Documentation" categorized={categories}>
   {
-    CATEGORIZED.map(([category, functions]) => (
-      <DocsSection title={category}>
-        {functions.map((func) => (
-          <FunctionCard category={category} func={func} />
+    categories.map(({ id, data: { children } }) => (
+      <DocsSection title={id}>
+        {children.map((functionRef) => (
+          <FunctionCard category={id} functionRef={functionRef} />
         ))}
       </DocsSection>
     ))
