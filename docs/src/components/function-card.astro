@@ -14,6 +14,7 @@ import {
 } from "@/lib/transform";
 import type { InferEntrySchema } from "astro:content";
 import { getEntry } from "astro:content";
+import { map, pipe, uniqueBy } from "remeda";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
@@ -40,15 +41,19 @@ const { data } = await getEntry(functionRef);
   </CardHeader>
   <CardContent className="grid gap-8">
     {
-      data.signatures.map((signature) => (
-        <FunctionApi
-          args={extractArgs(signature)}
-          example={extractExample(signature)}
-          returns={extractReturns(signature)}
-          signature={extractSignature(signature)}
-          variant={extractVariant(signature)}
-        />
-      ))
+      pipe(
+        data.signatures,
+        uniqueBy(extractSignature),
+        map((signature) => (
+          <FunctionApi
+            args={extractArgs(signature)}
+            example={extractExample(signature)}
+            returns={extractReturns(signature)}
+            signature={extractSignature(signature)}
+            variant={extractVariant(signature)}
+          />
+        )),
+      )
     }
   </CardContent>
 </Card>
