@@ -6,7 +6,7 @@ export type SourceTags = Readonly<
 
 export function getTags([
   method,
-]: ReadonlyArray<SourceTags>): ReadonlyArray<Tag> {
+]: ReadonlyArray<SourceTags> = []): ReadonlyArray<Tag> {
   if (method === undefined) {
     return [];
   }
