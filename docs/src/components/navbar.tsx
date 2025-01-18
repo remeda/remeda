@@ -17,11 +17,11 @@ export type NavbarCategory = readonly [
 ];
 
 export function Navbar({
-  entries,
+  categories,
   children,
   onSelect,
 }: {
-  readonly entries: ReadonlyArray<NavbarCategory>;
+  readonly categories: ReadonlyArray<NavbarCategory>;
   readonly children?: ReactNode;
   readonly onSelect?: () => void;
 }): ReactNode {
@@ -30,7 +30,7 @@ export function Navbar({
       {children}
       <ScrollArea className="flex-1">
         <ul className="flex flex-col gap-2">
-          {entries.map(([category, entries]) => (
+          {categories.map(([category, entries]) => (
             <li key={category}>
               <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
               <ul>
