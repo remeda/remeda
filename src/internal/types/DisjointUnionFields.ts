@@ -9,7 +9,7 @@ type SharedUnionFieldKeysComplement<T extends object> = Exclude<
 >;
 
 /**
- * Gets the complement of {@link SharedUnionFields} from a union.
+ * Gets the set of fields that are not shared by all members of a union. This is the complement of {@link SharedUnionFields}.
  */
 export type DisjointUnionFields<T extends object> = {
   [K in SharedUnionFieldKeysComplement<T>]: T extends Partial<
