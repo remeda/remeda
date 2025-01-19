@@ -58,15 +58,12 @@ export function mergeAll<T extends object>(
 export function mergeAll<T extends IterableContainer<object>>(
   objects: T,
 ): MergeAll<T>;
-export function mergeAll<T extends IterableContainer<object>>(
-  objects: T,
-): MergeAll<T> {
+export function mergeAll(objects: ReadonlyArray<object>): object {
   let out = {};
 
   for (const item of objects) {
     out = { ...out, ...item };
   }
 
-  // @ts-expect-error the return type will work out - see the type tests.
   return out;
 }
