@@ -7,7 +7,6 @@ it("should have the complement of SharedUnionFields", () => {
   type UnionEntity = A | B | C;
 
   type Result = DisjointUnionFields<UnionEntity>;
-  type ExpectedResult = { c: string | number; d: string };
 
-  expectTypeOf<Result>().toEqualTypeOf<ExpectedResult>();
+  expectTypeOf<Result>().toEqualTypeOf<{ c: string | number; d: string }>();
 });
