@@ -40,6 +40,17 @@ describe("data first", () => {
     // Like this:
     setPath(TEST_OBJECT, ["a", "b"] as const, { c: 123 });
   });
+
+  test("handles interfaces (#990)", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface User {
+      name: {
+        first: string;
+      };
+    }
+
+    setPath({ name: { first: "hello" } } as User, ["name", "first"], "world");
+  });
 });
 
 describe("data last", () => {
@@ -65,5 +76,19 @@ describe("data last", () => {
 
     // Like this:
     pipe(TEST_OBJECT, setPath(["a", "b"] as const, { c: 123 }));
+  });
+
+  test("handles interfaces (#990)", () => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface User {
+      name: {
+        first: string;
+      };
+    }
+
+    pipe(
+      { name: { first: "hello" } } as User,
+      setPath(["name", "first"], "world"),
+    );
   });
 });
