@@ -8,7 +8,7 @@ describe("arrays", () => {
     const userUnionArray: ReadonlyArray<
       | { id: string; phone: number }
       | { id: string; phone: string }
-      | { id: string; name: string; optianalTitle?: string }
+      | { id: string; name: string; optionalTitle?: string }
     > = [];
 
     const mergedUserUnion = mergeAll(userUnionArray);
@@ -18,7 +18,7 @@ describe("arrays", () => {
           id: string;
           phone?: string | number;
           name?: string;
-          optianalTitle?: string;
+          optionalTitle?: string;
         }
       | EmptyObject
     >();
