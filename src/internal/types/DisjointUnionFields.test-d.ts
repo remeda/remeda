@@ -1,12 +1,11 @@
 import type { DisjointUnionFields } from "./DisjointUnionFields";
 
 it("should have the complement of SharedUnionFields", () => {
-  type A = { a: string; b: string; c: string };
-  type B = { a: string; b: string; c: number };
-  type C = { a: string; b: string; d: string };
-  type UnionEntity = A | B | C;
-
-  type Result = DisjointUnionFields<UnionEntity>;
-
-  expectTypeOf<Result>().toEqualTypeOf<{ c: string | number; d: string }>();
+  expectTypeOf<
+    DisjointUnionFields<
+      | { a: string; b: string; c: string }
+      | { a: string; b: string; c: number }
+      | { a: string; b: string; d: string }
+    >
+  >().toEqualTypeOf<{ c: string | number; d: string }>();
 });
