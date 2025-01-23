@@ -6,6 +6,7 @@ import type {
 } from "type-fest";
 import type { DisjointUnionFields } from "./internal/types/DisjointUnionFields";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 /**
@@ -37,8 +38,6 @@ type MergeAll<T extends IterableContainer<object>> =
       : MergeTuple<T>
     : MergeUnion<T[number]> | EmptyObject;
 
-type NonEmptyReadonlyArray<T> = readonly [T, ...Array<T>];
-
 /**
  * Merges a list of objects into a single object.
  *
@@ -53,7 +52,7 @@ type NonEmptyReadonlyArray<T> = readonly [T, ...Array<T>];
  * @category Array
  */
 export function mergeAll<T extends object>(
-  objects: NonEmptyReadonlyArray<T>,
+  objects: Readonly<NonEmptyArray<T>>,
 ): MergeUnion<T>;
 export function mergeAll<T extends IterableContainer<object>>(
   objects: T,
