@@ -4,11 +4,12 @@ import { mergeAll } from "./mergeAll";
 describe("arrays", () => {
   it("custom case", () => {
     // based on https://github.com/remeda/remeda/issues/918
-    type UserWithPhone = { id: string; phone: number };
-    type UserWithPhoneAsString = { id: string; phone: string };
-    type UserWithName = { id: string; name: string; optianalTitle?: string };
-    type UserUnion = UserWithName | UserWithPhone | UserWithPhoneAsString;
-    const userUnionArray: ReadonlyArray<UserUnion> = [];
+
+    const userUnionArray: ReadonlyArray<
+      | { id: string; phone: number }
+      | { id: string; phone: string }
+      | { id: string; name: string; optianalTitle?: string }
+    > = [];
 
     const mergedUserUnion = mergeAll(userUnionArray);
 
@@ -24,21 +25,23 @@ describe("arrays", () => {
   });
 
   it("should produce the same type when the type isn't a union", () => {
-    type A = { a: string; b: number; c: boolean };
-    const input: ReadonlyArray<A> = [];
+    const input: ReadonlyArray<{ a: string; b: number; c: boolean }> = [];
     const result = mergeAll(input);
 
-    expectTypeOf(result).toEqualTypeOf<A | EmptyObject>();
+    expectTypeOf(result).toEqualTypeOf<
+      { a: string; b: number; c: boolean } | EmptyObject
+    >();
   });
 
   describe("optionality", () => {
     it("should keep non-optional fields shared across all union members non-optional, with the rest being converted into optionals", () => {
-      type A = { a?: number; b: string; c: number };
-      type B = { a?: number; b: string; d?: boolean };
-      type C = { a?: number; b: string; c: number; e: string };
       // the only real change is c and e becoming optional, because they aren't shared across all union members and they aren't already optional
 
-      const input: ReadonlyArray<A | B | C> = [];
+      const input: ReadonlyArray<
+        | { a?: number; b: string; c: number }
+        | { a?: number; b: string; d?: boolean }
+        | { a?: number; b: string; c: number; e: string }
+      > = [];
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
@@ -48,9 +51,9 @@ describe("arrays", () => {
     });
 
     it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
-      type A = { a: string };
-      type B = { a: string; b: string | undefined; c: undefined };
-      const input: ReadonlyArray<A | B> = [];
+      const input: ReadonlyArray<
+        { a: string } | { a: string; b: string | undefined; c: undefined }
+      > = [];
 
       const result = mergeAll(input);
 
@@ -60,23 +63,23 @@ describe("arrays", () => {
     });
 
     it("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
-      type A = { a?: number };
-      type B = { a: number };
-      type C = { a?: number };
       // there is no "optionality union", we should prefer the safer option for these ambiguities
-
-      const input: ReadonlyArray<A | B | C> = [];
+      const input: ReadonlyArray<
+        { a?: number } | { a: number } | { a?: number; b: string }
+      > = [];
       const result = mergeAll(input);
 
-      expectTypeOf(result).toEqualTypeOf<{ a?: number } | EmptyObject>();
+      expectTypeOf(result).toEqualTypeOf<
+        { a?: number; b?: string } | EmptyObject
+      >();
     });
   });
 
   describe("should merge different types on same fields into a union", () => {
     it("when the types are different, they form a union", () => {
-      type A = { a: number; b: string };
-      type B = { a: string; b: string };
-      const input: ReadonlyArray<A | B> = [];
+      const input: ReadonlyArray<
+        { a: number; b: string } | { a: string; b: string }
+      > = [];
 
       const result = mergeAll(input);
 
@@ -86,9 +89,9 @@ describe("arrays", () => {
     });
 
     it("when the fields are unions, they are combined into a single union", () => {
-      type A = { a: number | boolean; b: string };
-      type B = { a: string | Date; b: string };
-      const input: ReadonlyArray<A | B> = [];
+      const input: ReadonlyArray<
+        { a: number | boolean; b: string } | { a: string | Date; b: string }
+      > = [];
 
       const result = mergeAll(input);
 
@@ -98,20 +101,21 @@ describe("arrays", () => {
     });
 
     it("when the field has two different intersections, it becomes the union of the intersections", () => {
-      type IntersectionAPart1 = { a1: string };
-      type IntersectionAPart2 = { b1: string };
-      type IntersectionA = IntersectionAPart1 & IntersectionAPart2;
-      type IntersectionBPart1 = { a2: string };
-      type IntersectionBPart2 = { b2: string };
-      type IntersectionB = IntersectionBPart1 & IntersectionBPart2;
-      type A = { a: IntersectionA; b: string };
-      type B = { a: IntersectionB; b: string };
-      const input: ReadonlyArray<A | B> = [];
+      const input: ReadonlyArray<
+        | { a: { a1: string } & { b1: string }; b: string }
+        | { a: { a2: string } & { b2: string }; b: string }
+      > = [];
 
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        { a: IntersectionA | IntersectionB; b: string } | EmptyObject
+        | {
+            a:
+              | ({ a1: string } & { b1: string })
+              | ({ a2: string } & { b2: string });
+            b: string;
+          }
+        | EmptyObject
       >();
     });
   });
@@ -119,10 +123,10 @@ describe("arrays", () => {
 
 describe("nonempty arrays", () => {
   it("the return type should not include the possibility of returning a nonempty object given a nonempty array with nonempty objects", () => {
-    type A = { a: number; b: string };
-    type B = { a: string; b: string };
-    type AB = A | B;
-    const input: [AB, ...ReadonlyArray<AB>] = [{ a: 1, b: "b" }];
+    const input: [
+      { a: number; b: string } | { a: string; b: string },
+      ...ReadonlyArray<{ a: number; b: string } | { a: string; b: string }>,
+    ] = [{ a: 1, b: "b" }];
 
     const result = mergeAll(input);
 
@@ -141,8 +145,7 @@ describe("tuples", () => {
     });
 
     it("1 types", () => {
-      type A1 = { a: 1; b: 1 };
-      const input: [A1] = [{ a: 1, b: 1 }];
+      const input: [{ a: 1; b: 1 }] = [{ a: 1, b: 1 }];
 
       const result = mergeAll(input);
 
@@ -150,9 +153,7 @@ describe("tuples", () => {
     });
 
     it("2 types", () => {
-      type A1 = { a: 1; b: 1 };
-      type A2 = { a: 2 };
-      const input: [A1, A2] = [{ a: 1, b: 1 }, { a: 2 }];
+      const input: [{ a: 1; b: 1 }, { a: 2 }] = [{ a: 1, b: 1 }, { a: 2 }];
 
       const result = mergeAll(input);
 
@@ -160,10 +161,11 @@ describe("tuples", () => {
     });
 
     it("3 types", () => {
-      type A1 = { a: 1; b: 1 };
-      type A2 = { a: 2 };
-      type A3 = { a: 3 };
-      const input: [A1, A2, A3] = [{ a: 1, b: 1 }, { a: 2 }, { a: 3 }];
+      const input: [{ a: 1; b: 1 }, { a: 2 }, { a: 3 }] = [
+        { a: 1, b: 1 },
+        { a: 2 },
+        { a: 3 },
+      ];
 
       const result = mergeAll(input);
 
