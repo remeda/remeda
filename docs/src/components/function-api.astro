@@ -27,8 +27,7 @@ const variant = hasTag(blockTags, "dataFirst")
 
 const example = tagContent(blockTags, "example");
 
-const signaturePrototype =
-  tagContent(blockTags, "signature") ?? FALLBACK_SIGNATURE;
+const signature = tagContent(blockTags, "signature") ?? FALLBACK_SIGNATURE;
 ---
 
 <section class="flex flex-col gap-2">
@@ -38,7 +37,7 @@ const signaturePrototype =
     )
   }
   <MethodSignature type={type} parameters={parameters} client:load>
-    <CodeBlock code={signaturePrototype} />
+    <CodeBlock code={signature} />
   </MethodSignature>
   {
     example !== undefined && (
