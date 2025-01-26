@@ -5,33 +5,25 @@ import type {
   Signature,
 } from "@/content/functions/content.config";
 import type { InferEntrySchema } from "astro:content";
-import { map, pipe, prop, uniqueBy } from "remeda";
+import { prop } from "remeda";
+import { ALL_NAMES } from "./all-names";
+import { getTags } from "./get-tags";
 
-export type DocumentedFunction = ReturnType<typeof transformFunction>;
-export type FunctionSignature = DocumentedFunction["methods"][number];
+export const extractName = ({
+  name,
+}: InferEntrySchema<typeof functionsCollectionName>) => name;
 
-export const transformFunction = (
-  {
-    sources: [source],
-    signatures,
-    ...rest
-  }: InferEntrySchema<typeof functionsCollectionName>,
-  functionNames: ReadonlySet<string>,
-) => ({
-  description: getDescription(signatures[0], functionNames),
-  methods: pipe(
-    signatures,
-    map(transformSignature),
-    uniqueBy(prop("signature")),
-  ),
-  sourceUrl: source?.url,
-  ...rest,
-});
+export const extractSourceUrl = ({
+  sources: [source],
+}: InferEntrySchema<typeof functionsCollectionName>) => source?.url;
 
-const getDescription = (
-  { comment: { summary } }: Signature,
-  functionNames: ReadonlySet<string>,
-) =>
+export const extractDescription = ({
+  signatures: [
+    {
+      comment: { summary },
+    },
+  ],
+}: InferEntrySchema<typeof functionsCollectionName>) =>
   summary.length === 0
     ? undefined
     : summary
@@ -41,7 +33,7 @@ const getDescription = (
           }
 
           const codeContent = text.slice(1, -1);
-          if (!functionNames.has(codeContent)) {
+          if (!ALL_NAMES.has(codeContent)) {
             return text;
           }
 
@@ -50,31 +42,44 @@ const getDescription = (
         })
         .join("");
 
-const transformSignature = ({
-  comment: { blockTags },
-  parameters,
-  type,
-}: Signature) => ({
-  tag: hasTag(blockTags, "dataFirst")
+export const extractVariant = ({ comment: { blockTags } }: Signature) =>
+  hasTag(blockTags, "dataFirst")
     ? "Data First"
     : hasTag(blockTags, "dataLast")
       ? "Data Last"
-      : undefined,
-  signature: tagContent(blockTags, "signature"),
-  example: tagContent(blockTags, "example"),
-  lazy: hasTag(blockTags, "lazy"),
-  args: parameters?.map(getParameter) ?? [],
-  returns: {
-    name:
-      type.type === "intrinsic"
-        ? type.name
-        : type.type === "array"
-          ? "Array"
-          : type.type === "predicate"
-            ? "boolean"
-            : "Object",
-    description: tagContent(blockTags, "returns"),
-  },
+      : undefined;
+
+export const extractSignature = ({ comment: { blockTags } }: Signature) =>
+  tagContent(blockTags, "signature");
+
+export const extractExample = ({ comment: { blockTags } }: Signature) =>
+  tagContent(blockTags, "example");
+
+export const extractTags = ({
+  signatures: [
+    {
+      comment: { blockTags },
+    },
+  ],
+}: InferEntrySchema<typeof functionsCollectionName>) =>
+  getTags([{ lazy: hasTag(blockTags, "lazy") }]);
+
+export const extractArgs = ({ parameters }: Signature) =>
+  parameters?.map(getParameter);
+
+export const extractReturns = ({
+  type,
+  comment: { blockTags },
+}: Signature) => ({
+  name:
+    type.type === "intrinsic"
+      ? type.name
+      : type.type === "array"
+        ? "Array"
+        : type.type === "predicate"
+          ? "boolean"
+          : "Object",
+  description: tagContent(blockTags, "returns"),
 });
 
 function getParameter({ name, comment }: Parameter) {

@@ -1,39 +1,59 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/transform";
+import type { categoriesCollectionName } from "@/content/functions/content.config";
+import {
+  extractArgs,
+  extractDescription,
+  extractExample,
+  extractName,
+  extractReturns,
+  extractSignature,
+  extractSourceUrl,
+  extractTags,
+  extractVariant,
+} from "@/lib/transform";
+import type { InferEntrySchema } from "astro:content";
+import { getEntry } from "astro:content";
+import { map, pipe, uniqueBy } from "remeda";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
   readonly category: string;
-  readonly func: DocumentedFunction;
+  readonly functionRef: InferEntrySchema<
+    typeof categoriesCollectionName
+  >["children"][number];
 };
 
-const { func, category } = Astro.props;
+const { functionRef, category } = Astro.props;
+const { data } = await getEntry(functionRef);
 ---
 
-<Card id={func.name} className="scroll-mt-24">
+<Card id={extractName(data)} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
-      name={func.name}
+      name={extractName(data)}
       category={category}
-      tags={getTags(func.methods)}
-      description={func.description}
-      sourceUrl={func.sourceUrl}
+      tags={extractTags(data)}
+      description={extractDescription(data)}
+      sourceUrl={extractSourceUrl(data)}
     />
   </CardHeader>
   <CardContent className="grid gap-8">
     {
-      func.methods.map((method) => (
-        <FunctionApi
-          args={method.args}
-          example={method.example}
-          returns={method.returns}
-          signature={method.signature}
-          variant={method.tag}
-        />
-      ))
+      pipe(
+        data.signatures,
+        uniqueBy(extractSignature),
+        map((signature) => (
+          <FunctionApi
+            args={extractArgs(signature)}
+            example={extractExample(signature)}
+            returns={extractReturns(signature)}
+            signature={extractSignature(signature)}
+            variant={extractVariant(signature)}
+          />
+        )),
+      )
     }
   </CardContent>
 </Card>

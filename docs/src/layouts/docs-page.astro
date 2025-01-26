@@ -8,12 +8,15 @@ import {
   getNavbarEntries,
   type CategorizedFunctions,
 } from "@/lib/navbar-entries";
-import { render } from "astro:content";
+import { render, type CollectionEntry } from "astro:content";
 import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import BaseLayout from "./base.astro";
+import type { categoriesCollectionName } from "@/content/functions/content.config";
 
 type Props = {
-  readonly categorized: CategorizedFunctions;
+  readonly categorized:
+    | CategorizedFunctions
+    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>;
   readonly showVersionSelector?: boolean;
   readonly title?: string;
 };
@@ -24,7 +27,7 @@ const { pathname } = Astro.url;
 
 const articles = await getArticlesForPath(pathname);
 
-const navbarEntries = getNavbarEntries(categorized, articles);
+const navbarEntries = await getNavbarEntries(categorized, articles);
 
 const renderedArticles = pipe(
   await pipe(
@@ -46,7 +49,7 @@ const renderedArticles = pipe(
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
-      <Navbar entries={navbarEntries} client:load>
+      <Navbar categories={navbarEntries} client:load>
         {
           showVersionSelector && (
             <VersionSelector pathname={pathname} client:load />
