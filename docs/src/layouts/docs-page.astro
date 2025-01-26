@@ -3,6 +3,8 @@ import DocsSection from "@/components/docs-section.astro";
 import { Navbar } from "@/components/navbar";
 import Prose from "@/components/prose.astro";
 import { VersionSelector } from "@/components/version-selector";
+import type { categoriesCollectionName } from "@/content/functions/content.config";
+import type { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
 import { getArticlesForPath } from "@/lib/docs";
 import {
   getNavbarEntries,
@@ -11,12 +13,12 @@ import {
 import { render, type CollectionEntry } from "astro:content";
 import { entries, groupBy, map, pipe, sortBy } from "remeda";
 import BaseLayout from "./base.astro";
-import type { categoriesCollectionName } from "@/content/functions/content.config";
 
 type Props = {
   readonly categorized:
     | CategorizedFunctions
-    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>;
+    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>
+    | ReadonlyArray<CollectionEntry<typeof categoriesV1CollectionName>>;
   readonly showVersionSelector?: boolean;
   readonly title?: string;
 };

@@ -9,6 +9,12 @@ import {
   functionsCollectionName,
 } from "@/content/functions/content.config";
 import {
+  categoriesV1Collection,
+  categoriesV1CollectionName,
+  functionsV1Collection,
+  functionsV1CollectionName,
+} from "@/content/functions/v1/content.config";
+import {
   collection as mappingCollection,
   name as mappingName,
 } from "@/content/mapping/content.config";
@@ -23,4 +29,6 @@ export const collections = {
   [v1MigrationName]: v1MigrationCollection,
   [functionsCollectionName]: functionsCollection,
   [categoriesCollectionName]: categoriesCollection,
+  [functionsV1CollectionName]: functionsV1Collection,
+  [categoriesV1CollectionName]: categoriesV1Collection,
 };

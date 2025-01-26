@@ -1,38 +1,55 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  functionsV1CollectionName,
+  type categoriesV1CollectionName,
+} from "@/content/functions/v1/content.config";
 import { name as migrationCollectionName } from "@/content/v1-migration/content.config";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/v1/transform";
-import { getCollection, render } from "astro:content";
+import {
+  getCollection,
+  getEntry,
+  render,
+  type InferEntrySchema,
+} from "astro:content";
 import FunctionApi from "../function-api.astro";
 import FunctionDescription from "../function-description.astro";
 import Prose from "../prose.astro";
 import { MigrationBox } from "./migration-box";
 
 type Props = {
-  readonly func: DocumentedFunction;
+  readonly category: string;
+  readonly functionRef: InferEntrySchema<
+    typeof categoriesV1CollectionName
+  >["children"][number];
 };
 
-const { func } = Astro.props;
+const { functionRef, category } = Astro.props;
+
+const [{ data }, v1Functions] = await Promise.all([
+  getEntry(functionRef),
+  getCollection(functionsV1CollectionName),
+]);
 
 // We use getCollection with a filter here instead of getEntry because not all
 // functions have a migration entry and getEntry logs an error if the entry is
 // not found, filling our build log with redundant errors.
 const [entry] = await getCollection(
   migrationCollectionName,
-  ({ id }) => id === func.name,
+  ({ id }) => id === data.name,
 );
 const Migration = entry === undefined ? undefined : await render(entry);
+
+const v1InternalNames = new Set(
+  ...v1Functions.map(({ data: { name } }) => name),
+);
 ---
 
-<Card id={func.name} className="scroll-mt-24">
+<Card id={data.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
-      name={func.name}
-      category={func.category}
-      tags={getTags(func.methods)}
-      description={func.description}
-      sourceUrl={func.sourceUrl}
+      category={category}
+      entryData={data}
+      internalNames={v1InternalNames}
     />
   </CardHeader>
   {
@@ -48,13 +65,11 @@ const Migration = entry === undefined ? undefined : await render(entry);
   }
   <CardContent className="grid gap-8">
     {
-      func.methods.map((method) => (
+      data.signatures.map(({ comment: { blockTags }, parameters, type }) => (
         <FunctionApi
-          args={method.args}
-          example={method.example}
-          returns={method.returns}
-          signature={method.signature}
-          variant={method.tag}
+          blockTags={blockTags}
+          parameters={parameters}
+          type={type}
         />
       ))
     }

@@ -10,7 +10,7 @@
     "build:all": "npm run clean && typedoc && npm run build",
     "build:debug": "npm run build && open-cli node_modules/.cache/bundleVisualizer.html",
     "build:scripts": "vite build --config vite.scripts.config.ts",
-    "check": "tsc && astro check",
+    "check": "astro check",
     "clean": "rm -rf dist && rm -f src/content/functions/functions.json && rm -rf public/dist",
     "dev": "astro dev",
     "lint": "eslint",

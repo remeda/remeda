@@ -1,19 +1,12 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { categoriesCollectionName } from "@/content/functions/content.config";
 import {
-  extractArgs,
-  extractDescription,
-  extractExample,
-  extractName,
-  extractReturns,
-  extractSignature,
-  extractSourceUrl,
-  extractTags,
-  extractVariant,
-} from "@/lib/transform";
+  functionsCollectionName,
+  type categoriesCollectionName,
+} from "@/content/functions/content.config";
+import { tagContent } from "@/lib/tags";
 import type { InferEntrySchema } from "astro:content";
-import { getEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import { map, pipe, uniqueBy } from "remeda";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
@@ -26,31 +19,34 @@ type Props = {
 };
 
 const { functionRef, category } = Astro.props;
-const { data } = await getEntry(functionRef);
+const [{ data }, functions] = await Promise.all([
+  getEntry(functionRef),
+  getCollection(functionsCollectionName),
+]);
+
+const internalNames = new Set(...functions.map(({ data: { name } }) => name));
 ---
 
-<Card id={extractName(data)} className="scroll-mt-24">
+<Card id={data.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
-      name={extractName(data)}
       category={category}
-      tags={extractTags(data)}
-      description={extractDescription(data)}
-      sourceUrl={extractSourceUrl(data)}
+      entryData={data}
+      internalNames={internalNames}
     />
   </CardHeader>
   <CardContent className="grid gap-8">
     {
       pipe(
         data.signatures,
-        uniqueBy(extractSignature),
-        map((signature) => (
+        uniqueBy(({ comment: { blockTags } }) =>
+          tagContent(blockTags, "signature"),
+        ),
+        map(({ comment: { blockTags }, parameters, type }) => (
           <FunctionApi
-            args={extractArgs(signature)}
-            example={extractExample(signature)}
-            returns={extractReturns(signature)}
-            signature={extractSignature(signature)}
-            variant={extractVariant(signature)}
+            blockTags={blockTags}
+            parameters={parameters}
+            type={type}
           />
         )),
       )

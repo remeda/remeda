@@ -1,4 +1,5 @@
 import type { categoriesCollectionName } from "@/content/functions/content.config";
+import type { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
 import { getEntries, type CollectionEntry } from "astro:content";
 import {
   entries,
@@ -11,9 +12,7 @@ import {
   sortBy,
 } from "remeda";
 import type { getArticlesForPath } from "./docs";
-import type { SourceTags } from "./get-tags";
-import { getTags } from "./get-tags";
-import { extractName, extractTags } from "./transform";
+import { extractTags, type SourceTags } from "./tags";
 
 type FunctionItem = {
   readonly name: string;
@@ -27,7 +26,8 @@ export type CategorizedFunctions = ReadonlyArray<
 export async function getNavbarEntries(
   categorized:
     | CategorizedFunctions
-    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>,
+    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>
+    | ReadonlyArray<CollectionEntry<typeof categoriesV1CollectionName>>,
   collection: Awaited<ReturnType<typeof getArticlesForPath>>,
 ) {
   const contentEntries = pipe(
@@ -46,14 +46,7 @@ export async function getNavbarEntries(
     categorized.map(async (entry) => {
       if (isArray(entry)) {
         const [id, functions] = entry;
-
-        return [
-          id,
-          map(functions, ({ name: title, methods }) => ({
-            title,
-            tags: getTags(methods),
-          })),
-        ] as const;
+        return [id, map(functions, ({ name: title }) => ({ title }))] as const;
       }
 
       const {
@@ -65,10 +58,22 @@ export async function getNavbarEntries(
 
       return [
         id,
-        map(functions, ({ data }) => ({
-          title: extractName(data),
-          tags: extractTags(data),
-        })),
+        map(
+          functions,
+          ({
+            data: {
+              name: title,
+              signatures: [
+                {
+                  comment: { blockTags },
+                },
+              ],
+            },
+          }) => ({
+            title,
+            tags: extractTags(blockTags),
+          }),
+        ),
       ] as const;
     }),
   );

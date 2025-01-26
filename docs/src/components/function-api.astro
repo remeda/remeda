@@ -1,5 +1,10 @@
 ---
-import type { extractArgs, extractReturns } from "@/lib/transform";
+import type {
+  BlockTags,
+  SignatureParameters,
+  SignatureType,
+} from "@/content/functions/schema";
+import { hasTag, tagContent } from "@/lib/tags";
 import CodeBlock from "./code-block.astro";
 import { MethodSignature } from "./signature";
 
@@ -7,14 +12,22 @@ import { MethodSignature } from "./signature";
 const FALLBACK_SIGNATURE = "//! Missing Signature!";
 
 type Props = {
-  readonly variant: string | undefined;
-  readonly signature: string | undefined;
-  readonly args: ReturnType<typeof extractArgs>;
-  readonly returns: ReturnType<typeof extractReturns>;
-  readonly example: string | undefined;
+  readonly blockTags: BlockTags | undefined;
+  readonly parameters: SignatureParameters | undefined;
+  readonly type: SignatureType;
 };
 
-const { variant, signature, args, returns, example } = Astro.props;
+const { blockTags, parameters, type } = Astro.props;
+
+const variant = hasTag(blockTags, "dataFirst")
+  ? "Data First"
+  : hasTag(blockTags, "dataLast")
+    ? "Data Last"
+    : undefined;
+
+const example = tagContent(blockTags, "example");
+
+const signaturePrototype = tagContent(blockTags, "signature");
 ---
 
 <section class="flex flex-col gap-2">
@@ -23,8 +36,8 @@ const { variant, signature, args, returns, example } = Astro.props;
       <h6 class="text-sm font-bold text-secondary-foreground">{variant}</h6>
     )
   }
-  <MethodSignature args={args} returns={returns} client:load>
-    <CodeBlock code={signature ?? FALLBACK_SIGNATURE} />
+  <MethodSignature type={type} parameters={parameters} client:load>
+    <CodeBlock code={signaturePrototype ?? FALLBACK_SIGNATURE} />
   </MethodSignature>
   {
     example !== undefined && (

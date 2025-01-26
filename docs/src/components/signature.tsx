@@ -4,24 +4,27 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { extractArgs, extractReturns } from "@/lib/transform";
+import type {
+  SignatureParameters,
+  SignatureType,
+} from "@/content/functions/schema";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
+import { prop } from "remeda";
 
 export function MethodSignature({
-  args,
-  returns,
+  parameters,
+  type,
   children,
 }: {
+  readonly parameters: SignatureParameters | undefined;
+  readonly type: SignatureType;
   readonly children: ReactNode;
-  readonly args: ReturnType<typeof extractArgs>;
-  readonly returns: ReturnType<typeof extractReturns>;
 }): ReactNode {
   return (
     <CollapsibleRoot>
       <div className="relative flex items-center">
         <div className="flex-1">{children}</div>
-
         <CollapsibleTrigger asChild className="absolute right-0">
           <Button
             variant="link"
@@ -33,27 +36,56 @@ export function MethodSignature({
           </Button>
         </CollapsibleTrigger>
       </div>
-
       <CollapsibleContent>
         <div className="flex flex-col gap-3 p-2">
           <div>
             Parameters
             <dl className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm">
-              {args?.map((arg) => (
-                <Fragment key={arg.name}>
-                  <dt className="font-semibold">{arg.name}</dt>
-                  <dd className="text-muted-foreground">{arg.description}</dd>
+              {parameters?.map(({ name, comment }) => (
+                <Fragment key={name}>
+                  <dt className="font-semibold">{name}</dt>
+                  <dd className="text-muted-foreground">
+                    {comment?.summary === undefined ||
+                    comment.summary.length === 0
+                      ? undefined
+                      : comment.summary.map(prop("text")).join("")}
+                  </dd>
                 </Fragment>
               ))}
             </dl>
           </div>
-
           <div>
             Returns
-            <div className="text-sm font-semibold">{returns.name}</div>
+            <div className="text-sm font-semibold">
+              {extractReturnType(type)}
+            </div>
           </div>
         </div>
       </CollapsibleContent>
     </CollapsibleRoot>
   );
+}
+
+function extractReturnType(type: SignatureType): string {
+  switch (type.type) {
+    case "intrinsic":
+      return type.name;
+
+    case "array":
+      return "Array";
+
+    case "predicate":
+      return "boolean";
+
+    case "conditional":
+    case "indexedAccess":
+    case "intersection":
+    case "mapped":
+    case "query":
+    case "reference":
+    case "reflection":
+    case "tuple":
+    case "union":
+      return "Object";
+  }
 }

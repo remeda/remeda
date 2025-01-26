@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Tag } from "@/lib/get-tags";
+import type { Tag } from "@/lib/tags";
 import { cn } from "@/lib/utils";
 import { type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
