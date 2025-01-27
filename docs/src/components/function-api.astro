@@ -3,7 +3,6 @@ import type { Signature } from "@/content/functions/schema";
 import { hasTag, tagContent } from "@/lib/tags";
 import CodeBlock from "./code-block.astro";
 import { MethodSignature } from "./signature";
-import invariant from "tiny-invariant";
 
 type Props = {
   readonly signature: Signature;
@@ -26,7 +25,6 @@ const variant = hasTag(blockTags, "dataFirst")
 const example = tagContent(blockTags, "example");
 
 const signature = tagContent(blockTags, "signature");
-invariant(signature !== undefined, "Signature is required");
 ---
 
 <section class="flex flex-col gap-2">
@@ -36,7 +34,7 @@ invariant(signature !== undefined, "Signature is required");
     )
   }
   <MethodSignature type={type} parameters={parameters} client:load>
-    <CodeBlock code={signature} />
+    {signature !== undefined && <CodeBlock code={signature} />}
   </MethodSignature>
   {
     example !== undefined && (

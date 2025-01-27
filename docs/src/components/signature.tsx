@@ -6,8 +6,9 @@ import {
 } from "@/components/ui/collapsible";
 import type { Signature } from "@/content/functions/schema";
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Fragment, type ReactNode } from "react";
-import { prop } from "remeda";
+import { type ReactNode } from "react";
+import { FunctionReturnType } from "./function-return-type";
+import { Parameters } from "./parameters";
 
 export function MethodSignature({
   parameters,
@@ -34,58 +35,20 @@ export function MethodSignature({
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent>
-        <div className="flex flex-col gap-3 p-2">
+        <div className="flex flex-col gap-3 p-2" slot="definitions">
           <div>
             Parameters
-            <dl className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm">
-              {parameters?.map(({ name, comment }) => (
-                <Fragment key={name}>
-                  <dt className="font-semibold">{name}</dt>
-                  <dd className="text-muted-foreground">
-                    {comment?.summary === undefined ||
-                    comment.summary.length === 0
-                      ? undefined
-                      : comment.summary.map(prop("text")).join("")}
-                  </dd>
-                </Fragment>
-              ))}
-            </dl>
+            <Parameters
+              className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm"
+              parameters={parameters}
+            />
           </div>
           <div>
             Returns
-            <div className="text-sm font-semibold">
-              {extractReturnType(type)}
-            </div>
+            <FunctionReturnType className="text-sm font-semibold" type={type} />
           </div>
         </div>
       </CollapsibleContent>
     </CollapsibleRoot>
   );
-}
-
-function extractReturnType(type: Signature["type"]): string {
-  switch (type.type) {
-    case "intrinsic":
-      return type.name;
-
-    case "array":
-      return "Array";
-
-    case "predicate":
-      return "boolean";
-
-    case "mapped":
-    case "conditional":
-      // These only show up in V1!
-      return "Object";
-
-    case "indexedAccess":
-    case "intersection":
-    case "query":
-    case "reference":
-    case "reflection":
-    case "tuple":
-    case "union":
-      return "Object";
-  }
 }
