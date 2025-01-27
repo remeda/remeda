@@ -74,10 +74,13 @@ function extractReturnType(type: Signature["type"]): string {
     case "predicate":
       return "boolean";
 
+    case "mapped":
     case "conditional":
+      // These only show up in V1!
+      return "Object";
+
     case "indexedAccess":
     case "intersection":
-    case "mapped":
     case "query":
     case "reference":
     case "reflection":
