@@ -38,7 +38,7 @@ const internalNames = new Set(...functions.map(({ data: { name } }) => name));
   <CardHeader>
     <FunctionDescription
       category={category}
-      entryData={data}
+      func={data}
       internalNames={internalNames}
     />
   </CardHeader>

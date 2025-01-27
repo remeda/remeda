@@ -12,16 +12,16 @@ import { TagBadge } from "./tag-badge";
 import invariant from "tiny-invariant";
 
 type Props = {
-  readonly entryData: InferEntrySchema<typeof functionsCollectionName>;
+  readonly func: InferEntrySchema<typeof functionsCollectionName>;
   readonly internalNames: ReadonlySet<string>;
   readonly category: string | undefined;
 };
 
-const { entryData, category, internalNames } = Astro.props;
+const { func, category, internalNames } = Astro.props;
 
 invariant(
-  entryData.kind === "function",
-  `Entry ${entryData.name} is of unsupported kind: ${entryData.kind}`,
+  func.kind === "function",
+  `Entry ${func.name} is of unsupported kind: ${func.kind}`,
 );
 
 const {
@@ -32,7 +32,7 @@ const {
     },
   ],
   sources,
-} = entryData;
+} = func;
 ---
 
 <>
