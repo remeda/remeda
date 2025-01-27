@@ -35,7 +35,7 @@ export function MethodSignature({
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent>
-        <div className="flex flex-col gap-3 p-2" slot="definitions">
+        <div className="flex flex-col gap-3 p-2">
           <div>
             Parameters
             <Parameters
