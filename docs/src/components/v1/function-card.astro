@@ -64,12 +64,8 @@ const v1InternalNames = new Set(
         </CardContent>
       )}
       <CardContent className="grid gap-8">
-        {data.signatures.map(({ comment: { blockTags }, parameters, type }) => (
-          <FunctionApi
-            blockTags={blockTags}
-            parameters={parameters}
-            type={type}
-          />
+        {data.signatures.map((signature) => (
+          <FunctionApi signature={signature} />
         ))}
       </CardContent>
     </Card>

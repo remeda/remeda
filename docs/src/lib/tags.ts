@@ -1,4 +1,4 @@
-import type { BlockTags } from "@/content/functions/schema";
+import type { BlockTag } from "@/content/functions/schema";
 import { prop } from "remeda";
 
 export type Tag = "Lazy" | "Indexed" | "Strict";
@@ -7,7 +7,7 @@ export type SourceTags = Readonly<
   Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
 >;
 
-export function extractTags(blockTags: BlockTags | undefined) {
+export function extractTags(blockTags: ReadonlyArray<BlockTag> | undefined) {
   const out: Array<Tag> = [];
 
   if (hasTag(blockTags, "strict")) {
@@ -26,12 +26,12 @@ export function extractTags(blockTags: BlockTags | undefined) {
 }
 
 export const hasTag = (
-  blockTags: BlockTags | undefined,
+  blockTags: ReadonlyArray<BlockTag> | undefined,
   tagName: string,
 ): boolean => blockTags?.some(({ tag }) => tag === `@${tagName}`) ?? false;
 
 export function tagContent(
-  blockTags: BlockTags | undefined,
+  blockTags: ReadonlyArray<BlockTag> | undefined,
   tagName: string,
 ): string | undefined {
   const tag = blockTags?.find(({ tag }) => tag === `@${tagName}`);

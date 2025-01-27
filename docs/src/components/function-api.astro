@@ -1,9 +1,5 @@
 ---
-import type {
-  BlockTags,
-  SignatureParameters,
-  SignatureType,
-} from "@/content/functions/schema";
+import type { Signature } from "@/content/functions/schema";
 import { hasTag, tagContent } from "@/lib/tags";
 import CodeBlock from "./code-block.astro";
 import { MethodSignature } from "./signature";
@@ -12,12 +8,16 @@ import { MethodSignature } from "./signature";
 const FALLBACK_SIGNATURE = "//! Missing Signature!";
 
 type Props = {
-  readonly blockTags: BlockTags | undefined;
-  readonly parameters: SignatureParameters | undefined;
-  readonly type: SignatureType;
+  readonly signature: Signature;
 };
 
-const { blockTags, parameters, type } = Astro.props;
+const {
+  signature: {
+    comment: { blockTags },
+    parameters,
+    type,
+  },
+} = Astro.props;
 
 const variant = hasTag(blockTags, "dataFirst")
   ? "Data First"

@@ -48,13 +48,7 @@ const internalNames = new Set(...functions.map(({ data: { name } }) => name));
         uniqueBy(({ comment: { blockTags } }) =>
           tagContent(blockTags, "signature"),
         ),
-        map(({ comment: { blockTags }, parameters, type }) => (
-          <FunctionApi
-            blockTags={blockTags}
-            parameters={parameters}
-            type={type}
-          />
-        )),
+        map((signature) => <FunctionApi signature={signature} />),
       )
     }
   </CardContent>

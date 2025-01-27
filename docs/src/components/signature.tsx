@@ -4,10 +4,7 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type {
-  SignatureParameters,
-  SignatureType,
-} from "@/content/functions/schema";
+import type { Signature } from "@/content/functions/schema";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Fragment, type ReactNode } from "react";
 import { prop } from "remeda";
@@ -17,8 +14,8 @@ export function MethodSignature({
   type,
   children,
 }: {
-  readonly parameters: SignatureParameters | undefined;
-  readonly type: SignatureType;
+  readonly parameters: Signature["parameters"];
+  readonly type: Signature["type"];
   readonly children: ReactNode;
 }): ReactNode {
   return (
@@ -66,7 +63,7 @@ export function MethodSignature({
   );
 }
 
-function extractReturnType(type: SignatureType): string {
+function extractReturnType(type: Signature["type"]): string {
   switch (type.type) {
     case "intrinsic":
       return type.name;
