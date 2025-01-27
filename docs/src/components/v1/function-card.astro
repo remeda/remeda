@@ -45,6 +45,8 @@ const v1InternalNames = new Set(
 ---
 
 {
+  // Some of the top-level functions in V1 are namespaces which we don't show
+  // in the docs.
   data.kind === "function" && (
     <Card id={data.name} className="scroll-mt-24">
       <CardHeader>
