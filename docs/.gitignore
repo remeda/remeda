@@ -1,7 +1,7 @@
 # build output
 dist/
 build/
-src/data/data.json
+src/content/functions/functions.json
 public/dist/
 
 # generated types

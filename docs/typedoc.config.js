@@ -2,7 +2,7 @@ import { OptionDefaults } from "typedoc";
 
 /** @type {Partial<import('typedoc').TypeDocOptions>} */
 export default {
-  json: "src/data/data.json",
+  json: "src/content/functions/functions.json",
 
   tsconfig: "../tsconfig.json",
   entryPoints: ["../src/index.ts"],

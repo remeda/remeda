@@ -13,11 +13,11 @@ import {
   split,
   when,
 } from "remeda";
-import type { CategorizedFunctions } from "../navbar-entries";
+import type { MappingCategories } from "../navbar-entries";
 
 export async function getMappingEntries(
   library: string,
-): Promise<CategorizedFunctions> {
+): Promise<MappingCategories> {
   return pipe(
     await getCollection(mappingCollectionName, ({ id }) =>
       id.startsWith(library + "/"),

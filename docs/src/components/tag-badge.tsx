@@ -1,4 +1,4 @@
-import type { Tag } from "@/lib/get-tags";
+import type { Tag } from "@/lib/tags";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { Badge } from "./ui/badge";

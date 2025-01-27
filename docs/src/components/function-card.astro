@@ -1,38 +1,56 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/transform";
+import {
+  functionsCollectionName,
+  type categoriesCollectionName,
+} from "@/content/functions/content.config";
+import { tagContent } from "@/lib/tags";
+import type { InferEntrySchema } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
+import { map, pipe, uniqueBy } from "remeda";
+import invariant from "tiny-invariant";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
-  readonly func: DocumentedFunction;
+  readonly category: string;
+  readonly functionRef: InferEntrySchema<
+    typeof categoriesCollectionName
+  >["children"][number];
 };
 
-const { func } = Astro.props;
+const { functionRef, category } = Astro.props;
+
+const [{ data }, functions] = await Promise.all([
+  getEntry(functionRef),
+  getCollection(functionsCollectionName),
+]);
+
+invariant(
+  data.kind === "function",
+  `Entry ${data.name} is of unsupported kind: ${data.kind}`,
+);
+
+const internalNames = new Set(functions.map(({ data: { name } }) => name));
 ---
 
-<Card id={func.name} className="scroll-mt-24">
+<Card id={data.name} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
-      name={func.name}
-      category={func.category}
-      tags={getTags(func.methods)}
-      description={func.description}
-      sourceUrl={func.sourceUrl}
+      category={category}
+      func={data}
+      internalNames={internalNames}
     />
   </CardHeader>
   <CardContent className="grid gap-8">
     {
-      func.methods.map((method) => (
-        <FunctionApi
-          args={method.args}
-          example={method.example}
-          returns={method.returns}
-          signature={method.signature}
-          variant={method.tag}
-        />
-      ))
+      pipe(
+        data.signatures,
+        uniqueBy(({ comment: { blockTags } }) =>
+          tagContent(blockTags, "signature"),
+        ),
+        map((signature) => <FunctionApi signature={signature} />),
+      )
     }
   </CardContent>
 </Card>

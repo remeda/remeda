@@ -1,9 +1,10 @@
 ---
-import { CATEGORIZED } from "@/lib/categorized";
+import { categoriesCollectionName } from "@/content/functions/content.config";
+import { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
 import { getArticlesForPath } from "@/lib/docs";
 import { getMappingEntries } from "@/lib/mapping/entries";
 import { getNavbarEntries } from "@/lib/navbar-entries";
-import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
+import { getCollection } from "astro:content";
 import { MobileNav } from "./mobile-nav";
 import { VERSIONS } from "./version-selector";
 
@@ -18,21 +19,21 @@ const entries =
   migrationLibrary !== undefined
     ? await getMappingEntries(migrationLibrary)
     : normalizedPathname === VERSIONS.v1.path
-      ? V1_CATEGORIZED
+      ? await getCollection(categoriesV1CollectionName)
       : normalizedPathname === VERSIONS.latest.path
-        ? CATEGORIZED
+        ? await getCollection(categoriesCollectionName)
         : undefined;
 
 const articles = await getArticlesForPath(pathname);
 
 const navbarEntries =
-  entries === undefined ? [] : getNavbarEntries(entries, articles);
+  entries === undefined ? [] : await getNavbarEntries(entries, articles);
 ---
 
 <MobileNav
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  entries={navbarEntries}
+  categories={navbarEntries}
   client:media="(max-width: 767px)"
 />
