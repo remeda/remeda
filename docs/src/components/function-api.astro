@@ -3,9 +3,7 @@ import type { Signature } from "@/content/functions/schema";
 import { hasTag, tagContent } from "@/lib/tags";
 import CodeBlock from "./code-block.astro";
 import { MethodSignature } from "./signature";
-
-// TODO: signature shouldn't be nullish, we should fail the build instead!
-const FALLBACK_SIGNATURE = "//! Missing Signature!";
+import invariant from "tiny-invariant";
 
 type Props = {
   readonly signature: Signature;
@@ -27,7 +25,8 @@ const variant = hasTag(blockTags, "dataFirst")
 
 const example = tagContent(blockTags, "example");
 
-const signature = tagContent(blockTags, "signature") ?? FALLBACK_SIGNATURE;
+const signature = tagContent(blockTags, "signature");
+invariant(signature !== undefined, "Signature is required");
 ---
 
 <section class="flex flex-col gap-2">
