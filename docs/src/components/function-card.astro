@@ -20,6 +20,7 @@ type Props = {
 };
 
 const { functionRef, category } = Astro.props;
+
 const [{ data }, functions] = await Promise.all([
   getEntry(functionRef),
   getCollection(functionsCollectionName),
