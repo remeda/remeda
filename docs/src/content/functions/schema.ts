@@ -50,25 +50,29 @@ const zSignature = z.object({
     .optional(),
 });
 
-export const zEntry = z.intersection(
-  z.object({ id: z.number(), name: z.string() }),
-  z.discriminatedUnion("kind", [
-    z.object({
-      kind: z
-        .literal(ReflectionKind.Function)
-        .transform(constant("function" as const)),
-      sources: z.array(z.object({ url: z.string().url() })),
-      // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
-      signatures: z.array(zSignature).refine(hasAtLeast(1)),
-    }),
-    // V1 used namespaces to inject properties into functions. This caused the
-    // docs to contain these namespace declarations **in addition** to the
-    // actual function mapping. To allow parsing the v1 data file we need to
-    // support this kind as well.
-    z.object({
-      kind: z
-        .literal(ReflectionKind.Namespace)
-        .transform(constant("namespace" as const)),
-    }),
-  ]),
-);
+export type FunctionEntry = z.infer<typeof zFunction>;
+const zFunction = z.object({
+  id: z.number(),
+  name: z.string(),
+  kind: z
+    .literal(ReflectionKind.Function)
+    .transform(constant("function" as const)),
+  sources: z.array(z.object({ url: z.string().url() })),
+  // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
+  signatures: z.array(zSignature).refine(hasAtLeast(1)),
+});
+
+export const zEntry = z.discriminatedUnion("kind", [
+  zFunction,
+  // V1 used namespaces to inject properties into functions. This caused the
+  // docs to contain these namespace declarations **in addition** to the
+  // actual function mapping. To allow parsing the v1 data file we need to
+  // support this kind as well.
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    kind: z
+      .literal(ReflectionKind.Namespace)
+      .transform(constant("namespace" as const)),
+  }),
+]);
