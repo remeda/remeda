@@ -9,6 +9,7 @@ import GithubSource from "./github-source.astro";
 import Markdown from "./markdown.astro";
 import Prose from "./prose.astro";
 import { TagBadge } from "./tag-badge";
+import invariant from "tiny-invariant";
 
 type Props = {
   readonly entryData: InferEntrySchema<typeof functionsCollectionName>;
@@ -16,19 +17,22 @@ type Props = {
   readonly category: string | undefined;
 };
 
+const { entryData, category, internalNames } = Astro.props;
+
+invariant(
+  entryData.kind === "function",
+  `Entry ${entryData.name} is of unsupported kind: ${entryData.kind}`,
+);
+
 const {
-  entryData: {
-    name,
-    signatures: [
-      {
-        comment: { blockTags, summary },
-      },
-    ],
-    sources,
-  },
-  category,
-  internalNames,
-} = Astro.props;
+  name,
+  signatures: [
+    {
+      comment: { blockTags, summary },
+    },
+  ],
+  sources,
+} = entryData;
 ---
 
 <>

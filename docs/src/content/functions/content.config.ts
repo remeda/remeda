@@ -2,7 +2,7 @@ import { defineCollection, reference, z } from "astro:content";
 import path from "node:path";
 import dataFilePath from "./functions.json?url";
 import { categoriesLoader, functionsLoader } from "./loaders";
-import { zFunctions } from "./schema";
+import { zEntry } from "./schema";
 
 const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 
@@ -11,7 +11,7 @@ export const categoriesCollectionName = "categories";
 
 export const functionsCollection = defineCollection({
   loader: functionsLoader(DATA_FILE),
-  schema: zFunctions,
+  schema: zEntry,
 });
 
 export const categoriesCollection = defineCollection({

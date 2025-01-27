@@ -1,5 +1,5 @@
 import { z } from "astro:content";
-import { hasAtLeast } from "remeda";
+import { constant, hasAtLeast } from "remeda";
 
 export type BlockTags = z.infer<typeof zBlockTags>;
 const zBlockTags = z.array(
@@ -50,18 +50,29 @@ const zParameters = z.array(
   z.object({ name: z.string(), comment: zComment.optional() }),
 );
 
-export const zFunctions = z.object({
-  id: z.number(),
-  name: z.string(),
-  sources: z.array(z.object({ url: z.string().url() })),
-  // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
-  signatures: z
-    .array(
-      z.object({
-        type: zSignatureType,
-        comment: zComment,
-        parameters: zParameters.optional(),
-      }),
-    )
-    .refine(hasAtLeast(1)),
-});
+export const zEntry = z.intersection(
+  z.object({ id: z.number(), name: z.string() }),
+  z.discriminatedUnion("kind", [
+    z.object({
+      kind: z.literal(64).transform(constant("function" as const)),
+      sources: z.array(z.object({ url: z.string().url() })),
+      // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
+      signatures: z
+        .array(
+          z.object({
+            type: zSignatureType,
+            comment: zComment,
+            parameters: zParameters.optional(),
+          }),
+        )
+        .refine(hasAtLeast(1)),
+    }),
+    // V1 used namespaces to inject properties into functions. This caused the
+    // docs to contain these namespace declarations **in addition** to the
+    // actual function mapping. To allow parsing the v1 data file we need to
+    // support this kind as well.
+    z.object({
+      kind: z.literal(4).transform(constant("namespace" as const)),
+    }),
+  ]),
+);

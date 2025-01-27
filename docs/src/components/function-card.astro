@@ -8,6 +8,7 @@ import { tagContent } from "@/lib/tags";
 import type { InferEntrySchema } from "astro:content";
 import { getCollection, getEntry } from "astro:content";
 import { map, pipe, uniqueBy } from "remeda";
+import invariant from "tiny-invariant";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
@@ -23,6 +24,11 @@ const [{ data }, functions] = await Promise.all([
   getEntry(functionRef),
   getCollection(functionsCollectionName),
 ]);
+
+invariant(
+  data.kind === "function",
+  `Entry ${data.name} is of unsupported kind: ${data.kind}`,
+);
 
 const internalNames = new Set(...functions.map(({ data: { name } }) => name));
 ---

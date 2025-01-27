@@ -1,7 +1,7 @@
 import { file } from "astro/loaders";
-import { filter, isNullish, map, piped, prop, when } from "remeda";
+import { isNullish, map, piped, prop, when } from "remeda";
 import invariant from "tiny-invariant";
-import { ReflectionKind, type JSONOutput } from "typedoc";
+import { type JSONOutput } from "typedoc";
 
 export const functionsLoader = (fileName: string) =>
   file(fileName, {
@@ -13,7 +13,6 @@ export const functionsLoader = (fileName: string) =>
           `Data file ${fileName} is missing any declarations or references`,
         );
       }),
-      filter(({ kind }) => kind === ReflectionKind.Function),
       map((entry) => entry as unknown as Record<string, unknown>),
     ),
   });

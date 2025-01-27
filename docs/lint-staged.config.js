@@ -3,7 +3,7 @@ export default {
   // the whole project. To do that we use a function (instead of a string or
   // array) so that no matter what file or how many, we will always run the same
   // command.
-  "*.ts?(x)": () => "tsc -p tsconfig.json --noEmit",
+  "*.@(ts|tsx|astro)": () => "npm run check",
 
   // Javascript and Typescript (including commonJs and esm variants)
   "*.@(js|jsx|ts|tsx|cjs|mjs)": ["eslint --fix", "prettier --write"],

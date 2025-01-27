@@ -3,12 +3,14 @@ import type { categoriesV1CollectionName } from "@/content/functions/v1/content.
 import { getEntries, type CollectionEntry } from "astro:content";
 import {
   entries,
+  filter,
   groupBy,
   isArray,
   map,
   mapValues,
   pipe,
   piped,
+  prop,
   sortBy,
 } from "remeda";
 import type { getArticlesForPath } from "./docs";
@@ -58,21 +60,20 @@ export async function getNavbarEntries(
 
       return [
         id,
-        map(
+        pipe(
           functions,
-          ({
-            data: {
+          map(prop("data")),
+          filter((x) => x.kind === "function"),
+          map(
+            ({
               name: title,
               signatures: [
                 {
                   comment: { blockTags },
                 },
               ],
-            },
-          }) => ({
-            title,
-            tags: extractTags(blockTags),
-          }),
+            }) => ({ title, tags: extractTags(blockTags) }),
+          ),
         ),
       ] as const;
     }),
