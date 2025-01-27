@@ -15,17 +15,19 @@ type Props = {
   readonly category: string | undefined;
 };
 
-const { func, category, internalNames } = Astro.props;
-
 const {
-  name,
-  signatures: [
-    {
-      comment: { blockTags, summary },
-    },
-  ],
-  sources,
-} = func;
+  func: {
+    name,
+    signatures: [
+      {
+        comment: { blockTags, summary },
+      },
+    ],
+    sources,
+  },
+  category,
+  internalNames,
+} = Astro.props;
 ---
 
 <>
