@@ -32,7 +32,7 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent className="pt-12">
         <Navbar
-          categories={categories}
+          entries={categories}
           onSelect={() => {
             setIsOpen(false);
           }}

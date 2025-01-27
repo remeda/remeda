@@ -16,20 +16,24 @@ import {
 import type { getArticlesForPath } from "./docs";
 import { extractTags, type SourceTags } from "./tags";
 
-type FunctionItem = {
-  readonly name: string;
-  readonly methods?: ReadonlyArray<SourceTags>;
-};
+type MappingCategory = readonly [
+  category: string,
+  functions: ReadonlyArray<{
+    readonly name: string;
+    readonly methods?: ReadonlyArray<SourceTags>;
+  }>,
+];
 
-export type CategorizedFunctions = ReadonlyArray<
-  readonly [category: string, functions: ReadonlyArray<FunctionItem>]
->;
+export type MappingCategories = ReadonlyArray<MappingCategory>;
 
 export async function getNavbarEntries(
   categorized:
-    | CategorizedFunctions
-    | ReadonlyArray<CollectionEntry<typeof categoriesCollectionName>>
-    | ReadonlyArray<CollectionEntry<typeof categoriesV1CollectionName>>,
+    | MappingCategories
+    | ReadonlyArray<
+        CollectionEntry<
+          typeof categoriesCollectionName | typeof categoriesV1CollectionName
+        >
+      >,
   collection: Awaited<ReturnType<typeof getArticlesForPath>>,
 ) {
   const contentEntries = pipe(
@@ -45,38 +49,11 @@ export async function getNavbarEntries(
   );
 
   const unsorted = await Promise.all(
-    categorized.map(async (entry) => {
-      if (isArray(entry)) {
-        const [id, functions] = entry;
-        return [id, map(functions, ({ name: title }) => ({ title }))] as const;
-      }
-
-      const {
-        id,
-        data: { children },
-      } = entry;
-
-      const functions = await getEntries(children);
-
-      return [
-        id,
-        pipe(
-          functions,
-          map(prop("data")),
-          filter((x) => x.kind === "function"),
-          map(
-            ({
-              name: title,
-              signatures: [
-                {
-                  comment: { blockTags },
-                },
-              ],
-            }) => ({ title, tags: extractTags(blockTags) }),
-          ),
-        ),
-      ] as const;
-    }),
+    map(categorized, async (entry) =>
+      isArray(entry)
+        ? fromMapping(entry)
+        : await fromCategoriesCollection(entry),
+    ),
   );
 
   const functionEntries = sortBy(
@@ -86,4 +63,37 @@ export async function getNavbarEntries(
   );
 
   return [...contentEntries, ...functionEntries];
+}
+
+// When entry is an array it is coming from the mapping collections from
+// other libraries.
+const fromMapping = ([id, functions]: MappingCategory) =>
+  [id, map(functions, ({ name: title }) => ({ title }))] as const;
+
+async function fromCategoriesCollection({
+  id,
+  data: { children },
+}: CollectionEntry<
+  typeof categoriesV1CollectionName | typeof categoriesCollectionName
+>) {
+  const functions = await getEntries(children);
+
+  return [
+    id,
+    pipe(
+      functions,
+      map(prop("data")),
+      filter((x) => x.kind === "function"),
+      map(
+        ({
+          name: title,
+          signatures: [
+            {
+              comment: { blockTags },
+            },
+          ],
+        }) => ({ title, tags: extractTags(blockTags) }),
+      ),
+    ),
+  ] as const;
 }
