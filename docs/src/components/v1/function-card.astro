@@ -45,7 +45,7 @@ const v1InternalNames = new Set(
 ---
 
 {
-  data.kind === "function" ? (
+  data.kind === "function" && (
     <Card id={data.name} className="scroll-mt-24">
       <CardHeader>
         <FunctionDescription
@@ -69,5 +69,5 @@ const v1InternalNames = new Set(
         ))}
       </CardContent>
     </Card>
-  ) : undefined
+  )
 }
