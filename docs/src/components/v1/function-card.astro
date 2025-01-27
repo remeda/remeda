@@ -39,9 +39,7 @@ const [entry] = await getCollection(
 );
 const Migration = entry === undefined ? undefined : await render(entry);
 
-const v1InternalNames = new Set(
-  ...v1Functions.map(({ data: { name } }) => name),
-);
+const v1InternalNames = new Set(v1Functions.map(({ data: { name } }) => name));
 ---
 
 {

@@ -31,7 +31,7 @@ invariant(
   `Entry ${data.name} is of unsupported kind: ${data.kind}`,
 );
 
-const internalNames = new Set(...functions.map(({ data: { name } }) => name));
+const internalNames = new Set(functions.map(({ data: { name } }) => name));
 ---
 
 <Card id={data.name} className="scroll-mt-24">
