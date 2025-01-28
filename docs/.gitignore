@@ -1,6 +1,5 @@
 # build output
 dist/
-build/
 public/dist/
 
 # generated types
