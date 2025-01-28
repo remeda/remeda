@@ -25,7 +25,7 @@ The build step for deployment (`npm run build`) is automated via GitHub Actions 
 To run the entire build process end-to-end, ensuring everything is set up correctly.
 
 ```bash
-npm run build:all
+npm run build:force
 npm run preview
 ```
 

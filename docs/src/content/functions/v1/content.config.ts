@@ -1,8 +1,8 @@
 import { defineCollection, reference, z } from "astro:content";
 import path from "node:path";
-import { categoriesLoader, functionsLoader } from "../loaders";
 import { zEntry } from "../schema";
 import dataFilePath from "./functions.json?url";
+import { categoriesLoader, functionsLoader } from "./loaders";
 
 const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 

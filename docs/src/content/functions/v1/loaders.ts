@@ -1,5 +1,6 @@
+import { toString } from "@/lib/to-string";
 import { file } from "astro/loaders";
-import { isNullish, map, piped, prop, when } from "remeda";
+import { evolve, isNullish, map, piped, prop, when } from "remeda";
 import invariant from "tiny-invariant";
 import { type JSONOutput } from "typedoc";
 
@@ -13,7 +14,7 @@ export const functionsLoader = (fileName: string) =>
           `Data file ${fileName} is missing any declarations or references`,
         );
       }),
-      map((entry) => entry as unknown as Record<string, unknown>),
+      map(evolve({ id: toString() })),
     ),
   });
 
@@ -28,7 +29,7 @@ export const categoriesLoader = (fileName: string) =>
       map(({ title: id, children }) => {
         invariant(children !== undefined, `Category ${id} has no children?!`);
         // Astro expects reference types to be strings although it allows ids to be `numbers` :(
-        return { id, children: map(children, (id) => id.toString()) };
+        return { id, children: map(children, toString()) };
       }),
     ),
   });
