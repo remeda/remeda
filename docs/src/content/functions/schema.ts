@@ -4,12 +4,9 @@ import { ReflectionKind } from "typedoc";
 
 export type BlockTag = z.infer<typeof zBlockTag>;
 const zBlockTag = z.object({
+  // Zod's string `startsWith` modifier doesn't refine the output type accordingly so we use `refine` with our own `startsWith` too.
   tag: z.string().startsWith("@").refine(startsWith("@")),
   content: z.array(z.object({ text: z.string() })),
-  // Only v1 data has tags with a `name` prop, this might be a legacy
-  // thing that typedoc doesn't do anymore, prefer to avoid using this
-  // in the code.
-  name: z.string().optional(),
 });
 
 const zComment = z.object({
@@ -54,7 +51,7 @@ const zFunction = z.object({
     .literal(ReflectionKind.Function)
     .transform(constant("function" as const)),
   sources: z.array(z.object({ url: z.string().url() })),
-  // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` instead.
+  // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` too.
   signatures: z.array(zSignature).min(1).refine(hasAtLeast(1)),
 });
 
