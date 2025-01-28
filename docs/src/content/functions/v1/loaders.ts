@@ -1,3 +1,4 @@
+import { throws } from "@/lib/throws";
 import { toString } from "@/lib/to-string";
 import { file } from "astro/loaders";
 import path from "node:path";
@@ -5,7 +6,6 @@ import { evolve, isNullish, map, piped, prop, when } from "remeda";
 import invariant from "tiny-invariant";
 import { type JSONOutput } from "typedoc";
 import dataFilePath from "./functions.json?url";
-import { throws } from "@/lib/throws";
 
 const DATA_FILE = path.join(import.meta.dirname, path.basename(dataFilePath));
 
