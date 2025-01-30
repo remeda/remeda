@@ -1,5 +1,6 @@
-import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { defineCollection, reference, z } from "astro:content";
+import { functionsCollectionName } from "../functions/content.config";
 
 export const name = "mapping";
 
@@ -14,6 +15,6 @@ export const collection = defineCollection({
 
   schema: z.strictObject({
     category: z.string().min(1),
-    remeda: z.string().min(1).optional(),
+    remeda: reference(functionsCollectionName).optional(),
   }),
 });

@@ -14,6 +14,7 @@ import {
   when,
 } from "remeda";
 import type { MappingCategories } from "../navbar-entries";
+import { throws } from "../throws";
 
 export async function getMappingEntries(
   library: string,
@@ -33,9 +34,10 @@ export async function getMappingEntries(
           id,
           split("/", 2),
           last(),
-          when(isNullish, () => {
-            throw new Error(`Unexpected content ID for ${library}: ${id}`);
-          }),
+          when(
+            isNullish,
+            throws(`Unexpected content ID for ${library}: ${id}`),
+          ),
           objOf("name"),
         ),
       ),

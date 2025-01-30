@@ -8,6 +8,7 @@ import GithubEdit from "./github-edit.astro";
 import Prose from "./prose.astro";
 import { Badge } from "./ui/badge";
 import { buttonVariants } from "./ui/button";
+import { getEntry } from "astro:content";
 
 type Props = {
   readonly name: string;
@@ -17,6 +18,10 @@ type Props = {
 const { name, library } = Astro.props;
 
 const entry = await getMappedEntry(library, name);
+const mappedFunction =
+  entry.data.remeda === undefined
+    ? undefined
+    : await getEntry(entry.data.remeda);
 const { Content } = await render(entry);
 const mappedUrl = mappingUrl(library, name);
 ---
@@ -39,11 +44,14 @@ const mappedUrl = mappingUrl(library, name);
   </CardHeader>
   <CardContent className="space-y-3">
     {
-      entry.data.remeda !== undefined && (
+      mappedFunction !== undefined && (
         <h6 class="flex items-center gap-1 text-xl font-medium">
           <ArrowRightIcon className="ms-2 size-5" />
-          <a href={`/docs#${entry.data.remeda}`} class="truncate text-primary">
-            {entry.data.remeda}
+          <a
+            href={`/docs#${mappedFunction.data.id}`}
+            class="truncate text-primary"
+          >
+            {mappedFunction.data.name}
           </a>
         </h6>
       )
