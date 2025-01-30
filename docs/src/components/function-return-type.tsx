@@ -1,4 +1,4 @@
-import type { Signature } from "@/content/functions/schema";
+import type { Signature } from "@/lib/typedoc/schema";
 import type { ReactNode } from "react";
 
 export function FunctionReturnType({

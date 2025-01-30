@@ -45,7 +45,6 @@ const zSignature = z.object({
 
 export type FunctionEntry = z.infer<typeof zFunction>;
 const zFunction = z.object({
-  id: z.string(),
   name: z.string(),
   kind: z
     .literal(ReflectionKind.Function)
@@ -62,7 +61,6 @@ export const zEntry = z.discriminatedUnion("kind", [
   // actual function mapping. To allow parsing the v1 data file we need to
   // support this kind as well.
   z.object({
-    id: z.string(),
     name: z.string(),
     kind: z
       .literal(ReflectionKind.Namespace)

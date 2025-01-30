@@ -1,5 +1,5 @@
-import type { BlockTag } from "@/content/functions/schema";
 import { prop } from "remeda";
+import type { BlockTag } from "./typedoc/schema";
 
 export type Tag = "Lazy" | "Indexed" | "Strict";
 

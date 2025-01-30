@@ -4,7 +4,7 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { Signature } from "@/content/functions/schema";
+import type { Signature } from "@/lib/typedoc/schema";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { type ReactNode } from "react";
 import { FunctionReturnType } from "./function-return-type";
