@@ -19,8 +19,8 @@ export type TypeDocLoaderOptions = Omit<
   keyof typeof INTERNAL_TYPEDOC_OPTIONS
 >;
 
-export const typeDocLoader = (options: TypeDocLoaderOptions): Loader => ({
-  name: "typeDoc",
+export const typedocLoader = (options: TypeDocLoaderOptions): Loader => ({
+  name: "typedoc",
 
   schema: zEntry,
 

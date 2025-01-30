@@ -1,4 +1,4 @@
-import { typeDocLoader, type TypeDocLoaderOptions } from "@/lib/typedoc/loader";
+import { typedocLoader, type TypeDocLoaderOptions } from "@/lib/typedoc/loader";
 import { prop } from "remeda";
 import invariant from "tiny-invariant";
 import { OptionDefaults, Application as TypeDoc } from "typedoc";
@@ -22,7 +22,7 @@ const TYPEDOC_OPTIONS = {
   sourceLinkTemplate: "https://github.com/remeda/remeda/blob/main/{path}",
 } satisfies TypeDocLoaderOptions;
 
-export const functionsLoader = typeDocLoader(TYPEDOC_OPTIONS);
+export const functionsLoader = typedocLoader(TYPEDOC_OPTIONS);
 
 export async function categoriesLoader() {
   const app = await TypeDoc.bootstrap(TYPEDOC_OPTIONS);
