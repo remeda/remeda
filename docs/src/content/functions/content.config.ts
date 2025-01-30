@@ -1,13 +1,13 @@
-import { zEntry } from "@/lib/typedoc/schema";
 import { defineCollection, reference, z } from "astro:content";
 import { categoriesLoader, functionsLoader } from "./loaders";
+import { zFunction } from "@/lib/typedoc/schema";
 
 export const functionsCollectionName = "functions";
 export const categoriesCollectionName = "categories";
 
 export const functionsCollection = defineCollection({
   loader: functionsLoader,
-  schema: zEntry,
+  schema: zFunction,
 });
 
 export const categoriesCollection = defineCollection({

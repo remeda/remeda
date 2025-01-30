@@ -7,7 +7,6 @@ import {
   ReflectionKind,
   type TypeDocOptions,
 } from "typedoc";
-import { zEntry } from "./schema";
 
 const INTERNAL_TYPEDOC_OPTIONS = {
   // We want to keep astro-specific log lines visible in the output too
@@ -21,8 +20,6 @@ export type TypeDocLoaderOptions = Omit<
 
 export const typedocLoader = (options: TypeDocLoaderOptions): Loader => ({
   name: "typedoc",
-
-  schema: zEntry,
 
   load: async (context) => {
     const app = await Application.bootstrap({
