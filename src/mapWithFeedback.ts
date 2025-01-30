@@ -1,7 +1,7 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
-import type { LazyEvaluator } from "./pipe";
 
 /**
  * Applies a function on each element of the array, using the result of the
