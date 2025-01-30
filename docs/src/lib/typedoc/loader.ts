@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-import type { Loader } from "astro/loaders";
-import { difference, forEach, omit, pipe, prop } from "remeda";
+import type { Loader, LoaderContext } from "astro/loaders";
+import { omit } from "remeda";
 import invariant from "tiny-invariant";
-import { Application, ReflectionKind, type TypeDocOptions } from "typedoc";
+import {
+  Application,
+  ProjectReflection,
+  ReflectionKind,
+  type TypeDocOptions,
+} from "typedoc";
 import { zEntry } from "./schema";
 
 const INTERNAL_TYPEDOC_OPTIONS = {
@@ -21,82 +26,86 @@ export const typeDocLoader = (options: TypeDocLoaderOptions): Loader => ({
 
   schema: zEntry,
 
-  load: async ({ store, logger, watcher, parseData, generateDigest }) => {
+  load: async (context) => {
     const app = await Application.bootstrap({
       ...options,
       ...INTERNAL_TYPEDOC_OPTIONS,
     });
 
-    if (watcher === undefined) {
-      // build mode
+    if (context.watcher === undefined) {
       const project = await app.convert();
       invariant(project !== undefined, "Failed to parse project!");
 
-      const parsedData = await Promise.all(
-        project.getReflectionsByKind(ReflectionKind.Function).map(
-          async (funcReflection) =>
-            await parseData({
-              id: funcReflection.name,
-              data: omit(funcReflection, ["id"]),
-              ...(funcReflection.isDeclaration() &&
-                funcReflection.sources?.[0] !== undefined && {
-                  filePath: funcReflection.sources[0].fullFileName,
-                }),
-            }),
-        ),
-      );
-
-      store.clear();
-      for (const data of parsedData) {
-        store.set({ id: data.name, data });
-      }
+      await cleanLoad(context, project);
 
       return;
     }
 
-    store.clear();
-
     let isInit = true;
 
     app.convertAndWatch(async (project) => {
-      if (!isInit) {
-        logger.info("Detected changes in source files");
-      }
-
-      const parsedData = await Promise.all(
-        project.getReflectionsByKind(ReflectionKind.Function).map(
-          async (funcReflection) =>
-            await parseData({
-              id: funcReflection.name,
-              data: omit(funcReflection, ["id"]),
-              ...(funcReflection.isDeclaration() &&
-                funcReflection.sources?.[0] !== undefined && {
-                  filePath: funcReflection.sources[0].fullFileName,
-                }),
-            }),
-        ),
-      );
-
-      for (const data of parsedData) {
-        const digest = generateDigest(data);
-        const wasUpdated = store.set({ id: data.name, data, digest });
-        if (wasUpdated && !isInit) {
-          logger.info(`Updated ${data.name} in store`);
-        }
-      }
-
-      if (!isInit) {
-        pipe(
-          store.keys(),
-          difference(parsedData.map(prop("name"))),
-          forEach((removedKey) => {
-            logger.info(`Removing ${removedKey} from store`);
-            store.delete(removedKey);
-          }),
-        );
-      }
+      await (isInit
+        ? cleanLoad(context, project)
+        : incrementalLoad(context, project));
 
       isInit = false;
     });
   },
 });
+
+async function cleanLoad(
+  context: LoaderContext,
+  project: ProjectReflection,
+): Promise<void> {
+  context.store.clear();
+  for await (const data of getParsedData(context, project)) {
+    const digest = context.generateDigest(data);
+    context.store.set({ id: data.name, data, digest });
+  }
+}
+
+async function incrementalLoad(
+  context: LoaderContext,
+  project: ProjectReflection,
+): Promise<void> {
+  const { store, logger } = context;
+
+  logger.info("Detected changes in source files");
+
+  const existingFuncNames = new Set<string>();
+
+  for await (const data of getParsedData(context, project)) {
+    existingFuncNames.add(data.name);
+
+    const digest = context.generateDigest(data);
+    const wasUpdated = store.set({ id: data.name, data, digest });
+    if (wasUpdated) {
+      logger.info(`Updated ${data.name} in store`);
+    }
+  }
+
+  for (const key of store.keys()) {
+    if (!existingFuncNames.has(key)) {
+      logger.info(`Removing ${key} from store`);
+      store.delete(key);
+    }
+  }
+}
+
+async function* getParsedData(
+  { parseData }: LoaderContext,
+  project: ProjectReflection,
+) {
+  const reflections = project.getReflectionsByKind(ReflectionKind.Function);
+
+  for (const reflection of reflections) {
+    yield await parseData({
+      id: reflection.name,
+      data: omit(reflection, ["id"]),
+      ...(reflection.isDeclaration() &&
+        reflection.sources?.[0] !== undefined && {
+          filePath: reflection.sources[0].fullFileName,
+        }),
+    });
+  }
+}
