@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-
 import type { Loader, LoaderContext } from "astro/loaders";
 import { omit } from "remeda";
 import invariant from "tiny-invariant";
@@ -93,13 +91,13 @@ async function incrementalLoad(
 }
 
 async function* getParsedData(
-  { parseData }: LoaderContext,
+  context: LoaderContext,
   project: ProjectReflection,
 ) {
   const reflections = project.getReflectionsByKind(ReflectionKind.Function);
 
   for (const reflection of reflections) {
-    yield await parseData({
+    yield await context.parseData({
       id: reflection.name,
       data: omit(reflection, ["id"]),
       ...(reflection.isDeclaration() &&
