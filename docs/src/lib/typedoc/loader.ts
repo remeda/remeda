@@ -31,6 +31,9 @@ export const typedocLoader = (options: TypeDocLoaderOptions): Loader => ({
     });
 
     if (context.watcher === undefined) {
+      // There is no watcher available, meaning that the loader is not running
+      // in the context of a live/dev server.
+
       const project = await app.convert();
       invariant(project !== undefined, "Failed to parse project!");
 
