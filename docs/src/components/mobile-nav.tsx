@@ -8,18 +8,18 @@ import { isEmpty } from "remeda";
 
 export function MobileNav({
   pathname,
-  categories,
+  entries,
   title,
   showVersionSelector = false,
 }: {
   readonly pathname: string;
-  readonly categories: ReadonlyArray<NavbarCategory>;
+  readonly entries: ReadonlyArray<NavbarCategory>;
   readonly title: string | undefined;
   readonly showVersionSelector?: boolean;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
 
-  if (isEmpty(categories)) {
+  if (isEmpty(entries)) {
     return;
   }
 
@@ -32,7 +32,7 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent className="pt-12">
         <Navbar
-          entries={categories}
+          entries={entries}
           onSelect={() => {
             setIsOpen(false);
           }}

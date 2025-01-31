@@ -56,6 +56,6 @@ async function getRouteNavbarEntries() {
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  categories={[...articlesForNavbar(articles), ...routeNavbarEntries]}
+  entries={[...articlesForNavbar(articles), ...routeNavbarEntries]}
   client:media="(max-width: 767px)"
 />
