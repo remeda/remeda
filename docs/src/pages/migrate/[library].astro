@@ -2,10 +2,7 @@
 import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import {
-  migrationMappingNavBarEntries,
-  getMigrationMappings,
-} from "@/lib/mapping/entries";
+import { forNavbar, getMigrationMappings } from "@/lib/mapping/entries";
 import { getAllMappedLibraries } from "@/lib/mapping/libraries";
 import type { GetStaticPaths, InferGetStaticParamsType } from "astro";
 
@@ -19,10 +16,9 @@ type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 const { library } = Astro.params as Params;
 
 const mappings = await getMigrationMappings(library);
-const navbarEntries = migrationMappingNavBarEntries(mappings);
 ---
 
-<DocsPage title={`Migrate: ${library}`} navbarEntries={navbarEntries}>
+<DocsPage title={`Migrate: ${library}`} navbarEntries={forNavbar(mappings)}>
   {
     mappings.map(([category, categorizedMappings]) => (
       <DocsSection title={category}>

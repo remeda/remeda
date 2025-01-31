@@ -30,7 +30,7 @@ export const getMigrationMappings = async (library: string) =>
     sortByCategories(),
   );
 
-export const migrationMappingNavBarEntries = (
+export const forNavbar = (
   result: Awaited<ReturnType<typeof getMigrationMappings>>,
 ): ReadonlyArray<NavbarCategory> =>
   map(

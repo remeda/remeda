@@ -8,7 +8,7 @@ import {
   forNavbar as v1FunctionsForNavbar,
 } from "@/lib/v1/entries";
 import {
-  migrationMappingNavBarEntries,
+  forNavbar as migrationMappingsForNavBar,
   getMigrationMappings,
 } from "@/lib/mapping/entries";
 import { MobileNav } from "./mobile-nav";
@@ -34,7 +34,7 @@ const [routeNavbarEntries, articles] = await Promise.all([
  */
 async function getRouteNavbarEntries() {
   if (migrationLibrary !== undefined) {
-    return migrationMappingNavBarEntries(
+    return migrationMappingsForNavBar(
       await getMigrationMappings(migrationLibrary),
     );
   }
