@@ -21,8 +21,8 @@ const { pathname } = Astro.url;
 
 const migrationLibrary = MIGRATION_REGEXP.exec(pathname)?.groups?.library;
 
-const [routeNavbarEntries, articlesNavbarEntries] = await Promise.all([
-  getRouteEntries(),
+const [routeNavbarEntries, articles] = await Promise.all([
+  getRouteNavbarEntries(),
   getArticles(pathname),
 ]);
 
@@ -32,7 +32,7 @@ const [routeNavbarEntries, articlesNavbarEntries] = await Promise.all([
  * to sync the logic for what entries it should show with the routing logic for
  * our pages.
  */
-async function getRouteEntries() {
+async function getRouteNavbarEntries() {
   if (migrationLibrary !== undefined) {
     return migrationMappingNavBarEntries(
       await getMigrationMappings(migrationLibrary),
@@ -56,9 +56,6 @@ async function getRouteEntries() {
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  categories={[
-    ...articlesForNavbar(articlesNavbarEntries),
-    ...routeNavbarEntries,
-  ]}
+  categories={[...articlesForNavbar(articles), ...routeNavbarEntries]}
   client:media="(max-width: 767px)"
 />
