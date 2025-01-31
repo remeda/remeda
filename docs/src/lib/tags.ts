@@ -1,11 +1,7 @@
-import type { BlockTag } from "@/content/functions/schema";
 import { prop } from "remeda";
+import type { BlockTag } from "./typedoc/schema";
 
 export type Tag = "Lazy" | "Indexed" | "Strict";
-
-export type SourceTags = Readonly<
-  Partial<Record<"pipeable" | "strict" | "indexed" | "lazy", boolean>>
->;
 
 export function extractTags(blockTags: ReadonlyArray<BlockTag> | undefined) {
   const out: Array<Tag> = [];

@@ -1,40 +1,26 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  functionsCollectionName,
-  type categoriesCollectionName,
-} from "@/content/functions/content.config";
+import { functionsCollectionName } from "@/content/functions/content.config";
 import { tagContent } from "@/lib/tags";
-import type { InferEntrySchema } from "astro:content";
-import { getCollection, getEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import { map, pipe, uniqueBy } from "remeda";
-import invariant from "tiny-invariant";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
-  readonly category: string;
-  readonly functionRef: InferEntrySchema<
-    typeof categoriesCollectionName
-  >["children"][number];
+  readonly entry: CollectionEntry<typeof functionsCollectionName>;
+  readonly internalNames: ReadonlySet<string>;
 };
 
-const { functionRef, category } = Astro.props;
+const {
+  entry: { id, data },
+  internalNames,
+} = Astro.props;
 
-const [{ data }, functions] = await Promise.all([
-  getEntry(functionRef),
-  getCollection(functionsCollectionName),
-]);
-
-invariant(
-  data.kind === "function",
-  `Entry ${data.name} is of unsupported kind: ${data.kind}`,
-);
-
-const internalNames = new Set(functions.map(({ data: { name } }) => name));
+const category = tagContent(data.signatures[0].comment.blockTags, "category");
 ---
 
-<Card id={data.name} className="scroll-mt-24">
+<Card id={id} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
       category={category}

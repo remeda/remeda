@@ -44,8 +44,7 @@ const zSignature = z.object({
 });
 
 export type FunctionEntry = z.infer<typeof zFunction>;
-const zFunction = z.object({
-  id: z.string(),
+export const zFunction = z.object({
   name: z.string(),
   kind: z
     .literal(ReflectionKind.Function)
@@ -54,18 +53,3 @@ const zFunction = z.object({
   // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` too.
   signatures: z.array(zSignature).min(1).refine(hasAtLeast(1)),
 });
-
-export const zEntry = z.discriminatedUnion("kind", [
-  zFunction,
-  // V1 used namespaces to inject properties into functions. This caused the
-  // docs to contain these namespace declarations **in addition** to the
-  // actual function mapping. To allow parsing the v1 data file we need to
-  // support this kind as well.
-  z.object({
-    id: z.string(),
-    name: z.string(),
-    kind: z
-      .literal(ReflectionKind.Namespace)
-      .transform(constant("namespace" as const)),
-  }),
-]);
