@@ -3,11 +3,34 @@ import { functionsCollectionName } from "@/content/functions/content.config";
 import { getCollection } from "astro:content";
 import { entries, groupBy, map, pipe } from "remeda";
 import invariant from "tiny-invariant";
-import { sortByCategories } from "./sort-categories";
-import { extractTags, tagContent } from "./tags";
+import { sortByCategories } from "../sort-categories";
+import { extractTags, tagContent } from "../tags";
 
-export const v2NavBarEntries = (
-  result: Awaited<ReturnType<typeof v2Functions>>,
+export const getFunctions = async () =>
+  pipe(
+    await getCollection(functionsCollectionName),
+    groupBy(
+      ({
+        data: {
+          name,
+          signatures: [
+            {
+              comment: { blockTags },
+            },
+          ],
+        },
+      }) => {
+        const category = tagContent(blockTags, "category");
+        invariant(category !== undefined, `Missing category tag on ${name}`);
+        return category.toLowerCase();
+      },
+    ),
+    entries(),
+    sortByCategories(),
+  );
+
+export const forNavbar = (
+  result: Awaited<ReturnType<typeof getFunctions>>,
 ): ReadonlyArray<NavbarCategory> =>
   map(
     result,
@@ -30,27 +53,3 @@ export const v2NavBarEntries = (
         ),
       ] as const,
   );
-
-export async function v2Functions() {
-  return pipe(
-    await getCollection(functionsCollectionName),
-    groupBy(
-      ({
-        data: {
-          name,
-          signatures: [
-            {
-              comment: { blockTags },
-            },
-          ],
-        },
-      }) => {
-        const category = tagContent(blockTags, "category");
-        invariant(category !== undefined, `Missing category tag on ${name}`);
-        return category.toLowerCase();
-      },
-    ),
-    entries(),
-    sortByCategories(),
-  );
-}

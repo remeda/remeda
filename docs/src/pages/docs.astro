@@ -1,27 +1,28 @@
 ---
 import DocsSection from "@/components/docs-section.astro";
 import FunctionCard from "@/components/function-card.astro";
-import { functionsCollectionName } from "@/content/functions/content.config";
 import DocsPage from "@/layouts/docs-page.astro";
-import { v2Functions, v2NavBarEntries } from "@/lib/entries";
-import { getCollection } from "astro:content";
+import { forNavbar, getFunctions } from "@/lib/functions/entries";
+import { flatMap, map } from "remeda";
 
-const entries = await getCollection(functionsCollectionName);
-const internalNames = new Set(entries.map(({ data: { name } }) => name));
+const functions = await getFunctions();
 
-const categorizedFunctions = await v2Functions();
-const navbarEntries = v2NavBarEntries(categorizedFunctions);
+const internalNames = new Set(
+  flatMap(functions, ([, categoryFunctions]) =>
+    map(categoryFunctions, ({ data: { name } }) => name),
+  ),
+);
 ---
 
 <DocsPage
   showVersionSelector
   title="Documentation"
-  navbarEntries={navbarEntries}
+  navbarEntries={forNavbar(functions)}
 >
   {
-    categorizedFunctions.map(([category, functions]) => (
+    functions.map(([category, categoryFunctions]) => (
       <DocsSection title={category}>
-        {functions.map((entry) => (
+        {categoryFunctions.map((entry) => (
           <FunctionCard entry={entry} internalNames={internalNames} />
         ))}
       </DocsSection>

@@ -3,7 +3,6 @@ import {
   forNavbar as articlesForNavbar,
   getArticles,
 } from "@/lib/articles/entries";
-import { v2Functions, v2NavBarEntries } from "@/lib/entries";
 import {
   getV1Functions,
   forNavbar as v1FunctionsForNavbar,
@@ -14,32 +13,52 @@ import {
 } from "@/lib/mapping/entries";
 import { MobileNav } from "./mobile-nav";
 import { VERSIONS } from "./version-selector";
+import { forNavbar, getFunctions } from "@/lib/functions/entries";
 
 const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)\/?$/iu;
 
 const { pathname } = Astro.url;
-const normalizedPathname = pathname.replace(/\/$/, "");
 
 const migrationLibrary = MIGRATION_REGEXP.exec(pathname)?.groups?.library;
 
-const navbarEntries =
-  migrationLibrary !== undefined
-    ? migrationMappingNavBarEntries(
-        await getMigrationMappings(migrationLibrary),
-      )
-    : normalizedPathname === VERSIONS.v1.path
-      ? v1FunctionsForNavbar(await getV1Functions())
-      : normalizedPathname === VERSIONS.latest.path
-        ? v2NavBarEntries(await v2Functions())
-        : [];
+const [routeNavbarEntries, articlesNavbarEntries] = await Promise.all([
+  getRouteEntries(),
+  getArticles(pathname),
+]);
 
-const articlesNavbarEntries = articlesForNavbar(await getArticles(pathname));
+/**
+ * The mobile navbar is part of the header which is part of the general layout
+ * and doesn't have access to the data in the specific pages. This means we need
+ * to sync the logic for what entries it should show with the routing logic for
+ * our pages.
+ */
+async function getRouteEntries() {
+  if (migrationLibrary !== undefined) {
+    return migrationMappingNavBarEntries(
+      await getMigrationMappings(migrationLibrary),
+    );
+  }
+
+  switch (pathname.replace(/\/$/, "")) {
+    case VERSIONS.v1.path:
+      return v1FunctionsForNavbar(await getV1Functions());
+
+    case VERSIONS.latest.path:
+      return forNavbar(await getFunctions());
+
+    default:
+      return [];
+  }
+}
 ---
 
 <MobileNav
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  categories={[...articlesNavbarEntries, ...navbarEntries]}
+  categories={[
+    ...articlesForNavbar(articlesNavbarEntries),
+    ...routeNavbarEntries,
+  ]}
   client:media="(max-width: 767px)"
 />
