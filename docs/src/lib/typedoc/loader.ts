@@ -13,7 +13,7 @@ const INTERNAL_TYPEDOC_OPTIONS = {
   preserveWatchOutput: true,
 } as const satisfies Partial<TypeDocOptions>;
 
-export type TypeDocLoaderOptions = Omit<
+type TypeDocLoaderOptions = Omit<
   Partial<TypeDocOptions>,
   keyof typeof INTERNAL_TYPEDOC_OPTIONS
 >;
