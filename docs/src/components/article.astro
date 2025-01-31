@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { docsArticlesCollectionName } from "@/content/docs-articles/content.config";
+import { render } from "astro:content";
+import Prose from "./prose.astro";
+
+type Props = {
+  readonly article: CollectionEntry<typeof docsArticlesCollectionName>;
+};
+
+const { article } = Astro.props;
+
+const { Content } = await render(article);
+---
+
+<Prose id={article.data.slug ?? article.id} class="scroll-mt-24">
+  <Content />
+</Prose>

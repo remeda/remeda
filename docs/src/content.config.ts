@@ -1,10 +1,8 @@
 import {
-  collection as docsArticlesCollection,
-  name as docsArticlesName,
+  docsArticlesCollection,
+  docsArticlesCollectionName,
 } from "@/content/docs-articles/content.config";
 import {
-  categoriesCollection,
-  categoriesCollectionName,
   functionsCollection,
   functionsCollectionName,
 } from "@/content/functions/content.config";
@@ -15,8 +13,8 @@ import {
   functionsV1CollectionName,
 } from "@/content/functions/v1/content.config";
 import {
-  collection as mappingCollection,
-  name as mappingName,
+  mappingCollection,
+  mappingCollectionName,
 } from "@/content/mapping/content.config";
 import {
   collection as v1MigrationCollection,
@@ -24,11 +22,10 @@ import {
 } from "@/content/v1-migration/content.config";
 
 export const collections = {
-  [docsArticlesName]: docsArticlesCollection,
-  [mappingName]: mappingCollection,
+  [docsArticlesCollectionName]: docsArticlesCollection,
+  [mappingCollectionName]: mappingCollection,
   [v1MigrationName]: v1MigrationCollection,
   [functionsCollectionName]: functionsCollection,
-  [categoriesCollectionName]: categoriesCollection,
   [functionsV1CollectionName]: functionsV1Collection,
   [categoriesV1CollectionName]: categoriesV1Collection,
 };

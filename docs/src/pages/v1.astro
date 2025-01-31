@@ -1,19 +1,28 @@
 ---
 import DocsSection from "@/components/docs-section.astro";
 import V1FunctionCard from "@/components/v1/function-card.astro";
-import { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
+import { functionsV1CollectionName } from "@/content/functions/v1/content.config";
 import DocsPage from "@/layouts/docs-page.astro";
+import { getV1Functions, forNavbar } from "@/lib/v1/entries";
 import { getCollection } from "astro:content";
 
-const categories = await getCollection(categoriesV1CollectionName);
+const entries = await getCollection(functionsV1CollectionName);
+const internalNames = new Set(entries.map(({ data: { name } }) => name));
+
+const categorizedFunctions = await getV1Functions();
+const navbarEntries = forNavbar(categorizedFunctions);
 ---
 
-<DocsPage showVersionSelector title="v1 (Legacy)" categorized={categories}>
+<DocsPage showVersionSelector title="v1 (Legacy)" navbarEntries={navbarEntries}>
   {
-    categories.map(({ id, data: { children } }) => (
-      <DocsSection title={id}>
-        {children.map((functionRef) => (
-          <V1FunctionCard category={id} functionRef={functionRef} />
+    categorizedFunctions.map(([category, functions]) => (
+      <DocsSection title={category}>
+        {functions.map((data) => (
+          <V1FunctionCard
+            category={category}
+            data={data}
+            internalNames={internalNames}
+          />
         ))}
       </DocsSection>
     ))

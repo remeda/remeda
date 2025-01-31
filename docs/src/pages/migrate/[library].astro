@@ -2,10 +2,12 @@
 import DocsSection from "@/components/docs-section.astro";
 import MappingFunctionCard from "@/components/mapping-function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
-import { getMappingEntries } from "@/lib/mapping/entries";
+import {
+  migrationMappingNavBarEntries,
+  getMigrationMappings,
+} from "@/lib/mapping/entries";
 import { getAllMappedLibraries } from "@/lib/mapping/libraries";
 import type { GetStaticPaths, InferGetStaticParamsType } from "astro";
-import { sortBy } from "remeda";
 
 export const getStaticPaths = (async () => {
   const libraries = await getAllMappedLibraries();
@@ -16,16 +18,16 @@ type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
 const { library } = Astro.params as Params;
 
-const mappingEntries = await getMappingEntries(library);
-const forDisplay = sortBy(mappingEntries, ([category]) => category);
+const mappings = await getMigrationMappings(library);
+const navbarEntries = migrationMappingNavBarEntries(mappings);
 ---
 
-<DocsPage categorized={mappingEntries} title={`Migrate: ${library}`}>
+<DocsPage title={`Migrate: ${library}`} navbarEntries={navbarEntries}>
   {
-    forDisplay.map(([category, functions]) => (
+    mappings.map(([category, categorizedMappings]) => (
       <DocsSection title={category}>
-        {functions.map(({ name }) => (
-          <MappingFunctionCard name={name} library={library} />
+        {categorizedMappings.map((mapping) => (
+          <MappingFunctionCard entry={mapping} library={library} />
         ))}
       </DocsSection>
     ))

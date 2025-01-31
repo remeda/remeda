@@ -1,4 +1,4 @@
-import { name as mappingCollectionName } from "@/content/mapping/content.config";
+import { mappingCollectionName } from "@/content/mapping/content.config";
 import { getCollection } from "astro:content";
 import { hasAtLeast, split } from "remeda";
 import invariant from "tiny-invariant";

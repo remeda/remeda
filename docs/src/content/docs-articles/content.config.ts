@@ -1,9 +1,9 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-export const name = "docs-articles";
+export const docsArticlesCollectionName = "docs-articles";
 
-export const collection = defineCollection({
+export const docsArticlesCollection = defineCollection({
   loader: glob({
     base: import.meta.dirname,
     pattern: "**/[^_]*.md",

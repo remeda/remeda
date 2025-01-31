@@ -1,49 +1,22 @@
 ---
+import Article from "@/components/article.astro";
 import DocsSection from "@/components/docs-section.astro";
-import { Navbar } from "@/components/navbar";
-import Prose from "@/components/prose.astro";
+import { Navbar, type NavbarCategory } from "@/components/navbar";
 import { VersionSelector } from "@/components/version-selector";
-import type { categoriesCollectionName } from "@/content/functions/content.config";
-import type { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
-import { getArticlesForPath } from "@/lib/docs";
-import { getNavbarEntries, type MappingCategories } from "@/lib/navbar-entries";
-import { render, type CollectionEntry } from "astro:content";
-import { entries, groupBy, map, pipe, sortBy } from "remeda";
+import { forNavbar, getArticles } from "@/lib/articles/entries";
 import BaseLayout from "./base.astro";
 
 type Props = {
-  readonly categorized:
-    | MappingCategories
-    | ReadonlyArray<
-        CollectionEntry<
-          typeof categoriesCollectionName | typeof categoriesV1CollectionName
-        >
-      >;
+  readonly navbarEntries: ReadonlyArray<NavbarCategory>;
   readonly showVersionSelector?: boolean;
   readonly title?: string;
 };
 
-const { categorized, showVersionSelector = false, title } = Astro.props;
+const { navbarEntries, showVersionSelector = false, title } = Astro.props;
 
 const { pathname } = Astro.url;
 
-const articles = await getArticlesForPath(pathname);
-
-const navbarEntries = await getNavbarEntries(categorized, articles);
-
-const renderedArticles = pipe(
-  await pipe(
-    articles,
-    sortBy(({ data: { priority } }) => priority ?? Infinity),
-    map(async (entry) => ({
-      ...entry,
-      rendered: await render(entry),
-    })),
-    async ($) => await Promise.all($),
-  ),
-  groupBy(({ data: { category } }) => category),
-  entries(),
-);
+const articles = await getArticles(pathname);
 ---
 
 <BaseLayout title={title}>
@@ -51,7 +24,7 @@ const renderedArticles = pipe(
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
-      <Navbar entries={navbarEntries} client:load>
+      <Navbar entries={[...forNavbar(articles), ...navbarEntries]} client:load>
         {
           showVersionSelector && (
             <VersionSelector pathname={pathname} client:load />
@@ -64,12 +37,10 @@ const renderedArticles = pipe(
         {title}
       </h1>
       {
-        renderedArticles.map(([category, articles]) => (
+        articles.map(([category, categoryArticles]) => (
           <DocsSection title={category}>
-            {articles.map(({ slug, rendered: { Content } }) => (
-              <Prose id={slug} class="scroll-mt-24">
-                <Content />
-              </Prose>
+            {categoryArticles.map((article) => (
+              <Article article={article} />
             ))}
           </DocsSection>
         ))

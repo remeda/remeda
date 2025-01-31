@@ -1,10 +1,17 @@
 ---
-import { categoriesCollectionName } from "@/content/functions/content.config";
-import { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
-import { getArticlesForPath } from "@/lib/docs";
-import { getMappingEntries } from "@/lib/mapping/entries";
-import { getNavbarEntries } from "@/lib/navbar-entries";
-import { getCollection } from "astro:content";
+import {
+  forNavbar as articlesForNavbar,
+  getArticles,
+} from "@/lib/articles/entries";
+import { v2Functions, v2NavBarEntries } from "@/lib/entries";
+import {
+  getV1Functions,
+  forNavbar as v1FunctionsForNavbar,
+} from "@/lib/v1/entries";
+import {
+  migrationMappingNavBarEntries,
+  getMigrationMappings,
+} from "@/lib/mapping/entries";
 import { MobileNav } from "./mobile-nav";
 import { VERSIONS } from "./version-selector";
 
@@ -15,25 +22,24 @@ const normalizedPathname = pathname.replace(/\/$/, "");
 
 const migrationLibrary = MIGRATION_REGEXP.exec(pathname)?.groups?.library;
 
-const entries =
-  migrationLibrary !== undefined
-    ? await getMappingEntries(migrationLibrary)
-    : normalizedPathname === VERSIONS.v1.path
-      ? await getCollection(categoriesV1CollectionName)
-      : normalizedPathname === VERSIONS.latest.path
-        ? await getCollection(categoriesCollectionName)
-        : undefined;
-
-const articles = await getArticlesForPath(pathname);
-
 const navbarEntries =
-  entries === undefined ? [] : await getNavbarEntries(entries, articles);
+  migrationLibrary !== undefined
+    ? migrationMappingNavBarEntries(
+        await getMigrationMappings(migrationLibrary),
+      )
+    : normalizedPathname === VERSIONS.v1.path
+      ? v1FunctionsForNavbar(await getV1Functions())
+      : normalizedPathname === VERSIONS.latest.path
+        ? v2NavBarEntries(await v2Functions())
+        : [];
+
+const articlesNavbarEntries = articlesForNavbar(await getArticles(pathname));
 ---
 
 <MobileNav
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  categories={navbarEntries}
+  categories={[...articlesNavbarEntries, ...navbarEntries]}
   client:media="(max-width: 767px)"
 />

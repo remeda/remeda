@@ -2,9 +2,9 @@ import { glob } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
 import { functionsCollectionName } from "../functions/content.config";
 
-export const name = "mapping";
+export const mappingCollectionName = "mapping";
 
-export const collection = defineCollection({
+export const mappingCollection = defineCollection({
   loader: glob({
     base: import.meta.dirname,
     pattern: "**/[^_]*.md",
