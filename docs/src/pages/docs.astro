@@ -22,8 +22,8 @@ const internalNames = new Set(
   {
     functions.map(([category, categoryFunctions]) => (
       <DocsSection title={category}>
-        {categoryFunctions.map((entry) => (
-          <FunctionCard entry={entry} internalNames={internalNames} />
+        {categoryFunctions.map((func) => (
+          <FunctionCard func={func} internalNames={internalNames} />
         ))}
       </DocsSection>
     ))

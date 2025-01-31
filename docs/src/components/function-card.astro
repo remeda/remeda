@@ -8,12 +8,12 @@ import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
-  readonly entry: CollectionEntry<typeof functionsCollectionName>;
+  readonly func: CollectionEntry<typeof functionsCollectionName>;
   readonly internalNames: ReadonlySet<string>;
 };
 
 const {
-  entry: { id, data },
+  func: { id, data },
   internalNames,
 } = Astro.props;
 
