@@ -24,5 +24,6 @@ export const functionsCollection = defineCollection({
 
     sourceLinkTemplate: "https://github.com/remeda/remeda/blob/main/{path}",
   }),
+
   schema: zFunction,
 });
