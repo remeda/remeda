@@ -5,11 +5,12 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { filter, pipe, pullObject } from "remeda";
-import { build, defineConfig as defineViteConfig } from "vite";
-
-const SOURCE_DIRECTORY = "src/scripts";
-const OUTPUT_DIR = "public/dist/scripts";
+import { endsWith, filter, pipe, pullObject } from "remeda";
+import {
+  build,
+  defineConfig as defineViteConfig,
+  type PluginOption,
+} from "vite";
 
 export default defineConfig({
   site: "https://remedajs.com",
@@ -25,43 +26,66 @@ export default defineConfig({
 
   vite: {
     plugins: [
-      {
-        name: "build-scripts",
-        apply: "build",
-        buildStart: async () => {
-          await build(
-            defineViteConfig({
-              build: {
-                rollupOptions: {
-                  input: await getSourceFiles(SOURCE_DIRECTORY),
-                  output: {
-                    dir: OUTPUT_DIR,
-                    entryFileNames: "[name].js",
-                  },
-                },
-              },
-
-              // Disable the publicDir for the scripts because we aren't really building a
-              // server here and the name clash makes vite unhappy (very unhappy!).
-              publicDir: false,
-            }),
-          );
-        },
-      },
+      staticScriptsPlugin({
+        inputDir: "src/scripts",
+        outputDir: "public/dist/scripts",
+      }),
     ],
   },
 });
 
-async function getSourceFiles(
-  directory: string,
-): Promise<Record<string, string>> {
-  const sourceDir = path.resolve(import.meta.dirname, directory);
-  return pipe(
-    await fs.readdir(sourceDir),
-    filter((fileName) => fileName.endsWith(".ts")),
-    pullObject(
-      (fileName) => path.basename(fileName, ".ts"),
-      (fileName) => path.resolve(sourceDir, fileName),
-    ),
-  );
+/**
+ * A simple plugin to run a *separate* build via Vite for static scripts that
+ * need to be included by name and loaded by the browser directly.
+ *
+ * TODO: Ideally this should be it's own package. Once we move to a mono-repo setup we should consider creating a separate package for this so that it could be imported into the config instead of living here!
+ */
+function staticScriptsPlugin({
+  inputDir,
+  outputDir,
+}: {
+  readonly inputDir: string;
+  readonly outputDir: string;
+}): PluginOption {
+  const fullPath = path.resolve(import.meta.dirname, inputDir);
+
+  return {
+    name: "static-scripts",
+
+    async buildStart(this) {
+      this.debug(`Compiling static scripts to ${outputDir}`);
+
+      const input = pipe(
+        await fs.readdir(fullPath),
+        filter(endsWith(".ts")),
+        pullObject(
+          (fileName) => path.basename(fileName, ".ts"),
+          (fileName) => path.resolve(fullPath, fileName),
+        ),
+      );
+
+      for (const path of Object.values(input)) {
+        this.info(`Found static script: ${path}`);
+      }
+
+      const config = defineViteConfig({
+        build: {
+          rollupOptions: {
+            input,
+            output: {
+              dir: outputDir,
+              entryFileNames: "[name].js",
+            },
+          },
+        },
+
+        // Disable the publicDir for the scripts because we aren't really
+        // building a server here and the name clash makes vite unhappy (very
+        // unhappy!).
+        publicDir: false,
+      });
+
+      await build(config);
+    },
+  };
 }

@@ -30,14 +30,11 @@ changes.
 npm run sync
 ```
 
-The production site also relies on some scripts residing in [`src/scripts`](src/scripts/README.md)
-(mainly the dark mode theme switcher) which need ot be built "outside" of the
-regular astro flow. When making changes to these scripts you need to run the
-build script manually:
-
-```bash
-npm run build:scripts
-```
+A few features rely on static scripts which are not part of the astro site
+(like the dark mode theme switcher). These are found in
+[`src/scripts`](src/scripts/README.md). Astro's HMR will not detected changes
+to these files dynamically while the dev server is running, but will rebuild
+them every time the server is started.
 
 Finally, to check a production build flow end-to-end you can use astro's preview
 feature. This would run the same build flow that is used in CI/CD.
