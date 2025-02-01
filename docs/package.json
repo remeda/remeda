@@ -8,10 +8,8 @@
   "scripts": {
     "build": "astro build",
     "build:all": "npm run build:scripts && npm run build",
-    "build:clean": "npm run clean && npm run build:all",
     "build:scripts": "vite build --config vite.scripts.config.ts",
     "check": "astro check --noSync",
-    "clean": "rm -rf dist public/dist .astro node_modules/.astro",
     "dev": "astro dev",
     "lint": "eslint",
     "preview": "astro preview",

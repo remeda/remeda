@@ -1,31 +1,49 @@
 # [Remeda documentation site](https://remedajs.com)
 
-## The Build
+## Development
 
-### 1. Typedoc
-
-First, we generate the project documentation using Typedoc. This step parses jsdoc comments from the main project to create a JSON file that is written to `src/data`. It only needs to run once after any changes to the Remeda codebase.
-
-```bash
-npm run typedoc
-```
-
-### 2. Astro
-
-The site itself is generated via Astro. To run the development server that provides hot-swapping code while you develop use:
+The docs site is built with Astro. Development is done via the integrated dev
+server:
 
 ```bash
 npm run dev
 ```
 
-The build step for deployment (`npm run build`) is automated via GitHub Actions and typically does not need to be run manually.
+While the server is running any changes to the docs site would be reloaded
+dynamically. Additionally, the library source code is also watched, so that any
+changes to the documentation of functions would also be reloaded dynamically.
 
-### Full Build Command
-
-To run the entire build process end-to-end, ensuring everything is set up correctly.
+To check and lint your project, including both `.astro` files and `.ts` and
+`.tsx` files use `check` and `lint`, This is also run automatically on each
+commit via a git hook.
 
 ```bash
-npm run build:clean
+npm run check
+npm run lint
+```
+
+In rare cases where changes are being made to the content loaders or their
+schemas you will need to run sync which would regenerate types for these
+changes.
+
+```bash
+npm run sync
+```
+
+The production site also relies on some scripts residing in `src/scripts`
+(mainly the dark mode theme switcher) which need ot be built "outside" of the
+regular astro flow. When making changes to these scripts you need to run the
+build script manually:
+
+```bash
+npm run build:scripts
+```
+
+Finally, to check a production build flow end-to-end you can use astro's preview
+feature. This would run the same build flow that is used in CI/CD.
+
+```bash
+npm run build:all
 npm run preview
 ```
 
