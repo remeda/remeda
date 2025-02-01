@@ -7,8 +7,6 @@
   "type": "module",
   "scripts": {
     "build": "astro build",
-    "build:all": "npm run build:scripts && npm run build",
-    "build:scripts": "vite build --config vite.scripts.config.ts",
     "check": "astro check --noSync",
     "dev": "astro dev",
     "lint": "eslint",

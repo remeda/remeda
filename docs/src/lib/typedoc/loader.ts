@@ -3,8 +3,8 @@ import { omit } from "remeda";
 import invariant from "tiny-invariant";
 import {
   Application,
-  ProjectReflection,
   ReflectionKind,
+  type ProjectReflection,
   type TypeDocOptions,
 } from "typedoc";
 
