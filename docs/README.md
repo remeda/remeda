@@ -30,7 +30,7 @@ changes.
 npm run sync
 ```
 
-The production site also relies on some scripts residing in `src/scripts`
+The production site also relies on some scripts residing in [`src/scripts`](src/scripts/README.md)
 (mainly the dark mode theme switcher) which need ot be built "outside" of the
 regular astro flow. When making changes to these scripts you need to run the
 build script manually:
