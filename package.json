@@ -78,7 +78,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "^3.4.2",
-    "publint": "^0.2.12",
+    "publint": "^0.3.2",
     "semantic-release": "^24.2.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
