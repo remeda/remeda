@@ -40,7 +40,7 @@ Finally, to check a production build flow end-to-end you can use astro's preview
 feature. This would run the same build flow that is used in CI/CD.
 
 ```bash
-npm run build:all
+npm run build
 npm run preview
 ```
 
