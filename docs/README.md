@@ -14,7 +14,7 @@ dynamically. Additionally, the library source code is also watched, so that any
 changes to the documentation of functions would also be reloaded dynamically.
 
 To check and lint your project, including both `.astro` files and `.ts` and
-`.tsx` files use `check` and `lint`, This is also run automatically on each
+`.tsx` files use _check_ and _lint_, This is also run automatically on each
 commit via a git hook.
 
 ```bash
