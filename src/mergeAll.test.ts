@@ -10,3 +10,11 @@ test("merge objects", () => {
     d: 10,
   });
 });
+
+it("should return an empty object when the input is an empty array", () => {
+  const input: ReadonlyArray<object> = [];
+
+  const result = mergeAll(input);
+
+  expect(result).toStrictEqual({});
+});
