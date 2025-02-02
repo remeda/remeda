@@ -1,10 +1,10 @@
 import type { IsInteger, IsNegative, Subtract } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NTuple } from "./internal/types/NTuple";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
-import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 type Drop<T extends IterableContainer, N extends number> =
