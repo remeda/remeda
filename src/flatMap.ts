@@ -1,4 +1,4 @@
-import type { LazyEvaluator } from "./pipe";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { purry } from "./purry";
 
 /**
