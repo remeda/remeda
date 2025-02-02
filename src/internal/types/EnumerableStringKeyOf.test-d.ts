@@ -52,5 +52,6 @@ test("optional keys", () => {
 test("branded types", () => {
   expectTypeOf<
     EnumerableStringKeyOf<Record<Tagged<string, symbol>, unknown>>
-  >().toEqualTypeOf<`${Tagged<string, symbol>}`>();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-template-expression -- TODO: I'm not sure what's going on here, are we doing something wrong or is this code needed so we can test it properly?
+  >().branded.toEqualTypeOf<`${Tagged<string, symbol>}`>();
 });

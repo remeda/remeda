@@ -20,7 +20,8 @@ test("works with non-empty arrays", () => {
 });
 
 test("should infer type in pipes", () => {
-  const result = pipe("this is a text", (text) => [...text], last());
+  // eslint-disable-next-line unicorn/prefer-spread -- This is fine...
+  const result = pipe("this is a text", (text) => text.split(""), last());
 
   expectTypeOf(result).toEqualTypeOf<string | undefined>();
 });
