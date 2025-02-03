@@ -40,7 +40,7 @@ const articles = await getArticles(pathname);
         articles.map(([category, categoryArticles]) => (
           <DocsSection title={category}>
             {categoryArticles.map((article) => (
-              <Article article={article} />
+              <Article class="scroll-mt-24" article={article} />
             ))}
           </DocsSection>
         ))

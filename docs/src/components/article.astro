@@ -6,13 +6,14 @@ import Prose from "./prose.astro";
 
 type Props = {
   readonly article: CollectionEntry<typeof docsArticlesCollectionName>;
+  readonly class?: string;
 };
 
-const { article } = Astro.props;
+const { article, class: class_ } = Astro.props;
 
 const { Content } = await render(article);
 ---
 
-<Prose id={article.data.slug ?? article.id} class="scroll-mt-24">
+<Prose id={article.data.slug ?? article.id} class={class_}>
   <Content />
 </Prose>
