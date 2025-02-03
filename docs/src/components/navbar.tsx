@@ -32,7 +32,9 @@ export function Navbar({
         <ul className="flex flex-col gap-2">
           {entries.map(([category, entries]) => (
             <li key={category}>
-              <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
+              <h4 className="px-2 py-1 text-lg font-semibold capitalize">
+                {category}
+              </h4>
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.title}>
