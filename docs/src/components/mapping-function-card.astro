@@ -50,10 +50,7 @@ const mappedUrl = mappingUrl(library, name);
       mappedFunction !== undefined && (
         <h6 class="flex items-center gap-1 text-xl font-medium">
           <ArrowRightIcon className="ms-2 size-5" />
-          <a
-            href={`/docs#${mappedFunction.data.name}`}
-            class="truncate text-primary"
-          >
+          <a href={`/docs#${mappedFunction.id}`} class="truncate text-primary">
             {mappedFunction.data.name}
           </a>
         </h6>
