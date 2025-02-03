@@ -1,38 +1,61 @@
 ---
-import { CATEGORIZED } from "@/lib/categorized";
-import { getArticlesForPath } from "@/lib/docs";
-import { getMappingEntries } from "@/lib/mapping/entries";
-import { getNavbarEntries } from "@/lib/navbar-entries";
-import { CATEGORIZED as V1_CATEGORIZED } from "@/lib/v1/categorized";
+import {
+  forNavbar as articlesForNavbar,
+  getArticles,
+} from "@/lib/articles/entries";
+import { forNavbar, getFunctions } from "@/lib/functions/entries";
+import {
+  getMigrationMappings,
+  forNavbar as migrationMappingsForNavBar,
+} from "@/lib/mapping/entries";
+import {
+  getV1Functions,
+  forNavbar as v1FunctionsForNavbar,
+} from "@/lib/v1/entries";
 import { MobileNav } from "./mobile-nav";
 import { VERSIONS } from "./version-selector";
 
 const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)\/?$/iu;
 
 const { pathname } = Astro.url;
-const normalizedPathname = pathname.replace(/\/$/, "");
 
 const migrationLibrary = MIGRATION_REGEXP.exec(pathname)?.groups?.library;
 
-const entries =
-  migrationLibrary !== undefined
-    ? await getMappingEntries(migrationLibrary)
-    : normalizedPathname === VERSIONS.v1.path
-      ? V1_CATEGORIZED
-      : normalizedPathname === VERSIONS.latest.path
-        ? CATEGORIZED
-        : undefined;
+const [routeNavbarEntries, articles] = await Promise.all([
+  getRouteNavbarEntries(),
+  getArticles(pathname),
+]);
 
-const articles = await getArticlesForPath(pathname);
+/**
+ * The mobile navbar is part of the header which is part of the general layout
+ * and doesn't have access to the data in the specific pages. This means we need
+ * to sync the logic for what entries it should show with the routing logic for
+ * our pages.
+ */
+async function getRouteNavbarEntries() {
+  if (migrationLibrary !== undefined) {
+    return migrationMappingsForNavBar(
+      await getMigrationMappings(migrationLibrary),
+    );
+  }
 
-const navbarEntries =
-  entries === undefined ? [] : getNavbarEntries(entries, articles);
+  switch (pathname.replace(/\/$/, "")) {
+    case VERSIONS.v1.path:
+      return v1FunctionsForNavbar(await getV1Functions());
+
+    case VERSIONS.latest.path:
+      return forNavbar(await getFunctions());
+
+    default:
+      return [];
+  }
+}
 ---
 
 <MobileNav
   showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
   pathname={pathname}
-  entries={navbarEntries}
+  entries={[...articlesForNavbar(articles), ...routeNavbarEntries]}
   client:media="(max-width: 767px)"
 />

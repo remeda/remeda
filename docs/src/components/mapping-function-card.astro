@@ -1,23 +1,31 @@
 ---
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMappedEntry } from "@/lib/mapping/entry";
+import type { mappingCollectionName } from "@/content/mapping/content.config";
 import { mappingUrl } from "@/lib/mapping/urls";
 import { ArrowRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
-import { render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
+import path from "node:path";
 import GithubEdit from "./github-edit.astro";
 import Prose from "./prose.astro";
 import { Badge } from "./ui/badge";
 import { buttonVariants } from "./ui/button";
 
 type Props = {
-  readonly name: string;
+  readonly entry: CollectionEntry<typeof mappingCollectionName>;
   readonly library: string;
 };
 
-const { name, library } = Astro.props;
+const { entry, library } = Astro.props;
 
-const entry = await getMappedEntry(library, name);
+const mappedFunction =
+  entry.data.remeda === undefined
+    ? undefined
+    : await getEntry(entry.data.remeda);
 const { Content } = await render(entry);
+
+const name = path.basename(entry.id);
+
 const mappedUrl = mappingUrl(library, name);
 ---
 
@@ -39,11 +47,11 @@ const mappedUrl = mappingUrl(library, name);
   </CardHeader>
   <CardContent className="space-y-3">
     {
-      entry.data.remeda !== undefined && (
+      mappedFunction !== undefined && (
         <h6 class="flex items-center gap-1 text-xl font-medium">
           <ArrowRightIcon className="ms-2 size-5" />
-          <a href={`/docs#${entry.data.remeda}`} class="truncate text-primary">
-            {entry.data.remeda}
+          <a href={`/docs#${mappedFunction.id}`} class="truncate text-primary">
+            {mappedFunction.data.name}
           </a>
         </h6>
       )

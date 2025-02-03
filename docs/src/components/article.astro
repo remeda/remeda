@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { docsArticlesCollectionName } from "@/content/docs-articles/content.config";
+import { render } from "astro:content";
+import Prose from "./prose.astro";
+
+type Props = {
+  readonly article: CollectionEntry<typeof docsArticlesCollectionName>;
+  readonly id: string;
+  readonly class?: string;
+};
+
+const { article, id, class: class_ } = Astro.props;
+
+const { Content } = await render(article);
+---
+
+<Prose id={id} class={class_}>
+  <Content />
+</Prose>

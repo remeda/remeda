@@ -49,7 +49,7 @@
     "build": "tsup",
     "check": "tsc --project tsconfig.source.json",
     "check:dist": "tsc --project tsconfig.dist.json",
-    "docs:build": "cd docs && npm ci && npm run build:all",
+    "docs:build": "cd docs && npm ci && npm run build",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
     "prepare": "husky",

@@ -1,34 +1,68 @@
 ---
 import { Badge } from "@/components/ui/badge";
 import { CardTitle } from "@/components/ui/card";
-import type { Tag } from "@/lib/get-tags";
+import { extractTags } from "@/lib/tags";
+import type { FunctionEntry } from "@/lib/typedoc/schema";
+import { hasAtLeast } from "remeda";
 import GithubSource from "./github-source.astro";
 import Markdown from "./markdown.astro";
 import Prose from "./prose.astro";
 import { TagBadge } from "./tag-badge";
 
 type Props = {
-  readonly name: string;
+  readonly func: FunctionEntry;
+  readonly internalNames: ReadonlySet<string>;
   readonly category: string | undefined;
-  readonly sourceUrl: string | undefined;
-  readonly description: string | undefined;
-  readonly tags?: ReadonlyArray<Tag>;
 };
 
-const { name, sourceUrl, category, description, tags } = Astro.props;
+const {
+  func: {
+    name,
+    signatures: [
+      {
+        comment: { blockTags, summary },
+      },
+    ],
+    sources,
+  },
+  category,
+  internalNames,
+} = Astro.props;
 ---
 
 <>
   <div class="flex items-center gap-2">
-    <CardTitle className="flex-1 overflow-hidden text-2xl">{name}</CardTitle>
-    {tags?.map((tag) => <TagBadge tag={tag} className="h-8" />)}
+    <CardTitle className="flex-1 overflow-hidden text-2xl">
+      {name}
+    </CardTitle>
+    {
+      extractTags(blockTags).map((tag) => (
+        <TagBadge tag={tag} className="h-8" />
+      ))
+    }
     <Badge className="hidden h-8 sm:flex">{category}</Badge>
-    {sourceUrl !== undefined && <GithubSource url={sourceUrl} />}
+    {hasAtLeast(sources, 1) && <GithubSource url={sources[0].url} />}
   </div>
   {
-    description !== undefined && (
+    hasAtLeast(summary, 1) && (
       <Prose>
-        <Markdown markdown={description} />
+        <Markdown
+          markdown={summary
+            .map(({ kind, text }) => {
+              if (kind !== "code") {
+                return text;
+              }
+
+              const codeContent = text.slice(1, -1);
+              if (!internalNames.has(codeContent)) {
+                return text;
+              }
+
+              // If this is a function name, link to its anchor:
+              return `[${text}](#${codeContent})`;
+            })
+            .join("")}
+        />
       </Prose>
     )
   }
