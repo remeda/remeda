@@ -22,11 +22,6 @@ function extractReturnType(type: Signature["type"]): string {
     case "predicate":
       return "boolean";
 
-    case "mapped":
-    case "conditional":
-      // These only show up in V1!
-      return "Object";
-
     case "indexedAccess":
     case "intersection":
     case "query":
@@ -34,6 +29,12 @@ function extractReturnType(type: Signature["type"]): string {
     case "reflection":
     case "tuple":
     case "union":
+      // TODO: Can we improve our docs by making these more specific?
+      return "Object";
+
+    case "mapped":
+    case "conditional":
+      // These only show up in V1!
       return "Object";
   }
 }
