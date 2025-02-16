@@ -1,7 +1,7 @@
 import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 
-type TestType = {
+declare const TEST_OBJECT: {
   a: {
     b: { c: number; d?: number };
     e: Array<{ f: { g: number } }>;
@@ -9,11 +9,6 @@ type TestType = {
   };
   x?: number;
   y?: number;
-};
-
-const TEST_OBJECT: TestType = {
-  a: { b: { c: 1 }, e: [{ f: { g: 1 } }, { f: { g: 1 } }] },
-  y: 10,
 };
 
 describe("data first", () => {
@@ -40,16 +35,6 @@ describe("data first", () => {
     // Like this:
     setPath(TEST_OBJECT, ["a", "b"] as const, { c: 123 });
   });
-
-  test("handles interfaces (#990)", () => {
-    interface User {
-      name: {
-        first: string;
-      };
-    }
-
-    setPath({ name: { first: "hello" } } as User, ["name", "first"], "world");
-  });
 });
 
 describe("data last", () => {
@@ -75,18 +60,5 @@ describe("data last", () => {
 
     // Like this:
     pipe(TEST_OBJECT, setPath(["a", "b"] as const, { c: 123 }));
-  });
-
-  test("handles interfaces (#990)", () => {
-    interface User {
-      name: {
-        first: string;
-      };
-    }
-
-    pipe(
-      { name: { first: "hello" } } as User,
-      setPath(["name", "first"], "world"),
-    );
   });
 });

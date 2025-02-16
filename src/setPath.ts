@@ -3,7 +3,7 @@ import { purry } from "./purry";
 type Path<T, Prefix extends ReadonlyArray<unknown> = []> =
   T extends ReadonlyArray<unknown>
     ? Path<T[number], [...Prefix, number]> | Prefix
-    : T extends object
+    : T extends Record<PropertyKey, unknown>
       ? PathsOfObject<T, Prefix> | Prefix
       : Prefix;
 
