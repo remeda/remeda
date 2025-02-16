@@ -8,7 +8,7 @@ type Path<T, Prefix extends ReadonlyArray<unknown> = []> =
       : Prefix;
 
 type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
-  [K in keyof T]-?: Path<T[K], [...Prefix, K]>;
+  [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]>;
 }[keyof T];
 
 type ValueAtPath<T, TPath> = TPath extends readonly [
