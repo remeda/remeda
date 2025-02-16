@@ -58,7 +58,6 @@ describe("objects", () => {
   });
 
   test("interfaces", () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- Intentional
     interface MyInterface {
       a: number;
     }

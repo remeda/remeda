@@ -490,6 +490,10 @@ export default tseslint.config(
       globals: vitest.environments.env.globals,
     },
     rules: {
+      // We often need to test interfaces concretely and this rule just gets in
+      // the way of that.
+      "@typescript-eslint/consistent-type-definitions": "off",
+
       // A lot of our type tests use @ts-expect-error as the primary way to test
       // that function params are typed correctly. This isn't detected properly
       // by this rule and there's no way to configure it to work; so we disable
