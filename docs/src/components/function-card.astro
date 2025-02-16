@@ -1,38 +1,42 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getTags } from "@/lib/get-tags";
-import type { DocumentedFunction } from "@/lib/transform";
+import { functionsCollectionName } from "@/content/functions/content.config";
+import { tagContent } from "@/lib/tags";
+import type { CollectionEntry } from "astro:content";
+import { map, pipe, uniqueBy } from "remeda";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
 type Props = {
-  readonly func: DocumentedFunction;
+  readonly func: CollectionEntry<typeof functionsCollectionName>;
+  readonly internalNames: ReadonlySet<string>;
 };
 
-const { func } = Astro.props;
+const {
+  func: { id, data },
+  internalNames,
+} = Astro.props;
+
+const category = tagContent(data.signatures[0].comment.blockTags, "category");
 ---
 
-<Card id={func.name} className="scroll-mt-24">
+<Card id={id} className="scroll-mt-24">
   <CardHeader>
     <FunctionDescription
-      name={func.name}
-      category={func.category}
-      tags={getTags(func.methods)}
-      description={func.description}
-      sourceUrl={func.sourceUrl}
+      category={category}
+      func={data}
+      internalNames={internalNames}
     />
   </CardHeader>
   <CardContent className="grid gap-8">
     {
-      func.methods.map((method) => (
-        <FunctionApi
-          args={method.args}
-          example={method.example}
-          returns={method.returns}
-          signature={method.signature}
-          variant={method.tag}
-        />
-      ))
+      pipe(
+        data.signatures,
+        uniqueBy(({ comment: { blockTags } }) =>
+          tagContent(blockTags, "signature"),
+        ),
+        map((signature) => <FunctionApi signature={signature} />),
+      )
     }
   </CardContent>
 </Card>

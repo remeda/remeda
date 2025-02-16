@@ -4,24 +4,25 @@ import {
   Collapsible as CollapsibleRoot,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { FunctionParam, FunctionReturn } from "@/lib/transform";
+import type { Signature } from "@/lib/typedoc/schema";
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { FunctionReturnType } from "./function-return-type";
+import { Parameters } from "./parameters";
 
 export function MethodSignature({
-  args,
-  returns,
+  parameters,
+  type,
   children,
 }: {
+  readonly parameters: Signature["parameters"];
+  readonly type: Signature["type"];
   readonly children: ReactNode;
-  readonly args: ReadonlyArray<FunctionParam>;
-  readonly returns: FunctionReturn;
 }): ReactNode {
   return (
     <CollapsibleRoot>
       <div className="relative flex items-center">
         <div className="flex-1">{children}</div>
-
         <CollapsibleTrigger asChild className="absolute right-0">
           <Button
             variant="link"
@@ -33,24 +34,18 @@ export function MethodSignature({
           </Button>
         </CollapsibleTrigger>
       </div>
-
       <CollapsibleContent>
         <div className="flex flex-col gap-3 p-2">
           <div>
             Parameters
-            <dl className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm">
-              {args.map((arg) => (
-                <Fragment key={arg.name}>
-                  <dt className="font-semibold">{arg.name}</dt>
-                  <dd className="text-muted-foreground">{arg.description}</dd>
-                </Fragment>
-              ))}
-            </dl>
+            <Parameters
+              className="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm"
+              parameters={parameters}
+            />
           </div>
-
           <div>
             Returns
-            <div className="text-sm font-semibold">{returns.name}</div>
+            <FunctionReturnType className="text-sm font-semibold" type={type} />
           </div>
         </div>
       </CollapsibleContent>

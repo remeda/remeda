@@ -104,7 +104,7 @@ type SwappedIndices<
  *   swapIndices(data, index1, index2)
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
- *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
+ *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['a', 'c', 'b']
  *   swapIndices('abc', 0, 1) // => 'bac'
  * @dataFirst
  * @category Array
@@ -148,7 +148,8 @@ const swapIndicesImplementation = (
   index2: number,
 ): unknown =>
   typeof data === "string"
-    ? swapArray([...data], index1, index2).join("")
+    ? // eslint-disable-next-line @typescript-eslint/no-misused-spread -- TODO: I'm not sure what the right way to split the string here, there are multiple "correct" answers and each one is meaningfully different: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
+      swapArray([...data], index1, index2).join("")
     : swapArray(data, index1, index2);
 
 function swapArray(

@@ -62,7 +62,7 @@ export function setPath(...args: ReadonlyArray<unknown>): unknown {
   return purry(setPathImplementation, args);
 }
 
-export function setPathImplementation(
+function setPathImplementation(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
   value: unknown,

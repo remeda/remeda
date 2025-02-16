@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { LazyEvaluator } from "../pipe";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 /**
  * Use this helper function to build the data last implementation together with

@@ -1,4 +1,4 @@
 ---
 category: Object
-remeda: transform
+remeda: reduce
 ---

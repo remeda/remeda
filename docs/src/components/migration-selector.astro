@@ -1,8 +1,8 @@
 ---
-import { getLibraries } from "@/lib/mappings";
+import { getAllMappedLibraries } from "@/lib/mapping/libraries";
 import { MigrationSelectorIsland } from "./migration-selector-island";
 
-const libraries = await getLibraries();
+const libraries = await getAllMappedLibraries();
 ---
 
 <MigrationSelectorIsland client:load libraries={libraries}>

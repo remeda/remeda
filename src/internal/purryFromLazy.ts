@@ -1,4 +1,6 @@
-import { pipe, type LazyDefinition, type LazyEvaluator } from "../pipe";
+import { pipe } from "../pipe";
+import type { LazyDefinition } from "./types/LazyDefinition";
+import type { LazyEvaluator } from "./types/LazyEvaluator";
 
 /**
  * A version of `purry` for cases where the only meaningful implementation is a

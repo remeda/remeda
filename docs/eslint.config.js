@@ -9,16 +9,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [
-      ".astro",
-      "build",
-      "dist",
-      "node_modules",
-      "public",
-      "src/content",
-      "src/data",
-      "src/env.d.ts",
-    ],
+    ignores: [".astro", "dist", "public"],
   },
 
   eslint.configs.recommended,

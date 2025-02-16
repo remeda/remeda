@@ -34,8 +34,8 @@ const DEFAULT_OPTIONS = {
  * @example
  *   R.toCamelCase("hello world"); // "helloWorld"
  *   R.toCamelCase("__HELLO_WORLD__"); // "helloWorld"
- *   R.toCamelCase("HasHtml"); // "hasHTML"
- *   R.toCamelCase("HasHtml", { preserveConsecutiveUppercase: false }); // "hasHtml"
+ *   R.toCamelCase("HasHTML"); // "hasHTML"
+ *   R.toCamelCase("HasHTML", { preserveConsecutiveUppercase: false }); // "hasHtml"
  * @dataFirst
  * @category String
  */
@@ -65,9 +65,9 @@ export function toCamelCase<
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
  *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
- *   R.pipe("HasHtml", R.toCamelCase()); // "hasHTML"
+ *   R.pipe("HasHTML", R.toCamelCase()); // "hasHTML"
  *   R.pipe(
- *     "HasHtml",
+ *     "HasHTML",
  *     R.toCamelCase({ preserveConsecutiveUppercase: false }),
  *   ); // "hasHtml"
  * @dataLast

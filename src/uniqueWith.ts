@@ -1,8 +1,8 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
-import type { LazyEvaluator } from "./pipe";
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 
@@ -57,7 +57,14 @@ export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
 
 const lazyImplementation =
   <T>(isEquals: IsEquals<T>): LazyEvaluator<T> =>
-  (value, index, data) =>
-    data.findIndex((otherValue) => isEquals(value, otherValue)) === index
+  (value, index, data) => {
+    const firstEqualIndex = data.findIndex(
+      (otherValue, otherIndex) =>
+        index === otherIndex || isEquals(value, otherValue),
+    );
+
+    // skip items that aren't at the first equal index.
+    return firstEqualIndex === index
       ? { done: false, hasNext: true, next: value }
       : SKIP_ITEM;
+  };

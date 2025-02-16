@@ -1,7 +1,5 @@
 # build output
 dist/
-build/
-src/data/data.json
 public/dist/
 
 # generated types

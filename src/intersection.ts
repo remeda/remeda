@@ -1,6 +1,6 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
-import type { LazyEvaluator } from "./pipe";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
