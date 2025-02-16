@@ -74,13 +74,11 @@ it("doesn't recurse into arrays", () => {
 });
 
 it("works with interfaces", () => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- Intentional
   interface Foo {
     a: string;
     b: number;
   }
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- Intentional
   interface Bar {
     a: string;
     c: boolean;

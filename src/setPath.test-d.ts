@@ -42,7 +42,6 @@ describe("data first", () => {
   });
 
   test("handles interfaces (#990)", () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface User {
       name: {
         first: string;
@@ -79,7 +78,6 @@ describe("data last", () => {
   });
 
   test("handles interfaces (#990)", () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface User {
       name: {
         first: string;

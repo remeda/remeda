@@ -121,13 +121,11 @@ describe("data-first", () => {
   });
 
   it("allows interfaces", () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface AB {
       a: number;
       b: number;
     }
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface A {
       a: number;
     }
@@ -438,13 +436,11 @@ describe("data-last", () => {
   });
 
   it("allows interfaces", () => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface AB {
       a: number;
       b: number;
     }
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface A {
       a: number;
     }
