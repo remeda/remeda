@@ -1,13 +1,13 @@
 import { purry } from "./purry";
 
-type Path<T, Prefix extends ReadonlyArray<PropertyKey> = []> =
+type Path<T, Prefix extends ReadonlyArray<unknown> = []> =
   T extends ReadonlyArray<unknown>
     ? Path<T[number], [...Prefix, number]> | Prefix
     : T extends Record<PropertyKey, unknown>
       ? PathsOfObject<T, Prefix> | Prefix
       : Prefix;
 
-type PathsOfObject<T, Prefix extends ReadonlyArray<PropertyKey>> = {
+type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
   [K in keyof T]-?: Path<T[K], [...Prefix, K]>;
 }[keyof T];
 
