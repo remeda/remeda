@@ -104,10 +104,9 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
 
 describe("showcase", () => {
   test("results as object", async () => {
-    const mockApi = vi.fn(
-      async (words: ReadonlyArray<string>): Promise<Record<string, number>> =>
-        fromKeys(words, (word) => word.length),
-    );
+    const mockApi = vi.fn<
+      (words: ReadonlyArray<string>) => Promise<Record<string, number>>
+    >(async (words) => fromKeys(words, (word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
@@ -144,10 +143,9 @@ describe("showcase", () => {
   });
 
   test("results as array", async () => {
-    const mockApi = vi.fn(
-      async (words: ReadonlyArray<string>): Promise<ReadonlyArray<number>> =>
-        words.map((word) => word.length),
-    );
+    const mockApi = vi.fn<
+      (words: ReadonlyArray<string>) => Promise<ReadonlyArray<number>>
+    >(async (words) => words.map((word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.

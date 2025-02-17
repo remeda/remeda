@@ -97,7 +97,7 @@ describe("data first", () => {
   });
 
   it("doesn't evolve symbol keys", () => {
-    const mock = vi.fn();
+    const mock = vi.fn<(x: string) => unknown>();
     const mySymbol = Symbol("a");
     // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
     evolve({ [mySymbol]: "hello" }, { [mySymbol]: mock });

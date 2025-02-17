@@ -34,7 +34,7 @@ describe("data-last", () => {
 
 describe("pipe", () => {
   it("invoked lazily", () => {
-    const count = vi.fn(multiply(10));
+    const count = vi.fn<(x: number) => number>(multiply(10));
 
     expect(pipe([1, 2, 3], map(count), take(2))).toStrictEqual([10, 20]);
 
@@ -42,7 +42,9 @@ describe("pipe", () => {
   });
 
   it("invoked lazily (indexed)", () => {
-    const count = vi.fn((_: unknown, index: number) => index);
+    const count = vi.fn<(_: unknown, index: number) => number>(
+      (_, index) => index,
+    );
 
     expect(pipe([0, 0, 0], map(count), take(2))).toStrictEqual([0, 1]);
 

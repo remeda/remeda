@@ -24,7 +24,7 @@ it("should pipe operations", () => {
 
 describe("lazy", () => {
   it("lazy map + take", () => {
-    const count = vi.fn();
+    const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
       map((x) => {
@@ -39,7 +39,7 @@ describe("lazy", () => {
   });
 
   it("lazy map + filter + take", () => {
-    const count = vi.fn();
+    const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3, 4, 5],
       map((x) => {
@@ -55,7 +55,7 @@ describe("lazy", () => {
   });
 
   it("lazy after 1st op", () => {
-    const count = vi.fn();
+    const count = vi.fn<() => void>();
     const result = pipe(
       { inner: [1, 2, 3] },
       prop("inner"),
@@ -71,7 +71,7 @@ describe("lazy", () => {
   });
 
   it("break lazy", () => {
-    const count = vi.fn();
+    const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
       map((x) => {
@@ -87,7 +87,7 @@ describe("lazy", () => {
   });
 
   it("multiple take", () => {
-    const count = vi.fn();
+    const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
       map((x) => {
@@ -103,8 +103,8 @@ describe("lazy", () => {
   });
 
   it("multiple lazy", () => {
-    const count = vi.fn();
-    const count2 = vi.fn();
+    const count = vi.fn<() => void>();
+    const count2 = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3, 4, 5, 6, 7],
       map((x) => {

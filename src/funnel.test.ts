@@ -19,7 +19,7 @@ const ARGS_COLLECTOR = (
 
 describe("reducer behavior", () => {
   it("passes the reduced arg to the executor", () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: string) => void>();
     const foo = funnel(mockFn, {
       reducer: constant("hello world"),
       triggerAt: "start",
@@ -32,9 +32,7 @@ describe("reducer behavior", () => {
   });
 
   it("reduces call args", async () => {
-    const mockFn = vi.fn((_total: number): void => {
-      /* do nothing */
-    });
+    const mockFn = vi.fn<(x: number) => void>(doNothing());
 
     const foo = funnel(mockFn, {
       reducer: (total, item: number) => (total ?? 0) + item,
@@ -55,7 +53,7 @@ describe("reducer behavior", () => {
   });
 
   it("does not invoke if reduceArgs returns undefined", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
       reducer: constant(undefined),
       triggerAt: "end",
@@ -68,7 +66,7 @@ describe("reducer behavior", () => {
   });
 
   it("supports multiple arguments", () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
       reducer: (ret: unknown, a: number, b: string, c: boolean) => [
         ret,
@@ -86,7 +84,7 @@ describe("reducer behavior", () => {
   });
 
   test("reducer isn't called again when 'invokedAt: start'", async () => {
-    const mockFn = vi.fn(ARGS_COLLECTOR);
+    const mockFn = vi.fn<typeof ARGS_COLLECTOR>(ARGS_COLLECTOR);
     const foo = funnel(doNothing(), {
       reducer: mockFn,
       triggerAt: "start",
@@ -111,7 +109,7 @@ describe("reducer behavior", () => {
 describe("non-trivial (>0ms) timer duration", () => {
   describe("delay timer", () => {
     test("invokedAt: start", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "start",
@@ -138,7 +136,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("invokedAt: both", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -169,7 +167,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("invocations in the middle of a window", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -198,7 +196,7 @@ describe("non-trivial (>0ms) timer duration", () => {
 
   describe("burst timer", () => {
     test("invokedAt: start", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "start",
@@ -225,7 +223,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("invokedAt: both", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -257,7 +255,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("invokedAt: end", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -287,7 +285,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("invocations in the middle of a window", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -317,7 +315,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("maxBurstDurationMs limits the burst duration", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: UT,
@@ -346,7 +344,7 @@ describe("non-trivial (>0ms) timer duration", () => {
 
   describe("both timers", () => {
     test("delay is longer than burst", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minGapMs: 2 * UT,
@@ -374,7 +372,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("burst is longer than delay", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
@@ -406,7 +404,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("burst and delay are equal", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
@@ -435,7 +433,7 @@ describe("non-trivial (>0ms) timer duration", () => {
     });
 
     test("delay and maxBurstDurationMs are equal", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minGapMs: UT,
@@ -469,7 +467,7 @@ describe("non-trivial (>0ms) timer duration", () => {
 describe("immediate (===0) timer durations", () => {
   describe("delay timer", () => {
     test("invokedAt: start", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "start",
@@ -499,7 +497,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("invokedAt: both", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -527,7 +525,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("with a non-trivial burst timer", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -552,7 +550,7 @@ describe("immediate (===0) timer durations", () => {
 
   describe("burst timer", () => {
     test("invokedAt: start", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "start",
@@ -582,7 +580,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("invokedAt: both", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -614,7 +612,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("invokedAt: end", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -644,7 +642,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("with a non-trivial delay timer", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "both",
@@ -668,7 +666,7 @@ describe("immediate (===0) timer durations", () => {
     });
 
     test("burst timer with non-trivial maxBurstDuration", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: 0,
@@ -689,7 +687,7 @@ describe("immediate (===0) timer durations", () => {
   });
 
   test("both timers", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "both",
@@ -707,7 +705,7 @@ describe("immediate (===0) timer durations", () => {
   });
 
   test("maxBurstDurationMs = 0 limits the burst immediately", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "end",
@@ -722,7 +720,7 @@ describe("immediate (===0) timer durations", () => {
   });
 
   test("all timeouts zero", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "both",
@@ -745,7 +743,7 @@ describe("immediate (===0) timer durations", () => {
 
 describe("default minQuietPeriodMs === 0 when minGapMs is not defined", () => {
   test("invokedAt: start", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "start",
@@ -770,7 +768,7 @@ describe("default minQuietPeriodMs === 0 when minGapMs is not defined", () => {
   });
 
   test("invokedAt: both", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "both",
@@ -799,7 +797,7 @@ describe("default minQuietPeriodMs === 0 when minGapMs is not defined", () => {
 describe("utility functions", () => {
   describe("flush", () => {
     test("flush triggers an immediate invocation", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -819,7 +817,7 @@ describe("utility functions", () => {
     });
 
     test("flush during active burst", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -844,7 +842,7 @@ describe("utility functions", () => {
 
   describe("cancel", () => {
     test("cancel prevents invocation", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -860,7 +858,7 @@ describe("utility functions", () => {
     });
 
     test("cancel during delay period", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "start",
@@ -880,7 +878,7 @@ describe("utility functions", () => {
 
   describe("isIdle", () => {
     test("isIdle reflects the funnel's state", () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -899,7 +897,7 @@ describe("utility functions", () => {
     });
 
     test("isIdle works when burst duration is 0", async () => {
-      const mockFn = vi.fn();
+      const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: "end",
@@ -923,7 +921,7 @@ describe("utility functions", () => {
 
 describe("edge-cases", () => {
   test("bursts that start late don't prevent delayed invocations", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "both",
@@ -960,7 +958,7 @@ describe("edge-cases", () => {
   });
 
   test("delay timeouts don't cause an invocation in the middle of bursts", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: "both",

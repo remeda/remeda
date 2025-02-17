@@ -66,7 +66,7 @@ it("compares objects by reference", () => {
 });
 
 test("lazy", () => {
-  const mock = vi.fn(identity());
+  const mock = vi.fn<(x: number) => number>(identity());
   const result = pipe(
     [1, 2, 3, 4, 5, 6],
     map(mock),

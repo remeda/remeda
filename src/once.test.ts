@@ -1,8 +1,9 @@
+import { constant } from "./constant";
 import { once } from "./once";
 
 test("should call only once", () => {
-  const mock = vi.fn(() => ({}));
-  const wrapped = once(mock as () => object);
+  const mock = vi.fn<() => object>(constant({}));
+  const wrapped = once(mock);
   const ret1 = wrapped();
 
   expect(mock).toHaveBeenCalledTimes(1);

@@ -47,7 +47,7 @@ describe("data last", () => {
   });
 
   test("lazy implementation", () => {
-    const mockFunc = vi.fn(identity());
+    const mockFunc = vi.fn<(x: number) => number>(identity());
     pipe([1, 2, 3, 4, 5], map(mockFunc), take(2));
 
     expect(mockFunc).toHaveBeenCalledTimes(2);

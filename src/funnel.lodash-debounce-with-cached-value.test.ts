@@ -110,7 +110,7 @@ const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () => {
   it("should debounce a function", async () => {
-    const mockFn = vi.fn(identity());
+    const mockFn = vi.fn<(x: string) => string>(identity());
     const debounced = debounceWithCachedValue(mockFn, UT);
 
     expect(debounced("a")).toBeUndefined();
@@ -160,7 +160,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 
   it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
     const DATA = {};
-    const mockFn = vi.fn(constant(false));
+    const mockFn = vi.fn<(a: object, b: string) => boolean>(constant(false));
 
     // In Lodash the test uses both `leading` and `trailing` timing options
     // for this test, but it only works because the `leading` option in Lodash
@@ -227,7 +227,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should noop `cancel` and `flush` when nothing is queued", async () => {
-    const mockFn = vi.fn(constant("hello"));
+    const mockFn = vi.fn<() => string>(constant("hello"));
     const debounced = debounceWithCachedValue(mockFn, UT);
     debounced.cancel();
 

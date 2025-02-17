@@ -52,7 +52,7 @@ describe("dataLast", () => {
   });
 
   test("evaluates lazily", () => {
-    const mockFn = vi.fn(identity());
+    const mockFn = vi.fn<(x: number) => number>(identity());
     pipe([1, 2, 3], map(mockFn), zip([4, 5, 6]), first());
 
     expect(mockFn).toHaveBeenCalledTimes(1);

@@ -88,8 +88,9 @@ describe("dataLast", () => {
   });
 
   it("works lazily (shallow)", () => {
-    const beforeMock: <T>(x: T) => T = vi.fn(identity());
-    const afterMock: <T>(x: T) => T = vi.fn(identity());
+    // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
+    const beforeMock = vi.fn(identity());
+    const afterMock = vi.fn<(x: number) => number>(identity());
     const result = pipe(
       [[1, 2], 3, [4, 5]],
       map(beforeMock),
@@ -104,8 +105,9 @@ describe("dataLast", () => {
   });
 
   it("works lazily (deep)", () => {
-    const beforeMock: <T>(x: T) => T = vi.fn(identity());
-    const afterMock: <T>(x: T) => T = vi.fn(identity());
+    // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
+    const beforeMock = vi.fn(identity());
+    const afterMock = vi.fn<(x: number) => number>(identity());
     const result = pipe(
       [[[0]], [[[1, 2], [[3]], [[4, 5]]]], 6],
       map(beforeMock),

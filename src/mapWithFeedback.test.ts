@@ -1,3 +1,4 @@
+import { identity } from "./identity";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
@@ -40,7 +41,9 @@ describe("data first", () => {
   it("should track index and provide entire items array", () => {
     const data = [1, 2, 3, 4, 5];
 
-    const mockedReducer = vi.fn((acc: number, x: number) => acc + x);
+    const mockedReducer = vi.fn<(acc: number, x: number) => number>(
+      (acc, x) => acc + x,
+    );
 
     mapWithFeedback(data, mockedReducer, 100);
 
@@ -63,7 +66,7 @@ describe("data last", () => {
   });
 
   it("evaluates lazily", () => {
-    const counter = vi.fn((x: number) => x);
+    const counter = vi.fn<(x: number) => number>(identity());
     pipe(
       [1, 2, 3, 4, 5],
       map(counter),
