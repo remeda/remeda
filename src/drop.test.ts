@@ -1,5 +1,4 @@
 import { drop } from "./drop";
-import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -48,7 +47,7 @@ describe("data last", () => {
   });
 
   test("lazy impl", () => {
-    const mockFunc = vi.fn<(x: number) => number>(identity());
+    const mockFunc = vi.fn<(x: number) => number>();
     pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
 
     expect(mockFunc).toHaveBeenCalledTimes(4);

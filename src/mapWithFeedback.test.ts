@@ -1,4 +1,3 @@
-import { identity } from "./identity";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
@@ -66,7 +65,7 @@ describe("data last", () => {
   });
 
   it("evaluates lazily", () => {
-    const counter = vi.fn<(x: number) => number>(identity());
+    const counter = vi.fn<(x: number) => number>();
     pipe(
       [1, 2, 3, 4, 5],
       map(counter),
