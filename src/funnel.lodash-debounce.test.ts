@@ -97,7 +97,7 @@ const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () => {
   it("should debounce a function", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(x: string) => void>();
     const debounced = debounce(mockFn, UT);
     debounced("a");
     debounced("b");
@@ -122,7 +122,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should not immediately call `func` when `wait` is `0`", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, 0);
     debounced();
     debounced();
@@ -135,7 +135,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should apply default options", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, {});
     debounced();
 
@@ -147,8 +147,8 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should support a `leading` option", async () => {
-    const mockWithLeading = vi.fn();
-    const mockWithLeadingAndTrailing = vi.fn();
+    const mockWithLeading = vi.fn<() => void>();
+    const mockWithLeadingAndTrailing = vi.fn<() => void>();
     const withLeading = debounce(mockWithLeading, UT, {
       leading: true,
       // This Lodash test configures both debouncers with the same timing
@@ -180,8 +180,8 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should support a `trailing` option", async () => {
-    const mockWith = vi.fn();
-    const mockWithout = vi.fn();
+    const mockWith = vi.fn<() => void>();
+    const mockWithout = vi.fn<() => void>();
     const withTrailing = debounce(mockWith, UT, { trailing: true });
     // The lodash test disabled `trailing` but doesn't enable `leading`
     // resulting in a debouncer that has no effective timing policy. We handle
@@ -203,7 +203,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should support a `maxWait` option", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
     debounced();
@@ -225,8 +225,8 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should support `maxWait` in a tight loop", async () => {
-    const mockWith = vi.fn();
-    const mockWithout = vi.fn();
+    const mockWith = vi.fn<() => void>();
+    const mockWithout = vi.fn<() => void>();
     const withMaxWait = debounce(mockWith, 2 * UT, { maxWait: 4 * UT });
     const withoutMaxWait = debounce(mockWithout, 3 * UT);
     const end = Date.now() + 10 * UT;
@@ -256,7 +256,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, 6 * UT, { maxWait: 6 * UT });
     debounced();
     await sleep(5.5 * UT);
@@ -271,7 +271,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
     await sleep(4 * UT);
@@ -285,7 +285,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
   });
 
   it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<(a: object, b: string) => void>();
     const DATA = {};
     const debounced = debounce(mockFn, UT, {
       leading: true,
@@ -305,7 +305,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
   it("should use a default `wait` of `0`", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn);
     debounced();
     await sleep(UT);
@@ -334,7 +334,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should support cancelling delayed calls", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: false });
     debounced();
     debounced.cancel();
@@ -344,7 +344,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should reset `lastCalled` after cancelling", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: true });
     debounced();
 
@@ -362,7 +362,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should support flushing delayed calls", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: false });
     debounced();
     debounced.flush();
@@ -375,7 +375,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should noop `cancel` and `flush` when nothing is queued", async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT);
     debounced.cancel();
     debounced.flush();

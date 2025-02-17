@@ -133,8 +133,8 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
   });
 
   it("should support a `trailing` option", async () => {
-    const mockWith = vi.fn(identity() as <T>(x: T) => T);
-    const mockWithout = vi.fn(identity() as <T>(x: T) => T);
+    const mockWith = vi.fn<<T>(x: T) => T>(identity());
+    const mockWithout = vi.fn<<T>(x: T) => T>(identity());
     const withTrailing = throttleWithCachedValue(mockWith, 2 * UT, {
       trailing: true,
     });
@@ -198,7 +198,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   it("should noop `cancel` and `flush` when nothing is queued", async () => {
-    const mockFn = vi.fn(constant("hello"));
+    const mockFn = vi.fn<() => string>(constant("hello"));
     const throttled = throttleWithCachedValue(mockFn, UT);
     throttled.cancel();
 

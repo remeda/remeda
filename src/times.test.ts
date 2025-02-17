@@ -25,7 +25,7 @@ describe("data_first", () => {
   });
 
   it("passes idx to fn", () => {
-    const fn = vi.fn();
+    const fn = vi.fn<(x: number) => void>();
     times(5, fn);
 
     expect(fn).toHaveBeenCalledWith(0);
@@ -66,7 +66,7 @@ describe("data_last", () => {
   });
 
   it("passes idx to fn", () => {
-    const fn = vi.fn();
+    const fn = vi.fn<(x: number) => void>();
     pipe(5, times(fn));
 
     expect(fn).toHaveBeenCalledWith(0);
