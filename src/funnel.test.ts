@@ -32,7 +32,7 @@ describe("reducer behavior", () => {
   });
 
   it("reduces call args", async () => {
-    const mockFn = vi.fn<(x: number) => void>(doNothing());
+    const mockFn = vi.fn<(x: number) => void>();
 
     const foo = funnel(mockFn, {
       reducer: (total, item: number) => (total ?? 0) + item,

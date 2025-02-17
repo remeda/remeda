@@ -2,7 +2,6 @@
 
 import { constant } from "./constant";
 import { debounce } from "./debounce";
-import { doNothing } from "./doNothing";
 import { identity } from "./identity";
 
 describe("main functionality", () => {
@@ -47,7 +46,7 @@ describe("main functionality", () => {
   });
 
   it("should not immediately call `func` when `wait` is `0`", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const debouncer = debounce(mockFn, {});
 
@@ -62,7 +61,7 @@ describe("main functionality", () => {
   });
 
   it("should apply default options", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
@@ -76,8 +75,8 @@ describe("main functionality", () => {
   });
 
   it("should support a `leading` option", async () => {
-    const leadingMockFn = vi.fn<() => void>(doNothing());
-    const bothMockFn = vi.fn<() => void>(doNothing());
+    const leadingMockFn = vi.fn<() => void>();
+    const bothMockFn = vi.fn<() => void>();
 
     const withLeading = debounce(leadingMockFn, {
       waitMs: 32,
@@ -124,7 +123,7 @@ describe("main functionality", () => {
   });
 
   it("should support a `trailing` option", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const withTrailing = debounce(mockFn, { waitMs: 32, timing: "trailing" });
 
@@ -140,7 +139,7 @@ describe("main functionality", () => {
 
 describe("optional param maxWaitMs", () => {
   it("should support a `maxWait` option", async () => {
-    const mockFn = vi.fn<(x: string) => void>(doNothing());
+    const mockFn = vi.fn<(x: string) => void>();
 
     const debouncer = debounce(mockFn, { waitMs: 32, maxWaitMs: 64 });
 
@@ -164,8 +163,8 @@ describe("optional param maxWaitMs", () => {
   });
 
   it("should support `maxWait` in a tight loop", async () => {
-    const withMockFn = vi.fn<() => void>(doNothing());
-    const withoutMockFn = vi.fn<() => void>(doNothing());
+    const withMockFn = vi.fn<() => void>();
+    const withoutMockFn = vi.fn<() => void>();
 
     const withMaxWait = debounce(withMockFn, { waitMs: 32, maxWaitMs: 128 });
     const withoutMaxWait = debounce(withoutMockFn, { waitMs: 96 });
@@ -183,7 +182,7 @@ describe("optional param maxWaitMs", () => {
   });
 
   it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const debouncer = debounce(mockFn, { waitMs: 200, maxWaitMs: 200 });
 
@@ -205,7 +204,7 @@ describe("optional param maxWaitMs", () => {
   });
 
   it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const debouncer = debounce(mockFn, { waitMs: 32, maxWaitMs: 64 });
 
@@ -222,7 +221,7 @@ describe("optional param maxWaitMs", () => {
   });
 
   it("works like a leaky bucket when only maxWaitMs is set", async () => {
-    const mockFn = vi.fn<() => void>(doNothing());
+    const mockFn = vi.fn<() => void>();
 
     const debouncer = debounce(mockFn, { maxWaitMs: 32 });
 

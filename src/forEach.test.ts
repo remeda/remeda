@@ -1,4 +1,3 @@
-import { doNothing } from "./doNothing";
 import { forEach } from "./forEach";
 import { pipe } from "./pipe";
 import { take } from "./take";
@@ -33,7 +32,7 @@ test("dataLast", () => {
 test("pipe", () => {
   const data = [1, 2, 3];
 
-  const cb = vi.fn<(x: number) => void>(doNothing());
+  const cb = vi.fn<(x: number) => void>();
 
   const result = pipe(data, forEach(cb));
 

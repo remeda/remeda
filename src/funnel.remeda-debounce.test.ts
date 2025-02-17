@@ -4,7 +4,6 @@
 
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
-import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
 
@@ -233,7 +232,7 @@ describe("main functionality", () => {
 
 describe("optional param maxWaitMs", () => {
   it("should support a `maxWait` option", async () => {
-    const mockFn = vi.fn<(x: string) => void>(doNothing());
+    const mockFn = vi.fn<(x: string) => void>();
     const debouncer = debounce(mockFn, { waitMs: 32, maxWaitMs: 64 });
     debouncer.call("a");
     debouncer.call("b");
