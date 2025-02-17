@@ -1,0 +1,47 @@
+{
+  "name": "remeda",
+  "version": "2.0.0",
+  "private": true,
+  "description": "A utility library for JavaScript and Typescript.",
+  "keywords": [
+    "algo",
+    "algorithm",
+    "curried",
+    "fp",
+    "functional",
+    "generics",
+    "lodash",
+    "ramda",
+    "stdlib",
+    "toolkit",
+    "ts",
+    "types",
+    "typescript",
+    "underscore",
+    "util",
+    "utilities",
+    "utility",
+    "utils"
+  ],
+  "homepage": "https://remedajs.com/",
+  "bugs": {
+    "url": "https://github.com/remeda/remeda/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remeda/remeda.git"
+  },
+  "license": "MIT",
+  "author": "Łukasz Sentkiewicz",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "docs:build": "cd packages/docs && npm ci && npm run build"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3"
+  }
+}

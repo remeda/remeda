@@ -41,7 +41,7 @@ export const typedocLoader = (options: TypeDocLoaderOptions): Loader => ({
 
     let isInit = true;
 
-    app.convertAndWatch(async (project) => {
+    await app.convertAndWatch(async (project) => {
       await (isInit
         ? cleanLoad(context, project)
         : incrementalLoad(context, project));

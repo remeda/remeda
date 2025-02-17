@@ -2,18 +2,7 @@
   // We use prettier for pretty much anything it supports
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-  // Our tests live next to the files they test, this clutters the folder
-  // structure so we "tuck them" under the file they test. This also comes with
-  // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "*.ts": "${capture}.*.ts"
-  },
-
-  // It's better to ensure that the project typescript is the one we use for the
-  // project so that people don't build for newer typescript features before we
-  // bump it in our project first.
-  "typescript.tsdk": "node_modules/typescript/lib",
 
   // eslint disable comments and better-comments syntax highlighting only work
   // on a single line, so this setting makes them "feel" like they observe our
