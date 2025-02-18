@@ -15,7 +15,7 @@ describe("arrays", () => {
 
   it("reflects both `items` and `replacement` in the output type", () => {
     expectTypeOf(
-      splice([] as Array<number>, 0, 0, ["a"] as Array<string>),
+      splice([] as Array<number>, 0, 0, [] as Array<string>),
     ).toEqualTypeOf<Array<number | string>>();
   });
 });
@@ -24,58 +24,58 @@ describe("fixed tuples", () => {
   describe("deleteCount = 0", () => {
     it("works with start + length < 0", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, -4, 0, [4] as const),
-      ).toEqualTypeOf<[4, 1, 2, 3]>();
+        splice([1, 2, 3] as const, -4, 0, [4, 5] as const),
+      ).toEqualTypeOf<[4, 5, 1, 2, 3]>();
     });
 
     it("works with start < 0", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, -1, 0, [4] as const),
-      ).toEqualTypeOf<[1, 2, 4, 3]>();
+        splice([1, 2, 3] as const, -1, 0, [4, 5] as const),
+      ).toEqualTypeOf<[1, 2, 4, 5, 3]>();
     });
 
     it("works with start = 0", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 0, 0, [4] as const),
-      ).toEqualTypeOf<[4, 1, 2, 3]>();
+        splice([1, 2, 3] as const, 0, 0, [4, 5] as const),
+      ).toEqualTypeOf<[4, 5, 1, 2, 3]>();
     });
 
     it("works with start > 0", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 1, 0, [4] as const),
-      ).toEqualTypeOf<[1, 4, 2, 3]>();
+        splice([1, 2, 3] as const, 1, 0, [4, 5] as const),
+      ).toEqualTypeOf<[1, 4, 5, 2, 3]>();
     });
 
     it("works with start = length", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 3, 0, [4] as const),
-      ).toEqualTypeOf<[1, 2, 3, 4]>();
+        splice([1, 2, 3] as const, 3, 0, [4, 5] as const),
+      ).toEqualTypeOf<[1, 2, 3, 4, 5]>();
     });
 
     it("works with start > length", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 6, 0, [4] as const),
-      ).toEqualTypeOf<[1, 2, 3, 4]>();
+        splice([1, 2, 3] as const, 6, 0, [4, 5] as const),
+      ).toEqualTypeOf<[1, 2, 3, 4, 5]>();
     });
   });
 
   describe("deleteCount != 0", () => {
     it("works with deleteCount < 0", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 1, -1, [4] as const),
-      ).toEqualTypeOf<[1, 4, 2, 3]>();
+        splice([1, 2, 3] as const, 1, -1, [4, 5] as const),
+      ).toEqualTypeOf<[1, 4, 5, 2, 3]>();
     });
 
     it("works with deleteCount + start < length", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 1, 2, [4] as const),
-      ).toEqualTypeOf<[1, 4]>();
+        splice([1, 2, 3] as const, 1, 2, [4, 5] as const),
+      ).toEqualTypeOf<[1, 4, 5]>();
     });
 
     it("works with deleteCount + start > length", () => {
       expectTypeOf(
-        splice([1, 2, 3] as const, 1, 4, [4] as const),
-      ).toEqualTypeOf<[1, 4]>();
+        splice([1, 2, 3] as const, 1, 4, [4, 5] as const),
+      ).toEqualTypeOf<[1, 4, 5]>();
     });
   });
 
@@ -85,10 +85,10 @@ describe("fixed tuples", () => {
     >();
   });
 
-  it("works with big replacement", () => {
+  it("works with bigger replacement", () => {
     expectTypeOf(
-      splice([1, 2, 3] as const, 1, 1, [4, 5, 6] as const),
-    ).toEqualTypeOf<[1, 4, 5, 6, 3]>();
+      splice([1, 2, 3] as const, 1, 1, [4, 5, 6, 7, 8, 9] as const),
+    ).toEqualTypeOf<[1, 4, 5, 6, 7, 8, 9, 3]>();
   });
 
   describe("non-single-literal params", () => {
