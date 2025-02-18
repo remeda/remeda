@@ -122,7 +122,7 @@ type Splice<
 /**
  * Removes elements from an array and inserts new elements in their place.
  *
- * Equivalent to `items.toSpliced(start, deleteCount, ...replacement)`.
+ * Equivalent to [`items.toSpliced(start, deleteCount, ...replacement)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSpliced).
  *
  * @param items - The array to splice.
  * @param start - The index from which to start removing elements. If negative,
@@ -154,7 +154,7 @@ export function splice<
 /**
  * Removes elements from an array and, inserts new elements in their place.
  *
- * Equivalent to `items.toSpliced(start, deleteCount, ...replacement)`.
+ * Equivalent to [`items.toSpliced(start, deleteCount, ...replacement)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSpliced).
  *
  * @param start - The index from which to start removing elements. If negative,
  * it is counted from the end of the array. If it's at least `items.length`,
