@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- We know! */
+
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
@@ -7,6 +9,7 @@ it("returns undefined on 'trailing' timing", () => {
     timing: "trailing",
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string | undefined>();
 });
 
@@ -16,6 +19,7 @@ it("doesn't return undefined on 'leading' timing", () => {
     timing: "leading",
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
@@ -25,6 +29,7 @@ it("doesn't return undefined on 'both' timing", () => {
     timing: "both",
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 

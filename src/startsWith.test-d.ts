@@ -88,24 +88,28 @@ describe("data-last", () => {
       [] as Array<string>,
       startsWith("foo" as string),
     );
+
     expectTypeOf(yes).toEqualTypeOf<Array<string>>();
     expectTypeOf(no).toEqualTypeOf<Array<string>>();
   });
 
   test("const data that matches", () => {
     const [yes, no] = partition([] as Array<"foobar">, startsWith("foo"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<"foobar">>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
 
   test("const data that doesn't match", () => {
     const [yes, no] = partition([] as Array<"helloworld">, startsWith("foo"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<never>>();
     expectTypeOf(no).toEqualTypeOf<Array<"helloworld">>();
   });
 
   test("primitive string data", () => {
     const [yes, no] = partition([] as Array<string>, startsWith("foo"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<`foo${string}`>>();
     expectTypeOf(no).toEqualTypeOf<Array<string>>();
   });
@@ -115,7 +119,7 @@ describe("data-last", () => {
       [] as Array<`foo_${number}`>,
       startsWith("foo"),
     );
-    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
+
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`foo_${number}`>>();
     expectTypeOf(no).toEqualTypeOf<Array<never>>();
   });
@@ -125,6 +129,7 @@ describe("data-last", () => {
       [] as Array<`foo_${number}`>,
       startsWith("hello"),
     );
+
     expectTypeOf(yes).toEqualTypeOf<
       // These should be equivalent to `never` but TypeScript doesn't infer
       // that...
@@ -135,6 +140,7 @@ describe("data-last", () => {
 
   test("literal union", () => {
     const [yes, no] = partition([] as Array<"cat" | "dog">, startsWith("c"));
+
     expectTypeOf(yes).toEqualTypeOf<Array<"cat">>();
     expectTypeOf(no).toEqualTypeOf<Array<"dog">>();
   });
@@ -144,7 +150,7 @@ describe("data-last", () => {
       [] as Array<`cat_${number}` | `dog_${boolean}`>,
       startsWith("c"),
     );
-    // eslint-disable-next-line vitest/valid-expect -- the `branded` accessor isn't currently supported by the plugin. See https://github.com/vitest-dev/eslint-plugin-vitest/issues/539
+
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`cat_${number}`>>();
     expectTypeOf(no).toEqualTypeOf<Array<`dog_${boolean}`>>();
   });

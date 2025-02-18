@@ -1,0 +1,18 @@
+---
+const VARIANTS = {
+  accent: "https://www.netlify.com/v3/img/components/netlify-color-accent.svg",
+  bg: "https://www.netlify.com/v3/img/components/netlify-color-bg.svg",
+  light: "https://www.netlify.com/v3/img/components/netlify-light.svg",
+  dark: "https://www.netlify.com/v3/img/components/netlify-dark.svg",
+} as const;
+
+type Props = {
+  readonly variant?: keyof typeof VARIANTS;
+};
+
+const { variant = "accent" } = Astro.props;
+---
+
+<a href="https://www.netlify.com">
+  <img src={VARIANTS[variant]} alt="Deploys by Netlify" />
+</a>

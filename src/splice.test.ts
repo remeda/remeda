@@ -23,92 +23,192 @@ test("immutability", () => {
   expect(result).not.toBe(data);
 });
 
-describe("regression test including edge cases", () => {
-  // prettier-ignore
-  const testCases = [
-      // items: multiple elements
-      //              start: < 0
-      //                         deleteCount: < 0
-      { items: [1,2], start: -1, deleteCount: -1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start: -1, deleteCount: -1, replacement: [3], expected: [1,3,2] },
-      //                         deleteCount: = 0
-      { items: [1,2], start: -1, deleteCount:  0, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start: -1, deleteCount:  0, replacement: [3], expected: [1,3,2] },
-      //                         deleteCount: = 1
-      { items: [1,2], start: -1, deleteCount:  1, replacement: [ ], expected: [1] },
-      { items: [1,2], start: -1, deleteCount:  1, replacement: [3], expected: [1,3] },
-      //                         deleteCount: = items.length
-      { items: [1,2], start: -1, deleteCount:  2, replacement: [ ], expected: [1] },
-      { items: [1,2], start: -1, deleteCount:  2, replacement: [3], expected: [1,3] },
-      //              start: = 0
-      { items: [1,2], start:  0, deleteCount: -1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  0, deleteCount: -1, replacement: [3], expected: [3,1,2] },
-      { items: [1,2], start:  0, deleteCount:  0, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  0, deleteCount:  0, replacement: [3], expected: [3,1,2] },
-      { items: [1,2], start:  0, deleteCount:  1, replacement: [ ], expected: [2] },
-      { items: [1,2], start:  0, deleteCount:  1, replacement: [3], expected: [3,2] },
-      { items: [1,2], start:  0, deleteCount:  2, replacement: [ ], expected: [] },
-      { items: [1,2], start:  0, deleteCount:  2, replacement: [3], expected: [3] },
-      //              start: = 1
-      { items: [1,2], start:  1, deleteCount: -1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  1, deleteCount: -1, replacement: [3], expected: [1,3,2] },
-      { items: [1,2], start:  1, deleteCount:  0, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  1, deleteCount:  0, replacement: [3], expected: [1,3,2] },
-      { items: [1,2], start:  1, deleteCount:  1, replacement: [ ], expected: [1] },
-      { items: [1,2], start:  1, deleteCount:  1, replacement: [3], expected: [1,3] },
-      { items: [1,2], start:  1, deleteCount:  2, replacement: [ ], expected: [1] },
-      { items: [1,2], start:  1, deleteCount:  2, replacement: [3], expected: [1,3] },
-      //              start: = items.length
-      { items: [1,2], start:  2, deleteCount: -1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  2, deleteCount: -1, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  2, deleteCount:  0, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  2, deleteCount:  0, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  2, deleteCount:  1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  2, deleteCount:  1, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  2, deleteCount:  2, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  2, deleteCount:  2, replacement: [3], expected: [1,2,3] },
-      //              start: > items.length
-      { items: [1,2], start:  3, deleteCount: -1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  3, deleteCount: -1, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  3, deleteCount:  0, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  3, deleteCount:  0, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  3, deleteCount:  1, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  3, deleteCount:  1, replacement: [3], expected: [1,2,3] },
-      { items: [1,2], start:  3, deleteCount:  2, replacement: [ ], expected: [1,2] },
-      { items: [1,2], start:  3, deleteCount:  2, replacement: [3], expected: [1,2,3] },
+describe("regression tests", () => {
+  describe("start at array start", () => {
+    describe("no deletions", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 0, 0, [])).toStrictEqual([1, 2]);
+      });
 
-      // items: empty
-      //              start: < 0
-      { items: [   ], start: -1, deleteCount: -1, replacement: [ ], expected: [] },
-      { items: [   ], start: -1, deleteCount: -1, replacement: [3], expected: [3] },
-      { items: [   ], start: -1, deleteCount:  0, replacement: [ ], expected: [] },
-      { items: [   ], start: -1, deleteCount:  0, replacement: [3], expected: [3] },
-      { items: [   ], start: -1, deleteCount:  1, replacement: [ ], expected: [] },
-      { items: [   ], start: -1, deleteCount:  1, replacement: [3], expected: [3] },
-      //              start: = items.length = 0
-      { items: [   ], start:  0, deleteCount: -1, replacement: [ ], expected: [] },
-      { items: [   ], start:  0, deleteCount: -1, replacement: [3], expected: [3] },
-      { items: [   ], start:  0, deleteCount:  0, replacement: [ ], expected: [] },
-      { items: [   ], start:  0, deleteCount:  0, replacement: [3], expected: [3] },
-      { items: [   ], start:  0, deleteCount:  1, replacement: [ ], expected: [] },
-      { items: [   ], start:  0, deleteCount:  1, replacement: [3], expected: [3] },
-      //              start: > items.length = 0
-      { items: [   ], start:  1, deleteCount: -1, replacement: [ ], expected: [] },
-      { items: [   ], start:  1, deleteCount: -1, replacement: [3], expected: [3] },
-      { items: [   ], start:  1, deleteCount:  0, replacement: [ ], expected: [] },
-      { items: [   ], start:  1, deleteCount:  0, replacement: [3], expected: [3] },
-      { items: [   ], start:  1, deleteCount:  1, replacement: [ ], expected: [] },
-      { items: [   ], start:  1, deleteCount:  1, replacement: [3], expected: [3] },
-    ];
+      test("with replacement", () => {
+        expect(splice([1, 2], 0, 0, [3])).toStrictEqual([3, 1, 2]);
+      });
+    });
 
-  test.each(testCases)(
-    "splice($items, $start, $deleteCount, $replacement) -> $expected",
-    ({ items, start, deleteCount, replacement, expected }) => {
-      expect(splice(items, start, deleteCount, replacement)).toStrictEqual(
-        expected,
-      );
-    },
-  );
+    describe("delete some", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 0, 1, [])).toStrictEqual([2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 0, 1, [3])).toStrictEqual([3, 2]);
+      });
+    });
+
+    describe("delete all", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 0, 2, [])).toStrictEqual([]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 0, 2, [3])).toStrictEqual([3]);
+      });
+    });
+  });
+
+  describe("start within the array", () => {
+    describe("no deletions", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 1, 0, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 1, 0, [3])).toStrictEqual([1, 3, 2]);
+      });
+    });
+
+    describe("delete some", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 1, 1, [])).toStrictEqual([1]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 1, 1, [3])).toStrictEqual([1, 3]);
+      });
+    });
+
+    describe("delete all", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 1, 2, [])).toStrictEqual([1]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 1, 2, [3])).toStrictEqual([1, 3]);
+      });
+    });
+  });
+
+  describe("start at array end", () => {
+    describe("no deletions", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 2, 0, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 2, 0, [3])).toStrictEqual([1, 2, 3]);
+      });
+    });
+  });
+
+  describe("empty array", () => {
+    describe("start at array start", () => {
+      test("without replacement", () => {
+        expect(splice([], 0, -1, [])).toStrictEqual([]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([], 0, -1, [3])).toStrictEqual([3]);
+      });
+    });
+  });
+});
+
+describe("overflow indices", () => {
+  describe("negative start", () => {
+    describe("negative deleteCount", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], -1, -1, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], -1, -1, [3])).toStrictEqual([1, 3, 2]);
+      });
+    });
+
+    describe("no deletions", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], -1, 0, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], -1, 0, [3])).toStrictEqual([1, 3, 2]);
+      });
+    });
+
+    describe("delete some", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], -1, 1, [])).toStrictEqual([1]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], -1, 1, [3])).toStrictEqual([1, 3]);
+      });
+    });
+
+    describe("delete all", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], -1, 2, [])).toStrictEqual([1]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], -1, 2, [3])).toStrictEqual([1, 3]);
+      });
+    });
+  });
+
+  describe("negative deleteCount", () => {
+    describe("start at array start", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 0, -1, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 0, -1, [3])).toStrictEqual([3, 1, 2]);
+      });
+    });
+
+    describe("start within the array", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 1, -1, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 1, -1, [3])).toStrictEqual([1, 3, 2]);
+      });
+    });
+
+    describe("start at array end", () => {
+      test("without replacement", () => {
+        expect(splice([1, 2], 2, -1, [])).toStrictEqual([1, 2]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([1, 2], 2, -1, [3])).toStrictEqual([1, 2, 3]);
+      });
+    });
+  });
+
+  describe("empty array", () => {
+    describe("negative start", () => {
+      test("without replacement", () => {
+        expect(splice([], -1, -1, [])).toStrictEqual([]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([], -1, -1, [3])).toStrictEqual([3]);
+      });
+    });
+
+    describe("start > data.length", () => {
+      test("without replacement", () => {
+        expect(splice([], 1, -1, [])).toStrictEqual([]);
+      });
+
+      test("with replacement", () => {
+        expect(splice([], 1, -1, [3])).toStrictEqual([3]);
+      });
+    });
+  });
 });
 
 test("a purried data-last implementation", () => {

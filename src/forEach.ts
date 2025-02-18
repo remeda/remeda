@@ -1,6 +1,6 @@
 import type { Writable } from "type-fest";
-import type { IterableContainer } from "./internal/types";
-import type { LazyEvaluator } from "./pipe";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { purry } from "./purry";
 
 /**

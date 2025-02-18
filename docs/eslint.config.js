@@ -9,24 +9,13 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [
-      ".astro",
-      "build",
-      "dist",
-      "node_modules",
-      "public",
-      "src/content",
-      "src/data",
-      "src/env.d.ts",
-    ],
+    ignores: [".astro", "dist", "public"],
   },
 
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
   eslintPluginReact.configs.flat.recommended,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
   eslintPluginReact.configs.flat["jsx-runtime"],
   jsxA11y.flatConfigs.strict,
   eslintPluginUnicorn.configs["flat/recommended"],

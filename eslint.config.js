@@ -48,9 +48,7 @@ export default tseslint.config(
       // now instead...
       "@typescript-eslint/no-confusing-void-expression": "off",
 
-      // TODO: These rules allow us to really standardize our codebase, but they
-      // also do sweeping changes to the whole codebase which is very noisy. We
-      // should do it in one sweep sometime in the future.
+      // TODO: These rules allow us to really standardize our codebase, but they also do sweeping changes to the whole codebase which is very noisy. We should do it in one sweep sometime in the future.
       "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
 
@@ -429,6 +427,7 @@ export default tseslint.config(
     plugins: {
       vitest,
     },
+
     rules: {
       ...vitest.configs.all.rules,
       // The `all` config doesn't actually contain all the rules, its missing
@@ -451,10 +450,7 @@ export default tseslint.config(
       // without really adding any interesting semantics.
       "vitest/require-top-level-describe": "off",
 
-      // TODO: When none of the "onlyXXX" options are enabled this rule isn't
-      // valuable and doesn't improve the quality of the tests. We can consider
-      // enabling some (or all of) those options and see if it makes the tests
-      // better without the code being a mess.
+      // TODO: When none of the "onlyXXX" options are enabled this rule isn't valuable and doesn't improve the quality of the tests. We can consider enabling some (or all of) those options and see if it makes the tests better without the code being a mess.
       "vitest/prefer-expect-assertions": "off",
 
       // These aren't valuable when writing tests, they'll just make the tests
@@ -478,10 +474,7 @@ export default tseslint.config(
       // some weird setup.
       "vitest/no-hooks": "off",
 
-      // TODO: This rule might be useful to guide people to break tests into
-      // smaller tests that only expect one thing, but there's no reasonable
-      // max value we can configure it to that won't end up feeling arbitrary
-      // and noisy.
+      // TODO: This rule might be useful to guide people to break tests into smaller tests that only expect one thing, but there's no reasonable max value we can configure it to that won't end up feeling arbitrary and noisy.
       "vitest/max-expects": "off",
     },
   },
@@ -494,11 +487,13 @@ export default tseslint.config(
       },
     },
     languageOptions: {
-      globals: {
-        ...vitest.environments.env.globals,
-      },
+      globals: vitest.environments.env.globals,
     },
     rules: {
+      // We often need to test interfaces concretely and this rule just gets in
+      // the way of that.
+      "@typescript-eslint/consistent-type-definitions": "off",
+
       // A lot of our type tests use @ts-expect-error as the primary way to test
       // that function params are typed correctly. This isn't detected properly
       // by this rule and there's no way to configure it to work; so we disable
@@ -520,6 +515,12 @@ export default tseslint.config(
       // Skip some JSDoc rules for internal-only functions:
       "jsdoc/require-example": "off",
       "jsdoc/require-param": "off",
+    },
+  },
+  {
+    files: ["src/internal/types/*.ts"],
+    rules: {
+      "unicorn/filename-case": ["error", { case: "pascalCase" }],
     },
   },
 );

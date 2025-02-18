@@ -3,11 +3,9 @@
  * possible!
  */
 
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  ExactRecord,
-} from "./internal/types";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { ExactRecord } from "./internal/types/ExactRecord";
 import { purry } from "./purry";
 
 /**

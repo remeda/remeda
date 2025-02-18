@@ -1,5 +1,5 @@
 import type { IsEqual, Join } from "type-fest";
-import type { IterableContainer } from "./internal/types";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Difference<A extends number, B extends number> =
@@ -66,12 +66,7 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 > =
-  // TODO: Because of limitations on the typescript version used in Remeda we
-  // can't build a proper Absolute number type so we can't implement proper
-  // typing for negative indices and have to opt for a less- strict type
-  // instead.
-  // Check out the history for the PR that introduced this TODO to see how it
-  // could be implemented.
+  // TODO: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less- strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
   IsNonNegative<K1> extends false
     ? Array<T[number]>
     : IsNonNegative<K2> extends false
@@ -109,7 +104,7 @@ type SwappedIndices<
  *   swapIndices(data, index1, index2)
  * @example
  *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
- *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
+ *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['a', 'c', 'b']
  *   swapIndices('abc', 0, 1) // => 'bac'
  * @dataFirst
  * @category Array
@@ -153,7 +148,8 @@ const swapIndicesImplementation = (
   index2: number,
 ): unknown =>
   typeof data === "string"
-    ? swapArray([...data], index1, index2).join("")
+    ? // eslint-disable-next-line @typescript-eslint/no-misused-spread -- TODO: I'm not sure what the right way to split the string here, there are multiple "correct" answers and each one is meaningfully different: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
+      swapArray([...data], index1, index2).join("")
     : swapArray(data, index1, index2);
 
 function swapArray(

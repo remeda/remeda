@@ -1,4 +1,5 @@
-import type { ExactRecord, NonEmptyArray } from "./internal/types";
+import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { purry } from "./purry";
 
 /**

@@ -10,7 +10,6 @@ import { purry } from "./purry";
  * @example
  *    R.add(10, 5) // => 15
  *    R.add(10, -5) // => 5
- *    R.reduce([1, 2, 3, 4], R.add, 0) // => 10
  * @dataFirst
  * @category Number
  */

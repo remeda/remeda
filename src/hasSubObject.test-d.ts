@@ -120,6 +120,21 @@ describe("data-first", () => {
     );
   });
 
+  it("allows interfaces", () => {
+    interface AB {
+      a: number;
+      b: number;
+    }
+
+    interface A {
+      a: number;
+    }
+
+    expectTypeOf(
+      hasSubObject({ a: 1, b: 2 } as AB, { a: 1 } as A),
+    ).toEqualTypeOf<boolean>();
+  });
+
   it("narrows with empty object", () => {
     const obj = {} as { a?: string; b?: number };
 
@@ -309,7 +324,6 @@ describe("data-last", () => {
 
   it("allows const types", () => {
     // ok - const value
-    hasSubObject({ a: 1 } as const)({ a: 2, b: 2 });
     pipe({ a: 2, b: 2 }, hasSubObject({ a: 1 } as const));
   });
 
@@ -419,6 +433,20 @@ describe("data-last", () => {
       { a: { b: 1 as boolean | number } },
       hasSubObject({ a: { b: 1 as number | string } }),
     );
+  });
+
+  it("allows interfaces", () => {
+    interface AB {
+      a: number;
+      b: number;
+    }
+
+    interface A {
+      a: number;
+    }
+
+    hasSubObject({ a: 1 } as A)({ a: 1, b: 2 } as AB);
+    pipe({ a: 1, b: 2 } as AB, hasSubObject({ a: 1 } as A));
   });
 
   it("narrows with empty object", () => {

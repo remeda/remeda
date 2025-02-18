@@ -125,7 +125,7 @@ describe("legacy v1 replacements", () => {
       });
 
       test("lazy", () => {
-        const count = vi.fn();
+        const count = vi.fn<() => void>();
         const result = pipe(
           [1, 2, 3, 4, 5, 6],
           map((x) => {

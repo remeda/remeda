@@ -1,5 +1,5 @@
 import type { CamelCase } from "type-fest";
-import { splitWords } from "./internal/splitWords";
+import { words } from "./internal/words";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
 
@@ -18,7 +18,9 @@ const DEFAULT_OPTIONS = {
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * and `uncapitalize`.
+ * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
+ *
+ * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
@@ -32,8 +34,8 @@ const DEFAULT_OPTIONS = {
  * @example
  *   R.toCamelCase("hello world"); // "helloWorld"
  *   R.toCamelCase("__HELLO_WORLD__"); // "helloWorld"
- *   R.toCamelCase("HasHtml"); // "hasHTML"
- *   R.toCamelCase("HasHtml", { preserveConsecutiveUppercase: false }); // "hasHtml"
+ *   R.toCamelCase("HasHTML"); // "hasHTML"
+ *   R.toCamelCase("HasHTML", { preserveConsecutiveUppercase: false }); // "hasHtml"
  * @dataFirst
  * @category String
  */
@@ -48,7 +50,7 @@ export function toCamelCase<
  * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * and `uncapitalize`.
+ * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
  *
  * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
@@ -63,9 +65,9 @@ export function toCamelCase<
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
  *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
- *   R.pipe("HasHtml", R.toCamelCase()); // "hasHTML"
+ *   R.pipe("HasHTML", R.toCamelCase()); // "hasHTML"
  *   R.pipe(
- *     "HasHtml",
+ *     "HasHTML",
  *     R.toCamelCase({ preserveConsecutiveUppercase: false }),
  *   ); // "hasHtml"
  * @dataLast
@@ -92,7 +94,7 @@ const toCamelCaseImplementation = (
     preserveConsecutiveUppercase = DEFAULT_OPTIONS.preserveConsecutiveUppercase,
   }: CamelCaseOptions = {},
 ): string =>
-  splitWords(
+  words(
     LOWER_CASE_CHARACTER_RE.test(data)
       ? data
       : // If the text doesn't have **any** lower case characters we also lower

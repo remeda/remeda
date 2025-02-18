@@ -24,7 +24,7 @@ test("symbols are filtered out", () => {
 });
 
 test("symbols are not passed to the predicate", () => {
-  const mock = vi.fn();
+  const mock = vi.fn<(x: string) => boolean>();
   const data = { [Symbol("mySymbol")]: 1, a: "hello" };
   pickBy(data, mock);
 

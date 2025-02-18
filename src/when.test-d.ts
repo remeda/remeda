@@ -17,6 +17,7 @@ describe("dataFirst", () => {
       it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), constant({ a: 1 }));
+
         // The result contains both the input type, and the result of the
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
@@ -52,6 +53,7 @@ describe("dataFirst", () => {
       it("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
         const result = when(data, isString, constant("cat" as const));
+
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
@@ -97,6 +99,7 @@ describe("dataFirst", () => {
           onTrue: constant("cat" as const),
           onFalse: constant("dog" as const),
         });
+
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
@@ -148,6 +151,7 @@ describe("dataFirst", () => {
           onTrue: constant("cat" as const),
           onFalse: constant("dog" as const),
         });
+
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
@@ -198,6 +202,7 @@ describe("dataLast", () => {
       it("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(constant(true), constant({ a: 1 })));
+
         // The result contains both the input type, and the result of the
         // branch.
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
@@ -230,6 +235,7 @@ describe("dataLast", () => {
       it("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(isString, constant("cat" as const)));
+
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
@@ -275,6 +281,7 @@ describe("dataLast", () => {
             onFalse: constant("dog" as const),
           }),
         );
+
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
@@ -325,6 +332,7 @@ describe("dataLast", () => {
             onFalse: constant("dog" as const),
           }),
         );
+
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 

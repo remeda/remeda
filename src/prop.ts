@@ -27,11 +27,13 @@ export function prop<T, K extends keyof T>(data: T, key: K): T[K];
  */
 export function prop<T, K extends keyof T>(key: K): (data: T) => T[K];
 
+export function prop<K extends PropertyKey>(
+  key: K,
+): <T extends Partial<Record<K, unknown>>>(data: T) => T[K];
+
 export function prop(...args: ReadonlyArray<unknown>): unknown {
   return purry(propImplementation, args);
 }
 
-export const propImplementation = <T, K extends keyof T>(
-  data: T,
-  key: K,
-): T[K] => data[key];
+const propImplementation = <T, K extends keyof T>(data: T, key: K): T[K] =>
+  data[key];

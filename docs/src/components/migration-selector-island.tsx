@@ -5,14 +5,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Library } from "@/lib/mappings";
 import type { ReactNode } from "react";
 
 export function MigrationSelectorIsland({
   libraries,
   children,
 }: {
-  readonly libraries: ReadonlyArray<Library>;
+  readonly libraries: ReadonlyArray<string>;
   readonly children: ReactNode;
 }) {
   return (

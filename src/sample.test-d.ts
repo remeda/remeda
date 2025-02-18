@@ -4,48 +4,56 @@ describe("sampleSize 0", () => {
   it("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on tuples", () => {
     const array: [number, number, number, number, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on tuples with rest tail", () => {
     const array: [number, ...Array<number>] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on tuples with rest head", () => {
     const array: [...Array<number>, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on readonly tuples with rest tail", () => {
     const array: readonly [number, ...Array<number>] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("on readonly tuples with rest head", () => {
     const array: readonly [...Array<number>, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 });
@@ -54,6 +62,7 @@ describe("sampleSize < n", () => {
   it("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [number, number, number, number]
@@ -66,6 +75,7 @@ describe("sampleSize < n", () => {
   it("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [number, number, number, number]
@@ -78,6 +88,7 @@ describe("sampleSize < n", () => {
   it("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
     >();
@@ -86,6 +97,7 @@ describe("sampleSize < n", () => {
   it("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
     >();
@@ -100,13 +112,9 @@ describe("sampleSize < n", () => {
       "yey",
     ];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 elements. Only when the tuple has 4 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
       | [boolean | number | string, boolean | string]
@@ -122,13 +130,9 @@ describe("sampleSize < n", () => {
       "yey",
     ];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 elements. Only when the tuple has 4 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
       | [boolean | number | string, boolean | string]
@@ -144,6 +148,7 @@ describe("sampleSize < n", () => {
       3,
     ];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       | [boolean, number]
       | [string, boolean, number]
@@ -160,6 +165,7 @@ describe("sampleSize < n", () => {
       3,
     ];
     const result = sample(array, 4);
+
     expectTypeOf(result).toEqualTypeOf<
       | [boolean, number]
       | [string, boolean, number]
@@ -172,18 +178,21 @@ describe("sampleSize === n", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 0);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   it("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [number, number, number, number, number]
@@ -197,6 +206,7 @@ describe("sampleSize === n", () => {
   it("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [number, number, number, number, number]
@@ -210,12 +220,14 @@ describe("sampleSize === n", () => {
   it("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   it("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
@@ -228,13 +240,9 @@ describe("sampleSize === n", () => {
       "yey",
     ];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 and 4 elements. Only when the return tuple has 5 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string, string]
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
@@ -251,13 +259,9 @@ describe("sampleSize === n", () => {
       "yey",
     ];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3 and 4 elements. Only when the return tuple has 5 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [boolean | number | string, boolean | string, string, string, string]
       | [boolean | number | string, boolean | string, string, string]
       | [boolean | number | string, boolean | string, string]
@@ -274,6 +278,7 @@ describe("sampleSize === n", () => {
       3,
     ];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
       | [boolean, number]
       | [string, boolean, number]
@@ -291,6 +296,7 @@ describe("sampleSize === n", () => {
       3,
     ];
     const result = sample(array, 5);
+
     expectTypeOf(result).toEqualTypeOf<
       | [boolean, number]
       | [string, boolean, number]
@@ -304,18 +310,21 @@ describe("sampleSize > n", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   it("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
       | [
           number,
@@ -345,6 +354,7 @@ describe("sampleSize > n", () => {
   it("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
       | [
           number,
@@ -374,12 +384,14 @@ describe("sampleSize > n", () => {
   it("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   it("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
@@ -392,13 +404,9 @@ describe("sampleSize > n", () => {
       "yey",
     ];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3-9 elements. Only when the return tuple has 10 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [
           boolean | number | string,
           boolean | string,
@@ -465,13 +473,9 @@ describe("sampleSize > n", () => {
       "yey",
     ];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. If the tuple has only 2 elements, the result should be: `[number, boolean]` and similarly for 3-9 elements. Only when the return tuple has 10 elements then the type of the first and second item should be loosened because we don't know how many items are in the input.
       | [
           boolean | number | string,
           boolean | string,
@@ -538,6 +542,7 @@ describe("sampleSize > n", () => {
       3,
     ];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
       | [
           string,
@@ -581,6 +586,7 @@ describe("sampleSize > n", () => {
       3,
     ];
     const result = sample(array, 10);
+
     expectTypeOf(result).toEqualTypeOf<
       | [
           string,
@@ -620,30 +626,35 @@ describe("non-const sampleSize", () => {
   it("empty array", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
   it("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
   it("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   it("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [1, 2, 3, 4, 5]
@@ -683,6 +694,7 @@ describe("non-const sampleSize", () => {
   it("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
       | []
       | [1, 2, 3, 4, 5]
@@ -728,6 +740,7 @@ describe("non-const sampleSize", () => {
       "yey",
     ];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
       | Array<string>
       | [boolean, ...Array<string>]
@@ -745,6 +758,7 @@ describe("non-const sampleSize", () => {
       "yey",
     ];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
       | Array<string>
       | [boolean, ...Array<string>]
@@ -762,9 +776,9 @@ describe("non-const sampleSize", () => {
       3,
     ];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });
@@ -778,9 +792,9 @@ describe("non-const sampleSize", () => {
       3,
     ];
     const result = sample(array, 5 as number);
+
     expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
+      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
       Array<boolean | number | string>
     >();
   });

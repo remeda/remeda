@@ -21,5 +21,6 @@ it("should narrow `unknown`", () => {
 
 it("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isDate);
+
   expectTypeOf(data).toEqualTypeOf<Array<Date>>();
 });

@@ -1,5 +1,5 @@
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
-import type { LazyEvaluator } from "./pipe";
 import { purry } from "./purry";
 
 /**

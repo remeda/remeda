@@ -24,6 +24,7 @@ describe("parameter enforcing", () => {
 
 it("narrows the prop type", () => {
   const result = set({} as { a?: string }, "a", "hello" as const);
+
   expectTypeOf(result).toEqualTypeOf<{ a: "hello" }>();
 });
 
@@ -33,10 +34,12 @@ it("keeps the prop optional when the key isn't literal", () => {
     "a" as "a" | "b",
     "foo" as const,
   );
+
   expectTypeOf(result).toEqualTypeOf<{ a?: string; b?: number | "foo" }>();
 });
 
 it("works on simple objects", () => {
   const result = set({} as Record<string, string>, "a", "foo" as const);
+
   expectTypeOf(result).toEqualTypeOf<{ [x: string]: string; a: "foo" }>();
 });

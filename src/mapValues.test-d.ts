@@ -21,25 +21,25 @@ describe("interface", () => {
 
 describe("mapped type", () => {
   test("should work with string keys", () => {
-    mapValues({} as { [K in string]: unknown }, (_, key) => {
+    mapValues({} as Record<string, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<string>();
     });
   });
 
   test("should work with number keys", () => {
-    mapValues({} as { [K in number]: unknown }, (_, key) => {
+    mapValues({} as Record<number, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`${number}`>();
     });
   });
 
   test("should work with template literal string keys", () => {
-    mapValues({} as { [K in `prefix${string}`]: unknown }, (_, key) => {
+    mapValues({} as Record<`prefix${string}`, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
     });
   });
 
   test("should not work with symbol keys", () => {
-    mapValues({} as { [K in symbol]: unknown }, (_, key) => {
+    mapValues({} as Record<symbol, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<never>();
     });
   });
@@ -82,6 +82,7 @@ describe("branded types", () => {
 
     mapValues(userValues, (value, key) => {
       expectTypeOf(value).toEqualTypeOf<number>();
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-template-expression -- TODO: I'm not sure what's going on here, are we doing something wrong or is this code needed so we can test it properly?
       expectTypeOf(key).toEqualTypeOf<`${UserID}`>();
     });
   });
@@ -90,6 +91,7 @@ describe("branded types", () => {
 test("symbols are filtered out", () => {
   const mySymbol = Symbol("mySymbol");
   const result = mapValues({ [mySymbol]: 1, a: "hello" }, constant(true));
+
   expectTypeOf(result).toEqualTypeOf<{ a: boolean }>();
 });
 
@@ -102,6 +104,7 @@ test("symbols are ignored by the mapper", () => {
 
 test("objects with just symbol keys are still well defined", () => {
   const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
+
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();
 });
@@ -110,6 +113,7 @@ test("number keys are converted to string in the mapper", () => {
   mapValues({ 123: 456 }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<number>();
     expectTypeOf(key).toEqualTypeOf<"123">();
+
     return "world";
   });
 });
@@ -119,6 +123,7 @@ test("maintains partiality", () => {
     {} as { a?: number; b?: string; c: number; d: string },
     constant(true),
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     a?: boolean;
     b?: boolean;
@@ -131,11 +136,13 @@ test("unions of records", () => {
   const data = {} as Record<number, unknown> | Record<string, unknown>;
 
   const dataFirst = mapValues(data, constant("hello" as string));
+
   expectTypeOf(dataFirst).toEqualTypeOf<
     Record<`${number}`, string> | Record<string, string>
   >();
 
   const dataLast = pipe(data, mapValues(constant("hello" as string)));
+
   expectTypeOf(dataLast).toEqualTypeOf<
     Record<`${number}`, string> | Record<string, string>
   >();

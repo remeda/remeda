@@ -34,9 +34,7 @@
 - of
 - on
 - otherwise
-- partial
 - partialObject
-- partialRight
 - pipeWith
 - promap
 - thunkify
@@ -69,7 +67,6 @@
 - move
 - none
 - pair
-- pluck
 - prepend
 - reduceBy
 - reduced
@@ -108,7 +105,6 @@
 # Math
 
 - mathMod
-- median
 - modulo
 
 # Object
@@ -149,7 +145,6 @@
 
 # Relation
 
-- countBy
 - eqBy
 - gt
 - gte

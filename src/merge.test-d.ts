@@ -1,6 +1,5 @@
 import { merge } from "./merge";
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface FooInterface {
   [x: string]: unknown;
   [x: number]: unknown;

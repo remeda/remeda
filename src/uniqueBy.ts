@@ -1,11 +1,9 @@
 import { purryFromLazy } from "./internal/purryFromLazy";
-import type {
-  BrandedReturn,
-  Deduped,
-  IterableContainer,
-} from "./internal/types";
+import type { BrandedReturn } from "./internal/types/BrandedReturn";
+import type { Deduped } from "./internal/types/Deduped";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
-import type { LazyEvaluator } from "./pipe";
 
 /**
  * Returns a new array containing only one copy of each element in the original

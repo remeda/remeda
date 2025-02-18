@@ -51,9 +51,7 @@ function swapPropsImplementation<T extends object>(
   obj: T,
   key1: keyof T,
   key2: keyof T,
-): {
-  [K in PropertyKey]: unknown;
-} {
+): Record<PropertyKey, unknown> {
   const { [key1]: value1, [key2]: value2 } = obj;
   return {
     ...obj,

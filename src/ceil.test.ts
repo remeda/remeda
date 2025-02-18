@@ -12,6 +12,11 @@ describe("data-first", () => {
     expect(ceil(8123.4317, -4)).toBe(10_000);
   });
 
+  // Makes sure the issue github.com/remeda/remeda/issues/1003 doesn't happen.
+  test("does not output floating point number for negative precision", () => {
+    expect(ceil(123_456, -5)).toBe(200_000);
+  });
+
   test("should work with precision = 0", () => {
     expect(ceil(8123.4317, 0)).toBe(8124);
   });

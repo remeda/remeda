@@ -32,6 +32,7 @@ it("should infer ReadonlyArray<unknown> when given `unknown`", () => {
 
 it("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
+
   expectTypeOf(data).toEqualTypeOf<
     Array<Array<number> | [number, number, number]>
   >();

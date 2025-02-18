@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Tag } from "@/lib/get-tags";
+import type { Tag } from "@/lib/tags";
 import { cn } from "@/lib/utils";
 import { type ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
@@ -32,7 +32,9 @@ export function Navbar({
         <ul className="flex flex-col gap-2">
           {entries.map(([category, entries]) => (
             <li key={category}>
-              <h4 className="px-2 py-1 text-lg font-semibold">{category}</h4>
+              <h4 className="px-2 py-1 text-lg font-semibold capitalize">
+                {category}
+              </h4>
               <ul>
                 {entries.map((entry) => (
                   <li key={entry.title}>

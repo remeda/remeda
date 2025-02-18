@@ -1,4 +1,5 @@
 import { find } from "./find";
+import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
@@ -34,15 +35,18 @@ describe("data first", () => {
 
 describe("data last", () => {
   test("find", () => {
-    const counter = vi.fn((x: { readonly a: number; readonly b: number }) => x);
+    const data = [
+      { a: 1, b: 1 },
+      { a: 1, b: 2 },
+      { a: 2, b: 1 },
+      { a: 1, b: 3 },
+    ] as const;
+
+    const counter =
+      vi.fn<(x: (typeof data)[number]) => (typeof data)[number]>(identity());
 
     const actual = pipe(
-      [
-        { a: 1, b: 1 },
-        { a: 1, b: 2 },
-        { a: 2, b: 1 },
-        { a: 1, b: 3 },
-      ],
+      data,
       map(counter),
       find(({ b }) => b === 2),
     );
@@ -52,15 +56,18 @@ describe("data last", () => {
   });
 
   test("indexed", () => {
-    const counter = vi.fn((x: { readonly a: number; readonly b: number }) => x);
+    const data = [
+      { a: 1, b: 1 },
+      { a: 1, b: 2 },
+      { a: 2, b: 1 },
+      { a: 1, b: 3 },
+    ] as const;
+
+    const counter =
+      vi.fn<(x: (typeof data)[number]) => (typeof data)[number]>(identity());
 
     const actual = pipe(
-      [
-        { a: 1, b: 1 },
-        { a: 1, b: 2 },
-        { a: 2, b: 1 },
-        { a: 1, b: 3 },
-      ],
+      data,
       map(counter),
       find(({ b }, idx) => b === 2 && idx === 1),
     );

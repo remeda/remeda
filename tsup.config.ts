@@ -31,9 +31,7 @@ export default defineConfig(async () => ({
  * our library for. This allows the library to be tree-shaken so that bundlers
  * can take just the utilities and functionality the user's project needs.
  *
- * TODO: We need this just because tsup doesn't support globs in the entry
- * field. If tsup starts supporting it we can drop this and replace it with a
- * regular glob.
+ * TODO: We need this just because tsup doesn't support globs in the entry field. If tsup starts supporting it we can drop this and replace it with a regular glob.
  */
 async function getEntries(sourceDirectory: string): Promise<Array<string>> {
   const files = await ts.readdir(sourceDirectory);

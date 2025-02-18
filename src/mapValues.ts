@@ -1,8 +1,6 @@
 import type { Simplify } from "type-fest";
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-} from "./internal/types";
+import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
+import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import { purry } from "./purry";
 
 type MappedValues<T extends object, Value> = Simplify<{

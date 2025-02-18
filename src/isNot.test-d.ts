@@ -3,6 +3,7 @@ import {
   TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
   type TestClass,
+  type TypedArray,
 } from "../test/typesDataProvider";
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
@@ -20,7 +21,7 @@ it("should work as type guard", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | TypedArray
       | boolean
       | number
       | symbol
@@ -36,6 +37,7 @@ it("should work as type guard", () => {
 
 it("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
+
   expectTypeOf(data).toEqualTypeOf<
     Array<
       | Array<number>
@@ -45,7 +47,7 @@ it("should work as type guard in filter", () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      | TypedArray
       | boolean
       | number
       | string

@@ -21,11 +21,9 @@ PRs should be titled following using the format: `< TYPE >(< scope >)?: descript
 
 - `feat`: new functions, and changes to a function's type that would impact users.
 - `fix`: changes to the runtime behavior of an existing function, or refinements to it's type that shouldn't impact most users.
-- `perf`: changes to function implementations that improve a functions _runtime_ performance.
-- `refactor`: changes to function implementations that are neither `fix` nor `perf`
 - `test`: tests-only changes (transparent to users of the function).
 - `docs`: changes to the documentation of a function **or the documentation site**.
-- `build`, `ci`, `style`, `chore`, and `revert`: are only relevant for the internals of the library.
+- `build`, `ci`, `chore`, and `revert`: are only relevant for the internals of the library.
 
 For scope put the name of the function you are working on (either new or
 existing).
