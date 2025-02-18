@@ -7,28 +7,26 @@ import type {
   Subtract,
   Sum,
 } from "type-fest";
-import type {
-  CoercedArray,
-  IterableContainer,
-  TupleParts,
-  WidenLiteral,
-} from "./internal/types";
+import type { CoercedArray } from "./internal/types/CoercedArray";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 type IfLiteral<N extends number, Fallback> = number extends N ? Fallback : N;
 
-type PositiveIndex<
-  T extends IterableContainer,
-  N extends number,
-> = N extends unknown
-  ? IsNegative<N> extends false
-    ? GreaterThan<N, T["length"]> extends true
-      ? T["length"]
-      : N
-    : number extends T["length"]
-      ? number
-      : IfLiteral<Sum<T["length"], N>, 0>
-  : never;
+type PositiveIndex<T extends IterableContainer, N extends number> =
+  // `extends unknown` is always going to be the case and is used to convert any
+  // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
+  N extends unknown
+    ? IsNegative<N> extends true
+      ? number extends T["length"]
+        ? number
+        : // type-fest `Sum` returns `number` if the result is negative.
+          IfLiteral<Sum<T["length"], N>, 0>
+      : GreaterThan<N, T["length"]> extends true
+        ? T["length"]
+        : N
+    : never;
 
 type ClampedLength<
   T extends IterableContainer,
@@ -40,7 +38,8 @@ type ClampedLength<
     : number extends T["length"]
       ? number
       : GreaterThan<Sum<Offset, Length>, T["length"]> extends true
-        ? IfLiteral<Subtract<T["length"], Offset>, 0>
+        ? // type-fest `Subtract` returns `number` if the result is negative.
+          IfLiteral<Subtract<T["length"], Offset>, 0>
         : Length;
 
 type FixedLengthSplice<
@@ -49,26 +48,30 @@ type FixedLengthSplice<
   DeleteCount extends number,
   Replacement extends IterableContainer,
   PositiveStart extends number = PositiveIndex<T, Start>,
-> = PositiveStart extends unknown
-  ? ArraySplice<
-      T,
-      PositiveStart,
-      ClampedLength<T, PositiveStart, DeleteCount>,
-      Replacement
-    >
-  : never;
+> =
+  // Turn this to a distributive conditional type; see `extends unknown` note above.
+  PositiveStart extends unknown
+    ? ArraySplice<
+        T,
+        PositiveStart,
+        ClampedLength<T, PositiveStart, DeleteCount>,
+        Replacement
+      >
+    : never;
 
-/** Widen a tuple into an array type. */
-type WidenTuple<T extends IterableContainer> =
-  T extends ReadonlyArray<infer Item>
-    ? IfNever<Item, ReadonlyArray<unknown>, Array<WidenLiteral<Item>>>
+/** Collapse the types of two tuples into a single array. */
+type CollapseTuples<A extends IterableContainer, B extends IterableContainer> =
+  A extends ReadonlyArray<infer AItem>
+    ? B extends ReadonlyArray<infer BItem>
+      ? IfNever<AItem | BItem, ReadonlyArray<unknown>, Array<AItem | BItem>>
+      : never
     : never;
 
 type LiteralNumberSplice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends Readonly<WidenTuple<T>>,
+  Replacement extends IterableContainer,
 > = TupleParts<T>["item"] extends never
   ? FixedLengthSplice<T, Start, DeleteCount, Replacement>
   : IsNegative<Start> extends true
@@ -76,7 +79,7 @@ type LiteralNumberSplice<
       number extends Sum<TupleParts<T>["suffix"]["length"], Start>
       ? // Splice cuts into the variable-length part.
         // TODO: Is a better type is possible? See tests.
-        WidenTuple<T>
+        CollapseTuples<T, Replacement>
       : // Splice is solely in the suffix.
         [
           ...TupleParts<T>["prefix"],
@@ -94,7 +97,7 @@ type LiteralNumberSplice<
         > extends true
       ? // Splice cuts into the variable-length part.
         // TODO: Is a better type is possible? See tests.
-        WidenTuple<T>
+        CollapseTuples<T, Replacement>
       : // Splice is solely in the prefix.
         [
           ...FixedLengthSplice<
@@ -111,10 +114,10 @@ type Splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends Readonly<WidenTuple<T>>,
+  Replacement extends IterableContainer,
 > = [IsLiteral<Start>, IsLiteral<DeleteCount>] extends [true, true]
   ? LiteralNumberSplice<T, Start, DeleteCount, Replacement>
-  : WidenTuple<T>;
+  : CollapseTuples<T, Replacement>;
 
 /**
  * Removes elements from an array and inserts new elements in their place.
@@ -140,7 +143,7 @@ export function splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends Readonly<WidenTuple<T>>,
+  Replacement extends IterableContainer,
 >(
   items: T,
   start: Start,
@@ -171,7 +174,7 @@ export function splice<
   T extends IterableContainer,
   Start extends number,
   DeleteCount extends number,
-  Replacement extends Readonly<WidenTuple<T>>,
+  Replacement extends IterableContainer,
 >(
   start: Start,
   deleteCount: DeleteCount,

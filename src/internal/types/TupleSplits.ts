@@ -7,7 +7,7 @@ import type { CoercedArray } from "./CoercedArray";
  */
 export type TupleSplits<Tuple extends IterableContainer> =
   // Use a distributive conditional type, in case T is a union:
-  Tuple extends infer T
+  Tuple extends infer T extends IterableContainer
     ? TupleParts<T> extends {
         prefix: infer Prefix extends ReadonlyArray<unknown>;
         item: infer Item;

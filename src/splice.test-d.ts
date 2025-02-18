@@ -1,4 +1,3 @@
-import { pipe } from "./pipe";
 import { splice } from "./splice";
 
 describe("arrays", () => {
@@ -14,15 +13,10 @@ describe("arrays", () => {
     >();
   });
 
-  it("reflects the type of `replacement` in the return value (data-last)", () => {
-    expectTypeOf(pipe([], splice(0, 0, [] as Array<number>))).toEqualTypeOf<
-      Array<number>
-    >();
-  });
-
-  it("does not work with replacement of different type", () => {
-    // @ts-expect-error - wrong `replacement` type
-    splice([1, 2, 3] as const, 0, 0, ["a"] as const);
+  it("reflects both `items` and `replacement` in the output type", () => {
+    expectTypeOf(
+      splice([] as Array<number>, 0, 0, ["a"] as Array<string>),
+    ).toEqualTypeOf<Array<number | string>>();
   });
 });
 
@@ -97,11 +91,11 @@ describe("fixed tuples", () => {
     ).toEqualTypeOf<[1, 4, 5, 6, 3]>();
   });
 
-  describe("non-literal params", () => {
+  describe("non-single-literal params", () => {
     it("works as number", () => {
       expectTypeOf(
         splice([1, 2, 3] as const, 1 as number, 1 as number, [4] as const),
-      ).toEqualTypeOf<Array<number>>();
+      ).toEqualTypeOf<Array<1 | 2 | 3 | 4>>();
     });
 
     it("works with deleteCount", () => {
