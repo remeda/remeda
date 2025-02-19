@@ -1,32 +1,9 @@
 {
-  "name": "remeda",
+  "name": "remeda-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "A utility library for JavaScript and Typescript.",
-  "keywords": [
-    "algo",
-    "algorithm",
-    "curried",
-    "fp",
-    "functional",
-    "generics",
-    "lodash",
-    "ramda",
-    "stdlib",
-    "toolkit",
-    "ts",
-    "types",
-    "typescript",
-    "underscore",
-    "util",
-    "utilities",
-    "utility",
-    "utils"
-  ],
+  "description": "The root for the Remeda monorepo",
   "homepage": "https://remedajs.com/",
-  "bugs": {
-    "url": "https://github.com/remeda/remeda/issues"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/remeda/remeda.git"
