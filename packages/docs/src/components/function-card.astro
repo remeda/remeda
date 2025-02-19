@@ -1,0 +1,42 @@
+---
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { functionsCollectionName } from "@/content/functions/content.config";
+import { tagContent } from "@/lib/tags";
+import type { CollectionEntry } from "astro:content";
+import { map, pipe, uniqueBy } from "@remeda/library";
+import FunctionApi from "./function-api.astro";
+import FunctionDescription from "./function-description.astro";
+
+type Props = {
+  readonly func: CollectionEntry<typeof functionsCollectionName>;
+  readonly internalNames: ReadonlySet<string>;
+};
+
+const {
+  func: { id, data },
+  internalNames,
+} = Astro.props;
+
+const category = tagContent(data.signatures[0].comment.blockTags, "category");
+---
+
+<Card id={id} className="scroll-mt-24">
+  <CardHeader>
+    <FunctionDescription
+      category={category}
+      func={data}
+      internalNames={internalNames}
+    />
+  </CardHeader>
+  <CardContent className="grid gap-8">
+    {
+      pipe(
+        data.signatures,
+        uniqueBy(({ comment: { blockTags } }) =>
+          tagContent(blockTags, "signature"),
+        ),
+        map((signature) => <FunctionApi signature={signature} />),
+      )
+    }
+  </CardContent>
+</Card>

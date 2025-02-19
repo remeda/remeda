@@ -1,88 +1,14 @@
 {
   "name": "remeda",
   "version": "2.0.0",
-  "description": "A utility library for JavaScript and Typescript.",
-  "keywords": [
-    "algo",
-    "algorithm",
-    "curried",
-    "fp",
-    "functional",
-    "generics",
-    "lodash",
-    "ramda",
-    "stdlib",
-    "toolkit",
-    "ts",
-    "types",
-    "typescript",
-    "underscore",
-    "util",
-    "utilities",
-    "utility",
-    "utils"
-  ],
-  "homepage": "https://remedajs.com/",
-  "bugs": {
-    "url": "https://github.com/remeda/remeda/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remeda/remeda.git"
-  },
-  "license": "MIT",
-  "author": "Łukasz Sentkiewicz",
-  "sideEffects": false,
+  "private": true,
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "files": [
-    "dist/*"
+  "workspaces": [
+    "packages/*"
   ],
-  "scripts": {
-    "build": "tsup",
-    "check": "tsc --project tsconfig.source.json",
-    "check:dist": "tsc --project tsconfig.dist.json",
-    "docs:build": "cd docs && npm ci && npm run build",
-    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
-    "lint:build": "attw --pack . && publint",
-    "prepare": "husky",
-    "prettier": "prettier . --write",
-    "release": "semantic-release",
-    "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
-    "test:coverage": "vitest run --coverage",
-    "test:runtime": "tsc --project tsconfig.tests.json && vitest",
-    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
-  },
-  "dependencies": {
-    "type-fest": "^4.35.0"
-  },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.3",
-    "@eslint/js": "^9.20.0",
-    "@types/eslint__js": "^8.42.3",
-    "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.13.4",
-    "@vitest/coverage-v8": "^3.0.5",
-    "@vitest/eslint-plugin": "^1.1.31",
-    "eslint": "^9.20.1",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-jsdoc": "^50.6.3",
-    "eslint-plugin-unicorn": "^56.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.1",
-    "publint": "^0.3.5",
-    "semantic-release": "^24.2.3",
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.0",
-    "vitest": "^3.0.5"
+    "prettier": "^3.5.1"
   }
 }

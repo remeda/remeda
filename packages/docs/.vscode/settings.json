@@ -1,0 +1,10 @@
+{
+  // We use prettier for pretty much anything it supports
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Use project typescript:
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // This makes sense:
+  "cSpell.words": ["Remeda"]
+}
