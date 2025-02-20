@@ -22,8 +22,14 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🚨 Type check
-        run: npm run check --workspaces
+      - name: 🚨 Type check (Library)
+        run: npm run --workspace=@remeda/library check
+
+      - name: Build Library
+        run: npm run --workspace=@remeda/library build
+
+      - name: 🚨 Type check (Docs)
+        run: npm run --workspace=@remeda/docs check
 
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
