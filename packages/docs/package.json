@@ -7,9 +7,10 @@
   "type": "module",
   "scripts": {
     "build": "astro build",
-    "check": "astro check --noSync",
+    "check": "astro check",
     "dev": "astro dev",
-    "lint": "eslint",
+    "format": "prettier . --write",
+    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "preview": "astro preview",
     "sync": "astro sync"
   },
@@ -27,12 +28,12 @@
     "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-select": "^2.1.5",
     "@radix-ui/react-slot": "^1.1.1",
+    "@remeda/library": "*",
     "astro": "^5.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@remeda/library": "*",
     "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
@@ -55,6 +56,7 @@
     "eslint-plugin-unicorn": "^56.0.1",
     "globals": "^15.14.0",
     "jsdom": "^26.0.0",
+    "lint-staged": "^15.4.3",
     "marked": "^15.0.6",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",

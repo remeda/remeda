@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: /
+    directory: /packages/library
     schedule:
       interval: monthly
     groups:
@@ -16,7 +16,22 @@ updates:
           - minor
 
   - package-ecosystem: npm
-    directory: /docs
+    directory: /packages/docs
+    schedule:
+      interval: monthly
+    groups:
+      # We only group minor and patch updates so that its easy to review and
+      # accept without too much fuss. For major updates we still want a separate
+      # PR for each dependency so we can discuss and review it properly.
+      patches:
+        update-types:
+          - patch
+      minor:
+        update-types:
+          - minor
+
+  - package-ecosystem: npm
+    directory: /
     schedule:
       interval: monthly
     groups:

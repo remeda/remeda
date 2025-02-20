@@ -21,6 +21,9 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
+      - name: 🔍 Focus on Library
+        run: cd packages/library
+
       - name: ☔ Collect coverage
         run: npm run test:coverage
 
