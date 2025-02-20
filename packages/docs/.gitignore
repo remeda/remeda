@@ -4,12 +4,3 @@ public/dist/
 
 # generated types
 .astro/
-
-# dependencies
-node_modules/
-
-# logs
-npm-debug.log*
-
-# macOS-specific files
-.DS_Store

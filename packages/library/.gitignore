@@ -6,8 +6,3 @@ tsconfig.vitest-temp.json
 # Coverage directory used by vitest
 coverage
 
-# Optional npm cache directory
-.npm
-
-# IntelliJ users?
-.idea

@@ -1,11 +1,11 @@
+import { internalPackageDir } from "@/lib/typedoc/internal-package-dir";
 import { typedocLoader } from "@/lib/typedoc/loader";
 import { zFunction } from "@/lib/typedoc/schema";
 import { defineCollection } from "astro:content";
-import { OptionDefaults } from "typedoc";
 import path from "node:path";
-import process from "node:process";
+import { OptionDefaults } from "typedoc";
 
-const LIBRARY_DIR = path.join(process.cwd(), "..", "library");
+const LIBRARY_DIR = await internalPackageDir("@remeda/library");
 
 export const functionsCollectionName = "functions";
 
