@@ -1,4 +1,5 @@
 {
+  "packages": ["packages/library"],
   "sandboxes": ["/examples/vanilla"],
   "node": "20"
 }
