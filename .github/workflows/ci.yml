@@ -144,7 +144,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 💄 Format
-        run: npm run prettier --workspaces
+        run: npm run format --workspaces
 
   publish:
     needs:
