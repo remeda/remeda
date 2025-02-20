@@ -58,23 +58,20 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🔍 Focus on Library
-        run: cd packages/library
-
       # TODO: We are rebuilding everything several times, our builds aren't very
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: npm run build -- --dts-only
+        run: npm run --workspace=library build -- --dts-only
 
       - name: 📘 Install Typescript
-        run: npm install -D typescript@${{ matrix.typescript-version }}
+        run: npm install --workspace=library -D typescript@${{ matrix.typescript-version }}
 
       - name: 📋 Type tests
-        run: npm run test:typing
+        run: npm run  --workspace=library test:typing
 
       - name: 🚚 Check Outputs
-        run: npm run check:dist
+        run: npm run  --workspace=library check:dist
 
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
@@ -166,17 +163,14 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🔍 Focus on Library
-        run: cd packages/library
-
       - name: 🏗️ Build
-        run: npm run build
+        run: npm run --workspace=library build
 
       - name: 👮 Lint output
-        run: npm run lint:build
+        run: npm run --workspace=library lint:build
 
       - name: 🚀 Release
-        run: npm run release
+        run: npm run --workspace=library release
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
