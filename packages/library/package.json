@@ -56,7 +56,7 @@
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:coverage": "vitest run --coverage",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
-    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors"
+    "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
     "type-fest": "^4.35.0"
