@@ -22,7 +22,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: ☔ Collect coverage
-        run: npm run --workspace=library test:coverage
+        run: npm run --workspace=@remeda/library test:coverage
 
       - name: 🗺️ Upload coverage
         uses: codecov/codecov-action@v5

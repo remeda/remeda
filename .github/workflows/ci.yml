@@ -62,16 +62,16 @@ jobs:
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: npm run --workspace=library build -- --dts-only
+        run: npm run --workspace=@remeda/library build -- --dts-only
 
       - name: 📘 Install Typescript
-        run: npm install --workspace=library -D typescript@${{ matrix.typescript-version }}
+        run: npm install --workspace=@remeda/library -D typescript@${{ matrix.typescript-version }}
 
       - name: 📋 Type tests
-        run: npm run  --workspace=library test:typing
+        run: npm run  --workspace=@remeda/library test:typing
 
       - name: 🚚 Check Outputs
-        run: npm run  --workspace=library check:dist
+        run: npm run  --workspace=@remeda/library check:dist
 
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
@@ -98,7 +98,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: npm run --workspace=library test:runtime
+        run: npm run --workspace=@remeda/library test:runtime
 
   lint:
     name: 🧹 Lint
@@ -164,13 +164,13 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build
-        run: npm run --workspace=library build
+        run: npm run --workspace=@remeda/library build
 
       - name: 👮 Lint output
-        run: npm run --workspace=library lint:build
+        run: npm run --workspace=@remeda/library lint:build
 
       - name: 🚀 Release
-        run: npm run --workspace=library release
+        run: npm run --workspace=@remeda/library release
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
