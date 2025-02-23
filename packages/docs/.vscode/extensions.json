@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "aaron-bond.better-comments",
-    "astro-build.astro-vscode",
-    "bradlc.vscode-tailwindcss"
-  ]
-}
