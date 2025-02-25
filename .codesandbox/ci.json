@@ -3,5 +3,5 @@
 
   "packages": ["packages/library"],
   "buildCommand": "--workspace=@remeda/library build",
-  "sandboxes": ["/packages/library/.codesandbox/sandboxes/pr"]
+  "sandboxes": ["/packages/pr-sandbox"]
 }

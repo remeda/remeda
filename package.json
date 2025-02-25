@@ -5,7 +5,8 @@
   "type": "module",
   "workspaces": [
     "packages/library",
-    "packages/docs"
+    "packages/docs",
+    "packages/pr-sandbox"
   ],
   "scripts": {
     "docs:build": "npm run build --workspaces",
