@@ -3,17 +3,14 @@
   "main": "index.html",
   "scripts": {
     "build": "parcel build index.html",
-    "start": "parcel index.html --open",
-    "format": "prettier . --write"
-  },
-  "resolutions": {
-    "@babel/preset-env": "7.13.8"
+    "format": "prettier . --write",
+    "start": "parcel index.html --open"
   },
   "dependencies": {
-    "@remeda/library": "*",
-    "parcel-bundler": "^1.12.5"
+    "@remeda/library": "*"
   },
   "devDependencies": {
+    "parcel": "^2.13.3",
     "prettier": "^3.5.2",
     "typescript": "^5.7.3"
   }

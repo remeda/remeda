@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "name": "monorepo-root",
+      "name": ".monorepo-root",
       "path": ".",
     },
     {
