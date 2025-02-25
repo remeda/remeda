@@ -1,14 +1,14 @@
 {
   "folders": [
     {
+      "name": "monorepo-root",
+      "path": ".",
+    },
+    {
       "path": "packages/library",
     },
     {
       "path": "packages/docs",
-    },
-    {
-      "name": "monorepo",
-      "path": ".",
     },
   ],
 
@@ -43,16 +43,8 @@
       // inside the editor.
       "dbaeumer.vscode-eslint",
 
-      // We use vitest for testing, this helps debugging and running tests.
-      "vitest.explorer",
-
       // Surfaces TODOs and !IMPORTANT sections more clearly.
       "aaron-bond.better-comments",
-
-      // These are relevant for the docs site, without them you'll have a hard
-      // time working on the docs site.
-      "astro-build.astro-vscode",
-      "bradlc.vscode-tailwindcss",
     ],
   },
 }
