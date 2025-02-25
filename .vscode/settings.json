@@ -3,6 +3,6 @@
     // Packages should be exposed as workspace folders via an entry in
     // the `remeda.code-workspace`. When adding a new package, don't forget to
     // also add it there so it's available in the workspace.
-    "packages/**": true
+    "packages": true
   }
 }
