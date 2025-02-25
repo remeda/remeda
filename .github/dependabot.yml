@@ -16,7 +16,7 @@ updates:
           - minor
 
   - package-ecosystem: npm
-    directory: /packages/library
+    directory: /packages/remeda
     schedule:
       interval: monthly
     groups:
