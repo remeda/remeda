@@ -7,15 +7,15 @@
     "packages/library",
     "packages/docs"
   ],
-  "devDependencies": {
-    "lint-staged": "^15.4.3",
-    "prettier": "^3.5.1"
-  },
   "scripts": {
     "docs:build": "npm run build --workspaces",
     "prepare": "husky"
   },
   "dependencies": {
     "husky": "^9.1.7"
+  },
+  "devDependencies": {
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.1"
   }
 }

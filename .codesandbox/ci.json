@@ -1,5 +1,7 @@
 {
+  "node": "20",
+
   "packages": ["packages/library"],
   "buildCommand": "--workspace=@remeda/library build",
-  "node": "20"
+  "sandboxes": ["/packages/library/.codesandbox/sandboxes/pr"]
 }
