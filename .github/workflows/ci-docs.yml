@@ -1,4 +1,4 @@
-name: CI - Docs
+name: 🌐 CI - Docs
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CI - Library
+name: 📦 CI - Library
 
 on:
   push:
