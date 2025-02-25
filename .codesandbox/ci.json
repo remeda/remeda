@@ -1,5 +1,5 @@
 {
   "packages": ["packages/library"],
-  "sandboxes": ["/examples/vanilla"],
-  "node": "20"
+  "buildCommand": "npm run --workspace=library build",
+  "node": "22"
 }
