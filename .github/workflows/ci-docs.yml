@@ -25,7 +25,7 @@ jobs:
       - name: 🏗️ Build Library
         run: npm run --workspace=@remeda/library build
 
-      - name: 🚨 Type check (Docs)
+      - name: 🚨 Type check
         run: npm run --workspace=@remeda/docs check
 
   lint:
@@ -51,7 +51,7 @@ jobs:
       - name: 🔄 Sync Docs
         run: npm run --workspace=@remeda/docs sync
 
-      - name: 🧹 Lint (Docs)
+      - name: 🧹 Lint
         run: npm run  --workspace=@remeda/docs lint
 
   formatting:

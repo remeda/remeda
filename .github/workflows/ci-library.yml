@@ -22,7 +22,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🚨 Type check (Library)
+      - name: 🚨 Type check
         run: npm run --workspace=@remeda/library check
 
   test-typing:
@@ -117,7 +117,7 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🧹 Lint (Library)
+      - name: 🧹 Lint
         run: npm run  --workspace=@remeda/library lint
 
   formatting:
