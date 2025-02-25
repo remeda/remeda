@@ -3,7 +3,8 @@
   "main": "index.html",
   "scripts": {
     "build": "parcel build index.html",
-    "start": "parcel index.html --open"
+    "start": "parcel index.html --open",
+    "format": "prettier . --write"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
@@ -13,6 +14,7 @@
     "parcel-bundler": "^1.12.5"
   },
   "devDependencies": {
+    "prettier": "^3.5.2",
     "typescript": "^5.7.3"
   }
 }
