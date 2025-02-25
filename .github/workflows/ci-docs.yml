@@ -1,0 +1,75 @@
+name: CI - Docs
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  typecheck:
+    name: 👷 Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🏗️ Build Library
+        run: npm run --workspace=@remeda/library build
+
+      - name: 🚨 Type check (Docs)
+        run: npm run --workspace=@remeda/docs check
+
+  lint:
+    name: 🧹 Lint
+    needs:
+      - typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🏗️ Build Library
+        run: npm run --workspace=@remeda/library build
+
+      - name: 🔄 Sync Docs
+        run: npm run --workspace=@remeda/docs sync
+
+      - name: 🧹 Lint (Docs)
+        run: npm run  --workspace=@remeda/docs lint
+
+  formatting:
+    name: 💄 Format
+    needs:
+      - typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 💄 Format
+        run: npm run --workspace=@remeda/docs format

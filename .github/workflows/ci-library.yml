@@ -1,4 +1,4 @@
-name: CI
+name: CI - Library
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  typecheck-library:
-    name: 👷 Typecheck (Library)
+  typecheck:
+    name: 👷 Typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -25,33 +25,10 @@ jobs:
       - name: 🚨 Type check (Library)
         run: npm run --workspace=@remeda/library check
 
-  typecheck-docs:
-    name: 👷 Typecheck (Docs)
-    needs:
-      - typecheck-library
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🏗️ Build Library
-        run: npm run --workspace=@remeda/library build
-
-      - name: 🚨 Type check (Docs)
-        run: npm run --workspace=@remeda/docs check
-
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
     needs:
-      - typecheck-library
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -99,7 +76,7 @@ jobs:
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
     needs:
-      - typecheck-library
+      - typecheck
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -123,10 +100,10 @@ jobs:
       - name: 🧪 Run tests
         run: npm run --workspace=@remeda/library test:runtime
 
-  lint-library:
-    name: 🧹 Lint (Library)
+  lint:
+    name: 🧹 Lint
     needs:
-      - typecheck-library
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -143,37 +120,10 @@ jobs:
       - name: 🧹 Lint (Library)
         run: npm run  --workspace=@remeda/library lint
 
-  lint-docs:
-    name: 🧹 Lint (Docs)
-    needs:
-      - typecheck-docs
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🏗️ Build Library
-        run: npm run --workspace=@remeda/library build
-
-      - name: 🔄 Sync Docs
-        run: npm run --workspace=@remeda/docs sync
-
-      - name: 🧹 Lint (Docs)
-        run: npm run  --workspace=@remeda/docs lint
-
   formatting:
     name: 💄 Format
     needs:
-      - typecheck-library
-      - typecheck-docs
+      - typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -188,14 +138,12 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 💄 Format
-        run: npm run format --workspaces
+        run: npm run --workspace=@remeda/library format
 
   publish:
     needs:
       - test-typing
       - test-runtime
-      - lint-library
-      - lint-docs
       - formatting
 
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
