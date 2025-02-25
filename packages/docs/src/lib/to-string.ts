@@ -1,4 +1,4 @@
-import { purry } from "@remeda/library";
+import { purry } from "remeda";
 
 /**
  * A wrapper that allows calling `toString` generically with a data-last

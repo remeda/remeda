@@ -2,7 +2,7 @@ import { zFunction } from "@/lib/typedoc/schema";
 import { defineCollection, reference, z } from "astro:content";
 import { categoriesLoader, functionsLoader } from "./loaders";
 import { ReflectionKind } from "typedoc";
-import { constant } from "@remeda/library";
+import { constant } from "remeda";
 
 export const functionsV1CollectionName = "functions-v1";
 export const categoriesV1CollectionName = "categories-v1";

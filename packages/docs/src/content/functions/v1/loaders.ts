@@ -2,7 +2,7 @@ import { throws } from "@/lib/throws";
 import { toString } from "@/lib/to-string";
 import { file } from "astro/loaders";
 import path from "node:path";
-import { evolve, isNullish, map, piped, prop, when } from "@remeda/library";
+import { evolve, isNullish, map, piped, prop, when } from "remeda";
 import invariant from "tiny-invariant";
 import { type JSONOutput } from "typedoc";
 import dataFilePath from "./functions.json?url";

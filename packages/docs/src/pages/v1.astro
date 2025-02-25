@@ -3,7 +3,7 @@ import DocsSection from "@/components/docs-section.astro";
 import V1FunctionCard from "@/components/v1/function-card.astro";
 import DocsPage from "@/layouts/docs-page.astro";
 import { forNavbar, getV1Functions } from "@/lib/v1/entries";
-import { flatMap, map, prop } from "@remeda/library";
+import { flatMap, map, prop } from "remeda";
 
 const functions = await getV1Functions();
 

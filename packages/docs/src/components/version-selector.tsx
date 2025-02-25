@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCallback, useMemo, type ReactNode } from "react";
-import { entries, keys, map, only, pickBy, pipe } from "@remeda/library";
+import { entries, keys, map, only, pickBy, pipe } from "remeda";
 
 type VersionDescriptor = {
   readonly label: string;

@@ -5,7 +5,7 @@ import { defineCollection } from "astro:content";
 import path from "node:path";
 import { OptionDefaults } from "typedoc";
 
-const LIBRARY_DIR = await internalPackageDir("@remeda/library");
+const LIBRARY_DIR = await internalPackageDir("remeda");
 
 export const functionsCollectionName = "functions";
 

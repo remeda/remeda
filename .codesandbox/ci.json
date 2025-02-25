@@ -2,6 +2,6 @@
   "node": "20",
 
   "packages": ["packages/library"],
-  "buildCommand": "--workspace=@remeda/library build",
+  "buildCommand": "--workspace=remeda build",
   "sandboxes": ["/packages/pr-sandbox"]
 }

@@ -1,7 +1,7 @@
 import type { NavbarCategory } from "@/components/navbar";
 import { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
 import { getCollection, getEntries } from "astro:content";
-import { map, pipe, prop, filter } from "@remeda/library";
+import { map, pipe, prop, filter } from "remeda";
 import { extractTags } from "../tags";
 import { sortByCategories } from "../sort-categories";
 

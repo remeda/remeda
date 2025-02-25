@@ -6,7 +6,7 @@
     "start": "parcel index.html --open"
   },
   "dependencies": {
-    "@remeda/library": "*"
+    "remeda": "*"
   },
   "devDependencies": {
     "parcel": "^2.13.3",

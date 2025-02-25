@@ -11,7 +11,7 @@ import {
   piped,
   prop,
   sortBy,
-} from "@remeda/library";
+} from "remeda";
 import { sortByCategories } from "../sort-categories";
 
 // Matches a slash a the beginning or end of a string.

@@ -23,7 +23,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build Library
-        run: npm run --workspace=@remeda/library build
+        run: npm run --workspace=remeda build
 
       - name: 🚨 Type check
         run: npm run --workspace=@remeda/docs check
@@ -46,7 +46,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build Library
-        run: npm run --workspace=@remeda/library build
+        run: npm run --workspace=remeda build
 
       - name: 🔄 Sync Docs
         run: npm run --workspace=@remeda/docs sync

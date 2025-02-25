@@ -5,7 +5,7 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { endsWith, filter, pipe, pullObject } from "@remeda/library";
+import { endsWith, filter, pipe, pullObject } from "remeda";
 import {
   build,
   defineConfig as defineViteConfig,

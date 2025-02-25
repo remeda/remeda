@@ -13,7 +13,7 @@ import {
   sortBy,
   split,
   when,
-} from "@remeda/library";
+} from "remeda";
 import { sortByCategories } from "../sort-categories";
 
 export const getMigrationMappings = async (library: string) =>

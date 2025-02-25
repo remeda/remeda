@@ -1,7 +1,7 @@
 import type { NavbarCategory } from "@/components/navbar";
 import { functionsCollectionName } from "@/content/functions/content.config";
 import { getCollection } from "astro:content";
-import { entries, groupBy, map, pipe } from "@remeda/library";
+import { entries, groupBy, map, pipe } from "remeda";
 import invariant from "tiny-invariant";
 import { sortByCategories } from "../sort-categories";
 import { extractTags, tagContent } from "../tags";

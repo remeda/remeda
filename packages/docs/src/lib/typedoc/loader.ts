@@ -1,5 +1,5 @@
 import type { Loader, LoaderContext } from "astro/loaders";
-import { omit } from "@remeda/library";
+import { omit } from "remeda";
 import invariant from "tiny-invariant";
 import {
   Application,

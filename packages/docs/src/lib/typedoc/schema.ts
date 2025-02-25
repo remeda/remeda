@@ -1,5 +1,5 @@
 import { z } from "astro:content";
-import { constant, hasAtLeast, startsWith } from "@remeda/library";
+import { constant, hasAtLeast, startsWith } from "remeda";
 import { ReflectionKind } from "typedoc";
 
 export type BlockTag = z.infer<typeof zBlockTag>;

@@ -1,6 +1,6 @@
 import type { Signature } from "@/lib/typedoc/schema";
 import { Fragment, type ReactNode } from "react";
-import { prop } from "@remeda/library";
+import { prop } from "remeda";
 
 export function Parameters({
   parameters,

@@ -1,6 +1,6 @@
 import { mappingCollectionName } from "@/content/mapping/content.config";
 import { getCollection } from "astro:content";
-import { hasAtLeast, split } from "@remeda/library";
+import { hasAtLeast, split } from "remeda";
 import invariant from "tiny-invariant";
 
 export async function getAllMappedLibraries(): Promise<ReadonlyArray<string>> {

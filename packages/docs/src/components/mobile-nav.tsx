@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
 import { VersionSelector } from "./version-selector";
-import { isEmpty } from "@remeda/library";
+import { isEmpty } from "remeda";
 
 export function MobileNav({
   pathname,

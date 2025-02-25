@@ -1,5 +1,5 @@
 import "./styles.css";
-import * as R from "@remeda/library";
+import * as R from "remeda";
 
 const DATA = ["a", "b", "c"];
 

@@ -1,4 +1,4 @@
-import { sortBy } from "@remeda/library";
+import { sortBy } from "remeda";
 
 // We only use this function within pipes, so a data-last API is better for us.
 export const sortByCategories = () => sortByCategoriesImpl;
