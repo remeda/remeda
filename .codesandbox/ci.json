@@ -1,5 +1,5 @@
 {
   "packages": ["packages/library"],
-  "buildCommand": "--workspace=library build",
+  "buildCommand": "--workspace=@remeda/library build",
   "node": "20"
 }
