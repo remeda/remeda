@@ -18,7 +18,7 @@ export default tseslint.config(
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat["jsx-runtime"],
   jsxA11y.flatConfigs.strict,
-  eslintPluginUnicorn.configs["flat/recommended"],
+  eslintPluginUnicorn.configs.recommended,
   eslintConfigPrettier,
 
   {

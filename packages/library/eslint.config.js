@@ -13,7 +13,7 @@ export default tseslint.config(
   jsdoc.configs["flat/recommended-typescript"],
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  eslintPluginUnicorn.configs["flat/recommended"],
+  eslintPluginUnicorn.configs.recommended,
   prettierConfig,
   {
     languageOptions: {
