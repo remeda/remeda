@@ -54,6 +54,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-unicorn": "^57.0.0",
     "globals": "^16.0.0",
+    "jiti": "^2.4.2",
     "jsdom": "^26.0.0",
     "lint-staged": "^15.4.3",
     "marked": "^15.0.7",

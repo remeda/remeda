@@ -2,6 +2,7 @@ import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginReact from "eslint-plugin-react";
+// @ts-expect-error [ts7016] -- react-hooks doesn't ship with types :(
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
@@ -15,8 +16,10 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  eslintPluginReact.configs.flat.recommended,
-  eslintPluginReact.configs.flat["jsx-runtime"],
+  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
+  eslintPluginReact.configs.flat.recommended!,
+  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
+  eslintPluginReact.configs.flat["jsx-runtime"]!,
   jsxA11y.flatConfigs.strict,
   eslintPluginUnicorn.configs.recommended,
   eslintConfigPrettier,
