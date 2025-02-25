@@ -1,5 +1,5 @@
 {
   "packages": ["packages/library"],
-  "buildCommand": "npm run --workspace=library build",
+  "buildCommand": "--workspace=library build",
   "node": "20"
 }
