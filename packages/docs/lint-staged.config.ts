@@ -5,7 +5,7 @@ export default {
   // the whole project. To do that we use a function (instead of a string or
   // array) so that no matter what file or how many, we will always run the same
   // command.
-  "*.@(ts|tsx|astro)": () => "npm run check",
+  "*.@(ts|tsx|astro)": () => "npm run check -- --noSync",
 
   // Javascript and Typescript (including commonJs and esm variants)
   "*.@(js|jsx|ts|tsx|cjs|mjs|astro)": ["eslint --fix", "prettier --write"],
