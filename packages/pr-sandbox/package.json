@@ -1,6 +1,5 @@
 {
   "name": "@remeda/pr-sandbox",
-  "main": "index.html",
   "scripts": {
     "build": "parcel build index.html",
     "format": "prettier . --write",
