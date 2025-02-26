@@ -15,7 +15,7 @@ export function MigrationBox({
   return (
     <Collapsible className="flex flex-col gap-8 rounded-md border border-sky-100 bg-linear-to-tl from-sky-50 to-sky-100 p-3 shadow-xs dark:border-sky-900 dark:from-sky-900 dark:to-sky-950">
       <div className="relative flex items-center">
-        <h6 className="text-sm font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
+        <h6 className="text-sm font-semibold tracking-wider text-neutral-800 uppercase dark:text-neutral-200">
           Breaking changes in v2
         </h6>
         <CollapsibleTrigger asChild className="absolute right-0">
