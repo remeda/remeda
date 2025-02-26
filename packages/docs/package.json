@@ -32,7 +32,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.0.0",
     "remeda": "*",
     "tailwind-merge": "^3.0.2"
   },
@@ -45,7 +45,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.13.5",
     "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react-dom": "^19.0.4",
     "dompurify": "^3.2.4",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.1",
