@@ -1,14 +1,2 @@
-dist
-node_modules/
-
-# Vitests's temporary tsconfig file
-tsconfig.vitest-temp.json
-
-# Coverage directory used by vitest
-coverage
-
-# Optional npm cache directory
-.npm
-
-# IntelliJ users?
-.idea
+node_modules
+.parcel-cache

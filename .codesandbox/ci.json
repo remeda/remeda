@@ -1,4 +1,8 @@
 {
-  "sandboxes": ["/examples/vanilla"],
-  "node": "20"
+  "node": "20",
+
+  "packages": ["packages/remeda"],
+  "buildCommand": "--workspace=remeda build",
+
+  "sandboxes": ["/packages/pr-sandbox"]
 }

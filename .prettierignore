@@ -1,9 +1,0 @@
-node_modules/
-
-/coverage/
-dist/
-/examples/
-
-.husky/
-
-docs/
