@@ -17,10 +17,4 @@ const { code } = Astro.props;
 const formattedCode = await format(code, PRETTIER_OPTIONS);
 ---
 
-<style is:global>
-  .astro-code {
-    @apply rounded px-4 py-2;
-  }
-</style>
-
 <Code code={formattedCode} lang="typescript" theme={THEME} wrap />
