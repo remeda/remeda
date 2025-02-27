@@ -1,5 +1,6 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
+import GithubIcon from "./github-icon.astro";
 
 type Props = {
   readonly url: string;
@@ -14,6 +15,6 @@ const { url } = Astro.props;
   class={buttonVariants({ variant: "secondary", size: "sm" })}
   title="View source on Github"
 >
-  <img src="/github.svg" />
+  <GithubIcon />
   <span class="sr-only">View source on GitHub</span>
 </a>
