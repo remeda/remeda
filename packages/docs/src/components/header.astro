@@ -1,6 +1,5 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
 import MigrationSelector from "./migration-selector.astro";
 import NavLink from "./nav-link.astro";
@@ -26,7 +25,7 @@ import { ThemeSwitcher } from "./theme-switcher";
       target="_blank"
       class={buttonVariants({ variant: "ghost", size: "icon" })}
     >
-      <GitHubLogoIcon />
+      <img src="/github.svg" />
       <span class="sr-only">GitHub</span>
     </a>
   </nav>
