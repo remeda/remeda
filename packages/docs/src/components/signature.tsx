@@ -30,7 +30,7 @@ export function MethodSignature({
             className="text-background dark:text-foreground"
           >
             <span className="sr-only">Expand</span>
-            <ChevronsUpDownIcon className="h-4 w-4" />
+            <ChevronsUpDownIcon className="size-4" />
           </Button>
         </CollapsibleTrigger>
       </div>

@@ -29,14 +29,14 @@ export function CopyButton({
     <Button
       size="icon"
       variant="ghost"
-      className={cn("relative z-10 h-6 w-6", className)}
+      className={cn("relative z-10 size-6", className)}
       onClick={handleClick}
     >
       <span className="sr-only">Copy</span>
       {hasCopied ? (
-        <CheckIcon className="h-3 w-3" />
+        <CheckIcon className="size-3" />
       ) : (
-        <CopyIcon className="h-3 w-3" />
+        <CopyIcon className="size-3" />
       )}
     </Button>
   );

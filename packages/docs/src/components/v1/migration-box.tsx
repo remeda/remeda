@@ -21,7 +21,7 @@ export function MigrationBox({
         <CollapsibleTrigger asChild className="absolute right-0">
           <Button size="sm">
             <span className="sr-only">Expand</span>
-            <ChevronsUpDownIcon className="h-4 w-4" />
+            <ChevronsUpDownIcon className="size-4" />
           </Button>
         </CollapsibleTrigger>
       </div>
