@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useCallback, useState, type ReactNode } from "react";
 
 const COPIED_TIMEOUT = 2000;

@@ -4,7 +4,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { ChevronsUpDownIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 export function MigrationBox({
@@ -21,7 +21,7 @@ export function MigrationBox({
         <CollapsibleTrigger asChild className="absolute right-0">
           <Button size="sm">
             <span className="sr-only">Expand</span>
-            <CaretSortIcon className="h-4 w-4" />
+            <ChevronsUpDownIcon className="h-4 w-4" />
           </Button>
         </CollapsibleTrigger>
       </div>

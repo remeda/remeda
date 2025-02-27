@@ -1,7 +1,7 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
-import { Pencil2Icon } from "@radix-ui/react-icons";
 import type { CollectionEntry, CollectionKey } from "astro:content";
+import { SquarePenIcon } from "lucide-react";
 
 const GITHUB_EDIT_BASE_URL =
   "https://github.com/remeda/remeda/edit/main/docs/src/content/";
@@ -23,6 +23,6 @@ const url = new URL(`${collection}/${id}`, GITHUB_EDIT_BASE_URL);
   class={buttonVariants({ variant: "secondary", size: "sm" })}
   title="Edit on Github"
 >
-  <Pencil2Icon />
+  <SquarePenIcon />
   <span class="sr-only">View source on GitHub</span>
 </a>
