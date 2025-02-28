@@ -28,7 +28,7 @@ export function Navbar({
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
       {children}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-2">
           {entries.map(([category, entries]) => (
             <li key={category}>
