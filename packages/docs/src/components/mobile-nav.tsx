@@ -30,7 +30,7 @@ export function MobileNav({
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent className="pt-12">
+      <SheetContent className="p-6 pt-12">
         <Navbar
           entries={entries}
           onSelect={() => {
