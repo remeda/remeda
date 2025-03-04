@@ -2,7 +2,6 @@ import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginReact from "eslint-plugin-react";
-// @ts-expect-error [ts7016] -- react-hooks doesn't ship with types :(
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import globals from "globals";
@@ -20,19 +19,9 @@ export default tseslint.config(
   eslintPluginReact.configs.flat.recommended!,
   /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
   eslintPluginReact.configs.flat["jsx-runtime"]!,
+  reactHooks.configs["recommended-latest"],
   jsxA11y.flatConfigs.strict,
   eslintPluginUnicorn.configs.recommended,
-  eslintConfigPrettier,
-
-  {
-    plugins: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- react don't export types :(
-      "react-hooks": reactHooks,
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- react don't export types :(
-    rules: reactHooks.configs.recommended.rules,
-  },
-
   {
     languageOptions: {
       globals: {
@@ -80,4 +69,5 @@ export default tseslint.config(
       "jsx-a11y/heading-has-content": "off",
     },
   },
+  eslintConfigPrettier,
 );
