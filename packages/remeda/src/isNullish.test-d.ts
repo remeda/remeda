@@ -1,3 +1,4 @@
+import type { IsEqual, IsUnknown, Or } from "type-fest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
 
@@ -42,8 +43,13 @@ it("narrows unknowns", () => {
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- This is fine for this test.
-    expectTypeOf(data).toExtend<unknown | NonNullable<unknown>>();
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- Intentional
+      true as Or<
+        IsUnknown<typeof data>,
+        IsEqual<typeof data, NonNullable<unknown>>
+      >,
+    ).toEqualTypeOf<true>();
   }
 });
 
