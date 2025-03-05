@@ -42,7 +42,8 @@ it("narrows unknowns", () => {
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
-    expectTypeOf(data).toExtend<NonNullable<unknown>>();
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- This is fine for this test.
+    expectTypeOf(data).toExtend<unknown | NonNullable<unknown>>();
   }
 });
 
