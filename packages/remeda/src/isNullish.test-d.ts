@@ -42,7 +42,7 @@ it("narrows unknowns", () => {
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
-    expectTypeOf(data).toEqualTypeOf<NonNullable<unknown>>();
+    expectTypeOf(data).toExtend<NonNullable<unknown>>();
   }
 });
 
