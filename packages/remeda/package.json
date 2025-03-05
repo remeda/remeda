@@ -75,7 +75,7 @@
     "jiti": "^2.4.2",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.2",
-    "publint": "^0.3.6",
+    "publint": "^0.3.8",
     "semantic-release": "^24.2.3",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3",
