@@ -1,7 +1,7 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import DocsPageNav from "./docs-page-nav.astro";
+import GitHubLogoIcon from "./github-logo-icon.astro";
 import MigrationSelector from "./migration-selector.astro";
 import NavLink from "./nav-link.astro";
 import { Search } from "./search";
@@ -9,7 +9,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 ---
 
 <header
-  class="sticky top-0 z-50 flex h-16 flex-none items-center bg-background/95 px-3 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-8"
+  class="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 flex h-16 flex-none items-center px-3 shadow-sm backdrop-blur-sm sm:px-8"
 >
   <nav
     class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"

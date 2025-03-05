@@ -16,7 +16,7 @@ const COMMANDS = [
     COMMANDS.map((command) => (
       <article class="relative">
         <Code code={command} lang="bash" theme={THEME} />
-        <div class="absolute right-2 top-1/2 -translate-y-1/2">
+        <div class="absolute top-1/2 right-2 -translate-y-1/2">
           <CopyButton
             value={command}
             className="text-background dark:text-foreground"

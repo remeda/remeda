@@ -5,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import type { Signature } from "@/lib/typedoc/schema";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { ChevronsUpDownIcon } from "lucide-react";
 import { type ReactNode } from "react";
 import { FunctionReturnType } from "./function-return-type";
 import { Parameters } from "./parameters";
@@ -30,7 +30,7 @@ export function MethodSignature({
             className="text-background dark:text-foreground"
           >
             <span className="sr-only">Expand</span>
-            <CaretSortIcon className="h-4 w-4" />
+            <ChevronsUpDownIcon />
           </Button>
         </CollapsibleTrigger>
       </div>

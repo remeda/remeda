@@ -1,7 +1,7 @@
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -15,17 +15,11 @@ import {
 export default defineConfig({
   site: "https://remedajs.com",
 
-  integrations: [
-    react(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    mdx(),
-    sitemap(),
-  ],
+  integrations: [react(), mdx(), sitemap()],
 
   vite: {
     plugins: [
+      tailwindcss(),
       staticScriptsPlugin({
         inputDir: "src/scripts",
         outputDir: "public/dist/scripts",

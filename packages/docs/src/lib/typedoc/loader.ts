@@ -41,7 +41,8 @@ export const typedocLoader = (options: TypeDocLoaderOptions): Loader => ({
 
     let isInit = true;
 
-    await app.convertAndWatch(async (project) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- We don't await this promise because it only returns when typedoc detects that it's config has changed or when the process ends; these cases are not relevant to the functioning of the loader which is "done" once it starts watching.
+    app.convertAndWatch(async (project) => {
       await (isInit
         ? cleanLoad(context, project)
         : incrementalLoad(context, project));
