@@ -141,7 +141,7 @@ describe("data-first", () => {
     if (hasSubObject(obj, {})) {
       expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -151,7 +151,7 @@ describe("data-first", () => {
     if (hasSubObject(obj, obj)) {
       expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -161,7 +161,7 @@ describe("data-first", () => {
     if (hasSubObject(obj, { a: "a" })) {
       expectTypeOf(obj).toMatchObjectType<{ a: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -171,7 +171,7 @@ describe("data-first", () => {
     if (hasSubObject(obj, { a: "a" } as const)) {
       expectTypeOf(obj).toMatchObjectType<{ a: "a"; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -185,7 +185,7 @@ describe("data-first", () => {
         c: boolean;
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a?: string;
         b?: number;
         c?: boolean;
@@ -203,7 +203,7 @@ describe("data-first", () => {
         c?: number;
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a?: string;
         b?: number;
         c?: number | string;
@@ -228,7 +228,7 @@ describe("data-first", () => {
         b: { foo: string; bar: boolean };
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a: { foo: string; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();
@@ -252,7 +252,7 @@ describe("data-first", () => {
         b: { foo: string; bar: boolean };
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a: { foo: number | string; bar: boolean };
         b: { foo: string; bar: boolean | number };
       }>();
@@ -455,7 +455,7 @@ describe("data-last", () => {
     if (hasSubObject({})(obj)) {
       expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -465,7 +465,7 @@ describe("data-last", () => {
     if (hasSubObject(obj)(obj)) {
       expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -475,7 +475,7 @@ describe("data-last", () => {
     if (hasSubObject({ a: "a" })(obj)) {
       expectTypeOf(obj).toMatchObjectType<{ a: string; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -485,7 +485,7 @@ describe("data-last", () => {
     if (hasSubObject({ a: "a" } as const)(obj)) {
       expectTypeOf(obj).toMatchObjectType<{ a: "a"; b?: number }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
   });
 
@@ -499,7 +499,7 @@ describe("data-last", () => {
         c: boolean;
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a?: string;
         b?: number;
         c?: boolean;
@@ -517,7 +517,7 @@ describe("data-last", () => {
         c?: number;
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a?: string;
         b?: number;
         c?: number | string;
@@ -542,7 +542,7 @@ describe("data-last", () => {
         b: { foo: string; bar: boolean };
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a: { foo: string; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();
@@ -566,7 +566,7 @@ describe("data-last", () => {
         b: { foo: string; bar: boolean };
       }>();
     } else {
-      expectTypeOf(obj).toMatchObjectType<{
+      expectTypeOf(obj).toEqualTypeOf<{
         a: { foo: number | string; bar: boolean };
         b: { foo: string; bar: boolean | number };
       }>();
