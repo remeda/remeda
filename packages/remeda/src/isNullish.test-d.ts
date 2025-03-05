@@ -44,10 +44,12 @@ it("narrows unknowns", () => {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
     expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- Intentional
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- This syntax allows us to have different branches for different TypeScript versions.
       true as Or<
-        IsUnknown<typeof data>,
-        IsEqual<typeof data, NonNullable<unknown>>
+        // Since TypeScript 5.8 the type is narrowed in the else branch.
+        IsEqual<typeof data, NonNullable<unknown>>,
+        // Previous versions couldn't do that and kept the type as `unknown`.
+        IsUnknown<typeof data>
       >,
     ).toEqualTypeOf<true>();
   }
