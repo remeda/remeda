@@ -1,3 +1,4 @@
+import type { IsEqual, IsUnknown, Or } from "type-fest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
 
@@ -42,7 +43,15 @@ it("narrows unknowns", () => {
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
-    expectTypeOf(data).toBeUnknown();
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- This syntax allows us to have different branches for different TypeScript versions.
+      true as Or<
+        // Since TypeScript 5.8 the type is narrowed in the else branch.
+        IsEqual<typeof data, NonNullable<unknown>>,
+        // Previous versions couldn't do that and kept the type as `unknown`.
+        IsUnknown<typeof data>
+      >,
+    ).toEqualTypeOf<true>();
   }
 });
 

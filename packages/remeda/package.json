@@ -59,27 +59,27 @@
     "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.35.0"
+    "type-fest": "^4.37.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.4",
     "@eslint/js": "^9.21.0",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.9",
     "@vitest/coverage-v8": "^3.0.7",
-    "@vitest/eslint-plugin": "^1.1.31",
+    "@vitest/eslint-plugin": "^1.1.36",
     "eslint": "^9.21.0",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-jsdoc": "^50.6.3",
     "eslint-plugin-unicorn": "^57.0.0",
     "jiti": "^2.4.2",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "publint": "^0.3.8",
     "semantic-release": "^24.2.3",
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.25.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0",
     "vitest": "^3.0.7"
   }
 }
