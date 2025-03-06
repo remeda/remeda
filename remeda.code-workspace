@@ -1,0 +1,53 @@
+{
+  "folders": [
+    {
+      "name": ".monorepo-root",
+      "path": ".",
+    },
+    {
+      "path": "packages/remeda",
+    },
+    {
+      "path": "packages/docs",
+    },
+    {
+      "path": "packages/pr-sandbox",
+    },
+  ],
+
+  "settings": {
+    // We use prettier for pretty much anything it supports
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    // eslint disable comments and better-comments syntax highlighting only work
+    // on a single line, so this setting makes them "feel" like they observe our
+    // prettier `printWidth` setting.
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+
+    "explorer.fileNesting.enabled": true,
+
+    // It's better to ensure that the project typescript is the one we use for the
+    // project so that people don't build for newer typescript features before we
+    // bump it in our project first.
+    "typescript.tsdk": "node_modules/typescript/lib",
+
+    // This makes sense:
+    "cSpell.words": ["Remeda"],
+  },
+
+  "extensions": {
+    "recommendations": [
+      // We use prettier for everything, people should have it installed and set
+      // to format on save (but we don't enforce that).
+      "esbenp.prettier-vscode",
+
+      // Lint is crucial for our CI, it's best that people get signals and hints
+      // inside the editor.
+      "dbaeumer.vscode-eslint",
+
+      // Surfaces TODOs and !IMPORTANT sections more clearly.
+      "aaron-bond.better-comments",
+    ],
+  },
+}

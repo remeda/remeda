@@ -1,0 +1,29 @@
+---
+import { Code } from "astro:components";
+import { THEME } from "./code-block.astro";
+import { CopyButton } from "./copy-button";
+
+const COMMANDS = [
+  "npm install remeda",
+  "pnpm add remeda",
+  "yarn add remeda",
+  "bun install remeda",
+];
+---
+
+<section class="max-w-80">
+  {
+    COMMANDS.map((command) => (
+      <article class="relative">
+        <Code code={command} lang="bash" theme={THEME} />
+        <div class="absolute top-1/2 right-2 -translate-y-1/2">
+          <CopyButton
+            value={command}
+            className="text-background dark:text-foreground"
+            client:load
+          />
+        </div>
+      </article>
+    ))
+  }
+</section>

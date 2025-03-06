@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "include": ["dist"],
+
+  "compilerOptions": {
+    // We are deliberately checking .d.ts files, that's the whole purpose of
+    // this configuration file, as part of the check:dist script!
+    "skipLibCheck": false,
+
+    // We also want to check the interaction between the built-in types and our
+    // types, so we want TypeScript to check the default library as well.
+    "skipDefaultLibCheck": false,
+
+    // Because we use a monorepo, node_modules has a bunch of dependencies that
+    // are not consistent with each other and would fail the job, but are
+    // irrelevant to the package itself. One such dependency is astro's mdx
+    // plugin which depends on React 18, although our project uses React 19. To
+    // circumvent this situation we need to add the react types. In the future
+    // it might be possible to remove this.
+    // TODO: Check occasionally if we can remove these additional types.
+    "types": ["react"],
+
+    // TYPE CHECKING
+    "strict": true,
+
+    // MODULES
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // EMIT
+    "noEmit": true,
+
+    // LANGUAGE AND ENVIRONMENT
+    "target": "ES2022",
+    "lib": ["ES2022"]
+  }
+}

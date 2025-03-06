@@ -1,0 +1,3 @@
+[build]
+  command = "npm run --workspace=remeda --workspace=@remeda/docs build" 
+  publish = "packages/docs/dist"

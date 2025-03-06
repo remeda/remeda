@@ -1,0 +1,67 @@
+---
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { mappingCollectionName } from "@/content/mapping/content.config";
+import { mappingUrl } from "@/lib/mapping/urls";
+import type { CollectionEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
+import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
+import path from "node:path";
+import GithubEdit from "./github-edit.astro";
+import Prose from "./prose.astro";
+import { Badge } from "./ui/badge";
+import { buttonVariants } from "./ui/button";
+
+type Props = {
+  readonly entry: CollectionEntry<typeof mappingCollectionName>;
+  readonly library: string;
+};
+
+const { entry, library } = Astro.props;
+
+const mappedFunction =
+  entry.data.remeda === undefined
+    ? undefined
+    : await getEntry(entry.data.remeda);
+const { Content } = await render(entry);
+
+const name = path.basename(entry.id);
+
+const mappedUrl = mappingUrl(library, name);
+---
+
+<Card id={name} className="scroll-mt-24">
+  <CardHeader>
+    <div class="flex gap-2 overflow-hidden">
+      <CardTitle className="flex-1 truncate text-2xl">
+        {name}
+      </CardTitle>
+      <a
+        class={buttonVariants({ variant: "secondary", size: "sm" })}
+        href={mappedUrl}
+      >
+        <ExternalLinkIcon />
+      </a>
+      <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
+      <GithubEdit entry={entry} />
+    </div>
+  </CardHeader>
+  <CardContent className="space-y-3">
+    {
+      mappedFunction !== undefined && (
+        <h6 class="flex items-center gap-1 text-xl font-medium">
+          <ArrowRightIcon className="ms-2 size-5" />
+          <a href={`/docs#${mappedFunction.id}`} class="text-primary truncate">
+            {mappedFunction.data.name}
+          </a>
+        </h6>
+      )
+    }
+    {
+      entry.body !== "" && (
+        <Prose>
+          <Content />
+        </Prose>
+      )
+    }
+  </CardContent>
+</Card>

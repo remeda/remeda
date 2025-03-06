@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"article">;
+
+const { ["class"]: class_ = "", ...props } = Astro.props;
+---
+
+<article
+  class:list={[
+    "prose prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none max-w-2xl",
+    class_,
+  ]}
+  {...props}
+>
+  <slot />
+</article>

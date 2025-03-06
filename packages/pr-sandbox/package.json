@@ -1,0 +1,16 @@
+{
+  "name": "@remeda/pr-sandbox",
+  "scripts": {
+    "build": "parcel build index.html",
+    "format": "prettier . --write",
+    "start": "parcel index.html --open"
+  },
+  "dependencies": {
+    "remeda": "*"
+  },
+  "devDependencies": {
+    "parcel": "^2.13.3",
+    "prettier": "^3.5.2",
+    "typescript": "^5.7.3"
+  }
+}

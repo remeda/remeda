@@ -1,0 +1,26 @@
+---
+import { Code } from "astro:components";
+import { format, type Options } from "prettier";
+
+export const THEME = "poimandres";
+
+const PRETTIER_OPTIONS = {
+  parser: "typescript",
+} as const satisfies Options;
+
+type Props = {
+  readonly code: string;
+};
+
+const { code } = Astro.props;
+
+const formattedCode = await format(code, PRETTIER_OPTIONS);
+---
+
+<Code
+  wrap
+  code={formattedCode}
+  lang="typescript"
+  theme={THEME}
+  class="rounded-sm px-4 py-2"
+/>
