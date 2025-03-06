@@ -1,7 +1,8 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { IterableElement } from "type-fest";
+import doTransduce from "./internal/doTransduce";
 import type { Mapped } from "./internal/types/Mapped";
+import type { ArrayMethodCallbackDataArg } from "./internal/types/ArrayMethodCallback";
+import { isArray } from "./isArray";
 
 /**
  * Applies a function on each element of the array, using the result of the
@@ -26,13 +27,13 @@ import type { Mapped } from "./internal/types/Mapped";
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, U>(
+export function mapWithFeedback<T extends Iterable<unknown>, U>(
   data: T,
   callbackfn: (
     previousValue: U,
-    currentValue: T[number],
+    currentValue: IterableElement<T>,
     currentIndex: number,
-    data: T,
+    data: ArrayMethodCallbackDataArg<T>,
   ) => U,
   initialValue: U,
 ): Mapped<T, U>;
@@ -58,21 +59,22 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends IterableContainer, U>(
+export function mapWithFeedback<T extends Iterable<unknown>, U>(
   callbackfn: (
     previousValue: U,
-    currentValue: T[number],
+    currentValue: IterableElement<T>,
     currentIndex: number,
-    data: T,
+    data: ArrayMethodCallbackDataArg<T>,
   ) => U,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return doTransduce(undefined, lazyImplementation, args);
 }
 
-const lazyImplementation = <T, U>(
+function* lazyImplementation<T, U>(
+  data: Iterable<T>,
   reducer: (
     previousValue: U,
     currentValue: T,
@@ -80,10 +82,16 @@ const lazyImplementation = <T, U>(
     data: ReadonlyArray<T>,
   ) => U,
   initialValue: U,
-): LazyEvaluator<T, U> => {
+): Iterable<U> {
+  let index = 0;
   let previousValue = initialValue;
-  return (currentValue, index, data) => {
-    previousValue = reducer(previousValue, currentValue, index, data);
-    return { done: false, hasNext: true, next: previousValue };
-  };
-};
+  let writableData: Array<T> | undefined;
+  const dataArg: ReadonlyArray<T> = isArray(data) ? data : (writableData = []);
+  for (const value of data) {
+    if (writableData !== undefined) {
+      writableData.push(value);
+    }
+    previousValue = reducer(previousValue, value, index++, dataArg);
+    yield previousValue;
+  }
+}

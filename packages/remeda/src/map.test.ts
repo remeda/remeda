@@ -2,6 +2,7 @@ import { add } from "./add";
 import { constant } from "./constant";
 import { filter } from "./filter";
 import { identity } from "./identity";
+import { toBasicIterable } from "./internal/toBasicIterable";
 import { map } from "./map";
 import { multiply } from "./multiply";
 import { pipe } from "./pipe";
@@ -59,7 +60,7 @@ describe("pipe", () => {
 
     expect(
       pipe(
-        [1, 2, 3, 4, 5],
+        toBasicIterable([1, 2, 3, 4, 5]),
         map((x, i, items) => {
           anyItems1.push([...items]);
           indexes1.push(i);

@@ -1,5 +1,8 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
+import type { IterableElement } from "type-fest";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
+import { isArray } from "./isArray";
+import doTransduce from "./internal/doTransduce";
+import { simplifyCallback } from "./internal/utilityEvaluators";
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -15,10 +18,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function dropWhile<T extends IterableContainer>(
+export function dropWhile<T extends Iterable<unknown>>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+  predicate: ArrayMethodCallback<T, boolean>,
+): Array<IterableElement<T>>;
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -33,22 +36,43 @@ export function dropWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function dropWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => Array<T[number]>;
+export function dropWhile<T extends Iterable<unknown>>(
+  predicate: ArrayMethodCallback<T, boolean>,
+): (data: T) => Array<IterableElement<T>>;
 
 export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
-  return purry(dropWhileImplementation, args);
+  return doTransduce(dropWhileImplementation, lazyImplemention, args);
 }
 
-function dropWhileImplementation<T extends IterableContainer>(
-  data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
+function dropWhileImplementation<T>(
+  data: Iterable<T>,
+  predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
+): Array<T> {
+  if (!isArray(data)) {
+    return [...lazyImplemention(data, predicate)];
+  }
+
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
     }
   }
   return [];
+}
+
+function* lazyImplemention<T>(
+  data: Iterable<T>,
+  predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
+): Iterable<T> {
+  const simplePredicate = simplifyCallback(predicate, data);
+  let dropping = true;
+  for (const item of data) {
+    if (dropping) {
+      if (simplePredicate(item)) {
+        continue;
+      }
+      dropping = false;
+    }
+    yield item;
+  }
 }

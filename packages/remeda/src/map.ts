@@ -1,7 +1,8 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import doTransduce from "./internal/doTransduce";
 import type { Mapped } from "./internal/types/Mapped";
-import { purry } from "./purry";
+import { mapCallback } from "./internal/utilityEvaluators";
+import { isArray } from "./isArray";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -22,9 +23,9 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function map<T extends IterableContainer, U>(
+export function map<T extends Iterable<unknown>, U>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => U,
+  callbackfn: ArrayMethodCallback<T, U>,
 ): Mapped<T, U>;
 
 /**
@@ -45,25 +46,29 @@ export function map<T extends IterableContainer, U>(
  * @lazy
  * @category Array
  */
-export function map<T extends IterableContainer, U>(
-  callbackfn: (value: T[number], index: number, data: T) => U,
+export function map<T extends Iterable<unknown>, U>(
+  callbackfn: ArrayMethodCallback<T, U>,
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: ReadonlyArray<unknown>): unknown {
-  return purry(mapImplementation, args, lazyImplementation);
+  return doTransduce(mapImplementation, lazyImplementation, args);
 }
 
-const mapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): Array<U> => data.map(callbackfn);
+function mapImplementation<T, U>(
+  data: Iterable<T>,
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
+): Array<U> {
+  if (isArray(data)) {
+    return data.map(callbackfn);
+  }
+  return [...lazyImplementation(data, callbackfn)];
+}
 
-const lazyImplementation =
-  <T, U>(
-    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-  ): LazyEvaluator<T, U> =>
-  (value, index, data) => ({
-    done: false,
-    hasNext: true,
-    next: callbackfn(value, index, data),
-  });
+function* lazyImplementation<T, U>(
+  data: Iterable<T>,
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
+): Iterable<U> {
+  for (const [, result] of mapCallback(data, callbackfn)) {
+    yield result;
+  }
+}

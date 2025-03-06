@@ -1,4 +1,7 @@
-import { purry } from "./purry";
+import doReduce from "./internal/doReduce";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
+import { mapCallback } from "./internal/utilityEvaluators";
+import { isArray } from "./isArray";
 
 /**
  * Returns the index of the first element in an array that satisfies the
@@ -19,11 +22,12 @@ import { purry } from "./purry";
  * @example
  *    R.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  * @dataFirst
+ * @lazy
  * @category Array
  */
-export function findIndex<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+export function findIndex<T extends Iterable<unknown>>(
+  data: T,
+  predicate: ArrayMethodCallback<T, boolean>,
 ): number;
 
 /**
@@ -47,17 +51,31 @@ export function findIndex<T>(
  *      R.findIndex(n => n % 2 === 0)
  *    ); // => 2
  * @dataLast
+ * @lazy
  * @category Array
  */
-export function findIndex<T>(
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => number;
+export function findIndex<T extends Iterable<unknown>>(
+  predicate: ArrayMethodCallback<T, boolean>,
+): (data: T) => number;
 
 export function findIndex(...args: ReadonlyArray<unknown>): unknown {
-  return purry(findIndexImplementation, args);
+  return doReduce(findIndexImplementation, args);
 }
 
-const findIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
-): number => data.findIndex(predicate);
+function findIndexImplementation<T>(
+  data: Iterable<T>,
+  predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
+): number {
+  if (isArray(data)) {
+    return data.findIndex(predicate);
+  }
+
+  let index = 0;
+  for (const [, flag] of mapCallback(data, predicate)) {
+    if (flag) {
+      return index;
+    }
+    index++;
+  }
+  return -1;
+}

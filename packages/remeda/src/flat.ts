@@ -1,9 +1,8 @@
 import type { IsNumericLiteral } from "type-fest";
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { LazyResult } from "./internal/types/LazyResult";
-import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
+import doTransduce from "./internal/doTransduce";
+import { isArray } from "./isArray";
 
 type FlatArray<
   T,
@@ -107,41 +106,45 @@ export function flat(
   dataOrDepth?: IterableContainer | number,
   depth?: number,
 ): unknown {
-  if (typeof dataOrDepth === "object") {
-    return flatImplementation(dataOrDepth, depth);
-  }
-
-  return lazyDataLastImpl(
+  return doTransduce(
     flatImplementation,
-    dataOrDepth === undefined ? [] : [dataOrDepth],
     lazyImplementation,
+    [dataOrDepth, depth],
+    typeof dataOrDepth === "object",
   );
 }
 
 const flatImplementation = (
-  data: IterableContainer,
+  data: Iterable<unknown>,
   depth?: number,
-): IterableContainer => (depth === undefined ? data.flat() : data.flat(depth));
+): Array<unknown> => toReadonlyArray(data).flat(depth);
 
-const lazyImplementation = (depth?: number): LazyEvaluator =>
-  depth === undefined || depth === 1
-    ? lazyShallow
-    : depth <= 0
-      ? lazyIdentityEvaluator
-      : (value) =>
-          Array.isArray(value)
-            ? {
-                next: value.flat(depth - 1),
-                hasNext: true,
-                hasMany: true,
-                done: false,
-              }
-            : { next: value, hasNext: true, done: false };
+function* lazyImplementation(
+  data: Iterable<unknown>,
+  depth = 1,
+): Iterable<unknown> {
+  // Optimization for common case.
+  if (depth === 1) {
+    for (const value of data) {
+      if (isArray(value)) {
+        yield* value;
+      } else {
+        yield value;
+      }
+    }
+    return;
+  }
 
-// This function is pulled out so that we don't generate a new arrow function
-// each time. Because it doesn't need to run with recursion it could be pulled
-// out from the lazyImplementation and be reused for all invocations.
-const lazyShallow = <T>(value: T): LazyResult<T> =>
-  Array.isArray(value)
-    ? { next: value, hasNext: true, hasMany: true, done: false }
-    : { next: value, hasNext: true, done: false };
+  if (depth <= 0) {
+    yield* data;
+    return;
+  }
+
+  for (const value of data) {
+    if (isArray(value)) {
+      yield* value.flat(depth - 1);
+    } else {
+      yield value;
+    }
+  }
+}

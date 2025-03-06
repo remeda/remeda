@@ -1,3 +1,4 @@
+import { isArray } from "./isArray";
 import { purry } from "./purry";
 
 /**
@@ -14,11 +15,12 @@ import { purry } from "./purry";
  *    R.anyPass(8, fns) // => true
  *    R.anyPass(11, fns) // => false
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function anyPass<T>(
   data: T,
-  fns: ReadonlyArray<(data: T) => boolean>,
+  fns: Iterable<(data: T) => boolean>,
 ): boolean;
 
 /**
@@ -34,17 +36,29 @@ export function anyPass<T>(
  *    R.anyPass(fns)(8) // => true
  *    R.anyPass(fns)(11) // => false
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function anyPass<T>(
-  fns: ReadonlyArray<(data: T) => boolean>,
+  fns: Iterable<(data: T) => boolean>,
 ): (data: T) => boolean;
 
 export function anyPass(...args: ReadonlyArray<unknown>): unknown {
   return purry(anyPassImplementation, args);
 }
 
-const anyPassImplementation = <T>(
+function anyPassImplementation<T>(
   data: T,
-  fns: ReadonlyArray<(data: T) => boolean>,
-): boolean => fns.some((fn) => fn(data));
+  fns: Iterable<(data: T) => boolean>,
+): boolean {
+  if (isArray(fns)) {
+    return fns.some((fn) => fn(data));
+  }
+
+  for (const fn of fns) {
+    if (fn(data)) {
+      return true;
+    }
+  }
+  return false;
+}

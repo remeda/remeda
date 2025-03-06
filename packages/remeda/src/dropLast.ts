@@ -1,10 +1,11 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { IterableElement } from "type-fest";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 import { purry } from "./purry";
 
 /**
- * Removes last `n` elements from the `array`.
+ * Removes last `n` elements from the `data`.
  *
- * @param array - The target array.
+ * @param data - The target iterable.
  * @param n - The number of elements to skip.
  * @signature
  *    R.dropLast(array, n)
@@ -13,10 +14,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function dropLast<T extends IterableContainer>(
-  array: T,
+export function dropLast<T extends Iterable<unknown>>(
+  data: T,
   n: number,
-): Array<T[number]>;
+): Array<IterableElement<T>>;
 
 /**
  * Removes last `n` elements from the `array`.
@@ -31,14 +32,16 @@ export function dropLast<T extends IterableContainer>(
  */
 export function dropLast(
   n: number,
-): <T extends IterableContainer>(array: T) => Array<T[number]>;
+): <T extends Iterable<unknown>>(array: T) => Array<IterableElement<T>>;
 
 export function dropLast(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropLastImplementation, args);
 }
 
-const dropLastImplementation = <T extends IterableContainer>(
-  array: T,
-  n: number,
-): Array<T[number]> =>
-  n > 0 ? array.slice(0, Math.max(0, array.length - n)) : [...array];
+function dropLastImplementation<T>(input: Iterable<T>, n: number): Array<T> {
+  if (n > 0) {
+    const array = toReadonlyArray(input);
+    return array.slice(0, Math.max(0, array.length - n));
+  }
+  return [...input];
+}

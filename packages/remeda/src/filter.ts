@@ -1,6 +1,6 @@
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
+import doTransduce from "./internal/doTransduce";
+import { isArray } from "./isArray";
+import { mapCallback } from "./internal/utilityEvaluators";
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -21,14 +21,14 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function filter<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+export function filter<E, S extends E>(
+  data: Iterable<E>,
+  predicate: (value: E, index: number, data: ReadonlyArray<E>) => value is S,
 ): Array<S>;
-export function filter<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T>;
+export function filter<E>(
+  data: Iterable<E>,
+  predicate: (value: E, index: number, data: ReadonlyArray<E>) => boolean,
+): Array<E>;
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -48,27 +48,34 @@ export function filter<T>(
  * @lazy
  * @category Array
  */
-export function filter<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => Array<S>;
-export function filter<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function filter<E, S extends E>(
+  predicate: (value: E, index: number, data: ReadonlyArray<E>) => value is S,
+): (data: Iterable<E>) => Array<S>;
+export function filter<E>(
+  predicate: (value: E, index: number, data: ReadonlyArray<E>) => boolean,
+): (data: Iterable<E>) => Array<E>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
-  return purry(filterImplementation, args, lazyImplementation);
+  return doTransduce(filterImplementation, lazyImplementation, args);
 }
 
-const filterImplementation = <T>(
-  data: ReadonlyArray<T>,
+function filterImplementation<T>(
+  data: Iterable<T>,
   predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
-): Array<T> => data.filter(predicate);
+): Array<T> {
+  if (isArray(data)) {
+    return data.filter(predicate);
+  }
+  return [...lazyImplementation(data, predicate)];
+}
 
-const lazyImplementation =
-  <T>(
-    predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-  ): LazyEvaluator<T> =>
-  (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+function* lazyImplementation<T>(
+  data: Iterable<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): Iterable<T> {
+  for (const [value, flag] of mapCallback(data, predicate)) {
+    if (flag) {
+      yield value;
+    }
+  }
+}

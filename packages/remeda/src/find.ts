@@ -1,7 +1,6 @@
-import { toSingle } from "./internal/toSingle";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
+import doReduce from "./internal/doReduce";
+import { mapCallback } from "./internal/utilityEvaluators";
+import { isArray } from "./isArray";
 
 /**
  * Returns the first element in the provided array that satisfies the provided
@@ -31,12 +30,12 @@ import { purry } from "./purry";
  * @category Array
  */
 export function find<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  data: Iterable<T>,
+  predicate: (value: T, index: number, data: Iterable<T>) => value is S,
 ): S | undefined;
 export function find<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: Iterable<T>,
+  predicate: (value: T, index: number, data: Iterable<T>) => boolean,
 ): T | undefined;
 
 /**
@@ -70,25 +69,26 @@ export function find<T>(
  */
 export function find<T, S extends T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => S | undefined;
+): (data: Iterable<T>) => S | undefined;
 export function find<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => T | undefined;
+): (data: Iterable<T>) => T | undefined;
 
 export function find(...args: ReadonlyArray<unknown>): unknown {
-  return purry(findImplementation, args, toSingle(lazyImplementation));
+  return doReduce(findImplementation, args);
 }
 
-const findImplementation = <T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): S | undefined => data.find(predicate);
-
-const lazyImplementation =
-  <T, S extends T>(
-    predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-  ): LazyEvaluator<T, S> =>
-  (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: true, hasNext: true, next: value }
-      : SKIP_ITEM;
+function findImplementation<T>(
+  data: Iterable<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): T | undefined {
+  if (isArray(data)) {
+    return data.find(predicate);
+  }
+  for (const [value, flag] of mapCallback(data, predicate)) {
+    if (flag) {
+      return value;
+    }
+  }
+  return undefined;
+}

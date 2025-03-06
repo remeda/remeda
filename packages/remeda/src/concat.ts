@@ -1,5 +1,5 @@
+import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -16,12 +16,17 @@ import { purry } from "./purry";
  * @example
  *    R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function concat<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
 >(data: T1, other: T2): [...T1, ...T2];
+export function concat<T1, T2>(
+  data: Iterable<T1>,
+  other: Iterable<T2>,
+): Array<T1 | T2>;
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -36,20 +41,31 @@ export function concat<
  * @example
  *    R.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
+export function concat<T2>(
+  other: Iterable<T2>,
+): <T1>(data: Iterable<T1>) => Array<T1 | T2>;
 
 export function concat(...args: ReadonlyArray<unknown>): unknown {
-  return purry(concatImplementation, args);
+  return doTransduce(concatImplementation, lazyImplementation, args);
 }
 
-const concatImplementation = <
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
->(
-  arr1: T1,
-  arr2: T2,
-): [...T1, ...T2] => [...arr1, ...arr2];
+function concatImplementation<T1, T2>(
+  data: Iterable<T1>,
+  other: Iterable<T2>,
+): Array<T1 | T2> {
+  return [...data, ...other];
+}
+
+function* lazyImplementation<T1, T2>(
+  data: Iterable<T1>,
+  other: Iterable<T2>,
+): Iterable<T1 | T2> {
+  yield* data;
+  yield* other;
+}

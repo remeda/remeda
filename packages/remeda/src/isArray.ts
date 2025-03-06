@@ -1,4 +1,4 @@
-import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { IsAny } from "type-fest";
 
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly.
@@ -15,6 +15,14 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  */
 export function isArray<T>(
   data: ArrayLike<unknown> | T,
-): data is NarrowedTo<T, ReadonlyArray<unknown>> {
+): data is Extract<T, ReadonlyArray<unknown>> extends never
+  ? T extends Iterable<infer E>
+    ? ReadonlyArray<E>
+    : ReadonlyArray<unknown>
+  : IsAny<T> extends true
+    ? ReadonlyArray<unknown>
+    : Extract<T, ReadonlyArray<unknown>>;
+
+export function isArray(data: unknown): boolean {
   return Array.isArray(data);
 }

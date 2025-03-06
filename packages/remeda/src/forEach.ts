@@ -1,7 +1,8 @@
 import type { Writable } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
+import doTransduce from "./internal/doTransduce";
+import { mapCallback } from "./internal/utilityEvaluators";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 
 /**
  * Executes a provided function once for each array element. Equivalent to
@@ -27,6 +28,10 @@ import { purry } from "./purry";
 export function forEach<T extends IterableContainer>(
   data: T,
   callbackfn: (value: T[number], index: number, data: T) => void,
+): void;
+export function forEach<T>(
+  data: Iterable<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
 ): void;
 
 /**
@@ -57,24 +62,24 @@ export function forEach<T extends IterableContainer>(
 ): (data: T) => Writable<T>;
 
 export function forEach(...args: ReadonlyArray<unknown>): unknown {
-  return purry(forEachImplementation, args, lazyImplementation);
+  return doTransduce(forEachImplementation, lazyImplementation, args);
 }
 
 function forEachImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
 ): Array<T> {
   // eslint-disable-next-line unicorn/no-array-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
-  data.forEach(callbackfn);
+  toReadonlyArray(data).forEach(callbackfn);
   // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
   return data;
 }
 
-const lazyImplementation =
-  <T>(
-    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
-  ): LazyEvaluator<T> =>
-  (value, index, data) => {
-    callbackfn(value, index, data);
-    return { done: false, hasNext: true, next: value };
-  };
+function* lazyImplementation<T>(
+  data: Iterable<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): Iterable<T> {
+  for (const [value] of mapCallback(data, callbackfn)) {
+    yield value;
+  }
+}

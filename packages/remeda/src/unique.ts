@@ -1,8 +1,6 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import doTransduce from "./internal/doTransduce";
 import type { Deduped } from "./internal/types/Deduped";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -18,6 +16,7 @@ import { SKIP_ITEM } from "./internal/utilityEvaluators";
  * @category Array
  */
 export function unique<T extends IterableContainer>(data: T): Deduped<T>;
+export function unique<T>(data: Iterable<T>): Iterable<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -36,18 +35,19 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  * @category Array
  */
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
+export function unique(): <T>(data: Iterable<T>) => Iterable<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return doTransduce(undefined, lazyImplementation, args);
 }
 
-function lazyImplementation<T>(): LazyEvaluator<T> {
+function* lazyImplementation<T>(data: Iterable<T>): Iterable<T> {
   const set = new Set<T>();
-  return (value) => {
+  for (const value of data) {
     if (set.has(value)) {
-      return SKIP_ITEM;
+      continue;
     }
     set.add(value);
-    return { done: false, hasNext: true, next: value };
-  };
+    yield value;
+  }
 }

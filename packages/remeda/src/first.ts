@@ -1,15 +1,17 @@
-import { toSingle } from "./internal/toSingle";
+import type { IterableElement } from "type-fest";
+import doReduce from "./internal/doReduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
+import { isArray } from "./isArray";
 
-type First<T extends IterableContainer> = T extends []
-  ? undefined
-  : T extends readonly [unknown, ...Array<unknown>]
-    ? T[0]
-    : T extends readonly [...infer Pre, infer Last]
-      ? Last | Pre[0]
-      : T[0] | undefined;
+type First<T extends Iterable<unknown>> = [T] extends [IterableContainer]
+  ? T extends []
+    ? undefined
+    : T extends readonly [unknown, ...Array<unknown>]
+      ? T[0]
+      : T extends readonly [...infer Pre, infer Last]
+        ? Last | Pre[0]
+        : T[0] | undefined
+  : IterableElement<T> | undefined;
 
 /**
  * Gets the first element of `array`.
@@ -25,7 +27,7 @@ type First<T extends IterableContainer> = T extends []
  * @lazy
  * @category Array
  */
-export function first<T extends IterableContainer>(data: T): First<T>;
+export function first<T extends Iterable<unknown>>(data: T): First<T>;
 
 /**
  * Gets the first element of `array`.
@@ -44,16 +46,19 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  * @lazy
  * @category Array
  */
-export function first(): <T extends IterableContainer>(data: T) => First<T>;
+export function first(): <T extends Iterable<unknown>>(data: T) => First<T>;
 
 export function first(...args: ReadonlyArray<unknown>): unknown {
-  return purry(firstImplementation, args, toSingle(lazyImplementation));
+  return doReduce(firstImplementation, args);
 }
 
-const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>
-  item;
-
-const lazyImplementation = (): LazyEvaluator => firstLazy;
-
-const firstLazy = <T>(value: T) =>
-  ({ hasNext: true, next: value, done: true }) as const;
+function firstImplementation<T>(data: Iterable<T>): T | undefined {
+  if (isArray(data)) {
+    return data[0];
+  }
+  // eslint-disable-next-line no-unreachable-loop
+  for (const value of data) {
+    return value;
+  }
+  return undefined;
+}

@@ -1,6 +1,7 @@
+import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
+import { unsafeToArray } from "./internal/unsafeToArray";
+import { isArray } from "./isArray";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises
@@ -32,7 +33,7 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @signature
  *   R.zip(first, second)
  * @example
- *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
+ *   R.zip([1, 2, 3], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
  * @lazy
  * @category Array
@@ -41,6 +42,10 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
   first: F,
   second: S,
 ): Zipped<F, S>;
+export function zip<F, S>(
+  first: Iterable<F>,
+  second: Iterable<S>,
+): Iterable<[F, S]>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
@@ -51,7 +56,7 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @signature
  *   R.zip(second)(first)
  * @example
- *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
+ *   R.zip(['a', 'b'])([1, 2, 3]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
  * @lazy
  * @category Array
@@ -59,28 +64,38 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
 export function zip<S extends IterableContainer>(
   second: S,
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
+export function zip<S>(
+  second: Iterable<S>,
+): <F>(first: Iterable<F>) => Iterable<[F, S]>;
 
 export function zip(...args: ReadonlyArray<unknown>): unknown {
-  return purry(zipImplementation, args, lazyImplementation);
+  return doTransduce(zipImplementation, lazyImplementation, args);
 }
 
-const zipImplementation = <
-  F extends IterableContainer,
-  S extends IterableContainer,
->(
-  first: F,
-  second: S,
-): Zipped<F, S> =>
-  (first.length < second.length
-    ? first.map((item, index) => [item, second[index]])
-    : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
+function zipImplementation<F, S>(
+  first: Iterable<F>,
+  second: Iterable<S>,
+): Array<[F, S]> {
+  if (isArray(first) && isArray(second)) {
+    if (first.length < second.length) {
+      return first.map((item, index) => [item, second[index]!]);
+    }
+    return second.map((item, index) => [first[index]!, item]);
+  }
 
-const lazyImplementation =
-  <F extends IterableContainer, S extends IterableContainer>(
-    second: S,
-  ): LazyEvaluator<F[number], [F[number], S[number]]> =>
-  (value, index) => ({
-    hasNext: true,
-    next: [value, second[index]],
-    done: index >= second.length - 1,
-  });
+  return unsafeToArray(lazyImplementation(first, second));
+}
+
+function* lazyImplementation<F, S>(
+  first: Iterable<F>,
+  second: Iterable<S>,
+): Iterable<[F, S]> {
+  const iter = second[Symbol.iterator]();
+  for (const firstValue of first) {
+    const next = iter.next();
+    if (next.done === true) {
+      return;
+    }
+    yield [firstValue, next.value];
+  }
+}

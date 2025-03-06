@@ -1,17 +1,30 @@
-import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+import type { IterableElement } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import { isArray } from "./isArray";
+import { unsafeToArray } from "./internal/unsafeToArray";
+import doTransduce from "./internal/doTransduce";
+
+type IterableZippingFunction<T1 = unknown, T2 = unknown, Value = unknown> = (
+  first: T1,
+  second: T2,
+  index: number,
+  data: readonly [ReadonlyArray<T1>, ReadonlyArray<T2>],
+) => Value;
 
 type ZippingFunction<
-  T1 extends IterableContainer = IterableContainer,
-  T2 extends IterableContainer = IterableContainer,
+  T1 extends Iterable<unknown> = Iterable<unknown>,
+  T2 extends Iterable<unknown> = Iterable<unknown>,
   Value = unknown,
-> = (
-  first: T1[number],
-  second: T2[number],
-  index: number,
-  data: readonly [first: T1, second: T2],
-) => Value;
+> = T1 extends IterableContainer
+  ? T2 extends IterableContainer
+    ? (
+        first: T1[number],
+        second: T2[number],
+        index: number,
+        data: readonly [first: T1, second: T2],
+      ) => Value
+    : IterableZippingFunction<IterableElement<T1>, IterableElement<T2>, Value>
+  : IterableZippingFunction<IterableElement<T1>, IterableElement<T2>, Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -21,7 +34,7 @@ type ZippingFunction<
  * @signature
  *   R.zipWith(fn)(first, second)
  * @example
- *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3', '4'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
@@ -30,6 +43,11 @@ export function zipWith<TItem1, TItem2, Value>(
   first: ReadonlyArray<TItem1>,
   second: ReadonlyArray<TItem2>,
 ) => Array<Value>;
+export function zipWith<
+  T1 extends Iterable<unknown>,
+  T2 extends Iterable<unknown>,
+  Value,
+>(fn: ZippingFunction<T1, T2, Value>): (first: T1, second: T2) => Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -40,14 +58,14 @@ export function zipWith<TItem1, TItem2, Value>(
  * @signature
  *   R.zipWith(second, fn)(first)
  * @example
- *   R.pipe(['1', '2', '3'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
+ *   R.pipe(['1', '2', '3', '4'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
  * @lazy
  * @category Array
  */
 export function zipWith<
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
+  T1 extends Iterable<unknown>,
+  T2 extends Iterable<unknown>,
   Value,
 >(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Array<Value>;
 
@@ -61,62 +79,70 @@ export function zipWith<
  * @signature
  *   R.zipWith(first, second, fn)
  * @example
- *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
+ *   R.zipWith(['1', '2', '3', '4'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
  * @lazy
  * @category Array
  */
 export function zipWith<
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
+  T1 extends Iterable<unknown>,
+  T2 extends Iterable<unknown>,
   Value,
 >(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Array<Value>;
 
-export function zipWith(
-  arg0: IterableContainer | ZippingFunction,
-  arg1?: IterableContainer | ZippingFunction,
-  arg2?: ZippingFunction,
-): unknown {
-  if (typeof arg0 === "function") {
-    // Both datum's last
-    return (data1: IterableContainer, data2: IterableContainer) =>
-      zipWithImplementation(data1, data2, arg0);
+export function zipWith(...args: ReadonlyArray<unknown>): unknown {
+  // Both iterables last.
+  if (typeof args[0] === "function") {
+    return (data1: Iterable<unknown>, data2: Iterable<unknown>) =>
+      doTransduce(
+        zipWithImplementation,
+        lazyImplementation,
+        [data1, data2, args[0]],
+        true,
+      );
   }
 
-  if (typeof arg1 === "function") {
-    // dataLast
-    return lazyDataLastImpl(
+  if (typeof args[1] === "function") {
+    return doTransduce(
       zipWithImplementation,
-      [arg0, arg1],
       lazyImplementation,
+      [args[0], args[1]],
+      false,
     );
   }
 
-  // dataFirst. Notice that we assert that the arguments are defined to reduce
-  // the number of runtime checks that would otherwise be needed to make
-  // TypeScript happy here. Because this is an internal implementation and we
-  // are protected by the function typing itself this is fine!
-  return zipWithImplementation(arg0, arg1!, arg2!);
+  return doTransduce(zipWithImplementation, lazyImplementation, args, true);
 }
 
-function zipWithImplementation<
-  T1 extends IterableContainer,
-  T2 extends IterableContainer,
-  Value,
->(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Array<Value> {
-  const datum = [first, second] as const;
-  return first.length < second.length
-    ? first.map((item, index) => fn(item, second[index], index, datum))
-    : second.map((item, index) => fn(first[index], item, index, datum));
+function zipWithImplementation<T1, T2, Value>(
+  first: Iterable<T1>,
+  second: Iterable<T2>,
+  fn: IterableZippingFunction<T1, T2, Value>,
+): Array<Value> {
+  if (isArray(first) && isArray(second)) {
+    const datum = [first, second] as const;
+    if (first.length < second.length) {
+      return first.map((item, index) => fn(item, second[index]!, index, datum));
+    }
+    return second.map((item, index) => fn(first[index]!, item, index, datum));
+  }
+
+  return unsafeToArray(lazyImplementation(first, second, fn));
 }
 
-const lazyImplementation =
-  <T1, T2 extends IterableContainer, Value>(
-    second: T2,
-    fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>,
-  ): LazyEvaluator<T1, Value> =>
-  (value, index, data) => ({
-    next: fn(value, second[index], index, [data, second]),
-    hasNext: true,
-    done: index >= second.length - 1,
-  });
+function* lazyImplementation<T1, T2, Value>(
+  first: Iterable<T1>,
+  second: Iterable<T2>,
+  fn: IterableZippingFunction<T1, T2, Value>,
+): Iterable<Value> {
+  const iter = second[Symbol.iterator]();
+  const data1: Array<T1> = [];
+  const data2: Array<T2> = [];
+  for (const firstValue of first) {
+    const next = iter.next();
+    if (next.done === true) {
+      return;
+    }
+    yield fn(firstValue, next.value, data1.length - 1, [data1, data2]);
+  }
+}

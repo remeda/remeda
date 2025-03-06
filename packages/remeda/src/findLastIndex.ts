@@ -1,4 +1,6 @@
-import { purry } from "./purry";
+import doReduce from "./internal/doReduce";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 
 /**
  * Iterates the array in reverse order and returns the index of the first
@@ -21,9 +23,9 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function findLastIndex<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+export function findLastIndex<T extends Iterable<unknown>>(
+  data: T,
+  predicate: ArrayMethodCallback<T, boolean>,
 ): number;
 
 /**
@@ -49,22 +51,23 @@ export function findLastIndex<T>(
  * @dataLast
  * @category Array
  */
-export function findLastIndex<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (array: ReadonlyArray<T>) => number;
+export function findLastIndex<T extends Iterable<unknown>>(
+  predicate: ArrayMethodCallback<T, boolean>,
+): (array: T) => number;
 
 export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
-  return purry(findLastIndexImplementation, args);
+  return doReduce(findLastIndexImplementation, args);
 }
 
 const findLastIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: Iterable<T>,
+  predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
 ): number => {
   // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLastIndex` here.
 
-  for (let i = data.length - 1; i >= 0; i--) {
-    if (predicate(data[i]!, i, data)) {
+  const array = toReadonlyArray(data);
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (predicate(array[i]!, i, array)) {
       return i;
     }
   }

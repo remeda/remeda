@@ -1,16 +1,20 @@
+import type { IterableElement } from "type-fest";
 import { hasAtLeast } from "./hasAtLeast";
 import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 
-type FirstBy<T extends IterableContainer> =
-  | T[number]
-  | (T extends readonly [unknown, ...ReadonlyArray<unknown>]
-      ? never
-      : T extends readonly [...ReadonlyArray<unknown>, unknown]
-        ? never
-        : undefined);
+type FirstBy<T extends Iterable<unknown>> = [T] extends [IterableContainer]
+  ?
+      | T[number]
+      | (T extends readonly [unknown, ...ReadonlyArray<unknown>]
+          ? never
+          : T extends readonly [...ReadonlyArray<unknown>, unknown]
+            ? never
+            : undefined)
+  : IterableElement<T> | undefined;
 
 /**
  * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `R.first(R.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
@@ -36,8 +40,8 @@ type FirstBy<T extends IterableContainer> =
  * @dataLast
  * @category Array
  */
-export function firstBy<T extends IterableContainer>(
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+export function firstBy<T extends Iterable<unknown>>(
+  ...rules: Readonly<NonEmptyArray<OrderRule<IterableElement<T>>>>
 ): (data: T) => FirstBy<T>;
 
 /**
@@ -65,9 +69,9 @@ export function firstBy<T extends IterableContainer>(
  * @dataFirst
  * @category Array
  */
-export function firstBy<T extends IterableContainer>(
+export function firstBy<T extends Iterable<unknown>>(
   data: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: Readonly<NonEmptyArray<OrderRule<IterableElement<T>>>>
 ): FirstBy<T>;
 
 export function firstBy(...args: ReadonlyArray<unknown>): unknown {
@@ -75,18 +79,20 @@ export function firstBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function firstByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   compareFn: CompareFunction<T>,
 ): T | undefined {
-  if (!hasAtLeast(data, 2)) {
+  const array = toReadonlyArray(data);
+
+  if (!hasAtLeast(array, 2)) {
     // If we have 0 or 1 item we simply return the trivial result.
-    return data[0];
+    return array[0];
   }
 
-  let [currentFirst] = data;
+  let [currentFirst] = array;
 
   // Remove the first item, we won't compare it with itself.
-  const [, ...rest] = data;
+  const [, ...rest] = array;
   for (const item of rest) {
     if (compareFn(item, currentFirst) < 0) {
       // item comes before currentFirst in the order.
