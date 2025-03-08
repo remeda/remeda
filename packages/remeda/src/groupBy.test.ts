@@ -73,3 +73,26 @@ describe("filtering on undefined grouper result", () => {
     expect(result.even).toStrictEqual(["a", "c", "e", "g", "i"]);
   });
 });
+
+describe("tricky string", () => {
+  test("groupBy", () => {
+    expect(
+      groupBy(
+        [
+          { a: "toString", b: "toString" },
+          { a: "toString", b: "valueOf" },
+          { a: "valueOf", b: "toString" },
+          { a: "toString", b: "__proto__" },
+        ],
+        prop("a"),
+      ),
+    ).toStrictEqual({
+      toString: [
+        { a: "toString", b: "toString" },
+        { a: "toString", b: "valueOf" },
+        { a: "toString", b: "__proto__" },
+      ],
+      valueOf: [{ a: "valueOf", b: "toString" }],
+    });
+  });
+});
