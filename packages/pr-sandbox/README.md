@@ -3,4 +3,4 @@ the library installed.
 
 _You most likely don't need to touch anything here, we haven't for years..._
 
-Testing out the sandbox? [CLICK HERE!](src/index.ts)
+Testing out the sandbox? [CLICK HERE!](src/do-something.ts)

@@ -30,7 +30,7 @@
     // It's better to ensure that the project typescript is the one we use for the
     // project so that people don't build for newer typescript features before we
     // bump it in our project first.
-    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.tsdk": ".monorepo-root/node_modules/typescript/lib",
 
     // This makes sense:
     "cSpell.words": ["Remeda"],
