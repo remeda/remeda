@@ -74,7 +74,8 @@ describe("filtering on undefined grouper result", () => {
   });
 });
 
-describe("tricky string", () => {
+// https://github.com/remeda/remeda/pull/1049
+describe("key is an object instance method name", () => {
   test("groupBy", () => {
     expect(
       groupBy(
