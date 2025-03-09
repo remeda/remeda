@@ -63,15 +63,19 @@ const countByImplementation = <T>(
     data: ReadonlyArray<T>,
   ) => PropertyKey | undefined,
 ): ExactRecord<PropertyKey, number> => {
-  const out: ExactRecord<PropertyKey, number> = {};
+  const out = new Map<PropertyKey, number>();
 
   for (const [index, item] of data.entries()) {
     const category = categorizationFn(item, index, data);
     if (category !== undefined) {
-      out[category] ??= 0;
-      out[category] += 1;
+      const count = out.get(category);
+      if (count === undefined) {
+        out.set(category, 1);
+      } else {
+        out.set(category, count + 1);
+      }
     }
   }
 
-  return out;
+  return Object.fromEntries(out);
 };
