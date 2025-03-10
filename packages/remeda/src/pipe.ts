@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the op params, it'd be redundant */
+/* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
 
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -31,7 +31,10 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  * @dataFirst
  * @category Function
  */
+export function pipe<A>(value: A): A;
+
 export function pipe<A, B>(value: A, op1: (input: A) => B): B;
+
 export function pipe<A, B, C>(
   value: A,
   op1: (input: A) => B,
