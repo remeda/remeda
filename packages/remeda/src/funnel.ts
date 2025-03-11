@@ -80,7 +80,7 @@ type Funnel<Args extends RestArguments = []> = {
  *
  * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`.
  * - Throttling: use `minGapMs` and `triggerAt: "start"` or `"both"`.
- * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.reference-batch.test.ts).
+ * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.reference-batch.test.ts).
  *
  * @param callback - The main function that would be invoked periodically based
  * on `options`. The function would take the latest result of the `reducer`; if

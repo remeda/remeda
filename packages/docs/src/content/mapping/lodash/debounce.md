@@ -5,10 +5,10 @@ remeda: funnel
 
 - `debounce` can be implemented using the `funnel` utility. A reference
   implementation is provided below, and a more expanded version with inline
-  documentation and tests is available in the test file [`funnel.lodash-debounce.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-debounce.test.ts).
+  documentation and tests is available in the test file [`funnel.lodash-debounce.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.lodash-debounce.test.ts).
 
 - A more complete reference implementation that also maintains Lodash's
-  capability to store the callback's return value is available below, and in [`funnel.lodash-debounce-with-cached-value.test.ts`](https://github.com/remeda/remeda/blob/main/src/funnel.lodash-debounce-with-cached-value.test.ts).
+  capability to store the callback's return value is available below, and in [`funnel.lodash-debounce-with-cached-value.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.lodash-debounce-with-cached-value.test.ts).
 
 - These implementations can be copied as-is into your project, but might contain
   redundant parts which are not relevant for your specific use cases. By
