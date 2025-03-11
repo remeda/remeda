@@ -42,9 +42,9 @@ function debounce<F extends (...args: any) => void>(
       }
     },
     {
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      triggerAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
   return Object.assign(call, rest);
@@ -79,9 +79,9 @@ function debounce<F extends (...args: any) => void>(
     },
     {
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      triggerAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
   return Object.assign(call, rest);
@@ -114,9 +114,9 @@ function debounce<F extends (...args: any) => any>(
     },
     {
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      triggerAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
   return Object.assign(

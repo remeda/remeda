@@ -69,9 +69,9 @@ function throttle<F extends (...args: any) => void>(
     },
     {
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      triggerAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
   return Object.assign(call, rest);
@@ -99,9 +99,9 @@ function throttle<F extends (...args: any) => any>(
     },
     {
       reducer: (_, ...args: Parameters<F>) => args,
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      triggerAt: trailing ? (leading ? "both" : "end") : "start",
     },
   );
 
