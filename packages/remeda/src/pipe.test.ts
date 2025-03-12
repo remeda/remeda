@@ -6,6 +6,12 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
 
+it("should pass through data with 0 functions", () => {
+  const data = { a: "hello", b: 123 };
+
+  expect(pipe(data)).toBe(data);
+});
+
 it("should pipe a single operation", () => {
   const result = pipe(1, (x) => x * 2);
 
