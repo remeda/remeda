@@ -1,13 +1,10 @@
-// ECMAScript doesn't support more decimal places than 15 anyways,
-// so supporting higher values doesn't make a lot of sense,
-// Considering Number.MAX_SAFE_INTEGER < 10**16, we can use -15
-// for the negative precision limit, too.
 const MAX_PRECISION = 15;
 
 const RADIX = 10;
 
-export function withPrecision(roundingFn: (value: number) => number) {
-  return (value: number, precision: number): number => {
+export const withPrecision =
+  (roundingFn: (value: number) => number) =>
+  (value: number, precision: number): number => {
     if (precision === 0) {
       return roundingFn(value);
     }
@@ -26,13 +23,19 @@ export function withPrecision(roundingFn: (value: number) => number) {
       return roundingFn(value);
     }
 
-    if (precision > 0) {
-      const multiplier = RADIX ** precision;
-      return roundingFn(value * multiplier) / multiplier;
-    }
-
-    // Avoid losing precision by dividing first.
-    const divisor = RADIX ** -precision;
-    return roundingFn(value / divisor) * divisor;
+    const shiftedValue = shiftExponent(value, precision);
+    const rounded = roundingFn(shiftedValue);
+    return shiftExponent(rounded, -precision);
   };
+
+function shiftExponent(value: number, shift: number): number {
+  const asString = value.toString();
+  const [n, exponent] = asString.split("e");
+
+  const shiftedExponent =
+    (exponent === undefined ? 0 : Number.parseInt(exponent, RADIX)) + shift;
+
+  const shiftedValueAsString = `${n!}e${shiftedExponent.toString()}`;
+
+  return Number.parseFloat(shiftedValueAsString);
 }
