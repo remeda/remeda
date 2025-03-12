@@ -27,12 +27,20 @@ export const withPrecision =
       return roundingFn(value);
     }
 
-    const shiftedValue = shiftExponent(value, precision);
+    const shiftedValue = shiftDecimalPoint(value, precision);
     const rounded = roundingFn(shiftedValue);
-    return shiftExponent(rounded, -precision);
+    return shiftDecimalPoint(rounded, -precision);
   };
 
-function shiftExponent(value: number, shift: number): number {
+/**
+ * Shift a number's decimal point via scientific notation.
+ *
+ * This takes advantage of the fact that `Number` methods support scientific
+ * (e-notation) string natively and avoids working with double-precision
+ * floating-point numbers directly, working around their limitations
+ * with representing decimal numbers.
+ */
+function shiftDecimalPoint(value: number, shift: number): number {
   const asString = value.toString();
   const [n, exponent] = asString.split("e");
 
