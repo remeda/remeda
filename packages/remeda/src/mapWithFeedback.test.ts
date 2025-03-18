@@ -1,4 +1,3 @@
-import { toBasicIterable } from "./internal/toBasicIterable";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
@@ -81,7 +80,7 @@ describe("data last", () => {
     const lazyItems: Array<Array<number>> = [];
     const indices: Array<number> = [];
     pipe(
-      toBasicIterable([1, 2, 3, 4, 5]),
+      [1, 2, 3, 4, 5],
       mapWithFeedback((acc, x, index, items) => {
         indices.push(index);
         lazyItems.push([...items]);

@@ -30,12 +30,12 @@ import { isArray } from "./isArray";
  * @category Array
  */
 export function find<T, S extends T>(
-  data: Iterable<T>,
-  predicate: (value: T, index: number, data: Iterable<T>) => value is S,
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): S | undefined;
 export function find<T>(
-  data: Iterable<T>,
-  predicate: (value: T, index: number, data: Iterable<T>) => boolean,
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): T | undefined;
 
 /**
@@ -69,10 +69,10 @@ export function find<T>(
  */
 export function find<T, S extends T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: Iterable<T>) => S | undefined;
+): (data: ReadonlyArray<T>) => S | undefined;
 export function find<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: Iterable<T>) => T | undefined;
+): (data: ReadonlyArray<T>) => T | undefined;
 
 export function find(...args: ReadonlyArray<unknown>): unknown {
   return doReduce(findImplementation, args);

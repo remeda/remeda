@@ -23,8 +23,8 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @category Array
  */
 export function differenceWith<TFirst, TSecond>(
-  array: Iterable<TFirst>,
-  other: Iterable<TSecond>,
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ): Array<TFirst>;
 
@@ -51,9 +51,9 @@ export function differenceWith<TFirst, TSecond>(
  * @category Array
  */
 export function differenceWith<TFirst, TSecond>(
-  other: Iterable<TSecond>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
-): (array: Iterable<TFirst>) => Array<TFirst>;
+): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
 export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(undefined, lazyImplementation, args);

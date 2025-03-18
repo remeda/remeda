@@ -20,7 +20,7 @@ import { purry } from "./purry";
  */
 export function anyPass<T>(
   data: T,
-  fns: Iterable<(data: T) => boolean>,
+  fns: ReadonlyArray<(data: T) => boolean>,
 ): boolean;
 
 /**
@@ -40,7 +40,7 @@ export function anyPass<T>(
  * @category Array
  */
 export function anyPass<T>(
-  fns: Iterable<(data: T) => boolean>,
+  fns: ReadonlyArray<(data: T) => boolean>,
 ): (data: T) => boolean;
 
 export function anyPass(...args: ReadonlyArray<unknown>): unknown {

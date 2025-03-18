@@ -29,10 +29,6 @@ export function forEach<T extends IterableContainer>(
   data: T,
   callbackfn: (value: T[number], index: number, data: T) => void,
 ): void;
-export function forEach<T>(
-  data: Iterable<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
-): void;
 
 /**
  * Executes a provided function once for each array element. Equivalent to

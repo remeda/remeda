@@ -25,7 +25,7 @@ import { isArray } from "./isArray";
  * @category Array
  */
 export function flatMap<T, U>(
-  data: Iterable<T>,
+  data: ReadonlyArray<T>,
   callbackfn: (
     input: T,
     index: number,
@@ -59,7 +59,7 @@ export function flatMap<T, U>(
     index: number,
     data: ReadonlyArray<T>,
   ) => ReadonlyArray<U> | U,
-): (data: Iterable<T>) => Array<U>;
+): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(flatMapImplementation, lazyImplementation, args);

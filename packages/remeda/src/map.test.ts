@@ -2,7 +2,6 @@ import { add } from "./add";
 import { constant } from "./constant";
 import { filter } from "./filter";
 import { identity } from "./identity";
-import { toBasicIterable } from "./internal/toBasicIterable";
 import { map } from "./map";
 import { multiply } from "./multiply";
 import { pipe } from "./pipe";
@@ -60,7 +59,7 @@ describe("pipe", () => {
 
     expect(
       pipe(
-        toBasicIterable([1, 2, 3, 4, 5]),
+        [1, 2, 3, 4, 5],
         map((x, i, items) => {
           anyItems1.push([...items]);
           indexes1.push(i);
@@ -78,10 +77,10 @@ describe("pipe", () => {
     expect(indexes1).toStrictEqual([0, 1, 2, 3, 4]);
     expect(indexes2).toStrictEqual([0, 1, 2]);
     expect(anyItems1).toStrictEqual([
-      [1],
-      [1, 2],
-      [1, 2, 3],
-      [1, 2, 3, 4],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
       [1, 2, 3, 4, 5],
     ]);
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);

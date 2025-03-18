@@ -1,7 +1,6 @@
 import { purry } from "./purry";
 import type { ExactRecord } from "./internal/types/ExactRecord";
 import { toReadonlyArray } from "./internal/toReadonlyArray";
-import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -20,9 +19,13 @@ import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
  * @dataFirst
  * @category Array
  */
-export function countBy<T extends Iterable<unknown>, K extends PropertyKey>(
-  data: T,
-  categorizationFn: ArrayMethodCallback<T, K | undefined>,
+export function countBy<T, K extends PropertyKey>(
+  data: ReadonlyArray<T>,
+  categorizationFn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => K | undefined,
 ): ExactRecord<K, number>;
 
 /**
@@ -41,9 +44,13 @@ export function countBy<T extends Iterable<unknown>, K extends PropertyKey>(
  * @dataLast
  * @category Array
  */
-export function countBy<T extends Iterable<unknown>, K extends PropertyKey>(
-  categorizationFn: ArrayMethodCallback<T, K | undefined>,
-): (data: T) => ExactRecord<K, number>;
+export function countBy<T, K extends PropertyKey>(
+  categorizationFn: (
+    value: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => K | undefined,
+): (data: ReadonlyArray<T>) => ExactRecord<K, number>;
 
 export function countBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(countByImplementation, args);

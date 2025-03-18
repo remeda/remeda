@@ -1,7 +1,6 @@
-import type { IterableElement } from "type-fest";
 import doTransduce from "./internal/doTransduce";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Mapped } from "./internal/types/Mapped";
-import type { ArrayMethodCallbackDataArg } from "./internal/types/ArrayMethodCallback";
 import { isArray } from "./isArray";
 
 /**
@@ -27,13 +26,13 @@ import { isArray } from "./isArray";
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends Iterable<unknown>, U>(
+export function mapWithFeedback<T extends IterableContainer, U>(
   data: T,
   callbackfn: (
     previousValue: U,
-    currentValue: IterableElement<T>,
+    currentValue: T[number],
     currentIndex: number,
-    data: ArrayMethodCallbackDataArg<T>,
+    data: T,
   ) => U,
   initialValue: U,
 ): Mapped<T, U>;
@@ -59,12 +58,12 @@ export function mapWithFeedback<T extends Iterable<unknown>, U>(
  * @lazy
  * @category Array
  */
-export function mapWithFeedback<T extends Iterable<unknown>, U>(
+export function mapWithFeedback<T extends IterableContainer, U>(
   callbackfn: (
     previousValue: U,
-    currentValue: IterableElement<T>,
+    currentValue: T[number],
     currentIndex: number,
-    data: ArrayMethodCallbackDataArg<T>,
+    data: T,
   ) => U,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;

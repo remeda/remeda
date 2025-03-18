@@ -1,6 +1,6 @@
 import doTransduce from "./internal/doTransduce";
-import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import type { Deduped } from "./internal/types/Deduped";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { mapCallback } from "./internal/utilityEvaluators";
 
 /**
@@ -20,9 +20,9 @@ import { mapCallback } from "./internal/utilityEvaluators";
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends Iterable<unknown>>(
+export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: ArrayMethodCallback<T>,
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): Deduped<T>;
 
 /**
@@ -42,8 +42,8 @@ export function uniqueBy<T extends Iterable<unknown>>(
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends Iterable<unknown>>(
-  keyFunction: ArrayMethodCallback<T>,
+export function uniqueBy<T extends IterableContainer>(
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {

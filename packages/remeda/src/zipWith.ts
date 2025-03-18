@@ -1,4 +1,3 @@
-import type { IterableElement } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { isArray } from "./isArray";
 import { unsafeToArray } from "./internal/unsafeToArray";
@@ -12,19 +11,15 @@ type IterableZippingFunction<T1 = unknown, T2 = unknown, Value = unknown> = (
 ) => Value;
 
 type ZippingFunction<
-  T1 extends Iterable<unknown> = Iterable<unknown>,
-  T2 extends Iterable<unknown> = Iterable<unknown>,
+  T1 extends IterableContainer = IterableContainer,
+  T2 extends IterableContainer = IterableContainer,
   Value = unknown,
-> = T1 extends IterableContainer
-  ? T2 extends IterableContainer
-    ? (
-        first: T1[number],
-        second: T2[number],
-        index: number,
-        data: readonly [first: T1, second: T2],
-      ) => Value
-    : IterableZippingFunction<IterableElement<T1>, IterableElement<T2>, Value>
-  : IterableZippingFunction<IterableElement<T1>, IterableElement<T2>, Value>;
+> = (
+  first: T1[number],
+  second: T2[number],
+  index: number,
+  data: readonly [first: T1, second: T2],
+) => Value;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -34,7 +29,7 @@ type ZippingFunction<
  * @signature
  *   R.zipWith(fn)(first, second)
  * @example
- *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3', '4'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
@@ -43,11 +38,6 @@ export function zipWith<TItem1, TItem2, Value>(
   first: ReadonlyArray<TItem1>,
   second: ReadonlyArray<TItem2>,
 ) => Array<Value>;
-export function zipWith<
-  T1 extends Iterable<unknown>,
-  T2 extends Iterable<unknown>,
-  Value,
->(fn: ZippingFunction<T1, T2, Value>): (first: T1, second: T2) => Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -58,14 +48,14 @@ export function zipWith<
  * @signature
  *   R.zipWith(second, fn)(first)
  * @example
- *   R.pipe(['1', '2', '3', '4'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
+ *   R.pipe(['1', '2', '3'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
  * @lazy
  * @category Array
  */
 export function zipWith<
-  T1 extends Iterable<unknown>,
-  T2 extends Iterable<unknown>,
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
   Value,
 >(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Array<Value>;
 
@@ -79,14 +69,14 @@ export function zipWith<
  * @signature
  *   R.zipWith(first, second, fn)
  * @example
- *   R.zipWith(['1', '2', '3', '4'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
+ *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
  * @lazy
  * @category Array
  */
 export function zipWith<
-  T1 extends Iterable<unknown>,
-  T2 extends Iterable<unknown>,
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
   Value,
 >(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Array<Value>;
 

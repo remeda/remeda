@@ -23,9 +23,9 @@ import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
  * @dataFirst
  * @category Array
  */
-export function findLastIndex<T extends Iterable<unknown>>(
-  data: T,
-  predicate: ArrayMethodCallback<T, boolean>,
+export function findLastIndex<T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number;
 
 /**
@@ -51,9 +51,9 @@ export function findLastIndex<T extends Iterable<unknown>>(
  * @dataLast
  * @category Array
  */
-export function findLastIndex<T extends Iterable<unknown>>(
-  predicate: ArrayMethodCallback<T, boolean>,
-): (array: T) => number;
+export function findLastIndex<T>(
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): (array: ReadonlyArray<T>) => number;
 
 export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
   return doReduce(findLastIndexImplementation, args);

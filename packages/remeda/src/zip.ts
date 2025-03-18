@@ -42,10 +42,6 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
   first: F,
   second: S,
 ): Zipped<F, S>;
-export function zip<F, S>(
-  first: Iterable<F>,
-  second: Iterable<S>,
-): Iterable<[F, S]>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
@@ -64,9 +60,6 @@ export function zip<F, S>(
 export function zip<S extends IterableContainer>(
   second: S,
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
-export function zip<S>(
-  second: Iterable<S>,
-): <F>(first: Iterable<F>) => Iterable<[F, S]>;
 
 export function zip(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(zipImplementation, lazyImplementation, args);

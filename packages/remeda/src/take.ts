@@ -1,21 +1,25 @@
 import doTransduce from "./internal/doTransduce";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { unsafeToArray } from "./internal/unsafeToArray";
 import { isArray } from "./isArray";
 
 /**
- * Returns the first `n` elements of `input`.
+ * Returns the first `n` elements of `array`.
  *
- * @param input - The iterable to take from.
+ * @param array - The array.
  * @param n - The number of elements to take.
  * @signature
- *    R.take(input, n)
+ *    R.take(array, n)
  * @example
  *    R.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
  * @lazy
  * @category Array
  */
-export function take<T>(input: Iterable<T>, n: number): Array<T>;
+export function take<T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]>;
 
 /**
  * Returns the first `n` elements of `array`.
@@ -29,7 +33,9 @@ export function take<T>(input: Iterable<T>, n: number): Array<T>;
  * @lazy
  * @category Array
  */
-export function take(n: number): <T>(array: Iterable<T>) => Array<T>;
+export function take(
+  n: number,
+): <T extends IterableContainer>(array: T) => Array<T[number]>;
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(takeImplementation, lazyImplementation, args);

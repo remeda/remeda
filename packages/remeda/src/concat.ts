@@ -23,10 +23,6 @@ export function concat<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
 >(data: T1, other: T2): [...T1, ...T2];
-export function concat<T1, T2>(
-  data: Iterable<T1>,
-  other: Iterable<T2>,
-): Array<T1 | T2>;
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -47,9 +43,6 @@ export function concat<T1, T2>(
 export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
-export function concat<T2>(
-  other: Iterable<T2>,
-): <T1>(data: Iterable<T1>) => Array<T1 | T2>;
 
 export function concat(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(concatImplementation, lazyImplementation, args);

@@ -16,7 +16,10 @@ import doTransduce from "./internal/doTransduce";
  * @lazy
  * @category Array
  */
-export function difference<T>(data: Iterable<T>, other: Iterable<T>): Array<T>;
+export function difference<T>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<T>,
+): Array<T>;
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -34,8 +37,8 @@ export function difference<T>(data: Iterable<T>, other: Iterable<T>): Array<T>;
  * @category Array
  */
 export function difference<T>(
-  other: Iterable<T>,
-): (data: Iterable<T>) => Array<T>;
+  other: ReadonlyArray<T>,
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(undefined, lazyImplementation, args);

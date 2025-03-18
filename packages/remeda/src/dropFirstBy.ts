@@ -24,7 +24,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @category Array
  */
 export function dropFirstBy<T>(
-  data: Iterable<T>,
+  data: ReadonlyArray<T>,
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): Array<T>;
@@ -47,7 +47,7 @@ export function dropFirstBy<T>(
 export function dropFirstBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
-): (data: Iterable<T>) => Array<T>;
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function dropFirstBy(...args: ReadonlyArray<unknown>): unknown {
   return purryOrderRulesWithArgument(dropFirstByImplementation, args);

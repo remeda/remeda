@@ -110,7 +110,7 @@ export function flat(
     flatImplementation,
     lazyImplementation,
     [dataOrDepth, depth],
-    typeof dataOrDepth === "object",
+    typeof dataOrDepth !== "number",
   );
 }
 

@@ -3,6 +3,7 @@ import type { Mapped } from "./internal/types/Mapped";
 import { mapCallback } from "./internal/utilityEvaluators";
 import { isArray } from "./isArray";
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -23,9 +24,9 @@ import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
  * @lazy
  * @category Array
  */
-export function map<T extends Iterable<unknown>, U>(
+export function map<T extends IterableContainer, U>(
   data: T,
-  callbackfn: ArrayMethodCallback<T, U>,
+  callbackfn: (value: T[number], index: number, data: T) => U,
 ): Mapped<T, U>;
 
 /**
@@ -46,8 +47,8 @@ export function map<T extends Iterable<unknown>, U>(
  * @lazy
  * @category Array
  */
-export function map<T extends Iterable<unknown>, U>(
-  callbackfn: ArrayMethodCallback<T, U>,
+export function map<T extends IterableContainer, U>(
+  callbackfn: (value: T[number], index: number, data: T) => U,
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: ReadonlyArray<unknown>): unknown {

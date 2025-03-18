@@ -211,7 +211,6 @@ export function chunk<T extends IterableContainer, N extends number>(
   array: T,
   size: N,
 ): Chunk<T, N>;
-export function chunk<T>(data: Iterable<T>, size: number): Array<Array<T>>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
@@ -228,9 +227,7 @@ export function chunk<T>(data: Iterable<T>, size: number): Array<Array<T>>;
  */
 export function chunk<N extends number>(
   size: N,
-): <T extends Iterable<unknown>>(
-  array: T,
-) => T extends IterableContainer ? Chunk<T, N> : Iterable<Array<T>>;
+): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(chunkImplementation, lazyImplementation, args);
@@ -246,7 +243,7 @@ function chunkImplementation<T>(
 
   if (size < 1) {
     throw new RangeError(
-      `chunk: A chunk size of '${size.toString()}' would result in an infinite array'`,
+      `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
     );
   }
 

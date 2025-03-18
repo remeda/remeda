@@ -22,12 +22,11 @@ import { isArray } from "./isArray";
  * @example
  *    R.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  * @dataFirst
- * @lazy
  * @category Array
  */
-export function findIndex<T extends Iterable<unknown>>(
-  data: T,
-  predicate: ArrayMethodCallback<T, boolean>,
+export function findIndex<T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
 ): number;
 
 /**
@@ -51,12 +50,11 @@ export function findIndex<T extends Iterable<unknown>>(
  *      R.findIndex(n => n % 2 === 0)
  *    ); // => 2
  * @dataLast
- * @lazy
  * @category Array
  */
-export function findIndex<T extends Iterable<unknown>>(
-  predicate: ArrayMethodCallback<T, boolean>,
-): (data: T) => number;
+export function findIndex<T>(
+  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+): (data: ReadonlyArray<T>) => number;
 
 export function findIndex(...args: ReadonlyArray<unknown>): unknown {
   return doReduce(findIndexImplementation, args);

@@ -1,8 +1,8 @@
-import type { IterableElement } from "type-fest";
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import { isArray } from "./isArray";
 import doTransduce from "./internal/doTransduce";
 import { simplifyCallback } from "./internal/utilityEvaluators";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -18,10 +18,10 @@ import { simplifyCallback } from "./internal/utilityEvaluators";
  * @dataFirst
  * @category Array
  */
-export function dropWhile<T extends Iterable<unknown>>(
+export function dropWhile<T extends IterableContainer>(
   data: T,
-  predicate: ArrayMethodCallback<T, boolean>,
-): Array<IterableElement<T>>;
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): Array<T[number]>;
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -36,9 +36,9 @@ export function dropWhile<T extends Iterable<unknown>>(
  * @dataLast
  * @category Array
  */
-export function dropWhile<T extends Iterable<unknown>>(
-  predicate: ArrayMethodCallback<T, boolean>,
-): (data: T) => Array<IterableElement<T>>;
+export function dropWhile<T extends IterableContainer>(
+  predicate: (item: T[number], index: number, data: T) => boolean,
+): (data: T) => Array<T[number]>;
 
 export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(dropWhileImplementation, lazyImplemention, args);

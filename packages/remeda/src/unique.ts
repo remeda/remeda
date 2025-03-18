@@ -16,7 +16,6 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @category Array
  */
 export function unique<T extends IterableContainer>(data: T): Deduped<T>;
-export function unique<T>(data: Iterable<T>): Iterable<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -35,7 +34,6 @@ export function unique<T>(data: Iterable<T>): Iterable<T>;
  * @category Array
  */
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
-export function unique(): <T>(data: Iterable<T>) => Iterable<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(undefined, lazyImplementation, args);

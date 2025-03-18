@@ -21,14 +21,14 @@ import { mapCallback } from "./internal/utilityEvaluators";
  * @lazy
  * @category Array
  */
-export function filter<E, S extends E>(
-  data: Iterable<E>,
-  predicate: (value: E, index: number, data: ReadonlyArray<E>) => value is S,
+export function filter<T, S extends T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): Array<S>;
-export function filter<E>(
-  data: Iterable<E>,
-  predicate: (value: E, index: number, data: ReadonlyArray<E>) => boolean,
-): Array<E>;
+export function filter<T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): Array<T>;
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -48,12 +48,12 @@ export function filter<E>(
  * @lazy
  * @category Array
  */
-export function filter<E, S extends E>(
-  predicate: (value: E, index: number, data: ReadonlyArray<E>) => value is S,
-): (data: Iterable<E>) => Array<S>;
-export function filter<E>(
-  predicate: (value: E, index: number, data: ReadonlyArray<E>) => boolean,
-): (data: Iterable<E>) => Array<E>;
+export function filter<T, S extends T>(
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+): (data: ReadonlyArray<T>) => Array<S>;
+export function filter<T>(
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(filterImplementation, lazyImplementation, args);

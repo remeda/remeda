@@ -25,8 +25,8 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
-  array: Iterable<TFirst>,
-  other: Iterable<TSecond>,
+  array: ReadonlyArray<TFirst>,
+  other: ReadonlyArray<TSecond>,
   comparator: Comparator<TFirst, TSecond>,
 ): Array<TFirst>;
 
@@ -51,7 +51,7 @@ export function intersectionWith<TFirst, TSecond>(
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
-  other: Iterable<TSecond>,
+  other: ReadonlyArray<TSecond>,
   /**
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
