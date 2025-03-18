@@ -103,14 +103,13 @@ export function flat<Depth extends number = 1>(
 ): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 
 export function flat(
-  dataOrDepth?: IterableContainer | number,
-  depth?: number,
+  ...args: readonly [dataOrDepth?: IterableContainer | number, depth?: number]
 ): unknown {
   return doTransduce(
     flatImplementation,
     lazyImplementation,
-    [dataOrDepth, depth],
-    typeof dataOrDepth !== "number",
+    args,
+    typeof args[0] === "object",
   );
 }
 
