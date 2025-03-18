@@ -1,7 +1,7 @@
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import { isArray } from "./isArray";
 import doTransduce from "./internal/doTransduce";
-import { simplifyCallback } from "./internal/utilityEvaluators";
+import { mapCallback } from "./internal/utilityEvaluators";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
@@ -64,15 +64,19 @@ function* lazyImplemention<T>(
   data: Iterable<T>,
   predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
 ): Iterable<T> {
-  const simplePredicate = simplifyCallback(predicate, data);
   let dropping = true;
-  for (const item of data) {
-    if (dropping) {
-      if (simplePredicate(item)) {
-        continue;
-      }
-      dropping = false;
+  for (const [item, flag] of mapCallback(data, (itemArg, index, dataArg) => {
+    if (!dropping) {
+      return false;
     }
-    yield item;
+    if (!predicate(itemArg, index, dataArg)) {
+      dropping = false;
+      return false;
+    }
+    return true;
+  })) {
+    if (!flag) {
+      yield item;
+    }
   }
 }

@@ -38,23 +38,6 @@
  *    }
  * @category Function
  */
-export function purry<Data, Rest extends ReadonlyArray<unknown>, Result>(
-  fn: (data: Data, ...rest: Rest) => Result,
-  args: readonly [Data, ...Rest],
-): Result;
-export function purry<Data, Rest extends ReadonlyArray<unknown>, Result>(
-  fn: (data: Data, ...rest: Rest) => Result,
-  args: Rest,
-): (data: Data) => Result;
-export function purry<Data, Rest extends ReadonlyArray<unknown>, Result>(
-  fn: (data: Data, ...rest: Rest) => Result,
-  args: readonly [Data, ...Rest] | Rest,
-): Result | ((data: Data) => Result);
-export function purry(
-  fn: (...args: any) => unknown,
-  args: ReadonlyArray<unknown>,
-): unknown;
-
 export function purry(
   fn: (...args: any) => unknown,
   args: ReadonlyArray<unknown>,

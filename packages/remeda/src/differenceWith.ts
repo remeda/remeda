@@ -64,7 +64,9 @@ function* lazyImplementation<TFirst, TSecond>(
   other: Iterable<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ): Iterable<TFirst> {
-  other = memoizeIterable(other);
+  if (!Array.isArray(other)) {
+    other = memoizeIterable(other);
+  }
   for (const value of data) {
     let anyEqual = false;
     for (const otherValue of other) {
