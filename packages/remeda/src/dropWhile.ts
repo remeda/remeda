@@ -16,6 +16,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @example
  *    R.dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(
@@ -34,6 +35,7 @@ export function dropWhile<T extends IterableContainer>(
  * @example
  *    R.pipe([1, 2, 10, 3, 4], R.dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(

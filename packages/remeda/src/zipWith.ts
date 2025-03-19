@@ -30,6 +30,7 @@ type ZippingFunction<
  *   R.zipWith(fn)(first, second)
  * @example
  *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ * @lazy
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
