@@ -1,7 +1,6 @@
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import doReduce from "./internal/doReduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { Reducer } from "./internal/types/LazyFunc";
 import { mapCallback } from "./internal/utilityEvaluators";
 
 type SumBy<
@@ -41,11 +40,11 @@ type SumBy<
  * @category Array
  */
 export function sumBy<T extends IterableContainer>(
-  callbackfn: ArrayMethodCallback<T, number>,
-): Reducer<T, SumBy<T, number>>;
+  callbackfn: (value: T[number], index: number, data: T) => number,
+): (items: T) => SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
-  callbackfn: ArrayMethodCallback<T, bigint>,
-): Reducer<T, SumBy<T, bigint>>;
+  callbackfn: (value: T[number], index: number, data: T) => bigint,
+): (items: T) => SumBy<T, bigint>;
 
 /**
  * Returns the sum of the elements of an array using the provided mapper.
@@ -77,11 +76,11 @@ export function sumBy<T extends IterableContainer>(
 
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: ArrayMethodCallback<T, number>,
+  callbackfn: (value: T[number], index: number, data: T) => number,
 ): SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: ArrayMethodCallback<T, bigint>,
+  callbackfn: (value: T[number], index: number, data: T) => bigint,
 ): SumBy<T, bigint>;
 
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {

@@ -7,8 +7,5 @@ export type ArrayMethodCallback<T extends Iterable<unknown>, R = unknown> = (
   data: ArrayMethodCallbackDataArg<T>,
 ) => R;
 
-export type ArrayMethodCallbackDataArg<T extends Iterable<unknown>> = [
-  T,
-] extends [IterableContainer]
-  ? T
-  : ReadonlyArray<IterableElement<T>>;
+export type ArrayMethodCallbackDataArg<T extends Iterable<unknown>> =
+  T extends IterableContainer ? T : ReadonlyArray<IterableElement<T>>;

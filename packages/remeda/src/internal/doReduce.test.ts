@@ -4,8 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, it, expect } from "vitest";
 import doReduce from "./doReduce";
+import type { LazyReducerImpl } from "./types/LazyFunc";
 
-const impl = (data: Iterable<number>, arg1: number): number =>
+const impl: LazyReducerImpl<number, [number], number> = (data, arg1) =>
   [...data].reduce((acc, val) => acc + val, arg1);
 
 describe("doReduce", () => {

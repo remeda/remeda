@@ -101,7 +101,6 @@ export * from "./pick";
 export * from "./pickBy";
 export * from "./pipe";
 export * from "./piped";
-export * from "./prepend";
 export * from "./product";
 export * from "./prop";
 export * from "./pullObject";
