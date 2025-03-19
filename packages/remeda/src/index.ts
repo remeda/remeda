@@ -151,7 +151,7 @@ export * from "./toSnakeCase";
 export * from "./toUpperCase";
 export * from "./uncapitalize";
 export * from "./unique";
-export * from "./unfold";
+export * from "./internal/unfold";
 export * from "./uniqueBy";
 export * from "./uniqueWith";
 export * from "./values";

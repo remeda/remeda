@@ -1,7 +1,6 @@
 import doTransduce from "./internal/doTransduce";
 import type { Mapped } from "./internal/types/Mapped";
 import { mapCallback } from "./internal/utilityEvaluators";
-import { isArray } from "./isArray";
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 
@@ -56,13 +55,10 @@ export function map(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function mapImplementation<T, U>(
-  data: Iterable<T>,
+  data: ReadonlyArray<T>,
   callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
 ): Array<U> {
-  if (isArray(data)) {
-    return data.map(callbackfn);
-  }
-  return [...lazyImplementation(data, callbackfn)];
+  return data.map(callbackfn);
 }
 
 function* lazyImplementation<T, U>(

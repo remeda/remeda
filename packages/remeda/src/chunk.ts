@@ -11,7 +11,6 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { isArray } from "./isArray";
 import doTransduce from "./internal/doTransduce";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
@@ -234,13 +233,9 @@ export function chunk(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function chunkImplementation<T>(
-  data: Iterable<T>,
+  data: IterableContainer<T>,
   size: number,
 ): Array<Array<T>> {
-  if (!isArray(data)) {
-    return [...lazyImplementation(data, size)];
-  }
-
   if (size < 1) {
     throw new RangeError(
       `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
@@ -281,7 +276,9 @@ function* lazyImplementation<T>(
   size: number,
 ): Iterable<Array<T>> {
   if (size < 1) {
-    throw new RangeError(`chunk: Invalid chunk size '${size.toString()}'`);
+    throw new RangeError(
+      `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
+    );
   }
 
   if (size === 1) {

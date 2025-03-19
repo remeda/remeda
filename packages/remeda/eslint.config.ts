@@ -476,6 +476,11 @@ export default tseslint.config(
 
       // TODO: This rule might be useful to guide people to break tests into smaller tests that only expect one thing, but there's no reasonable max value we can configure it to that won't end up feeling arbitrary and noisy.
       "vitest/max-expects": "off",
+
+      "vitest/require-hook": [
+        "warn",
+        { allowedFunctionCalls: ["describeIterableArg", "describeWithPipe"] },
+      ],
     },
   },
   {

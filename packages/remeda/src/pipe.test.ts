@@ -1,10 +1,12 @@
 import { filter } from "./filter";
+import { first } from "./first";
 import { flat } from "./flat";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
+import { unfold } from "./internal/unfold";
 
 it("should pass through data with 0 functions", () => {
   const data = { a: "hello", b: 123 };
@@ -143,5 +145,32 @@ describe("lazy", () => {
     );
 
     expect(result).toStrictEqual([1, 2]);
+  });
+
+  test("with producer", () => {
+    const results = pipe(
+      0,
+      unfold((x) => (x > 5 ? undefined : [x, x + 1])),
+    );
+
+    expect(results).toStrictEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  test("with two producers", () => {
+    const results = pipe(
+      0,
+      unfold((x: number) => (x > 5 ? undefined : [x, x + 1])),
+      unfold((x: ReadonlyArray<number>) =>
+        x.length > 0 ? [x.length, x.slice(1)] : undefined,
+      ),
+    );
+
+    expect(results).toStrictEqual([6, 5, 4, 3, 2, 1]);
+  });
+
+  test("with reducer", () => {
+    const result = pipe([1, 2, 3], map(identity()), first());
+
+    expect(result).toBe(1);
   });
 });

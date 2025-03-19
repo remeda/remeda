@@ -1,6 +1,4 @@
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { isArray } from "./isArray";
-import { unsafeToArray } from "./internal/unsafeToArray";
 import doTransduce from "./internal/doTransduce";
 
 type IterableZippingFunction<T1 = unknown, T2 = unknown, Value = unknown> = (
@@ -106,19 +104,15 @@ export function zipWith(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function zipWithImplementation<T1, T2, Value>(
-  first: Iterable<T1>,
-  second: Iterable<T2>,
+  first: ReadonlyArray<T1>,
+  second: ReadonlyArray<T2>,
   fn: IterableZippingFunction<T1, T2, Value>,
 ): Array<Value> {
-  if (isArray(first) && isArray(second)) {
-    const datum = [first, second] as const;
-    if (first.length < second.length) {
-      return first.map((item, index) => fn(item, second[index]!, index, datum));
-    }
-    return second.map((item, index) => fn(first[index]!, item, index, datum));
+  const datum = [first, second] as const;
+  if (first.length < second.length) {
+    return first.map((item, index) => fn(item, second[index]!, index, datum));
   }
-
-  return unsafeToArray(lazyImplementation(first, second, fn));
+  return second.map((item, index) => fn(first[index]!, item, index, datum));
 }
 
 function* lazyImplementation<T1, T2, Value>(

@@ -1,5 +1,4 @@
 import doTransduce from "./internal/doTransduce";
-import { memoizeIterable } from "./internal/memoizeIterable";
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -61,12 +60,9 @@ export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
 
 function* lazyImplementation<TFirst, TSecond>(
   data: Iterable<TFirst>,
-  other: Iterable<TSecond>,
+  other: ReadonlyArray<TSecond>,
   isEquals: IsEquals<TFirst, TSecond>,
 ): Iterable<TFirst> {
-  if (!Array.isArray(other)) {
-    other = memoizeIterable(other);
-  }
   for (const value of data) {
     let anyEqual = false;
     for (const otherValue of other) {

@@ -1,7 +1,7 @@
 import { unfold } from "./unfold";
-import { constant } from "./constant";
-import { take } from "./take";
-import { pipe } from "./pipe";
+import { constant } from "../constant";
+import { take } from "../take";
+import { pipe } from "../pipe";
 
 describe("unfold", () => {
   it("should generate a sequence of numbers", () => {

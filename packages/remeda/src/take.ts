@@ -1,7 +1,5 @@
 import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { unsafeToArray } from "./internal/unsafeToArray";
-import { isArray } from "./isArray";
 
 /**
  * Returns the first `n` elements of `array`.
@@ -41,11 +39,8 @@ export function take(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(takeImplementation, lazyImplementation, args);
 }
 
-function takeImplementation<T>(input: Iterable<T>, n: number): Array<T> {
-  if (isArray(input)) {
-    return n < 0 ? [] : input.slice(0, n);
-  }
-  return unsafeToArray(lazyImplementation(input, n));
+function takeImplementation<T>(input: ReadonlyArray<T>, n: number): Array<T> {
+  return n < 0 ? [] : input.slice(0, n);
 }
 
 function* lazyImplementation<T>(input: Iterable<T>, n: number): Iterable<T> {

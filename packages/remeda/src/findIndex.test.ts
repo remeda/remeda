@@ -1,5 +1,5 @@
 import { findIndex } from "./findIndex";
-import { pipe } from "./pipe";
+import { describeWithPipe } from "./internal/describeWithPipe";
 
 describe("data first", () => {
   test("found", () => {
@@ -11,7 +11,7 @@ describe("data first", () => {
   });
 });
 
-describe("data last", () => {
+describeWithPipe("data last", (pipe) => {
   test("found", () => {
     expect(
       pipe(

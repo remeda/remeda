@@ -1,5 +1,4 @@
 import doTransduce from "./internal/doTransduce";
-import { isArray } from "./isArray";
 import { mapCallback } from "./internal/utilityEvaluators";
 
 /**
@@ -60,13 +59,10 @@ export function filter(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function filterImplementation<T>(
-  data: Iterable<T>,
+  data: ReadonlyArray<T>,
   predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
 ): Array<T> {
-  if (isArray(data)) {
-    return data.filter(predicate);
-  }
-  return [...lazyImplementation(data, predicate)];
+  return data.filter(predicate);
 }
 
 function* lazyImplementation<T>(

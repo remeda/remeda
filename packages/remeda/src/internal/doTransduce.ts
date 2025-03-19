@@ -1,3 +1,5 @@
+import { toReadonlyArray } from "./toReadonlyArray";
+import type { IterableContainer } from "./types/IterableContainer";
 import type {
   EagerTransducer,
   EagerTransducerImpl,
@@ -38,11 +40,11 @@ export default function doTransduce<
   }
 
   if (isDataFirst) {
-    return eager(...(args as readonly [Iterable<Data>, ...Rest]));
+    return eager(...(args as readonly [IterableContainer<Data>, ...Rest]));
   }
 
   const dataLast: EagerTransducer<Data, Result> = (data): Array<Result> =>
-    eager(data, ...(args as Rest));
+    eager(toReadonlyArray(data), ...(args as Rest));
   return Object.assign(dataLast, {
     lazy: (data: Iterable<Data>) => lazy(data, ...(args as Rest)),
     lazyKind: "transducer",

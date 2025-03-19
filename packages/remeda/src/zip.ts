@@ -1,7 +1,5 @@
 import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { unsafeToArray } from "./internal/unsafeToArray";
-import { isArray } from "./isArray";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
   // If the array is empty the output is empty, no surprises
@@ -66,17 +64,13 @@ export function zip(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function zipImplementation<F, S>(
-  first: Iterable<F>,
-  second: Iterable<S>,
+  first: ReadonlyArray<F>,
+  second: ReadonlyArray<S>,
 ): Array<[F, S]> {
-  if (isArray(first) && isArray(second)) {
-    if (first.length < second.length) {
-      return first.map((item, index) => [item, second[index]!]);
-    }
-    return second.map((item, index) => [first[index]!, item]);
+  if (first.length < second.length) {
+    return first.map((item, index) => [item, second[index]!]);
   }
-
-  return unsafeToArray(lazyImplementation(first, second));
+  return second.map((item, index) => [first[index]!, item]);
 }
 
 function* lazyImplementation<F, S>(

@@ -1,4 +1,4 @@
-import doProduce from "./internal/doProduce";
+import doProduce from "./doProduce";
 
 /**
  * Generates a list of values by unfolding a seed value.

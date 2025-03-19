@@ -9,6 +9,8 @@
 // - Eager*Impl: A function contining the eager implementation of an effect.
 // - *: An eager effect that contains additional fields to support a lazy implementation.
 
+import type { IterableContainer } from "./IterableContainer";
+
 export type LazyOp =
   | Producer<unknown, unknown>
   | Transducer<unknown, unknown>
@@ -47,7 +49,7 @@ export type EagerTransducerImpl<
   Data,
   Args extends ReadonlyArray<unknown>,
   Result,
-> = (data: Iterable<Data>, ...args: Args) => Array<Result>;
+> = (data: IterableContainer<Data>, ...args: Args) => Array<Result>;
 
 export type EagerTransducer<Data, Result> = (
   data: Iterable<Data>,

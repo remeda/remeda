@@ -4,8 +4,6 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
 import type { TupleParts } from "./internal/types/TupleParts";
 import doTransduce from "./internal/doTransduce";
-import { isArray } from "./isArray";
-import { unsafeToArray } from "./internal/unsafeToArray";
 
 type Drop<T extends IterableContainer, N extends number> =
   IsNegative<N> extends true
@@ -115,14 +113,11 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
   return doTransduce(dropImplementation, lazyImplementation, args);
 }
 
-function dropImplementation<T>(data: Iterable<T>, n: number): Array<T> {
+function dropImplementation<T>(data: ReadonlyArray<T>, n: number): Array<T> {
   if (n < 0) {
     return [...data];
   }
-  if (isArray(data)) {
-    return data.slice(n);
-  }
-  return unsafeToArray(lazyImplementation(data, n));
+  return data.slice(n);
 }
 
 function* lazyImplementation<T>(data: Iterable<T>, n: number): Iterable<T> {

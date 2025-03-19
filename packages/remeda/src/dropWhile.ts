@@ -1,5 +1,4 @@
 import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
-import { isArray } from "./isArray";
 import doTransduce from "./internal/doTransduce";
 import { mapCallback } from "./internal/utilityEvaluators";
 import type { IterableContainer } from "./internal/types/IterableContainer";
@@ -47,13 +46,9 @@ export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function dropWhileImplementation<T>(
-  data: Iterable<T>,
+  data: ReadonlyArray<T>,
   predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
 ): Array<T> {
-  if (!isArray(data)) {
-    return [...lazyImplemention(data, predicate)];
-  }
-
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
