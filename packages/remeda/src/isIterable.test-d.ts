@@ -14,7 +14,7 @@ it("should work as type guard", () => {
       | Map<string, string>
       | Set<string>
       | [number, number, number]
-      | Uint8Array<ArrayBuffer>
+      | Uint8Array
     >();
   }
 });
@@ -29,7 +29,7 @@ it("should work as type guard in filter", () => {
       | Map<string, string>
       | Set<string>
       | [number, number, number]
-      | Uint8Array<ArrayBuffer>
+      | Uint8Array
     >
   >();
 });

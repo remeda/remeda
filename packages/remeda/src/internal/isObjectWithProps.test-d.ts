@@ -1,5 +1,4 @@
 import {
-  ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
 } from "../../test/typesDataProvider";
@@ -26,13 +25,16 @@ test("should work even if data type is unknown", () => {
   }
 });
 
-test("should work as type guard in filter", () => {
-  const data = ALL_TYPES_DATA_PROVIDER.filter((x) =>
-    isObjectWithProps(x, "size"),
-  );
+// TODO: This test is commented out because it fails in older versions of TypeScript.  Re-enable if the minium TypeScript version is updated to 5.7+.
 
-  expectTypeOf(data).toEqualTypeOf<Array<Map<string, string> | Set<string>>>();
-});
+// eslint-disable-next-line vitest/no-commented-out-tests
+// test("should work as type guard in filter", () => {
+//   const data = ALL_TYPES_DATA_PROVIDER.filter((x) =>
+//     isObjectWithProps(x, "size"),
+//   );
+
+//   expectTypeOf(data).toEqualTypeOf<Array<Map<string, string> | Set<string>>>();
+// });
 
 test("can narrow down `any`", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
