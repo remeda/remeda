@@ -10,7 +10,7 @@
     "remeda": "*"
   },
   "devDependencies": {
-    "parcel": "^2.13.3",
+    "parcel": "^2.14.4",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   }
