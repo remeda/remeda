@@ -1,25 +1,17 @@
-import type { LazyResult } from "./types/LazyResult";
+import { isArray } from "../isArray";
+import type { ArrayMethodCallback } from "./types/ArrayMethodCallback";
 
-const EMPTY_PIPE = { done: true, hasNext: false } as const;
-
-/**
- * A singleton value for skipping an item in a lazy evaluator.
- */
-export const SKIP_ITEM = { done: false, hasNext: false } as const;
-
-/**
- * A helper evaluator when we want to return an empty result. It memoizes both
- * the result and the evaluator itself to reduce memory usage.
- */
-export const lazyEmptyEvaluator = <T>(): LazyResult<T> => EMPTY_PIPE;
-
-/**
- * A helper evaluator when we want to return a shallow clone of the input. It
- * memoizes both the evaluator itself to reduce memory usage.
- */
-export const lazyIdentityEvaluator = <T>(value: T) =>
-  ({
-    hasNext: true,
-    next: value,
-    done: false,
-  }) as const;
+export function* mapCallback<T, U>(
+  data: Iterable<T>,
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
+): Iterable<[T, U]> {
+  let index = 0;
+  let writableData: Array<T> | undefined;
+  const dataArg: ReadonlyArray<T> = isArray(data) ? data : (writableData = []);
+  for (const value of data) {
+    if (writableData !== undefined) {
+      writableData.push(value);
+    }
+    yield [value, callbackfn(value, index++, dataArg)];
+  }
+}

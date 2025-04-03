@@ -1,7 +1,7 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
+import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
+import { isArray } from "./isArray";
 
 /**
  * Applies a function on each element of the array, using the result of the
@@ -69,10 +69,11 @@ export function mapWithFeedback<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return doTransduce(undefined, lazyImplementation, args);
 }
 
-const lazyImplementation = <T, U>(
+function* lazyImplementation<T, U>(
+  data: Iterable<T>,
   reducer: (
     previousValue: U,
     currentValue: T,
@@ -80,10 +81,16 @@ const lazyImplementation = <T, U>(
     data: ReadonlyArray<T>,
   ) => U,
   initialValue: U,
-): LazyEvaluator<T, U> => {
+): Iterable<U> {
+  let index = 0;
   let previousValue = initialValue;
-  return (currentValue, index, data) => {
-    previousValue = reducer(previousValue, currentValue, index, data);
-    return { done: false, hasNext: true, next: previousValue };
-  };
-};
+  let writableData: Array<T> | undefined;
+  const dataArg: ReadonlyArray<T> = isArray(data) ? data : (writableData = []);
+  for (const value of data) {
+    if (writableData !== undefined) {
+      writableData.push(value);
+    }
+    previousValue = reducer(previousValue, value, index++, dataArg);
+    yield previousValue;
+  }
+}

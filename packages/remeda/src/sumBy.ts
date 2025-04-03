@@ -1,5 +1,7 @@
-import { purry } from "./purry";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
+import doReduce from "./internal/doReduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import { mapCallback } from "./internal/utilityEvaluators";
 
 type SumBy<
   T extends IterableContainer,
@@ -82,34 +84,22 @@ export function sumBy<T extends IterableContainer>(
 ): SumBy<T, bigint>;
 
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {
-  return purry(sumByImplementation, args);
+  return doReduce(sumByImplementation, args);
 }
 
 const sumByImplementation = <T>(
-  array: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => bigint | number,
+  data: Iterable<T>,
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, bigint | number>,
 ): bigint | number => {
-  const iter = array.entries();
-
-  const firstEntry = iter.next();
-  if (firstEntry.done ?? false) {
-    return 0;
+  let sum: number | bigint | undefined;
+  for (const [, summand] of mapCallback(data, callbackfn)) {
+    if (sum === undefined) {
+      sum = summand;
+    } else {
+      // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      sum += summand;
+    }
   }
-
-  const {
-    value: [, firstValue],
-  } = firstEntry;
-  let sum = callbackfn(firstValue, 0, array);
-  for (const [index, item] of iter) {
-    const summand = callbackfn(item, index, array);
-
-    // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    sum += summand;
-  }
-  return sum;
+  return sum ?? 0;
 };
