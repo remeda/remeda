@@ -1,5 +1,6 @@
 import { purry } from "./purry";
 import type { ExactRecord } from "./internal/types/ExactRecord";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -56,7 +57,7 @@ export function countBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 const countByImplementation = <T>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   categorizationFn: (
     value: T,
     index: number,
@@ -65,8 +66,9 @@ const countByImplementation = <T>(
 ): ExactRecord<PropertyKey, number> => {
   const out = new Map<PropertyKey, number>();
 
-  for (const [index, item] of data.entries()) {
-    const category = categorizationFn(item, index, data);
+  const array = toReadonlyArray(data);
+  for (const [index, item] of array.entries()) {
+    const category = categorizationFn(item, index, array);
     if (category !== undefined) {
       const count = out.get(category);
       if (count === undefined) {

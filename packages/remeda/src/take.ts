@@ -1,7 +1,5 @@
+import doTransduce from "./internal/doTransduce";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
 
 /**
  * Returns the first `n` elements of `array`.
@@ -38,22 +36,21 @@ export function take(
 ): <T extends IterableContainer>(array: T) => Array<T[number]>;
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
-  return purry(takeImplementation, args, lazyImplementation);
+  return doTransduce(takeImplementation, lazyImplementation, args);
 }
 
-const takeImplementation = <T extends IterableContainer>(
-  array: T,
-  n: number,
-): Array<T[number]> => (n < 0 ? [] : array.slice(0, n));
+function takeImplementation<T>(input: ReadonlyArray<T>, n: number): Array<T> {
+  return n < 0 ? [] : input.slice(0, n);
+}
 
-function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  if (n <= 0) {
-    return lazyEmptyEvaluator;
+function* lazyImplementation<T>(input: Iterable<T>, n: number): Iterable<T> {
+  if (n > 0) {
+    for (const item of input) {
+      yield item;
+      n--;
+      if (n <= 0) {
+        break;
+      }
+    }
   }
-
-  let remaining = n;
-  return (value) => {
-    remaining -= 1;
-    return { done: remaining <= 0, hasNext: true, next: value };
-  };
 }
