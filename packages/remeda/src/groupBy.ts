@@ -80,19 +80,21 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
     data: ReadonlyArray<T>,
   ) => Key | undefined,
 ): ExactRecord<Key, NonEmptyArray<T>> => {
-  const output = new Map<Key, Array<T>>();
+  const output: Partial<Record<Key, Array<T>>> = {};
 
   for (const [index, item] of data.entries()) {
     const key = callbackfn(item, index, data);
     if (key !== undefined) {
-      let items = output.get(key);
+      let items = Object.getOwnPropertyDescriptor(output, key)?.value as
+        | Array<T>
+        | undefined;
       if (items === undefined) {
         items = [];
-        output.set(key, items);
+        output[key] = items;
       }
       items.push(item);
     }
   }
 
-  return Object.fromEntries(output) as ExactRecord<Key, NonEmptyArray<T>>;
+  return output as ExactRecord<Key, NonEmptyArray<T>>;
 };
