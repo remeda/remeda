@@ -1,6 +1,7 @@
+import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
-declare function tupleParts<T>(x: T): TupleParts<T>;
+declare function tupleParts<T extends IterableContainer>(x: T): TupleParts<T>;
 
 describe("mutable", () => {
   test("empty array", () => {
