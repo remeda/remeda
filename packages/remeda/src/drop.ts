@@ -1,11 +1,9 @@
 import type { IsInteger, IsNegative, Subtract } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NTuple } from "./internal/types/NTuple";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
-import { purry } from "./purry";
+import doTransduce from "./internal/doTransduce";
 
 type Drop<T extends IterableContainer, N extends number> =
   IsNegative<N> extends true
@@ -112,25 +110,26 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
-  return purry(dropImplementation, args, lazyImplementation);
+  return doTransduce(dropImplementation, lazyImplementation, args);
 }
 
-const dropImplementation = <T extends IterableContainer>(
-  array: T,
-  n: number,
-): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
+function dropImplementation<T>(data: ReadonlyArray<T>, n: number): Array<T> {
+  if (n < 0) {
+    return [...data];
+  }
+  return data.slice(n);
+}
 
-function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+function* lazyImplementation<T>(data: Iterable<T>, n: number): Iterable<T> {
   if (n <= 0) {
-    return lazyIdentityEvaluator;
+    yield* data;
+    return;
   }
 
-  let left = n;
-  return (value) => {
-    if (left > 0) {
-      left -= 1;
-      return SKIP_ITEM;
+  let i = 0;
+  for (const value of data) {
+    if (i++ >= n) {
+      yield value;
     }
-    return { done: false, hasNext: true, next: value };
-  };
+  }
 }

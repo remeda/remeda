@@ -3,6 +3,7 @@ import { purryOrderRules, type OrderRule } from "./internal/purryOrderRules";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 
 type FirstBy<T extends IterableContainer> =
   | T[number]
@@ -75,18 +76,20 @@ export function firstBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function firstByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   compareFn: CompareFunction<T>,
 ): T | undefined {
-  if (!hasAtLeast(data, 2)) {
+  const array = toReadonlyArray(data);
+
+  if (!hasAtLeast(array, 2)) {
     // If we have 0 or 1 item we simply return the trivial result.
-    return data[0];
+    return array[0];
   }
 
-  let [currentFirst] = data;
+  let [currentFirst] = array;
 
   // Remove the first item, we won't compare it with itself.
-  const [, ...rest] = data;
+  const [, ...rest] = array;
   for (const item of rest) {
     if (compareFn(item, currentFirst) < 0) {
       // item comes before currentFirst in the order.

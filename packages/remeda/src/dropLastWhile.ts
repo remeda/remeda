@@ -1,5 +1,7 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
 import { purry } from "./purry";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -41,13 +43,14 @@ export function dropLastWhile(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropLastWhileImplementation, args);
 }
 
-function dropLastWhileImplementation<T extends IterableContainer>(
-  data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
-  for (let i = data.length - 1; i >= 0; i--) {
-    if (!predicate(data[i], i, data)) {
-      return data.slice(0, i + 1);
+function dropLastWhileImplementation<T>(
+  data: Iterable<T>,
+  predicate: ArrayMethodCallback<ReadonlyArray<T>, boolean>,
+): Array<T> {
+  const array = toReadonlyArray(data);
+  for (let i = array.length - 1; i >= 0; i--) {
+    if (!predicate(array[i]!, i, array)) {
+      return array.slice(0, i + 1);
     }
   }
   return [];
