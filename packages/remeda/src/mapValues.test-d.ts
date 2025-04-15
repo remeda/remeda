@@ -118,7 +118,8 @@ test("number keys are converted to string in the mapper", () => {
   });
 });
 
-test("number keys are preserved in the resulting object", () => {
+// @see https://github.com/remeda/remeda/issues/1071
+test("number keys are preserved in the resulting object (issue #1071)", () => {
   const data = {} as Record<number, unknown>;
 
   const dataFirst = mapValues(data, constant(true));
