@@ -40,7 +40,6 @@ export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): (array: T) => Array<T[number]>;
 
-
 export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
   return purry(takeWhileImplementation, args);
 }
