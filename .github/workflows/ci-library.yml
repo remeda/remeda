@@ -175,7 +175,7 @@ jobs:
       - name: 🚀 Release
         run: |
           npm run --workspace=remeda release
-          npm exec --workspace=remeda jsr publish
+          npm exec --workspace=remeda jsr publish --unstable-sloppy-imports --allow-slow-types
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
