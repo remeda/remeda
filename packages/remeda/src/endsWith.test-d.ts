@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion --
- * This is required to write the tests properly, otherwise vitest fails to
- * assert that our input data is a `const`.
- */
-
 import { partition } from "./partition";
 import { endsWith } from "./endsWith";
 

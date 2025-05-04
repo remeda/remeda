@@ -63,7 +63,7 @@ function medianImplementation<T extends IterableContainer<number>>(
     return undefined;
   }
 
-  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
+  // TODO [2025-08-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   const sortedData = [...data].sort(numberComparator);
 
   // For odd length, return the middle element
