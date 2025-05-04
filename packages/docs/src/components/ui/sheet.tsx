@@ -3,27 +3,31 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
-function Sheet({ ...props }: ComponentProps<typeof SheetPrimitive.Root>) {
+export function Sheet({
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger({
+export function SheetTrigger({
   ...props
 }: ComponentProps<typeof SheetPrimitive.Trigger>) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
-function SheetClose({ ...props }: ComponentProps<typeof SheetPrimitive.Close>) {
+export function SheetClose({
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Close>) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
-function SheetPortal({
+export function SheetPortal({
   ...props
 }: ComponentProps<typeof SheetPrimitive.Portal>) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
-function SheetOverlay({
+export function SheetOverlay({
   className,
   ...props
 }: ComponentProps<typeof SheetPrimitive.Overlay>) {
@@ -31,7 +35,7 @@ function SheetOverlay({
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
         className,
       )}
       {...props}
@@ -39,7 +43,7 @@ function SheetOverlay({
   );
 }
 
-function SheetContent({
+export function SheetContent({
   className,
   children,
   side = "right",
@@ -76,7 +80,7 @@ function SheetContent({
   );
 }
 
-function SheetHeader({ className, ...props }: ComponentProps<"div">) {
+export function SheetHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
@@ -86,7 +90,7 @@ function SheetHeader({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-function SheetFooter({ className, ...props }: ComponentProps<"div">) {
+export function SheetFooter({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
@@ -96,7 +100,7 @@ function SheetFooter({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-function SheetTitle({
+export function SheetTitle({
   className,
   ...props
 }: ComponentProps<typeof SheetPrimitive.Title>) {
@@ -109,7 +113,7 @@ function SheetTitle({
   );
 }
 
-function SheetDescription({
+export function SheetDescription({
   className,
   ...props
 }: ComponentProps<typeof SheetPrimitive.Description>) {
@@ -121,14 +125,3 @@ function SheetDescription({
     />
   );
 }
-
-export {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-};
