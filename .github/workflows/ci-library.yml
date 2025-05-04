@@ -149,6 +149,9 @@ jobs:
 
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -170,7 +173,9 @@ jobs:
         run: npm run --workspace=remeda lint:build
 
       - name: 🚀 Release
-        run: npm run --workspace=remeda release
+        run: |
+          npm run --workspace=remeda release
+          npm exec --workspace=remeda jsr publish
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
