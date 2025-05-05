@@ -30,7 +30,7 @@ const signature = tagContent(blockTags, "signature");
 <section class="flex flex-col gap-2">
   {
     variant !== undefined && (
-      <h6 class="text-secondary-foreground text-sm font-bold">{variant}</h6>
+      <h6 class="text-sm font-bold text-secondary-foreground">{variant}</h6>
     )
   }
   <MethodSignature type={type} parameters={parameters} client:load>
