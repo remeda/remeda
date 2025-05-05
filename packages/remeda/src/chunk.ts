@@ -11,7 +11,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
 import type { TupleParts } from "./internal/types/TupleParts";
-import { purry } from "./purry";
+import doTransduce from "./internal/doTransduce";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
 // allows the typing to remain useful even when very large chunks are needed,
@@ -203,6 +203,7 @@ type GenericChunk<T extends IterableContainer> = T extends
  *    R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function chunk<T extends IterableContainer, N extends number>(
@@ -220,6 +221,7 @@ export function chunk<T extends IterableContainer, N extends number>(
  *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function chunk<N extends number>(
@@ -227,11 +229,11 @@ export function chunk<N extends number>(
 ): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
-  return purry(chunkImplementation, args);
+  return doTransduce(chunkImplementation, lazyImplementation, args);
 }
 
 function chunkImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: IterableContainer<T>,
   size: number,
 ): Array<Array<T>> {
   if (size < 1) {
@@ -267,4 +269,37 @@ function chunkImplementation<T>(
   }
 
   return result;
+}
+
+function* lazyImplementation<T>(
+  data: Iterable<T>,
+  size: number,
+): Iterable<Array<T>> {
+  if (size < 1) {
+    throw new RangeError(
+      `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
+    );
+  }
+
+  if (size === 1) {
+    for (const item of data) {
+      yield [item];
+    }
+    return;
+  }
+
+  let nextChunk: Array<T> = [];
+
+  for (const item of data) {
+    nextChunk.push(item);
+
+    if (nextChunk.length === size) {
+      yield nextChunk;
+      nextChunk = [];
+    }
+  }
+
+  if (nextChunk.length > 0) {
+    yield nextChunk;
+  }
 }

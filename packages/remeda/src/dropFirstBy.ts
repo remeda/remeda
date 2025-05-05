@@ -3,6 +3,7 @@ import {
   purryOrderRulesWithArgument,
   type OrderRule,
 } from "./internal/purryOrderRules";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 import type { CompareFunction } from "./internal/types/CompareFunction";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
@@ -53,24 +54,26 @@ export function dropFirstBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function dropFirstByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   compareFn: CompareFunction<T>,
   n: number,
 ): Array<T> {
-  if (n >= data.length) {
+  const array = toReadonlyArray(data);
+
+  if (n >= array.length) {
     return [];
   }
 
   if (n <= 0) {
-    return [...data];
+    return [...array];
   }
 
-  const heap = data.slice(0, n);
+  const heap = array.slice(0, n);
   heapify(heap, compareFn);
 
   const out = [];
 
-  const rest = data.slice(n);
+  const rest = array.slice(n);
   for (const item of rest) {
     const previousHead = heapMaybeInsert(heap, compareFn, item);
     out.push(previousHead ?? item);

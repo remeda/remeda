@@ -1,5 +1,7 @@
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { purry } from "./purry";
+import doTransduce from "./internal/doTransduce";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
+import { mapCallback } from "./internal/utilityEvaluators";
+import { isArray } from "./isArray";
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -60,30 +62,31 @@ export function flatMap<T, U>(
 ): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
-  return purry(flatMapImplementation, args, lazyImplementation);
+  return doTransduce(flatMapImplementation, lazyImplementation, args);
 }
 
 const flatMapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
+  data: Iterable<T>,
   callbackfn: (
     value: T,
     index: number,
     data: ReadonlyArray<T>,
   ) => ReadonlyArray<U> | U,
-): Array<U> => data.flatMap(callbackfn);
+): Array<U> => toReadonlyArray(data).flatMap(callbackfn);
 
-const lazyImplementation =
-  <T, K>(
-    callbackfn: (
-      input: T,
-      index: number,
-      data: ReadonlyArray<T>,
-    ) => K | ReadonlyArray<K>,
-  ): LazyEvaluator<T, K> =>
-  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
-  (value, index, data) => {
-    const next = callbackfn(value, index, data);
-    return Array.isArray(next)
-      ? { done: false, hasNext: true, hasMany: true, next }
-      : { done: false, hasNext: true, next };
-  };
+function* lazyImplementation<T, K>(
+  data: Iterable<T>,
+  callbackfn: (
+    input: T,
+    index: number,
+    data: ReadonlyArray<T>,
+  ) => K | ReadonlyArray<K>,
+): Iterable<K> {
+  for (const [, next] of mapCallback(data, callbackfn)) {
+    if (isArray(next)) {
+      yield* next;
+    } else {
+      yield next;
+    }
+  }
+}

@@ -1,7 +1,8 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import doTransduce from "./internal/doTransduce";
 import type { Mapped } from "./internal/types/Mapped";
-import { purry } from "./purry";
+import { mapCallback } from "./internal/utilityEvaluators";
+import type { ArrayMethodCallback } from "./internal/types/ArrayMethodCallback";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -50,20 +51,21 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: ReadonlyArray<unknown>): unknown {
-  return purry(mapImplementation, args, lazyImplementation);
+  return doTransduce(mapImplementation, lazyImplementation, args);
 }
 
-const mapImplementation = <T, U>(
+function mapImplementation<T, U>(
   data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): Array<U> => data.map(callbackfn);
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
+): Array<U> {
+  return data.map(callbackfn);
+}
 
-const lazyImplementation =
-  <T, U>(
-    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-  ): LazyEvaluator<T, U> =>
-  (value, index, data) => ({
-    done: false,
-    hasNext: true,
-    next: callbackfn(value, index, data),
-  });
+function* lazyImplementation<T, U>(
+  data: Iterable<T>,
+  callbackfn: ArrayMethodCallback<ReadonlyArray<T>, U>,
+): Iterable<U> {
+  for (const [, result] of mapCallback(data, callbackfn)) {
+    yield result;
+  }
+}

@@ -1,5 +1,6 @@
-import type { IterableContainer } from "./internal/types/IterableContainer";
+import { toReadonlyArray } from "./internal/toReadonlyArray";
 import { purry } from "./purry";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 
 /**
  * Removes last `n` elements from the `array`.
@@ -37,8 +38,10 @@ export function dropLast(...args: ReadonlyArray<unknown>): unknown {
   return purry(dropLastImplementation, args);
 }
 
-const dropLastImplementation = <T extends IterableContainer>(
-  array: T,
-  n: number,
-): Array<T[number]> =>
-  n > 0 ? array.slice(0, Math.max(0, array.length - n)) : [...array];
+function dropLastImplementation<T>(input: Iterable<T>, n: number): Array<T> {
+  if (n > 0) {
+    const array = toReadonlyArray(input);
+    return array.slice(0, Math.max(0, array.length - n));
+  }
+  return [...input];
+}

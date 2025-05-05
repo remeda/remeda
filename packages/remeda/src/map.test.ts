@@ -78,10 +78,10 @@ describe(pipe, () => {
     expect(indexes1).toStrictEqual([0, 1, 2, 3, 4]);
     expect(indexes2).toStrictEqual([0, 1, 2]);
     expect(anyItems1).toStrictEqual([
-      [1],
-      [1, 2],
-      [1, 2, 3],
-      [1, 2, 3, 4],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
       [1, 2, 3, 4, 5],
     ]);
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);

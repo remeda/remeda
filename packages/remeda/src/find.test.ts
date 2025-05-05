@@ -1,5 +1,6 @@
 import { find } from "./find";
 import { identity } from "./identity";
+import { describeWithPipe } from "./internal/describeWithPipe";
 import { map } from "./map";
 import { pipe } from "./pipe";
 
@@ -74,5 +75,16 @@ describe("data last", () => {
 
     expect(counter).toHaveBeenCalledTimes(2);
     expect(actual).toStrictEqual({ a: 1, b: 2 });
+  });
+
+  describeWithPipe("not found", (pipeLike) => {
+    it("returns undefined", () => {
+      expect(
+        pipeLike(
+          [1, 2, 3],
+          find((x) => x === 4),
+        ),
+      ).toBeUndefined();
+    });
   });
 });

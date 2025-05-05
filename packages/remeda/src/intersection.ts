@@ -1,6 +1,4 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
+import doTransduce from "./internal/doTransduce";
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -43,30 +41,30 @@ export function intersection<S>(
 ): <T>(data: ReadonlyArray<T>) => Array<S & T>;
 
 export function intersection(...args: ReadonlyArray<unknown>): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return doTransduce(undefined, lazyImplementation, args);
 }
 
-function lazyImplementation<T, S>(
+function* lazyImplementation<T, S>(
+  data: Iterable<T>,
   other: ReadonlyArray<S>,
-): LazyEvaluator<T, S & T> {
-  if (other.length === 0) {
-    return lazyEmptyEvaluator;
-  }
-
+): Iterable<S & T> {
   // We need to build a more efficient data structure that would allow us to
   // keep track of the number of times we've seen a value in the other array.
   const remaining = new Map<S | T, number>();
   for (const value of other) {
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
+  if (remaining.size === 0) {
+    return;
+  }
 
-  return (value) => {
+  for (const value of data) {
     const copies = remaining.get(value);
 
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've "used" enough
       // copies of it so we skip the remaining values.
-      return SKIP_ITEM;
+      continue;
     }
 
     // The item is equal to an item in the other array and there are still
@@ -78,13 +76,13 @@ function lazyImplementation<T, S>(
       remaining.set(value, copies - 1);
     }
 
-    return {
-      hasNext: true,
-      // We can safely cast here because if value was in the `remaining` map, it
-      // has to be of type S (that's just how we built it).
-      next: value as S & T,
-      // We can stop the iteration if the remaining map is empty.
-      done: remaining.size === 0,
-    };
-  };
+    // We can safely cast here because if value was in the `remaining` map, it
+    // has to be of type S (that's just how we built it).
+    yield value as S & T;
+
+    // We can stop the iteration if the remaining map is empty.
+    if (remaining.size === 0) {
+      break;
+    }
+  }
 }

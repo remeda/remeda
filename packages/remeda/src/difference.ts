@@ -1,6 +1,4 @@
-import { purryFromLazy } from "./internal/purryFromLazy";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
+import doTransduce from "./internal/doTransduce";
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -43,14 +41,13 @@ export function difference<T>(
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
-  return purryFromLazy(lazyImplementation, args);
+  return doTransduce(undefined, lazyImplementation, args);
 }
 
-function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
-  if (other.length === 0) {
-    return lazyIdentityEvaluator;
-  }
-
+function* lazyImplementation<T>(
+  data: Iterable<T>,
+  other: Iterable<T>,
+): Iterable<T> {
   // We need to build a more efficient data structure that would allow us to
   // keep track of the number of times we've seen a value in the other array.
   const remaining = new Map<T, number>();
@@ -58,19 +55,18 @@ function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     remaining.set(value, (remaining.get(value) ?? 0) + 1);
   }
 
-  return (value) => {
+  for (const value of data) {
     const copies = remaining.get(value);
 
     if (copies === undefined || copies === 0) {
       // The item is either not part of the other array or we've dropped enough
       // copies of it so we return it.
-      return { done: false, hasNext: true, next: value };
+      yield value;
+    } else {
+      // The item is equal to an item in the other array and there are still
+      // copies of it to "account" for so we skip this one and remove it from our
+      // ongoing tally.
+      remaining.set(value, copies - 1);
     }
-
-    // The item is equal to an item in the other array and there are still
-    // copies of it to "account" for so we skip this one and remove it from our
-    // ongoing tally.
-    remaining.set(value, copies - 1);
-    return SKIP_ITEM;
-  };
+  }
 }
