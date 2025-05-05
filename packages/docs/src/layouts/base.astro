@@ -27,7 +27,7 @@ const { title } = Astro.props;
     <title>{`${title === undefined ? "" : `${title} - `}Remeda`}</title>
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
-  <body class="container mx-auto flex flex-col items-stretch px-4">
+  <body class="container mx-auto flex flex-col items-stretch">
     <Header />
     <slot />
     <script is:inline fetchpriority="low" src="/sandbox.js" type="module"
