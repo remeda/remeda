@@ -1,7 +1,29 @@
 {
   "name": "remeda",
   "version": "2.0.0",
+  "type": "module",
   "description": "A utility library for JavaScript and Typescript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remeda/remeda.git"
+  },
+  "homepage": "https://remedajs.com/",
+  "bugs": {
+    "url": "https://github.com/remeda/remeda/issues"
+  },
+  "author": "Łukasz Sentkiewicz",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
   "keywords": [
     "algo",
     "algorithm",
@@ -21,29 +43,6 @@
     "utilities",
     "utility",
     "utils"
-  ],
-  "homepage": "https://remedajs.com/",
-  "bugs": {
-    "url": "https://github.com/remeda/remeda/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remeda/remeda.git"
-  },
-  "license": "MIT",
-  "author": "Łukasz Sentkiewicz",
-  "sideEffects": false,
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "files": [
-    "dist/*"
   ],
   "scripts": {
     "build": "tsup",
@@ -75,11 +74,14 @@
     "jiti": "^2.4.2",
     "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
+    "prettier-plugin-pkg": "^0.19.0",
+    "prettier-plugin-sh": "^0.17.2",
     "publint": "^0.3.12",
     "semantic-release": "^24.2.3",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1",
     "vitest": "^3.1.2"
-  }
+  },
+  "sideEffects": false
 }
