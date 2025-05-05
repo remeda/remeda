@@ -11,7 +11,8 @@ test("empty array", () => {
   expect(first([])).toBeUndefined();
 });
 
-describe("pipe", () => {
+// eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
+describe(pipe, () => {
   test("as fn", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe([1, 2, 3, 4, 5, 6] as const, counter.fn(), first());

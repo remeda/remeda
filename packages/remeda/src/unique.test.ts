@@ -7,7 +7,8 @@ it("unique", () => {
   expect(unique([1, 2, 2, 5, 1, 6, 7] as const)).toStrictEqual([1, 2, 5, 6, 7]);
 });
 
-describe("pipe", () => {
+// eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
+describe(pipe, () => {
   it("unique", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
