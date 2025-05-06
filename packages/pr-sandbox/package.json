@@ -10,8 +10,10 @@
     "remeda": "*"
   },
   "devDependencies": {
-    "parcel": "^2.13.3",
+    "parcel": "^2.14.4",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "prettier-plugin-pkg": "^0.19.0",
+    "prettier-plugin-sh": "^0.17.2",
+    "typescript": "^5.8.3"
   }
 }

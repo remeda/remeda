@@ -117,7 +117,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  *      count: 10,
  *      time: { elapsed: 100, remaining: 1400 },
  *    };
- *    R.pipe(object, R.evolve(evolver))
+ *    R.pipe(data, R.evolve(evolver))
  *    // => {
  *    //   id: 10,
  *    //   count: 11,
