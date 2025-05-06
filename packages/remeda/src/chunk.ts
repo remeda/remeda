@@ -37,7 +37,7 @@ type Chunk<
     : GenericChunk<T>;
 
 type LiteralChunk<
-  T,
+  T extends IterableContainer,
   N extends number,
   // TupleParts allows us to optimize the algorithm by taking all items up to
   // the rest param, all items after the rest param, and the type of the rest

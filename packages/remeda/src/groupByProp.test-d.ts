@@ -1,4 +1,5 @@
 import { groupByProp } from "./groupByProp";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 test("string literals", () => {
   const data = groupByProp(
@@ -87,13 +88,9 @@ test("symbol", () => {
 });
 
 test("ambiguous type", () => {
-  const array = [
-    { a: "cat", b: 123 },
-    { a: "dog", b: 456 },
-  ];
-  const data = groupByProp(array, "a");
+  const data = groupByProp([] as Array<{ a: string; b: number }>, "a");
 
   expectTypeOf(data).toEqualTypeOf<
-    Record<string, [never, ...Array<never>] | undefined>
+    Record<string, NonEmptyArray<{ a: string; b: number }>>
   >();
 });

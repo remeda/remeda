@@ -1,46 +1,25 @@
-import type { Simplify } from "type-fest";
+import type { AllUnionFields, SimplifyDeep } from "type-fest";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
-import type { IsReadonlyRecord } from "./internal/types/IsReadonlyRecord";
+import type { ConditionalArray } from "./internal/types/ConditionalArray";
+import type { NonEmptyTuple } from "./internal/types/NonEmptyTuple";
+
+// We need to use AllUnionFields to convert a union of objects into a single type that would extend all of them, and thus provide a better representation of what the groupBy loop would need to handle.
+type GroupableBy<T> = SingleObjectGroupableBy<AllUnionFields<T>>;
+
+type SingleObjectGroupableBy<U> = {
+  // We make all props required in the output to prevent optional props from adding `| undefined` to our output type.
+  [P in keyof U]-?: U[P] extends PropertyKey | undefined ? P : never; // Only PropertyKeys can be used in the output grouped object, so props with other types need to be filtered out. We include `undefined` to allow groupBy to filter out items which can't be grouped.
+}[keyof U];
 
 type GroupByProp<
-  T extends Array<Record<PropertyKey, unknown> & Record<Prop, PropertyKey>>,
-  Prop extends keyof T[number],
-> =
-  IsReadonlyRecord<T[number]> extends true
-    ? Simplify<GroupByPropAcc<T, Prop>>
-    : Simplify<{
-        [P in T[number][Prop]]:
-          | NonEmptyArray<Extract<T, Record<Prop, P>>>
-          | undefined;
-      }>;
-
-/** Helper type that recursively traverses items (tuples) and merges them into ACC. */
-type GroupByPropAcc<
-  Items extends Array<unknown>,
-  Prop extends PropertyKey,
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- it is used as the initial value.
-  Acc extends Record<PropertyKey, Array<unknown>> = {},
-> = Items extends [infer Head, ...infer Rest]
-  ? Head extends Record<Prop, PropertyKey>
-    ? GroupByPropAcc<Rest, Prop, MergeGroup<Acc, Head[Prop], Head>>
-    : GroupByPropAcc<Rest, Prop, Acc>
-  : Acc;
-
-/** Helper type to add items to each group. */
-type MergeGroup<
-  Acc extends Record<PropertyKey, Array<unknown>>,
-  Prop extends PropertyKey,
-  Item,
-> = {
-  [P in keyof Acc | Prop]: P extends Prop
-    ? P extends keyof Acc
-      ? [...Acc[P], Item]
-      : [Item]
-    : P extends keyof Acc
-      ? Acc[P]
-      : never;
-};
+  T extends ReadonlyArray<unknown> | [],
+  P extends GroupableBy<T[number]>,
+> = SimplifyDeep<{
+  [GroupKey in AllUnionFields<T[number]>[P] & PropertyKey]: NonEmptyTuple<
+    ConditionalArray<T, Record<P, GroupKey>>
+  >;
+}>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -61,9 +40,9 @@ type MergeGroup<
  * @category Array
  */
 export function groupByProp<
-  T extends Array<Record<PropertyKey, unknown> & Record<Prop, PropertyKey>>,
-  Prop extends keyof T[number],
->(data: T, prop: Prop): GroupByProp<T, Prop>;
+  T extends IterableContainer,
+  P extends GroupableBy<T[number]>,
+>(data: T, prop: P): GroupByProp<T, P>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -86,32 +65,38 @@ export function groupByProp<
  * @category Array
  */
 export function groupByProp<
-  T extends Array<Record<PropertyKey, unknown> & Record<Prop, PropertyKey>>,
-  Prop extends keyof T[number],
->(prop: Prop): (data: T) => GroupByProp<T, Prop>;
+  T extends IterableContainer,
+  P extends GroupableBy<T[number]>,
+>(prop: P): (data: T) => GroupByProp<T, P>;
 
 export function groupByProp(...args: ReadonlyArray<unknown>): unknown {
   return purry(groupByPropImplementation, args);
 }
 
 const groupByPropImplementation = <
-  T extends Array<Record<PropertyKey, unknown> & Record<Prop, PropertyKey>>,
-  Prop extends keyof T[number],
+  T extends IterableContainer,
+  P extends GroupableBy<T[number]>,
 >(
   data: T,
-  prop: Prop,
-): GroupByProp<T, Prop> => {
+  prop: P,
+): GroupByProp<T, P> => {
   const output = new Map<PropertyKey, Array<T[number]>>();
 
   for (const item of data) {
+    // @ts-expect-error [ts18046] -- TODO...
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const key = item[prop];
-    let items = output.get(key);
-    if (items === undefined) {
-      items = [];
-      output.set(key, items);
+    if (key !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      const items = output.get(key);
+      if (items === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        output.set(key, [item]);
+      } else {
+        items.push(item);
+      }
     }
-    items.push(item);
   }
 
-  return Object.fromEntries(output) as GroupByProp<T, Prop>;
+  return Object.fromEntries(output) as GroupByProp<T, P>;
 };

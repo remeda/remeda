@@ -1,4 +1,4 @@
-import type { IsEqual } from "type-fest";
+import type { IterableContainer } from "./IterableContainer";
 
 /**
  * Takes an array and returns the types that make up its parts. The prefix is
@@ -20,7 +20,7 @@ import type { IsEqual } from "type-fest";
  * ]`.
  */
 export type TupleParts<
-  T,
+  T extends IterableContainer,
   PrefixRequired extends Array<unknown> = [],
   PrefixOptionals extends Array<unknown> = [],
   Suffix extends Array<unknown> = [],
@@ -30,7 +30,7 @@ export type TupleParts<
     ? TupleParts<Head, PrefixRequired, PrefixOptionals, [Tail, ...Suffix]>
     : // We need to distinguish between e.g. [number? ...Array<string>] and
       // Array<number | string>.
-      IsTupleRestOnly<T> extends true
+      T extends readonly [unknown?, ...T]
       ? // This is the Array<number | string> case.
         T extends ReadonlyArray<infer Item>
         ? {
@@ -50,12 +50,3 @@ export type TupleParts<
             Suffix
           >
         : never;
-
-/**
- * Helper type for `TupleParts`. Checks if T = ReadonlyArray<U> for some U.
- */
-type IsTupleRestOnly<T> = T extends readonly []
-  ? true
-  : T extends readonly [unknown?, ...infer Tail]
-    ? IsEqual<Readonly<T>, Readonly<Tail>>
-    : false;
