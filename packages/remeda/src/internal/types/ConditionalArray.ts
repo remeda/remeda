@@ -1,14 +1,18 @@
+import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
-export type ConditionalArray<T extends IterableContainer, Condition> = [
-  ...ConditionalTuple<TupleParts<T>["required"], Condition>,
-  ...Partial<ConditionalTuple<TupleParts<T>["optional"], Condition>>,
-  ...(TupleParts<T>["item"] & Condition extends never
-    ? []
-    : Array<TupleParts<T>["item"] & Condition>),
-  ...ConditionalTuple<TupleParts<T>["suffix"], Condition>,
-];
+export type ConditionalArray<
+  T extends IterableContainer,
+  Condition,
+> = Condition extends unknown
+  ? [
+      ...ConditionalTuple<TupleParts<T>["required"], Condition>,
+      ...Partial<ConditionalTuple<TupleParts<T>["optional"], Condition>>,
+      ...CoercedArray<CommonCore<TupleParts<T>["item"], Condition>>,
+      ...ConditionalTuple<TupleParts<T>["suffix"], Condition>,
+    ]
+  : never;
 
 type ConditionalTuple<
   T,
@@ -21,3 +25,9 @@ type ConditionalTuple<
       Head extends Condition ? [...Output, Head] : Output
     >
   : Output;
+
+type CommonCore<A, B> = A extends B
+  ? Extract<A, B>
+  : B extends A
+    ? Extract<B, A>
+    : never;
