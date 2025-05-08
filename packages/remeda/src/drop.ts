@@ -3,7 +3,7 @@ import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NTuple } from "./internal/types/NTuple";
-import type { TupleParts } from "./internal/types/TupleParts";
+import type { TupleParts, TuplePrefix } from "./internal/types/TupleParts";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
@@ -20,10 +20,8 @@ type Drop<T extends IterableContainer, N extends number> =
         Array<T[number]>
       : // We have an non-negative integer N so we start chopping up the array.
         // first we take a look at its prefix:
-        TupleParts<T>["prefix"] extends [
-            ...NTuple<unknown, N>,
-            ...infer Remaining,
-          ]
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+        TuplePrefix<T> extends [...NTuple<unknown, N>, ...infer Remaining]
         ? // If the prefix is as long as N, we know the drop would only remove
           // items from the prefix, so we reconstruct the array with any
           // remaining items from the prefix, and the rest of the array as it
@@ -47,7 +45,11 @@ type Drop<T extends IterableContainer, N extends number> =
                   // prefix items have been removed, so we need to take those
                   // into account when counting how many items to drop from the
                   // suffix.
-                  Subtract<N, TupleParts<T>["prefix"]["length"]>
+                  Subtract<
+                    Subtract<N, TupleParts<T>["required"]["length"]>,
+                    // TODO: This type wasn't built with the optional part in mind, we need to consider how it impacts the computed type.
+                    TupleParts<T>["optional"]["length"]
+                  >
                 >
               // And because we have a rest component, we also need to
               // consider that all items were removed from that part, leaving

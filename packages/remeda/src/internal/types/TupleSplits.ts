@@ -1,33 +1,46 @@
 import type { IterableContainer } from "./IterableContainer";
-import type { TupleParts } from "./TupleParts";
+import type { TupleParts, TuplePrefix } from "./TupleParts";
 import type { CoercedArray } from "./CoercedArray";
 
 /**
  * The union of all possible ways to write a tuple as [...left, ...right].
  */
-export type TupleSplits<Tuple extends IterableContainer> =
+export type TupleSplits<T extends IterableContainer> =
   // Use a distributive conditional type, in case T is a union:
-  Tuple extends infer T
-    ? TupleParts<T> extends {
-        prefix: infer Prefix extends ReadonlyArray<unknown>;
-        item: infer Item;
-        suffix: infer Suffix extends ReadonlyArray<unknown>;
-      }
-      ?
-          | FixedTupleSplits<Prefix, [...CoercedArray<Item>, ...Suffix]>
-          | {
-              left: [...Prefix, ...CoercedArray<Item>];
-              right: [...CoercedArray<Item>, ...Suffix];
-            }
-          | (FixedTupleSplits<Suffix> extends infer U
-              ? U extends {
-                  left: infer L extends ReadonlyArray<unknown>;
-                  right: infer R;
+  T extends unknown
+    ?
+        | FixedTupleSplits<
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+            TuplePrefix<T>,
+            [...CoercedArray<TupleParts<T>["item"]>, ...TupleParts<T>["suffix"]]
+          >
+        | {
+            left: [
+              // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+              ...TuplePrefix<T>,
+              ...CoercedArray<TupleParts<T>["item"]>,
+            ];
+            right: [
+              ...CoercedArray<TupleParts<T>["item"]>,
+              ...TupleParts<T>["suffix"],
+            ];
+          }
+        | (FixedTupleSplits<TupleParts<T>["suffix"]> extends infer U
+            ? U extends {
+                left: infer L extends ReadonlyArray<unknown>;
+                right: infer R;
+              }
+              ? {
+                  left: [
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+                    ...TuplePrefix<T>,
+                    ...CoercedArray<TupleParts<T>["item"]>,
+                    ...L,
+                  ];
+                  right: R;
                 }
-                ? { left: [...Prefix, ...CoercedArray<Item>, ...L]; right: R }
-                : never
-              : never)
-      : never
+              : never
+            : never)
     : never;
 
 /**
