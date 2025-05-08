@@ -9,7 +9,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: never;
@@ -22,7 +21,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: number;
@@ -35,7 +33,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [1, 2, 3];
       required: [1, 2, 3];
       optional: [];
       item: never;
@@ -48,7 +45,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [string];
       required: [string];
       optional: [];
       item: boolean;
@@ -61,7 +57,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: boolean;
@@ -74,11 +69,22 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number];
       required: [number];
       optional: [];
       item: boolean;
       suffix: [string];
+    }>();
+  });
+
+  test("only optional", () => {
+    const data = [] as [number?];
+    const result = tupleParts(data);
+
+    expectTypeOf(result).toEqualTypeOf<{
+      required: [];
+      optional: [number];
+      item: never;
+      suffix: [];
     }>();
   });
 
@@ -87,7 +93,6 @@ describe("mutable", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number, string?, number?];
       required: [number];
       optional: [string, number];
       item: boolean;
@@ -102,7 +107,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: never;
@@ -115,7 +119,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: number;
@@ -128,7 +131,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [1, 2, 3];
       required: [1, 2, 3];
       optional: [];
       item: never;
@@ -141,7 +143,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [string];
       required: [string];
       optional: [];
       item: boolean;
@@ -154,7 +155,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
       required: [];
       optional: [];
       item: boolean;
@@ -167,7 +167,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number];
       required: [number];
       optional: [];
       item: boolean;
@@ -185,7 +184,6 @@ describe("readonly", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number, string?, number?];
       required: [number];
       optional: [string, number];
       item: boolean;
@@ -200,8 +198,18 @@ describe("unions", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
-      | { prefix: []; required: []; optional: []; item: number; suffix: [] }
+      | {
+          required: [];
+          optional: [];
+          item: boolean;
+          suffix: [];
+        }
+      | {
+          required: [];
+          optional: [];
+          item: number;
+          suffix: [];
+        }
     >();
   });
 
@@ -210,9 +218,13 @@ describe("unions", () => {
     const result = tupleParts(data);
 
     expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
       | {
-          prefix: [number, string];
+          required: [];
+          optional: [];
+          item: boolean;
+          suffix: [];
+        }
+      | {
           required: [number, string];
           optional: [];
           item: never;

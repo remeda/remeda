@@ -10,7 +10,7 @@ import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
-import type { TupleParts } from "./internal/types/TupleParts";
+import type { TupleParts, TuplePrefix } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
@@ -48,7 +48,11 @@ type LiteralChunk<
   | ChunkInfinite<
       // Our result will always have the prefix tuple chunked the same way, so
       // we compute it once here and send it to the main logic below
-      ChunkFinite<Parts["prefix"], N>,
+      ChunkFinite<
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: Update the logic to handle the optional part correctly.
+        TuplePrefix<T>,
+        N
+      >,
       Parts["item"],
       Parts["suffix"],
       N
@@ -56,7 +60,13 @@ type LiteralChunk<
   // If both the prefix and suffix tuples are empty then our input is a simple
   // array of the form `Array<Item>`. This means it could also be empty, so we
   // need to add the empty output to our return type.
-  | ([...Parts["prefix"], ...Parts["suffix"]]["length"] extends 0 ? [] : never);
+  | ([
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: Update the logic to handle the optional part correctly.
+      ...TuplePrefix<T>,
+      ...Parts["suffix"],
+    ]["length"] extends 0
+      ? []
+      : never);
 
 /**
  * This type **only** works if the input array `T` is a finite tuple (

@@ -17,7 +17,7 @@ export type ConditionalArray<
 type ConditionalTuple<
   T,
   Condition,
-  Output extends IterableContainer = [],
+  Output extends Array<unknown> = [],
 > = T extends readonly [infer Head, ...infer Rest]
   ? ConditionalTuple<
       Rest,

@@ -2,6 +2,7 @@ import type { IfNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
+import type { NonEmptyArray } from "./NonEmptyArray";
 
 export type NonEmptyTuple<T extends IterableContainer> =
   TupleParts<T>["required"] extends readonly []
@@ -17,4 +18,4 @@ type NonEmptyOptionals<T extends IterableContainer, Item> = T extends readonly [
   ?
       | [Head, ...Partial<Tail>, ...CoercedArray<Item>]
       | NonEmptyOptionals<Tail, Item>
-  : IfNever<Item, never, [Item, ...Array<Item>]>;
+  : IfNever<Item, never, NonEmptyArray<Item>>;

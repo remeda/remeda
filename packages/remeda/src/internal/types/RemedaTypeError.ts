@@ -11,12 +11,15 @@ const RemedaErrorSymbol = Symbol("RemedaError");
 export type RemedaTypeError<
   FunctionName extends string,
   Message extends string | number,
+  Metadata = never,
 > = Message extends string
   ? Tagged<
       typeof RemedaErrorSymbol,
-      `RemedaTypeError(${FunctionName}): ${Message}.`
+      `RemedaTypeError(${FunctionName}): ${Message}.`,
+      Metadata
     >
   : RemedaTypeError<
       FunctionName,
-      `Internal error ${Message}. Please open a Remeda GitHub issue.`
+      `Internal error ${Message}. Please open a Remeda GitHub issue.`,
+      Metadata
     >;
