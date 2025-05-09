@@ -38,14 +38,11 @@ jobs:
           - "5.7"
           - "5.6"
           - "5.5"
-          - "5.4"
-          - "5.3"
-          - "5.2"
           # This is the current lowest version of typescript we support. Do not
           # change this without bumping a major version. We support up to 4
           # versions back from the latest version of typescript at time of a
           # major release.
-          - "5.1"
+          - "5.4"
 
     steps:
       - name: ⬇️ Checkout repo
@@ -82,10 +79,13 @@ jobs:
     strategy:
       matrix:
         node:
+          - 24
           - 23
           - 22
+          # This is the current lowest version of node we support. Do not
+          # change this without bumping a major version. We support all non-EOL
+          # versions of node.
           - 20
-          - 18
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
