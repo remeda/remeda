@@ -24,7 +24,7 @@ npm install
 Run tests and watch for changes:
 
 ```bash
-npm test # every test
+npm test                     # every test
 npm test -i src/file.test.ts # specific test
 ```
 
@@ -32,7 +32,7 @@ We have a pre-commit script that will format and lint the project, but if you wa
 
 ```bash
 npm run prettier # format
-npm run lint # lint
+npm run lint     # lint
 ```
 
 ## Documentation

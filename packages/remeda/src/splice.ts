@@ -52,7 +52,7 @@ function spliceImplementation<T>(
   deleteCount: number,
   replacement: ReadonlyArray<T>,
 ): Array<T> {
-  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
+  // TODO [2025-08-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
   const result = [...items];
   result.splice(start, deleteCount, ...replacement);
   return result;

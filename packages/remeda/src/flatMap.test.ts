@@ -37,7 +37,8 @@ describe("dataLast", () => {
     expect(pipe([1, 2, 3], flatMap(add(1)))).toStrictEqual([2, 3, 4]);
   });
 
-  describe("pipe", () => {
+  // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
+  describe(pipe, () => {
     test("with find", () => {
       const counter1 = createLazyInvocationCounter();
       const counter2 = createLazyInvocationCounter();
