@@ -1,6 +1,7 @@
 import type {
   And,
   GreaterThan,
+  IsEqual,
   IsLiteral,
   IsNever,
   ReadonlyTuple,
@@ -88,35 +89,62 @@ export type ArraySetRequired<
         MinRequiredItems
       >;
 
-type WithSameReadonly<T, U> = Readonly<T> extends T ? Readonly<U> : U;
+// A trivial utility that makes the output Readonly if T is also readonly.
+// Notice that we make the decision based on T, but output the type based on U.
+type WithSameReadonly<Source, Destination> =
+  IsEqual<Source, Readonly<Source>> extends true
+    ? Readonly<Destination>
+    : Destination;
 
+// We built our own version of Subtract instead of using type-fest's one because
+// we needed a simpler implementation that isn't as prone to excessive recursion
+// issues and that is clamped at 0 so that we don't need to handle negative
+// values using even more utilities.
 type SubtractNonNegativeIntegers<
   N,
   Subtrahend,
   SubtrahendBag extends Array<unknown> = [],
   OutputBag extends Array<unknown> = [],
 > = [...SubtrahendBag, ...OutputBag]["length"] extends N
-  ? OutputBag["length"]
+  ? // At this point OutputBag is: N - Subtrahend if Subtrahend is smaller than
+    // N, or 0 if it is larger (or equal).
+    OutputBag["length"]
   : SubtrahendBag["length"] extends Subtrahend
-    ? SubtractNonNegativeIntegers<
+    ? // We've finished building the SubtrahendBag, which means we also finished
+      // "removing" items from N and we now start "counting up" from 0 the
+      // remainder via the OutputBag.
+      SubtractNonNegativeIntegers<
         N,
         Subtrahend,
         SubtrahendBag,
         [...OutputBag, unknown]
       >
-    : SubtractNonNegativeIntegers<
+    : // While we still haven't filled the SubtrahendBag adding items to it
+      // allows us to "skip" items while we count up to N.
+      SubtractNonNegativeIntegers<
         N,
         Subtrahend,
         [...SubtrahendBag, unknown],
         OutputBag
       >;
 
+// Instead of using type-fest utilities to compute the index for pivoting, and
+// then using ArraySlice twice and spreading the result; we implement a much
+// simpler iterative solution to make the beginning of the optional part
+// required and the rest of it optional.
 type OptionalTupleSetRequired<
   T extends Array<unknown>,
-  Min,
+  N,
   _Output extends Array<unknown> = [],
-> = _Output["length"] extends Min
-  ? [..._Output, ...Partial<T>]
-  : T extends [infer Head, ...infer Rest]
-    ? OptionalTupleSetRequired<Rest, Min, [..._Output, Head]>
-    : _Output;
+> = _Output["length"] extends N
+  ? // This case happens when N is smaller than the number of items in T, it
+    // means that Output contains the required part of the optional part, and
+    // anything items that haven't been processed yet need to be added to the
+    // output as optional items.
+    [..._Output, ...Partial<T>]
+  : T extends readonly [infer Head, ...infer Rest]
+    ? OptionalTupleSetRequired<Rest, N, [..._Output, Head]>
+    : // This case happens when N is equal to or larger than the number of
+      // items in T, it means that we made all items required and we don't have
+      // any remainder that needs to be spread as optional items.
+      _Output;
