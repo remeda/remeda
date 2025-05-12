@@ -1,3 +1,6 @@
+import type { IsEqual, Writable } from "type-fest";
+import type { FilteredArray } from "./internal/types/FilteredArray";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
@@ -21,14 +24,21 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function filter<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): Array<S>;
-export function filter<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): Array<T>;
+export function filter<
+  T extends IterableContainer,
+  Condition extends T[number],
+>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): FilteredArray<T, Condition>;
+export function filter<T extends IterableContainer, B extends boolean>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => B,
+): IsEqual<B, true> extends true
+  ? Writable<T>
+  : IsEqual<B, false> extends true
+    ? []
+    : Array<T[number]>;
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -48,12 +58,21 @@ export function filter<T>(
  * @lazy
  * @category Array
  */
-export function filter<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => Array<S>;
-export function filter<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function filter<
+  T extends IterableContainer,
+  Condition extends T[number],
+>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): (data: T) => FilteredArray<T, Condition>;
+export function filter<T extends IterableContainer, B extends boolean>(
+  predicate: (value: T[number], index: number, data: T) => B,
+): (
+  data: T,
+) => IsEqual<B, true> extends true
+  ? Writable<T>
+  : IsEqual<B, false> extends true
+    ? []
+    : Array<T[number]>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
   return purry(filterImplementation, args, lazyImplementation);
