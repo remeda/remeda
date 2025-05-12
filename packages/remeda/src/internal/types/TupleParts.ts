@@ -6,6 +6,21 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  * follow TypeScript's only supported format for arrays/tuples:
  * [<required>, <optional>, ...<rest>[], <suffix>].
  *
+ * There are some limitations to what shapes TypeScript supports:
+ * tuples can only have a suffix if they also have a non-never rest element,
+ * **and** tuples cannot have both an optional part and a suffix; this means
+ * there are only 10 possible shapes for tuples:
+ *   1.  Empty Tuples: `[]`.
+ *   2.  Fixed Tuples: `[string, number]`.
+ *   3.  Optional Tuples: `[string?, number?]`.
+ *   4.  Mixed Tuples: `[string, number?]`.
+ *   5.  Arrays: `Array<string>`.
+ *   6.  Fixed-Prefix Arrays: `[string, ...Array<string>]`.
+ *   7.  Optional-Prefix Arrays: `[number?, ...Array<boolean>]`.
+ *   8.  Mixed-Prefix Arrays: `[string, number?, ...Array<boolean>]`.
+ *   9.  Fixed-Suffix Arrays: `[...Array<string>, string]`.
+ *   10. Fixed-Elements Arrays: `[string, ...Array<string>, string]`.
+ *
  * @example [
  *   ...TupleParts<T>["required"],
  *   ...Partial<TupleParts<T>["optional"]>,
@@ -14,16 +29,16 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  * ].
  */
 export type TupleParts<
-  T,
-  _Required extends Array<unknown> = [],
-  _Optional extends Array<unknown> = [],
-  _Suffix extends Array<unknown> = [],
+  T extends IterableContainer,
+  Prefix extends Array<unknown> = [],
+  Optional extends Array<unknown> = [],
+  Suffix extends Array<unknown> = [],
 > = T extends readonly [infer Head, ...infer Tail]
   ? // Build the `required` part:
-    TupleParts<Tail, [..._Required, Head], _Optional, _Suffix>
+    TupleParts<Tail, [...Prefix, Head], Optional, Suffix>
   : T extends readonly [...infer Head, infer Tail]
     ? // Build the `suffix` part:
-      TupleParts<Head, _Required, _Optional, [Tail, ..._Suffix]>
+      TupleParts<Head, Prefix, Optional, [Tail, ...Suffix]>
     : // At this point our tuple doesn't have the `required` part or the
       // `suffix` part. We now need to check if it has an `optional` part by
       // making everything required and seeing if anything in the type changed.
@@ -39,7 +54,7 @@ export type TupleParts<
              * When the array doesn't have a required part this will be an
              * empty tuple (`[]`).
              */
-            required: _Required;
+            required: Prefix;
 
             /**
              * A *trivial* tuple that defines the part of a tuple where all its
@@ -54,7 +69,7 @@ export type TupleParts<
              *
              * @example Partial<TupleParts<T>["optional"]>
              */
-            optional: _Optional;
+            optional: Optional;
 
             /**
              * The type for the rest parameter of the tuple, if any. Unlike the
@@ -75,22 +90,22 @@ export type TupleParts<
              * When the array doesn't have a required part this will be an
              * empty tuple (`[]`).
              */
-            suffix: _Suffix;
+            suffix: Suffix;
           }
-        : RemedaTypeError<"TupleParts", "Input is not an array!", T>
+        : RemedaTypeError<"TupleParts", "Unexpected tuple shape (1)", T>
       : T extends readonly [(infer OptionalHead)?, ...infer Tail]
         ? // Build the `optional` part:
           TupleParts<
             Tail,
-            _Required,
+            Prefix,
             [
-              ..._Optional,
+              ...Optional,
               // Optional tuple items always accept `undefined`, even with `exactOptionalPropertyTypes` enabled in tsconfig.json!
               OptionalHead | undefined,
             ],
-            _Suffix
+            Suffix
           >
-        : RemedaTypeError<"TupleParts", "Unexpected tuple shape!", T>;
+        : RemedaTypeError<"TupleParts", "Unexpected tuple shape (2)", T>;
 
 /**
  * ! **DO NOT USE THIS IN NEW CODE** !
