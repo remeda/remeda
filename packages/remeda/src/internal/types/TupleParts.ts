@@ -116,5 +116,12 @@ export type TupleParts<
  */
 export type TuplePrefix<T extends IterableContainer> = [
   ...TupleParts<T>["required"],
-  ...Partial<TupleParts<T>["optional"]>,
+  ...(Partial<TupleParts<T>["optional"]> extends ReadonlyArray<unknown>
+    ? Partial<TupleParts<T>["optional"]>
+    : // TODO [>2.0]: TypeScript before version 5.4 couldn't infer the type correctly as an array. This shouldn't be needed once the minimum TypeScript version is bumped above this.
+      RemedaTypeError<
+        "TupleParts",
+        "Partial on arrays should always result in an array",
+        [Partial<TupleParts<T>["optional"]>, T]
+      >),
 ];
