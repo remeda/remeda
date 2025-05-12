@@ -17,14 +17,14 @@ it("synchronizes the tuple readonly modifier", () => {
 });
 
 describe("works with all array shapes", () => {
-  test("empty array", () => {
+  test("empty tuple", () => {
     expectTypeOf(arraySetRequired([] as [], 0)).toEqualTypeOf<[]>();
 
     // Overflow
     expectTypeOf(arraySetRequired([] as [], 1)).toBeNever();
   });
 
-  test("trivial tuples (only required elements)", () => {
+  test("fixed tuples", () => {
     expectTypeOf(
       arraySetRequired(
         [1, "hello", true, new Date()] as [number, string, boolean, Date],
@@ -69,7 +69,7 @@ describe("works with all array shapes", () => {
     ).toBeNever();
   });
 
-  test("trivial arrays (only rest element)", () => {
+  test("arrays", () => {
     expectTypeOf(arraySetRequired([] as Array<string>, 0)).toEqualTypeOf<
       Array<string>
     >();
@@ -84,7 +84,7 @@ describe("works with all array shapes", () => {
     >();
   });
 
-  test("optional elements only", () => {
+  test("optional tuples", () => {
     expectTypeOf(
       arraySetRequired([] as [number?, string?, boolean?, Date?], 0),
     ).toEqualTypeOf<[number?, string?, boolean?, Date?]>();
@@ -122,7 +122,7 @@ describe("works with all array shapes", () => {
     ).toBeNever();
   });
 
-  test("required and optional elements (no rest element)", () => {
+  test("mixed tuples", () => {
     expectTypeOf(
       arraySetRequired([1, "hello"] as [number, string, boolean?, Date?], 0),
     ).toEqualTypeOf<[number, string, boolean?, Date?]>();
@@ -149,7 +149,7 @@ describe("works with all array shapes", () => {
     ).toBeNever();
   });
 
-  test("required and rest element (non-empty array)", () => {
+  test("fixed-prefix arrays", () => {
     expectTypeOf(
       arraySetRequired(
         [1, "hello", true] as [number, string, boolean, ...Array<Date>],
@@ -194,7 +194,7 @@ describe("works with all array shapes", () => {
     ).toEqualTypeOf<[number, string, boolean, Date, Date, ...Array<Date>]>();
   });
 
-  test("optional prefix and rest element", () => {
+  test("optional-prefix arrays", () => {
     expectTypeOf(
       arraySetRequired([] as [number?, string?, boolean?, ...Array<Date>], 0),
     ).toEqualTypeOf<[number?, string?, boolean?, ...Array<Date>]>();
@@ -247,7 +247,7 @@ describe("works with all array shapes", () => {
     >();
   });
 
-  test("rest element and suffix (non-empty array)", () => {
+  test("fixed-suffix arrays", () => {
     expectTypeOf(
       arraySetRequired(
         ["hello", true, new Date()] as [
@@ -324,7 +324,7 @@ describe("works with all array shapes", () => {
     >();
   });
 
-  test("array with prefix and suffix (non-empty array)", () => {
+  test("fixed-elements array", () => {
     expectTypeOf(
       arraySetRequired(
         [1, "hello", new Date()] as [number, string, ...Array<boolean>, Date],
@@ -371,7 +371,7 @@ describe("works with all array shapes", () => {
     >();
   });
 
-  test("prefix array (no suffix)", () => {
+  test("mixed-prefix array", () => {
     expectTypeOf(
       arraySetRequired(
         [1, "hello"] as [number, string, boolean?, ...Array<Date>],
