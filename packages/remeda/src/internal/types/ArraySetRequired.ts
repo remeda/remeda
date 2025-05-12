@@ -26,11 +26,12 @@ export type ArraySetRequired<
           TupleParts<T>["suffix"]["length"]
         > extends infer Remainder extends number
         ? Remainder extends 0
-          ? // The array already has enough required items in it's prefix or suffix
-            // so it satisfies the requirement without modifications.
+          ? // The array already has enough required items in it's prefix or
+            // suffix so it satisfies the requirement without modifications.
             T
           : And<
-                // We need more items than the optional part of the tuple can provide
+                // We need more items than the optional part of the tuple can
+                // provide
                 GreaterThan<Remainder, TupleParts<T>["optional"]["length"]>,
                 // ...and there is no rest element we can use
                 IsNever<TupleParts<T>["item"]>
@@ -53,8 +54,8 @@ export type ArraySetRequired<
 
                   // We first make optional items required, we do this as many
                   // times as needed to fulfil the Remainder amount. If we have
-                  // leftover optional items they are added to the output as they
-                  // were originally defined as optional.
+                  // leftover optional items they are added to the output as
+                  // they were originally defined as optional.
                   ...OptionalTupleSetRequired<
                     TupleParts<T>["optional"],
                     Remainder
@@ -71,8 +72,8 @@ export type ArraySetRequired<
                     >
                   >,
 
-                  // We then get back to copying the input tuple to the output, we
-                  // add the rest element itself, and the required suffix.
+                  // We then get back to copying the input tuple to the output,
+                  // we add the rest element itself, and the required suffix.
                   ...CoercedArray<TupleParts<T>["item"]>,
                   ...TupleParts<T>["suffix"],
                 ]
