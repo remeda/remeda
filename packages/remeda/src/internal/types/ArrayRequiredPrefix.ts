@@ -11,18 +11,12 @@ import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 import type { IterableContainer } from "./IterableContainer";
 
-export type ArrayRequiredPrefix<
-  T extends IterableContainer,
-  MinRequiredItems extends number,
-> =
-  IsLiteral<MinRequiredItems> extends true
+export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
+  IsLiteral<N> extends true
     ? // Distribute T to support union types
       T extends unknown
       ? SubtractNonNegativeIntegers<
-          SubtractNonNegativeIntegers<
-            MinRequiredItems,
-            TupleParts<T>["required"]["length"]
-          >,
+          SubtractNonNegativeIntegers<N, TupleParts<T>["required"]["length"]>,
           TupleParts<T>["suffix"]["length"]
         > extends infer Remainder extends number
         ? Remainder extends 0
@@ -39,7 +33,7 @@ export type ArrayRequiredPrefix<
             ? RemedaTypeError<
                 "ArrayRequiredPrefix",
                 "The input tuple cannot satisfy the minimum",
-                [T, MinRequiredItems]
+                [T, N]
               >
             : // This is the crux of the type, there are two important things to
               // note here:
@@ -81,7 +75,7 @@ export type ArrayRequiredPrefix<
         : RemedaTypeError<
             "ArrayRequiredPrefix",
             "Remainder didn't compute to a number?!",
-            [T, MinRequiredItems]
+            [T, N]
           >
       : RemedaTypeError<
           "ArrayRequiredPrefix",
@@ -91,7 +85,7 @@ export type ArrayRequiredPrefix<
     : RemedaTypeError<
         "ArrayRequiredPrefix",
         "Only literal minimums are supported!",
-        MinRequiredItems
+        N
       >;
 
 // A trivial utility that makes the output Readonly if T is also readonly.
