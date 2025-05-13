@@ -15,8 +15,8 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
   IsLiteral<N> extends true
     ? // Distribute T to support union types
       T extends unknown
-      ? SubtractNonNegativeIntegers<
-          SubtractNonNegativeIntegers<N, TupleParts<T>["required"]["length"]>,
+      ? ClampedIntegerSubtract<
+          ClampedIntegerSubtract<N, TupleParts<T>["required"]["length"]>,
           TupleParts<T>["suffix"]["length"]
         > extends infer Remainder extends number
         ? Remainder extends 0
@@ -50,7 +50,7 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                   // times as needed to fulfil the Remainder amount. If we have
                   // leftover optional items they are added to the output as
                   // they were originally defined as optional.
-                  ...OptionalTupleSetRequired<
+                  ...OptionalTupleRequiredPrefix<
                     TupleParts<T>["optional"],
                     Remainder
                   >,
@@ -60,7 +60,7 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                   // the item type of the rest element.
                   ...ReadonlyTuple<
                     TupleParts<T>["item"],
-                    SubtractNonNegativeIntegers<
+                    ClampedIntegerSubtract<
                       Remainder,
                       TupleParts<T>["optional"]["length"]
                     >
@@ -99,29 +99,29 @@ type WithSameReadonly<Source, Destination> =
 // we needed a simpler implementation that isn't as prone to excessive recursion
 // issues and that is clamped at 0 so that we don't need to handle negative
 // values using even more utilities.
-type SubtractNonNegativeIntegers<
-  N,
+type ClampedIntegerSubtract<
+  Minuend,
   Subtrahend,
   SubtrahendBag extends Array<unknown> = [],
   OutputBag extends Array<unknown> = [],
-> = [...SubtrahendBag, ...OutputBag]["length"] extends N
-  ? // At this point OutputBag is: N - Subtrahend if Subtrahend is smaller than
-    // N, or 0 if it is larger (or equal).
+> = [...SubtrahendBag, ...OutputBag]["length"] extends Minuend
+  ? // At this point OutputBag is: Minuend - Subtrahend if Subtrahend is
+    // smaller than Minuend, or 0 if it is larger (or equal).
     OutputBag["length"]
   : SubtrahendBag["length"] extends Subtrahend
     ? // We've finished building the SubtrahendBag, which means we also finished
-      // "removing" items from N and we now start "counting up" from 0 the
+      // "removing" items from Minuend and we now start "counting up" from 0 the
       // remainder via the OutputBag.
-      SubtractNonNegativeIntegers<
-        N,
+      ClampedIntegerSubtract<
+        Minuend,
         Subtrahend,
         SubtrahendBag,
         [...OutputBag, unknown]
       >
     : // While we still haven't filled the SubtrahendBag adding items to it
-      // allows us to "skip" items while we count up to N.
-      SubtractNonNegativeIntegers<
-        N,
+      // allows us to "skip" items while we count up to Minuend.
+      ClampedIntegerSubtract<
+        Minuend,
         Subtrahend,
         [...SubtrahendBag, unknown],
         OutputBag
@@ -131,19 +131,19 @@ type SubtractNonNegativeIntegers<
 // then using ArraySlice twice and spreading the result; we implement a much
 // simpler iterative solution to make the beginning of the optional part
 // required and the rest of it optional.
-type OptionalTupleSetRequired<
+type OptionalTupleRequiredPrefix<
   T extends Array<unknown>,
   N,
-  Output extends Array<unknown> = [],
-> = Output["length"] extends N
+  Prefix extends Array<unknown> = [],
+> = Prefix["length"] extends N
   ? // This case happens when N is smaller than the number of items in T, it
     // means that Output contains the required part of the optional part, and
     // anything items that haven't been processed yet need to be added to the
     // output as optional items.
-    [...Output, ...Partial<T>]
+    [...Prefix, ...Partial<T>]
   : T extends readonly [infer Head, ...infer Rest]
-    ? OptionalTupleSetRequired<Rest, N, [...Output, Head]>
+    ? OptionalTupleRequiredPrefix<Rest, N, [...Prefix, Head]>
     : // This case happens when N is equal to or larger than the number of
       // items in T, it means that we made all items required and we don't have
       // any remainder that needs to be spread as optional items.
-      Output;
+      Prefix;
