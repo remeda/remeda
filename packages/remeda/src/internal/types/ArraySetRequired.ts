@@ -136,16 +136,16 @@ type SubtractNonNegativeIntegers<
 type OptionalTupleSetRequired<
   T extends Array<unknown>,
   N,
-  _Output extends Array<unknown> = [],
-> = _Output["length"] extends N
+  Output extends Array<unknown> = [],
+> = Output["length"] extends N
   ? // This case happens when N is smaller than the number of items in T, it
     // means that Output contains the required part of the optional part, and
     // anything items that haven't been processed yet need to be added to the
     // output as optional items.
-    [..._Output, ...Partial<T>]
+    [...Output, ...Partial<T>]
   : T extends readonly [infer Head, ...infer Rest]
-    ? OptionalTupleSetRequired<Rest, N, [..._Output, Head]>
+    ? OptionalTupleSetRequired<Rest, N, [...Output, Head]>
     : // This case happens when N is equal to or larger than the number of
       // items in T, it means that we made all items required and we don't have
       // any remainder that needs to be spread as optional items.
-      _Output;
+      Output;
