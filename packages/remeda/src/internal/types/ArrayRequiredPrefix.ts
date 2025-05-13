@@ -103,20 +103,20 @@ type ClampedIntegerSubtract<
   Minuend,
   Subtrahend,
   SubtrahendBag extends Array<unknown> = [],
-  OutputBag extends Array<unknown> = [],
-> = [...SubtrahendBag, ...OutputBag]["length"] extends Minuend
-  ? // At this point OutputBag is: Minuend - Subtrahend if Subtrahend is
-    // smaller than Minuend, or 0 if it is larger (or equal).
-    OutputBag["length"]
+  ResultBag extends Array<unknown> = [],
+> = [...SubtrahendBag, ...ResultBag]["length"] extends Minuend
+  ? // At this point ResultBag is: Minuend - Subtrahend if Subtrahend is smaller
+    // than Minuend, or 0 if it is larger (or equal).
+    ResultBag["length"]
   : SubtrahendBag["length"] extends Subtrahend
     ? // We've finished building the SubtrahendBag, which means we also finished
       // "removing" items from Minuend and we now start "counting up" from 0 the
-      // remainder via the OutputBag.
+      // remainder via the ResultBag.
       ClampedIntegerSubtract<
         Minuend,
         Subtrahend,
         SubtrahendBag,
-        [...OutputBag, unknown]
+        [...ResultBag, unknown]
       >
     : // While we still haven't filled the SubtrahendBag adding items to it
       // allows us to "skip" items while we count up to Minuend.
@@ -124,7 +124,7 @@ type ClampedIntegerSubtract<
         Minuend,
         Subtrahend,
         [...SubtrahendBag, unknown],
-        OutputBag
+        ResultBag
       >;
 
 // Instead of using type-fest utilities to compute the index for pivoting, and
@@ -137,9 +137,9 @@ type OptionalTupleRequiredPrefix<
   Prefix extends Array<unknown> = [],
 > = Prefix["length"] extends N
   ? // This case happens when N is smaller than the number of items in T, it
-    // means that Output contains the required part of the optional part, and
+    // means that Prefix contains the required part of the optional part, and
     // anything items that haven't been processed yet need to be added to the
-    // output as optional items.
+    // prefix as optional items.
     [...Prefix, ...Partial<T>]
   : T extends readonly [infer Head, ...infer Rest]
     ? OptionalTupleRequiredPrefix<Rest, N, [...Prefix, Head]>
