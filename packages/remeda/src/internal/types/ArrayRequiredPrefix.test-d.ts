@@ -1,10 +1,10 @@
-import type { ArraySetRequired } from "./ArraySetRequired";
+import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
 import type { IterableContainer } from "./IterableContainer";
 
 declare function arraySetRequired<
   T extends IterableContainer,
   Min extends number,
->(data: T, min: Min): ArraySetRequired<T, Min>;
+>(data: T, min: Min): ArrayRequiredPrefix<T, Min>;
 
 it("synchronizes the tuple readonly modifier", () => {
   expectTypeOf(arraySetRequired([] as Array<string>, 1)).toEqualTypeOf<

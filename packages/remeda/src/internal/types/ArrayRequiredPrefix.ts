@@ -11,7 +11,7 @@ import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 import type { IterableContainer } from "./IterableContainer";
 
-export type ArraySetRequired<
+export type ArrayRequiredPrefix<
   T extends IterableContainer,
   MinRequiredItems extends number,
 > =

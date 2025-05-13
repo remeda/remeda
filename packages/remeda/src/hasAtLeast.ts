@@ -1,7 +1,7 @@
 import type { IsNumericLiteral } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
-import type { ArraySetRequired } from "./internal/types/ArraySetRequired";
+import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 
 /**
  * Checks if the given array has at least the defined number of elements. When
@@ -28,7 +28,7 @@ import type { ArraySetRequired } from "./internal/types/ArraySetRequired";
 export function hasAtLeast<T extends IterableContainer, N extends number>(
   data: IterableContainer | T,
   minimum: IsNumericLiteral<N> extends true ? N : never,
-): data is ArraySetRequired<T, N>;
+): data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
 
 /**
@@ -59,7 +59,7 @@ export function hasAtLeast<N extends number>(
   minimum: IsNumericLiteral<N> extends true ? N : never,
 ): <T extends IterableContainer>(
   data: IterableContainer | T,
-) => data is ArraySetRequired<T, N>;
+) => data is ArrayRequiredPrefix<T, N>;
 export function hasAtLeast(
   minimum: number,
 ): (data: IterableContainer) => boolean;
