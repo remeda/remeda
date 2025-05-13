@@ -37,7 +37,7 @@ export type ArrayRequiredPrefix<
                 IsNever<TupleParts<T>["item"]>
               > extends true
             ? RemedaTypeError<
-                "ArraySetRequired",
+                "ArrayRequiredPrefix",
                 "The input tuple cannot satisfy the minimum",
                 [T, MinRequiredItems]
               >
@@ -79,13 +79,17 @@ export type ArrayRequiredPrefix<
                 ]
               >
         : RemedaTypeError<
-            "ArraySetRequired",
+            "ArrayRequiredPrefix",
             "Remainder didn't compute to a number?!",
             [T, MinRequiredItems]
           >
-      : RemedaTypeError<"ArraySetRequired", "Failed to distribute union?!", T>
+      : RemedaTypeError<
+          "ArrayRequiredPrefix",
+          "Failed to distribute union?!",
+          T
+        >
     : RemedaTypeError<
-        "ArraySetRequired",
+        "ArrayRequiredPrefix",
         "Only literal minimums are supported!",
         MinRequiredItems
       >;
