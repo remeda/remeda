@@ -97,5 +97,5 @@ const sortByImplementation = <T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
 ): Array<T> =>
-  // TODO [2025-08-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
+  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   [...data].sort(compareFn);
