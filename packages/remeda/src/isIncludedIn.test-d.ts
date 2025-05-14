@@ -13,7 +13,6 @@ it("throws on non-overlapping (e.g. typo-proof)", () => {
 
 describe("narrowing", () => {
   test("data is single literal, container is pure tuple === NARROWED", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const data = 1 as const;
     if (isIncludedIn(data, [1] as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -32,7 +31,6 @@ describe("narrowing", () => {
   });
 
   test("data is single literal, container is array === NOT NARROWED", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const data = 1 as const;
     if (isIncludedIn(data, [1] as Array<1>)) {
       expectTypeOf(data).toEqualTypeOf<1>();

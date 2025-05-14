@@ -1,5 +1,6 @@
 {
   "name": "@remeda/pr-sandbox",
+  "type": "module",
   "scripts": {
     "build": "parcel build index.html",
     "format": "prettier . --write",
@@ -9,8 +10,10 @@
     "remeda": "*"
   },
   "devDependencies": {
-    "parcel": "^2.13.3",
-    "prettier": "^3.5.2",
-    "typescript": "^5.7.3"
+    "parcel": "^2.14.4",
+    "prettier": "^3.5.3",
+    "prettier-plugin-pkg": "^0.19.0",
+    "prettier-plugin-sh": "^0.17.2",
+    "typescript": "^5.8.3"
   }
 }

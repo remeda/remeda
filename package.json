@@ -1,8 +1,8 @@
 {
   "name": "remeda",
   "version": "2.0.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "workspaces": [
     "packages/remeda",
     "packages/docs",
@@ -16,7 +16,9 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "lint-staged": "^15.4.3",
-    "prettier": "^3.5.1"
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-pkg": "^0.19.0",
+    "prettier-plugin-sh": "^0.17.2"
   }
 }

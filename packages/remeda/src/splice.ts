@@ -191,7 +191,7 @@ function spliceImplementation(
   deleteCount: number,
   replacement: IterableContainer,
 ): IterableContainer {
-  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
+  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
   const result = [...items];
   result.splice(start, deleteCount, ...replacement);
   return result;

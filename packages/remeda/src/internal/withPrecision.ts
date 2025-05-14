@@ -6,8 +6,9 @@ const MAX_PRECISION = 15;
 
 const RADIX = 10;
 
-export function withPrecision(roundingFn: (value: number) => number) {
-  return (value: number, precision: number): number => {
+export const withPrecision =
+  (roundingFn: (value: number) => number) =>
+  (value: number, precision: number): number => {
     if (precision === 0) {
       return roundingFn(value);
     }
@@ -26,13 +27,27 @@ export function withPrecision(roundingFn: (value: number) => number) {
       return roundingFn(value);
     }
 
-    if (precision > 0) {
-      const multiplier = RADIX ** precision;
-      return roundingFn(value * multiplier) / multiplier;
-    }
-
-    // Avoid losing precision by dividing first.
-    const divisor = RADIX ** -precision;
-    return roundingFn(value / divisor) * divisor;
+    const shiftedValue = shiftDecimalPoint(value, precision);
+    const rounded = roundingFn(shiftedValue);
+    return shiftDecimalPoint(rounded, -precision);
   };
+
+/**
+ * Shift a number's decimal point via scientific notation.
+ *
+ * This takes advantage of the fact that `Number` methods support scientific
+ * (e-notation) string natively and avoids working with double-precision
+ * floating-point numbers directly, working around their limitations
+ * with representing decimal numbers.
+ */
+function shiftDecimalPoint(value: number, shift: number): number {
+  const asString = value.toString();
+  const [n, exponent] = asString.split("e");
+
+  const shiftedExponent =
+    (exponent === undefined ? 0 : Number.parseInt(exponent, RADIX)) + shift;
+
+  const shiftedValueAsString = `${n!}e${shiftedExponent.toString()}`;
+
+  return Number.parseFloat(shiftedValueAsString);
 }

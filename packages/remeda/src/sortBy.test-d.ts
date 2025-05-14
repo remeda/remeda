@@ -34,7 +34,7 @@ describe("dataFirst", () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = sortBy(items, prop("a"));
 
-    expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
   });
 
   test("sortPair", () => {
@@ -49,7 +49,7 @@ describe("dataLast", () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = pipe(items, sortBy(prop("a")));
 
-    expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
   });
 
   test("sortPair", () => {

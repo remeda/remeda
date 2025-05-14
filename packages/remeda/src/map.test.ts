@@ -32,7 +32,8 @@ describe("data-last", () => {
   });
 });
 
-describe("pipe", () => {
+// eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
+describe(pipe, () => {
   it("invoked lazily", () => {
     const count = vi.fn<(x: number) => number>(multiply(10));
 

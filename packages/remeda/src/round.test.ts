@@ -96,3 +96,9 @@ describe("data-last", () => {
     },
   );
 });
+
+test("inconsistencies due to IEEE 754 double-precision floating-point inaccuracies (Issue #1051)", () => {
+  // @see https://github.com/remeda/remeda/issues/1051
+  expect(round(2.345, 2)).toBe(2.35);
+  expect(round(2.135, 2)).toBe(2.14);
+});

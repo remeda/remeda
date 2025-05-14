@@ -118,6 +118,19 @@ test("number keys are converted to string in the mapper", () => {
   });
 });
 
+// @see https://github.com/remeda/remeda/issues/1071
+test("number keys are preserved in the resulting object (issue #1071)", () => {
+  const data = {} as Record<number, unknown>;
+
+  const dataFirst = mapValues(data, constant(true));
+
+  expectTypeOf(dataFirst).toEqualTypeOf<Record<number, boolean>>();
+
+  const dataLast = pipe(data, mapValues(constant(true)));
+
+  expectTypeOf(dataLast).toEqualTypeOf<Record<number, boolean>>();
+});
+
 test("maintains partiality", () => {
   const result = mapValues(
     {} as { a?: number; b?: string; c: number; d: string },
@@ -138,12 +151,12 @@ test("unions of records", () => {
   const dataFirst = mapValues(data, constant("hello" as string));
 
   expectTypeOf(dataFirst).toEqualTypeOf<
-    Record<`${number}`, string> | Record<string, string>
+    Record<number, string> | Record<string, string>
   >();
 
   const dataLast = pipe(data, mapValues(constant("hello" as string)));
 
   expectTypeOf(dataLast).toEqualTypeOf<
-    Record<`${number}`, string> | Record<string, string>
+    Record<number, string> | Record<string, string>
   >();
 });

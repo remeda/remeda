@@ -1,5 +1,6 @@
 import { countBy } from "./countBy";
 import { pipe } from "./pipe";
+import { prop } from "./prop";
 
 describe("dataFirst", () => {
   test("countBy", () => {
@@ -129,4 +130,17 @@ test("empty array", () => {
   const result = countBy([], (x) => x);
 
   expect(result).toStrictEqual({});
+});
+
+// https://github.com/remeda/remeda/pull/1049
+test("category is an object instance method name", () => {
+  const data = [
+    { a: "toString", b: "toString" },
+    { a: "toString", b: "valueOf" },
+    { a: "valueOf", b: "toString" },
+    { a: "toString", b: "__proto__" },
+  ];
+  const result = countBy(data, prop("a"));
+
+  expect(result).toStrictEqual({ toString: 3, valueOf: 1 });
 });
