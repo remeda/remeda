@@ -10,14 +10,15 @@ import type { CoercedArray } from "./CoercedArray";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 import type { IterableContainer } from "./IterableContainer";
+import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 
 export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
   IsLiteral<N> extends true
     ? // Distribute T to support union types
       T extends unknown
       ? ClampedIntegerSubtract<
-          ClampedIntegerSubtract<N, TupleParts<T>["required"]["length"]>,
-          TupleParts<T>["suffix"]["length"]
+          N,
+          [...TupleParts<T>["required"], ...TupleParts<T>["suffix"]]["length"]
         > extends infer Remainder extends number
         ? Remainder extends 0
           ? // The array already has enough required items in it's prefix or
@@ -106,38 +107,6 @@ type WithSameReadonly<Source, Destination> =
   IsEqual<Source, Readonly<Source>> extends true
     ? Readonly<Destination>
     : Destination;
-
-// We built our own version of Subtract instead of using type-fest's one because
-// we needed a simpler implementation that isn't as prone to excessive recursion
-// issues and that is clamped at 0 so that we don't need to handle negative
-// values using even more utilities.
-type ClampedIntegerSubtract<
-  Minuend,
-  Subtrahend,
-  SubtrahendBag extends Array<unknown> = [],
-  ResultBag extends Array<unknown> = [],
-> = [...SubtrahendBag, ...ResultBag]["length"] extends Minuend
-  ? // At this point ResultBag is: Minuend - Subtrahend if Subtrahend is smaller
-    // than Minuend, or 0 if it is larger (or equal).
-    ResultBag["length"]
-  : SubtrahendBag["length"] extends Subtrahend
-    ? // We've finished building the SubtrahendBag, which means we also finished
-      // "removing" items from Minuend and we now start "counting up" from 0 the
-      // remainder via the ResultBag.
-      ClampedIntegerSubtract<
-        Minuend,
-        Subtrahend,
-        SubtrahendBag,
-        [...ResultBag, unknown]
-      >
-    : // While we still haven't filled the SubtrahendBag adding items to it
-      // allows us to "skip" items while we count up to Minuend.
-      ClampedIntegerSubtract<
-        Minuend,
-        Subtrahend,
-        [...SubtrahendBag, unknown],
-        ResultBag
-      >;
 
 // Instead of using type-fest utilities to compute the index for pivoting, and
 // then using ArraySlice twice and spreading the result; we implement a much
