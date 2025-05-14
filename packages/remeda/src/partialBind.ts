@@ -9,7 +9,7 @@ import type { TupleSplits } from "./internal/types/TupleSplits";
 type PartialBindError<
   Message extends string,
   Metadata = never,
-> = RemedaTypeError<"partialBind", Message, Metadata>;
+> = RemedaTypeError<"partialBind", Message, { metadata: Metadata }>;
 
 type TuplePrefix<T extends IterableContainer> = TupleSplits<T>["left"];
 

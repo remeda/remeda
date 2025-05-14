@@ -33,7 +33,10 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
             ? RemedaTypeError<
                 "ArrayRequiredPrefix",
                 "The input tuple cannot satisfy the minimum",
-                [T, N]
+                {
+                  type: never;
+                  metadata: [T, N];
+                }
               >
             : // This is the crux of the type, there are two important things to
               // note here:
@@ -75,17 +78,26 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
         : RemedaTypeError<
             "ArrayRequiredPrefix",
             "Remainder didn't compute to a number?!",
-            [T, N]
+            {
+              type: never;
+              metadata: [T, N];
+            }
           >
       : RemedaTypeError<
           "ArrayRequiredPrefix",
           "Failed to distribute union?!",
-          T
+          {
+            type: never;
+            metadata: T;
+          }
         >
     : RemedaTypeError<
         "ArrayRequiredPrefix",
         "Only literal minimums are supported!",
-        N
+        {
+          type: never;
+          metadata: N;
+        }
       >;
 
 // A trivial utility that makes the output Readonly if T is also readonly.

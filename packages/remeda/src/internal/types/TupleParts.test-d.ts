@@ -254,18 +254,18 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
 describe("unions", () => {
   test("union of arrays", () => {
-    const result = tupleParts([] as Array<boolean> | Array<number>);
-
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(
+      tupleParts([] as Array<boolean> | Array<number>),
+    ).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | { required: []; optional: []; item: number; suffix: [] }
     >();
   });
 
   test("mixed unions", () => {
-    const result = tupleParts([] as Array<boolean> | [number, string]);
-
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(
+      tupleParts([] as Array<boolean> | [number, string]),
+    ).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | {
           required: [number, string];
@@ -277,9 +277,7 @@ describe("unions", () => {
   });
 
   test("looks like an optional tuple", () => {
-    const result = tupleParts([] as [] | [string | undefined]);
-
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(tupleParts([] as [] | [string | undefined])).toEqualTypeOf<
       | { required: []; optional: []; item: never; suffix: [] }
       | {
           required: [string | undefined];
@@ -291,9 +289,9 @@ describe("unions", () => {
   });
 
   test("union of equivalent optional tuples", () => {
-    const result = tupleParts([] as [string?] | [(string | undefined)?]);
-
-    expectTypeOf(result).toEqualTypeOf<{
+    expectTypeOf(
+      tupleParts([] as [string?] | [(string | undefined)?]),
+    ).toEqualTypeOf<{
       required: [];
       optional: [string | undefined];
       item: never;
@@ -304,9 +302,9 @@ describe("unions", () => {
 
 describe("handling of undefined values", () => {
   test("undefined required item", () => {
-    const result = tupleParts([undefined] as [number | undefined]);
-
-    expectTypeOf(result).toEqualTypeOf<{
+    expectTypeOf(
+      tupleParts([undefined] as [number | undefined]),
+    ).toEqualTypeOf<{
       required: [number | undefined];
       optional: [];
       item: never;
@@ -315,13 +313,79 @@ describe("handling of undefined values", () => {
   });
 
   test("undefined optional item", () => {
-    const result = tupleParts([undefined] as [(number | undefined)?]);
-
-    expectTypeOf(result).toEqualTypeOf<{
+    expectTypeOf(
+      tupleParts([undefined] as [(number | undefined)?]),
+    ).toEqualTypeOf<{
       required: [];
       optional: [number | undefined];
       item: never;
       suffix: [];
+    }>();
+  });
+
+  test("undefined rest item", () => {
+    expectTypeOf(
+      tupleParts([undefined] as Array<number | undefined>),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number | undefined;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined suffix and rest items", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [
+        ...Array<number | undefined>,
+        string | undefined,
+      ]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number | undefined;
+      suffix: [string | undefined];
+    }>();
+  });
+
+  test("undefined tuple with options", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [number | undefined, (string | undefined)?]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [string | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined prefix items", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [
+        number | undefined,
+        (string | undefined)?,
+        ...Array<boolean | undefined>,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [string | undefined];
+      item: boolean | undefined;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined fixed and rest elements", () => {
+    expectTypeOf(
+      tupleParts([undefined, undefined] as [
+        number | undefined,
+        ...Array<boolean | undefined>,
+        string | undefined,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [];
+      item: boolean | undefined;
+      suffix: [string | undefined];
     }>();
   });
 });
