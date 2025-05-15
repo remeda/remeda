@@ -5,6 +5,26 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
+// When the predicate used for filter isn't refining (like a type-predicate) we
+// can narrow the result slightly if it's also trivial (it returns the same
+// result for all items). This is uncommon, but can be useful to
+// "short-circuiting" the filter.
+type NonRefinedFilteredArray<T extends IterableContainer, B extends boolean> =
+  IsEqual<B, true> extends true
+    ? // If the predicate is always true we return a shallow copy of the array.
+      // If it was originally readonly we need to strip that away.
+      Writable<T>
+    : IsEqual<B, false> extends true
+      ? // If the predicate is always false we will always return an empty
+        // array.
+        []
+      : // These are the cases where we have the least to work with when
+        // computing the result type. We don't know which items of the array
+        // would participate in the output and which wouldn't so we can only
+        // safely say that the result is an array with items from the input
+        // array.
+        Array<T[number]>;
+
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
  * the elements from the given array that pass the test implemented by the
@@ -34,11 +54,7 @@ export function filter<
 export function filter<T extends IterableContainer, B extends boolean>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => B,
-): IsEqual<B, true> extends true
-  ? Writable<T>
-  : IsEqual<B, false> extends true
-    ? []
-    : Array<T[number]>;
+): NonRefinedFilteredArray<T, B>;
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -66,13 +82,7 @@ export function filter<
 ): (data: T) => FilteredArray<T, Condition>;
 export function filter<T extends IterableContainer, B extends boolean>(
   predicate: (value: T[number], index: number, data: T) => B,
-): (
-  data: T,
-) => IsEqual<B, true> extends true
-  ? Writable<T>
-  : IsEqual<B, false> extends true
-    ? []
-    : Array<T[number]>;
+): (data: T) => NonRefinedFilteredArray<T, B>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
   return purry(filterImplementation, args, lazyImplementation);
