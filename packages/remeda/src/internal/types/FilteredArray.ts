@@ -2,19 +2,18 @@ import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
-export type FilteredArray<
-  T extends IterableContainer,
-  Condition,
-> = T extends unknown
-  ? [
-      // Reconstruct the array from it's parts, but with each part being filtered on
-      // the condition.
-      ...FilteredFixedTuple<TupleParts<T>["required"], Condition>,
-      ...FilteredFixedTuple<TupleParts<T>["optional"], Condition>,
-      ...CoercedArray<SymmetricRefine<TupleParts<T>["item"], Condition>>,
-      ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
-    ]
-  : never;
+export type FilteredArray<T extends IterableContainer, Condition> =
+  // We distribute the array type to support unions of arrays/tuples.
+  T extends unknown
+    ? [
+        // Reconstruct the array from it's parts, but with each part being filtered on
+        // the condition.
+        ...FilteredFixedTuple<TupleParts<T>["required"], Condition>,
+        ...FilteredFixedTuple<TupleParts<T>["optional"], Condition>,
+        ...CoercedArray<SymmetricRefine<TupleParts<T>["item"], Condition>>,
+        ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
+      ]
+    : never;
 
 // The real logic for filtering an array is done on fixed tuples (as those make
 // up the required prefix, the optional prefix, and the suffix of the array).
