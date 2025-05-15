@@ -6,10 +6,10 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import type { TupleSplits } from "./internal/types/TupleSplits";
 
-type PartialBindError<Message extends string | number> = RemedaTypeError<
-  "partialBind",
-  Message
->;
+type PartialBindError<
+  Message extends string,
+  Metadata = never,
+> = RemedaTypeError<"partialBind", Message, { metadata: Metadata }>;
 
 type TuplePrefix<T extends IterableContainer> = TupleSplits<T>["left"];
 
@@ -36,7 +36,7 @@ type RemovePrefix<
           TRest
       : // We got passed a parameter list that isn't what we expected; this is
         // an internal error.
-        PartialBindError<1>;
+        PartialBindError<"Function parameter list has unexpected shape", T>;
 
 /**
  * Creates a function that calls `func` with `partial` put before the arguments

@@ -10,7 +10,7 @@ import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
-import type { TupleParts } from "./internal/types/TupleParts";
+import type { TupleParts, TuplePrefix } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
@@ -36,27 +36,29 @@ type Chunk<
         : GenericChunk<T>
     : GenericChunk<T>;
 
-type LiteralChunk<
-  T,
-  N extends number,
-  // TupleParts allows us to optimize the algorithm by taking all items up to
-  // the rest param, all items after the rest param, and the type of the rest
-  // param, in a single recursive scan, so that all other parts of our algorithm
-  // don't need to recurse again in order to handle them.
-  Parts extends TupleParts<T> = TupleParts<T>,
-> =
+type LiteralChunk<T extends IterableContainer, N extends number> =
   | ChunkInfinite<
       // Our result will always have the prefix tuple chunked the same way, so
       // we compute it once here and send it to the main logic below
-      ChunkFinite<Parts["prefix"], N>,
-      Parts["item"],
-      Parts["suffix"],
+      ChunkFinite<
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+        TuplePrefix<T>,
+        N
+      >,
+      TupleParts<T>["item"],
+      TupleParts<T>["suffix"],
       N
     >
   // If both the prefix and suffix tuples are empty then our input is a simple
   // array of the form `Array<Item>`. This means it could also be empty, so we
   // need to add the empty output to our return type.
-  | ([...Parts["prefix"], ...Parts["suffix"]]["length"] extends 0 ? [] : never);
+  | ([
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: We need to consider how the 'optional' part of the tuple is handled in this type
+      ...TuplePrefix<T>,
+      ...TupleParts<T>["suffix"],
+    ]["length"] extends 0
+      ? []
+      : never);
 
 /**
  * This type **only** works if the input array `T` is a finite tuple (
