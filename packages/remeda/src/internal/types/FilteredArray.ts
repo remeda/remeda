@@ -5,11 +5,17 @@ import type { TupleParts } from "./TupleParts";
 export type FilteredArray<T extends IterableContainer, Condition> =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
-    ? [
-        // Reconstruct the array from it's parts, but with each part being filtered on
-        // the condition.
+    ? // Reconstruct the array from it's parts, but with each part being
+      // filtered on the condition.
+      [
         ...FilteredFixedTuple<TupleParts<T>["required"], Condition>,
+
+        // The optional elements are added as if they were required instead.
+        // This is because when building the filtered fixed tuples we create
+        // unions of possible outcomes, simulating the way optional elements
+        // work.
         ...FilteredFixedTuple<TupleParts<T>["optional"], Condition>,
+
         ...CoercedArray<SymmetricRefine<TupleParts<T>["item"], Condition>>,
         ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
       ]
