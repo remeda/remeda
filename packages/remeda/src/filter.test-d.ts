@@ -3,10 +3,12 @@ import { filter } from "./filter";
 import { isDefined } from "./isDefined";
 import { isNonNull } from "./isNonNull";
 import { isNonNullish } from "./isNonNullish";
-import { isNumber } from "./isNumber";
 import { isStrictEqual } from "./isStrictEqual";
-import { isString } from "./isString";
 import { pipe } from "./pipe";
+
+// TODO [>2]: The Remeda `isNumber` utility isn't narrowing our types correctly for our tests here due to it inferring the types "too soon" because it is used "headless"ly. This is also a problem with TypeScript before version 5.5 because we can't use a simple arrow function too without being explicit about it's return type, which makes the whole code messy. In Remeda v3 we plan to bump the minimum TypeScript version so this wouldn't be an issue any way, but we also plan to deprecate headless type predicates.
+declare function isNumber<T>(x: T): x is Extract<T, number>;
+declare function isString<T>(x: T): x is Extract<T, string>;
 
 describe("primitives arrays", () => {
   test("predicate", () => {
@@ -98,7 +100,7 @@ describe("fixed tuple", () => {
     expectTypeOf(
       filter(
         ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
-        ($) => isString($),
+        isString,
       ),
     ).toEqualTypeOf<["hello", "world", "world", "hello"]>();
   });
@@ -106,7 +108,8 @@ describe("fixed tuple", () => {
   test("type predicate with union type", () => {
     const result = filter(
       ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
-      ($) => $ === 1 || $ === "world",
+      // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
+      ($): $ is 1 | "world" => $ === 1 || $ === "world",
     );
 
     expectTypeOf(result).toEqualTypeOf<["world", 1, "world"]>();
@@ -131,8 +134,8 @@ describe("special tuple shapes", () => {
     expectTypeOf(filter(data, isStrictEqual("world" as const))).toEqualTypeOf<
       Array<"world"> | ["world", ...Array<"world">]
     >();
-    expectTypeOf(filter(data, ($) => isString($))).toEqualTypeOf<
-      Array<string>
+    expectTypeOf(filter(data, isString)).toEqualTypeOf<
+      [string, ...Array<string>]
     >();
     expectTypeOf(filter(data, constant(true))).toEqualTypeOf<Array<string>>();
   });
@@ -146,9 +149,7 @@ describe("special tuple shapes", () => {
   test("rest element is kept", () => {
     const data = ["hello", "world"] as [string, ...Array<number>, string];
 
-    expectTypeOf(filter(data, ($) => !isString($))).toEqualTypeOf<
-      Array<number>
-    >();
+    expectTypeOf(filter(data, isNumber)).toEqualTypeOf<Array<number>>();
   });
 
   test("non-empty array filtered with regular predicate", () => {
@@ -179,12 +180,20 @@ test("discriminated union filtering", () => {
     { type: "cat"; hates: string } | { type: "dog"; numFriends: number }
   >;
 
-  expectTypeOf(filter(data, ($) => $.type === "cat")).toEqualTypeOf<
-    Array<{ type: "cat"; hates: string }>
-  >();
-  expectTypeOf(filter(data, ($) => $.type === "dog")).toEqualTypeOf<
-    Array<{ type: "dog"; numFriends: number }>
-  >();
+  expectTypeOf(
+    filter(
+      data,
+      // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
+      ($): $ is { type: "cat" } & (typeof data)[number] => $.type === "cat",
+    ),
+  ).toEqualTypeOf<Array<{ type: "cat"; hates: string }>>();
+  expectTypeOf(
+    filter(
+      data,
+      // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
+      ($): $ is { type: "dog" } & (typeof data)[number] => $.type === "dog",
+    ),
+  ).toEqualTypeOf<Array<{ type: "dog"; numFriends: number }>>();
 });
 
 describe("accepts readonly arrays, returns mutable ones", () => {
@@ -250,10 +259,7 @@ describe("data last", () => {
   });
 
   test("type-guard", () => {
-    const result = pipe(
-      [1, 2, 3, false, "text"] as const,
-      filter(($) => isNumber($)),
-    );
+    const result = pipe([1, 2, 3, false, "text"] as const, filter(isNumber));
 
     expectTypeOf(result).toEqualTypeOf<[1, 2, 3]>();
   });
@@ -279,7 +285,7 @@ describe("union of array types", () => {
     expectTypeOf(
       filter(
         ["hello", 0] as ["hello", 0] | [1, 2, "world", true, 3, "hello", 4],
-        ($) => isNumber($),
+        isNumber,
       ),
     ).toEqualTypeOf<[0] | [1, 2, 3, 4]>();
   });
