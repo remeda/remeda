@@ -59,7 +59,9 @@ type FilteredFixedTuple<
               Output
     >
   : // We assume that T is a fixed tuple so it's safe to recurse via chopping
-    // off the head element until the array is consumed.
+    // off the head element until the array is consumed. When that condition
+    // isn't met we safely assume that T is now empty and we can end the
+    // recursion.
     Output;
 
 // This type is similar to the built-in `Extract` type, but allows us to have
