@@ -185,7 +185,7 @@ type GenericChunk<T extends IterableContainer> = T extends
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : Array<NonEmptyArray<T[number]>>;
 
-// TODO: This type was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
+// TODO: Chunk was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
 type TuplePrefix<T extends IterableContainer> = [
   ...TupleParts<T>["required"],
   ...(Partial<TupleParts<T>["optional"]> extends ReadonlyArray<unknown>
