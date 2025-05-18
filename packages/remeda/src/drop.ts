@@ -39,7 +39,7 @@ type Drop<T extends IterableContainer, N extends number> =
                 TupleParts<T>["optional"]["length"]
               > extends infer RemainingOptional extends number
             ? RemainingOptional extends 0
-              ? // The dorp will occur within the optional part of the tuple, we
+              ? // The drop will occur within the optional part of the tuple, we
                 // completely remove the required part, remove enough elements
                 // from the optional part, and reconstruct the rest of the
                 // tuple.
