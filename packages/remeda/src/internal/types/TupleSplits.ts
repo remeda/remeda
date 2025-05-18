@@ -1,5 +1,6 @@
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
+import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
 /**
@@ -27,7 +28,7 @@ type SplitPrefix<T extends IterableContainer> =
           left: Left;
           right: [
             ...Right,
-            ...Partial<TupleParts<T>["optional"]>,
+            ...PartialArray<TupleParts<T>["optional"]>,
             ...CoercedArray<TupleParts<T>["item"]>,
             ...TupleParts<T>["suffix"],
           ];
@@ -65,7 +66,7 @@ type SplitRest<T extends IterableContainer> = {
   // optional prefixes, and for the right side it's the suffix.
   left: [
     ...TupleParts<T>["required"],
-    ...Partial<TupleParts<T>["optional"]>,
+    ...PartialArray<TupleParts<T>["optional"]>,
     ...CoercedArray<TupleParts<T>["item"]>,
   ];
   right: [...CoercedArray<TupleParts<T>["item"]>, ...TupleParts<T>["suffix"]];
@@ -85,7 +86,7 @@ type SplitSuffix<T extends IterableContainer> =
           // the tuple.
           left: [
             ...TupleParts<T>["required"],
-            ...Partial<TupleParts<T>["optional"]>,
+            ...PartialArray<TupleParts<T>["optional"]>,
             ...CoercedArray<TupleParts<T>["item"]>,
             ...Left,
           ];

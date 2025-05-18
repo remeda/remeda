@@ -8,11 +8,11 @@ import type {
 } from "type-fest";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
-import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
 // allows the typing to remain useful even when very large chunks are needed,
@@ -188,17 +188,7 @@ type GenericChunk<T extends IterableContainer> = T extends
 // TODO: Chunk was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
 type TuplePrefix<T extends IterableContainer> = [
   ...TupleParts<T>["required"],
-  ...(Partial<TupleParts<T>["optional"]> extends ReadonlyArray<unknown>
-    ? Partial<TupleParts<T>["optional"]>
-    : // TODO [>2.0]: TypeScript before version 5.4 couldn't infer the type correctly as an array. This shouldn't be needed once the minimum TypeScript version is bumped above this.
-      RemedaTypeError<
-        "TupleParts",
-        "Partial on arrays should always result in an array",
-        {
-          type: never;
-          metadata: [Partial<TupleParts<T>["optional"]>, T];
-        }
-      >),
+  ...PartialArray<TupleParts<T>["optional"]>,
 ];
 
 /**
