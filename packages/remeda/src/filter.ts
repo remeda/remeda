@@ -7,8 +7,8 @@ import { purry } from "./purry";
 
 // When the predicate used for filter isn't refining (like a type-predicate) we
 // can narrow the result slightly if it's also trivial (it returns the same
-// result for all items). This is uncommon, but can be useful to
-// "short-circuiting" the filter.
+// result for all items). This is uncommon, but can be useful to "short-circuit"
+// the filter.
 type NonRefinedFilteredArray<T extends IterableContainer, B extends boolean> =
   IsEqual<B, true> extends true
     ? // If the predicate is always true we return a shallow copy of the array.
