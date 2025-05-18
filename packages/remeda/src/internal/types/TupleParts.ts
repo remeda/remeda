@@ -135,25 +135,3 @@ type TuplePartsRest<T extends IterableContainer> = {
    */
   item: T extends readonly [] ? never : T[number];
 };
-
-/**
- * ! **DO NOT USE THIS IN NEW CODE** !
- *
- * @deprecated The tuple prefix contains both optional and required elements and
- * doesn't differentiate between them. Most types would require different logic
- * for the optional part than the required part.
- */
-export type TuplePrefix<T extends IterableContainer> = [
-  ...TupleParts<T>["required"],
-  ...(Partial<TupleParts<T>["optional"]> extends ReadonlyArray<unknown>
-    ? Partial<TupleParts<T>["optional"]>
-    : // TODO [>2.0]: TypeScript before version 5.4 couldn't infer the type correctly as an array. This shouldn't be needed once the minimum TypeScript version is bumped above this.
-      RemedaTypeError<
-        "TupleParts",
-        "Partial on arrays should always result in an array",
-        {
-          type: never;
-          metadata: [Partial<TupleParts<T>["optional"]>, T];
-        }
-      >),
-];
