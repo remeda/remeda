@@ -1,4 +1,4 @@
-import type { IsEqual, Writable } from "type-fest";
+import type { Writable } from "type-fest";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -9,21 +9,22 @@ import { purry } from "./purry";
 // can narrow the result slightly if it's also trivial (it returns the same
 // result for all items). This is uncommon, but can be useful to "short-circuit"
 // the filter.
-type NonRefinedFilteredArray<T extends IterableContainer, B extends boolean> =
-  IsEqual<B, true> extends true
+type NonRefinedFilteredArray<
+  T extends IterableContainer,
+  B extends boolean,
+> = boolean extends B
+  ? // We don't know which items of the array the predicate would allow in the
+    // output so we can only safely say that the result is an array with items
+    // from the input array.
+    // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
+    Array<T[number]>
+  : B extends true
     ? // If the predicate is always true we return a shallow copy of the array.
       // If it was originally readonly we need to strip that away.
       Writable<T>
-    : IsEqual<B, false> extends true
-      ? // If the predicate is always false we will always return an empty
-        // array.
-        []
-      : // These are the cases where we have the least to work with when
-        // computing the result type. We don't know which items of the array
-        // would participate in the output and which wouldn't so we can only
-        // safely say that the result is an array with items from the input
-        // array.
-        Array<T[number]>;
+    : // If the predicate is always false we will always return an empty
+      // array.
+      [];
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
