@@ -6,7 +6,7 @@ import { isNonNullish } from "./isNonNullish";
 import { isStrictEqual } from "./isStrictEqual";
 import { pipe } from "./pipe";
 
-// TODO [>2]: The Remeda `isNumber` utility isn't narrowing our types correctly for our tests here due to it inferring the types "too soon" because it is used "headless"ly. This is also a problem with TypeScript before version 5.5 because we can't use a simple arrow function too without being explicit about it's return type, which makes the whole code messy. In Remeda v3 we plan to bump the minimum TypeScript version so this wouldn't be an issue any way, but we also plan to deprecate headless type predicates.
+// TODO [>2]: Our type-narrowing utilities aren't narrowing our types correctly in these tests due to them inferring the types "too soon" (because they are invoked "headless"ly). This is also a problem with TypeScript before version 5.5 because we can't use a simple arrow function too without being explicit about it's return type, which makes the whole code messy. In Remeda v3 we plan to bump the minimum TypeScript version so this wouldn't be an issue any way, but we also plan to deprecate headless type predicates.
 declare function isNumber<T>(x: T): x is Extract<T, number>;
 declare function isString<T>(x: T): x is Extract<T, string>;
 
