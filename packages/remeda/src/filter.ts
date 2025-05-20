@@ -11,14 +11,14 @@ import { purry } from "./purry";
 // the filter.
 type NonRefinedFilteredArray<
   T extends IterableContainer,
-  B extends boolean,
-> = boolean extends B
+  IsItemIncluded extends boolean,
+> = boolean extends IsItemIncluded
   ? // We don't know which items of the array the predicate would allow in the
     // output so we can only safely say that the result is an array with items
     // from the input array.
     // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
     Array<T[number]>
-  : B extends true
+  : IsItemIncluded extends true
     ? // If the predicate is always true we return a shallow copy of the array.
       // If it was originally readonly we need to strip that away.
       Writable<T>
@@ -52,10 +52,13 @@ export function filter<
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): FilteredArray<T, Condition>;
-export function filter<T extends IterableContainer, B extends boolean>(
+export function filter<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => B,
-): NonRefinedFilteredArray<T, B>;
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): NonRefinedFilteredArray<T, IsItemIncluded>;
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -81,9 +84,12 @@ export function filter<
 >(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (data: T) => FilteredArray<T, Condition>;
-export function filter<T extends IterableContainer, B extends boolean>(
-  predicate: (value: T[number], index: number, data: T) => B,
-): (data: T) => NonRefinedFilteredArray<T, B>;
+export function filter<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
   return purry(filterImplementation, args, lazyImplementation);
