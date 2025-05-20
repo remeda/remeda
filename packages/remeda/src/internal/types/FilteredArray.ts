@@ -58,7 +58,7 @@ type FilteredFixedTuple<
               // it as it would never satisfy the condition.
               Output
     >
-  : [];
+  : Output;
 
 // This type is similar to the built-in `Extract` type, but allows us to have
 // either Item or Condition be narrower than the other.
