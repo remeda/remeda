@@ -48,9 +48,9 @@ type SplitOptional<T extends IterableContainer> =
           // For optional part we need to add the required prefix to each left
           // side, we need to make the partial part partial, and we need to
           // reconstruct the rest of the tuple for the right side.
-          left: [...TupleParts<T>["required"], ...Partial<Left>];
+          left: [...TupleParts<T>["required"], ...PartialArray<Left>];
           right: [
-            ...Partial<Right>,
+            ...PartialArray<Right>,
             ...CoercedArray<TupleParts<T>["item"]>,
             ...TupleParts<T>["suffix"],
           ];
