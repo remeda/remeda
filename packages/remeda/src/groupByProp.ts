@@ -1,7 +1,7 @@
 import type { AllUnionFields, SimplifyDeep } from "type-fest";
+import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyTuple } from "./internal/types/NonEmptyTuple";
 import { purry } from "./purry";
 
 // We need to use AllUnionFields to convert a union of objects into a single type that would extend all of them, and thus provide a better representation of what the groupBy loop would need to handle.
@@ -16,8 +16,9 @@ type GroupByProp<
   T extends ReadonlyArray<unknown> | [],
   P extends GroupableBy<T[number]>,
 > = SimplifyDeep<{
-  [GroupKey in AllUnionFields<T[number]>[P] & PropertyKey]: NonEmptyTuple<
-    FilteredArray<T, Record<P, GroupKey>>
+  [GroupKey in AllUnionFields<T[number]>[P] & PropertyKey]: ArrayRequiredPrefix<
+    FilteredArray<T, Record<P, GroupKey>>,
+    1
   >;
 }>;
 
