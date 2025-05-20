@@ -1,16 +1,18 @@
-import type { IsInteger, IsNegative, Subtract } from "type-fest";
+import type { IsInteger, IsNegative, Writable } from "type-fest";
+import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { NTuple } from "./internal/types/NTuple";
-import type { TupleParts, TuplePrefix } from "./internal/types/TupleParts";
+import type { PartialArray } from "./internal/types/PartialArray";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 type Drop<T extends IterableContainer, N extends number> =
   IsNegative<N> extends true
-    ? // Negative numbers result in nothing being dropped.
-      T
+    ? // Negative numbers result in nothing being dropped, we return a shallow
+      // clone of the array.
+      Writable<T>
     : IsInteger<N> extends false
       ? // We can't compute accurate types for non-integer numbers so we
         // fallback to the "legacy" typing where we convert our output to a
@@ -18,66 +20,79 @@ type Drop<T extends IterableContainer, N extends number> =
         // (e.g. it is `number`).
         // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
         Array<T[number]>
-      : // We have an non-negative integer N so we start chopping up the array.
-        // first we take a look at its prefix:
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: Update the logic to handle the `optional` part correctly.
-        TuplePrefix<T> extends [...NTuple<unknown, N>, ...infer Remaining]
-        ? // If the prefix is as long as N, we know the drop would only remove
-          // items from the prefix, so we reconstruct the array with any
-          // remaining items from the prefix, and the rest of the array as it
-          // is...
-          [
-            ...Remaining,
-            ...CoercedArray<TupleParts<T>["item"]>,
-            ...TupleParts<T>["suffix"],
-          ]
-        : // But if the prefix is shorter than N, the drop would also remove
-          // items from the rest param and possibly the suffix.
-          0 extends TupleParts<T>["suffix"]["length"]
-          ? // When there is no suffix the result is simply the rest param, and
-            // dropping items from a simple array results in the same array
-            // type.
-            CoercedArray<TupleParts<T>["item"]>
-          : // But if we have a suffix, the drop could remove items from it.
-            | DropUpTo<
-                  TupleParts<T>["suffix"],
-                  // If the suffix has any items dropped, it would be after all
-                  // prefix items have been removed, so we need to take those
-                  // into account when counting how many items to drop from the
-                  // suffix.
-                  // TODO: `TupleParts` has been updated to handle the `optional` part more accurately, instead of lumping it into the required `prefix` part. The following logic was written before this fix and now might be handling optional items incorrectly.
-                  Subtract<
-                    Subtract<N, TupleParts<T>["required"]["length"]>,
-                    TupleParts<T>["optional"]["length"]
-                  >
-                >
-              // And because we have a rest component, we also need to
-              // consider that all items were removed from that part, leaving
-              // the suffix intact.
-              | [...Array<TupleParts<T>["item"]>, ...TupleParts<T>["suffix"]];
+      : ClampedIntegerSubtract<
+            N,
+            TupleParts<T>["required"]["length"]
+          > extends infer RemainingPrefix extends number
+        ? RemainingPrefix extends 0
+          ? // The drop will occur within the required part of the tuple, we
+            // simply remove those elements from it and reconstruct the rest of
+            // the tuple.
+            [
+              ...DropFixedTuple<TupleParts<T>["required"], N>,
+              ...PartialArray<TupleParts<T>["optional"]>,
+              ...CoercedArray<TupleParts<T>["item"]>,
+              ...TupleParts<T>["suffix"],
+            ]
+          : ClampedIntegerSubtract<
+                RemainingPrefix,
+                TupleParts<T>["optional"]["length"]
+              > extends infer RemainingOptional extends number
+            ? RemainingOptional extends 0
+              ? // The drop will occur within the optional part of the tuple, we
+                // completely remove the required part, remove enough elements
+                // from the optional part, and reconstruct the rest of the
+                // tuple.
+                [
+                  ...PartialArray<
+                    DropFixedTuple<TupleParts<T>["optional"], RemainingPrefix>
+                  >,
+                  ...CoercedArray<TupleParts<T>["item"]>,
+                  ...TupleParts<T>["suffix"],
+                ]
+              : // The drop will occur within the rest element or the suffix.
+                // Because the suffix can contain any number of elements this
+                // case adds more complexity as we need to consider all possible
+                // (relevant) lengths. We start by considering the case where
+                // there are enough elements within the rest param; this means
+                // we still maintain the rest element as it could contain even
+                // more elements, and we add the suffix untouched.
+                | [
+                      ...CoercedArray<TupleParts<T>["item"]>,
+                      ...TupleParts<T>["suffix"],
+                    ]
+                  // Additionally, we need to consider the case where the rest
+                  // element has up to the same number of elements as the
+                  // suffix; this will result in removing the rest element
+                  // entirely, and dropping elements from the suffix. We do this
+                  // for all possible values from 0 to N where N is the
+                  // remaining value after we handled the prefix. We can exclude
+                  // the 0 case because it is contained in the previous case.
+                  | Exclude<
+                      DropFixedTuple<
+                        TupleParts<T>["suffix"],
+                        RemainingOptional,
+                        true /* IncludePrefixes */
+                      >,
+                      TupleParts<T>["suffix"]
+                    >
+            : never
+        : never;
 
-/**
- * Arrays with a fixed suffix will result in any number of items being dropped,
- * up to N, and not just N itself. This is because we don't know during typing
- * how many items the "rest" part of the tuple will have in runtime.
- *
- * !Important: This is an internal type and assumes that T is a fixed-size
- * tuple! It will not work if T has a rest element.
- */
-type DropUpTo<
+type DropFixedTuple<
   T,
   N,
-  Dropped extends ReadonlyArray<unknown> = [],
+  // This flag controls if we want a union of all possible prefixes, or just the
+  // final tuple with all N items dropped.
+  IncludePrefixes = false,
+  Dropped extends Array<unknown> = [],
 > = Dropped["length"] extends N
-  ? // The last item had been dropped off T
-    T
-  : T extends [unknown, ...infer Rest]
-    ? // Take the current value, and then recurse with the array where it is
-      // dropped, while counting how many items we've already dropped.
-      DropUpTo<Rest, N, [...Dropped, unknown]> | T
-    : // T is most likely [] at this point, but we use T instead of [] just to
-      // be on the safe side.
-      T;
+  ? T
+  : T extends readonly [unknown, ...infer Rest]
+    ?
+        | DropFixedTuple<Rest, N, IncludePrefixes, [...Dropped, unknown]>
+        | (true extends IncludePrefixes ? T : never)
+    : [];
 
 /**
  * Removes first `n` elements from the `array`.

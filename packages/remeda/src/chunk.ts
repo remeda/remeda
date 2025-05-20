@@ -8,9 +8,10 @@ import type {
 } from "type-fest";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import type { NTuple } from "./internal/types/NTuple";
-import type { TupleParts, TuplePrefix } from "./internal/types/TupleParts";
+import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
+import type { PartialArray } from "./internal/types/PartialArray";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 // This prevents typescript from failing on complex arrays and large chunks. It
@@ -36,45 +37,27 @@ type Chunk<
         : GenericChunk<T>
     : GenericChunk<T>;
 
-type LiteralChunk<
-  T extends IterableContainer,
-  N extends number,
-  // TupleParts allows us to optimize the algorithm by taking all items up to
-  // the rest param, all items after the rest param, and the type of the rest
-  // param, in a single recursive scan, so that all other parts of our algorithm
-  // don't need to recurse again in order to handle them.
-  Parts extends TupleParts<T> = TupleParts<T>,
-> =
-  | ChunkInfinite<
+type LiteralChunk<T extends IterableContainer, N extends number> =
+  | ChunkRestElement<
       // Our result will always have the prefix tuple chunked the same way, so
       // we compute it once here and send it to the main logic below
-      ChunkFinite<
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: Update the logic to handle the optional part correctly.
-        TuplePrefix<T>,
-        N
-      >,
-      Parts["item"],
-      Parts["suffix"],
+      ChunkFixedTuple<TuplePrefix<T>, N>,
+      TupleParts<T>["item"],
+      TupleParts<T>["suffix"],
       N
     >
   // If both the prefix and suffix tuples are empty then our input is a simple
   // array of the form `Array<Item>`. This means it could also be empty, so we
   // need to add the empty output to our return type.
-  | ([
-      // eslint-disable-next-line @typescript-eslint/no-deprecated -- TODO: Update the logic to handle the optional part correctly.
-      ...TuplePrefix<T>,
-      ...Parts["suffix"],
-    ]["length"] extends 0
+  | ([...TuplePrefix<T>, ...TupleParts<T>["suffix"]] extends readonly []
       ? []
       : never);
 
 /**
- * This type **only** works if the input array `T` is a finite tuple (
- * `[number, "abc", true, { a: "hello" }]` etc..., and it doesn't contain a rest
- * parameter). For these inputs the chunked output could be computed as literal
- * finite tuples too.
+ * This type **only** works if the input array `T` is a fixed tuple. For these
+ * inputs the chunked output could be computed as literal finite tuples too.
  */
-type ChunkFinite<
+type ChunkFixedTuple<
   T,
   N extends number,
   // Important! Result is initialized with an empty array (and not `[[]]`)
@@ -82,7 +65,7 @@ type ChunkFinite<
   Result = [],
 > = T extends readonly [infer Head, ...infer Rest]
   ? // We continue consuming the input tuple recursively item by item.
-    ChunkFinite<
+    ChunkFixedTuple<
       Rest,
       N,
       Result extends [
@@ -113,7 +96,7 @@ type ChunkFinite<
  * creates all possible combinations of adding items to the prefix and suffix
  * for all possible scenarios for how many items the rest param "represents".
  */
-type ChunkInfinite<
+type ChunkRestElement<
   PrefixChunks,
   Item,
   Suffix extends Array<unknown>,
@@ -142,7 +125,7 @@ type ChunkInfinite<
               Subtract<N, LastPrefixChunk["length"]>
             >]: [
               ...PrefixFullChunks,
-              ...ChunkFinite<
+              ...ChunkFixedTuple<
                 // Create a new array that would **not** contain a rest param
                 // (so it's finite) made of the last prefix chunk, padding from
                 // the rest param, and the suffix.
@@ -186,7 +169,7 @@ type SuffixChunk<
   : ValueOf<{
       // When suffix isn't empty we pad the head of the suffix and compute it's
       // chunks for all possible padding sizes.
-      [Padding in IntRange<0, N>]: ChunkFinite<
+      [Padding in IntRange<0, N>]: ChunkFixedTuple<
         [...NTuple<Item, Padding>, ...T],
         N
       >;
@@ -201,6 +184,12 @@ type GenericChunk<T extends IterableContainer> = T extends
   | readonly [unknown, ...Array<unknown>]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : Array<NonEmptyArray<T[number]>>;
+
+// TODO: Chunk was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
+type TuplePrefix<T extends IterableContainer> = [
+  ...TupleParts<T>["required"],
+  ...PartialArray<TupleParts<T>["optional"]>,
+];
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.

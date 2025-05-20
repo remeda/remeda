@@ -29,9 +29,7 @@ describe("data-first", () => {
   test("suffixed array", () => {
     const result = drop([1] as [...Array<boolean>, number], 2);
 
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean>, number] | [] | [number]
-    >();
+    expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, number] | []>();
   });
 
   describe("arrays with a prefix (2) and a suffix (2)", () => {
@@ -73,7 +71,7 @@ describe("data-first", () => {
       );
 
       expectTypeOf(result).toEqualTypeOf<
-        [...Array<boolean>, string, string] | [string, string] | [string]
+        [...Array<boolean>, string, string] | [string]
       >();
     });
 
@@ -84,7 +82,7 @@ describe("data-first", () => {
       );
 
       expectTypeOf(result).toEqualTypeOf<
-        [...Array<boolean>, string, string] | [] | [string, string] | [string]
+        [...Array<boolean>, string, string] | [] | [string]
       >();
     });
 
@@ -95,7 +93,7 @@ describe("data-first", () => {
       );
 
       expectTypeOf(result).toEqualTypeOf<
-        [...Array<boolean>, string, string] | [] | [string, string] | [string]
+        [...Array<boolean>, string, string] | [] | [string]
       >();
     });
   });
@@ -122,6 +120,16 @@ describe("data-first", () => {
     const result = drop(["a", 1, true] as const, 1 as number);
 
     expectTypeOf(result).toEqualTypeOf<Array<"a" | 1 | true>>();
+  });
+
+  test("union of tuples of different length", () => {
+    expectTypeOf(
+      drop([1, "a"] as [number, string] | [boolean, boolean, number], 1),
+    ).toEqualTypeOf<[string] | [boolean, number]>();
+  });
+
+  test("dropping more than available", () => {
+    expectTypeOf(drop([1, 2, 3] as const, 10)).toEqualTypeOf<[]>();
   });
 });
 
@@ -153,9 +161,7 @@ describe("data-last", () => {
   test("suffix array", () => {
     const result = pipe([1] as [...Array<boolean>, number], drop(2));
 
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean>, number] | [] | [number]
-    >();
+    expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, number] | []>();
   });
 
   test("array with suffix and prefix", () => {
@@ -164,9 +170,7 @@ describe("data-last", () => {
       drop(2),
     );
 
-    expectTypeOf(result).toEqualTypeOf<
-      [...Array<boolean>, string] | [] | [string]
-    >();
+    expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string] | []>();
   });
 
   test("tuple", () => {
