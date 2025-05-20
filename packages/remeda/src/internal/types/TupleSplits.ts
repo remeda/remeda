@@ -1,6 +1,7 @@
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { PartialArray } from "./PartialArray";
+import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 
 /**
@@ -33,7 +34,11 @@ type SplitPrefix<T extends IterableContainer> =
             ...TupleParts<T>["suffix"],
           ];
         }
-      : never
+      : RemedaTypeError<
+          "SplitPrefix",
+          "Unexpected result shape from FixedTupleSplits",
+          { type: never; metadata: [Req, T] }
+        >
     : never;
 
 type SplitOptional<T extends IterableContainer> =
@@ -55,7 +60,11 @@ type SplitOptional<T extends IterableContainer> =
             ...TupleParts<T>["suffix"],
           ];
         }
-      : never
+      : RemedaTypeError<
+          "SplitOptional",
+          "Unexpected result shape from FixedTupleSplits",
+          { type: never; metadata: [Optional, T] }
+        >
     : never;
 
 type SplitRest<T extends IterableContainer> = {
@@ -92,7 +101,11 @@ type SplitSuffix<T extends IterableContainer> =
           ];
           right: Right;
         }
-      : never
+      : RemedaTypeError<
+          "SplitSuffix",
+          "Unexpected result shape from FixedTupleSplits",
+          { type: never; metadata: [Suffix, T] }
+        >
     : never;
 
 type FixedTupleSplits<L, R extends Array<unknown> = []> =
