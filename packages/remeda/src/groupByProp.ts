@@ -113,13 +113,10 @@ export function groupByProp(...args: ReadonlyArray<unknown>): unknown {
   return purry(groupByPropImplementation, args);
 }
 
-const groupByPropImplementation = <
+function groupByPropImplementation<
   T extends IterableContainer,
   Prop extends GroupableProps<T>,
->(
-  data: T,
-  prop: Prop,
-): GroupByProp<T, Prop> => {
+>(data: T, prop: Prop): GroupByProp<T, Prop> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
   const output: BoundedPartial<
     Record<AllPropValues<T, Prop>, Array<T[number]>>
@@ -161,4 +158,4 @@ const groupByPropImplementation = <
 
   // @ts-expect-error [ts2322] -- This is fine! We use a broader type for output while we build it because it more accurately represents the shape of the object *while it is being built*. TypeScript can't tell that we finished building the object so can't ensure that output matches the expected output at this point.
   return output;
-};
+}
