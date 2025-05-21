@@ -1,8 +1,9 @@
 import type {
-  KeysOfUnion,
-  IsStringLiteral,
   IsNumericLiteral,
+  IsStringLiteral,
   IsSymbolLiteral,
+  KeysOfUnion,
+  Or,
   Split,
 } from "type-fest";
 
@@ -11,32 +12,23 @@ import type {
  * set of keys.
  *
  * @example
- *     IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
- *     IfBoundedRecord<Record<string | number, unknown>>; //=> false
- *     IfBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
+ *   IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
+ *   IfBoundedRecord<Record<string | number, unknown>>; //=> false
+ *   IfBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
  */
-export type IfBoundedRecord<
-  T,
-  TypeIfBoundedRecord = true,
-  TypeIfUnboundedRecord = false,
-> =
-  IsBoundedKey<KeysOfUnion<T>> extends true
-    ? TypeIfBoundedRecord
-    : TypeIfUnboundedRecord;
+export type IfBoundedRecord<T, WhenTrue = true, WhenFalse = false> =
+  IsBounded<KeysOfUnion<T>> extends true ? WhenTrue : WhenFalse;
 
 /**
  * Checks if a type is a bounded key: a union of bounded strings, numeric
  * literals, or symbol literals.
  */
-type IsBoundedKey<T> =
-  // `extends unknown` is always going to be the case and is used to convert any
-  // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
+type IsBounded<T> =
+  // We distribute unions to allow iterating over each value separately.
   T extends unknown
     ? IsStringLiteral<T> extends true
       ? IsBoundedString<T>
-      : IsNumericLiteral<T> extends true
-        ? true
-        : IsSymbolLiteral<T>
+      : Or<IsNumericLiteral<T>, IsSymbolLiteral<T>>
     : never;
 
 /**

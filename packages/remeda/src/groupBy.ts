@@ -1,4 +1,4 @@
-import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { purry } from "./purry";
 
@@ -31,7 +31,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): ExactRecord<Key, NonEmptyArray<T>>;
+): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -66,7 +66,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): (items: ReadonlyArray<T>) => ExactRecord<Key, NonEmptyArray<T>>;
+): (items: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 export function groupBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(groupByImplementation, args);
@@ -79,9 +79,10 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): ExactRecord<Key, NonEmptyArray<T>> => {
+): BoundedPartial<Record<Key, NonEmptyArray<T>>> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
-  const output: ExactRecord<Key, NonEmptyArray<T>> = Object.create(null);
+  const output: BoundedPartial<Record<Key, NonEmptyArray<T>>> =
+    Object.create(null);
 
   for (let index = 0; index < data.length; index++) {
     // Accessing the object directly instead of via an iterator on the `entries` showed significant performance benefits while benchmarking.

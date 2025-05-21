@@ -3,9 +3,9 @@
  * possible!
  */
 
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { ExactRecord } from "./internal/types/ExactRecord";
 import { purry } from "./purry";
 
 /**
@@ -27,7 +27,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
+): BoundedPartial<Record<S, EnumerableStringKeyedValueOf<T>>>;
 
 /**
  * Maps keys of `object` and keeps the same values.
@@ -46,7 +46,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): (data: T) => ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
+): (data: T) => BoundedPartial<Record<S, EnumerableStringKeyedValueOf<T>>>;
 
 export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapKeysImplementation, args);
