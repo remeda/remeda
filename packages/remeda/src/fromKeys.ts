@@ -1,7 +1,7 @@
 import type { Simplify } from "type-fest";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
-import type { BoundedPartial } from "./internal/types/BoundedPartial";
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
