@@ -13,10 +13,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, S extends T>(
-  data: T, 
-  predicate: (item: T[number], index: number, data: T) => item is S[number]
-): Array<S[number]>;
+export function takeWhile<T extends IterableContainer, S extends T[number]>(
+  data: T,
+  predicate: (item: T[number], index: number, data: T) => item is S,
+): Array<S>;
 export function takeWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
@@ -33,9 +33,9 @@ export function takeWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, S extends T>(
-  predicate: (item: T[number], index: number, data: T) => item is S[number]
-): (array: T) => Array<S[number]>;
+export function takeWhile<T extends IterableContainer, S extends T[number]>(
+  predicate: (item: T[number], index: number, data: T) => item is S,
+): (array: T) => Array<S>;
 export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): (array: T) => Array<T[number]>;

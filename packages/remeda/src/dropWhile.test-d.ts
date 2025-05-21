@@ -1,6 +1,7 @@
 import { pipe } from "./pipe";
 import { dropWhile } from "./dropWhile";
 import { constant } from "./constant";
+import { isNumber } from "./isNumber";
 
 describe("data-first", () => {
   test("empty array", () => {
@@ -61,6 +62,12 @@ describe("data-first", () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+  });
+
+  test("assert type using predicate", () => {
+    const result = dropWhile([1, "a"], isNumber);
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 });
 
@@ -126,6 +133,12 @@ describe("data-last", () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+  });
+
+  test("assert type using predicate", () => {
+    const result = pipe([1, "a"], dropWhile(isNumber));
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   describe("predicate is typed correctly", () => {
