@@ -1,20 +1,18 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style --
+ * The autofixer for this rule is breaking our tests!
+ */
+
 import { groupByProp } from "./groupByProp";
 
 const SYMBOL = Symbol("sym");
 
 describe("grouping prop types", () => {
   test("primitive strings", () => {
-    const result = groupByProp([] as Array<{ a: string }>, "a");
-    const expected = {} as Record<
-      string,
-      [{ a: string }, ...Array<{ a: string }>]
-    >;
-
-    // @ts-expect-error [ts2344] -- TODO: Vitest is failing to assert that the types match and I don't know why. That's why we do the 'extends' checks below instead, because if two types extend each other, they are effectively equal.
-    expectTypeOf(result).toEqualTypeOf<typeof expected>();
-
-    expectTypeOf(result).toExtend<typeof expected>();
-    expectTypeOf(expected).toExtend<typeof result>();
+    expectTypeOf(
+      groupByProp([] as Array<{ a: string }>, "a"),
+    ).branded.toEqualTypeOf<{
+      [x: string]: [{ a: string }, ...Array<{ a: string }>];
+    }>();
   });
 
   test("literal strings", () => {
@@ -72,31 +70,16 @@ describe("grouping prop types", () => {
 });
 
 test("values which might not exist in the input are optional in the output", () => {
-  const result = groupByProp(
-    [{ a: "cat" }] as [
-      // 'cat' is required
-      { a: "cat" },
-      // 'mouse' is optional
-      { a: "mouse" }?,
-      // 'dog' is a rest element
-      ...Array<{ a: "dog" }>,
-    ],
-    "a",
-  );
-  const expected = {} as {
-    // Cat is not optional because the tuple will always have at least one.
+  expectTypeOf(
+    groupByProp(
+      [{ a: "cat" }] as [{ a: "cat" }, { a: "mouse" }?, ...Array<{ a: "dog" }>],
+      "a",
+    ),
+  ).branded.toEqualTypeOf<{
     cat: [{ a: "cat" }];
-    // Dog is optional because the rest element could have 0 items.
     dog?: [{ a: "dog" }, ...Array<{ a: "dog" }>];
-    // Mouse is optional because it's optional in the input type.
     mouse?: [{ a: "mouse" }];
-  };
-
-  // @ts-expect-error [ts2344] -- TODO: Vitest is failing to assert that the types match and I don't know why. That's why we do the 'extends' checks below instead, because if two types extend each other, they are effectively equal.
-  expectTypeOf(result).toEqualTypeOf<typeof expected>();
-
-  expectTypeOf(result).toExtend<typeof expected>();
-  expectTypeOf(expected).toExtend<typeof result>();
+  }>();
 });
 
 describe("enforces strong typing on the grouping prop", () => {
@@ -138,4 +121,53 @@ test("group by prop that doesn't exist on all items", () => {
   expectTypeOf(
     groupByProp([{ a: "cat" }, { b: "dog" }] as const, "a"),
   ).toEqualTypeOf<{ cat: [{ readonly a: "cat" }] }>();
+});
+
+describe("union of array types", () => {
+  test("when they share the grouping prop", () => {
+    expectTypeOf(
+      groupByProp(
+        [] as
+          | Array<{ a: "cat"; cat: number }>
+          | Array<{ a: "dog"; dog: boolean }>,
+        "a",
+      ),
+    ).branded.toEqualTypeOf<
+      | {
+          cat?: [
+            { a: "cat"; cat: number },
+            ...Array<{ a: "cat"; cat: number }>,
+          ];
+        }
+      | {
+          dog?: [
+            { a: "dog"; dog: boolean },
+            ...Array<{ a: "dog"; dog: boolean }>,
+          ];
+        }
+    >();
+  });
+
+  test("when they don't share the grouping prop", () => {
+    expectTypeOf(
+      groupByProp([] as Array<{ a: string }> | Array<{ b: number }>, "a"),
+    ).branded.toEqualTypeOf<
+      | Record<PropertyKey, never>
+      | {
+          [x: string]: [{ a: string }, ...Array<{ a: string }>];
+        }
+    >();
+  });
+
+  test("empty tuple", () => {
+    expectTypeOf(groupByProp([] as [{ a: string }] | [], "a")).toEqualTypeOf<
+      Record<PropertyKey, never> | { [x: string]: [{ a: string }] }
+    >();
+  });
+});
+
+test("all values are undefined", () => {
+  expectTypeOf(groupByProp([] as Array<{ a: undefined }>, "a")).toEqualTypeOf<
+    Record<PropertyKey, never>
+  >();
 });

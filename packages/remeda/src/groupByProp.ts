@@ -1,4 +1,10 @@
-import type { AllUnionFields, And, ConditionalKeys, Merge } from "type-fest";
+import type {
+  AllUnionFields,
+  And,
+  ConditionalKeys,
+  IfNever,
+  Merge,
+} from "type-fest";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { FilteredArray } from "./internal/types/FilteredArray";
@@ -6,14 +12,20 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type GroupByProp<
-  T extends IterableContainer,
-  Prop extends GroupableProps<T>,
-> = EnsureNonEmpty<{
-  // For each possible value of the prop we filter the input tuple with the prop
-  // assigned to the value, e.g. `{ type: "cat" }`
-  [Value in AllPropValues<T, Prop>]: FilteredArray<T, Record<Prop, Value>>;
-}>;
+type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>> =
+  // We distribute the union in order to support unions of tuple types.
+  T extends unknown
+    ? FixEmptyObject<
+        EnsureValuesAreNonEmpty<{
+          // For each possible value of the prop we filter the input tuple with
+          // the prop assigned to the value, e.g. `{ type: "cat" }`
+          [Value in AllPropValues<T, Prop>]: FilteredArray<
+            T,
+            Record<Prop, Value>
+          >;
+        }>
+      >
+    : never;
 
 // We can only group by props that only have values that could be used to key
 // an object (i.e. PropertyKey), or if they are undefined (which would filter
@@ -45,17 +57,28 @@ type ItemsSuperObject<T extends IterableContainer> = AllUnionFields<
   Exclude<T[number], undefined>
 >;
 
+// When the input array is empty the constructed result type would be `{}`
+// because our mapped type would never run; but this doesn't represent the
+// semantics of the return value for that case, because it effectively means
+// "any object" and not "empty object". This can happen in 2 situations:
+// A union of tuples where one of the tuples doesn't have any item with the
+// groupable prop, or when the groupable prop has a value of `undefined` for
+// all items. The former is extra problematic because it would add `| {}` to the
+// result type which effectively cancels out all other parts of the union.
+type FixEmptyObject<T> = IfNever<keyof T, Record<PropertyKey, never>, T>;
+
 // Group by can never return an empty tuple but our filtered arrays might not
 // represent that. We need to reshape the tuples so that they always have at
 // least one item in them.
-type EnsureNonEmpty<T extends Record<PropertyKey, IterableContainer>> = Merge<
-  T,
-  BoundedPartial<{
-    [P in keyof T as IsPossiblyEmpty<T[P]> extends true
-      ? P
-      : never]: ArrayRequiredPrefix<T[P], 1>;
-  }>
->;
+type EnsureValuesAreNonEmpty<T extends Record<PropertyKey, IterableContainer>> =
+  Merge<
+    T,
+    BoundedPartial<{
+      [P in keyof T as IsPossiblyEmpty<T[P]> extends true
+        ? P
+        : never]: ArrayRequiredPrefix<T[P], 1>;
+    }>
+  >;
 
 // A tuple is possibly empty if non of the fixed parts have any elements in
 // them. This means the tuple is made of optional elements and/or a rest
