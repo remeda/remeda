@@ -87,8 +87,6 @@ type IsEmpty<T> = T extends readonly [] ? true : false;
  *
  * @param data - The items to group.
  * @param prop - The property name to group by.
- * @returns An object where each key is a property value and each value is an array
- * of elements with that property value.
  * @signature
  *    R.groupByProp(data, prop)
  * @example
@@ -120,8 +118,6 @@ export function groupByProp<
  * that value.
  *
  * @param prop - The property name to group by.
- * @returns A function that takes an array and returns an object where each key is a
- * property value and each value is an array of elements with that property value.
  * @signature
  *    R.groupByProp(prop)(data);
  * @example
