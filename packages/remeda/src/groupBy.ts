@@ -10,9 +10,10 @@ import { purry } from "./purry";
  * return `undefined` in order to exclude the item from being added to any
  * group.
  *
- * If you are grouping by a property (e.g. `groupBy(data, ({ prop }) => prop)`
- * or `groupBy(data, prop('prop'))`) consider using `groupByProp` instead, as
- * it would provide better typing).
+ * If you are grouping objects by a property of theirs (e.g.
+ * `groupBy(data, ({ myProp }) => myProp)` or `groupBy(data, prop('myProp'))`)
+ * consider using `groupByProp` (e.g. `groupByProp(data, 'myProp')`) instead,
+ * as it would provide better typing.
  *
  * @param data - The items to group.
  * @param callbackfn - A function to execute for each element in the iterable.
@@ -45,9 +46,10 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * return `undefined` in order to exclude the item from being added to any
  * group.
  *
- * If you are grouping by a property (e.g. `groupBy(data, ({ prop }) => prop)`
- * or `groupBy(data, prop('prop'))`) consider using `groupByProp` instead, as
- * it would provide better typing).
+ * If you are grouping objects by a property of theirs (e.g.
+ * `groupBy(data, ({ myProp }) => myProp)` or `groupBy(data, prop('myProp'))`)
+ * consider using `groupByProp` (e.g. `groupByProp(data, 'myProp')`) instead,
+ * as it would provide better typing.
  *
  * @param callbackfn - A function to execute for each element in the iterable.
  * It should return a value indicating the group of the current element, or
