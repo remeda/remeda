@@ -68,16 +68,27 @@ type IsPossiblyEmpty<T extends IterableContainer> = And<
 type IsEmpty<T> = T extends readonly [] ? true : false;
 
 /**
- * Groups the elements of a given iterable according to the string values
- * returned by a provided prop.
- * The returned object has separate properties for each group, containing
- * arrays with the elements in the group.
- * Unlike `groupBy`, it provides full type inference when `data` is static.
+ * Groups the elements of an array of objects based on the values of a
+ * specified property of those objects. The result would contain a property for
+ * each unique value of the specific property, with it's value being the input
+ * array filtered to only items that have that property set to that value.
+ * For any object where the property is missing, or if it's value is
+ * `undefined` the item would be filtered out.
+ *
+ * The grouping property is enforced at the type level to exist in at least one
+ * item and to never have a value that cannot be used as an object key (e.g. it
+ * must be `PropertyKey | undefined`).
+ *
+ * The resulting arrays are filtered with the prop and it's value as a
+ * type-guard, effectively narrowing the items in each output arrays. This
+ * means that when the grouping property is the discriminator of a
+ * discriminated union type each output array would contain just the subtype for
+ * that value.
  *
  * @param data - The items to group.
- * @param prop - The prop to group by.
- * @returns An object with properties for all groups, each assigned to an array
- * containing the elements of the associated group.
+ * @param prop - The property name to group by.
+ * @returns An object where each key is a property value and each value is an array
+ * of elements with that property value.
  * @signature
  *    R.groupByProp(data, prop)
  * @example
@@ -91,15 +102,26 @@ export function groupByProp<
 >(data: T, prop: Prop): GroupByProp<T, Prop>;
 
 /**
- * Groups the elements of a given iterable according to the string values
- * returned by a provided prop.
- * The returned object has separate properties for each group, containing
- * arrays with the elements in the group.
- * Unlike `groupBy`, it provides full type inference when `data` is static.
+ * Groups the elements of an array of objects based on the values of a
+ * specified property of those objects. The result would contain a property for
+ * each unique value of the specific property, with it's value being the input
+ * array filtered to only items that have that property set to that value.
+ * For any object where the property is missing, or if it's value is
+ * `undefined` the item would be filtered out.
  *
- * @param prop - The prop to group by.
- * @returns An object with properties for all groups, each assigned to an array
- * containing the elements of the associated group.
+ * The grouping property is enforced at the type level to exist in at least one
+ * item and to never have a value that cannot be used as an object key (e.g. it
+ * must be `PropertyKey | undefined`).
+ *
+ * The resulting arrays are filtered with the prop and it's value as a
+ * type-guard, effectively narrowing the items in each output arrays. This
+ * means that when the grouping property is the discriminator of a
+ * discriminated union type each output array would contain just the subtype for
+ * that value.
+ *
+ * @param prop - The property name to group by.
+ * @returns A function that takes an array and returns an object where each key is a
+ * property value and each value is an array of elements with that property value.
  * @signature
  *    R.groupByProp(prop)(data);
  * @example
