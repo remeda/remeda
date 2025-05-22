@@ -40,6 +40,7 @@ export * from "./fromEntries";
 export * from "./fromKeys";
 export * from "./funnel";
 export * from "./groupBy";
+export * from "./groupByProp";
 export * from "./hasAtLeast";
 export * from "./hasSubObject";
 export * from "./identity";
