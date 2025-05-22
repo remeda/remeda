@@ -122,6 +122,8 @@ export function groupByProp<
  * discriminated union type each output array would contain just the subtype for
  * that value.
  *
+ * If you need more control over the grouping you should use `groupBy` instead.
+ *
  * @param prop - The property name to group by.
  * @signature
  *    R.groupByProp(prop)(data);
