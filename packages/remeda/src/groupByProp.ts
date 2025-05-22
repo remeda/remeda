@@ -85,6 +85,8 @@ type IsEmpty<T> = T extends readonly [] ? true : false;
  * discriminated union type each output array would contain just the subtype for
  * that value.
  *
+ * If you need more control over the grouping you should use `groupBy` instead.
+ *
  * @param data - The items to group.
  * @param prop - The property name to group by.
  * @signature
