@@ -1,69 +1,86 @@
 import { groupByProp } from "./groupByProp";
-import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
-test("string literals readonly", () => {
-  expectTypeOf(
-    groupByProp(
-      [
-        { a: "cat", b: 123 },
-        { a: "dog", b: 456 },
-        { a: "dog", b: 789 },
-        { a: "cat", b: 101 },
-      ] as const,
-      "a",
-    ),
-  ).toEqualTypeOf<{
-    cat: [
-      { readonly a: "cat"; readonly b: 123 },
-      { readonly a: "cat"; readonly b: 101 },
-    ];
-    dog: [
-      { readonly a: "dog"; readonly b: 456 },
-      { readonly a: "dog"; readonly b: 789 },
-    ];
-  }>();
-});
+const SYMBOL = Symbol("sym");
 
-test("string literals", () => {
-  expectTypeOf(
-    groupByProp(
-      [
-        { a: "cat", b: 123 },
-        { a: "dog", b: 456 },
-        { a: "dog", b: 789 },
-        { a: "cat", b: 101 },
-      ] as [
-        { a: "cat"; b: 123 },
-        { a: "dog"; b: 456 },
-        { a: "dog"; b: 789 },
-        { a: "cat"; b: 101 },
-      ],
-      "a",
-    ),
-  ).toEqualTypeOf<{
-    cat: [{ a: "cat"; b: 123 }, { a: "cat"; b: 101 }];
-    dog: [{ a: "dog"; b: 456 }, { a: "dog"; b: 789 }];
-  }>();
-});
+describe("grouping prop types", () => {
+  test("primitive strings", () => {
+    const result = groupByProp([] as Array<{ a: string }>, "a");
+    const expected = {} as Record<
+      string,
+      [{ a: string }, ...Array<{ a: string }>]
+    >;
 
-test("number literals", () => {
-  expectTypeOf(
-    groupByProp(
-      [
-        { a: "cat", b: 123 },
-        { a: "dog", b: 456 },
-      ] as const,
-      "b",
-    ),
-  ).toEqualTypeOf<{
-    123: [{ readonly a: "cat"; readonly b: 123 }];
-    456: [{ readonly a: "dog"; readonly b: 456 }];
-  }>();
+    // @ts-expect-error [ts2344] -- TODO: Vitest is failing to assert that the types match and I don't know why. That's why we do the 'extends' checks below instead, because if two types extend each other, they are effectively equal.
+    expectTypeOf(result).toEqualTypeOf<typeof expected>();
+
+    expectTypeOf(result).toExtend<typeof expected>();
+    expectTypeOf(expected).toExtend<typeof result>();
+  });
+
+  test("literal strings", () => {
+    expectTypeOf(
+      groupByProp(
+        [
+          { a: "cat", b: 123 },
+          { a: "dog", b: 456 },
+          { a: "dog", b: 789 },
+          { a: "cat", b: 101 },
+        ] as const,
+        "a",
+      ),
+    ).toEqualTypeOf<{
+      cat: [
+        { readonly a: "cat"; readonly b: 123 },
+        { readonly a: "cat"; readonly b: 101 },
+      ];
+      dog: [
+        { readonly a: "dog"; readonly b: 456 },
+        { readonly a: "dog"; readonly b: 789 },
+      ];
+    }>();
+  });
+
+  test("literal numbers", () => {
+    expectTypeOf(
+      groupByProp(
+        [
+          { a: "cat", b: 123 },
+          { a: "dog", b: 456 },
+        ] as const,
+        "b",
+      ),
+    ).toEqualTypeOf<{
+      123: [{ readonly a: "cat"; readonly b: 123 }];
+      456: [{ readonly a: "dog"; readonly b: 456 }];
+    }>();
+  });
+
+  test("symbol", () => {
+    expectTypeOf(
+      groupByProp(
+        [
+          { [SYMBOL]: "cat", b: 123 },
+          { [SYMBOL]: "dog", b: 456 },
+        ] as const,
+        SYMBOL,
+      ),
+    ).toEqualTypeOf<{
+      cat: [{ readonly [SYMBOL]: "cat"; readonly b: 123 }];
+      dog: [{ readonly [SYMBOL]: "dog"; readonly b: 456 }];
+    }>();
+  });
 });
 
 test("values which might not exist in the input are optional in the output", () => {
   const result = groupByProp(
-    [{ a: "cat" }] as [{ a: "cat" }, { a: "mouse" }?, ...Array<{ a: "dog" }>],
+    [{ a: "cat" }] as [
+      // 'cat' is required
+      { a: "cat" },
+      // 'mouse' is optional
+      { a: "mouse" }?,
+      // 'dog' is a rest element
+      ...Array<{ a: "dog" }>,
+    ],
     "a",
   );
   const expected = {} as {
@@ -82,25 +99,43 @@ test("values which might not exist in the input are optional in the output", () 
   expectTypeOf(expected).toExtend<typeof result>();
 });
 
-test("symbol", () => {
-  const sym = Symbol("sym");
-
-  expectTypeOf(
+describe("enforces strong typing on the grouping prop", () => {
+  test("typo in prop name", () => {
     groupByProp(
-      [
-        { [sym]: "cat", b: 123 },
-        { [sym]: "dog", b: 456 },
-      ] as const,
-      sym,
-    ),
-  ).toEqualTypeOf<{
-    cat: [{ readonly [sym]: "cat"; readonly b: 123 }];
-    dog: [{ readonly [sym]: "dog"; readonly b: 456 }];
-  }>();
+      [{ a: "hello" }] as const,
+      // @ts-expect-error [ts2345] -- "typo" isn't a valid prop name
+      "typo",
+    );
+  });
+
+  test("prop is not groupable", () => {
+    groupByProp(
+      [{ a: new Date() }] as const,
+      // @ts-expect-error [ts2345] -- "a" can't be used to group the array
+      "a",
+    );
+  });
+
+  test("prop is only groupable for some of the elements", () => {
+    groupByProp(
+      [{ a: "hello" }, { a: new Date() }] as const,
+      // @ts-expect-error [ts2345] -- "a" cannot be used to group the array
+      // because it can sometimes be a Date
+      "a",
+    );
+  });
+
+  test("allows grouping on a prop that isn't in all elements", () => {
+    groupByProp([{ a: "hello" }, { b: 123 }] as const, "a");
+  });
+
+  test("allows grouping on possibly undefined props", () => {
+    groupByProp([] as Array<{ a: string | undefined }>, "a");
+  });
 });
 
-test("ambiguous type", () => {
+test("group by prop that doesn't exist on all items", () => {
   expectTypeOf(
-    groupByProp([] as Array<{ a: string; b: number }>, "a"),
-  ).toEqualTypeOf<Record<string, NonEmptyArray<{ a: string; b: number }>>>();
+    groupByProp([{ a: "cat" }, { b: "dog" }] as const, "a"),
+  ).toEqualTypeOf<{ cat: [{ readonly a: "cat" }] }>();
 });

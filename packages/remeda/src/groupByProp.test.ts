@@ -140,3 +140,13 @@ describe("data last", () => {
     });
   });
 });
+
+it("handles undefined as optional elements", () => {
+  expect(
+    groupByProp(
+      // @ts-expect-error [ts2352] -- When `exactOptionalPropertyTypes` isn't enabled in tsconfig.json this isn't an error and would be acceptable as input, so we want to also test this case and make sure we don't cause issues. In our project the settings is enabled so we have to suppress the error.
+      [undefined, { a: "cat" }] as [{ a: string }?, { a: string }],
+      "a",
+    ),
+  ).toStrictEqual({ cat: [{ a: "cat" }] });
+});
