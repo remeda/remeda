@@ -61,6 +61,27 @@ test("number literals", () => {
   }>();
 });
 
+test("values which might not exist in the input are optional in the output", () => {
+  const result = groupByProp(
+    [{ a: "cat" }] as [{ a: "cat" }, { a: "mouse" }?, ...Array<{ a: "dog" }>],
+    "a",
+  );
+  const expected = {} as {
+    // Cat is not optional because the tuple will always have at least one.
+    cat: [{ a: "cat" }];
+    // Dog is optional because the rest element could have 0 items.
+    dog?: [{ a: "dog" }, ...Array<{ a: "dog" }>];
+    // Mouse is optional because it's optional in the input type.
+    mouse?: [{ a: "mouse" }];
+  };
+
+  // @ts-expect-error [ts2344] -- TODO: Vitest is failing to assert that the types match and I don't know why. That's why we do the 'extends' checks below instead, because if two types extend each other, they are effectively equal.
+  expectTypeOf(result).toEqualTypeOf<typeof expected>();
+
+  expectTypeOf(result).toExtend<typeof expected>();
+  expectTypeOf(expected).toExtend<typeof result>();
+});
+
 test("symbol", () => {
   const sym = Symbol("sym");
 

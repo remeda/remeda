@@ -33,11 +33,17 @@ type AllPropValues<
 // provides us a way to check, for each prop, what are all values it would
 // have within the tuple. We use this to map which props are candidates for
 // grouping, and when a prop is selected, the full list of values that would
-// exist in the output.For example:
+// exist in the output. For example:
 // `{ a: number, b: "cat", c: string } | { b: "dog", c: Date }` is groupable
 // by 'a' and 'b', but not 'c', and when selecting by 'b', the output would
 // have a prop for "cat" and a prop for "dog".
-type ItemsSuperObject<T extends IterableContainer> = AllUnionFields<T[number]>;
+type ItemsSuperObject<T extends IterableContainer> = AllUnionFields<
+  // If the input tuple contains optional elements they would add `undefined` to
+  // T[number] (and could technically show up in the array itself). Because
+  // undefined breaks AllUnionFields we need to remove it from the union. This
+  // is OK because we handle this in the implementation too.
+  Exclude<T[number], undefined>
+>;
 
 // Group by can never return an empty tuple but our filtered arrays might not
 // represent that. We need to reshape the tuples so that they always have at
@@ -125,7 +131,7 @@ function groupByPropImplementation<
   for (const item of data) {
     // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Because of the error mentioned above the resulting key isn't inferred correctly as `AllPropValues<T, Prop> | undefined` which would be needed to remove this lint error.
-    const key = item[prop];
+    const key = item?.[prop];
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
