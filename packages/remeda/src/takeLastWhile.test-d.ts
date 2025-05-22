@@ -1,4 +1,5 @@
 import { constant } from "./constant";
+import { isNumber } from "./isNumber";
 import { pipe } from "./pipe";
 import { takeLastWhile } from "./takeLastWhile";
 
@@ -61,6 +62,12 @@ describe("data-first", () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+  });
+
+  test("assert type using predicate", () => {
+    const result = takeLastWhile([1, "a"], isNumber);
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 });
 
@@ -126,6 +133,12 @@ describe("data-last", () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+  });
+
+  test("assert type using predicate", () => {
+    const result = pipe([1, "a"], takeLastWhile(isNumber));
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   describe("predicate is typed correctly", () => {
