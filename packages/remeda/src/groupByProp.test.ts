@@ -3,6 +3,10 @@ import { pipe } from "./pipe";
 
 const SYMBOL = Symbol("sym");
 
+test("empty array", () => {
+  expect(groupByProp([] as Array<{ a: string }>, "a")).toStrictEqual({});
+});
+
 describe("data first", () => {
   it("must be grouped correctly by string", () => {
     expect(
