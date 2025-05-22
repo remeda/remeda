@@ -92,10 +92,11 @@ type IsEmpty<T> = T extends readonly [] ? true : false;
  * @signature
  *    R.groupByProp(data, prop)
  * @example
- *    R.groupByProp(
+ *    const result = R.groupByProp(
+ *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
  *      'a',
- *    ); // => { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
+ *    );
  * @dataFirst
  * @category Array
  */
@@ -128,10 +129,11 @@ export function groupByProp<
  * @signature
  *    R.groupByProp(prop)(data);
  * @example
- *    R.pipe(
+ *    const result = R.pipe(
+ *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
  *      R.groupByProp('a'),
- *    ); // => { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
+ *    );
  * @dataLast
  * @category Array
  */
