@@ -3,232 +3,217 @@ import type { TupleSplits } from "./TupleSplits";
 
 declare function tupleSplits<T extends IterableContainer>(x: T): TupleSplits<T>;
 
-describe("mutable", () => {
-  test("empty array", () => {
-    const data = [] as [];
-    const result = tupleSplits(data);
+describe("all tuple shapes", () => {
+  test("empty tuple", () => {
+    expectTypeOf(tupleSplits([])).toEqualTypeOf<{ left: []; right: [] }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
+    expectTypeOf(tupleSplits([] as const)).toEqualTypeOf<{
       left: [];
       right: [];
     }>();
   });
 
-  test("regular array", () => {
-    const data = [] as Array<number>;
-    const result = tupleSplits(data);
-
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: Array<number>;
-        }
-      | {
-          left: Array<number>;
-          right: Array<number>;
-        }
-      | {
-          left: Array<number>;
-          right: [];
-        }
-    >();
-  });
-
   test("fixed tuple", () => {
-    const data = [1, 2, 3] as [1, 2, 3];
-    const result = tupleSplits(data);
+    expectTypeOf(tupleSplits([1, 2, 3] as [1, 2, 3])).toEqualTypeOf<
+      | { left: [1, 2, 3]; right: [] }
+      | { left: [1, 2]; right: [3] }
+      | { left: [1]; right: [2, 3] }
+      | { left: []; right: [1, 2, 3] }
+    >();
 
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [1, 2, 3];
-          right: [];
-        }
-      | {
-          left: [1, 2];
-          right: [3];
-        }
-      | {
-          left: [1];
-          right: [2, 3];
-        }
-      | {
-          left: [];
-          right: [1, 2, 3];
-        }
+    expectTypeOf(tupleSplits([1, 2, 3] as const)).toEqualTypeOf<
+      | { left: [1, 2, 3]; right: [] }
+      | { left: [1, 2]; right: [3] }
+      | { left: [1]; right: [2, 3] }
+      | { left: []; right: [1, 2, 3] }
     >();
   });
 
-  test("array with prefix", () => {
-    const data = ["a"] as [string, ...Array<boolean>];
-    const result = tupleSplits(data);
+  test("optional tuple", () => {
+    expectTypeOf(tupleSplits([] as [1?, 2?, 3?])).toEqualTypeOf<
+      | { left: [1?, 2?, 3?]; right: [] }
+      | { left: [1?, 2?]; right: [3?] }
+      | { left: [1?]; right: [2?, 3?] }
+      | { left: []; right: [1?, 2?, 3?] }
+    >();
 
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: [string, ...Array<boolean>];
-        }
-      | {
-          left: [string];
-          right: Array<boolean>;
-        }
-      | {
-          left: [string, ...Array<boolean>];
-          right: Array<boolean>;
-        }
-      | {
-          left: [string, ...Array<boolean>];
-          right: [];
-        }
+    expectTypeOf(tupleSplits([] as readonly [1?, 2?, 3?])).toEqualTypeOf<
+      | { left: [1?, 2?, 3?]; right: [] }
+      | { left: [1?, 2?]; right: [3?] }
+      | { left: [1?]; right: [2?, 3?] }
+      | { left: []; right: [1?, 2?, 3?] }
     >();
   });
 
-  test("array with suffix", () => {
-    const data = ["a"] as [...Array<boolean>, string];
-    const result = tupleSplits(data);
+  test("mixed tuple", () => {
+    expectTypeOf(tupleSplits([1, 2] as [1, 2, 3?, 4?])).toEqualTypeOf<
+      | { left: [1, 2, 3?, 4?]; right: [] }
+      | { left: [1, 2, 3?]; right: [4?] }
+      | { left: [1, 2]; right: [3?, 4?] }
+      | { left: [1]; right: [2, 3?, 4?] }
+      | { left: []; right: [1, 2, 3?, 4?] }
+    >();
 
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: [...Array<boolean>, string];
-        }
-      | {
-          left: Array<boolean>;
-          right: [...Array<boolean>, string];
-        }
-      | {
-          left: Array<boolean>;
-          right: [string];
-        }
-      | {
-          left: [...Array<boolean>, string];
-          right: [];
-        }
+    expectTypeOf(tupleSplits([1, 2] as readonly [1, 2, 3?, 4?])).toEqualTypeOf<
+      | { left: [1, 2, 3?, 4?]; right: [] }
+      | { left: [1, 2, 3?]; right: [4?] }
+      | { left: [1, 2]; right: [3?, 4?] }
+      | { left: [1]; right: [2, 3?, 4?] }
+      | { left: []; right: [1, 2, 3?, 4?] }
     >();
   });
 
-  test("array with prefix and suffix", () => {
-    const data = [1, "a"] as [number, ...Array<boolean>, string];
-    const result = tupleSplits(data);
+  test("array", () => {
+    expectTypeOf(tupleSplits([] as Array<number>)).toEqualTypeOf<
+      | { left: Array<number>; right: [] }
+      | { left: Array<number>; right: Array<number> }
+      | { left: []; right: Array<number> }
+    >();
 
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: [number, ...Array<boolean>, string];
-        }
-      | {
-          left: [number];
-          right: [...Array<boolean>, string];
-        }
-      | {
-          left: [number, ...Array<boolean>];
-          right: [...Array<boolean>, string];
-        }
-      | {
-          left: [number, ...Array<boolean>];
-          right: [string];
-        }
-      | {
-          left: [number, ...Array<boolean>, string];
-          right: [];
-        }
+    expectTypeOf(tupleSplits([] as ReadonlyArray<number>)).toEqualTypeOf<
+      | { left: Array<number>; right: [] }
+      | { left: Array<number>; right: Array<number> }
+      | { left: []; right: Array<number> }
     >();
   });
 
-  test("array with optional prefixes", () => {
-    const data = [1, "a"] as [number, string?, number?, ...Array<boolean>];
-    const result = tupleSplits(data);
+  test("fixed-prefix array", () => {
+    expectTypeOf(tupleSplits([1, 2] as [1, 2, ...Array<3>])).toEqualTypeOf<
+      | { left: [1, 2, ...Array<3>]; right: [] }
+      | { left: [1, 2, ...Array<3>]; right: Array<3> }
+      | { left: [1, 2]; right: Array<3> }
+      | { left: [1]; right: [2, ...Array<3>] }
+      | { left: []; right: [1, 2, ...Array<3>] }
+    >();
 
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: [number, string?, number?, ...Array<boolean>];
-        }
-      | {
-          left: [number];
-          right: [string?, number?, ...Array<boolean>];
-        }
-      | {
-          left: [number, string?];
-          right: [number?, ...Array<boolean>];
-        }
-      | {
-          left: [number, string?, number?];
-          right: [...Array<boolean>];
-        }
-      | {
-          left: [number, string?, number?, ...Array<boolean>];
-          right: Array<boolean>;
-        }
-      | {
-          left: [number, string?, number?, ...Array<boolean>];
-          right: [];
-        }
+    expectTypeOf(
+      tupleSplits([1, 2] as readonly [1, 2, ...Array<3>]),
+    ).toEqualTypeOf<
+      | { left: [1, 2, ...Array<3>]; right: [] }
+      | { left: [1, 2, ...Array<3>]; right: Array<3> }
+      | { left: [1, 2]; right: Array<3> }
+      | { left: [1]; right: [2, ...Array<3>] }
+      | { left: []; right: [1, 2, ...Array<3>] }
+    >();
+  });
+
+  test("optional-prefix array", () => {
+    expectTypeOf(tupleSplits([] as [1?, 2?, ...Array<3>])).toEqualTypeOf<
+      | { left: [1?, 2?, ...Array<3>]; right: [] }
+      | { left: [1?, 2?, ...Array<3>]; right: Array<3> }
+      | { left: [1?, 2?]; right: Array<3> }
+      | { left: [1?]; right: [2?, ...Array<3>] }
+      | { left: []; right: [1?, 2?, ...Array<3>] }
+    >();
+
+    expectTypeOf(
+      tupleSplits([] as readonly [1?, 2?, ...Array<3>]),
+    ).toEqualTypeOf<
+      | { left: [1?, 2?, ...Array<3>]; right: [] }
+      | { left: [1?, 2?, ...Array<3>]; right: Array<3> }
+      | { left: [1?, 2?]; right: Array<3> }
+      | { left: [1?]; right: [2?, ...Array<3>] }
+      | { left: []; right: [1?, 2?, ...Array<3>] }
+    >();
+  });
+
+  test("mixed-prefix array", () => {
+    expectTypeOf(
+      tupleSplits([1, 2] as [1, 2, 3?, 4?, ...Array<5>]),
+    ).toEqualTypeOf<
+      | { left: [1, 2, 3?, 4?, ...Array<5>]; right: [] }
+      | { left: [1, 2, 3?, 4?, ...Array<5>]; right: Array<5> }
+      | { left: [1, 2, 3?, 4?]; right: Array<5> }
+      | { left: [1, 2, 3?]; right: [4?, ...Array<5>] }
+      | { left: [1, 2]; right: [3?, 4?, ...Array<5>] }
+      | { left: [1]; right: [2, 3?, 4?, ...Array<5>] }
+      | { left: []; right: [1, 2, 3?, 4?, ...Array<5>] }
+    >();
+
+    expectTypeOf(
+      tupleSplits([1, 2] as readonly [1, 2, 3?, 4?, ...Array<5>]),
+    ).toEqualTypeOf<
+      | { left: [1, 2, 3?, 4?, ...Array<5>]; right: [] }
+      | { left: [1, 2, 3?, 4?, ...Array<5>]; right: Array<5> }
+      | { left: [1, 2, 3?, 4?]; right: Array<5> }
+      | { left: [1, 2, 3?]; right: [4?, ...Array<5>] }
+      | { left: [1, 2]; right: [3?, 4?, ...Array<5>] }
+      | { left: [1]; right: [2, 3?, 4?, ...Array<5>] }
+      | { left: []; right: [1, 2, 3?, 4?, ...Array<5>] }
+    >();
+  });
+
+  test("fixed-suffix array", () => {
+    expectTypeOf(tupleSplits([2, 3] as [...Array<1>, 2, 3])).toEqualTypeOf<
+      | { left: [...Array<1>, 2, 3]; right: [] }
+      | { left: [...Array<1>, 2]; right: [3] }
+      | { left: Array<1>; right: [2, 3] }
+      | { left: Array<1>; right: [...Array<1>, 2, 3] }
+      | { left: []; right: [...Array<1>, 2, 3] }
+    >();
+
+    expectTypeOf(
+      tupleSplits([2, 3] as readonly [...Array<1>, 2, 3]),
+    ).toEqualTypeOf<
+      | { left: [...Array<1>, 2, 3]; right: [] }
+      | { left: [...Array<1>, 2]; right: [3] }
+      | { left: Array<1>; right: [2, 3] }
+      | { left: Array<1>; right: [...Array<1>, 2, 3] }
+      | { left: []; right: [...Array<1>, 2, 3] }
+    >();
+  });
+
+  test("fixed-elements array", () => {
+    expectTypeOf(
+      tupleSplits([1, 2, 4, 5] as [1, 2, ...Array<3>, 4, 5]),
+    ).toEqualTypeOf<
+      | { left: [1, 2, ...Array<3>, 4, 5]; right: [] }
+      | { left: [1, 2, ...Array<3>, 4]; right: [5] }
+      | { left: [1, 2, ...Array<3>]; right: [4, 5] }
+      | { left: [1, 2, ...Array<3>]; right: [...Array<3>, 4, 5] }
+      | { left: [1, 2]; right: [...Array<3>, 4, 5] }
+      | { left: [1]; right: [2, ...Array<3>, 4, 5] }
+      | { left: []; right: [1, 2, ...Array<3>, 4, 5] }
+    >();
+
+    expectTypeOf(
+      tupleSplits([1, 2, 4, 5] as readonly [1, 2, ...Array<3>, 4, 5]),
+    ).toEqualTypeOf<
+      | { left: [1, 2, ...Array<3>, 4, 5]; right: [] }
+      | { left: [1, 2, ...Array<3>, 4]; right: [5] }
+      | { left: [1, 2, ...Array<3>]; right: [4, 5] }
+      | { left: [1, 2, ...Array<3>]; right: [...Array<3>, 4, 5] }
+      | { left: [1, 2]; right: [...Array<3>, 4, 5] }
+      | { left: [1]; right: [2, ...Array<3>, 4, 5] }
+      | { left: []; right: [1, 2, ...Array<3>, 4, 5] }
     >();
   });
 });
 
 describe("unions", () => {
   test("union of arrays", () => {
-    const data = [] as Array<boolean> | Array<number>;
-    const result = tupleSplits(data);
-
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: Array<boolean>;
-        }
-      | {
-          left: Array<boolean>;
-          right: Array<boolean>;
-        }
-      | {
-          left: Array<boolean>;
-          right: [];
-        }
-      | {
-          left: [];
-          right: Array<number>;
-        }
-      | {
-          left: Array<number>;
-          right: Array<number>;
-        }
-      | {
-          left: Array<number>;
-          right: [];
-        }
+    expectTypeOf(
+      tupleSplits([] as Array<boolean> | Array<number>),
+    ).toEqualTypeOf<
+      | { left: []; right: Array<boolean> }
+      | { left: Array<boolean>; right: Array<boolean> }
+      | { left: Array<boolean>; right: [] }
+      | { left: []; right: Array<number> }
+      | { left: Array<number>; right: Array<number> }
+      | { left: Array<number>; right: [] }
     >();
   });
 
   test("mixed unions", () => {
-    const data = [] as Array<boolean> | [number, string];
-    const result = tupleSplits(data);
-
-    expectTypeOf(result).toEqualTypeOf<
-      | {
-          left: [];
-          right: Array<boolean>;
-        }
-      | {
-          left: Array<boolean>;
-          right: Array<boolean>;
-        }
-      | {
-          left: Array<boolean>;
-          right: [];
-        }
-      | {
-          left: [];
-          right: [number, string];
-        }
-      | {
-          left: [number];
-          right: [string];
-        }
-      | {
-          left: [number, string];
-          right: [];
-        }
+    expectTypeOf(
+      tupleSplits([] as Array<boolean> | [number, string]),
+    ).toEqualTypeOf<
+      | { left: []; right: Array<boolean> }
+      | { left: Array<boolean>; right: Array<boolean> }
+      | { left: Array<boolean>; right: [] }
+      | { left: []; right: [number, string] }
+      | { left: [number]; right: [string] }
+      | { left: [number, string]; right: [] }
     >();
   });
 });

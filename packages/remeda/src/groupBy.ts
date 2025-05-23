@@ -1,4 +1,4 @@
-import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { purry } from "./purry";
 
@@ -9,6 +9,11 @@ import { purry } from "./purry";
  * Unlike the built in `Object.groupBy` this function also allows the callback to
  * return `undefined` in order to exclude the item from being added to any
  * group.
+ *
+ * If you are grouping objects by a property of theirs (e.g.
+ * `groupBy(data, ({ myProp }) => myProp)` or `groupBy(data, prop('myProp'))`)
+ * consider using `groupByProp` (e.g. `groupByProp(data, 'myProp')`) instead,
+ * as it would provide better typing.
  *
  * @param data - The items to group.
  * @param callbackfn - A function to execute for each element in the iterable.
@@ -31,7 +36,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): ExactRecord<Key, NonEmptyArray<T>>;
+): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -40,6 +45,11 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * Unlike the built in `Object.groupBy` this function also allows the callback to
  * return `undefined` in order to exclude the item from being added to any
  * group.
+ *
+ * If you are grouping objects by a property of theirs (e.g.
+ * `groupBy(data, ({ myProp }) => myProp)` or `groupBy(data, prop('myProp'))`)
+ * consider using `groupByProp` (e.g. `groupByProp(data, 'myProp')`) instead,
+ * as it would provide better typing.
  *
  * @param callbackfn - A function to execute for each element in the iterable.
  * It should return a value indicating the group of the current element, or
@@ -66,7 +76,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): (items: ReadonlyArray<T>) => ExactRecord<Key, NonEmptyArray<T>>;
+): (items: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 export function groupBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(groupByImplementation, args);
@@ -79,20 +89,35 @@ const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => Key | undefined,
-): ExactRecord<Key, NonEmptyArray<T>> => {
-  const output = new Map<Key, Array<T>>();
+): BoundedPartial<Record<Key, NonEmptyArray<T>>> => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
+  const output: BoundedPartial<Record<Key, NonEmptyArray<T>>> =
+    Object.create(null);
 
-  for (const [index, item] of data.entries()) {
+  for (let index = 0; index < data.length; index++) {
+    // Accessing the object directly instead of via an iterator on the `entries` showed significant performance benefits while benchmarking.
+    const item = data[index];
+
+    // @ts-expect-error [ts2345] -- TypeScript is not able to infer that the index wouldn't overflow the array and that it shouldn't add `undefined` to the type. We don't want to use the `!` operator here because it's semantics are different because it changes the type of `item` to `NonNullable<T>` which is inaccurate because T itself could have `undefined` as a valid value.
     const key = callbackfn(item, index, data);
     if (key !== undefined) {
-      let items = output.get(key);
+      // Once the prototype chain is fixed, it is safe to access the prop directly without needing to check existence or types.
+      const items = output[key];
+
       if (items === undefined) {
-        items = [];
-        output.set(key, items);
+        // It is more performant to create a 1-element array over creating an empty array and falling through to a unified the push. It is also more performant to mutate the existing object over using spread to continually create new objects on every unique key.
+        // @ts-expect-error [ts2322] -- In addition to the typing issue we have for `item`, this line also creates a typing issue for the whole object, as TypeScript is having a hard time inferring what values could be adding to the object.
+        output[key] = [item];
+      } else {
+        // It is more performant to add the items to an existing array over continually creating a new array every time we add an item to it.
+        // @ts-expect-error [ts2345] -- See comment above about the effective typing for `item` here.
+        items.push(item);
       }
-      items.push(item);
     }
   }
 
-  return Object.fromEntries(output) as ExactRecord<Key, NonEmptyArray<T>>;
+  // Set the prototype as if we initialized our object as a normal object (e.g. `{}`). Without this none of the built-in object methods like `toString` would work on this object and it would act differently than expected.
+  Object.setPrototypeOf(output, Object.prototype);
+
+  return output;
 };

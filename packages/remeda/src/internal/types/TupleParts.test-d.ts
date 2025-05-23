@@ -1,14 +1,18 @@
+import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
 
-declare function tupleParts<T>(x: T): TupleParts<T>;
+declare function tupleParts<T extends IterableContainer>(x: T): TupleParts<T>;
 
-describe("mutable", () => {
-  test("empty array", () => {
-    const data = [] as [];
-    const result = tupleParts(data);
+describe("all tuple/array shapes (mutable and readonly)", () => {
+  test("empty tuples", () => {
+    expectTypeOf(tupleParts([] as [])).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: never;
+      suffix: [];
+    }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
+    expectTypeOf(tupleParts([] as const)).toEqualTypeOf<{
       required: [];
       optional: [];
       item: never;
@@ -16,12 +20,15 @@ describe("mutable", () => {
     }>();
   });
 
-  test("regular array", () => {
-    const data = [] as Array<number>;
-    const result = tupleParts(data);
+  test("arrays", () => {
+    expectTypeOf(tupleParts([] as Array<number>)).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number;
+      suffix: [];
+    }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
+    expectTypeOf(tupleParts([] as ReadonlyArray<number>)).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number;
@@ -29,165 +36,217 @@ describe("mutable", () => {
     }>();
   });
 
-  test("fixed tuple", () => {
-    const data = [1, 2, 3] as [1, 2, 3];
-    const result = tupleParts(data);
+  test("fixed tuples", () => {
+    expectTypeOf(
+      tupleParts([1, "hello", true, new Date()] as [
+        number,
+        string,
+        boolean,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string, boolean, Date];
+      optional: [];
+      item: never;
+      suffix: [];
+    }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [1, 2, 3];
-      required: [1, 2, 3];
+    expectTypeOf(
+      tupleParts([1, "hello", true, new Date()] as readonly [
+        number,
+        string,
+        boolean,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string, boolean, Date];
       optional: [];
       item: never;
       suffix: [];
     }>();
   });
 
-  test("array with prefix", () => {
-    const data = ["a"] as [string, ...Array<boolean>];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [string];
-      required: [string];
+  test("fixed-prefix arrays", () => {
+    expectTypeOf(
+      tupleParts([1, "hello", true] as [
+        number,
+        string,
+        boolean,
+        ...Array<Date>,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string, boolean];
       optional: [];
-      item: boolean;
+      item: Date;
+      suffix: [];
+    }>();
+
+    expectTypeOf(
+      tupleParts([1, "hello", true] as readonly [
+        number,
+        string,
+        boolean,
+        ...Array<Date>,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string, boolean];
+      optional: [];
+      item: Date;
       suffix: [];
     }>();
   });
 
-  test("array with suffix", () => {
-    const data = ["a"] as [...Array<boolean>, string];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
-      required: [];
-      optional: [];
-      item: boolean;
-      suffix: [string];
-    }>();
-  });
-
-  test("array with prefix and suffix", () => {
-    const data = [1, "a"] as [number, ...Array<boolean>, string];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number];
-      required: [number];
-      optional: [];
-      item: boolean;
-      suffix: [string];
-    }>();
-  });
-
-  test("array with optional prefixes", () => {
-    const data = [1, "a"] as [number, string?, number?, ...Array<boolean>];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number, string?, number?];
-      required: [number];
-      optional: [string, number];
-      item: boolean;
-      suffix: [];
-    }>();
-  });
-});
-
-describe("readonly", () => {
-  test("empty array", () => {
-    const data = [] as const;
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
-      required: [];
-      optional: [];
-      item: never;
-      suffix: [];
-    }>();
-  });
-
-  test("regular array", () => {
-    const data = [] as ReadonlyArray<number>;
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
+  test("fixed-suffix arrays", () => {
+    expectTypeOf(
+      tupleParts(["a", true, new Date()] as [
+        ...Array<number>,
+        string,
+        boolean,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number;
-      suffix: [];
+      suffix: [string, boolean, Date];
+    }>();
+
+    expectTypeOf(
+      tupleParts(["a", true, new Date()] as readonly [
+        ...Array<number>,
+        string,
+        boolean,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number;
+      suffix: [string, boolean, Date];
     }>();
   });
 
-  test("fixed tuple", () => {
-    const data = [1, 2, 3] as const;
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [1, 2, 3];
-      required: [1, 2, 3];
+  test("fixed-elements arrays", () => {
+    expectTypeOf(
+      tupleParts([1, "a", new Date()] as [
+        number,
+        string,
+        ...Array<boolean>,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string];
       optional: [];
+      item: boolean;
+      suffix: [Date];
+    }>();
+
+    expectTypeOf(
+      tupleParts([1, "a", new Date()] as readonly [
+        number,
+        string,
+        ...Array<boolean>,
+        Date,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string];
+      optional: [];
+      item: boolean;
+      suffix: [Date];
+    }>();
+  });
+
+  test("optional tuples", () => {
+    expectTypeOf(
+      tupleParts([] as [number?, string?, boolean?, Date?]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [
+        number | undefined,
+        string | undefined,
+        boolean | undefined,
+        Date | undefined,
+      ];
+      item: never;
+      suffix: [];
+    }>();
+
+    expectTypeOf(
+      tupleParts([] as readonly [number?, string?, boolean?, Date?]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [
+        number | undefined,
+        string | undefined,
+        boolean | undefined,
+        Date | undefined,
+      ];
       item: never;
       suffix: [];
     }>();
   });
 
-  test("array with prefix", () => {
-    const data = ["a"] as readonly [string, ...Array<boolean>];
-    const result = tupleParts(data);
+  test("optional-prefix arrays", () => {
+    expectTypeOf(
+      tupleParts([] as [number?, string?, boolean?, ...Array<Date>]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [number | undefined, string | undefined, boolean | undefined];
+      item: Date;
+      suffix: [];
+    }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [string];
-      required: [string];
-      optional: [];
-      item: boolean;
+    expectTypeOf(
+      tupleParts([] as readonly [number?, string?, boolean?, ...Array<Date>]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [number | undefined, string | undefined, boolean | undefined];
+      item: Date;
       suffix: [];
     }>();
   });
 
-  test("array with suffix", () => {
-    const data = ["a"] as readonly [...Array<boolean>, string];
-    const result = tupleParts(data);
+  test("mixed tuples", () => {
+    expectTypeOf(
+      tupleParts([1, "a"] as [number, string, boolean?, Date?]),
+    ).toEqualTypeOf<{
+      required: [number, string];
+      optional: [boolean | undefined, Date | undefined];
+      item: never;
+      suffix: [];
+    }>();
 
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [];
-      required: [];
-      optional: [];
-      item: boolean;
-      suffix: [string];
+    expectTypeOf(
+      tupleParts([1, "a"] as readonly [number, string, boolean?, Date?]),
+    ).toEqualTypeOf<{
+      required: [number, string];
+      optional: [boolean | undefined, Date | undefined];
+      item: never;
+      suffix: [];
     }>();
   });
 
-  test("array with prefix and suffix", () => {
-    const data = [1, "a"] as readonly [number, ...Array<boolean>, string];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number];
-      required: [number];
-      optional: [];
-      item: boolean;
-      suffix: [string];
+  test("mixed-prefix arrays", () => {
+    expectTypeOf(
+      tupleParts([1, "a"] as [number, string, boolean?, ...Array<Date>]),
+    ).toEqualTypeOf<{
+      required: [number, string];
+      optional: [boolean | undefined];
+      item: Date;
+      suffix: [];
     }>();
-  });
 
-  test("array with optional prefixes", () => {
-    const data = [1, "a"] as readonly [
-      number,
-      string?,
-      number?,
-      ...Array<boolean>,
-    ];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      prefix: [number, string?, number?];
-      required: [number];
-      optional: [string, number];
-      item: boolean;
+    expectTypeOf(
+      tupleParts([1, "a"] as readonly [
+        number,
+        string,
+        boolean?,
+        ...Array<Date>,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number, string];
+      optional: [boolean | undefined];
+      item: Date;
       suffix: [];
     }>();
   });
@@ -195,28 +254,138 @@ describe("readonly", () => {
 
 describe("unions", () => {
   test("union of arrays", () => {
-    const data = [] as Array<boolean> | Array<number>;
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
-      | { prefix: []; required: []; optional: []; item: number; suffix: [] }
+    expectTypeOf(
+      tupleParts([] as Array<boolean> | Array<number>),
+    ).toEqualTypeOf<
+      | { required: []; optional: []; item: boolean; suffix: [] }
+      | { required: []; optional: []; item: number; suffix: [] }
     >();
   });
 
   test("mixed unions", () => {
-    const data = [] as Array<boolean> | [number, string];
-    const result = tupleParts(data);
-
-    expectTypeOf(result).toEqualTypeOf<
-      | { prefix: []; required: []; optional: []; item: boolean; suffix: [] }
+    expectTypeOf(
+      tupleParts([] as Array<boolean> | [number, string]),
+    ).toEqualTypeOf<
+      | { required: []; optional: []; item: boolean; suffix: [] }
       | {
-          prefix: [number, string];
           required: [number, string];
           optional: [];
           item: never;
           suffix: [];
         }
     >();
+  });
+
+  test("looks like an optional tuple", () => {
+    expectTypeOf(tupleParts([] as [] | [string | undefined])).toEqualTypeOf<
+      | { required: []; optional: []; item: never; suffix: [] }
+      | {
+          required: [string | undefined];
+          optional: [];
+          item: never;
+          suffix: [];
+        }
+    >();
+  });
+
+  test("union of equivalent optional tuples", () => {
+    expectTypeOf(
+      tupleParts([] as [string?] | [(string | undefined)?]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [string | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+});
+
+describe("handling of undefined values", () => {
+  test("undefined required item", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [number | undefined]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined optional item", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [(number | undefined)?]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [number | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined rest item", () => {
+    expectTypeOf(
+      tupleParts([undefined] as Array<number | undefined>),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number | undefined;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined suffix and rest items", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [
+        ...Array<number | undefined>,
+        string | undefined,
+      ]),
+    ).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: number | undefined;
+      suffix: [string | undefined];
+    }>();
+  });
+
+  test("undefined tuple with options", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [number | undefined, (string | undefined)?]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [string | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined prefix items", () => {
+    expectTypeOf(
+      tupleParts([undefined] as [
+        number | undefined,
+        (string | undefined)?,
+        ...Array<boolean | undefined>,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [string | undefined];
+      item: boolean | undefined;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined fixed and rest elements", () => {
+    expectTypeOf(
+      tupleParts([undefined, undefined] as [
+        number | undefined,
+        ...Array<boolean | undefined>,
+        string | undefined,
+      ]),
+    ).toEqualTypeOf<{
+      required: [number | undefined];
+      optional: [];
+      item: boolean | undefined;
+      suffix: [string | undefined];
+    }>();
   });
 });

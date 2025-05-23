@@ -1,5 +1,5 @@
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import { purry } from "./purry";
-import type { ExactRecord } from "./internal/types/ExactRecord";
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -25,7 +25,7 @@ export function countBy<T, K extends PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => K | undefined,
-): ExactRecord<K, number>;
+): BoundedPartial<Record<K, number>>;
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -49,7 +49,7 @@ export function countBy<T, K extends PropertyKey>(
     index: number,
     data: ReadonlyArray<T>,
   ) => K | undefined,
-): (data: ReadonlyArray<T>) => ExactRecord<K, number>;
+): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, number>>;
 
 export function countBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(countByImplementation, args);
@@ -62,7 +62,7 @@ const countByImplementation = <T>(
     index: number,
     data: ReadonlyArray<T>,
   ) => PropertyKey | undefined,
-): ExactRecord<PropertyKey, number> => {
+): BoundedPartial<Record<PropertyKey, number>> => {
   const out = new Map<PropertyKey, number>();
 
   for (const [index, item] of data.entries()) {

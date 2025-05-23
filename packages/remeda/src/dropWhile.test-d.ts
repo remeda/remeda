@@ -1,6 +1,6 @@
-import { pipe } from "./pipe";
-import { dropWhile } from "./dropWhile";
 import { constant } from "./constant";
+import { dropWhile } from "./dropWhile";
+import { pipe } from "./pipe";
 
 describe("data-first", () => {
   test("empty array", () => {

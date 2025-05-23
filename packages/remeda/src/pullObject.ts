@@ -1,4 +1,4 @@
-import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -41,7 +41,7 @@ export function pullObject<
   data: T,
   keyExtractor: (item: T[number], index: number, data: T) => K,
   valueExtractor: (item: T[number], index: number, data: T) => V,
-): ExactRecord<K, V>;
+): BoundedPartial<Record<K, V>>;
 
 /**
  * Creates an object that maps the result of `valueExtractor` with a key
@@ -79,7 +79,7 @@ export function pullObject<
 >(
   keyExtractor: (item: T[number], index: number, data: T) => K,
   valueExtractor: (item: T[number], index: number, data: T) => V,
-): (data: T) => ExactRecord<K, V>;
+): (data: T) => BoundedPartial<Record<K, V>>;
 
 export function pullObject(...args: ReadonlyArray<unknown>): unknown {
   return purry(pullObjectImplementation, args);
