@@ -170,8 +170,7 @@ jobs:
         run: npm run --workspace=remeda lint:build
 
       - name: 🚀 Release
-        run: |
-          npm run --workspace=remeda release:npm
+        run: npm run --workspace=remeda release:npm
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -202,7 +201,6 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🚀 Release
-        run: |
-          npm run --workspace=remeda release:jsr
+        run: npm run --workspace=remeda release:jsr
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
