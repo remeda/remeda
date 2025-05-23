@@ -141,7 +141,42 @@ jobs:
       - name: 💄 Format
         run: npm run --workspace=remeda format
 
-  publish:
+  publishToNpm:
+    needs:
+      - test-typing
+      - test-runtime
+      - formatting
+
+    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🏗️ Build
+        run: npm run --workspace=remeda build
+
+      - name: 👮 Lint output
+        run: npm run --workspace=remeda lint:build
+
+      - name: 🚀 Release
+        run: |
+          npm run --workspace=remeda release:npm
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publishToJsr:
     needs:
       - test-typing
       - test-runtime
@@ -166,16 +201,8 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🏗️ Build
-        run: npm run --workspace=remeda build
-
-      - name: 👮 Lint output
-        run: npm run --workspace=remeda lint:build
-
       - name: 🚀 Release
         run: |
-          npm run --workspace=remeda release
-          npm exec --workspace=remeda jsr publish --allow-slow-types
+          npm run --workspace=remeda release:jsr
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
