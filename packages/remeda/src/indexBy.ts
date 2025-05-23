@@ -1,4 +1,4 @@
-import type { ExactRecord } from "./internal/types/ExactRecord";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import { purry } from "./purry";
 
 /**
@@ -25,7 +25,7 @@ import { purry } from "./purry";
 export function indexBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
   mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): ExactRecord<K, T>;
+): BoundedPartial<Record<K, T>>;
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -52,7 +52,7 @@ export function indexBy<T, K extends PropertyKey>(
  */
 export function indexBy<T, K extends PropertyKey>(
   mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): (data: ReadonlyArray<T>) => ExactRecord<K, T>;
+): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, T>>;
 
 export function indexBy(...args: ReadonlyArray<unknown>): unknown {
   return purry(indexByImplementation, args);
@@ -61,7 +61,7 @@ export function indexBy(...args: ReadonlyArray<unknown>): unknown {
 function indexByImplementation<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
   mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): ExactRecord<K, T> {
+): BoundedPartial<Record<K, T>> {
   const out: Partial<Record<K, T>> = {};
 
   for (const [index, item] of data.entries()) {
@@ -69,5 +69,5 @@ function indexByImplementation<T, K extends PropertyKey>(
     out[key] = item;
   }
 
-  return out as ExactRecord<K, T>;
+  return out as BoundedPartial<Record<K, T>>;
 }
