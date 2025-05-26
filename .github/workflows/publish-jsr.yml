@@ -44,4 +44,4 @@ jobs:
         run: jq --arg version "${{ github.event.release.tag_name || github.event.inputs.tag }}" '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
 
       - name: 🚀 Publish
-        run: npm run --workspace=remeda jsr:publish
+        run: npm run --workspace=remeda jsr:publish -- --allow-dirty
