@@ -5,7 +5,7 @@
   "version": "2.0.0",
   "exports": "./src/index.ts",
   "publish": {
-    "include": ["./src/**/*.ts"],
+    "include": ["./src/**/*.ts", "./LICENSE", "./README.md"],
     "exclude": ["**/*.test.ts", "**/*.test-d.ts"]
   }
 }

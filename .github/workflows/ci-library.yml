@@ -141,7 +141,7 @@ jobs:
       - name: 💄 Format
         run: npm run --workspace=remeda format
 
-  publishToNpm:
+  publish:
     needs:
       - test-typing
       - test-runtime
@@ -170,37 +170,7 @@ jobs:
         run: npm run --workspace=remeda lint:build
 
       - name: 🚀 Release
-        run: npm run --workspace=remeda release:npm
+        run: npm run --workspace=remeda release
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-
-  publishToJsr:
-    needs:
-      - test-typing
-      - test-runtime
-      - formatting
-
-    if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🚀 Release
-        run: npm run --workspace=remeda release:jsr
-        env:
-          GH_TOKEN: ${{secrets.GH_TOKEN}}
