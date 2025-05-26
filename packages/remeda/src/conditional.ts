@@ -9,9 +9,19 @@ type Case<
   When extends (x: In) => boolean = (x: In) => boolean,
 > = readonly [when: When, then: (x: GuardType<When, In> & In) => Out];
 
-// We package the defaultCase helper into the function itself so that we
-// encapsulate everything into a single export.
-const conditionalPlus = Object.assign(conditional, { defaultCase });
+// For easier discovery and to allow us to have a single exported function we
+// merge a set of utilities with the function itself. This provides a namespace-
+// like structure where the function could be used directly by calling it, but
+// also as the container of additional utilities.
+type Utilities = {
+  readonly defaultCase: typeof defaultCase;
+};
+type WithUtils<T> = T & Utilities;
+
+const conditionalPlus: WithUtils<typeof conditional> = Object.assign(
+  conditional,
+  { defaultCase } satisfies Utilities,
+);
 export { conditionalPlus as conditional };
 
 /**

@@ -1,4 +1,4 @@
-import type { CamelCase } from "type-fest";
+import type { CamelCase, Merge } from "type-fest";
 import { words } from "./internal/words";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
@@ -7,10 +7,17 @@ type CamelCaseOptions = {
   readonly preserveConsecutiveUppercase?: boolean;
 };
 
-const DEFAULT_OPTIONS = {
-  // Same as type-fest's default.
-  preserveConsecutiveUppercase: true,
-} as const satisfies CamelCaseOptions;
+const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
+
+// Merge the default as used in our runtime implementation with the options
+// provided by the user. This allows us to couple typing and runtime so that
+// they don't diverge.
+type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
+  {
+    preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
+  },
+  Options
+>;
 
 /**
  * Convert a text to camelCase by splitting it into words, un-capitalizing the
@@ -39,10 +46,10 @@ const DEFAULT_OPTIONS = {
  * @dataFirst
  * @category String
  */
-export function toCamelCase<
-  T extends string,
-  Options extends CamelCaseOptions = typeof DEFAULT_OPTIONS,
->(data: T, options?: Options): CamelCase<T, Options>;
+export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
+  data: T,
+  options?: Options,
+): CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
 
 /**
  * Convert a text to camelCase by splitting it into words, un-capitalizing the
@@ -73,9 +80,11 @@ export function toCamelCase<
  * @dataLast
  * @category String
  */
-export function toCamelCase<
-  Options extends CamelCaseOptions = typeof DEFAULT_OPTIONS,
->(options?: Options): <T extends string>(data: T) => CamelCase<T, Options>;
+export function toCamelCase<Options extends CamelCaseOptions>(
+  options?: Options,
+): <T extends string>(
+  data: T,
+) => CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
 
 export function toCamelCase(
   dataOrOptions: CamelCaseOptions | string,
@@ -91,7 +100,7 @@ export function toCamelCase(
 const toCamelCaseImplementation = (
   data: string,
   {
-    preserveConsecutiveUppercase = DEFAULT_OPTIONS.preserveConsecutiveUppercase,
+    preserveConsecutiveUppercase = DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE,
   }: CamelCaseOptions = {},
 ): string =>
   words(
