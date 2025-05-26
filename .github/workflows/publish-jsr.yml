@@ -46,4 +46,4 @@ jobs:
           mv jsr.json.tmp jsr.json
 
       - name: 🚀 Publish
-        run: npm run --workspace=remeda jsr:publish -- --allow-dirty
+        run: npm run --workspace=remeda jsr:publish
