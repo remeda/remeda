@@ -7,14 +7,13 @@ on:
 
   workflow_dispatch:
     inputs:
-      tag:
-        description: "Release tag to publish (e.g., v2.0.1)"
+      tag_name:
+        description: "The tag name to sync to JSR.io (e.g., v2.34.56)"
         required: true
         type: string
 
 jobs:
   publish:
-    name: 🦕 Publish
     runs-on: ubuntu-latest
 
     permissions:
@@ -23,26 +22,26 @@ jobs:
       contents: read
 
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout Repo
         uses: actions/checkout@v4
         with:
           # Checkout the specific tag
-          ref: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+          ref: ${{ github.event.release.tag_name || github.event.inputs.tag_name }}
 
-      - name: ⎔ Setup node
+      - name: ⎔ Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download Dependencies
         uses: bahmutov/npm-install@v1
         env:
           HUSKY: 0
 
-      - name: 📝 Rewrite package version
+      - name: 📝 Update Version
         working-directory: packages/remeda
         run: |
-          VERSION="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          VERSION="${{ github.event.release.tag_name || github.event.inputs.tag_name }}"
           jq --arg version "${VERSION#v}" '.version = $version' jsr.json > jsr.json.tmp
           mv jsr.json.tmp jsr.json
 
