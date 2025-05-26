@@ -37,16 +37,9 @@ jobs:
         env:
           HUSKY: 0
 
-      - name: 🔍 Debug - Check files
-        working-directory: packages/remeda
-        run: |
-          pwd
-          ls -la
-          cat jsr.json
-
       - name: 📝 Rewrite package version
         working-directory: packages/remeda
-        run: jq --arg version "${{ github.event.release.tag_name || github.event.inputs.tag }}" '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
+        run: jq '.version = "${{ github.event.release.tag_name || github.event.inputs.tag }}"' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
 
       - name: 🚀 Publish
         run: npm run --workspace=remeda jsr:publish
