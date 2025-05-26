@@ -182,3 +182,37 @@ test("with template literal type (uppercase)", () => {
 
   expectTypeOf(result).toEqualTypeOf<`tHISIS${Capitalize<`${number}`>}`>();
 });
+
+describe("implicit default 'preserveConsecutiveUppercase' option matches explicit setting", () => {
+  test("fooBAR", () => {
+    const data = "fooBAR";
+
+    expectTypeOf(toCamelCase(data)).toEqualTypeOf(
+      toCamelCase(data, { preserveConsecutiveUppercase: true }),
+    );
+  });
+
+  test("fooBARBiz", () => {
+    const data = "fooBARBiz";
+
+    expectTypeOf(toCamelCase(data)).toEqualTypeOf(
+      toCamelCase(data, { preserveConsecutiveUppercase: true }),
+    );
+  });
+
+  test("foo BAR-Biz_BUZZ", () => {
+    const data = "foo BAR-Biz_BUZZ";
+
+    expectTypeOf(toCamelCase(data)).toEqualTypeOf(
+      toCamelCase(data, { preserveConsecutiveUppercase: true }),
+    );
+  });
+
+  test("foo\tBAR-Biz_BUZZ", () => {
+    const data = "foo\tBAR-Biz_BUZZ";
+
+    expectTypeOf(toCamelCase(data)).toEqualTypeOf(
+      toCamelCase(data, { preserveConsecutiveUppercase: true }),
+    );
+  });
+});

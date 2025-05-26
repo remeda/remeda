@@ -9,6 +9,9 @@ type CamelCaseOptions = {
 
 const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
 
+// Merge the default as used in our runtime implementation with the options
+// provided by the user. This allows us to couple typing and runtime so that
+// they don't diverge.
 type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
   {
     preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
