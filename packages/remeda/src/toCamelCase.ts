@@ -7,10 +7,9 @@ type CamelCaseOptions = {
   readonly preserveConsecutiveUppercase?: boolean;
 };
 
-const DEFAULT_OPTIONS = {
-  // Same as type-fest's default.
+const DEFAULT_OPTIONS: Required<CamelCaseOptions> = {
   preserveConsecutiveUppercase: true,
-} as const satisfies CamelCaseOptions;
+};
 
 /**
  * Convert a text to camelCase by splitting it into words, un-capitalizing the

@@ -11,7 +11,9 @@ type Case<
 
 // We package the defaultCase helper into the function itself so that we
 // encapsulate everything into a single export.
-const conditionalPlus = Object.assign(conditional, { defaultCase });
+const conditionalPlus: typeof conditional & {
+  readonly defaultCase: typeof defaultCase;
+} = Object.assign(conditional, { defaultCase });
 export { conditionalPlus as conditional };
 
 /**
