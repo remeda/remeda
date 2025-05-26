@@ -7,7 +7,7 @@ type CamelCaseOptions = {
   readonly preserveConsecutiveUppercase?: boolean;
 };
 
-const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = false;
+const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
 
 type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
   {
