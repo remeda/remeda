@@ -1,4 +1,4 @@
-name: 📦 Publish to JSR
+name: 🦕 Publish to JSR.io
 
 on:
   release:
@@ -13,8 +13,8 @@ on:
         type: string
 
 jobs:
-  release:
-    name: 🦕 Publish to JSR
+  publish:
+    name: 🦕 Publish
     runs-on: ubuntu-latest
 
     permissions:
@@ -39,11 +39,10 @@ jobs:
         env:
           HUSKY: 0
 
-      - name: 📝 Update jsr.json version
+      - name: 📝 Rewrite package version
         working-directory: ./packages/remeda
         run: |
-          "sed -i 's/"version": "[^"]*"/"version": "${{ github.event.release.tag_name || github.event.inputs.tag }}"/' jsr.json"
+          sed -i 's/"version": "[^"]*"/"version": "${{ github.event.release.tag_name || github.event.inputs.tag }}"/' jsr.json
 
-      - name: 🚀 Publish to JSR
-        working-directory: ./packages/remeda
-        run: npm run --workspace=remeda release:jsr
+      - name: 🚀 Publish
+        run: npm run --workspace=remeda jsr:publish
