@@ -1,0 +1,42 @@
+name: 🦕 Publish to JSR.io
+
+on:
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (e.g., v2.0.1)"
+        required: true
+        type: string
+
+jobs:
+  publish:
+    name: 🦕 Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # Checkout the specific tag
+          ref: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+        env:
+          HUSKY: 0
+
+      - name: 📝 Rewrite package version
+        working-directory: ./packages/remeda
+        run: jq --arg version "${{ github.event.release.tag_name || github.event.inputs.tag }}" '.version = $version' jsr.json | sponge jsr.json
+
+      - name: 🚀 Publish
+        run: npm run --workspace=remeda jsr:publish
