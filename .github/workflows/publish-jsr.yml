@@ -46,4 +46,6 @@ jobs:
           mv jsr.json.tmp jsr.json
 
       - name: 🚀 Publish
-        run: npm run --workspace=remeda jsr:publish
+        # We allow dirty here because our jsr.json file has been modified and we
+        # don't want to commit it back to the repo.
+        run: npm run --workspace=remeda jsr:publish -- --allow-dirty
