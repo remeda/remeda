@@ -49,7 +49,7 @@
     "check": "tsc --project tsconfig.source.json",
     "check:dist": "tsc --project tsconfig.dist.json",
     "format": "prettier . --write",
-    "jsr:publish": "jsr publish --allow-slow-types",
+    "jsr:publish": "jsr publish --allow-slow-types --allow-dirty",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
     "release": "semantic-release",
