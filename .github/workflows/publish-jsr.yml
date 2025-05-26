@@ -35,8 +35,8 @@ jobs:
           HUSKY: 0
 
       - name: 📝 Rewrite package version
-        working-directory: ./packages/remeda
-        run: jq --arg version "${{ github.event.release.tag_name || github.event.inputs.tag }}" '.version = $version' jsr.json | sponge jsr.json
+        working-directory: packages/remeda
+        run: jq '.version = "${{ github.event.release.tag_name || github.event.inputs.tag }}"' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
 
       - name: 🚀 Publish
         run: npm run --workspace=remeda jsr:publish
