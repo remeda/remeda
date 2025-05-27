@@ -141,12 +141,34 @@ jobs:
       - name: 💄 Format
         run: npm run --workspace=remeda format
 
+  slowTypes:
+    name: 🐢 Slow Types
+    needs:
+      - typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🐢 Slow Types
+        run: npm run  --workspace=remeda publish:jsr -- --dry-run
+
   preview:
     name: 🧑‍🔬 Preview
     needs:
       - test-typing
       - test-runtime
+      - lint
       - formatting
+      - slowTypes
 
     runs-on: ubuntu-latest
 
@@ -172,7 +194,9 @@ jobs:
     needs:
       - test-typing
       - test-runtime
+      - lint
       - formatting
+      - slowTypes
 
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
