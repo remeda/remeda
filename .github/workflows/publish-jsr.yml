@@ -48,4 +48,4 @@ jobs:
       - name: 🚀 Publish
         # We allow dirty here because our jsr.json file has been modified and we
         # don't want to commit it back to the repo.
-        run: npm run --workspace=remeda jsr:publish -- --allow-dirty
+        run: npm run --workspace=remeda publish:jsr -- --allow-dirty
