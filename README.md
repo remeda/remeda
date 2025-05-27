@@ -40,6 +40,7 @@ npm install remeda
 pnpm add remeda
 yarn add remeda
 bun install remeda
+deno add jsr:@remeda/remeda
 ```
 
 ### Usage
