@@ -141,6 +141,33 @@ jobs:
       - name: 💄 Format
         run: npm run --workspace=remeda format
 
+  preview:
+    name: 🧑‍🔬 Preview
+    needs:
+      - test-typing
+      - test-runtime
+      - formatting
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🏗️ Build
+        run: npm run --workspace=remeda build
+
+      - name: 🧑‍🔬 Preview
+        run: npm run --workspace=remeda publish:preview
+
   publish:
     needs:
       - test-typing
