@@ -7,7 +7,8 @@ on:
   pull_request:
 
 permissions:
-  contents: read # Least default privilege, allows reading the repository
+  contents: read
+  pull-requests: write # To allow Codecov to comment on PRs
 
 jobs:
   codecov:
