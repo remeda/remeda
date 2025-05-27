@@ -190,7 +190,8 @@ jobs:
       - name: 🧑‍🔬 Preview
         run: npm run --workspace=remeda publish:preview
 
-  publish:
+  release:
+    name: 🚀 Release
     needs:
       - test-typing
       - test-runtime
@@ -199,7 +200,15 @@ jobs:
       - slowTypes
 
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -223,5 +232,5 @@ jobs:
       - name: 🚀 Release
         run: npm run --workspace=remeda release
         env:
-          GH_TOKEN: ${{secrets.GH_TOKEN}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
