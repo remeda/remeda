@@ -166,7 +166,7 @@ jobs:
         run: npm run --workspace=remeda build
 
       - name: 🧑‍🔬 Preview
-        run: npm run --workspace=remeda publish:pkg-pr-new
+        run: npm run --workspace=remeda publish:preview
 
   publish:
     needs:
