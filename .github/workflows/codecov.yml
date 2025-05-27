@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  pull-requests: write # To allow Codecov to comment on PRs
+
 jobs:
   codecov:
     runs-on: ubuntu-latest

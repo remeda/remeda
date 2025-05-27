@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  pull-requests: write # To allow inline comments for warnings/errors
+
 jobs:
   typecheck:
     name: 👷 Typecheck
