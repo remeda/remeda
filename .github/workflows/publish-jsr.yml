@@ -12,6 +12,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read # Least default privilege, allows reading the repository
+
 jobs:
   publish:
     runs-on: ubuntu-latest

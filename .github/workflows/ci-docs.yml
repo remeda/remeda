@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read # Least default privilege, allows reading the repository
+
 jobs:
   typecheck:
     name: 👷 Typecheck

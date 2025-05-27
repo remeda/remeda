@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read # Least default privilege, allows reading the repository
+
 jobs:
   typecheck:
     name: 👷 Typecheck
@@ -204,6 +207,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      # @see https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions#github-workflows-release.yml-configuration-for-node-projects
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
