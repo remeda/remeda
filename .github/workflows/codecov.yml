@@ -26,7 +26,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: ☔ Collect coverage
-        run: npm run --workspace=remeda test:coverage
+        run: npm --workspace=remeda run test:coverage
 
       - name: 🗺️ Upload coverage
         uses: codecov/codecov-action@v5
