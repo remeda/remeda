@@ -228,6 +228,10 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
+      - name: 🔏 Audit Supply Chain
+        working-directory: package/remeda
+        run: npm audit signatures
+
       - name: 🏗️ Build
         run: npm run --workspace=remeda build
 
@@ -237,5 +241,6 @@ jobs:
       - name: 🚀 Release
         run: npm run --workspace=remeda release
         env:
+          NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
