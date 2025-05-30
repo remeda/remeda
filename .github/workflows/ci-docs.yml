@@ -27,10 +27,10 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build Library
-        run: npm run --workspace=remeda build
+        run: npm --workspace=remeda run build
 
       - name: 🚨 Type check
-        run: npm run --workspace=@remeda/docs check
+        run: npm --workspace=@remeda/docs run check
 
   lint:
     name: 🧹 Lint
@@ -50,13 +50,13 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build Library
-        run: npm run --workspace=remeda build
+        run: npm --workspace=remeda run build
 
       - name: 🔄 Sync Docs
-        run: npm run --workspace=@remeda/docs sync
+        run: npm --workspace=@remeda/docs run sync
 
       - name: 🧹 Lint
-        run: npm run  --workspace=@remeda/docs lint
+        run: npm --workspace=@remeda/docs run lint
 
   formatting:
     name: 💄 Format
@@ -76,4 +76,4 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 💄 Format
-        run: npm --workspace=docs run format
+        run: npm --workspace=@remeda/docs run format
