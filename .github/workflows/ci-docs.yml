@@ -76,4 +76,4 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 💄 Format
-        run: npm run --workspace=@remeda/docs format
+        run: npm --workspace=docs run format

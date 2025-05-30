@@ -27,7 +27,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🚨 Type check
-        run: npm run --workspace=remeda check
+        run: npm --workspace=remeda run check
 
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
@@ -67,16 +67,16 @@ jobs:
       # expensive, but we can easily optimize by caching the 'dist' directory
       # once.
       - name: 🏗️ Build
-        run: npm run --workspace=remeda build -- --dts-only
+        run: npm --workspace=remeda run build -- --dts-only
 
       - name: 📘 Install Typescript
-        run: npm install --workspace=remeda -D typescript@${{ matrix.typescript-version }}
+        run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 📋 Type tests
-        run: npm run  --workspace=remeda test:typing
+        run: npm --workspace=remeda run test:typing
 
       - name: 🚚 Check Outputs
-        run: npm run  --workspace=remeda check:dist
+        run: npm --workspace=remeda run check:dist
 
   test-runtime:
     name: Tests/🧪 Runtime [Node ${{ matrix.node }}]
@@ -103,7 +103,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧪 Run tests
-        run: npm run --workspace=remeda test:runtime
+        run: npm --workspace=remeda run test:runtime
 
   lint:
     name: 🧹 Lint
@@ -123,7 +123,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🧹 Lint
-        run: npm run  --workspace=remeda lint
+        run: npm --workspace=remeda run lint
 
   formatting:
     name: 💄 Format
@@ -143,7 +143,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 💄 Format
-        run: npm run --workspace=remeda format
+        run: npm --workspace=remeda run format
 
   slowTypes:
     name: 🐢 Slow Types
@@ -163,7 +163,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🐢 Slow Types
-        run: npm run  --workspace=remeda publish:jsr -- --dry-run
+        run: npm --workspace=remeda run publish:jsr -- --dry-run
 
   preview:
     name: 🧑‍🔬 Preview
@@ -189,10 +189,10 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🏗️ Build
-        run: npm run --workspace=remeda build
+        run: npm --workspace=remeda run build
 
       - name: 🧑‍🔬 Preview
-        run: npm run --workspace=remeda publish:preview
+        run: npm --workspace=remeda run publish:preview
 
   release:
     name: 🚀 Release
@@ -229,17 +229,16 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🔏 Audit Supply Chain
-        working-directory: package/remeda
-        run: npm audit signatures
+        run: npm --workspace=remeda audit signatures
 
       - name: 🏗️ Build
-        run: npm run --workspace=remeda build
+        run: npm --workspace=remeda run build
 
       - name: 👮 Lint output
-        run: npm run --workspace=remeda lint:build
+        run: npm --workspace=remeda run lint:build
 
       - name: 🚀 Release
-        run: npm run --workspace=remeda release
+        run: npm --workspace=remeda run release
         env:
           NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
