@@ -256,18 +256,11 @@ jobs:
       id-token: write
 
     steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: 🫥 Extract Missing Version
         id: extract-missing
         run: |
-          git fetch --tags
-
           # Get the latest version tag
-          VERSION=$(git describe --tags --abbrev=0 | tr -d 'v')
+          VERSION=$(git ls-remote --tags origin | grep --only-matching --extended-regexp 'v[0-9]+\.[0-9]+\.[0-9]+$' | sort --version-sort | tail -1 | tr -d 'v')
 
           # Get the list of published versions from JSR.io and check if the 
           # latest version has already been published. If it has, we're done;
