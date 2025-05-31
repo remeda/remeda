@@ -243,3 +243,57 @@ jobs:
           NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-jsr:
+    name: 🦕 Publish to JSR.io
+    needs:
+      - release
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🫥 Check Already Published
+        id: already-published
+        run: |
+          git fetch --tags
+          VERSION=$(git describe --tags --abbrev=0 | tr -d 'v')
+          curl -s "https://jsr.io/@remeda/remeda/meta.json" | jq --exit-status --arg version $VERSION '.versions | has($version)' >/dev/null || echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: ⬇️ Checkout Repo
+        if: steps.already-published.outputs.version != ''
+        uses: actions/checkout@v4
+        with:
+          # Checkout the specific tag
+          ref: v${{ steps.already-published.outputs.version }}
+
+      - name: ⎔ Setup Node
+        if: steps.already-published.outputs.version != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download Dependencies
+        if: steps.already-published.outputs.version != ''
+        uses: bahmutov/npm-install@v1
+        env:
+          HUSKY: 0
+
+      - name: 📝 Update Version
+        if: steps.already-published.outputs.version != ''
+        working-directory: packages/remeda
+        run: jq --arg version {{ steps.already-published.outputs.version }} '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
+
+      - name: 🦕 Publish to JSR.io
+        if: steps.already-published.outputs.version != ''
+        # We allow dirty here because our jsr.json file has been modified and we
+        # don't want to commit it back to the repo.
+        run: npm --workspace=remeda run publish:jsr -- --allow-dirty
