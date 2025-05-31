@@ -262,7 +262,7 @@ jobs:
           fetch-depth: 0
 
       - name: 🫥 Extract Missing Version
-        id: already-published
+        id: extract-missing
         run: |
           git fetch --tags
 
@@ -276,31 +276,31 @@ jobs:
           curl -s "https://jsr.io/@remeda/remeda/meta.json" | jq --exit-status --arg version $VERSION '.versions | has($version)' >/dev/null || echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: ⬇️ Checkout Repo
-        if: steps.already-published.outputs.version != ''
+        if: steps.extract-missing.outputs.version != ''
         uses: actions/checkout@v4
         with:
           # We want to publish the required tag and not the latest commit.
-          ref: v${{ steps.already-published.outputs.version }}
+          ref: v${{ steps.extract-missing.outputs.version }}
 
       - name: ⎔ Setup Node
-        if: steps.already-published.outputs.version != ''
+        if: steps.extract-missing.outputs.version != ''
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download Dependencies
-        if: steps.already-published.outputs.version != ''
+        if: steps.extract-missing.outputs.version != ''
         uses: bahmutov/npm-install@v1
         env:
           HUSKY: 0
 
       - name: 📝 Update Version
-        if: steps.already-published.outputs.version != ''
+        if: steps.extract-missing.outputs.version != ''
         working-directory: packages/remeda
-        run: jq --arg version ${{ steps.already-published.outputs.version }} '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
+        run: jq --arg version ${{ steps.extract-missing.outputs.version }} '.version = $version' jsr.json > jsr.json.tmp && mv jsr.json.tmp jsr.json
 
       - name: 🦕 Publish to JSR.io
-        if: steps.already-published.outputs.version != ''
+        if: steps.extract-missing.outputs.version != ''
         # We allow dirty here because our jsr.json file has been modified and we
         # don't want to commit it back to the repo.
         run: npm --workspace=remeda run publish:jsr -- --allow-dirty
