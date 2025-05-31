@@ -303,7 +303,7 @@ jobs:
         if: steps.extract-missing.outputs.version != ''
         working-directory: packages/remeda
         run: |
-          jq --arg version ${{ steps.extract-missing.outputs.version }} '.version = $version' jsr.json > jsr.json.tmp \
+          jq --arg version "${{ steps.extract-missing.outputs.version }}" '.version = $version' jsr.json > jsr.json.tmp \
           && mv jsr.json.tmp jsr.json
 
       - name: 🦕 Publish to JSR.io
