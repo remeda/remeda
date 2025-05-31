@@ -6,7 +6,8 @@ on:
       - main
   pull_request:
   # For debugging workflows or for re-triggering releases if they failed on
-  # network issues or problems on external 3rd parties.
+  # network issues or problems at external 3rd party services (npm, jsr,
+  # etc...).
   workflow_dispatch:
 
 permissions:
