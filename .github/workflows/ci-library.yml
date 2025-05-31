@@ -261,18 +261,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🫥 Check Already Published
+      - name: 🫥 Extract Missing Version
         id: already-published
         run: |
           git fetch --tags
+
+          # Get the latest version tag
           VERSION=$(git describe --tags --abbrev=0 | tr -d 'v')
+
+          # Get the list of published versions from JSR.io and check if the 
+          # latest version has already been published. If it has, we're done;
+          # otherwise, we set the required (unpublished) version for the rest 
+          # of the job.
           curl -s "https://jsr.io/@remeda/remeda/meta.json" | jq --exit-status --arg version $VERSION '.versions | has($version)' >/dev/null || echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: ⬇️ Checkout Repo
         if: steps.already-published.outputs.version != ''
         uses: actions/checkout@v4
         with:
-          # Checkout the specific tag
+          # We want to publish the required tag and not the latest commit.
           ref: v${{ steps.already-published.outputs.version }}
 
       - name: ⎔ Setup Node
