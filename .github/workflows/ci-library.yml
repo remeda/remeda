@@ -5,6 +5,10 @@ on:
     branches:
       - main
   pull_request:
+  # For debugging workflows or for re-triggering releases if they failed on
+  # network issues or problems at external 3rd party services (npm, jsr,
+  # etc...).
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -261,7 +265,7 @@ jobs:
         run: |
           # Get the latest version tag
           VERSION=$(
-            git ls-remote --tags origin \
+            git ls-remote --tags https://github.com/${{ github.repository }}.git \
             | grep --only-matching --extended-regexp 'v[0-9]+\.[0-9]+\.[0-9]+$' \
             | sort --version-sort \
             | tail -1 \
