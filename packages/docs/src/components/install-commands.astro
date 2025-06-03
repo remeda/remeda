@@ -19,9 +19,9 @@ const COMMANDS = [
         <Code code={command} lang="bash" theme={THEME} />
         <div class="absolute top-1/2 right-2 -translate-y-1/2">
           <CopyButton
-            value={command}
+            client:idle
             className="text-background dark:text-foreground"
-            client:load
+            value={command}
           />
         </div>
       </article>

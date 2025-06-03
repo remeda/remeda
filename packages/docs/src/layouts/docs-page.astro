@@ -15,6 +15,8 @@ const { navbarEntries, title } = Astro.props;
 const { pathname } = Astro.url;
 
 const articles = await getArticles(pathname);
+
+const entries = [...forNavbar(articles), ...navbarEntries];
 ---
 
 <BaseLayout title={title}>
@@ -22,10 +24,7 @@ const articles = await getArticles(pathname);
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
-      <Navbar
-        entries={[...forNavbar(articles), ...navbarEntries]}
-        client:load
-      />
+      <Navbar client:visible entries={entries} />
     </aside>
     <main class="flex-1 space-y-3 overflow-hidden sm:space-y-8">
       <h1 class="mb-12 text-3xl font-thin tracking-widest capitalize">
