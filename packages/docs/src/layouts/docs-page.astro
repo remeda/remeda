@@ -2,17 +2,15 @@
 import Article from "@/components/article.astro";
 import DocsSection from "@/components/docs-section.astro";
 import { Navbar, type NavbarCategory } from "@/components/navbar";
-import { VersionSelector } from "@/components/version-selector";
 import { forNavbar, getArticles } from "@/lib/articles/entries";
 import BaseLayout from "./base.astro";
 
 type Props = {
   readonly navbarEntries: ReadonlyArray<NavbarCategory>;
-  readonly showVersionSelector?: boolean;
   readonly title?: string;
 };
 
-const { navbarEntries, showVersionSelector = false, title } = Astro.props;
+const { navbarEntries, title } = Astro.props;
 
 const { pathname } = Astro.url;
 
@@ -24,13 +22,10 @@ const articles = await getArticles(pathname);
     <aside
       class="sticky top-24 hidden h-[calc(100dvh-8rem)] w-64 overscroll-contain md:block"
     >
-      <Navbar entries={[...forNavbar(articles), ...navbarEntries]} client:load>
-        {
-          showVersionSelector && (
-            <VersionSelector pathname={pathname} client:load />
-          )
-        }
-      </Navbar>
+      <Navbar
+        entries={[...forNavbar(articles), ...navbarEntries]}
+        client:load
+      />
     </aside>
     <main class="flex-1 space-y-3 overflow-hidden sm:space-y-8">
       <h1 class="mb-12 text-3xl font-thin tracking-widest capitalize">

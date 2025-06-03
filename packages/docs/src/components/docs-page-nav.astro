@@ -13,7 +13,6 @@ import {
   forNavbar as v1FunctionsForNavbar,
 } from "@/lib/v1/entries";
 import { MobileNav } from "./mobile-nav";
-import { VERSIONS } from "./version-selector";
 
 const MIGRATION_REGEXP = /^\/migrate\/(?<library>\w+)\/?$/iu;
 
@@ -39,11 +38,14 @@ async function getRouteNavbarEntries() {
     );
   }
 
-  switch (pathname.replace(/\/$/, "")) {
-    case VERSIONS.v1.path:
+  switch (pathname) {
+    // Keep in sync with the routes available in the pages directory.
+    case "/v1":
+    case "/v1/":
       return v1FunctionsForNavbar(await getV1Functions());
 
-    case VERSIONS.latest.path:
+    case "/docs":
+    case "/docs/":
       return forNavbar(await getFunctions());
 
     default:
@@ -53,9 +55,7 @@ async function getRouteNavbarEntries() {
 ---
 
 <MobileNav
-  showVersionSelector={migrationLibrary === undefined}
   title={migrationLibrary}
-  pathname={pathname}
   entries={[...articlesForNavbar(articles), ...routeNavbarEntries]}
   client:media="(max-width: 767px)"
 />

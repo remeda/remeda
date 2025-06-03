@@ -4,18 +4,13 @@ import { MenuIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { isEmpty } from "remeda";
 import { Navbar, type NavbarCategory } from "./navbar";
-import { VersionSelector } from "./version-selector";
 
 export function MobileNav({
-  pathname,
   entries,
   title,
-  showVersionSelector = false,
 }: {
-  readonly pathname: string;
   readonly entries: ReadonlyArray<NavbarCategory>;
   readonly title: string | undefined;
-  readonly showVersionSelector?: boolean;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,7 +25,7 @@ export function MobileNav({
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent className="p-6 pt-12">
+      <SheetContent className="p-6">
         <Navbar
           entries={entries}
           onSelect={() => {
@@ -40,7 +35,6 @@ export function MobileNav({
           {title !== undefined && (
             <h2 className="text-lg font-bold capitalize">{title}</h2>
           )}
-          {showVersionSelector && <VersionSelector pathname={pathname} />}
         </Navbar>
       </SheetContent>
     </Sheet>
