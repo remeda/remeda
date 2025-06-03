@@ -9,7 +9,6 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { isEmpty } from "remeda";
 import { Navbar, type NavbarCategory } from "./navbar";
 
 export function MobileNav({
@@ -20,10 +19,6 @@ export function MobileNav({
   readonly title: string | undefined;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
-
-  if (isEmpty(entries)) {
-    return;
-  }
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>

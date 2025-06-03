@@ -25,6 +25,8 @@ const [routeNavbarEntries, articles] = await Promise.all([
   getArticles(pathname),
 ]);
 
+const entries = [...articlesForNavbar(articles), ...routeNavbarEntries];
+
 /**
  * The mobile navbar is part of the header which is part of the general layout
  * and doesn't have access to the data in the specific pages. This means we need
@@ -54,8 +56,8 @@ async function getRouteNavbarEntries() {
 }
 ---
 
-<MobileNav
-  title={migrationLibrary}
-  entries={[...articlesForNavbar(articles), ...routeNavbarEntries]}
-  client:media="(max-width: 767px)"
-/>
+{
+  entries.length === 0 ? undefined : (
+    <MobileNav client:visible title={migrationLibrary} entries={entries} />
+  )
+}
