@@ -20,7 +20,7 @@ Read the full docs and API reference on [remedajs.com/docs](https://remedajs.com
 
 Migrating from other libraries? Check out our migration guides for [Lodash](https://remedajs.com/migrate/lodash) and [Ramda](https://remedajs.com/migrate/ramda)!
 
-Interested in contributing? Read the [contributing guide](CONTRIBUTING.md).
+Interested in contributing? Read the [contributing guide](https://github.com/remeda/remeda/blob/main/CONTRIBUTING.md).
 
 ## Features
 
