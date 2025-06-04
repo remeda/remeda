@@ -18,21 +18,19 @@ export async function getRouteNavbarEntries(
   pathname: string,
   migrationLibrary: string | undefined,
 ) {
+  if (migrationLibrary === "v1") {
+    return v1FunctionsForNavbar(await getV1Functions());
+  }
+
   if (migrationLibrary !== undefined) {
     return migrationMappingsForNavBar(
       await getMigrationMappings(migrationLibrary),
     );
   }
 
-  switch (pathname) {
-    // Keep in sync with the routes available in the pages directory.
-    case "/v1":
-      return v1FunctionsForNavbar(await getV1Functions());
-
-    case "/docs":
-      return forNavbar(await getFunctions());
-
-    default:
-      return [];
+  if (pathname === "/docs") {
+    return forNavbar(await getFunctions());
   }
+
+  return [];
 }
