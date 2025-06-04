@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/collapsible";
 import type { Signature } from "@/lib/typedoc/schema";
 import { ChevronsUpDownIcon } from "lucide-react";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FunctionReturnType } from "./function-return-type";
 import { Parameters } from "./parameters";
 
