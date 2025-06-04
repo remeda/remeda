@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- (See TODO below.) */
 /* eslint-disable jsdoc/check-param-names, jsdoc/require-param -- we don't document the case params, it'd be redundant */
 
 import { purryOn } from "./internal/purryOn";
@@ -240,7 +241,30 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
   );
 }
 
+// TODO [2025-09-04]: Remove the deprecated `defaultCase` utility.
 /**
+ *! **DEPRECATED**: use `[constant(true), constant(undefined)]` instead!
+ *
+ * A simplified case that accepts all data. Put this as the last case to
+ * prevent an exception from being thrown when none of the previous cases
+ * match.
+ * If this is not the last case it will short-circuit anything after it.
+ *
+ * @example
+ *   const nameOrId = 3 as string | number;
+ *   R.conditional(
+ *     nameOrId,
+ *     [R.isString, (name) => `Hello ${name}`],
+ *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     R.conditional.defaultCase(),
+ *   ); //=> 'Hello ID: 3'
+ * @deprecated Use `[constant(true), constant(undefined)]` instead!
+ */
+function defaultCase(): Case<unknown, undefined>;
+
+/**
+ *! **DEPRECATED**: use `[constant(true), then]` instead!
+ *
  * A simplified case that accepts all data. Put this as the last case to
  * prevent an exception from being thrown when none of the previous cases
  * match.
@@ -259,8 +283,8 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
  *       (something) => `Hello something (${JSON.stringify(something)})`,
  *     ),
  *   ); //=> 'Hello ID: 3'
+ * @deprecated Use `[constant(true), then]` instead!
  */
-function defaultCase(): Case<unknown, undefined>;
 function defaultCase<In, Then extends (param: In) => unknown>(
   then: Then,
 ): Case<In, ReturnType<Then>>;

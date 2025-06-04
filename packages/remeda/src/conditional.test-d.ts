@@ -1,4 +1,5 @@
 import { conditional } from "./conditional";
+import { constant } from "./constant";
 import { firstBy } from "./firstBy";
 import { isNonNullish } from "./isNonNullish";
 import { isNullish } from "./isNullish";
@@ -76,7 +77,7 @@ describe("data-first", () => {
     const result = conditional(
       "Jokic",
       [isString, () => "hello" as const],
-      conditional.defaultCase(),
+      [constant(true), constant(undefined)],
     );
 
     expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
@@ -86,7 +87,7 @@ describe("data-first", () => {
     const result = conditional(
       "Jokic",
       [isString, () => "hello" as const],
-      conditional.defaultCase(() => 123 as const),
+      [constant(true), constant(123 as const)],
     );
 
     expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
@@ -163,7 +164,7 @@ describe("data-last", () => {
       "Jokic",
       conditional(
         [isString, () => "hello" as const],
-        conditional.defaultCase(),
+        [constant(true), constant(undefined)],
       ),
     );
 
@@ -175,7 +176,7 @@ describe("data-last", () => {
       "Jokic",
       conditional(
         [isString, () => "hello" as const],
-        conditional.defaultCase(() => 123 as const),
+        [constant(true), constant(123 as const)],
       ),
     );
 

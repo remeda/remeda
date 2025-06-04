@@ -1,19 +1,19 @@
 import { conditional } from "./conditional";
+import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
   it("falls back to trivial default", () => {
-    expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
+    expect(
+      conditional("Jokic", [constant(true), constant(undefined)]),
+    ).toBeUndefined();
   });
 
   it("falls back to our default", () => {
-    expect(
-      conditional(
-        "Jokic",
-        conditional.defaultCase(() => "hello"),
-      ),
-    ).toBe("hello");
+    expect(conditional("Jokic", [constant(true), constant("hello")])).toBe(
+      "hello",
+    );
   });
 
   it("works with a single case", () => {
