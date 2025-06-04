@@ -9,18 +9,19 @@ const PRETTIER_OPTIONS = {
 } as const satisfies Options;
 
 type Props = {
+  readonly class?: string;
   readonly code: string;
 };
 
-const { code } = Astro.props;
+const { code, class: class_ } = Astro.props;
 
 const formattedCode = await format(code, PRETTIER_OPTIONS);
 ---
 
 <Code
   wrap
+  class:list={["rounded-sm px-4 py-2", class_]}
   code={formattedCode}
   lang="typescript"
   theme={THEME}
-  class="rounded-sm px-4 py-2"
 />
