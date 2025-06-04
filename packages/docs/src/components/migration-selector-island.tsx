@@ -23,7 +23,7 @@ export function MigrationSelectorIsland({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <a href={`/v1`}>Remeda@1.61.0</a>
+          <a href={`/migrate/v1`}>Remeda@1.61.0</a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {libraries.map((library) => (

@@ -3,9 +3,14 @@ import { buttonVariants } from "@/components/ui/button";
 import DocsPageNav from "./docs-page-nav.astro";
 import GitHubLogoIcon from "./github-logo-icon.astro";
 import MigrationSelector from "./migration-selector.astro";
-import NavLink from "./nav-link.astro";
 import { Search } from "./search";
 import { ThemeSwitcher } from "./theme-switcher";
+import { cn } from "@/lib/utils";
+
+const pathname = Astro.url.pathname.replace(/\/$/, "");
+
+const NAVLINK_CLASS =
+  "truncate text-foreground/60 transition-colors hover:text-foreground/80 aria-[current=page]:font-semibold aria-[current=page]:text-primary";
 ---
 
 <header
@@ -15,9 +20,20 @@ import { ThemeSwitcher } from "./theme-switcher";
     class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"
   >
     <a href="/" class="font-bold">Remeda</a>
-    <NavLink href="/docs" additionalHrefs={["/v1"]}>Documentation</NavLink>
+    <a
+      aria-current={"/docs" === pathname ? "page" : undefined}
+      class={NAVLINK_CLASS}
+      href="/docs"
+    >
+      Documentation
+    </a>
     <MigrationSelector>
-      <NavLink directory as="span" href="/migrate">Migration Guides</NavLink>
+      <span
+        aria-current={pathname.startsWith("/migrate") ? "page" : undefined}
+        class={cn(NAVLINK_CLASS, "cursor-pointer")}
+      >
+        Migration Guides
+      </span>
     </MigrationSelector>
     <div class="flex-1"></div>
     <Search client:only="react" />
@@ -30,6 +46,6 @@ import { ThemeSwitcher } from "./theme-switcher";
       <span class="sr-only">GitHub</span>
     </a>
   </nav>
-  <ThemeSwitcher client:load />
+  <ThemeSwitcher client:idle />
   <DocsPageNav />
 </header>

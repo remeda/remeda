@@ -5,6 +5,6 @@ import { MigrationSelectorIsland } from "./migration-selector-island";
 const libraries = await getAllMappedLibraries();
 ---
 
-<MigrationSelectorIsland client:load libraries={libraries}>
+<MigrationSelectorIsland client:idle libraries={libraries}>
   <slot />
 </MigrationSelectorIsland>

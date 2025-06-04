@@ -14,11 +14,7 @@ const internalNames = new Set(
 );
 ---
 
-<DocsPage
-  showVersionSelector
-  title="v1 (Legacy)"
-  navbarEntries={forNavbar(functions)}
->
+<DocsPage title="v1 (Legacy)" navbarEntries={forNavbar(functions)}>
   {
     functions.map(([category, categoryFunctions]) => (
       <DocsSection title={category}>
