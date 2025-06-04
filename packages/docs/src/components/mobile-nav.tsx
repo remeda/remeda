@@ -6,7 +6,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { MenuIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
@@ -24,19 +23,15 @@ export function MobileNav({
     <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <VisuallyHidden>Library navigation menu</VisuallyHidden>
+          <span className="sr-only">Library navigation menu</span>
           <MenuIcon />
         </Button>
       </SheetTrigger>
       <SheetContent className="p-6">
-        <VisuallyHidden asChild>
-          <SheetTitle>Library Entries</SheetTitle>
-        </VisuallyHidden>
-        <VisuallyHidden asChild>
-          <SheetDescription>
-            List of all available functions provided by the library.
-          </SheetDescription>
-        </VisuallyHidden>
+        <SheetTitle className="sr-only">Library Entries</SheetTitle>
+        <SheetDescription className="sr-only">
+          List of all available functions provided by the library.
+        </SheetDescription>
         <Navbar
           entries={entries}
           onSelect={() => {
