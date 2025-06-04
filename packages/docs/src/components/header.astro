@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const pathname = Astro.url.pathname.replace(/\/$/, "");
 
 const NAVLINK_CLASS =
-  "truncate text-foreground/60 transition-colors hover:text-foreground/80 data-[active=true]:font-semibold data-[active=true]:text-primary";
+  "truncate text-foreground/60 transition-colors hover:text-foreground/80 aria-[current=page]:font-semibold aria-[current=page]:text-primary";
 ---
 
 <header
@@ -20,12 +20,16 @@ const NAVLINK_CLASS =
     class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"
   >
     <a href="/" class="font-bold">Remeda</a>
-    <a data-active={"/docs" === pathname} class={NAVLINK_CLASS} href="/docs">
+    <a
+      aria-current={"/docs" === pathname ? "page" : undefined}
+      class={NAVLINK_CLASS}
+      href="/docs"
+    >
       Documentation
     </a>
     <MigrationSelector>
       <span
-        data-active={pathname.startsWith("/migrate")}
+        aria-current={pathname.startsWith("/migrate") ? "page" : undefined}
         class={cn(NAVLINK_CLASS, "cursor-pointer")}
       >
         Migration Guides
