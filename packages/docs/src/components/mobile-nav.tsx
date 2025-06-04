@@ -28,7 +28,13 @@ export function MobileNav({
         </Button>
       </SheetTrigger>
       <SheetContent className="p-6">
-        <SheetTitle className="sr-only">Library Entries</SheetTitle>
+        <SheetTitle
+          className={
+            title === undefined ? "sr-only" : "text-lg font-bold capitalize"
+          }
+        >
+          {title ?? "Library Entries"}
+        </SheetTitle>
         <SheetDescription className="sr-only">
           List of all available functions provided by the library.
         </SheetDescription>
@@ -37,11 +43,7 @@ export function MobileNav({
           onSelect={() => {
             setIsOpen(false);
           }}
-        >
-          {title !== undefined && (
-            <h2 className="text-lg font-bold capitalize">{title}</h2>
-          )}
-        </Navbar>
+        />
       </SheetContent>
     </Sheet>
   );

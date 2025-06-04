@@ -2,7 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Tag } from "@/lib/tags";
 import { cn } from "@/lib/utils";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { TagBadge } from "./tag-badge";
 
 type NavbarEntry = {
@@ -18,16 +18,13 @@ export type NavbarCategory = readonly [
 
 export function Navbar({
   entries,
-  children,
   onSelect,
 }: {
   readonly entries: ReadonlyArray<NavbarCategory>;
-  readonly children?: ReactNode;
   readonly onSelect?: () => void;
 }): ReactNode {
   return (
     <nav className="flex h-full flex-col items-stretch gap-4">
-      {children}
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-2">
           {entries.map(([category, entries]) => (
