@@ -8,12 +8,28 @@ describe("runtime (dataFirst)", () => {
     expect(
       conditional("Jokic", [constant(true), constant(undefined)]),
     ).toBeUndefined();
+
+    expect(
+      conditional(
+        "Jokic",
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        conditional.defaultCase(),
+      ),
+    ).toBeUndefined();
   });
 
   it("falls back to our default", () => {
     expect(conditional("Jokic", [constant(true), constant("hello")])).toBe(
       "hello",
     );
+
+    expect(
+      conditional(
+        "Jokic",
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        conditional.defaultCase(() => "hello"),
+      ),
+    ).toBe("hello");
   });
 
   it("works with a single case", () => {

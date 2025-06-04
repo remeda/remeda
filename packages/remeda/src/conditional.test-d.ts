@@ -74,23 +74,41 @@ describe("data-first", () => {
   });
 
   it("passes the trivial defaultCase's type to the output", () => {
-    const result = conditional(
-      "Jokic",
-      [isString, () => "hello" as const],
-      [constant(true), constant(undefined)],
-    );
+    expectTypeOf(
+      conditional(
+        "Jokic",
+        [isString, () => "hello" as const],
+        [constant(true), constant(undefined)],
+      ),
+    ).toEqualTypeOf<"hello" | undefined>();
 
-    expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
+    expectTypeOf(
+      conditional(
+        "Jokic",
+        [isString, () => "hello" as const],
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        conditional.defaultCase(),
+      ),
+    ).toEqualTypeOf<"hello" | undefined>();
   });
 
   it("passes the defaultCase's type to the output", () => {
-    const result = conditional(
-      "Jokic",
-      [isString, () => "hello" as const],
-      [constant(true), constant(123 as const)],
-    );
+    expectTypeOf(
+      conditional(
+        "Jokic",
+        [isString, () => "hello" as const],
+        [constant(true), constant(123 as const)],
+      ),
+    ).toEqualTypeOf<"hello" | 123>();
 
-    expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
+    expectTypeOf(
+      conditional(
+        "Jokic",
+        [isString, () => "hello" as const],
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        conditional.defaultCase(() => 123 as const),
+      ),
+    ).toEqualTypeOf<"hello" | 123>();
   });
 });
 
@@ -160,26 +178,48 @@ describe("data-last", () => {
   });
 
   it("passes the trivial defaultCase's type to the output", () => {
-    const result = pipe(
-      "Jokic",
-      conditional(
-        [isString, () => "hello" as const],
-        [constant(true), constant(undefined)],
+    expectTypeOf(
+      pipe(
+        "Jokic",
+        conditional(
+          [isString, () => "hello" as const],
+          [constant(true), constant(undefined)],
+        ),
       ),
-    );
+    ).toEqualTypeOf<"hello" | undefined>();
 
-    expectTypeOf(result).toEqualTypeOf<"hello" | undefined>();
+    expectTypeOf(
+      pipe(
+        "Jokic",
+        conditional(
+          [isString, () => "hello" as const],
+          // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+          conditional.defaultCase(),
+        ),
+      ),
+    ).toEqualTypeOf<"hello" | undefined>();
   });
 
   it("passes the defaultCase's type to the output", () => {
-    const result = pipe(
-      "Jokic",
-      conditional(
-        [isString, () => "hello" as const],
-        [constant(true), constant(123 as const)],
+    expectTypeOf(
+      pipe(
+        "Jokic",
+        conditional(
+          [isString, () => "hello" as const],
+          [constant(true), constant(123 as const)],
+        ),
       ),
-    );
+    ).toEqualTypeOf<"hello" | 123>();
 
-    expectTypeOf(result).toEqualTypeOf<"hello" | 123>();
+    expectTypeOf(
+      pipe(
+        "Jokic",
+        conditional(
+          [isString, () => "hello" as const],
+          // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+          conditional.defaultCase(() => 123 as const),
+        ),
+      ),
+    ).toEqualTypeOf<"hello" | 123>();
   });
 });
