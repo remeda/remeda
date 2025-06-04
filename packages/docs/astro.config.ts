@@ -26,6 +26,11 @@ export default defineConfig({
       }),
     ],
   },
+
+  redirects: {
+    // TODO: Eventually this could be removed...
+    "/v1": "/migrate/v1",
+  },
 });
 
 /**
