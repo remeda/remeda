@@ -5,6 +5,7 @@ import GitHubLogoIcon from "./github-logo-icon.astro";
 import MigrationSelector from "./migration-selector.astro";
 import { Search } from "./search";
 import { ThemeSwitcher } from "./theme-switcher";
+import { cn } from "@/lib/utils";
 
 const pathname = Astro.url.pathname.replace(/\/$/, "");
 
@@ -25,7 +26,7 @@ const NAVLINK_CLASS =
     <MigrationSelector>
       <span
         data-active={pathname.startsWith("/migrate")}
-        class:list={[NAVLINK_CLASS, "cursor-pointer"]}
+        class={cn(NAVLINK_CLASS, "cursor-pointer")}
       >
         Migration Guides
       </span>
