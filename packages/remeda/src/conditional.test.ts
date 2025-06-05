@@ -1,16 +1,40 @@
 import { conditional } from "./conditional";
+import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
-  it("falls back to trivial default", () => {
-    expect(conditional("Jokic", conditional.defaultCase())).toBeUndefined();
+  it("accepts and runs a default/fallback case", () => {
+    expect(
+      conditional(
+        "Jokic",
+        [constant(false), constant("hello")],
+        constant(undefined),
+      ),
+    ).toBeUndefined();
+
+    expect(
+      conditional(
+        "Jokic",
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
+        conditional.defaultCase(),
+      ),
+    ).toBeUndefined();
   });
 
   it("falls back to our default", () => {
     expect(
       conditional(
         "Jokic",
+        [constant(false), constant("world")],
+        constant("hello"),
+      ),
+    ).toBe("hello");
+
+    expect(
+      conditional(
+        "Jokic",
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
         conditional.defaultCase(() => "hello"),
       ),
     ).toBe("hello");
