@@ -7,7 +7,7 @@
     "start": "code index.ts && tsx index.ts"
   },
   "dependencies": {
-    "remeda": "^2.0.0"
+    "remeda": "*"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
