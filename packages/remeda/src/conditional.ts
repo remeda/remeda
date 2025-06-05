@@ -34,15 +34,18 @@ export { conditionalPlus as conditional };
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
+ * To add a a default, catch-all, case you can provide a single callback
+ * function (instead of a 2-tuple) as the last case. This is equivalent to
+ * adding a case with a trivial always-true predicate as it's condition (see
+ * example).
+ *
  * For simpler cases you should also consider using `when` instead.
  *
- * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
- * Ramda, the Remeda implementation does **NOT** return a default/fallback
- * `undefined` value when none of the cases match; and instead will **throw** an
- * exception in those cases.
- * To add a default case use the `conditional.defaultCase` helper as the final
- * case of your implementation. By default it returns `undefined`, but could be
- * provided a transformer in order to return something else.
+ * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
+ * implementation **doesn't** implicitly return `undefined` as a fallback when
+ * when none of the cases match; and instead **throws** an exception in those
+ * cases! You have to explicitly provide a default case, and can use
+ * `constant(undefined)` as your last case to replicate that behavior.
  *
  * Due to TypeScript's inability to infer the result of negating a type-
  * predicate we can't refine the types used in subsequent cases based on
@@ -50,26 +53,43 @@ export { conditionalPlus as conditional };
  * is recommended for more precise type control when such type narrowing is
  * needed.
  *
- * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
- * consists of a predicate (or a type-predicate) and a transformer function that
- * processes the data if its case matches.
+ * @param cases - A list of (up to 10) cases. Each case can be either:
+ * - A 2-tuple consisting of a predicate (or type-predicate) and a transformer
+ *   function that processes the data if the predicate matches.
+ * - A single callback function that acts as a default fallback case.
  * @returns The output of the matched transformer. If no cases match, an
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
  *   R.conditional(...cases)(data);
  * @example
- *   const nameOrId = 3 as string | number;
+ *   const nameOrId = 3 as string | number | boolean;
+ *
  *   R.pipe(
  *     nameOrId,
  *     R.conditional(
  *       [R.isString, (name) => `Hello ${name}`],
  *       [R.isNumber, (id) => `Hello ID: ${id}`],
- *       R.conditional.defaultCase(
- *         (something) => `Hello something (${JSON.stringify(something)})`,
- *       ),
  *     ),
- *   ); //=> 'Hello ID: 3'
+ *   ); //=> 'Hello ID: 3' (typed as `string`), can throw!.
+ *
+ *   R.pipe(
+ *     nameOrId,
+ *     R.conditional(
+ *       [R.isString, (name) => `Hello ${name}`],
+ *       [R.isNumber, (id) => `Hello ID: ${id}`],
+ *       R.constant(undefined),
+ *     ),
+ *   ); //=> 'Hello ID: 3' (typed as `string | undefined`), won't throw.
+ *
+ *   R.pipe(
+ *     nameOrId,
+ *     R.conditional(
+ *       [R.isString, (name) => `Hello ${name}`],
+ *       [R.isNumber, (id) => `Hello ID: ${id}`],
+ *       (something) => `Hello something (${JSON.stringify(something)})`,
+ *     ),
+ *   ); //=> 'Hello ID: 3' (typed as `string`), won't throw.
  * @dataLast
  * @category Function
  */
@@ -127,15 +147,18 @@ function conditional<
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
+ * To add a a default, catch-all, case you can provide a single callback
+ * function (instead of a 2-tuple) as the last case. This is equivalent to
+ * adding a case with a trivial always-true predicate as it's condition (see
+ * example).
+ *
  * For simpler cases you should also consider using `when` instead.
  *
- * !IMPORTANT! - Unlike similar implementations in frameworks like Lodash and
- * Ramda, the Remeda implementation does **NOT** return a default/fallback
- * `undefined` value when none of the cases match; and instead will **throw** an
- * exception in those cases.
- * To add a default case use the `conditional.defaultCase` helper as the final
- * case of your implementation. By default it returns `undefined`, but could be
- * provided a transformer in order to return something else.
+ * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
+ * implementation **doesn't** implicitly return `undefined` as a fallback when
+ * when none of the cases match; and instead **throws** an exception in those
+ * cases! You have to explicitly provide a default case, and can use
+ * `constant(undefined)` as your last case to replicate that behavior.
  *
  * Due to TypeScript's inability to infer the result of negating a type-
  * predicate we can't refine the types used in subsequent cases based on
@@ -144,24 +167,37 @@ function conditional<
  * needed.
  *
  * @param data - The input data to be evaluated against the provided cases.
- * @param cases - A list of (up to 10) tuples, each defining a case. Each tuple
- * consists of a predicate (or a type-predicate) and a transformer function that
- * processes the data if its case matches.
+ * @param cases - A list of (up to 10) cases. Each case can be either:
+ * - A 2-tuple consisting of a predicate (or type-predicate) and a transformer
+ *   function that processes the data if the predicate matches.
+ * - A single callback function that acts as a default fallback case.
  * @returns The output of the matched transformer. If no cases match, an
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
  *   R.conditional(data, ...cases);
  * @example
- *   const nameOrId = 3 as string | number;
+ *   const nameOrId = 3 as string | number | boolean;
+ *
  *   R.conditional(
  *     nameOrId,
  *     [R.isString, (name) => `Hello ${name}`],
  *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     R.conditional.defaultCase(
- *       (something) => `Hello something (${JSON.stringify(something)})`,
- *     ),
- *   ); //=> 'Hello ID: 3'
+ *   ); //=> 'Hello ID: 3' (typed as `string`), can throw!.
+ *
+ *   R.conditional(
+ *     nameOrId,
+ *     [R.isString, (name) => `Hello ${name}`],
+ *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     R.constant(undefined),
+ *   ); //=> 'Hello ID: 3' (typed as `string | undefined`), won't throw.
+ *
+ *   R.conditional(
+ *     nameOrId,
+ *     [R.isString, (name) => `Hello ${name}`],
+ *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     (something) => `Hello something (${JSON.stringify(something)})`,
+ *   ); //=> 'Hello ID: 3' (typed as `string`), won't throw.
  * @dataFirst
  * @category Function
  */
