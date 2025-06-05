@@ -7,6 +7,9 @@
     "node": ">=22.6.0"
   },
   "main": "src/index.ts",
+  "scripts": {
+    "start": "node --version"
+  },
   "devDependencies": {
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
