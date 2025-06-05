@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "include": ["src", "*.config.js"],
+
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitAny": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "lib": ["esnext", "dom"],
+    "rootDir": "src",
+    "moduleResolution": "node"
+  }
+}
