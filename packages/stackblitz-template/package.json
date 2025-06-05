@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "main": "src/index.ts",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "code index.ts && tsx index.ts"
+  },
+  "dependencies": {
+    "remeda": "^2.0.0"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
