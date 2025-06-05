@@ -96,6 +96,193 @@ export { conditionalPlus as conditional };
 function conditional<
   T,
   Fn0 extends (x: T) => boolean,
+  Return0,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  fallback?: DefaultCase<T, Fallback>,
+): (data: T) => Return0 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  fallback?: DefaultCase<T, Fallback>,
+): (data: T) => Return0 | Return1 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  fallback?: DefaultCase<T, Fallback>,
+): (data: T) => Return0 | Return1 | Return2 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  fallback?: DefaultCase<T, Fallback>,
+): (data: T) => Return0 | Return1 | Return2 | Return3 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  fallback?: DefaultCase<T, Fallback>,
+): (data: T) => Return0 | Return1 | Return2 | Return3 | Return4 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  fallback?: DefaultCase<T, Fallback>,
+): (
+  data: T,
+) => Return0 | Return1 | Return2 | Return3 | Return4 | Return5 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  fallback?: DefaultCase<T, Fallback>,
+): (
+  data: T,
+) =>
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  fallback?: DefaultCase<T, Fallback>,
+): (
+  data: T,
+) =>
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Return7
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
   Fn2 extends (x: T) => boolean,
   Fn3 extends (x: T) => boolean,
@@ -104,28 +291,27 @@ function conditional<
   Fn6 extends (x: T) => boolean,
   Fn7 extends (x: T) => boolean,
   Fn8 extends (x: T) => boolean,
-  Fn9 extends (x: T) => boolean,
   Return0,
-  Return1 = never,
-  Return2 = never,
-  Return3 = never,
-  Return4 = never,
-  Return5 = never,
-  Return6 = never,
-  Return7 = never,
-  Return8 = never,
-  Return9 = never,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Return8,
+  Fallback = never,
 >(
   case0: Case<T, Return0, Fn0>,
-  case1?: Case<T, Return1, Fn1> | DefaultCase<T, Return1>,
-  case2?: Case<T, Return2, Fn2> | DefaultCase<T, Return2>,
-  case3?: Case<T, Return3, Fn3> | DefaultCase<T, Return3>,
-  case4?: Case<T, Return4, Fn4> | DefaultCase<T, Return4>,
-  case5?: Case<T, Return5, Fn5> | DefaultCase<T, Return5>,
-  case6?: Case<T, Return6, Fn6> | DefaultCase<T, Return6>,
-  case7?: Case<T, Return7, Fn7> | DefaultCase<T, Return7>,
-  case8?: Case<T, Return8, Fn8> | DefaultCase<T, Return8>,
-  case9?: Case<T, Return9, Fn9> | DefaultCase<T, Return9>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  case8: Case<T, Return8, Fn8>,
+  fallback?: DefaultCase<T, Fallback>,
 ): (
   data: T,
 ) =>
@@ -138,7 +324,57 @@ function conditional<
   | Return6
   | Return7
   | Return8
-  | Return9;
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Fn8 extends (x: T) => boolean,
+  Fn9 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Return8,
+  Return9,
+  Fallback = never,
+>(
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  case8: Case<T, Return8, Fn8>,
+  case9: Case<T, Return9, Fn9>,
+  fallback?: DefaultCase<T, Fallback>,
+): (
+  data: T,
+) =>
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Return7
+  | Return8
+  | Return9
+  | Fallback;
 
 /**
  * Executes a transformer function based on the first matching predicate,
@@ -204,6 +440,195 @@ function conditional<
 function conditional<
   T,
   Fn0 extends (x: T) => boolean,
+  Return0,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Return1 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Return1 | Return2 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Return1 | Return2 | Return3 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Return1 | Return2 | Return3 | Return4 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  fallback?: DefaultCase<T, Fallback>,
+): Return0 | Return1 | Return2 | Return3 | Return4 | Return5 | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  fallback?: DefaultCase<T, Fallback>,
+):
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  fallback?: DefaultCase<T, Fallback>,
+):
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Return7
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
   Fn2 extends (x: T) => boolean,
   Fn3 extends (x: T) => boolean,
@@ -212,29 +637,28 @@ function conditional<
   Fn6 extends (x: T) => boolean,
   Fn7 extends (x: T) => boolean,
   Fn8 extends (x: T) => boolean,
-  Fn9 extends (x: T) => boolean,
   Return0,
-  Return1 = never,
-  Return2 = never,
-  Return3 = never,
-  Return4 = never,
-  Return5 = never,
-  Return6 = never,
-  Return7 = never,
-  Return8 = never,
-  Return9 = never,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Return8,
+  Fallback = never,
 >(
   data: T,
   case0: Case<T, Return0, Fn0>,
-  case1?: Case<T, Return1, Fn1> | DefaultCase<T, Return1>,
-  case2?: Case<T, Return2, Fn2> | DefaultCase<T, Return2>,
-  case3?: Case<T, Return3, Fn3> | DefaultCase<T, Return3>,
-  case4?: Case<T, Return4, Fn4> | DefaultCase<T, Return4>,
-  case5?: Case<T, Return5, Fn5> | DefaultCase<T, Return5>,
-  case6?: Case<T, Return6, Fn6> | DefaultCase<T, Return6>,
-  case7?: Case<T, Return7, Fn7> | DefaultCase<T, Return7>,
-  case8?: Case<T, Return8, Fn8> | DefaultCase<T, Return8>,
-  case9?: Case<T, Return9, Fn9> | DefaultCase<T, Return9>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  case8: Case<T, Return8, Fn8>,
+  fallback?: DefaultCase<T, Fallback>,
 ):
   | Return0
   | Return1
@@ -245,7 +669,56 @@ function conditional<
   | Return6
   | Return7
   | Return8
-  | Return9;
+  | Fallback;
+
+function conditional<
+  T,
+  Fn0 extends (x: T) => boolean,
+  Fn1 extends (x: T) => boolean,
+  Fn2 extends (x: T) => boolean,
+  Fn3 extends (x: T) => boolean,
+  Fn4 extends (x: T) => boolean,
+  Fn5 extends (x: T) => boolean,
+  Fn6 extends (x: T) => boolean,
+  Fn7 extends (x: T) => boolean,
+  Fn8 extends (x: T) => boolean,
+  Fn9 extends (x: T) => boolean,
+  Return0,
+  Return1,
+  Return2,
+  Return3,
+  Return4,
+  Return5,
+  Return6,
+  Return7,
+  Return8,
+  Return9,
+  Fallback = never,
+>(
+  data: T,
+  case0: Case<T, Return0, Fn0>,
+  case1: Case<T, Return1, Fn1>,
+  case2: Case<T, Return2, Fn2>,
+  case3: Case<T, Return3, Fn3>,
+  case4: Case<T, Return4, Fn4>,
+  case5: Case<T, Return5, Fn5>,
+  case6: Case<T, Return6, Fn6>,
+  case7: Case<T, Return7, Fn7>,
+  case8: Case<T, Return8, Fn8>,
+  case9: Case<T, Return9, Fn9>,
+  fallback?: DefaultCase<T, Fallback>,
+):
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Return7
+  | Return8
+  | Return9
+  | Fallback;
 
 function conditional(...args: ReadonlyArray<unknown>): unknown {
   return purryOn(isCase, conditionalImplementation, args);
