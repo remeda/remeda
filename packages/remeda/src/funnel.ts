@@ -1,5 +1,15 @@
 import type { RequireAtLeastOne } from "type-fest";
 
+// We use the value provided by the reducer to also determine if a call
+// was done during a timeout period. This means that even when no reducer
+// is provided, we still need a dummy reducer that would return something
+// other than `undefined`. It is safe to cast this to R (which might be
+// anything) because the callback would never use it as it would be typed
+// as a zero-args function.
+const VOID_REDUCER_SYMBOL = Symbol("funnel/voidReducer");
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- Intentional, so that it could be used as a default value above.
+const voidReducer = <R>(): R => VOID_REDUCER_SYMBOL as R;
+
 type FunnelOptions<Args extends RestArguments, R> = {
   readonly reducer?: (accumulator: R | undefined, ...params: Args) => R;
 } & FunnelTimingOptions;
@@ -184,7 +194,14 @@ export function funnel<Args extends RestArguments = [], R = never>(
     // Make sure the args aren't accidentally used again
     preparedData = undefined;
 
-    callback(param);
+    if (param === VOID_REDUCER_SYMBOL) {
+      // @ts-expect-error [ts2554] -- R is typed as `never` because we hide the
+      // symbol that `voidReducer` returns; there's no way to make TypeScript
+      // aware of this.
+      callback();
+    } else {
+      callback(param);
+    }
 
     if (minGapMs !== undefined) {
       intervalTimeoutId = setTimeout(handleIntervalEnd, minGapMs);
@@ -294,12 +311,3 @@ export function funnel<Args extends RestArguments = [], R = never>(
     },
   };
 }
-
-// We use the value provided by the reducer to also determine if a call
-// was done during a timeout period. This means that even when no reducer
-// is provided, we still need a dummy reducer that would return something
-// other than `undefined`. It is safe to cast this to R (which might be
-// anything) because the callback would never use it as it would be typed
-// as a zero-args function.
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- Intentional, so that it could be used as a default value above.
-const voidReducer = <R>(): R => "" as R;

@@ -67,7 +67,7 @@
     "@eslint/js": "^9.28.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^22.15.29",
-    "@vitest/coverage-v8": "^3.2.0",
+    "@vitest/coverage-v8": "^3.2.1",
     "@vitest/eslint-plugin": "^1.2.1",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
@@ -85,7 +85,7 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.1"
   },
   "sideEffects": false
 }
