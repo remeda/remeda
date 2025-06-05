@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=22.6.0"
+  },
   "main": "src/index.ts",
   "devDependencies": {
     "prettier": "^3.5.3",
