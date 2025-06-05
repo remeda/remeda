@@ -52,7 +52,7 @@
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
     "publish:jsr": "jsr publish",
-    "publish:preview": "pkg-pr-new publish",
+    "publish:preview": "pkg-pr-new publish --compact --template ../pr-sandbox/",
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:coverage": "vitest run --coverage",
