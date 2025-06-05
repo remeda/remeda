@@ -5,16 +5,40 @@
 
   "compilerOptions": {
     "strict": true,
-    "module": "commonjs",
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "useUnknownInCatchVariables": true,
-    "noImplicitAny": true,
-    "jsx": "preserve",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // MODULES
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "types": ["vitest/globals"],
+
+    // EMIT
+    "noEmit": true,
+
+    // JAVASCRIPT SUPPORT
+    "checkJs": true,
+
+    // INTEROP CONSTRAINTS
     "esModuleInterop": true,
-    "sourceMap": true,
-    "allowJs": true,
-    "lib": ["esnext", "dom"],
-    "rootDir": "src",
-    "moduleResolution": "node"
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // LANGUAGE and ENVIRONMENT
+    // TODO [>2]: These are defined by the minimum still-supported Node.JS version, which is currently 18.
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "moduleDetection": "force",
+
+    // COMPLETENESS
+    "skipLibCheck": true
   }
 }
