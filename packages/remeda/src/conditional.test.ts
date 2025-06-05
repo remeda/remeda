@@ -12,7 +12,7 @@ describe("runtime (dataFirst)", () => {
     expect(
       conditional(
         "Jokic",
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
         conditional.defaultCase(),
       ),
     ).toBeUndefined();
@@ -26,7 +26,7 @@ describe("runtime (dataFirst)", () => {
     expect(
       conditional(
         "Jokic",
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
         conditional.defaultCase(() => "hello"),
       ),
     ).toBe("hello");

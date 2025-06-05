@@ -86,7 +86,7 @@ describe("data-first", () => {
       conditional(
         "Jokic",
         [isString, () => "hello" as const],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
         conditional.defaultCase(),
       ),
     ).toEqualTypeOf<"hello" | undefined>();
@@ -105,7 +105,7 @@ describe("data-first", () => {
       conditional(
         "Jokic",
         [isString, () => "hello" as const],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
         conditional.defaultCase(() => 123 as const),
       ),
     ).toEqualTypeOf<"hello" | 123>();
@@ -193,7 +193,7 @@ describe("data-last", () => {
         "Jokic",
         conditional(
           [isString, () => "hello" as const],
-          // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+          // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
           conditional.defaultCase(),
         ),
       ),
@@ -216,7 +216,7 @@ describe("data-last", () => {
         "Jokic",
         conditional(
           [isString, () => "hello" as const],
-          // eslint-disable-next-line @typescript-eslint/no-deprecated -- Its safe to delete this check once defaultCase is removed, the check above does the same thing.
+          // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
           conditional.defaultCase(() => 123 as const),
         ),
       ),
