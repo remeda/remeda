@@ -78,7 +78,7 @@ describe("data-first", () => {
       conditional(
         "Jokic",
         [isString, () => "hello" as const],
-        [constant(true), constant(undefined)],
+        constant(undefined),
       ),
     ).toEqualTypeOf<"hello" | undefined>();
 
@@ -97,7 +97,7 @@ describe("data-first", () => {
       conditional(
         "Jokic",
         [isString, () => "hello" as const],
-        [constant(true), constant(123 as const)],
+        constant(123 as const),
       ),
     ).toEqualTypeOf<"hello" | 123>();
 
@@ -181,10 +181,7 @@ describe("data-last", () => {
     expectTypeOf(
       pipe(
         "Jokic",
-        conditional(
-          [isString, () => "hello" as const],
-          [constant(true), constant(undefined)],
-        ),
+        conditional([isString, () => "hello" as const], constant(undefined)),
       ),
     ).toEqualTypeOf<"hello" | undefined>();
 
@@ -204,10 +201,7 @@ describe("data-last", () => {
     expectTypeOf(
       pipe(
         "Jokic",
-        conditional(
-          [isString, () => "hello" as const],
-          [constant(true), constant(123 as const)],
-        ),
+        conditional([isString, () => "hello" as const], constant(123 as const)),
       ),
     ).toEqualTypeOf<"hello" | 123>();
 

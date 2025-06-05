@@ -4,9 +4,13 @@ import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
-  it("falls back to trivial default", () => {
+  it("accepts and runs a default/fallback case", () => {
     expect(
-      conditional("Jokic", [constant(true), constant(undefined)]),
+      conditional(
+        "Jokic",
+        [constant(false), constant("hello")],
+        constant(undefined),
+      ),
     ).toBeUndefined();
 
     expect(
@@ -19,9 +23,13 @@ describe("runtime (dataFirst)", () => {
   });
 
   it("falls back to our default", () => {
-    expect(conditional("Jokic", [constant(true), constant("hello")])).toBe(
-      "hello",
-    );
+    expect(
+      conditional(
+        "Jokic",
+        [constant(false), constant("world")],
+        constant("hello"),
+      ),
+    ).toBe("hello");
 
     expect(
       conditional(

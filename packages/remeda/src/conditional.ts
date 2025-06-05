@@ -10,6 +10,8 @@ type Case<
   When extends (x: In) => boolean = (x: In) => boolean,
 > = readonly [when: When, then: (x: GuardType<When, In> & In) => Out];
 
+type DefaultCase<In, Out> = (x: In) => Out;
+
 // For easier discovery and to allow us to have a single exported function we
 // merge a set of utilities with the function itself. This provides a namespace-
 // like structure where the function could be used directly by calling it, but
@@ -95,15 +97,15 @@ function conditional<
   Return9 = never,
 >(
   case0: Case<T, Return0, Fn0>,
-  case1?: Case<T, Return1, Fn1>,
-  case2?: Case<T, Return2, Fn2>,
-  case3?: Case<T, Return3, Fn3>,
-  case4?: Case<T, Return4, Fn4>,
-  case5?: Case<T, Return5, Fn5>,
-  case6?: Case<T, Return6, Fn6>,
-  case7?: Case<T, Return7, Fn7>,
-  case8?: Case<T, Return8, Fn8>,
-  case9?: Case<T, Return9, Fn9>,
+  case1?: Case<T, Return1, Fn1> | DefaultCase<T, Return1>,
+  case2?: Case<T, Return2, Fn2> | DefaultCase<T, Return2>,
+  case3?: Case<T, Return3, Fn3> | DefaultCase<T, Return3>,
+  case4?: Case<T, Return4, Fn4> | DefaultCase<T, Return4>,
+  case5?: Case<T, Return5, Fn5> | DefaultCase<T, Return5>,
+  case6?: Case<T, Return6, Fn6> | DefaultCase<T, Return6>,
+  case7?: Case<T, Return7, Fn7> | DefaultCase<T, Return7>,
+  case8?: Case<T, Return8, Fn8> | DefaultCase<T, Return8>,
+  case9?: Case<T, Return9, Fn9> | DefaultCase<T, Return9>,
 ): (
   data: T,
 ) =>
@@ -188,15 +190,15 @@ function conditional<
 >(
   data: T,
   case0: Case<T, Return0, Fn0>,
-  case1?: Case<T, Return1, Fn1>,
-  case2?: Case<T, Return2, Fn2>,
-  case3?: Case<T, Return3, Fn3>,
-  case4?: Case<T, Return4, Fn4>,
-  case5?: Case<T, Return5, Fn5>,
-  case6?: Case<T, Return6, Fn6>,
-  case7?: Case<T, Return7, Fn7>,
-  case8?: Case<T, Return8, Fn8>,
-  case9?: Case<T, Return9, Fn9>,
+  case1?: Case<T, Return1, Fn1> | DefaultCase<T, Return1>,
+  case2?: Case<T, Return2, Fn2> | DefaultCase<T, Return2>,
+  case3?: Case<T, Return3, Fn3> | DefaultCase<T, Return3>,
+  case4?: Case<T, Return4, Fn4> | DefaultCase<T, Return4>,
+  case5?: Case<T, Return5, Fn5> | DefaultCase<T, Return5>,
+  case6?: Case<T, Return6, Fn6> | DefaultCase<T, Return6>,
+  case7?: Case<T, Return7, Fn7> | DefaultCase<T, Return7>,
+  case8?: Case<T, Return8, Fn8> | DefaultCase<T, Return8>,
+  case9?: Case<T, Return9, Fn9> | DefaultCase<T, Return9>,
 ):
   | Return0
   | Return1
@@ -215,9 +217,14 @@ function conditional(...args: ReadonlyArray<unknown>): unknown {
 
 function conditionalImplementation<In, Out>(
   data: In,
-  ...cases: ReadonlyArray<Case<In, Out>>
+  ...cases: ReadonlyArray<Case<In, Out> | DefaultCase<In, Out>>
 ): Out {
-  for (const [when, then] of cases) {
+  for (const current of cases) {
+    if (typeof current === "function") {
+      return current(data);
+    }
+
+    const [when, then] = current;
     if (when(data)) {
       return then(data);
     }
@@ -243,12 +250,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
 
 // TODO [2025-09-04]: Remove the deprecated `defaultCase` utility.
 /**
- *! **DEPRECATED**: use `[constant(true), constant(undefined)]` instead!
- *
- * A simplified case that accepts all data. Put this as the last case to
- * prevent an exception from being thrown when none of the previous cases
- * match.
- * If this is not the last case it will short-circuit anything after it.
+ *! **DEPRECATED**: `conditional` now accepts a default, catch-all, callback directly and no longer needs this utility wrapper. Use `constant(undefined)` as your last case instead (see example).
  *
  * @example
  *   const nameOrId = 3 as string | number;
@@ -256,19 +258,17 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
  *     nameOrId,
  *     [R.isString, (name) => `Hello ${name}`],
  *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     R.conditional.defaultCase(),
+ *     // Was: `R.conditional.defaultCase(),`, Now:
+ *     constant(undefined),
  *   ); //=> 'Hello ID: 3'
- * @deprecated Use `[constant(true), constant(undefined)]` instead!
+ * @deprecated `conditional` now accepts a default, catch-all, callback
+ * directly and no longer needs this utility wrapper. Use `constant(undefined)`
+ * as your last case instead (see example).
  */
 function defaultCase(): Case<unknown, undefined>;
 
 /**
- *! **DEPRECATED**: use `[constant(true), then]` instead!
- *
- * A simplified case that accepts all data. Put this as the last case to
- * prevent an exception from being thrown when none of the previous cases
- * match.
- * If this is not the last case it will short-circuit anything after it.
+ *! **DEPRECATED**: `conditional` now accepts a default, catch-all, callback directly and no longer needs this utility wrapper. Simply put your `then` callback as the last case (see example).
  *
  * @param then - You only need to provide the transformer, the predicate is
  * implicit. @default () => undefined, which is how Lodash and Ramda handle
@@ -279,11 +279,14 @@ function defaultCase(): Case<unknown, undefined>;
  *     nameOrId,
  *     [R.isString, (name) => `Hello ${name}`],
  *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     R.conditional.defaultCase(
- *       (something) => `Hello something (${JSON.stringify(something)})`,
- *     ),
+ *     // Was: `R.conditional.defaultCase(
+ *     //  (something) => `Hello something (${JSON.stringify(something)})`,
+ *     //),`, Now:
+ *     (something) => `Hello something (${JSON.stringify(something)})`
  *   ); //=> 'Hello ID: 3'
- * @deprecated Use `[constant(true), then]` instead!
+ * @deprecated `conditional` now accepts a default, catch-all, callback
+ * directly and no longer needs this utility wrapper. Simply put your `then`
+ * callback as the last case.
  */
 function defaultCase<In, Then extends (param: In) => unknown>(
   then: Then,
