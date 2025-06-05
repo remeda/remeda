@@ -4,7 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "code index.ts && tsx index.ts"
+    "start": "tsx index.ts"
   },
   "dependencies": {
     "remeda": "*"
