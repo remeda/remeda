@@ -114,10 +114,8 @@ const toCamelCaseImplementation = (
     .map(
       (word, index) =>
         `${
-          (index === 0
-            ? // The first word is uncapitalized, the rest are capitalized
-              word[0]?.toLowerCase()
-            : word[0]?.toUpperCase()) ?? ""
+          // The first word is uncapitalized, the rest are capitalized
+          index === 0 ? word[0]!.toLowerCase() : word[0]!.toUpperCase()
         }${preserveConsecutiveUppercase ? word.slice(1) : word.slice(1).toLowerCase()}`,
     )
     .join("");
