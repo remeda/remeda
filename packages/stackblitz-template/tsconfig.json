@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "include": ["*.config.js", "index.ts"],
+
+  "compilerOptions": {
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // MODULES
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "types": ["vitest/globals"],
+
+    // EMIT
+    "noEmit": true,
+
+    // JAVASCRIPT SUPPORT
+    "checkJs": true,
+
+    // INTEROP CONSTRAINTS
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // LANGUAGE and ENVIRONMENT
+    // TODO [>2]: These are defined by the minimum still-supported Node.JS version, which is currently 18.
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "moduleDetection": "force",
+
+    // COMPLETENESS
+    "skipLibCheck": true
+  }
+}

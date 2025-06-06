@@ -13,6 +13,9 @@
     {
       "path": "packages/pr-sandbox",
     },
+    {
+      "path": "packages/stackblitz-template",
+    },
   ],
 
   "settings": {
