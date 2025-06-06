@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "include": ["*.config.js", "index.ts"],
+  "include": ["*.config.js", "*.ts"],
 
   "compilerOptions": {
     "strict": true,
