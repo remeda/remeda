@@ -265,8 +265,8 @@ jobs:
         run: |
           # Get the latest version tag
           VERSION=$(
-            git ls-remote --tags https://github.com/${{ github.repository }}.git \
-            | grep --only-matching --extended-regexp 'v[0-9]+\.[0-9]+\.[0-9]+$' \
+            git ls-remote --tags "https://github.com/${{ github.repository }}.git" \
+            | grep --only-matching --extended-regexp "v[0-9]+\.[0-9]+\.[0-9]+$" \
             | sort --version-sort \
             | tail -1 \
             | tr -d 'v'
@@ -277,7 +277,7 @@ jobs:
           # otherwise, we set the required (unpublished) version for the rest 
           # of the job.
           curl -s "https://jsr.io/@remeda/remeda/meta.json" \
-          | jq --exit-status --arg version $VERSION '.versions | has($version)' >/dev/null \
+          | jq --exit-status --arg version "$VERSION" ".versions | has($version)" >/dev/null \
           || echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: ⬇️ Checkout Repo
@@ -310,4 +310,4 @@ jobs:
         if: steps.extract-missing.outputs.version != ''
         # We allow dirty here because our jsr.json file has been modified and we
         # don't want to commit it back to the repo.
-        run: npm --workspace=remeda run publish:jsr -- --allow-dirty
+        run: npm --workspace=remeda run publish:jsr -- --allow-dirty --verbose
