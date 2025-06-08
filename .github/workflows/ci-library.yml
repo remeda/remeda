@@ -265,7 +265,7 @@ jobs:
         run: |
           set -x
           VERSION=$(
-            git ls-remote --tags "https://github.com/${{ github.repository }}.git" \
+            git ls-remote --tags "${{ github.server_url }}/${{ github.repository }}.git" \
               | grep --only-matching --perl-regexp "\B(\d+\.){2}\d+$" \
               | sort --version-sort \
               | tail -1
