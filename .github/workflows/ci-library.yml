@@ -260,54 +260,63 @@ jobs:
       id-token: write
 
     steps:
-      - name: 🫥 Extract Missing Version
-        id: extract-missing
+      - name: 🏷️ Repo Latest Released Version?
+        id: latest-released
         run: |
-          # Get the latest version tag
+          set -x
           VERSION=$(
-            git ls-remote --tags "https://github.com/${{ github.repository }}.git" \
-            | grep --only-matching --extended-regexp "v[0-9]+\.[0-9]+\.[0-9]+$" \
-            | sort --version-sort \
-            | tail -1 \
-            | tr -d 'v'
+            git ls-remote --tags "${{ github.repositoryUrl }}" \
+              | grep --only-matching --extended-regexp "\B(\d+\.){2}\d+$" \
+              | sort --version-sort \
+              | tail -1
           )
+          set +x
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "::notice title=Latest released version in repo::$VERSION"
 
-          # Get the list of published versions from JSR.io and check if the 
-          # latest version has already been published. If it has, we're done;
-          # otherwise, we set the required (unpublished) version for the rest 
-          # of the job.
-          curl -s "https://jsr.io/@remeda/remeda/meta.json" \
-          | jq --exit-status --arg version "$VERSION" ".versions | has($version)" >/dev/null \
-          || echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: 📘 JSR Latest Published Version?
+        id: latest-published
+        run: |
+          set -x
+          VERSION=$(
+            curl -s 'https://jsr.io/@remeda/remeda/meta.json' \
+              | jq --raw-output '.versions | keys | join("\n")' \
+              | sort --version-sort \
+              | tail -1
+          )
+          set +x
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "::notice title=Latest published version in JSR.io::$VERSION"
 
       - name: ⬇️ Checkout Repo
-        if: steps.extract-missing.outputs.version != ''
+        if: steps.latest-released.outputs.version != steps.latest-published.outcome.version
         uses: actions/checkout@v4
         with:
           # We want to publish the required tag and not the latest commit.
-          ref: v${{ steps.extract-missing.outputs.version }}
+          ref: v${{ steps.latest-released.outputs.version }}
 
       - name: ⎔ Setup Node
-        if: steps.extract-missing.outputs.version != ''
+        if: steps.latest-released.outputs.version != steps.latest-published.outcome.version
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download Dependencies
-        if: steps.extract-missing.outputs.version != ''
+        if: steps.latest-released.outputs.version != steps.latest-published.outcome.version
         uses: bahmutov/npm-install@v1
         env:
           HUSKY: 0
 
       - name: 📝 Update Version
-        if: steps.extract-missing.outputs.version != ''
+        if: steps.latest-released.outputs.version != steps.latest-published.outcome.version
         working-directory: packages/remeda
         run: |
-          jq --arg version "${{ steps.extract-missing.outputs.version }}" '.version = $version' jsr.json > jsr.json.tmp \
+          jq --arg version '${{ steps.latest-released.outputs.version }}' '.version = $version' jsr.json \
+          | tee jsr.json.tmp \
           && mv jsr.json.tmp jsr.json
 
       - name: 🦕 Publish to JSR.io
-        if: steps.extract-missing.outputs.version != ''
+        if: steps.latest-released.outputs.version != steps.latest-published.outcome.version
         # We allow dirty here because our jsr.json file has been modified and we
         # don't want to commit it back to the repo.
         run: npm --workspace=remeda run publish:jsr -- --allow-dirty --verbose
