@@ -286,4 +286,4 @@ jobs:
 
       - name: 🦕 Publish to JSR.io
         if: steps.latest-released.outputs.version != ''
-        run: npm --workspace=remeda run publish:jsr -- --set-version "${{ steps.latest-released.outputs.version }}"
+        run: npm --workspace=remeda run publish:jsr -- --set-version "${{ steps.latest-released.outputs.version }}" --no-provenance
