@@ -4,13 +4,15 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "node interactive.js"
+    "start": "node interactive.js",
+    "test": "vitest --typecheck"
   },
   "dependencies": {
     "remeda": "*"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.3"
   }
 }

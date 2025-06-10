@@ -20,7 +20,6 @@
     // MODULES
     "module": "Preserve",
     "moduleResolution": "Bundler",
-    "types": ["vitest/globals"],
 
     // EMIT
     "noEmit": true,
