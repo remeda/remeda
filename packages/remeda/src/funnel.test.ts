@@ -17,6 +17,33 @@ const ARGS_COLLECTOR = (
 ): ReadonlyArray<string> =>
   accumulator === undefined ? [item] : [...accumulator, item];
 
+describe("without a reducer", () => {
+  test("still calls the executor", () => {
+    const mockFn = vi.fn<() => void>();
+    const foo = funnel(mockFn, { triggerAt: "start" });
+    foo.call();
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenLastCalledWith();
+  });
+
+  test("handles multiple calls", async () => {
+    const mockFn = vi.fn<() => void>();
+    const foo = funnel(mockFn, { triggerAt: "both", minQuietPeriodMs: UT });
+    foo.call();
+    foo.call();
+    foo.call();
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenLastCalledWith();
+
+    await sleep(2 * UT);
+
+    expect(mockFn).toHaveBeenCalledTimes(2);
+    expect(mockFn).toHaveBeenLastCalledWith();
+  });
+});
+
 describe("reducer behavior", () => {
   it("passes the reduced arg to the executor", () => {
     const mockFn = vi.fn<(x: string) => void>();

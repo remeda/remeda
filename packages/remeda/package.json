@@ -51,7 +51,7 @@
     "format": "prettier . --write",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "lint:build": "attw --pack . && publint",
-    "publish:jsr": "jsr publish",
+    "publish:jsr": "jsr publish --no-provenance",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
@@ -67,7 +67,7 @@
     "@eslint/js": "^9.28.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^22.15.29",
-    "@vitest/coverage-v8": "^3.2.0",
+    "@vitest/coverage-v8": "^3.2.1",
     "@vitest/eslint-plugin": "^1.2.1",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
@@ -85,7 +85,7 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.1"
   },
   "sideEffects": false
 }
