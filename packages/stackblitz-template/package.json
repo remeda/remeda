@@ -4,14 +4,13 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "node interactive.ts"
+    "start": "node interactive.js"
   },
   "dependencies": {
     "remeda": "*"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
-    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
 }

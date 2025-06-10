@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "include": ["*.config.js", "*.ts"],
+  "include": ["*.config.js", "*.ts", "interactive.js"],
 
   "compilerOptions": {
     "strict": true,
@@ -17,8 +17,8 @@
     "noUnusedParameters": true,
 
     // MODULES
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
+    "module": "nodenext",
+    "moduleResolution": "node16",
     "types": ["vitest/globals"],
 
     // EMIT
@@ -34,7 +34,7 @@
 
     // LANGUAGE and ENVIRONMENT
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "moduleDetection": "force",
 
     // COMPLETENESS
