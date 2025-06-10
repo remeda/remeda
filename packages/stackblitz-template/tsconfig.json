@@ -1,7 +1,14 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
 
-  "include": ["*.config.js", "*.ts", "interactive.js"],
+  "include": ["*.config.ts", "src"],
+  "exclude": ["./src/playground.ts"],
+
+  "references": [
+    {
+      "path": "./tsconfig.playground.json"
+    }
+  ],
 
   "compilerOptions": {
     "strict": true,

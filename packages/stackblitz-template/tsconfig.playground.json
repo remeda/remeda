@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "files": ["./src/playground.ts"],
+
+  "compilerOptions": {
+    "composite": true,
+
+    "target": "es2017",
+    "jsx": "react",
+    "module": "nodenext",
+
+    // Emit
+    "declaration": true,
+
+    // Interop Constraints
+    "esModuleInterop": true,
+
+    // Type Checking
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitOverride": false,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  }
+}
