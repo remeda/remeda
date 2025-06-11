@@ -6,7 +6,6 @@
   "workspaces": [
     "packages/remeda",
     "packages/docs",
-    "packages/pr-sandbox",
     "packages/stackblitz-template"
   ],
   "scripts": {
