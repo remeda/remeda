@@ -1,4 +1,11 @@
 {
+  // This config is used by the TypeScript Playground file. It allows you to
+  // change how TypeScript checks that file in order to better match it to your
+  // preferences or your existing project config.
+  //
+  // You most likely will only need to change the settings under the "Type
+  // Checking" section.
+
   "$schema": "http://json.schemastore.org/tsconfig",
 
   "files": ["./src/playground.ts"],
@@ -9,9 +16,6 @@
     "target": "es2017",
     "jsx": "react",
     "module": "nodenext",
-
-    // Emit
-    "declaration": true,
 
     // Interop Constraints
     "esModuleInterop": true,

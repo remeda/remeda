@@ -1,15 +1,37 @@
-# Welcome to the Remeda StackBlitz sandbox!
+# 🎉 Remeda Sandbox
 
-This sandbox provides several tools to make testing out Remeda functionality:
+Welcome to the **Remeda StackBlitz Sandbox**! This environment allows you to
+test and explore how remeda works before installing it in your own projects.
 
-- An **interactive** Node REPL session ("console") with all Remeda utilities
-  preloaded into the global scope; run automatically when the sandbox is
-  started, and could be re-run via `npm start`.
-- A pre-configured vitest **testing suite** that provides a surface for reproducing
-  complex issues and edge-cases. Available both for
-  [runtime (functional) testing](./src/runtime.test.ts), and
-  [types testing](./src/typing.test-d.ts). Use `npm test` to run them, or via
-  the recommended Vitest VSCode plugin.
-- A [TypeScript **Playground**](./src/playground.ts) for checking how input and
-  output types relate and affect each other, and configurable via it's own,
-  separate, [TypeScript Configuration File](./tsconfig.playground.json).
+> **📋 What's this for?** This sandbox is automatically created for each Remeda
+> PR, letting contributors and maintainers validate changes in a live
+> environment with the latest code modifications.
+
+## 🛠️ Available Tools
+
+### 🧑‍💻 **Interactive Console**
+
+- All Remeda utilities loaded globally
+- Perfect for quick experimentation
+- **Usage:** Runs automatically when the sandbox is started, or restart with
+  `npm start`
+
+### 🧪 **Test Suite**
+
+- Pre-configured Vitest testing environment
+- Test both runtime behavior and TypeScript types
+- **Files:** [`runtime.test.ts`](./src/runtime.test.ts) • [`typing.test-d.ts`](./src/typing.test-d.ts)
+- **Usage:** `npm test` or use the Vitest VS Code extension
+
+### 🎮 **TypeScript Playground**
+
+- Experiment with type inference and transformations
+- Uses relaxed TypeScript settings for easier experimentation
+- **File:** [`playground.ts`](./src/playground.ts)
+- **Config:** [`tsconfig.playground.json`](./tsconfig.playground.json)
+
+---
+
+**🔗 Need help?** React out to us at https://github.com/remeda/remeda/discussions.
+
+**🐞 Something broken?** Report it at https://github.com/remeda/remeda/issues.

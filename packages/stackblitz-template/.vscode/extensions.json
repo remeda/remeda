@@ -1,3 +1,7 @@
 {
-  "recommendations": ["Orta.vscode-twoslash-queries", "vitest.explorer"]
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "Orta.vscode-twoslash-queries",
+    "vitest.explorer"
+  ]
 }
