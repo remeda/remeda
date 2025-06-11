@@ -1,0 +1,4 @@
+{
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": true
+}
