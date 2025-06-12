@@ -20,7 +20,9 @@ test and explore how remeda works before installing it in your own projects.
 
 - Pre-configured Vitest testing environment
 - Test both runtime behavior and TypeScript types
-- **Files:** [`runtime.test.ts`](./src/runtime.test.ts) • [`typing.test-d.ts`](./src/typing.test-d.ts)
+- **Files:**
+  - [Runtime](./src/runtime.test.ts)
+  - [Typing](./src/typing.test-d.ts)
 - **Usage:** `npm test` or use the Vitest VS Code extension
 
 ### 🎮 **TypeScript Playground**
