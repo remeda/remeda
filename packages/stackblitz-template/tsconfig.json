@@ -1,40 +1,7 @@
 {
-  "include": ["*.config.js", "interactive.js", "src"],
-
-  "compilerOptions": {
-    "strict": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "exactOptionalPropertyTypes": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-
-    // MODULES
-    "module": "nodenext",
-    "moduleResolution": "node16",
-
-    // EMIT
-    "noEmit": true,
-
-    // JAVASCRIPT SUPPORT
-    "checkJs": true,
-
-    // INTEROP CONSTRAINTS
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-
-    // LANGUAGE and ENVIRONMENT
-    "target": "ES2022",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "moduleDetection": "force",
-
-    // COMPLETENESS
-    "skipLibCheck": true
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.project.json" },
+    { "path": "./tsconfig.playground.json" }
+  ]
 }

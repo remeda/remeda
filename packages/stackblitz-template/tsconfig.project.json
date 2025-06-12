@@ -1,0 +1,45 @@
+{
+  "include": ["*.config.js", "interactive.js", "src"],
+  "exclude": ["src/playground.ts"],
+
+  "compilerOptions": {
+    "composite": true,
+
+    // TYPE CHECKING
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // MODULES
+    "module": "nodenext",
+    "moduleResolution": "node16",
+    "types": ["vitest/globals"],
+
+    // EMIT
+    "noEmit": true,
+
+    // JAVASCRIPT SUPPORT
+    "checkJs": true,
+
+    // INTEROP CONSTRAINTS
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // LANGUAGE and ENVIRONMENT
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+
+    // COMPLETENESS
+    "skipLibCheck": true
+  }
+}
