@@ -1,9 +1,8 @@
 import { start } from "node:repl";
 
+const repl = start({ prompt: "" });
+
 console.log("Loading the Remeda utilities into the global scope...");
-
-const repl = start();
-
 import("remeda").then((remeda) => {
   Object.assign(repl.context, remeda);
   console.log("✅ Done!");
