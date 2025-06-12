@@ -4,24 +4,25 @@
   "compilerOptions": {
     "composite": true,
 
-    "target": "es2017",
-    "jsx": "react",
-    "module": "nodenext",
+    // We highly recommend enabling these options:
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
 
-    // Interop Constraints
-    "esModuleInterop": true,
-
-    // Type Checking
+    // Additional type checking options
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "exactOptionalPropertyTypes": false,
     "noFallthroughCasesInSwitch": false,
     "noImplicitOverride": false,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+
+    // Other options...
+    "target": "es2017",
+    "jsx": "react",
+    "module": "nodenext",
+    "esModuleInterop": true
   }
 }
