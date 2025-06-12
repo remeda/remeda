@@ -1,12 +1,5 @@
 {
-  "include": ["*.config.js", "*.config.ts", "./interactive.js", "./src/"],
-  "exclude": ["./src/playground.ts"],
-
-  "references": [
-    {
-      "path": "./tsconfig.playground.json"
-    }
-  ],
+  "include": ["*.config.js", "interactive.js", "src"],
 
   "compilerOptions": {
     "strict": true,
