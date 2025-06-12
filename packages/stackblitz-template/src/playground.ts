@@ -10,7 +10,8 @@
  * recommended configuration. The configuration can be modified in
  * `tsconfig.playground.json` in the root of this project.
  *
- * !We highly recommend enabling `exactOptionalPropertyTypes`!
+ * We highly recommend enabling `exactOptionalPropertyTypes` and
+ * `noUncheckedIndexedAccess`!
  */
 
 import { filter } from "remeda";
