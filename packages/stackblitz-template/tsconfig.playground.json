@@ -6,8 +6,6 @@
   // You most likely will only need to change the settings under the "Type
   // Checking" section.
 
-  "$schema": "http://json.schemastore.org/tsconfig",
-
   "files": ["./src/playground.ts"],
 
   "compilerOptions": {

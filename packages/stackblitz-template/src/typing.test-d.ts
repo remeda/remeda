@@ -13,6 +13,7 @@
  */
 
 import { pick } from "remeda";
+import { expectTypeOf, test } from "vitest";
 
 test("example", () => {
   expectTypeOf(pick({ a: 1, b: "hello" } as const, ["a"])).toEqualTypeOf<{

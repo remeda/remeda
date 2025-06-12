@@ -1,6 +1,4 @@
 {
-  "$schema": "http://json.schemastore.org/tsconfig",
-
   "include": ["*.config.js", "*.config.ts", "./interactive.js", "./src/"],
   "exclude": ["./src/playground.ts"],
 
@@ -26,7 +24,6 @@
     // MODULES
     "module": "nodenext",
     "moduleResolution": "node16",
-    "types": ["vitest/globals"],
 
     // EMIT
     "noEmit": true,
