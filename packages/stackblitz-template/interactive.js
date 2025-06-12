@@ -12,7 +12,7 @@ import("remeda").then((remeda) => {
     "You can now use Remeda utilities directly in the console, e.g.,",
   );
   console.log("");
-  console.log("\tmap([1, 2, 3], ($) => $ * 2);");
+  console.log("\tmap([1, 2, 3], add(4));");
   console.log("");
 
   repl.setPrompt("Remeda> ");
