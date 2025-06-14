@@ -1,0 +1,28 @@
+{
+  "files": ["src/playground.ts"],
+
+  "compilerOptions": {
+    "composite": true,
+
+    // We highly recommend enabling these options:
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
+
+    // Additional type checking options
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitOverride": false,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // Other options...
+    "target": "es2017",
+    "jsx": "react",
+    "module": "nodenext",
+    "esModuleInterop": true
+  }
+}

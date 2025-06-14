@@ -11,7 +11,7 @@
       "path": "packages/docs",
     },
     {
-      "path": "packages/pr-sandbox",
+      "path": "packages/stackblitz-template",
     },
   ],
 
