@@ -69,6 +69,15 @@ describe("indexed signature", () => {
       expectTypeOf(key).toEqualTypeOf<never>();
     });
   });
+
+  test("should work with keys that extends string", () => {
+    type FormConfig<K extends string> = Record<K, FieldConfig>;
+    type FieldConfig = { label: string }
+
+    mapValues({} as FormConfig<"name" | "email">, (value) => {
+      expectTypeOf(value).toEqualTypeOf<FieldConfig>();
+    });
+  });
 });
 
 describe("branded types", () => {

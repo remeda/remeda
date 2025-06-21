@@ -59,16 +59,17 @@ export function mapValues(...args: ReadonlyArray<unknown>): unknown {
   return purry(mapValuesImplementation, args);
 }
 
-function mapValuesImplementation<T extends object, Value>(
+function mapValuesImplementation<T extends Record<string, any>, Value>(
   data: T,
-  valueMapper: (value: unknown, key: string, data: T) => Value,
-): Record<string, Value> {
-  const out: Record<string, Value> = {};
+  valueMapper: (value: T[keyof T], key: keyof T, data: T) => Value,
+): Record<keyof T, Value> {
+  const out = {} as Record<keyof T, Value>;
 
   for (const [key, value] of Object.entries(data)) {
-    const mappedValue = valueMapper(value, key, data);
-    out[key] = mappedValue;
+    const mappedValue = valueMapper(value as T[keyof T], key as keyof T, data);
+    out[key as keyof T] = mappedValue;
   }
 
   return out;
 }
+
