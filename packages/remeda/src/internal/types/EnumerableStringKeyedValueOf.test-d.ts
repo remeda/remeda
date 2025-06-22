@@ -104,7 +104,9 @@ test("empty object", () => {
 test("generic key type (Issue #1122)", () => {
   // @ts-expect-error [ts6133] -- Intentional for testing.
   // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
-  const foo = <K extends string>(data: Record<K, "hello">) => {
-    expectTypeOf(enumerableStringKeyedValueOf(data)).toEqualTypeOf<"hello">();
+  const foo = <K extends string>(data: Record<K, { a: "hello" }>) => {
+    const { a } = enumerableStringKeyedValueOf(data);
+
+    expectTypeOf(a).toEqualTypeOf<"hello">();
   };
 });
