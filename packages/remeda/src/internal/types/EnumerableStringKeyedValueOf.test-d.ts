@@ -5,7 +5,7 @@ declare function enumerableStringKeyedValueOf<const T>(
   data: T,
 ): EnumerableStringKeyedValueOf<T>;
 
-declare const SymbolFoo: unique symbol;
+const SymbolFoo = Symbol("foo");
 
 test("string values", () => {
   expectTypeOf(
@@ -45,28 +45,26 @@ test("literal values", () => {
   ).toEqualTypeOf<1>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as { a: "1" | "2" | 1 }),
+    enumerableStringKeyedValueOf({ a: 1 } as { a: "1" | "2" | 1 }),
   ).toEqualTypeOf<"1" | "2" | 1>();
 });
 
 test("optional values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as { a: 1; b?: 4 }),
+    enumerableStringKeyedValueOf({ a: 1 } as { a: 1; b?: 4 }),
   ).toEqualTypeOf<1 | 4>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as { a: string; b?: number }),
+    enumerableStringKeyedValueOf({ a: "hello" } as { a: string; b?: number }),
   ).toEqualTypeOf<number | string>();
 });
 
 test("nullish and undefined values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf(
-      {} as {
-        a: string | undefined;
-        b: string | null;
-      },
-    ),
+    enumerableStringKeyedValueOf({ a: "hello", b: "world" } as {
+      a: string | undefined;
+      b: string | null;
+    }),
   ).toEqualTypeOf<string | null | undefined>();
 
   expectTypeOf(
@@ -81,11 +79,11 @@ test("nullish and undefined values", () => {
 
 test("symbol keys", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as { [SymbolFoo]: string }),
+    enumerableStringKeyedValueOf({ [SymbolFoo]: "hello" } as const),
   ).toEqualTypeOf<never>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as { [SymbolFoo]: string; b: "1" }),
+    enumerableStringKeyedValueOf({ [SymbolFoo]: "hello", b: "1" } as const),
   ).toEqualTypeOf<"1">();
 
   expectTypeOf(
