@@ -101,10 +101,14 @@ test("empty object", () => {
   ).toEqualTypeOf<never>();
 });
 
-test("generic key type (Issue #1122)", () => {
-  // @ts-expect-error [ts6133] -- Intentional for testing.
-  // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
-  const foo = <K extends string>(data: Record<K, { a: "hello" }>) => {
+test("parameterized record key (Issue #1122)", () => {
+  // @ts-expect-error [ts6133] -- Only functions allow us to define a parametrized record (I think...)
+  // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars -- The function inside this test IS the main point of the test and can't be pulled out or used.
+  const foo = <K extends string>(data: Record<K, { a: "hello" }>): void => {
+    // TypeScript/Vitest (?!) is failing to infer the result of our function
+    // on this type directly, but still manages to typecheck it once we
+    // destructure the result and only test the type of the property. I don't
+    // know why that is and if there's any better more idiomatic way to do this.
     const { a } = enumerableStringKeyedValueOf(data);
 
     expectTypeOf(a).toEqualTypeOf<"hello">();
