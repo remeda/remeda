@@ -16,7 +16,7 @@ _Not provided by Remeda._
   values.
 
 - Notice that `without` takes a variadic array of items to remove. In Remeda all
-  functions take an explicit array instead. You will need to wrap you items in
+  functions take an explicit array instead. You will need to wrap your items in
   an array when migrating, or remove the `...` spread operator if they are
   already in an array.
 
