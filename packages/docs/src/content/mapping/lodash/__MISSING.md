@@ -25,7 +25,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - unionWith
 - unzip
 - unzipWith
-- without
 - xor
 - xorBy
 - xorWith
