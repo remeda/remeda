@@ -144,12 +144,6 @@ test("works well with nullish type-guards", () => {
   }>();
 });
 
-test("narrowing correctly on unbounded records (Issue #1075)", () => {
-  expectTypeOf(
-    pickBy({} as Record<string, number | null>, isNonNull),
-  ).toEqualTypeOf<Record<string, number>>();
-});
-
 // @see https://github.com/remeda/remeda/issues/696
 describe("records with non-narrowing predicates (Issue #696)", () => {
   test("string keys", () => {
@@ -187,4 +181,11 @@ describe("records with non-narrowing predicates (Issue #696)", () => {
       Record<`${number}`, string> | Record<string, string>
     >();
   });
+});
+
+// @see https://github.com/remeda/remeda/issues/1075
+test("narrowing correctly on unbounded records (Issue #1075)", () => {
+  expectTypeOf(
+    pickBy({} as Record<string, number | null>, isNonNull),
+  ).toEqualTypeOf<Record<string, number>>();
 });
