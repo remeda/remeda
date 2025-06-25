@@ -35,9 +35,15 @@ type EnumeratedPartial<T> = T extends unknown
 // are the "matches", which would not change the "optionality" of the input
 // object's props, and one for partial matches which would also make the props
 // optional (as they could have a value that would be filtered out).
-type EnumeratedPartialNarrowed<T, S> = Simplify<
-  ExactProps<T, S> & PartialProps<T, S>
->;
+type EnumeratedPartialNarrowed<T, S> = T extends unknown
+  ? Simplify<
+      IfBoundedRecord<
+        T,
+        ExactProps<T, S> & PartialProps<T, S>,
+        Record<EnumerableStringKeyOf<T>, S>
+      >
+    >
+  : never;
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
