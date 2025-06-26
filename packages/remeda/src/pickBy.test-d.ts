@@ -184,8 +184,52 @@ describe("records with non-narrowing predicates (Issue #696)", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/1075
-test("type-predicates with unbounded records (Issue #1075)", () => {
-  expectTypeOf(
-    pickBy({} as Record<string, number | null>, isNonNull),
-  ).toEqualTypeOf<Record<string, number>>();
+describe("unbounded records and narrowing predicates (Issue #1075)", () => {
+  test("simple case", () => {
+    expectTypeOf(
+      pickBy({} as Record<string, number | null>, isNonNull),
+    ).toEqualTypeOf<Record<string, number>>();
+  });
+
+  describe("union record types", () => {
+    test("disjoint value types", () => {
+      expectTypeOf(
+        pickBy(
+          {} as
+            | Record<string, string | null>
+            | Record<string, number | boolean>,
+          isString,
+        ),
+      ).toEqualTypeOf<Record<string, string> | Record<string, never>>();
+    });
+
+    test("shared filtered type", () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, number | null> | Record<string, string | null>,
+          isNonNull,
+        ),
+      ).toEqualTypeOf<Record<string, number> | Record<string, string>>();
+    });
+
+    test("shared remaining type", () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, string | number> | Record<string, string | null>,
+          isNonNull,
+        ),
+      ).toEqualTypeOf<
+        Record<string, string | number> | Record<string, string>
+      >();
+    });
+
+    test("same type after narrowing", () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, string | 123> | Record<string, string | 456>,
+          isString,
+        ),
+      ).toEqualTypeOf<Record<string, string>>();
+    });
+  });
 });
