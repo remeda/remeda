@@ -22,7 +22,7 @@ type EnumeratedPartial<T> = T extends unknown
         // For unbounded records (a simple Record with primitive `string` or
         // `number` keys) the return type here could technically be T; but for
         // cases where the record is unbounded but is more complex (like
-        // `symbol` keys) we want to "reconstruct" the record from just it's
+        // `symbol` keys) we want to "reconstruct" the record from just its
         // enumerable components (which are the ones accessible via
         // `Object.entries`).
         Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
