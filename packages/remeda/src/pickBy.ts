@@ -2,7 +2,6 @@ import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
-import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only
@@ -20,7 +19,7 @@ type EnumeratedPartial<T> = T extends unknown
         {
           -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
         },
-        ReconstructedRecord<T>
+        Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
       >
     >
   : never;
@@ -40,7 +39,10 @@ type EnumeratedPartialNarrowed<T, S> = T extends unknown
       IfBoundedRecord<
         T,
         ExactProps<T, S> & PartialProps<T, S>,
-        Record<EnumerableStringKeyOf<T>, S>
+        Record<
+          EnumerableStringKeyOf<T>,
+          Extract<EnumerableStringKeyedValueOf<T>, S>
+        >
       >
     >
   : never;

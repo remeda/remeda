@@ -184,7 +184,7 @@ describe("records with non-narrowing predicates (Issue #696)", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/1075
-test("narrowing correctly on unbounded records (Issue #1075)", () => {
+test("type-predicates with unbounded records (Issue #1075)", () => {
   expectTypeOf(
     pickBy({} as Record<string, number | null>, isNonNull),
   ).toEqualTypeOf<Record<string, number>>();
