@@ -2,7 +2,6 @@ import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
-import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only
@@ -20,7 +19,13 @@ type EnumeratedPartial<T> = T extends unknown
         {
           -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
         },
-        ReconstructedRecord<T>
+        // For unbounded records (a simple Record with primitive `string` or
+        // `number` keys) the return type here could technically be T; but for
+        // cases where the record is unbounded but is more complex (like
+        // `symbol` keys) we want to "reconstruct" the record from just its
+        // enumerable components (which are the ones accessible via
+        // `Object.entries`).
+        Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
       >
     >
   : never;
@@ -35,9 +40,21 @@ type EnumeratedPartial<T> = T extends unknown
 // are the "matches", which would not change the "optionality" of the input
 // object's props, and one for partial matches which would also make the props
 // optional (as they could have a value that would be filtered out).
-type EnumeratedPartialNarrowed<T, S> = Simplify<
-  ExactProps<T, S> & PartialProps<T, S>
->;
+type EnumeratedPartialNarrowed<T, S> = T extends unknown
+  ? Simplify<
+      IfBoundedRecord<
+        T,
+        ExactProps<T, S> & PartialProps<T, S>,
+        // For unbounded records we need to "reconstruct" the record and narrow
+        // the value types. Similar to the non-narrowed case, we need to also
+        // ignore `symbol` keys and any values that are only relevant to them.
+        Record<
+          EnumerableStringKeyOf<T>,
+          Extract<EnumerableStringKeyedValueOf<T>, S>
+        >
+      >
+    >
+  : never;
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
