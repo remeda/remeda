@@ -8,40 +8,37 @@ describe("data first", () => {
     pick({ a: 1, b: 2, c: 3, d: 4 }, ["not", "in"]);
   });
 
-  test("complex type", () => {
-    const obj = { a: 1 } as { a: number } | { a?: number; b: string };
-    const result = pick(obj, ["a"]);
-
-    expectTypeOf(result).toEqualTypeOf<
-      Pick<{ a: number } | { a?: number; b: string }, "a">
-    >();
+  test("union with common prop", () => {
+    expectTypeOf(
+      pick({ a: 1 } as { a: number } | { a?: number; b: string }, ["a"]),
+    ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
   });
 
-  it("infers the key types from the keys array (issue #886)", () => {
-    const data = { foo: "hello", bar: "world" };
+  describe("infers the key types from the keys array (issue #886)", () => {
+    test("base", () => {
+      expectTypeOf(
+        pick({ foo: "hello", bar: "world" }, ["foo"]),
+      ).toEqualTypeOf<{ foo: string }>();
+    });
 
-    const raw = pick(data, ["foo"]);
+    test("wrapped", () => {
+      expectTypeOf(
+        keys(pick({ foo: "hello", bar: "world" }, ["foo"])),
+      ).toEqualTypeOf<Array<"foo">>();
+    });
 
-    expectTypeOf(raw).toEqualTypeOf<{ foo: string }>();
-
-    const wrapped = keys(pick(data, ["foo"]));
-
-    expectTypeOf(wrapped).toEqualTypeOf<Array<"foo">>();
-
-    const withConstKeys = keys(pick(data, ["foo"] as const));
-
-    expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
+    test("with const key", () => {
+      expectTypeOf(
+        keys(pick({ foo: "hello", bar: "world" }, ["foo"] as const)),
+      ).toEqualTypeOf<Array<"foo">>();
+    });
   });
+});
 
-  it("handles optional keys (issue #911)", () => {
-    const data = { foo: "hello", bar: "world" } as const;
-    const result = pick(data, [] as Array<keyof typeof data>);
-
-    expectTypeOf(result).toEqualTypeOf<{
-      readonly foo?: "hello";
-      readonly bar?: "world";
-    }>();
-  });
+it("handles optional keys (issue #911)", () => {
+  expectTypeOf(
+    pick({ foo: "hello", bar: "world" }, [] as Array<"foo" | "bar">),
+  ).toEqualTypeOf<{ foo?: string; bar?: string }>();
 });
 
 describe("data last", () => {
@@ -53,28 +50,18 @@ describe("data last", () => {
     );
   });
 
-  test("complex type", () => {
-    const obj = { a: 1 } as { a: number } | { a?: number; b: string };
-    const result = pipe(obj, pick(["a"]));
-
-    expectTypeOf(result).toEqualTypeOf<
-      Pick<{ a: number } | { a?: number; b: string }, "a">
-    >();
+  test("union with common prop", () => {
+    expectTypeOf(
+      pipe({ a: 1 } as { a: number } | { a?: number; b: string }, pick(["a"])),
+    ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
   });
 });
 
 test("multiple keys", () => {
-  type Data = { aProp: string; bProp: string };
-
-  const obj: Data = {
-    aProp: "p1",
-
-    bProp: "p2",
-  };
-
-  const result = pipe(obj, pick(["aProp", "bProp"]));
-
-  expectTypeOf(result).toEqualTypeOf<Pick<Data, "aProp" | "bProp">>();
+  expectTypeOf(pipe({ a: "p1", b: "p2" }, pick(["a", "b"]))).toEqualTypeOf<{
+    a: string;
+    b: string;
+  }>();
 });
 
 test("support inherited properties", () => {
@@ -85,9 +72,8 @@ test("support inherited properties", () => {
     }
   }
   class TestClass extends BaseClass {}
-  const testClass = new TestClass();
 
-  expectTypeOf(pick(testClass, ["testProp"])).toEqualTypeOf<{
+  expectTypeOf(pick(new TestClass(), ["testProp"])).toEqualTypeOf<{
     testProp: () => string;
   }>();
 });
