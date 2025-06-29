@@ -1,9 +1,10 @@
 import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
 import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type { If } from "./internal/types/If";
 
 // Because pickBy needs to iterate over all entries of the object, only
 // enumerable keys (those returned by `Object.entries`) could be part of the
@@ -15,8 +16,8 @@ type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-      IfBoundedRecord<
-        T,
+      If<
+        IsBoundedRecord<T>,
         {
           -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
         },
