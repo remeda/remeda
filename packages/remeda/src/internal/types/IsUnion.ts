@@ -1,6 +1,6 @@
 import type { IsNever } from "type-fest";
 
-// TODO: This type is copied from type-fest because it isn't exported. It's part of the "internal" types. We should check back in a while to see if this type is added to the public offering.
+// TODO [type-fest@>=5]: This type will be exported in v5. We don't need to re-implement and export it here.
 export type IsUnion<T> = InternalIsUnion<T>;
 
 type InternalIsUnion<T, U = T> = (
