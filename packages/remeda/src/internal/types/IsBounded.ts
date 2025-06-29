@@ -25,10 +25,11 @@ export type IsBounded<T> =
       : never
   ) extends true
     ? // When some parts of the union result in `true` and others in `false`
-      // (e.g. "a" | number), when we distribute the union we would get
-      // `boolean` as a result, instead of a single literal boolean value; But
-      // the union as a whole is bounded only if all it's parts are bounded
-      // individually, so those cases should return `false`.
+      // (e.g. `"a" | number`), when we distribute the union we would get
+      // `boolean` as a result (because `true | false` === `boolean`), instead
+      // of a single literal boolean value; But the union as a whole is bounded
+      // only if all it's parts are bounded individually, so those cases should
+      // return `false`.
       true
     : false;
 
