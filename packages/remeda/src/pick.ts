@@ -1,21 +1,32 @@
-import type { Simplify } from "type-fest";
+import type { EmptyObject, Simplify } from "type-fest";
+import type { IsUnion } from "type-fest/source/internal";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
+import type { If } from "./internal/types/If";
 
-type PickFromArray<T, Keys extends ReadonlyArray<keyof T>> = Simplify<
-  // The keys that are in the fixed parts of the Keys array will always be part
-  // of the result.
-  Pick<
-    T,
-    TupleParts<Keys>["required"][number] | TupleParts<Keys>["suffix"][number]
-  > &
-    // The keys in the optional parts of the Keys array might be part of the
-    // result or not, so we need to make this part of the result partial to
-    // reflect that.
-    Partial<
-      Pick<T, TupleParts<Keys>["optional"][number] | TupleParts<Keys>["item"]>
+type PickFromArray<
+  T,
+  Keys extends ReadonlyArray<keyof T>,
+> = Keys extends readonly []
+  ? EmptyObject
+  : Simplify<
+      Pick<T, ItemsByUnion<TupleParts<Keys>["required"]>["single"]> &
+        Pick<T, ItemsByUnion<TupleParts<Keys>["suffix"]>["single"]> &
+        Partial<Pick<T, ItemsByUnion<TupleParts<Keys>["required"]>["union"]>> &
+        Partial<Pick<T, TupleParts<Keys>["item"]>> &
+        Partial<Pick<T, ItemsByUnion<TupleParts<Keys>["suffix"]>["union"]>>
+    >;
+
+type ItemsByUnion<T, Single = never, Union = never> = T extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? If<
+      IsUnion<Head>,
+      ItemsByUnion<Rest, Single, Union | Head>,
+      ItemsByUnion<Rest, Single | Head, Union>
     >
->;
+  : { single: Single; union: Union };
 
 /**
  * Creates an object composed of the picked `data` properties.
