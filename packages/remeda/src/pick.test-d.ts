@@ -922,6 +922,17 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       >();
     });
   });
+
+  it("narrows on unbounded keys but doesn't make it partial", () => {
+    const picks = [] as Array<`prefix_${string}`>;
+
+    expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+      Record<`prefix_${string}`, "required">
+    >();
+    expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+      Record<`prefix_${string}`, "undefinable" | undefined>
+    >();
+  });
 });
 
 describe("data is a union of object types", () => {
