@@ -5,6 +5,8 @@ import type { IsBounded } from "./IsBounded";
  * Check if a type is guaranteed to be a bounded record: a record with a finite
  * set of keys.
  *
+ * See the docs for `IsBounded` to understand more.
+ *
  * @example
  *   IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
  *   IfBoundedRecord<Record<string | number, unknown>>; //=> false
