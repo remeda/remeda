@@ -2,7 +2,7 @@ import type { EmptyObject } from "type-fest";
 import { keys } from "./keys";
 import { pick } from "./pick";
 
-describe("plain (bounded) object", () => {
+describe("bounded object types", () => {
   const DATA = { a: "required", c: undefined } as {
     a: "required";
     b?: "optional";
@@ -10,88 +10,88 @@ describe("plain (bounded) object", () => {
     d?: "optional-undefinable" | undefined;
   };
 
-  it("enforces props can be picked from object", () => {
+  it("enforces keys must exist on object", () => {
     // @ts-expect-error [ts2322] -- should not allow non existing props
     pick(DATA, ["not", "in"]);
   });
 
-  it("doesn't widen type for props", () => {
+  it("doesn't widen key types", () => {
     // @ts-expect-error [ts2345] -- string is too wide for object
     pick(DATA, ["a"] as [string]);
   });
 
-  test("keys are empty", () => {
+  test("empty keys tuple", () => {
     expectTypeOf(pick(DATA, [])).toEqualTypeOf<EmptyObject>();
   });
 
-  describe("keys are fixed tuple of singular literals", () => {
-    test("only required picked", () => {
+  describe("fixed tuple of literal keys", () => {
+    test("required key only", () => {
       expectTypeOf(pick(DATA, ["a"])).toEqualTypeOf<{
         a: "required";
       }>();
     });
 
-    test("only optional picked", () => {
+    test("optional key only", () => {
       expectTypeOf(pick(DATA, ["b"])).toEqualTypeOf<{
         b?: "optional";
       }>();
     });
 
-    test("only undefinable picked", () => {
+    test("undefinable key only", () => {
       expectTypeOf(pick(DATA, ["c"])).toEqualTypeOf<{
         c: "undefinable" | undefined;
       }>();
     });
 
-    test("only optional-undefinable picked", () => {
+    test("optional-undefinable key only", () => {
       expectTypeOf(pick(DATA, ["d"])).toEqualTypeOf<{
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("require and optional picked", () => {
+    test("required and optional keys", () => {
       expectTypeOf(pick(DATA, ["a", "b"])).toEqualTypeOf<{
         a: "required";
         b?: "optional";
       }>();
     });
 
-    test("required and undefinable picked", () => {
+    test("required and undefinable keys", () => {
       expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<{
         a: "required";
         c: "undefinable" | undefined;
       }>();
     });
 
-    test("required and optional-undefinable picked", () => {
+    test("required and optional-undefinable keys", () => {
       expectTypeOf(pick(DATA, ["a", "d"])).toEqualTypeOf<{
         a: "required";
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("optional and undefinable picked", () => {
+    test("optional and undefinable keys", () => {
       expectTypeOf(pick(DATA, ["b", "c"])).toEqualTypeOf<{
         b?: "optional";
         c: "undefinable" | undefined;
       }>();
     });
 
-    test("optional and optional-undefinable picked", () => {
+    test("optional and optional-undefinable keys", () => {
       expectTypeOf(pick(DATA, ["b", "d"])).toEqualTypeOf<{
         b?: "optional";
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("undefinable and optional-undefinable picked", () => {
+    test("undefinable and optional-undefinable keys", () => {
       expectTypeOf(pick(DATA, ["c", "d"])).toEqualTypeOf<{
         c: "undefinable" | undefined;
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("all picked except optional-undefinable", () => {
+    test("all except optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["a", "b", "c"])).toEqualTypeOf<{
         a: "required";
         b?: "optional";
@@ -99,7 +99,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("all picked except undefinable", () => {
+    test("all except undefinable", () => {
       expectTypeOf(pick(DATA, ["a", "b", "d"])).toEqualTypeOf<{
         a: "required";
         b?: "optional";
@@ -107,7 +107,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("all picked except optional", () => {
+    test("all except optional", () => {
       expectTypeOf(pick(DATA, ["a", "c", "d"])).toEqualTypeOf<{
         a: "required";
         c: "undefinable" | undefined;
@@ -115,7 +115,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("all picked except required", () => {
+    test("all except required", () => {
       expectTypeOf(pick(DATA, ["b", "c", "d"])).toEqualTypeOf<{
         b?: "optional";
         c: "undefinable" | undefined;
@@ -123,7 +123,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("all picked", () => {
+    test("all keys", () => {
       expectTypeOf(pick(DATA, ["a", "b", "c", "d"])).toEqualTypeOf<{
         a: "required";
         b?: "optional";
@@ -133,50 +133,50 @@ describe("plain (bounded) object", () => {
     });
   });
 
-  describe("keys is a single item which is a union of literals", () => {
-    test("required or optional picked", () => {
+  describe("single union key", () => {
+    test("required or optional", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "b"])).toEqualTypeOf<{
         a?: "required";
         b?: "optional";
       }>();
     });
 
-    test("required or undefinable picked", () => {
+    test("required or undefinable", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "c"])).toEqualTypeOf<{
         a?: "required";
         c?: "undefinable" | undefined;
       }>();
     });
 
-    test("required or optional-undefinable picked", () => {
+    test("required or optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "d"])).toEqualTypeOf<{
         a?: "required";
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("optional or undefinable picked", () => {
+    test("optional or undefinable", () => {
       expectTypeOf(pick(DATA, ["b" as "b" | "c"])).toEqualTypeOf<{
         b?: "optional";
         c?: "undefinable" | undefined;
       }>();
     });
 
-    test("optional or optional-undefinable picked", () => {
+    test("optional or optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["b" as "b" | "d"])).toEqualTypeOf<{
         b?: "optional";
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("undefinable or optional-undefinable picked", () => {
+    test("undefinable or optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["c" as "c" | "d"])).toEqualTypeOf<{
         c?: "undefinable" | undefined;
         d?: "optional-undefinable" | undefined;
       }>();
     });
 
-    test("required, optional or undefinable picked", () => {
+    test("required, optional, and undefinable", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "b" | "c"])).toEqualTypeOf<{
         a?: "required";
         b?: "optional";
@@ -184,7 +184,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("required, optional or optional-undefinable picked", () => {
+    test("required, optional, and optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "b" | "d"])).toEqualTypeOf<{
         a?: "required";
         b?: "optional";
@@ -192,7 +192,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("required, undefinable or optional-undefinable picked", () => {
+    test("required, undefinable, and optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "c" | "d"])).toEqualTypeOf<{
         a?: "required";
         c?: "undefinable" | undefined;
@@ -200,7 +200,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("optional, undefinable or optional-undefinable picked", () => {
+    test("optional, undefinable, and optional-undefinable", () => {
       expectTypeOf(pick(DATA, ["b" as "b" | "c" | "d"])).toEqualTypeOf<{
         b?: "optional";
         c?: "undefinable" | undefined;
@@ -208,7 +208,7 @@ describe("plain (bounded) object", () => {
       }>();
     });
 
-    test("all picked", () => {
+    test("all key types", () => {
       expectTypeOf(pick(DATA, ["a" as "a" | "b" | "c" | "d"])).toEqualTypeOf<{
         a?: "required";
         b?: "optional";
@@ -218,7 +218,7 @@ describe("plain (bounded) object", () => {
     });
   });
 
-  describe("multiple picked elements typed as union of keys", () => {
+  describe("multiple union keys", () => {
     test("with partial overlap", () => {
       expectTypeOf(
         pick(DATA, ["a" as "a" | "b", "b" as "b" | "c"]),
@@ -250,7 +250,7 @@ describe("plain (bounded) object", () => {
     });
   });
 
-  describe("combination of literals and union keys", () => {
+  describe("mixed literal and union keys", () => {
     test("with partial overlap", () => {
       expectTypeOf(pick(DATA, ["a", "b" as "a" | "b"])).toEqualTypeOf<{
         a: "required";
@@ -267,34 +267,34 @@ describe("plain (bounded) object", () => {
     });
   });
 
-  describe("array with a singular literal key", () => {
-    test("only required picked", () => {
+  describe("array with literal key", () => {
+    test("required key", () => {
       expectTypeOf(pick(DATA, [] as Array<"a">)).toEqualTypeOf<{
         a?: "required";
       }>();
     });
 
-    test("only optional picked", () => {
+    test("optional key", () => {
       expectTypeOf(pick(DATA, [] as Array<"b">)).toEqualTypeOf<{
         b?: "optional";
       }>();
     });
 
-    test("only undefinable picked", () => {
+    test("undefinable key", () => {
       expectTypeOf(pick(DATA, [] as Array<"c">)).toEqualTypeOf<{
         c?: "undefinable" | undefined;
       }>();
     });
 
-    test("only optional-undefinable picked", () => {
+    test("optional-undefinable key", () => {
       expectTypeOf(pick(DATA, [] as Array<"d">)).toEqualTypeOf<{
         d?: "optional-undefinable" | undefined;
       }>();
     });
   });
 
-  describe("array with union of literals", () => {
-    test("required or optional picked", () => {
+  describe("array with union keys", () => {
+    test("required or optional", () => {
       expectTypeOf(pick(DATA, [] as Array<"a" | "b">)).toEqualTypeOf<{
         a?: "required";
         b?: "optional";
@@ -584,26 +584,26 @@ describe("plain (bounded) object", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/1128
-describe("primitive (unbounded) records (Issue #1128)", () => {
+describe("unbounded record types (Issue #1128)", () => {
   const DATA = {} as Record<string, "required">;
   const UNDEFINABLE = {} as Record<string, "undefinable" | undefined>;
 
-  it("enforces props can be picked from object", () => {
+  it("enforces keys must exist on object", () => {
     // @ts-expect-error [ts2322] -- should not allow non existing props
     pick(DATA, [1, 2]);
   });
 
-  it("doesn't widen type for props", () => {
+  it("doesn't widen key types", () => {
     // @ts-expect-error [ts2345] -- string is too wide for object
     pick(DATA, ["a"] as [PropertyKey]);
   });
 
-  test("keys are empty", () => {
+  test("empty keys tuple", () => {
     expectTypeOf(pick(DATA, [])).toEqualTypeOf<EmptyObject>();
   });
 
-  describe("keys are a fixed tuple", () => {
-    test("singular literals", () => {
+  describe("fixed tuple keys", () => {
+    test("literal keys", () => {
       const picks = ["a", "b"] as const;
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -616,7 +616,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("union of non-overlapping literals", () => {
+    test("non-overlapping union keys", () => {
       const picks = ["a", "c"] as ["a" | "b", "c" | "d"];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -633,7 +633,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("union of partially overlapping literals", () => {
+    test("partially overlapping union keys", () => {
       const picks = ["a", "b"] as ["a" | "b", "b" | "c"];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -648,7 +648,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("union of fully overlapping literals", () => {
+    test("fully overlapping union keys", () => {
       const picks = ["a", "b"] as ["a" | "b", "a" | "b"];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -661,7 +661,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("literals and overlapping union of literals", () => {
+    test("literal and overlapping union keys", () => {
       const picks = ["a", "b"] as ["a", "a" | "b"];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -674,7 +674,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("literals and non-overlapping union of literals", () => {
+    test("literal and non-overlapping union keys", () => {
       const picks = ["a", "b"] as ["a", "b" | "c"];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -723,8 +723,8 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
     });
   });
 
-  describe("keys are an array", () => {
-    test("singular literals", () => {
+  describe("array keys", () => {
+    test("literal key", () => {
       const picks = [] as Array<"a">;
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -735,7 +735,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("union of literals", () => {
+    test("union keys", () => {
       const picks = [] as Array<"a" | "b">;
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -748,7 +748,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("primitives", () => {
+    test("primitive keys", () => {
       const picks = [] as Array<string>;
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
@@ -760,8 +760,8 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
     });
   });
 
-  describe("keys are a non-empty (prefix) array", () => {
-    test("singular non-overlapping literals", () => {
+  describe("prefix array keys", () => {
+    test("non-overlapping literal keys", () => {
       const picks = ["a"] as ["a", ...Array<"b">];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -774,7 +774,7 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       }>();
     });
 
-    test("singular overlapping literals", () => {
+    test("overlapping literal keys", () => {
       const picks = ["a"] as ["a", ...Array<"a">];
 
       expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
@@ -934,8 +934,8 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
   });
 });
 
-describe("data is a union of object types", () => {
-  describe("both picked props exist in both objects", () => {
+describe("union object types", () => {
+  describe("keys exist in all union members", () => {
     test("same type", () => {
       expectTypeOf(
         pick(
@@ -970,7 +970,7 @@ describe("data is a union of object types", () => {
     });
   });
 
-  describe("partial overlap of picked props", () => {
+  describe("keys exist in some union members", () => {
     test("same type", () => {
       const DATA = { a: "a", b: "b", c: "c" } as
         | { a: "a"; b: "b"; c: "c" }
@@ -1011,7 +1011,7 @@ describe("data is a union of object types", () => {
     });
   });
 
-  test("props are disjoint, and belong to a single object", () => {
+  test("keys belong to single union member", () => {
     expectTypeOf(
       pick(
         { a: "a", b: "b", c: "c" } as
@@ -1022,7 +1022,7 @@ describe("data is a union of object types", () => {
     ).toEqualTypeOf<{ a: "a"; b: "b" } | EmptyObject>();
   });
 
-  test("props are disjoint, but picked from both objects", () => {
+  test("keys distributed across union members", () => {
     expectTypeOf(
       pick({ a: "a", b: "b" } as { a: "a"; b: "b" } | { c: "c"; d: "d" }, [
         "a",
@@ -1032,8 +1032,8 @@ describe("data is a union of object types", () => {
   });
 });
 
-describe("keys is a union of array types", () => {
-  describe("union of disjoint singular literals", () => {
+describe("union key array types", () => {
+  describe("disjoint literal keys", () => {
     test("bounded plain object", () => {
       expectTypeOf(
         pick({ a: "a", b: "b" }, ["a"] as ["a"] | ["b"]),
@@ -1047,7 +1047,7 @@ describe("keys is a union of array types", () => {
     });
   });
 
-  describe("union of overlapping singular literals", () => {
+  describe("overlapping literal keys", () => {
     const picks = ["a", "b"] as ["a", "b"] | ["b", "c"];
 
     test("bounded plain object", () => {
@@ -1063,7 +1063,7 @@ describe("keys is a union of array types", () => {
     });
   });
 
-  describe("union of overlapping literal unions", () => {
+  describe("overlapping union keys", () => {
     const picks = ["a", "b"] as ["a" | "b", "b" | "c"] | ["b" | "c", "c" | "d"];
 
     test("bounded plain object", () => {
@@ -1083,7 +1083,7 @@ describe("keys is a union of array types", () => {
     });
   });
 
-  describe("union of different tuple shapes", () => {
+  describe("different array shapes", () => {
     const picks = ["a", "b"] as ["a" | "b", "b" | "c"] | Array<"d">;
 
     test("bounded plain object", () => {
@@ -1108,7 +1108,7 @@ describe("keys is a union of array types", () => {
   });
 });
 
-it("strips readonly modifiers", () => {
+test("result is mutable", () => {
   expectTypeOf(pick({ a: 1 } as const, ["a"])).toEqualTypeOf<{
     a: 1;
   }>();
@@ -1119,7 +1119,7 @@ it("strips readonly modifiers", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/886
-describe("infers the key types from the keys array (issue #886)", () => {
+describe("key type inference (issue #886)", () => {
   test("base", () => {
     expectTypeOf(pick({ foo: "hello", bar: "world" }, ["foo"])).toEqualTypeOf<{
       foo: string;
@@ -1139,7 +1139,7 @@ describe("infers the key types from the keys array (issue #886)", () => {
   });
 });
 
-test("support inherited properties", () => {
+test("supports inherited properties", () => {
   class BaseClass {
     // eslint-disable-next-line @typescript-eslint/class-methods-use-this -- This is fine...
     public testProp(): string {
