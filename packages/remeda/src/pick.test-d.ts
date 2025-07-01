@@ -3,7 +3,7 @@ import { keys } from "./keys";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
 
-describe("plain object", () => {
+describe("plain (bounded) object", () => {
   const DATA = { a: "required", c: undefined } as {
     a: "required";
     b?: "optional";
@@ -572,34 +572,343 @@ describe("plain object", () => {
       }>();
     });
   });
+
+  test.todo("strip readonlyness");
 });
 
 // @see https://github.com/remeda/remeda/issues/1128
-describe("unbounded records (Issue #1128)", () => {
-  test("single key", () => {
-    expectTypeOf(pick({} as Record<string, "world">, ["hello"])).toEqualTypeOf<{
-      hello?: "world";
-    }>();
+describe("primitive (unbounded) records (Issue #1128)", () => {
+  const DATA = {} as Record<string, "required">;
+  const UNDEFINABLE = {} as Record<string, "undefinable" | undefined>;
+
+  test("keys are empty", () => {
+    expectTypeOf(pick(DATA, [])).toEqualTypeOf<EmptyObject>();
   });
 
-  test("multiple keys", () => {
-    expectTypeOf(
-      pick({} as Record<string, 123>, ["hello", "world"]),
-    ).toEqualTypeOf<{ hello?: 123; world?: 123 }>();
+  describe("keys are a fixed tuple", () => {
+    test("singular literals", () => {
+      const picks = ["a", "b"] as const;
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of non-overlapping literals", () => {
+      const picks = ["a", "c"] as ["a" | "b", "c" | "d"];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+        d?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+        d?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of partially overlapping literals", () => {
+      const picks = ["a", "b"] as ["a" | "b", "b" | "c"];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of fully overlapping literals", () => {
+      const picks = ["a", "b"] as ["a" | "b", "a" | "b"];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("literals and overlapping union of literals", () => {
+      const picks = ["a", "b"] as ["a", "a" | "b"];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("literals and non-overlapping union of literals", () => {
+      const picks = ["a", "b"] as ["a", "b" | "c"];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("primitive keys", () => {
+      const picks = ["a", "b"] as [string, string];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
+
+    test("primitive and singular literal keys", () => {
+      const picks = ["a", "b"] as ["a", string];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
+
+    test("primitive and union of literal", () => {
+      const picks = ["a", "b"] as ["a" | "b", string];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
   });
 
-  test("array of primitive keys", () => {
-    expectTypeOf(
-      pick({} as Record<string, "world">, [] as Array<string>),
-    ).toEqualTypeOf<Record<string, "world">>();
+  describe("keys are an array", () => {
+    test("singular literals", () => {
+      const picks = [] as Array<"a">;
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of literals", () => {
+      const picks = [] as Array<"a" | "b">;
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("primitives", () => {
+      const picks = [] as Array<string>;
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
   });
 
-  test("array of literals", () => {
-    expectTypeOf(
-      pick({} as Record<string, 123>, [] as Array<"hello" | "world">),
-    ).toEqualTypeOf<{ hello: 123; world: 123 }>();
+  describe("keys are a non-empty (prefix) array", () => {
+    test("singular non-overlapping literals", () => {
+      const picks = ["a"] as ["a", ...Array<"b">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("singular overlapping literals", () => {
+      const picks = ["a"] as ["a", ...Array<"a">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of non-overlapping literals", () => {
+      const picks = ["a"] as ["a" | "b", ...Array<"c" | "d">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+        d?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+        d?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of partially overlapping literals", () => {
+      const picks = ["a"] as ["a" | "b", ...Array<"b" | "c">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("union of fully overlapping literals", () => {
+      const picks = ["a"] as ["a" | "b", ...Array<"a" | "b">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("literals and overlapping union of literals", () => {
+      const picks = ["a"] as ["a", ...Array<"a" | "b">];
+      const alt = ["a"] as ["a" | "b", ...Array<"b">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+      expectTypeOf(pick(DATA, alt)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, alt)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("literals and non-overlapping union of literals", () => {
+      const picks = ["a"] as ["a", ...Array<"b" | "c">];
+      const alt = ["a"] as ["a" | "b", ...Array<"c">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+      }>();
+      expectTypeOf(pick(DATA, alt)).toEqualTypeOf<{
+        a?: "required";
+        b?: "required";
+        c?: "required";
+      }>();
+      expectTypeOf(pick(UNDEFINABLE, alt)).toEqualTypeOf<{
+        a?: "undefinable" | undefined;
+        b?: "undefinable" | undefined;
+        c?: "undefinable" | undefined;
+      }>();
+    });
+
+    test("primitive keys", () => {
+      const picks = ["a"] as [string, ...Array<string>];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
+
+    test("primitive and singular literal keys", () => {
+      const picks = ["a"] as ["a", ...Array<string>];
+      const alt = ["a"] as [string, ...Array<"a">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+      expectTypeOf(pick(DATA, alt)).toEqualTypeOf<Record<string, "required">>();
+      expectTypeOf(pick(UNDEFINABLE, alt)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
+
+    test("primitive and union of literal", () => {
+      const picks = ["a"] as ["a" | "b", ...Array<string>];
+      const alt = ["a"] as [string, ...Array<"a" | "b">];
+
+      expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
+        Record<string, "required">
+      >();
+      expectTypeOf(pick(UNDEFINABLE, picks)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+      expectTypeOf(pick(DATA, alt)).toEqualTypeOf<Record<string, "required">>();
+      expectTypeOf(pick(UNDEFINABLE, alt)).toEqualTypeOf<
+        Record<string, "undefinable" | undefined>
+      >();
+    });
   });
+
+  test.todo("strip readonlyness");
 });
+
+describe.todo("unions of data objects and of keys arrays");
 
 describe("data first", () => {
   test("non existing prop", () => {

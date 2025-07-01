@@ -3,6 +3,8 @@ import type { IsUnion } from "type-fest/source/internal";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 import type { If } from "./internal/types/If";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type { IsBounded } from "./internal/types/IsBounded";
 
 type PickFromArray<
   T,
@@ -10,21 +12,29 @@ type PickFromArray<
 > = Keys extends readonly []
   ? EmptyObject
   : Simplify<
-      Pick<
-        T,
-        | ItemsByUnion<TupleParts<Keys>["required"]>["single"]
-        | ItemsByUnion<TupleParts<Keys>["suffix"]>["single"]
-      > &
-        Partial<
-          Pick<
-            T,
-            | ItemsByUnion<TupleParts<Keys>["required"]>["union"]
-            // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements always have an implicit `| undefined` type which breaks the constraint that all keys are `keyof T`. We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint allows the enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
-            | TupleParts<Keys>["optional"][number]
-            | TupleParts<Keys>["item"]
-            | ItemsByUnion<TupleParts<Keys>["suffix"]>["union"]
-          >
+      If<
+        IsBoundedRecord<T>,
+        Pick<
+          T,
+          | ItemsByUnion<TupleParts<Keys>["required"]>["single"]
+          | ItemsByUnion<TupleParts<Keys>["suffix"]>["single"]
+        > &
+          Partial<
+            Pick<
+              T,
+              | ItemsByUnion<TupleParts<Keys>["required"]>["union"]
+              // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements always have an implicit `| undefined` type which breaks the constraint that all keys are `keyof T`. We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint allows the enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
+              | TupleParts<Keys>["optional"][number]
+              | TupleParts<Keys>["item"]
+              | ItemsByUnion<TupleParts<Keys>["suffix"]>["union"]
+            >
+          >,
+        If<
+          IsBounded<Keys[number]>,
+          Partial<Pick<T, Keys[number]>>,
+          Pick<T, Keys[number]>
         >
+      >
     >;
 
 type ItemsByUnion<T, Single = never, Union = never> = T extends readonly [
