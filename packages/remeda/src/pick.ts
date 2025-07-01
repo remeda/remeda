@@ -6,48 +6,87 @@ import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type PickFromArray<
-  T,
-  Keys extends ReadonlyArray<KeysOfUnion<T>>,
-> = T extends unknown
-  ? Keys extends unknown
-    ? If<
-        IsNever<Extract<Keys[number], keyof T>>,
-        EmptyObject,
-        Writable<
-          If<
-            IsBoundedRecord<T>,
-            Pick<
-              T,
-              (
-                | ItemsByUnion<TupleParts<Keys>["required"]>["single"]
-                | ItemsByUnion<TupleParts<Keys>["suffix"]>["single"]
-              ) &
-                keyof T
-            > &
-              Partial<
-                Pick<
-                  T,
-                  (
-                    | ItemsByUnion<TupleParts<Keys>["required"]>["union"]
-                    // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements always have an implicit `| undefined` type which breaks the constraint that all keys are `keyof T`. We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint allows the enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
-                    | TupleParts<Keys>["optional"][number]
-                    | TupleParts<Keys>["item"]
-                    | ItemsByUnion<TupleParts<Keys>["suffix"]>["union"]
-                  ) &
-                    keyof T
-                >
-              >,
+type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
+  // We distribute unions of inputs so that we compute those cases accurately.
+  T extends unknown
+    ? Keys extends unknown
+      ? If<
+          // After distributing the union there could be cases where the keys
+          // don't belong to the object at all (e.g.
+          // `pick({} as { a: string } | { b: number }, ['a'])`
+          // If we simply let the regular "constructive" logic run the
+          // resulting type would be `{}` which doesn't behave like an empty
+          // object.
+          IsNever<Extract<Keys[number], keyof T>>,
+          EmptyObject,
+          // Our logic uses the internal `Pick` type which preserves
+          // readonly-ness of props, but return types in Remeda are always
+          // mutable (because they are new objects).
+          // An additional advantage of using Writable here is that it
+          // implicitly also does what "Simplify" would do (by reconstructing
+          // the type), so we don't need to wrap everything with `Simplify` too.
+          Writable<
             If<
-              IsBounded<Keys[number]>,
-              Partial<Pick<T, Keys[number] & keyof T>>,
-              Pick<T, Keys[number] & keyof T>
+              // Bounded and unbounded records create very different semantics
+              // when constructing the result type. See the docs for
+              // `IsBounded`.
+              IsBoundedRecord<T>,
+              BoundedPickFromArray<T, Keys>,
+              If<
+                // The built-in `Pick` is weird when it comes to unbounded
+                // records because it reconstructs the output object regardless
+                // of the shape of the input:
+                // `Pick<Record<string, "world">, "hello">`
+                // results in the type { hello: "world" }, but you'd expect it
+                // to be optional because we don't know if the record contains
+                // a `hello` prop or not. This means that when we know the
+                // picked keys would create a bounded record **as output**, we
+                // need to manually make the output Partial.
+                // @see: https://www.typescriptlang.org/play/?#code/PTAEE0HsFcHIBNQFMAeAHJBjALqAGqNpKAEZKigAGA3qABZIA2jkA-AFygBEA7pAE6N4XUAF9KAGlLRcAQ0ayAzgChsATwz5QAXlAAFAJaYA1gB4ASlgHxTi7PwMA7AOZTeAoVwB8bhs0jeANzKIBSgAHqsykA
+                IsBounded<Keys[number]>,
+                Partial<
+                  Pick<
+                    T,
+                    // We intersect the keys with `keyof T` to make sure we only
+                    // select the keys that relevant for this object of the
+                    // distributed union.
+                    Keys[number] & keyof T
+                  >
+                >,
+                Pick<T, Keys[number] & keyof T>
+              >
             >
           >
         >
-      >
-    : never
-  : never;
+      : never
+    : never;
+
+/**
+ * For bounded records the keys are always bounded too (because they are a
+ * subset of the keys of the record). This allows us to focus on the shape of
+ * keys array when constructing the output type.
+ */
+type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> = Pick<
+  T,
+  (
+    | ItemsByUnion<TupleParts<Keys>["required"]>["single"]
+    | ItemsByUnion<TupleParts<Keys>["suffix"]>["single"]
+  ) &
+    keyof T
+> &
+  Partial<
+    Pick<
+      T,
+      (
+        | ItemsByUnion<TupleParts<Keys>["required"]>["union"]
+        // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements always have an implicit `| undefined` type which breaks the constraint that all keys are `keyof T`. We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint allows the enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
+        | TupleParts<Keys>["optional"][number]
+        | TupleParts<Keys>["item"]
+        | ItemsByUnion<TupleParts<Keys>["suffix"]>["union"]
+      ) &
+        keyof T
+    >
+  >;
 
 type ItemsByUnion<T, Single = never, Union = never> = T extends readonly [
   infer Head,
