@@ -11,6 +11,16 @@ describe("plain (bounded) object", () => {
     d?: "optional-undefinable" | undefined;
   };
 
+  it("enforces props can be picked from object", () => {
+    // @ts-expect-error [ts2322] -- should not allow non existing props
+    pick(DATA, ["not", "in"]);
+  });
+
+  it("doesn't widen type for props", () => {
+    // @ts-expect-error [ts2345] -- string is too wide for object
+    pick(DATA, ["a"] as [string]);
+  });
+
   test("keys are empty", () => {
     expectTypeOf(pick(DATA, [])).toEqualTypeOf<EmptyObject>();
   });
@@ -581,6 +591,16 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
   const DATA = {} as Record<string, "required">;
   const UNDEFINABLE = {} as Record<string, "undefinable" | undefined>;
 
+  it("enforces props can be picked from object", () => {
+    // @ts-expect-error [ts2322] -- should not allow non existing props
+    pick(DATA, [1, 2]);
+  });
+
+  it("doesn't widen type for props", () => {
+    // @ts-expect-error [ts2345] -- string is too wide for object
+    pick(DATA, ["a"] as [PropertyKey]);
+  });
+
   test("keys are empty", () => {
     expectTypeOf(pick(DATA, [])).toEqualTypeOf<EmptyObject>();
   });
@@ -908,45 +928,36 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
   test.todo("strip readonlyness");
 });
 
-describe.todo("unions of data objects and of keys arrays");
-
-describe("data first", () => {
-  test("non existing prop", () => {
-    // @ts-expect-error [ts2322] -- should not allow non existing props
-    pick({ a: 1, b: 2, c: 3, d: 4 }, ["not", "in"]);
-  });
-
+describe("data is a union of object types", () => {
   test("union with common prop", () => {
     expectTypeOf(
       pick({ a: 1 } as { a: number } | { a?: number; b: string }, ["a"]),
     ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
   });
 
-  describe("infers the key types from the keys array (issue #886)", () => {
-    test("base", () => {
-      expectTypeOf(
-        pick({ foo: "hello", bar: "world" }, ["foo"]),
-      ).toEqualTypeOf<{ foo: string }>();
-    });
-
-    test("wrapped", () => {
-      expectTypeOf(
-        keys(pick({ foo: "hello", bar: "world" }, ["foo"])),
-      ).toEqualTypeOf<Array<"foo">>();
-    });
-
-    test("with const key", () => {
-      expectTypeOf(
-        keys(pick({ foo: "hello", bar: "world" }, ["foo"] as const)),
-      ).toEqualTypeOf<Array<"foo">>();
-    });
-  });
+  test.todo("add more tests");
 });
 
-it("handles optional keys (issue #911)", () => {
-  expectTypeOf(
-    pick({ foo: "hello", bar: "world" }, [] as Array<"foo" | "bar">),
-  ).toEqualTypeOf<{ foo?: string; bar?: string }>();
+describe.todo("keys is a union of array types");
+
+describe("infers the key types from the keys array (issue #886)", () => {
+  test("base", () => {
+    expectTypeOf(pick({ foo: "hello", bar: "world" }, ["foo"])).toEqualTypeOf<{
+      foo: string;
+    }>();
+  });
+
+  test("wrapped", () => {
+    expectTypeOf(
+      keys(pick({ foo: "hello", bar: "world" }, ["foo"])),
+    ).toEqualTypeOf<Array<"foo">>();
+  });
+
+  test("with const key", () => {
+    expectTypeOf(
+      keys(pick({ foo: "hello", bar: "world" }, ["foo"] as const)),
+    ).toEqualTypeOf<Array<"foo">>();
+  });
 });
 
 describe("data last", () => {
@@ -963,13 +974,6 @@ describe("data last", () => {
       pipe({ a: 1 } as { a: number } | { a?: number; b: string }, pick(["a"])),
     ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
   });
-});
-
-test("multiple keys", () => {
-  expectTypeOf(pipe({ a: "p1", b: "p2" }, pick(["a", "b"]))).toEqualTypeOf<{
-    a: string;
-    b: string;
-  }>();
 });
 
 test("support inherited properties", () => {
