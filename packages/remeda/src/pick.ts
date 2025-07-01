@@ -1,17 +1,17 @@
-import type { EmptyObject, Simplify } from "type-fest";
+import type { EmptyObject, Writable } from "type-fest";
 import type { IsUnion } from "type-fest/source/internal";
+import type { If } from "./internal/types/If";
+import type { IsBounded } from "./internal/types/IsBounded";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
-import type { If } from "./internal/types/If";
-import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import type { IsBounded } from "./internal/types/IsBounded";
 
 type PickFromArray<
   T,
   Keys extends ReadonlyArray<keyof T>,
 > = Keys extends readonly []
   ? EmptyObject
-  : Simplify<
+  : Writable<
       If<
         IsBoundedRecord<T>,
         Pick<

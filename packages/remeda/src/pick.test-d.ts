@@ -582,8 +582,6 @@ describe("plain (bounded) object", () => {
       }>();
     });
   });
-
-  test.todo("strip readonlyness");
 });
 
 // @see https://github.com/remeda/remeda/issues/1128
@@ -924,8 +922,6 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
       >();
     });
   });
-
-  test.todo("strip readonlyness");
 });
 
 describe("data is a union of object types", () => {
@@ -939,6 +935,16 @@ describe("data is a union of object types", () => {
 });
 
 describe.todo("keys is a union of array types");
+
+it("strips readonly modifiers", () => {
+  expectTypeOf(pick({ a: 1 } as const, ["a"])).toEqualTypeOf<{
+    a: 1;
+  }>();
+
+  expectTypeOf(
+    pick({} as Readonly<Record<string, "something">>, [] as Array<string>),
+  ).toEqualTypeOf<Record<string, "something">>();
+});
 
 describe("infers the key types from the keys array (issue #886)", () => {
   test("base", () => {
