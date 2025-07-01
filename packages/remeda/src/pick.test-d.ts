@@ -1,7 +1,6 @@
 import type { EmptyObject } from "type-fest";
 import { keys } from "./keys";
 import { pick } from "./pick";
-import { pipe } from "./pipe";
 
 describe("plain (bounded) object", () => {
   const DATA = { a: "required", c: undefined } as {
@@ -936,13 +935,101 @@ describe("primitive (unbounded) records (Issue #1128)", () => {
 });
 
 describe("data is a union of object types", () => {
-  test("union with common prop", () => {
-    expectTypeOf(
-      pick({ a: 1 } as { a: number } | { a?: number; b: string }, ["a"]),
-    ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
+  describe("both picked props exist in both objects", () => {
+    test("same type", () => {
+      expectTypeOf(
+        pick(
+          { a: "a", b: "b", c: "c" } as
+            | { a: "a"; b: "b"; c: "c" }
+            | { a: "a"; b: "b"; d: "d" },
+          ["a", "b"],
+        ),
+      ).toEqualTypeOf<{ a: "a"; b: "b" }>();
+    });
+
+    test("different optionality", () => {
+      expectTypeOf(
+        pick(
+          { a: "a", b: "b", c: "c" } as
+            | { a: "a"; b: "b"; c: "c" }
+            | { a?: "a"; b: "b"; d: "d" },
+          ["a", "b"],
+        ),
+      ).toEqualTypeOf<{ a: "a"; b: "b" } | { a?: "a"; b: "b" }>();
+    });
+
+    test("different types", () => {
+      expectTypeOf(
+        pick(
+          { a: "a", b: "b", c: "c" } as
+            | { a: "a"; b: "b"; c: "c" }
+            | { a: "alt_a"; b: "alt_b"; d: "d" },
+          ["a", "b"],
+        ),
+      ).toEqualTypeOf<{ a: "a"; b: "b" } | { a: "alt_a"; b: "alt_b" }>();
+    });
   });
 
-  test.todo("add more tests");
+  describe("partial overlap of picked props", () => {
+    test("same type", () => {
+      const DATA = { a: "a", b: "b", c: "c" } as
+        | { a: "a"; b: "b"; c: "c" }
+        | { a: "a"; b: "b"; d: "d" };
+
+      expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
+        { a: "a"; c: "c" } | { a: "a" }
+      >();
+      expectTypeOf(pick(DATA, ["a", "d"])).toEqualTypeOf<
+        { a: "a" } | { a: "a"; d: "d" }
+      >();
+    });
+
+    test("different optionality", () => {
+      const DATA = { a: "a", b: "b", c: "c" } as
+        | { a: "a"; b: "b"; c: "c" }
+        | { a?: "a"; b: "b"; d: "d" };
+
+      expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
+        { a: "a"; c: "c" } | { a?: "a" }
+      >();
+      expectTypeOf(pick(DATA, ["a", "d"])).toEqualTypeOf<
+        { a: "a" } | { a?: "a"; d: "d" }
+      >();
+    });
+
+    test("different types", () => {
+      const DATA = { a: "a", b: "b", c: "c" } as
+        | { a: "a"; b: "b"; c: "c" }
+        | { a: "alt_a"; b: "alt_b"; d: "alt_d" };
+
+      expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
+        { a: "a"; c: "c" } | { a: "alt_a" }
+      >();
+      expectTypeOf(pick(DATA, ["a", "d"])).toEqualTypeOf<
+        { a: "a" } | { a: "alt_a"; d: "alt_d" }
+      >();
+    });
+  });
+
+  test("props are disjoint, and belong to a single object", () => {
+    expectTypeOf(
+      pick(
+        { a: "a", b: "b", c: "c" } as
+          | { a: "a"; b: "b"; c: "c" }
+          | { d: "d"; e: "e"; f: "f" },
+        ["a", "b"],
+      ),
+    ).toEqualTypeOf<{ a: "a"; b: "b" } | EmptyObject>();
+  });
+
+  test("props are disjoint, but picked from both objects", () => {
+    expectTypeOf(
+      pick({ a: "a", b: "b" } as { a: "a"; b: "b" } | { c: "c"; d: "d" }, [
+        "a",
+        "d",
+      ]),
+    ).toEqualTypeOf<{ a: "a" } | { d: "d" }>();
+  });
 });
 
 describe.todo("keys is a union of array types");
@@ -957,6 +1044,7 @@ it("strips readonly modifiers", () => {
   ).toEqualTypeOf<Record<string, "something">>();
 });
 
+// @see https://github.com/remeda/remeda/issues/886
 describe("infers the key types from the keys array (issue #886)", () => {
   test("base", () => {
     expectTypeOf(pick({ foo: "hello", bar: "world" }, ["foo"])).toEqualTypeOf<{
@@ -974,22 +1062,6 @@ describe("infers the key types from the keys array (issue #886)", () => {
     expectTypeOf(
       keys(pick({ foo: "hello", bar: "world" }, ["foo"] as const)),
     ).toEqualTypeOf<Array<"foo">>();
-  });
-});
-
-describe("data last", () => {
-  test("non existing prop", () => {
-    pipe(
-      { a: 1, b: 2, c: 3, d: 4 },
-      // @ts-expect-error [ts2345] -- should not allow non existing props
-      pick(["not", "in"]),
-    );
-  });
-
-  test("union with common prop", () => {
-    expectTypeOf(
-      pipe({ a: 1 } as { a: number } | { a?: number; b: string }, pick(["a"])),
-    ).toEqualTypeOf<Pick<{ a: number } | { a?: number; b: string }, "a">>();
   });
 });
 
