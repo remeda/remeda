@@ -1032,7 +1032,81 @@ describe("data is a union of object types", () => {
   });
 });
 
-describe.todo("keys is a union of array types");
+describe("keys is a union of array types", () => {
+  describe("union of disjoint singular literals", () => {
+    test("bounded plain object", () => {
+      expectTypeOf(
+        pick({ a: "a", b: "b" }, ["a"] as ["a"] | ["b"]),
+      ).toEqualTypeOf<{ a: string } | { b: string }>();
+    });
+
+    test("unbounded record", () => {
+      expectTypeOf(
+        pick({} as Record<string, "value">, ["a"] as ["a"] | ["b"]),
+      ).toEqualTypeOf<{ a?: "value" } | { b?: "value" }>();
+    });
+  });
+
+  describe("union of overlapping singular literals", () => {
+    const picks = ["a", "b"] as ["a", "b"] | ["b", "c"];
+
+    test("bounded plain object", () => {
+      expectTypeOf(pick({ a: "a", b: "b", c: "c" }, picks)).toEqualTypeOf<
+        { a: string; b: string } | { b: string; c: string }
+      >();
+    });
+
+    test("unbounded record", () => {
+      expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
+        { a?: "value"; b?: "value" } | { b?: "value"; c?: "value" }
+      >();
+    });
+  });
+
+  describe("union of overlapping literal unions", () => {
+    const picks = ["a", "b"] as ["a" | "b", "b" | "c"] | ["b" | "c", "c" | "d"];
+
+    test("bounded plain object", () => {
+      expectTypeOf(
+        pick({ a: "a", b: "b", c: "c", d: "d" }, picks),
+      ).toEqualTypeOf<
+        | { a?: string; b?: string; c?: string }
+        | { b?: string; c?: string; d?: string }
+      >();
+    });
+
+    test("unbounded record", () => {
+      expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
+        | { a?: "value"; b?: "value"; c?: "value" }
+        | { b?: "value"; c?: "value"; d?: "value" }
+      >();
+    });
+  });
+
+  describe("union of different tuple shapes", () => {
+    const picks = ["a", "b"] as ["a" | "b", "b" | "c"] | Array<"d">;
+
+    test("bounded plain object", () => {
+      expectTypeOf(
+        pick({ a: "a", b: "b", c: "c", d: "d" }, picks),
+      ).toEqualTypeOf<
+        { a?: string; b?: string; c?: string } | { d?: string }
+      >();
+    });
+
+    test("unbounded record", () => {
+      expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
+        { a?: "value"; b?: "value"; c?: "value" } | { d?: "value" }
+      >();
+    });
+  });
+
+  test("mix of literals and primitives", () => {
+    expectTypeOf(
+      pick({} as Record<string, "value">, [] as Array<string> | Array<"a">),
+    ).toEqualTypeOf<Record<string, "value"> | { a?: "value" }>();
+  });
+});
 
 it("strips readonly modifiers", () => {
   expectTypeOf(pick({ a: 1 } as const, ["a"])).toEqualTypeOf<{
