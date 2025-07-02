@@ -434,11 +434,6 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
-      "vitest/prefer-lowercase-title": [
-        "warn",
-        { ignoreTopLevelDescribe: true },
-      ],
-
       // Makes everything consistent and clear... If someone wants to they can
       // add the word 'it' to the beginning of the test name when if it makes
       // sense.

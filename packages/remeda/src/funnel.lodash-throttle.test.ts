@@ -322,7 +322,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 });
 
-describe("Not tested by Lodash", () => {
+describe("not tested by Lodash", () => {
   test("should do nothing when `leading` and `trailing` are both `disabled`", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false, trailing: false });

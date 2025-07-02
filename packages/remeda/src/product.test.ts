@@ -32,7 +32,7 @@ describe("dataLast", () => {
   });
 });
 
-describe("KNOWN ISSUES", () => {
+describe("known issues!", () => {
   test("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
     const result = product([] as Array<bigint>);
 

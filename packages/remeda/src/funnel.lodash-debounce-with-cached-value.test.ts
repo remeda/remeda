@@ -240,7 +240,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 });
 
-describe("Features not tested by Lodash", () => {
+describe("features not tested by Lodash", () => {
   test("does nothing when neither leading nor trailing are enabled", async () => {
     const debounced = debounceWithCachedValue(identity(), UT, {
       leading: false,

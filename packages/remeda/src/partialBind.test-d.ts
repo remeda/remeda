@@ -178,7 +178,7 @@ describe("optional and rest param case", () => {
   });
 });
 
-describe("KNOWN ISSUES", () => {
+describe("known issues!", () => {
   test("does not support readonly rest params", () => {
     const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 
