@@ -10,7 +10,6 @@ export default tseslint.config(
     ignores: ["coverage", "dist"],
   },
   eslint.configs.recommended,
-  jsdoc.configs["flat/recommended-typescript"],
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs.recommended,
@@ -24,8 +23,123 @@ export default tseslint.config(
     },
   },
   {
+    // === JSDoc ==============================================================
+
+    // We only need JSDocs in our actual library code, and we can skip config
+    // files and tests.
+    files: ["src/**/*.ts"],
+    ignores: ["*.test.ts", "*.test-d.ts"],
+
+    // Start with the recommended config
+    ...jsdoc.configs["flat/recommended-typescript"],
+
+    settings: {
+      jsdoc: {
+        // We only require JSDoc for top-level function exports. Assuming that
+        // each function has overrides, we only require JSDocs for the
+        // overrides (which are TSDeclareFunction) and not the implementation
+        // (which is a FunctionDeclaration).
+        contexts: ["ExportNamedDeclaration > TSDeclareFunction"],
+      },
+    },
+
+    rules: {
+      ...jsdoc.configs["flat/recommended-typescript"].rules,
+
+      // Correctness
+      "jsdoc/check-tag-names": [
+        "error",
+        {
+          // Non-standard JSDoc tags we use to generate documentation; see
+          // docs/src/lib/transform.ts.
+          definedTags: [
+            "signature",
+            "dataFirst",
+            "dataLast",
+            "indexed",
+            "lazy",
+            "strict",
+            "category",
+          ],
+        },
+      ],
+      "jsdoc/no-bad-blocks": "error",
+      "jsdoc/no-blank-blocks": "error",
+      "jsdoc/no-blank-block-descriptions": "error",
+      "jsdoc/require-asterisk-prefix": "error",
+
+      // Completeness
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/no-restricted-syntax": [
+        "off",
+        {
+          contexts: [
+            {
+              comment:
+                "JsdocBlock:not(*:has(JsdocTag[tag=/(dataFirst|dataLast)/]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include either @dataFirst or @dataLast.",
+            },
+            {
+              comment: "JsdocBlock:not(*:has(JsdocTag[tag=signature]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include @signature.",
+            },
+          ],
+        },
+      ],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-jsdoc": [
+        "off",
+        { enableFixer: false, require: { FunctionDeclaration: false } },
+      ],
+      "jsdoc/require-description": "error",
+      "jsdoc/require-example": ["warn", { enableFixer: false }],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-returns": "off",
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-throws": "off",
+      "jsdoc/require-yields": "error",
+
+      // Style
+      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      "jsdoc/require-description-complete-sentence": [
+        "warn",
+        { abbreviations: ["etc.", "e.g.", "i.e."] },
+      ],
+      "jsdoc/require-hyphen-before-param-description": [
+        "error",
+        "always",
+        { tags: { "*": "never" } },
+      ],
+      "jsdoc/sort-tags": [
+        "error",
+        {
+          tagSequence: [
+            {
+              tags: [
+                "param",
+                "returns",
+                "signature",
+                "example",
+                "dataFirst",
+                "dataLast",
+                "indexed",
+                "lazy",
+                "strict",
+                "category",
+              ],
+            },
+          ],
+          linesBetween: 0,
+        },
+      ],
+      "jsdoc/tag-lines": ["error", "any", { startLines: 1 }],
+    },
+  },
+  {
     linterOptions: {
-      reportUnusedDisableDirectives: true,
+      reportUnusedDisableDirectives: "warn",
     },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
@@ -187,110 +301,6 @@ export default tseslint.config(
       "prefer-promise-reject-errors": "off",
       "require-await": "off",
 
-      // === JSDoc =============================================================
-      // (We are assuming that the config is extended by JSDoc's:
-      // recommended-typescript extension)
-
-      // Correctness
-      "jsdoc/check-param-names": "error",
-      "jsdoc/check-tag-names": [
-        "error",
-        {
-          // Non-standard JSDoc tags we use to generate documentation; see
-          // docs/src/lib/transform.ts.
-          definedTags: [
-            "signature",
-            "dataFirst",
-            "dataLast",
-            "indexed",
-            "lazy",
-            "strict",
-            "category",
-          ],
-        },
-      ],
-      "jsdoc/no-bad-blocks": "error",
-      "jsdoc/no-blank-blocks": "error",
-      "jsdoc/no-blank-block-descriptions": "error",
-      "jsdoc/require-asterisk-prefix": "error",
-
-      // Completeness
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/no-restricted-syntax": [
-        "off",
-        {
-          contexts: [
-            {
-              comment:
-                "JsdocBlock:not(*:has(JsdocTag[tag=/(dataFirst|dataLast)/]))",
-              context: "ExportNamedDeclaration, TSDeclareFunction",
-              message: "JSDoc must include either @dataFirst or @dataLast.",
-            },
-            {
-              comment: "JsdocBlock:not(*:has(JsdocTag[tag=signature]))",
-              context: "ExportNamedDeclaration, TSDeclareFunction",
-              message: "JSDoc must include @signature.",
-            },
-          ],
-        },
-      ],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-jsdoc": [
-        "off",
-        {
-          enableFixer: false,
-          // We only require JSDoc for top-level function exports. Assuming
-          // that each function has overrides, we only require JSDocs for the
-          // overrides (which are TSDeclareFunction) and not the implementation
-          // (which is FunctionDeclaration).
-          require: { FunctionDeclaration: false },
-          contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
-        },
-      ],
-      "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
-      "jsdoc/require-param": "warn",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-returns": "off",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-throws": "off",
-      "jsdoc/require-yields": "error",
-
-      // Style
-      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
-      "jsdoc/require-description-complete-sentence": [
-        "warn",
-        { abbreviations: ["etc.", "e.g.", "i.e."] },
-      ],
-      "jsdoc/require-hyphen-before-param-description": [
-        "error",
-        "always",
-        { tags: { "*": "never" } },
-      ],
-      "jsdoc/sort-tags": [
-        "error",
-        {
-          tagSequence: [
-            {
-              tags: [
-                "param",
-                "returns",
-                "signature",
-                "example",
-                "dataFirst",
-                "dataLast",
-                "indexed",
-                "lazy",
-                "strict",
-                "category",
-              ],
-            },
-          ],
-          linesBetween: 0,
-        },
-      ],
-      "jsdoc/tag-lines": ["error", "any", { startLines: 1 }],
-
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
       // strictTypeChecked, and stylisticTypeChecked configs)
@@ -417,8 +427,6 @@ export default tseslint.config(
   {
     files: ["*.config.js", "*.config.ts"],
     rules: {
-      "jsdoc/require-example": "off",
-      "jsdoc/require-param": "off",
       "unicorn/filename-case": "off",
     },
   },
