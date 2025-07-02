@@ -126,7 +126,7 @@ type UnboundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> = If<
  */
 export function pick<
   T extends object,
-  const Keys extends ReadonlyArray<keyof T>,
+  const Keys extends ReadonlyArray<KeysOfUnion<T>>,
 >(keys: Keys): (data: T) => PickFromArray<T, Keys>;
 
 /**
