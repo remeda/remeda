@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { filter } from "./filter";
 import { map } from "./map";
 import { multiply } from "./multiply";

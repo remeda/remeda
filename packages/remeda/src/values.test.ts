@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { values } from "./values";
 
 it("works with arrays", () => {

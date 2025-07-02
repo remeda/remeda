@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from "vitest";
 import { set } from "./set";
 
 describe("parameter enforcing", () => {

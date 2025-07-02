@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { uncapitalize } from "./uncapitalize";
 

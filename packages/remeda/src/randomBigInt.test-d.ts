@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from "vitest";
 import { randomBigInt } from "./randomBigInt";
 
 describe("KNOWN LIMITATIONS", () => {

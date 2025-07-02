@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from "vitest";
 import { filter } from "./filter";
 import { map } from "./map";
 import { multiply } from "./multiply";
@@ -12,7 +13,7 @@ describe("data first", () => {
     tap(DATA, fn);
 
     expect(fn).toHaveBeenCalledWith(DATA);
-    expect(fn).toHaveBeenCalledOnce();
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   it("should return input value", () => {
@@ -26,7 +27,7 @@ describe("data last", () => {
     pipe(DATA, tap(fn));
 
     expect(fn).toHaveBeenCalledWith(DATA);
-    expect(fn).toHaveBeenCalledOnce();
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   it("should return input value", () => {

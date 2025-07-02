@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { pipe } from "./pipe";
 import { take } from "./take";

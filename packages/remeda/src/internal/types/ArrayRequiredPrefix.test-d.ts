@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it, test } from "vitest";
 import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
 import type { IterableContainer } from "./IterableContainer";
 

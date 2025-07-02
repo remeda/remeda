@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { join } from "./join";
 
 describe("joins same-typed items", () => {

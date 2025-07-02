@@ -1,3 +1,4 @@
+import { expectTypeOf, it, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,

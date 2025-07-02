@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- We know! */
 
+import { describe, expect, it, vi } from "vitest";
 import { constant } from "./constant";
 import { debounce } from "./debounce";
 import { identity } from "./identity";

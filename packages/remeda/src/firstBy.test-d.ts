@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { firstBy } from "./firstBy";
 import { identity } from "./identity";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";

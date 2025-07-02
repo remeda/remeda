@@ -1,3 +1,4 @@
+import { test } from "vitest";
 import { doNothing } from "./doNothing";
 
 test("supported in any api", () => {

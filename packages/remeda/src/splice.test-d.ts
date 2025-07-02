@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { splice } from "./splice";
 
 it("reflects the type of `items` in the return value", () => {

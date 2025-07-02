@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from "vitest";
 import { sample } from "./sample";
 
 describe("sampleSize 0", () => {

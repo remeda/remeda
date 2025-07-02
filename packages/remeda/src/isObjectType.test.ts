@@ -1,3 +1,4 @@
+import { expect, it, test } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER, TestClass } from "../test/typesDataProvider";
 import { isObjectType } from "./isObjectType";
 

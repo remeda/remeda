@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { sort } from "./sort";
 
 it("on empty tuple", () => {

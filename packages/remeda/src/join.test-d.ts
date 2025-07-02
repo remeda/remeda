@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from "vitest";
 import { join } from "./join";
 
 it("empty tuple", () => {

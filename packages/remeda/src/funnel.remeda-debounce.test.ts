@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation!
  */
 
+import { describe, expect, it, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";

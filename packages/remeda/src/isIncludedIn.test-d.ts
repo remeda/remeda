@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it, test } from "vitest";
 import { isIncludedIn } from "./isIncludedIn";
 
 it("throws on bad value types", () => {

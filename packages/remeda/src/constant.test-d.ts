@@ -1,3 +1,4 @@
+import { test } from "vitest";
 import { constant } from "./constant";
 
 test("supported in any api", () => {

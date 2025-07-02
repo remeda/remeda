@@ -1,5 +1,6 @@
-import { nthBy } from "./nthBy";
+import { describe, expect, it } from "vitest";
 import { identity } from "./identity";
+import { nthBy } from "./nthBy";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {

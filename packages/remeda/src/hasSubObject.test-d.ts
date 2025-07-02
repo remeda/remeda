@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from "vitest";
 import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
 

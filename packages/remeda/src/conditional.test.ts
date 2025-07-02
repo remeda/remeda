@@ -1,3 +1,4 @@
+import { describe, expect, it, test } from "vitest";
 import { conditional } from "./conditional";
 import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";

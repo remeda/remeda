@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { identity } from "./identity";
 import { nthBy } from "./nthBy";
 

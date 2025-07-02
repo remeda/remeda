@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any */
 
+import { describe, expect, it, test } from "vitest";
 import { clone } from "./clone";
 
 describe("primitive types", () => {

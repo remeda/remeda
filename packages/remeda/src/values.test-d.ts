@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { doNothing } from "./doNothing";
 import { values } from "./values";
 

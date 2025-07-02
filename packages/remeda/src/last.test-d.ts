@@ -1,3 +1,4 @@
+import { expectTypeOf, it, test } from "vitest";
 import { last } from "./last";
 import { pipe } from "./pipe";
 

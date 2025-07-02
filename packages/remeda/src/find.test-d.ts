@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { find } from "./find";
 import { isString } from "./isString";
 

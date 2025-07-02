@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { intersection } from "./intersection";
 
 it("narrows the result type", () => {

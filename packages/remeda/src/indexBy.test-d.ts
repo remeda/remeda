@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { indexBy } from "./indexBy";
 import { pipe } from "./pipe";
 import { prop } from "./prop";

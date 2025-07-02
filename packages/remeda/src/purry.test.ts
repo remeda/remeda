@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { purry } from "./purry";
 
 function sub(a: number, b: number): number {

@@ -1,4 +1,5 @@
 import type { EmptyObject } from "type-fest";
+import { describe, expectTypeOf, it } from "vitest";
 import { mergeAll } from "./mergeAll";
 
 describe("arrays", () => {

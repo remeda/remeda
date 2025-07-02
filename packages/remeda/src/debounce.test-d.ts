@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- We know! */
 
+import { expectTypeOf, it, test } from "vitest";
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 

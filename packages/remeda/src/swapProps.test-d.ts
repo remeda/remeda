@@ -1,3 +1,4 @@
+import { it } from "vitest";
 import { swapProps } from "./swapProps";
 
 it("protects against invalid prop names", () => {

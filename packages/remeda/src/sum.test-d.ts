@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it, test } from "vitest";
 import { pipe } from "./pipe";
 import { sum } from "./sum";
 

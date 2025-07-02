@@ -1,3 +1,4 @@
+import { expect, test, vi } from "vitest";
 import { forEach } from "./forEach";
 import { pipe } from "./pipe";
 import { take } from "./take";

@@ -1,5 +1,6 @@
-import { pipe } from "./pipe";
+import { describe, expectTypeOf, test } from "vitest";
 import { dropLast } from "./dropLast";
+import { pipe } from "./pipe";
 
 describe("data-first", () => {
   test("empty array", () => {

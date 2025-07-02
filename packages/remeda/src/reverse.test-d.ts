@@ -1,5 +1,6 @@
-import { reverse } from "./reverse";
+import { describe, expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
+import { reverse } from "./reverse";
 
 describe("data first", () => {
   test("arrays", () => {

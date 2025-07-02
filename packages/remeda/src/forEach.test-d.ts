@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { doNothing } from "./doNothing";
 import { forEach } from "./forEach";
 import { pipe } from "./pipe";

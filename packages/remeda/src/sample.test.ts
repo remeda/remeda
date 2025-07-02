@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { sample } from "./sample";
 import { times } from "./times";

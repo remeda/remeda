@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { splitWhen } from "./splitWhen";
 
 it("should split array", () => {

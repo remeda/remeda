@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from "vitest";
 import { first } from "./first";
 import { map } from "./map";
 import { pipe } from "./pipe";

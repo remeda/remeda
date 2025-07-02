@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import type { NTuple } from "./NTuple";
 
 declare function nTuple<T, N extends number>(x: T, n: N): NTuple<T, N>;

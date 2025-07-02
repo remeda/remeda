@@ -1,6 +1,7 @@
-import { sumBy } from "./sumBy";
-import { pipe } from "./pipe";
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
+import { pipe } from "./pipe";
+import { sumBy } from "./sumBy";
 
 test("empty array", () => {
   const result1 = sumBy([], constant(1n));

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { subtract } from "./subtract";
 
 test("data-first", () => {

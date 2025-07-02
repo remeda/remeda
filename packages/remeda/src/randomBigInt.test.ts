@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { randomBigInt } from "./randomBigInt";
 
 const ITERATIONS = 10_000;

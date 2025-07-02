@@ -1,3 +1,4 @@
+import { expectTypeOf, it, test } from "vitest";
 import { merge } from "./merge";
 
 interface FooInterface {

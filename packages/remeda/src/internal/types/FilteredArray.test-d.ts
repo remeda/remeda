@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import type { FilteredArray } from "./FilteredArray";
 import type { IterableContainer } from "./IterableContainer";
 

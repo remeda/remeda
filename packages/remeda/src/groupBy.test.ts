@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { groupBy } from "./groupBy";
 import { pipe } from "./pipe";
 import { prop } from "./prop";

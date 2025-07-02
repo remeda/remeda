@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { forEachObj } from "./forEachObj";
 import { pipe } from "./pipe";
 

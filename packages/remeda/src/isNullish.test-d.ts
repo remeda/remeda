@@ -1,4 +1,5 @@
 import type { IsEqual, IsUnknown, Or } from "type-fest";
+import { expectTypeOf, it } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
 

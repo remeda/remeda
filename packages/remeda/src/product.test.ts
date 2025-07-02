@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { pipe } from "./pipe";
 import { product } from "./product";
 

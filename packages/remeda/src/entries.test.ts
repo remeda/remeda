@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { entries } from "./entries";
 
 it("should return pairs", () => {

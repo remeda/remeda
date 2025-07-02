@@ -1,3 +1,4 @@
+import { describe, expect, it, test } from "vitest";
 import { doNothing } from "./doNothing";
 import { mergeDeep } from "./mergeDeep";
 

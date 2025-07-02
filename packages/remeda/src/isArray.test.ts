@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,

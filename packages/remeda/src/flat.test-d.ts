@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from "vitest";
 import { flat } from "./flat";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 

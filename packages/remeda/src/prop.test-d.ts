@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";

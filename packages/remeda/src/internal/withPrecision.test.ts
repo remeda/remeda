@@ -1,3 +1,4 @@
+import { expect, it, vi } from "vitest";
 import { identity } from "../identity";
 import { withPrecision } from "./withPrecision";
 
