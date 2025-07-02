@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { splice } from "./splice";
 

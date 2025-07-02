@@ -1,4 +1,4 @@
-import { expectTypeOf } from "expect-type";
+import { expectTypeOf, test } from "vitest";
 import { toSnakeCase } from "./toSnakeCase";
 
 test("primitive string", () => {

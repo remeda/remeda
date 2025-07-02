@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { words } from "./words";
 
 describe("copied from the type-fest tests", () => {

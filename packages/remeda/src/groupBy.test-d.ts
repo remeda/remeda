@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { groupBy } from "./groupBy";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { prop } from "./prop";

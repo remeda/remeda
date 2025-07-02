@@ -1,4 +1,5 @@
 import type { EmptyObject } from "type-fest";
+import { expectTypeOf, test } from "vitest";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
 
 declare function enumerableStringKeyedValueOf<const T>(

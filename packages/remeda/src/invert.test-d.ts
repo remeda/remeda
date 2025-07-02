@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { invert } from "./invert";
 
 test("simple string records", () => {

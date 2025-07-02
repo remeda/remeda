@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { first } from "./first";
 
 test("simple empty array", () => {

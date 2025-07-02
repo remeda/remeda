@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { omit } from "./omit";
 import { pipe } from "./pipe";
 

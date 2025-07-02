@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { filter } from "./filter";
 import { first } from "./first";

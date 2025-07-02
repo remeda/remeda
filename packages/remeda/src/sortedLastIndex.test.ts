@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { sortedLastIndex } from "./sortedLastIndex";
 
 test("empty array", () => {

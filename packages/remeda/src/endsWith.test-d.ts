@@ -1,5 +1,6 @@
-import { partition } from "./partition";
+import { describe, expectTypeOf, test } from "vitest";
 import { endsWith } from "./endsWith";
+import { partition } from "./partition";
 
 describe("data-first", () => {
   test("doesn't narrow on 'string' prefix", () => {

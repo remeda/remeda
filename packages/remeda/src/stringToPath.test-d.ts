@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 
 test("should convert a string to a deeply nested path", () => {

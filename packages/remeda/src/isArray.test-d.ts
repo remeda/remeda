@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
@@ -5,7 +6,7 @@ import {
 } from "../test/typesDataProvider";
 import { isArray } from "./isArray";
 
-it("should infer ReadonlyArray<unknown> when given any", () => {
+test("should infer ReadonlyArray<unknown> when given any", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
   const data = [] as any;
   if (isArray(data)) {
@@ -14,7 +15,7 @@ it("should infer ReadonlyArray<unknown> when given any", () => {
   }
 });
 
-it("should work as type guard", () => {
+test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.array as AllTypesDataProviderTypes;
   if (isArray(data)) {
     expectTypeOf(data).toEqualTypeOf<
@@ -23,14 +24,14 @@ it("should work as type guard", () => {
   }
 });
 
-it("should infer ReadonlyArray<unknown> when given `unknown`", () => {
+test("should infer ReadonlyArray<unknown> when given `unknown`", () => {
   const data = TYPES_DATA_PROVIDER.array as unknown;
   if (isArray(data)) {
     expectTypeOf(data).toEqualTypeOf<ReadonlyArray<unknown>>();
   }
 });
 
-it("should work as type guard in filter", () => {
+test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
 
   expectTypeOf(data).toEqualTypeOf<

@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { shuffle } from "./shuffle";
 
@@ -31,13 +32,13 @@ test("fixed size tuple", () => {
   >();
 });
 
-it("removes readonlyness from array", () => {
+test("removes readonlyness from array", () => {
   const result = shuffle([] as ReadonlyArray<string>);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-it("infers type via a pipe", () => {
+test("infers type via a pipe", () => {
   const result = pipe(["a", 1, true] as [string, number, boolean], shuffle());
 
   expectTypeOf(result).toEqualTypeOf<

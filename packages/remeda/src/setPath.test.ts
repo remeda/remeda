@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 import { stringToPath } from "./stringToPath";

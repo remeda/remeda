@@ -1,3 +1,4 @@
+import { expect, test, vi } from "vitest";
 import { constant } from "./constant";
 import { once } from "./once";
 

@@ -1,15 +1,16 @@
+import { expect, test } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
 
-it("accepts nulls", () => {
+test("accepts nulls", () => {
   expect(isNullish(null)).toBe(true);
 });
 
-it("accepts undefined", () => {
+test("accepts undefined", () => {
   expect(isNullish(undefined)).toBe(true);
 });
 
-it("rejects anything else", () => {
+test("rejects anything else", () => {
   for (const data of ALL_TYPES_DATA_PROVIDER) {
     if (data === null || data === undefined) {
       continue;

@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import type { IterableContainer } from "./IterableContainer";
 import type { TupleSplits } from "./TupleSplits";
 

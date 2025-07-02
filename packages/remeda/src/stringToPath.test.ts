@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 
 test("empty path", () => {

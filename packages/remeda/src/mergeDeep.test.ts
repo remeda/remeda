@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { doNothing } from "./doNothing";
 import { mergeDeep } from "./mergeDeep";
 
@@ -30,21 +31,21 @@ describe("runtime (dataFirst)", () => {
     expect(mergeDeep(a, b)).toStrictEqual({ foo: ["qux"] });
   });
 
-  it("should not merge arrays", () => {
+  test("should not merge arrays", () => {
     const a = { foo: ["bar"] };
     const b = { foo: ["baz"] };
 
     expect(mergeDeep(a, b)).toStrictEqual({ foo: ["baz"] });
   });
 
-  it("should merge different types", () => {
+  test("should merge different types", () => {
     const a = { foo: "bar" };
     const b = { foo: 123 };
 
     expect(mergeDeep(a, b)).toStrictEqual({ foo: 123 });
   });
 
-  it("should work with weird object types, null", () => {
+  test("should work with weird object types, null", () => {
     const a = { foo: null };
     const b = { foo: 123 };
 
@@ -52,7 +53,7 @@ describe("runtime (dataFirst)", () => {
     expect(mergeDeep(b, a)).toStrictEqual({ foo: null });
   });
 
-  it("should work with weird object types, functions", () => {
+  test("should work with weird object types, functions", () => {
     const a = { foo: doNothing() };
     const b = { foo: 123 };
 
@@ -60,7 +61,7 @@ describe("runtime (dataFirst)", () => {
     expect(mergeDeep(b, a)).toStrictEqual({ foo: doNothing() });
   });
 
-  it("should work with weird object types, date", () => {
+  test("should work with weird object types, date", () => {
     const a = { foo: new Date(1337) };
     const b = { foo: 123 };
 
@@ -68,14 +69,14 @@ describe("runtime (dataFirst)", () => {
     expect(mergeDeep(b, a)).toStrictEqual({ foo: new Date(1337) });
   });
 
-  it("doesn't spread arrays", () => {
+  test("doesn't spread arrays", () => {
     const a = { foo: ["bar"] };
     const b = { foo: ["baz"] };
 
     expect(mergeDeep(a, b)).toStrictEqual({ foo: ["baz"] });
   });
 
-  it("doesn't recurse into arrays", () => {
+  test("doesn't recurse into arrays", () => {
     const a = { foo: [{ bar: "baz" }] };
     const b = { foo: [{ bar: "hello, world" }] };
 

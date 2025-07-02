@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation!
  */
 
+import { describe, expect, test, vi } from "vitest";
 import { doNothing } from "./doNothing";
 import { fromKeys } from "./fromKeys";
 import { funnel } from "./funnel";

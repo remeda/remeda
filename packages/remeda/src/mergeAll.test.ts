@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { mergeAll } from "./mergeAll";
 
 test("merge objects", () => {
@@ -11,7 +12,7 @@ test("merge objects", () => {
   });
 });
 
-it("should return an empty object when the input is an empty array", () => {
+test("should return an empty object when the input is an empty array", () => {
   const input: ReadonlyArray<object> = [];
 
   const result = mergeAll(input);

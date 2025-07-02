@@ -1,4 +1,5 @@
 import type { Tagged } from "type-fest";
+import { expectTypeOf, test } from "vitest";
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 
 declare const SymbolFoo: unique symbol;

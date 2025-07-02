@@ -1,8 +1,9 @@
 import type { EmptyObject } from "type-fest";
+import { describe, expectTypeOf, test } from "vitest";
 import { mergeAll } from "./mergeAll";
 
 describe("arrays", () => {
-  it("custom case", () => {
+  test("custom case", () => {
     // based on https://github.com/remeda/remeda/issues/918
 
     const userUnionArray: ReadonlyArray<
@@ -24,7 +25,7 @@ describe("arrays", () => {
     >();
   });
 
-  it("should produce the same type when the type isn't a union", () => {
+  test("should produce the same type when the type isn't a union", () => {
     const input: ReadonlyArray<{ a: string; b: number; c: boolean }> = [];
     const result = mergeAll(input);
 
@@ -34,7 +35,7 @@ describe("arrays", () => {
   });
 
   describe("optionality", () => {
-    it("should keep non-optional fields shared across all union members non-optional, with the rest being converted into optionals", () => {
+    test("should keep non-optional fields shared across all union members non-optional, with the rest being converted into optionals", () => {
       // the only real change is c and e becoming optional, because they aren't shared across all union members and they aren't already optional
 
       const input: ReadonlyArray<
@@ -50,7 +51,7 @@ describe("arrays", () => {
       >();
     });
 
-    it("should preserve undefined in fields when converting fields from non-optional to optional", () => {
+    test("should preserve undefined in fields when converting fields from non-optional to optional", () => {
       const input: ReadonlyArray<
         { a: string } | { a: string; b: string | undefined; c: undefined }
       > = [];
@@ -62,7 +63,7 @@ describe("arrays", () => {
       >();
     });
 
-    it("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
+    test("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
       // there is no "optionality union", we should prefer the safer option for these ambiguities
       const input: ReadonlyArray<
         { a?: number } | { a: number } | { a?: number; b: string }
@@ -76,7 +77,7 @@ describe("arrays", () => {
   });
 
   describe("should merge different types on same fields into a union", () => {
-    it("when the types are different, they form a union", () => {
+    test("when the types are different, they form a union", () => {
       const input: ReadonlyArray<
         { a: number; b: string } | { a: string; b: string }
       > = [];
@@ -88,7 +89,7 @@ describe("arrays", () => {
       >();
     });
 
-    it("when the fields are unions, they are combined into a single union", () => {
+    test("when the fields are unions, they are combined into a single union", () => {
       const input: ReadonlyArray<
         { a: number | boolean; b: string } | { a: string | Date; b: string }
       > = [];
@@ -100,7 +101,7 @@ describe("arrays", () => {
       >();
     });
 
-    it("when the field has two different intersections, it becomes the union of the intersections", () => {
+    test("when the field has two different intersections, it becomes the union of the intersections", () => {
       const input: ReadonlyArray<
         | { a: { a1: string } & { b1: string }; b: string }
         | { a: { a2: string } & { b2: string }; b: string }
@@ -122,7 +123,7 @@ describe("arrays", () => {
 });
 
 describe("nonempty arrays", () => {
-  it("the return type should not include the possibility of returning a nonempty object given a nonempty array with nonempty objects", () => {
+  test("the return type should not include the possibility of returning a nonempty object given a nonempty array with nonempty objects", () => {
     const input: [
       { a: number; b: string } | { a: string; b: string },
       ...ReadonlyArray<{ a: number; b: string } | { a: string; b: string }>,
@@ -136,7 +137,7 @@ describe("nonempty arrays", () => {
 
 describe("tuples", () => {
   describe("the fields of the rightmost item should have the greatest priority in overrides", () => {
-    it("0 types", () => {
+    test("0 types", () => {
       const input: [] = [];
 
       const result = mergeAll(input);
@@ -144,7 +145,7 @@ describe("tuples", () => {
       expectTypeOf(result).toEqualTypeOf<EmptyObject>();
     });
 
-    it("1 types", () => {
+    test("1 types", () => {
       const input: [{ a: 1; b: 1 }] = [{ a: 1, b: 1 }];
 
       const result = mergeAll(input);
@@ -152,7 +153,7 @@ describe("tuples", () => {
       expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 1 }>();
     });
 
-    it("2 types", () => {
+    test("2 types", () => {
       const input: [{ a: 1; b: 1 }, { a: 2 }] = [{ a: 1, b: 1 }, { a: 2 }];
 
       const result = mergeAll(input);
@@ -160,7 +161,7 @@ describe("tuples", () => {
       expectTypeOf(result).toEqualTypeOf<{ a: 2; b: 1 }>();
     });
 
-    it("3 types", () => {
+    test("3 types", () => {
       const input: [{ a: 1; b: 1 }, { a: 2 }, { a: 3 }] = [
         { a: 1, b: 1 },
         { a: 2 },

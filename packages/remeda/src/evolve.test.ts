@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from "vitest";
 import { add } from "./add";
 import { constant } from "./constant";
 import { evolve } from "./evolve";
@@ -11,7 +12,7 @@ import { set } from "./set";
 const sum = reduce((a, b: number) => add(a, b), 0);
 
 describe("data first", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
+  test("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     expect(
       evolve(
         {
@@ -32,11 +33,11 @@ describe("data first", () => {
     });
   });
 
-  it("does not invoke function if `data` does not contain the key", () => {
+  test("does not invoke function if `data` does not contain the key", () => {
     expect(evolve({} as { id?: number }, { id: add(1) })).toStrictEqual({});
   });
 
-  it("is not destructive and is immutable", () => {
+  test("is not destructive and is immutable", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = evolve(data, { n: add(1) });
@@ -46,7 +47,7 @@ describe("data first", () => {
     expect(result).not.toBe(expected);
   });
 
-  it("is recursive", () => {
+  test("is recursive", () => {
     expect(
       evolve(
         { first: 1, nested: { second: 2, third: 3 } },
@@ -55,11 +56,11 @@ describe("data first", () => {
     ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
   });
 
-  it("ignores undefined transformations", () => {
+  test("ignores undefined transformations", () => {
     expect(evolve({ n: 0 }, {})).toStrictEqual({ n: 0 });
   });
 
-  it("can handle data that is complex nested objects", () => {
+  test("can handle data that is complex nested objects", () => {
     expect(
       evolve(
         {
@@ -83,7 +84,7 @@ describe("data first", () => {
     });
   });
 
-  it("accept function whose second and subsequent arguments are optional", () => {
+  test("accept function whose second and subsequent arguments are optional", () => {
     expect(
       evolve(
         { arg2Optional: 1, arg2arg3Optional: 1 },
@@ -96,7 +97,7 @@ describe("data first", () => {
     ).toStrictEqual({ arg2Optional: true, arg2arg3Optional: true });
   });
 
-  it("doesn't evolve symbol keys", () => {
+  test("doesn't evolve symbol keys", () => {
     const mock = vi.fn<(x: string) => unknown>();
     const mySymbol = Symbol("a");
     // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
@@ -105,7 +106,7 @@ describe("data first", () => {
     expect(mock).toHaveBeenCalledTimes(0);
   });
 
-  it("ignore transformers for non-object values", () => {
+  test("ignore transformers for non-object values", () => {
     expect(
       evolve({ a: "hello" } as { a: string | { b: string } }, {
         a: { b: constant(3) },
@@ -115,7 +116,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
+  test("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     expect(
       pipe(
         {
@@ -136,13 +137,13 @@ describe("data last", () => {
     });
   });
 
-  it("does not invoke function if `data` does not contain the key", () => {
+  test("does not invoke function if `data` does not contain the key", () => {
     expect(pipe({} as { id?: number }, evolve({ id: add(1) }))).toStrictEqual(
       {},
     );
   });
 
-  it("is not destructive and is immutable", () => {
+  test("is not destructive and is immutable", () => {
     const data = { n: 100 };
     const expected = { n: 101 };
     const result = pipe(data, evolve({ n: add(1) }));
@@ -152,7 +153,7 @@ describe("data last", () => {
     expect(result).not.toBe(expected);
   });
 
-  it("is recursive", () => {
+  test("is recursive", () => {
     expect(
       pipe(
         { first: 1, nested: { second: 2, third: 3 } },
@@ -161,11 +162,11 @@ describe("data last", () => {
     ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
   });
 
-  it("ignores undefined transformations", () => {
+  test("ignores undefined transformations", () => {
     expect(pipe({ n: 0 }, evolve({}))).toStrictEqual({ n: 0 });
   });
 
-  it("can handle data that is complex nested objects", () => {
+  test("can handle data that is complex nested objects", () => {
     expect(
       pipe(
         {
@@ -189,7 +190,7 @@ describe("data last", () => {
     });
   });
 
-  it("accept function whose second and subsequent arguments are optional", () => {
+  test("accept function whose second and subsequent arguments are optional", () => {
     expect(
       pipe(
         { arg2Optional: 1, arg2arg3Optional: 1 },

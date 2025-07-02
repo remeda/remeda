@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { range } from "./range";
 
 describe("data first", () => {

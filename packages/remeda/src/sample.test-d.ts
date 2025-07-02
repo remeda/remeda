@@ -1,56 +1,57 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { sample } from "./sample";
 
 describe("sampleSize 0", () => {
-  it("on arrays", () => {
+  test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on readonly arrays", () => {
+  test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on tuples", () => {
+  test("on tuples", () => {
     const array: [number, number, number, number, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on readonly tuples", () => {
+  test("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on tuples with rest tail", () => {
+  test("on tuples with rest tail", () => {
     const array: [number, ...Array<number>] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on tuples with rest head", () => {
+  test("on tuples with rest head", () => {
     const array: [...Array<number>, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on readonly tuples with rest tail", () => {
+  test("on readonly tuples with rest tail", () => {
     const array: readonly [number, ...Array<number>] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("on readonly tuples with rest head", () => {
+  test("on readonly tuples with rest head", () => {
     const array: readonly [...Array<number>, number] = [1, 2, 3, 4, 5];
     const result = sample(array, 0);
 
@@ -59,7 +60,7 @@ describe("sampleSize 0", () => {
 });
 
 describe("sampleSize < n", () => {
-  it("on arrays", () => {
+  test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
 
@@ -72,7 +73,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on readonly arrays", () => {
+  test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
 
@@ -85,7 +86,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on tuples", () => {
+  test("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
 
@@ -94,7 +95,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on readonly tuples", () => {
+  test("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 4);
 
@@ -103,7 +104,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on tuples with rest tail", () => {
+  test("on tuples with rest tail", () => {
     const array: [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -121,7 +122,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on readonly tuples with rest tail", () => {
+  test("on readonly tuples with rest tail", () => {
     const array: readonly [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -139,7 +140,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on tuples with rest head", () => {
+  test("on tuples with rest head", () => {
     const array: [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -156,7 +157,7 @@ describe("sampleSize < n", () => {
     >();
   });
 
-  it("on readonly tuples with rest head", () => {
+  test("on readonly tuples with rest head", () => {
     const array: readonly [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -175,21 +176,21 @@ describe("sampleSize < n", () => {
 });
 
 describe("sampleSize === n", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 0);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on arrays", () => {
+  test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
 
@@ -203,7 +204,7 @@ describe("sampleSize === n", () => {
     >();
   });
 
-  it("on readonly arrays", () => {
+  test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
 
@@ -217,21 +218,21 @@ describe("sampleSize === n", () => {
     >();
   });
 
-  it("on tuples", () => {
+  test("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 5);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on readonly tuples", () => {
+  test("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 5);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on tuples with rest tail", () => {
+  test("on tuples with rest tail", () => {
     const array: [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -250,7 +251,7 @@ describe("sampleSize === n", () => {
     >();
   });
 
-  it("on readonly tuples with rest tail", () => {
+  test("on readonly tuples with rest tail", () => {
     const array: readonly [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -269,7 +270,7 @@ describe("sampleSize === n", () => {
     >();
   });
 
-  it("on tuples with rest head", () => {
+  test("on tuples with rest head", () => {
     const array: [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -287,7 +288,7 @@ describe("sampleSize === n", () => {
     >();
   });
 
-  it("on readonly tuples with rest head", () => {
+  test("on readonly tuples with rest head", () => {
     const array: readonly [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -307,21 +308,21 @@ describe("sampleSize === n", () => {
 });
 
 describe("sampleSize > n", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 10);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 10);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on arrays", () => {
+  test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
 
@@ -351,7 +352,7 @@ describe("sampleSize > n", () => {
     >();
   });
 
-  it("on readonly arrays", () => {
+  test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
 
@@ -381,21 +382,21 @@ describe("sampleSize > n", () => {
     >();
   });
 
-  it("on tuples", () => {
+  test("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 10);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on readonly tuples", () => {
+  test("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 10);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on tuples with rest tail", () => {
+  test("on tuples with rest tail", () => {
     const array: [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -464,7 +465,7 @@ describe("sampleSize > n", () => {
     >();
   });
 
-  it("on readonly tuples with rest tail", () => {
+  test("on readonly tuples with rest tail", () => {
     const array: readonly [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -533,7 +534,7 @@ describe("sampleSize > n", () => {
     >();
   });
 
-  it("on tuples with rest head", () => {
+  test("on tuples with rest head", () => {
     const array: [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -577,7 +578,7 @@ describe("sampleSize > n", () => {
     >();
   });
 
-  it("on readonly tuples with rest head", () => {
+  test("on readonly tuples with rest head", () => {
     const array: readonly [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -623,35 +624,35 @@ describe("sampleSize > n", () => {
 });
 
 describe("non-const sampleSize", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 5 as number);
 
     expectTypeOf(result).toEqualTypeOf<typeof array>();
   });
 
-  it("on arrays", () => {
+  test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  it("on readonly arrays", () => {
+  test("on readonly arrays", () => {
     const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  it("on tuples", () => {
+  test("on tuples", () => {
     const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
     const result = sample(array, 5 as number);
 
@@ -691,7 +692,7 @@ describe("non-const sampleSize", () => {
     >();
   });
 
-  it("on readonly tuples", () => {
+  test("on readonly tuples", () => {
     const array = [1, 2, 3, 4, 5] as const;
     const result = sample(array, 5 as number);
 
@@ -731,7 +732,7 @@ describe("non-const sampleSize", () => {
     >();
   });
 
-  it("on tuples with rest tail", () => {
+  test("on tuples with rest tail", () => {
     const array: [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -749,7 +750,7 @@ describe("non-const sampleSize", () => {
     >();
   });
 
-  it("on readonly tuples with rest tail", () => {
+  test("on readonly tuples with rest tail", () => {
     const array: readonly [number, boolean, ...Array<string>] = [
       1,
       true,
@@ -767,7 +768,7 @@ describe("non-const sampleSize", () => {
     >();
   });
 
-  it("on tuples with rest head", () => {
+  test("on tuples with rest head", () => {
     const array: [...Array<string>, boolean, number] = [
       "yey",
       "hello",
@@ -783,7 +784,7 @@ describe("non-const sampleSize", () => {
     >();
   });
 
-  it("on readonly tuples with rest head", () => {
+  test("on readonly tuples with rest head", () => {
     const array: readonly [...Array<string>, boolean, number] = [
       "yey",
       "hello",

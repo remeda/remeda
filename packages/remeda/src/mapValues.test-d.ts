@@ -1,4 +1,5 @@
 import type { Tagged } from "type-fest";
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";

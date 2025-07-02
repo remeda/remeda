@@ -1,13 +1,14 @@
+import { expectTypeOf, test } from "vitest";
 import { last } from "./last";
 import { pipe } from "./pipe";
 
-it("works with empty arrays", () => {
+test("works with empty arrays", () => {
   const result = last([] as const);
 
   expectTypeOf(result).toEqualTypeOf<never>();
 });
 
-it("works with regular arrays", () => {
+test("works with regular arrays", () => {
   const result = last([1, 2, 3] as Array<number>);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();

@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
@@ -20,7 +21,7 @@ describe("data_first", () => {
     expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
 
-  it("should return items that are not equal to themselves", () => {
+  test("should return items that are not equal to themselves", () => {
     // test case based on https://github.com/remeda/remeda/issues/999
     const data = [
       { id: 1, reason: "No name" },
@@ -51,7 +52,7 @@ describe("data_last", () => {
     expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
   });
 
-  it("lazy", () => {
+  test("lazy", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
@@ -64,7 +65,7 @@ describe("data_last", () => {
     expect(result).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
   });
 
-  it("take before uniq", () => {
+  test("take before uniq", () => {
     // bug from https://github.com/remeda/remeda/issues/14
     const counter = createLazyInvocationCounter();
     const result = pipe(

@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { zipWith } from "./zipWith";
 

@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { isDeepEqual } from "./isDeepEqual";
 
 describe("scalars", () => {
@@ -74,7 +75,7 @@ describe("scalars", () => {
   });
 });
 
-describe("Objects", () => {
+describe("objects", () => {
   test("empty objects are equal", () => {
     expect(isDeepEqual({}, {})).toBe(true);
   });
@@ -152,7 +153,7 @@ describe("Objects", () => {
   });
 });
 
-describe("Sets", () => {
+describe("sets", () => {
   test("two empty sets should be equal", () => {
     expect(isDeepEqual(new Set(), new Set())).toBe(true);
   });
@@ -199,7 +200,7 @@ describe("Sets", () => {
   });
 });
 
-describe("Arrays", () => {
+describe("arrays", () => {
   test("two empty arrays are equal", () => {
     expect(isDeepEqual([], [])).toBe(true);
   });
@@ -233,8 +234,8 @@ describe("Arrays", () => {
   });
 });
 
-describe("Maps", () => {
-  it("works on shallow equal maps", () => {
+describe("maps", () => {
+  test("works on shallow equal maps", () => {
     expect(isDeepEqual(new Map([["a", 1]]), new Map([["a", 1]]))).toBe(true);
   });
 
@@ -242,11 +243,11 @@ describe("Maps", () => {
     expect(isDeepEqual(new Map(), new Map())).toBe(true);
   });
 
-  it("two Maps with different size should not be equal", () => {
+  test("two Maps with different size should not be equal", () => {
     expect(isDeepEqual(new Map(), new Map([["a", 1]]))).toBe(false);
   });
 
-  it("two Maps with different keys shoud not be equal", () => {
+  test("two Maps with different keys shoud not be equal", () => {
     expect(
       isDeepEqual(
         new Map([
@@ -261,7 +262,7 @@ describe("Maps", () => {
     ).toBe(false);
   });
 
-  it("two maps with the same keys but with different values should not be equal", () => {
+  test("two maps with the same keys but with different values should not be equal", () => {
     expect(
       isDeepEqual(
         new Map([
@@ -278,7 +279,7 @@ describe("Maps", () => {
     ).toBe(false);
   });
 
-  it("two Maps with the same non primitives data should be equal", () => {
+  test("two Maps with the same non primitives data should be equal", () => {
     expect(
       isDeepEqual(
         new Map([
@@ -296,7 +297,7 @@ describe("Maps", () => {
   });
 });
 
-describe("Dates", () => {
+describe("dates", () => {
   test("equal date objects", () => {
     expect(
       isDeepEqual(
@@ -331,7 +332,7 @@ describe("Dates", () => {
   });
 });
 
-describe("RegExp", () => {
+describe("regular expressions", () => {
   test("equal RegExp objects", () => {
     expect(isDeepEqual(/foo/u, /foo/u)).toBe(true);
   });

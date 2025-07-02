@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
@@ -104,7 +105,7 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
 const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", () => {
-  it("subsequent calls should return the result of the first call", async () => {
+  test("subsequent calls should return the result of the first call", async () => {
     const throttled = throttleWithCachedValue(identity(), UT);
 
     expect(throttled("a")).toBe("a");
@@ -120,7 +121,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(resultD).toBeDefined();
   });
 
-  it("should support a `leading` option", () => {
+  test("should support a `leading` option", () => {
     const withLeading = throttleWithCachedValue(identity(), UT, {
       leading: true,
     });
@@ -132,7 +133,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(withoutLeading("a")).toBeUndefined();
   });
 
-  it("should support a `trailing` option", async () => {
+  test("should support a `trailing` option", async () => {
     const mockWith = vi.fn<<T>(x: T) => T>(identity());
     const mockWithout = vi.fn<<T>(x: T) => T>(identity());
     const withTrailing = throttleWithCachedValue(mockWith, 2 * UT, {
@@ -155,7 +156,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
 });
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
-  it("should reset `lastCalled` after cancelling", async () => {
+  test("should reset `lastCalled` after cancelling", async () => {
     let callCount = 0;
     const throttled = throttleWithCachedValue(
       () => {
@@ -178,7 +179,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(callCount).toBe(3);
   });
 
-  it("should support flushing delayed calls", async () => {
+  test("should support flushing delayed calls", async () => {
     let callCount = 0;
     const throttled = throttleWithCachedValue(
       () => {
@@ -197,7 +198,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(callCount).toBe(1);
   });
 
-  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+  test("should noop `cancel` and `flush` when nothing is queued", async () => {
     const mockFn = vi.fn<() => string>(constant("hello"));
     const throttled = throttleWithCachedValue(mockFn, UT);
     throttled.cancel();
@@ -210,8 +211,8 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 });
 
-describe("Features not tested by Lodash", () => {
-  it("does nothing when neither leading nor trailing are enabled", async () => {
+describe("features not tested by Lodash", () => {
+  test("does nothing when neither leading nor trailing are enabled", async () => {
     const throttled = throttleWithCachedValue(identity(), UT, {
       leading: false,
       trailing: false,

@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
 import type { IterableContainer } from "./IterableContainer";
 
@@ -6,7 +7,7 @@ declare function arrayRequiredPrefix<
   Min extends number,
 >(data: T, min: Min): ArrayRequiredPrefix<T, Min>;
 
-it("synchronizes the tuple readonly modifier", () => {
+test("synchronizes the tuple readonly modifier", () => {
   expectTypeOf(arrayRequiredPrefix([] as Array<string>, 1)).toEqualTypeOf<
     [string, ...Array<string>]
   >();
