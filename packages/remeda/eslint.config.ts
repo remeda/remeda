@@ -463,11 +463,6 @@ export default tseslint.config(
       "vitest/prefer-to-be-truthy": "off",
       "vitest/prefer-to-be-falsy": "off",
 
-      // It's rare that hooks are even needed, but in those cases it's probably
-      // preferable to use them as they make it clear that the tests relies on
-      // some weird setup.
-      "vitest/no-hooks": "off",
-
       // TODO: This rule might be useful to guide people to break tests into smaller tests that only expect one thing, but there's no reasonable max value we can configure it to that won't end up feeling arbitrary and noisy.
       "vitest/max-expects": "off",
     },
