@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { add } from "./add";
 import { evolve } from "./evolve";
 import { identity } from "./identity";
@@ -9,7 +10,7 @@ import { reduce } from "./reduce";
 import { set } from "./set";
 
 describe("data first", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
+  test("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     const result = evolve(
       {
         id: 1,
@@ -30,13 +31,13 @@ describe("data first", () => {
     }>();
   });
 
-  it("is not destructive and is immutable", () => {
+  test("is not destructive and is immutable", () => {
     const result = evolve({ n: 100 }, { n: add(1) });
 
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
-  it("is recursive", () => {
+  test("is recursive", () => {
     const result = evolve(
       { first: 1, nested: { second: 2, third: 3 } },
       { nested: { second: add(-1), third: add(1) } },
@@ -48,7 +49,7 @@ describe("data first", () => {
     }>();
   });
 
-  it("can handle data that is complex nested objects", () => {
+  test("can handle data that is complex nested objects", () => {
     const result = evolve(
       {
         array: ["1", "2", "3"],
@@ -73,7 +74,7 @@ describe("data first", () => {
   });
 
   describe("type reflection", (): void => {
-    it("can reflect type of data to function of evolver object", () => {
+    test("can reflect type of data to function of evolver object", () => {
       const result = evolve(
         {
           id: 1,
@@ -100,7 +101,7 @@ describe("data first", () => {
       }>();
     });
 
-    it("can reflect type of data to function of nested evolver object", () => {
+    test("can reflect type of data to function of nested evolver object", () => {
       const result = evolve(
         {
           id: 1,
@@ -128,7 +129,7 @@ describe("data first", () => {
     });
   });
 
-  it("can detect mismatch of parameters and arguments", () => {
+  test("can detect mismatch of parameters and arguments", () => {
     evolve(
       {
         number: "1",
@@ -152,7 +153,7 @@ describe("data first", () => {
     );
   });
 
-  it("does not accept function that require multiple arguments", () => {
+  test("does not accept function that require multiple arguments", () => {
     evolve(
       { requiring2Args: 1, requiring3Args: 1 },
       {
@@ -165,7 +166,7 @@ describe("data first", () => {
     );
   });
 
-  it("accept function whose second and subsequent arguments are optional", () => {
+  test("accept function whose second and subsequent arguments are optional", () => {
     const result = evolve(
       { arg2Optional: 1, arg2arg3Optional: 1 },
       {
@@ -181,7 +182,7 @@ describe("data first", () => {
     }>();
   });
 
-  it("can not handle function arrays.", () => {
+  test("can not handle function arrays.", () => {
     evolve(
       { quartile: [1, 2] },
       {
@@ -191,7 +192,7 @@ describe("data first", () => {
     );
   });
 
-  it("doesn't provide typing for symbol key evolvers", () => {
+  test("doesn't provide typing for symbol key evolvers", () => {
     const mySymbol = Symbol("a");
     evolve(
       { [mySymbol]: "hello" },
@@ -204,7 +205,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("creates a new object by evolving the `data` according to the `transformation` functions", () => {
+  test("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     const result = pipe(
       {
         id: 1,
@@ -225,13 +226,13 @@ describe("data last", () => {
     }>();
   });
 
-  it("is not destructive and is immutable", () => {
+  test("is not destructive and is immutable", () => {
     const result = pipe({ n: 100 }, evolve({ n: add(1) }));
 
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
-  it("is recursive", () => {
+  test("is recursive", () => {
     const result = pipe(
       { first: 1, nested: { second: 2, third: 3 } },
       evolve({ nested: { second: add(-1), third: add(1) } }),
@@ -243,13 +244,13 @@ describe("data last", () => {
     }>();
   });
 
-  it("ignores undefined transformations", () => {
+  test("ignores undefined transformations", () => {
     const result = pipe({ n: 0 }, evolve({}));
 
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
-  it("can handle data that is complex nested objects", () => {
+  test("can handle data that is complex nested objects", () => {
     const result = pipe(
       {
         array: ["1", "2", "3"],
@@ -274,7 +275,7 @@ describe("data last", () => {
   });
 
   describe("it can detect mismatch of parameters and arguments", () => {
-    it('detect property "number" are incompatible', () => {
+    test('detect property "number" are incompatible', () => {
       pipe(
         { number: "1", array: ["1", "2", "3"] },
         // @ts-expect-error [ts2345] - Evolver isn't the right type.
@@ -286,7 +287,7 @@ describe("data last", () => {
       );
     });
 
-    it('detect property "array" are incompatible', () => {
+    test('detect property "array" are incompatible', () => {
       pipe(
         { number: 1, array: ["1", "2", "3"] },
         // @ts-expect-error [ts2345] - Evolver isn't the right type.
@@ -299,7 +300,7 @@ describe("data last", () => {
     });
   });
 
-  it("does not accept function that require multiple arguments", () => {
+  test("does not accept function that require multiple arguments", () => {
     pipe(
       { requiring2Args: 1 },
       // @ts-expect-error [ts2345] - Type '{ requiring2Args: any; }' provides no match for the signature '(input: { requiring2Args: number; }): unknown'.
@@ -310,7 +311,7 @@ describe("data last", () => {
     );
   });
 
-  it("accept function whose second and subsequent arguments are optional", () => {
+  test("accept function whose second and subsequent arguments are optional", () => {
     const result = pipe(
       { arg2Optional: 1, arg2arg3Optional: 1 },
       evolve({
@@ -326,7 +327,7 @@ describe("data last", () => {
     }>();
   });
 
-  it("can not handle function arrays.", () => {
+  test("can not handle function arrays.", () => {
     pipe(
       { quartile: [1, 2] },
       // @ts-expect-error [ts2345] - Type '{ quartile: ((value: number) => number)[]; }' provides no match for the signature '(input: { quartile: number[]; }): unknown'.

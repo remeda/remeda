@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { dropLast } from "./dropLast";
 
 test("empty array", () => {

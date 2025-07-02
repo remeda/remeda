@@ -1,9 +1,10 @@
-import { nthBy } from "./nthBy";
+import { describe, expect, test } from "vitest";
 import { identity } from "./identity";
+import { nthBy } from "./nthBy";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
-  it("works", () => {
+  test("works", () => {
     const data = [2, 1, 3];
 
     expect(nthBy(data, 0, identity())).toBe(1);
@@ -11,7 +12,7 @@ describe("runtime (dataFirst)", () => {
     expect(nthBy(data, 2, identity())).toBe(3);
   });
 
-  it("handles negative indexes", () => {
+  test("handles negative indexes", () => {
     const data = [2, 1, 3];
 
     expect(nthBy(data, -1, identity())).toBe(3);
@@ -19,12 +20,12 @@ describe("runtime (dataFirst)", () => {
     expect(nthBy(data, -3, identity())).toBe(1);
   });
 
-  it("handles overflows gracefully", () => {
+  test("handles overflows gracefully", () => {
     expect(nthBy([1, 2, 3], 100, identity())).toBeUndefined();
     expect(nthBy([1, 2, 3], -100, identity())).toBeUndefined();
   });
 
-  it("works with complex order rules", () => {
+  test("works with complex order rules", () => {
     const data = ["aaaa", "b", "bb", "a", "aaa", "bbbb", "aa", "bbb"] as const;
 
     expect(nthBy(data, 0, (a) => a.length, identity())).toBe("a");
@@ -39,7 +40,7 @@ describe("runtime (dataFirst)", () => {
 });
 
 describe("runtime (dataLast)", () => {
-  it("works", () => {
+  test("works", () => {
     const data = [2, 1, 3];
 
     expect(pipe(data, nthBy(0, identity()))).toBe(1);
@@ -47,7 +48,7 @@ describe("runtime (dataLast)", () => {
     expect(pipe(data, nthBy(2, identity()))).toBe(3);
   });
 
-  it("handles negative indexes", () => {
+  test("handles negative indexes", () => {
     const data = [2, 1, 3];
 
     expect(pipe(data, nthBy(-1, identity()))).toBe(3);
@@ -55,12 +56,12 @@ describe("runtime (dataLast)", () => {
     expect(pipe(data, nthBy(-3, identity()))).toBe(1);
   });
 
-  it("handles overflows gracefully", () => {
+  test("handles overflows gracefully", () => {
     expect(pipe([1, 2, 3], nthBy(100, identity()))).toBeUndefined();
     expect(pipe([1, 2, 3], nthBy(-100, identity()))).toBeUndefined();
   });
 
-  it("works with complex order rules", () => {
+  test("works with complex order rules", () => {
     const data = ["aaaa", "b", "bb", "a", "aaa", "bbbb", "aa", "bbb"] as const;
 
     expect(

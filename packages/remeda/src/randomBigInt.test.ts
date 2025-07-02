@@ -1,3 +1,9 @@
+/* eslint-disable vitest/no-hooks --
+ * This utility relies on the execution environment (node). These APIs need to
+ * be mocked for our tests, which is done via hooks.
+ */
+
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { randomBigInt } from "./randomBigInt";
 
 const ITERATIONS = 10_000;

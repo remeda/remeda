@@ -1,26 +1,27 @@
+import { describe, expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { takeLastWhile } from "./takeLastWhile";
 
 describe("data first", () => {
-  it("should return items after the last predicate failure", () => {
+  test("should return items after the last predicate failure", () => {
     expect(takeLastWhile([1, 2, 3, 4], (n) => n !== 2)).toStrictEqual([3, 4]);
   });
 
-  it("should return an empty array when the last item fails the predicate", () => {
+  test("should return an empty array when the last item fails the predicate", () => {
     expect(takeLastWhile([1, 2, 3, 4], (n) => n !== 4)).toStrictEqual([]);
   });
 
-  it("should return rest of the items when first item fails the predicate", () => {
+  test("should return rest of the items when first item fails the predicate", () => {
     expect(takeLastWhile([1, 2, 3, 4], (n) => n !== 1)).toStrictEqual([
       2, 3, 4,
     ]);
   });
 
-  it("should return an empty array when an empty array is passed", () => {
+  test("should return an empty array when an empty array is passed", () => {
     expect(takeLastWhile([], (n) => n > 0)).toStrictEqual([]);
   });
 
-  it("should return a copy of the original array when all items pass the predicate", () => {
+  test("should return a copy of the original array when all items pass the predicate", () => {
     const data = [1, 2, 3, 4];
     const result = takeLastWhile(data, (n) => n > 0);
 
@@ -30,7 +31,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("should return items after the last predicate failure", () => {
+  test("should return items after the last predicate failure", () => {
     expect(
       pipe(
         [1, 2, 3, 4],
@@ -39,7 +40,7 @@ describe("data last", () => {
     ).toStrictEqual([3, 4]);
   });
 
-  it("should return an empty array when the last item fails the predicate", () => {
+  test("should return an empty array when the last item fails the predicate", () => {
     expect(
       pipe(
         [1, 2, 3, 4],
@@ -48,7 +49,7 @@ describe("data last", () => {
     ).toStrictEqual([]);
   });
 
-  it("should return rest of the items when first item fails the predicate", () => {
+  test("should return rest of the items when first item fails the predicate", () => {
     expect(
       pipe(
         [1, 2, 3, 4],
@@ -57,7 +58,7 @@ describe("data last", () => {
     ).toStrictEqual([2, 3, 4]);
   });
 
-  it("should return an empty array when an empty array is passed", () => {
+  test("should return an empty array when an empty array is passed", () => {
     expect(
       pipe(
         [],
@@ -66,7 +67,7 @@ describe("data last", () => {
     ).toStrictEqual([]);
   });
 
-  it("should return a copy of the original array when all items pass the predicate", () => {
+  test("should return a copy of the original array when all items pass the predicate", () => {
     const data = [1, 2, 3, 4];
     const result = pipe(
       data,

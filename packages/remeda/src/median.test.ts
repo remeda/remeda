@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { median } from "./median";
 import { pipe } from "./pipe";
 
@@ -11,7 +12,7 @@ describe("dataFirst", () => {
     expect(median([-1, 0, 1, 10])).toBe(0.5);
   });
 
-  it("should return undefined for an empty array", () => {
+  test("should return undefined for an empty array", () => {
     expect(median([])).toBeUndefined();
   });
 });
@@ -26,7 +27,7 @@ describe("dataLast", () => {
     expect(pipe([-1, 0, 1, 10], median())).toBe(0.5);
   });
 
-  it("should return undefined for an empty array", () => {
+  test("should return undefined for an empty array", () => {
     expect(pipe([], median())).toBeUndefined();
   });
 });

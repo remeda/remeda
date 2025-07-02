@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { sum } from "./sum";
 
@@ -85,13 +86,13 @@ describe("dataLast", () => {
   });
 });
 
-it("doesn't allow mixed arrays", () => {
+test("doesn't allow mixed arrays", () => {
   // @ts-expect-error [ts2345] - Can't sum bigints and numbers...
   sum([1, 2n]);
 });
 
-describe("KNOWN ISSUES", () => {
-  it("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
+describe("known issues!", () => {
+  test("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
     const result = sum([] as Array<bigint>);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();

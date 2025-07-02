@@ -1,5 +1,6 @@
-import { split } from "./split";
+import { describe, expect, test } from "vitest";
 import { pipe } from "./pipe";
+import { split } from "./split";
 
 test("empty string, empty separator", () => {
   expect(split("", "")).toStrictEqual([]);

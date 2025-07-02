@@ -1,27 +1,28 @@
+import { expect, test } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER, TestClass } from "../test/typesDataProvider";
 import { isPlainObject } from "./isPlainObject";
 
-it("accepts simple objects", () => {
+test("accepts simple objects", () => {
   expect(isPlainObject({ a: 123 })).toBe(true);
 });
 
-it("accepts trivial empty objects", () => {
+test("accepts trivial empty objects", () => {
   expect(isPlainObject({})).toBe(true);
 });
 
-it("rejects strings", () => {
+test("rejects strings", () => {
   expect(isPlainObject("asd")).toBe(false);
 });
 
-it("rejects arrays", () => {
+test("rejects arrays", () => {
   expect(isPlainObject([1, 2, 3])).toBe(false);
 });
 
-it("rejects classes", () => {
+test("rejects classes", () => {
   expect(isPlainObject(new TestClass())).toBe(false);
 });
 
-it("accepts null prototypes", () => {
+test("accepts null prototypes", () => {
   expect(isPlainObject(Object.create(null))).toBe(true);
 });
 

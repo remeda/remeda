@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { isIncludedIn } from "./isIncludedIn";
 import { isNot } from "./isNot";
@@ -18,18 +19,18 @@ describe("dataFirst", () => {
     expect(isIncludedIn(4, [1, 2, 3])).toBe(false);
   });
 
-  it("works with strings", () => {
+  test("works with strings", () => {
     expect(isIncludedIn("b", ["a", "b", "c"])).toBe(true);
   });
 
-  it("only tests reference equality: (arrays)", () => {
+  test("only tests reference equality: (arrays)", () => {
     const arr = [1];
 
     expect(isIncludedIn([1], [arr])).toBe(false);
     expect(isIncludedIn(arr, [arr])).toBe(true);
   });
 
-  it("only tests reference equality: (objects)", () => {
+  test("only tests reference equality: (objects)", () => {
     const obj = { a: 1 };
 
     expect(isIncludedIn({ a: 1 }, [obj])).toBe(false);
@@ -50,18 +51,18 @@ describe("dataLast", () => {
     expect(pipe(4, isIncludedIn([1, 2, 3]))).toBe(false);
   });
 
-  it("works with strings", () => {
+  test("works with strings", () => {
     expect(pipe("b", isIncludedIn(["a", "b", "c"]))).toBe(true);
   });
 
-  it("only tests reference equality: (arrays)", () => {
+  test("only tests reference equality: (arrays)", () => {
     const arr = [1];
 
     expect(pipe([1], isIncludedIn([arr]))).toBe(false);
     expect(pipe(arr, isIncludedIn([arr]))).toBe(true);
   });
 
-  it("only tests reference equality: (objects)", () => {
+  test("only tests reference equality: (objects)", () => {
     const obj = { a: 1 };
 
     expect(pipe({ a: 1 }, isIncludedIn([obj]))).toBe(false);
@@ -69,14 +70,14 @@ describe("dataLast", () => {
   });
 
   describe("dataLast memoization", () => {
-    it("returns correct result when called multiple times with the same container", () => {
+    test("returns correct result when called multiple times with the same container", () => {
       const isIncludedInContainer = isIncludedIn([1, 2, 3]);
 
       expect(isIncludedInContainer(2)).toBe(true);
       expect(isIncludedInContainer(4)).toBe(false);
     });
 
-    it("returns correct result when called with different containers", () => {
+    test("returns correct result when called with different containers", () => {
       const isIncludedInContainer1 = isIncludedIn([1, 2, 3]);
       const isIncludedInContainer2 = isIncludedIn([4, 5, 6]);
 
@@ -86,7 +87,7 @@ describe("dataLast", () => {
       expect(isIncludedInContainer2(4)).toBe(true);
     });
 
-    it("does not leak information between invocations", () => {
+    test("does not leak information between invocations", () => {
       const container = [1, 2, 3];
 
       const isIncludedInContainer = isIncludedIn(container);

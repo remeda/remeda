@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { findLastIndex } from "./findLastIndex";
 import { pipe } from "./pipe";
 

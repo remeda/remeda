@@ -1,5 +1,6 @@
-import { pipe } from "./pipe";
+import { describe, expect, test } from "vitest";
 import { capitalize } from "./capitalize";
+import { pipe } from "./pipe";
 
 describe("data-first", () => {
   test("empty string", () => {

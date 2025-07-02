@@ -2,6 +2,7 @@
  * The autofixer for this rule is breaking our tests!
  */
 
+import { describe, expectTypeOf, test } from "vitest";
 import { groupByProp } from "./groupByProp";
 
 const SYMBOL = Symbol("sym");

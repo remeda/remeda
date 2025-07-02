@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { median } from "./median";
 import { pipe } from "./pipe";
 

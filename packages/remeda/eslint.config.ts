@@ -423,6 +423,7 @@ export default tseslint.config(
     },
   },
   {
+    // All Tests
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
       vitest,
@@ -434,16 +435,10 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
-      "vitest/prefer-lowercase-title": [
-        "warn",
-        { ignoreTopLevelDescribe: true },
-      ],
-
-      // I don't agree with this rule, `it` and `test` should be used based on
-      // the situation. Some times we are testing a specific behavior or trait,
-      // and sometimes we have a specific flow, input, or edge-case that needs
-      // to be tested against.
-      "vitest/consistent-test-it": "off",
+      // Makes everything consistent and clear... If someone wants to they can
+      // add the word 'it' to the beginning of the test name when if it makes
+      // sense.
+      "vitest/consistent-test-it": ["warn", { withinDescribe: "test" }],
 
       // This rule's docs don't provide justification for enabling it and what
       // value it adds. Going by the rule just adds another level of indentation
@@ -461,6 +456,7 @@ export default tseslint.config(
     },
   },
   {
+    // Runtime Tests
     files: ["src/**/*.test.ts"],
     rules: {
       // The range of things that are acceptable for truthy and falsy is wider
@@ -468,11 +464,6 @@ export default tseslint.config(
       // on the narrowest cases.
       "vitest/prefer-to-be-truthy": "off",
       "vitest/prefer-to-be-falsy": "off",
-
-      // It's rare that hooks are even needed, but in those cases it's probably
-      // preferable to use them as they make it clear that the tests relies on
-      // some weird setup.
-      "vitest/no-hooks": "off",
 
       // TODO: This rule might be useful to guide people to break tests into smaller tests that only expect one thing, but there's no reasonable max value we can configure it to that won't end up feeling arbitrary and noisy.
       "vitest/max-expects": "off",
@@ -494,11 +485,7 @@ export default tseslint.config(
       // the way of that.
       "@typescript-eslint/consistent-type-definitions": "off",
 
-      // A lot of our type tests use @ts-expect-error as the primary way to test
-      // that function params are typed correctly. This isn't detected properly
-      // by this rule and there's no way to configure it to work; so we disable
-      // it for now... There might be other ways to write the tests so that they
-      // conform to this rule.
+      // TODO: A lot of our type tests use @ts-expect-error as the primary way to test that function params are typed correctly. This isn't detected properly by this rule and there's no way to configure it to work; so we disable it for now... There might be other ways to write the tests so that they conform to this rule.
       "vitest/expect-expect": "off",
 
       // When testing type-predicates (guards) we need to test what happens to

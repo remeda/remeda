@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { split } from "./split";
 
 test("non-literals", () => {

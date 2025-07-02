@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { isTruthy } from "./isTruthy";
 
 test("isTruthy", () => {

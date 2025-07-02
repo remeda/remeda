@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
@@ -7,7 +8,7 @@ import {
 } from "../test/typesDataProvider";
 import { isNonNullish } from "./isNonNullish";
 
-it("should work as type guard", () => {
+test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
   if (isNonNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<
@@ -32,7 +33,7 @@ it("should work as type guard", () => {
   }
 });
 
-it("should work as type guard in filter", () => {
+test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNullish);
 
   expectTypeOf(data).toEqualTypeOf<

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { randomString } from "./randomString";
 
 test("randomString", () => {

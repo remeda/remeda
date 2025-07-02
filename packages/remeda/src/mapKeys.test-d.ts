@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { mapKeys } from "./mapKeys";
 import { pipe } from "./pipe";

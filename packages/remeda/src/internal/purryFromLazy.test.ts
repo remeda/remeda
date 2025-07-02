@@ -3,6 +3,7 @@
  * to write the tests.
  */
 
+import { expect, test } from "vitest";
 import { purryFromLazy } from "./purryFromLazy";
 import type { LazyEvaluator } from "./types/LazyEvaluator";
 

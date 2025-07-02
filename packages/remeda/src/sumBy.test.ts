@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { sumBy } from "./sumBy";
@@ -24,7 +25,7 @@ describe("data first", () => {
     ).toBe(15n);
   });
 
-  it("should return 0 for an empty array", () => {
+  test("should return 0 for an empty array", () => {
     expect(sumBy([], prop("a"))).toBe(0);
   });
 });
@@ -48,7 +49,7 @@ describe("data last", () => {
     ).toBe(15n);
   });
 
-  it("should return 0 for an empty array", () => {
+  test("should return 0 for an empty array", () => {
     expect(pipe([], sumBy(prop("a")))).toBe(0);
   });
 

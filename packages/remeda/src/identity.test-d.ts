@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { identity } from "./identity";
 
 test("normal values", () => {

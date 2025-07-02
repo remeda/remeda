@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";
 import { isDefined } from "./isDefined";

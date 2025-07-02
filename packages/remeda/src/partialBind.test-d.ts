@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types, unicorn/consistent-function-scoping */
+import { describe, expectTypeOf, test } from "vitest";
 import { partialBind } from "./partialBind";
 
 describe("simple case (all required, no rest params)", () => {
@@ -177,7 +178,7 @@ describe("optional and rest param case", () => {
   });
 });
 
-describe("KNOWN ISSUES", () => {
+describe("known issues!", () => {
   test("does not support readonly rest params", () => {
     const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
 

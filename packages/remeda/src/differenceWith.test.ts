@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { differenceWith } from "./differenceWith";
 import { isDeepEqual } from "./isDeepEqual";
