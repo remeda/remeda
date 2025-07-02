@@ -56,7 +56,7 @@
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.2",
-    "marked": "^15.0.12",
+    "marked": "^16.0.0",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-pkg": "^0.21.1",
