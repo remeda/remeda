@@ -17,13 +17,7 @@ export type IsBounded<T> =
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
   (
     T extends unknown
-      ? Or<
-          // String literals can still be unbounded when they are a template
-          // literal containing an unbounded (non-literal) type, otherwise
-          // literals are bounded because they are a finite set of values.
-          IsBoundedString<T>,
-          Or<IsNumericLiteral<T>, IsSymbolLiteral<T>>
-        >
+      ? Or<IsBoundedString<T>, Or<IsNumericLiteral<T>, IsSymbolLiteral<T>>>
       : never
   ) extends true
     ? // When some parts of the union result in `true` and others in `false`
@@ -36,11 +30,9 @@ export type IsBounded<T> =
     : false;
 
 /**
- * Checks if a type is a bounded string: a type that only has a finite
- * number of strings that are that type.
- *
- * Most relevant for template literals: IsBoundedString<`${1 | 2}_${3 | 4}`> is
- * true, and IsBoundedString<`${1 | 2}_${number}`> is false.
+ * Literal strings can be unbounded when they are a template literal which
+ * contains non-literal components (e.g. `prefix_${string}`), this is because
+ * there are an infinite number of possible values that satisfy it.
  */
 type IsBoundedString<T> = T extends string
   ? IsStringLiteral<T> extends true
