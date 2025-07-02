@@ -42,7 +42,7 @@
     "@types/eslint": "^9.6.1",
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.15.29",
+    "@types/node": "^24.0.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "dompurify": "^3.2.6",
