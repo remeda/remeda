@@ -2,7 +2,7 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { funnel } from "./funnel";
 
@@ -97,7 +97,7 @@ function debounce<F extends (...args: any) => void>(
 const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () => {
-  it("should debounce a function", async () => {
+  test("should debounce a function", async () => {
     const mockFn = vi.fn<(x: string) => void>();
     const debounced = debounce(mockFn, UT);
     debounced("a");
@@ -122,7 +122,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should not immediately call `func` when `wait` is `0`", async () => {
+  test("should not immediately call `func` when `wait` is `0`", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, 0);
     debounced();
@@ -135,7 +135,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should apply default options", async () => {
+  test("should apply default options", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, {});
     debounced();
@@ -147,7 +147,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should support a `leading` option", async () => {
+  test("should support a `leading` option", async () => {
     const mockWithLeading = vi.fn<() => void>();
     const mockWithLeadingAndTrailing = vi.fn<() => void>();
     const withLeading = debounce(mockWithLeading, UT, {
@@ -180,7 +180,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockWithLeading).toHaveBeenCalledTimes(2);
   });
 
-  it("should support a `trailing` option", async () => {
+  test("should support a `trailing` option", async () => {
     const mockWith = vi.fn<() => void>();
     const mockWithout = vi.fn<() => void>();
     const withTrailing = debounce(mockWith, UT, { trailing: true });
@@ -203,7 +203,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockWithout).toHaveBeenCalledTimes(0);
   });
 
-  it("should support a `maxWait` option", async () => {
+  test("should support a `maxWait` option", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
@@ -225,7 +225,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should support `maxWait` in a tight loop", async () => {
+  test("should support `maxWait` in a tight loop", async () => {
     const mockWith = vi.fn<() => void>();
     const mockWithout = vi.fn<() => void>();
     const withMaxWait = debounce(mockWith, 2 * UT, { maxWait: 4 * UT });
@@ -256,7 +256,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockWith).toHaveBeenCalledTimes(1);
   });
 
-  it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
+  test("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, 6 * UT, { maxWait: 6 * UT });
     debounced();
@@ -271,7 +271,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
+  test("should cancel `maxDelayed` when `delayed` is invoked", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { maxWait: 2 * UT });
     debounced();
@@ -285,7 +285,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+  test("should invoke the trailing call with the correct arguments and `this` binding", async () => {
     const mockFn = vi.fn<(a: object, b: string) => void>();
     const DATA = {};
     const debounced = debounce(mockFn, UT, {
@@ -305,7 +305,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 });
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
-  it("should use a default `wait` of `0`", async () => {
+  test("should use a default `wait` of `0`", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn);
     debounced();
@@ -315,7 +315,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("supports recursive calls", async () => {
+  test("supports recursive calls", async () => {
     const actual = [] as Array<string>;
     const queue = ["a", "b", "c"];
     const debounced = debounce((chr: string) => {
@@ -334,7 +334,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(actual).toStrictEqual(["a", "b", "c"]);
   });
 
-  it("should support cancelling delayed calls", async () => {
+  test("should support cancelling delayed calls", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: false });
     debounced();
@@ -344,7 +344,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 
-  it("should reset `lastCalled` after cancelling", async () => {
+  test("should reset `lastCalled` after cancelling", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: true });
     debounced();
@@ -362,7 +362,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(3);
   });
 
-  it("should support flushing delayed calls", async () => {
+  test("should support flushing delayed calls", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT, { leading: false });
     debounced();
@@ -375,7 +375,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+  test("should noop `cancel` and `flush` when nothing is queued", async () => {
     const mockFn = vi.fn<() => void>();
     const debounced = debounce(mockFn, UT);
     debounced.cancel();

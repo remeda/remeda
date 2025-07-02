@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { keys } from "./keys";
 import { pick } from "./pick";
 import { pipe } from "./pipe";
@@ -18,7 +18,7 @@ describe("data first", () => {
     >();
   });
 
-  it("infers the key types from the keys array (issue #886)", () => {
+  test("infers the key types from the keys array (issue #886)", () => {
     const data = { foo: "hello", bar: "world" };
 
     const raw = pick(data, ["foo"]);
@@ -34,7 +34,7 @@ describe("data first", () => {
     expectTypeOf(withConstKeys).toEqualTypeOf<Array<"foo">>();
   });
 
-  it("handles optional keys (issue #911)", () => {
+  test("handles optional keys (issue #911)", () => {
     const data = { foo: "hello", bar: "world" } as const;
     const result = pick(data, [] as Array<keyof typeof data>);
 

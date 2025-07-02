@@ -2,7 +2,7 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
@@ -110,7 +110,7 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
 const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () => {
-  it("should debounce a function", async () => {
+  test("should debounce a function", async () => {
     const mockFn = vi.fn<(x: string) => string>(identity());
     const debounced = debounceWithCachedValue(mockFn, UT);
 
@@ -132,7 +132,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("subsequent debounced calls return the last `func` result", async () => {
+  test("subsequent debounced calls return the last `func` result", async () => {
     const debounced = debounceWithCachedValue(identity(), UT);
     debounced("a");
     await sleep(2 * UT);
@@ -144,7 +144,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(debounced("c")).not.toBe("c");
   });
 
-  it("subsequent leading debounced calls return the last `func` result", async () => {
+  test("subsequent leading debounced calls return the last `func` result", async () => {
     const debounced = debounceWithCachedValue(identity(), UT, {
       leading: true,
       trailing: false,
@@ -159,7 +159,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
     expect(debounced("d")).toBe("c");
   });
 
-  it("should invoke the trailing call with the correct arguments and `this` binding", async () => {
+  test("should invoke the trailing call with the correct arguments and `this` binding", async () => {
     const DATA = {};
     const mockFn = vi.fn<(a: object, b: string) => boolean>(constant(false));
 
@@ -185,7 +185,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 });
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
-  it("should reset `lastCalled` after cancelling", async () => {
+  test("should reset `lastCalled` after cancelling", async () => {
     let callCount = 0;
     const debounced = debounceWithCachedValue(
       () => {
@@ -208,7 +208,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(callCount).toBe(3);
   });
 
-  it("should support flushing delayed calls", async () => {
+  test("should support flushing delayed calls", async () => {
     let callCount = 0;
     const debounced = debounceWithCachedValue(
       () => {
@@ -227,7 +227,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(callCount).toBe(1);
   });
 
-  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+  test("should noop `cancel` and `flush` when nothing is queued", async () => {
     const mockFn = vi.fn<() => string>(constant("hello"));
     const debounced = debounceWithCachedValue(mockFn, UT);
     debounced.cancel();
@@ -241,7 +241,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
 });
 
 describe("Features not tested by Lodash", () => {
-  it("does nothing when neither leading nor trailing are enabled", async () => {
+  test("does nothing when neither leading nor trailing are enabled", async () => {
     const debounced = debounceWithCachedValue(identity(), UT, {
       leading: false,
       trailing: false,

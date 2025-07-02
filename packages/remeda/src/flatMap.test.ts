@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { add } from "./add";
 import { find } from "./find";
@@ -6,13 +6,13 @@ import { flatMap } from "./flatMap";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
-  it("flatMap", () => {
+  test("flatMap", () => {
     const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3]);
 
     expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
-  it("should accept fn returning a readonly array", () => {
+  test("should accept fn returning a readonly array", () => {
     const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3] as const);
 
     expect(result).toStrictEqual([2, 3, 4, 6]);
@@ -20,13 +20,13 @@ describe("dataFirst", () => {
 });
 
 describe("dataLast", () => {
-  it("flatMap", () => {
+  test("flatMap", () => {
     const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
 
     expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
-  it("should accept fn returning a readonly array", () => {
+  test("should accept fn returning a readonly array", () => {
     const result = flatMap((x: number) => [x * 2, x * 3] as const)([
       1, 2,
     ] as const);
@@ -34,7 +34,7 @@ describe("dataLast", () => {
     expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
-  it("works with non array outputs", () => {
+  test("works with non array outputs", () => {
     expect(pipe([1, 2, 3], flatMap(add(1)))).toStrictEqual([2, 3, 4]);
   });
 

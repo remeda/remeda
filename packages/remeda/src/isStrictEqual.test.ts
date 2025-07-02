@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { isStrictEqual } from "./isStrictEqual";
 
 describe("primitives", () => {
@@ -104,7 +104,7 @@ describe("special cases", () => {
     expect(isStrictEqual(0, 0)).toBe(true);
   });
 
-  it("fails on loose equality", () => {
+  test("fails on loose equality", () => {
     expect(isStrictEqual("" as unknown, 0)).toBe(false);
     expect(isStrictEqual("" as unknown, false)).toBe(false);
     expect(isStrictEqual(0 as unknown, false)).toBe(false);

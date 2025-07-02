@@ -2,7 +2,7 @@
  * These aren't useful for a reference implementation!
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
@@ -110,7 +110,7 @@ function debounce<F extends (...args: any) => any>(
 }
 
 describe("main functionality", () => {
-  it("should debounce a function", async () => {
+  test("should debounce a function", async () => {
     const mockFn = vi.fn<(x: string) => string>(identity());
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
@@ -136,7 +136,7 @@ describe("main functionality", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("subsequent debounced calls return the last `func` result", async () => {
+  test("subsequent debounced calls return the last `func` result", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
     debouncer.call("a");
     await sleep(64);
@@ -148,7 +148,7 @@ describe("main functionality", () => {
     expect(debouncer.call("c")).toBe("b");
   });
 
-  it("should not immediately call `func` when `wait` is `0`", async () => {
+  test("should not immediately call `func` when `wait` is `0`", async () => {
     const mockFn = vi.fn<() => void>();
     const debouncer = debounce(mockFn, {});
     debouncer.call();
@@ -161,7 +161,7 @@ describe("main functionality", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should apply default options", async () => {
+  test("should apply default options", async () => {
     const mockFn = vi.fn<() => void>();
     const debouncer = debounce(mockFn, { waitMs: 32 });
     debouncer.call();
@@ -173,7 +173,7 @@ describe("main functionality", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should support a `leading` option", async () => {
+  test("should support a `leading` option", async () => {
     const leadingMockFn = vi.fn<() => void>();
     const bothMockFn = vi.fn<() => void>();
     const withLeading = debounce(leadingMockFn, {
@@ -202,7 +202,7 @@ describe("main functionality", () => {
     expect(leadingMockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("subsequent leading debounced calls return the last `func` result", async () => {
+  test("subsequent leading debounced calls return the last `func` result", async () => {
     const debouncer = debounce(identity(), { waitMs: 32, timing: "leading" });
 
     expect([debouncer.call("a"), debouncer.call("b")]).toStrictEqual([
@@ -218,7 +218,7 @@ describe("main functionality", () => {
     ]);
   });
 
-  it("should support a `trailing` option", async () => {
+  test("should support a `trailing` option", async () => {
     const mockFn = vi.fn<() => void>();
     const withTrailing = debounce(mockFn, { waitMs: 32, timing: "trailing" });
     withTrailing.call();
@@ -232,7 +232,7 @@ describe("main functionality", () => {
 });
 
 describe("optional param maxWaitMs", () => {
-  it("should support a `maxWait` option", async () => {
+  test("should support a `maxWait` option", async () => {
     const mockFn = vi.fn<(x: string) => void>();
     const debouncer = debounce(mockFn, { waitMs: 32, maxWaitMs: 64 });
     debouncer.call("a");
@@ -254,7 +254,7 @@ describe("optional param maxWaitMs", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should support `maxWait` in a tight loop", async () => {
+  test("should support `maxWait` in a tight loop", async () => {
     const withMockFn = vi.fn<() => void>();
     const withoutMockFn = vi.fn<() => void>();
     const withMaxWait = debounce(withMockFn, { waitMs: 32, maxWaitMs: 128 });
@@ -270,7 +270,7 @@ describe("optional param maxWaitMs", () => {
     expect(withMockFn).not.toHaveBeenCalledTimes(0);
   });
 
-  it("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
+  test("should queue a trailing call for subsequent debounced calls after `maxWait`", async () => {
     const mockFn = vi.fn<() => void>();
     const debouncer = debounce(mockFn, { waitMs: 200, maxWaitMs: 200 });
     debouncer.call();
@@ -288,7 +288,7 @@ describe("optional param maxWaitMs", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should cancel `maxDelayed` when `delayed` is invoked", async () => {
+  test("should cancel `maxDelayed` when `delayed` is invoked", async () => {
     const mockFn = vi.fn<() => void>();
     const debouncer = debounce(mockFn, { waitMs: 32, maxWaitMs: 64 });
     debouncer.call();
@@ -302,7 +302,7 @@ describe("optional param maxWaitMs", () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("works like a leaky bucket when only maxWaitMs is set", async () => {
+  test("works like a leaky bucket when only maxWaitMs is set", async () => {
     const mockFn = vi.fn<() => void>();
     const debouncer = debounce(mockFn, { maxWaitMs: 32 });
     debouncer.call();
@@ -323,7 +323,7 @@ describe("optional param maxWaitMs", () => {
 });
 
 describe("additional functionality", () => {
-  it("can cancel before the timer starts", async () => {
+  test("can cancel before the timer starts", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(() => {
@@ -336,7 +336,7 @@ describe("additional functionality", () => {
     expect(debouncer.call("world")).toBe("hello");
   });
 
-  it("can cancel the timer", async () => {
+  test("can cancel the timer", async () => {
     const mockFn = vi.fn<() => string>(constant("Hello, World!"));
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
@@ -360,7 +360,7 @@ describe("additional functionality", () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("can cancel after the timer ends", async () => {
+  test("can cancel after the timer ends", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(debouncer.call("hello")).toBeUndefined();
@@ -373,7 +373,7 @@ describe("additional functionality", () => {
     }).not.toThrow();
   });
 
-  it("can cancel maxWait timer", async () => {
+  test("can cancel maxWait timer", async () => {
     const debouncer = debounce(identity(), { waitMs: 16, maxWaitMs: 32 });
 
     expect(debouncer.call("hello")).toBeUndefined();
@@ -385,7 +385,7 @@ describe("additional functionality", () => {
     expect(debouncer.call("world")).toBeUndefined();
   });
 
-  it("can return a cached value", () => {
+  test("can return a cached value", () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
 
     expect(debouncer.cachedValue).toBeUndefined();
@@ -393,7 +393,7 @@ describe("additional functionality", () => {
     expect(debouncer.cachedValue).toBe("hello");
   });
 
-  it("can check for inflight timers (trailing)", async () => {
+  test("can check for inflight timers (trailing)", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(debouncer.isPending).toBe(false);
@@ -409,7 +409,7 @@ describe("additional functionality", () => {
     expect(debouncer.isPending).toBe(false);
   });
 
-  it("can check for inflight timers (leading)", async () => {
+  test("can check for inflight timers (leading)", async () => {
     const debouncer = debounce(identity(), { timing: "leading", waitMs: 32 });
 
     expect(debouncer.isPending).toBe(false);
@@ -425,7 +425,7 @@ describe("additional functionality", () => {
     expect(debouncer.isPending).toBe(false);
   });
 
-  it("can flush before a cool-down", async () => {
+  test("can flush before a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(debouncer.flush()).toBeUndefined();
@@ -436,7 +436,7 @@ describe("additional functionality", () => {
     expect(debouncer.call("world")).toBe("hello");
   });
 
-  it("can flush during a cool-down", async () => {
+  test("can flush during a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(debouncer.call("hello")).toBeUndefined();
@@ -450,7 +450,7 @@ describe("additional functionality", () => {
     expect(debouncer.flush()).toBe("world");
   });
 
-  it("can flush after a cool-down", async () => {
+  test("can flush after a cool-down", async () => {
     const debouncer = debounce(identity(), { waitMs: 32 });
 
     expect(debouncer.call("hello")).toBeUndefined();
@@ -462,7 +462,7 @@ describe("additional functionality", () => {
 });
 
 describe("errors", () => {
-  it("prevents maxWaitMs to be less then waitMs", () => {
+  test("prevents maxWaitMs to be less then waitMs", () => {
     expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrow(
       "debounce: maxWaitMs (16) cannot be less than waitMs (32)",
     );

@@ -1,34 +1,34 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { dropFirstBy } from "./dropFirstBy";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
-  it("works", () => {
+  test("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(dropFirstBy(data, 2, identity())).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
-  it("handles empty arrays gracefully", () => {
+  test("handles empty arrays gracefully", () => {
     const data: Array<number> = [];
 
     expect(dropFirstBy(data, 1, identity())).toHaveLength(0);
   });
 
-  it("handles negative numbers gracefully", () => {
+  test("handles negative numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(dropFirstBy(data, -3, identity())).toHaveLength(data.length);
   });
 
-  it("handles overflowing numbers gracefully", () => {
+  test("handles overflowing numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(dropFirstBy(data, 100, identity())).toHaveLength(0);
   });
 
-  it("clones the input when needed", () => {
+  test("clones the input when needed", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
     const result = dropFirstBy(data, 0, identity());
 
@@ -36,7 +36,7 @@ describe("runtime (dataFirst)", () => {
     expect(result).toStrictEqual(data);
   });
 
-  it("works with complex compare rules", () => {
+  test("works with complex compare rules", () => {
     const data = [
       "a",
       "aaa",
@@ -63,7 +63,7 @@ describe("runtime (dataFirst)", () => {
 });
 
 describe("runtime (dataLast)", () => {
-  it("works", () => {
+  test("works", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(
@@ -74,7 +74,7 @@ describe("runtime (dataLast)", () => {
     ).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
-  it("handles empty arrays gracefully", () => {
+  test("handles empty arrays gracefully", () => {
     const data: Array<number> = [];
 
     expect(
@@ -85,7 +85,7 @@ describe("runtime (dataLast)", () => {
     ).toHaveLength(0);
   });
 
-  it("handles negative numbers gracefully", () => {
+  test("handles negative numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(
@@ -96,7 +96,7 @@ describe("runtime (dataLast)", () => {
     ).toHaveLength(data.length);
   });
 
-  it("handles overflowing numbers gracefully", () => {
+  test("handles overflowing numbers gracefully", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(
@@ -107,7 +107,7 @@ describe("runtime (dataLast)", () => {
     ).toHaveLength(0);
   });
 
-  it("clones the data when needed", () => {
+  test("clones the data when needed", () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
     const result = pipe(
       data,
@@ -118,7 +118,7 @@ describe("runtime (dataLast)", () => {
     expect(result).toStrictEqual(data);
   });
 
-  it("works with complex compare rules", () => {
+  test("works with complex compare rules", () => {
     const data = [
       "a",
       "aaa",

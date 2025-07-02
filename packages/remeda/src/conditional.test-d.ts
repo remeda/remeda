@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { conditional } from "./conditional";
 import { constant } from "./constant";
 import { firstBy } from "./firstBy";
@@ -10,7 +10,7 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 
 describe("data-first", () => {
-  it("narrows types in the transformers", () => {
+  test("narrows types in the transformers", () => {
     const data = 3 as number | string;
 
     conditional(
@@ -49,7 +49,7 @@ describe("data-first", () => {
   });
 
   // https://github.com/remeda/remeda/issues/675
-  it("narrows types when using `isNullish`/`isNonNullish` with complex data", () => {
+  test("narrows types when using `isNullish`/`isNonNullish` with complex data", () => {
     const data = firstBy(
       [{ x: 10 }, { x: 20 }] as Array<{ x: number }>,
       prop("x"),
@@ -74,7 +74,7 @@ describe("data-first", () => {
     );
   });
 
-  it("passes the trivial defaultCase's type to the output", () => {
+  test("passes the trivial defaultCase's type to the output", () => {
     expectTypeOf(
       conditional(
         "Jokic",
@@ -93,7 +93,7 @@ describe("data-first", () => {
     ).toEqualTypeOf<"hello" | undefined>();
   });
 
-  it("passes the defaultCase's type to the output", () => {
+  test("passes the defaultCase's type to the output", () => {
     expectTypeOf(
       conditional(
         "Jokic",
@@ -114,7 +114,7 @@ describe("data-first", () => {
 });
 
 describe("data-last", () => {
-  it("narrows types in the transformers", () => {
+  test("narrows types in the transformers", () => {
     const data = 3 as number | string;
 
     pipe(
@@ -155,7 +155,7 @@ describe("data-last", () => {
   });
 
   // https://github.com/remeda/remeda/issues/675
-  it("narrows types when using `isNullish`/`isNonNullish` with complex data", () => {
+  test("narrows types when using `isNullish`/`isNonNullish` with complex data", () => {
     pipe(
       [{ x: 10 }, { x: 20 }],
       firstBy(prop("x")),
@@ -178,7 +178,7 @@ describe("data-last", () => {
     );
   });
 
-  it("passes the trivial defaultCase's type to the output", () => {
+  test("passes the trivial defaultCase's type to the output", () => {
     expectTypeOf(
       pipe(
         "Jokic",
@@ -198,7 +198,7 @@ describe("data-last", () => {
     ).toEqualTypeOf<"hello" | undefined>();
   });
 
-  it("passes the defaultCase's type to the output", () => {
+  test("passes the defaultCase's type to the output", () => {
     expectTypeOf(
       pipe(
         "Jokic",

@@ -2,7 +2,7 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { funnel } from "./funnel";
 
@@ -91,7 +91,7 @@ function throttle<F extends (...args: any) => void>(
 const UT = 16;
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", () => {
-  it("should throttle a function", async () => {
+  test("should throttle a function", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
@@ -106,7 +106,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn.mock.calls.length).toBeGreaterThan(callCount);
   });
 
-  it("should clear timeout when `func` is called", async () => {
+  test("should clear timeout when `func` is called", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
@@ -120,7 +120,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should not trigger a trailing call when invoked once", async () => {
+  test("should not trigger a trailing call when invoked once", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
@@ -132,7 +132,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should trigger a call when invoked repeatedly", () => {
+  test("should trigger a call when invoked repeatedly", () => {
     const mockFn = vi.fn<() => void>();
 
     const throttled = throttle(mockFn, UT);
@@ -145,7 +145,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledWith();
   });
 
-  it("should trigger a call when invoked repeatedly and `leading` is `false`", async () => {
+  test("should trigger a call when invoked repeatedly and `leading` is `false`", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     const end = Date.now() + 10 * UT;
@@ -158,7 +158,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledWith();
   });
 
-  it("should trigger a second throttled call as soon as possible", async () => {
+  test("should trigger a second throttled call as soon as possible", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, 4 * UT, { leading: false });
     throttled();
@@ -176,7 +176,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should apply default options", async () => {
+  test("should apply default options", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, {});
     throttled();
@@ -189,7 +189,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("should support a `leading` option", () => {
+  test("should support a `leading` option", () => {
     const mockWith = vi.fn<() => void>();
     const mockWithout = vi.fn<() => void>();
     const withLeading = throttle(mockWith, UT, { leading: true });
@@ -202,7 +202,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockWithout).toHaveBeenCalledTimes(0);
   });
 
-  it("should support a `trailing` option", async () => {
+  test("should support a `trailing` option", async () => {
     const mockWith = vi.fn<(x: string) => void>();
     const mockWithout = vi.fn<(x: string) => void>();
     const withTrailing = throttle(mockWith, 2 * UT, { trailing: true });
@@ -223,7 +223,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     expect(mockWithout).toHaveBeenCalledTimes(1);
   });
 
-  it("should not update `lastCalled`, at the end of the timeout, when `trailing` is `false`", async () => {
+  test("should not update `lastCalled`, at the end of the timeout, when `trailing` is `false`", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, 64, { trailing: false });
     throttled();
@@ -238,7 +238,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
 });
 
 describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", () => {
-  it("should use a default `wait` of `0`", async () => {
+  test("should use a default `wait` of `0`", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn);
     throttled();
@@ -248,7 +248,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  it("supports recursive calls", async () => {
+  test("supports recursive calls", async () => {
     const actual = [] as Array<string>;
     const queue = ["a", "b", "c"];
     const throttled = throttle((chr: string) => {
@@ -267,7 +267,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(actual).toStrictEqual(["a", "b", "c"]);
   });
 
-  it("should support cancelling delayed calls", async () => {
+  test("should support cancelling delayed calls", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     throttled();
@@ -277,7 +277,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 
-  it("should reset `lastCalled` after cancelling", async () => {
+  test("should reset `lastCalled` after cancelling", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: true });
     throttled();
@@ -295,7 +295,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(3);
   });
 
-  it("should support flushing delayed calls", async () => {
+  test("should support flushing delayed calls", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     throttled();
@@ -308,7 +308,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it("should noop `cancel` and `flush` when nothing is queued", async () => {
+  test("should noop `cancel` and `flush` when nothing is queued", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled.cancel();
@@ -323,7 +323,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
 });
 
 describe("Not tested by Lodash", () => {
-  it("should do nothing when `leading` and `trailing` are both `disabled`", async () => {
+  test("should do nothing when `leading` and `trailing` are both `disabled`", async () => {
     const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false, trailing: false });
     throttled();

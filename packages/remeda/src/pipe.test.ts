@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { flat } from "./flat";
 import { identity } from "./identity";
@@ -7,19 +7,19 @@ import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { take } from "./take";
 
-it("should pass through data with 0 functions", () => {
+test("should pass through data with 0 functions", () => {
   const data = { a: "hello", b: 123 };
 
   expect(pipe(data)).toBe(data);
 });
 
-it("should pipe a single operation", () => {
+test("should pipe a single operation", () => {
   const result = pipe(1, (x) => x * 2);
 
   expect(result).toBe(2);
 });
 
-it("should pipe operations", () => {
+test("should pipe operations", () => {
   const result = pipe(
     1,
     (x) => x * 2,
@@ -30,7 +30,7 @@ it("should pipe operations", () => {
 });
 
 describe("lazy", () => {
-  it("lazy map + take", () => {
+  test("lazy map + take", () => {
     const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
@@ -45,7 +45,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([10, 20]);
   });
 
-  it("lazy map + filter + take", () => {
+  test("lazy map + filter + take", () => {
     const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3, 4, 5],
@@ -61,7 +61,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([10, 30]);
   });
 
-  it("lazy after 1st op", () => {
+  test("lazy after 1st op", () => {
     const count = vi.fn<() => void>();
     const result = pipe(
       { inner: [1, 2, 3] },
@@ -77,7 +77,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([10, 20]);
   });
 
-  it("break lazy", () => {
+  test("break lazy", () => {
     const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
@@ -93,7 +93,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([10, 20]);
   });
 
-  it("multiple take", () => {
+  test("multiple take", () => {
     const count = vi.fn<() => void>();
     const result = pipe(
       [1, 2, 3],
@@ -109,7 +109,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([10]);
   });
 
-  it("multiple lazy", () => {
+  test("multiple lazy", () => {
     const count = vi.fn<() => void>();
     const count2 = vi.fn<() => void>();
     const result = pipe(
@@ -132,7 +132,7 @@ describe("lazy", () => {
     expect(result).toStrictEqual([100, 200]);
   });
 
-  it("lazy early exit with hasMany", () => {
+  test("lazy early exit with hasMany", () => {
     const result = pipe(
       [
         [1, 2],

@@ -1,7 +1,7 @@
-import { expectTypeOf, it } from "vitest";
+import { expectTypeOf, test } from "vitest";
 import type { DisjointUnionFields } from "./DisjointUnionFields";
 
-it("should have the complement of SharedUnionFields", () => {
+test("should have the complement of SharedUnionFields", () => {
   expectTypeOf<
     DisjointUnionFields<
       | { a: string; b: string; c: string }

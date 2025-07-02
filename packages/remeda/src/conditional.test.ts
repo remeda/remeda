@@ -1,11 +1,11 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { conditional } from "./conditional";
 import { constant } from "./constant";
 import { isDeepEqual } from "./isDeepEqual";
 import { pipe } from "./pipe";
 
 describe("runtime (dataFirst)", () => {
-  it("accepts and runs a default/fallback case", () => {
+  test("accepts and runs a default/fallback case", () => {
     expect(
       conditional(
         "Jokic",
@@ -23,7 +23,7 @@ describe("runtime (dataFirst)", () => {
     ).toBeUndefined();
   });
 
-  it("falls back to our default", () => {
+  test("falls back to our default", () => {
     expect(
       conditional(
         "Jokic",
@@ -41,13 +41,13 @@ describe("runtime (dataFirst)", () => {
     ).toBe("hello");
   });
 
-  it("works with a single case", () => {
+  test("works with a single case", () => {
     expect(conditional("Jokic", [isDeepEqual("Jokic"), () => "center"])).toBe(
       "center",
     );
   });
 
-  it("works with two cases", () => {
+  test("works with two cases", () => {
     expect(
       conditional(
         "Jokic",
@@ -57,7 +57,7 @@ describe("runtime (dataFirst)", () => {
     ).toBe("center");
   });
 
-  it("picks the first matching case", () => {
+  test("picks the first matching case", () => {
     expect(
       conditional(
         "Jokic",
@@ -67,7 +67,7 @@ describe("runtime (dataFirst)", () => {
     ).toBe("center");
   });
 
-  it("throws when no matching case", () => {
+  test("throws when no matching case", () => {
     expect(() =>
       conditional("Jokic", [() => false, () => "world"]),
     ).toThrowErrorMatchingInlineSnapshot(

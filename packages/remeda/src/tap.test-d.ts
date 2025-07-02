@@ -1,11 +1,11 @@
-import { expectTypeOf, it } from "vitest";
+import { expectTypeOf, test } from "vitest";
 import { filter } from "./filter";
 import { map } from "./map";
 import { multiply } from "./multiply";
 import { pipe } from "./pipe";
 import { tap } from "./tap";
 
-it("should work in the middle of pipe sequence", () => {
+test("should work in the middle of pipe sequence", () => {
   pipe(
     [-1, 2],
     filter((n) => n > 0),
@@ -16,7 +16,7 @@ it("should work in the middle of pipe sequence", () => {
   );
 });
 
-it("should infer types after tapping function reference with parameter type any", () => {
+test("should infer types after tapping function reference with parameter type any", () => {
   pipe(
     [-1, 2],
     filter((n) => n > 0),

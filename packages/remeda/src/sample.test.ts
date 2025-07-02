@@ -1,11 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 import { sample } from "./sample";
 import { times } from "./times";
 import { unique } from "./unique";
 
 describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
-  it.each(allIndices(array))(
+  test.each(allIndices(array))(
     "returns the right number of items",
     (sampleSize) => {
       const result = sample(array, sampleSize);
@@ -14,7 +14,7 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     },
   );
 
-  it.each(allIndices(array))(
+  test.each(allIndices(array))(
     "doesn't make items up (returns a subset of the input array)",
     (sampleSize) => {
       const result = sample(array, sampleSize);
@@ -25,7 +25,7 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     },
   );
 
-  it("returns a random result", () => {
+  test("returns a random result", () => {
     const collector = new Set<number>();
     // We iterate because we might hit randomly on the same item several
     // times. We took a large enough number so that it's unlikely to happen
@@ -41,13 +41,13 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
     expect(collector.size).toBeGreaterThan(1);
   });
 
-  it.each(allIndices(array))("doesn't return repetitions", (sampleSize) => {
+  test.each(allIndices(array))("doesn't return repetitions", (sampleSize) => {
     const result = sample(array, sampleSize);
 
     expect(result).toHaveLength(new Set(result).size);
   });
 
-  it.each(allIndices(array))("doesn't reorder items", (sampleSize) => {
+  test.each(allIndices(array))("doesn't reorder items", (sampleSize) => {
     const result = sample(array, sampleSize);
 
     let lastInputIndex = -1; // outside of the array
@@ -65,7 +65,7 @@ describe.each([[generateRandomArray()]])("mathy stuff", (array) => {
 });
 
 describe("identity", () => {
-  it("for full (=== n) sample size", () => {
+  test("for full (=== n) sample size", () => {
     const array = [1, 2, 3];
     const result = sample(array, 3);
 
@@ -73,7 +73,7 @@ describe("identity", () => {
     expect(result).not.toBe(array);
   });
 
-  it("for large (> n) sample sizes", () => {
+  test("for large (> n) sample sizes", () => {
     const array = [1, 2, 3];
     const result = sample(array, 10);
 
@@ -81,7 +81,7 @@ describe("identity", () => {
     expect(result).not.toBe(array);
   });
 
-  it("on empty arrays", () => {
+  test("on empty arrays", () => {
     const array: Array<number> = [];
     const result = sample(array, 1);
 
@@ -89,7 +89,7 @@ describe("identity", () => {
     expect(result).not.toBe(array);
   });
 
-  it("on empty arrays and sample size 0", () => {
+  test("on empty arrays and sample size 0", () => {
     const array: Array<number> = [];
     const result = sample(array, 0);
 
@@ -99,30 +99,30 @@ describe("identity", () => {
 });
 
 describe("edge cases", () => {
-  it("works on empty arrays", () => {
+  test("works on empty arrays", () => {
     const result = sample([], 1);
 
     expect(result).toStrictEqual([]);
   });
 
-  it("treats negative sample sizes as 0", () => {
+  test("treats negative sample sizes as 0", () => {
     expect(sample([1, 2, 3], -1 as number)).toStrictEqual([]);
   });
 
-  it("rounds non-integer sample sizes", () => {
+  test("rounds non-integer sample sizes", () => {
     expect(sample([1, 2, 3], 0.5)).toHaveLength(1);
   });
 });
 
 describe("sampleSize === n", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 0);
 
     expect(result).toStrictEqual([]);
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 0);
 
@@ -131,14 +131,14 @@ describe("sampleSize === n", () => {
 });
 
 describe("sampleSize > n", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 10);
 
     expect(result).toStrictEqual([]);
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 10);
 
@@ -147,14 +147,14 @@ describe("sampleSize > n", () => {
 });
 
 describe("non-const sampleSize", () => {
-  it("empty array", () => {
+  test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
 
     expect(result).toStrictEqual([]);
   });
 
-  it("empty readonly array", () => {
+  test("empty readonly array", () => {
     const array: readonly [] = [];
     const result = sample(array, 5 as number);
 

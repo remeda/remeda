@@ -1,4 +1,4 @@
-import { describe, expect, it, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter.js";
 import { find } from "./find";
 import { flat } from "./flat";
@@ -7,37 +7,37 @@ import { map } from "./map";
 import { pipe } from "./pipe";
 
 describe("dataFirst", () => {
-  it("works on empty arrays", () => {
+  test("works on empty arrays", () => {
     expect(flat([], 1)).toStrictEqual([]);
   });
 
-  it("works on flat arrays", () => {
+  test("works on flat arrays", () => {
     expect(flat([1, 2, 3], 1)).toStrictEqual([1, 2, 3]);
   });
 
-  it("flattens shallow nested arrays", () => {
+  test("flattens shallow nested arrays", () => {
     expect(flat([[1, 2], [3, 4], [5], [6]], 1)).toStrictEqual([
       1, 2, 3, 4, 5, 6,
     ]);
   });
 
-  it("stops at the given depth", () => {
+  test("stops at the given depth", () => {
     expect(flat([[[[[[[[[1]]]]]]]]], 3)).toStrictEqual([[[[[[1]]]]]]);
   });
 
-  it("works with deeper depth", () => {
+  test("works with deeper depth", () => {
     expect(flat([1], 10)).toStrictEqual([1]);
   });
 
-  it("handles optional depth as if it was 1", () => {
+  test("handles optional depth as if it was 1", () => {
     expect(flat([1, [2, 3], [[4]]])).toStrictEqual([1, 2, 3, [4]]);
   });
 
-  it("handles objects", () => {
+  test("handles objects", () => {
     expect(flat([{ a: 1 }, [{ b: 3 }]], 1)).toStrictEqual([{ a: 1 }, { b: 3 }]);
   });
 
-  it("clones the array on depth 0", () => {
+  test("clones the array on depth 0", () => {
     const data = [1, 2, 3];
     const result = flat(data, 0);
 
@@ -45,7 +45,7 @@ describe("dataFirst", () => {
     expect(result).not.toBe(data);
   });
 
-  it("clones the array when no nested items", () => {
+  test("clones the array when no nested items", () => {
     const data = [1, 2, 3];
     const result = flat(data, 1);
 
@@ -55,40 +55,40 @@ describe("dataFirst", () => {
 });
 
 describe("dataLast", () => {
-  it("works on empty arrays", () => {
+  test("works on empty arrays", () => {
     expect(pipe([], flat(1))).toStrictEqual([]);
   });
 
-  it("works on flat arrays", () => {
+  test("works on flat arrays", () => {
     expect(pipe([1, 2, 3], flat(1))).toStrictEqual([1, 2, 3]);
   });
 
-  it("flattens shallow nested arrays", () => {
+  test("flattens shallow nested arrays", () => {
     expect(pipe([[1, 2], [3, 4], [5], [6]], flat(1))).toStrictEqual([
       1, 2, 3, 4, 5, 6,
     ]);
   });
 
-  it("stops at the given depth", () => {
+  test("stops at the given depth", () => {
     expect(pipe([[[[[[[[[1]]]]]]]]], flat(3))).toStrictEqual([[[[[[1]]]]]]);
   });
 
-  it("works with deeper depth", () => {
+  test("works with deeper depth", () => {
     expect(pipe([1], flat(10))).toStrictEqual([1]);
   });
 
-  it("handles optional depth as if it was 1", () => {
+  test("handles optional depth as if it was 1", () => {
     expect(pipe([1, [2, 3], [[4]]], flat())).toStrictEqual([1, 2, 3, [4]]);
   });
 
-  it("handles objects", () => {
+  test("handles objects", () => {
     expect(pipe([{ a: 1 }, [{ b: 3 }]], flat(1))).toStrictEqual([
       { a: 1 },
       { b: 3 },
     ]);
   });
 
-  it("works lazily (shallow)", () => {
+  test("works lazily (shallow)", () => {
     // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
     const beforeMock = vi.fn(identity());
     const afterMock = vi.fn<(x: number) => number>(identity());
@@ -105,7 +105,7 @@ describe("dataLast", () => {
     expect(result).toBe(3);
   });
 
-  it("works lazily (deep)", () => {
+  test("works lazily (deep)", () => {
     // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
     const beforeMock = vi.fn(identity());
     const afterMock = vi.fn<(x: number) => number>(identity());
@@ -122,7 +122,7 @@ describe("dataLast", () => {
     expect(result).toBe(3);
   });
 
-  it("works lazily with trivial depth === 0", () => {
+  test("works lazily with trivial depth === 0", () => {
     const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
     const result = pipe(data, flat(0));
 
@@ -131,7 +131,7 @@ describe("dataLast", () => {
   });
 });
 
-it("can go very very deep", () => {
+test("can go very very deep", () => {
   expect(
     flat([[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]], 99),
   ).toStrictEqual([1]);

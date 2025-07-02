@@ -1,12 +1,12 @@
-import { describe, expectTypeOf, it, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { isIncludedIn } from "./isIncludedIn";
 
-it("throws on bad value types", () => {
+test("throws on bad value types", () => {
   // @ts-expect-error [ts2322] - strings are not numbers
   isIncludedIn(1, ["yes", "no"]);
 });
 
-it("throws on non-overlapping (e.g. typo-proof)", () => {
+test("throws on non-overlapping (e.g. typo-proof)", () => {
   const myEnum = "cat" as "cat" | "dog";
   // @ts-expect-error [ts2322] - "doog" is a typo
   isIncludedIn(myEnum, ["doog"]);

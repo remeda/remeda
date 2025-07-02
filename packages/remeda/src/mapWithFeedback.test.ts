@@ -1,17 +1,17 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { map } from "./map";
 import { mapWithFeedback } from "./mapWithFeedback";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
 describe("data first", () => {
-  it("should return an array of successively accumulated values", () => {
+  test("should return an array of successively accumulated values", () => {
     expect(
       mapWithFeedback([1, 2, 3, 4, 5], (acc, x) => acc + x, 100),
     ).toStrictEqual([101, 103, 106, 110, 115]);
   });
 
-  it("should use the same accumulator on every iteration if it's mutable, therefore returning an array containing {array length} references to the accumulator.", () => {
+  test("should use the same accumulator on every iteration if it's mutable, therefore returning an array containing {array length} references to the accumulator.", () => {
     const results = mapWithFeedback(
       [1, 2, 3, 4, 5],
       (acc, x) => {
@@ -30,7 +30,7 @@ describe("data first", () => {
     }
   });
 
-  it("if an empty array is provided, it should never iterate, returning a new empty array.", () => {
+  test("if an empty array is provided, it should never iterate, returning a new empty array.", () => {
     const data: Array<unknown> = [];
     const result = mapWithFeedback(data, (acc) => acc, "value");
 
@@ -38,7 +38,7 @@ describe("data first", () => {
     expect(result).not.toBe(data);
   });
 
-  it("should track index and provide entire items array", () => {
+  test("should track index and provide entire items array", () => {
     const data = [1, 2, 3, 4, 5];
 
     const mockedReducer = vi.fn<(acc: number, x: number) => number>(
@@ -56,7 +56,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("should return an array of successively accumulated values", () => {
+  test("should return an array of successively accumulated values", () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],
@@ -65,7 +65,7 @@ describe("data last", () => {
     ).toStrictEqual([101, 103, 106, 110, 115]);
   });
 
-  it("evaluates lazily", () => {
+  test("evaluates lazily", () => {
     const counter = vi.fn<(x: number) => number>();
     pipe(
       [1, 2, 3, 4, 5],
@@ -77,7 +77,7 @@ describe("data last", () => {
     expect(counter).toHaveBeenCalledTimes(2);
   });
 
-  it("should track index and progressively include elements from the original array in the items array during each iteration, forming a growing window", () => {
+  test("should track index and progressively include elements from the original array in the items array during each iteration, forming a growing window", () => {
     const lazyItems: Array<Array<number>> = [];
     const indices: Array<number> = [];
     pipe(

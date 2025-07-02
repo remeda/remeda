@@ -1,4 +1,4 @@
-import { expectTypeOf, it, test } from "vitest";
+import { expectTypeOf, test } from "vitest";
 import { merge } from "./merge";
 
 interface FooInterface {
@@ -15,7 +15,7 @@ test("source type overrides destination type", () => {
   }>();
 });
 
-it("works with interfaces", () => {
+test("works with interfaces", () => {
   expectTypeOf(
     merge(
       {} as FooInterface,

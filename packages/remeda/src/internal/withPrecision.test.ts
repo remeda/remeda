@@ -1,8 +1,8 @@
-import { expect, it, vi } from "vitest";
+import { expect, test, vi } from "vitest";
 import { identity } from "../identity";
 import { withPrecision } from "./withPrecision";
 
-it("handles numbers that can only be printed in scientific notation", () => {
+test("handles numbers that can only be printed in scientific notation", () => {
   const mockRoundingFn = vi.fn<(input: number) => number>(identity());
   const roundingFn = withPrecision(mockRoundingFn);
   roundingFn(Number.parseFloat("1.23e+45"), 6);

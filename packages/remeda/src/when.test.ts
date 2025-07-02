@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { constant } from "./constant";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
@@ -11,19 +11,19 @@ import { when } from "./when";
 
 describe("dataFirst", () => {
   describe("without else", () => {
-    it("returns the happy path when true", () => {
+    test("returns the happy path when true", () => {
       expect(when("hello", isStrictEqual("hello"), constant("was true"))).toBe(
         "was true",
       );
     });
 
-    it("returns the identity when false", () => {
+    test("returns the identity when false", () => {
       expect(when("hello", isStrictEqual("olleh"), constant("was true"))).toBe(
         "hello",
       );
     });
 
-    it("passes extra args to the functions", () => {
+    test("passes extra args to the functions", () => {
       expect(
         when(
           "20",
@@ -37,13 +37,13 @@ describe("dataFirst", () => {
   });
 
   describe("with else", () => {
-    it("returns the happy path when true", () => {
+    test("returns the happy path when true", () => {
       expect(when("hello", isStrictEqual("hello"), constant("was true"))).toBe(
         "was true",
       );
     });
 
-    it("returns the else path when false", () => {
+    test("returns the else path when false", () => {
       expect(
         when("hello", isStrictEqual("olleh"), {
           onTrue: constant("was true"),
@@ -52,7 +52,7 @@ describe("dataFirst", () => {
       ).toBe("was false");
     });
 
-    it("passes extra args to the functions", () => {
+    test("passes extra args to the functions", () => {
       expect(
         when(
           123,
@@ -71,19 +71,19 @@ describe("dataFirst", () => {
 
 describe("dataLast", () => {
   describe("without else", () => {
-    it("returns the happy path when true", () => {
+    test("returns the happy path when true", () => {
       expect(
         pipe("hello", when(isStrictEqual("hello"), constant("was true"))),
       ).toBe("was true");
     });
 
-    it("returns the identity when false", () => {
+    test("returns the identity when false", () => {
       expect(
         pipe("hello", when(isStrictEqual("olleh"), constant("was true"))),
       ).toBe("hello");
     });
 
-    it("passes extra args to the functions", () => {
+    test("passes extra args to the functions", () => {
       expect(
         map(
           [1, 2, 3, 4],
@@ -97,13 +97,13 @@ describe("dataLast", () => {
   });
 
   describe("with else", () => {
-    it("returns the happy path when true", () => {
+    test("returns the happy path when true", () => {
       expect(
         pipe("hello", when(isStrictEqual("hello"), constant("was true"))),
       ).toBe("was true");
     });
 
-    it("returns the else path when false", () => {
+    test("returns the else path when false", () => {
       expect(
         pipe(
           "hello",
@@ -116,7 +116,7 @@ describe("dataLast", () => {
     });
   });
 
-  it("passes extra args to the functions", () => {
+  test("passes extra args to the functions", () => {
     expect(
       map(
         [1, 2, 3, 4],
@@ -129,7 +129,7 @@ describe("dataLast", () => {
   });
 });
 
-it("can return other types", () => {
+test("can return other types", () => {
   expect(
     when(
       "hello",
@@ -148,7 +148,7 @@ it("can return other types", () => {
 });
 
 describe("recipes", () => {
-  it("acts as a coalesce tool", () => {
+  test("acts as a coalesce tool", () => {
     expect(
       map(
         [0, 1, 2, undefined, 4, undefined, 6],
@@ -157,7 +157,7 @@ describe("recipes", () => {
     ).toStrictEqual([0, 1, 2, "missing", 4, "missing", 6]);
   });
 
-  it("can replace defaultTo", () => {
+  test("can replace defaultTo", () => {
     // Nullish
     expect(
       map([undefined, null, 1], when(isNullish, constant(42))),

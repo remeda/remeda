@@ -1,9 +1,9 @@
 //! IMPORTANT: It's impossible to verify that a function does nothing without checking it's implementation, so there aren't any obvious way to expect some result. This clashes with the expectations of the vitest eslint plugin rule vitest/valid-expect. To work around this we wrapped all our calls and expect them not to throw. It doesn't mean we think this function would throw in **any** case!
 
-import { expect, it } from "vitest";
+import { expect, test } from "vitest";
 import { doNothing } from "./doNothing";
 
-it("does nothing when called with no arguments", () => {
+test("does nothing when called with no arguments", () => {
   const doesNothing = doNothing();
 
   expect(() => {
@@ -11,7 +11,7 @@ it("does nothing when called with no arguments", () => {
   }).not.toThrow();
 });
 
-it("ignores any parameters sent to the function", () => {
+test("ignores any parameters sent to the function", () => {
   const doesNothing = doNothing();
 
   expect(() => {

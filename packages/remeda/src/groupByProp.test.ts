@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { groupByProp } from "./groupByProp";
 import { pipe } from "./pipe";
 
@@ -9,7 +9,7 @@ test("empty array", () => {
 });
 
 describe("data first", () => {
-  it("must be grouped correctly by string", () => {
+  test("must be grouped correctly by string", () => {
     expect(
       groupByProp(
         [
@@ -30,7 +30,7 @@ describe("data first", () => {
     });
   });
 
-  it("must be grouped correctly by number", () => {
+  test("must be grouped correctly by number", () => {
     expect(
       groupByProp(
         [
@@ -53,7 +53,7 @@ describe("data first", () => {
     });
   });
 
-  it("must be grouped correctly by Symbol", () => {
+  test("must be grouped correctly by Symbol", () => {
     expect(
       groupByProp(
         [
@@ -78,7 +78,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("must be grouped correctly by string", () => {
+  test("must be grouped correctly by string", () => {
     expect(
       pipe(
         [
@@ -99,7 +99,7 @@ describe("data last", () => {
     });
   });
 
-  it("must be grouped correctly by number", () => {
+  test("must be grouped correctly by number", () => {
     expect(
       pipe(
         [
@@ -122,7 +122,7 @@ describe("data last", () => {
     });
   });
 
-  it("must be grouped correctly by Symbol", () => {
+  test("must be grouped correctly by Symbol", () => {
     expect(
       pipe(
         [
@@ -146,7 +146,7 @@ describe("data last", () => {
   });
 });
 
-it("handles undefined as optional elements", () => {
+test("handles undefined as optional elements", () => {
   expect(
     groupByProp(
       // @ts-expect-error [ts2352] -- When `exactOptionalPropertyTypes` isn't enabled in tsconfig.json this isn't an error and would be acceptable as input, so we want to also test this case and make sure we don't cause issues. In our project the settings is enabled so we have to suppress the error.

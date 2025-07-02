@@ -1,19 +1,19 @@
-import { expect, it } from "vitest";
+import { expect, test } from "vitest";
 import { pipe } from "./pipe";
 import { swapProps } from "./swapProps";
 
-it("data-first", () => {
+test("data-first", () => {
   expect(swapProps({ a: 1, b: 2 }, "a", "b")).toStrictEqual({ a: 2, b: 1 });
 });
 
-it("data-last", () => {
+test("data-last", () => {
   expect(pipe({ a: 1, b: 2 }, swapProps("a", "b"))).toStrictEqual({
     a: 2,
     b: 1,
   });
 });
 
-it("maintains the shape of the rest of the object", () => {
+test("maintains the shape of the rest of the object", () => {
   expect(swapProps({ a: true, b: "hello", c: 3 }, "a", "b")).toStrictEqual({
     a: "hello",
     b: true,

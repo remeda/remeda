@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { map } from "./map";
 import { multiply } from "./multiply";
@@ -8,7 +8,7 @@ import { tap } from "./tap";
 const DATA = [1] as const;
 
 describe("data first", () => {
-  it("should call function with input value", () => {
+  test("should call function with input value", () => {
     const fn = vi.fn<() => void>();
     tap(DATA, fn);
 
@@ -16,13 +16,13 @@ describe("data first", () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return input value", () => {
+  test("should return input value", () => {
     expect(tap(DATA, (data) => data.length)).toBe(DATA);
   });
 });
 
 describe("data last", () => {
-  it("should call function with input value", () => {
+  test("should call function with input value", () => {
     const fn = vi.fn<() => void>();
     pipe(DATA, tap(fn));
 
@@ -30,7 +30,7 @@ describe("data last", () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return input value", () => {
+  test("should return input value", () => {
     expect(
       pipe(
         DATA,
@@ -39,7 +39,7 @@ describe("data last", () => {
     ).toBe(DATA);
   });
 
-  it("should work in the middle of pipe sequence", () => {
+  test("should work in the middle of pipe sequence", () => {
     expect(
       pipe(
         [-1, 2],
@@ -52,7 +52,7 @@ describe("data last", () => {
     ).toStrictEqual([4]);
   });
 
-  it("should infer types after tapping function reference with parameter type any", () => {
+  test("should infer types after tapping function reference with parameter type any", () => {
     expect(
       pipe(
         [-1, 2],

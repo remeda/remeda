@@ -439,11 +439,10 @@ export default tseslint.config(
         { ignoreTopLevelDescribe: true },
       ],
 
-      // I don't agree with this rule, `it` and `test` should be used based on
-      // the situation. Some times we are testing a specific behavior or trait,
-      // and sometimes we have a specific flow, input, or edge-case that needs
-      // to be tested against.
-      "vitest/consistent-test-it": "off",
+      // Makes everything consistent and clear... If someone wants to they can
+      // add the word 'it' to the beginning of the test name when if it makes
+      // sense.
+      "vitest/consistent-test-it": ["warn", { withinDescribe: "test" }],
 
       // This rule's docs don't provide justification for enabling it and what
       // value it adds. Going by the rule just adds another level of indentation

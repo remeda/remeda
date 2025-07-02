@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any */
 
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { clone } from "./clone";
 
 describe("primitive types", () => {
@@ -24,7 +24,7 @@ describe("primitive types", () => {
 });
 
 describe("objects", () => {
-  it("clones shallow object", () => {
+  test("clones shallow object", () => {
     const obj = { a: 1, b: "foo", c: true, d: new Date(2013, 11, 25) };
     const cloned = clone(obj);
 
@@ -42,7 +42,7 @@ describe("objects", () => {
     });
   });
 
-  it("clones deep object", () => {
+  test("clones deep object", () => {
     const obj = { a: { b: { c: "foo" } } };
     const cloned = clone(obj);
 
@@ -54,7 +54,7 @@ describe("objects", () => {
     expect(cloned).toStrictEqual({ a: { b: { c: "foo" } } });
   });
 
-  it("clones objects with circular references", () => {
+  test("clones objects with circular references", () => {
     const x: any = { c: null };
     const y = { a: x };
     const z = { b: y };
@@ -83,7 +83,7 @@ describe("objects", () => {
 });
 
 describe("arrays", () => {
-  it("clones shallow arrays", () => {
+  test("clones shallow arrays", () => {
     const list = [1, 2, 3];
     const cloned = clone(list);
 
@@ -96,7 +96,7 @@ describe("arrays", () => {
     expect(cloned).toStrictEqual([1, 2, 3]);
   });
 
-  it("clones deep arrays", () => {
+  test("clones deep arrays", () => {
     const list: any = [1, [1, 2, 3], [[[5]]]];
     const cloned = clone(list);
 
@@ -114,7 +114,7 @@ describe("arrays", () => {
 });
 
 describe("functions", () => {
-  it("keep reference to function", () => {
+  test("keep reference to function", () => {
     const list = [{ a: (x: number): number => x + x }] as const;
     const cloned = clone(list);
 
@@ -127,7 +127,7 @@ describe("functions", () => {
 });
 
 describe("built-in types", () => {
-  it("clones Date object", () => {
+  test("clones Date object", () => {
     const date = new Date(2014, 10, 14, 23, 59, 59, 999);
 
     const cloned = clone(date);
@@ -138,7 +138,7 @@ describe("built-in types", () => {
     expect(cloned.getDay()).toBe(5); // friday
   });
 
-  it.each([
+  test.each([
     /x/u,
     /x/gu,
     /x/iu,
@@ -164,7 +164,7 @@ describe("built-in types", () => {
 });
 
 describe("nested mixed objects", () => {
-  it("clones array with objects", () => {
+  test("clones array with objects", () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
     const cloned = clone(list);
     list[1][0] = null;
@@ -181,7 +181,7 @@ describe("nested mixed objects", () => {
       expect(cloned).toStrictEqual([[1], [[3]]]);
     });
 
-    it("clones array with mutual ref object", () => {
+    test("clones array with mutual ref object", () => {
       const obj = { a: 1 };
       const list = [{ b: obj }, { b: obj }];
       const cloned = clone(list);

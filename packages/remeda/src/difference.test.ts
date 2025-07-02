@@ -1,19 +1,19 @@
-import { expect, it, test, vi } from "vitest";
+import { expect, test, vi } from "vitest";
 import { difference } from "./difference";
 import { identity } from "./identity";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
-it("returns empty array on empty input", () => {
+test("returns empty array on empty input", () => {
   expect(difference([], [1, 2, 3])).toStrictEqual([]);
 });
 
-it("removes nothing on empty other array", () => {
+test("removes nothing on empty other array", () => {
   expect(difference([1, 2, 3], [])).toStrictEqual([1, 2, 3]);
 });
 
-it("returns a shallow clone when nothing is removed", () => {
+test("returns a shallow clone when nothing is removed", () => {
   const data = [1, 2, 3];
   const result = difference(data, [4, 5, 6]);
 
@@ -21,37 +21,37 @@ it("returns a shallow clone when nothing is removed", () => {
   expect(result).not.toBe(data);
 });
 
-it("removes an item that is in the input", () => {
+test("removes an item that is in the input", () => {
   expect(difference([1], [1])).toStrictEqual([]);
 });
 
-it("doesn't remove items that are not in the other array", () => {
+test("doesn't remove items that are not in the other array", () => {
   expect(difference([1], [2])).toStrictEqual([1]);
 });
 
-it("maintains multi-set semantics (removes only one copy)", () => {
+test("maintains multi-set semantics (removes only one copy)", () => {
   expect(difference([1, 1, 2, 2], [1])).toStrictEqual([1, 2, 2]);
 });
 
-it("works if the other array has more copies than the input", () => {
+test("works if the other array has more copies than the input", () => {
   expect(difference([1], [1, 1])).toStrictEqual([]);
 });
 
-it("preserves the original order in source array", () => {
+test("preserves the original order in source array", () => {
   expect(difference([3, 1, 2, 2, 4], [2])).toStrictEqual([3, 1, 2, 4]);
 });
 
-it("accounts and removes multiple copies", () => {
+test("accounts and removes multiple copies", () => {
   expect(difference([1, 2, 3, 1, 2, 3, 1, 2, 3], [1, 2, 1, 2])).toStrictEqual([
     3, 3, 1, 2, 3,
   ]);
 });
 
-it("works with strings", () => {
+test("works with strings", () => {
   expect(difference(["a", "b", "c"], ["b"])).toStrictEqual(["a", "c"]);
 });
 
-it("works with objects", () => {
+test("works with objects", () => {
   const item = { a: 2 };
 
   expect(difference([item, { b: 3 }, item], [item, item])).toStrictEqual([
@@ -59,7 +59,7 @@ it("works with objects", () => {
   ]);
 });
 
-it("compares objects by reference", () => {
+test("compares objects by reference", () => {
   expect(difference([{ a: 2 }, { b: 3 }], [{ a: 2 }])).toStrictEqual([
     { a: 2 },
     { b: 3 },

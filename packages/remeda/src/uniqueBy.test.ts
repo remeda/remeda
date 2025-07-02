@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
 import { pipe } from "./pipe";
@@ -15,13 +15,13 @@ const PEOPLE = [
   { name: "Emily", age: 42 },
 ] as const;
 
-it("handles uniq by identity", () => {
+test("handles uniq by identity", () => {
   expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity())).toStrictEqual([
     1, 2, 5, 6, 7,
   ]);
 });
 
-it("returns people with uniq names", () => {
+test("returns people with uniq names", () => {
   expect(uniqueBy(PEOPLE, (p) => p.name)).toStrictEqual([
     { name: "John", age: 42 },
     { name: "Jörn", age: 30 },
@@ -31,7 +31,7 @@ it("returns people with uniq names", () => {
   ]);
 });
 
-it("returns people with uniq ages", () => {
+test("returns people with uniq ages", () => {
   expect(uniqueBy(PEOPLE, (p) => p.age)).toStrictEqual([
     { name: "John", age: 42 },
     { name: "Jörn", age: 30 },
@@ -41,7 +41,7 @@ it("returns people with uniq ages", () => {
   ]);
 });
 
-it("returns people with uniq first letter of name", () => {
+test("returns people with uniq first letter of name", () => {
   expect(uniqueBy(PEOPLE, (p) => p.name.slice(0, 1))).toStrictEqual([
     { name: "John", age: 42 },
     { name: "Sarah", age: 33 },
@@ -52,7 +52,7 @@ it("returns people with uniq first letter of name", () => {
 
 // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(pipe, () => {
-  it("gets executed until target length is reached", () => {
+  test("gets executed until target length is reached", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 2, 5, 1, 6, 7],
@@ -65,7 +65,7 @@ describe(pipe, () => {
     expect(result).toStrictEqual([1, 2, 5]);
   });
 
-  it("get executed 3 times when take before uniqueBy", () => {
+  test("get executed 3 times when take before uniqueBy", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 2, 5, 1, 6, 7],

@@ -1,9 +1,9 @@
 import type { IsEqual, IsUnknown, Or } from "type-fest";
-import { expectTypeOf, it } from "vitest";
+import { expectTypeOf, test } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
 
-it("narrows nulls", () => {
+test("narrows nulls", () => {
   const data = 123 as number | null;
   if (isNullish(data)) {
     expectTypeOf(data).toBeNull();
@@ -12,7 +12,7 @@ it("narrows nulls", () => {
   }
 });
 
-it("narrows undefined", () => {
+test("narrows undefined", () => {
   const data = 123 as number | undefined;
   if (isNullish(data)) {
     expectTypeOf(data).toBeUndefined();
@@ -21,7 +21,7 @@ it("narrows undefined", () => {
   }
 });
 
-it("narrows on both", () => {
+test("narrows on both", () => {
   const data = 123 as number | null | undefined;
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
@@ -30,7 +30,7 @@ it("narrows on both", () => {
   }
 });
 
-it("doesn't narrow non-nullables", () => {
+test("doesn't narrow non-nullables", () => {
   const data = 123;
   if (isNullish(data)) {
     expectTypeOf(data).toBeNever();
@@ -39,7 +39,7 @@ it("doesn't narrow non-nullables", () => {
   }
 });
 
-it("narrows unknowns", () => {
+test("narrows unknowns", () => {
   const data = 123 as unknown;
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
@@ -55,7 +55,7 @@ it("narrows unknowns", () => {
   }
 });
 
-it("narrows any", () => {
+test("narrows any", () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   const data = 123 as any;
   if (isNullish(data)) {
@@ -65,7 +65,7 @@ it("narrows any", () => {
   }
 });
 
-it("doesn't expand narrow types", () => {
+test("doesn't expand narrow types", () => {
   const data = "cat" as "cat" | "dog" | null | undefined;
   if (isNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
@@ -74,7 +74,7 @@ it("doesn't expand narrow types", () => {
   }
 });
 
-it("should work as type guard in filter", () => {
+test("should work as type guard in filter", () => {
   const result = ALL_TYPES_DATA_PROVIDER.filter(isNullish);
 
   expectTypeOf(result).toEqualTypeOf<Array<null | undefined>>();

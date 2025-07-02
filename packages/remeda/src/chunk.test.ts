@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { chunk } from "./chunk";
 
 describe("data first", () => {
@@ -35,13 +35,13 @@ describe("data last", () => {
 });
 
 describe("edge-cases", () => {
-  it("throws on 0 size", () => {
+  test("throws on 0 size", () => {
     expect(() => chunk(["a", "b", "c", "d"], 0)).toThrow(
       "chunk: A chunk size of '0' would result in an infinite array",
     );
   });
 
-  it("throws on negative size", () => {
+  test("throws on negative size", () => {
     expect(() => chunk(["a", "b", "c", "d"], -10)).toThrow(
       "chunk: A chunk size of '-10' would result in an infinite array",
     );

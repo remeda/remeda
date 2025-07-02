@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { isString } from "./isString";
 import { map } from "./map";
@@ -15,7 +15,7 @@ describe("dataFirst", () => {
         });
       });
 
-      it("return type is not narrowed", () => {
+      test("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), constant({ a: 1 }));
 
@@ -24,7 +24,7 @@ describe("dataFirst", () => {
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
       });
 
-      it("passes extra args to the functions", () => {
+      test("passes extra args to the functions", () => {
         const data = "hello" as number | string;
         when(
           data,
@@ -44,14 +44,14 @@ describe("dataFirst", () => {
     });
 
     describe("type-guards", () => {
-      it("narrows the mapper's param", () => {
+      test("narrows the mapper's param", () => {
         const data = "hello" as number | string;
         when(data, isString, (x) => {
           expectTypeOf(x).toEqualTypeOf<string>();
         });
       });
 
-      it("removes narrowed types from the output", () => {
+      test("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
         const result = when(data, isString, constant("cat" as const));
 
@@ -60,7 +60,7 @@ describe("dataFirst", () => {
         expectTypeOf(result).toEqualTypeOf<number | "cat">();
       });
 
-      it("passes extra args to the functions (workaround)", () => {
+      test("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
         when(
           data,
@@ -94,7 +94,7 @@ describe("dataFirst", () => {
         });
       });
 
-      it("returns the union of the branch return types", () => {
+      test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), {
           onTrue: constant("cat" as const),
@@ -104,7 +104,7 @@ describe("dataFirst", () => {
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
-      it("passes extra args to the functions (workaround)", () => {
+      test("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
         when(
           data,
@@ -132,7 +132,7 @@ describe("dataFirst", () => {
     });
 
     describe("type-guards", () => {
-      it("narrows the mapper's param", () => {
+      test("narrows the mapper's param", () => {
         const data = "hello" as number | string;
         when(data, isString, {
           onTrue: (x) => {
@@ -146,7 +146,7 @@ describe("dataFirst", () => {
         });
       });
 
-      it("returns the union of the branch return types", () => {
+      test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = when(data, isString, {
           onTrue: constant("cat" as const),
@@ -156,7 +156,7 @@ describe("dataFirst", () => {
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
-      it("passes extra args to the functions (workaround)", () => {
+      test("passes extra args to the functions (workaround)", () => {
         const data = "hello" as number | string;
         when(
           data,
@@ -200,7 +200,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("return type is not narrowed", () => {
+      test("return type is not narrowed", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(constant(true), constant({ a: 1 })));
 
@@ -209,7 +209,7 @@ describe("dataLast", () => {
         expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
       });
 
-      it("passes extra args to the functions", () => {
+      test("passes extra args to the functions", () => {
         const data = [] as Array<number | string>;
         map(
           data,
@@ -223,7 +223,7 @@ describe("dataLast", () => {
     });
 
     describe("type-guards", () => {
-      it("narrows the mapper's param", () => {
+      test("narrows the mapper's param", () => {
         const data = "hello" as number | string;
         pipe(
           data,
@@ -233,7 +233,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("removes narrowed types from the output", () => {
+      test("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
         const result = pipe(data, when(isString, constant("cat" as const)));
 
@@ -243,7 +243,7 @@ describe("dataLast", () => {
       });
     });
 
-    it("passes extra args to the functions", () => {
+    test("passes extra args to the functions", () => {
       const data = [] as Array<number | string>;
       map(
         data,
@@ -273,7 +273,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("returns the union of the branch return types", () => {
+      test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
@@ -286,7 +286,7 @@ describe("dataLast", () => {
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
-      it("passes extra args to the functions", () => {
+      test("passes extra args to the functions", () => {
         const data = [] as Array<number | string>;
         map(
           data,
@@ -307,7 +307,7 @@ describe("dataLast", () => {
     });
 
     describe("type-guards", () => {
-      it("narrows the mapper's param", () => {
+      test("narrows the mapper's param", () => {
         const data = "hello" as number | string;
         pipe(
           data,
@@ -324,7 +324,7 @@ describe("dataLast", () => {
         );
       });
 
-      it("returns the union of the branch return types", () => {
+      test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
@@ -337,7 +337,7 @@ describe("dataLast", () => {
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
       });
 
-      it("passes extra args to the functions", () => {
+      test("passes extra args to the functions", () => {
         const data = [] as Array<number | string>;
         map(
           data,
@@ -424,7 +424,7 @@ describe("typing mismatches", () => {
 });
 
 describe("recipes", () => {
-  it("handles api response union response objects", () => {
+  test("handles api response union response objects", () => {
     someApi({
       onFoo: when(isErrorPayload, {
         onTrue: ({ error }) => handleError(error),

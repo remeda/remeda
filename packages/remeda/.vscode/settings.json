@@ -4,5 +4,8 @@
   // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.patterns": {
     "*.ts": "${capture}.*.ts"
+  },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
   }
 }

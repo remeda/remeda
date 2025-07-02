@@ -1,23 +1,23 @@
-import { describe, expect, it, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { drop } from "./drop";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { take } from "./take";
 
 describe("data first", () => {
-  it("works on regular inputs", () => {
+  test("works on regular inputs", () => {
     expect(drop([1, 2, 3, 4, 5], 2)).toStrictEqual([3, 4, 5]);
   });
 
-  it("works trivially on empty arrays", () => {
+  test("works trivially on empty arrays", () => {
     expect(drop([], 2)).toStrictEqual([]);
   });
 
-  it("works trivially with negative numbers", () => {
+  test("works trivially with negative numbers", () => {
     expect(drop([1, 2, 3, 4, 5], -1)).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
-  it("works when dropping more than the length of the array", () => {
+  test("works when dropping more than the length of the array", () => {
     expect(drop([1, 2, 3, 4, 5], 10)).toStrictEqual([]);
   });
 
@@ -31,19 +31,19 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("works on regular inputs", () => {
+  test("works on regular inputs", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(2))).toStrictEqual([3, 4, 5]);
   });
 
-  it("works trivially on empty arrays", () => {
+  test("works trivially on empty arrays", () => {
     expect(pipe([], drop(2))).toStrictEqual([]);
   });
 
-  it("works trivially with negative numbers", () => {
+  test("works trivially with negative numbers", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(-1))).toStrictEqual([1, 2, 3, 4, 5]);
   });
 
-  it("works when dropping more than the length of the array", () => {
+  test("works when dropping more than the length of the array", () => {
     expect(pipe([1, 2, 3, 4, 5], drop(10))).toStrictEqual([]);
   });
 
