@@ -50,16 +50,13 @@ export default tseslint.config(
       "jsdoc/check-tag-names": [
         "error",
         {
-          // Non-standard JSDoc tags we use to generate documentation; see
-          // docs/src/lib/transform.ts.
+          // Non-standard JSDoc tags we use to generate documentation.
           definedTags: [
-            "signature",
+            "category",
             "dataFirst",
             "dataLast",
-            "indexed",
             "lazy",
-            "strict",
-            "category",
+            "signature",
           ],
         },
       ],
@@ -69,8 +66,8 @@ export default tseslint.config(
       "jsdoc/require-asterisk-prefix": "error",
 
       // Completeness
-      // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/no-restricted-syntax": [
+        // TODO: Requires manual fixes, enable in a separate PR.
         "off",
         {
           contexts: [
@@ -88,8 +85,8 @@ export default tseslint.config(
           ],
         },
       ],
-      // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-jsdoc": [
+        // TODO: Requires manual fixes, enable in a separate PR.
         "off",
         { enableFixer: false, require: { FunctionDeclaration: false } },
       ],
@@ -99,13 +96,12 @@ export default tseslint.config(
       "jsdoc/require-returns": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-throws": "off",
-      "jsdoc/require-yields": "error",
 
       // Style
       "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
       "jsdoc/require-description-complete-sentence": [
         "warn",
-        { abbreviations: ["etc.", "e.g.", "i.e."] },
+        { abbreviations: ["etc", "e.g", "i.e"] },
       ],
       "jsdoc/require-hyphen-before-param-description": [
         "error",
@@ -124,9 +120,7 @@ export default tseslint.config(
                 "example",
                 "dataFirst",
                 "dataLast",
-                "indexed",
                 "lazy",
-                "strict",
                 "category",
               ],
             },
