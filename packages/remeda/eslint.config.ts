@@ -423,6 +423,7 @@ export default tseslint.config(
     },
   },
   {
+    // All Tests
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
       vitest,
@@ -455,6 +456,7 @@ export default tseslint.config(
     },
   },
   {
+    // Runtime Tests
     files: ["src/**/*.test.ts"],
     rules: {
       // The range of things that are acceptable for truthy and falsy is wider
@@ -483,11 +485,7 @@ export default tseslint.config(
       // the way of that.
       "@typescript-eslint/consistent-type-definitions": "off",
 
-      // A lot of our type tests use @ts-expect-error as the primary way to test
-      // that function params are typed correctly. This isn't detected properly
-      // by this rule and there's no way to configure it to work; so we disable
-      // it for now... There might be other ways to write the tests so that they
-      // conform to this rule.
+      // TODO: A lot of our type tests use @ts-expect-error as the primary way to test that function params are typed correctly. This isn't detected properly by this rule and there's no way to configure it to work; so we disable it for now... There might be other ways to write the tests so that they conform to this rule.
       "vitest/expect-expect": "off",
 
       // When testing type-predicates (guards) we need to test what happens to
