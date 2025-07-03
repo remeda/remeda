@@ -1,7 +1,8 @@
 import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
+import type { If } from "./internal/types/If";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import { purry } from "./purry";
 
 // Because pickBy needs to iterate over all entries of the object, only
@@ -14,8 +15,8 @@ type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-      IfBoundedRecord<
-        T,
+      If<
+        IsBoundedRecord<T>,
         {
           -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
         },
@@ -42,8 +43,8 @@ type EnumeratedPartial<T> = T extends unknown
 // optional (as they could have a value that would be filtered out).
 type EnumeratedPartialNarrowed<T, S> = T extends unknown
   ? Simplify<
-      IfBoundedRecord<
-        T,
+      If<
+        IsBoundedRecord<T>,
         ExactProps<T, S> & PartialProps<T, S>,
         // For unbounded records we need to "reconstruct" the record and narrow
         // the value types. Similar to the non-narrowed case, we need to also

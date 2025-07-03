@@ -1,4 +1,5 @@
-import type { IfBoundedRecord } from "./IfBoundedRecord";
+import type { If } from "./If";
+import type { IsBoundedRecord } from "./IsBoundedRecord";
 
 /**
  * Records with an unbounded set of keys have different semantics to those with
@@ -9,4 +10,4 @@ import type { IfBoundedRecord } from "./IfBoundedRecord";
  *    BoundedPartial<{ a: number }>; //=> { a?: number }
  *    BoundedPartial<Record<string, number>>; //=> Record<string, number>
  */
-export type BoundedPartial<T> = IfBoundedRecord<T, Partial<T>, T>;
+export type BoundedPartial<T> = If<IsBoundedRecord<T>, Partial<T>, T>;

@@ -1,7 +1,8 @@
 import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { IfBoundedRecord } from "./internal/types/IfBoundedRecord";
+import type { If } from "./internal/types/If";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
@@ -22,8 +23,8 @@ type PartialEnumerableKeys<T extends object> =
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
   T extends unknown
     ? Simplify<
-        IfBoundedRecord<
-          T,
+        If<
+          IsBoundedRecord<T>,
           PickSymbolKeys<T> & {
             -readonly [P in keyof T as P extends symbol
               ? never
