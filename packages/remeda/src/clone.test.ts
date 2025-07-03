@@ -2,6 +2,7 @@
 
 import { describe, expect, test } from "vitest";
 import { clone } from "./clone";
+import { version } from "node:process";
 
 describe("primitive types", () => {
   test("number", () => {
@@ -176,8 +177,19 @@ test
 
   expect(cloned.size).toBe(original.size);
   expect(cloned.type).toBe(original.type);
-  expect(cloned.name).toBe(original.name);
-  expect(cloned.lastModified).toBe(original.lastModified);
+
+  // Older node versions didn't perform a full clone on Files.
+  const isPartialClone =
+    // TODO [>3]: Remove this once we drop support for Node 20.
+    version.startsWith("v20.") ||
+    // TODO [>4]: Remove this once we drop support for Node 22.
+    version.startsWith("v22.");
+
+  expect(cloned.name).toBe(isPartialClone ? undefined : original.name);
+  expect(cloned.lastModified).toBe(
+    isPartialClone ? undefined : original.lastModified,
+  );
+
   await expect(cloned.text()).resolves.toBe("Hello, World!");
 });
 
