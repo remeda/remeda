@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, jsdoc/require-param, jsdoc/require-example, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any --
  * These aren't useful for a reference implementation!
  */
 

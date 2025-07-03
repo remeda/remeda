@@ -71,7 +71,6 @@ export function sumBy<T extends IterableContainer>(
  * @dataFirst
  * @category Array
  */
-
 export function sumBy<T extends IterableContainer>(
   data: T,
   callbackfn: (value: T[number], index: number, data: T) => number,
