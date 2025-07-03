@@ -1,4 +1,5 @@
 import type { Tagged } from "type-fest";
+import { expectTypeOf, test } from "vitest";
 import type { IsBounded } from "./IsBounded";
 
 declare const SymbolFoo: unique symbol;
@@ -50,7 +51,7 @@ test("unions between string, number, symbol", () => {
   ).toEqualTypeOf<true>();
 });
 
-test("unions with unbounded types", () => {
+test("unions with unbound types", () => {
   expectTypeOf(isBounded("a" as "a" | number)).toEqualTypeOf<false>();
   expectTypeOf(isBounded(1 as 1 | string)).toEqualTypeOf<false>();
 });
@@ -70,7 +71,7 @@ test("bounded template strings", () => {
   ).toEqualTypeOf<true>();
 });
 
-test("unbounded template strings", () => {
+test("unbound template strings", () => {
   expectTypeOf(isBounded("a_1" as `a_${number}`)).toEqualTypeOf<false>();
   expectTypeOf(
     isBounded("a_1" as `${"a" | "b"}_${number}`),
