@@ -62,6 +62,8 @@ function cloneImplementation<T>(
   const prototype = Object.getPrototypeOf(value);
   if (
     !Array.isArray(value) &&
+    // Keep this check in sync with the same check in the impl of
+    // `isPlainObject`.
     prototype !== null &&
     prototype !== Object.prototype
   ) {
