@@ -1,10 +1,10 @@
 import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
+import type { If } from "./internal/types/If";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
-import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import type { If } from "./internal/types/If";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the output object is built from a
