@@ -164,9 +164,10 @@ describe("built-in types", () => {
   });
 });
 
-test
+test.skipIf(
   // TODO [>2]: Remove this skipIf once we drop support for Node 18.
-  .skipIf(!("File" in globalThis))("clones File objects", async () => {
+  !("File" in globalThis),
+)("clones File objects", async () => {
   const original = new File(["Hello, World!"], "foo.txt", {
     type: "text/plain",
   });
