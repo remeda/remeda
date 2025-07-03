@@ -19,8 +19,8 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
           // object! instead, we want to use a more explicit *empty* type.
           IsNever<Extract<Keys[number], keyof T>>,
           EmptyObject,
-          // Remove readonly modifiers from picked props since we return a new,
-          // mutable, object. We don't wrap the result with `Simplify` to
+          // Remove `readonly` modifiers from picked props since we return a
+          // new, mutable, object. We don't wrap the result with `Simplify` to
           // flatten it because `Writable` does the same thing implicitly.
           Writable<
             If<
