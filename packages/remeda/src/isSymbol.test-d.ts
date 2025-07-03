@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
@@ -5,21 +6,21 @@ import {
 } from "../test/typesDataProvider";
 import { isSymbol } from "./isSymbol";
 
-it("should work as type guard", () => {
+test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.symbol as AllTypesDataProviderTypes;
   if (isSymbol(data)) {
     expectTypeOf(data).toEqualTypeOf<symbol>();
   }
 });
 
-it("should work even if data type is `unknown`", () => {
+test("should work even if data type is `unknown`", () => {
   const data = TYPES_DATA_PROVIDER.symbol as unknown;
   if (isSymbol(data)) {
     expectTypeOf(data).toEqualTypeOf<symbol>();
   }
 });
 
-it("should work even if data type is `any`", () => {
+test("should work even if data type is `any`", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly checking any
   const data = TYPES_DATA_PROVIDER.symbol as any;
   if (isSymbol(data)) {
@@ -27,7 +28,7 @@ it("should work even if data type is `any`", () => {
   }
 });
 
-it("should work as type guard in array", () => {
+test("should work as type guard in array", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isSymbol);
 
   expectTypeOf(data).toEqualTypeOf<Array<symbol>>();

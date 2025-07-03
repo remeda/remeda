@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { merge } from "./merge";
 
 describe("data first", () => {

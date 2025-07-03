@@ -3,6 +3,7 @@
  * so we test it mainly via the tests for that function.
  */
 
+import { expect, test } from "vitest";
 import { sortedIndexWith } from "./sortedIndexWith";
 
 test("regular", () => {

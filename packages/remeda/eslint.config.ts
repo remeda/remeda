@@ -10,7 +10,6 @@ export default tseslint.config(
     ignores: ["coverage", "dist"],
   },
   eslint.configs.recommended,
-  jsdoc.configs["flat/recommended-typescript"],
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs.recommended,
@@ -24,8 +23,117 @@ export default tseslint.config(
     },
   },
   {
+    // === JSDoc ==============================================================
+
+    // We only need JSDocs in our actual library code, and we can skip config
+    // files and tests.
+    files: ["src/**/*.ts"],
+    ignores: ["*.test.ts", "*.test-d.ts"],
+
+    // Start with the recommended config
+    ...jsdoc.configs["flat/recommended-typescript"],
+
+    settings: {
+      jsdoc: {
+        // We only require JSDoc for top-level function exports. Assuming that
+        // each function has overrides, we only require JSDocs for the
+        // overrides (which are TSDeclareFunction) and not the implementation
+        // (which is a FunctionDeclaration).
+        contexts: ["ExportNamedDeclaration > TSDeclareFunction"],
+      },
+    },
+
+    rules: {
+      ...jsdoc.configs["flat/recommended-typescript"].rules,
+
+      // Correctness
+      "jsdoc/check-tag-names": [
+        "error",
+        {
+          // Non-standard JSDoc tags we use to generate documentation.
+          definedTags: [
+            "category",
+            "dataFirst",
+            "dataLast",
+            "lazy",
+            "signature",
+          ],
+        },
+      ],
+      "jsdoc/no-bad-blocks": "error",
+      "jsdoc/no-blank-blocks": "error",
+      "jsdoc/no-blank-block-descriptions": "error",
+      "jsdoc/require-asterisk-prefix": "error",
+
+      // Completeness
+      "jsdoc/no-restricted-syntax": [
+        // TODO: Requires manual fixes, enable in a separate PR.
+        "off",
+        {
+          contexts: [
+            {
+              comment:
+                "JsdocBlock:not(*:has(JsdocTag[tag=/(dataFirst|dataLast)/]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include either @dataFirst or @dataLast.",
+            },
+            {
+              comment: "JsdocBlock:not(*:has(JsdocTag[tag=signature]))",
+              context: "ExportNamedDeclaration, TSDeclareFunction",
+              message: "JSDoc must include @signature.",
+            },
+          ],
+        },
+      ],
+      "jsdoc/require-jsdoc": [
+        // TODO: Requires manual fixes, enable in a separate PR.
+        "off",
+        { enableFixer: false, require: { FunctionDeclaration: false } },
+      ],
+      "jsdoc/require-description": "error",
+      "jsdoc/require-example": ["warn", { enableFixer: false }],
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-returns": "off",
+      // TODO: Requires manual fixes, enable in a separate PR.
+      "jsdoc/require-throws": "off",
+
+      // Style
+      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
+      "jsdoc/require-description-complete-sentence": [
+        "warn",
+        { abbreviations: ["etc", "e.g", "i.e"] },
+      ],
+      "jsdoc/require-hyphen-before-param-description": [
+        "error",
+        "always",
+        { tags: { "*": "never" } },
+      ],
+      "jsdoc/sort-tags": [
+        "error",
+        {
+          tagSequence: [
+            {
+              tags: [
+                "param",
+                "returns",
+                "signature",
+                "example",
+                "dataFirst",
+                "dataLast",
+                "lazy",
+                "category",
+              ],
+            },
+          ],
+          linesBetween: 0,
+        },
+      ],
+      "jsdoc/tag-lines": ["error", "any", { startLines: 1 }],
+    },
+  },
+  {
     linterOptions: {
-      reportUnusedDisableDirectives: true,
+      reportUnusedDisableDirectives: "warn",
     },
     rules: {
       // Whenever we call a built-in function we want to be as transparent as
@@ -187,110 +295,6 @@ export default tseslint.config(
       "prefer-promise-reject-errors": "off",
       "require-await": "off",
 
-      // === JSDoc =============================================================
-      // (We are assuming that the config is extended by JSDoc's:
-      // recommended-typescript extension)
-
-      // Correctness
-      "jsdoc/check-param-names": "error",
-      "jsdoc/check-tag-names": [
-        "error",
-        {
-          // Non-standard JSDoc tags we use to generate documentation; see
-          // docs/src/lib/transform.ts.
-          definedTags: [
-            "signature",
-            "dataFirst",
-            "dataLast",
-            "indexed",
-            "lazy",
-            "strict",
-            "category",
-          ],
-        },
-      ],
-      "jsdoc/no-bad-blocks": "error",
-      "jsdoc/no-blank-blocks": "error",
-      "jsdoc/no-blank-block-descriptions": "error",
-      "jsdoc/require-asterisk-prefix": "error",
-
-      // Completeness
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/no-restricted-syntax": [
-        "off",
-        {
-          contexts: [
-            {
-              comment:
-                "JsdocBlock:not(*:has(JsdocTag[tag=/(dataFirst|dataLast)/]))",
-              context: "ExportNamedDeclaration, TSDeclareFunction",
-              message: "JSDoc must include either @dataFirst or @dataLast.",
-            },
-            {
-              comment: "JsdocBlock:not(*:has(JsdocTag[tag=signature]))",
-              context: "ExportNamedDeclaration, TSDeclareFunction",
-              message: "JSDoc must include @signature.",
-            },
-          ],
-        },
-      ],
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-jsdoc": [
-        "off",
-        {
-          enableFixer: false,
-          // We only require JSDoc for top-level function exports. Assuming
-          // that each function has overrides, we only require JSDocs for the
-          // overrides (which are TSDeclareFunction) and not the implementation
-          // (which is FunctionDeclaration).
-          require: { FunctionDeclaration: false },
-          contexts: ["Program > ExportNamedDeclaration > TSDeclareFunction"],
-        },
-      ],
-      "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
-      "jsdoc/require-param": "warn",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-returns": "off",
-      // TODO: Requires manual fixes, enable in a separate PR.
-      "jsdoc/require-throws": "off",
-      "jsdoc/require-yields": "error",
-
-      // Style
-      "jsdoc/no-multi-asterisks": ["warn", { allowWhitespace: true }],
-      "jsdoc/require-description-complete-sentence": [
-        "warn",
-        { abbreviations: ["etc.", "e.g.", "i.e."] },
-      ],
-      "jsdoc/require-hyphen-before-param-description": [
-        "error",
-        "always",
-        { tags: { "*": "never" } },
-      ],
-      "jsdoc/sort-tags": [
-        "error",
-        {
-          tagSequence: [
-            {
-              tags: [
-                "param",
-                "returns",
-                "signature",
-                "example",
-                "dataFirst",
-                "dataLast",
-                "indexed",
-                "lazy",
-                "strict",
-                "category",
-              ],
-            },
-          ],
-          linesBetween: 0,
-        },
-      ],
-      "jsdoc/tag-lines": ["error", "any", { startLines: 1 }],
-
       // === Typescript ========================================================
       // (We are assuming that the config is extended by typescript's:
       // strictTypeChecked, and stylisticTypeChecked configs)
@@ -417,12 +421,11 @@ export default tseslint.config(
   {
     files: ["*.config.js", "*.config.ts"],
     rules: {
-      "jsdoc/require-example": "off",
-      "jsdoc/require-param": "off",
       "unicorn/filename-case": "off",
     },
   },
   {
+    // All Tests
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
       vitest,
@@ -434,16 +437,10 @@ export default tseslint.config(
       // all the recommended ones...
       ...vitest.configs.recommended.rules,
 
-      "vitest/prefer-lowercase-title": [
-        "warn",
-        { ignoreTopLevelDescribe: true },
-      ],
-
-      // I don't agree with this rule, `it` and `test` should be used based on
-      // the situation. Some times we are testing a specific behavior or trait,
-      // and sometimes we have a specific flow, input, or edge-case that needs
-      // to be tested against.
-      "vitest/consistent-test-it": "off",
+      // Makes everything consistent and clear... If someone wants to they can
+      // add the word 'it' to the beginning of the test name when if it makes
+      // sense.
+      "vitest/consistent-test-it": ["warn", { withinDescribe: "test" }],
 
       // This rule's docs don't provide justification for enabling it and what
       // value it adds. Going by the rule just adds another level of indentation
@@ -461,6 +458,7 @@ export default tseslint.config(
     },
   },
   {
+    // Runtime Tests
     files: ["src/**/*.test.ts"],
     rules: {
       // The range of things that are acceptable for truthy and falsy is wider
@@ -468,11 +466,6 @@ export default tseslint.config(
       // on the narrowest cases.
       "vitest/prefer-to-be-truthy": "off",
       "vitest/prefer-to-be-falsy": "off",
-
-      // It's rare that hooks are even needed, but in those cases it's probably
-      // preferable to use them as they make it clear that the tests relies on
-      // some weird setup.
-      "vitest/no-hooks": "off",
 
       // TODO: This rule might be useful to guide people to break tests into smaller tests that only expect one thing, but there's no reasonable max value we can configure it to that won't end up feeling arbitrary and noisy.
       "vitest/max-expects": "off",
@@ -494,11 +487,7 @@ export default tseslint.config(
       // the way of that.
       "@typescript-eslint/consistent-type-definitions": "off",
 
-      // A lot of our type tests use @ts-expect-error as the primary way to test
-      // that function params are typed correctly. This isn't detected properly
-      // by this rule and there's no way to configure it to work; so we disable
-      // it for now... There might be other ways to write the tests so that they
-      // conform to this rule.
+      // TODO: A lot of our type tests use @ts-expect-error as the primary way to test that function params are typed correctly. This isn't detected properly by this rule and there's no way to configure it to work; so we disable it for now... There might be other ways to write the tests so that they conform to this rule.
       "vitest/expect-expect": "off",
 
       // When testing type-predicates (guards) we need to test what happens to

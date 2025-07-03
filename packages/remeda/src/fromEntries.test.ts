@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { fromEntries } from "./fromEntries";
 import { pipe } from "./pipe";
 

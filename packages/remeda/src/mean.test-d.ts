@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { mean } from "./mean";
 import { pipe } from "./pipe";
 

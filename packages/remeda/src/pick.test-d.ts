@@ -1,4 +1,5 @@
 import type { EmptyObject } from "type-fest";
+import { describe, expectTypeOf, test } from "vitest";
 import { keys } from "./keys";
 import { pick } from "./pick";
 
@@ -10,12 +11,12 @@ describe("bounded object types", () => {
     d?: "optional-undefinable" | undefined;
   };
 
-  it("enforces keys must exist on object", () => {
+  test("enforces keys must exist on object", () => {
     // @ts-expect-error [ts2322] -- should not allow non existing props
     pick(DATA, ["not", "in"]);
   });
 
-  it("doesn't widen key types", () => {
+  test("doesn't widen key types", () => {
     // @ts-expect-error [ts2345] -- string is too wide for object
     pick(DATA, ["a"] as [string]);
   });
@@ -588,12 +589,12 @@ describe("unbounded record types (Issue #1128)", () => {
   const DATA = {} as Record<string, "required">;
   const UNDEFINABLE = {} as Record<string, "undefinable" | undefined>;
 
-  it("enforces keys must exist on object", () => {
+  test("enforces keys must exist on object", () => {
     // @ts-expect-error [ts2322] -- should not allow non existing props
     pick(DATA, [1, 2]);
   });
 
-  it("doesn't widen key types", () => {
+  test("doesn't widen key types", () => {
     // @ts-expect-error [ts2345] -- string is too wide for object
     pick(DATA, ["a"] as [PropertyKey]);
   });
@@ -922,7 +923,7 @@ describe("unbounded record types (Issue #1128)", () => {
     });
   });
 
-  it("narrows on unbounded keys but doesn't make it partial", () => {
+  test("narrows on unbounded keys but doesn't make it partial", () => {
     const picks = [] as Array<`prefix_${string}`>;
 
     expectTypeOf(pick(DATA, picks)).toEqualTypeOf<

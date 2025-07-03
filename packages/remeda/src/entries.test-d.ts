@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { entries } from "./entries";
 
 test("with known properties", () => {

@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { intersectionWith } from "./intersectionWith";
 import { isDeepEqual } from "./isDeepEqual";
@@ -25,7 +26,7 @@ describe("data first", () => {
 });
 
 describe("data last", () => {
-  it("returns the new array of intersecting values based on a custom comparator", () => {
+  test("returns the new array of intersecting values based on a custom comparator", () => {
     expect(
       intersectionWith(
         other,
@@ -36,7 +37,7 @@ describe("data last", () => {
     ).toStrictEqual(expected);
   });
 
-  it("checks if items are equal based on remeda's imported util function as a comparator", () => {
+  test("checks if items are equal based on remeda's imported util function as a comparator", () => {
     expect(
       pipe(
         [
@@ -54,7 +55,7 @@ describe("data last", () => {
     ).toStrictEqual([{ x: 1, y: 2 }]);
   });
 
-  it("evaluates lazily", () => {
+  test("evaluates lazily", () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],

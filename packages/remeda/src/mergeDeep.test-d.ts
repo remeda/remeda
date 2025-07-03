@@ -1,6 +1,7 @@
+import { expectTypeOf, test } from "vitest";
 import { mergeDeep } from "./mergeDeep";
 
-it("trivially merges disjoint objects", () => {
+test("trivially merges disjoint objects", () => {
   const result = mergeDeep(
     { foo: "bar" } as { foo: string },
     { bar: "baz" } as { bar: string },
@@ -9,7 +10,7 @@ it("trivially merges disjoint objects", () => {
   expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
 });
 
-it("merges fully overlapping types", () => {
+test("merges fully overlapping types", () => {
   const result = mergeDeep(
     { foo: "bar" } as { foo: string },
     { foo: "baz" } as { foo: string },
@@ -18,7 +19,7 @@ it("merges fully overlapping types", () => {
   expectTypeOf(result).toEqualTypeOf<{ foo: string }>();
 });
 
-it("merges semi-overlapping types", () => {
+test("merges semi-overlapping types", () => {
   const result = mergeDeep(
     { foo: "bar", x: 1 } as { foo: string; x: number },
     { foo: "baz", y: 2 } as { foo: string; y: number },
@@ -27,7 +28,7 @@ it("merges semi-overlapping types", () => {
   expectTypeOf(result).toEqualTypeOf<{ foo: string; x: number; y: number }>();
 });
 
-it("deeply merges", () => {
+test("deeply merges", () => {
   const result = mergeDeep(
     { foo: { bar: "bar" } } as { foo: { bar: string } },
     { foo: { qux: "qux" } } as { foo: { qux: string } },
@@ -36,7 +37,7 @@ it("deeply merges", () => {
   expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
 });
 
-it("overrides types", () => {
+test("overrides types", () => {
   const a = { foo: { bar: "baz" } } as { foo: { bar: string } };
   const b = { foo: "qux" } as { foo: string };
 
@@ -49,7 +50,7 @@ it("overrides types", () => {
   expectTypeOf(resultBA).toEqualTypeOf<{ foo: { bar: string } }>();
 });
 
-it("doesn't spread arrays", () => {
+test("doesn't spread arrays", () => {
   const result = mergeDeep(
     { foo: ["bar"] } as const,
     { foo: ["baz"] } as const,
@@ -58,7 +59,7 @@ it("doesn't spread arrays", () => {
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: readonly ["baz"] }>();
 });
 
-it("doesn't recurse into arrays", () => {
+test("doesn't recurse into arrays", () => {
   const result = mergeDeep(
     { foo: [{ bar: "baz", x: 123 }] } as {
       foo: Array<{ bar: string; x: number }>;
@@ -73,7 +74,7 @@ it("doesn't recurse into arrays", () => {
   }>();
 });
 
-it("works with interfaces", () => {
+test("works with interfaces", () => {
   interface Foo {
     a: string;
     b: number;

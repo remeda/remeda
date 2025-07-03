@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { difference } from "./difference";
 import { pipe } from "./pipe";
 import { shuffle } from "./shuffle";

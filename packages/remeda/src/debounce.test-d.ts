@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- We know! */
 
+import { expectTypeOf, test } from "vitest";
 import { debounce } from "./debounce";
 import { identity } from "./identity";
 
-it("returns undefined on 'trailing' timing", () => {
+test("returns undefined on 'trailing' timing", () => {
   const debouncer = debounce(() => "Hello, World!", {
     waitMs: 32,
     timing: "trailing",
@@ -13,7 +14,7 @@ it("returns undefined on 'trailing' timing", () => {
   expectTypeOf(result).toEqualTypeOf<string | undefined>();
 });
 
-it("doesn't return undefined on 'leading' timing", () => {
+test("doesn't return undefined on 'leading' timing", () => {
   const debouncer = debounce(() => "Hello, World!", {
     waitMs: 32,
     timing: "leading",
@@ -23,7 +24,7 @@ it("doesn't return undefined on 'leading' timing", () => {
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-it("doesn't return undefined on 'both' timing", () => {
+test("doesn't return undefined on 'both' timing", () => {
   const debouncer = debounce(() => "Hello, World!", {
     waitMs: 32,
     timing: "both",
@@ -112,7 +113,7 @@ test("argument typing to be good (with rest param)", () => {
   debouncer.call("a", true, false);
 });
 
-it("doesn't accept maxWaitMs when timing is 'leading'", () => {
+test("doesn't accept maxWaitMs when timing is 'leading'", () => {
   debounce(identity(), { timing: "trailing", maxWaitMs: 32 });
   debounce(identity(), { timing: "both", maxWaitMs: 32 });
   // @ts-expect-error [ts2769]: maxWaitMs not supported!

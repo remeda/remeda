@@ -1,3 +1,4 @@
+import { describe, test } from "vitest";
 import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 
@@ -12,7 +13,7 @@ declare const TEST_OBJECT: {
 };
 
 describe("data first", () => {
-  it("should correctly type value argument", () => {
+  test("should correctly type value argument", () => {
     // @ts-expect-error [ts2345] - this path should yield a type of number
     setPath(TEST_OBJECT, ["a", "e", 1, "f", "g"], "hello");
 
@@ -20,7 +21,7 @@ describe("data first", () => {
     setPath(TEST_OBJECT, ["a", "e", 1, "f", "g"], 123);
   });
 
-  it("should correctly type path argument", () => {
+  test("should correctly type path argument", () => {
     // @ts-expect-error [ts2322] - 'hello' isn't a valid path
     setPath(TEST_OBJECT, ["a", "hello"], "hello");
 

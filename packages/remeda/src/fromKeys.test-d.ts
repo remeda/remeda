@@ -1,4 +1,5 @@
 import type { Simplify } from "type-fest";
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";

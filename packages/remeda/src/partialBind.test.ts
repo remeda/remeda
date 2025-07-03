@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { partialBind } from "./partialBind";
 
 const fn = (x: number, y: number, z: number): string => `${x}, ${y}, and ${z}`;

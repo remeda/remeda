@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { isEmpty } from "./isEmpty";
 
 describe("invalid types", () => {

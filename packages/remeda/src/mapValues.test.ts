@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { constant } from "./constant";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";

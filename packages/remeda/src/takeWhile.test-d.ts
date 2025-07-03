@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { isNumber } from "./isNumber";
 import { pipe } from "./pipe";

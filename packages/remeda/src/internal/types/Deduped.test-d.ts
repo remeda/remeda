@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import type { Deduped } from "./Deduped";
 import type { IterableContainer } from "./IterableContainer";
 

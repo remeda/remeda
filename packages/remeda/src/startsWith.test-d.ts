@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { partition } from "./partition";
 import { startsWith } from "./startsWith";
 

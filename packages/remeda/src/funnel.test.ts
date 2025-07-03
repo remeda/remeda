@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { doNothing } from "./doNothing";
@@ -45,7 +46,7 @@ describe("without a reducer", () => {
 });
 
 describe("reducer behavior", () => {
-  it("passes the reduced arg to the executor", () => {
+  test("passes the reduced arg to the executor", () => {
     const mockFn = vi.fn<(x: string) => void>();
     const foo = funnel(mockFn, {
       reducer: constant("hello world"),
@@ -58,7 +59,7 @@ describe("reducer behavior", () => {
     expect(mockFn).toHaveBeenLastCalledWith("hello world");
   });
 
-  it("reduces call args", async () => {
+  test("reduces call args", async () => {
     const mockFn = vi.fn<(x: number) => void>();
 
     const foo = funnel(mockFn, {
@@ -79,7 +80,7 @@ describe("reducer behavior", () => {
     expect(mockFn).toHaveBeenLastCalledWith(21 /* 1 + 2 + ... + 6 */);
   });
 
-  it("does not invoke if reduceArgs returns undefined", async () => {
+  test("does not invoke if reduceArgs returns undefined", async () => {
     const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
       reducer: constant(undefined),
@@ -92,7 +93,7 @@ describe("reducer behavior", () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 
-  it("supports multiple arguments", () => {
+  test("supports multiple arguments", () => {
     const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
       reducer: (ret: unknown, a: number, b: string, c: boolean) => [

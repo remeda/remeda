@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { product } from "./product";
 
@@ -85,13 +86,13 @@ describe("dataLast", () => {
   });
 });
 
-it("doesn't allow mixed arrays", () => {
+test("doesn't allow mixed arrays", () => {
   // @ts-expect-error [ts2345] - Can't product bigints and numbers...
   product([1, 2n]);
 });
 
-describe("KNOWN ISSUES", () => {
-  it("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
+describe("known issues!", () => {
+  test("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
     const result = product([] as Array<bigint>);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 1>();

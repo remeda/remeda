@@ -1,5 +1,6 @@
-import { pipe } from "./pipe";
+import { expect, test } from "vitest";
 import { endsWith } from "./endsWith";
+import { pipe } from "./pipe";
 
 test("empty data", () => {
   expect(endsWith("", "")).toBe(true);

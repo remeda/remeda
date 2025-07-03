@@ -1,34 +1,35 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { join } from "./join";
 
-it("empty tuple", () => {
+test("empty tuple", () => {
   const array: [] = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<"">();
 });
 
-it("empty readonly tuple", () => {
+test("empty readonly tuple", () => {
   const array: readonly [] = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<"">();
 });
 
-it("array", () => {
+test("array", () => {
   const array: Array<number> = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-it("readonly array", () => {
+test("readonly array", () => {
   const array: ReadonlyArray<number> = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-it("tuple", () => {
+test("tuple", () => {
   const array: ["a" | "b", "c" | "d", "e" | "f"] = ["a", "c", "e"];
   const result = join(array, ",");
 
@@ -37,7 +38,7 @@ it("tuple", () => {
     | "f"}`>();
 });
 
-it("readonly tuple", () => {
+test("readonly tuple", () => {
   const array: readonly ["a" | "b", "c" | "d", "e" | "f"] = ["a", "c", "e"];
   const result = join(array, ",");
 
@@ -46,28 +47,28 @@ it("readonly tuple", () => {
     | "f"}`>();
 });
 
-it("tuple with rest tail", () => {
+test("tuple with rest tail", () => {
   const array: ["a" | "b", ...Array<"c" | "d">] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${string}`>();
 });
 
-it("readonly tuple with rest tail", () => {
+test("readonly tuple with rest tail", () => {
   const array: readonly ["a" | "b", ...Array<"c" | "d">] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${string}`>();
 });
 
-it("tuple with rest head", () => {
+test("tuple with rest head", () => {
   const array: [...Array<"a" | "b">, "c" | "d"] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${string},${"c" | "d"}`>();
 });
 
-it("readonly tuple with rest head", () => {
+test("readonly tuple with rest head", () => {
   const array: readonly [...Array<"a" | "b">, "c" | "d"] = ["a", "c"];
   const result = join(array, ",");
 
@@ -75,56 +76,56 @@ it("readonly tuple with rest head", () => {
 });
 
 describe("tuple item types", () => {
-  it("number", () => {
+  test("number", () => {
     const array: [number, number] = [1, 2];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${number},${number}`>();
   });
 
-  it("string", () => {
+  test("string", () => {
     const array: [string, string] = ["a", "b"];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${string},${string}`>();
   });
 
-  it("bigint", () => {
+  test("bigint", () => {
     const array: [bigint, bigint] = [1n, 2n];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${bigint},${bigint}`>();
   });
 
-  it("boolean", () => {
+  test("boolean", () => {
     const array: [boolean, boolean] = [true, false];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${boolean},${boolean}`>();
   });
 
-  it("null", () => {
+  test("null", () => {
     const array: [null, null] = [null, null];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<",">();
   });
 
-  it("undefined", () => {
+  test("undefined", () => {
     const array: [undefined, undefined] = [undefined, undefined];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<",">();
   });
 
-  it("mixed", () => {
+  test("mixed", () => {
     const array: [number, undefined, string] = [1, undefined, "a"];
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${number},,${string}`>();
   });
 
-  it("nullish items", () => {
+  test("nullish items", () => {
     const array: [
       "prefix" | undefined,
       "midfix" | undefined,

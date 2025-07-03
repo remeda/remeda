@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- We just want to build types, we don't care about using the params... */
 
+import { describe, expectTypeOf, test } from "vitest";
 import { doNothing } from "./doNothing";
 import { funnel } from "./funnel";
 

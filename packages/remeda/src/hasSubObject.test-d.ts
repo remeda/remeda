@@ -1,17 +1,18 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
 
 describe("data-first", () => {
-  it("returns boolean", () => {
+  test("returns boolean", () => {
     expectTypeOf(hasSubObject({ a: 2 }, { a: 1 })).toEqualTypeOf<boolean>();
   });
 
-  it("doesn't require sub-object to have all keys", () => {
+  test("doesn't require sub-object to have all keys", () => {
     // ok
     hasSubObject({ a: 1, b: 2 }, { b: 2 });
   });
 
-  it("doesn't allow sub-object to have distinct keys from super-object", () => {
+  test("doesn't allow sub-object to have distinct keys from super-object", () => {
     // @ts-expect-error [ts2322] - non-matching key
     hasSubObject({ b: 2 }, { a: 1 });
 
@@ -19,7 +20,7 @@ describe("data-first", () => {
     hasSubObject({ b: 2 }, { b: 2, a: 1 });
   });
 
-  it("doesn't allow keys to have different types", () => {
+  test("doesn't allow keys to have different types", () => {
     // @ts-expect-error [ts2322] - `number` isn't assignable to `string`
     hasSubObject({ a: "a" }, { a: 1 });
 
@@ -30,7 +31,7 @@ describe("data-first", () => {
     hasSubObject({ a: { b: 2 } }, { a: "a" });
   });
 
-  it("allows keys to have different types when types are overlapping", () => {
+  test("allows keys to have different types when types are overlapping", () => {
     // ok - union type in super-object
     hasSubObject({ a: "a" as number | string }, { a: 1 });
 
@@ -41,12 +42,12 @@ describe("data-first", () => {
     hasSubObject({ a: "a" as number | string }, { a: 1 as boolean | number });
   });
 
-  it("allows const types", () => {
+  test("allows const types", () => {
     // ok - const value
     hasSubObject({ a: 2, b: 2 }, { a: 1 } as const);
   });
 
-  it("only allows valid objects to be passed", () => {
+  test("only allows valid objects to be passed", () => {
     // @ts-expect-error [ts2345] - only allow valid objects to be passed
     hasSubObject({ a: 2 } as unknown, { a: 1 });
 
@@ -54,7 +55,7 @@ describe("data-first", () => {
     hasSubObject({ a: 2 }, { a: 1 } as unknown);
   });
 
-  it("allows nested objects", () => {
+  test("allows nested objects", () => {
     // ok - nested objects
     hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 2 } });
 
@@ -72,7 +73,7 @@ describe("data-first", () => {
     });
   });
 
-  it("doesn't allow nested objects to have missing keys", () => {
+  test("doesn't allow nested objects to have missing keys", () => {
     // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
     hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1 } });
 
@@ -82,7 +83,7 @@ describe("data-first", () => {
     });
   });
 
-  it("doesn't allow nested objects to have extra keys", () => {
+  test("doesn't allow nested objects to have extra keys", () => {
     // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
     hasSubObject({ a: { b: 1 } }, { a: { b: 1, c: 2 } });
 
@@ -92,7 +93,7 @@ describe("data-first", () => {
     });
   });
 
-  it("doesn't allow nested objects keys to have different types", () => {
+  test("doesn't allow nested objects keys to have different types", () => {
     // @ts-expect-error [ts2322] - nested sub-object has wrong value types
     hasSubObject({ a: { b: 4, c: "c" } }, { a: { b: 1, c: 2 } });
 
@@ -106,7 +107,7 @@ describe("data-first", () => {
     hasSubObject({ a: { b: { c: 2 } } }, { a: { b: "a" } });
   });
 
-  it("allows nested objects keys to have different types when types are overlapping", () => {
+  test("allows nested objects keys to have different types when types are overlapping", () => {
     // ok - union type in nested super-object
     hasSubObject({ a: { b: 1 as number | string } }, { a: { b: 1 } });
 
@@ -120,7 +121,7 @@ describe("data-first", () => {
     );
   });
 
-  it("allows interfaces", () => {
+  test("allows interfaces", () => {
     interface AB {
       a: number;
       b: number;
@@ -135,7 +136,7 @@ describe("data-first", () => {
     ).toEqualTypeOf<boolean>();
   });
 
-  it("narrows with empty object", () => {
+  test("narrows with empty object", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, {})) {
@@ -145,7 +146,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows with same object", () => {
+  test("narrows with same object", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, obj)) {
@@ -155,7 +156,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows optional field to required", () => {
+  test("narrows optional field to required", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, { a: "a" })) {
@@ -165,7 +166,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows field to constant type", () => {
+  test("narrows field to constant type", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, { a: "a" } as const)) {
@@ -175,7 +176,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows with sub-object union type field", () => {
+  test("narrows with sub-object union type field", () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
     if (hasSubObject(obj, { c: true as boolean | number })) {
@@ -193,7 +194,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows union types", () => {
+  test("narrows union types", () => {
     const obj: { a?: string; b?: number; c?: number | string } = {};
 
     if (hasSubObject(obj, { c: true } as { c?: boolean | number })) {
@@ -211,7 +212,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows nested fields with sub-object union types", () => {
+  test("narrows nested fields with sub-object union types", () => {
     const obj = {
       a: { foo: "test", bar: true },
       b: { foo: "test", bar: true },
@@ -235,7 +236,7 @@ describe("data-first", () => {
     }
   });
 
-  it("narrows nested fields with union types", () => {
+  test("narrows nested fields with union types", () => {
     const obj = {
       a: { foo: "test" as number | string, bar: true },
       b: { foo: "test", bar: true as boolean | number },
@@ -261,20 +262,20 @@ describe("data-first", () => {
 });
 
 describe("data-last", () => {
-  it("returns boolean", () => {
+  test("returns boolean", () => {
     expectTypeOf(
       pipe({ a: 2 }, hasSubObject({ a: 1 })),
     ).toEqualTypeOf<boolean>();
   });
 
-  it("doesn't require sub-object to have all keys", () => {
+  test("doesn't require sub-object to have all keys", () => {
     // ok
     hasSubObject({ b: 2 })({ a: 1, b: 2 });
     // ok
     pipe({ a: 1, b: 2 }, hasSubObject({ b: 2 }));
   });
 
-  it("doesn't allow sub-object to have distinct keys from super-object", () => {
+  test("doesn't allow sub-object to have distinct keys from super-object", () => {
     // @ts-expect-error [ts2353] - non-matching key
     hasSubObject({ a: 1 })({ b: 2 });
     // @ts-expect-error [ts2345] - non-matching key
@@ -286,7 +287,7 @@ describe("data-last", () => {
     pipe({ b: 2 }, hasSubObject({ b: 2, a: 1 }));
   });
 
-  it("doesn't allow keys to have different types", () => {
+  test("doesn't allow keys to have different types", () => {
     // @ts-expect-error [ts2322] - `string` isn't assignable to `number`
     hasSubObject({ a: 1 })({ a: "a" });
     // @ts-expect-error [ts2345] - `string` isn't assignable to `number`
@@ -303,7 +304,7 @@ describe("data-last", () => {
     pipe({ a: { b: 2 } }, hasSubObject({ a: "a" }));
   });
 
-  it("allows keys to have different types when types are overlapping", () => {
+  test("allows keys to have different types when types are overlapping", () => {
     // ok - union type in super-object
     hasSubObject({ a: 1 })({ a: "a" as number | string });
     pipe({ a: "a" as number | string }, hasSubObject({ a: 1 }));
@@ -322,19 +323,19 @@ describe("data-last", () => {
     );
   });
 
-  it("allows const types", () => {
+  test("allows const types", () => {
     // ok - const value
     pipe({ a: 2, b: 2 }, hasSubObject({ a: 1 } as const));
   });
 
-  it("only allows valid objects to be passed", () => {
+  test("only allows valid objects to be passed", () => {
     // @ts-expect-error [ts2345] - only allow valid objects to be passed
     hasSubObject({ a: 1 })({ a: 2 } as unknown);
     // @ts-expect-error [ts2345] - only allow valid objects to be passed
     pipe({ a: 2 } as unknown, hasSubObject({ a: 1 }));
   });
 
-  it("allows nested objects", () => {
+  test("allows nested objects", () => {
     // ok - nested objects
     hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 1, c: 2 } });
     pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 2 } }));
@@ -358,7 +359,7 @@ describe("data-last", () => {
     );
   });
 
-  it("doesn't allow nested objects to have missing keys", () => {
+  test("doesn't allow nested objects to have missing keys", () => {
     // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
     hasSubObject({ a: { b: 1 } })({ a: { b: 1, c: 2 } });
     // @ts-expect-error [ts2345] - nested sub-object doesn't have `c` key
@@ -375,7 +376,7 @@ describe("data-last", () => {
     );
   });
 
-  it("doesn't allow nested objects to have extra keys", () => {
+  test("doesn't allow nested objects to have extra keys", () => {
     // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
     hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 1 } });
     // @ts-expect-error [ts2345] - nested sub-object has extra key `c`
@@ -392,7 +393,7 @@ describe("data-last", () => {
     );
   });
 
-  it("doesn't allow nested objects keys to have different types", () => {
+  test("doesn't allow nested objects keys to have different types", () => {
     // @ts-expect-error [ts2322] - nested sub-object has wrong value types
     hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 4, c: "c" } });
     // @ts-expect-error [ts2345] - nested sub-object has wrong value types
@@ -414,7 +415,7 @@ describe("data-last", () => {
     pipe({ a: { b: { c: 2 } } }, hasSubObject({ a: { b: "a" } }));
   });
 
-  it("allows nested objects keys to have different types when types are overlapping", () => {
+  test("allows nested objects keys to have different types when types are overlapping", () => {
     // ok - union type in nested super-object
     hasSubObject({ a: { b: 1 } })({ a: { b: 1 as number | string } });
     pipe({ a: { b: 1 as number | string } }, hasSubObject({ a: { b: 1 } }));
@@ -435,7 +436,7 @@ describe("data-last", () => {
     );
   });
 
-  it("allows interfaces", () => {
+  test("allows interfaces", () => {
     interface AB {
       a: number;
       b: number;
@@ -449,7 +450,7 @@ describe("data-last", () => {
     pipe({ a: 1, b: 2 } as AB, hasSubObject({ a: 1 } as A));
   });
 
-  it("narrows with empty object", () => {
+  test("narrows with empty object", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({})(obj)) {
@@ -459,7 +460,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows with same object", () => {
+  test("narrows with same object", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj)(obj)) {
@@ -469,7 +470,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows optional field to required", () => {
+  test("narrows optional field to required", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({ a: "a" })(obj)) {
@@ -479,7 +480,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows field to constant type", () => {
+  test("narrows field to constant type", () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({ a: "a" } as const)(obj)) {
@@ -489,7 +490,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows with sub-object union type field", () => {
+  test("narrows with sub-object union type field", () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
     if (hasSubObject({ c: true as boolean | number })(obj)) {
@@ -507,7 +508,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows union types", () => {
+  test("narrows union types", () => {
     const obj: { a?: string; b?: number; c?: number | string } = {};
 
     if (hasSubObject({ c: true } as { c?: boolean | number })(obj)) {
@@ -525,7 +526,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows nested fields with sub-object union types", () => {
+  test("narrows nested fields with sub-object union types", () => {
     const obj = {
       a: { foo: "test", bar: true },
       b: { foo: "test", bar: true },
@@ -549,7 +550,7 @@ describe("data-last", () => {
     }
   });
 
-  it("narrows nested fields with union types", () => {
+  test("narrows nested fields with union types", () => {
     const obj = {
       a: { foo: "test" as number | string, bar: true },
       b: { foo: "test", bar: true as boolean | number },

@@ -1,3 +1,4 @@
+import { expectTypeOf, test } from "vitest";
 import { randomInteger } from "./randomInteger";
 
 test("returns number when from is float", () => {

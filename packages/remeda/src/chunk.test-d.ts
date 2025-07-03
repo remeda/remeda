@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, test } from "vitest";
 import { chunk } from "./chunk";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 

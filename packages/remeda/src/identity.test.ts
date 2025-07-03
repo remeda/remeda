@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { add } from "./add";
 import { identity } from "./identity";
 import { map } from "./map";

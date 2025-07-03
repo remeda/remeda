@@ -1,20 +1,21 @@
+import { describe, expect, test } from "vitest";
 import { add } from "./add";
 import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
 
-it("works on trivially empty arrays", () => {
+test("works on trivially empty arrays", () => {
   expect(fromKeys([] as Array<string>, (item) => `${item}_`)).toStrictEqual({});
 });
 
-it("works on regular arrays", () => {
+test("works on regular arrays", () => {
   expect(fromKeys(["a"], (item) => `${item}_`)).toStrictEqual({ a: "a_" });
 });
 
-it("works with duplicates", () => {
+test("works with duplicates", () => {
   expect(fromKeys(["a", "a"], (item) => `${item}_`)).toStrictEqual({ a: "a_" });
 });
 
-it("uses the last value", () => {
+test("uses the last value", () => {
   let counter = 0;
 
   expect(
@@ -25,17 +26,17 @@ it("uses the last value", () => {
   ).toStrictEqual({ a: 2 });
 });
 
-it("works with number keys", () => {
+test("works with number keys", () => {
   expect(fromKeys([123], add(1))).toStrictEqual({ 123: 124 });
 });
 
-it("works with symbols", () => {
+test("works with symbols", () => {
   const symbol = Symbol("a");
 
   expect(fromKeys([symbol], () => 1)).toStrictEqual({ [symbol]: 1 });
 });
 
-it("works with a mix of key types", () => {
+test("works with a mix of key types", () => {
   const symbol = Symbol("a");
 
   expect(fromKeys(["a", 123, symbol], (item) => typeof item)).toStrictEqual({
@@ -46,7 +47,7 @@ it("works with a mix of key types", () => {
 });
 
 describe("dataLast", () => {
-  it("works on trivially empty arrays", () => {
+  test("works on trivially empty arrays", () => {
     expect(
       pipe(
         [] as Array<string>,
@@ -55,7 +56,7 @@ describe("dataLast", () => {
     ).toStrictEqual({});
   });
 
-  it("works on regular arrays", () => {
+  test("works on regular arrays", () => {
     expect(
       pipe(
         ["a"],
@@ -64,7 +65,7 @@ describe("dataLast", () => {
     ).toStrictEqual({ a: "a_" });
   });
 
-  it("works with duplicates", () => {
+  test("works with duplicates", () => {
     expect(
       pipe(
         ["a", "a"],
@@ -73,7 +74,7 @@ describe("dataLast", () => {
     ).toStrictEqual({ a: "a_" });
   });
 
-  it("uses the last value", () => {
+  test("uses the last value", () => {
     let counter = 0;
 
     expect(
@@ -87,11 +88,11 @@ describe("dataLast", () => {
     ).toStrictEqual({ a: 2 });
   });
 
-  it("works with number keys", () => {
+  test("works with number keys", () => {
     expect(pipe([123], fromKeys(add(1)))).toStrictEqual({ 123: 124 });
   });
 
-  it("works with symbols", () => {
+  test("works with symbols", () => {
     const symbol = Symbol("a");
 
     expect(
@@ -102,7 +103,7 @@ describe("dataLast", () => {
     ).toStrictEqual({ [symbol]: 1 });
   });
 
-  it("works with a mix of key types", () => {
+  test("works with a mix of key types", () => {
     const symbol = Symbol("a");
 
     expect(

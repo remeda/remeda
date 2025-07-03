@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { binarySearchCutoffIndex } from "./binarySearchCutoffIndex";
 
 describe("runtime correctness", () => {
