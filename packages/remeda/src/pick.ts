@@ -34,9 +34,13 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
     : never;
 
 /**
- * Bounded records have bounded keys and result in a bounded output. We rely on
- * the shape of the keys array to determine which keys are guaranteed and which
- * are optional.
+ * Bounded records have bounded keys and result in a bounded output. The only
+ * question left is whether to add the prop as-is, or make it optional. This
+ * can be determined by the part of the keys array the prop is defined in, and
+ * the way that element is defined: if the array contains a singular literal
+ * key in either the required prefix or the suffix, we know that prop should be
+ * picked as-is, otherwise, the key might not be present in the keys array so it
+ * can only be picked optionally.
  */
 type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
   // Literal keys in the prefix/suffix are guaranteed present.
