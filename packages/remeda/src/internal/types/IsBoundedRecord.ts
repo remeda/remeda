@@ -8,8 +8,8 @@ import type { IsBounded } from "./IsBounded";
  * See the docs for `IsBounded` to understand more.
  *
  * @example
- *   IfBoundedRecord<{ a: 1, 1: "a" }>; //=> true
- *   IfBoundedRecord<Record<string | number, unknown>>; //=> false
- *   IfBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
+ *   IsBoundedRecord<{ a: 1, 1: "a" }>; //=> true
+ *   IsBoundedRecord<Record<string | number, unknown>>; //=> false
+ *   IsBoundedRecord<Record<`prefix_${number}`, unknown>>; //=> false
  */
 export type IsBoundedRecord<T> = IsBounded<KeysOfUnion<T>>;
