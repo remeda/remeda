@@ -163,13 +163,9 @@ describe("built-in types", () => {
   });
 });
 
-test("clones File objects", async () => {
-  // TODO [>2]: Remove this condition once we drop support for Node 18.
-  // eslint-disable-next-line vitest/no-conditional-in-test -- required to allow testing under Node 18.
-  if (!("File" in globalThis)) {
-    return;
-  }
-
+test
+  // TODO [>2]: Remove this skipIf once we drop support for Node 18.
+  .skipIf(!("File" in globalThis))("clones File objects", async () => {
   const original = new File(["Hello, World!"], "foo.txt", {
     type: "text/plain",
   });
