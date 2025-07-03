@@ -52,13 +52,22 @@ function cloneImplementation<T>(
     return value;
   }
 
+  if (typeof value !== "object" || value === null) {
+    // Only objects are interesting when cloning, everything else can use
+    // whatever JS does by default.
+    return structuredClone(value);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const prototype = Object.getPrototypeOf(value);
   if (
-    typeof value !== "object" ||
-    value === null ||
-    value instanceof Date ||
-    value instanceof RegExp
+    !Array.isArray(value) &&
+    prototype !== null &&
+    prototype !== Object.prototype
   ) {
-    // We can use the built-in deep cloning function.
+    // Our cloning logic is only designed for plain objects and arrays; other
+    // object types (like `Date`, `RegExp`, `File`, and user-defined classes)
+    // wouldn't clone properly. We fallback to the native cloning for them.
     return structuredClone(value);
   }
 

@@ -163,6 +163,28 @@ describe("built-in types", () => {
   });
 });
 
+test("clones File objects", async () => {
+  // TODO [>2]: Remove this condition once we drop support for Node 18.
+  // eslint-disable-next-line vitest/no-conditional-in-test -- required to allow testing under Node 18.
+  if (!("File" in globalThis)) {
+    return;
+  }
+
+  const original = new File(["Hello, World!"], "foo.txt", {
+    type: "text/plain",
+  });
+  const cloned = clone(original);
+
+  // Validate it's actually cloned...
+  expect(cloned).not.toBe(original);
+
+  expect(cloned.size).toBe(original.size);
+  expect(cloned.type).toBe(original.type);
+  expect(cloned.name).toBe(original.name);
+  expect(cloned.lastModified).toBe(original.lastModified);
+  await expect(cloned.text()).resolves.toBe("Hello, World!");
+});
+
 describe("nested mixed objects", () => {
   test("clones array with objects", () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
