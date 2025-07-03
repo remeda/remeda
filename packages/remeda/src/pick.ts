@@ -20,9 +20,8 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
           IsNever<Extract<Keys[number], keyof T>>,
           EmptyObject,
           // Remove readonly modifiers from picked props since we return a new,
-          // mutable, object. Additionally, we usually wrap our types with
-          // `Simplify` to flatten any complex types, but Writable does that
-          // for us here.
+          // mutable, object. We don't wrap the result with `Simplify` to
+          // flatten it because `Writable` does the same thing implicitly.
           Writable<
             If<
               IsBoundedRecord<T>,
