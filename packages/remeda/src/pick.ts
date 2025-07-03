@@ -12,9 +12,9 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
     ? Keys extends unknown
       ? If<
           // When T is a union (or when Keys is empty) the picked props might
-          // not exist in some of its sub-types (e.g.,
-          //   `pick(... as { a: string } | { b: number }, ['a'])`
-          // ). If we simply let the regular "constructive" logic run, the
+          // not exist in some of its sub-types, e.g.,
+          //   `pick(... as { a: string } | { b: number }, ['a'])`,
+          // if we simply let the regular "constructive" logic run, the
           // resulting type would be `{}` which doesn't behave like an empty
           // object; instead, we want to use a more explicit *empty* type.
           IsNever<Extract<Keys[number], keyof T>>,
