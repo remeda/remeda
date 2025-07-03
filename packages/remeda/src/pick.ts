@@ -25,8 +25,8 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
           Writable<
             If<
               IsBoundedRecord<T>,
-              BoundedPickFromArray<T, Keys>,
-              UnboundedPickFromArray<T, Keys>
+              PickBoundedFromArray<T, Keys>,
+              PickUnbounded<T, Extract<Keys[number], keyof T>>
             >
           >
         >
@@ -42,7 +42,7 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
  * picked as-is, otherwise, the key might not be present in the keys array so it
  * can only be picked optionally.
  */
-type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
+type PickBoundedFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
   // Literal keys in the prefix/suffix are guaranteed present.
   Pick<
     T,
@@ -90,22 +90,20 @@ type ItemsByUnion<T, Singular = never, Union = never> = T extends readonly [
   : { singular: Singular; union: Union };
 
 /**
- * The built-in `Pick` is weird when it comes to unbounded records because it
- * reconstructs the output object regardless of the shape of the input:
- * `Pick<Record<string, "world">, "hello">` results in the type
+ * The built-in `Pick` is weird when it comes to picking bounded keys from
+ * unbounded records. It reconstructs the output object regardless of the shape
+ * of the input: `Pick<Record<string, "world">, "hello">` results in the type
  * `{ hello: "world" }`, but you'd expect it to be optional because we don't
- * know if the record contains a `hello` prop or not. This means that when we
- * know the picked keys would create a bounded record **as output**, we need to
- * manually make the output Partial.
+ * know if the record contains a `hello` prop or not!
+ *
+ * !Important: We assume T is unbounded and don't test for it!
  *
  * See: https://www.typescriptlang.org/play/?#code/PTAEE0HsFcHIBNQFMAeAHJBjALqAGqNpKAEZKigAGA3qABZIA2jkA-AFygBEA7pAE6N4XUAF9KAGlLRcAQ0ayAzgChsATwz5QAXlAAFAJaYA1gB4ASlgHxTi7PwMA7AOZTeAoVwB8bhs0jeANzKIBSgAHqsykA.
  */
-type UnboundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> = If<
-  IsBounded<Keys[number]>,
-  // When T is a union the keys need to be narrowed to just those that are keys
-  // of the specific sub-type being built.
-  Partial<Pick<T, Extract<Keys[number], keyof T>>>,
-  Pick<T, Extract<Keys[number], keyof T>>
+type PickUnbounded<T, Keys extends keyof T> = If<
+  IsBounded<Keys>,
+  Partial<Pick<T, Keys>>,
+  Pick<T, Keys>
 >;
 
 /**
