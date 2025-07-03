@@ -73,11 +73,7 @@ type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
 
 /**
  * We split the fixed tuple item types into **singular** props (e.g., `"a"`),
- * and unions of several props (e.g., `"a" | "b"`). Singular props are ensured
- * to **always** be in the keys array, and thus always be picked in the
- * output, as-is. Unions define a softer constraint, that their members are
- * only optionally present in the keys array, and thus should also be optional
- * in the output type.
+ * and unions of several props (e.g., `"a" | "b"`).
  *
  * We assume that T is a fixed tuple (no optional or rest elements), and that
  * all elements in it are bounded (as defined by `IsBounded`).
