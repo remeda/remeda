@@ -51,7 +51,7 @@ test("unions between string, number, symbol", () => {
   ).toEqualTypeOf<true>();
 });
 
-test("unions with unbound types", () => {
+test("unions with unbounded types", () => {
   expectTypeOf(isBounded("a" as "a" | number)).toEqualTypeOf<false>();
   expectTypeOf(isBounded(1 as 1 | string)).toEqualTypeOf<false>();
 });
@@ -71,7 +71,7 @@ test("bounded template strings", () => {
   ).toEqualTypeOf<true>();
 });
 
-test("unbound template strings", () => {
+test("unbounded template strings", () => {
   expectTypeOf(isBounded("a_1" as `a_${number}`)).toEqualTypeOf<false>();
   expectTypeOf(
     isBounded("a_1" as `${"a" | "b"}_${number}`),

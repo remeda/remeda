@@ -585,7 +585,7 @@ describe("bounded object types", () => {
 });
 
 // @see https://github.com/remeda/remeda/issues/1128
-describe("unbound record types (Issue #1128)", () => {
+describe("unbounded record types (Issue #1128)", () => {
   const DATA = {} as Record<string, "required">;
   const UNDEFINABLE = {} as Record<string, "undefinable" | undefined>;
 
@@ -923,7 +923,7 @@ describe("unbound record types (Issue #1128)", () => {
     });
   });
 
-  test("narrows on unbound keys but doesn't make it partial", () => {
+  test("narrows on unbounded keys but doesn't make it partial", () => {
     const picks = [] as Array<`prefix_${string}`>;
 
     expectTypeOf(pick(DATA, picks)).toEqualTypeOf<
@@ -1041,7 +1041,7 @@ describe("union key array types", () => {
       ).toEqualTypeOf<{ a: string } | { b: string }>();
     });
 
-    test("unbound record", () => {
+    test("unbounded record", () => {
       expectTypeOf(
         pick({} as Record<string, "value">, ["a"] as ["a"] | ["b"]),
       ).toEqualTypeOf<{ a?: "value" } | { b?: "value" }>();
@@ -1057,7 +1057,7 @@ describe("union key array types", () => {
       >();
     });
 
-    test("unbound record", () => {
+    test("unbounded record", () => {
       expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
         { a?: "value"; b?: "value" } | { b?: "value"; c?: "value" }
       >();
@@ -1076,7 +1076,7 @@ describe("union key array types", () => {
       >();
     });
 
-    test("unbound record", () => {
+    test("unbounded record", () => {
       expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
         | { a?: "value"; b?: "value"; c?: "value" }
         | { b?: "value"; c?: "value"; d?: "value" }
@@ -1095,7 +1095,7 @@ describe("union key array types", () => {
       >();
     });
 
-    test("unbound record", () => {
+    test("unbounded record", () => {
       expectTypeOf(pick({} as Record<string, "value">, picks)).toEqualTypeOf<
         { a?: "value"; b?: "value"; c?: "value" } | { d?: "value" }
       >();
