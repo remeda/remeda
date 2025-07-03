@@ -167,7 +167,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: 🐢 Slow Types
-        run: npm --workspace=remeda run publish:jsr -- --dry-run
+        run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
 
   preview:
     name: 🧑‍🔬 Preview
