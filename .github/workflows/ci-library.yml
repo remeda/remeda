@@ -262,6 +262,8 @@ jobs:
     steps:
       - name: ⬇️ Checkout Repo
         uses: actions/checkout@v4
+        with:
+          fetch-tags: true
 
       - name: 🏷️ Repo Latest Released Version?
         id: latest-released
