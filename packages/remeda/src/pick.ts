@@ -46,11 +46,11 @@ type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
   // Literal keys in the prefix/suffix are guaranteed present.
   Pick<
     T,
+    // When T is a union the keys need to be narrowed to just those that are
+    // keys of the specific sub-type being built
     Extract<
       | ItemsByUnion<TupleParts<Keys>["required"]>["singular"]
       | ItemsByUnion<TupleParts<Keys>["suffix"]>["singular"],
-      // When T is a union the keys need to be narrowed to just those that are
-      // keys of the specific sub-type being built
       keyof T
     >
   > &
@@ -58,14 +58,14 @@ type BoundedPickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
     Partial<
       Pick<
         T,
+        // When T is a union the keys need to be narrowed to just those that are
+        // keys of the specific sub-type being built.
         Extract<
           | ItemsByUnion<TupleParts<Keys>["required"]>["union"]
           // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements are always implicitly `undefined` too; which breaks the constraint that all keys are keys of T (`undefined` is not a key of anything). We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
           | TupleParts<Keys>["optional"][number]
           | TupleParts<Keys>["item"]
           | ItemsByUnion<TupleParts<Keys>["suffix"]>["union"],
-          // When T is a union the keys need to be narrowed to just those that
-          // are keys of the specific sub-type being built.
           keyof T
         >
       >
