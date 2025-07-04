@@ -2,6 +2,7 @@
 
 import { describe, expect, test } from "vitest";
 import { clone } from "./clone";
+import { version } from "node:process";
 
 describe("primitive types", () => {
   test("number", () => {
@@ -161,6 +162,36 @@ describe("built-in types", () => {
     expect(cloned.ignoreCase).toStrictEqual(pattern.ignoreCase);
     expect(cloned.multiline).toStrictEqual(pattern.multiline);
   });
+});
+
+test.skipIf(
+  // TODO [>2]: Remove this skipIf once we drop support for Node 18.
+  !("File" in globalThis),
+)("clones File objects", async () => {
+  const original = new File(["Hello, World!"], "foo.txt", {
+    type: "text/plain",
+  });
+  const cloned = clone(original);
+
+  // Validate it's actually cloned...
+  expect(cloned).not.toBe(original);
+
+  expect(cloned.size).toBe(original.size);
+  expect(cloned.type).toBe(original.type);
+
+  // Older node versions didn't perform a full clone on Files.
+  const isPartialClone =
+    // TODO [>3]: Remove this once we drop support for Node 20.
+    version.startsWith("v20.") ||
+    // TODO [>4]: Remove this once we drop support for Node 22.
+    version.startsWith("v22.");
+
+  expect(cloned.name).toBe(isPartialClone ? undefined : original.name);
+  expect(cloned.lastModified).toBe(
+    isPartialClone ? undefined : original.lastModified,
+  );
+
+  await expect(cloned.text()).resolves.toBe("Hello, World!");
 });
 
 describe("nested mixed objects", () => {
