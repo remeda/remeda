@@ -1,68 +1,128 @@
-const DEFAULT_OMISSION = "...";
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
+import type { And, IsStringLiteral, Join, NonNegativeInteger } from "type-fest";
+import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
+import type { If } from "./internal/types/If";
 
 type TruncateOptions = {
   readonly omission?: string;
   readonly separator?: string | RegExp;
 };
 
+const DEFAULT_OMISSION = "...";
+
+type Truncated<
+  S extends string,
+  N extends number,
+  Options extends TruncateOptions = {},
+> = TruncatedImpl<
+  S,
+  N,
+  Options extends { omission: infer Omission }
+    ? Omission
+    : typeof DEFAULT_OMISSION,
+  Options extends { separator: infer Separator } ? Separator : undefined
+>;
+
+type TruncatedImpl<
+  S extends string,
+  N extends number,
+  Omission extends string,
+  Separator extends string | RegExp | undefined,
+> = If<
+  And<IsStringLiteral<S>, IsStringLiteral<Omission>>,
+  `${Join<StringTake<S, Remaining<N, Omission>>, "">}${Omission}`,
+  string
+>;
+
+type Remaining<
+  N extends number,
+  Omission extends string,
+> = ClampedIntegerSubtract<N, StringLength<Omission>>;
+
+type StringTake<
+  S extends string,
+  N extends number,
+  Characters extends ReadonlyArray<string> = [],
+> = Characters["length"] extends N
+  ? Characters
+  : S extends `${infer Character}${infer Rest}`
+    ? StringTake<Rest, N, [...Characters, Character]>
+    : Characters;
+
+type StringLength<
+  S extends string,
+  Characters extends ReadonlyArray<string> = [],
+> = S extends `${infer Character}${infer Rest}`
+  ? StringLength<Rest, [...Characters, Character]>
+  : Characters["length"];
+
+export function truncate<
+  S extends string,
+  N extends number,
+  Options extends TruncateOptions = {},
+>(
+  data: S,
+  n: NonNegativeInteger<N>,
+  options?: Options,
+): Truncated<S, N, Options>;
 export function truncate(
   data: string,
-  maxLength: number,
+  n: number,
   options?: TruncateOptions,
 ): string;
 export function truncate(
-  maxLength: number,
+  n: number,
   options?: TruncateOptions,
 ): (data: string) => string;
 
 export function truncate(
-  dataOrMaxLength: string | number,
-  maxLengthOrOptions?: number | TruncateOptions,
+  dataOrN: string | number,
+  nOrOptions?: number | TruncateOptions,
   options?: TruncateOptions,
 ): unknown {
-  return typeof dataOrMaxLength === "string"
+  return typeof dataOrN === "string"
     ? truncateImplementation(
-        dataOrMaxLength,
+        dataOrN,
         // @ts-expect-error [ts2345] -- We want to reduce runtime checks to a
         // minimum, and there's no (easy) way to couple params so that when we
         // check one, the others are inferred accordingly.
-        maxLengthOrOptions,
+        nOrOptions,
         options,
       )
     : (data: string) =>
         truncateImplementation(
           data,
-          dataOrMaxLength,
+          dataOrN,
           // @ts-expect-error [ts2345] -- We want to reduce runtime checks to a
           // minimum, and there's no (easy) way to couple params so that when we
           // check one, the others are inferred accordingly.
-          maxLengthOrOptions,
+          nOrOptions,
         );
 }
 
 function truncateImplementation(
   data: string,
-  maxLength: number,
+  n: number,
   { omission = DEFAULT_OMISSION, separator }: TruncateOptions = {},
 ): string {
-  if (data.length <= maxLength) {
+  if (data.length <= n) {
     // No truncation needed.
     return data;
   }
 
-  if (maxLength <= 0) {
-    // Avoid weirdness when maxLength isn't positive.
+  if (n <= 0) {
+    // Avoid weirdness when n isn't positive.
     return "";
   }
 
   // Handle cases where the omission itself is too long.
   const effectiveOmission =
-    omission.length > maxLength ? omission.slice(0, maxLength) : omission;
+    omission.length > n ? omission.slice(0, n) : omission;
 
   // Our trivial cutoff is the point where we can add the omission and reach
-  // the max length exactly, this is what we'll use when no separator is
-  // provided.
-  let cutoff = maxLength - effectiveOmission.length;
+  // n exactly, this is what we'll use when no separator is provided.
+  let cutoff = n - effectiveOmission.length;
 
   if (typeof separator === "string") {
     const lastSeparator = data.lastIndexOf(separator, cutoff);
