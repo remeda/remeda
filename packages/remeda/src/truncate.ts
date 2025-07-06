@@ -1,31 +1,49 @@
-const DEFAULT_MAX_LENGTH = 30;
 const DEFAULT_OMISSION = "...";
 
 type TruncateOptions = {
-  readonly maxLength?: number;
   readonly omission?: string;
   readonly separator?: string | RegExp;
 };
 
-export function truncate(data: string, options?: TruncateOptions): string;
-export function truncate(options?: TruncateOptions): (data: string) => string;
+export function truncate(
+  data: string,
+  maxLength: number,
+  options?: TruncateOptions,
+): string;
+export function truncate(
+  maxLength: number,
+  options?: TruncateOptions,
+): (data: string) => string;
 
 export function truncate(
-  dataOrOptions: string | TruncateOptions | undefined,
+  dataOrMaxLength: string | number,
+  maxLengthOrOptions?: number | TruncateOptions,
   options?: TruncateOptions,
 ): unknown {
-  return typeof dataOrOptions === "string"
-    ? truncateImplementation(dataOrOptions, options)
-    : (data: string) => truncateImplementation(data, dataOrOptions);
+  return typeof dataOrMaxLength === "string"
+    ? truncateImplementation(
+        dataOrMaxLength,
+        // @ts-expect-error [ts2345] -- We want to reduce runtime checks to a
+        // minimum, and there's no (easy) way to couple params so that when we
+        // check one, the others are inferred accordingly.
+        maxLengthOrOptions,
+        options,
+      )
+    : (data: string) =>
+        truncateImplementation(
+          data,
+          dataOrMaxLength,
+          // @ts-expect-error [ts2345] -- We want to reduce runtime checks to a
+          // minimum, and there's no (easy) way to couple params so that when we
+          // check one, the others are inferred accordingly.
+          maxLengthOrOptions,
+        );
 }
 
 function truncateImplementation(
   data: string,
-  {
-    maxLength = DEFAULT_MAX_LENGTH,
-    omission = DEFAULT_OMISSION,
-    separator,
-  }: TruncateOptions = {},
+  maxLength: number,
+  { omission = DEFAULT_OMISSION, separator }: TruncateOptions = {},
 ): string {
   if (data.length <= maxLength) {
     // No truncation needed.
