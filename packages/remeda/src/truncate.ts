@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-import type { And, IsStringLiteral, Join, NonNegativeInteger } from "type-fest";
+import type {
+  And,
+  IsEqual,
+  IsStringLiteral,
+  Join,
+  NonNegativeInteger,
+} from "type-fest";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { If } from "./internal/types/If";
 
@@ -15,7 +21,7 @@ type Truncated<
   S extends string,
   N extends number,
   Options extends TruncateOptions = {},
-> = TruncatedImpl<
+> = TruncatedWithOptions<
   S,
   N,
   Options extends { omission: infer Omission }
@@ -24,31 +30,39 @@ type Truncated<
   Options extends { separator: infer Separator } ? Separator : undefined
 >;
 
-type TruncatedImpl<
+type TruncatedWithOptions<
   S extends string,
   N extends number,
   Omission extends string,
   Separator extends string | RegExp | undefined,
 > = If<
-  And<IsStringLiteral<S>, IsStringLiteral<Omission>>,
-  `${Join<StringTake<S, Remaining<N, Omission>>, "">}${Omission}`,
+  IsStringLiteral<Omission>,
+  If<
+    IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
+    TruncateLiterals<Omission, N, "">,
+    If<
+      And<IsStringLiteral<S>, IsEqual<Separator, undefined>>,
+      TruncateLiterals<
+        S,
+        ClampedIntegerSubtract<N, StringLength<Omission>>,
+        Omission
+      >,
+      string
+    >
+  >,
   string
 >;
 
-type Remaining<
-  N extends number,
-  Omission extends string,
-> = ClampedIntegerSubtract<N, StringLength<Omission>>;
-
-type StringTake<
+type TruncateLiterals<
   S extends string,
   N extends number,
+  Omission extends string,
   Characters extends ReadonlyArray<string> = [],
-> = Characters["length"] extends N
-  ? Characters
-  : S extends `${infer Character}${infer Rest}`
-    ? StringTake<Rest, N, [...Characters, Character]>
-    : Characters;
+> = S extends `${infer Character}${infer Rest}`
+  ? Characters["length"] extends N
+    ? `${Join<Characters, "">}${Omission}`
+    : TruncateLiterals<Rest, N, Omission, [...Characters, Character]>
+  : Join<Characters, "">;
 
 type StringLength<
   S extends string,
@@ -116,13 +130,14 @@ function truncateImplementation(
     return "";
   }
 
-  // Handle cases where the omission itself is too long.
-  const effectiveOmission =
-    omission.length > n ? omission.slice(0, n) : omission;
+  if (n < omission.length) {
+    // Handle cases where the omission itself is too long.
+    return omission.slice(0, n);
+  }
 
   // Our trivial cutoff is the point where we can add the omission and reach
   // n exactly, this is what we'll use when no separator is provided.
-  let cutoff = n - effectiveOmission.length;
+  let cutoff = n - omission.length;
 
   if (typeof separator === "string") {
     const lastSeparator = data.lastIndexOf(separator, cutoff);
@@ -148,5 +163,5 @@ function truncateImplementation(
   }
 
   // Build the output.
-  return `${data.slice(0, cutoff)}${effectiveOmission}`;
+  return `${data.slice(0, cutoff)}${omission}`;
 }
