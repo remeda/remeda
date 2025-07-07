@@ -4,7 +4,7 @@ remeda: truncate
 ---
 
 - The `length` param in Remeda is not part of the options object and is required
-  as it's own argument. There is no implicit default length.
+  as its own argument. There is no implicit default length.
 - In Lodash, the function also supports some handling of Unicode characters
   (like Emojis). The Remeda implementation only supports ASCII.
 - In Lodash when `omission` is longer than the provided `length` the output
