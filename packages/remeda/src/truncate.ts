@@ -79,6 +79,51 @@ type StringLength<
   ? StringLength<Rest, [...Characters, Character]>
   : Characters["length"];
 
+/**
+ * Ensure that a string never exceeds the maximum length defined by `n`. When a
+ * string is longer, it will be truncated and the `omission` string will be
+ * appended to the end of the string, so that the total length of the string
+ * (including the `omission`) is at most `n`.
+ *
+ * In rare cases where `n` is less then the lenght of the `omission`,
+ * `omission` itself will be truncated instead.
+ *
+ * The function also takes an optional `separator` argument which defines an
+ * earlier cutoff point for the truncation which could be used to maintain
+ * word boundaries or other semantic boundaries in the string.
+ *
+ * IMPORTANT: If the truncation is aimed at a UI that is rendered by a browser,
+ * prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * instead. You should avoid handling rendering concerns in runtime code. This
+ * function doesn't handle diacritics, emojis, and any sort of semantic
+ * understanding of the string contents.
+ *
+ * If you don't need the special handling of the `omission` and `separator`
+ * logic consider using `sliceString` instead.
+ *
+ * @param data - The string to truncate.
+ * @param n - The maximum length of the output string. The output will **never**
+ * exceed this length.
+ * @param options - An optional options object.
+ * @param options.omission - The string that is appended to the end of the
+ * output *whenever the input string is truncated*. Default: '...'.
+ * @param options.separator - A string or regular expression that defines a
+ * cutoff point for the truncation. If multiple cutoff points are found, the one
+ * closest to `n` will be used, and if no cutoff point is found then the
+ * function will fallback to the trivial cutoff point. Regular expressions are
+ * also supported, but they must have the `global` flag. Default: <none> (which
+ * is equivalent to `""` and to the regular expression `/./gu`).
+ * @signature
+ *   R.truncate(data, n, { omission, separator });
+ * @example
+ *   R.truncate("Hello, world!", 8); //=> "Hello..."
+ *   R.truncate(
+ *     "cat, dog, mouse",
+ *     12,
+ *     { omission: "__", separator: ","},
+ *   ); //=> "cat, dog__"
+ * @dataFirst
+ */
 export function truncate<
   S extends string,
   N extends number,
@@ -94,6 +139,49 @@ export function truncate(
   options?: TruncateOptions,
 ): string;
 
+/**
+ * Ensure that a string never exceeds the maximum length defined by `n`. When a
+ * string is longer, it will be truncated and the `omission` string will be
+ * appended to the end of the string, so that the total length of the string
+ * (including the `omission`) is at most `n`.
+ *
+ * In rare cases where `n` is less then the lenght of the `omission`,
+ * `omission` itself will be truncated instead.
+ *
+ * The function also takes an optional `separator` argument which defines an
+ * earlier cutoff point for the truncation which could be used to maintain
+ * word boundaries or other semantic boundaries in the string.
+ *
+ * IMPORTANT: If the truncation is aimed at a UI that is rendered by a browser,
+ * prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * instead. You should avoid handling rendering concerns in runtime code. This
+ * function doesn't handle diacritics, emojis, and any sort of semantic
+ * understanding of the string contents.
+ *
+ * If you don't need the special handling of the `omission` and `separator`
+ * logic consider using `sliceString` instead.
+ *
+ * @param n - The maximum length of the output string. The output will **never**
+ * exceed this length.
+ * @param options - An optional options object.
+ * @param options.omission - The string that is appended to the end of the
+ * output *whenever the input string is truncated*. Default: '...'.
+ * @param options.separator - A string or regular expression that defines a
+ * cutoff point for the truncation. If multiple cutoff points are found, the one
+ * closest to `n` will be used, and if no cutoff point is found then the
+ * function will fallback to the trivial cutoff point. Regular expressions are
+ * also supported, but they must have the `global` flag. Default: <none> (which
+ * is equivalent to `""` and to the regular expression `/./gu`).
+ * @signature
+ *   R.truncate(n, { omission, separator })(data);
+ * @example
+ *   R.pipe("Hello, world!" as const, R.truncate(8)); //=> "Hello..."
+ *   R.pipe(
+ *     "cat, dog, mouse" as const,
+ *     R.truncate(12, { omission: "__", separator: ","}),
+ *   ); //=> "cat, dog__"
+ * @dataLast
+ */
 export function truncate<
   N extends number,
   const Options extends TruncateOptions = {},

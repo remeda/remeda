@@ -248,3 +248,5 @@ test("returns literal empty string for `n === 0` even when other inputs are not 
     }),
   ).toEqualTypeOf<"">();
 });
+
+truncate("Hello, world!", 8, { omission: "..." });
