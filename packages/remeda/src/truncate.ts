@@ -22,19 +22,16 @@ type Truncate<
   S extends string,
   N extends number,
   Options extends TruncateOptions = {},
-> = If<
-  IsEqual<N, 0>,
-  "",
-  TruncateWithOptions<
-    S,
-    N,
-    Options extends { omission: infer Omission extends string }
-      ? Omission
-      : typeof DEFAULT_OMISSION,
-    Options extends { separator: infer Separator extends string | RegExp }
-      ? Separator
-      : undefined
-  >
+> = TruncateWithOptions<
+  S,
+  N,
+  // TODO: I don't like how I handled the default options object; i want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
+  Options extends Pick<Required<TruncateOptions>, "omission">
+    ? Options["omission"]
+    : typeof DEFAULT_OMISSION,
+  Options extends Pick<Required<TruncateOptions>, "separator">
+    ? Options["separator"]
+    : undefined
 >;
 
 type TruncateWithOptions<
@@ -42,38 +39,77 @@ type TruncateWithOptions<
   N extends number,
   Omission extends string,
   Separator extends string | RegExp | undefined,
-> = Omission extends unknown
-  ? If<
-      IsStringLiteral<Omission>,
-      N extends unknown
-        ? If<
-            IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
-            TruncateLiterals<Omission, N, "">,
-            If<
-              And<IsStringLiteral<S>, IsEqual<Separator, undefined>>,
-              TruncateLiterals<
-                S,
-                ClampedIntegerSubtract<N, StringLength<Omission>>,
-                Omission
+> =
+  // When multiple values of `n` are provided we need to distribute the logic
+  // over each one as they would each produce a different output.
+  N extends unknown
+    ? If<
+        // We can short-circuit most of our logic when N is a literal 0, the
+        // only output truncate would ever return in this case is an empty
+        // string.
+        IsEqual<N, 0>,
+        "",
+        // It's rare that `omission` wouldn't be defined as a string literal,
+        // but if it's defined a union we need to distribute the logic over all
+        // possible values to get the correct output.
+        Omission extends unknown
+          ? If<
+              // When Omission isn't literal we don't know how long it is, so we
+              // can't say how the output would be shaped. Ideally this would
+              // be all prefixes of S up to N, with a suffix of `string`, but
+              // that type is neither useful nor easy to compute.
+              IsStringLiteral<Omission>,
+              If<
+                // This mirrors the runtime logic where if `n - omission.length`
+                // is not positive then what we end up truncating is the
+                // Omission itself and not S.
+                IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
+                TruncateLiterals<Omission, N, "">,
+                If<
+                  And<
+                    // We can only compute a literal output when the input is
+                    // literal because we know how long it is.
+                    IsStringLiteral<S>,
+                    // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                    IsEqual<Separator, undefined>
+                  >,
+                  TruncateLiterals<
+                    S,
+                    // We "fix" N so that it takes into account the length of
+                    // the omission.
+                    ClampedIntegerSubtract<N, StringLength<Omission>>,
+                    Omission
+                  >,
+                  string
+                >
               >,
               string
             >
-          >
-        : never,
-      string
-    >
-  : never;
+          : never
+      >
+    : never;
 
+/**
+ * This is the actual implementation of the truncation logic. It assumes all
+ * its params are literals and valid.
+ */
 type TruncateLiterals<
   S extends string,
   N extends number,
   Omission extends string,
   Characters extends ReadonlyArray<string> = [],
 > = S extends `${infer Character}${infer Rest}`
-  ? Characters["length"] extends N
+  ? // The order of the conditions here is important! The condition above is
+    // satisfied only when the string isn't empty. When the condition below is
+    // also satisfied it would mean that we found the cutoff point for the
+    // string and we know it was truncated.
+    Characters["length"] extends N
     ? `${Join<Characters, "">}${Omission}`
     : TruncateLiterals<Rest, N, Omission, [...Characters, Character]>
-  : Join<Characters, "">;
+  : // We reach this point only if the string "emptied out" before we processed
+    // N characters. This would mean it is shorter than N so we don't need to
+    // add the omission.
+    Join<Characters, "">;
 
 /**
  * Ensure that a string never exceeds the maximum length defined by `n`. When a
