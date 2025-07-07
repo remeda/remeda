@@ -17,41 +17,49 @@ type TruncateOptions = {
 
 const DEFAULT_OMISSION = "...";
 
-type Truncated<
+type Truncate<
   S extends string,
   N extends number,
   Options extends TruncateOptions = {},
-> = TruncatedWithOptions<
-  S,
-  N,
-  Options extends { omission: infer Omission }
-    ? Omission
-    : typeof DEFAULT_OMISSION,
-  Options extends { separator: infer Separator } ? Separator : undefined
+> = If<
+  IsEqual<N, 0>,
+  "",
+  TruncateWithOptions<
+    S,
+    N,
+    Options extends { omission: infer Omission }
+      ? Omission
+      : typeof DEFAULT_OMISSION,
+    Options extends { separator: infer Separator } ? Separator : undefined
+  >
 >;
 
-type TruncatedWithOptions<
+type TruncateWithOptions<
   S extends string,
   N extends number,
   Omission extends string,
   Separator extends string | RegExp | undefined,
-> = If<
-  IsStringLiteral<Omission>,
-  If<
-    IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
-    TruncateLiterals<Omission, N, "">,
-    If<
-      And<IsStringLiteral<S>, IsEqual<Separator, undefined>>,
-      TruncateLiterals<
-        S,
-        ClampedIntegerSubtract<N, StringLength<Omission>>,
-        Omission
-      >,
+> = Omission extends unknown
+  ? If<
+      IsStringLiteral<Omission>,
+      N extends unknown
+        ? If<
+            IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
+            TruncateLiterals<Omission, N, "">,
+            If<
+              And<IsStringLiteral<S>, IsEqual<Separator, undefined>>,
+              TruncateLiterals<
+                S,
+                ClampedIntegerSubtract<N, StringLength<Omission>>,
+                Omission
+              >,
+              string
+            >
+          >
+        : never,
       string
     >
-  >,
-  string
->;
+  : never;
 
 type TruncateLiterals<
   S extends string,
@@ -74,17 +82,25 @@ type StringLength<
 export function truncate<
   S extends string,
   N extends number,
-  Options extends TruncateOptions = {},
+  const Options extends TruncateOptions = {},
 >(
   data: S,
   n: NonNegativeInteger<N>,
   options?: Options,
-): Truncated<S, N, Options>;
+): Truncate<S, N, Options>;
 export function truncate(
   data: string,
   n: number,
   options?: TruncateOptions,
 ): string;
+
+export function truncate<
+  N extends number,
+  const Options extends TruncateOptions = {},
+>(
+  n: NonNegativeInteger<N>,
+  options?: Options,
+): <S extends string>(data: S) => Truncate<S, N, Options>;
 export function truncate(
   n: number,
   options?: TruncateOptions,
