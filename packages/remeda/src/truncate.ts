@@ -7,9 +7,9 @@ import type {
   Join,
   NonNegativeInteger,
 } from "type-fest";
-import type { StringLength } from "type-fest/source/internal";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { If } from "./internal/types/If";
+import type { StringLength } from "./internal/types/StringLength";
 
 type TruncateOptions = {
   readonly omission?: string;
