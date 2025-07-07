@@ -120,6 +120,7 @@ type TruncateLiterals<
  *     { omission: "__", separator: ","},
  *   ); //=> "cat, dog__"
  * @dataFirst
+ * @category String
  */
 export function truncate<
   S extends string,
@@ -179,6 +180,7 @@ export function truncate(
  *     R.truncate(12, { omission: "__", separator: ","}),
  *   ); //=> "cat, dog__"
  * @dataLast
+ * @category String
  */
 export function truncate<
   N extends number,
