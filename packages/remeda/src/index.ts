@@ -148,6 +148,7 @@ export * from "./toKebabCase";
 export * from "./toLowerCase";
 export * from "./toSnakeCase";
 export * from "./toUpperCase";
+export * from "./truncate";
 export * from "./uncapitalize";
 export * from "./unique";
 export * from "./uniqueBy";
