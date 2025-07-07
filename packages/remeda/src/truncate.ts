@@ -111,8 +111,9 @@ type StringLength<
  * cutoff point for the truncation. If multiple cutoff points are found, the one
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
- * also supported, but they must have the `global` flag. Default: <none> (which
- * is equivalent to `""` and to the regular expression `/./gu`).
+ * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
+ * flag. Default: <none> (which is equivalent to `""` and to the regular \
+ * expression `/./gu`).
  * @signature
  *   R.truncate(data, n, { omission, separator });
  * @example
@@ -170,8 +171,9 @@ export function truncate(
  * cutoff point for the truncation. If multiple cutoff points are found, the one
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
- * also supported, but they must have the `global` flag. Default: <none> (which
- * is equivalent to `""` and to the regular expression `/./gu`).
+ * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
+ * flag. Default: <none> (which is equivalent to `""` and to the regular \
+ * expression `/./gu`).
  * @signature
  *   R.truncate(n, { omission, separator })(data);
  * @example
