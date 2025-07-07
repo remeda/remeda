@@ -28,10 +28,12 @@ type Truncate<
   TruncateWithOptions<
     S,
     N,
-    Options extends { omission: infer Omission }
+    Options extends { omission: infer Omission extends string }
       ? Omission
       : typeof DEFAULT_OMISSION,
-    Options extends { separator: infer Separator } ? Separator : undefined
+    Options extends { separator: infer Separator extends string | RegExp }
+      ? Separator
+      : undefined
   >
 >;
 
