@@ -62,7 +62,7 @@ truncate(DATA, 30, { separator: "," });
 _.truncate(DATA, { separator: /,? +/ });
 
 // Remeda
-truncate(DATA, 30, { separator /,? +/g });
+truncate(DATA, 30, { separator: /,? +/g });
 ```
 
 ### All options

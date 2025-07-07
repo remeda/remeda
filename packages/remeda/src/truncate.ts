@@ -117,7 +117,7 @@ type TruncateLiterals<
  * appended to the end of the string, so that the total length of the string
  * (including the `omission`) is at most `n`.
  *
- * In rare cases where `n` is less then the lenght of the `omission`,
+ * In rare cases where `n` is less than the length of the `omission`,
  * `omission` itself will be truncated instead.
  *
  * The function also takes an optional `separator` argument which defines an
@@ -179,7 +179,7 @@ export function truncate(
  * appended to the end of the string, so that the total length of the string
  * (including the `omission`) is at most `n`.
  *
- * In rare cases where `n` is less then the lenght of the `omission`,
+ * In rare cases where `n` is less than the length of the `omission`,
  * `omission` itself will be truncated instead.
  *
  * The function also takes an optional `separator` argument which defines an
