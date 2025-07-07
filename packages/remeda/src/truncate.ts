@@ -62,7 +62,7 @@ type TruncateWithOptions<
                 TruncateLiterals<Omission, N, "">,
                 If<
                   And<
-                    // When S isn't literal we don't know how long it is.
+                    // Only compute literal output when input is literal.
                     IsStringLiteral<S>,
                     // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                     IsEqual<Separator, undefined>
@@ -172,7 +172,7 @@ export function truncate(
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
- * middle ofa word or other semantic boundary.
+ * middle of a word or other semantic boundary.
  *
  * If you just need to limit the total length of the string, without adding an
  * `omission` or optimizing the cutoff point via `separator`, prefer
