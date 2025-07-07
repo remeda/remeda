@@ -7,6 +7,7 @@ import type {
   Join,
   NonNegativeInteger,
 } from "type-fest";
+import type { StringLength } from "type-fest/source/internal";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { If } from "./internal/types/If";
 
@@ -71,13 +72,6 @@ type TruncateLiterals<
     ? `${Join<Characters, "">}${Omission}`
     : TruncateLiterals<Rest, N, Omission, [...Characters, Character]>
   : Join<Characters, "">;
-
-type StringLength<
-  S extends string,
-  Characters extends ReadonlyArray<string> = [],
-> = S extends `${infer Character}${infer Rest}`
-  ? StringLength<Rest, [...Characters, Character]>
-  : Characters["length"];
 
 /**
  * Ensure that a string never exceeds the maximum length defined by `n`. When a
