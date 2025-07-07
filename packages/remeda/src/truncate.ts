@@ -113,7 +113,7 @@ type TruncateLiterals<
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
- * middle ofa word or other semantic boundary.
+ * middle of a word or other semantic boundary.
  *
  * If you just need to limit the total length of the string, without adding an
  * `omission` or optimizing the cutoff point via `separator`, prefer
