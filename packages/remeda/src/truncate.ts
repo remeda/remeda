@@ -52,10 +52,7 @@ type TruncateWithOptions<
         // possible values to get the correct output.
         Omission extends unknown
           ? If<
-              // When Omission isn't literal we don't know how long it is, so we
-              // can't say how the output would be shaped. Ideally this would
-              // be all prefixes of S up to N, with a suffix of `string`, but
-              // that type is neither useful nor easy to compute.
+              // When Omission isn't literal we don't know how long it is.
               IsStringLiteral<Omission>,
               If<
                 // This mirrors the runtime logic where if `n - omission.length`
@@ -65,8 +62,7 @@ type TruncateWithOptions<
                 TruncateLiterals<Omission, N, "">,
                 If<
                   And<
-                    // We can only compute a literal output when the input is
-                    // literal because we know how long it is.
+                    // When S isn't literal we don't know how long it is.
                     IsStringLiteral<S>,
                     // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                     IsEqual<Separator, undefined>
@@ -74,7 +70,7 @@ type TruncateWithOptions<
                   TruncateLiterals<
                     S,
                     // We "fix" N so that it takes into account the length of
-                    // the omission.
+                    // the omission, at this point we know this is >0.
                     ClampedIntegerSubtract<N, StringLength<Omission>>,
                     Omission
                   >,
