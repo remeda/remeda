@@ -120,6 +120,10 @@ describe("with separator", () => {
   });
 });
 
+test("data is exactly the 'n' length", () => {
+  expectTypeOf(truncate("Hello, world!", 13)).toEqualTypeOf<"Hello, world!">();
+});
+
 describe("unions", () => {
   describe("union of 'data'", () => {
     test("both truncated", () => {
