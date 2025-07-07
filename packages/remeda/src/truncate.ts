@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-
 import type {
   And,
   IsEqual,
@@ -21,7 +19,7 @@ const DEFAULT_OMISSION = "...";
 type Truncate<
   S extends string,
   N extends number,
-  Options extends TruncateOptions = {},
+  Options extends TruncateOptions,
 > = TruncateWithOptions<
   S,
   N,
@@ -112,28 +110,25 @@ type TruncateLiterals<
     Join<Characters, "">;
 
 /**
- * Ensure that a string never exceeds the maximum length defined by `n`. When a
- * string is longer, it will be truncated and the `omission` string will be
- * appended to the end of the string, so that the total length of the string
- * (including the `omission`) is at most `n`.
+ * Truncates strings longer than `n`, appending an `omission` marker to them
+ * (which defaults to '...'); shorter strings are returned as-is. The total
+ * length of the output will never exceed `n` (in the rare case where the
+ * `omission` itself is too long, it will be truncated too).
  *
- * In rare cases where `n` is less than the length of the `omission`,
- * `omission` itself will be truncated instead.
+ * The `separator` argument provides more control by optimistically searching
+ * for a matching cutoff point, which could be used to avoid truncating in the
+ * middle ofa word or other semantic boundary.
  *
- * The function also takes an optional `separator` argument which defines an
- * earlier cutoff point for the truncation which could be used to maintain
- * word boundaries or other semantic boundaries in the string.
+ * If you just need to limit the total length of the string, without adding an
+ * `omission` or optimizing the cutoff point via `separator`, prefer
+ * `sliceString` instead, which runs more efficiently.
  *
- * IMPORTANT: If the truncation is aimed at a UI that is rendered by a browser,
- * prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
- * instead. You should avoid handling rendering concerns in runtime code. This
- * function doesn't handle diacritics, emojis, and any sort of semantic
- * understanding of the string contents.
+ * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
+ * the output is rendered in a browser; this function doesn't handle
+ * diacritics, emojis, and any sort of semantic understanding of the string
+ * contents.
  *
- * If you don't need the special handling of the `omission` and `separator`
- * logic consider using `sliceString` instead.
- *
- * @param data - The string to truncate.
+ * @param data - The input string.
  * @param n - The maximum length of the output string. The output will **never**
  * exceed this length.
  * @param options - An optional options object.
@@ -144,8 +139,8 @@ type TruncateLiterals<
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
  * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
- * flag. Default: <none> (which is equivalent to `""` and to the regular \
- * expression `/./gu`).
+ * flag. Default: <none> (which is equivalent to `""` or the regular expression
+ * `/./g`).
  * @signature
  *   R.truncate(data, n, { omission, separator });
  * @example
@@ -161,7 +156,7 @@ type TruncateLiterals<
 export function truncate<
   S extends string,
   N extends number,
-  const Options extends TruncateOptions = {},
+  const Options extends TruncateOptions,
 >(
   data: S,
   n: NonNegativeInteger<N>,
@@ -174,26 +169,23 @@ export function truncate(
 ): string;
 
 /**
- * Ensure that a string never exceeds the maximum length defined by `n`. When a
- * string is longer, it will be truncated and the `omission` string will be
- * appended to the end of the string, so that the total length of the string
- * (including the `omission`) is at most `n`.
+ * Truncates strings longer than `n`, appending an `omission` marker to them
+ * (which defaults to '...'); shorter strings are returned as-is. The total
+ * length of the output will never exceed `n` (in the rare case where the
+ * `omission` itself is too long, it will be truncated too).
  *
- * In rare cases where `n` is less than the length of the `omission`,
- * `omission` itself will be truncated instead.
+ * The `separator` argument provides more control by optimistically searching
+ * for a matching cutoff point, which could be used to avoid truncating in the
+ * middle ofa word or other semantic boundary.
  *
- * The function also takes an optional `separator` argument which defines an
- * earlier cutoff point for the truncation which could be used to maintain
- * word boundaries or other semantic boundaries in the string.
+ * If you just need to limit the total length of the string, without adding an
+ * `omission` or optimizing the cutoff point via `separator`, prefer
+ * `sliceString` instead, which runs more efficiently.
  *
- * IMPORTANT: If the truncation is aimed at a UI that is rendered by a browser,
- * prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
- * instead. You should avoid handling rendering concerns in runtime code. This
- * function doesn't handle diacritics, emojis, and any sort of semantic
- * understanding of the string contents.
- *
- * If you don't need the special handling of the `omission` and `separator`
- * logic consider using `sliceString` instead.
+ * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
+ * the output is rendered in a browser; this function doesn't handle
+ * diacritics, emojis, and any sort of semantic understanding of the string
+ * contents.
  *
  * @param n - The maximum length of the output string. The output will **never**
  * exceed this length.
@@ -205,8 +197,8 @@ export function truncate(
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
  * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
- * flag. Default: <none> (which is equivalent to `""` and to the regular \
- * expression `/./gu`).
+ * flag. Default: <none> (which is equivalent to `""` or the regular expression
+ * `/./g`).
  * @signature
  *   R.truncate(n, { omission, separator })(data);
  * @example
@@ -220,7 +212,7 @@ export function truncate(
  */
 export function truncate<
   N extends number,
-  const Options extends TruncateOptions = {},
+  const Options extends TruncateOptions,
 >(
   n: NonNegativeInteger<N>,
   options?: Options,
