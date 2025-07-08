@@ -29,12 +29,22 @@ describe("data first", () => {
     setPath(TEST_OBJECT, ["a", "z"], 123);
   });
 
-  test("should correctly type partial paths", () => {
+  test("should correctly type partial paths (objects)", () => {
     // @ts-expect-error [ts2345] - this path should yield a type of { c: number }
     setPath(TEST_OBJECT, ["a", "b"] as const, 123);
 
     // Like this:
     setPath(TEST_OBJECT, ["a", "b"] as const, { c: 123 });
+  });
+
+  test("should correctly type partial paths (arrays)", () => {
+    const DATA = [[]] as Array<Array<{ c: number }>>;
+
+    // @ts-expect-error [ts2345] - this path should yield a type of { c: number }
+    setPath(DATA, [1, 2] as const, 123);
+
+    // Like this:
+    setPath(DATA, [1, 2] as const, { c: 123 });
   });
 });
 
@@ -62,4 +72,13 @@ describe("data last", () => {
     // Like this:
     pipe(TEST_OBJECT, setPath(["a", "b"] as const, { c: 123 }));
   });
+});
+
+// @see https://github.com/remeda/remeda/issues/990
+test("support interfaces (issue #990)", () => {
+  interface User {
+    name: { first: string };
+  }
+
+  setPath({ name: { first: "John" } } as User, ["name", "first"], "Jane");
 });

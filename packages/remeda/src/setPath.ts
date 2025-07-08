@@ -1,15 +1,10 @@
 import { purry } from "./purry";
 
 type Path<T, Prefix extends ReadonlyArray<unknown> = []> =
-  T extends ReadonlyArray<unknown>
-    ? Path<T[number], [...Prefix, number]> | Prefix
-    : T extends Record<PropertyKey, unknown>
-      ? PathsOfObject<T, Prefix> | Prefix
-      : Prefix;
-
-type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
-  [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]>;
-}[keyof T];
+  | (T extends ReadonlyArray<unknown>
+      ? Path<T[number], readonly [...Prefix, number]>
+      : { [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]> }[keyof T])
+  | Prefix;
 
 type ValueAtPath<T, TPath> = TPath extends readonly [
   infer Head extends keyof T,
