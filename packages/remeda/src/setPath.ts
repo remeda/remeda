@@ -3,13 +3,17 @@ import { purry } from "./purry";
 // IMPORTANT: All Prefix arrays need to be `readonly` because this type is used
 // to define the type for the path **param** in `setPath`, and readonly arrays
 // don't extend mutable arrays, so they won't satisfy the param.
-type Path<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
+type Paths<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
+  | Prefix
   | (T extends ReadonlyArray<unknown>
-      ? Path<T[number], readonly [...Prefix, number]>
-      : { [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]> }[keyof T])
-  | Prefix;
+      ? Paths<T[number], readonly [...Prefix, number]>
+      : PathsOfObject<T, Prefix>);
 
-type ValueAtPath<T, TPath> = TPath extends readonly [
+type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
+  [K in keyof T]-?: Paths<T[K], readonly [...Prefix, K]>;
+}[keyof T];
+
+type ValueAtPath<T, Path> = Path extends readonly [
   infer Head extends keyof T,
   ...infer Rest,
 ]
@@ -31,7 +35,7 @@ type ValueAtPath<T, TPath> = TPath extends readonly [
  * @dataFirst
  * @category Object
  */
-export function setPath<T, TPath extends Path<T>>(
+export function setPath<T, TPath extends Paths<T>>(
   data: T,
   path: TPath,
   value: ValueAtPath<T, TPath>,
@@ -51,7 +55,7 @@ export function setPath<T, TPath extends Path<T>>(
  */
 export function setPath<
   T,
-  TPath extends Path<T>,
+  TPath extends Paths<T>,
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- TODO: This is solvable by inlining Value and wrapping the T parameter with `NoInfer` (e.g. `ValueAtPath<NoInfer<T>, TPath>); to prevent typescript from inferring it as `unknown`. This is only available in TS 5.4, which is above what we currently support (5.1).
   Value extends ValueAtPath<T, TPath>,
 >(path: TPath, value: Value): (data: T) => T;
