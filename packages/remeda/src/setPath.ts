@@ -1,6 +1,9 @@
 import { purry } from "./purry";
 
-type Path<T, Prefix extends ReadonlyArray<unknown> = []> =
+// IMPORTANT: All Prefix arrays need to be `readonly` because this type is used
+// to define the type for the path **param** in `setPath`, and readonly arrays
+// don't extend mutable arrays, so they won't satisfy the param.
+type Path<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
   | (T extends ReadonlyArray<unknown>
       ? Path<T[number], readonly [...Prefix, number]>
       : { [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]> }[keyof T])

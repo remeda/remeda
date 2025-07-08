@@ -46,6 +46,15 @@ describe("data first", () => {
     // Like this:
     setPath(DATA, [1, 2] as const, { c: 123 });
   });
+
+  test("should correctly type an empty path", () => {
+    // @ts-expect-error [ts2345] - this path should yield a type of
+    // typeof TEST_OBJECT
+    setPath(TEST_OBJECT, [] as const, 123);
+
+    // Like this:
+    setPath(TEST_OBJECT, [] as const, { a: { b: { c: 123 }, e: [] } });
+  });
 });
 
 describe("data last", () => {
