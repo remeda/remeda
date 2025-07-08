@@ -2,7 +2,6 @@ import type {
   And,
   IsEqual,
   IsStringLiteral,
-  LessThanOrEqual,
   NonNegativeInteger,
 } from "type-fest";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
@@ -38,31 +37,27 @@ type TruncateWithOptions<
   Omission extends string,
   Separator extends string | RegExp | undefined,
 > =
-  // When multiple values of `n` are provided we need to distribute the logic
-  // over each one as they would each produce a different output.
+  // Distribute the result over unions.
   N extends unknown
     ? If<
-        // We can short-circuit most of our logic when N is a literal 0, the
-        // only output truncate would ever return in this case is an empty
-        // string.
+        // We can short-circuit most of our logic when N is a literal 0.
         IsEqual<N, 0>,
         "",
-        // It's rare that `omission` wouldn't be defined as a string literal,
-        // but if it's defined a union we need to distribute the logic over all
-        // possible values to get the correct output.
+        // Distribute the result over unions.
         Omission extends unknown
           ? If<
               // When Omission isn't literal we don't know how long it is.
               IsStringLiteral<Omission>,
               If<
                 // This mirrors the runtime logic where if `n - omission.length`
-                // is not positive then what we end up truncating is the
-                // Omission itself and not S.
+                // is not positive then what we end up truncating is Omission
+                // itself and not S.
                 IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
                 TruncateLiterals<Omission, N, "">,
                 If<
                   And<
-                    // Only compute literal output when input is literal.
+                    // When S isn't literal the output wouldn't be literal
+                    // either.
                     IsStringLiteral<S>,
                     // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                     IsEqual<Separator, undefined>
@@ -87,30 +82,33 @@ type TruncateLiterals<
   Omission extends string,
   Iteration extends ReadonlyArray<unknown> = [],
 > = S extends `${infer Character}${infer Rest}`
-  ? // We only need to iterate up to the potential cutoff point which is N -
-    // Omission["length"] and not up to N because we need to leave room to
-    // append the omission within the N character limit.
+  ? // The cutoff point N - omission.length leaves room for the omission.
     Iteration["length"] extends ClampedIntegerSubtract<
       N,
       StringLength<Omission>
     >
-    ? If<
-        // At the cutoff point we need to decide if the input was longer than N
-        // or not, but because we've already consumed N - Omission["length"]
-        // characters from the input string we only care about the last
-        // Omission["length"] characters remaining: if we have more the string
-        // was longer than N and we truncate it by returning the omission,
-        // otherwise the string was shorter or equal to N and we return the
-        // input as-is.
-        LessThanOrEqual<StringLength<S>, StringLength<Omission>>,
-        S,
-        Omission
-      >
-    : // Until we reach the cutoff point we reconstruct the string character by
-      // character, counting the number of characters we've already consumed.
+    ? // The string is only truncated if it's total length is longer than N; at
+      // the cutoff point this is simplified to comparing the remaining suffix
+      // length to the omission length.
+      If<IsLongerThan<S, Omission>, Omission, S>
+    : // Reconstruct string character by character until cutoff.
       `${Character}${TruncateLiterals<Rest, N, Omission, [...Iteration, unknown]>}`
-  : // The input string is empty, the result is also empty.
+  : // Empty input string results in empty output.
     "";
+
+/**
+ * An optimized check that efficiently checks if the string A is longer than B.
+ */
+type IsLongerThan<
+  A extends string,
+  B extends string,
+> = A extends `${string}${infer RestA}`
+  ? B extends `${string}${infer RestB}`
+    ? IsLongerThan<RestA, RestB>
+    : // B is empty and A isn't!
+      true
+  : // A is empty, even if B is empty, A wouldn't be (strictly) longer.
+    false;
 
 /**
  * Truncates strings longer than `n`, appending an `omission` marker to them
