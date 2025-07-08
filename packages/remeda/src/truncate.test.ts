@@ -6,6 +6,10 @@ test("empty string", () => {
   expect(truncate("", 10)).toBe("");
 });
 
+test("trivial (0) n", () => {
+  expect(truncate("hello, world!", 0)).toBe("");
+});
+
 test("trivial case", () => {
   expect(truncate("hello, world!", 8)).toBe("hello...");
 });
