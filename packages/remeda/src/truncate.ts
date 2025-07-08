@@ -2,7 +2,7 @@ import type {
   And,
   IsEqual,
   IsStringLiteral,
-  Join,
+  LessThanOrEqual,
   NonNegativeInteger,
 } from "type-fest";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
@@ -67,13 +67,7 @@ type TruncateWithOptions<
                     // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                     IsEqual<Separator, undefined>
                   >,
-                  TruncateLiterals<
-                    S,
-                    // We "fix" N so that it takes into account the length of
-                    // the omission, at this point we know this is >0.
-                    ClampedIntegerSubtract<N, StringLength<Omission>>,
-                    Omission
-                  >,
+                  TruncateLiterals<S, N, Omission>,
                   string
                 >
               >,
@@ -91,19 +85,32 @@ type TruncateLiterals<
   S extends string,
   N extends number,
   Omission extends string,
-  Characters extends ReadonlyArray<string> = [],
+  Iteration extends ReadonlyArray<unknown> = [],
 > = S extends `${infer Character}${infer Rest}`
-  ? // The order of the conditions here is important! The condition above is
-    // satisfied only when the string isn't empty. When the condition below is
-    // also satisfied it would mean that we found the cutoff point for the
-    // string and we know it was truncated.
-    Characters["length"] extends N
-    ? `${Join<Characters, "">}${Omission}`
-    : TruncateLiterals<Rest, N, Omission, [...Characters, Character]>
-  : // We reach this point only if the string "emptied out" before we processed
-    // N characters. This would mean it is shorter than N so we don't need to
-    // add the omission.
-    Join<Characters, "">;
+  ? // We only need to iterate up to the potential cutoff point which is N -
+    // Omission["length"] and not up to N because we need to leave room to
+    // append the omission within the N character limit.
+    Iteration["length"] extends ClampedIntegerSubtract<
+      N,
+      StringLength<Omission>
+    >
+    ? If<
+        // At the cutoff point we need to decide if the input was longer than N
+        // or not, but because we've already consumed N - Omission["length"]
+        // characters from the input string we only care about the last
+        // Omission["length"] characters remaining: if we have more the string
+        // was longer than N and we truncate it by returning the omission,
+        // otherwise the string was shorter or equal to N and we return the
+        // input as-is.
+        LessThanOrEqual<StringLength<S>, StringLength<Omission>>,
+        S,
+        Omission
+      >
+    : // Until we reach the cutoff point we reconstruct the string character by
+      // character, counting the number of characters we've already consumed.
+      `${Character}${TruncateLiterals<Rest, N, Omission, [...Iteration, unknown]>}`
+  : // The input string is empty, the result is also empty.
+    "";
 
 /**
  * Truncates strings longer than `n`, appending an `omission` marker to them

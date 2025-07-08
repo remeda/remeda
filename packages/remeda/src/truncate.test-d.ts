@@ -120,7 +120,9 @@ describe("with separator", () => {
   });
 });
 
-test("data is exactly the 'n' length", () => {
+test("n is in range ((data.length - omission.length)..data.length]", () => {
+  expectTypeOf(truncate("Hello, world!", 11)).toEqualTypeOf<"Hello, w...">();
+  expectTypeOf(truncate("Hello, world!", 12)).toEqualTypeOf<"Hello, wo...">();
   expectTypeOf(truncate("Hello, world!", 13)).toEqualTypeOf<"Hello, world!">();
 });
 

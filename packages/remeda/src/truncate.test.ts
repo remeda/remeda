@@ -46,6 +46,12 @@ test("omission is longer than maxLength", () => {
   expect(truncate("Hello, world!", 5, { omission: "123456789" })).toBe("12345");
 });
 
+test("n is in range ((data.length - omission.length)..data.length]", () => {
+  expect(truncate("Hello, world!", 11)).toBe("Hello, w...");
+  expect(truncate("Hello, world!", 12)).toBe("Hello, wo...");
+  expect(truncate("Hello, world!", 13)).toBe("Hello, world!");
+});
+
 describe("data-last", () => {
   test("has an implicit default options object", () => {
     expect(pipe("Hello, world!", truncate(8))).toBe("Hello...");
