@@ -23,6 +23,10 @@ test("empty separator", () => {
 });
 
 test("trivial regex separator", () => {
+  expect(truncate("hello, world!", 8, { separator: /./u })).toBe("hello...");
+});
+
+test("trivial global regex separator", () => {
   expect(truncate("hello, world!", 8, { separator: /./gu })).toBe("hello...");
 });
 
@@ -100,6 +104,9 @@ describe("lodash spec", () => {
     expect(
       truncate("hi-diddly-ho there, neighborino", 24, { separator: " " }),
     ).toBe("hi-diddly-ho there,...");
+    expect(
+      truncate("hi-diddly-ho there, neighborino", 24, { separator: /,? +/u }),
+    ).toBe("hi-diddly-ho there...");
     expect(
       truncate("hi-diddly-ho there, neighborino", 24, { separator: /,? +/gu }),
     ).toBe("hi-diddly-ho there...");

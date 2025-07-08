@@ -139,9 +139,8 @@ type IsLongerThan<
  * cutoff point for the truncation. If multiple cutoff points are found, the one
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
- * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
- * flag. Default: <none> (which is equivalent to `""` or the regular expression
- * `/./g`).
+ * also supported. Default: <none> (which is equivalent to `""` or the regular
+ * expression `/./`).
  * @signature
  *   R.truncate(data, n, { omission, separator });
  * @example
@@ -197,9 +196,8 @@ export function truncate(
  * cutoff point for the truncation. If multiple cutoff points are found, the one
  * closest to `n` will be used, and if no cutoff point is found then the
  * function will fallback to the trivial cutoff point. Regular expressions are
- * also supported, but they must have the [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
- * flag. Default: <none> (which is equivalent to `""` or the regular expression
- * `/./g`).
+ * also supported. Default: <none> (which is equivalent to `""` or the regular
+ * expression `/./`).
  * @signature
  *   R.truncate(n, { omission, separator })(data);
  * @example
@@ -280,8 +278,12 @@ function truncateImplementation(
       cutoff = lastSeparator;
     }
   } else if (separator !== undefined) {
+    const globalSeparator = separator.flags.includes("g")
+      ? separator
+      : new RegExp(separator.source, `${separator.flags}g`);
+
     let lastSeparator;
-    for (const { index } of data.matchAll(separator)) {
+    for (const { index } of data.matchAll(globalSeparator)) {
       if (index > cutoff) {
         // We only care about separators within the part of the string that
         // would be returned anyway, once we are past that point we don't care
