@@ -1,17 +1,20 @@
 import { purry } from "./purry";
 
-// IMPORTANT: All Prefix arrays need to be `readonly` because this type is used
-// to define the type for the path **param** in `setPath`, and readonly arrays
-// don't extend mutable arrays, so they won't satisfy the param.
-type Paths<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
-  T extends ReadonlyArray<unknown>
-    ? Paths<T[number], readonly [...Prefix, number]> | Prefix
-    : T extends object
-      ? PathsOfObject<T, Prefix> | Prefix
-      : Prefix;
+type Paths<T, Prefix extends ReadonlyArray<unknown> = []> =
+  | Prefix
+  | (T extends ReadonlyArray<unknown>
+      ? Paths<T[number], [...Prefix, number]>
+      : T extends object
+        ? PathsOfObject<T, Prefix>
+        : never) extends infer U
+  ? // All Prefix arrays need to be `readonly` because this type is used to
+    // define the type for the path **param** in `setPath`, and readonly arrays
+    // don't extend mutable arrays, so they won't satisfy the param.
+    Readonly<U>
+  : never;
 
 type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
-  [K in keyof T]-?: Paths<T[K], readonly [...Prefix, K]>;
+  [K in keyof T]-?: Paths<T[K], [...Prefix, K]>;
 }[keyof T];
 
 type ValueAtPath<T, Path> = Path extends readonly [
