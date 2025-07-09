@@ -14,7 +14,7 @@ type Values<T extends object> = T extends IterableContainer
  *    R.values(source)
  * @example
  *    R.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
- *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'OOz']
+ *    R.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
  * @dataFirst
  * @category Object
  */
