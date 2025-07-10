@@ -33,6 +33,12 @@ export { conditionalPlus as conditional };
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
+ * *NOTE*: Some type-predicates may fail to narrow the param type of their
+ * transformer; in such cases wrap your type-predicate in an anonymous arrow
+ * function: e.g., instead of
+ * `conditional(..., [myTypePredicate, myTransformer], ...)`, use
+ * `conditional(..., [($) => myTypePredicate($), myTransformer], ...)`.
+ *
  * To add a a default, catch-all, case you can provide a single callback
  * function (instead of a 2-tuple) as the last case. This is equivalent to
  * adding a case with a trivial always-true predicate as it's condition (see
@@ -40,17 +46,17 @@ export { conditionalPlus as conditional };
  *
  * For simpler cases you should also consider using `when` instead.
  *
- * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
- * implementation **doesn't** implicitly return `undefined` as a fallback when
- * when none of the cases match; and instead **throws** an exception in those
- * cases! You have to explicitly provide a default case, and can use
- * `constant(undefined)` as your last case to replicate that behavior.
- *
  * Due to TypeScript's inability to infer the result of negating a type-
  * predicate we can't refine the types used in subsequent cases based on
  * previous conditions. Using a `switch (true)` statement or ternary operators
  * is recommended for more precise type control when such type narrowing is
  * needed.
+ *
+ * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
+ * implementation **doesn't** implicitly return `undefined` as a fallback when
+ * when none of the cases match; and instead **throws** an exception in those
+ * cases! You have to explicitly provide a default case, and can use
+ * `constant(undefined)` as your last case to replicate that behavior.
  *
  * @param cases - A list of (up to 10) cases. Each case can be either:
  * - A 2-tuple consisting of a predicate (or type-predicate) and a transformer
@@ -105,6 +111,7 @@ function conditional<
 function conditional<
   T,
   Fn0 extends (x: T) => boolean,
+  // TODO [>2]: Exclude previous guarded types from the next functions in the chain. Although this isn't a prefect solution, it's the common approach to compute the "negation" of a type-predicate, and would provide a more comfortable API for bigger chains for cases like discriminated unions. This TODO is at the first occurrence where it is relevant, but it should be applied to **all** subsequent overloads. p.s. don't forget to update the docs too!
   Fn1 extends (x: T) => boolean,
   Return0,
   Return1,
@@ -382,6 +389,12 @@ function conditional<
  * corresponding transformer, and returns, ignoring any further cases, even if
  * they would match.
  *
+ * *NOTE*: Some type-predicates may fail to narrow the param type of their
+ * transformer; in such cases wrap your type-predicate in an anonymous arrow
+ * function: e.g., instead of
+ * `conditional(..., [myTypePredicate, myTransformer], ...)`, use
+ * `conditional(..., [($) => myTypePredicate($), myTransformer], ...)`.
+ *
  * To add a a default, catch-all, case you can provide a single callback
  * function (instead of a 2-tuple) as the last case. This is equivalent to
  * adding a case with a trivial always-true predicate as it's condition (see
@@ -389,17 +402,17 @@ function conditional<
  *
  * For simpler cases you should also consider using `when` instead.
  *
- * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
- * implementation **doesn't** implicitly return `undefined` as a fallback when
- * when none of the cases match; and instead **throws** an exception in those
- * cases! You have to explicitly provide a default case, and can use
- * `constant(undefined)` as your last case to replicate that behavior.
- *
  * Due to TypeScript's inability to infer the result of negating a type-
  * predicate we can't refine the types used in subsequent cases based on
  * previous conditions. Using a `switch (true)` statement or ternary operators
  * is recommended for more precise type control when such type narrowing is
  * needed.
+ *
+ * !IMPORTANT! - Unlike similar implementations in Lodash and Ramda, the Remeda
+ * implementation **doesn't** implicitly return `undefined` as a fallback when
+ * when none of the cases match; and instead **throws** an exception in those
+ * cases! You have to explicitly provide a default case, and can use
+ * `constant(undefined)` as your last case to replicate that behavior.
  *
  * @param data - The input data to be evaluated against the provided cases.
  * @param cases - A list of (up to 10) cases. Each case can be either:
@@ -738,6 +751,7 @@ function conditionalImplementation<In, Out>(
     }
   }
 
+  // TODO [>2]: When we built this function originally we didn't want to have to always return `undefined` and force users to always have to handle that case even when they knew it would never happen. In hindsight that was wrong and we can support this at the type-level without throwing. If users want to throw they can always have an explicit fallback that does that (and we might add a throw utility in v3 too!).
   throw new Error("conditional: data failed for all cases");
 }
 
