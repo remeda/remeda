@@ -1,4 +1,4 @@
-import type { IsStringLiteral } from "type-fest";
+import type { IsNumericLiteral, IsStringLiteral } from "type-fest";
 import type { If } from "./internal/types/If";
 
 const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
@@ -20,7 +20,7 @@ type StringToPath<T> = If<
           : "" extends T
             ? []
             : T extends `${infer N extends number}`
-              ? [N]
+              ? [If<IsNumericLiteral<N>, N, T>]
               : [T],
   never
 >;

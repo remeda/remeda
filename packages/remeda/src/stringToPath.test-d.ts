@@ -1,3 +1,7 @@
+/* eslint-disable unicorn/prefer-string-raw --
+ * String.raw`` doesn't get identified as string literals by TypeScript!
+ */
+
 import { describe, expectTypeOf, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 
@@ -165,6 +169,11 @@ describe("quoted properties edge-cases", () => {
     expectTypeOf(stringToPath("foo['bar baz']")).toEqualTypeOf<
       ["foo", "bar baz"]
     >();
+    expectTypeOf(stringToPath("foo[' bar']")).toEqualTypeOf<["foo", " bar"]>();
+    expectTypeOf(stringToPath("foo['bar ']")).toEqualTypeOf<["foo", "bar "]>();
+    expectTypeOf(stringToPath("foo[' bar ']")).toEqualTypeOf<
+      ["foo", " bar "]
+    >();
   });
 
   test("dots", () => {
@@ -194,66 +203,156 @@ describe("empty segments edge-cases", () => {
 
 describe("known limitations", () => {
   test("nested object access", () => {
-    expectTypeOf(stringToPath("foo[bar[baz]]")).toEqualTypeOf<
-      // @ts-expect-error [ts2344] -- This is TypeScript! we can't count parentheses (can we? would it be crazy complex?)
-      ["foo", "bar", "baz"]
-    >();
+    const result = stringToPath("foo[bar[baz]]");
+
+    // @ts-expect-error [ts2344] -- This is TypeScript! we can't count parentheses (can we? would it be crazy complex?)
+    expectTypeOf(result).toEqualTypeOf<["foo", "bar", "baz"]>();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["foo", "bar[baz", "]"]>();
   });
 
   test("two sequential dots", () => {
+    const result = stringToPath("foo..bar");
+
     // @ts-expect-error [ts2344] -- Is this even valuable to support?! What does an empty property even mean, can an object have an empty property?! If users need this kind of access they can use the quoted access syntax which does work (e.g., `foo[''].bar`).
-    expectTypeOf(stringToPath("foo..bar")).toEqualTypeOf<["foo", "", "bar"]>();
+    expectTypeOf(result).toEqualTypeOf<["foo", "", "bar"]>();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["foo", "bar"]>();
   });
 
   test("empty unquoted access", () => {
+    const result = stringToPath("foo[].bar");
+
     // @ts-expect-error [ts2344] -- Is this even valuable to support?! What does an empty property even mean, can an object have an empty property?! If users need this kind of access they can use the quoted access syntax which does work (e.g., `foo[''].bar`).
-    expectTypeOf(stringToPath("foo[].bar")).toEqualTypeOf<["foo", "", "bar"]>();
+    expectTypeOf(result).toEqualTypeOf<["foo", "", "bar"]>();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["foo", "bar"]>();
   });
 
-  test("using slash as an escape character", () => {
-    expectTypeOf(stringToPath(String.raw`a['b\'c']`)).toEqualTypeOf<
-      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-      ["a", "b'c"]
-    >();
+  test("using backslash to escape a quote", () => {
+    const result = stringToPath("a['b\\'c']");
 
-    expectTypeOf(stringToPath(String.raw`a["b\\"c"]`)).toEqualTypeOf<
-      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-      ["a", 'b"c']
-    >();
+    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+    expectTypeOf(result).toEqualTypeOf<["a", "b'c"]>();
 
-    expectTypeOf(stringToPath(String.raw`a['b\\c']`)).toEqualTypeOf<
-      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-      // eslint-disable-next-line unicorn/prefer-string-raw
-      ["a", "b\\c"]
-    >();
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["a", "b\\'c"]>();
   });
 
-  test("whitespace handling", () => {
+  test("using backslash to escape a double-quote", () => {
+    const result = stringToPath('a["b\\"c"]');
+
     // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[ 'bar' ]")).toEqualTypeOf<["foo", "bar"]>();
+    expectTypeOf(result).toEqualTypeOf<["a", 'b"c']>();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["a", 'b\\"c']>();
+  });
+
+  test("using a backslash to escape a backslash", () => {
+    const result = stringToPath("a['b\\\\c']");
+
     // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[' bar']")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo['bar ']")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[' bar ']")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[ bar]")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[bar ]")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[ bar ]")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo[ 123 ]")).toEqualTypeOf<["foo", 123]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo. bar")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo .bar")).toEqualTypeOf<["foo", "bar"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath(" foo")).toEqualTypeOf<["foo"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath("foo ")).toEqualTypeOf<["foo"]>();
-    // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-    expectTypeOf(stringToPath(" foo ")).toEqualTypeOf<["foo"]>();
+    expectTypeOf(result).toEqualTypeOf<["a", "b\\c"]>();
+
+    // Actual
+    expectTypeOf(result).toEqualTypeOf<["a", "b\\\\c"]>();
+  });
+
+  describe("whitespace handling", () => {
+    test("between the brackets and the quotes", () => {
+      const pre = stringToPath("foo[ 'bar']");
+      const post = stringToPath("foo['bar' ]");
+      const both = stringToPath("foo[ 'bar' ]");
+
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(pre).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(post).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(both).toEqualTypeOf<["foo", "bar"]>();
+
+      // Actual
+      expectTypeOf(pre).toEqualTypeOf<["foo", " 'bar'"]>();
+      expectTypeOf(post).toEqualTypeOf<["foo", "'bar' "]>();
+      expectTypeOf(both).toEqualTypeOf<["foo", " 'bar' "]>();
+    });
+
+    test("between the brackets and the property", () => {
+      const pre = stringToPath("foo[ bar]");
+      const post = stringToPath("foo[bar ]");
+      const both = stringToPath("foo[ bar ]");
+
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(pre).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(post).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(both).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(withNumbers).toEqualTypeOf<["foo", 123]>();
+
+      // Actual
+      expectTypeOf(pre).toEqualTypeOf<["foo", " bar"]>();
+      expectTypeOf(post).toEqualTypeOf<["foo", "bar "]>();
+      expectTypeOf(both).toEqualTypeOf<["foo", " bar "]>();
+    });
+
+    test("between the brackets and an array index", () => {
+      const pre = stringToPath("foo[ 123]");
+      const post = stringToPath("foo[123 ]");
+      const both = stringToPath("foo[ 123 ]");
+
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(pre).toEqualTypeOf<["foo", 123]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(post).toEqualTypeOf<["foo", 123]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(both).toEqualTypeOf<["foo", 123]>();
+
+      // Actual
+      expectTypeOf(pre).toEqualTypeOf<["foo", " 123"]>();
+      expectTypeOf(post).toEqualTypeOf<["foo", "123 "]>();
+      expectTypeOf(both).toEqualTypeOf<["foo", " 123 "]>();
+    });
+
+    test("around dots", () => {
+      const pre = stringToPath("foo .bar");
+      const post = stringToPath("foo. bar");
+      const both = stringToPath("foo . bar");
+
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(pre).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(post).toEqualTypeOf<["foo", "bar"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(both).toEqualTypeOf<["foo", "bar"]>();
+
+      // Actual
+      expectTypeOf(pre).toEqualTypeOf<["foo ", "bar"]>();
+      expectTypeOf(post).toEqualTypeOf<["foo", " bar"]>();
+      expectTypeOf(both).toEqualTypeOf<["foo ", " bar"]>();
+    });
+
+    test("around prop names", () => {
+      const pre = stringToPath("foo ");
+      const post = stringToPath(" foo");
+      const both = stringToPath(" foo ");
+
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(pre).toEqualTypeOf<["foo"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(post).toEqualTypeOf<["foo"]>();
+      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
+      expectTypeOf(both).toEqualTypeOf<["foo"]>();
+
+      // Actual
+      expectTypeOf(pre).toEqualTypeOf<["foo "]>();
+      expectTypeOf(post).toEqualTypeOf<[" foo"]>();
+      expectTypeOf(both).toEqualTypeOf<[" foo "]>();
+    });
   });
 });
