@@ -21,13 +21,15 @@ test("single array index", () => {
 
 describe("dynamic strings are not inferred", () => {
   test("primitive string", () => {
-    expectTypeOf(stringToPath("foo" as string)).toEqualTypeOf<never>();
+    expectTypeOf(stringToPath("foo" as string)).toEqualTypeOf<
+      Array<string | number>
+    >();
   });
 
   test("template literals", () => {
-    expectTypeOf(
-      stringToPath(`foo.${"bar" as string}[baz]`),
-    ).toEqualTypeOf<never>();
+    expectTypeOf(stringToPath(`foo.${"bar" as string}[baz]`)).toEqualTypeOf<
+      Array<string | number>
+    >();
   });
 });
 

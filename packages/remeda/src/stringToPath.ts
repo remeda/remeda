@@ -1,12 +1,18 @@
 import type { IsNumericLiteral, IsStringLiteral } from "type-fest";
 import type { If } from "./internal/types/If";
 
-const PATH_RE =
+const PATH_PARTS_RE =
   /^(?:\.*(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\])(?<rest>.*)$/u;
 
 const NON_NEGATIVE_INTEGER_RE = /^[0-9]+$/u;
 
-type StringToPath<S> = If<IsStringLiteral<S>, StringToPathImpl<S>, never>;
+type StringToPath<S> = If<
+  // We can only compute the path type for literals that TypeScript can
+  // break down further into parts.
+  IsStringLiteral<S>,
+  StringToPathImpl<S>,
+  Array<string | number>
+>;
 
 type StringToPathImpl<S> =
   S extends `${infer Head}['${infer Quoted}']${infer Tail}`
@@ -47,15 +53,11 @@ export function stringToPath<const Path extends string>(
   path: Path,
 ): StringToPath<Path> {
   if (path === "") {
-    // @ts-expect-error [ts2322] -- This is OK, TypeScript can't infer this
-    // automatically.
     return [];
   }
 
-  const match = PATH_RE.exec(path);
+  const match = PATH_PARTS_RE.exec(path);
   if (match?.groups === undefined) {
-    // @ts-expect-error [ts2322] -- This is OK, TypeScript can't infer this
-    // automatically.
     return [path];
   }
   const {
@@ -63,6 +65,8 @@ export function stringToPath<const Path extends string>(
   } = match;
 
   if (quoted !== undefined || doubleQuoted !== undefined) {
+    // @ts-expect-error [ts2322] -- This is OK, TypeScript can't infer this
+    // automatically.
     return [quoted ?? doubleQuoted, ...stringToPath(rest!)];
   }
 
@@ -70,6 +74,8 @@ export function stringToPath<const Path extends string>(
     return [...stringToPath(unquoted), ...stringToPath(rest!)];
   }
 
+  // @ts-expect-error [ts2322] -- This is OK, TypeScript can't infer this
+  // automatically.
   return [
     NON_NEGATIVE_INTEGER_RE.test(propName!) ? Number(propName) : propName,
     ...stringToPath(rest!),
