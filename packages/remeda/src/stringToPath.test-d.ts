@@ -374,3 +374,21 @@ describe("known limitations", () => {
     });
   });
 });
+
+describe("malformed inputs", () => {
+  test("where the runtime output matches the type", () => {
+    expectTypeOf(stringToPath("[")).toEqualTypeOf<["["]>();
+    expectTypeOf(stringToPath("]")).toEqualTypeOf<["]"]>();
+    expectTypeOf(stringToPath("[[")).toEqualTypeOf<["[["]>();
+    expectTypeOf(stringToPath("]]")).toEqualTypeOf<["]]"]>();
+  });
+
+  test("where the runtime output does not match the type", () => {
+    expectTypeOf(stringToPath(".")).toEqualTypeOf<[]>();
+    expectTypeOf(stringToPath("..")).toEqualTypeOf<[]>();
+    expectTypeOf(stringToPath("[.")).toEqualTypeOf<["["]>();
+    expectTypeOf(stringToPath("].")).toEqualTypeOf<["]"]>();
+    expectTypeOf(stringToPath(".[")).toEqualTypeOf<["["]>();
+    expectTypeOf(stringToPath(".]")).toEqualTypeOf<["]"]>();
+  });
+});

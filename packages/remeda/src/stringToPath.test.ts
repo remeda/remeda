@@ -241,3 +241,10 @@ describe("known type limitations", () => {
     });
   });
 });
+
+test.each(
+  // ¯\_(ツ)_/¯
+  [".", "..", "[", "]", "[[", "]]", "[.", "].", ".[", ".]"],
+)("malformed input: %s", (input) => {
+  expect(stringToPath(input)).toStrictEqual([input]);
+});
