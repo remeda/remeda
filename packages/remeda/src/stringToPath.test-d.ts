@@ -5,6 +5,8 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 
+//! IMPORTANT: The tests in this file need to be synced with the runtime tests so that we can ensure that the function's runtime implementation returns the same values as the functions type computes. This is critical for this utility because its main purpose is to couple the path string parsing logic with the type so that it could be used in utility functions that take a strictly typed path array as input (e.g. `pathOr`, `setPath`, etc...).
+
 test("empty string", () => {
   expectTypeOf(stringToPath("")).toEqualTypeOf<[]>();
 });
@@ -191,6 +193,22 @@ describe("quoted properties edge-cases", () => {
   test("numbers", () => {
     expectTypeOf(stringToPath("foo['123']")).toEqualTypeOf<["foo", "123"]>();
   });
+
+  test("non-matching quotes", () => {
+    expectTypeOf(stringToPath("foo['bar\"]")).toEqualTypeOf<
+      ["foo", "'bar\""]
+    >();
+    expectTypeOf(stringToPath("foo[\"bar']")).toEqualTypeOf<
+      ["foo", "\"bar'"]
+    >();
+  });
+
+  test("missing quote", () => {
+    expectTypeOf(stringToPath("foo['bar]")).toEqualTypeOf<["foo", "'bar"]>();
+    expectTypeOf(stringToPath('foo["bar]')).toEqualTypeOf<["foo", '"bar']>();
+    expectTypeOf(stringToPath("foo[bar']")).toEqualTypeOf<["foo", "bar'"]>();
+    expectTypeOf(stringToPath('foo[bar"]')).toEqualTypeOf<["foo", 'bar"']>();
+  });
 });
 
 describe("empty segments edge-cases", () => {
@@ -292,8 +310,6 @@ describe("known limitations", () => {
       expectTypeOf(post).toEqualTypeOf<["foo", "bar"]>();
       // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
       expectTypeOf(both).toEqualTypeOf<["foo", "bar"]>();
-      // @ts-expect-error [ts2344] -- This is TypeScript! we are not going to build a whole text parser!
-      expectTypeOf(withNumbers).toEqualTypeOf<["foo", 123]>();
 
       // Actual
       expectTypeOf(pre).toEqualTypeOf<["foo", " bar"]>();
