@@ -65,18 +65,31 @@ type StringToPathImpl<S> =
                 [S];
 
 /**
- * Converts a path string to an array of string keys (including array index
- * access keys).
+ * A utility to allow JSONPath-like strings to be used in other utilities which
+ * take an array of path segments as input (e.g. `pathOr`, `setPath`, etc...).
+ * The main purpose of this utility is to act as a bridge between the runtime
+ * implementation that converts the path to an array, and the type-system that
+ * parses the path string **type** into an array **type**. This type allows us
+ * to return fine-grained types and to enforce correctness at the type-level.
  *
- * ! IMPORTANT: Attempting to pass a simple `string` type will result in the
- * result being inferred as `never`. This is intentional to help with type-
- * safety as this function is primarily intended to help with other "object path
- * access" functions like `pathOr` or `setPath`.
+ * This utility helps bridge the gap for legacy code that already contains these
+ * path strings (which are accepted by Lodash for similar utilities). We
+ * strongly recommend using array paths instead as they can provide a better
+ * developer experience via fine-grained error messages and automatic typeahead
+ * suggestions for each segment of the path.
+ *
+ * **There are a bunch of limitations to this utility derived from the
+ * limitations of the type itself, these are usually edge-cases around deeply
+ * nested paths, escaping, whitespaces, and empty segments. This is true even
+ * in cases where the runtime implementation can better handle them, this is
+ * intentional. See the tests for this utility for more details and the
+ * expected outputs**.
  *
  * @param path - A string path.
- * @signature R.stringToPath(path)
+ * @signature
+ *   R.stringToPath(path)
  * @example
- *   R.stringToPath('a.b[0].c') // => ['a', 'b', '0', 'c']
+ *   R.stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category Utility
  */
