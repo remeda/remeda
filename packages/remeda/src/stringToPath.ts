@@ -1,16 +1,29 @@
+import type { IsStringLiteral } from "type-fest";
+import type { If } from "./internal/types/If";
+
 const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
 
-type StringToPath<T extends string> = string extends T
-  ? never
-  : T extends ""
-    ? []
-    : T extends `${infer Head}[${infer Nest}].${infer Tail}`
-      ? [...StringToPath<Head>, Nest, ...StringToPath<Tail>]
-      : T extends `${infer Head}[${infer Nest}]`
-        ? [...StringToPath<Head>, Nest]
+type StringToPath<T> = If<
+  IsStringLiteral<T>,
+  T extends `${infer Head}['${infer Quoted}']${infer Tail}`
+    ? [...StringToPath<Head>, Quoted, ...StringToPath<Tail>]
+    : T extends `${infer Head}["${infer DoubleQuoted}"]${infer Tail}`
+      ? [...StringToPath<Head>, DoubleQuoted, ...StringToPath<Tail>]
+      : T extends `${infer Head}[${infer Unquoted}]${infer Tail}`
+        ? [
+            ...StringToPath<Head>,
+            ...StringToPath<Unquoted>,
+            ...StringToPath<Tail>,
+          ]
         : T extends `${infer Head}.${infer Tail}`
           ? [...StringToPath<Head>, ...StringToPath<Tail>]
-          : [T];
+          : "" extends T
+            ? []
+            : T extends `${infer N extends number}`
+              ? [N]
+              : [T],
+  never
+>;
 
 /**
  * Converts a path string to an array of string keys (including array index
@@ -28,7 +41,7 @@ type StringToPath<T extends string> = string extends T
  * @dataFirst
  * @category Utility
  */
-export function stringToPath<Path extends string>(
+export function stringToPath<const Path extends string>(
   path: Path,
 ): StringToPath<Path> {
   if (path.length === 0) {
