@@ -104,6 +104,7 @@ function conditional<
   Return0,
   Fallback = never,
 >(
+  // TODO [>2]: TypeScript has problems inferring narrowed types within the case tuples, making it hard to work with this utility. Removing the tuple wrappers solves these issues without impacting the API too much. @see https://github.com/remeda/remeda/issues/847#issuecomment-3057371891
   case0: Case<T, Return0, Fn0>,
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Fallback;
