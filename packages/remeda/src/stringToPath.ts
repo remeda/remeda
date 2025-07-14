@@ -28,7 +28,11 @@ import type { If } from "./internal/types/If";
 const PATH_PARTS_RE =
   /^(?:\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\])/u;
 
-const NON_NEGATIVE_INTEGER_RE = /^[0-9]+$/u;
+// This is the most efficient way to check an arbitrary string if it is a simple
+// non-negative integer. We use character ranges instead of the `\d` character
+// class to avoid matching non-ascii digits (e.g. Arabic-Indic digits), while
+// maintaining that the regular expression supports unicode.
+const NON_NEGATIVE_INTEGER_RE = /^[1-9][0-9]*$/u;
 
 type StringToPath<S> = If<
   // We can only compute the path type for literals that TypeScript can
