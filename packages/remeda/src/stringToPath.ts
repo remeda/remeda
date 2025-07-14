@@ -96,19 +96,19 @@ type StringToPathImpl<S> =
  * parses the path string **type** into an array **type**. This type allows us
  * to return fine-grained types and to enforce correctness at the type-level.
  *
- * This utility helps bridge the gap for legacy code that already contains these
- * path strings (which are accepted by Lodash for similar utilities). We
- * strongly recommend using **path arrays** instead as they can provide a better
+ * **This utility helps bridge the gap for legacy code that already contains
+ * these path strings (which are accepted by Lodash for similar utilities). We
+ * strongly recommend using *path arrays* instead as they provide better
  * developer experience via significantly faster type-checking, fine-grained
- * error messages and automatic typeahead suggestions for each segment of the
- * path.
+ * error messages, and automatic typeahead suggestions for each segment of the
+ * path**.
  *
- * **There are a bunch of limitations to this utility derived from the
+ * *There are a bunch of limitations to this utility derived from the
  * limitations of the type itself, these are usually edge-cases around deeply
  * nested paths, escaping, whitespaces, and empty segments. This is true even
  * in cases where the runtime implementation can better handle them, this is
  * intentional. See the tests for this utility for more details and the
- * expected outputs**.
+ * expected outputs*.
  *
  * @param path - A string path.
  * @signature
