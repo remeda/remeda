@@ -156,7 +156,7 @@ describe("square bracket notation", () => {
   });
 });
 
-describe("quoted properties edge-cases", () => {
+describe("edge-cases", () => {
   test("hyphens", () => {
     expectTypeOf(stringToPath("foo['bar-baz']")).toEqualTypeOf<
       ["foo", "bar-baz"]
@@ -211,13 +211,15 @@ describe("quoted properties edge-cases", () => {
     expectTypeOf(stringToPath("foo[bar']")).toEqualTypeOf<["foo", "bar'"]>();
     expectTypeOf(stringToPath('foo[bar"]')).toEqualTypeOf<["foo", 'bar"']>();
   });
-});
 
-describe("empty segments edge-cases", () => {
   test("empty quoted access", () => {
     expectTypeOf(stringToPath("foo[''].bar")).toEqualTypeOf<
       ["foo", "", "bar"]
     >();
+  });
+
+  test("array index with leading zeros", () => {
+    expectTypeOf(stringToPath("012")).toEqualTypeOf<["012"]>();
   });
 });
 
