@@ -16,6 +16,7 @@ test("single property", () => {
 });
 
 test("single array index", () => {
+  expect(stringToPath("0")).toStrictEqual([0]);
   expect(stringToPath("123")).toStrictEqual([123]);
 });
 

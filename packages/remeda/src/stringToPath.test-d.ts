@@ -16,6 +16,7 @@ test("single property", () => {
 });
 
 test("single array index", () => {
+  expectTypeOf(stringToPath("0")).toEqualTypeOf<[0]>();
   expectTypeOf(stringToPath("123")).toEqualTypeOf<[123]>();
 });
 

@@ -5,7 +5,7 @@ import type { If } from "./internal/types/If";
 // non-negative integer. We use character ranges instead of the `\d` character
 // class to avoid matching non-ascii digits (e.g. Arabic-Indic digits), while
 // maintaining that the regular expression supports unicode.
-const NON_NEGATIVE_INTEGER_RE = /^[1-9][0-9]*$/u;
+const NON_NEGATIVE_INTEGER_RE = /^(?:0|[1-9][0-9]*)$/u;
 
 type StringToPath<S> = If<
   // We can only compute the path type for literals that TypeScript can
