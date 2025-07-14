@@ -98,9 +98,10 @@ type StringToPathImpl<S> =
  *
  * This utility helps bridge the gap for legacy code that already contains these
  * path strings (which are accepted by Lodash for similar utilities). We
- * strongly recommend using array paths instead as they can provide a better
- * developer experience via fine-grained error messages and automatic typeahead
- * suggestions for each segment of the path.
+ * strongly recommend using **path arrays** instead as they can provide a better
+ * developer experience via significantly faster type-checking, fine-grained
+ * error messages and automatic typeahead suggestions for each segment of the
+ * path.
  *
  * **There are a bunch of limitations to this utility derived from the
  * limitations of the type itself, these are usually edge-cases around deeply
