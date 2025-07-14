@@ -120,7 +120,7 @@ export function stringToPath<const Path extends string>(
   // will match this group (this is why the order is important here!). Contents
   // of this group get parsed *recursively*.
   const pathSegmentRe =
-    /\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\]/uy;
+    /\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>(?:[^'\\]|\\.)*)'\]|\["(?<doubleQuoted>(?:[^"\\]|\\.)*)"\]|\[(?<unquoted>[^\]]*)\]/uy;
 
   let match: RegExpExecArray | null;
   while ((match = pathSegmentRe.exec(path)) !== null) {
