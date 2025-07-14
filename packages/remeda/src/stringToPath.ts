@@ -1,33 +1,6 @@
 import type { IsNumericLiteral, IsStringLiteral } from "type-fest";
 import type { If } from "./internal/types/If";
 
-// In the stringToPath implementation we consume the path from left to right,
-// each time chopping off a candidate segment for addition to the path by
-// matching against **one of** the following named groups:
-// - `propName`: is used to parse dot-notation paths, e.g. foo.bar.baz, we allow
-// multiple sequential dots because our type allows them, but they are
-// semantically meaningless. Note that this would also allow strings starting
-// with a dot, e.g. `.foo`, this is fine because the dot itself is just used as
-// a separator and is ignored in the final path. Note that we limit the number
-// of dots to some arbitrary large number (100); this is to avoid a concern that
-// regular expression unbounded prefix matching can cause non-linear performance
-// issues.
-// - `quoted`, `doubleQuoted`: used within square bracket notation to prevent
-// any recursive parsing of their contents. As for the type itself, we only
-// allow quote symbols to appear immediately after the opening square bracket
-// and immediately before the closing square bracket, this allows us to handle
-// more gracefully cases where a quote symbol might appear within the quoted
-// part.
-// - `unquoted`: If the contents of the square brackets are not quoted they will
-// match this group (this is way the order is important here!). Contents of this
-// group get parsed recursively.
-//
-// Note that this Regular Expression is anchored to the start of the string, but
-// not to the end, it is assumed that there will be more contents after the
-// matched part; this content will be parsed recursively.
-const PATH_PARTS_RE =
-  /^(?:\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\])/u;
-
 // This is the most efficient way to check an arbitrary string if it is a simple
 // non-negative integer. We use character ranges instead of the `\d` character
 // class to avoid matching non-ascii digits (e.g. Arabic-Indic digits), while
@@ -125,41 +98,50 @@ type StringToPathImpl<S> =
 export function stringToPath<const Path extends string>(
   path: Path,
 ): StringToPath<Path> {
-  if (path === "") {
-    return [];
+  const result: Array<string | number> = [];
+
+  // There are four possible ways to define a path segment::
+  // - `propName`: is used to parse dot-notation paths, e.g. 'foo.bar.baz', we
+  // allow multiple sequential dots because our type allows them, but they are
+  // semantically meaningless. Note that this would also allow strings starting
+  // with a dot, e.g. `.foo`, this is fine because the dot itself is just used
+  // as a separator and is ignored in the final path. Note that we limit the
+  // number of dots to some arbitrary large number (100); this is to avoid a
+  // concern that when a regular expression has an unbounded prefix it can cause
+  // non-linear performance issues; See:
+  // https://github.com/remeda/remeda/security/code-scanning/4.
+  // - `quoted`, `doubleQuoted`: used within square bracket notation to prevent
+  // any recursive parsing of their contents. As for the type itself, we only
+  // allow quote symbols to appear immediately after the opening square bracket
+  // and immediately before the closing square bracket, this allows us to handle
+  // more gracefully cases where a quote symbol might appear within the quoted
+  // part.
+  // - `unquoted`: If the contents of the square brackets are not quoted they
+  // will match this group (this is why the order is important here!). Contents
+  // of this group get parsed *recursively*.
+  const pathSegmentRe =
+    /\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\]/uy;
+
+  let match: RegExpExecArray | null;
+  while ((match = pathSegmentRe.exec(path)) !== null) {
+    const { propName, quoted, doubleQuoted, unquoted } = match.groups!;
+
+    if (unquoted !== undefined) {
+      result.push(...stringToPath(unquoted));
+      continue;
+    }
+
+    result.push(
+      propName === undefined
+        ? (quoted ?? doubleQuoted!)
+        : // The only way to differentiate between array indices and properties
+          // is to check if the property is a non-negative integer. In those
+          // cases we perform the conversion (unlike Lodash).
+          NON_NEGATIVE_INTEGER_RE.test(propName)
+          ? Number(propName)
+          : propName,
+    );
   }
 
-  const match = PATH_PARTS_RE.exec(path);
-  if (match?.groups === undefined) {
-    return [path];
-  }
-
-  const {
-    groups: { propName, quoted, doubleQuoted, unquoted },
-  } = match;
-
-  return [
-    ...(unquoted === undefined
-      ? [
-          propName === undefined
-            ? // We either have quoted or doubleQuoted contents at this point,
-              // they are semantically equivalent and just need to be added to
-              // the path, as-is.
-              (quoted ?? doubleQuoted!)
-            : // simple property names are the only ones we need to further
-              // check and parse their content, in order to handle array index
-              // accessors correctly (by parsing them as numbers), but obviously
-              // we only do this if they are an non-negative integer.
-              NON_NEGATIVE_INTEGER_RE.test(propName)
-              ? Number(propName)
-              : propName,
-        ]
-      : // We have unquoted square bracket contents, we need to recursively
-        // parse it and add it to the path.
-        stringToPath(unquoted)),
-    // Our regular expression only handles a single segment at a time, we need
-    // to recursively parse the remainder of the path and append it to the
-    // result.
-    ...stringToPath(path.slice(match[0].length)),
-  ];
+  return result;
 }

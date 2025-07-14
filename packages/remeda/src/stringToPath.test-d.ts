@@ -379,16 +379,16 @@ describe("known limitations", () => {
 
 describe("malformed inputs", () => {
   test("where the runtime output matches the type", () => {
-    expectTypeOf(stringToPath("[")).toEqualTypeOf<["["]>();
-    expectTypeOf(stringToPath("]")).toEqualTypeOf<["]"]>();
-    expectTypeOf(stringToPath("[[")).toEqualTypeOf<["[["]>();
-    expectTypeOf(stringToPath("]]")).toEqualTypeOf<["]]"]>();
+    expectTypeOf(stringToPath(".")).toEqualTypeOf<[]>();
+    expectTypeOf(stringToPath("..")).toEqualTypeOf<[]>();
   });
 
   test("where the runtime output does not match the type", () => {
     // TODO: These are malformed and should be considered invalid and uninteresting, but the fact that they aren't typed the same as the runtime output can be confusing and cause issues for users. The problem is that handling them in the type system might add (a lot of) complexity just for the sake of malformed inputs handling :(
-    expectTypeOf(stringToPath(".")).toEqualTypeOf<[]>();
-    expectTypeOf(stringToPath("..")).toEqualTypeOf<[]>();
+    expectTypeOf(stringToPath("[")).toEqualTypeOf<["["]>();
+    expectTypeOf(stringToPath("]")).toEqualTypeOf<["]"]>();
+    expectTypeOf(stringToPath("[[")).toEqualTypeOf<["[["]>();
+    expectTypeOf(stringToPath("]]")).toEqualTypeOf<["]]"]>();
     expectTypeOf(stringToPath("[.")).toEqualTypeOf<["["]>();
     expectTypeOf(stringToPath("].")).toEqualTypeOf<["]"]>();
     expectTypeOf(stringToPath(".[")).toEqualTypeOf<["["]>();
