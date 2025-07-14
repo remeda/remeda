@@ -105,11 +105,7 @@ export function stringToPath<const Path extends string>(
   // allow multiple sequential dots because our type allows them, but they are
   // semantically meaningless. Note that this would also allow strings starting
   // with a dot, e.g. `.foo`, this is fine because the dot itself is just used
-  // as a separator and is ignored in the final path. Note that we limit the
-  // number of dots to some arbitrary large number (100); this is to avoid a
-  // concern that when a regular expression has an unbounded prefix it can cause
-  // non-linear performance issues; See:
-  // https://github.com/remeda/remeda/security/code-scanning/4.
+  // as a separator and is ignored in the final path.
   // - `quoted`, `doubleQuoted`: used within square bracket notation to prevent
   // any recursive parsing of their contents. As for the type itself, we only
   // allow quote symbols to appear immediately after the opening square bracket
@@ -120,7 +116,7 @@ export function stringToPath<const Path extends string>(
   // will match this group (this is why the order is important here!). Contents
   // of this group get parsed *recursively*.
   const pathSegmentRe =
-    /\.{0,100}(?<propName>[^.[\]]+)|\['(?<quoted>(?:[^'\\]|\\.)*)'\]|\["(?<doubleQuoted>(?:[^"\\]|\\.)*)"\]|\[(?<unquoted>[^\]]*)\]/uy;
+    /\.*(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\]/uy;
 
   let match: RegExpExecArray | null;
   while ((match = pathSegmentRe.exec(path)) !== null) {
