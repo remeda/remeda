@@ -1,3 +1,4 @@
+import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { keys } from "./keys";
 import { pipe } from "./pipe";
@@ -172,4 +173,11 @@ describe("object types", () => {
 
     expectTypeOf(actual).toEqualTypeOf<Array<"123" | "a">>();
   });
+});
+
+// @see https://github.com/remeda/remeda/issues/752
+test("branded keys (issue #752)", () => {
+  expectTypeOf(
+    keys({} as Record<Tagged<string, "color">, string>),
+  ).toEqualTypeOf<Array<Tagged<string, "color">>>();
 });

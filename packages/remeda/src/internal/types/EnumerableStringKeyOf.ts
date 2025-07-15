@@ -9,5 +9,11 @@
  */
 export type EnumerableStringKeyOf<T> =
   Required<T> extends Record<infer K, unknown>
-    ? `${Exclude<K, symbol>}`
+    ? K extends symbol
+      ? never
+      : K extends number
+        ? `${K}`
+        : K extends string
+          ? K
+          : never
     : never;
