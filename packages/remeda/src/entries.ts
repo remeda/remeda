@@ -2,17 +2,23 @@
  * We want to match the typing of the built-in Object.entries as much as
  * possible!
  */
-
-import type { Simplify } from "type-fest";
+import type { Simplify, ValueOf } from "type-fest";
 import { purry } from "./purry";
+import type { ToString } from "./internal/types/ToString";
 
-// Object.entries only returns enumerable keys, skipping symbols. It also
-// only returns string keys, translating numbers to strings.
-type EntryForKey<T, Key extends keyof T> = Key extends number | string
-  ? [key: `${Key}`, value: Required<T>[Key]]
-  : never;
-
-type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
+type Entry<T> = Simplify<
+  ValueOf<{
+    // Object.entries only returns enumerable keys, skipping symbols.
+    [P in Exclude<keyof T, symbol>]-?: [
+      //  It also only returns string keys, translating numbers to strings.
+      key: ToString<P>,
+      // Optionality doesn't play a factor in the result of entries because its
+      // a typing thing, not a runtime thing. We need to remove any `undefined`
+      // added just because the prop is optional.
+      value: Required<T>[P],
+    ];
+  }>
+>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
