@@ -47,7 +47,7 @@ type StringToPathImpl<S> =
             : // We differ from Lodash in the way we handle numbers. Lodash
               // returns everything in the path as a string, and relies on JS to
               // coerce array accessors to numbers (or the other way around in
-              // practice, e.g., `myArray[123] === `myArray[123]`), but from a
+              // practice, e.g., `myArray[123] === myArray['123']`), but from a
               // typing perspective the two are not the same and we need the
               // path to be accurate about it.
               S extends `${infer N extends number}`
@@ -73,12 +73,12 @@ type StringToPathImpl<S> =
  * parses the path string **type** into an array **type**. This type allows us
  * to return fine-grained types and to enforce correctness at the type-level.
  *
- * **This utility helps bridge the gap for legacy code that already contains
- * these path strings (which are accepted by Lodash for similar utilities). We
+ * We **discourage** using this utility for new code. This utility is for legacy
+ * code that already contains path strings (which are accepted by Lodash). We
  * strongly recommend using *path arrays* instead as they provide better
  * developer experience via significantly faster type-checking, fine-grained
  * error messages, and automatic typeahead suggestions for each segment of the
- * path**.
+ * path.
  *
  * *There are a bunch of limitations to this utility derived from the
  * limitations of the type itself, these are usually edge-cases around deeply
