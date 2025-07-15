@@ -8,9 +8,9 @@ import type { ToString } from "./internal/types/ToString";
 
 type Entry<T> = Simplify<
   ValueOf<{
-    // Object.entries only returns enumerable keys, skipping symbols.
+    // `Object.entries` only returns enumerable keys, skipping symbols.
     [P in Exclude<keyof T, symbol>]-?: [
-      //  It also only returns string keys, translating numbers to strings.
+      // and all keys are converted to strings.
       key: ToString<P>,
       // Optionality doesn't play a factor in the result of entries because its
       // a typing thing, not a runtime thing. We need to remove any `undefined`
