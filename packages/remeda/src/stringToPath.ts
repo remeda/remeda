@@ -115,8 +115,13 @@ export function stringToPath<const Path extends string>(
   // - `unquoted`: If the contents of the square brackets are not quoted they
   // will match this group (this is why the order is important here!). Contents
   // of this group get parsed *recursively*.
+  //
+  // NOTE: We limit all repeats to 2048 characters to avoid a possible attack
+  // vector when the input to this function is controlled by the user. This is
+  // due to a DoS timing attack because regex backtracking is non-linear.
+  // @see: https://codeql.github.com/codeql-query-help/javascript/js-polynomial-redos/
   const pathSegmentRe =
-    /\.*(?<propName>[^.[\]]+)|\['(?<quoted>.*?)'\]|\["(?<doubleQuoted>.*?)"\]|\[(?<unquoted>.*?)\]/uy;
+    /\.{0,2048}(?<propName>[^.[\]]+)|\['(?<quoted>.{0,2048}?)'\]|\["(?<doubleQuoted>.{0,2048}?)"\]|\[(?<unquoted>.{0,2048}?)\]/uy;
 
   let match: RegExpExecArray | null;
   while ((match = pathSegmentRe.exec(path)) !== null) {
