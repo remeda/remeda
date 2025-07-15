@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-deprecated --
+ * This utility is going away in v3!
+ */
+
 import { describe, expect, test } from "vitest";
 import { mapToObj } from "./mapToObj";
 import { pipe } from "./pipe";

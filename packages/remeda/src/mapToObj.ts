@@ -1,7 +1,11 @@
 import { purry } from "./purry";
 
+// TODO [>2]: Delete this utility!
 /**
  * Map each element of an array into an object using a defined callback function.
+ *
+ * **DEPRECATED**: This function is going away in v3! Use
+ * `fromEntries(map(array, fn))` instead!
  *
  * There are several other functions that could be used to build an object from
  * an array:
@@ -20,14 +24,21 @@ import { purry } from "./purry";
  *    R.mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  * @dataFirst
  * @category Array
+ * @deprecated This function is going away in v3! Use
+ * `fromEntries(map(array, fn))` instead.
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   array: ReadonlyArray<T>,
   fn: (value: T, index: number, data: ReadonlyArray<T>) => [K, V],
 ): Record<K, V>;
 
+// TODO [>2]: Delete this utility!
 /**
  * Map each element of an array into an object using a defined callback function.
+ *
+ * **DEPRECATED**: This function is going away in v3! Use
+ * `($) => fromEntries(map($, fn))` instead, or if already in a pipe: convert
+ * `..., mapToObj(fn), ...` to `..., map(fn), fromEntries(), ...`.
  *
  * There are several other functions that could be used to build an object from
  * an array:
@@ -48,6 +59,9 @@ export function mapToObj<T, K extends PropertyKey, V>(
  *    ) // => {1: 2, 2: 4, 3: 6}
  * @dataLast
  * @category Array
+ * @deprecated This function is going away in v3! Use
+ * `($) => fromEntries(map($, fn))` instead, or if already in a pipe: convert
+ * `..., mapToObj(fn), ...` to `..., map(fn), fromEntries(), ...`.
  */
 export function mapToObj<T, K extends PropertyKey, V>(
   fn: (value: T, index: number, data: ReadonlyArray<T>) => [K, V],
