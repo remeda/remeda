@@ -16,6 +16,10 @@ test("primitive numbers", () => {
   expectTypeOf(toString(123 as number)).toEqualTypeOf<`${number}`>();
 });
 
+test("literal number", () => {
+  expectTypeOf(toString(123)).toEqualTypeOf<"123">();
+});
+
 test("template string", () => {
   expectTypeOf(
     toString("prefix_123" as `prefix_${number}`),
