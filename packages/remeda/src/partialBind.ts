@@ -49,7 +49,7 @@ type RemovePrefix<
  * @param partial - The arguments to put before.
  * @returns A partially bound function.
  * @signature
- *    R.partialBind(func, partial)
+ *    R.partialBind(func, ...partial);
  * @example
  *    const fn = (x: number, y: number, z: number) => x * 100 + y * 10 + z;
  *    const partialFn = R.partialBind(fn, 1, 2);

@@ -52,7 +52,7 @@ type RemoveSuffix<
  * @param partial - The arguments to put after.
  * @returns A partially bound function.
  * @signature
- *    R.partialLastBind(func, partial)
+ *    R.partialLastBind(func, ...partial);
  * @example
  *    const fn = (x: number, y: number, z: number) => x * 100 + y * 10 + z;
  *    const partialFn = R.partialLastBind(fn, 2, 3);
