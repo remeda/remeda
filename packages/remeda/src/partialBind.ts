@@ -49,14 +49,14 @@ type RemovePrefix<
  * @param partial - The arguments to put before.
  * @returns A partially bound function.
  * @signature
- *    R.partialBind(func, partial)
+ *    R.partialBind(func, ...partial);
  * @example
- *    const fn = (x, y, z) => `${x}, ${y}, and ${z}`
- *    const partialFn = R.partialBind(fn, [1, 2])
- *    partialFn(3) // => 1, 2, and 3
+ *    const fn = (x: number, y: number, z: number) => x * 100 + y * 10 + z;
+ *    const partialFn = R.partialBind(fn, 1, 2);
+ *    partialFn(3); //=> 123
  *
- *    const logWithPrefix = R.partialBind(console.log, ["[prefix]"])
- *    logWithPrefix("hello") // => "[prefix] hello"
+ *    const logWithPrefix = R.partialBind(console.log, "[prefix]");
+ *    logWithPrefix("hello"); //=> "[prefix] hello"
  * @dataFirst
  * @category Function
  * @see partialLastBind
