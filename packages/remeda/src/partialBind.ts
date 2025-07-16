@@ -55,7 +55,7 @@ type RemovePrefix<
  *    const partialFn = R.partialBind(fn, 1, 2);
  *    partialFn(3); //=> 123
  *
- *    const logWithPrefix = R.partialBind(console.log, "[prefix]")
+ *    const logWithPrefix = R.partialBind(console.log, "[prefix]");
  *    logWithPrefix("hello") //=> "[prefix] hello"
  * @dataFirst
  * @category Function
