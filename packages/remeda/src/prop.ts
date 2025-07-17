@@ -1,4 +1,9 @@
+import type { ArrayIndices, KeysOfUnion } from "type-fest";
 import { purry } from "./purry";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleParts } from "./internal/types/TupleParts";
+import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
+import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 
 /**
  * Gets the value of the given property.
@@ -12,7 +17,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Object
  */
-export function prop<T, K extends keyof T>(data: T, key: K): T[K];
+export function prop<T, K extends KeysOfUnion<T>>(
+  data: T,
+  key: K,
+): T extends unknown ? (K extends keyof T ? T[K] : undefined) : never;
 
 /**
  * Gets the value of the given property.
@@ -25,7 +33,11 @@ export function prop<T, K extends keyof T>(data: T, key: K): T[K];
  * @dataLast
  * @category Object
  */
-export function prop<T, K extends keyof T>(key: K): (data: T) => T[K];
+export function prop<T, K extends KeysOfUnion<T>>(
+  key: K,
+): (
+  data: T,
+) => T extends unknown ? (K extends keyof T ? T[K] : undefined) : never;
 
 export function prop<K extends PropertyKey>(
   key: K,
