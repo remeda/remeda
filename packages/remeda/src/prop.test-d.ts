@@ -3,6 +3,7 @@ import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
 import { sortBy } from "./sortBy";
+import { stringToPath } from "./stringToPath";
 
 describe("data-last", () => {
   test("inferred directly", () => {
@@ -262,4 +263,24 @@ describe("optional props", () => {
       ),
     ).toEqualTypeOf<string | undefined>();
   });
+});
+
+test("works with stringToPath", () => {
+  const data = {} as { a: { b: Array<{ c: { d: number } }> } };
+
+  expectTypeOf(prop(data, ...stringToPath("a"))).toEqualTypeOf<{
+    b: Array<{ c: { d: number } }>;
+  }>();
+  expectTypeOf(prop(data, ...stringToPath("a.b"))).toEqualTypeOf<
+    Array<{ c: { d: number } }>
+  >();
+  expectTypeOf(prop(data, ...stringToPath("a.b[0]"))).toExtend<
+    { c: { d: number } } | undefined
+  >();
+  expectTypeOf(prop(data, ...stringToPath("a.b[0].c"))).toExtend<
+    { d: number } | undefined
+  >();
+  expectTypeOf(prop(data, ...stringToPath("a.b[0].c.d"))).toEqualTypeOf<
+    number | undefined
+  >();
 });
