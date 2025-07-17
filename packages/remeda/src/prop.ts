@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 import type { KeysOfUnion } from "type-fest";
-import { purry } from "./purry";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 
 type PropDeep<T, K extends ReadonlyArray<unknown>> = K extends readonly [
@@ -17,6 +18,8 @@ type Prop<T, K> = T extends unknown
     : undefined
   : never;
 
+type NonPropertyKey = Exclude<{}, PropertyKey>;
+
 /**
  * Gets the value of the given property.
  *
@@ -29,17 +32,17 @@ type Prop<T, K> = T extends unknown
  * @dataFirst
  * @category Object
  */
-export function prop<T, Key extends KeysOfUnion<T>>(
+export function prop<T extends NonPropertyKey, Key extends KeysOfUnion<T>>(
   data: T,
   key: Key,
 ): NoInfer<Prop<T, Key>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
 >(data: T, key0: Key0, key1: Key1): NoInfer<PropDeep<T, [Key0, Key1]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -50,7 +53,7 @@ export function prop<
   key2: Key2,
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -63,7 +66,7 @@ export function prop<
   key3: Key3,
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -78,7 +81,7 @@ export function prop<
   key4: Key4,
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -95,7 +98,7 @@ export function prop<
   key5: Key5,
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -114,7 +117,7 @@ export function prop<
   key6: Key6,
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -135,7 +138,7 @@ export function prop<
   key7: K7,
 ): NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -158,7 +161,7 @@ export function prop<
   key8: K8,
 ): NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -194,16 +197,16 @@ export function prop<
  * @dataLast
  * @category Object
  */
-export function prop<T, Key extends KeysOfUnion<T>>(
+export function prop<T extends NonPropertyKey, Key extends KeysOfUnion<T>>(
   key: Key,
 ): (data: T) => NoInfer<Prop<T, Key>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
 >(key0: Key0, key1: Key1): (data: T) => NoInfer<PropDeep<T, [Key0, Key1]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -213,7 +216,7 @@ export function prop<
   key2: Key2,
 ): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -225,7 +228,7 @@ export function prop<
   key3: Key3,
 ): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -239,7 +242,7 @@ export function prop<
   key4: Key4,
 ): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
   Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
@@ -255,7 +258,7 @@ export function prop<
   key5: Key5,
 ): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<Prop<T, K0>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -273,7 +276,7 @@ export function prop<
   key6: K6,
 ): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -293,7 +296,7 @@ export function prop<
   key7: K7,
 ): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -315,7 +318,7 @@ export function prop<
   key8: K8,
 ): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>;
 export function prop<
-  T,
+  T extends NonPropertyKey,
   K0 extends KeysOfUnion<T>,
   K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
   K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
@@ -343,9 +346,29 @@ export function prop<K extends PropertyKey>(
   key: K,
 ): <T extends Partial<Record<K, unknown>>>(data: T) => T[K];
 
-export function prop(...args: ReadonlyArray<unknown>): unknown {
-  return purry(propImplementation, args);
+export function prop(
+  maybeData: NonPropertyKey | PropertyKey,
+  ...args: ReadonlyArray<PropertyKey>
+): unknown {
+  return typeof maybeData === "string" ||
+    typeof maybeData === "number" ||
+    typeof maybeData === "symbol"
+    ? (data: NonPropertyKey) => propImplementation(data, maybeData, ...args)
+    : propImplementation(maybeData, ...args);
 }
 
-const propImplementation = <T, K extends keyof T>(data: T, key: K): T[K] =>
-  data[key];
+function propImplementation(
+  data: NonPropertyKey,
+  ...keys: ReadonlyArray<PropertyKey>
+): unknown {
+  let output: unknown = data;
+  for (const key of keys) {
+    if (output === undefined || output === null) {
+      return;
+    }
+    // @ts-expect-error [ts7053] -- This is fine, the types are really dynamic
+    // here and TypeScript doesn't have a chance to infer them correctly.
+    output = output[key];
+  }
+  return output;
+}
