@@ -125,11 +125,11 @@ describe("as a factory function", () => {
 });
 
 describe("deep prop", () => {
-  test("data-first", () => {
-    const DATA = {} as {
-      a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
-    };
+  const DATA = {} as {
+    a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
+  };
 
+  test("data-first", () => {
     expectTypeOf(prop(DATA, "a")).toEqualTypeOf<{
       b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
     }>();
@@ -165,10 +165,6 @@ describe("deep prop", () => {
   });
 
   test("data-last", () => {
-    const DATA = {} as {
-      a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
-    };
-
     expectTypeOf(pipe(DATA, prop("a"))).toEqualTypeOf<{
       b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
     }>();
@@ -203,5 +199,67 @@ describe("deep prop", () => {
     expectTypeOf(
       pipe(DATA, prop("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
     ).toEqualTypeOf<10>();
+  });
+
+  test("detects typos", () => {
+    // @ts-expect-error [ts2769] -- "cc" is not a key of DATA.a.b
+    prop(DATA, "a", "b", "cc", "d", "e");
+  });
+
+  test("multi-dimensional arrays", () => {
+    const data = [[[[]]]] as Array<Array<Array<Array<"cat">>>>;
+
+    expectTypeOf(prop(data, 10)).toExtend<
+      Array<Array<Array<"cat">>> | undefined
+    >();
+    expectTypeOf(prop(data, 10, 20)).toExtend<
+      Array<Array<"cat">> | undefined
+    >();
+    expectTypeOf(prop(data, 10, 20, 30)).toExtend<Array<"cat"> | undefined>();
+    expectTypeOf(prop(data, 10, 20, 30, 40)).toExtend<"cat" | undefined>();
+  });
+
+  test("element aware deep props", () => {
+    const data = [{ a: 1 }, { b: 2 }, { c: 3 }] as const;
+
+    expectTypeOf(prop(data, 0)).toEqualTypeOf<{ readonly a: 1 }>();
+    expectTypeOf(prop(data, 1)).toEqualTypeOf<{ readonly b: 2 }>();
+    expectTypeOf(prop(data, 2)).toEqualTypeOf<{ readonly c: 3 }>();
+    expectTypeOf(prop(data, 0, "a")).toEqualTypeOf<1>();
+    expectTypeOf(prop(data, 1, "b")).toEqualTypeOf<2>();
+    expectTypeOf(prop(data, 2, "c")).toEqualTypeOf<3>();
+
+    // @ts-expect-error [ts2769] -- "b" is not a key of data[0]
+    prop(data, 0, "b");
+    // @ts-expect-error [ts2769] -- "a" is not a key of data[10]
+    prop(data, 10, "a");
+  });
+});
+
+describe("optional props", () => {
+  test("shallow prop", () => {
+    expectTypeOf(prop({} as { a?: 1 }, "a")).toEqualTypeOf<1 | undefined>();
+  });
+
+  test("deep prop", () => {
+    expectTypeOf(
+      prop({} as { a?: { b?: { c?: 1 } } }, "a", "b", "c"),
+    ).toEqualTypeOf<1 | undefined>();
+  });
+
+  test("discriminated unions (Issue #830)", () => {
+    expectTypeOf(
+      prop(
+        {} as {
+          type: "a";
+          b:
+            | { type: "b"; c: { type: "c"; content: string } | { type: "c2" } }
+            | { type: "b2" };
+        },
+        "b",
+        "c",
+        "content",
+      ),
+    ).toEqualTypeOf<string | undefined>();
   });
 });
