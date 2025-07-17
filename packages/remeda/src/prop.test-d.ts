@@ -123,3 +123,85 @@ describe("as a factory function", () => {
     propB({ a: 1 });
   });
 });
+
+describe("deep prop", () => {
+  test("data-first", () => {
+    const DATA = {} as {
+      a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
+    };
+
+    expectTypeOf(prop(DATA, "a")).toEqualTypeOf<{
+      b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b")).toEqualTypeOf<{
+      c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b", "c")).toEqualTypeOf<{
+      d: { e: { f: { g: { h: { i: { j: 10 } } } } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b", "c", "d")).toEqualTypeOf<{
+      e: { f: { g: { h: { i: { j: 10 } } } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b", "c", "d", "e")).toEqualTypeOf<{
+      f: { g: { h: { i: { j: 10 } } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b", "c", "d", "e", "f")).toEqualTypeOf<{
+      g: { h: { i: { j: 10 } } };
+    }>();
+    expectTypeOf(prop(DATA, "a", "b", "c", "d", "e", "f", "g")).toEqualTypeOf<{
+      h: { i: { j: 10 } };
+    }>();
+    expectTypeOf(
+      prop(DATA, "a", "b", "c", "d", "e", "f", "g", "h"),
+    ).toEqualTypeOf<{
+      i: { j: 10 };
+    }>();
+    expectTypeOf(
+      prop(DATA, "a", "b", "c", "d", "e", "f", "g", "h", "i"),
+    ).toEqualTypeOf<{ j: 10 }>();
+    expectTypeOf(
+      prop(DATA, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+    ).toEqualTypeOf<10>();
+  });
+
+  test("data-last", () => {
+    const DATA = {} as {
+      a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
+    };
+
+    expectTypeOf(pipe(DATA, prop("a"))).toEqualTypeOf<{
+      b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
+    }>();
+    expectTypeOf(pipe(DATA, prop("a", "b"))).toEqualTypeOf<{
+      c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } };
+    }>();
+    expectTypeOf(pipe(DATA, prop("a", "b", "c"))).toEqualTypeOf<{
+      d: { e: { f: { g: { h: { i: { j: 10 } } } } } };
+    }>();
+    expectTypeOf(pipe(DATA, prop("a", "b", "c", "d"))).toEqualTypeOf<{
+      e: { f: { g: { h: { i: { j: 10 } } } } };
+    }>();
+    expectTypeOf(pipe(DATA, prop("a", "b", "c", "d", "e"))).toEqualTypeOf<{
+      f: { g: { h: { i: { j: 10 } } } };
+    }>();
+    expectTypeOf(pipe(DATA, prop("a", "b", "c", "d", "e", "f"))).toEqualTypeOf<{
+      g: { h: { i: { j: 10 } } };
+    }>();
+    expectTypeOf(
+      pipe(DATA, prop("a", "b", "c", "d", "e", "f", "g")),
+    ).toEqualTypeOf<{
+      h: { i: { j: 10 } };
+    }>();
+    expectTypeOf(
+      pipe(DATA, prop("a", "b", "c", "d", "e", "f", "g", "h")),
+    ).toEqualTypeOf<{
+      i: { j: 10 };
+    }>();
+    expectTypeOf(
+      pipe(DATA, prop("a", "b", "c", "d", "e", "f", "g", "h", "i")),
+    ).toEqualTypeOf<{ j: 10 }>();
+    expectTypeOf(
+      pipe(DATA, prop("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
+    ).toEqualTypeOf<10>();
+  });
+});
