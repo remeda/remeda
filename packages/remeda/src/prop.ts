@@ -37,9 +37,7 @@ export function prop<T, K extends KeysOfUnion<T>>(data: T, key: K): Prop<T, K>;
  */
 export function prop<T, K extends KeysOfUnion<T>>(
   key: K,
-): (
-  data: T,
-) => T extends unknown ? (K extends keyof T ? T[K] : undefined) : never;
+): (data: T) => Prop<T, K>;
 
 export function prop<K extends PropertyKey>(
   key: K,

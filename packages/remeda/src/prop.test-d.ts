@@ -16,29 +16,6 @@ describe("data-last", () => {
       [{ readonly a: 1 }]
     >();
   });
-
-  describe("as a factory function", () => {
-    test("direct usage", () => {
-      const propA = prop("a");
-
-      expectTypeOf(propA({ a: 1 } as const)).toEqualTypeOf<1>();
-    });
-
-    test("indirect usage as a callback", () => {
-      const propA = prop("a");
-
-      expectTypeOf(map([{ a: 1 }, { a: 2 }] as const, propA)).toEqualTypeOf<
-        [1 | 2, 1 | 2]
-      >();
-    });
-
-    test("detects typos", () => {
-      const propB = prop("b");
-
-      // @ts-expect-error [ts2353] -- b is not a key of typeof item
-      propB({ a: 1 });
-    });
-  });
 });
 
 describe("tuples", () => {
@@ -121,5 +98,28 @@ describe("unions", () => {
     expectTypeOf(prop(data, "a" as "a" | number)).toEqualTypeOf<
       1 | "cat" | undefined
     >();
+  });
+});
+
+describe("as a factory function", () => {
+  test("direct usage", () => {
+    const propA = prop("a");
+
+    expectTypeOf(propA({ a: 1 } as const)).toEqualTypeOf<1>();
+  });
+
+  test("indirect usage as a callback", () => {
+    const propA = prop("a");
+
+    expectTypeOf(map([{ a: 1 }, { a: 2 }] as const, propA)).toEqualTypeOf<
+      [1 | 2, 1 | 2]
+    >();
+  });
+
+  test("detects typos", () => {
+    const propB = prop("b");
+
+    // @ts-expect-error [ts2353] -- b is not a key of typeof item
+    propB({ a: 1 });
   });
 });
