@@ -11,7 +11,7 @@ import type { If } from "./If";
  * and tuples with fixed suffixes, and for primitive indices where we don't know
  * if the index is out of bounds.
  */
-export type ArrayAt<T extends IterableContainer, I extends number> = If<
+export type ArrayAt<T extends IterableContainer, I extends keyof T> = If<
   // Only literals pose a challenge to the typing system because they refer to a
   // specific element within the array.
   IsNumericLiteral<I>,
@@ -70,5 +70,5 @@ export type ArrayAt<T extends IterableContainer, I extends number> = If<
   T[number] | undefined
 >;
 
-type HasIndex<T extends ReadonlyArray<unknown>, I extends number> =
+type HasIndex<T extends ReadonlyArray<unknown>, I> =
   I extends ArrayIndices<T> ? true : false;

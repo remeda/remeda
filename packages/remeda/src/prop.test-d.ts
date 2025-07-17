@@ -1,4 +1,4 @@
-import { expectTypeOf, test, describe } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -41,6 +41,24 @@ describe("data-last", () => {
   });
 });
 
+describe("tuples", () => {
+  test("fixed tuple", () => {
+    expectTypeOf(prop([1, 2, 3] as const, 0)).toEqualTypeOf<1>();
+  });
+
+  test("simple array", () => {
+    expectTypeOf(prop([] as Array<"cat">, 3)).toEqualTypeOf<
+      "cat" | undefined
+    >();
+  });
+
+  test("prefix array", () => {
+    expectTypeOf(prop([1] as [number, ...Array<string>], 10)).toEqualTypeOf<
+      string | undefined
+    >();
+  });
+});
+
 describe("unions", () => {
   test("shared prop name", () => {
     expectTypeOf(prop({} as { a: 1 } | { a: 2 }, "a")).toEqualTypeOf<1 | 2>();
@@ -76,16 +94,32 @@ describe("unions", () => {
     // @ts-expect-error [ts2345] -- 'c' is not a key of the union type
     prop({ a: "hello", b: "world" } as const, "a" as "a" | "c");
   });
-});
 
-describe("tuples", () => {
-  test("fixed tuple", () => {
-    expectTypeOf(prop([1, 2, 3] as const, 0)).toEqualTypeOf<1>();
+  test("union of arrays", () => {
+    expectTypeOf(prop([] as Array<string> | Array<number>, 10)).toEqualTypeOf<
+      string | number | undefined
+    >();
   });
 
-  test("simple array", () => {
-    expectTypeOf(prop([] as Array<"cat">, 3)).toEqualTypeOf<
-      "cat" | undefined
+  test("arrays of unions", () => {
+    expectTypeOf(prop([] as Array<"cat" | "dog">, 100)).toEqualTypeOf<
+      "cat" | "dog" | undefined
+    >();
+  });
+
+  test("union of tuples", () => {
+    expectTypeOf(
+      prop([1, "foo"] as [number, string] | [string, boolean], 1),
+    ).toEqualTypeOf<string | boolean>();
+  });
+
+  test("union of array and object", () => {
+    const data = { a: 1 } as { a: 1 } | ReadonlyArray<"cat">;
+
+    expectTypeOf(prop(data, "a")).toEqualTypeOf<1 | undefined>();
+    expectTypeOf(prop(data, 100)).toEqualTypeOf<"cat" | undefined>();
+    expectTypeOf(prop(data, "a" as "a" | number)).toEqualTypeOf<
+      1 | "cat" | undefined
     >();
   });
 });
