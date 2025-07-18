@@ -1,5 +1,6 @@
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { ToString } from "./internal/types/ToString";
 import { purry } from "./purry";
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
@@ -11,7 +12,7 @@ type ArrayKeys<T extends IterableContainer> = {
   -readonly [Index in keyof T]: Index extends number | string
     ? // Notice that we coalesce the values as strings, this is because in JS,
       // Object.keys always returns strings, even for arrays.
-      `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
+      ToString<IsIndexAfterSpread<T, Index> extends true ? number : Index>
     : // Index is typed as a symbol, this can't happen, but we need to guard
       // against it for typescript.
       never;
