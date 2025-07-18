@@ -17,11 +17,9 @@ import { purry } from "./purry";
  *
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
- * constraints, or if the logic to compute the key and value are highly
- * dependent and expensive to compute. We recommend that in most cases you
- * should use: `pullObject`, or the composition `fromEntries(map(array, fn))`.
- * This function might be deprecated and **removed** in future versions of the
- * library!
+ * constraints. We recommend that in most cases you should use: `pullObject`,
+ * or the composition `fromEntries(map(array, fn))`. This function will be
+ * deprecated and **removed** in future versions of the library!
  *
  * @param array - The array to map.
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
@@ -55,11 +53,9 @@ export function mapToObj<T, K extends PropertyKey, V>(
  *
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
- * constraints, or if the logic to compute the key and value are highly
- * dependent and expensive to compute. We recommend that in most cases you
- * should use: `pullObject`, or the composition `fromEntries(map(array, fn))`.
- * This function might be deprecated and **removed** in future versions of the
- * library!
+ * constraints. We recommend that in most cases you should use: `pullObject`,
+ * or the composition `fromEntries(map(array, fn))`. This function will be
+ * deprecated and **removed** in future versions of the library!
  *
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
