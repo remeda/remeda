@@ -17,7 +17,7 @@ import { purry } from "./purry";
  *
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
- * constraints. We recommend that in most cases you should use: `pullObject`,
+ * constraints. We recommend that in most cases you should use `pullObject`,
  * or the composition `fromEntries(map(array, fn))`. This function will be
  * deprecated and **removed** in future versions of the library!
  *
@@ -53,7 +53,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
  *
  * **Warning**: We strongly advise against using this function unless it is
  * used with a huge input array and your app has stringent memory/gc
- * constraints. We recommend that in most cases you should use: `pullObject`,
+ * constraints. We recommend that in most cases you should use `pullObject`,
  * or the composition `fromEntries(map(array, fn))`. This function will be
  * deprecated and **removed** in future versions of the library!
  *

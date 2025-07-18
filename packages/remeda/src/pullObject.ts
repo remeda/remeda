@@ -13,7 +13,6 @@ import { purry } from "./purry";
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `fromEntries` - Builds an object from an array of key-value pairs.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param data - The items used to pull/extract the keys and values from.
@@ -54,7 +53,6 @@ export function pullObject<
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `fromEntries` - Builds an object from an array of key-value pairs.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param keyExtractor - Computes the key for item.
