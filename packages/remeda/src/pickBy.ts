@@ -14,6 +14,7 @@ type EnumeratedPartial<T> = T extends unknown
       If<
         IsBoundedRecord<T>,
         {
+          // Object.entries returns keys as strings.
           -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
         },
         // For unbounded records (a simple Record with primitive `string` or
@@ -55,6 +56,7 @@ type EnumeratedPartialNarrowed<T, S> = T extends unknown
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
+  // Object.entries returns keys as strings.
   -readonly [P in keyof T as ToString<
     IsExactProp<T, P, S> extends true ? P : never
   >]: Extract<Required<T>[P], S>;
@@ -63,6 +65,7 @@ type ExactProps<T, S> = {
 // The partial case, props here might be part of the output object, but might
 // not be, hence they are optional.
 type PartialProps<T, S> = {
+  // Object.entries returns keys as strings.
   -readonly [P in keyof T as ToString<
     IsPartialProp<T, P, S> extends true ? P : never
   >]?: IfNever<
