@@ -4,11 +4,7 @@ import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableSt
 import type { If } from "./internal/types/If";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import { purry } from "./purry";
-
-// Because pickBy needs to iterate over all entries of the object, only
-// enumerable keys (those returned by `Object.entries`) could be part of the
-// output object. Any symbol keys would be skipped and filtered out.
-type EnumerableKey<T> = `${T extends number | string ? T : never}`;
+import type { ToString } from "./internal/types/ToString";
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
@@ -18,7 +14,8 @@ type EnumeratedPartial<T> = T extends unknown
       If<
         IsBoundedRecord<T>,
         {
-          -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
+          // Object.entries returns keys as strings.
+          -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
         },
         // For unbounded records (a simple Record with primitive `string` or
         // `number` keys) the return type here could technically be T; but for
@@ -59,7 +56,8 @@ type EnumeratedPartialNarrowed<T, S> = T extends unknown
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
-  -readonly [P in keyof T as EnumerableKey<
+  // Object.entries returns keys as strings.
+  -readonly [P in keyof T as ToString<
     IsExactProp<T, P, S> extends true ? P : never
   >]: Extract<Required<T>[P], S>;
 };
@@ -67,7 +65,8 @@ type ExactProps<T, S> = {
 // The partial case, props here might be part of the output object, but might
 // not be, hence they are optional.
 type PartialProps<T, S> = {
-  -readonly [P in keyof T as EnumerableKey<
+  // Object.entries returns keys as strings.
+  -readonly [P in keyof T as ToString<
     IsPartialProp<T, P, S> extends true ? P : never
   >]?: IfNever<
     Extract<T[P], S>,
