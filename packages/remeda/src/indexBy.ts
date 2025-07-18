@@ -10,7 +10,6 @@ import { purry } from "./purry";
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromEntries` - Builds an object from an array of key-value pairs.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param data - The array.
@@ -36,7 +35,6 @@ export function indexBy<T, K extends PropertyKey>(
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * * `fromEntries` - Builds an object from an array of key-value pairs.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param mapper - The indexing function.
