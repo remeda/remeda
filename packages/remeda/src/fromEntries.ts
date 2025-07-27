@@ -98,7 +98,6 @@ type ValueForKey<
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param entries - An array of key-value pairs.
@@ -126,7 +125,6 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @signature

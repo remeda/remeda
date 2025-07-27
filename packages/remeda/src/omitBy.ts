@@ -3,7 +3,6 @@ import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKey
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { If } from "./internal/types/If";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import type { ReconstructedRecord } from "./internal/types/ReconstructedRecord";
 import { purry } from "./purry";
 
 // Symbols are not passed to the predicate (because they can't be enumerated
@@ -30,7 +29,9 @@ type PartialEnumerableKeys<T extends object> =
               ? never
               : P]?: Required<T>[P];
           },
-          ReconstructedRecord<T>
+          // This is the type you'd get from doing:
+          // `Object.fromEntries(Object.entries(x))`.
+          Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
         >
       >
     : never;

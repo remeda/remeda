@@ -1,9 +1,9 @@
 ---
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { functionsCollectionName } from "@/content/functions/content.config";
-import { tagContent } from "@/lib/tags";
+import { hasTag, tagContent } from "@/lib/tags";
 import type { CollectionEntry } from "astro:content";
-import { map, pipe, uniqueBy } from "remeda";
+import { map, pipe, sortBy, uniqueBy } from "remeda";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
 
@@ -35,6 +35,8 @@ const category = tagContent(data.signatures[0].comment.blockTags, "category");
         uniqueBy(({ comment: { blockTags } }) =>
           tagContent(blockTags, "signature"),
         ),
+        // When multiple signatures exist, put the dataLast ones last.
+        sortBy(({ comment: { blockTags } }) => hasTag(blockTags, "dataLast")),
         map((signature) => <FunctionApi signature={signature} />),
       )
     }

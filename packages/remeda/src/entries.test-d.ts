@@ -1,5 +1,6 @@
 import { expectTypeOf, test } from "vitest";
 import { entries } from "./entries";
+import type { Tagged } from "type-fest";
 
 test("with known properties", () => {
   const actual = entries({ a: 1, b: 2, c: 3 });
@@ -59,4 +60,11 @@ test("object with combined symbols and keys", () => {
   const actual = entries({ a: 1, [Symbol("b")]: "world", 123: true });
 
   expectTypeOf(actual).toEqualTypeOf<Array<["123", boolean] | ["a", number]>>();
+});
+
+// @see https://github.com/remeda/remeda/issues/752
+test("branded keys (issue #752)", () => {
+  expectTypeOf(
+    entries({} as Record<Tagged<string, "color">, string>),
+  ).toEqualTypeOf<Array<[Tagged<string, "color">, string]>>();
 });
