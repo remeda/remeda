@@ -147,18 +147,19 @@ describe("lodash spec", () => {
     ).toBe(8);
   });
 
-  test.todo("should return `undefined` when `object` is nullish", () => {
-    // expect(prop(null, "constructor")).toBeUndefined();
-    // expect(prop(undefined, "constructor")).toBeUndefined();
+  test("should return `undefined` when `object` is nullish", () => {
+    expect(prop(null as { a: 123 } | null, "a")).toBeUndefined();
+    expect(prop(undefined as { a: 123 } | undefined, "a")).toBeUndefined();
   });
 
-  test.todo(
-    "should return `undefined` for deep paths when `object` is nullish",
-    () => {
-      // expect(prop(null, "constructor", "prototype", "valueOf")).toBeUndefined();
-      // expect(prop(undefined, "constructor", "prototype", "valueOf")).toBeUndefined();
-    },
-  );
+  test("should return `undefined` for deep paths when `object` is nullish", () => {
+    expect(
+      prop(null as { a: { b: { c: 123 } } } | null, "a", "b", "c"),
+    ).toBeUndefined();
+    expect(
+      prop(undefined as { a: { b: { c: 123 } } } | undefined, "a", "b", "c"),
+    ).toBeUndefined();
+  });
 
   test("should return `undefined` if parts of `path` are missing", () => {
     expect(
