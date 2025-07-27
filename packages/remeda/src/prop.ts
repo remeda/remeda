@@ -1,23 +1,38 @@
-import type { KeysOfUnion, Primitive } from "type-fest";
+import type { KeysOfUnion } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 import type { NoInfer } from "./internal/types/NoInfer";
 
-type PropDeep<T, K extends ReadonlyArray<unknown>> = K extends readonly [
-  infer Head,
+type PropDeep<T, Keys extends ReadonlyArray<unknown>> = Keys extends readonly [
+  infer Key,
   ...infer Rest,
 ]
-  ? PropDeep<Prop<T, Head>, Rest>
-  : T;
+  ? PropDeep<Prop<T, Key>, Rest>
+  : // Keys is a fixed tuple so we know we reach here only when we've reached
+    // the output object.
+    T;
 
-type Prop<T, K> = T extends unknown
-  ? K extends keyof T
-    ? T extends ReadonlyArray<unknown>
-      ? ArrayAt<T, K>
-      : T[K]
-    : undefined
-  : never;
+type Prop<T, Key> =
+  // Distribute the union to support unions of keys.
+  T extends unknown
+    ? // In a distributed union some of the union members might not be keys of a
+      // specific object within a union of objects, those cases don't contribute
+      // to the output type.
+      Key extends keyof T
+      ? T extends ReadonlyArray<unknown>
+        ? ArrayAt<T, Key>
+        : T[Key]
+      : undefined
+    : never;
 
-type NonPropertyKey = object | Exclude<Primitive, PropertyKey>;
+// Currying relies on us being able to differentiate between data-first and
+// data-last invocations at runtime, but because the function takes a variadic
+// array of keys we can't rely on it's shape or length to do that. Instead, we
+// can limit the types we accept for `data` so that looking at the first
+// parameter's type is enough to make the call. From a practical standpoint
+// this means we accept in any `object`, `null,` or `undefined`, and that we
+// don't accept `string`. All other types (`boolean` and `bigint`) don't
+// have properties, so are incompatible with our `key` parameters anyway.
+type NonPropertyKey = object | null | undefined;
 
 /**
  * Gets the value of the given property from an object. Nested properties can
