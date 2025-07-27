@@ -2,6 +2,7 @@
 
 import type { KeysOfUnion } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
+import type { NoInfer } from "./internal/types/NoInfer";
 
 type PropDeep<T, K extends ReadonlyArray<unknown>> = K extends readonly [
   infer Head,
