@@ -172,6 +172,7 @@ export function prop<
   K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
   K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
   K9 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>,
+  AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
 >(
   data: T,
   key0: K0,
@@ -184,7 +185,10 @@ export function prop<
   key7: K7,
   key8: K8,
   key9: K9,
-): NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9]>>;
+  ...additionalKeys: AdditionalKeys
+): NoInfer<
+  PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9, ...AdditionalKeys]>
+>;
 
 /**
  * Gets the value of the given property.
@@ -329,6 +333,7 @@ export function prop<
   K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
   K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
   K9 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>,
+  AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
 >(
   key0: K0,
   key1: K1,
@@ -340,7 +345,12 @@ export function prop<
   key7: K7,
   key8: K8,
   key9: K9,
-): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9]>>;
+  ...additionalKeys: AdditionalKeys
+): (
+  data: T,
+) => NoInfer<
+  PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9, ...AdditionalKeys]>
+>;
 
 export function prop<K extends PropertyKey>(
   key: K,
