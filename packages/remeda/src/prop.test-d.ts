@@ -265,22 +265,33 @@ describe("optional props", () => {
   });
 });
 
-test("works with stringToPath", () => {
-  const data = {} as { a: { b: Array<{ c: { d: number } }> } };
+describe("with stringToPath", () => {
+  const DATA = {} as { a: { b: Array<{ c: { d: number } }> } };
 
-  expectTypeOf(prop(data, ...stringToPath("a"))).toEqualTypeOf<{
-    b: Array<{ c: { d: number } }>;
-  }>();
-  expectTypeOf(prop(data, ...stringToPath("a.b"))).toEqualTypeOf<
-    Array<{ c: { d: number } }>
-  >();
-  expectTypeOf(prop(data, ...stringToPath("a.b[0]"))).toExtend<
-    { c: { d: number } } | undefined
-  >();
-  expectTypeOf(prop(data, ...stringToPath("a.b[0].c"))).toExtend<
-    { d: number } | undefined
-  >();
-  expectTypeOf(prop(data, ...stringToPath("a.b[0].c.d"))).toEqualTypeOf<
-    number | undefined
-  >();
+  test("with valid paths", () => {
+    expectTypeOf(prop(DATA, ...stringToPath("a"))).toEqualTypeOf<{
+      b: Array<{ c: { d: number } }>;
+    }>();
+    expectTypeOf(prop(DATA, ...stringToPath("a.b"))).toEqualTypeOf<
+      Array<{ c: { d: number } }>
+    >();
+    expectTypeOf(prop(DATA, ...stringToPath("a.b[0]"))).toExtend<
+      { c: { d: number } } | undefined
+    >();
+    expectTypeOf(prop(DATA, ...stringToPath("a.b[0].c"))).toExtend<
+      { d: number } | undefined
+    >();
+    expectTypeOf(prop(DATA, ...stringToPath("a.b[0].c.d"))).toEqualTypeOf<
+      number | undefined
+    >();
+  });
+
+  test("with invalid paths", () => {
+    // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
+    prop(DATA, ...stringToPath("x.y"));
+    // @ts-expect-error [ts2769] -- 'e' is not a key of DATA.a.b[0].c.d
+    prop(DATA, ...stringToPath("a.b[0].c.d.e"));
+    // @ts-expect-error [ts2769] -- 1 is not a key of DATA.a.b[0].c.d
+    prop(DATA, ...stringToPath("a.b[0].c.d[1]"));
+  });
 });
