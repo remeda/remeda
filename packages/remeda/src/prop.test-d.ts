@@ -237,6 +237,166 @@ describe("deep prop", () => {
   });
 });
 
+describe("deeper than 10 levels", () => {
+  const data = {} as {
+    a: {
+      b: {
+        c: {
+          d: {
+            e: {
+              f: {
+                g: {
+                  h: {
+                    i: {
+                      j: {
+                        k: {
+                          l: {
+                            m: {
+                              n: {
+                                o: {
+                                  p: {
+                                    q: {
+                                      r: {
+                                        s: {
+                                          t: {
+                                            u: {
+                                              v: {
+                                                w: {
+                                                  x: { y: { z: "yey!" } };
+                                                };
+                                              };
+                                            };
+                                          };
+                                        };
+                                      };
+                                    };
+                                  };
+                                };
+                              };
+                            };
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+
+  test("just before the tip", () => {
+    expectTypeOf(
+      prop(
+        data,
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+      ),
+    ).toEqualTypeOf<{ z: "yey!" }>();
+  });
+
+  test("at the tip", () => {
+    expectTypeOf(
+      prop(
+        data,
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+      ),
+    ).toEqualTypeOf<"yey!">();
+  });
+
+  test("after the tip", () => {
+    expectTypeOf(
+      prop(
+        data,
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        // Notice that this also tests that we don't validate that the props are
+        // valid after the first 10 levels (otherwise we would need to continue
+        // adding more function overloads!) but we still compute the output type
+        // correctly.
+        "aa",
+        "bb",
+        "cc",
+      ),
+    ).toEqualTypeOf<undefined>();
+  });
+});
+
 describe("optional props", () => {
   test("shallow prop", () => {
     expectTypeOf(prop({} as { a?: 1 }, "a")).toEqualTypeOf<1 | undefined>();
