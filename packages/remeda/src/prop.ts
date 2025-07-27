@@ -118,76 +118,103 @@ export function prop<
 ): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
 >(
   data: T,
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-): NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>;
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
-  K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
+  Key8 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>
+  >,
 >(
   data: T,
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-  key8: K8,
-): NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>;
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+  key8: Key8,
+): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
-  K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
-  K9 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
+  Key8 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>
+  >,
+  Key9 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>
+  >,
   AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
 >(
   data: T,
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-  key8: K8,
-  key9: K9,
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+  key8: Key8,
+  key9: Key9,
   ...additionalKeys: AdditionalKeys
 ): NoInfer<
-  PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9, ...AdditionalKeys]>
+  PropDeep<
+    T,
+    [
+      Key0,
+      Key1,
+      Key2,
+      Key3,
+      Key4,
+      Key5,
+      Key6,
+      Key7,
+      Key8,
+      Key9,
+      ...AdditionalKeys,
+    ]
+  >
 >;
 
 /**
@@ -263,93 +290,128 @@ export function prop<
 ): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<Prop<T, K0>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
 >(
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>;
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+): (
+  data: T,
+) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
 >(
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>;
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+): (
+  data: T,
+) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
-  K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
+  Key8 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>
+  >,
 >(
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-  key8: K8,
-): (data: T) => NoInfer<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>;
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+  key8: Key8,
+): (
+  data: T,
+) => NoInfer<
+  PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>
+>;
 export function prop<
   T extends NonPropertyKey,
-  K0 extends KeysOfUnion<T>,
-  K1 extends KeysOfUnion<PropDeep<T, [K0]>>,
-  K2 extends KeysOfUnion<PropDeep<T, [K0, K1]>>,
-  K3 extends KeysOfUnion<PropDeep<T, [K0, K1, K2]>>,
-  K4 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3]>>,
-  K5 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4]>>,
-  K6 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5]>>,
-  K7 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6]>>,
-  K8 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7]>>,
-  K9 extends KeysOfUnion<PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8]>>,
+  Key0 extends KeysOfUnion<T>,
+  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
+  Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
+  Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
+  Key5 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>,
+  Key6 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>,
+  Key7 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>
+  >,
+  Key8 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>
+  >,
+  Key9 extends KeysOfUnion<
+    PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>
+  >,
   AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
 >(
-  key0: K0,
-  key1: K1,
-  key2: K2,
-  key3: K3,
-  key4: K4,
-  key5: K5,
-  key6: K6,
-  key7: K7,
-  key8: K8,
-  key9: K9,
+  key0: Key0,
+  key1: Key1,
+  key2: Key2,
+  key3: Key3,
+  key4: Key4,
+  key5: Key5,
+  key6: Key6,
+  key7: Key7,
+  key8: Key8,
+  key9: Key9,
   ...additionalKeys: AdditionalKeys
 ): (
   data: T,
 ) => NoInfer<
-  PropDeep<T, [K0, K1, K2, K3, K4, K5, K6, K7, K8, K9, ...AdditionalKeys]>
+  PropDeep<
+    T,
+    [
+      Key0,
+      Key1,
+      Key2,
+      Key3,
+      Key4,
+      Key5,
+      Key6,
+      Key7,
+      Key8,
+      Key9,
+      ...AdditionalKeys,
+    ]
+  >
 >;
 
 export function prop<K extends PropertyKey>(
