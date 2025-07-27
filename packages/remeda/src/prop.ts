@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-
-import type { KeysOfUnion } from "type-fest";
+import type { KeysOfUnion, Primitive } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 import type { NoInfer } from "./internal/types/NoInfer";
 
@@ -19,7 +17,7 @@ type Prop<T, K> = T extends unknown
     : undefined
   : never;
 
-type NonPropertyKey = Exclude<{}, PropertyKey>;
+type NonPropertyKey = object | Exclude<Primitive, PropertyKey>;
 
 /**
  * Gets the value of the given property from an object. Nested properties can

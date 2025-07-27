@@ -455,3 +455,20 @@ describe("with stringToPath", () => {
     prop(DATA, ...stringToPath("a.b[0].c.d[1]"));
   });
 });
+
+describe("prevents unsupported data types", () => {
+  test("strings", () => {
+    // @ts-expect-error [ts2769] -- strings can't be used as data.
+    prop("hello", "length");
+  });
+
+  test("number", () => {
+    // @ts-expect-error [ts2769] -- numbers can't be used as data.
+    prop(123, "doNumbersHaveProps?");
+  });
+
+  test("symbol", () => {
+    // @ts-expect-error [ts2769] -- symbols can't be used as data.
+    prop(Symbol("test"), "description");
+  });
+});
