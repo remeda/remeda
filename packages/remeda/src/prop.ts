@@ -22,14 +22,22 @@ type Prop<T, K> = T extends unknown
 type NonPropertyKey = Exclude<{}, PropertyKey>;
 
 /**
- * Gets the value of the given property.
+ * Gets the value of the given property from an object. Nested properties can
+ * be accessed by providing a variadic array of keys that define the path from
+ * the root to the desired property. Arrays can be accessed by using numeric
+ * keys. Unions and optional properties are handled gracefully by returning
+ * `undefined` early for any non-existing property on the path. Paths are
+ * validated against the object type to provide stronger type safety, better
+ * compile-time errors, and to enable autocompletion in IDEs.
  *
- * @param data - The object to extract the prop from.
- * @param key - The key of the property to extract.
+ * @param data - The object or array to access.
+ * @param key - The key(s) for the property to extract.
  * @signature
- *   R.prop(data, key);
+ *   R.prop(data, ...keys);
  * @example
- *   R.prop({ foo: 'bar' }, 'foo'); // => 'bar'
+ *   R.prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
+ *   R.prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
+ *   R.prop(["cat", "dog"], 1); //=> 'dog'
  * @dataFirst
  * @category Object
  */
@@ -219,13 +227,21 @@ export function prop<
 >;
 
 /**
- * Gets the value of the given property.
+ * Gets the value of the given property from an object. Nested properties can
+ * be accessed by providing a variadic array of keys that define the path from
+ * the root to the desired property. Arrays can be accessed by using numeric
+ * keys. Unions and optional properties are handled gracefully by returning
+ * `undefined` early for any non-existing property on the path. Paths are
+ * validated against the object type to provide stronger type safety, better
+ * compile-time errors, and to enable autocompletion in IDEs.
  *
- * @param key - The key of the property to extract.
+ * @param key - The key(s) for the property to extract.
  * @signature
- *   R.prop(key)(data);
+ *   R.prop(...keys)(data);
  * @example
- *    R.pipe({foo: 'bar'}, R.prop('foo')) // => 'bar'
+ *   R.pipe({ foo: { bar: 'baz' } }, R.prop('foo')); //=> { bar: 'baz' }
+ *   R.pipe({ foo: { bar: 'baz' } }, R.prop('foo', 'bar')); //=> 'baz'
+ *   R.pipe(["cat", "dog"], R.prop(1)); //=> 'dog'
  * @dataLast
  * @category Object
  */
