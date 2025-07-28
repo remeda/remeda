@@ -1,6 +1,5 @@
-/* eslint-disable jsdoc/require-param */
-/* eslint-disable jsdoc/require-example */
-/* eslint-disable jsdoc/require-description */
+/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- allow us to deprecate all overloads of the function, not just those that have the docblock directly above them. */
+
 import { purry } from "./purry";
 
 /**
