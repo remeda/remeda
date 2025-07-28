@@ -16,8 +16,9 @@ remeda: prop
 - Lodash supports an optional last argument to `get` which defines a default
   fallback in cases where the prop being accessed does not exist on the input
   object. This could be replicated by using the built-in
-  [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) on the result of `prop`. If you need stricter
-  typing for the default fallback you can also use [`pathOr`](/docs#pathOr).
+  [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+  on the result of `prop`. If you need stricter typing for the default fallback
+  you can also use [`pathOr`](/docs#pathOr).
 
 ### Shallow Access
 
