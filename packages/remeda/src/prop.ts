@@ -141,7 +141,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
@@ -164,7 +164,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
@@ -191,7 +191,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
@@ -341,7 +341,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
@@ -365,7 +365,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
@@ -395,7 +395,7 @@ export function prop<
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysOfUnion<T>,
-  Key1 extends KeysOfUnion<PropDeep<T, [Key0]>>,
+  Key1 extends KeysOfUnion<Prop<T, Key0>>,
   Key2 extends KeysOfUnion<PropDeep<T, [Key0, Key1]>>,
   Key3 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2]>>,
   Key4 extends KeysOfUnion<PropDeep<T, [Key0, Key1, Key2, Key3]>>,
