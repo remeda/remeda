@@ -71,6 +71,12 @@ type PathValue3<
 /**
  * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
+ * Prefer `prop` over this function as it provides better typing and is more
+ * flexible when building solutions. To provide a default value using `prop`
+ * use a [Nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+ * after the call. This function will be deprecated and removed in a future
+ * version of Remeda.
+ *
  * @param object - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
@@ -110,6 +116,12 @@ export function pathOr<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ *
+ * Prefer `prop` over this function as it provides better typing and is more
+ * flexible when building solutions. To provide a default value using `prop`
+ * use a [Nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+ * after the call. This function will be deprecated and removed in a future
+ * version of Remeda.
  *
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
