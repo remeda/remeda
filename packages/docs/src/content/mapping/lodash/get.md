@@ -6,9 +6,9 @@ remeda: prop
 - In Lodash `get` takes an array where each element is a property in the path to
   a deeply-nested property (e.g. `['a', 'b', '0', 'c']`). In Remeda the path is
   provided directly as a variadic arguments list.
-- In Lodash all property keys are string, even when accessing numbers. In Remeda
-  use the exact type that the object is defined with, e.g., `number` for array
-  indices.
+- In Lodash all property keys are `string`, even when accessing numbers. In
+  Remeda the exact type of each prop should be used instead (e.g., `number` when
+  accessing arrays).
 - Lodash also supports a _string_ that defines the path to the deeply-nested
   property (e.g., `a.b[0].c`). In Remeda this isn't supported directly; instead,
   use the helper function [`stringToPath`](/docs#stringToPath) to convert the
