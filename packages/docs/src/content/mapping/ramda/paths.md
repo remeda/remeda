@@ -1,5 +1,6 @@
 ---
 category: Object
+remeda: prop
 ---
 
 Compose `paths` using [`map`](/docs#map) and [`prop`](/docs#prop):
