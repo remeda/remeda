@@ -130,8 +130,6 @@
 - modify
 - modifyPath
 - over
-- path
-- paths
 - pickAll
 - project
 - propOr
