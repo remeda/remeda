@@ -5,7 +5,7 @@
 import { describe, expect, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 
-//! IMPORTANT: The tests in this file need to be synced with the type tests so that we can ensure that the function's runtime implementation returns the same values as the functions type computes. This is critical for this utility because its main purpose is to couple the path string parsing logic with the type so that it could be used in utility functions that take a strictly typed path array as input (e.g. `pathOr`, `setPath`, etc...).
+//! IMPORTANT: The tests in this file need to be synced with the type tests so that we can ensure that the function's runtime implementation returns the same values as the functions type computes. This is critical for this utility because its main purpose is to couple the path string parsing logic with the type so that it could be used in utility functions that take a strictly typed path array as input (e.g. `prop`, `setPath`, etc...).
 
 test("empty string", () => {
   expect(stringToPath("")).toStrictEqual([]);
