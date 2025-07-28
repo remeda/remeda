@@ -89,3 +89,8 @@ describe("object identity", () => {
     );
   });
 });
+
+test("undefined fallback", () => {
+  expect(defaultTo(undefined as string | undefined, undefined)).toBeUndefined();
+  expect(defaultTo(null as string | null, null)).toBeNull();
+});
