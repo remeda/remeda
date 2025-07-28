@@ -17,8 +17,10 @@ remeda: prop
   fallback in cases where the prop being accessed does not exist on the input
   object. This could be replicated by using the built-in
   [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
-  on the result of `prop`. If you need stricter typing for the default fallback
-  you can also use [`pathOr`](/docs#pathOr).
+  on the result of `prop`.
+- If you need stricter typing for the default fallback consider [`pathOr`](/docs#pathOr)
+  though this function is being phased out and would be deprecated and removed
+  in the near future.
 
 ### Shallow Access
 
@@ -79,5 +81,5 @@ _.get(DATA, ["a", "0", "b"], "default");
 // Remeda
 prop(DATA, "a", 0, "b") ?? "default";
 // When you need the provided default value to be typechecked use:
-pathOr(DATA, ["a", 0, "b"], "default");
+pathOr(DATA, ["a", 0, "b"], 123);
 ```
