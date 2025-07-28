@@ -1,28 +1,82 @@
 ---
 category: Object
-remeda: pathOr
+remeda: prop
 ---
 
-- In Lodash the `get` function supports two ways of defining the path parameter:
-  a string representation of the path (similar to XPath: e.g. `a.b[0].c`), and
-  an array representation of the path (e.g. `['a', 'b', 0, 'c']`). In Remeda
-  only the array representation is accepted. Use the helper function
-  [`stringToPath`](/docs#stringToPath) to translate string paths to array paths.
-- In order to provide good types, the Remeda `pathOr` function is limited to
-  paths of length 3 or less. Longer paths are not supported.
-- [`prop`](/docs#prop) is a simplified version of `pathOr` for paths of length
-  **1** and `undefined` as the default (fallback) value.
+- In Lodash `get` takes an array where each element is a property in the path to
+  a deeply-nested property (e.g. `['a', 'b', '0', 'c']`). In Remeda the path is
+  provided directly as a variadic arguments list.
+- In Lodash all property keys are string, even when accessing numbers. In Remeda
+  use the exact type that the object is defined with, e.g., `number` for array
+  indices.
+- Lodash also supports a _string_ that defines the path to the deeply-nested
+  property (e.g., `a.b[0].c`). In Remeda this isn't supported directly; instead,
+  use the helper function [`stringToPath`](/docs#stringToPath) to convert the
+  path string to a path array, which could then be _spread_ into `prop`.
+- Lodash supports an optional last argument to `get` which defines a default
+  fallback in cases where the prop being accessed does not exist on the input
+  object. This could be replicated by using the built-in
+  [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) on the result of `prop`. If you need stricter
+  typing for the default fallback you can also use [`pathOr`](/docs#pathOr).
+
+### Shallow Access
 
 ```ts
-const DATA = { a: [{ b: 123 }] };
+const DATA = { a: 123 };
 
 // Lodash
-get(DATA, "a");
-get(DATA, ["a", 0, "b"], 456);
-get(DATA, "a[0].b", 456);
+_.get(DATA, ["a"]);
 
 // Remeda
-prop(DATA, "a");
-pathOr(DATA, ["a", 0, "b"], 456);
-pathOr(DATA, stringToPath("a[0].b"), 456);
+prop(data, "a");
+```
+
+### Array indices
+
+```ts
+const DATA = [1, 2, 3];
+
+// Lodash
+_.get(DATA, ["0"]);
+
+// Remeda
+prop(DATA, 0);
+```
+
+### Path Arrays
+
+```ts
+const DATA = { a: [{ b: { c: 3 } }] };
+
+// Lodash
+_.get(DATA, ["a", "0", "b", "c"]);
+
+// Remeda
+prop(DATA, "a", 0, "b", "c");
+```
+
+### Path Strings
+
+```ts
+const DATA = { a: [{ b: { c: 3 } }] };
+
+// Lodash
+_.get(DATA, "a[0].b.c");
+
+// Remeda
+prop(DATA, ...stringToPath("a[0].b.c"));
+```
+
+### Default Fallback
+
+```ts
+const DATA = { a: [] as Array<{ b: number }> };
+
+// Lodash
+_.get(DATA, ["a", "0", "b"], "default");
+
+// Remeda
+prop(DATA, "a", 0, "b") ?? "default";
+// When you need the provided default value to be typechecked use:
+pathOr(DATA, ["a", 0, "b"], "default");
 ```
