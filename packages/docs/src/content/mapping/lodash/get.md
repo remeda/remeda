@@ -31,7 +31,7 @@ const DATA = { a: 123 };
 _.get(DATA, ["a"]);
 
 // Remeda
-prop(data, "a");
+prop(DATA, "a");
 ```
 
 ### Array indices
