@@ -30,7 +30,7 @@ defaultTo(DATA, 456);
 const DATA = Number.NaN;
 
 // Lodash
-defaultTo(DATA, 10);
+_.defaultTo(DATA, 10);
 
 // Remeda
 when(DATA, Number.isNaN, constant(10));
@@ -42,7 +42,7 @@ when(DATA, Number.isNaN, constant(10));
 const DATA: number | null | undefined;
 
 // Lodash
-defaultTo(DATA, 10);
+_.defaultTo(DATA, 10);
 
 // Remeda
 when(
@@ -58,7 +58,7 @@ when(
 const DATA: string | null | undefined;
 
 // Lodash
-defaultTo(DATA, 123);
+_.defaultTo(DATA, 123);
 
 // Remeda
 when(DATA, isNullish, constant(123));
