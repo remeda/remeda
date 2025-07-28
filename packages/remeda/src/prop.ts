@@ -2,11 +2,14 @@ import type { KeysOfUnion } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 import type { NoInfer } from "./internal/types/NoInfer";
 
-type KeysDeep<T, PreviousKeys extends ReadonlyArray<unknown>> = KeysOfUnion<
-  PropDeep<T, PreviousKeys>
+// Computes all possible keys of `T` at `Path` spread over unions, allowing
+// keys from any of the results, not just those **shared** by all of them.
+type KeysDeep<T, Path extends ReadonlyArray<unknown>> = KeysOfUnion<
+  PropDeep<T, Path>
 >;
 
-type PropDeep<T, Keys extends ReadonlyArray<unknown>> = Keys extends readonly [
+// Recursively run `Prop` over `Path` to extract the deeply nested type.
+type PropDeep<T, Path extends ReadonlyArray<unknown>> = Path extends readonly [
   infer Key,
   ...infer Rest,
 ]
@@ -15,6 +18,7 @@ type PropDeep<T, Keys extends ReadonlyArray<unknown>> = Keys extends readonly [
     // the output object.
     T;
 
+// Expanding on the built-in `T[Key]` operator to support arrays and unions.
 type Prop<T, Key> =
   // Distribute the union to support unions of keys.
   T extends unknown
