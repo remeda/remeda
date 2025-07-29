@@ -46,19 +46,19 @@ describe("primitives arrays", () => {
 describe("arrays with literal unions", () => {
   test("predicate", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(true)),
+      filter([] as Array<"cat" | "dog">, constant(true as boolean)),
     ).toEqualTypeOf<Array<"cat" | "dog">>();
   });
 
   test("trivial acceptor", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(true as const)),
+      filter([] as Array<"cat" | "dog">, constant(true)),
     ).toEqualTypeOf<Array<"cat" | "dog">>();
   });
 
   test("trivial rejector", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(false as const)),
+      filter([] as Array<"cat" | "dog">, constant(false)),
     ).toEqualTypeOf<[]>();
   });
 
@@ -74,7 +74,7 @@ describe("fixed tuple", () => {
     expectTypeOf(
       filter(
         ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
-        constant(true),
+        constant(true as boolean),
       ),
     ).toEqualTypeOf<Array<true | 1 | 2 | 3 | "hello" | "world">>();
   });
@@ -138,7 +138,9 @@ describe("special tuple shapes", () => {
     expectTypeOf(filter(data, isString)).toEqualTypeOf<
       [string, ...Array<string>]
     >();
-    expectTypeOf(filter(data, constant(true))).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
+      Array<string>
+    >();
   });
 
   test("rest element is filtered out", () => {
@@ -156,7 +158,7 @@ describe("special tuple shapes", () => {
   test("non-empty array filtered with regular predicate", () => {
     const data = ["hello", "world"] as [string, ...Array<number>, string];
 
-    expectTypeOf(filter(data, constant(true))).toEqualTypeOf<
+    expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
       Array<string | number>
     >();
   });

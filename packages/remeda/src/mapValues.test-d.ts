@@ -90,9 +90,10 @@ describe("branded types", () => {
 
 test("symbols are filtered out", () => {
   const mySymbol = Symbol("mySymbol");
-  const result = mapValues({ [mySymbol]: 1, a: "hello" }, constant(true));
 
-  expectTypeOf(result).toEqualTypeOf<{ a: boolean }>();
+  expectTypeOf(
+    mapValues({ [mySymbol]: 1, a: "hello" }, constant(true)),
+  ).toEqualTypeOf<{ a: true }>();
 });
 
 test("symbols are ignored by the mapper", () => {
@@ -122,27 +123,21 @@ test("number keys are converted to string in the mapper", () => {
 test("number keys are preserved in the resulting object (issue #1071)", () => {
   const data = {} as Record<number, unknown>;
 
-  const dataFirst = mapValues(data, constant(true));
-
-  expectTypeOf(dataFirst).toEqualTypeOf<Record<number, boolean>>();
-
-  const dataLast = pipe(data, mapValues(constant(true)));
-
-  expectTypeOf(dataLast).toEqualTypeOf<Record<number, boolean>>();
+  expectTypeOf(mapValues(data, constant(true))).toEqualTypeOf<
+    Record<number, true>
+  >();
+  expectTypeOf(pipe(data, mapValues(constant(true)))).toEqualTypeOf<
+    Record<number, true>
+  >();
 });
 
 test("maintains partiality", () => {
-  const result = mapValues(
-    {} as { a?: number; b?: string; c: number; d: string },
-    constant(true),
-  );
-
-  expectTypeOf(result).toEqualTypeOf<{
-    a?: boolean;
-    b?: boolean;
-    c: boolean;
-    d: boolean;
-  }>();
+  expectTypeOf(
+    mapValues(
+      {} as { a?: number; b?: string; c: number; d: string },
+      constant(true),
+    ),
+  ).toEqualTypeOf<{ a?: true; b?: true; c: true; d: true }>();
 });
 
 test("unions of records", () => {

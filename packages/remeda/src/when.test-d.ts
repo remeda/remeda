@@ -16,12 +16,11 @@ describe("dataFirst", () => {
       });
 
       test("return type is not narrowed", () => {
-        const data = "hello" as number | string;
-        const result = when(data, constant(true), constant({ a: 1 }));
-
         // The result contains both the input type, and the result of the
         // branch.
-        expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
+        expectTypeOf(
+          when("hello" as number | string, constant(true), constant({ a: 1 })),
+        ).toEqualTypeOf<number | string | { readonly a: 1 }>();
       });
 
       test("passes extra args to the functions", () => {
@@ -201,12 +200,14 @@ describe("dataLast", () => {
       });
 
       test("return type is not narrowed", () => {
-        const data = "hello" as number | string;
-        const result = pipe(data, when(constant(true), constant({ a: 1 })));
-
         // The result contains both the input type, and the result of the
         // branch.
-        expectTypeOf(result).toEqualTypeOf<typeof data | { a: number }>();
+        expectTypeOf(
+          pipe(
+            "hello" as number | string,
+            when(constant(true), constant({ a: 1 })),
+          ),
+        ).toEqualTypeOf<number | string | { readonly a: 1 }>();
       });
 
       test("passes extra args to the functions", () => {
