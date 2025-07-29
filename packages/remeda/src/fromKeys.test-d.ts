@@ -46,12 +46,14 @@ test("empty array", () => {
 });
 
 test("fixed tuple", () => {
-  expectTypeOf(fromKeys(["cat", "dog"] as const, constant(1))).toEqualTypeOf<
+  const data = ["cat", "dog"] as const;
+
+  expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
     Record<"cat" | "dog", 1>
   >();
-  expectTypeOf(
-    pipe(["cat", "dog"] as const, fromKeys(constant(1))),
-  ).toEqualTypeOf<Record<"cat" | "dog", 1>>();
+  expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<
+    Record<"cat" | "dog", 1>
+  >();
 });
 
 describe("with simple keys", () => {

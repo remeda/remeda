@@ -41,25 +41,23 @@ test("symbol keys", () => {
 test("number constants", () => {
   const data = [1, 2] as const;
 
-  const dataFirst = pullObject(data, identity(), constant(3));
-
-  expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
-
-  const dataLast = pipe(data, pullObject(identity(), constant(3)));
-
-  expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
+  expectTypeOf(pullObject(data, identity(), constant(3))).toEqualTypeOf<
+    Partial<Record<1 | 2, 3>>
+  >();
+  expectTypeOf(pipe(data, pullObject(identity(), constant(3)))).toEqualTypeOf<
+    Partial<Record<1 | 2, 3>>
+  >();
 });
 
 test("string constants", () => {
   const data = ["a", "b"] as const;
 
-  const dataFirst = pullObject(data, identity(), constant("c"));
-
-  expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
-
-  const dataLast = pipe(data, pullObject(identity(), constant("c")));
-
-  expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
+  expectTypeOf(pullObject(data, identity(), constant("c"))).toEqualTypeOf<
+    Partial<Record<"a" | "b", "c">>
+  >();
+  expectTypeOf(pipe(data, pullObject(identity(), constant("c")))).toEqualTypeOf<
+    Partial<Record<"a" | "b", "c">>
+  >();
 });
 
 test("literal unions keys", () => {

@@ -51,12 +51,11 @@ describe("dataFirst", () => {
       });
 
       test("removes narrowed types from the output", () => {
-        const data = "hello" as number | string;
-        const result = when(data, isString, constant("cat"));
-
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
-        expectTypeOf(result).toEqualTypeOf<number | "cat">();
+        expectTypeOf(
+          when("hello" as number | string, isString, constant("cat")),
+        ).toEqualTypeOf<number | "cat">();
       });
 
       test("passes extra args to the functions (workaround)", () => {
@@ -235,12 +234,11 @@ describe("dataLast", () => {
       });
 
       test("removes narrowed types from the output", () => {
-        const data = "hello" as number | string;
-        const result = pipe(data, when(isString, constant("cat")));
-
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
-        expectTypeOf(result).toEqualTypeOf<number | "cat">();
+        expectTypeOf(
+          pipe("hello" as number | string, when(isString, constant("cat"))),
+        ).toEqualTypeOf<number | "cat">();
       });
     });
 
