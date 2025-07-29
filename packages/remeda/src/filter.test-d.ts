@@ -19,15 +19,15 @@ describe("primitives arrays", () => {
   });
 
   test("trivial acceptor", () => {
-    expectTypeOf(
-      filter([] as Array<string>, constant(true as const)),
-    ).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter([] as Array<string>, constant(true))).toEqualTypeOf<
+      Array<string>
+    >();
   });
 
   test("trivial rejector", () => {
-    expectTypeOf(
-      filter([] as Array<string>, constant(false as const)),
-    ).toEqualTypeOf<[]>();
+    expectTypeOf(filter([] as Array<string>, constant(false))).toEqualTypeOf<
+      []
+    >();
   });
 
   test("type predicate", () => {
@@ -83,7 +83,7 @@ describe("fixed tuple", () => {
     expectTypeOf(
       filter(
         ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
-        constant(true as const),
+        constant(true),
       ),
     ).toEqualTypeOf<["hello", "world", 1, 2, 3, true, "world", 3, "hello"]>();
   });
@@ -92,7 +92,7 @@ describe("fixed tuple", () => {
     expectTypeOf(
       filter(
         ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
-        constant(false as const),
+        constant(false),
       ),
     ).toEqualTypeOf<[]>();
   });
@@ -212,13 +212,13 @@ describe("accepts readonly arrays, returns mutable ones", () => {
 
   test("trivial acceptor", () => {
     expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(true as const)),
+      filter([] as ReadonlyArray<string>, constant(true)),
     ).toEqualTypeOf<Array<string>>();
   });
 
   test("trivial rejector", () => {
     expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(false as const)),
+      filter([] as ReadonlyArray<string>, constant(false)),
     ).toEqualTypeOf<[]>();
   });
 

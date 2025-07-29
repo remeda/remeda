@@ -52,7 +52,7 @@ describe("dataFirst", () => {
 
       test("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
-        const result = when(data, isString, constant("cat" as const));
+        const result = when(data, isString, constant("cat"));
 
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
@@ -96,8 +96,8 @@ describe("dataFirst", () => {
       test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = when(data, constant(true), {
-          onTrue: constant("cat" as const),
-          onFalse: constant("dog" as const),
+          onTrue: constant("cat"),
+          onFalse: constant("dog"),
         });
 
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
@@ -148,8 +148,8 @@ describe("dataFirst", () => {
       test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
         const result = when(data, isString, {
-          onTrue: constant("cat" as const),
-          onFalse: constant("dog" as const),
+          onTrue: constant("cat"),
+          onFalse: constant("dog"),
         });
 
         expectTypeOf(result).toEqualTypeOf<"cat" | "dog">();
@@ -236,7 +236,7 @@ describe("dataLast", () => {
 
       test("removes narrowed types from the output", () => {
         const data = "hello" as number | string;
-        const result = pipe(data, when(isString, constant("cat" as const)));
+        const result = pipe(data, when(isString, constant("cat")));
 
         // The result doesn't contain the input type that was narrowed against
         // (string), but does contain the input type that wasn't (number).
@@ -279,8 +279,8 @@ describe("dataLast", () => {
         const result = pipe(
           data,
           when(constant(true), {
-            onTrue: constant("cat" as const),
-            onFalse: constant("dog" as const),
+            onTrue: constant("cat"),
+            onFalse: constant("dog"),
           }),
         );
 
@@ -330,8 +330,8 @@ describe("dataLast", () => {
         const result = pipe(
           data,
           when(isString, {
-            onTrue: constant("cat" as const),
-            onFalse: constant("dog" as const),
+            onTrue: constant("cat"),
+            onFalse: constant("dog"),
           }),
         );
 

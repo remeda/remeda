@@ -41,11 +41,11 @@ test("symbol keys", () => {
 test("number constants", () => {
   const data = [1, 2] as const;
 
-  const dataFirst = pullObject(data, identity(), constant(3 as const));
+  const dataFirst = pullObject(data, identity(), constant(3));
 
   expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
 
-  const dataLast = pipe(data, pullObject(identity(), constant(3 as const)));
+  const dataLast = pipe(data, pullObject(identity(), constant(3)));
 
   expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
 });
@@ -53,11 +53,11 @@ test("number constants", () => {
 test("string constants", () => {
   const data = ["a", "b"] as const;
 
-  const dataFirst = pullObject(data, identity(), constant("c" as const));
+  const dataFirst = pullObject(data, identity(), constant("c"));
 
   expectTypeOf(dataFirst).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
 
-  const dataLast = pipe(data, pullObject(identity(), constant("c" as const)));
+  const dataLast = pipe(data, pullObject(identity(), constant("c")));
 
   expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<"a" | "b", "c">>>();
 });
