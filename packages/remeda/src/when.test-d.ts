@@ -10,7 +10,7 @@ describe("dataFirst", () => {
     describe("simple predicates", () => {
       test("mapper param is not narrowed", () => {
         const data = "hello" as number | string;
-        when(data, constant(true as boolean), (x) => {
+        when(data, constant(true), (x) => {
           expectTypeOf(x).toEqualTypeOf(data);
         });
       });
@@ -19,11 +19,7 @@ describe("dataFirst", () => {
         // The result contains both the input type, and the result of the
         // branch.
         expectTypeOf(
-          when(
-            "hello" as number | string,
-            constant(true as boolean),
-            constant({ a: 1 }),
-          ),
+          when("hello" as number | string, constant(true), constant({ a: 1 })),
         ).toEqualTypeOf<number | string | { readonly a: 1 }>();
       });
 
@@ -31,7 +27,7 @@ describe("dataFirst", () => {
         const data = "hello" as number | string;
         when(
           data,
-          constant(true as boolean),
+          constant(true),
           (x, a, b, c) => {
             expectTypeOf(x).toEqualTypeOf(data);
             expectTypeOf(a).toEqualTypeOf<1>();
@@ -86,7 +82,7 @@ describe("dataFirst", () => {
     describe("simple predicates", () => {
       test("mapper's param is not narrowed", () => {
         const data = "hello" as number | string;
-        when(data, constant(true as boolean), {
+        when(data, constant(true), {
           onTrue: (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           },
@@ -98,7 +94,7 @@ describe("dataFirst", () => {
 
       test("returns the union of the branch return types", () => {
         const data = "hello" as number | string;
-        const result = when(data, constant(true as boolean), {
+        const result = when(data, constant(true), {
           onTrue: constant("cat"),
           onFalse: constant("dog"),
         });
@@ -110,7 +106,7 @@ describe("dataFirst", () => {
         const data = "hello" as number | string;
         when(
           data,
-          constant(true as boolean),
+          constant(true),
           {
             onTrue: (x, a, b, c) => {
               expectTypeOf(x).toEqualTypeOf(data);
@@ -196,7 +192,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          when(constant(true as boolean), (x) => {
+          when(constant(true), (x) => {
             expectTypeOf(x).toEqualTypeOf(data);
           }),
         );
@@ -208,7 +204,7 @@ describe("dataLast", () => {
         expectTypeOf(
           pipe(
             "hello" as number | string,
-            when(constant(true as boolean), constant({ a: 1 })),
+            when(constant(true), constant({ a: 1 })),
           ),
         ).toEqualTypeOf<number | string | { readonly a: 1 }>();
       });
@@ -217,7 +213,7 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          when(constant(true as boolean), (x, index, array) => {
+          when(constant(true), (x, index, array) => {
             expectTypeOf(x).toEqualTypeOf<number | string>();
             expectTypeOf(index).toEqualTypeOf<number>();
             expectTypeOf(array).toEqualTypeOf<typeof data>();
@@ -265,7 +261,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         pipe(
           data,
-          when(constant(true as boolean), {
+          when(constant(true), {
             onTrue: (x) => {
               expectTypeOf(x).toEqualTypeOf(data);
             },
@@ -280,7 +276,7 @@ describe("dataLast", () => {
         const data = "hello" as number | string;
         const result = pipe(
           data,
-          when(constant(true as boolean), {
+          when(constant(true), {
             onTrue: constant("cat"),
             onFalse: constant("dog"),
           }),
@@ -293,7 +289,7 @@ describe("dataLast", () => {
         const data = [] as Array<number | string>;
         map(
           data,
-          when(constant(true as boolean), {
+          when(constant(true), {
             onTrue: (x, index, array) => {
               expectTypeOf(x).toEqualTypeOf<number | string>();
               expectTypeOf(index).toEqualTypeOf<number>();
@@ -378,7 +374,7 @@ describe("typing mismatches", () => {
   test("type of extra args enforced (data-first)", () => {
     when(
       1,
-      constant(true as boolean),
+      constant(true),
       // @ts-expect-error [ts2345] -- The extra arg is not a boolean
       (x: number, _: boolean) => x,
       (x: number, _: boolean) => x,
@@ -389,7 +385,7 @@ describe("typing mismatches", () => {
   test("number of extra args enforced (data-first)", () => {
     when(
       1,
-      constant(true as boolean),
+      constant(true),
       // @ts-expect-error [ts2345] -- Not enough extra args
       (x: number, _a: boolean, _b: boolean, _c: boolean) => x,
       (x: number, _a: boolean, _b: boolean, _c: boolean) => x,
@@ -402,7 +398,7 @@ describe("typing mismatches", () => {
     map(
       [] as Array<string>,
       when(
-        constant(true as boolean),
+        constant(true),
         // @ts-expect-error [ts2345] -- The extra arg is not a boolean
         (x: string, _: boolean) => x,
       ),
@@ -413,7 +409,7 @@ describe("typing mismatches", () => {
     map(
       [] as Array<string>,
       when(
-        constant(true as boolean),
+        constant(true),
         // @ts-expect-error [ts2345] -- Not enough extra args
         (
           x: string,
