@@ -1,10 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type --
- * Function is used generically in this file to define any type of function, so
- * this lint error is not relevant for it.
- */
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
 
-type DefinitelyFunction<T> =
-  Extract<T, Function> extends never ? Function : Extract<T, Function>;
+// Contrary to intuition, because TypeScript compares function params using
+// contra-variance and not co-variance, in order to accept any function we need
+// the most "limiting" type for the argument list, and not the most permissive
+// one (which would be `readonly unknown[]`); now when any function is compared
+// against this signature it will always match because `never` **everything**
+// extends everything!
+// @see https://www.typescriptlang.org/play/?#code/C4TwDgpgBA6glsAFgJQgQwCYHsB2AbEAVRwGscsB3HAHgBUA+KAXilqggA9gIcMBnKAAoAdKLQAnAOZ8AXFHHps+EFACupclQDaAXQCUzRurKUcAKChQA-FGDjVEC1DkAzNHj4QA3GbOhIsAiIAII4IHSMLGyc3LwCImJSslBoYQZMRhqm1rb20K7unj5+4NDwSAByEABuEOIRzKzsXDz8QqLCEtJyODV16ZkmVDl2Ds5Qbh7evv7QtBB8wABi6gDGjYJoPaoAtgBG-YZQi+JwOJLFs1AAGgAMjeUoirgExEM084srOKv0PgD0-0sUAAelYZqUbgBGB5BULhT7LNZ-MyA4FgiEBa4AJlhlT69UR31+AKBljBQA
+type StrictFunction = (...args: never) => unknown;
+
 /**
  * A function that checks if the passed parameter is a Function and narrows its type accordingly.
  *
@@ -17,8 +21,6 @@ type DefinitelyFunction<T> =
  *    R.isFunction('somethingElse') //=> false
  * @category Guard
  */
-export function isFunction<T>(
-  data: Function | T,
-): data is DefinitelyFunction<T> {
-  return typeof data === "function";
-}
+export const isFunction = <T>(
+  data: StrictFunction | T,
+): data is NarrowedTo<T, StrictFunction> => typeof data === "function";
