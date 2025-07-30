@@ -1,65 +1,47 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { sample } from "./sample";
 
-describe("sampleSize 0", () => {
+describe("literal sampleSize === 0", () => {
   test("on arrays", () => {
-    const array: Array<number> = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+    expectTypeOf(sample([] as Array<1>, 0)).toEqualTypeOf<[]>();
   });
 
   test("on readonly arrays", () => {
-    const array: ReadonlyArray<number> = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+    expectTypeOf(sample([] as ReadonlyArray<1>, 0)).toEqualTypeOf<[]>();
   });
 
-  test("on tuples", () => {
-    const array: [number, number, number, number, number] = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed-tuples", () => {
+    expectTypeOf(sample([1, 2, 3, 4, 5] as [1, 2, 3, 4, 5], 0)).toEqualTypeOf<
+      []
+    >();
   });
 
-  test("on readonly tuples", () => {
-    const array = [1, 2, 3, 4, 5] as const;
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed readonly tuples", () => {
+    expectTypeOf(sample([1, 2, 3, 4, 5], 0)).toEqualTypeOf<[]>();
   });
 
-  test("on tuples with rest tail", () => {
-    const array: [number, ...Array<number>] = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed-prefix arrays", () => {
+    expectTypeOf(sample([1] as [1, ...Array<2>], 0)).toEqualTypeOf<[]>();
   });
 
-  test("on tuples with rest head", () => {
-    const array: [...Array<number>, number] = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed-suffix arrays", () => {
+    expectTypeOf(sample([2] as [...Array<1>, 2], 0)).toEqualTypeOf<[]>();
   });
 
-  test("on readonly tuples with rest tail", () => {
-    const array: readonly [number, ...Array<number>] = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed-prefix readonly array", () => {
+    expectTypeOf(sample([1] as readonly [1, ...Array<2>], 0)).toEqualTypeOf<
+      []
+    >();
   });
 
-  test("on readonly tuples with rest head", () => {
-    const array: readonly [...Array<number>, number] = [1, 2, 3, 4, 5];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<[]>();
+  test("on fixed-suffix readonly array", () => {
+    expectTypeOf(sample([2] as readonly [...Array<1>, 2], 0)).toEqualTypeOf<
+      []
+    >();
   });
 });
 
-describe("sampleSize < n", () => {
+describe("literal sampleSize < n", () => {
   test("on arrays", () => {
     const array: Array<number> = [1, 2, 3, 4, 5];
     const result = sample(array, 4);
@@ -96,10 +78,7 @@ describe("sampleSize < n", () => {
   });
 
   test("on readonly tuples", () => {
-    const array = [1, 2, 3, 4, 5] as const;
-    const result = sample(array, 4);
-
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(sample([1, 2, 3, 4, 5], 4)).toEqualTypeOf<
       [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
     >();
   });
@@ -175,7 +154,7 @@ describe("sampleSize < n", () => {
   });
 });
 
-describe("sampleSize === n", () => {
+describe("literal sampleSize === n", () => {
   test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 0);
@@ -184,10 +163,7 @@ describe("sampleSize === n", () => {
   });
 
   test("empty readonly array", () => {
-    const array: readonly [] = [];
-    const result = sample(array, 0);
-
-    expectTypeOf(result).toEqualTypeOf<typeof array>();
+    expectTypeOf(sample([], 0)).toEqualTypeOf<[]>();
   });
 
   test("on arrays", () => {
@@ -226,10 +202,7 @@ describe("sampleSize === n", () => {
   });
 
   test("on readonly tuples", () => {
-    const array = [1, 2, 3, 4, 5] as const;
-    const result = sample(array, 5);
-
-    expectTypeOf(result).toEqualTypeOf<typeof array>();
+    expectTypeOf(sample([1, 2, 3, 4, 5], 5)).toEqualTypeOf<[1, 2, 3, 4, 5]>();
   });
 
   test("on tuples with rest tail", () => {
@@ -307,7 +280,7 @@ describe("sampleSize === n", () => {
   });
 });
 
-describe("sampleSize > n", () => {
+describe("literal sampleSize > n", () => {
   test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 10);
@@ -316,10 +289,7 @@ describe("sampleSize > n", () => {
   });
 
   test("empty readonly array", () => {
-    const array: readonly [] = [];
-    const result = sample(array, 10);
-
-    expectTypeOf(result).toEqualTypeOf<typeof array>();
+    expectTypeOf(sample([], 10)).toEqualTypeOf<[]>();
   });
 
   test("on arrays", () => {
@@ -390,10 +360,7 @@ describe("sampleSize > n", () => {
   });
 
   test("on readonly tuples", () => {
-    const array = [1, 2, 3, 4, 5] as const;
-    const result = sample(array, 10);
-
-    expectTypeOf(result).toEqualTypeOf<typeof array>();
+    expectTypeOf(sample([1, 2, 3, 4, 5], 10)).toEqualTypeOf<[1, 2, 3, 4, 5]>();
   });
 
   test("on tuples with rest tail", () => {
@@ -623,7 +590,7 @@ describe("sampleSize > n", () => {
   });
 });
 
-describe("non-const sampleSize", () => {
+describe("primitive sampleSize", () => {
   test("empty array", () => {
     const array: [] = [];
     const result = sample(array, 5 as number);
@@ -632,10 +599,7 @@ describe("non-const sampleSize", () => {
   });
 
   test("empty readonly array", () => {
-    const array: readonly [] = [];
-    const result = sample(array, 5 as number);
-
-    expectTypeOf(result).toEqualTypeOf<typeof array>();
+    expectTypeOf(sample([], 5 as number)).toEqualTypeOf<[]>();
   });
 
   test("on arrays", () => {
@@ -693,10 +657,7 @@ describe("non-const sampleSize", () => {
   });
 
   test("on readonly tuples", () => {
-    const array = [1, 2, 3, 4, 5] as const;
-    const result = sample(array, 5 as number);
-
-    expectTypeOf(result).toEqualTypeOf<
+    expectTypeOf(sample([1, 2, 3, 4, 5], 5 as number)).toEqualTypeOf<
       | []
       | [1, 2, 3, 4, 5]
       | [1, 2, 3, 4]
