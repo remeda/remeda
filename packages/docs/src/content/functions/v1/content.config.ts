@@ -18,7 +18,7 @@ export const functionsV1Collection = defineCollection({
       name: z.string(),
       kind: z
         .literal(ReflectionKind.Namespace)
-        .transform(constant("namespace" as const)),
+        .transform(constant("namespace")),
     }),
   ]),
 });

@@ -46,9 +46,7 @@ const zSignature = z.object({
 export type FunctionEntry = z.infer<typeof zFunction>;
 export const zFunction = z.object({
   name: z.string(),
-  kind: z
-    .literal(ReflectionKind.Function)
-    .transform(constant("function" as const)),
+  kind: z.literal(ReflectionKind.Function).transform(constant("function")),
   sources: z.array(z.object({ url: z.string().url() })),
   // Zod's array `min` modifier doesn't refine the output type accordingly so we use `refine` with our own `hasAtLeast` too.
   signatures: z.array(zSignature).min(1).refine(hasAtLeast(1)),
