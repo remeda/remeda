@@ -48,12 +48,11 @@ test("empty array", () => {
 test("fixed tuple", () => {
   const data = ["cat", "dog"] as const;
 
-  expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
-    Record<"cat" | "dog", 1>
-  >();
-  expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<
-    Record<"cat" | "dog", 1>
-  >();
+  expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<{ cat: 1; dog: 1 }>();
+  expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<{
+    cat: 1;
+    dog: 1;
+  }>();
 });
 
 describe("with simple keys", () => {
@@ -95,12 +94,14 @@ describe("with literal union keys", () => {
   test("regular array", () => {
     const data = [] as Array<"cat" | "dog">;
 
-    expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
-      Partial<Record<"cat" | "dog", 1>>
-    >();
-    expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<
-      Partial<Record<"cat" | "dog", 1>>
-    >();
+    expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<{
+      cat?: 1;
+      dog?: 1;
+    }>();
+    expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<{
+      cat?: 1;
+      dog?: 1;
+    }>();
   });
 
   test("non-empty array", () => {
@@ -209,12 +210,16 @@ describe("with string template keys", () => {
     test("literals", () => {
       const data = [1, 2, 3] as const;
 
-      expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
-        Record<1 | 2 | 3, 1>
-      >();
-      expectTypeOf(pipe(data, fromKeys(constant(1)))).toEqualTypeOf<
-        Record<1 | 2 | 3, 1>
-      >();
+      expectTypeOf(fromKeys(data, constant("a"))).toEqualTypeOf<{
+        1: "a";
+        2: "a";
+        3: "a";
+      }>();
+      expectTypeOf(pipe(data, fromKeys(constant("a")))).toEqualTypeOf<{
+        1: "a";
+        2: "a";
+        3: "a";
+      }>();
     });
   });
 });
