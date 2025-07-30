@@ -41,23 +41,25 @@ test("symbol keys", () => {
 test("number constants", () => {
   const data = [1, 2] as const;
 
-  expectTypeOf(pullObject(data, identity(), constant(3))).toEqualTypeOf<
-    Partial<Record<1 | 2, 3>>
-  >();
-  expectTypeOf(pipe(data, pullObject(identity(), constant(3)))).toEqualTypeOf<
-    Partial<Record<1 | 2, 3>>
-  >();
+  expectTypeOf(pullObject(data, identity(), constant("a"))).toEqualTypeOf<{
+    1?: "a";
+    2?: "a";
+  }>();
+  expectTypeOf(
+    pipe(data, pullObject(identity(), constant("a"))),
+  ).toEqualTypeOf<{ 1?: "a"; 2?: "a" }>();
 });
 
 test("string constants", () => {
   const data = ["a", "b"] as const;
 
-  expectTypeOf(pullObject(data, identity(), constant("c"))).toEqualTypeOf<
-    Partial<Record<"a" | "b", "c">>
-  >();
-  expectTypeOf(pipe(data, pullObject(identity(), constant("c")))).toEqualTypeOf<
-    Partial<Record<"a" | "b", "c">>
-  >();
+  expectTypeOf(pullObject(data, identity(), constant("c"))).toEqualTypeOf<{
+    a?: "c";
+    b?: "c";
+  }>();
+  expectTypeOf(
+    pipe(data, pullObject(identity(), constant("c"))),
+  ).toEqualTypeOf<{ a?: "c"; b?: "c" }>();
 });
 
 test("literal unions keys", () => {
@@ -69,13 +71,13 @@ test("literal unions keys", () => {
       (item) => (item % 2 === 0 ? "odd" : "even"),
       constant("c"),
     ),
-  ).toEqualTypeOf<Partial<Record<"even" | "odd", "c">>>();
+  ).toEqualTypeOf<{ even?: "c"; odd?: "c" }>();
   expectTypeOf(
     pipe(
       data,
       pullObject((item) => (item % 2 === 0 ? "odd" : "even"), constant("c")),
     ),
-  ).toEqualTypeOf<Partial<Record<"even" | "odd", "c">>>();
+  ).toEqualTypeOf<{ even?: "c"; odd?: "c" }>();
 });
 
 test("template string keys", () => {
