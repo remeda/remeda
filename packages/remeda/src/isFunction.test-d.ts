@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any --
+ * `any` is part of the type
+ */
+
 import { expectTypeOf, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,
@@ -57,20 +61,19 @@ test("unknown", () => {
   const data = "Hello, world!" as unknown;
 
   if (isFunction(data)) {
-    expectTypeOf(data).toEqualTypeOf<(...args: never) => unknown>();
+    expectTypeOf(data).toEqualTypeOf<(...args: any) => unknown>();
   } else {
     expectTypeOf(data).toEqualTypeOf<unknown>();
   }
 });
 
 test("any", () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any -- Intentional!
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Intentional!
   const data = "Hello, world!" as any;
 
   if (isFunction(data)) {
-    expectTypeOf(data).toEqualTypeOf<(...args: never) => unknown>();
+    expectTypeOf(data).toEqualTypeOf<(...args: any) => unknown>();
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional!
     expectTypeOf(data).toEqualTypeOf<any>();
   }
 });
