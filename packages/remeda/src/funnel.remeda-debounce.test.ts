@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
  * These aren't useful for a reference implementation!
  */
 
@@ -37,17 +37,17 @@ type DebounceOptions = {
  *
  * @see debounce
  */
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends (...args: any) => unknown>(
   func: F,
   options: DebounceOptions & { readonly timing?: "trailing" },
 ): Debouncer<F>;
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends (...args: any) => unknown>(
   func: F,
   options:
     | (DebounceOptions & { readonly timing: "both" })
     | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
 ): Debouncer<F, false /* call CAN'T return null */>;
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends (...args: any) => unknown>(
   func: F,
   {
     timing,

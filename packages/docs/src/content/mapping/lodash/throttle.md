@@ -81,7 +81,7 @@ function throttle<F extends (...args: any) => void>(
 ### With cached value
 
 ```ts
-function throttle<F extends (...args: any) => any>(
+function throttle<F extends (...args: any) => unknown>(
   func: F,
   wait = 0,
   {

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -36,7 +36,7 @@ import { identity } from "./identity";
  * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L1347
  */
-function throttleWithCachedValue<F extends (...args: any) => any>(
+function throttleWithCachedValue<F extends (...args: any) => unknown>(
   func: F,
   wait = 0,
   {

@@ -4,6 +4,6 @@ import type { Tagged } from "type-fest";
 declare const TAG_NAME_BRANDED_RETURN: unique symbol;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- The most generic function signature requires the usage of `any` instead of `unknown`
-export type BrandedReturn<F extends (...args: any) => any> = (
+export type BrandedReturn<F extends (...args: any) => unknown> = (
   ...args: Parameters<F>
 ) => Tagged<ReturnType<F>, typeof TAG_NAME_BRANDED_RETURN, F>;
