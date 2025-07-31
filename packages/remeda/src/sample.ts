@@ -24,6 +24,10 @@ type SampledPrimitive<T extends IterableContainer> = [
   ...FixedSubTuples<TupleParts<T>["suffix"]>,
 ];
 
+/**
+ * When N is literal our output should be a union of fixed tuples of exactly
+ * N elements that are sub-tuples of the input.
+ */
 type SampledLiteral<T extends IterableContainer, N extends number> = If<
   // When N is trivially 0 the result is trivially empty.
   IsEqual<N, 0>,
@@ -59,6 +63,7 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
     FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
   : [];
 
+// Assuming T has a rest element, we build all possible sub-tuples of N length.
 type SampledWithRest<
   T extends IterableContainer,
   N extends number,
