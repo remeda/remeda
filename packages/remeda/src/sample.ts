@@ -8,6 +8,7 @@ import type {
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { If } from "./internal/types/If";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
@@ -18,16 +19,10 @@ import { purry } from "./purry";
 type SampledPrimitive<T extends IterableContainer> = [
   ...FixedSubTuples<TupleParts<T>["required"]>,
   // TODO: We currently have no tests that check optional elements!
-  ...Partial<FixedSubTuples<TupleParts<T>["optional"]>>,
+  ...PartialArray<FixedSubTuples<TupleParts<T>["optional"]>>,
   ...CoercedArray<TupleParts<T>["item"]>,
   ...FixedSubTuples<TupleParts<T>["suffix"]>,
 ];
-
-// Assuming T is a fixed tuple we build all it's possible sub-tuples.
-type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
-  ? // For each element we either take it or skip it, and recurse over the rest.
-    FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
-  : [];
 
 type SampledLiteral<T extends IterableContainer, N extends number> = If<
   // When N is trivially 0 the result is trivially empty.
@@ -57,6 +52,12 @@ type SampledLiteral<T extends IterableContainer, N extends number> = If<
     SampledWithRest<T, N>
   >
 >;
+
+// Assuming T is a fixed tuple we build all it's possible sub-tuples.
+type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
+  ? // For each element we either take it or skip it, and recurse over the rest.
+    FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
+  : [];
 
 type SampledWithRest<
   T extends IterableContainer,
