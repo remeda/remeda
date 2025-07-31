@@ -1,6 +1,15 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { sample } from "./sample";
 
+// We rely on the tuple shapes defined and described in TupleParts. We extracted
+// the constants our of the tests so that we can ensure they keep certain
+// properties that are then assumed when we test for different sampleSizes. All
+// these tuples have exactly 5 fixed elements (except the empty tuple), this
+// allows us to use fixed sample sizes in all tests of each category and make
+// sure we hit all the edge-cases.
+//
+// TODO: Some tuple shapes are not tested yet: optional, mixed, optional prefix, mixed prefix, and fixed elements.
+
 const EMPTY = [] as [];
 const EMPTY_RO = EMPTY as readonly [];
 
@@ -29,8 +38,6 @@ const SUFFIX = ["v", "w", "x", "y", "z"] as [
   "z",
 ];
 const SUFFIX_RO = SUFFIX as readonly [...Array<true>, "v", "w", "x", "y", "z"];
-
-// TODO: We aren't testing all possible tuple shapes: optional, mixed, optional prefix, mixed prefix, and fixed elements (see TupleParts for the definition of each shape).
 
 describe("literal sampleSize === 0", () => {
   const SAMPLE_SIZE = 0;
