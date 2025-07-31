@@ -122,39 +122,145 @@ describe("literal sampleSize < n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
-      [
-        true | "a" | "b" | "c" | "d" | "e",
-        true | "b" | "c" | "d" | "e",
-        true | "c" | "d" | "e",
-        true | "d" | "e",
-      ]
+      | ["a", "b", "c", "d"]
+      | ["a", "b", "c", "e"]
+      | ["a", "b", "d", "e"]
+      | ["a", "c", "d", "e"]
+      | ["b", "c", "d", "e"]
+      | ["a", "b", "c", true]
+      | ["a", "b", "d", true]
+      | ["a", "b", "e", true]
+      | ["a", "c", "d", true]
+      | ["a", "c", "e", true]
+      | ["a", "d", "e", true]
+      | ["b", "c", "d", true]
+      | ["b", "c", "e", true]
+      | ["b", "d", "e", true]
+      | ["c", "d", "e", true]
+      | ["a", "b", true, true]
+      | ["a", "c", true, true]
+      | ["a", "d", true, true]
+      | ["a", "e", true, true]
+      | ["b", "c", true, true]
+      | ["b", "d", true, true]
+      | ["b", "e", true, true]
+      | ["c", "d", true, true]
+      | ["c", "e", true, true]
+      | ["d", "e", true, true]
+      | ["a", true, true, true]
+      | ["b", true, true, true]
+      | ["c", true, true, true]
+      | ["d", true, true, true]
+      | ["e", true, true, true]
+      | [true, true, true, true]
     >();
   });
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
-      [
-        true | "a" | "b" | "c" | "d" | "e",
-        true | "b" | "c" | "d" | "e",
-        true | "c" | "d" | "e",
-        true | "d" | "e",
-      ]
+      | ["a", "b", "c", "d"]
+      | ["a", "b", "c", "e"]
+      | ["a", "b", "d", "e"]
+      | ["a", "c", "d", "e"]
+      | ["b", "c", "d", "e"]
+      | ["a", "b", "c", true]
+      | ["a", "b", "d", true]
+      | ["a", "b", "e", true]
+      | ["a", "c", "d", true]
+      | ["a", "c", "e", true]
+      | ["a", "d", "e", true]
+      | ["b", "c", "d", true]
+      | ["b", "c", "e", true]
+      | ["b", "d", "e", true]
+      | ["c", "d", "e", true]
+      | ["a", "b", true, true]
+      | ["a", "c", true, true]
+      | ["a", "d", true, true]
+      | ["a", "e", true, true]
+      | ["b", "c", true, true]
+      | ["b", "d", true, true]
+      | ["b", "e", true, true]
+      | ["c", "d", true, true]
+      | ["c", "e", true, true]
+      | ["d", "e", true, true]
+      | ["a", true, true, true]
+      | ["b", true, true, true]
+      | ["c", true, true, true]
+      | ["d", true, true, true]
+      | ["e", true, true, true]
+      | [true, true, true, true]
     >();
   });
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
-      ["w", "x", "y", "z"]
+      | ["v", "w", "x", "y"]
+      | ["v", "w", "x", "z"]
+      | ["v", "w", "y", "z"]
+      | ["v", "x", "y", "z"]
+      | ["w", "x", "y", "z"]
+      | [true, "v", "w", "x"]
+      | [true, "v", "w", "y"]
+      | [true, "v", "w", "z"]
+      | [true, "v", "x", "y"]
+      | [true, "v", "x", "z"]
+      | [true, "v", "y", "z"]
+      | [true, "w", "x", "y"]
+      | [true, "w", "x", "z"]
+      | [true, "w", "y", "z"]
+      | [true, "x", "y", "z"]
+      | [true, true, "v", "w"]
+      | [true, true, "v", "x"]
+      | [true, true, "v", "y"]
+      | [true, true, "v", "z"]
+      | [true, true, "w", "x"]
+      | [true, true, "w", "y"]
+      | [true, true, "w", "z"]
+      | [true, true, "x", "y"]
+      | [true, true, "x", "z"]
+      | [true, true, "y", "z"]
+      | [true, true, true, "v"]
+      | [true, true, true, "w"]
+      | [true, true, true, "x"]
+      | [true, true, true, "y"]
+      | [true, true, true, "z"]
+      | [true, true, true, true]
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
-      ["w", "x", "y", "z"]
+      | ["v", "w", "x", "y"]
+      | ["v", "w", "x", "z"]
+      | ["v", "w", "y", "z"]
+      | ["v", "x", "y", "z"]
+      | ["w", "x", "y", "z"]
+      | [true, "v", "w", "x"]
+      | [true, "v", "w", "y"]
+      | [true, "v", "w", "z"]
+      | [true, "v", "x", "y"]
+      | [true, "v", "x", "z"]
+      | [true, "v", "y", "z"]
+      | [true, "w", "x", "y"]
+      | [true, "w", "x", "z"]
+      | [true, "w", "y", "z"]
+      | [true, "x", "y", "z"]
+      | [true, true, "v", "w"]
+      | [true, true, "v", "x"]
+      | [true, true, "v", "y"]
+      | [true, true, "v", "z"]
+      | [true, true, "w", "x"]
+      | [true, true, "w", "y"]
+      | [true, true, "w", "z"]
+      | [true, true, "x", "y"]
+      | [true, true, "x", "z"]
+      | [true, true, "y", "z"]
+      | [true, true, true, "v"]
+      | [true, true, true, "w"]
+      | [true, true, true, "x"]
+      | [true, true, true, "y"]
+      | [true, true, true, "z"]
+      | [true, true, true, true]
     >();
   });
 });
@@ -176,41 +282,149 @@ describe("literal sampleSize === n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e", "e"] that isn't possible.
-      [
-        true | "a" | "b" | "c" | "d" | "e",
-        true | "b" | "c" | "d" | "e",
-        true | "c" | "d" | "e",
-        true | "d" | "e",
-        true | "e",
-      ]
+      | ["a", "b", "c", "d", "e"]
+      | ["a", "b", "c", "d", true]
+      | ["a", "b", "c", "e", true]
+      | ["a", "b", "d", "e", true]
+      | ["a", "c", "d", "e", true]
+      | ["b", "c", "d", "e", true]
+      | ["a", "b", "c", true, true]
+      | ["a", "b", "d", true, true]
+      | ["a", "b", "e", true, true]
+      | ["a", "c", "d", true, true]
+      | ["a", "c", "e", true, true]
+      | ["a", "d", "e", true, true]
+      | ["b", "c", "d", true, true]
+      | ["b", "c", "e", true, true]
+      | ["b", "d", "e", true, true]
+      | ["c", "d", "e", true, true]
+      | ["a", "b", true, true, true]
+      | ["a", "c", true, true, true]
+      | ["a", "d", true, true, true]
+      | ["a", "e", true, true, true]
+      | ["b", "c", true, true, true]
+      | ["b", "d", true, true, true]
+      | ["b", "e", true, true, true]
+      | ["c", "d", true, true, true]
+      | ["c", "e", true, true, true]
+      | ["d", "e", true, true, true]
+      | ["a", true, true, true, true]
+      | ["b", true, true, true, true]
+      | ["c", true, true, true, true]
+      | ["d", true, true, true, true]
+      | ["e", true, true, true, true]
+      | [true, true, true, true, true]
     >();
   });
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e", "e"] that isn't possible.
-      [
-        true | "a" | "b" | "c" | "d" | "e",
-        true | "b" | "c" | "d" | "e",
-        true | "c" | "d" | "e",
-        true | "d" | "e",
-        true | "e",
-      ]
+      | ["a", "b", "c", "d", "e"]
+      | ["a", "b", "c", "d", true]
+      | ["a", "b", "c", "e", true]
+      | ["a", "b", "d", "e", true]
+      | ["a", "c", "d", "e", true]
+      | ["b", "c", "d", "e", true]
+      | ["a", "b", "c", true, true]
+      | ["a", "b", "d", true, true]
+      | ["a", "b", "e", true, true]
+      | ["a", "c", "d", true, true]
+      | ["a", "c", "e", true, true]
+      | ["a", "d", "e", true, true]
+      | ["b", "c", "d", true, true]
+      | ["b", "c", "e", true, true]
+      | ["b", "d", "e", true, true]
+      | ["c", "d", "e", true, true]
+      | ["a", "b", true, true, true]
+      | ["a", "c", true, true, true]
+      | ["a", "d", true, true, true]
+      | ["a", "e", true, true, true]
+      | ["b", "c", true, true, true]
+      | ["b", "d", true, true, true]
+      | ["b", "e", true, true, true]
+      | ["c", "d", true, true, true]
+      | ["c", "e", true, true, true]
+      | ["d", "e", true, true, true]
+      | ["a", true, true, true, true]
+      | ["b", true, true, true, true]
+      | ["c", true, true, true, true]
+      | ["d", true, true, true, true]
+      | ["e", true, true, true, true]
+      | [true, true, true, true, true]
     >();
   });
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
-      ["v", "w", "x", "y", "z"]
+      | ["v", "w", "x", "y", "z"]
+      | [true, "v", "w", "x", "y"]
+      | [true, "v", "w", "x", "z"]
+      | [true, "v", "w", "y", "z"]
+      | [true, "v", "x", "y", "z"]
+      | [true, "w", "x", "y", "z"]
+      | [true, true, "v", "w", "x"]
+      | [true, true, "v", "w", "y"]
+      | [true, true, "v", "w", "z"]
+      | [true, true, "v", "x", "y"]
+      | [true, true, "v", "x", "z"]
+      | [true, true, "v", "y", "z"]
+      | [true, true, "w", "x", "y"]
+      | [true, true, "w", "x", "z"]
+      | [true, true, "w", "y", "z"]
+      | [true, true, "x", "y", "z"]
+      | [true, true, true, "v", "w"]
+      | [true, true, true, "v", "x"]
+      | [true, true, true, "v", "y"]
+      | [true, true, true, "v", "z"]
+      | [true, true, true, "w", "x"]
+      | [true, true, true, "w", "y"]
+      | [true, true, true, "w", "z"]
+      | [true, true, true, "x", "y"]
+      | [true, true, true, "x", "z"]
+      | [true, true, true, "y", "z"]
+      | [true, true, true, true, "v"]
+      | [true, true, true, true, "w"]
+      | [true, true, true, true, "x"]
+      | [true, true, true, true, "y"]
+      | [true, true, true, true, "z"]
+      | [true, true, true, true, true]
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
-      ["v", "w", "x", "y", "z"]
+      | ["v", "w", "x", "y", "z"]
+      | [true, "v", "w", "x", "y"]
+      | [true, "v", "w", "x", "z"]
+      | [true, "v", "w", "y", "z"]
+      | [true, "v", "x", "y", "z"]
+      | [true, "w", "x", "y", "z"]
+      | [true, true, "v", "w", "x"]
+      | [true, true, "v", "w", "y"]
+      | [true, true, "v", "w", "z"]
+      | [true, true, "v", "x", "y"]
+      | [true, true, "v", "x", "z"]
+      | [true, true, "v", "y", "z"]
+      | [true, true, "w", "x", "y"]
+      | [true, true, "w", "x", "z"]
+      | [true, true, "w", "y", "z"]
+      | [true, true, "x", "y", "z"]
+      | [true, true, true, "v", "w"]
+      | [true, true, true, "v", "x"]
+      | [true, true, true, "v", "y"]
+      | [true, true, true, "v", "z"]
+      | [true, true, true, "w", "x"]
+      | [true, true, true, "w", "y"]
+      | [true, true, true, "w", "z"]
+      | [true, true, true, "x", "y"]
+      | [true, true, true, "x", "z"]
+      | [true, true, true, "y", "z"]
+      | [true, true, true, true, "v"]
+      | [true, true, true, true, "w"]
+      | [true, true, true, true, "x"]
+      | [true, true, true, true, "y"]
+      | [true, true, true, true, "z"]
+      | [true, true, true, true, true]
     >();
   });
 });
@@ -240,127 +454,85 @@ describe("literal sampleSize > n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; there are two problems with it: it accepts invalid outputs like ["e", "e", "e", "e", "e", true, true, true, true, true] of length SAMPLE_SIZE, but it also compute the cases for outputs shorter than SAMPLE_SIZE incorrectly, because in those cases the prefix will always be sampled as-is (because it's always present and we are sampling more items than the input has!).
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-        ]
+      | ["a", "b", "c", "d", "e"]
+      | ["a", "b", "c", "d", "e", true]
+      | ["a", "b", "c", "d", "e", true, true]
+      | ["a", "b", "c", "d", "e", true, true, true]
+      | ["a", "b", "c", "d", "e", true, true, true, true]
+      | ["a", "b", "c", "d", "e", true, true, true, true, true]
+      | ["a", "b", "c", "d", true, true, true, true, true, true]
+      | ["a", "b", "c", "e", true, true, true, true, true, true]
+      | ["a", "b", "d", "e", true, true, true, true, true, true]
+      | ["a", "c", "d", "e", true, true, true, true, true, true]
+      | ["b", "c", "d", "e", true, true, true, true, true, true]
+      | ["a", "b", "c", true, true, true, true, true, true, true]
+      | ["a", "b", "d", true, true, true, true, true, true, true]
+      | ["a", "b", "e", true, true, true, true, true, true, true]
+      | ["a", "c", "d", true, true, true, true, true, true, true]
+      | ["a", "c", "e", true, true, true, true, true, true, true]
+      | ["a", "d", "e", true, true, true, true, true, true, true]
+      | ["b", "c", "d", true, true, true, true, true, true, true]
+      | ["b", "c", "e", true, true, true, true, true, true, true]
+      | ["b", "d", "e", true, true, true, true, true, true, true]
+      | ["c", "d", "e", true, true, true, true, true, true, true]
+      | ["a", "b", true, true, true, true, true, true, true, true]
+      | ["a", "c", true, true, true, true, true, true, true, true]
+      | ["a", "d", true, true, true, true, true, true, true, true]
+      | ["a", "e", true, true, true, true, true, true, true, true]
+      | ["b", "c", true, true, true, true, true, true, true, true]
+      | ["b", "d", true, true, true, true, true, true, true, true]
+      | ["b", "e", true, true, true, true, true, true, true, true]
+      | ["c", "d", true, true, true, true, true, true, true, true]
+      | ["c", "e", true, true, true, true, true, true, true, true]
+      | ["d", "e", true, true, true, true, true, true, true, true]
+      | ["a", true, true, true, true, true, true, true, true, true]
+      | ["b", true, true, true, true, true, true, true, true, true]
+      | ["c", true, true, true, true, true, true, true, true, true]
+      | ["d", true, true, true, true, true, true, true, true, true]
+      | ["e", true, true, true, true, true, true, true, true, true]
+      | [true, true, true, true, true, true, true, true, true, true]
     >();
   });
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; there are two problems with it: it accepts invalid outputs like ["e", "e", "e", "e", "e", true, true, true, true, true] of length SAMPLE_SIZE, but it also compute the cases for outputs shorter than SAMPLE_SIZE incorrectly, because in those cases the prefix will always be sampled as-is (because it's always present and we are sampling more items than the input has!).
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-          true,
-        ]
-      | [
-          "a" | "b" | "c" | "d" | "e" | true,
-          "b" | "c" | "d" | "e" | true,
-          "c" | "d" | "e" | true,
-          "d" | "e" | true,
-          "e" | true,
-        ]
+      | ["a", "b", "c", "d", "e"]
+      | ["a", "b", "c", "d", "e", true]
+      | ["a", "b", "c", "d", "e", true, true]
+      | ["a", "b", "c", "d", "e", true, true, true]
+      | ["a", "b", "c", "d", "e", true, true, true, true]
+      | ["a", "b", "c", "d", "e", true, true, true, true, true]
+      | ["a", "b", "c", "d", true, true, true, true, true, true]
+      | ["a", "b", "c", "e", true, true, true, true, true, true]
+      | ["a", "b", "d", "e", true, true, true, true, true, true]
+      | ["a", "c", "d", "e", true, true, true, true, true, true]
+      | ["b", "c", "d", "e", true, true, true, true, true, true]
+      | ["a", "b", "c", true, true, true, true, true, true, true]
+      | ["a", "b", "d", true, true, true, true, true, true, true]
+      | ["a", "b", "e", true, true, true, true, true, true, true]
+      | ["a", "c", "d", true, true, true, true, true, true, true]
+      | ["a", "c", "e", true, true, true, true, true, true, true]
+      | ["a", "d", "e", true, true, true, true, true, true, true]
+      | ["b", "c", "d", true, true, true, true, true, true, true]
+      | ["b", "c", "e", true, true, true, true, true, true, true]
+      | ["b", "d", "e", true, true, true, true, true, true, true]
+      | ["c", "d", "e", true, true, true, true, true, true, true]
+      | ["a", "b", true, true, true, true, true, true, true, true]
+      | ["a", "c", true, true, true, true, true, true, true, true]
+      | ["a", "d", true, true, true, true, true, true, true, true]
+      | ["a", "e", true, true, true, true, true, true, true, true]
+      | ["b", "c", true, true, true, true, true, true, true, true]
+      | ["b", "d", true, true, true, true, true, true, true, true]
+      | ["b", "e", true, true, true, true, true, true, true, true]
+      | ["c", "d", true, true, true, true, true, true, true, true]
+      | ["c", "e", true, true, true, true, true, true, true, true]
+      | ["d", "e", true, true, true, true, true, true, true, true]
+      | ["a", true, true, true, true, true, true, true, true, true]
+      | ["b", true, true, true, true, true, true, true, true, true]
+      | ["c", true, true, true, true, true, true, true, true, true]
+      | ["d", true, true, true, true, true, true, true, true, true]
+      | ["e", true, true, true, true, true, true, true, true, true]
+      | [true, true, true, true, true, true, true, true, true, true]
     >();
   });
 
@@ -371,8 +543,38 @@ describe("literal sampleSize > n", () => {
       | [true, true, "v", "w", "x", "y", "z"]
       | [true, true, true, "v", "w", "x", "y", "z"]
       | [true, true, true, true, "v", "w", "x", "y", "z"]
-      // TODO: This is wrong, once the input array has more than sampleSize items then the result might not contain the suffix at all, we need to take any combination of items from the suffix.
       | [true, true, true, true, true, "v", "w", "x", "y", "z"]
+      | [true, true, true, true, true, true, "v", "w", "x", "y"]
+      | [true, true, true, true, true, true, "v", "w", "x", "z"]
+      | [true, true, true, true, true, true, "v", "w", "y", "z"]
+      | [true, true, true, true, true, true, "v", "x", "y", "z"]
+      | [true, true, true, true, true, true, "w", "x", "y", "z"]
+      | [true, true, true, true, true, true, true, "v", "w", "x"]
+      | [true, true, true, true, true, true, true, "v", "w", "y"]
+      | [true, true, true, true, true, true, true, "v", "w", "z"]
+      | [true, true, true, true, true, true, true, "v", "x", "y"]
+      | [true, true, true, true, true, true, true, "v", "x", "z"]
+      | [true, true, true, true, true, true, true, "v", "y", "z"]
+      | [true, true, true, true, true, true, true, "w", "x", "y"]
+      | [true, true, true, true, true, true, true, "w", "x", "z"]
+      | [true, true, true, true, true, true, true, "w", "y", "z"]
+      | [true, true, true, true, true, true, true, "x", "y", "z"]
+      | [true, true, true, true, true, true, true, true, "v", "w"]
+      | [true, true, true, true, true, true, true, true, "v", "x"]
+      | [true, true, true, true, true, true, true, true, "v", "y"]
+      | [true, true, true, true, true, true, true, true, "v", "z"]
+      | [true, true, true, true, true, true, true, true, "w", "x"]
+      | [true, true, true, true, true, true, true, true, "w", "y"]
+      | [true, true, true, true, true, true, true, true, "w", "z"]
+      | [true, true, true, true, true, true, true, true, "x", "y"]
+      | [true, true, true, true, true, true, true, true, "x", "z"]
+      | [true, true, true, true, true, true, true, true, "y", "z"]
+      | [true, true, true, true, true, true, true, true, true, "v"]
+      | [true, true, true, true, true, true, true, true, true, "w"]
+      | [true, true, true, true, true, true, true, true, true, "x"]
+      | [true, true, true, true, true, true, true, true, true, "y"]
+      | [true, true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, true, true]
     >();
   });
 
@@ -383,8 +585,38 @@ describe("literal sampleSize > n", () => {
       | [true, true, "v", "w", "x", "y", "z"]
       | [true, true, true, "v", "w", "x", "y", "z"]
       | [true, true, true, true, "v", "w", "x", "y", "z"]
-      // TODO: This is wrong, once the input array has more than sampleSize items then the result might not contain the suffix at all, we need to take any combination of items from the suffix.
       | [true, true, true, true, true, "v", "w", "x", "y", "z"]
+      | [true, true, true, true, true, true, "v", "w", "x", "y"]
+      | [true, true, true, true, true, true, "v", "w", "x", "z"]
+      | [true, true, true, true, true, true, "v", "w", "y", "z"]
+      | [true, true, true, true, true, true, "v", "x", "y", "z"]
+      | [true, true, true, true, true, true, "w", "x", "y", "z"]
+      | [true, true, true, true, true, true, true, "v", "w", "x"]
+      | [true, true, true, true, true, true, true, "v", "w", "y"]
+      | [true, true, true, true, true, true, true, "v", "w", "z"]
+      | [true, true, true, true, true, true, true, "v", "x", "y"]
+      | [true, true, true, true, true, true, true, "v", "x", "z"]
+      | [true, true, true, true, true, true, true, "v", "y", "z"]
+      | [true, true, true, true, true, true, true, "w", "x", "y"]
+      | [true, true, true, true, true, true, true, "w", "x", "z"]
+      | [true, true, true, true, true, true, true, "w", "y", "z"]
+      | [true, true, true, true, true, true, true, "x", "y", "z"]
+      | [true, true, true, true, true, true, true, true, "v", "w"]
+      | [true, true, true, true, true, true, true, true, "v", "x"]
+      | [true, true, true, true, true, true, true, true, "v", "y"]
+      | [true, true, true, true, true, true, true, true, "v", "z"]
+      | [true, true, true, true, true, true, true, true, "w", "x"]
+      | [true, true, true, true, true, true, true, true, "w", "y"]
+      | [true, true, true, true, true, true, true, true, "w", "z"]
+      | [true, true, true, true, true, true, true, true, "x", "y"]
+      | [true, true, true, true, true, true, true, true, "x", "z"]
+      | [true, true, true, true, true, true, true, true, "y", "z"]
+      | [true, true, true, true, true, true, true, true, true, "v"]
+      | [true, true, true, true, true, true, true, true, true, "w"]
+      | [true, true, true, true, true, true, true, true, true, "x"]
+      | [true, true, true, true, true, true, true, true, true, "y"]
+      | [true, true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, true, true]
     >();
   });
 });
