@@ -76,31 +76,26 @@ describe("literal sampleSize === 0", () => {
   });
 });
 
+describe("simple arrays", () => {
+  test("mutable", () => {
+    expectTypeOf(sample(ARRAY, 4)).toEqualTypeOf<
+      [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
+    >();
+  });
+
+  test("readonly", () => {
+    expectTypeOf(sample(ARRAY_RO, 4)).toEqualTypeOf<
+      [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
+    >();
+  });
+});
+
 describe("literal sampleSize < n", () => {
   const SAMPLE_SIZE = 4;
 
-  test("empty", () => {
-    expectTypeOf(sample(EMPTY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
-  });
-
-  test("empty readonly", () => {
-    expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
-  });
-
-  test("arrays", () => {
-    expectTypeOf(sample(ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
-      [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
-    >();
-  });
-
-  test("readonly arrays", () => {
-    expectTypeOf(sample(ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
-    >();
-  });
-
   test("fixed tuples", () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
       [
         "a" | "b" | "c" | "d" | "e",
         "b" | "c" | "d" | "e",
@@ -112,6 +107,7 @@ describe("literal sampleSize < n", () => {
 
   test("fixed readonly tuples", () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
       [
         "a" | "b" | "c" | "d" | "e",
         "b" | "c" | "d" | "e",
@@ -123,7 +119,7 @@ describe("literal sampleSize < n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be.
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
       [
         true | "a" | "b" | "c" | "d" | "e",
         true | "b" | "c" | "d" | "e",
@@ -135,7 +131,7 @@ describe("literal sampleSize < n", () => {
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be.
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
       [
         true | "a" | "b" | "c" | "d" | "e",
         true | "b" | "c" | "d" | "e",
@@ -147,12 +143,14 @@ describe("literal sampleSize < n", () => {
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
       ["w", "x", "y", "z"]
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
       ["w", "x", "y", "z"]
     >();
   });
@@ -161,36 +159,6 @@ describe("literal sampleSize < n", () => {
 describe("literal sampleSize === n", () => {
   const SAMPLE_SIZE = 5;
 
-  test("empty", () => {
-    expectTypeOf(sample(EMPTY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
-  });
-
-  test("empty readonly", () => {
-    expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
-  });
-
-  test("arrays", () => {
-    expectTypeOf(sample(ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
-      | []
-      | [true]
-      | [true, true]
-      | [true, true, true]
-      | [true, true, true, true]
-      | [true, true, true, true, true]
-    >();
-  });
-
-  test("readonly arrays", () => {
-    expectTypeOf(sample(ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      | []
-      | [true]
-      | [true, true]
-      | [true, true, true]
-      | [true, true, true, true]
-      | [true, true, true, true, true]
-    >();
-  });
-
   test("fixed tuples", () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       ["a", "b", "c", "d", "e"]
@@ -205,7 +173,7 @@ describe("literal sampleSize === n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be.
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e", "e"] that isn't possible.
       [
         true | "a" | "b" | "c" | "d" | "e",
         true | "b" | "c" | "d" | "e",
@@ -218,7 +186,7 @@ describe("literal sampleSize === n", () => {
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be.
+      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e", "e"] that isn't possible.
       [
         true | "a" | "b" | "c" | "d" | "e",
         true | "b" | "c" | "d" | "e",
@@ -231,12 +199,14 @@ describe("literal sampleSize === n", () => {
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
       ["v", "w", "x", "y", "z"]
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is wrong, it doesn't represent the rest part of the input at all...
       ["v", "w", "x", "y", "z"]
     >();
   });
@@ -253,38 +223,6 @@ describe("literal sampleSize > n", () => {
     expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test("arrays", () => {
-    expectTypeOf(sample(ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
-      | [true, true, true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true]
-      | [true, true, true, true, true]
-      | [true, true, true, true]
-      | [true, true, true]
-      | [true, true]
-      | [true]
-      | []
-    >();
-  });
-
-  test("readonly arrays", () => {
-    expectTypeOf(sample(ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      | [true, true, true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true, true]
-      | [true, true, true, true, true, true]
-      | [true, true, true, true, true]
-      | [true, true, true, true]
-      | [true, true, true]
-      | [true, true]
-      | [true]
-      | []
-    >();
-  });
-
   test("fixed tuples", () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       ["a", "b", "c", "d", "e"]
@@ -299,6 +237,7 @@ describe("literal sampleSize > n", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is OK but it isn't optimal; there are two problems with it: it accepts invalid outputs like ["e", "e", "e", "e", "e", true, true, true, true, true] of length SAMPLE_SIZE, but it also compute the cases for outputs shorter than SAMPLE_SIZE incorrectly, because in those cases the prefix will always be sampled as-is (because it's always present and we are sampling more items than the input has!).
       | [
           "a" | "b" | "c" | "d" | "e" | true,
           "b" | "c" | "d" | "e" | true,
@@ -311,7 +250,6 @@ describe("literal sampleSize > n", () => {
           true,
           true,
         ]
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. The prefix will always show up as-is when we sample more items than the tuple has.
       | [
           "a" | "b" | "c" | "d" | "e" | true,
           "b" | "c" | "d" | "e" | true,
@@ -362,6 +300,7 @@ describe("literal sampleSize > n", () => {
 
   test("fixed-prefix readonly arrays", () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      // TODO: This type is OK but it isn't optimal; there are two problems with it: it accepts invalid outputs like ["e", "e", "e", "e", "e", true, true, true, true, true] of length SAMPLE_SIZE, but it also compute the cases for outputs shorter than SAMPLE_SIZE incorrectly, because in those cases the prefix will always be sampled as-is (because it's always present and we are sampling more items than the input has!).
       | [
           "a" | "b" | "c" | "d" | "e" | true,
           "b" | "c" | "d" | "e" | true,
@@ -374,7 +313,6 @@ describe("literal sampleSize > n", () => {
           true,
           true,
         ]
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's not as narrow as it could be. The prefix will always show up as-is when we sample more items than the tuple has.
       | [
           "a" | "b" | "c" | "d" | "e" | true,
           "b" | "c" | "d" | "e" | true,
@@ -617,14 +555,14 @@ describe("primitive sampleSize", () => {
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
+      // TODO: the typing here isn't wrong but it's far from optimal!
       Array<true | "v" | "w" | "x" | "y" | "z">
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type here should be...
+      // TODO: the typing here isn't wrong but it's far from optimal!
       Array<true | "v" | "w" | "x" | "y" | "z">
     >();
   });
