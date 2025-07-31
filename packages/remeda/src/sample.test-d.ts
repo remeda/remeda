@@ -2,13 +2,13 @@ import { describe, expectTypeOf, test } from "vitest";
 import { sample } from "./sample";
 
 const EMPTY = [] as [];
-const EMPTY_RO = [] as Readonly<typeof EMPTY>;
+const EMPTY_RO = EMPTY as readonly [];
 
 const FIXED = ["a", "b", "c", "d", "e"] as ["a", "b", "c", "d", "e"];
-const FIXED_RO = ["a", "b", "c", "d", "e"] as Readonly<typeof FIXED>;
+const FIXED_RO = FIXED as readonly ["a", "b", "c", "d", "e"];
 
 const ARRAY = [] as Array<true>;
-const ARRAY_RO = [] as Readonly<typeof ARRAY>;
+const ARRAY_RO = ARRAY as ReadonlyArray<true>;
 
 const PREFIX = ["a", "b", "c", "d", "e"] as [
   "a",
@@ -18,7 +18,7 @@ const PREFIX = ["a", "b", "c", "d", "e"] as [
   "e",
   ...Array<true>,
 ];
-const PREFIX_RO = ["a", "b", "c", "d", "e"] as Readonly<typeof PREFIX>;
+const PREFIX_RO = PREFIX as readonly ["a", "b", "c", "d", "e", ...Array<true>];
 
 const SUFFIX = ["v", "w", "x", "y", "z"] as [
   ...Array<true>,
@@ -28,7 +28,7 @@ const SUFFIX = ["v", "w", "x", "y", "z"] as [
   "y",
   "z",
 ];
-const SUFFIX_RO = ["v", "w", "x", "y", "z"] as Readonly<typeof SUFFIX>;
+const SUFFIX_RO = SUFFIX as readonly [...Array<true>, "v", "w", "x", "y", "z"];
 
 // TODO: We aren't testing all possible tuple shapes: optional, mixed, optional prefix, mixed prefix, and fixed elements (see TupleParts for the definition of each shape).
 
