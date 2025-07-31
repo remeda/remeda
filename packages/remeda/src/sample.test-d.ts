@@ -95,25 +95,21 @@ describe("literal sampleSize < n", () => {
 
   test("fixed tuples", () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
-      [
-        "a" | "b" | "c" | "d" | "e",
-        "b" | "c" | "d" | "e",
-        "c" | "d" | "e",
-        "d" | "e",
-      ]
+      | ["a", "b", "c", "d"]
+      | ["b", "c", "d", "e"]
+      | ["a", "c", "d", "e"]
+      | ["a", "b", "d", "e"]
+      | ["a", "b", "c", "e"]
     >();
   });
 
   test("fixed readonly tuples", () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: This type is OK but it isn't optimal; e.g., It accepts the output ["e", "e", "e", "e"] that isn't possible.
-      [
-        "a" | "b" | "c" | "d" | "e",
-        "b" | "c" | "d" | "e",
-        "c" | "d" | "e",
-        "d" | "e",
-      ]
+      | ["a", "b", "c", "d"]
+      | ["b", "c", "d", "e"]
+      | ["a", "c", "d", "e"]
+      | ["a", "b", "d", "e"]
+      | ["a", "b", "c", "e"]
     >();
   });
 
@@ -555,15 +551,75 @@ describe("primitive sampleSize", () => {
 
   test("fixed-suffix arrays", () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: the typing here isn't wrong but it's far from optimal!
-      Array<true | "v" | "w" | "x" | "y" | "z">
+      | [...Array<true>, "v", "w", "x", "y", "z"]
+      | [...Array<true>, "v", "w", "x", "y"]
+      | [...Array<true>, "v", "w", "x", "z"]
+      | [...Array<true>, "v", "w", "x"]
+      | [...Array<true>, "v", "w", "y", "z"]
+      | [...Array<true>, "v", "w", "y"]
+      | [...Array<true>, "v", "w", "z"]
+      | [...Array<true>, "v", "w"]
+      | [...Array<true>, "v", "x", "y", "z"]
+      | [...Array<true>, "v", "x", "y"]
+      | [...Array<true>, "v", "x", "z"]
+      | [...Array<true>, "v", "x"]
+      | [...Array<true>, "v", "y", "z"]
+      | [...Array<true>, "v", "y"]
+      | [...Array<true>, "v", "z"]
+      | [...Array<true>, "v"]
+      | [...Array<true>, "w", "x", "y", "z"]
+      | [...Array<true>, "w", "x", "y"]
+      | [...Array<true>, "w", "x", "z"]
+      | [...Array<true>, "w", "x"]
+      | [...Array<true>, "w", "y", "z"]
+      | [...Array<true>, "w", "y"]
+      | [...Array<true>, "w", "z"]
+      | [...Array<true>, "w"]
+      | [...Array<true>, "x", "y", "z"]
+      | [...Array<true>, "x", "y"]
+      | [...Array<true>, "x", "z"]
+      | [...Array<true>, "x"]
+      | [...Array<true>, "y", "z"]
+      | [...Array<true>, "y"]
+      | [...Array<true>, "z"]
+      | Array<true>
     >();
   });
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
-      // TODO: the typing here isn't wrong but it's far from optimal!
-      Array<true | "v" | "w" | "x" | "y" | "z">
+      | [...Array<true>, "v", "w", "x", "y", "z"]
+      | [...Array<true>, "v", "w", "x", "y"]
+      | [...Array<true>, "v", "w", "x", "z"]
+      | [...Array<true>, "v", "w", "x"]
+      | [...Array<true>, "v", "w", "y", "z"]
+      | [...Array<true>, "v", "w", "y"]
+      | [...Array<true>, "v", "w", "z"]
+      | [...Array<true>, "v", "w"]
+      | [...Array<true>, "v", "x", "y", "z"]
+      | [...Array<true>, "v", "x", "y"]
+      | [...Array<true>, "v", "x", "z"]
+      | [...Array<true>, "v", "x"]
+      | [...Array<true>, "v", "y", "z"]
+      | [...Array<true>, "v", "y"]
+      | [...Array<true>, "v", "z"]
+      | [...Array<true>, "v"]
+      | [...Array<true>, "w", "x", "y", "z"]
+      | [...Array<true>, "w", "x", "y"]
+      | [...Array<true>, "w", "x", "z"]
+      | [...Array<true>, "w", "x"]
+      | [...Array<true>, "w", "y", "z"]
+      | [...Array<true>, "w", "y"]
+      | [...Array<true>, "w", "z"]
+      | [...Array<true>, "w"]
+      | [...Array<true>, "x", "y", "z"]
+      | [...Array<true>, "x", "y"]
+      | [...Array<true>, "x", "z"]
+      | [...Array<true>, "x"]
+      | [...Array<true>, "y", "z"]
+      | [...Array<true>, "y"]
+      | [...Array<true>, "z"]
+      | Array<true>
     >();
   });
 });

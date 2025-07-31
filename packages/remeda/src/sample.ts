@@ -1,29 +1,64 @@
-import type { IsLiteral, Writable } from "type-fest";
-import type { IterableContainer } from "./internal/types/IterableContainer";
-import { purry } from "./purry";
+import type {
+  FixedLengthArray,
+  IsEqual,
+  IsNever,
+  NonNegativeInteger,
+  Writable,
+} from "type-fest";
+import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { If } from "./internal/types/If";
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { TupleParts } from "./internal/types/TupleParts";
+import { purry } from "./purry";
 
-type Sampled<T extends IterableContainer, N extends number> = If<
-  IsLiteral<N>,
-  undefined extends T[N]
-    ? // We check if the input tuple is shorter than N. We need to check this
-      // outside the recursive loop because T changes inside that loop
-      Writable<T>
-    : SampledLiteral<T, N>,
-  SampledGeneric<T>
+/**
+ * When N is primitive we don't have a lot of information to base the output on,
+ * but we can say it will be any possible subset shape of the input.
+ */
+type SampledPrimitive<T extends IterableContainer> = [
+  ...FixedSubTuples<TupleParts<T>["required"]>,
+  // TODO: We currently have no tests that check optional elements!
+  ...Partial<FixedSubTuples<TupleParts<T>["optional"]>>,
+  ...CoercedArray<TupleParts<T>["item"]>,
+  ...FixedSubTuples<TupleParts<T>["suffix"]>,
+];
+
+// Assuming T is a fixed tuple we build all it's possible sub-tuples.
+type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
+  ? // For each element we either take it or skip it, and recurse over the rest.
+    FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
+  : [];
+
+type SampledLiteral<T extends IterableContainer, N extends number> = If<
+  // When N is trivially 0 the result is trivially empty.
+  IsEqual<N, 0>,
+  [],
+  If<
+    IsNever<TupleParts<T>["item"]>,
+    If<
+      // When T is a fixed tuple and N is literal (e.g., `[1, 2, 3]` and `10`)
+      // we can skip reconstructing the output and simply return a writable
+      // version of the input. Checking for `undefined` is a neat trick to
+      // avoid needing to compare integer literals because if N overflows the
+      // tuple then the type for that element will be `undefined`.
+      IsEqual<T[N], undefined>,
+      Writable<T>,
+      // When the input is a fixed tuple the result is simply all sub-tuples of
+      // it that are exactly N elements long. Extract allows us to do this by
+      // effectively intersecting each union element with a "template" tuple
+      // that extends all tuples of length N.
+      Extract<
+        // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
+        FixedSubTuples<TupleParts<T>["required"]>,
+        // This is just [unknown, unknown, ..., unknown] with N elements.
+        FixedLengthArray<unknown, N>
+      >
+    >,
+    SampledWithRest<T, N>
+  >
 >;
 
-type SampledGeneric<T extends IterableContainer> = T extends readonly []
-  ? []
-  : // As long as the tuple has non-rest elements we continue expanding the type
-    // by both taking the item, and not taking it.
-    T extends readonly [infer First, ...infer Rest]
-    ? SampledGeneric<Rest> | [First, ...SampledGeneric<Rest>]
-    : // Stop the recursion also when we have an array, or the rest element of
-      // the tuple
-      Array<T[number]>;
-
-type SampledLiteral<
+type SampledWithRest<
   T extends IterableContainer,
   N extends number,
   Iteration extends Array<unknown> = [],
@@ -36,15 +71,15 @@ type SampledLiteral<
       T extends readonly [infer First, ...infer Tail]
       ? [
           First | Tail[number],
-          ...SampledLiteral<Tail, N, [unknown, ...Iteration]>,
+          ...SampledWithRest<Tail, N, [unknown, ...Iteration]>,
         ]
       : T extends readonly [...infer Head, infer Last]
-        ? [...SampledLiteral<Head, N, [unknown, ...Iteration]>, Last]
+        ? [...SampledWithRest<Head, N, [unknown, ...Iteration]>, Last]
         : // If the input is an array, or a tuple's rest-element we need to
           // split the recursion in 2, one type adds an element to the output,
           // and the other skips it, just like the sample method itself.
-          | SampledLiteral<T, N, [unknown, ...Iteration]>
-            | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>];
+          | SampledWithRest<T, N, [unknown, ...Iteration]>
+            | [T[number], ...SampledWithRest<T, N, [unknown, ...Iteration]>];
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.
@@ -69,8 +104,12 @@ type SampledLiteral<
  */
 export function sample<const T extends IterableContainer, N extends number>(
   data: T,
-  sampleSize: N,
-): Sampled<T, N>;
+  sampleSize: NonNegativeInteger<N>,
+): SampledLiteral<T, N>;
+export function sample<const T extends IterableContainer>(
+  data: T,
+  sampleSize: number,
+): SampledPrimitive<T>;
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.
@@ -93,8 +132,11 @@ export function sample<const T extends IterableContainer, N extends number>(
  * @category Array
  */
 export function sample<const T extends IterableContainer, N extends number>(
-  sampleSize: N,
-): (data: T) => Sampled<T, N>;
+  sampleSize: NonNegativeInteger<N>,
+): (data: T) => SampledLiteral<T, N>;
+export function sample<const T extends IterableContainer>(
+  sampleSize: number,
+): (data: T) => SampledPrimitive<T>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
   return purry(sampleImplementation, args);
