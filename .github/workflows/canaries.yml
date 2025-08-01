@@ -1,0 +1,54 @@
+# Inspired and largely copied from type-fest!
+# @see https://github.com/sindresorhus/type-fest/blob/main/.github/workflows/ts-canary.yml
+
+name: TypeScript Canary
+on:
+  schedule:
+    # Run daily to make it the easiest to track down what changed
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  types:
+    name: 🐦 TypeScript ${{ matrix.typescript-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typescript-version:
+          - next
+          - beta
+          - rc
+          - latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      # TODO: We are rebuilding everything several times, our builds aren't very
+      # expensive, but we can easily optimize by caching the 'dist' directory
+      # once.
+      - name: 🏗️ Build
+        run: npm --workspace=remeda run build -- --dts-only
+
+      - name: 📘 Install Typescript
+        run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
+
+      - name: 🎯 Concrete Version
+        run: npm list typescript --depth=0
+
+      - name: 🚨 Type check
+        run: npm --workspace=remeda run check
+
+      - name: 📋 Type tests
+        run: npm --workspace=remeda run test:typing
+
+      - name: 🚚 Check Outputs
+        run: npm --workspace=remeda run check:dist
