@@ -8,7 +8,7 @@ import { sample } from "./sample";
 // allows us to use fixed sample sizes in all tests of each category and make
 // sure we hit all the edge-cases.
 //
-// TODO: Some tuple shapes are not tested yet: optional, mixed, optional prefix, mixed prefix, and fixed elements.
+// TODO: Some tuple shapes are not tested yet: optional, mixed, optional prefix, mixed prefix.
 
 const EMPTY = [] as [];
 const EMPTY_RO = EMPTY as readonly [];
@@ -38,6 +38,23 @@ const SUFFIX = ["v", "w", "x", "y", "z"] as [
   "z",
 ];
 const SUFFIX_RO = SUFFIX as readonly [...Array<true>, "v", "w", "x", "y", "z"];
+
+const FIXED_ARRAY = ["a", "b", "c", "y", "z"] as [
+  "a",
+  "b",
+  "c",
+  ...Array<true>,
+  "y",
+  "z",
+];
+const FIXED_ARRAY_RO = FIXED_ARRAY as readonly [
+  "a",
+  "b",
+  "c",
+  ...Array<true>,
+  "y",
+  "z",
+];
 
 describe("literal sampleSize === 0", () => {
   const SAMPLE_SIZE = 0;
@@ -80,6 +97,14 @@ describe("literal sampleSize === 0", () => {
 
   test("fixed-suffix readonly arrays", () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
+  });
+
+  test("fixed array", () => {
+    expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
+  });
+
+  test("fixed readonly array", () => {
+    expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 });
 
@@ -263,6 +288,78 @@ describe("literal sampleSize < n", () => {
       | [true, true, true, true]
     >();
   });
+
+  test("fixed array", () => {
+    expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y"]
+      | ["a", "b", "c", "z"]
+      | ["a", "b", "y", "z"]
+      | ["a", "c", "y", "z"]
+      | ["b", "c", "y", "z"]
+      | ["a", "b", "c", true]
+      | ["a", "b", true, "y"]
+      | ["a", "b", true, "z"]
+      | ["a", "c", true, "y"]
+      | ["a", "c", true, "z"]
+      | ["b", "c", true, "y"]
+      | ["b", "c", true, "z"]
+      | ["a", true, "y", "z"]
+      | ["b", true, "y", "z"]
+      | ["c", true, "y", "z"]
+      | ["a", "b", true, true]
+      | ["a", "c", true, true]
+      | ["b", "c", true, true]
+      | ["a", true, true, "y"]
+      | ["a", true, true, "z"]
+      | ["b", true, true, "y"]
+      | ["b", true, true, "z"]
+      | ["c", true, true, "y"]
+      | ["c", true, true, "z"]
+      | [true, true, "y", "z"]
+      | ["a", true, true, true]
+      | ["b", true, true, true]
+      | ["c", true, true, true]
+      | [true, true, true, "y"]
+      | [true, true, true, "z"]
+      | [true, true, true, true]
+    >();
+  });
+
+  test("fixed readonly array", () => {
+    expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y"]
+      | ["a", "b", "c", "z"]
+      | ["a", "b", "y", "z"]
+      | ["a", "c", "y", "z"]
+      | ["b", "c", "y", "z"]
+      | ["a", "b", "c", true]
+      | ["a", "b", true, "y"]
+      | ["a", "b", true, "z"]
+      | ["a", "c", true, "y"]
+      | ["a", "c", true, "z"]
+      | ["b", "c", true, "y"]
+      | ["b", "c", true, "z"]
+      | ["a", true, "y", "z"]
+      | ["b", true, "y", "z"]
+      | ["c", true, "y", "z"]
+      | ["a", "b", true, true]
+      | ["a", "c", true, true]
+      | ["b", "c", true, true]
+      | ["a", true, true, "y"]
+      | ["a", true, true, "z"]
+      | ["b", true, true, "y"]
+      | ["b", true, true, "z"]
+      | ["c", true, true, "y"]
+      | ["c", true, true, "z"]
+      | [true, true, "y", "z"]
+      | ["a", true, true, true]
+      | ["b", true, true, true]
+      | ["c", true, true, true]
+      | [true, true, true, "y"]
+      | [true, true, true, "z"]
+      | [true, true, true, true]
+    >();
+  });
 });
 
 describe("literal sampleSize === n", () => {
@@ -422,6 +519,80 @@ describe("literal sampleSize === n", () => {
       | [true, true, true, true, "v"]
       | [true, true, true, true, "w"]
       | [true, true, true, true, "x"]
+      | [true, true, true, true, "y"]
+      | [true, true, true, true, "z"]
+      | [true, true, true, true, true]
+    >();
+  });
+
+  test("fixed array", () => {
+    expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y", "z"]
+      | ["a", "b", "c", true, "y"]
+      | ["a", "b", "c", true, "z"]
+      | ["a", "b", true, "y", "z"]
+      | ["a", "c", true, "y", "z"]
+      | ["b", "c", true, "y", "z"]
+      | ["a", "b", "c", true, true]
+      | ["a", "b", true, true, "y"]
+      | ["a", "b", true, true, "z"]
+      | ["a", "c", true, true, "y"]
+      | ["a", "c", true, true, "z"]
+      | ["b", "c", true, true, "y"]
+      | ["b", "c", true, true, "z"]
+      | ["a", true, true, "y", "z"]
+      | ["b", true, true, "y", "z"]
+      | ["c", true, true, "y", "z"]
+      | ["a", "b", true, true, true]
+      | ["a", "c", true, true, true]
+      | ["b", "c", true, true, true]
+      | ["a", true, true, true, "y"]
+      | ["a", true, true, true, "z"]
+      | ["b", true, true, true, "y"]
+      | ["b", true, true, true, "z"]
+      | ["c", true, true, true, "y"]
+      | ["c", true, true, true, "z"]
+      | [true, true, true, "y", "z"]
+      | ["a", true, true, true, true]
+      | ["b", true, true, true, true]
+      | ["c", true, true, true, true]
+      | [true, true, true, true, "y"]
+      | [true, true, true, true, "z"]
+      | [true, true, true, true, true]
+    >();
+  });
+
+  test("fixed readonly array", () => {
+    expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y", "z"]
+      | ["a", "b", "c", true, "y"]
+      | ["a", "b", "c", true, "z"]
+      | ["a", "b", true, "y", "z"]
+      | ["a", "c", true, "y", "z"]
+      | ["b", "c", true, "y", "z"]
+      | ["a", "b", "c", true, true]
+      | ["a", "b", true, true, "y"]
+      | ["a", "b", true, true, "z"]
+      | ["a", "c", true, true, "y"]
+      | ["a", "c", true, true, "z"]
+      | ["b", "c", true, true, "y"]
+      | ["b", "c", true, true, "z"]
+      | ["a", true, true, "y", "z"]
+      | ["b", true, true, "y", "z"]
+      | ["c", true, true, "y", "z"]
+      | ["a", "b", true, true, true]
+      | ["a", "c", true, true, true]
+      | ["b", "c", true, true, true]
+      | ["a", true, true, true, "y"]
+      | ["a", true, true, true, "z"]
+      | ["b", true, true, true, "y"]
+      | ["b", true, true, true, "z"]
+      | ["c", true, true, true, "y"]
+      | ["c", true, true, true, "z"]
+      | [true, true, true, "y", "z"]
+      | ["a", true, true, true, true]
+      | ["b", true, true, true, true]
+      | ["c", true, true, true, true]
       | [true, true, true, true, "y"]
       | [true, true, true, true, "z"]
       | [true, true, true, true, true]
@@ -614,6 +785,90 @@ describe("literal sampleSize > n", () => {
       | [true, true, true, true, true, true, true, true, true, "v"]
       | [true, true, true, true, true, true, true, true, true, "w"]
       | [true, true, true, true, true, true, true, true, true, "x"]
+      | [true, true, true, true, true, true, true, true, true, "y"]
+      | [true, true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, true, true]
+    >();
+  });
+
+  test("fixed array", () => {
+    expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y", "z"]
+      | ["a", "b", "c", true, "y", "z"]
+      | ["a", "b", "c", true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, true, "y"]
+      | ["a", "b", "c", true, true, true, true, true, true, "z"]
+      | ["a", "b", true, true, true, true, true, true, "y", "z"]
+      | ["a", "c", true, true, true, true, true, true, "y", "z"]
+      | ["b", "c", true, true, true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, true, true]
+      | ["a", "b", true, true, true, true, true, true, true, "y"]
+      | ["a", "b", true, true, true, true, true, true, true, "z"]
+      | ["a", "c", true, true, true, true, true, true, true, "y"]
+      | ["a", "c", true, true, true, true, true, true, true, "z"]
+      | ["b", "c", true, true, true, true, true, true, true, "y"]
+      | ["b", "c", true, true, true, true, true, true, true, "z"]
+      | ["a", true, true, true, true, true, true, true, "y", "z"]
+      | ["b", true, true, true, true, true, true, true, "y", "z"]
+      | ["c", true, true, true, true, true, true, true, "y", "z"]
+      | ["a", "b", true, true, true, true, true, true, true, true]
+      | ["a", "c", true, true, true, true, true, true, true, true]
+      | ["b", "c", true, true, true, true, true, true, true, true]
+      | ["a", true, true, true, true, true, true, true, true, "y"]
+      | ["a", true, true, true, true, true, true, true, true, "z"]
+      | ["b", true, true, true, true, true, true, true, true, "y"]
+      | ["b", true, true, true, true, true, true, true, true, "z"]
+      | ["c", true, true, true, true, true, true, true, true, "y"]
+      | ["c", true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, "y", "z"]
+      | ["a", true, true, true, true, true, true, true, true, true]
+      | ["b", true, true, true, true, true, true, true, true, true]
+      | ["c", true, true, true, true, true, true, true, true, true]
+      | [true, true, true, true, true, true, true, true, true, "y"]
+      | [true, true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, true, true]
+    >();
+  });
+
+  test("fixed readonly array", () => {
+    expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", "y", "z"]
+      | ["a", "b", "c", true, "y", "z"]
+      | ["a", "b", "c", true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, true, "y"]
+      | ["a", "b", "c", true, true, true, true, true, true, "z"]
+      | ["a", "b", true, true, true, true, true, true, "y", "z"]
+      | ["a", "c", true, true, true, true, true, true, "y", "z"]
+      | ["b", "c", true, true, true, true, true, true, "y", "z"]
+      | ["a", "b", "c", true, true, true, true, true, true, true]
+      | ["a", "b", true, true, true, true, true, true, true, "y"]
+      | ["a", "b", true, true, true, true, true, true, true, "z"]
+      | ["a", "c", true, true, true, true, true, true, true, "y"]
+      | ["a", "c", true, true, true, true, true, true, true, "z"]
+      | ["b", "c", true, true, true, true, true, true, true, "y"]
+      | ["b", "c", true, true, true, true, true, true, true, "z"]
+      | ["a", true, true, true, true, true, true, true, "y", "z"]
+      | ["b", true, true, true, true, true, true, true, "y", "z"]
+      | ["c", true, true, true, true, true, true, true, "y", "z"]
+      | ["a", "b", true, true, true, true, true, true, true, true]
+      | ["a", "c", true, true, true, true, true, true, true, true]
+      | ["b", "c", true, true, true, true, true, true, true, true]
+      | ["a", true, true, true, true, true, true, true, true, "y"]
+      | ["a", true, true, true, true, true, true, true, true, "z"]
+      | ["b", true, true, true, true, true, true, true, true, "y"]
+      | ["b", true, true, true, true, true, true, true, true, "z"]
+      | ["c", true, true, true, true, true, true, true, true, "y"]
+      | ["c", true, true, true, true, true, true, true, true, "z"]
+      | [true, true, true, true, true, true, true, true, "y", "z"]
+      | ["a", true, true, true, true, true, true, true, true, true]
+      | ["b", true, true, true, true, true, true, true, true, true]
+      | ["c", true, true, true, true, true, true, true, true, true]
       | [true, true, true, true, true, true, true, true, true, "y"]
       | [true, true, true, true, true, true, true, true, true, "z"]
       | [true, true, true, true, true, true, true, true, true, true]
@@ -856,6 +1111,80 @@ describe("primitive sampleSize", () => {
       | [...Array<true>, "x", "z"]
       | [...Array<true>, "x"]
       | [...Array<true>, "y", "z"]
+      | [...Array<true>, "y"]
+      | [...Array<true>, "z"]
+      | Array<true>
+    >();
+  });
+
+  test("fixed array", () => {
+    expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", ...Array<true>, "y", "z"]
+      | ["a", "b", "c", ...Array<true>, "y"]
+      | ["a", "b", "c", ...Array<true>, "z"]
+      | ["a", "b", ...Array<true>, "y", "z"]
+      | ["a", "c", ...Array<true>, "y", "z"]
+      | ["b", "c", ...Array<true>, "y", "z"]
+      | ["a", "b", "c", ...Array<true>]
+      | ["a", "b", ...Array<true>, "y"]
+      | ["a", "b", ...Array<true>, "z"]
+      | ["a", "c", ...Array<true>, "y"]
+      | ["a", "c", ...Array<true>, "z"]
+      | ["b", "c", ...Array<true>, "y"]
+      | ["b", "c", ...Array<true>, "z"]
+      | ["a", ...Array<true>, "y", "z"]
+      | ["b", ...Array<true>, "y", "z"]
+      | ["c", ...Array<true>, "y", "z"]
+      | ["a", "b", ...Array<true>]
+      | ["a", "c", ...Array<true>]
+      | ["b", "c", ...Array<true>]
+      | ["a", ...Array<true>, "y"]
+      | ["a", ...Array<true>, "z"]
+      | ["b", ...Array<true>, "y"]
+      | ["b", ...Array<true>, "z"]
+      | ["c", ...Array<true>, "y"]
+      | ["c", ...Array<true>, "z"]
+      | [...Array<true>, "y", "z"]
+      | ["a", ...Array<true>]
+      | ["b", ...Array<true>]
+      | ["c", ...Array<true>]
+      | [...Array<true>, "y"]
+      | [...Array<true>, "z"]
+      | Array<true>
+    >();
+  });
+
+  test("fixed readonly array", () => {
+    expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
+      | ["a", "b", "c", ...Array<true>, "y", "z"]
+      | ["a", "b", "c", ...Array<true>, "y"]
+      | ["a", "b", "c", ...Array<true>, "z"]
+      | ["a", "b", ...Array<true>, "y", "z"]
+      | ["a", "c", ...Array<true>, "y", "z"]
+      | ["b", "c", ...Array<true>, "y", "z"]
+      | ["a", "b", "c", ...Array<true>]
+      | ["a", "b", ...Array<true>, "y"]
+      | ["a", "b", ...Array<true>, "z"]
+      | ["a", "c", ...Array<true>, "y"]
+      | ["a", "c", ...Array<true>, "z"]
+      | ["b", "c", ...Array<true>, "y"]
+      | ["b", "c", ...Array<true>, "z"]
+      | ["a", ...Array<true>, "y", "z"]
+      | ["b", ...Array<true>, "y", "z"]
+      | ["c", ...Array<true>, "y", "z"]
+      | ["a", "b", ...Array<true>]
+      | ["a", "c", ...Array<true>]
+      | ["b", "c", ...Array<true>]
+      | ["a", ...Array<true>, "y"]
+      | ["a", ...Array<true>, "z"]
+      | ["b", ...Array<true>, "y"]
+      | ["b", ...Array<true>, "z"]
+      | ["c", ...Array<true>, "y"]
+      | ["c", ...Array<true>, "z"]
+      | [...Array<true>, "y", "z"]
+      | ["a", ...Array<true>]
+      | ["b", ...Array<true>]
+      | ["c", ...Array<true>]
       | [...Array<true>, "y"]
       | [...Array<true>, "z"]
       | Array<true>
