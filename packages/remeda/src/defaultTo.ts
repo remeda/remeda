@@ -19,8 +19,8 @@ type FallbackOf<T> = If<
 
 /**
  * A stricter wrapper around the [Nullish coalescing operator `??`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator)
- * that ensures that the fallback matches the type of the data, and that the
- * data is nullish (`null` or `undefined`).
+ * that ensures that the fallback matches the type of the data. Only works
+ * when data can be `null` or `undefined`.
  *
  * Notice that `Number.NaN` is not nullish and would not result in returning the
  * fallback!
