@@ -55,7 +55,7 @@ test("number keys are converted to strings", () => {
 });
 
 test("numbers returned from the mapper are used as-is", () => {
-  expectTypeOf(mapKeys({ a: "b" }, constant(123 as const))).toEqualTypeOf<
+  expectTypeOf(mapKeys({ a: "b" }, constant(123))).toEqualTypeOf<
     Partial<Record<123, string>>
   >();
 });

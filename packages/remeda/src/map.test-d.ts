@@ -41,18 +41,15 @@ test("named number 3-tuple", () => {
 });
 
 test("mixed type tuple", () => {
-  const result = map([1, "2", true] as [number, string, boolean], constant(1));
-
-  expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
+  expectTypeOf(
+    map([1, "2", true] as [number, string, boolean], constant(1)),
+  ).toEqualTypeOf<[1, 1, 1]>();
 });
 
 test("readonly mixed type tuple", () => {
-  const result = map(
-    [1, "2", true] as readonly [number, string, boolean],
-    constant(1),
-  );
-
-  expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
+  expectTypeOf(
+    map([1, "2", true] as readonly [number, string, boolean], constant(1)),
+  ).toEqualTypeOf<[1, 1, 1]>();
 });
 
 test("nonempty (tail) number array", () => {
