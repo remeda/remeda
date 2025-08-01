@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { LazyEvaluator } from "./types/LazyEvaluator";
+import type { StrictFunction } from "./types/StrictFunction";
 
 /**
  * Use this helper function to build the data last implementation together with
@@ -10,7 +11,7 @@ import type { LazyEvaluator } from "./types/LazyEvaluator";
  * functions with optional or variadic arguments.
  */
 export function lazyDataLastImpl(
-  fn: (...args: any) => unknown,
+  fn: StrictFunction,
   args: ReadonlyArray<unknown>,
   lazy?: (...args: any) => LazyEvaluator,
   // TODO: We can probably provide better typing to the return type...

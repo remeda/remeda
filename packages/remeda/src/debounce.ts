@@ -3,10 +3,9 @@
  * generic type, it **has** to be `any`.
  */
 
-type Debouncer<
-  F extends (...args: any) => unknown,
-  IsNullable extends boolean = true,
-> = {
+import type { StrictFunction } from "./internal/types/StrictFunction";
+
+type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
   /**
    * Invoke the debounced function.
    *

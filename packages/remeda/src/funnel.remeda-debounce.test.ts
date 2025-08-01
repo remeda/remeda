@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type --
  * These aren't useful for a reference implementation!
  */
 
@@ -7,11 +7,9 @@ import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
-type Debouncer<
-  F extends (...args: any) => unknown,
-  IsNullable extends boolean = true,
-> = {
+type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
   readonly call: (
     ...args: Parameters<F>
   ) => ReturnType<F> | (true extends IsNullable ? undefined : never);
@@ -37,17 +35,17 @@ type DebounceOptions = {
  *
  * @see debounce
  */
-function debounce<F extends (...args: any) => unknown>(
+function debounce<F extends StrictFunction>(
   func: F,
   options: DebounceOptions & { readonly timing?: "trailing" },
 ): Debouncer<F>;
-function debounce<F extends (...args: any) => unknown>(
+function debounce<F extends StrictFunction>(
   func: F,
   options:
     | (DebounceOptions & { readonly timing: "both" })
     | (Omit<DebounceOptions, "maxWaitMs"> & { readonly timing: "leading" }),
 ): Debouncer<F, false /* call CAN'T return null */>;
-function debounce<F extends (...args: any) => unknown>(
+function debounce<F extends StrictFunction>(
   func: F,
   {
     timing,

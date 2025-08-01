@@ -2,6 +2,7 @@
 
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
@@ -43,7 +44,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * @category Function
  */
 export function purry(
-  fn: (...args: any) => unknown,
+  fn: StrictFunction,
   args: ReadonlyArray<unknown>,
   lazy?: (...args: any) => LazyEvaluator,
 ): unknown {

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -7,6 +7,7 @@ import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**
  * A reference implementation of the Lodash `throttle` function using the
@@ -36,7 +37,7 @@ import { identity } from "./identity";
  * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L1347
  */
-function throttleWithCachedValue<F extends (...args: any) => unknown>(
+function throttleWithCachedValue<F extends StrictFunction>(
   func: F,
   wait = 0,
   {
