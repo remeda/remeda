@@ -8,6 +8,9 @@ on:
     - cron: "0 7 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   types:
     name: 🐦 TypeScript ${{ matrix.typescript-version }}
