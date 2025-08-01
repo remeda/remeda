@@ -1,7 +1,7 @@
 # Inspired and largely copied from type-fest!
 # @see https://github.com/sindresorhus/type-fest/blob/main/.github/workflows/ts-canary.yml
 
-name: TypeScript Canary
+name: 🐦 Canaries
 on:
   schedule:
     # Run daily to make it the easiest to track down what changed
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   types:
-    name: 🐦 TypeScript ${{ matrix.typescript-version }}
+    name: 👷 TypeScript ${{ matrix.typescript-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
