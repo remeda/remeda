@@ -1,29 +1,36 @@
 ---
 category: Logic
-remeda: when
+remeda: defaultTo
 ---
 
-- Use Remeda's [`when`] with [`isNullish`](/docs#isNullish) as the predicate
-  and the fallback value wrapped with [`constant`](/docs#constant).
-- For defaulting `NaN` values use the built-in [`Number.isNaN`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)
-  instead.
-- For both you'd need to construct a type-guard manually.
+- `Number.NaN` is not considered nullish and would not result in returning the
+  default value. Use [`when`](/docs#when) with the built-in [`Number.isNaN`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)
+  and a [`constant`](/docs#constant) for the fallback value.
+- Unlike in Remeda, Ramda allows the fallback value to be of any type, even
+  those that are incompatible with the data type. It also allows the data type
+  to be non-nullish; for those cases use the built-in [Nullish coalescing operator `??`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+  directly, or use [`when`](/docs#when) with [`isNullish`](/docs#isNullish) and
+  [`constant`](/docs#constant).
 
 ### Nullish
 
 ```ts
+const DATA: number | undefined | null;
+
 // Ramda
-defaultTo(DATA, 10);
+R.defaultTo(456)(DATA);
 
 // Remeda
-when(DATA, isNullish, constant(10));
+defaultTo(DATA, 456);
 ```
 
 ### NaN
 
 ```ts
+const DATA = Number.NaN;
+
 // Ramda
-defaultTo(DATA, 10);
+R.defaultTo(10)(DATA);
 
 // Remeda
 when(DATA, Number.isNaN, constant(10));
@@ -32,8 +39,10 @@ when(DATA, Number.isNaN, constant(10));
 ### Both
 
 ```ts
+const DATA: number | null | undefined;
+
 // Ramda
-defaultTo(DATA, 10);
+R.defaultTo(10)(DATA);
 
 // Remeda
 when(
@@ -41,4 +50,19 @@ when(
   (x) => x === undefined || x === null || Number.isNaN(x),
   constant(10),
 );
+```
+
+### Non-matching fallback
+
+```ts
+const DATA: string | null | undefined;
+
+// Ramda
+R.defaultTo(123)(DATA);
+
+// Remeda
+when(DATA, isNullish, constant(123));
+
+// or natively
+DATA ?? 123;
 ```

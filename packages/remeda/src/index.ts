@@ -12,6 +12,7 @@ export * from "./conditional";
 export * from "./constant";
 export * from "./countBy";
 export * from "./debounce";
+export * from "./defaultTo";
 export * from "./difference";
 export * from "./differenceWith";
 export * from "./divide";

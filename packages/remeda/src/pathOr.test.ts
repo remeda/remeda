@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-deprecated --
+ * The function is deprecated!
+ */
+
 import { describe, expect, test } from "vitest";
 import { pathOr } from "./pathOr";
 import { pipe } from "./pipe";
