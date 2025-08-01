@@ -1,5 +1,4 @@
 import type { EmptyObject, IsNever, KeysOfUnion, Writable } from "type-fest";
-import type { If } from "./internal/types/If";
 import type { IsBounded } from "./internal/types/IsBounded";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { IsUnion } from "./internal/types/IsUnion";
@@ -10,26 +9,22 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
   // Distribute unions for both object types and key arrays.
   T extends unknown
     ? Keys extends unknown
-      ? If<
-          // When T is a union (or when Keys is empty) the picked props might
-          // not exist in some of its sub-types, e.g.,
-          //   `pick(... as { a: string } | { b: number }, ['a'])`,
-          // if we simply let the regular "constructive" logic run, the
-          // resulting type would be `{}` which doesn't behave like an empty
-          // object! instead, we want to use a more explicit *empty* type.
-          IsNever<Extract<Keys[number], keyof T>>,
-          EmptyObject,
-          // Remove `readonly` modifiers from picked props since we return a
+      ? // When T is a union (or when Keys is empty) the picked props might
+        // not exist in some of its sub-types, e.g.,
+        //   `pick(... as { a: string } | { b: number }, ['a'])`,
+        // if we simply let the regular "constructive" logic run, the
+        // resulting type would be `{}` which doesn't behave like an empty
+        // object! instead, we want to use a more explicit *empty* type.
+        IsNever<Extract<Keys[number], keyof T>> extends true
+        ? EmptyObject
+        : // Remove `readonly` modifiers from picked props since we return a
           // new, mutable, object. We don't wrap the result with `Simplify` to
           // flatten it because `Writable` does the same thing implicitly.
           Writable<
-            If<
-              IsBoundedRecord<T>,
-              PickBoundedFromArray<T, Keys>,
-              PickUnbounded<T, Extract<Keys[number], keyof T>>
-            >
+            IsBoundedRecord<T> extends true
+              ? PickBoundedFromArray<T, Keys>
+              : PickUnbounded<T, Extract<Keys[number], keyof T>>
           >
-        >
       : never
     : never;
 
@@ -82,11 +77,9 @@ type ItemsByUnion<T, Singular = never, Union = never> = T extends readonly [
   infer Head,
   ...infer Rest,
 ]
-  ? If<
-      IsUnion<Head>,
-      ItemsByUnion<Rest, Singular, Union | Head>,
-      ItemsByUnion<Rest, Singular | Head, Union>
-    >
+  ? IsUnion<Head> extends true
+    ? ItemsByUnion<Rest, Singular, Union | Head>
+    : ItemsByUnion<Rest, Singular | Head, Union>
   : { singular: Singular; union: Union };
 
 /**
@@ -100,11 +93,8 @@ type ItemsByUnion<T, Singular = never, Union = never> = T extends readonly [
  *
  * See: https://www.typescriptlang.org/play/?#code/PTAEE0HsFcHIBNQFMAeAHJBjALqAGqNpKAEZKigAGA3qABZIA2jkA-AFygBEA7pAE6N4XUAF9KAGlLRcAQ0ayAzgChsATwz5QAXlAAFAJaYA1gB4ASlgHxTi7PwMA7AOZTeAoVwB8bhs0jeANzKIBSgAHqsykA.
  */
-type PickUnbounded<T, Keys extends keyof T> = If<
-  IsBounded<Keys>,
-  Partial<Pick<T, Keys>>,
-  Pick<T, Keys>
->;
+type PickUnbounded<T, Keys extends keyof T> =
+  IsBounded<Keys> extends true ? Partial<Pick<T, Keys>> : Pick<T, Keys>;
 
 /**
  * Creates an object composed of the picked `data` properties.

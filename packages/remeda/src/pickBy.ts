@@ -1,7 +1,6 @@
 import type { IfNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
-import type { If } from "./internal/types/If";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import { purry } from "./purry";
 import type { ToString } from "./internal/types/ToString";
@@ -11,20 +10,18 @@ import type { ToString } from "./internal/types/ToString";
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-      If<
-        IsBoundedRecord<T>,
-        {
-          // Object.entries returns keys as strings.
-          -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
-        },
-        // For unbounded records (a simple Record with primitive `string` or
-        // `number` keys) the return type here could technically be T; but for
-        // cases where the record is unbounded but is more complex (like
-        // `symbol` keys) we want to "reconstruct" the record from just its
-        // enumerable components (which are the ones accessible via
-        // `Object.entries`).
-        Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
-      >
+      IsBoundedRecord<T> extends true
+        ? {
+            // Object.entries returns keys as strings.
+            -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
+          }
+        : // For unbounded records (a simple Record with primitive `string` or
+          // `number` keys) the return type here could technically be T; but for
+          // cases where the record is unbounded but is more complex (like
+          // `symbol` keys) we want to "reconstruct" the record from just its
+          // enumerable components (which are the ones accessible via
+          // `Object.entries`).
+          Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
     >
   : never;
 
@@ -40,17 +37,16 @@ type EnumeratedPartial<T> = T extends unknown
 // optional (as they could have a value that would be filtered out).
 type EnumeratedPartialNarrowed<T, S> = T extends unknown
   ? Simplify<
-      If<
-        IsBoundedRecord<T>,
-        ExactProps<T, S> & PartialProps<T, S>,
-        // For unbounded records we need to "reconstruct" the record and narrow
-        // the value types. Similar to the non-narrowed case, we need to also
-        // ignore `symbol` keys and any values that are only relevant to them.
-        Record<
-          EnumerableStringKeyOf<T>,
-          Extract<EnumerableStringKeyedValueOf<T>, S>
-        >
-      >
+      IsBoundedRecord<T> extends true
+        ? ExactProps<T, S> & PartialProps<T, S>
+        : // For unbounded records we need to "reconstruct" the record and
+          // narrow the value types. Similar to the non-narrowed case, we need
+          // to also ignore `symbol` keys and any values that are only relevant
+          // to them.
+          Record<
+            EnumerableStringKeyOf<T>,
+            Extract<EnumerableStringKeyedValueOf<T>, S>
+          >
     >
   : never;
 
