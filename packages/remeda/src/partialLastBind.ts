@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return --
- * Function inference doesn't work when `unknown` is used as the parameters
- * generic type, it **has** to be `any`.
- */
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 import type { TupleSplits } from "./internal/types/TupleSplits";
 
 type PartialLastBindError<
@@ -71,7 +68,7 @@ type RemoveSuffix<
  * @see partialBind
  */
 export function partialLastBind<
-  F extends (...args: any) => any,
+  F extends StrictFunction,
   SuffixArgs extends TupleSuffix<Parameters<F>>,
   RemovedSuffix extends RemoveSuffix<Parameters<F>, SuffixArgs>,
 >(
@@ -80,5 +77,9 @@ export function partialLastBind<
 ): (
   ...rest: RemovedSuffix extends IterableContainer ? RemovedSuffix : never
 ) => ReturnType<F> {
+  // @ts-expect-error [ts2322] -- TypeScript is over-eager with translating
+  // the return type of `func` to `unknown` instead of keeping it as
+  // `ReturnType<F>` which would be stricter and work here. This is similar
+  // to this issue: https://github.com/microsoft/TypeScript/issues/61750
   return (...rest) => func(...rest, ...partial);
 }
