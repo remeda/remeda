@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type --
- * Function is used generically in this file to define any type of function, so
- * this lint error is not relevant for it.
- */
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
-type DefinitelyFunction<T> =
-  Extract<T, Function> extends never ? Function : Extract<T, Function>;
 /**
  * A function that checks if the passed parameter is a Function and narrows its type accordingly.
  *
@@ -17,8 +13,6 @@ type DefinitelyFunction<T> =
  *    R.isFunction('somethingElse') //=> false
  * @category Guard
  */
-export function isFunction<T>(
-  data: Function | T,
-): data is DefinitelyFunction<T> {
-  return typeof data === "function";
-}
+export const isFunction = <T>(
+  data: StrictFunction | T,
+): data is NarrowedTo<T, StrictFunction> => typeof data === "function";
