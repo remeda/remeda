@@ -1,5 +1,4 @@
 import type { IsNumericLiteral, IsStringLiteral } from "type-fest";
-import type { If } from "./internal/types/If";
 
 // This is the most efficient way to check an arbitrary string if it is a simple
 // non-negative integer. We use character ranges instead of the `\d` character
@@ -7,13 +6,12 @@ import type { If } from "./internal/types/If";
 // maintaining that the regular expression supports unicode.
 const NON_NEGATIVE_INTEGER_RE = /^(?:0|[1-9][0-9]*)$/u;
 
-type StringToPath<S> = If<
+type StringToPath<S> =
   // We can only compute the path type for literals that TypeScript can
   // break down further into parts.
-  IsStringLiteral<S>,
-  StringToPathImpl<S>,
-  Array<string | number>
->;
+  IsStringLiteral<S> extends true
+    ? StringToPathImpl<S>
+    : Array<string | number>;
 
 type StringToPathImpl<S> =
   // We start by checking the 2 quoted variants of the square bracket access
@@ -52,15 +50,11 @@ type StringToPathImpl<S> =
               // path to be accurate about it.
               S extends `${infer N extends number}`
               ? [
-                  If<
-                    // TypeScript considers " 123 " to still extend `${number}`,
-                    // but would type is as `string` instead of a literal. We
-                    // can use that fact to make sure we only consider simple
-                    // number literals as numbers, and take the rest as strings.
-                    IsNumericLiteral<N>,
-                    N,
-                    S
-                  >,
+                  // TypeScript considers " 123 " to still extend `${number}`,
+                  // but would type is as `string` instead of a literal. We
+                  // can use that fact to make sure we only consider simple
+                  // number literals as numbers, and take the rest as strings.
+                  IsNumericLiteral<N> extends true ? N : S,
                 ]
               : // This simplest form of a path is just a single string literal.
                 [S];

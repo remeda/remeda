@@ -1,11 +1,11 @@
 import type {
   And,
   IsEqual,
+  IsNever,
   IsStringLiteral,
   NonNegativeInteger,
 } from "type-fest";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
-import type { If } from "./internal/types/If";
 import type { StringLength } from "./internal/types/StringLength";
 
 type TruncateOptions = {
@@ -19,17 +19,21 @@ type Truncate<
   S extends string,
   N extends number,
   Options extends TruncateOptions,
-> = TruncateWithOptions<
-  S,
-  N,
-  // TODO: I don't like how I handled the default options object; i want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
-  Options extends Pick<Required<TruncateOptions>, "omission">
-    ? Options["omission"]
-    : typeof DEFAULT_OMISSION,
-  Options extends Pick<Required<TruncateOptions>, "separator">
-    ? Options["separator"]
-    : undefined
->;
+> =
+  IsNever<NonNegativeInteger<N>> extends true
+    ? // Exit early when N isn't a literal non-negative integer.
+      string
+    : TruncateWithOptions<
+        S,
+        N,
+        // TODO: I don't like how I handled the default options object; i want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
+        Options extends Pick<Required<TruncateOptions>, "omission">
+          ? Options["omission"]
+          : typeof DEFAULT_OMISSION,
+        Options extends Pick<Required<TruncateOptions>, "separator">
+          ? Options["separator"]
+          : undefined
+      >;
 
 type TruncateWithOptions<
   S extends string,
@@ -39,37 +43,32 @@ type TruncateWithOptions<
 > =
   // Distribute the result over unions.
   N extends unknown
-    ? If<
-        // We can short-circuit most of our logic when N is a literal 0.
-        IsEqual<N, 0>,
-        "",
-        // Distribute the result over unions.
+    ? // We can short-circuit most of our logic when N is a literal 0.
+      IsEqual<N, 0> extends true
+      ? ""
+      : // Distribute the result over unions.
         Omission extends unknown
-          ? If<
-              // When Omission isn't literal we don't know how long it is.
-              IsStringLiteral<Omission>,
-              If<
-                // This mirrors the runtime logic where if `n - omission.length`
-                // is not positive then what we end up truncating is Omission
-                // itself and not S.
-                IsEqual<ClampedIntegerSubtract<N, StringLength<Omission>>, 0>,
-                TruncateLiterals<Omission, N, "">,
-                If<
-                  And<
-                    // When S isn't literal the output wouldn't be literal
-                    // either.
-                    IsStringLiteral<S>,
-                    // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
-                    IsEqual<Separator, undefined>
-                  >,
-                  TruncateLiterals<S, N, Omission>,
-                  string
-                >
-              >,
-              string
-            >
-          : never
-      >
+        ? // When Omission isn't literal we don't know how long it is.
+          IsStringLiteral<Omission> extends true
+          ? // This mirrors the runtime logic where if `n - omission.length`
+            // is not positive then what we end up truncating is Omission
+            // itself and not S.
+            IsEqual<
+              ClampedIntegerSubtract<N, StringLength<Omission>>,
+              0
+            > extends true
+            ? TruncateLiterals<Omission, N, "">
+            : And<
+                  // When S isn't literal the output wouldn't be literal
+                  // either.
+                  IsStringLiteral<S>,
+                  // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                  IsEqual<Separator, undefined>
+                > extends true
+              ? TruncateLiterals<S, N, Omission>
+              : string
+          : string
+        : never
     : never;
 
 /**
@@ -90,7 +89,9 @@ type TruncateLiterals<
     ? // The string is only truncated if it's total length is longer than N; at
       // the cutoff point this is simplified to comparing the remaining suffix
       // length to the omission length.
-      If<IsLongerThan<S, Omission>, Omission, S>
+      IsLongerThan<S, Omission> extends true
+      ? Omission
+      : S
     : // Reconstruct string character by character until cutoff.
       `${Character}${TruncateLiterals<Rest, N, Omission, [...Iteration, unknown]>}`
   : // Empty input string results in empty output.
@@ -157,16 +158,7 @@ export function truncate<
   S extends string,
   N extends number,
   const Options extends TruncateOptions,
->(
-  data: S,
-  n: NonNegativeInteger<N>,
-  options?: Options,
-): Truncate<S, N, Options>;
-export function truncate(
-  data: string,
-  n: number,
-  options?: TruncateOptions,
-): string;
+>(data: S, n: N, options?: Options): Truncate<S, N, Options>;
 
 /**
  * Truncates strings longer than `n`, appending an `omission` marker to them
@@ -213,13 +205,9 @@ export function truncate<
   N extends number,
   const Options extends TruncateOptions,
 >(
-  n: NonNegativeInteger<N>,
+  n: N,
   options?: Options,
 ): <S extends string>(data: S) => Truncate<S, N, Options>;
-export function truncate(
-  n: number,
-  options?: TruncateOptions,
-): (data: string) => string;
 
 export function truncate(
   dataOrN: string | number,
