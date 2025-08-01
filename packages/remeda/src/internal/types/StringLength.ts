@@ -1,5 +1,4 @@
 import type { IsStringLiteral } from "type-fest";
-import type { If } from "./If";
 
 /**
  * Returns a literal number for literal strings.
@@ -10,10 +9,9 @@ import type { If } from "./If";
 export type StringLength<
   S extends string,
   Characters extends ReadonlyArray<string> = [],
-> = If<
-  IsStringLiteral<S>,
-  S extends `${infer Character}${infer Rest}`
-    ? StringLength<Rest, [...Characters, Character]>
-    : Characters["length"],
-  number
->;
+> =
+  IsStringLiteral<S> extends true
+    ? S extends `${infer Character}${infer Rest}`
+      ? StringLength<Rest, [...Characters, Character]>
+      : Characters["length"]
+    : number;
