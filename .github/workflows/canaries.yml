@@ -19,10 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
-          - next
-          - beta
-          - rc
-          - latest
+          - next # The bleeding-edge
+          - latest # The "current" version
+          - rc # The "best" pre-release version
+          - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
