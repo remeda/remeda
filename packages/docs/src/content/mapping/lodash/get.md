@@ -15,12 +15,9 @@ remeda: prop
   path string to a path array, which could then be _spread_ into `prop`.
 - Lodash supports an optional last argument to `get` which defines a default
   fallback in cases where the prop being accessed does not exist on the input
-  object. This could be replicated by using the built-in
-  [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
-  on the result of `prop`.
-- If you need stricter typing for the default fallback consider [`pathOr`](/docs#pathOr)
-  though this function is being phased out and would be deprecated and removed
-  in the near future.
+  object. To achieve this wrap your call to `prop` with a call to
+  [`defaultTo`](/docs#defaultTo), or use the native [Nullish coalescing operator `??`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
+  instead if the fallback is of a different type.
 
 ### Shallow Access
 
@@ -79,7 +76,7 @@ const DATA = { a: [] as Array<{ b: number }> };
 _.get(DATA, ["a", "0", "b"], "default");
 
 // Remeda
+defaultTo(prop(DATA, "a", 0, "b"), 123);
+// Or natively
 prop(DATA, "a", 0, "b") ?? "default";
-// When you need the provided default value to be typechecked use:
-pathOr(DATA, ["a", 0, "b"], 123);
 ```

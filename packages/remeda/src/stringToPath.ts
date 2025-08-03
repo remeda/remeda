@@ -61,7 +61,7 @@ type StringToPathImpl<S> =
 
 /**
  * A utility to allow JSONPath-like strings to be used in other utilities which
- * take an array of path segments as input (e.g. `pathOr`, `setPath`, etc...).
+ * take an array of path segments as input (e.g. `prop`, `setPath`, etc...).
  * The main purpose of this utility is to act as a bridge between the runtime
  * implementation that converts the path to an array, and the type-system that
  * parses the path string **type** into an array **type**. This type allows us

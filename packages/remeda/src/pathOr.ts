@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- allow us to deprecate all overloads of the function, not just those that have the docblock directly above them. */
+
 import { purry } from "./purry";
 
 /**
@@ -71,11 +73,8 @@ type PathValue3<
 /**
  * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
- * Prefer `prop` over this function as it provides better typing and is more
- * flexible when building solutions. To provide a default value using `prop`
- * use a [Nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
- * after the call. This function will be deprecated and removed in a future
- * version of Remeda.
+ * **DEPRECATED**: Use `defaultTo(prop(object, ...path), defaultValue)`
+ * instead!
  *
  * @param object - The target object.
  * @param path - The path of the property to get.
@@ -86,6 +85,7 @@ type PathValue3<
  *    R.pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
+ * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   object: T,
@@ -93,6 +93,9 @@ export function pathOr<T, A extends keyof Pathable<T>>(
   defaultValue: PathValue1<T, A>,
 ): PathValue1<T, A>;
 
+/**
+ * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ */
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
@@ -103,6 +106,9 @@ export function pathOr<
   defaultValue: PathValue2<T, A, B>,
 ): PathValue2<T, A, B>;
 
+/**
+ * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
+ */
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
@@ -117,11 +123,9 @@ export function pathOr<
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
  *
- * Prefer `prop` over this function as it provides better typing and is more
- * flexible when building solutions. To provide a default value using `prop`
- * use a [Nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
- * after the call. This function will be deprecated and removed in a future
- * version of Remeda.
+ * **DEPRECATED**: Use `($) => defaultTo(prop($, ...path), defaultValue)`
+ * instead, or if already inside a `pipe`, replace the call to `pathOr` with:
+ * `pipe(..., prop(...path), defaultTo(defaultValue), ...)`.
  *
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
@@ -131,12 +135,20 @@ export function pathOr<
  *    R.pipe({y: 10}, R.pathOr(['y'], 2)) // 10
  * @dataLast
  * @category Object
+ * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,
+ * or if already inside a `pipe`, replace the call to `pathOr` with:
+ * `pipe(..., prop(...path), defaultTo(defaultValue), ...)`.
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   path: readonly [A],
   defaultValue: PathValue1<T, A>,
 ): (object: T) => PathValue1<T, A>;
 
+/**
+ * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,
+ * or if already inside a `pipe`, replace the call to `pathOr` with:
+ * `pipe(..., prop(...path), defaultTo(defaultValue), ...)`.
+ */
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
@@ -146,6 +158,11 @@ export function pathOr<
   defaultValue: PathValue2<T, A, B>,
 ): (object: T) => PathValue2<T, A, B>;
 
+/**
+ * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,
+ * or if already inside a `pipe`, replace the call to `pathOr` with:
+ * `pipe(..., prop(...path), defaultTo(defaultValue), ...)`.
+ */
 export function pathOr<
   T,
   A extends keyof Pathable<T>,
@@ -156,6 +173,7 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
+// TODO [>2]: Remove this function!
 export function pathOr(...args: ReadonlyArray<unknown>): unknown {
   return purry(pathOrImplementation, args);
 }

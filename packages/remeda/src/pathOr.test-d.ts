@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-deprecated --
+ * The function is deprecated!
+ */
+
 import { describe, expectTypeOf, test } from "vitest";
 import { stringToPath } from "./stringToPath";
 import { pathOr } from "./pathOr";
