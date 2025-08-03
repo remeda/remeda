@@ -62,7 +62,10 @@ function throttleWithCachedValue<F extends StrictFunction>(
       // them through, to replicate this behavior we need to spread the args
       // array maintained via the reducer below.
       // Also, every time the function is invoked the cached value is updated.
-      cachedValue = func(...args) as ReturnType<F>;
+      // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+      // types too eagerly, making itself blind to the fact that the types
+      // match here.
+      cachedValue = func(...args);
     },
     {
       // Throttle stores the latest args it was called with for the next

@@ -66,7 +66,10 @@ function debounce<F extends StrictFunction>(
   const debouncingFunnel = funnel(
     (args: Parameters<F>) => {
       // Every time the function is invoked the cached value is updated.
-      cachedValue = func(...args) as ReturnType<F>;
+      // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+      // types too eagerly, making itself blind to the fact that the types
+      // match here.
+      cachedValue = func(...args);
     },
     {
       // Debounce stores the latest args it was called with for the next
