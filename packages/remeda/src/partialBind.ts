@@ -68,9 +68,8 @@ export function partialBind<
 ): (
   ...rest: RemovedPrefix extends IterableContainer ? RemovedPrefix : never
 ) => ReturnType<F> {
-  // @ts-expect-error [ts2322] -- TypeScript is over-eager with translating
-  // the return type of `func` to `unknown` instead of keeping it as
-  // `ReturnType<F>` which would be stricter and work here. This is similar
-  // to this issue: https://github.com/microsoft/TypeScript/issues/61750
+  // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+  // types too eagerly, making itself blind to the fact that the types match
+  // here.
   return (...rest) => func(...partial, ...rest);
 }
