@@ -16,6 +16,10 @@ export function lazyDataLastImpl(
   lazy?: (...args: any) => LazyEvaluator,
   // TODO: We can probably provide better typing to the return type...
 ): unknown {
+  // @ts-expect-error [ts2345] -- This error is accurate because we don't know
+  // anything about `fn` so can't ensure that we are passing the correct
+  // arguments to it, we just have to trust that the caller knows what they are
+  // doing.
   const dataLast = (data: unknown): unknown => fn(data, ...args);
 
   return lazy === undefined
