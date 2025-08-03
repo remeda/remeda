@@ -91,7 +91,7 @@ function debounce<F extends (...args: any) => void>(
 ### With cached value
 
 ```ts
-function debounce<F extends (...args: any) => unknown>(
+function debounce<F extends (...args: any) => any>(
   func: F,
   wait = 0,
   {
