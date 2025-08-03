@@ -1,21 +1,16 @@
 import type { IsEqual } from "type-fest";
-import type { If } from "./internal/types/If";
 import { purry } from "./purry";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 
-type FallbackOf<T> = If<
-  IsEqual<T, NonNullable<T>>,
-  RemedaTypeError<
-    "defaultTo",
-    "no unnecessary fallback",
-    {
-      // The type for the fallback is `never` because it will never be used ;)
-      type: never;
-      metadata: T;
-    }
-  >,
-  T
->;
+type FallbackOf<T> =
+  IsEqual<T, NonNullable<T>> extends true
+    ? RemedaTypeError<
+        "defaultTo",
+        "no unnecessary fallback",
+        // The type is `never` because it will never be used ;)
+        { type: never; metadata: T }
+      >
+    : T;
 
 /**
  * A stricter wrapper around the [Nullish coalescing operator `??`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator)
