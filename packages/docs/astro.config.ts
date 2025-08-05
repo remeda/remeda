@@ -19,7 +19,9 @@ export default defineConfig({
 
   vite: {
     plugins: [
+      // @ts-expect-error [ts2322] -- Based on https://github.com/withastro/astro/issues/14030#issuecomment-3027129338 there are version mismatches with vite 7 which are not solvable until Astro itself is bumped.
       tailwindcss(),
+      // @ts-expect-error [ts2322] -- Based on https://github.com/withastro/astro/issues/14030#issuecomment-3027129338 there are version mismatches with vite 7 which are not solvable until Astro itself is bumped.
       staticScriptsPlugin({
         inputDir: "src/scripts",
         outputDir: "public/dist/scripts",
