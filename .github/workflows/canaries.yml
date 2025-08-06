@@ -16,7 +16,7 @@ jobs:
     name: 🏗️ Build
     runs-on: ubuntu-latest
     outputs:
-      cache-key: ${{ steps.cache-key.outputs.key }}
+      buildCacheKey: ${{ steps.build-cache-key.outputs.buildCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4.2.2
@@ -29,29 +29,31 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1.10.9
 
-      - name: 🔑 Generate cache key
-        id: cache-key
+      - name: 🔑 Generate build cache key
+        id: build-cache-key
         # for the best results this should be kept in sync with the key used by
         # the same job in the `ci-library` workflow, that way we can reuse the
         # cache from committed PRs.
-        run: echo "key=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+        run: echo "buildCacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
 
-      - name: 🚚 Restore dist
-        id: cache-restore
-        uses: actions/cache/restore@v4.2.3
+      - name: 🚚 Lookup cached build
+        id: build-restore
+        uses: actions/cache@v4.2.3
         with:
+          lookup-only: true
           path: packages/remeda/dist
-          key: ${{ steps.cache-key.outputs.key }}
+          key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
 
       - name: 🏗️ Build
-        if: steps.cache-restore.outputs.cache-hit != 'true'
+        if: steps.build-restore.outputs.cache-hit != 'true'
         run: npm --workspace=remeda run build
 
-      - name: 🚚 Save dist
+      - name: 🚚 Save build
+        if: steps.build-restore.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4.2.3
         with:
           path: packages/remeda/dist
-          key: ${{ steps.cache-key.outputs.key }}
+          key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
 
   types:
     name: 👷 TypeScript ${{ matrix.typescript-version }}
@@ -78,13 +80,6 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1.10.9
 
-      - name: 🚚 Restore cached dist
-        uses: actions/cache/restore@v4.2.3
-        with:
-          path: packages/remeda/dist
-          fail-on-cache-miss: true
-          key: ${{ needs.build.outputs.cache-key }}
-
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
@@ -96,6 +91,13 @@ jobs:
 
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
+
+      - name: 🚚 Restore build
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.buildCacheKey }}
 
       - name: 🚚 Check Outputs
         run: npm --workspace=remeda run check:dist

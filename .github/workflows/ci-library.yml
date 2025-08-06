@@ -39,7 +39,7 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     outputs:
-      cache-key: ${{ steps.cache-key.outputs.key }}
+      buildCacheKey: ${{ steps.build-cache-key.outputs.cacheKey }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -52,21 +52,21 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
+      - name: 🔑 Generate build cache key
+        id: build-cache-key
+        run: echo "cacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
 
-      - name: 🔑 Generate cache key
-        id: cache-key
-        run: echo "key=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
-
       # We're going to use this cache when we typecheck the build output and in
       # our daily canaries.
-      - name: 🚚 Save dist
-        id: cache-dist
+      - name: 🚚 Save build
+        id: cache-build
         uses: actions/cache/save@v4.2.3
         with:
           path: packages/remeda/dist
-          key: ${{ steps.cache-key.outputs.key }}
+          key: ${{ steps.build-cache-key.outputs.cacheKey }}
 
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
@@ -114,7 +114,7 @@ jobs:
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
-          key: ${{ needs.build.outputs.cache-key }}
+          key: ${{ needs.build.outputs.buildCacheKey }}
 
       - name: 🧐 Check Outputs
         run: npm --workspace=remeda run check:dist
