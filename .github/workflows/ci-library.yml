@@ -20,15 +20,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
@@ -42,15 +42,15 @@ jobs:
       buildCacheKey: ${{ steps.build-cache-key.outputs.buildCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Generate build cache key
@@ -92,15 +92,15 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -135,15 +135,15 @@ jobs:
           - 18
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: ${{ matrix.node }}
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🧪 Run tests
         run: npm --workspace=remeda run test:runtime
@@ -155,15 +155,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🧹 Lint
         run: npm --workspace=remeda run lint
@@ -175,15 +175,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 💄 Format
         run: npm --workspace=remeda run format
@@ -195,15 +195,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🐢 Slow Types
         run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
@@ -221,15 +221,15 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
@@ -259,17 +259,17 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🔏 Audit Supply Chain
         run: npm --workspace=remeda audit signatures
@@ -297,7 +297,7 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-tags: true
 
@@ -312,13 +312,13 @@ jobs:
 
       - name: ⎔ Setup Node
         if: steps.latest-released.outputs.version != ''
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download Dependencies
         if: steps.latest-released.outputs.version != ''
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
         env:
           HUSKY: 0
 
