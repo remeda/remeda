@@ -12,8 +12,43 @@ permissions:
   contents: read
 
 jobs:
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1.10.9
+
+      - name: 🚚 Restore dist
+        id: cache-restore
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}
+
+      - name: 🏗️ Build
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: npm --workspace=remeda run build
+
+      - name: 🚚 Save dist
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}
+
   types:
     name: 👷 TypeScript ${{ matrix.typescript-version }}
+    needs:
+      - build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -35,9 +70,12 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1.10.9
 
-      # TODO: We are rebuilding everything several times, our builds aren't very expensive, but we can easily optimize by caching the 'dist' directory once.
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build
+      - name: 🚚 Restore cached dist
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}

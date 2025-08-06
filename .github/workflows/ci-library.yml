@@ -33,10 +33,39 @@ jobs:
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
 
+  build:
+    name: 🏗️ Build
+    needs:
+      - typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🏗️ Build
+        run: npm --workspace=remeda run build
+
+      # We're going to use this cache when we typecheck the build output and in
+      # our daily canaries.
+      - name: 🚚 Save dist
+        id: cache-dist
+        uses: actions/cache/save@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}
+
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
     needs:
-      - typecheck
+      - build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -67,9 +96,12 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      # TODO: We are rebuilding everything several times, our builds aren't very expensive, but we can easily optimize by caching the 'dist' directory once.
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build
+      - name: 🚚 Restore build
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
