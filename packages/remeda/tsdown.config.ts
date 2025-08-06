@@ -14,8 +14,10 @@ export default defineConfig({
     sourcemap: true,
   },
 
-  // We want to stay generic, not building for node or the browser.
+  // We support both client and server envs
   platform: "neutral",
 
   minify: true,
+
+  attw: true,
 });
