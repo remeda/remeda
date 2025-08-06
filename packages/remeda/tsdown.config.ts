@@ -1,9 +1,11 @@
 import { defineConfig } from "tsdown";
 
-const SOURCE_DIRECTORY = "src";
-
 export default defineConfig({
-  entry: [`${SOURCE_DIRECTORY}/**/*.ts`],
+  entry: [
+    "src/*.ts",
+    // Skip test files
+    `!**/*.test{,-d}.ts`,
+  ],
 
   // TODO [>2]: Remove CJS support?
   format: ["esm", "cjs"],
