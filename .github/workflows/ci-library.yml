@@ -52,13 +52,13 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build
-
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Generate build cache key
         id: build-cache-key
         run: echo "buildCacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build
+        run: npm --workspace=remeda run build
 
       - name: 🚚 Save build
         id: cache-build
