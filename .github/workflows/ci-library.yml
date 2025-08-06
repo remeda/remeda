@@ -108,6 +108,9 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
+      # We restore the build and check it last so that we don't do redundant
+      # work if the type tests already failed (which is way more common than the
+      # build typing failing).
       - name: 🚚 Restore build
         uses: actions/cache/restore@v4.2.3
         with:
