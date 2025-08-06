@@ -50,7 +50,7 @@
     "check:dist": "tsc --project tsconfig.dist.json",
     "format": "prettier . --write",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
-    "lint:build": "attw --pack . && publint",
+    "lint:build": "publint",
     "publish:jsr": "jsr publish --no-provenance",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
     "release": "semantic-release",
@@ -63,7 +63,7 @@
     "type-fest": "^4.41.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.18.2",
+    "@arethetypeswrong/core": "^0.18.2",
     "@eslint/js": "^9.32.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^24.2.0",
