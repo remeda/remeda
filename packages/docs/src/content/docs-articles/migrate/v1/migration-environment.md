@@ -34,7 +34,7 @@ without requiring a breaking change.
 
 ## Importing
 
-Remeda v2 builds its packaged files using [`tsup`](https://tsup.egoist.dev/)
+Remeda v2 builds its packaged files using [`tsdown`](https://tsdown.dev/)
 (replacing the bare `tsc` build of the previous version), with full support for
 tree-shaking, code splitting, and minification. The output config is validated
 using both [`attw`](https://arethetypeswrong.github.io/) and [`publint`](https://publint.dev/).
