@@ -67,11 +67,9 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
-      # TODO: We are rebuilding everything several times, our builds aren't very
-      # expensive, but we can easily optimize by caching the 'dist' directory
-      # once.
+      # TODO: We are rebuilding everything several times, our builds aren't very expensive, but we can easily optimize by caching the 'dist' directory once.
       - name: 🏗️ Build
-        run: npm --workspace=remeda run build -- --dts-only
+        run: npm --workspace=remeda run build
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
