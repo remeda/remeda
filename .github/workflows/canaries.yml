@@ -36,6 +36,8 @@ jobs:
           path: packages/remeda/dist
           key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
 
+      # Only on cache misses do we proceed to building the library.
+
       - name: ⎔ Setup node
         if: steps.build-restore.outputs.cache-hit != 'true'
         uses: actions/setup-node@v4.4.0
@@ -86,7 +88,7 @@ jobs:
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🎯 Concrete Version
-        run: npm list typescript --depth=0
+        run: npx --workspace=remeda tsc --version
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
@@ -94,6 +96,9 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
+      # We restore the build and check it last so that we don't do redundant
+      # work if the type checking or type tests already failed (which is way
+      # more common than the build typing failing).
       - name: 🚚 Restore build
         uses: actions/cache/restore@v4.2.3
         with:
