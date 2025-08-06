@@ -20,4 +20,5 @@ export default defineConfig({
   minify: true,
 
   attw: true,
+  publint: true,
 });

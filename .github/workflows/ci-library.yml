@@ -238,9 +238,6 @@ jobs:
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
 
-      - name: 👮 Lint output
-        run: npm --workspace=remeda run lint:build
-
       - name: 🚀 Release
         run: npm --workspace=remeda run release
         env:
