@@ -29,7 +29,7 @@ jobs:
         run: echo "buildCacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
 
       - name: 🚚 Lookup cached build
-        id: build-restore
+        id: build-lookup
         uses: actions/cache@v4.2.3
         with:
           lookup-only: true
@@ -39,21 +39,21 @@ jobs:
       # Only on cache misses do we proceed to building the library.
 
       - name: ⎔ Setup node
-        if: steps.build-restore.outputs.cache-hit != 'true'
+        if: steps.build-lookup.outputs.cache-hit != 'true'
         uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        if: steps.build-restore.outputs.cache-hit != 'true'
+        if: steps.build-lookup.outputs.cache-hit != 'true'
         uses: bahmutov/npm-install@v1.10.9
 
       - name: 🏗️ Build
-        if: steps.build-restore.outputs.cache-hit != 'true'
+        if: steps.build-lookup.outputs.cache-hit != 'true'
         run: npm --workspace=remeda run build
 
       - name: 🚚 Save build
-        if: steps.build-restore.outputs.cache-hit != 'true'
+        if: steps.build-lookup.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4.2.3
         with:
           path: packages/remeda/dist
