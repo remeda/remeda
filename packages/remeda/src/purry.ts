@@ -2,6 +2,7 @@
 
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
@@ -43,12 +44,16 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
  * @category Function
  */
 export function purry(
-  fn: (...args: any) => unknown,
+  fn: StrictFunction,
   args: ReadonlyArray<unknown>,
   lazy?: (...args: any) => LazyEvaluator,
 ): unknown {
   const diff = fn.length - args.length;
   if (diff === 0) {
+    // @ts-expect-error [ts2345] -- This error is accurate because we don't know
+    // anything about `fn` so can't ensure that we are passing the correct
+    // arguments to it, we just have to trust that the caller knows what they
+    // are doing.
     return fn(...args);
   }
 

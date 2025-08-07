@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any --
+/* eslint-disable @typescript-eslint/explicit-function-return-type --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -7,6 +7,7 @@ import { sleep } from "../test/sleep";
 import { constant } from "./constant";
 import { funnel } from "./funnel";
 import { identity } from "./identity";
+import type { StrictFunction } from "./internal/types/StrictFunction";
 
 /**
  * A reference implementation of the Lodash `debounce` function using the
@@ -36,7 +37,7 @@ import { identity } from "./identity";
  * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L374
  */
-function debounceWithCachedValue<F extends (...args: any) => any>(
+function debounceWithCachedValue<F extends StrictFunction>(
   func: F,
   wait = 0,
   {
@@ -66,7 +67,10 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
       // them through, to replicate this behavior we need to spread the args
       // array maintained via the reducer below.
       // Also, every time the function is invoked the cached value is updated.
-      cachedValue = func(...args) as ReturnType<F>;
+      // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+      // types too eagerly, making itself blind to the fact that the types
+      // match here.
+      cachedValue = func(...args);
     },
     {
       // Debounce stores the latest args it was called with for the next
