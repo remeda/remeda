@@ -39,7 +39,7 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     outputs:
-      buildCacheKey: ${{ steps.build-cache-key.outputs.buildCacheKey }}
+      distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4.2.2
@@ -53,19 +53,21 @@ jobs:
         uses: bahmutov/npm-install@v1.10.9
 
       # Generate the cache key so we can reuse it in the next job.
-      - name: 🔑 Generate build cache key
-        id: build-cache-key
-        run: echo "buildCacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+      - name: 🔑 Hash distributable
+        id: hash-dist
+        # for the best results this should be kept in sync with the key used by
+        # the same job in the `ci-library` workflow, that way we can reuse the
+        # cache from committed PRs.
+        run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
 
-      - name: 🚚 Save build
-        id: cache-build
+      - name: 🚚 Save distributable
         uses: actions/cache/save@v4.2.3
         with:
           path: packages/remeda/dist
-          key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
@@ -108,17 +110,17 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
-      # We restore the build and check it last so that we don't do redundant
-      # work if the type tests already failed (which is way more common than the
-      # build typing failing).
-      - name: 🚚 Restore build
+      # We restore the distributable and check it last so that we don't do
+      # redundant work if the type tests already failed (which is way more
+      # common than the build typing failing).
+      - name: 🚚 Restore distributable
         uses: actions/cache/restore@v4.2.3
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
-          key: ${{ needs.build.outputs.buildCacheKey }}
+          key: ${{ needs.build.outputs.distCacheKey }}
 
-      - name: 🧐 Check Outputs
+      - name: 🧐 Check distributable
         run: npm --workspace=remeda run check:dist
 
   test-runtime:
@@ -211,6 +213,7 @@ jobs:
   preview:
     name: 🧑‍🔬 Preview
     needs:
+      - build
       - test-typing
       - test-runtime
       - lint
@@ -231,8 +234,12 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1.10.9
 
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build
+      - name: 🚚 Restore distributable
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.distCacheKey }}
 
       - name: 🧑‍🔬 Preview
         run: npm --workspace=remeda run publish:preview

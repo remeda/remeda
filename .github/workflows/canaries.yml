@@ -12,57 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    name: 🏗️ Build
-    runs-on: ubuntu-latest
-    outputs:
-      buildCacheKey: ${{ steps.build-cache-key.outputs.buildCacheKey }}
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4.2.2
-
-      - name: 🔑 Generate build cache key
-        id: build-cache-key
-        # for the best results this should be kept in sync with the key used by
-        # the same job in the `ci-library` workflow, that way we can reuse the
-        # cache from committed PRs.
-        run: echo "buildCacheKey=build-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
-
-      - name: 🚚 Lookup cached build
-        id: build-lookup
-        uses: actions/cache@v4.2.3
-        with:
-          lookup-only: true
-          path: packages/remeda/dist
-          key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
-
-      # Only on cache misses do we proceed to building the library.
-
-      - name: ⎔ Setup node
-        if: steps.build-lookup.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v4.4.0
-        with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download deps
-        if: steps.build-lookup.outputs.cache-hit != 'true'
-        uses: bahmutov/npm-install@v1.10.9
-
-      - name: 🏗️ Build
-        if: steps.build-lookup.outputs.cache-hit != 'true'
-        run: npm --workspace=remeda run build
-
-      - name: 🚚 Save build
-        if: steps.build-lookup.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4.2.3
-        with:
-          path: packages/remeda/dist
-          key: ${{ steps.build-cache-key.outputs.buildCacheKey }}
-
-  types:
-    name: 👷 TypeScript ${{ matrix.typescript-version }}
-    needs:
-      - build
+  source-testing:
+    name: 📒 Source Testing [${{ matrix.typescript-version }}]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -96,15 +47,91 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
-      # We restore the build and check it last so that we don't do redundant
-      # work if the type checking or type tests already failed (which is way
-      # more common than the build typing failing).
-      - name: 🚚 Restore build
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    needs:
+      # No need to build if we already have test failures
+      - source-testing
+    outputs:
+      distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      # Generate the cache key so we can reuse it in the next job.
+      - name: 🔑 Hash distributable
+        id: hash-dist
+        # for the best results this should be kept in sync with the key used by
+        # the same job in the `ci-library` workflow, that way we can reuse the
+        # cache from committed PRs.
+        run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
+      - name: 🚚 Lookup distributable
+        id: dist-lookup
+        uses: actions/cache@v4.2.3
+        with:
+          lookup-only: true
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+      # Only on cache misses do we proceed to building the library.
+
+      - name: ⎔ Setup node
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: bahmutov/npm-install@v1.10.9
+
+      - name: 🏗️ Build
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        run: npm --workspace=remeda run build
+
+      - name: 🚚 Save distributable
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+  dist-testing:
+    name: 📦 Distributable Testing [${{ matrix.typescript-version }}]]
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typescript-version:
+          - next # The bleeding-edge
+          - latest # The "current" version
+          - rc # The "best" pre-release version
+          - beta # New features ready to be tested by the general public.
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@v1.10.9
+
+      - name: 📘 Install TypeScript
+        run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
+
+      - name: 🚚 Restore distributable
         uses: actions/cache/restore@v4.2.3
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
-          key: ${{ needs.build.outputs.buildCacheKey }}
+          key: ${{ needs.build.outputs.distCacheKey }}
 
-      - name: 🚚 Check Outputs
+      - name: 🧐 Check distributable
         run: npm --workspace=remeda run check:dist
