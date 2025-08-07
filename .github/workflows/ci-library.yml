@@ -20,28 +20,65 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
 
+  build:
+    name: 🏗️ Build
+    needs:
+      - typecheck
+    runs-on: ubuntu-latest
+    outputs:
+      distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1.10.9
+
+      # Generate the cache key so we can reuse it in the next job.
+      - name: 🔑 Hash distributable
+        id: hash-dist
+        # for the best results this should be kept in sync with the key used by
+        # the same job in the `ci-library` workflow, that way we can reuse the
+        # cache from committed PRs.
+        run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build
+        run: npm --workspace=remeda run build
+
+      - name: 🚚 Save distributable
+        uses: actions/cache/save@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
   test-typing:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
     needs:
-      - typecheck
+      - build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         typescript-version:
+          - "5.9"
           - "5.8"
           - "5.7"
           - "5.6"
@@ -57,21 +94,15 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      # TODO: We are rebuilding everything several times, our builds aren't very
-      # expensive, but we can easily optimize by caching the 'dist' directory
-      # once.
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build -- --dts-only
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -79,7 +110,17 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
-      - name: 🚚 Check Outputs
+      # We restore the distributable and check it last so that we don't do
+      # redundant work if the type tests already failed (which is way more
+      # common than the build typing failing).
+      - name: 🚚 Restore distributable
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.distCacheKey }}
+
+      - name: 🧐 Check distributable
         run: npm --workspace=remeda run check:dist
 
   test-runtime:
@@ -96,15 +137,15 @@ jobs:
           - 18
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: ${{ matrix.node }}
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🧪 Run tests
         run: npm --workspace=remeda run test:runtime
@@ -116,15 +157,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🧹 Lint
         run: npm --workspace=remeda run lint
@@ -136,15 +177,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 💄 Format
         run: npm --workspace=remeda run format
@@ -156,15 +197,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🐢 Slow Types
         run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
@@ -172,6 +213,7 @@ jobs:
   preview:
     name: 🧑‍🔬 Preview
     needs:
+      - build
       - test-typing
       - test-runtime
       - lint
@@ -182,18 +224,22 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build
+      - name: 🚚 Restore distributable
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.distCacheKey }}
 
       - name: 🧑‍🔬 Preview
         run: npm --workspace=remeda run publish:preview
@@ -220,26 +266,23 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
 
       - name: 🔏 Audit Supply Chain
         run: npm --workspace=remeda audit signatures
 
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
-
-      - name: 👮 Lint output
-        run: npm --workspace=remeda run lint:build
 
       - name: 🚀 Release
         run: npm --workspace=remeda run release
@@ -261,7 +304,7 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-tags: true
 
@@ -276,13 +319,13 @@ jobs:
 
       - name: ⎔ Setup Node
         if: steps.latest-released.outputs.version != ''
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download Dependencies
         if: steps.latest-released.outputs.version != ''
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.9
         env:
           HUSKY: 0
 

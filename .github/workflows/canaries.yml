@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  types:
-    name: 👷 TypeScript ${{ matrix.typescript-version }}
+  source-testing:
+    name: 📒 Source Testing [${{ matrix.typescript-version }}]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -35,15 +35,11 @@ jobs:
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1.10.9
 
-      # TODO: We are rebuilding everything several times, our builds aren't very expensive, but we can easily optimize by caching the 'dist' directory once.
-      - name: 🏗️ Build
-        run: npm --workspace=remeda run build -- --dts-only
-
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🎯 Concrete Version
-        run: npm list typescript --depth=0
+        run: npx --workspace=remeda tsc --version
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
@@ -51,5 +47,91 @@ jobs:
       - name: 📋 Type tests
         run: npm --workspace=remeda run test:typing
 
-      - name: 🚚 Check Outputs
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    needs:
+      # No need to build if we already have test failures
+      - source-testing
+    outputs:
+      distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      # Generate the cache key so we can reuse it in the next job.
+      - name: 🔑 Hash distributable
+        id: hash-dist
+        # for the best results this should be kept in sync with the key used by
+        # the same job in the `ci-library` workflow, that way we can reuse the
+        # cache from committed PRs.
+        run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
+      - name: 🚚 Lookup distributable
+        id: dist-lookup
+        uses: actions/cache@v4.2.3
+        with:
+          lookup-only: true
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+      # Only on cache misses do we proceed to building the library.
+
+      - name: ⎔ Setup node
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: bahmutov/npm-install@v1.10.9
+
+      - name: 🏗️ Build
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        run: npm --workspace=remeda run build
+
+      - name: 🚚 Save distributable
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4.2.3
+        with:
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+  dist-testing:
+    name: 📦 Distributable Testing [${{ matrix.typescript-version }}]]
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typescript-version:
+          - next # The bleeding-edge
+          - latest # The "current" version
+          - rc # The "best" pre-release version
+          - beta # New features ready to be tested by the general public.
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@v1.10.9
+
+      - name: 📘 Install TypeScript
+        run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
+
+      - name: 🚚 Restore distributable
+        uses: actions/cache/restore@v4.2.3
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.distCacheKey }}
+
+      - name: 🧐 Check distributable
         run: npm --workspace=remeda run check:dist
