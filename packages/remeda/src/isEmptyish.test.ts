@@ -11,22 +11,27 @@ test("strings", () => {
   expect(isEmptyish("test")).toBe(false);
 });
 
-test("arrays", () => {
+test("literal arrays", () => {
   expect(isEmptyish([])).toBe(true);
+  expect(isEmptyish([1, 2, 3])).toBe(false);
+});
+
+test("sparse arrays", () => {
   // eslint-disable-next-line unicorn/new-for-builtins
   expect(isEmptyish(Array(0))).toBe(true);
-  // eslint-disable-next-line unicorn/no-new-array
-  expect(isEmptyish(new Array(0))).toBe(true);
-  expect(isEmptyish(Array.from({ length: 0 }))).toBe(true);
-
-  expect(isEmptyish([1, 2, 3])).toBe(false);
-  // eslint-disable-next-line no-sparse-arrays
-  expect(isEmptyish([, ,])).toBe(false);
   // eslint-disable-next-line unicorn/new-for-builtins
   expect(isEmptyish(Array(10))).toBe(false);
+
+  // eslint-disable-next-line unicorn/no-new-array
+  expect(isEmptyish(new Array(0))).toBe(true);
   // eslint-disable-next-line unicorn/no-new-array
   expect(isEmptyish(new Array(10))).toBe(false);
+
+  expect(isEmptyish(Array.from({ length: 0 }))).toBe(true);
   expect(isEmptyish(Array.from({ length: 10 }))).toBe(false);
+
+  // eslint-disable-next-line no-sparse-arrays
+  expect(isEmptyish([, ,])).toBe(false);
 });
 
 test("plain objects", () => {
