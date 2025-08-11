@@ -17,15 +17,6 @@ export default tseslint.config(
 
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  {
-    files: ["**/*.ts{,x}", "**/*.js{,x}"],
-    languageOptions: {
-      parserOptions: {
-        // modern typescript parser support for type-aware rules
-        projectService: true,
-      },
-    },
-  },
 
   {
     languageOptions: {
@@ -36,6 +27,7 @@ export default tseslint.config(
       },
 
       parserOptions: {
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: {
           jsx: true,
@@ -59,8 +51,12 @@ export default tseslint.config(
     ...eslintPluginUnicorn.configs.recommended,
     rules: {
       ...eslintPluginUnicorn.configs.recommended.rules,
-      "unicorn/switch-case-braces": ["error", "avoid"],
+
+      // Not useful!
       "unicorn/prevent-abbreviations": "off",
+
+      // We prefer the "avoid" syntax which isn't the default...
+      "unicorn/switch-case-braces": ["error", "avoid"],
     },
   },
 
@@ -108,10 +104,10 @@ export default tseslint.config(
 
       // Not relevant to us
       "react/forbid-component-props": "off",
-      "react/jsx-no-literals": "off",
       "react/jsx-max-depth": "off",
-      "react/require-default-props": "off",
+      "react/jsx-no-literals": "off",
       "react/jsx-props-no-spreading": "off",
+      "react/require-default-props": "off",
     },
   },
 
@@ -130,8 +126,11 @@ export default tseslint.config(
     files: ["**/*.astro"],
     languageOptions: {
       parserOptions: {
-        // projectService isn't supported for astro linting, use this instead
+        // When we lint TypeScript within Astro files it's done with the old
+        // TypeScript parser which doesn't support `projectService` and requires
+        // `project` instead.
         project: true,
+        projectService: false,
       },
     },
     rules: {
@@ -150,6 +149,16 @@ export default tseslint.config(
       "astro/prefer-object-class-list": "warn",
       "astro/prefer-split-class-list": "warn",
       "astro/sort-attributes": "warn",
+    },
+  },
+
+  {
+    // The base layout is mainly raw HTML, and some rules just don't work well
+    // for those cases.
+    files: ["src/layouts/base.astro"],
+    rules: {
+      "astro/sort-attributes": "off",
+      "unicorn/text-encoding-identifier-case": "off",
     },
   },
 
