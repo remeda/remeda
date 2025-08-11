@@ -1,5 +1,4 @@
 ---
-import { cn } from "@/lib/utils";
 import type { HTMLAttributes } from "astro/types";
 
 type Props = HTMLAttributes<"article">;
@@ -8,10 +7,10 @@ const { class: class_, ...props } = Astro.props;
 ---
 
 <article
-  class:list={cn(
+  class:list={[
     "prose max-w-2xl prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none",
     class_,
-  )}
+  ]}
   {...props}
 >
   <slot />

@@ -1,7 +1,6 @@
 ---
-import { Code } from "astro:components";
-import { THEME } from "./code-block.astro";
 import { CopyButton } from "./copy-button";
+import ThemedCode from "./themed-code.astro";
 
 const COMMANDS = [
   "npm install remeda",
@@ -16,7 +15,7 @@ const COMMANDS = [
   {
     COMMANDS.map((command) => (
       <article class="relative">
-        <Code code={command} lang="bash" theme={THEME} />
+        <ThemedCode code={command} lang="bash" />
         <div class="absolute top-1/2 right-2 -translate-y-1/2">
           <CopyButton
             className="text-background dark:text-foreground"

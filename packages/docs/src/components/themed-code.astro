@@ -1,0 +1,8 @@
+---
+import type { ComponentProps } from "astro/types";
+import { Code } from "astro:components";
+
+type Props = Omit<ComponentProps<typeof Code>, "theme">;
+---
+
+<Code theme="poimandres" {...Astro.props} />

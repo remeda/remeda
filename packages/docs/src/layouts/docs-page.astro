@@ -36,8 +36,8 @@ const entries = [...forNavbar(articles), ...navbarEntries];
             {categoryArticles.map((article) => (
               <Article
                 article={article}
-                class="scroll-mt-24"
-                id={article.data.slug ?? article.id}
+                class:list="scroll-mt-24"
+                id={article.slug}
               />
             ))}
           </DocsSection>

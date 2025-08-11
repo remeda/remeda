@@ -7,14 +7,14 @@ import Prose from "./prose.astro";
 type Props = {
   readonly article: CollectionEntry<typeof docsArticlesCollectionName>;
   readonly id: string;
-  readonly class?: string;
+  readonly ["class:list"]?: string;
 };
 
-const { article, id, class: class_ } = Astro.props;
+const { article, ...props } = Astro.props;
 
 const { Content } = await render(article);
 ---
 
-<Prose class:list={class_} id={id}>
+<Prose {...props}>
   <Content />
 </Prose>
