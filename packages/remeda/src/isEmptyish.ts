@@ -52,14 +52,14 @@ export function isEmptyish<T>(
     return false;
   }
 
-  if ("length" in data) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/dot-notation
-    return data["length"] === 0;
+  if ("length" in data && typeof data.length === "number") {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return data.length === 0;
   }
 
-  if ("size" in data) {
+  if ("size" in data && typeof data.size === "number") {
     // Maps and Sets
-    return data["size"] === 0;
+    return data.size === 0;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is just how TypeScript types it...
