@@ -15,6 +15,6 @@ const { article, id, class: class_ } = Astro.props;
 const { Content } = await render(article);
 ---
 
-<Prose id={id} class={class_}>
+<Prose class:list={class_} id={id}>
   <Content />
 </Prose>

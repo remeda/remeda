@@ -18,7 +18,7 @@ const { library } = Astro.params as Params;
 const mappings = await getMigrationMappings(library);
 ---
 
-<DocsPage title={`Migrate: ${library}`} navbarEntries={forNavbar(mappings)}>
+<DocsPage navbarEntries={forNavbar(mappings)} title={`Migrate: ${library}`}>
   {
     mappings.map(([category, categorizedMappings]) => (
       <DocsSection title={category}>

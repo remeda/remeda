@@ -25,6 +25,6 @@ const entries = [...articlesForNavbar(articles), ...routeNavbarEntries];
 
 {
   entries.length === 0 ? undefined : (
-    <MobileNav client:visible title={migrationLibrary} entries={entries} />
+    <MobileNav client:visible entries={entries} title={migrationLibrary} />
   )
 }

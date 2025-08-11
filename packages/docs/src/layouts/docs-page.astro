@@ -35,9 +35,9 @@ const entries = [...forNavbar(articles), ...navbarEntries];
           <DocsSection title={category}>
             {categoryArticles.map((article) => (
               <Article
-                id={article.data.slug ?? article.id}
-                class="scroll-mt-24"
                 article={article}
+                class="scroll-mt-24"
+                id={article.data.slug ?? article.id}
               />
             ))}
           </DocsSection>

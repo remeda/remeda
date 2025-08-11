@@ -70,9 +70,9 @@ function NavbarItem({
         {tags?.map((tag) => (
           <TagBadge
             key={tag}
-            tag={tag}
             abbreviated
             className="flex h-7 w-5 justify-center"
+            tag={tag}
           />
         ))}
       </span>

@@ -19,10 +19,10 @@ const NAVLINK_CLASS =
   <nav
     class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"
   >
-    <a href="/" class="font-bold">Remeda</a>
+    <a class="font-bold" href="/">Remeda</a>
     <a
       aria-current={"/docs" === pathname ? "page" : undefined}
-      class={NAVLINK_CLASS}
+      class:list={NAVLINK_CLASS}
       href="/docs"
     >
       Documentation
@@ -30,7 +30,7 @@ const NAVLINK_CLASS =
     <MigrationSelector>
       <span
         aria-current={pathname.startsWith("/migrate") ? "page" : undefined}
-        class={cn(NAVLINK_CLASS, "cursor-pointer")}
+        class:list={cn(NAVLINK_CLASS, "cursor-pointer")}
       >
         Migration Guides
       </span>
@@ -38,9 +38,9 @@ const NAVLINK_CLASS =
     <div class="flex-1"></div>
     <Search client:only="react" />
     <a
+      class:list={buttonVariants({ variant: "ghost", size: "icon" })}
       href="https://github.com/remeda/remeda"
       target="_blank"
-      class={buttonVariants({ variant: "ghost", size: "icon" })}
     >
       <GitHubLogoIcon />
       <span class="sr-only">GitHub</span>

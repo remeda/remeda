@@ -20,9 +20,9 @@ export function MobileNav({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
+    <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
+        <Button className="md:hidden" size="icon" variant="ghost">
           <span className="sr-only">Library navigation menu</span>
           <MenuIcon />
         </Button>

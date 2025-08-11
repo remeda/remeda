@@ -8,7 +8,7 @@ const { class: class_, ...props } = Astro.props;
 ---
 
 <article
-  class={cn(
+  class:list={cn(
     "prose max-w-2xl prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none",
     class_,
   )}
