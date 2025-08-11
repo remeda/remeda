@@ -1,11 +1,33 @@
+import type { Simplify } from "type-fest";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 
-type Emptyish =
-  | ""
-  | undefined
-  | null
-  | { readonly length: 0 }
-  | Readonly<Record<PropertyKey, never>>;
+type Emptyish<T> =
+  | (T extends string ? "" : never)
+  | (T extends ReadonlyArray<unknown>
+      ? T extends Array<unknown>
+        ? []
+        : readonly []
+      : never)
+  | (T extends { readonly length: number }
+      ? T extends string
+        ? never
+        : T extends ReadonlyArray<unknown>
+          ? never
+          : { length: 0 }
+      : never)
+  | (T extends { readonly size: number } ? { size: 0 } : never)
+  | (T extends object
+      ? T extends ReadonlyArray<unknown>
+        ? never
+        : IsBoundedRecord<T> extends true
+          ? Partial<T> extends T
+            ? Record<keyof T, never>
+            : never
+          : Record<keyof T, never>
+      : never)
+  | (T extends null ? null : never)
+  | (T extends undefined ? undefined : never);
 
 /**
  * A function that checks if the passed parameter is empty.
@@ -33,8 +55,10 @@ type Emptyish =
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: T | Emptyish,
-): data is NarrowedTo<T, Emptyish> {
+  data: T,
+): data is T extends unknown
+  ? NarrowedTo<T, Simplify<T & Emptyish<T>>>
+  : never {
   if (data === undefined) {
     return true;
   }
@@ -53,7 +77,6 @@ export function isEmptyish<T>(
   }
 
   if ("length" in data && typeof data.length === "number") {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return data.length === 0;
   }
 
