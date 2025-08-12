@@ -33,7 +33,7 @@ const signature = tagContent(blockTags, "signature");
       <h6 class="text-sm font-bold text-secondary-foreground">{variant}</h6>
     )
   }
-  <MethodSignature client:visible type={type} parameters={parameters}>
+  <MethodSignature client:visible parameters={parameters} type={type}>
     {signature !== undefined && <CodeBlock class="flex-1" code={signature} />}
   </MethodSignature>
   {

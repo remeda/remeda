@@ -14,7 +14,7 @@ const internalNames = new Set(
 );
 ---
 
-<DocsPage title="Documentation" navbarEntries={forNavbar(functions)}>
+<DocsPage navbarEntries={forNavbar(functions)} title="Documentation">
   {
     functions.map(([category, categoryFunctions]) => (
       <DocsSection title={category}>
