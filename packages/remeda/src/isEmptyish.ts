@@ -1,30 +1,27 @@
-import type { Simplify } from "type-fest";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 
 type Emptyish<T> =
   | (T extends string ? "" : never)
-  | (T extends ReadonlyArray<unknown>
-      ? T extends Array<unknown>
-        ? []
-        : readonly []
-      : never)
-  | (T extends { readonly length: number }
-      ? T extends string
-        ? never
-        : T extends ReadonlyArray<unknown>
-          ? never
-          : { length: 0 }
-      : never)
-  | (T extends { readonly size: number } ? { size: 0 } : never)
+  | (T extends ReadonlyArray<unknown> ? readonly [] : never)
+  | (T extends ReadonlyMap<infer K, unknown> ? ReadonlyMap<K, never> : never)
+  | (T extends ReadonlySet<unknown> ? ReadonlySet<never> : never)
+  //   | (T extends { readonly length: number }
+  //       ? T extends string
+  //         ? never
+  //         : T extends ReadonlyArray<unknown>
+  //           ? never
+  //           : { readonly length: 0 }
+  //       : never)
+  //   | (T extends { readonly size: number } ? { readonly size: 0 } : never)
   | (T extends object
       ? T extends ReadonlyArray<unknown>
         ? never
         : IsBoundedRecord<T> extends true
           ? Partial<T> extends T
-            ? Record<keyof T, never>
+            ? { readonly [P in keyof T]: never }
             : never
-          : Record<keyof T, never>
+          : { readonly [P in keyof T]: never }
       : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
@@ -51,14 +48,12 @@ type Emptyish<T> =
  *    R.isEmptyish({}) //=> true
  *    R.isEmptyish('test') //=> false
  *    R.isEmptyish([1, 2, 3]) //=> false
- *    R.isEmptyish({ length: 0 }) //=> false
+ *    R.isEmptyish({ length: 0 }) //=> true
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: T,
-): data is T extends unknown
-  ? NarrowedTo<T, Simplify<T & Emptyish<T>>>
-  : never {
+  data: T | Emptyish<T>,
+): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
   if (data === undefined) {
     return true;
   }
@@ -77,6 +72,7 @@ export function isEmptyish<T>(
   }
 
   if ("length" in data && typeof data.length === "number") {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return data.length === 0;
   }
 

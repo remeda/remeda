@@ -15,7 +15,7 @@ describe("objects", () => {
   test("unbounded record", () => {
     const data = {} as Record<string, string>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<Record<string, never>>();
+      expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, never>>>();
     } else {
       expectTypeOf(data).toEqualTypeOf<Record<string, string>>();
     }
@@ -31,11 +31,14 @@ describe("objects", () => {
   });
 
   test("partial bounded record", () => {
-    const data = {} as Partial<Record<"a" | "b", number>>;
+    const data = {} as { a?: number; b?: number };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<Record<"a" | "b", never>>();
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a?: never;
+        readonly b?: never;
+      }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<Partial<Record<"a" | "b", number>>>();
+      expectTypeOf(data).toEqualTypeOf<{ a?: number; b?: number }>();
     }
   });
 
@@ -234,7 +237,7 @@ describe("tuples", () => {
       // This is effectively the empty array, but because the input was mutable
       // the output is also mutable and we need to maintain the type of the
       // items in the array (for functions like `push`).
-      expectTypeOf(data).toEqualTypeOf<Array<"cat"> & []>();
+      expectTypeOf(data).toEqualTypeOf<Array<"cat"> & readonly []>();
     } else {
       expectTypeOf(data).toEqualTypeOf<Array<"cat">>();
     }
@@ -246,7 +249,7 @@ describe("tuples", () => {
       // This is effectively the empty array, but because the input was mutable
       // the output is also mutable and we need to maintain the type of the
       // items in the array (for functions like `push`).
-      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<"cat"> & readonly []>();
+      expectTypeOf(data).toEqualTypeOf<readonly []>();
     } else {
       expectTypeOf(data).toEqualTypeOf<ReadonlyArray<"cat">>();
     }
@@ -254,18 +257,30 @@ describe("tuples", () => {
 });
 
 test("maps", () => {
-  expectTypeOf(isEmptyish(new Map())).toBe(true);
-  expectTypeOf(isEmptyish(new Map([["key", "value"]]))).toBe(false);
+  const data = new Map<"a" | "b", number>();
+  if (isEmptyish(data)) {
+    expectTypeOf(data).toEqualTypeOf<ReadonlyMap<"a" | "b", never>>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<Map<"a" | "b", number>>();
+  }
 });
 
 test("sets", () => {
-  expectTypeOf(isEmptyish(new Set())).toBe(true);
-  expectTypeOf(isEmptyish(new Set([1, 2, 3]))).toBe(false);
+  const data = new Set<"a" | "b">();
+  if (isEmptyish(data)) {
+    expectTypeOf(data).toEqualTypeOf<ReadonlySet<"a" | "b", never>>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<Set<"a" | "b">>();
+  }
 });
 
 test("typed arrays", () => {
-  expectTypeOf(isEmptyish(new Uint8Array())).toBe(true);
-  expectTypeOf(isEmptyish(new Uint8Array([1, 2, 3]))).toBe(false);
+  const data = new Uint8Array();
+  if (isEmptyish(data)) {
+    expectTypeOf(data).toEqualTypeOf<Uint8Array>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<Uint8Array<ArrayBuffer>>();
+  }
 });
 
 test("buffers", () => {
