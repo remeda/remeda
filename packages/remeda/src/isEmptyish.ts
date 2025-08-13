@@ -1,4 +1,4 @@
-import type { And, IsEqual, Or, Tagged } from "type-fest";
+import type { And, IsEqual, Tagged } from "type-fest";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -7,53 +7,41 @@ import type { TupleParts } from "./internal/types/TupleParts";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
 const EMPTYISH_BRAND = Symbol("emptyish");
 
+type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
+
 type Emptyish<T> =
   | (T extends string ? "" : never)
-  | (T extends ReadonlyArray<unknown>
-      ? T extends readonly []
-        ? T
-        : And<
-              IsEqual<TupleParts<T>["required"], []>,
-              IsEqual<TupleParts<T>["suffix"], []>
-            > extends true
-          ? T extends Array<unknown>
-            ? And<
-                IsEqual<TupleParts<T>["required"], []>,
-                IsEqual<TupleParts<T>["suffix"], []>
-              > extends true
-              ? Tagged<T, typeof EMPTYISH_BRAND>
-              : never
-            : readonly []
-          : never
-      : never)
-  | (T extends ReadonlyMap<infer K, unknown> ? ReadonlyMap<K, never> : never)
-  | (T extends ReadonlySet<unknown>
-      ? T extends Set<unknown>
-        ? Tagged<T, typeof EMPTYISH_BRAND>
-        : ReadonlySet<never>
-      : never)
-  | (T extends Readonly<Record<PropertyKey, unknown>>
-      ? IsBoundedRecord<T> extends true
-        ? Partial<T> extends T
-          ? { readonly [P in keyof T]: never }
-          : never
-        : { readonly [P in keyof T]: never }
-      : never)
-  | (T extends { length: number }
-      ? Or<
-          T extends ReadonlyArray<unknown> ? true : false,
-          T extends string ? true : false
-        > extends true
-        ? never
-        : Tagged<T, typeof EMPTYISH_BRAND>
-      : never)
-  | (T extends { size: number }
-      ? T extends ReadonlySet<unknown>
-        ? never
-        : Tagged<T, typeof EMPTYISH_BRAND>
-      : never)
+  | (T extends object ? EmptyishObjectLike<T> : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
+
+type EmptyishObjectLike<T> =
+  T extends ReadonlyArray<unknown>
+    ? EmptyishArray<T>
+    : T extends ReadonlySet<unknown>
+      ? T extends Set<unknown>
+        ? Empty<T>
+        : ReadonlySet<never>
+      : EmptyishObject<T>;
+
+type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
+  ? T
+  : And<
+        IsEqual<TupleParts<T>["required"], []>,
+        IsEqual<TupleParts<T>["suffix"], []>
+      > extends true
+    ? T extends Array<unknown>
+      ? Empty<T>
+      : never
+    : readonly [];
+
+type EmptyishObject<T> = T extends { length: number }
+  ? Empty<T>
+  : IsBoundedRecord<T> extends true
+    ? Partial<T> extends T
+      ? { readonly [P in keyof T]: never }
+      : never
+    : { readonly [P in keyof T]: never };
 
 /**
  * A function that checks if the passed parameter is empty.

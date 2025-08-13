@@ -466,7 +466,7 @@ describe("array-like", () => {
   });
 });
 
-describe("objects", () => {
+describe("keyed collections", () => {
   test("empty object", () => {
     const data = {} as const;
     if (isEmptyish(data)) {
