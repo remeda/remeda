@@ -216,6 +216,8 @@ describe("nullish", () => {
 });
 
 describe("all tuple shapes", () => {
+  // See TupleParts for a description of all possible tuple shapes.
+
   test("empty tuple", () => {
     const data = [] as [];
     if (isEmptyish(data)) {
@@ -382,7 +384,7 @@ describe("all tuple shapes", () => {
     }
   });
 
-  test('fixed-elements array', () => {
+  test("fixed-elements array", () => {
     const data = [1, 2] as [number, ...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -392,15 +394,18 @@ describe("all tuple shapes", () => {
     }
   });
 
-  test('readonly fixed-elements array', () => {
+  test("readonly fixed-elements array", () => {
     const data = [1, 2] as readonly [number, ...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<readonly [number, ...Array<number>, number]>();
+      expectTypeOf(data).toEqualTypeOf<
+        readonly [number, ...Array<number>, number]
+      >();
     }
   });
+});
 
 describe("objects", () => {
   test("empty object", () => {
