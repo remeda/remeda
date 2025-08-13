@@ -1,4 +1,12 @@
-import type { And, IsEqual, Tagged } from "type-fest";
+import type {
+  And,
+  HasRequiredKeys,
+  HasWritableKeys,
+  IsEqual,
+  IsNever,
+  Tagged,
+  ValueOf,
+} from "type-fest";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -10,11 +18,11 @@ type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
 
 type Emptyish<T> =
   | (T extends string ? "" : never)
-  | (T extends object ? EmptyishObjectLike<Extract<T, object>> : never)
+  | (T extends object ? EmptyishObjectLike<T> : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
 
-type EmptyishObjectLike<T> =
+type EmptyishObjectLike<T extends object> =
   T extends ReadonlyArray<unknown>
     ? EmptyishArray<T>
     : T extends ReadonlySet<unknown>
@@ -34,15 +42,21 @@ type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
       : readonly []
     : never;
 
-type EmptyishObject<T> = T extends { length: number }
+type EmptyishObject<T extends object> = T extends { length: number }
   ? T extends string
     ? never
     : Empty<T>
-  : IsBoundedRecord<T> extends true
-    ? Partial<T> extends T
-      ? { readonly [P in keyof T]: never }
-      : never
-    : { readonly [P in keyof T]: never };
+  : IsNever<ValueOf<T>> extends true
+    ? T
+    : IsBoundedRecord<T> extends true
+      ? HasRequiredKeys<T> extends true
+        ? never
+        : HasWritableKeys<T> extends true
+          ? Empty<T>
+          : { readonly [P in keyof T]: never }
+      : HasWritableKeys<T> extends true
+        ? Empty<T>
+        : { readonly [P in keyof T]: never };
 
 /**
  * A function that checks if the passed parameter is empty.
@@ -70,7 +84,7 @@ type EmptyishObject<T> = T extends { length: number }
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: T | Readonly<Emptyish<T>>,
+  data: T | Emptyish<T>,
 ): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
   if (data === undefined) {
     return true;

@@ -467,7 +467,7 @@ describe("array-like", () => {
 });
 
 describe("keyed collections", () => {
-  test("empty object", () => {
+  test("empty const object", () => {
     const data = {} as const;
     if (isEmptyish(data)) {
       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -477,33 +477,84 @@ describe("keyed collections", () => {
     }
   });
 
+  test("never record", () => {
+    const data = {} as Record<PropertyKey, never>;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<Record<PropertyKey, never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("readonly never record", () => {
+    const data = {} as Readonly<Record<PropertyKey, never>>;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<Readonly<Record<PropertyKey, never>>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("plain object", () => {
+    const data = { a: 123, b: "hello" } as { a: number; b: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ a: number; b: string }>();
+    }
+  });
+
+  test("readonly plain object", () => {
+    const data = { a: 123, b: "hello" } as const;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a: 123;
+        readonly b: "hello";
+      }>();
+    }
+  });
+
   test("unbounded record", () => {
     const data = {} as Record<string, string>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, never>>>();
+      expectTypeOf(data).toExtend<Record<string, string>>();
     } else {
       expectTypeOf(data).toEqualTypeOf<Record<string, string>>();
     }
   });
 
-  test("bounded record", () => {
-    const data = {} as Record<"a" | "b", number>;
+  test("readonly unbounded record", () => {
+    const data = {} as Readonly<Record<string, string>>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<never>();
+      expectTypeOf(data).toExtend<Record<string, never>>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<Record<"a" | "b", number>>();
+      expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, string>>>();
     }
   });
 
   test("partial bounded record", () => {
-    const data = {} as { a?: number; b?: number };
+    const data = {} as { a?: number; b?: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ a?: number; b?: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ a?: number; b?: string }>();
+    }
+  });
+
+  test("readonly partial bounded record", () => {
+    const data = {} as { readonly a?: number; readonly b?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{
         readonly a?: never;
         readonly b?: never;
       }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ a?: number; b?: number }>();
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a?: number;
+        readonly b?: string;
+      }>();
     }
   });
 
