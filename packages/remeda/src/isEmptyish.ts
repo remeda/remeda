@@ -1,7 +1,7 @@
-import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { And, IsEqual, Tagged } from "type-fest";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
-import type { And, IsEqual, IsNever, Tagged } from "type-fest";
-import { TupleParts } from "./internal/types/TupleParts";
+import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { TupleParts } from "./internal/types/TupleParts";
 
 /* v8 ignore next 2 */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
