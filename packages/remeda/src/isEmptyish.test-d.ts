@@ -407,6 +407,65 @@ describe("all tuple shapes", () => {
   });
 });
 
+describe("array-like", () => {
+  test("typed arrays", () => {
+    const data = new Int8Array();
+    if (isEmptyish(data)) {
+      // Typed arrays are either mutable via their underlying buffer, or they
+      // do not track their length; in both cases we don't have a narrower type
+      // to represent the emptiness.
+
+      expectTypeOf(data).toExtend<Int8Array<ArrayBuffer>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Int8Array<ArrayBuffer>>();
+    }
+  });
+
+  test("buffers", () => {
+    const data = Buffer.alloc(0);
+    if (isEmptyish(data)) {
+      // There's no way to construct an empty Buffer at the type level.
+
+      expectTypeOf(data).toExtend<Buffer<ArrayBuffer>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Buffer<ArrayBuffer>>();
+    }
+  });
+
+  test("sets", () => {
+    const data = new Set<number>();
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<Set<number>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Set<number>>();
+    }
+  });
+
+  test("readonly sets", () => {
+    const data = new Set<number>() as ReadonlySet<number>;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlySet<never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<ReadonlySet<number>>();
+    }
+  });
+
+  test("array-like (e.g., `arguments`)", () => {
+    // @ts-expect-error [ts6133] -- This is the best way to initialize a proper
+    // `arguments` array.
+    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars
+    function foo(): void {
+      // eslint-disable-next-line prefer-rest-params
+      const args = arguments;
+      if (isEmptyish(args)) {
+        expectTypeOf(args).toExtend<IArguments>();
+      } else {
+        expectTypeOf(args).toEqualTypeOf<IArguments>();
+      }
+    }
+  });
+});
+
 describe("objects", () => {
   test("empty object", () => {
     const data = {} as const;

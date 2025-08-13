@@ -42,8 +42,8 @@ describe("arrays", () => {
   });
 
   test("typed arrays", () => {
-    expect(isEmptyish(new Uint8Array())).toBe(true);
-    expect(isEmptyish(new Uint8Array([1, 2, 3]))).toBe(false);
+    expect(isEmptyish(new Int8Array())).toBe(true);
+    expect(isEmptyish(new Int8Array([1, 2, 3]))).toBe(false);
   });
 
   test("buffers", () => {

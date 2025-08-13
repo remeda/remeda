@@ -1,4 +1,4 @@
-import type { And, IsEqual, Tagged } from "type-fest";
+import type { And, IsEqual, Or, Tagged } from "type-fest";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -27,13 +27,30 @@ type Emptyish<T> =
           : never
       : never)
   | (T extends ReadonlyMap<infer K, unknown> ? ReadonlyMap<K, never> : never)
-  | (T extends ReadonlySet<unknown> ? ReadonlySet<never> : never)
+  | (T extends ReadonlySet<unknown>
+      ? T extends Set<unknown>
+        ? Tagged<T, typeof EMPTYISH_BRAND>
+        : ReadonlySet<never>
+      : never)
   | (T extends Readonly<Record<PropertyKey, unknown>>
       ? IsBoundedRecord<T> extends true
         ? Partial<T> extends T
           ? { readonly [P in keyof T]: never }
           : never
         : { readonly [P in keyof T]: never }
+      : never)
+  | (T extends { length: number }
+      ? Or<
+          T extends ReadonlyArray<unknown> ? true : false,
+          T extends string ? true : false
+        > extends true
+        ? never
+        : Tagged<T, typeof EMPTYISH_BRAND>
+      : never)
+  | (T extends { size: number }
+      ? T extends ReadonlySet<unknown>
+        ? never
+        : Tagged<T, typeof EMPTYISH_BRAND>
       : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
