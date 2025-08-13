@@ -12,9 +12,9 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  * @param key2 - The second property key.
  * @returns Returns the manipulated object.
  * @signature
- *   swap(data, key1, key2)
+ *   swapProps(data, key1, key2)
  * @example
- *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
+ *   swapProps({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
  * @dataFirst
  * @category Object
  */
@@ -31,9 +31,9 @@ export function swapProps<
  * @param key2 - The second property key.
  * @returns Returns the manipulated object.
  * @signature
- *   swap(key1, key2)(data)
+ *   swapProps(key1, key2)(data)
  * @example
- *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
+ *   swapProps('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
  * @dataLast
  * @category Object
  */
