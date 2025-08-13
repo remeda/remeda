@@ -1,27 +1,39 @@
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type { And, IsEqual, IsNever, Tagged } from "type-fest";
+import { TupleParts } from "./internal/types/TupleParts";
+
+/* v8 ignore next 2 */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
+const EMPTYISH_BRAND = Symbol("emptyish");
 
 type Emptyish<T> =
   | (T extends string ? "" : never)
-  | (T extends ReadonlyArray<unknown> ? readonly [] : never)
+  | (T extends ReadonlyArray<unknown>
+      ? T extends readonly []
+        ? T
+        : And<
+              IsEqual<TupleParts<T>["required"], []>,
+              IsEqual<TupleParts<T>["suffix"], []>
+            > extends true
+          ? T extends Array<unknown>
+            ? And<
+                IsEqual<TupleParts<T>["required"], []>,
+                IsEqual<TupleParts<T>["suffix"], []>
+              > extends true
+              ? Tagged<T, typeof EMPTYISH_BRAND>
+              : never
+            : readonly []
+          : never
+      : never)
   | (T extends ReadonlyMap<infer K, unknown> ? ReadonlyMap<K, never> : never)
   | (T extends ReadonlySet<unknown> ? ReadonlySet<never> : never)
-  //   | (T extends { readonly length: number }
-  //       ? T extends string
-  //         ? never
-  //         : T extends ReadonlyArray<unknown>
-  //           ? never
-  //           : { readonly length: 0 }
-  //       : never)
-  //   | (T extends { readonly size: number } ? { readonly size: 0 } : never)
-  | (T extends object
-      ? T extends ReadonlyArray<unknown>
-        ? never
-        : IsBoundedRecord<T> extends true
-          ? Partial<T> extends T
-            ? { readonly [P in keyof T]: never }
-            : never
-          : { readonly [P in keyof T]: never }
+  | (T extends Readonly<Record<PropertyKey, unknown>>
+      ? IsBoundedRecord<T> extends true
+        ? Partial<T> extends T
+          ? { readonly [P in keyof T]: never }
+          : never
+        : { readonly [P in keyof T]: never }
       : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
@@ -52,7 +64,7 @@ type Emptyish<T> =
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: T | Emptyish<T>,
+  data: T | Readonly<Emptyish<T>>,
 ): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
   if (data === undefined) {
     return true;
@@ -72,7 +84,6 @@ export function isEmptyish<T>(
   }
 
   if ("length" in data && typeof data.length === "number") {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return data.length === 0;
   }
 
