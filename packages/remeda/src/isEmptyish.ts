@@ -3,15 +3,14 @@ import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { TupleParts } from "./internal/types/TupleParts";
 
-/* v8 ignore next 2 */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
-const EMPTYISH_BRAND = Symbol("emptyish");
+declare const EMPTYISH_BRAND: unique symbol;
 
 type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
 
 type Emptyish<T> =
   | (T extends string ? "" : never)
-  | (T extends object ? EmptyishObjectLike<T> : never)
+  | (T extends object ? EmptyishObjectLike<Extract<T, object>> : never)
   | (T extends null ? null : never)
   | (T extends undefined ? undefined : never);
 
@@ -32,11 +31,13 @@ type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
       > extends true
     ? T extends Array<unknown>
       ? Empty<T>
-      : never
-    : readonly [];
+      : readonly []
+    : never;
 
 type EmptyishObject<T> = T extends { length: number }
-  ? Empty<T>
+  ? T extends string
+    ? never
+    : Empty<T>
   : IsBoundedRecord<T> extends true
     ? Partial<T> extends T
       ? { readonly [P in keyof T]: never }
