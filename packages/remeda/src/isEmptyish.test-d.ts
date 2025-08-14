@@ -1,7 +1,7 @@
 import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
-import { isEmptyish } from "./isEmptyish";
 import type { TypedArray } from "../test/typesDataProvider";
+import { isEmptyish } from "./isEmptyish";
 
 describe("strings", () => {
   test("primitives", () => {
