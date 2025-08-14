@@ -526,7 +526,9 @@ describe("plain objects", () => {
   test("readonly unbounded record", () => {
     const data = {} as Readonly<Record<string, string>>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<Readonly<Record<string, never>>>();
+      expectTypeOf(data).branded.toEqualTypeOf<
+        Readonly<Record<string, never>>
+      >();
     } else {
       expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, string>>>();
     }
@@ -637,7 +639,7 @@ describe("plain objects", () => {
   test("readonly optional prop and index signature", () => {
     const data = {} as { readonly a?: string; readonly [key: string]: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<{
+      expectTypeOf(data).branded.toEqualTypeOf<{
         readonly a?: never;
         readonly [key: string]: never;
       }>();
