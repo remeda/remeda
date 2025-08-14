@@ -17,17 +17,21 @@ export function MigrationSelectorIsland({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="truncate">
+        <button className="truncate" type="button">
           {children}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="cursor-pointer" asChild>
-          <a href={`/migrate/v1`}>Remeda@1.61.0</a>
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <a href="/migrate/v1">Remeda@1.61.0</a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {libraries.map((library) => (
-          <DropdownMenuItem key={library} className="capitalize cursor-pointer" asChild>
+          <DropdownMenuItem
+            key={library}
+            asChild
+            className="cursor-pointer capitalize"
+          >
             <a href={`/migrate/${library}`}>{library}</a>
           </DropdownMenuItem>
         ))}

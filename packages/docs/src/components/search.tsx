@@ -21,10 +21,10 @@ const NAVIGATOR = {
 export function Search(): ReactNode {
   return (
     <DocSearch
-      appId={APP_ID}
-      indexName={INDEX_NAME}
       apiKey={API_KEY}
+      appId={APP_ID}
       getMissingResultsUrl={getMissingResultsUrl}
+      indexName={INDEX_NAME}
       navigator={NAVIGATOR}
     />
   );

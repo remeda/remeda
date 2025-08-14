@@ -8,4 +8,5 @@ type Props = {
 const { markdown } = Astro.props;
 ---
 
+{/* eslint-disable-next-line astro/no-set-html-directive -- Intentional! */}
 <Fragment set:html={asHtml(markdown)} />

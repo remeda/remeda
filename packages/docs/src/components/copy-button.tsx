@@ -27,9 +27,9 @@ export function CopyButton({
 
   return (
     <Button
+      className={cn("relative z-10 size-6", className)}
       size="icon"
       variant="ghost"
-      className={cn("relative z-10 size-6", className)}
       onClick={handleClick}
     >
       <span className="sr-only">Copy</span>

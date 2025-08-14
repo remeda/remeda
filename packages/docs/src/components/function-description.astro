@@ -37,7 +37,7 @@ const {
     </CardTitle>
     {
       extractTags(blockTags).map((tag) => (
-        <TagBadge tag={tag} className="h-8" />
+        <TagBadge className="h-8" tag={tag} />
       ))
     }
     <Badge className="hidden h-8 sm:flex">{category}</Badge>

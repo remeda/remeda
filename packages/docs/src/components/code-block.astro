@@ -1,9 +1,6 @@
 ---
-import { cn } from "@/lib/utils";
-import { Code } from "astro:components";
 import { format, type Options } from "prettier";
-
-export const THEME = "poimandres";
+import ThemedCode from "./themed-code.astro";
 
 const PRETTIER_OPTIONS = {
   parser: "typescript",
@@ -19,10 +16,9 @@ const { code, class: class_ } = Astro.props;
 const formattedCode = await format(code, PRETTIER_OPTIONS);
 ---
 
-<Code
-  wrap
-  class={cn("rounded-sm px-4 py-2", class_)}
+<ThemedCode
+  class:list={["rounded-sm px-4 py-2", class_]}
   code={formattedCode}
   lang="typescript"
-  theme={THEME}
+  wrap
 />

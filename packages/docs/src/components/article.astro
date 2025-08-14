@@ -10,11 +10,11 @@ type Props = {
   readonly class?: string;
 };
 
-const { article, id, class: class_ } = Astro.props;
+const { article, ...props } = Astro.props;
 
 const { Content } = await render(article);
 ---
 
-<Prose id={id} class={class_}>
+<Prose {...props}>
   <Content />
 </Prose>

@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
 
 export function MobileNav({
@@ -19,10 +19,14 @@ export function MobileNav({
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleNavbarSelect = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
+    <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
+        <Button className="md:hidden" size="icon" variant="ghost">
           <span className="sr-only">Library navigation menu</span>
           <MenuIcon />
         </Button>
@@ -38,12 +42,7 @@ export function MobileNav({
         <SheetDescription className="sr-only">
           List of all available functions provided by the library.
         </SheetDescription>
-        <Navbar
-          entries={entries}
-          onSelect={() => {
-            setIsOpen(false);
-          }}
-        />
+        <Navbar entries={entries} onSelect={handleNavbarSelect} />
       </SheetContent>
     </Sheet>
   );
