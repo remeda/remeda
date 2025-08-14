@@ -1,7 +1,6 @@
 import type {
   And,
   HasRequiredKeys,
-  HasWritableKeys,
   IsAny,
   IsEqual,
   IsNever,
@@ -12,6 +11,7 @@ import type {
   Tagged,
   ValueOf,
 } from "type-fest";
+import type { HasWritableKeys } from "./internal/types/HasWritableKeys";
 import type { NoInfer } from "./internal/types/NoInfer";
 import type { TupleParts } from "./internal/types/TupleParts";
 
