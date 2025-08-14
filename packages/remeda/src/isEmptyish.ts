@@ -4,6 +4,7 @@ import type {
   HasWritableKeys,
   IsEqual,
   IsNever,
+  IsNumericLiteral,
   IsUnknown,
   OmitIndexSignature,
   Tagged,
@@ -53,17 +54,30 @@ type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
       : readonly []
     : never;
 
-type EmptyishObject<T extends object> = T extends { length: number }
+type EmptyishObject<T extends object> = T extends {
+  length: infer Length extends number;
+}
   ? T extends string
     ? never
-    : Empty<T>
-  : IsNever<ValueOf<T>> extends true
-    ? T
-    : HasRequiredKeys<OmitIndexSignature<T>> extends true
-      ? never
-      : HasWritableKeys<T> extends true
-        ? Empty<T>
-        : { readonly [P in keyof T]: never };
+    : EmptyishArbitrary<T, Length>
+  : T extends { size: infer Size extends number }
+    ? EmptyishArbitrary<T, Size>
+    : IsNever<ValueOf<T>> extends true
+      ? T
+      : HasRequiredKeys<OmitIndexSignature<T>> extends true
+        ? never
+        : HasWritableKeys<T> extends true
+          ? Empty<T>
+          : { readonly [P in keyof T]: never };
+
+type EmptyishArbitrary<T, N> =
+  IsNumericLiteral<N> extends true
+    ? [0] extends [N]
+      ? [N] extends [0]
+        ? T
+        : Empty<T>
+      : never
+    : Empty<T>;
 
 /**
  * A function that checks if the passed parameter is empty.

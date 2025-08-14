@@ -702,6 +702,98 @@ describe("keyed collections", () => {
   });
 });
 
+describe("self-declared sizes", () => {
+  test("primitive length", () => {
+    const data = { length: 0, a: "hello" } as { length: number; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ length: number; a: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ length: number; a: string }>();
+    }
+  });
+
+  test("literal empty length", () => {
+    const data = { length: 0 } as { length: 0; a?: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ length: 0; a?: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("literal non-empty length", () => {
+    const data = { length: 1 } as { length: 1; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ length: 1; a: string }>();
+    }
+  });
+
+  test("literal union of empty and non-empty length", () => {
+    const data = { length: 1 } as { length: 0 | 1; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ length: 0 | 1; a: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ length: 0 | 1; a: string }>();
+    }
+  });
+
+  test("length is optional and readonly", () => {
+    const data = {} as { readonly length?: number };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<{ readonly length?: never }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ readonly length?: number }>();
+    }
+  });
+
+  test("primitive size", () => {
+    const data = { size: 0, a: "hello" } as { size: number; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ size: number; a: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ size: number; a: string }>();
+    }
+  });
+
+  test("literal empty size", () => {
+    const data = { size: 0 } as { size: 0; a?: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ size: 0; a?: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("literal non-empty size", () => {
+    const data = { size: 1 } as { size: 1; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ size: 1; a: string }>();
+    }
+  });
+
+  test("literal union of empty and non-empty size", () => {
+    const data = { size: 1 } as { size: 0 | 1; a: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ size: 0 | 1; a: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ size: 0 | 1; a: string }>();
+    }
+  });
+
+  test("size is optional and readonly", () => {
+    const data = {} as { readonly size?: number };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<{ readonly size?: never }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ readonly size?: number }>();
+    }
+  });
+});
+
 describe("generic types", () => {
   test("non-nullable", () => {
     const data = {} as const;
@@ -734,18 +826,6 @@ describe("generic types", () => {
       expectTypeOf(data).toEqualTypeOf<unknown>();
     }
   });
-});
-
-test("arbitrary sized objects", () => {
-  expectTypeOf(isEmptyish({ length: 0 })).toBe(true);
-  expectTypeOf(isEmptyish({ length: 1 })).toBe(false);
-  expectTypeOf(isEmptyish({ size: 0 })).toBe(true);
-  expectTypeOf(isEmptyish({ size: 1 })).toBe(false);
-});
-
-test("self-declared props are not coerced", () => {
-  expectTypeOf(isEmptyish({ length: "0" })).toBe(false);
-  expectTypeOf(isEmptyish({ size: null })).toBe(false);
 });
 
 test("string objects", () => {
