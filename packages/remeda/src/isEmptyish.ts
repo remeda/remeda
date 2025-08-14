@@ -78,28 +78,37 @@ type EmptyishArbitrary<T, N> =
     : Empty<T>;
 
 /**
- * A function that checks if the passed parameter is empty.
+ * A function that checks if the input is empty. Nullish values (`undefined`
+ * and `null`) are also considered empty(-ish). The function supports array-like
+ * and object-like types too and thus supports *most* built-in types that have
+ * "empty-ish" semantics.
  *
- * `undefined` is also considered empty, but only when it's in a union with a
- * `string` or string-like type.
- *
- * This guard doesn't work negated because of typescript limitations! If you
- * need to check that an array is *not* empty, use `R.hasAtLeast(data, 1)`
- * and not `!R.isEmptyish(data)`. For strings and objects there's no way in
- * typescript to narrow the result to a non-empty type.
+ * This function has *limited* utility at the type level because **negating** it
+ * does not yield a useful type in most cases because of TypeScript
+ * limitations. Additionally, utilities which accept a narrower input type
+ * provide better type-safety on their inputs. In most cases, you should use
+ * one of the following functions instead:
+ * * `isEmpty` - provides better type-safety on inputs by accepting a narrower set of cases.
+ * * `hasAtLeast` - when the input is just an array/tuple.
+ * * `isStrictEqual` - when you just need to check for a specific literal value.
+ * * `isNullish` - when you just care about `null` and `undefined`.
+ * * `isTruthy` - when you need to also filter `number` and `boolean`.
  *
  * @param data - The variable to check.
- * @returns True if the passed input is empty, false otherwise.
  * @signature
  *    R.isEmptyish(data)
  * @example
- *    R.isEmptyish(undefined) //=>true
- *    R.isEmptyish('') //=> true
- *    R.isEmptyish([]) //=> true
- *    R.isEmptyish({}) //=> true
- *    R.isEmptyish('test') //=> false
- *    R.isEmptyish([1, 2, 3]) //=> false
- *    R.isEmptyish({ length: 0 }) //=> true
+ *    R.isEmptyish(undefined); //=> true
+ *    R.isEmptyish(null); //=> true
+ *    R.isEmptyish(''); //=> true
+ *    R.isEmptyish([]); //=> true
+ *    R.isEmptyish({}); //=> true
+ *    R.isEmptyish(new Map()); //=> true
+ *    R.isEmptyish(new Set()); //=> true
+ *
+ *    R.isEmptyish('test'); //=> false
+ *    R.isEmptyish([1, 2, 3]); //=> false
+ *    R.isEmptyish({ a: "hello" }); //=> false
  * @category Guard
  */
 export function isEmptyish<T>(

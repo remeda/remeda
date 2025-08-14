@@ -3,7 +3,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 /**
  * A function that checks if the passed parameter is empty.
  *
- * This function has *limited* utility at the type level because negating it
+ * This function has *limited* utility at the type level because **negating** it
  * does not yield a useful type in most cases because of TypeScript
  * limitations. Additionally, utilities which accept a narrower input type
  * provide better type-safety on their inputs. In most cases, you should use
@@ -15,18 +15,17 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * * `isTruthy` - when you need to also filter `number` and `boolean`.
  *
  * @param data - The variable to check.
- * @returns True if the passed input is empty, false otherwise.
  * @signature
  *    R.isEmpty(data)
  * @example
- *    R.isEmpty('') //=> true
- *    R.isEmpty([]) //=> true
- *    R.isEmpty({}) //=> true
+ *    R.isEmpty(''); //=> true
+ *    R.isEmpty([]); //=> true
+ *    R.isEmpty({}); //=> true
  *
- *    R.isEmpty(undefined) //=> false
- *    R.isEmpty('test') //=> false
- *    R.isEmpty([1, 2, 3]) //=> false
- *    R.isEmpty({ a: "hello" }) //=> false
+ *    R.isEmpty(undefined); //=> false
+ *    R.isEmpty('test'); //=> false
+ *    R.isEmpty([1, 2, 3]); //=> false
+ *    R.isEmpty({ a: "hello" }); //=> false
  * @category Guard
  */
 export function isEmpty(data: IterableContainer): data is [];
