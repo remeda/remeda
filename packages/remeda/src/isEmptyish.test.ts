@@ -90,6 +90,10 @@ describe("keyed collections", () => {
     expect(isEmptyish(object)).toBe(false);
   });
 
+  test("symbol props", () => {
+    expect(isEmptyish({ [Symbol("hello")]: "world" })).toBe(false);
+  });
+
   test("maps", () => {
     expect(isEmptyish(new Map())).toBe(true);
     expect(isEmptyish(new Map([["key", "value"]]))).toBe(false);
@@ -236,13 +240,5 @@ describe("unsupported types", () => {
     // is minimal.
 
     expect(isEmptyish(Object.create({}))).toBe(false);
-  });
-
-  test("objects with non-enumerable props", () => {
-    // Symbol keys in objects are inherently hard to account for, and could be
-    // considered "hidden" when considering emptiness; There's no easy solution
-    // for this anyway.
-
-    expect(isEmptyish({ [Symbol("hello")]: "world" })).toBe(true);
   });
 });

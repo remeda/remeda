@@ -9,7 +9,6 @@ import type {
   Tagged,
   ValueOf,
 } from "type-fest";
-import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
 import type { NarrowedTo } from "./internal/types/NarrowedTo";
 import type { TupleParts } from "./internal/types/TupleParts";
 
@@ -33,11 +32,15 @@ type Emptyish<T> =
 type EmptyishObjectLike<T extends object> =
   T extends ReadonlyArray<unknown>
     ? EmptyishArray<T>
-    : T extends ReadonlySet<unknown>
-      ? T extends Set<unknown>
+    : T extends ReadonlyMap<infer Key, unknown>
+      ? T extends Map<unknown, unknown>
         ? Empty<T>
-        : ReadonlySet<never>
-      : EmptyishObject<T>;
+        : ReadonlyMap<Key, never>
+      : T extends ReadonlySet<unknown>
+        ? T extends Set<unknown>
+          ? Empty<T>
+          : ReadonlySet<never>
+        : EmptyishObject<T>;
 
 type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
   ? T
@@ -91,16 +94,8 @@ export function isEmptyish<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   data: T | Emptyish<T>,
 ): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
-  if (data === undefined) {
-    return true;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (data === null) {
-    return true;
-  }
-
-  if (data === "") {
+  // eslint-disable-next-line eqeqeq
+  if (data == undefined || data === "") {
     return true;
   }
 
@@ -110,6 +105,7 @@ export function isEmptyish<T>(
   }
 
   if ("length" in data && typeof data.length === "number") {
+    // Arrays
     return data.length === 0;
   }
 
@@ -120,9 +116,13 @@ export function isEmptyish<T>(
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is just how TypeScript types it...
   const proto = Object.getPrototypeOf(data);
+  if (proto !== Object.prototype && proto !== null) {
+    return false;
+  }
 
-  return (
-    (proto === Object.prototype || proto === null) &&
-    Object.keys(data).length === 0
-  );
+  for (const _key in data) {
+    return false;
+  }
+
+  return Object.getOwnPropertySymbols(data).length === 0;
 }

@@ -467,7 +467,7 @@ describe("array-like", () => {
   });
 });
 
-describe("keyed collections", () => {
+describe("plain objects", () => {
   test("never record", () => {
     const data = {} as Record<PropertyKey, never>;
     if (isEmptyish(data)) {
@@ -641,6 +641,65 @@ describe("keyed collections", () => {
       }>();
     }
   });
+
+  test("required symbol prop", () => {
+    const mySymbol = Symbol("hello");
+    const data = { [mySymbol]: "world" };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]: string }>();
+    }
+  });
+
+  test("optional symbol prop", () => {
+    const mySymbol = Symbol("hello");
+    const data = {} as { [mySymbol]?: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ [mySymbol]?: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]?: string }>();
+    }
+  });
+
+  test("readonly optional symbol prop", () => {
+    const mySymbol = Symbol("hello");
+    const data = {} as { readonly [mySymbol]?: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: never }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: string }>();
+    }
+  });
+});
+
+describe("keyed collections", () => {
+  test("maps", () => {
+    const data = new Map<string, number>();
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<Map<string, number>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<Map<string, number>>();
+    }
+  });
+
+  test("readonly maps", () => {
+    const data: ReadonlyMap<string, number> = new Map();
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyMap<string, never>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyMap<string, number>>();
+    }
+  });
+
+  test("search params", () => {
+    const data = new URLSearchParams();
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<URLSearchParams>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<URLSearchParams>();
+    }
+  });
 });
 
 describe("generic types", () => {
@@ -675,64 +734,6 @@ describe("generic types", () => {
       expectTypeOf(data).toEqualTypeOf<unknown>();
     }
   });
-});
-
-test("maps", () => {
-  const data = new Map<"a" | "b", number>();
-  if (isEmptyish(data)) {
-    expectTypeOf(data).toEqualTypeOf<ReadonlyMap<"a" | "b", never>>();
-  } else {
-    expectTypeOf(data).toEqualTypeOf<Map<"a" | "b", number>>();
-  }
-});
-
-test("sets", () => {
-  const data = new Set<"a" | "b">();
-  if (isEmptyish(data)) {
-    expectTypeOf(data).toEqualTypeOf<ReadonlySet<"a" | "b", never>>();
-  } else {
-    expectTypeOf(data).toEqualTypeOf<Set<"a" | "b">>();
-  }
-});
-
-test("typed arrays", () => {
-  const data = new Uint8Array();
-  if (isEmptyish(data)) {
-    expectTypeOf(data).toEqualTypeOf<Uint8Array<ArrayBuffer>>();
-  } else {
-    expectTypeOf(data).toEqualTypeOf<Uint8Array<ArrayBuffer>>();
-  }
-});
-
-test("buffers", () => {
-  expectTypeOf(isEmptyish(Buffer.alloc(0))).toBe(true);
-  expectTypeOf(isEmptyish(Buffer.alloc(3))).toBe(false);
-});
-
-test("array-like (e.g., `arguments`)", () => {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  function empty(): void {
-    // eslint-disable-next-line prefer-rest-params
-    expectTypeOf(isEmptyish(arguments)).toBe(true);
-  }
-  empty();
-
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  function nonEmpty(_p0: string, _p1: number, _p2: boolean): void {
-    // eslint-disable-next-line prefer-rest-params
-    expectTypeOf(isEmptyish(arguments)).toBe(false);
-  }
-  nonEmpty("test", 123, true);
-});
-
-test("url search params", () => {
-  expectTypeOf(isEmptyish(new URLSearchParams())).toBe(true);
-  expectTypeOf(isEmptyish(new URLSearchParams(""))).toBe(true);
-  expectTypeOf(isEmptyish(new URLSearchParams("?"))).toBe(true);
-  expectTypeOf(isEmptyish(new URLSearchParams("hello"))).toBe(false);
-  expectTypeOf(isEmptyish(new URLSearchParams({ hello: "world " }))).toBe(
-    false,
-  );
 });
 
 test("arbitrary sized objects", () => {
