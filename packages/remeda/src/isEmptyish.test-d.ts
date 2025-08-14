@@ -386,7 +386,7 @@ describe("all tuple shapes", () => {
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
       // change.
-      expectTypeOf(data).toExtend<readonly []>();
+      expectTypeOf(data).toEqualTypeOf<readonly []>();
     } else {
       expectTypeOf(data).toEqualTypeOf<readonly [number?, ...Array<number>]>();
     }
@@ -478,7 +478,7 @@ describe("plain objects", () => {
   test("never record", () => {
     const data = {} as Record<PropertyKey, never>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<Record<PropertyKey, never>>();
+      expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, never>>();
     } else {
       expectTypeOf(data).toEqualTypeOf<never>();
     }
@@ -722,7 +722,7 @@ describe("self-declared sizes", () => {
   test("literal empty length", () => {
     const data = { length: 0 } as { length: 0; a?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<{ length: 0; a?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ length: 0; a?: string }>();
     } else {
       expectTypeOf(data).toEqualTypeOf<never>();
     }
@@ -767,7 +767,7 @@ describe("self-declared sizes", () => {
   test("literal empty size", () => {
     const data = { size: 0 } as { size: 0; a?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<{ size: 0; a?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ size: 0; a?: string }>();
     } else {
       expectTypeOf(data).toEqualTypeOf<never>();
     }
@@ -806,7 +806,7 @@ describe("generic types", () => {
     const data = {} as const;
     if (isEmptyish(data)) {
       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-      expectTypeOf(data).toExtend<{}>();
+      expectTypeOf(data).toEqualTypeOf<{}>();
     } else {
       // eslint-disable-next-line @typescript-eslint/no-empty-object-type
       expectTypeOf(data).toEqualTypeOf<{}>();
@@ -822,14 +822,14 @@ describe("generic types", () => {
     } else {
       // For any type, the else branch should also be any, not narrowed
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expectTypeOf(data).toExtend<any>();
+      expectTypeOf(data).toEqualTypeOf<any>();
     }
   });
 
   test("unknown", () => {
     const data = "" as unknown;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<unknown>();
+      expectTypeOf(data).toEqualTypeOf<unknown>();
     } else {
       expectTypeOf(data).toEqualTypeOf<unknown>();
     }
