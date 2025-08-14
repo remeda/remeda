@@ -209,7 +209,7 @@ export function isEmptyish(data: unknown): boolean {
     return false;
   }
 
-  // eslint-disable-next-line guard-for-in, no-unreachable-loop -- Instead of taking Object.keys just to check it's length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
+  // eslint-disable-next-line guard-for-in, no-unreachable-loop -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
   for (const _ in data) {
     return false;
   }

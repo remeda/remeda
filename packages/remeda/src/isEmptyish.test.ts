@@ -1,7 +1,7 @@
 import { expect, test, describe } from "vitest";
 import { isEmptyish } from "./isEmptyish";
 
-describe("nullsih", () => {
+describe("nullish", () => {
   test("null", () => {
     expect(isEmptyish(null)).toBe(true);
   });
