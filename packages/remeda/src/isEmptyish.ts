@@ -4,6 +4,8 @@ import type {
   HasWritableKeys,
   IsEqual,
   IsNever,
+  IsUnknown,
+  OmitIndexSignature,
   Tagged,
   ValueOf,
 } from "type-fest";
@@ -17,10 +19,16 @@ declare const EMPTYISH_BRAND: unique symbol;
 type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
 
 type Emptyish<T> =
-  | (T extends string ? "" : never)
-  | (T extends object ? EmptyishObjectLike<T> : never)
-  | (T extends null ? null : never)
-  | (T extends undefined ? undefined : never);
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  IsEqual<T, {}> extends true
+    ? Empty<T>
+    : IsUnknown<T> extends true
+      ? Empty<T>
+      :
+          | (T extends string ? "" : never)
+          | (T extends object ? EmptyishObjectLike<T> : never)
+          | (T extends null ? null : never)
+          | (T extends undefined ? undefined : never);
 
 type EmptyishObjectLike<T extends object> =
   T extends ReadonlyArray<unknown>
@@ -48,12 +56,8 @@ type EmptyishObject<T extends object> = T extends { length: number }
     : Empty<T>
   : IsNever<ValueOf<T>> extends true
     ? T
-    : IsBoundedRecord<T> extends true
-      ? HasRequiredKeys<T> extends true
-        ? never
-        : HasWritableKeys<T> extends true
-          ? Empty<T>
-          : { readonly [P in keyof T]: never }
+    : HasRequiredKeys<OmitIndexSignature<T>> extends true
+      ? never
       : HasWritableKeys<T> extends true
         ? Empty<T>
         : { readonly [P in keyof T]: never };
@@ -84,12 +88,14 @@ type EmptyishObject<T extends object> = T extends { length: number }
  * @category Guard
  */
 export function isEmptyish<T>(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   data: T | Emptyish<T>,
 ): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
   if (data === undefined) {
     return true;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (data === null) {
     return true;
   }

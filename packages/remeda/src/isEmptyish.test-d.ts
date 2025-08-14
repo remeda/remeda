@@ -106,6 +106,7 @@ describe("branded", () => {
 
   test("union of non-empty literals", () => {
     const data = "cat" as Tagged<"cat" | "dog", "brand">;
+    // TODO: SOLVE THIS LAST, THE SOLUTION I FOUND IS TO JUST ADD READONLY TO THE FUNCTION DECLARATION, BUT THAT BREAKS OBJECT TYPES :(
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
@@ -467,16 +468,6 @@ describe("array-like", () => {
 });
 
 describe("keyed collections", () => {
-  test("empty const object", () => {
-    const data = {} as const;
-    if (isEmptyish(data)) {
-      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-      expectTypeOf(data).toEqualTypeOf<{}>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
-  });
-
   test("never record", () => {
     const data = {} as Record<PropertyKey, never>;
     if (isEmptyish(data)) {
@@ -528,7 +519,7 @@ describe("keyed collections", () => {
   test("readonly unbounded record", () => {
     const data = {} as Readonly<Record<string, string>>;
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<Record<string, never>>();
+      expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, never>>>();
     } else {
       expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, string>>>();
     }
@@ -567,7 +558,7 @@ describe("keyed collections", () => {
     }
   });
 
-  test("interfaces", () => {
+  test("required interfaces", () => {
     interface MyInterface {
       a: number;
     }
@@ -576,6 +567,112 @@ describe("keyed collections", () => {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
       expectTypeOf(data).toEqualTypeOf<MyInterface>();
+    }
+  });
+
+  test("optional interfaces", () => {
+    interface MyInterface {
+      a?: number;
+    }
+    const data = {} as MyInterface;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<MyInterface>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<MyInterface>();
+    }
+  });
+
+  test("optional readonly interfaces", () => {
+    interface MyInterface {
+      readonly a?: number;
+    }
+    const data = {} as MyInterface;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<{ readonly a?: never }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<MyInterface>();
+    }
+  });
+
+  test("required prop and index signature", () => {
+    const data = { a: "hello" } as { a: string; [key: string]: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ a: string; [key: string]: string }>();
+    }
+  });
+
+  test("readonly required prop and index signature", () => {
+    const data = { a: "hello" } as {
+      readonly a: string;
+      readonly [key: string]: string;
+    };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a: string;
+        readonly [key: string]: string;
+      }>();
+    }
+  });
+
+  test("optional prop and index signature", () => {
+    const data = {} as { a?: string; [key: string]: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<{ a?: string; [key: string]: string }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{ a?: string; [key: string]: string }>();
+    }
+  });
+
+  test("readonly optional prop and index signature", () => {
+    const data = {} as { readonly a?: string; readonly [key: string]: string };
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a?: never;
+        readonly [key: string]: never;
+      }>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<{
+        readonly a?: string;
+        readonly [key: string]: string;
+      }>();
+    }
+  });
+});
+
+describe("generic types", () => {
+  test("non-nullable", () => {
+    const data = {} as const;
+    if (isEmptyish(data)) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+      expectTypeOf(data).toExtend<{}>();
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+      expectTypeOf(data).toEqualTypeOf<{}>();
+    }
+  });
+
+  test("any", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+    const data = "" as any;
+    if (isEmptyish(data)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expectTypeOf(data).toEqualTypeOf<any>();
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expectTypeOf(data).toEqualTypeOf<any>();
+    }
+  });
+
+  test("unknown", () => {
+    const data = "" as unknown;
+    if (isEmptyish(data)) {
+      expectTypeOf(data).toExtend<unknown>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<unknown>();
     }
   });
 });
