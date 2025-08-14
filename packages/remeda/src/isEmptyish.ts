@@ -116,8 +116,7 @@ export function isEmptyish<T>(
 export function isEmptyish(data: unknown): boolean;
 
 export function isEmptyish(data: unknown): boolean {
-  // eslint-disable-next-line eqeqeq -- The typing makes it so that `null` is not considered a possible value for data at this point, but it is, and we can optimize perf by checking with the non-strict equals operator.
-  if (data == undefined || data === "") {
+  if (data === undefined || data === null || data === "") {
     // These are the only literal values that are considered emptyish.
     return true;
   }
