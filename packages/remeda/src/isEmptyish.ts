@@ -2,6 +2,7 @@ import type {
   And,
   HasRequiredKeys,
   HasWritableKeys,
+  IfAny,
   IsEqual,
   IsNever,
   IsNumericLiteral,
@@ -10,7 +11,7 @@ import type {
   Tagged,
   ValueOf,
 } from "type-fest";
-import type { NarrowedTo } from "./internal/types/NarrowedTo";
+import type { NoInfer } from "./internal/types/NoInfer";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
@@ -105,8 +106,16 @@ type EmptyishArbitrary<T, N> =
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: T | NoInfer<Emptyish<T>>,
-): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
+  data: IfAny<T> extends true ? never : T | Readonly<Emptyish<NoInfer<T>>>,
+): data is IfAny<T> extends true
+  ? never
+  : T extends unknown
+    ? Emptyish<NoInfer<T>>
+    : never;
+
+export function isEmptyish(data: unknown): boolean;
+
+export function isEmptyish(data: unknown): boolean {
   // eslint-disable-next-line eqeqeq -- The typing makes it so that `null` is not considered a possible value for data at this point, but it is, and we can optimize perf by checking with the non-strict equals operator.
   if (data == undefined || data === "") {
     // These are the only literal values that are considered emptyish.
@@ -138,7 +147,7 @@ export function isEmptyish<T>(
     return false;
   }
 
-  // eslint-disable-next-line guard-for-in, no-unreachable-loop, @typescript-eslint/no-for-in-array -- Instead of taking Object.keys just to check it's length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
+  // eslint-disable-next-line guard-for-in, no-unreachable-loop -- Instead of taking Object.keys just to check it's length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
   for (const _ in data) {
     return false;
   }

@@ -811,6 +811,10 @@ describe("generic types", () => {
     if (isEmptyish(data)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expectTypeOf(data).toEqualTypeOf<any>();
+    } else {
+      // For any type, the else branch should also be any, not narrowed
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expectTypeOf(data).toExtend<any>();
     }
   });
 
