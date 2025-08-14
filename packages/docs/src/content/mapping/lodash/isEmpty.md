@@ -1,4 +1,4 @@
 ---
 category: Lang
-remeda: isEmpty
+remeda: isEmptyish
 ---

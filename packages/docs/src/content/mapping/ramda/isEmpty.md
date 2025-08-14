@@ -1,4 +1,4 @@
 ---
 category: Logic
-remeda: isEmpty
+remeda: isEmptyish
 ---
