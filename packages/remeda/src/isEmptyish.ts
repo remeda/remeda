@@ -105,11 +105,11 @@ type EmptyishArbitrary<T, N> =
  * @category Guard
  */
 export function isEmptyish<T>(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-  data: T | Emptyish<T>,
+  data: T | NoInfer<Emptyish<T>>,
 ): data is T extends unknown ? NarrowedTo<T, Emptyish<T>> : never {
-  // eslint-disable-next-line eqeqeq
+  // eslint-disable-next-line eqeqeq -- The typing makes it so that `null` is not considered a possible value for data at this point, but it is, and we can optimize perf by checking with the non-strict equals operator.
   if (data == undefined || data === "") {
+    // These are the only literal values that are considered emptyish.
     return true;
   }
 
@@ -119,24 +119,33 @@ export function isEmptyish<T>(
   }
 
   if ("length" in data && typeof data.length === "number") {
-    // Arrays
+    // Arrays and array-likes.
     return data.length === 0;
   }
 
   if ("size" in data && typeof data.size === "number") {
-    // Maps and Sets
+    // Maps and Sets.
     return data.size === 0;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is just how TypeScript types it...
   const proto = Object.getPrototypeOf(data);
   if (proto !== Object.prototype && proto !== null) {
+    // For plain objects we are next going to check their actual props in order
+    // to assess emptiness, but for any other kind of object we can't rely on
+    // any generic logic to detect emptiness correctly (see the tests for all
+    // cases this covers).
     return false;
   }
 
-  for (const _key in data) {
+  // eslint-disable-next-line guard-for-in, no-unreachable-loop, @typescript-eslint/no-for-in-array -- Instead of taking Object.keys just to check it's length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
+  for (const _ in data) {
     return false;
   }
 
+  // We can't do a similar optimization for symbol props, so we leave them for
+  // the very last check when the object is practically empty. Assuming that
+  // even if an object has a symbol prop, it probably doesn't have thousands of
+  // them.
   return Object.getOwnPropertySymbols(data).length === 0;
 }

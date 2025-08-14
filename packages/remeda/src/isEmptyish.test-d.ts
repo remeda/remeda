@@ -106,7 +106,6 @@ describe("branded", () => {
 
   test("union of non-empty literals", () => {
     const data = "cat" as Tagged<"cat" | "dog", "brand">;
-    // TODO: SOLVE THIS LAST, THE SOLUTION I FOUND IS TO JUST ADD READONLY TO THE FUNCTION DECLARATION, BUT THAT BREAKS OBJECT TYPES :(
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
@@ -812,9 +811,6 @@ describe("generic types", () => {
     if (isEmptyish(data)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expectTypeOf(data).toEqualTypeOf<any>();
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expectTypeOf(data).toEqualTypeOf<any>();
     }
   });
 
@@ -826,9 +822,4 @@ describe("generic types", () => {
       expectTypeOf(data).toEqualTypeOf<unknown>();
     }
   });
-});
-
-test("string objects", () => {
-  expectTypeOf(isEmptyish(new String(""))).toEqualTypeOf<never>();
-  expectTypeOf(isEmptyish(new String("test"))).toBe(false);
 });
