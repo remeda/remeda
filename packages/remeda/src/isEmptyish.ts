@@ -2,12 +2,13 @@ import type {
   And,
   HasRequiredKeys,
   HasWritableKeys,
-  IfAny,
+  IsAny,
   IsEqual,
   IsNever,
   IsNumericLiteral,
   IsUnknown,
   OmitIndexSignature,
+  Or,
   Tagged,
   ValueOf,
 } from "type-fest";
@@ -16,20 +17,16 @@ import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This symbol should only be used for emptyish
 declare const EMPTYISH_BRAND: unique symbol;
-
 type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type ShouldNotNarrow<T> = Or<Or<IsAny<T>, IsUnknown<T>>, IsEqual<T, {}>>;
+
 type Emptyish<T> =
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  IsEqual<T, {}> extends true
-    ? Empty<T>
-    : IsUnknown<T> extends true
-      ? Empty<T>
-      :
-          | (T extends string ? "" : never)
-          | (T extends object ? EmptyishObjectLike<T> : never)
-          | (T extends null ? null : never)
-          | (T extends undefined ? undefined : never);
+  | (T extends string ? "" : never)
+  | (T extends object ? EmptyishObjectLike<T> : never)
+  | (T extends null ? null : never)
+  | (T extends undefined ? undefined : never);
 
 type EmptyishObjectLike<T extends object> =
   T extends ReadonlyArray<unknown>
@@ -106,8 +103,10 @@ type EmptyishArbitrary<T, N> =
  * @category Guard
  */
 export function isEmptyish<T>(
-  data: IfAny<T> extends true ? never : T | Readonly<Emptyish<NoInfer<T>>>,
-): data is IfAny<T> extends true
+  data: ShouldNotNarrow<T> extends true
+    ? never
+    : T | Readonly<Emptyish<NoInfer<T>>>,
+): data is ShouldNotNarrow<T> extends true
   ? never
   : T extends unknown
     ? Emptyish<NoInfer<T>>
