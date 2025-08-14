@@ -1,6 +1,7 @@
 import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { isEmptyish } from "./isEmptyish";
+import type { TypedArray } from "../test/typesDataProvider";
 
 describe("strings", () => {
   test("primitives", () => {
@@ -409,15 +410,15 @@ describe("all tuple shapes", () => {
 
 describe("array-like", () => {
   test("typed arrays", () => {
-    const data = new Int8Array();
+    const data = {} as TypedArray;
     if (isEmptyish(data)) {
       // Typed arrays are either mutable via their underlying buffer, or they
       // do not track their length; in both cases we don't have a narrower type
       // to represent the emptiness.
 
-      expectTypeOf(data).toExtend<Int8Array<ArrayBuffer>>();
+      expectTypeOf(data).toExtend<TypedArray>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<Int8Array<ArrayBuffer>>();
+      expectTypeOf(data).toEqualTypeOf<TypedArray>();
     }
   });
 
