@@ -1,7 +1,14 @@
 import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
-import type { TypedArray } from "../test/typesDataProvider";
 import { isEmptyish } from "./isEmptyish";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This is a trick in order to bypass breaking changes introduced in TypeScript that made TypedArrays like `Int8Array` accept a required type parameter.
+const TYPED_ARRAY = new Int8Array(1);
+export type TypedArray = typeof TYPED_ARRAY;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This is a trick in order to bypass breaking changes introduced in TypeScript that made `Buffer` accept a required type parameter.
+const BUFFER = Buffer.alloc(0);
+export type Buffer = typeof BUFFER;
 
 describe("strings", () => {
   test("primitives", () => {
@@ -423,13 +430,13 @@ describe("array-like", () => {
   });
 
   test("buffers", () => {
-    const data = Buffer.alloc(0);
+    const data = {} as Buffer;
     if (isEmptyish(data)) {
       // There's no way to construct an empty Buffer at the type level.
 
-      expectTypeOf(data).toExtend<Buffer<ArrayBuffer>>();
+      expectTypeOf(data).toExtend<Buffer>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<Buffer<ArrayBuffer>>();
+      expectTypeOf(data).toEqualTypeOf<Buffer>();
     }
   });
 
