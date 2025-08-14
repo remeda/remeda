@@ -36,6 +36,7 @@ export function isEmpty<T extends string>(
   data: T,
 ): data is "" extends T ? "" : never;
 
+// TODO [>2]: remove this overload once we stop supporting `undefined`
 // eslint-disable-next-line jsdoc/require-example, jsdoc/require-param, jsdoc/require-description
 /**
  * @deprecated Use `isEmptyish` instead!
