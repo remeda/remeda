@@ -6,7 +6,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type PreparedLazyOperation = LazyEvaluator & {
+type PreparedLazyFunction = LazyEvaluator & {
   readonly isSingle: boolean;
 
   // These are intentionally mutable, they maintain the lazy piped state.
@@ -14,12 +14,12 @@ type PreparedLazyOperation = LazyEvaluator & {
   items: Array<unknown>;
 };
 
-type LazyOp = LazyDefinition & ((input: unknown) => unknown);
+type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
 /**
  * Perform left-to-right function composition, effectively passing data through
- * functions (transformers) in sequence. Each transforming function takes must
- * take exactly one argument and can return any non-void value.
+ * functions in sequence. Each transforming function must accept exactly one
+ * parameter, and return a non-void value.
  *
  * By taking advantage of Remeda's built-in currying, `pipe` enables you to
  * easily convert deeply nested, onion-like, transformations into a readable
@@ -45,10 +45,11 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  * complete original array.
  *
  * @param data - The input data.
- * @param transformers - Functions that take one argument and return a value.
- * Each function needs to be able to handle the output of the previous function.
+ * @param functions - A sequence of functions that take one argument and return
+ * a value. Each function needs to be able to handle the output of the previous
+ * function.
  * @signature
- *   R.pipe(data, ...transformers);
+ *   R.pipe(data, ...functions);
  * @example
  *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
  *
@@ -66,7 +67,7 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  *      data,
  *      R.map(mapper),
  *      R.filter(predicate),
- *      // `mapper` and `predicate` would only run enough times to generate up3
+ *      // `mapper` and `predicate` would only run enough times to generate up
  *      // to three outputs.
  *      R.take(3),
  *    );
@@ -293,27 +294,27 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...operations: ReadonlyArray<LazyOp | ((value: any) => unknown)>
+  ...functions: ReadonlyArray<LazyFunction | ((value: any) => unknown)>
 ): any {
   let output = input;
 
-  const lazyOperations = operations.map((op) =>
-    "lazy" in op ? prepareLazyOperation(op) : undefined,
+  const lazyFunctions = functions.map((op) =>
+    "lazy" in op ? prepareLazyFunction(op) : undefined,
   );
 
-  let operationIndex = 0;
-  while (operationIndex < operations.length) {
-    const lazyOperation = lazyOperations[operationIndex];
-    if (lazyOperation === undefined || !isIterable(output)) {
-      const operation = operations[operationIndex]!;
-      output = operation(output);
-      operationIndex += 1;
+  let functionIndex = 0;
+  while (functionIndex < functions.length) {
+    const lazyFunction = lazyFunctions[functionIndex];
+    if (lazyFunction === undefined || !isIterable(output)) {
+      const func = functions[functionIndex]!;
+      output = func(output);
+      functionIndex += 1;
       continue;
     }
 
-    const lazySequence: Array<PreparedLazyOperation> = [];
-    for (let index = operationIndex; index < operations.length; index++) {
-      const lazyOp = lazyOperations[index];
+    const lazySequence: Array<PreparedLazyFunction> = [];
+    for (let index = functionIndex; index < functions.length; index++) {
+      const lazyOp = lazyFunctions[index];
       if (lazyOp === undefined) {
         break;
       }
@@ -335,7 +336,7 @@ export function pipe(
 
     const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
-    operationIndex += lazySequence.length;
+    functionIndex += lazySequence.length;
   }
   return output;
 }
@@ -345,7 +346,7 @@ function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: Array<unknown>,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: ReadonlyArray<PreparedLazyOperation>,
+  lazySequence: ReadonlyArray<PreparedLazyFunction>,
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -356,7 +357,7 @@ function processItem(
 
   let lazyResult: LazyResult<any> = SKIP_ITEM;
   let isDone = false;
-  for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
+  for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
     items.push(currentItem);
     lazyResult = lazyFn(currentItem, index, items);
@@ -367,7 +368,7 @@ function processItem(
           const subResult = processItem(
             subItem,
             accumulator,
-            lazySequence.slice(operationsIndex + 1),
+            lazySequence.slice(functionsIndex + 1),
           );
           if (subResult) {
             return true;
@@ -392,8 +393,8 @@ function processItem(
   return isDone;
 }
 
-function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
-  const { lazy, lazyArgs } = op;
+function prepareLazyFunction(func: LazyFunction): PreparedLazyFunction {
+  const { lazy, lazyArgs } = func;
   const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
     isSingle: lazy.single ?? false,
