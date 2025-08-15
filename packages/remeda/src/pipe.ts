@@ -19,15 +19,83 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 /**
  * Perform left-to-right function composition.
  *
- * @param value - The initial value.
- * @param operations - The list of operations to apply.
+ * By taking advantage of Remeda's built-in currying, `pipe` enables you to
+ * easily convert deeply nested, onion-like, transformations into a readable
+ * top-to-bottom data flow that matches how you think about the transformation.
+ *
+ * When two or more consecutive functions are marked with `@lazy` (e.g., `map`,
+ * `filter`, `take`, `drop`, `forEach`, etc...) they are evaluated lazily in an
+ * iterator-like chain, allowing partial evaluation via optimistic early
+ * termination.
+ *
+ * A "headless" variant of `pipe` that doesn't take an initial data value and
+ * instead returns a callback that accepts the data is available as `piped`.
+ * This version is useful when creating pipes as callbacks to other functions.
+ *
+ * Functions are only considered for lazy evaluation when their data-last form
+ * is used directly within `pipe` (or `piped`). To disable lazy evaluation you
+ * can call your function data-first via an arrow function, e.g., replace
+ * `map(callback)` within a pipe with `($) => map($, callback)`.
+ *
+ * IMPORTANT: When functions are evaluated lazily, callbacks that use the third
+ * parameter (the input array) receive only the items processed so far, not the
+ * complete original array.
+ *
+ * @param value - The initial value to transform.
+ * @param operations - Functions to apply in sequence. Remeda functions
+ * automatically curry to data-last form.
  * @signature R.pipe(data, op1, op2, op3)
  * @example
+ *    // = Basic transformation pipeline =
  *    R.pipe(
  *      [1, 2, 3, 4],
  *      R.map(x => x * 2),
- *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
- *    ) // => [6, 14]
+ *      R.filter(x => x > 4),
+ *      R.take(1)
+ *    ); // => [6]
+ *
+ *    // = Mix Remeda functions with custom logic =
+ *    R.pipe(
+ *      "hello world",
+ *      R.split(" "),
+ *      R.map(R.capitalize),
+ *      words => words.join(" ")
+ *    ); // => "Hello World"
+ *
+ *    // = Complex data processing with early termination =
+ *    R.pipe(
+ *      users,
+ *      R.filter(u => u.isActive),
+ *      R.map(u => ({ ...u, score: calculateScore(u) })),
+ *      R.take(10)  // Only processes until 10 results found
+ *    );
+ *
+ *    // = Converting nested transformations to a pipe =
+ *    // From this:
+ *    const result = first(
+ *      filter(
+ *        when(
+ *          prop(
+ *            groupBy(map(data, add(3)), ($) => ($ % 2 ? "odd" : "even")),
+ *            "even",
+ *          ),
+ *          isNullish,
+ *          constant([]),
+ *        ),
+ *        ($) => $ > 10,
+ *      ),
+ *    );
+ *
+ *    // To this:
+ *    const result = pipe(
+ *      data,
+ *      map(add(3)),
+ *      groupBy(($) => ($ % 2 ? "odd" : "even")),
+ *      prop("even"),
+ *      when(isNullish, constant([])),
+ *      filter(($) => $ > 10),
+ *      first(),
+ *    );
  * @dataFirst
  * @category Function
  */
