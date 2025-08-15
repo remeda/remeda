@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-param -- We don't document the ops */
+/* eslint-disable jsdoc/require-param -- We don't document the funcs */
 
 import { pipe } from "./pipe";
 
@@ -14,11 +14,11 @@ import { pipe } from "./pipe";
  * "headless" pipe (you'd have to define *all* the type params for it to work).
  * We don't recommend using `piped` for this, and instead define your own
  * function and use `pipe` internally instead; e.g.,
- *   `const foo = (data: Data) => pipe(data, ...transformers);`
- *    and **not**: `const foo = piped<Data, ...>(transformers);`.
+ *   `const foo = (data: Data) => pipe(data, ...functions);`
+ *    and **not**: `const foo = piped<Data, ...>(functions);`.
  *
  * @signature
- *    R.piped(...transformers)(data);
+ *    R.piped(...functions)(data);
  * @example
  *    R.map(
  *      [{ a: 1 }, { a: 2 }, { a: 3 }],
@@ -27,60 +27,60 @@ import { pipe } from "./pipe";
  * @dataLast
  * @category Function
  */
-export function piped<A, B>(op1: (input: A) => B): (data: A) => B;
+export function piped<A, B>(func0: (input: A) => B): (data: A) => B;
 
 export function piped<A, B, C>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
 ): (data: A) => C;
 
 export function piped<A, B, C, D>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
+  func2: (input: C) => D,
 ): (data: A) => D;
 
 export function piped<A, B, C, D, E>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
+  func2: (input: C) => D,
+  func3: (input: D) => E,
 ): (data: A) => E;
 
 export function piped<A, B, C, D, E, F>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
+  func2: (input: C) => D,
+  func3: (input: D) => E,
+  func4: (input: E) => F,
 ): (data: A) => F;
 
 export function piped<A, B, C, D, E, F, G>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
+  func2: (input: C) => D,
+  func3: (input: D) => E,
+  func4: (input: E) => F,
+  func5: (input: F) => G,
 ): (data: A) => G;
 
 export function piped<A, B, C, D, E, F, G, H>(
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
-  op7: (input: G) => H,
+  func0: (input: A) => B,
+  func1: (input: B) => C,
+  func2: (input: C) => D,
+  func3: (input: D) => E,
+  func4: (input: E) => F,
+  func5: (input: F) => G,
+  func6: (input: G) => H,
 ): (data: A) => H;
 
 export function piped(
-  ...operations: ReadonlyArray<(input: unknown) => unknown>
+  ...functions: ReadonlyArray<(input: unknown) => unknown>
 ) {
   return (value: unknown): unknown =>
     pipe(
       value,
       // @ts-expect-error [ts2556] - We can't avoid this error because pipe is typed for users and this is an internal function
-      ...operations,
+      ...functions,
     );
 }
