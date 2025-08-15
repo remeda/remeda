@@ -17,7 +17,9 @@ type PreparedLazyOperation = LazyEvaluator & {
 type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 
 /**
- * Perform left-to-right function composition.
+ * Perform left-to-right function composition, effectively passing data through
+ * functions (transformers) in sequence. Each transforming function takes must
+ * take exactly one argument and can return any non-void value.
  *
  * By taking advantage of Remeda's built-in currying, `pipe` enables you to
  * easily convert deeply nested, onion-like, transformations into a readable
@@ -26,7 +28,8 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  * When two or more consecutive functions are marked with `@lazy` (e.g., `map`,
  * `filter`, `take`, `drop`, `forEach`, etc...) they are evaluated lazily in an
  * iterator-like chain, allowing partial evaluation via optimistic early
- * termination.
+ * termination. By designing the pipes to take advantage of this, expensive
+ * computations could be skipped entirely if not needed.
  *
  * A "headless" variant of `pipe` that doesn't take an initial data value and
  * instead returns a callback that accepts the data is available as `piped`.
@@ -41,37 +44,35 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  * parameter (the input array) receive only the items processed so far, not the
  * complete original array.
  *
- * @param value - The initial value to transform.
- * @param operations - Functions to apply in sequence. Remeda functions
- * automatically curry to data-last form.
- * @signature R.pipe(data, op1, op2, op3)
+ * @param data - The input data.
+ * @param transformers - Functions that take one argument and return a value.
+ * Each function needs to be able to handle the output of the previous function.
+ * @signature
+ *   R.pipe(data, ...transformers);
  * @example
- *    // = Basic transformation pipeline =
- *    R.pipe(
- *      [1, 2, 3, 4],
- *      R.map(x => x * 2),
- *      R.filter(x => x > 4),
- *      R.take(1)
- *    ); // => [6]
+ *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
  *
- *    // = Mix Remeda functions with custom logic =
+ *    // = Custom logic within a pipe =
  *    R.pipe(
- *      "hello world",
- *      R.split(" "),
- *      R.map(R.capitalize),
- *      words => words.join(" ")
- *    ); // => "Hello World"
- *
- *    // = Complex data processing with early termination =
- *    R.pipe(
- *      users,
- *      R.filter(u => u.isActive),
- *      R.map(u => ({ ...u, score: calculateScore(u) })),
- *      R.take(10)  // Only processes until 10 results found
+ *      data,
+ *      R.map(...),
+ *      ($) => foo(param0, $, param2, ...),
+ *      R.split(...),
+ *      // etc...
  *    );
  *
- *    // = Converting nested transformations to a pipe =
- *    // From this:
+ *    // = Lazy evaluation =
+ *    R.pipe(
+ *      data,
+ *      R.map(mapper),
+ *      R.filter(predicate),
+ *      // `mapper` and `predicate` would only run enough times to generate up3
+ *      // to three outputs.
+ *      R.take(3),
+ *    );
+ *
+ *    // = Migrating nested transformations to pipes =
+ *    // The following computation can be migrated to the pipe below
  *    const result = first(
  *      filter(
  *        when(
@@ -86,7 +87,6 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  *      ),
  *    );
  *
- *    // To this:
  *    const result = pipe(
  *      data,
  *      map(add(3)),
@@ -96,28 +96,41 @@ type LazyOp = LazyDefinition & ((input: unknown) => unknown);
  *      filter(($) => $ > 10),
  *      first(),
  *    );
+ *
+ *    // = Using the 3rd param of a callback =
+ *    // The following would print out `data` in its entirety for each value
+ *    // of `data`.
+ *    forEach([1, 2, 3, 4], (_item, _index, data) => {
+ *      console.log(data);
+ *    }); //=> "[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]"
+ *
+ *    // But with `pipe` data would only contain the items up to the current
+ *    // index
+ *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
+ *      console.log(data);
+ *    })); //=> "[1], [1, 2], [1, 2, 3], [1, 2, 3, 4]"
  * @dataFirst
  * @category Function
  */
-export function pipe<A>(value: A): A;
+export function pipe<A>(data: A): A;
 
-export function pipe<A, B>(value: A, op1: (input: A) => B): B;
+export function pipe<A, B>(data: A, op1: (input: A) => B): B;
 
 export function pipe<A, B, C>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
 ): C;
 
 export function pipe<A, B, C, D>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
 ): D;
 
 export function pipe<A, B, C, D, E>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -125,7 +138,7 @@ export function pipe<A, B, C, D, E>(
 ): E;
 
 export function pipe<A, B, C, D, E, F>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -134,7 +147,7 @@ export function pipe<A, B, C, D, E, F>(
 ): F;
 
 export function pipe<A, B, C, D, E, F, G>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -144,7 +157,7 @@ export function pipe<A, B, C, D, E, F, G>(
 ): G;
 
 export function pipe<A, B, C, D, E, F, G, H>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -155,7 +168,7 @@ export function pipe<A, B, C, D, E, F, G, H>(
 ): H;
 
 export function pipe<A, B, C, D, E, F, G, H, I>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -167,7 +180,7 @@ export function pipe<A, B, C, D, E, F, G, H, I>(
 ): I;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J>(
-  value: A,
+  data: A,
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
@@ -180,7 +193,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J>(
 ): J;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
@@ -194,7 +207,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
 ): K;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
@@ -209,7 +222,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
 ): L;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
@@ -225,7 +238,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
 ): M;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
@@ -242,7 +255,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
 ): N;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
@@ -260,7 +273,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
 ): O;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  value: A,
+  data: A,
   op01: (input: A) => B,
   op02: (input: B) => C,
   op03: (input: C) => D,
