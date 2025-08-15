@@ -56,9 +56,9 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    // = Custom logic within a pipe =
  *    R.pipe(
  *      data,
- *      R.map(...),
- *      ($) => foo(param0, $, param2, ...),
- *      R.split(...),
+ *      R.map(mapper),
+ *      ($) => foo(param0, $, param2),
+ *      R.split(""),
  *      // etc...
  *    );
  *
