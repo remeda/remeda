@@ -27,51 +27,51 @@ import { pipe } from "./pipe";
  * @dataLast
  * @category Function
  */
-export function piped<A, B>(func0: (input: A) => B): (data: A) => B;
+export function piped<A, B>(funcA: (input: A) => B): (data: A) => B;
 
 export function piped<A, B, C>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
 ): (data: A) => C;
 
 export function piped<A, B, C, D>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
-  func2: (input: C) => D,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
 ): (data: A) => D;
 
 export function piped<A, B, C, D, E>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
-  func2: (input: C) => D,
-  func3: (input: D) => E,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
 ): (data: A) => E;
 
 export function piped<A, B, C, D, E, F>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
-  func2: (input: C) => D,
-  func3: (input: D) => E,
-  func4: (input: E) => F,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
 ): (data: A) => F;
 
 export function piped<A, B, C, D, E, F, G>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
-  func2: (input: C) => D,
-  func3: (input: D) => E,
-  func4: (input: E) => F,
-  func5: (input: F) => G,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
 ): (data: A) => G;
 
 export function piped<A, B, C, D, E, F, G, H>(
-  func0: (input: A) => B,
-  func1: (input: B) => C,
-  func2: (input: C) => D,
-  func3: (input: D) => E,
-  func4: (input: E) => F,
-  func5: (input: F) => G,
-  func6: (input: G) => H,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
 ): (data: A) => H;
 
 export function piped(
