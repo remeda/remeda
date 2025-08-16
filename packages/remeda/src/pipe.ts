@@ -24,15 +24,15 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * function is returned from pipe. In most cases functions are run serially,
  * one after the other, from top-to-bottom (or left-to-right).
  *
- * When two or more consecutive functions are marked with `@lazy` (e.g., `map`,
- * `filter`, `take`, `drop`, `forEach`, etc...) their inputs are broken down
- * and evaluated lazily, item-by-item, in an iterator-like chain, allowing
- * partial evaluation via optimistic early termination. This is done
- * automatically and without any special syntax or configuration. A pipe may
- * contain as many sequences of lazy functions of any length; with no
- * limitations. By designing the pipes to take advantage of this, expensive
- * computations are avoided and less intermediate data needs to be handled,
- * stored, and garbage collected.
+ * When two or more functions with a `lazy` tag in their documentation (e.g.,
+ * `map`, `filter`, `take`, `drop`, `forEach`, etc...) are used *consecutively*
+ * inside a pipe, their inputs are broken down and evaluated lazily item-
+ * by-item, in an iterator-like chain, allowing partial evaluation via
+ * optimistic early termination. This is done automatically and without any
+ * additional code or configuration. A pipe may contain as many sequences of
+ * lazy functions of any length; with no limitations. By designing the pipes to
+ * take advantage of this, expensive computations are avoided and less
+ * intermediate data needs to be handled, stored, and garbage collected.
  *
  * By taking advantage of Remeda's built-in currying, `pipe` enables you to
  * easily convert deeply nested, onion-like, transformations, or sequences
