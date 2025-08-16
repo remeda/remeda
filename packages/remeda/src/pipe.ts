@@ -20,9 +20,12 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * Performs left-to-right function composition, passing data through its
  * functions in sequence. Functions are invoked with the returned value of their
  * predecessors (similar to how the unix pipe operator works), and with the
- * first function being called with the input data, and the result of last
- * function is returned from pipe. In most cases functions are run serially,
- * one after the other, from top-to-bottom (or left-to-right).
+ * first function being called with the input data. Functions are run serially,
+ * one after the other. By taking advantage of Remeda's built-in currying,
+ * `pipe` enables you to easily convert deeply nested, onion-like,
+ * transformations, or sequences of computations, into a readable top-to-bottom
+ * data flow that matches how the transformation is executed, and without
+ * needing to come up with a bunch of temporary variable names.
  *
  * When two or more functions with a `lazy` tag in their documentation (e.g.,
  * `map`, `filter`, `take`, `drop`, `forEach`, etc...) are used *consecutively*
@@ -36,15 +39,9 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * computations are avoided and less intermediate data needs to be handled,
  * stored, and garbage collected.
  *
- * By taking advantage of Remeda's built-in currying, `pipe` enables you to
- * easily convert deeply nested, onion-like, transformations, or sequences
- * of transformation defining multiple temporary variables, into a readable
- * top-to-bottom data flow that matches how the transformation is executed.
- * (see example).
- *
  * Pipes can be built using any function, and not just Remeda utility
  * functions. For more advanced cases check out the `purry` utility which also
- * provides a way to provide a lazy variant for your function. (see example).
+ * provides a way to provide a lazy variant for your function.
  *
  * A "headless" variant of `pipe` that doesn't take an initial data value and
  * instead returns a callback is available as `piped`. This version is useful
@@ -58,7 +55,7 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *
  * IMPORTANT: When functions are evaluated lazily, callbacks that use the third
  * parameter (the input array) receive only the items processed so far, not the
- * complete original array. (See example).
+ * complete original array.
  *
  * @param data - The input data.
  * @param functions - A sequence of functions that take exactly one argument
