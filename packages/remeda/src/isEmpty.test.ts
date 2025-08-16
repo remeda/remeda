@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { isEmpty } from "./isEmpty";
 
 test("returns true for an empty array", () => {
@@ -25,6 +25,9 @@ test("returns false for a non-empty object", () => {
   expect(isEmpty({ length: 0 })).toBe(false);
 });
 
-test("returns true for undefined", () => {
-  expect(isEmpty(undefined)).toBe(true);
+describe("deprecated `string | undefined` support", () => {
+  test("returns true for undefined", () => {
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    expect(isEmpty(undefined)).toBe(true);
+  });
 });
