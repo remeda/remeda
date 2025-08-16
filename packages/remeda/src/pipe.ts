@@ -28,11 +28,13 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * `map`, `filter`, `take`, `drop`, `forEach`, etc...) are used *consecutively*
  * inside a pipe, their inputs are broken down and evaluated lazily item-
  * by-item, in an iterator-like chain, allowing partial evaluation via
- * optimistic early termination. This is done automatically and without any
- * additional code or configuration. A pipe may contain as many sequences of
- * lazy functions of any length; with no limitations. By designing the pipes to
- * take advantage of this, expensive computations are avoided and less
- * intermediate data needs to be handled, stored, and garbage collected.
+ * optimistic early termination (only the items needed to compute the output
+ * would be processed, and any additional items would be ignored). This is done
+ * automatically and without any additional code or configuration. A pipe may
+ * contain as many sequences of lazy functions of any length; with no
+ * limitations. By designing the pipes to take advantage of this, expensive
+ * computations are avoided and less intermediate data needs to be handled,
+ * stored, and garbage collected.
  *
  * By taking advantage of Remeda's built-in currying, `pipe` enables you to
  * easily convert deeply nested, onion-like, transformations, or sequences
