@@ -17,23 +17,37 @@ type PreparedLazyFunction = LazyEvaluator & {
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
 /**
- * Perform left-to-right function composition, effectively passing data through
- * functions in sequence. Each transforming function must accept exactly one
- * parameter, and return a non-void value.
- *
- * By taking advantage of Remeda's built-in currying, `pipe` enables you to
- * easily convert deeply nested, onion-like, transformations into a readable
- * top-to-bottom data flow that matches how you think about the transformation.
+ * Performs left-to-right function composition, passing data through its
+ * functions in sequence. Functions are invoked with the returned value of their
+ * predecessors (similar to how the unix pipe operator works), and with the
+ * first function being called with the input data, and the result of last
+ * function is returned from pipe. In most cases functions are run serially,
+ * one after the other, from top-to-bottom (or left-to-right).
  *
  * When two or more consecutive functions are marked with `@lazy` (e.g., `map`,
- * `filter`, `take`, `drop`, `forEach`, etc...) they are evaluated lazily in an
- * iterator-like chain, allowing partial evaluation via optimistic early
- * termination. By designing the pipes to take advantage of this, expensive
- * computations could be skipped entirely if not needed.
+ * `filter`, `take`, `drop`, `forEach`, etc...) their inputs are broken down
+ * and evaluated lazily, item-by-item, in an iterator-like chain, allowing
+ * partial evaluation via optimistic early termination. This is done
+ * automatically and without any special syntax or configuration. A pipe may
+ * contain as many sequences of lazy functions of any length; with no
+ * limitations. By designing the pipes to take advantage of this, expensive
+ * computations are avoided and less intermediate data needs to be handled,
+ * stored, and garbage collected.
+ *
+ * By taking advantage of Remeda's built-in currying, `pipe` enables you to
+ * easily convert deeply nested, onion-like, transformations, or sequences
+ * of transformation defining multiple temporary variables, into a readable
+ * top-to-bottom data flow that matches how the transformation is executed.
+ * (see example).
+ *
+ * Pipes can be built using any function, and not just Remeda utility
+ * functions. For more advanced cases check out the `purry` utility which also
+ * provides a way to provide a lazy variant for your function. (see example).
  *
  * A "headless" variant of `pipe` that doesn't take an initial data value and
- * instead returns a callback that accepts the data is available as `piped`.
- * This version is useful when creating pipes as callbacks to other functions.
+ * instead returns a callback is available as `piped`. This version is useful
+ * when creating pipes as callbacks to other functions; e.g., instead of doing
+ * `foo(($) => pipe($, ...functions))` use `foo(piped(functions))`.
  *
  * Functions are only considered for lazy evaluation when their data-last form
  * is used directly within `pipe` (or `piped`). To disable lazy evaluation you
@@ -42,25 +56,15 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *
  * IMPORTANT: When functions are evaluated lazily, callbacks that use the third
  * parameter (the input array) receive only the items processed so far, not the
- * complete original array.
+ * complete original array. (See example).
  *
  * @param data - The input data.
- * @param functions - A sequence of functions that take one argument and return
- * a value. Each function needs to be able to handle the output of the previous
- * function.
+ * @param functions - A sequence of functions that take exactly one argument
+ * and return a non-void value.
  * @signature
  *   R.pipe(data, ...functions);
  * @example
  *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
- *
- *    // = Custom logic within a pipe =
- *    R.pipe(
- *      data,
- *      R.map(mapper),
- *      ($) => foo(param0, $, param2),
- *      R.split(""),
- *      // etc...
- *    );
  *
  *    // = Lazy evaluation =
  *    R.pipe(
@@ -70,6 +74,15 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *      // `mapper` and `predicate` would only run enough times to generate up
  *      // to three outputs.
  *      R.take(3),
+ *    );
+ *
+ *    // = Custom logic within a pipe =
+ *    R.pipe(
+ *      data,
+ *      R.map(mapper),
+ *      ($) => foo(param0, $, param2),
+ *      R.split(""),
+ *      // etc...
  *    );
  *
  *    // = Migrating nested transformations to pipes =
