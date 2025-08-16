@@ -22,10 +22,11 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  *    R.isEmpty([]); //=> true
  *    R.isEmpty({}); //=> true
  *
- *    R.isEmpty(undefined); //=> false
  *    R.isEmpty('test'); //=> false
  *    R.isEmpty([1, 2, 3]); //=> false
  *    R.isEmpty({ a: "hello" }); //=> false
+ *
+ *    R.isEmpty(undefined); // Deprecated: use `isEmptyish`
  * @category Guard
  */
 export function isEmpty(data: IterableContainer): data is [];
@@ -36,7 +37,7 @@ export function isEmpty<T extends string>(
   data: T,
 ): data is "" extends T ? "" : never;
 
-// TODO [>2]: remove this overload once we stop supporting `undefined`
+// TODO [>2]: remove this overload once we stop supporting `undefined`.
 // eslint-disable-next-line jsdoc/require-example, jsdoc/require-param, jsdoc/require-description
 /**
  * @deprecated Use `isEmptyish` instead!
@@ -50,7 +51,7 @@ export function isEmpty<T extends string | undefined>(
 export function isEmpty(data: object | string | undefined): boolean {
   if (
     data === "" ||
-    // TODO [>2]: remove `undefined` support!
+    // TODO [>2]: remove `undefined` support! (don't forget to update the jsdoc example too!)
     data === undefined
   ) {
     return true;
