@@ -3,19 +3,17 @@
 import { pipe } from "./pipe";
 
 /**
- * A data-last wrapper for `pipe`. See the documentation for that function for
- * more information.
+ * Data-last version of `pipe`. See `pipe` documentation for full details.
  *
- * Use this utility for building callbacks for functions like `map` and `filter`
- * where the data type could be inferred from the call site.
+ * Use `piped` when you need to pass a transformation as a callback to
+ * functions like `map` and `filter`, where the data type can be inferred
+ * from the call site.
  *
- * IMPORTANT: TypeScript doesn't support defining only some of a function's
- * type-params, making it hard to use `piped` as a general-purpose data-last
- * "headless" pipe (you'd have to define *all* the type params for it to work).
- * We don't recommend using `piped` for this, and instead define your own
- * function and use `pipe` internally instead; e.g.,
- *   `const foo = (data: Data) => pipe(data, ...functions);`
- *    and **not**: `const foo = piped<Data, ...>(functions);`.
+ * IMPORTANT: `piped` does not work as a "function factory" in order to create
+ * standalone utility functions; because TypeScript cannot infer the input data
+ * type (without requiring to explicitly define all type params for all
+ * functions in the pipe). We recommend defining the function explicitly, and
+ * then use `pipe` in its implementation.
  *
  * @signature
  *    R.piped(...functions)(data);
