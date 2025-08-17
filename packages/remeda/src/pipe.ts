@@ -92,21 +92,13 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    // of `data`.
  *    R.forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
- *    });
- *    //=> [1, 2, 3, 4]
- *    //=> [1, 2, 3, 4]
- *    //=> [1, 2, 3, 4]
- *    //=> [1, 2, 3, 4]
+ *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
  *    // index
  *    R.pipe([1, 2, 3, 4], R.forEach((_item, _index, data) => {
  *      console.log(data);
- *    }));
- *    //=> [1]
- *    //=> [1, 2]
- *    //=> [1, 2, 3]
- *    //=> [1, 2, 3, 4]
+ *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
  * @dataFirst
  * @category Function
  */
