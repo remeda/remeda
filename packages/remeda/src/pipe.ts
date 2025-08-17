@@ -17,111 +17,96 @@ type PreparedLazyFunction = LazyEvaluator & {
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
 /**
- * Performs left-to-right function composition, passing data through its
- * functions in sequence. Functions are invoked with the returned value of their
- * predecessors (similar to how the unix pipe operator works), and with the
- * first function being called with the input data. Functions are run serially,
- * one after the other. By taking advantage of Remeda's built-in currying,
- * `pipe` enables you to easily convert deeply nested, onion-like,
- * transformations, or sequences of computations, into a readable top-to-bottom
- * data flow that matches how the transformation is executed, and without
- * needing to come up with a bunch of temporary variable names.
+ * Performs left-to-right function composition, passing data through functions
+ * in sequence. Each function receives the output of the previous function,
+ * creating a readable top-to-bottom data flow that matches how the
+ * transformation is executed. This enables converting deeply nested function
+ * calls into clear, sequential steps without temporary variables.
  *
- * When two or more functions with a `lazy` tag in their documentation (e.g.,
- * `map`, `filter`, `take`, `drop`, `forEach`, etc...) are used *consecutively*
- * inside a pipe, their inputs are broken down and evaluated lazily item-
- * by-item, in an iterator-like chain, allowing partial evaluation via
- * optimistic early termination (only the items needed to compute the output
- * would be processed, and any additional items would be ignored). This is done
- * automatically and without any additional code or configuration. A pipe may
- * contain as many sequences of lazy functions of any length; with no
- * limitations. By designing the pipes to take advantage of this, expensive
- * computations are avoided and less intermediate data needs to be handled,
- * stored, and garbage collected.
+ * When consecutive functions with a `lazy` tag (e.g., `map`, `filter`, `take`,
+ * `drop`, `forEach`, etc...) are used together, they process data item-by-item
+ * rather than creating intermediate arrays. This enables early termination
+ * when only partial results are needed, improving performance for large
+ * datasets and expensive operations.
  *
- * Pipes can be built using any function, and not just Remeda utility
- * functions. For more advanced cases check out the `purry` utility which also
- * provides a way to provide a lazy variant for your function.
+ * Functions are only evaluated lazily when their data-last form is used
+ * directly in the pipe. To disable lazy evaluation, use data-first calls via
+ * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
  *
- * A "headless" variant of `pipe` that doesn't take an initial data value and
- * instead returns a callback is available as `piped`. This version is useful
- * when creating pipes as callbacks to other functions; e.g., instead of doing
- * `foo(($) => pipe($, ...functions))` use `foo(piped(functions))`.
+ * Any function can be used in pipes, not just Remeda utilities. For creating
+ * custom functions with currying and lazy evaluation support, see the `purry`
+ * utility.
  *
- * Functions are only considered for lazy evaluation when their data-last form
- * is used directly within `pipe` (or `piped`). To disable lazy evaluation you
- * can call your function data-first via an arrow function, e.g., replace
- * `map(callback)` within a pipe with `($) => map($, callback)`.
+ * A "headless" variant `piped` is available for creating reusable pipe
+ * functions without initial data.
  *
- * IMPORTANT: When functions are evaluated lazily, callbacks that use the third
- * parameter (the input array) receive only the items processed so far, not the
- * complete original array.
+ * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
+ * input array) receive only items processed up to that point, not the complete
+ * array.
  *
  * @param data - The input data.
- * @param functions - A sequence of functions that take exactly one argument
- * and return a non-void value.
+ * @param functions - A sequence of functions that take one argument and
+ * return a value.
  * @signature
  *   R.pipe(data, ...functions);
  * @example
  *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
  *
- *    // = Lazy evaluation =
+ *    // = Early termination with lazy evaluation =
  *    R.pipe(
- *      data,
- *      R.map(mapper),
- *      R.filter(predicate),
- *      // `mapper` and `predicate` would only run enough times to generate up
- *      // to three outputs.
- *      R.take(3),
+ *      hugeArray,
+ *      R.map(expensiveComputation),
+ *      R.filter(complexPredicate),
+ *      // Only processes items until 2 results are found, then stops.
+ *      // Most of hugeArray never gets processed.
+ *      R.take(2),
  *    );
  *
  *    // = Custom logic within a pipe =
  *    R.pipe(
- *      data,
- *      R.map(mapper),
- *      ($) => foo(param0, $, param2),
- *      R.split(""),
- *      // etc...
+ *      input,
+ *      R.toLowerCase(),
+ *      normalize,
+ *      ($) => validate($, CONFIG),
+ *      R.split(","),
+ *      R.unique(),
  *    );
  *
  *    // = Migrating nested transformations to pipes =
- *    // The following computation can be migrated to the pipe below
- *    const result = first(
- *      filter(
- *        when(
- *          prop(
- *            groupBy(map(data, add(3)), ($) => ($ % 2 ? "odd" : "even")),
- *            "even",
- *          ),
- *          isNullish,
- *          constant([]),
- *        ),
- *        ($) => $ > 10,
- *      ),
+ *    // Nested
+ *    const result = R.prop(
+ *      R.mapValues(R.groupByProp(users, "department"), R.length()),
+ *      "engineering",
  *    );
  *
- *    const result = pipe(
- *      data,
- *      map(add(3)),
- *      groupBy(($) => ($ % 2 ? "odd" : "even")),
- *      prop("even"),
- *      when(isNullish, constant([])),
- *      filter(($) => $ > 10),
- *      first(),
+ *    // Piped
+ *    const result = R.pipe(
+ *      users,
+ *      R.groupByProp("department"),
+ *      R.mapValues(R.length()),
+ *      R.prop("engineering"),
  *    );
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
  *    // of `data`.
- *    forEach([1, 2, 3, 4], (_item, _index, data) => {
+ *    R.forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
- *    }); //=> "[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]"
+ *    });
+ *    //=> [1, 2, 3, 4]
+ *    //=> [1, 2, 3, 4]
+ *    //=> [1, 2, 3, 4]
+ *    //=> [1, 2, 3, 4]
  *
  *    // But with `pipe` data would only contain the items up to the current
  *    // index
- *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
+ *    R.pipe([1, 2, 3, 4], R.forEach((_item, _index, data) => {
  *      console.log(data);
- *    })); //=> "[1], [1, 2], [1, 2, 3], [1, 2, 3, 4]"
+ *    }));
+ *    //=> [1]
+ *    //=> [1, 2]
+ *    //=> [1, 2, 3]
+ *    //=> [1, 2, 3, 4]
  * @dataFirst
  * @category Function
  */
