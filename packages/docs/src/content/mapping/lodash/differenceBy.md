@@ -5,27 +5,90 @@ remeda: filter
 
 _Not provided by Remeda._
 
-- Use [`filter`](/docs#filter) with a custom predicate function instead.
+- Use a composition based on [`filter`](/docs#filter), [`isNot`](/docs#isNot)
+  [`isIncludedIn`](/docs#isIncludedIn), and [`map`](/docs#map) to recreate the
+  logic for `differenceBy`.
 
-- Lodash's `differenceBy` accepts multiple arrays as separate arguments and
-  flattens them, while also taking the last argument as an iteratee function.
+- Additionally, when the iteratee parameter is defined as a _property name_, use
+  [`prop`](/docs#prop) as the iteratee _function_ instead.
 
-### With property iteratee
+- Lodash accepts `null` and `undefined` values for the array (and treats them as
+  an empty array). In Remeda this nullish value needs to be handled explicitly
+  either by skipping the call to `differenceBy`, or by coalescing the input to
+  an empty array.
+
+- When the `iteratee` parameter is not provided to the Lodash `differenceBy`
+  function (or is provided as `undefined`) it behaves like a call to
+  [`difference`](/#difference).
+
+### Function iteratee
 
 ```ts
 // Lodash
-differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], "x");
+_.differenceBy(DATA, values, iteratee);
 
 // Remeda
-filter([{ x: 2 }, { x: 1 }], (item) => ![1].includes(item.x));
+filter(DATA, piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))));
+
+// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// but could be for efficiency if needed via `unique`
+filter(
+  DATA,
+  piped(iteratee, isNot(isIncludedIn(unique(map(values, iteratee))))),
+);
 ```
 
-### With function iteratee and multiple exclusion arrays
+### Property iteratee
 
 ```ts
 // Lodash
-differenceBy([2.1, 1.2], [2.3], [1.4], Math.floor);
+_.differenceBy(DATA, values, "x");
 
-// Remeda - combine exclusion arrays and apply iteratee logic
-filter([2.1, 1.2], (item) => ![2, 1].includes(Math.floor(item)));
+// Remeda
+filter(DATA, piped(prop("x"), isNot(isIncludedIn(map(values, prop("x"))))));
+
+// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// but could be for efficiency if needed via `unique`
+filter(
+  DATA,
+  piped(prop("x"), isNot(isIncludedIn(unique(map(values, prop("x")))))),
+);
+```
+
+### Multiple exclusion arrays
+
+```ts
+// Lodash
+_.differenceBy(DATA, a, b, c, iteratee);
+
+// Remeda
+filter(
+  DATA,
+  piped(iteratee, isNot(isIncludedIn(map([...a, ...b, ...c], iteratee)))),
+);
+
+// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// but could be for efficiency if needed via `unique`
+filter(
+  DATA,
+  piped(
+    iteratee,
+    isNot(isIncludedIn(unique(map([...a, ...b, ...c], iteratee)))),
+  ),
+);
+```
+
+### Nullish inputs
+
+```ts
+// Lodash
+_.differenceBy(DATA, values, iteratee);
+
+// Remeda
+isNonNullish(DATA)
+  ? filter(DATA, piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))))
+  : [];
+
+// Or
+filter(DATA ?? [], piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))));
 ```
