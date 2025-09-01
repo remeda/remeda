@@ -55,6 +55,7 @@ differenceWith(DATA ?? [], values, comparator);
 // Lodash
 _.differenceWith(DATA, values);
 
-// Convert to `difference` and then refer to the `difference` migration docs
+// Convert to Lodash's `difference` and then refer to the `difference` migration
+// docs
 _.difference(DATA, values);
 ```
