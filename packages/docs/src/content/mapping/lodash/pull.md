@@ -13,6 +13,11 @@ your codebase that need to be handled before migrating to Remeda!
   first migrate calls to `difference` and then use the migration docs for
   [`difference`](/#difference) to complete the migration.
 
+- **IMPORTANT**: The Remeda `difference` function isn't a drop-in replacement of
+  the Lodash `difference` function, and requires a non-trivial migration too. It
+  is highly recommended to first migrate from `pull` to Lodash `difference`, and
+  only then migrate to Remeda's `difference` function via the migration docs.
+
 - If the mutability of the input array is desired then make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
   of `difference` back to it. Note that if the input array is part of an object
@@ -48,7 +53,7 @@ const pulled = _.pull([...DATA], itemA, itemB, itemC);
 const pulled = _.difference(DATA, [itemA, itemB, itemC]);
 ```
 
-### Within an object
+### Nested inside an object
 
 ```ts
 // pull
