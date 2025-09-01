@@ -1,52 +1,61 @@
 ---
 category: Array
-remeda: differenceWith
 ---
 
-- In most cases [`differenceWith`](/docs#differenceWith) is equivalent to
-  `pullAllWith`.
+_Not provided by Remeda._
 
-- When called without the 3rd comparator parameter the Lodash implementation is
-  equivalent to that of [`pullAll`](/migrate/lodash/#pullAll).
+**CAUTION**: `pullAllWith` mutates the input array _in-place_! All functions in
+Remeda are [_pure_](https://en.wikipedia.org/wiki/Pure_function) and never
+mutate the input. These mutations might introduce side-effects and implicit
+dependencies in your codebase that need to be handled before migrating to
+Remeda!
 
-- When called without the 2nd values parameter the Lodash implementation
-  effectively does **nothing**. Prefer skipping the call, or fallback to using
-  an empty array for it.
+- `pullAllWith` is equivalent to Lodash's `differenceWith` function. To migrate
+  to Remeda first migrate calls to Lodash `_.differenceWith` and then use the
+  migration docs for [`differenceWith`](/#differenceWith) to complete the
+  migration. **IMPORTANT**: The Remeda `differenceWith` function **isn't** a
+  drop-in replacement for the Lodash `_.differenceWith` function, we do **not**
+  recommend migrating directly from `pullAllWith` to Remeda's `differenceWith`.
 
-- `pullAllWith` mutates the input array _in-place_, in Remeda inputs are never
-  mutated and a _new_ array is returned instead. To "mutate" the input array
-  assign the result back to the input variable.
+- If the mutability of the input array is desired then make sure the variable is
+  assignable (e.g., using `let` instead of `const`), and assign back the result
+  of `differenceWith` back to it. Note that if the input array is part of an
+  object or nested array, you will need to manually reconstruct this _outer_
+  object with the updated array manually.
 
-### Comparing objects by value
+- If mutability wasn't desired, and instead the input was cloned (shallow)
+  before calling `pullAllWith`, that cloning should now be skipped.
+
+### In-place mutation
 
 ```ts
-let DATA = [
-  { x: 1, y: 2 },
-  { x: 3, y: 4 },
-  { x: 5, y: 6 },
-];
+// pullAllWith
+const DATA = [{ x: 1 }, { x: 2 }, { x: 3 }];
+_.pullAllWith(DATA, values, comparator);
 
-// Lodash
-_.pullAllWith(DATA, [{ x: 3, y: 4 }], _.isEqual);
-
-// Remeda
-DATA = differenceWith(DATA, [{ x: 3, y: 4 }], isDeepEqual);
+// differenceWith
+let DATA = [{ x: 1 }, { x: 2 }, { x: 3 }];
+DATA = _.differenceWith(DATA, values, comparator);
 ```
 
-### Missing values parameter
+### Non-mutating usage
 
 ```ts
-let DATA = [1, 2, 3];
-const values: string[] | undefined = undefined;
+// pullAllWith
+const pulled = _.pullAllWith([...DATA], values, comparator);
 
-// Lodash
-_.pullAllWith(DATA, values, _.isEqual);
+// differenceWith
+const pulled = _.differenceWith(DATA, values, comparator);
+```
 
-// Remeda
-if (values !== undefined) {
-  DATA = differenceWith(DATA, values, isDeepEqual);
-}
+### Nested inside an object
 
-// Or
-DATA = differenceWith(DATA, values ?? [], isDeepEqual);
+```ts
+// pullAllWith
+const DATA = { items: [{ x: 1 }, { x: 2 }], meta: "info" };
+_.pullAllWith(DATA.items, values, comparator);
+
+// differenceWith
+let DATA = { items: [{ x: 1 }, { x: 2 }], meta: "info" };
+DATA = { ...DATA, items: _.differenceWith(DATA.items, values, comparator) };
 ```
