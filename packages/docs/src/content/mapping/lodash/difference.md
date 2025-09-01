@@ -47,7 +47,7 @@ filter(dataWithDuplicates, isNot(isIncludedIn(uniqueValues)));
 filter(uniqueData, isNot(isIncludedIn(valuesWithDuplicates)));
 filter(dataWithDuplicates, isNot(isIncludedIn(valuesWithDuplicates)));
 
-// valuesWithDuplicates doesn't need to be dedupped when used inside
+// valuesWithDuplicates doesn't need to be deduped when used inside
 // `isIncludedIn`, but can be for efficiency if needed via `unique`
 filter(dataWithDuplicates, isNot(isIncludedIn(unique(valuesWithDuplicates))));
 ```

@@ -3,42 +3,58 @@ category: Array
 remeda: differenceWith
 ---
 
-- In most cases [`differenceWith`](/docs#differenceWith) is equivalent to
-  Lodash's `differenceWith`.
+- Lodash's `differenceWith` accepts a variadic list of values arrays which are
+  then effectively flattened, but Remeda only accepts a single values array;
+  Multiple arrays need to be spread manually instead.
 
-- Lodash's `differenceWith` accepts multiple arrays as separate arguments and
-  flattens them, while Remeda's `differenceWith` takes exactly two arrays.
+- Lodash accepts `null` and `undefined` values for the array (and treats them as
+  an empty array). In Remeda this nullish value needs to be handled explicitly
+  either by skipping the call to `differenceWith`, or by coalescing the input to
+  an empty array.
+
+- When the `iteratee` parameter is not provided to the Lodash `differenceWith`
+  function (or is provided as `undefined`) it behaves like a call to
+  [`difference`](/#difference).
 
 ### Single exclusion array
 
 ```ts
 // Lodash
-differenceWith(
-  [
-    { x: 1, y: 2 },
-    { x: 2, y: 1 },
-  ],
-  [{ x: 1, y: 2 }],
-  _.isEqual,
-);
+_.differenceWith(DATA, values, comparator);
 
 // Remeda
-differenceWith(
-  [
-    { x: 1, y: 2 },
-    { x: 2, y: 1 },
-  ],
-  [{ x: 1, y: 2 }],
-  isDeepEqual,
-);
+differenceWith(DATA, values, comparator);
 ```
 
 ### Multiple exclusion arrays
 
 ```ts
 // Lodash
-differenceWith([{ x: 1 }, { x: 2 }], [{ x: 1 }], [{ x: 2 }], _.isEqual);
+_.differenceWith(DATA, a, b, c, comparator);
 
-// Remeda - combine exclusion arrays
-differenceWith([{ x: 1 }, { x: 2 }], [{ x: 1 }, { x: 2 }], isDeepEqual);
+// Remeda
+differenceWith(DATA, [...a, ...b, ...c], comparator);
+```
+
+### Nullish inputs
+
+```ts
+// Lodash
+_.differenceWith(DATA, values, comparator);
+
+// Remeda
+isNonNullish(DATA) ? differenceWith(DATA, values, comparator) : [];
+
+// Or
+differenceWith(DATA ?? [], values, comparator);
+```
+
+### Missing iteratee function
+
+```ts
+// Lodash
+_.differenceWith(DATA, values);
+
+// Convert to `difference` and then refer to the `difference` migration docs
+_.difference(DATA, values);
 ```

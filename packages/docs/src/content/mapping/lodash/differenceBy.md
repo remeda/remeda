@@ -30,7 +30,7 @@ _.differenceBy(DATA, values, iteratee);
 // Remeda
 filter(DATA, piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))));
 
-// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// the mapped values don't need to be deduped when used inside `isIncludedIn`,
 // but could be for efficiency if needed via `unique`
 filter(
   DATA,
@@ -47,7 +47,7 @@ _.differenceBy(DATA, values, "x");
 // Remeda
 filter(DATA, piped(prop("x"), isNot(isIncludedIn(map(values, prop("x"))))));
 
-// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// the mapped values don't need to be deduped when used inside `isIncludedIn`,
 // but could be for efficiency if needed via `unique`
 filter(
   DATA,
@@ -67,7 +67,7 @@ filter(
   piped(iteratee, isNot(isIncludedIn(map([...a, ...b, ...c], iteratee)))),
 );
 
-// the mapped values don't need to be dedupped when used inside `isIncludedIn`,
+// the mapped values don't need to be deduped when used inside `isIncludedIn`,
 // but could be for efficiency if needed via `unique`
 filter(
   DATA,
@@ -91,4 +91,14 @@ isNonNullish(DATA)
 
 // Or
 filter(DATA ?? [], piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))));
+```
+
+### Missing iteratee function
+
+```ts
+// Lodash
+_.differenceBy(DATA, values);
+
+// Convert to `difference` and then refer to the `difference` migration docs
+_.difference(DATA, values);
 ```
