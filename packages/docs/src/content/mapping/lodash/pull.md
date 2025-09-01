@@ -18,6 +18,10 @@ your codebase that need to be handled before migrating to Remeda!
   is highly recommended to first migrate from `pull` to Lodash `difference`, and
   only then migrate to Remeda's `difference` function via the migration docs.
 
+- `pull` takes a variadic array of items to remove; `difference` take an
+  explicit array instead. You will need to wrap your items in an array when
+  migrating.
+
 - If the mutability of the input array is desired then make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
   of `difference` back to it. Note that if the input array is part of an object
@@ -27,30 +31,36 @@ your codebase that need to be handled before migrating to Remeda!
 - If mutability wasn't desired, and instead the input was cloned (shallow)
   before calling `pull`, that cloning should now be skipped.
 
-- `pull` takes a variadic array of items to remove; `difference` take an
-  explicit array instead. You will need to wrap your items in an array when
-  migrating.
+### Exclusion Items
+
+```ts
+// pull
+_.pull(DATA, a, b, c, ...additional);
+
+// difference
+_.difference(DATA, [a, b, c, ...additional]);
+```
 
 ### In-place mutation
 
 ```ts
 // pull
 const DATA = ["a", "b", "c", "d"];
-_.pull(DATA, itemA, itemB, itemC);
+_.pull(DATA, ...values);
 
 // difference
 let DATA = ["a", "b", "c", "d"];
-DATA = _.difference(DATA, [itemA, itemB, itemC]);
+DATA = _.difference(DATA, values);
 ```
 
 ### Non-mutating usage
 
 ```ts
 // pull
-const pulled = _.pull([...DATA], itemA, itemB, itemC);
+const pulled = _.pull([...DATA], ...values);
 
 // difference
-const pulled = _.difference(DATA, [itemA, itemB, itemC]);
+const pulled = _.difference(DATA, values);
 ```
 
 ### Nested inside an object
@@ -58,9 +68,9 @@ const pulled = _.difference(DATA, [itemA, itemB, itemC]);
 ```ts
 // pull
 const DATA = { a: ["a", "b", "c"], b: "hello, world" };
-_.pull(DATA.a, itemA, itemB, itemC);
+_.pull(DATA.a, ...values);
 
 // difference
 let DATA = { a: ["a", "b", "c"], b: "hello, world" };
-DATA = { ...DATA, a: _.difference(DATA.a, [itemA, itemB, itemC]) };
+DATA = { ...DATA, a: _.difference(DATA.a, values) };
 ```

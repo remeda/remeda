@@ -1,41 +1,64 @@
 ---
 category: Array
-remeda: difference
 ---
 
 _Not provided by Remeda._
 
-- For cases where the input data is **unique** (no duplicate values) [`difference`](/docs#difference)
-  could be used as a replacement.
+**CAUTION**: `pullAll` mutates the input array _in-place_! All functions in
+Remeda are [_pure_](https://en.wikipedia.org/wiki/Pure_function) and never
+mutate the input. These mutations might introduce side-effects and implicit
+dependencies in your codebase that need to be handled before migrating to
+Remeda!
 
-- For the general case, when the input might contain _duplicates_, use the
-  composition of [`filter`](/docs#filter), [`isNot`](/docs#isNot), and [`isIncludedIn`](/docs#isIncludedIn)
-  instead.
+- `pullAll` is equivalent to Lodash's `difference` function. To migrate to
+  Remeda first migrate calls to `difference` and then use the migration docs for
+  [`difference`](/#difference) to complete the migration.
 
-- `pullAll` mutates the input array _in-place_, in Remeda inputs are never mutated
-  and a _new_ array is returned instead. To "mutate" the input array assign the
-  result back to the input variable.
+- **IMPORTANT**: The Remeda `difference` function isn't a drop-in replacement of
+  the Lodash `difference` function, and requires a non-trivial migration too. It
+  is highly recommended to first migrate from `pullAll` to Lodash `difference`,
+  and only then migrate to Remeda's `difference` function via the migration
+  docs.
 
-### No duplicates
+- If the mutability of the input array is desired then make sure the variable is
+  assignable (e.g., using `let` instead of `const`), and assign back the result
+  of `difference` back to it. Note that if the input array is part of an object
+  or nested array, you will need to manually reconstruct this _outer_ object
+  with the updated array manually.
+
+- If mutability wasn't desired, and instead the input was cloned (shallow)
+  before calling `pullAll`, that cloning should now be skipped.
+
+### In-place mutation
 
 ```ts
-let DATA = [1, 2, 3, 4, 5, 6];
+// pull
+const DATA = ["a", "b", "c", "d"];
+_.pullAll(DATA, values);
 
-// Lodash
-_.pullAll(DATA, [1, 3, 5]);
-
-// Remeda
-DATA = difference(DATA, [1, 3, 5]);
+// difference
+let DATA = ["a", "b", "c", "d"];
+DATA = _.difference(DATA, values);
 ```
 
-### With duplicates
+### Non-mutating usage
 
 ```ts
-let DATA = [2, 1, 2, 3];
+// pull
+const pulled = _.pullAll([...DATA], values);
 
-// Lodash
-_.pullAll(DATA, [1, 2]);
+// difference
+const pulled = _.difference(DATA, values);
+```
 
-// Remeda
-DATA = filter(DATA, isNot(isIncludedIn([1, 2])));
+### Nested inside an object
+
+```ts
+// pull
+const DATA = { a: ["a", "b", "c"], b: "hello, world" };
+_.pullAll(DATA.a, values);
+
+// difference
+let DATA = { a: ["a", "b", "c"], b: "hello, world" };
+DATA = { ...DATA, a: _.difference(DATA.a, values) };
 ```
