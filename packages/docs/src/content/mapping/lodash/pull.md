@@ -10,13 +10,11 @@ input. These mutations might introduce side-effects and implicit dependencies in
 your codebase that need to be handled before migrating to Remeda!
 
 - `pull` is equivalent to Lodash's `difference` function. To migrate to Remeda
-  first migrate calls to `difference` and then use the migration docs for
-  [`difference`](/#difference) to complete the migration.
-
-- **IMPORTANT**: The Remeda `difference` function isn't a drop-in replacement of
-  the Lodash `difference` function, and requires a non-trivial migration too. It
-  is highly recommended to first migrate from `pull` to Lodash `difference`, and
-  only then migrate to Remeda's `difference` function via the migration docs.
+  first migrate calls to Lodash `_.difference` and then use the migration docs
+  for [`difference`](/#difference) to complete the migration. **IMPORTANT**: The
+  Remeda `difference` function **isn't** a drop-in replacement for the Lodash
+  `_.difference` function, we do **not** recommend migrating directly from
+  `pull` to Remeda's `difference`.
 
 - `pull` takes a variadic array of items to remove; `difference` take an
   explicit array instead. You will need to wrap your items in an array when

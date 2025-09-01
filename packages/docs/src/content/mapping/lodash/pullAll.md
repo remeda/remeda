@@ -11,14 +11,11 @@ dependencies in your codebase that need to be handled before migrating to
 Remeda!
 
 - `pullAll` is equivalent to Lodash's `difference` function. To migrate to
-  Remeda first migrate calls to `difference` and then use the migration docs for
-  [`difference`](/#difference) to complete the migration.
-
-- **IMPORTANT**: The Remeda `difference` function isn't a drop-in replacement of
-  the Lodash `difference` function, and requires a non-trivial migration too. It
-  is highly recommended to first migrate from `pullAll` to Lodash `difference`,
-  and only then migrate to Remeda's `difference` function via the migration
-  docs.
+  Remeda first migrate calls to Lodash `_.difference` and then use the migration
+  docs for [`difference`](/#difference) to complete the migration.
+  **IMPORTANT**: The Remeda `difference` function **isn't** a drop-in
+  replacement for the Lodash `_.difference` function, we do **not** recommend
+  migrating directly from `pullAll` to Remeda's `difference`.
 
 - If the mutability of the input array is desired then make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
@@ -32,7 +29,7 @@ Remeda!
 ### In-place mutation
 
 ```ts
-// pull
+// pullAll
 const DATA = ["a", "b", "c", "d"];
 _.pullAll(DATA, values);
 
@@ -44,7 +41,7 @@ DATA = _.difference(DATA, values);
 ### Non-mutating usage
 
 ```ts
-// pull
+// pullAll
 const pulled = _.pullAll([...DATA], values);
 
 // difference
@@ -54,7 +51,7 @@ const pulled = _.difference(DATA, values);
 ### Nested inside an object
 
 ```ts
-// pull
+// pullAll
 const DATA = { a: ["a", "b", "c"], b: "hello, world" };
 _.pullAll(DATA.a, values);
 
