@@ -1,58 +1,23 @@
 ---
 category: Array
-remeda: difference
 ---
 
 _Not provided by Remeda._
 
-- For cases where the input data is **unique** (no duplicate values)
-  [`difference`](/docs#difference) could be used as a replacement.
+- `without` is equivalent to Lodash's `difference` function. To migrate to
+  Remeda first migrate calls to Lodash `_.difference` and then use the migration
+  docs for [`difference`](/#difference) to complete the migration.
+  **IMPORTANT**: The Remeda `difference` function **isn't** a drop-in
+  replacement for the Lodash `_.difference` function, we do **not** recommend
+  migrating directly from `without` to Remeda's `difference`.
 
-- For the general case, when the input might contain _duplicates_, use the
-  composition of [`filter`](/docs#filter), [`isNot`](/docs#isNot), and [`isIncludedIn`](/docs#isIncludedIn)
-  instead.
-
-- Notice that `without` takes a variadic array of items to remove. In Remeda all
-  functions take an explicit array instead. You will need to wrap your items in
-  an array when migrating.
-
-- For very simple cases where the type of items being removed is easily
-  distinguishable from those that remain, simple type-guards like
-  [`isDefined`](/docs#isDefined), [`isTruthy`](/docs#isTruthy), or
-  [`isString`](/docs#isString) could be used instead.
-
-### No duplicates
+- `without` takes variadic arguments; `difference` takes an explicit array.
+  You will need to wrap your items in an array when migrating.
 
 ```ts
-const DATA = [1, 2, 3, 4, 5, 6];
+// pull
+_.pull(DATA, a, b, c, ...additional);
 
-// Lodash
-_.without(DATA, 1, 3, 5);
-
-// Remeda
-difference(DATA, [1, 3, 5]);
-```
-
-### With duplicates
-
-```ts
-const DATA = [2, 1, 2, 3];
-
-// Lodash
-_.without(DATA, 1, 2);
-
-// Remeda
-filter(DATA, isNot(isIncludedIn([1, 2])));
-```
-
-### Distinguishable Types
-
-```ts
-const DATA = ["hello", null, "", "world"];
-
-// Lodash
-_.without(DATA, null, "");
-
-// Remeda
-filter(DATA, isTruthy);
+// difference
+_.difference(DATA, [a, b, c, ...additional]);
 ```
