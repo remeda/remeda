@@ -2,17 +2,12 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # Array
 
-- differenceBy
 - fill
 - flattenDepth
 - indexOf
 - initial
 - intersectionBy
 - lastIndexOf
-- pull
-- pullAll
-- pullAllBy
-- pullAllWith
 - pullAt
 - remove
 - slice

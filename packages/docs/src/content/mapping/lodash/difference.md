@@ -3,28 +3,87 @@ category: Array
 remeda: difference
 ---
 
-In Remeda `difference` treats the inputs as multisets/bags which respect
-**item duplication**, whereas in Lodash all matching values are filtered out.
-This only matters for cases where _both_ arrays might have duplicate values. Use
-[`filter`](/docs#filter), [`isNot`](/docs#isNot), and
-[`isIncludedIn`](/docs#isIncludedIn) instead to compose the same logic.
+- Remeda's `difference` treats the inputs as multisets/bags which respect
+  **item duplication**, whereas in Lodash all matching values are filtered out.
+  This means Remeda removes **only one copy** of each matching item, while
+  Lodash removes **all copies**.
 
-### No duplicates
+- When the input arrays might contain duplicates and you want to filter all
+  values use a composition of [`filter`](/docs#filter), [`isNot`](/docs#isNot),
+  and [`isIncludedIn`](/docs#isIncludedIn) to replicate the Lodash semantics.
+
+- Lodash's `difference` accepts multiple arrays as separate arguments and
+  flattens them, while Remeda's `difference` takes exactly two arrays.
+
+- Lodash supports calling `difference` trivially, with no exclusion array at
+  all which results in a shallow clone of the input array. In Remeda the
+  exclusion array is required.
+
+- Lodash accepts `null` and `undefined` values for the array (and treats them as
+  an empty array). In Remeda this nullish value needs to be handled explicitly
+  either by skipping the call to `difference`, or by coalescing the input to an
+  empty array.
+
+### Without duplicate values (unique)
 
 ```ts
 // Lodash
-difference([2, 1], [2, 3]);
+_.difference(uniqueData, uniqueValues);
 
 // Remeda
-difference([2, 1], [2, 3]);
+difference(uniqueData, uniqueValues);
 ```
 
-### With duplicates
+### With duplicate values
 
 ```ts
 // Lodash
-difference([1, 1, 2, 2], [1]);
+_.difference(dataWithDuplicates, uniqueValues);
+_.difference(uniqueData, valuesWithDuplicates);
+_.difference(dataWithDuplicates, valuesWithDuplicates);
 
 // Remeda
-filter([1, 1, 2, 2], isNot(isIncludedIn([1])));
+filter(dataWithDuplicates, isNot(isIncludedIn(uniqueValues)));
+filter(uniqueData, isNot(isIncludedIn(valuesWithDuplicates)));
+filter(dataWithDuplicates, isNot(isIncludedIn(valuesWithDuplicates)));
+
+// valuesWithDuplicates doesn't need to be deduped when used inside
+// `isIncludedIn`, but can be for efficiency if needed via `unique`
+filter(dataWithDuplicates, isNot(isIncludedIn(unique(valuesWithDuplicates))));
+```
+
+### Multiple exclusion arrays
+
+```ts
+// Lodash
+_.difference(DATA, a, b, c);
+
+// Remeda
+difference(DATA, [...a, ...b, ...c]);
+```
+
+### Missing 2nd (exclusions) parameter
+
+```ts
+// Lodash
+_.difference(DATA);
+
+// Remeda
+difference(DATA, []);
+
+// Or directly via Native JS:
+[...DATA];
+```
+
+### Nullish inputs
+
+```ts
+// Lodash
+_.difference(DATA, values);
+
+// Remeda
+isNonNullish(DATA) ? difference(DATA, values) : [];
+
+// Or
+difference(DATA ?? [], values);
 ```
