@@ -15,8 +15,8 @@ _Not provided by Remeda._
   You will need to wrap your items in an array when migrating.
 
 ```ts
-// pull
-_.pull(DATA, a, b, c, ...additional);
+// without
+_.without(DATA, a, b, c, ...additional);
 
 // difference
 _.difference(DATA, [a, b, c, ...additional]);
