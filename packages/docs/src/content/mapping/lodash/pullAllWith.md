@@ -12,10 +12,11 @@ Remeda!
 
 - `pullAllWith` is equivalent to Lodash's `differenceWith` function. To migrate
   to Remeda first migrate calls to Lodash `_.differenceWith` and then use the
-  migration docs for [`differenceWith`](/#differenceWith) to complete the
-  migration. **IMPORTANT**: The Remeda `differenceWith` function **isn't** a
-  drop-in replacement for the Lodash `_.differenceWith` function, we do **not**
-  recommend migrating directly from `pullAllWith` to Remeda's `differenceWith`.
+  migration docs for [`differenceWith`](/migrate/lodash#differenceWith) to
+  complete the migration. **IMPORTANT**: The Remeda `differenceWith` function
+  **isn't** a drop-in replacement for the Lodash `_.differenceWith` function, we
+  do **not** recommend migrating directly from `pullAllWith` to Remeda's
+  `differenceWith`.
 
 - If the mutability of the input array is desired then make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result

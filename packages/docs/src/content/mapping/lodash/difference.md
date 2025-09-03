@@ -12,8 +12,10 @@ remeda: difference
   values use a composition of [`filter`](/docs#filter), [`isNot`](/docs#isNot),
   and [`isIncludedIn`](/docs#isIncludedIn) to replicate the Lodash semantics.
 
-- Lodash's `difference` accepts multiple arrays as separate arguments and
-  flattens them, while Remeda's `difference` takes exactly two arrays.
+- Lodash's `difference` accepts multiple values arrays as separate arguments and
+  flattens them, while Remeda's `difference` takes a single values array. When
+  migrating these arrays need to be flattened or spread into a single array
+  manually.
 
 - Lodash supports calling `difference` trivially, with no exclusion array at
   all which results in a shallow clone of the input array. In Remeda the

@@ -12,7 +12,7 @@ Remeda!
 
 - `pullAll` is equivalent to Lodash's `difference` function. To migrate to
   Remeda first migrate calls to Lodash `_.difference` and then use the migration
-  docs for [`difference`](/#difference) to complete the migration.
+  docs for [`difference`](/migrate/lodash#difference) to complete the migration.
   **IMPORTANT**: The Remeda `difference` function **isn't** a drop-in
   replacement for the Lodash `_.difference` function, we do **not** recommend
   migrating directly from `pullAll` to Remeda's `difference`.

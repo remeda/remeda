@@ -12,9 +12,9 @@ remeda: differenceWith
   either by skipping the call to `differenceWith`, or by coalescing the input to
   an empty array.
 
-- When the `iteratee` parameter is not provided to the Lodash `differenceWith`
+- When the `comparator` parameter is not provided to the Lodash `differenceWith`
   function (or is provided as `undefined`) it behaves like a call to
-  [`difference`](/#difference).
+  [`difference`](/migrate/lodash#difference).
 
 ### Single exclusion array
 

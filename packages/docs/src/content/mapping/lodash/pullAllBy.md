@@ -12,7 +12,8 @@ Remeda!
 
 - `pullAllBy` is equivalent to Lodash's `differenceBy` function. To migrate to
   Remeda first migrate calls to Lodash `_.differenceBy` and then use the
-  migration docs for [`differenceBy`](/#differenceBy) to complete the migration.
+  migration docs for [`differenceBy`](/migrate/lodash#differenceBy) to complete
+  the migration.
 
 - If the mutability of the input array is desired then make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
