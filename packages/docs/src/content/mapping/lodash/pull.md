@@ -20,14 +20,14 @@ your codebase that need to be handled before migrating to Remeda!
   explicit array instead. You will need to wrap your items in an array when
   migrating.
 
-- If the mutability of the input array is desired then make sure the variable is
+- If the mutability of the input array is desired, make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
   of `difference` back to it. Note that if the input array is part of an object
-  or nested array, you will need to manually reconstruct this _outer_ object
-  with the updated array manually.
+  or nested array, you will need to manually reconstruct this _outer_ containing
+  object with the updated array manually.
 
-- If mutability wasn't desired, and instead the input was cloned (shallow)
-  before calling `pull`, that cloning should now be skipped.
+- If mutability wasn't desired, and instead the input was cloned (shallowly)
+  before calling `pull`, that cloning is now redundant.
 
 ### Exclusion Items
 

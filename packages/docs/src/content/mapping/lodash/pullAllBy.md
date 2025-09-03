@@ -15,14 +15,14 @@ Remeda!
   migration docs for [`differenceBy`](/migrate/lodash#differenceBy) to complete
   the migration.
 
-- If the mutability of the input array is desired then make sure the variable is
+- If the mutability of the input array is desired, make sure the variable is
   assignable (e.g., using `let` instead of `const`), and assign back the result
   of `differenceBy` back to it. Note that if the input array is part of an
   object or nested array, you will need to manually reconstruct this _outer_
   object with the updated array manually.
 
-- If mutability wasn't desired, and instead the input was cloned (shallow)
-  before calling `pullAllBy`, that cloning should now be skipped.
+- If mutability wasn't desired, and instead the input was cloned (shallowly)
+  before calling `pullAllBy`, that cloning is now redundant.
 
 ### In-place mutation
 
