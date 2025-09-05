@@ -56,6 +56,7 @@ export * from "./isDate";
 export * from "./isDeepEqual";
 export * from "./isDefined";
 export * from "./isEmpty";
+export * from "./isEmptyish";
 export * from "./isError";
 export * from "./isFunction";
 export * from "./isIncludedIn";
