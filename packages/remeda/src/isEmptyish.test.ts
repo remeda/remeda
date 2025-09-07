@@ -106,6 +106,17 @@ describe("keyed collections", () => {
     expect(isEmptyish(new URLSearchParams("hello"))).toBe(false);
     expect(isEmptyish(new URLSearchParams({ hello: "world " }))).toBe(false);
   });
+
+  test("prototype chains", () => {
+    // Verifying chained prototypes would add complexity the implementation and
+    // incur performance costs, and the real-life practical use for such a chain
+    // is minimal.
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    expect(isEmptyish(Object.create(Object.create({})))).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    expect(isEmptyish(Object.create(Object.create({ a: 123 })))).toBe(false);
+  });
 });
 
 describe("self-declared sizes", () => {
@@ -170,19 +181,29 @@ describe("unsupported types", () => {
   });
 
   test("classes", () => {
-    // It's hard to define what an empty class is (does it have private
-    // members? are we considering it empty if one of it's fields is empty?) and
-    // there's no use-case where one would need to a define a purely empty
-    // class anyway.
+    // It's hard to define what an empty class is; does it have private members?
+    // are we considering it empty if one of it's fields is empty?
 
     // eslint-disable-next-line @typescript-eslint/no-extraneous-class
     class Empty {}
     class NonEmpty {
       public a = "hello";
     }
+    class NonEmptyButPrivate {
+      readonly #a = "hello";
 
-    expect(isEmptyish(new Empty())).toBe(false);
+      public get a(): string {
+        return this.#a;
+      }
+    }
+    class ContainerWrapper {
+      public data: Array<unknown> = [];
+    }
+
+    expect(isEmptyish(new Empty())).toBe(true);
     expect(isEmptyish(new NonEmpty())).toBe(false);
+    expect(isEmptyish(new NonEmptyButPrivate())).toBe(true);
+    expect(isEmptyish(new ContainerWrapper())).toBe(false);
   });
 
   test("regexp", () => {
@@ -190,16 +211,16 @@ describe("unsupported types", () => {
     // unlikely that this would be needed.
 
     // eslint-disable-next-line prefer-regex-literals, require-unicode-regexp
-    expect(isEmptyish(new RegExp(""))).toBe(false);
-    expect(isEmptyish(/abc/u)).toBe(false);
+    expect(isEmptyish(new RegExp(""))).toBe(true);
+    expect(isEmptyish(/abc/u)).toBe(true);
   });
 
   test("dates", () => {
     // Dates are like numbers, so they similarly don't have a notion of
     // emptiness.
 
-    expect(isEmptyish(new Date(0))).toBe(false);
-    expect(isEmptyish(new Date())).toBe(false);
+    expect(isEmptyish(new Date(0))).toBe(true);
+    expect(isEmptyish(new Date())).toBe(true);
   });
 
   test("functions", () => {
@@ -219,8 +240,8 @@ describe("unsupported types", () => {
     // Weak collections don't have mechanism that allows tracking it's size or
     // enumerating it's entries.
 
-    expect(isEmptyish(new WeakMap())).toBe(false);
-    expect(isEmptyish(new WeakSet())).toBe(false);
+    expect(isEmptyish(new WeakMap())).toBe(true);
+    expect(isEmptyish(new WeakSet())).toBe(true);
   });
 
   test("errors", () => {
@@ -230,15 +251,7 @@ describe("unsupported types", () => {
     // explicitly.
 
     // eslint-disable-next-line unicorn/error-message
-    expect(isEmptyish(new Error())).toBe(false);
-    expect(isEmptyish(new Error("hello world!"))).toBe(false);
-  });
-
-  test("prototype chains", () => {
-    // Verifying chained prototypes would add complexity the implementation and
-    // incur performance costs, and the real-life practical use for such a chain
-    // is minimal.
-
-    expect(isEmptyish(Object.create({}))).toBe(false);
+    expect(isEmptyish(new Error())).toBe(true);
+    expect(isEmptyish(new Error("hello world!"))).toBe(true);
   });
 });

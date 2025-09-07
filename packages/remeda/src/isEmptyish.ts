@@ -199,16 +199,6 @@ export function isEmptyish(data: unknown): boolean {
     return data.size === 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is just how TypeScript types it...
-  const proto = Object.getPrototypeOf(data);
-  if (proto !== Object.prototype && proto !== null) {
-    // For plain objects we are next going to check their actual props in order
-    // to assess emptiness, but for any other kind of object we can't rely on
-    // any generic logic to detect emptiness correctly (see the tests for all
-    // cases this covers).
-    return false;
-  }
-
   // eslint-disable-next-line guard-for-in, no-unreachable-loop -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
   for (const _ in data) {
     return false;
