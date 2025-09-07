@@ -6,7 +6,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type PreparedLazyOperation = LazyEvaluator & {
+type PreparedLazyFunction = LazyEvaluator & {
   readonly isSingle: boolean;
 
   // These are intentionally mutable, they maintain the lazy piped state.
@@ -14,225 +14,296 @@ type PreparedLazyOperation = LazyEvaluator & {
   items: Array<unknown>;
 };
 
-type LazyOp = LazyDefinition & ((input: unknown) => unknown);
+type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
 
 /**
- * Perform left-to-right function composition.
+ * Performs left-to-right function composition, passing data through functions
+ * in sequence. Each function receives the output of the previous function,
+ * creating a readable top-to-bottom data flow that matches how the
+ * transformation is executed. This enables converting deeply nested function
+ * calls into clear, sequential steps without temporary variables.
  *
- * @param value - The initial value.
- * @param operations - The list of operations to apply.
- * @signature R.pipe(data, op1, op2, op3)
+ * When consecutive functions with a `lazy` tag (e.g., `map`, `filter`, `take`,
+ * `drop`, `forEach`, etc...) are used together, they process data item-by-item
+ * rather than creating intermediate arrays. This enables early termination
+ * when only partial results are needed, improving performance for large
+ * datasets and expensive operations.
+ *
+ * Functions are only evaluated lazily when their data-last form is used
+ * directly in the pipe. To disable lazy evaluation, use data-first calls via
+ * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
+ *
+ * Any function can be used in pipes, not just Remeda utilities. For creating
+ * custom functions with currying and lazy evaluation support, see the `purry`
+ * utility.
+ *
+ * A "headless" variant `piped` is available for creating reusable pipe
+ * functions without initial data.
+ *
+ * IMPORTANT: During lazy evaluation, callbacks using the third parameter (the
+ * input array) receive only items processed up to that point, not the complete
+ * array.
+ *
+ * @param data - The input data.
+ * @param functions - A sequence of functions that take one argument and
+ * return a value.
+ * @signature
+ *   R.pipe(data, ...functions);
  * @example
+ *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
+ *
+ *    // = Early termination with lazy evaluation =
  *    R.pipe(
- *      [1, 2, 3, 4],
- *      R.map(x => x * 2),
- *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
- *    ) // => [6, 14]
+ *      hugeArray,
+ *      R.map(expensiveComputation),
+ *      R.filter(complexPredicate),
+ *      // Only processes items until 2 results are found, then stops.
+ *      // Most of hugeArray never gets processed.
+ *      R.take(2),
+ *    );
+ *
+ *    // = Custom logic within a pipe =
+ *    R.pipe(
+ *      input,
+ *      R.toLowerCase(),
+ *      normalize,
+ *      ($) => validate($, CONFIG),
+ *      R.split(","),
+ *      R.unique(),
+ *    );
+ *
+ *    // = Migrating nested transformations to pipes =
+ *    // Nested
+ *    const result = R.prop(
+ *      R.mapValues(R.groupByProp(users, "department"), R.length()),
+ *      "engineering",
+ *    );
+ *
+ *    // Piped
+ *    const result = R.pipe(
+ *      users,
+ *      R.groupByProp("department"),
+ *      R.mapValues(R.length()),
+ *      R.prop("engineering"),
+ *    );
+ *
+ *    // = Using the 3rd param of a callback =
+ *    // The following would print out `data` in its entirety for each value
+ *    // of `data`.
+ *    R.forEach([1, 2, 3, 4], (_item, _index, data) => {
+ *      console.log(data);
+ *    }); //=> "[1, 2, 3, 4]" logged 4 times
+ *
+ *    // But with `pipe` data would only contain the items up to the current
+ *    // index
+ *    R.pipe([1, 2, 3, 4], R.forEach((_item, _index, data) => {
+ *      console.log(data);
+ *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
  * @dataFirst
  * @category Function
  */
-export function pipe<A>(value: A): A;
+export function pipe<A>(data: A): A;
 
-export function pipe<A, B>(value: A, op1: (input: A) => B): B;
+export function pipe<A, B>(data: A, funcA: (input: A) => B): B;
 
 export function pipe<A, B, C>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
 ): C;
 
 export function pipe<A, B, C, D>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
 ): D;
 
 export function pipe<A, B, C, D, E>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
 ): E;
 
 export function pipe<A, B, C, D, E, F>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
 ): F;
 
 export function pipe<A, B, C, D, E, F, G>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
 ): G;
 
 export function pipe<A, B, C, D, E, F, G, H>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
-  op7: (input: G) => H,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
 ): H;
 
 export function pipe<A, B, C, D, E, F, G, H, I>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
-  op7: (input: G) => H,
-  op8: (input: H) => I,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
 ): I;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J>(
-  value: A,
-  op1: (input: A) => B,
-  op2: (input: B) => C,
-  op3: (input: C) => D,
-  op4: (input: D) => E,
-  op5: (input: E) => F,
-  op6: (input: F) => G,
-  op7: (input: G) => H,
-  op8: (input: H) => I,
-  op9: (input: I) => J,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
 ): J;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
 ): K;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
-  op11: (input: K) => L,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
+  funcK: (input: K) => L,
 ): L;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
-  op11: (input: K) => L,
-  op12: (input: L) => M,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
+  funcK: (input: K) => L,
+  funcL: (input: L) => M,
 ): M;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
-  op11: (input: K) => L,
-  op12: (input: L) => M,
-  op13: (input: M) => N,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
+  funcK: (input: K) => L,
+  funcL: (input: L) => M,
+  funcM: (input: M) => N,
 ): N;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
-  op11: (input: K) => L,
-  op12: (input: L) => M,
-  op13: (input: M) => N,
-  op14: (input: N) => O,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
+  funcK: (input: K) => L,
+  funcL: (input: L) => M,
+  funcM: (input: M) => N,
+  funcN: (input: N) => O,
 ): O;
 
 export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
-  value: A,
-  op01: (input: A) => B,
-  op02: (input: B) => C,
-  op03: (input: C) => D,
-  op04: (input: D) => E,
-  op05: (input: E) => F,
-  op06: (input: F) => G,
-  op07: (input: G) => H,
-  op08: (input: H) => I,
-  op09: (input: I) => J,
-  op10: (input: J) => K,
-  op11: (input: K) => L,
-  op12: (input: L) => M,
-  op13: (input: M) => N,
-  op14: (input: N) => O,
-  op15: (input: O) => P,
+  data: A,
+  funcA: (input: A) => B,
+  funcB: (input: B) => C,
+  funcC: (input: C) => D,
+  funcD: (input: D) => E,
+  funcE: (input: E) => F,
+  funcF: (input: F) => G,
+  funcG: (input: G) => H,
+  funcH: (input: H) => I,
+  funcI: (input: I) => J,
+  funcJ: (input: J) => K,
+  funcK: (input: K) => L,
+  funcL: (input: L) => M,
+  funcM: (input: M) => N,
+  funcN: (input: N) => O,
+  funcO: (input: O) => P,
 ): P;
 
 export function pipe(
   input: unknown,
-  ...operations: ReadonlyArray<LazyOp | ((value: any) => unknown)>
+  ...functions: ReadonlyArray<LazyFunction | ((value: any) => unknown)>
 ): any {
   let output = input;
 
-  const lazyOperations = operations.map((op) =>
-    "lazy" in op ? prepareLazyOperation(op) : undefined,
+  const lazyFunctions = functions.map((op) =>
+    "lazy" in op ? prepareLazyFunction(op) : undefined,
   );
 
-  let operationIndex = 0;
-  while (operationIndex < operations.length) {
-    const lazyOperation = lazyOperations[operationIndex];
-    if (lazyOperation === undefined || !isIterable(output)) {
-      const operation = operations[operationIndex]!;
-      output = operation(output);
-      operationIndex += 1;
+  let functionIndex = 0;
+  while (functionIndex < functions.length) {
+    const lazyFunction = lazyFunctions[functionIndex];
+    if (lazyFunction === undefined || !isIterable(output)) {
+      const func = functions[functionIndex]!;
+      output = func(output);
+      functionIndex += 1;
       continue;
     }
 
-    const lazySequence: Array<PreparedLazyOperation> = [];
-    for (let index = operationIndex; index < operations.length; index++) {
-      const lazyOp = lazyOperations[index];
+    const lazySequence: Array<PreparedLazyFunction> = [];
+    for (let index = functionIndex; index < functions.length; index++) {
+      const lazyOp = lazyFunctions[index];
       if (lazyOp === undefined) {
         break;
       }
@@ -254,7 +325,7 @@ export function pipe(
 
     const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
-    operationIndex += lazySequence.length;
+    functionIndex += lazySequence.length;
   }
   return output;
 }
@@ -264,7 +335,7 @@ function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: Array<unknown>,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: ReadonlyArray<PreparedLazyOperation>,
+  lazySequence: ReadonlyArray<PreparedLazyFunction>,
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -275,7 +346,7 @@ function processItem(
 
   let lazyResult: LazyResult<any> = SKIP_ITEM;
   let isDone = false;
-  for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
+  for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
     items.push(currentItem);
     lazyResult = lazyFn(currentItem, index, items);
@@ -286,7 +357,7 @@ function processItem(
           const subResult = processItem(
             subItem,
             accumulator,
-            lazySequence.slice(operationsIndex + 1),
+            lazySequence.slice(functionsIndex + 1),
           );
           if (subResult) {
             return true;
@@ -311,8 +382,8 @@ function processItem(
   return isDone;
 }
 
-function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
-  const { lazy, lazyArgs } = op;
+function prepareLazyFunction(func: LazyFunction): PreparedLazyFunction {
+  const { lazy, lazyArgs } = func;
   const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
     isSingle: lazy.single ?? false,
