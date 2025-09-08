@@ -3,15 +3,16 @@ import vitest from "@vitest/eslint-plugin";
 import prettierConfig from "eslint-config-prettier";
 import jsdoc from "eslint-plugin-jsdoc";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ["coverage", "dist"],
   },
   eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs.recommended,
   prettierConfig,
   {
@@ -159,6 +160,9 @@ export default tseslint.config(
       // TODO: These rules allow us to really standardize our codebase, but they also do sweeping changes to the whole codebase which is very noisy. We should do it in one sweep sometime in the future.
       "@typescript-eslint/naming-convention": "off",
       "unicorn/prevent-abbreviations": "off",
+
+      // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
+      "unicorn/no-array-sort": "off",
 
       // === ESLint ============================================================
       // (We are assuming that the config is extended by eslint's: recommended
@@ -428,6 +432,7 @@ export default tseslint.config(
     // All Tests
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
+      // @ts-expect-error [ts2322] -- TODO: follow issue https://github.com/vitest-dev/eslint-plugin-vitest/issues/737 to see how this is resolved.
       vitest,
     },
 
