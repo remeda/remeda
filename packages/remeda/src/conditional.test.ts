@@ -13,14 +13,6 @@ describe("runtime (dataFirst)", () => {
         constant(undefined),
       ),
     ).toBeUndefined();
-
-    expect(
-      conditional(
-        "Jokic",
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(),
-      ),
-    ).toBeUndefined();
   });
 
   test("falls back to our default", () => {
@@ -29,14 +21,6 @@ describe("runtime (dataFirst)", () => {
         "Jokic",
         [constant(false), constant("world")],
         constant("hello"),
-      ),
-    ).toBe("hello");
-
-    expect(
-      conditional(
-        "Jokic",
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(() => "hello"),
       ),
     ).toBe("hello");
   });
