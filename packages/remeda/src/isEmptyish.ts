@@ -134,10 +134,17 @@ type ShouldNotNarrow<T> = Or<
 >;
 
 /**
- * A function that checks if the input is empty. Nullish values (`undefined`
- * and `null`) are also considered empty(-ish). The function supports array-like
- * and object-like types too and thus supports *most* built-in types that have
- * "empty-ish" semantics.
+ * A function that checks if the input is empty. Empty is defined as anything
+ * exposing a numerical `length`, or `size` property that is equal to `0`,
+ * `undefined`, and `null`. This definition covers strings, arrays, Maps, Sets,
+ * plain objects, and custom classes.
+ *
+ * `number`, `bigint`, `boolean`, `symbol`, and functions will always return
+ * `false`. `RegExp`, `Date`, and weak collections will always return `true`.
+ * Classes and Errors are treated as plain objects: if they expose any public
+ * property they would be considered non-empty, unless they expose a numerical
+ * `length` or `size` property, which defines their emptiness regardless of
+ * other properties.
  *
  * This function has *limited* utility at the type level because **negating** it
  * does not yield a useful type in most cases because of TypeScript
@@ -161,10 +168,12 @@ type ShouldNotNarrow<T> = Or<
  *    R.isEmptyish({}); //=> true
  *    R.isEmptyish(new Map()); //=> true
  *    R.isEmptyish(new Set()); //=> true
+ *    R.isEmptyish({ a: "hello", size: 0 }); //=> true
  *
  *    R.isEmptyish('test'); //=> false
  *    R.isEmptyish([1, 2, 3]); //=> false
  *    R.isEmptyish({ a: "hello" }); //=> false
+ *    R.isEmptyish({ length: 1 }); //=> false
  * @category Guard
  */
 export function isEmptyish<T>(

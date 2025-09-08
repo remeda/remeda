@@ -148,36 +148,53 @@ describe("unsupported types", () => {
   // implementation they should be fixed and possibly extracted out of this
   // section!
 
-  test("numbers", () => {
-    // What even constitutes an empty number?!
+  describe("always false", () => {
+    // Empty !== Falsy...
 
-    expect(isEmptyish(0)).toBe(false);
-    expect(isEmptyish(-0)).toBe(false);
-    expect(isEmptyish(Number.NaN)).toBe(false);
-    expect(isEmptyish(Infinity)).toBe(false);
-    expect(isEmptyish(100)).toBe(false);
-    expect(isEmptyish(12.34)).toBe(false);
-  });
+    test("numbers", () => {
+      expect(isEmptyish(0)).toBe(false);
+      expect(isEmptyish(-0)).toBe(false);
+      expect(isEmptyish(Number.NaN)).toBe(false);
+      expect(isEmptyish(Infinity)).toBe(false);
+      expect(isEmptyish(100)).toBe(false);
+      expect(isEmptyish(12.34)).toBe(false);
+    });
 
-  test("booleans", () => {
-    // Empty is not falsy...
+    test("bigints", () => {
+      expect(isEmptyish(0n)).toBe(false);
+      expect(isEmptyish(1n)).toBe(false);
+    });
 
-    expect(isEmptyish(false)).toBe(false);
-    expect(isEmptyish(true)).toBe(false);
-  });
+    test("booleans", () => {
+      expect(isEmptyish(false)).toBe(false);
+      expect(isEmptyish(true)).toBe(false);
+    });
 
-  test("bigints", () => {
-    expect(isEmptyish(0n)).toBe(false);
-    expect(isEmptyish(1n)).toBe(false);
-  });
+    test("symbols", () => {
+      // Using an empty string in a symbol results in the same "kind" of
+      // symbol as ones created with a non-empty string. It's unlikely that the
+      // actual value of a symbol would be checked (and not its identity), and
+      // that that value would be checked for emptiness explicitly.
 
-  test("symbols", () => {
-    // The empty symbol is more of a special case of using symbols and shouldn't
-    // be considered different to non-empty symbols. It's also unlikely to have
-    // a practical use-case which would *also* need to consider it as empty...
+      expect(isEmptyish(Symbol(""))).toBe(false);
+      expect(isEmptyish(Symbol("something"))).toBe(false);
+    });
 
-    expect(isEmptyish(Symbol(""))).toBe(false);
-    expect(isEmptyish(Symbol("something"))).toBe(false);
+    test("functions", () => {
+      // It's not possible to check the contents of a function at runtime, and
+      // even if it were, there's a semantic difference between a purely empty
+      // function and one that doesn't do anything useful (but can still log,
+      // for example).
+
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      expect(isEmptyish(() => {})).toBe(false);
+      expect(
+        isEmptyish(() => {
+          // eslint-disable-next-line no-console
+          console.log("hello");
+        }),
+      ).toBe(false);
+    });
   });
 
   test("classes", () => {
@@ -206,52 +223,54 @@ describe("unsupported types", () => {
     expect(isEmptyish(new ContainerWrapper())).toBe(false);
   });
 
-  test("regexp", () => {
-    // There is no value in an empty regexp because it catches nothing so it's
-    // unlikely that this would be needed.
-
-    // eslint-disable-next-line prefer-regex-literals, require-unicode-regexp
-    expect(isEmptyish(new RegExp(""))).toBe(true);
-    expect(isEmptyish(/abc/u)).toBe(true);
-  });
-
-  test("dates", () => {
-    // Dates are like numbers, so they similarly don't have a notion of
-    // emptiness.
-
-    expect(isEmptyish(new Date(0))).toBe(true);
-    expect(isEmptyish(new Date())).toBe(true);
-  });
-
-  test("functions", () => {
-    // Similar to RegExps, empty functions don't really make sense.
-
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    expect(isEmptyish(() => {})).toBe(false);
-    expect(
-      isEmptyish(() => {
-        // eslint-disable-next-line no-console
-        console.log("hello");
-      }),
-    ).toBe(false);
-  });
-
-  test("weak collections", () => {
-    // Weak collections don't have mechanism that allows tracking it's size or
-    // enumerating it's entries.
-
-    expect(isEmptyish(new WeakMap())).toBe(true);
-    expect(isEmptyish(new WeakSet())).toBe(true);
-  });
-
   test("errors", () => {
-    // Errors are similar to classes in the sense that they don't have obvious
-    // semantics for emptiness; an error can still hold information even if it's
-    // message is empty, and the caller can check for an empty message
-    // explicitly.
+    // Errors are just classes! We don't special-case errors to check the length
+    // of the message because errors could be designed so that the message is
+    // not important and they hold information in other properties, and they
+    // wouldn't be semantically empty because of that.
+
+    class MyError extends Error {
+      // eslint-disable-next-line unicorn/custom-error-definition
+      public constructor(public data = "hello") {
+        super();
+      }
+    }
 
     // eslint-disable-next-line unicorn/error-message
     expect(isEmptyish(new Error())).toBe(true);
     expect(isEmptyish(new Error("hello world!"))).toBe(true);
+    expect(isEmptyish(new MyError())).toBe(false);
+  });
+
+  describe("always true", () => {
+    // These are built-in classes that would be assessed the same way we
+    // assess objects; for the most part they come up as empty because they
+    // don't have any public properties. We don't special-case them for
+    // performance reasons (they would add redundant checks).
+
+    test("regexp", () => {
+      // There is no value in an empty regexp because it catches nothing so it's
+      // unlikely that this would be needed.
+
+      // eslint-disable-next-line prefer-regex-literals, require-unicode-regexp
+      expect(isEmptyish(new RegExp(""))).toBe(true);
+      expect(isEmptyish(/abc/u)).toBe(true);
+    });
+
+    test("dates", () => {
+      // Dates are wrapped numbers, even if we special-case them there is no
+      // clear semantic for what an "empty" date would be.
+
+      expect(isEmptyish(new Date(0))).toBe(true);
+      expect(isEmptyish(new Date())).toBe(true);
+    });
+
+    test("weak collections", () => {
+      // Weak collections don't have a mechanism that allows tracking its size
+      // or enumerating its entries.
+
+      expect(isEmptyish(new WeakMap())).toBe(true);
+      expect(isEmptyish(new WeakSet())).toBe(true);
+    });
   });
 });
