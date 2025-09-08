@@ -15,18 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.0.0
 
       - name: ⎔ Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.10.10
 
       - name: ☔ Collect coverage
         run: npm --workspace=remeda run test:coverage
 
       - name: 🗺️ Upload coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v5.5.1

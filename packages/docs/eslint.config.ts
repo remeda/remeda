@@ -5,18 +5,19 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [".astro/**", "dist", "public"],
   },
 
   eslint.configs.recommended,
 
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
 
   {
     languageOptions: {
@@ -120,8 +121,8 @@ export default tseslint.config(
     },
   },
 
-  ...eslintPluginAstro.configs["flat/recommended"],
-  ...eslintPluginAstro.configs["jsx-a11y-strict"],
+  eslintPluginAstro.configs["flat/recommended"],
+  eslintPluginAstro.configs["jsx-a11y-strict"],
   {
     files: ["**/*.astro"],
     languageOptions: {

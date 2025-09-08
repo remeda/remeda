@@ -21,4 +21,6 @@ export default defineConfig({
 
   attw: true,
   publint: true,
+
+  failOnWarn: true,
 });
