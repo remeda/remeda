@@ -1,4 +1,7 @@
-/* eslint-disable @typescript-eslint/no-deprecated -- (See TODO below.) */
+/* eslint-disable jsdoc/check-param-names, jsdoc/require-param --
+ * We don't document each `case` param, instead we document the concept more
+ * generally, but these eslint rules can't detect that.
+ */
 
 import { purryOn } from "./internal/purryOn";
 import type { GuardType } from "./internal/types/GuardType";
@@ -10,21 +13,6 @@ type Case<
 > = readonly [when: When, then: (x: GuardType<When, In> & In) => Out];
 
 type DefaultCase<In, Out> = (x: In) => Out;
-
-// For easier discovery and to allow us to have a single exported function we
-// merge a set of utilities with the function itself. This provides a namespace-
-// like structure where the function could be used directly by calling it, but
-// also as the container of additional utilities.
-type Utilities = {
-  readonly defaultCase: typeof defaultCase;
-};
-type WithUtils<T> = T & Utilities;
-
-const conditionalPlus: WithUtils<typeof conditional> = Object.assign(
-  conditional,
-  { defaultCase } satisfies Utilities,
-);
-export { conditionalPlus as conditional };
 
 /**
  * Executes a transformer function based on the first matching predicate,
@@ -98,7 +86,7 @@ export { conditionalPlus as conditional };
  * @dataLast
  * @category Function
  */
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Return0,
@@ -109,7 +97,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   // TODO [>2]: Exclude previous guarded types from the next functions in the chain. Although this isn't a prefect solution, it's the common approach to compute the "negation" of a type-predicate, and would provide a more comfortable API for bigger chains for cases like discriminated unions. This TODO is at the first occurrence where it is relevant, but it should be applied to **all** subsequent overloads. p.s. don't forget to update the docs too!
@@ -123,7 +111,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Return1 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -139,7 +127,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Return1 | Return2 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -158,7 +146,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Return1 | Return2 | Return3 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -180,7 +168,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): (data: T) => Return0 | Return1 | Return2 | Return3 | Return4 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -207,7 +195,7 @@ function conditional<
   data: T,
 ) => Return0 | Return1 | Return2 | Return3 | Return4 | Return5 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -245,7 +233,7 @@ function conditional<
   | Return6
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -287,7 +275,7 @@ function conditional<
   | Return7
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -333,7 +321,7 @@ function conditional<
   | Return8
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -450,7 +438,7 @@ function conditional<
  * @dataFirst
  * @category Function
  */
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Return0,
@@ -461,7 +449,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -475,7 +463,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Return1 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -492,7 +480,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Return1 | Return2 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -512,7 +500,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Return1 | Return2 | Return3 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -535,7 +523,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Return1 | Return2 | Return3 | Return4 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -561,7 +549,7 @@ function conditional<
   fallback?: DefaultCase<T, Fallback>,
 ): Return0 | Return1 | Return2 | Return3 | Return4 | Return5 | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -598,7 +586,7 @@ function conditional<
   | Return6
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -639,7 +627,7 @@ function conditional<
   | Return7
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -684,7 +672,7 @@ function conditional<
   | Return8
   | Fallback;
 
-function conditional<
+export function conditional<
   T,
   Fn0 extends (x: T) => boolean,
   Fn1 extends (x: T) => boolean,
@@ -733,7 +721,7 @@ function conditional<
   | Return9
   | Fallback;
 
-function conditional(...args: ReadonlyArray<unknown>): unknown {
+export function conditional(...args: ReadonlyArray<unknown>): unknown {
   return purryOn(isCase, conditionalImplementation, args);
 }
 
@@ -770,58 +758,3 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
     rest.length === 0
   );
 }
-
-// TODO [2025-09-04]: Remove the deprecated `defaultCase` utility.
-/**
- *! **DEPRECATED**: `conditional` now accepts a default, catch-all, callback directly and no longer needs this utility wrapper. Use `constant(undefined)` as your last case instead (see example).
- *
- * @example
- *   const nameOrId = 3 as string | number;
- *   R.conditional(
- *     nameOrId,
- *     [R.isString, (name) => `Hello ${name}`],
- *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     // Was: `R.conditional.defaultCase(),`, Now:
- *     constant(undefined),
- *   ); //=> 'Hello ID: 3'
- * @deprecated `conditional` now accepts a default, catch-all, callback
- * directly and no longer needs this utility wrapper. Use `constant(undefined)`
- * as your last case instead (see example).
- */
-function defaultCase(): Case<unknown, undefined>;
-
-/**
- *! **DEPRECATED**: `conditional` now accepts a default, catch-all, callback directly and no longer needs this utility wrapper. Simply put your `then` callback as the last case (see example).
- *
- * @param then - You only need to provide the transformer, the predicate is
- * implicit. @default () => undefined, which is how Lodash and Ramda handle
- * the final fallback case.
- * @example
- *   const nameOrId = 3 as string | number;
- *   R.conditional(
- *     nameOrId,
- *     [R.isString, (name) => `Hello ${name}`],
- *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     // Was: `R.conditional.defaultCase(
- *     //  (something) => `Hello something (${JSON.stringify(something)})`,
- *     //),`, Now:
- *     (something) => `Hello something (${JSON.stringify(something)})`
- *   ); //=> 'Hello ID: 3'
- * @deprecated `conditional` now accepts a default, catch-all, callback
- * directly and no longer needs this utility wrapper. Simply put your `then`
- * callback as the last case.
- */
-function defaultCase<In, Then extends (param: In) => unknown>(
-  then: Then,
-): Case<In, ReturnType<Then>>;
-function defaultCase(
-  then: (data: unknown) => unknown = trivialDefaultCase,
-): Case<unknown, unknown> {
-  return [acceptAnything, then];
-}
-
-// We memoize this so it isn't recreated on every invocation of `defaultCase`.
-const acceptAnything = () => true as const;
-
-// Lodash and Ramda return `undefined` as the default case.
-const trivialDefaultCase = (): undefined => undefined;

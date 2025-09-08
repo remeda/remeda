@@ -82,29 +82,11 @@ describe("data-first", () => {
         constant(undefined),
       ),
     ).toEqualTypeOf<"hello" | undefined>();
-
-    expectTypeOf(
-      conditional(
-        "Jokic",
-        [isString, () => "hello" as const],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(),
-      ),
-    ).toEqualTypeOf<"hello" | undefined>();
   });
 
   test("passes the defaultCase's type to the output", () => {
     expectTypeOf(
       conditional("Jokic", [isString, () => "hello" as const], constant(123)),
-    ).toEqualTypeOf<"hello" | 123>();
-
-    expectTypeOf(
-      conditional(
-        "Jokic",
-        [isString, () => "hello" as const],
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(() => 123 as const),
-      ),
     ).toEqualTypeOf<"hello" | 123>();
   });
 });
@@ -181,17 +163,6 @@ describe("data-last", () => {
         conditional([isString, () => "hello" as const], constant(undefined)),
       ),
     ).toEqualTypeOf<"hello" | undefined>();
-
-    expectTypeOf(
-      pipe(
-        "Jokic",
-        conditional(
-          [isString, () => "hello" as const],
-          // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-          conditional.defaultCase(),
-        ),
-      ),
-    ).toEqualTypeOf<"hello" | undefined>();
   });
 
   test("passes the defaultCase's type to the output", () => {
@@ -199,17 +170,6 @@ describe("data-last", () => {
       pipe(
         "Jokic",
         conditional([isString, () => "hello" as const], constant(123)),
-      ),
-    ).toEqualTypeOf<"hello" | 123>();
-
-    expectTypeOf(
-      pipe(
-        "Jokic",
-        conditional(
-          [isString, () => "hello" as const],
-          // eslint-disable-next-line @typescript-eslint/no-deprecated -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-          conditional.defaultCase(() => 123 as const),
-        ),
       ),
     ).toEqualTypeOf<"hello" | 123>();
   });
