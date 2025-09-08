@@ -139,7 +139,7 @@ type ShouldNotNarrow<T> = Or<
  * `undefined`, and `null`. This definition covers strings, arrays, Maps, Sets,
  * plain objects, and custom classes.
  *
- * `number`, `bigint`, `boolean`, `symbol`, and functions will always return
+ * `number`, `bigint`, `boolean`, `symbol`, and `function` will always return
  * `false`. `RegExp`, `Date`, and weak collections will always return `true`.
  * Classes and Errors are treated as plain objects: if they expose any public
  * property they would be considered non-empty, unless they expose a numerical
@@ -169,11 +169,17 @@ type ShouldNotNarrow<T> = Or<
  *    R.isEmptyish(new Map()); //=> true
  *    R.isEmptyish(new Set()); //=> true
  *    R.isEmptyish({ a: "hello", size: 0 }); //=> true
+ *    R.isEmptyish(/abc/); //=> true
+ *    R.isEmptyish(new Date()); //=> true
+ *    R.isEmptyish(new WeakMap()); //=> true
  *
  *    R.isEmptyish('test'); //=> false
  *    R.isEmptyish([1, 2, 3]); //=> false
  *    R.isEmptyish({ a: "hello" }); //=> false
  *    R.isEmptyish({ length: 1 }); //=> false
+ *    R.isEmptyish(0); //=> false
+ *    R.isEmptyish(true); //=> false
+ *    R.isEmptyish(() => {}); //=> false
  * @category Guard
  */
 export function isEmptyish<T>(
