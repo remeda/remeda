@@ -1,11 +1,11 @@
 import eslint from "@eslint/js";
-import { defineConfig } from "astro/config";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -122,11 +122,7 @@ export default defineConfig(
   },
 
   eslintPluginAstro.configs["flat/recommended"],
-  // @ts-expect-error [ts2556] -- TODO: It looks like we should be able to just
-  // remove the spread operator here, but that causes the whole config to show
-  // up as badly typed. Until I understand this better I prefer the typing
-  // issue to be local to just this config.
-  ...eslintPluginAstro.configs["jsx-a11y-strict"],
+  eslintPluginAstro.configs["jsx-a11y-strict"],
   {
     files: ["**/*.astro"],
     languageOptions: {
