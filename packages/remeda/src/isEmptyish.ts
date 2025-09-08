@@ -135,9 +135,9 @@ type ShouldNotNarrow<T> = Or<
 
 /**
  * A function that checks if the input is empty. Empty is defined as anything
- * exposing a numerical `length`, or `size` property that is equal to `0`,
- * `undefined`, and `null`. This definition covers strings, arrays, Maps, Sets,
- * plain objects, and custom classes.
+ * exposing a numerical `length`, or `size` property that is equal to `0`. This
+ * definition covers strings, arrays, Maps, Sets, plain objects, and custom
+ * classes. Additionally, `null` and `undefined` are also considered empty.
  *
  * `number`, `bigint`, `boolean`, `symbol`, and `function` will always return
  * `false`. `RegExp`, `Date`, and weak collections will always return `true`.
