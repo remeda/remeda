@@ -25,15 +25,15 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.9
+        uses: bahmutov/npm-install@v1.10.10
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -57,7 +57,7 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
@@ -69,7 +69,7 @@ jobs:
 
       - name: 🚚 Lookup distributable
         id: dist-lookup
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.2.4
         with:
           lookup-only: true
           path: packages/remeda/dist
@@ -79,13 +79,13 @@ jobs:
 
       - name: ⎔ Setup node
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: bahmutov/npm-install@v1.10.9
+        uses: bahmutov/npm-install@v1.10.10
 
       - name: 🏗️ Build
         if: steps.dist-lookup.outputs.cache-hit != 'true'
@@ -93,7 +93,7 @@ jobs:
 
       - name: 🚚 Save distributable
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4.2.3
+        uses: actions/cache/save@v4.2.4
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -113,21 +113,21 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v5.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
-        uses: bahmutov/npm-install@v1.10.9
+        uses: bahmutov/npm-install@v1.10.10
 
       - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@v4.2.4
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
