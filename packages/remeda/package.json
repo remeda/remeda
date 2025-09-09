@@ -50,7 +50,7 @@
     "check:dist": "tsc --project tsconfig.dist.json",
     "format": "prettier . --write",
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
-    "publish:jsr": "jsr publish --no-provenance",
+    "publish:jsr": "jsr publish",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
     "release": "semantic-release",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
