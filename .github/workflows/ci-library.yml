@@ -303,6 +303,7 @@ jobs:
         run: npm --workspace=remeda run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # TODO: We should be able to migrate to an OIDC based release once issues in semantic-release/npm are resolved: https://github.com/semantic-release/npm/issues/958
           NPM_CONFIG_PROVENANCE: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
