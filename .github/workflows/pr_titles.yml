@@ -30,3 +30,6 @@ jobs:
             ci
             chore
             revert
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required by the action
+
