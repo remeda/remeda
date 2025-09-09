@@ -278,9 +278,6 @@ jobs:
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm publishing
-    env:
-      # Required by semantic-release
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: ⬇️ Checkout repo
@@ -304,6 +301,9 @@ jobs:
 
       - name: 🚀 Release
         run: npm --workspace=remeda run release
+        env:
+          # Required by semantic-release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-jsr:
     name: 🦕 Publish to JSR.io

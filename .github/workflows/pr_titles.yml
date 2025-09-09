@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
-    env:
-      # Required by the action
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: amannn/action-semantic-pull-request@v6.1.1
         with:
@@ -33,3 +30,6 @@ jobs:
             ci
             chore
             revert
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required by the action
+
