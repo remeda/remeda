@@ -302,8 +302,9 @@ jobs:
       - name: 🚀 Release
         run: npm --workspace=remeda run release
         env:
-          # Required by semantic-release
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-jsr:
     name: 🦕 Publish to JSR.io
