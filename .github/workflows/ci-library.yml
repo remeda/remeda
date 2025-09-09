@@ -10,14 +10,13 @@ on:
   # etc...).
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pull-requests: write # To allow inline comments for warnings/errors
-
 jobs:
   typecheck:
     name: 👷 Typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5.0.0
@@ -38,6 +37,8 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
@@ -74,6 +75,9 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     strategy:
       fail-fast: false
       matrix:
@@ -128,6 +132,9 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     strategy:
       matrix:
         node:
@@ -155,6 +162,9 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5.0.0
@@ -175,6 +185,9 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5.0.0
@@ -195,6 +208,9 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5.0.0
@@ -219,9 +235,11 @@ jobs:
       - lint
       - formatting
       - slowTypes
-
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      # Provides a link to the preview as a comment in the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5.0.0
@@ -252,17 +270,14 @@ jobs:
       - lint
       - formatting
       - slowTypes
-
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
-
     runs-on: ubuntu-latest
-
     permissions:
       # @see https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions#github-workflows-release.yml-configuration-for-node-projects
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      id-token: write # to enable use of OIDC for npm publishing
 
     steps:
       - name: ⬇️ Checkout repo
@@ -287,21 +302,16 @@ jobs:
       - name: 🚀 Release
         run: npm --workspace=remeda run release
         env:
-          NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-jsr:
     name: 🦕 Publish to JSR.io
     needs:
       - release
-
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
-      id-token: write
-
+      id-token: write # Enable OIDC for JSR publishing
     steps:
       - name: ⬇️ Checkout Repo
         uses: actions/checkout@v5.0.0
