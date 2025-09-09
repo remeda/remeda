@@ -301,8 +301,6 @@ jobs:
 
       - name: 🚀 Release
         run: npm --workspace=remeda run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-jsr:
     name: 🦕 Publish to JSR.io
