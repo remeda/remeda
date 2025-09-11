@@ -7,9 +7,9 @@ remeda: capitalize
   capitalizes only the first character. Remeda's `capitalize` doesn't do this
   automatically, but it could be reproduced by calling [`toLowerCase`](/docs#toLowerCase)
   on the input before calling `capitalize` on it.
-- For display purposes, consider using the
-  [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
-  instead of any JavaScript function.
+- For display purposes, consider using CSS directly via the property
+  [`text-transform: capitalize`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
+  without any runtime logic at all.
 - Remeda's `capitalize` is designed for ASCII strings and may produce unexpected
   results with non-ASCII characters (diacritics, non-Latin characters, emojis,
   etc.). For internationalized text processing,
