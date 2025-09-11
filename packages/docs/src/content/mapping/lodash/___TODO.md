@@ -18,3 +18,9 @@
    `ToTitleCase()`. This single function enables composition-based migration
    for both `startCase` (direct replacement) and `lowerCase` (via
    `toLowerCase(toTitleCase(input))`).
+
+6. Add frontmatter flag (e.g., `candidate: true`) for mapping docs where
+   functions are "Not provided by Remeda". When present, display a banner/UX
+   element encouraging users to share their use-cases if they believe the
+   function should be added, allowing us to re-assess past decisions based on
+   real-world usage data.
