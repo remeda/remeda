@@ -23,4 +23,4 @@
    functions are "Not provided by Remeda". When present, display a banner/UX
    element encouraging users to share their use-cases if they believe the
    function should be added, allowing us to re-assess past decisions based on
-   real-world usage data.
+   real-world usage data. Articles to mark as candidates: `pad`.
