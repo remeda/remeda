@@ -4,9 +4,7 @@ category: String
 
 _Not provided by Remeda._
 
-Lodash's `lowerCase` converts strings to space-separated lowercase words. Use Remeda's `toLowerCase` for simple case conversion, or create a custom function for word separation.
-
-**Note**: Remeda's case functions are designed for ASCII strings and may produce unexpected results with non-ASCII characters (diacritics, non-Latin characters, emojis, etc.).
+Lodash's `lowerCase` converts strings to space-separated lowercase words using word splitting. Remeda's `toLowerCase` only converts case without word separation.
 
 ```ts
 // Lodash
