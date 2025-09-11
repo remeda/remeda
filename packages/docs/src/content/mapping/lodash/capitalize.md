@@ -4,7 +4,7 @@ remeda: capitalize
 ---
 
 - Lodash's `capitalize` converts the entire string to lowercase first, then capitalizes only the first character. Remeda's `capitalize` only capitalizes the first character without modifying the rest of the string.
-- Remeda might work incorrectly for non-ASCII inputs. Lodash handles Unicode characters better.
+- Remeda's `capitalize` is designed for ASCII identifiers (variable names, database fields, etc.) and may produce unexpected results with non-ASCII characters. For Unicode text, consider using the CSS `text-transform: capitalize` property instead.
 
 ```ts
 // Lodash

@@ -10,3 +10,9 @@
 
 4. `pick`, `pickBy`, `omit`, and `omitBy` handle symbol keys differently. We
    need to compare this with how Lodash does it and document any differences.
+
+5. Add `toTitleCase` function to handle 45% of `words` usage (converting
+   identifiers to readable labels). Research shows this is the most common
+   Lodash string operation not covered by Remeda. Use proper name `toTitleCase`
+   instead of `startCase` - matches Python's `str.title()` and .NET's
+   `ToTitleCase()`.

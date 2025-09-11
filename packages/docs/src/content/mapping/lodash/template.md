@@ -28,4 +28,4 @@ const user = "fred";
 `hello ${user}!`; // "hello fred!"
 ```
 
-For production applications, dedicated templating libraries offer better performance, security, and features than Lodash's basic templating.
+For production applications, consider using dedicated templating libraries that are specifically designed for your use case.

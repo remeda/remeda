@@ -6,6 +6,8 @@ _Not provided by Remeda._
 
 Lodash's `upperCase` converts strings to space-separated uppercase words. Use Remeda's `toUpperCase` for simple case conversion, or create a custom function for word separation.
 
+**Note**: Remeda's case functions are designed for ASCII identifiers and may produce unexpected results with non-ASCII characters.
+
 ```ts
 // Lodash
 upperCase("--foo-bar"); // "FOO BAR"

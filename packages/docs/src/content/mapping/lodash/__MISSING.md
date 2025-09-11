@@ -119,7 +119,7 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # String
 
-_All string functions have been documented._
+- startCase
 
 # Util
 
