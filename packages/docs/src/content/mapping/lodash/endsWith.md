@@ -4,7 +4,9 @@ remeda: endsWith
 ---
 
 - Lodash supports an optional `position` parameter to check only part of the
-  string, while Remeda doesn't support this parameter.
+  string, while Remeda doesn't support this parameter. To replicate this
+  behaviour use [`sliceString`](/docs#sliceString) to remove the tail of the
+  string at the cutoff position.
 - Lodash allows the suffix to be `undefined` (converts to `"undefined"` string)
   but this is not supported by Remeda and needs to be handled explicitly.
 
