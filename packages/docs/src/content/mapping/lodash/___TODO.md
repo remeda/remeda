@@ -23,4 +23,10 @@
    functions are "Not provided by Remeda". When present, display a banner/UX
    element encouraging users to share their use-cases if they believe the
    function should be added, allowing us to re-assess past decisions based on
-   real-world usage data. Articles to mark as candidates: `pad`.
+   real-world usage data. Articles to mark as candidates: `pad`, `padStart`,
+   `padEnd`.
+
+7. Add `padStart` and `padEnd` functions to Remeda for data-last ergonomics
+   in pipes (e.g., `pipe(input, padStart(10, "0"))`) and better typing than
+   native methods. These would complement existing string functions and make
+   Remeda a more complete string processing toolkit.
