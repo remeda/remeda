@@ -8,8 +8,8 @@ Use the native JS [`String.prototype.padEnd`](https://developer.mozilla.org/en-U
 
 ```ts
 // Lodash
-padEnd("abc", 6); // "abc   "
-padEnd("abc", 6, "_-"); // "abc_-_"
+_.padEnd("abc", 6); // "abc   "
+_.padEnd("abc", 6, "_-"); // "abc_-_"
 
 // Native
 "abc".padEnd(6); // "abc   "

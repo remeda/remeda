@@ -8,7 +8,7 @@ Use a dedicated library like [`he`](https://www.npmjs.com/package/he) or create 
 
 ```ts
 // Lodash
-unescape("&lt;div&gt;Hello &amp; goodbye&lt;/div&gt;"); // "<div>Hello & goodbye</div>"
+_.unescape("&lt;div&gt;Hello &amp; goodbye&lt;/div&gt;"); // "<div>Hello & goodbye</div>"
 
 // Simple implementation
 function unescape(string: string): string {

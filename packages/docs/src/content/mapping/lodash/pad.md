@@ -8,8 +8,8 @@ Use the native JS [`String.prototype.padStart`](https://developer.mozilla.org/en
 
 ```ts
 // Lodash
-pad("abc", 8); // "  abc   "
-pad("abc", 8, "_-"); // "_-abc_-_"
+_.pad("abc", 8); // "  abc   "
+_.pad("abc", 8, "_-"); // "_-abc_-_"
 
 // Custom implementation using native methods
 function pad(str: string, length: number, chars: string = " "): string {

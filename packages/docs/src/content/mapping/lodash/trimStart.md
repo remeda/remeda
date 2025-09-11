@@ -8,13 +8,13 @@ Use the native JS [`String.prototype.trimStart`](https://developer.mozilla.org/e
 
 ```ts
 // Lodash (whitespace)
-trimStart("  abc  "); // "abc  "
+_.trimStart("  abc  "); // "abc  "
 
 // Native (identical for whitespace)
 "  abc  ".trimStart(); // "abc  "
 
 // Lodash (custom characters)
-trimStart("-_-abc-_-", "_-"); // "abc-_-"
+_.trimStart("-_-abc-_-", "_-"); // "abc-_-"
 
 // Custom implementation for specific characters
 function trimStart(str: string, chars?: string): string {

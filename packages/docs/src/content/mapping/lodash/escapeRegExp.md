@@ -4,7 +4,7 @@ category: String
 
 _Not provided by Remeda._
 
-Use a simple implementation or a library like [`escape-string-regexp`](https://www.npmjs.com/package/escape-string-regexp).
+Use a simple implementation or a library like [`escape-string-regexp`](https://www.npmjs.com/package/escape-string-regexp). The escaped string can then be safely used in `new RegExp()` constructor.
 
 ```ts
 // Lodash
@@ -21,5 +21,3 @@ escapeRegExp("[lodash](https://lodash.com/)"); // "\\[lodash\\]\\(https://lodash
 import escapeStringRegexp from "escape-string-regexp";
 escapeStringRegexp("[lodash](https://lodash.com/)"); // "\\[lodash\\]\\(https://lodash\\.com/\\)"
 ```
-
-The escaped string can then be safely used in `new RegExp()` constructor.

@@ -6,13 +6,13 @@ _Not provided by Remeda._
 
 Lodash's `upperCase` converts strings to space-separated uppercase words. Use Remeda's `toUpperCase` for simple case conversion, or create a custom function for word separation.
 
-**Note**: Remeda's case functions are designed for ASCII identifiers and may produce unexpected results with non-ASCII characters.
+**Note**: Remeda's case functions are designed for ASCII strings and may produce unexpected results with non-ASCII characters (diacritics, non-Latin characters, emojis, etc.).
 
 ```ts
 // Lodash
-upperCase("--foo-bar"); // "FOO BAR"
-upperCase("fooBar"); // "FOO BAR"
-upperCase("__foo_bar__"); // "FOO BAR"
+_.upperCase("--foo-bar"); // "FOO BAR"
+_.upperCase("fooBar"); // "FOO BAR"
+_.upperCase("__foo_bar__"); // "FOO BAR"
 
 // Remeda (simple uppercase)
 toUpperCase("--foo-bar"); // "--FOO-BAR"

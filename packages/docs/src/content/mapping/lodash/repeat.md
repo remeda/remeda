@@ -8,9 +8,9 @@ Use the native JS [`String.prototype.repeat`](https://developer.mozilla.org/en-U
 
 ```ts
 // Lodash
-repeat("*", 3); // "***"
-repeat("abc", 2); // "abcabc"
-repeat("abc", 0); // ""
+_.repeat("*", 3); // "***"
+_.repeat("abc", 2); // "abcabc"
+_.repeat("abc", 0); // ""
 
 // Native (identical behavior)
 "*".repeat(3); // "***"

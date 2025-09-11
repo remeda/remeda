@@ -4,14 +4,14 @@ category: String
 
 _Not provided by Remeda._
 
-Lodash's `template` is a full templating system. Use a dedicated templating library like [`handlebars`](https://www.npmjs.com/package/handlebars), [`mustache`](https://www.npmjs.com/package/mustache), or [`ejs`](https://www.npmjs.com/package/ejs) instead.
+Lodash's `template` is a full templating system. Use a dedicated templating library like [`handlebars`](https://www.npmjs.com/package/handlebars), [`mustache`](https://www.npmjs.com/package/mustache), or [`ejs`](https://www.npmjs.com/package/ejs) instead. For production applications, consider using dedicated templating libraries that are specifically designed for your use case.
 
 ```ts
 // Lodash
-const compiled = template("hello <%= user %>!");
+const compiled = _.template("hello <%= user %>!");
 compiled({ user: "fred" }); // "hello fred!"
 
-const compiled2 = template("<b><%- value %></b>");
+const compiled2 = _.template("<b><%- value %></b>");
 compiled2({ value: "<script>" }); // "<b>&lt;script&gt;</b>"
 
 // Using handlebars
@@ -27,5 +27,3 @@ template2({ value: "<script>" }); // "<b>&lt;script&gt;</b>"
 const user = "fred";
 `hello ${user}!`; // "hello fred!"
 ```
-
-For production applications, consider using dedicated templating libraries that are specifically designed for your use case.

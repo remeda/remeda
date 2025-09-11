@@ -8,13 +8,13 @@ Use the native JS [`String.prototype.trimEnd`](https://developer.mozilla.org/en-
 
 ```ts
 // Lodash (whitespace)
-trimEnd("  abc  "); // "  abc"
+_.trimEnd("  abc  "); // "  abc"
 
 // Native (identical for whitespace)
 "  abc  ".trimEnd(); // "  abc"
 
 // Lodash (custom characters)
-trimEnd("-_-abc-_-", "_-"); // "-_-abc"
+_.trimEnd("-_-abc-_-", "_-"); // "-_-abc"
 
 // Custom implementation for specific characters
 function trimEnd(str: string, chars?: string): string {

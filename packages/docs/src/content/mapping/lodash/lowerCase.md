@@ -6,13 +6,13 @@ _Not provided by Remeda._
 
 Lodash's `lowerCase` converts strings to space-separated lowercase words. Use Remeda's `toLowerCase` for simple case conversion, or create a custom function for word separation.
 
-**Note**: Remeda's case functions are designed for ASCII identifiers and may produce unexpected results with non-ASCII characters.
+**Note**: Remeda's case functions are designed for ASCII strings and may produce unexpected results with non-ASCII characters (diacritics, non-Latin characters, emojis, etc.).
 
 ```ts
 // Lodash
-lowerCase("--Foo-Bar--"); // "foo bar"
-lowerCase("fooBar"); // "foo bar"
-lowerCase("__FOO_BAR__"); // "foo bar"
+_.lowerCase("--Foo-Bar--"); // "foo bar"
+_.lowerCase("fooBar"); // "foo bar"
+_.lowerCase("__FOO_BAR__"); // "foo bar"
 
 // Remeda (simple lowercase)
 toLowerCase("--Foo-Bar--"); // "--foo-bar--"
