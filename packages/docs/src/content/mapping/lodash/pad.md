@@ -4,31 +4,28 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`String.prototype.padStart`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart) and [`padEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) to implement center padding.
+- If pad is used with whitespace as padding in order to center text when
+  displayed on a web page prefer using CSS instead. You shouldn't need to use
+  runtime logic for styling.
+- For other uses `pad` could be replicated via [`padStart`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart)
+  and [`padEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd),
+  by computing the amount of effective padding you need on one side.
+
+### CSS
+
+```tsx
+// Lodash
+<pre>{_.pad(user.name, 20)}</pre>
+
+// CSS
+<div style={{ textAlign: "center", width: "20ch" }}>{user.name}</div>
+```
+
+### Reference Implementation
 
 ```ts
-// Lodash
-_.pad("abc", 8); // "  abc   "
-_.pad("abc", 8, "_-"); // "_-abc_-_"
-
-// Custom implementation using native methods
-function pad(str: string, length: number, chars: string = " "): string {
-  if (str.length >= length) return str;
-
-  const padLength = length - str.length;
-  const padLeft = Math.floor(padLength / 2);
-  const padRight = padLength - padLeft;
-
-  const leftPad = chars
-    .repeat(Math.ceil(padLeft / chars.length))
-    .slice(0, padLeft);
-  const rightPad = chars
-    .repeat(Math.ceil(padRight / chars.length))
-    .slice(0, padRight);
-
-  return leftPad + str + rightPad;
-}
-
-pad("abc", 8); // "  abc   "
-pad("abc", 8, "_-"); // "_-abc_-_"
+const pad = (data: string, length: number, padding = " ") =>
+  data
+    .padStart(Math.floor((length + data.length) / 2), padding)
+    .padEnd(length, padding);
 ```
