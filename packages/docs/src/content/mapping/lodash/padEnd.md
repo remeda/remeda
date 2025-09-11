@@ -4,14 +4,15 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`String.prototype.padEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) instead.
+Use native [`String.prototype.padEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd)
+instead.
 
 ```ts
 // Lodash
-_.padEnd("abc", 6); // "abc   "
-_.padEnd("abc", 6, "_-"); // "abc_-_"
+_.padEnd(input, n);
+_.padEnd(input, n, padding);
 
 // Native
-"abc".padEnd(6); // "abc   "
-"abc".padEnd(6, "_-"); // "abc_-_"
+input.padEnd(n);
+input.padEnd(n, padding);
 ```
