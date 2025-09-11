@@ -13,9 +13,9 @@ remeda: toCamelCase
 - Remeda treats consecutive uppercase characters differently than Lodash. Use
   `{ preserveConsecutiveUppercase: false }` as the second parameter to get the
   same results.
-- Lodash performs normalization on the input before splitting it, this includes
+- Lodash performs normalization on the input before splitting it, including
   [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Because Remeda
-  assumes the input is a simple string these normalizations are not baked into
+  assumes the input is a simple string, these normalizations are not built into
   the function and need to be done manually.
 
 ### Simple strings

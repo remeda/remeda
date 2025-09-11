@@ -18,10 +18,8 @@ purpose-built for this task:
 - When **comparing** strings, prefer [`Intl.Collator`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator)
   with `sensitivity: 'base'` to compare them while ignoring accents and case.
 - When **simplifying** strings, prefer [`normalize("NFD")`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize)
-  to "extract" the diacritics from characters, then use [`replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace). This solution would
-  be more accurate, but is not a drop-in replacement for `deburr` because of the
-  differences mentioned above.
-  to remove [diacritics](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
+  to decompose characters, then use [`replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+  to remove [diacritics](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks). This solution is more accurate, but is not a drop-in replacement for `deburr` because of the differences mentioned above.
 - When **querying** for a string, prefer purpose built collations and other
   built-in mechanisms of databases and other systems that offer more robust
   query normalization.
