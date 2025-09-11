@@ -4,31 +4,26 @@ category: String
 
 _Not provided by Remeda._
 
-Use a dedicated library like [`he`](https://www.npmjs.com/package/he) or create a simple mapping function.
+`escape` is not needed in the vast majority of modern web development - all
+modern frameworks and tools perform this kind of escaping (and more!)
+automatically wherever it matters. If you are working on a low-level application
+that writes directly to the DOM, prefer libraries that take a holistic approach
+to this problem (like [`DOMPurify`](https://www.npmjs.com/package/dompurify))
+instead of basic string substitutions. In the rare case you must have an
+escaping function, copy the reference code below as-is.
 
 ```ts
-// Lodash
-escape("<div>Hello & goodbye</div>"); // "&lt;div&gt;Hello &amp; goodbye&lt;/div&gt;"
+const ESCAPED: Readonly<Record<string, `&${string}`>> = {
+  // https://github.com/lodash/lodash/blob/main/lodash.js#L399-L403
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
 
-// Simple implementation
-function escape(string: string): string {
-  const htmlEscapes = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  } as const;
+const CHARS_RE = new RegExp(`[${Object.keys(ESCAPED).join("")}]`, "g");
 
-  return string.replace(
-    /[&<>"']/g,
-    (match) => htmlEscapes[match as keyof typeof htmlEscapes],
-  );
-}
-
-escape("<div>Hello & goodbye</div>"); // "&lt;div&gt;Hello &amp; goodbye&lt;/div&gt;"
-
-// Using 'he' library
-import { encode } from "he";
-encode("<div>Hello & goodbye</div>"); // "&lt;div&gt;Hello &#x26; goodbye&lt;/div&gt;"
+const escape = (input: string): string =>
+  input.replace(CHARS_RE, (char) => ESCAPED[char]!);
 ```
