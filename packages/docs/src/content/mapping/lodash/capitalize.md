@@ -3,35 +3,35 @@ category: String
 remeda: capitalize
 ---
 
-- Lodash's `capitalize` converts the entire string to lowercase first, then capitalizes only the first character. Remeda's `capitalize` only capitalizes the first character without modifying the rest of the string.
-- Remeda's `capitalize` is designed for ASCII identifiers (variable names, database fields, etc.) and may produce unexpected results with non-ASCII characters. For Unicode text, consider using the CSS `text-transform: capitalize` property instead.
+- Lodash's `capitalize` converts the entire string to lowercase first, then
+  capitalizes only the first character. Remeda's `capitalize` doesn't do this
+  automatically, but it could be reproduced by calling [`toLowerCase`](/docs#toLowerCase)
+  on the input before calling `capitalize` on it.
+- For display purposes, consider using the
+  [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
+  instead of any JavaScript function.
+- Remeda's `capitalize` is designed for ASCII strings and may produce unexpected
+  results with non-ASCII characters (diacritics, non-Latin characters, emojis,
+  etc.). For internationalized text processing,
+  [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+  provides more accurate word segmentation.
+
+### Programmatic conversion
 
 ```ts
 // Lodash
-capitalize("hELLO WORLD"); // "Hello world"
-capitalize("HTML"); // "Html"
+_.capitalize("javaScript"); // "Javascript"
 
 // Remeda
-capitalize("hELLO WORLD"); // "HELLO WORLD"
-capitalize("HTML"); // "HTML"
+capitalize(toLowerCase("javaScript")); // "Javascript"
 ```
 
-### When behavior is identical
+### CSS alternative
 
-```ts
+```tsx
 // Lodash
-capitalize("hello world"); // "Hello world"
+<div>{_.capitalize(user.name)}</div>
 
-// Remeda
-capitalize("hello world"); // "Hello world"
-```
-
-### Mixed case handling
-
-```ts
-// Lodash
-capitalize("javaScript"); // "Javascript"
-
-// Remeda
-capitalize("javaScript"); // "JavaScript"
+// CSS
+<div style={{ textTransform: "capitalize" }}>{user.name}</div>
 ```
