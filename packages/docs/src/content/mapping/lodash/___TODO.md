@@ -15,4 +15,6 @@
    identifiers to readable labels). Research shows this is the most common
    Lodash string operation not covered by Remeda. Use proper name `toTitleCase`
    instead of `startCase` - matches Python's `str.title()` and .NET's
-   `ToTitleCase()`.
+   `ToTitleCase()`. This single function enables composition-based migration
+   for both `startCase` (direct replacement) and `lowerCase` (via
+   `toLowerCase(toTitleCase(input))`).
