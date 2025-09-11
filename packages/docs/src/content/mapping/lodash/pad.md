@@ -25,7 +25,5 @@ _Not provided by Remeda._
 
 ```ts
 const pad = (data: string, length: number, padding = " ") =>
-  data
-    .padStart(Math.floor((length + data.length) / 2), padding)
-    .padEnd(length, padding);
+  data.padStart((length + data.length) / 2, padding).padEnd(length, padding);
 ```
