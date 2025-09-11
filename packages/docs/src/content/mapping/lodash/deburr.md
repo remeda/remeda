@@ -13,8 +13,8 @@ are purpose-built for this task:
 - When **simplifying** strings, prefer [`normalize("NFD")`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize)
   to "extract" the diacritics from characters, then use [`replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
   to remove [diacritics](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
-- When **querying** for a string, prefer built-in mechanisms in databases
-  and APIs that have more robust query normalization.
+- When **querying** for a string, prefer purpose built collations and other
+  built-in mechanisms of databases which offer more robust query normalization.
 
 ### Comparison
 
