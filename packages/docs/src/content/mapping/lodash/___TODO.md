@@ -24,9 +24,15 @@
    element encouraging users to share their use-cases if they believe the
    function should be added, allowing us to re-assess past decisions based on
    real-world usage data. Articles to mark as candidates: `pad`, `padStart`,
-   `padEnd`.
+   `padEnd`, `parseInt`.
 
 7. Add `padStart` and `padEnd` functions to Remeda for data-last ergonomics
    in pipes (e.g., `pipe(input, padStart(10, "0"))`) and better typing than
    native methods. These would complement existing string functions and make
    Remeda a more complete string processing toolkit.
+
+8. Consider adding `parseInt` function to Remeda for improved TypeScript
+   literal type support. Could extract number literal types from string
+   literals (e.g., `parseInt<"123">()` → `123`), but would have significant
+   limitations on when it works (literal strings only, simple numeric patterns,
+   compile-time only benefits). Low value given caveats.
