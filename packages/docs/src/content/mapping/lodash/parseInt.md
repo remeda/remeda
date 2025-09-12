@@ -4,14 +4,31 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`parseInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt) function instead. Lodash's `parseInt` is essentially a wrapper around native `parseInt` that trims leading whitespace, but native `parseInt` already does this in modern browsers.
+- Use native [`Number.parseInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt)
+  instead.
+- When used as a callback, `parseInt` protects against the index parameter
+  unintentionally redefining the `radix`. To avoid this issue, wrap the callback
+  with an arrow function.
+
+### Basic usage
 
 ```ts
 // Lodash
-_.parseInt("08"); // 8
-_.parseInt("08", 10); // 8
+_.parseInt(input);
+_.parseInt(input, radix);
 
-// Native (identical behavior)
-parseInt("08"); // 8
-parseInt("08", 10); // 8
+// Native
+Number.parseInt(input);
+Number.parseInt(input, radix);
+```
+
+### Callback
+
+```ts
+// Lodash
+data.map(_.parseInt);
+
+// Native
+data.map((item) => Number.parseInt(item, 10)); // ✅
+data.map(Number.parseInt); // ❌
 ```
