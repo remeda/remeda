@@ -4,26 +4,60 @@ category: String
 
 _Not provided by Remeda._
 
-Lodash's `template` is a full templating system. Use a dedicated templating library like [`handlebars`](https://www.npmjs.com/package/handlebars), [`mustache`](https://www.npmjs.com/package/mustache), or [`ejs`](https://www.npmjs.com/package/ejs) instead. For production applications, consider using dedicated templating libraries that are specifically designed for your use case.
+Lodash's `template` is a complex templating engine that compiles templates into
+executable JavaScript functions. Due to its complexity and security implications
+it is outside the scope that Remeda offers.
+
+- In most cases it can be substituted by native [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
+- In many other cases it is redundant with the templating capabilities of
+  frameworks such as React, Express, Vue, Fastify, and many others.
+- For the most complex cases there are dedicated libraries that offer robust
+  templating features (e.g., [Handlebars](https://handlebarsjs.com/)).
+
+### Template Literals
 
 ```ts
 // Lodash
-const compiled = _.template("hello <%= user %>!");
-compiled({ user: "fred" }); // "hello fred!"
+const greet = _.template("Hello <%= firstName %> <%= lastName %>!");
 
-const compiled2 = _.template("<b><%- value %></b>");
-compiled2({ value: "<script>" }); // "<b>&lt;script&gt;</b>"
+// Template literals
+const greet = ({
+  firstName,
+  lastName,
+}: {
+  firstName: string;
+  lastName: string;
+}) => `Hello ${firstName} ${lastName}!`;
+```
 
-// Using handlebars
-import Handlebars from "handlebars";
+### HTML
 
-const template1 = Handlebars.compile("hello {{user}}!");
-template1({ user: "fred" }); // "hello fred!"
+```tsx
+// Lodash
+const bold = _.template("<b><%- value %></b>");
+bold({ value: "<script>" });
 
-const template2 = Handlebars.compile("<b>{{value}}</b>");
-template2({ value: "<script>" }); // "<b>&lt;script&gt;</b>"
+// React
+function Bold({ value }: { value: string }) {
+  return <b>{value}</b>;
+}
 
-// For simple string interpolation, use template literals
-const user = "fred";
-`hello ${user}!`; // "hello fred!"
+<Bold value="<script>" />;
+```
+
+### With complex logic
+
+```tsx
+// Lodash
+const list = _.template(
+  "<% _.forEach(users, function(user) { %><li><%- user %></li><% }); %>",
+);
+list({ users: ["fred", "barney"] });
+
+// React
+function List({ users }: { users: string[] }) {
+  return users.map((user) => <li key={user}>{user}</li>);
+}
+
+<List users={["fred", "barney"]} />;
 ```
