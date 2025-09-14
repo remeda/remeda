@@ -4,20 +4,13 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace) instead.
+Use native [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+instead.
 
 ```ts
 // Lodash
-_.replace("Hi Fred", "Fred", "Barney"); // "Hi Barney"
-_.replace("Hi Fred", /fred/i, "Barney"); // "Hi Barney"
-
-// Native (identical behavior)
-"Hi Fred".replace("Fred", "Barney"); // "Hi Barney"
-"Hi Fred".replace(/fred/i, "Barney"); // "Hi Barney"
-
-// With function replacement
-_.replace("2-4-6", /(\d)/g, (match, p1) => `[${p1}]`); // "[2]-[4]-[6]"
+_.replace(input, pattern, replacement);
 
 // Native
-"2-4-6".replace(/(\d)/g, (match, p1) => `[${p1}]`); // "[2]-[4]-[6]"
+input.replace(pattern, replacement);
 ```

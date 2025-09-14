@@ -7,8 +7,6 @@ _Not provided by Remeda._
 Use native [`String.prototype.repeat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat)
 instead.
 
-### Basic usage
-
 ```ts
 // Lodash
 _.repeat(input, n);
