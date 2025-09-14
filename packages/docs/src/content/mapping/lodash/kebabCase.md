@@ -10,9 +10,6 @@ remeda: toKebabCase
   keys. For linguistic processing where language and locale nuances matter, use
   the built-in [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   instead.
-- Remeda treats consecutive uppercase characters differently than Lodash. Use
-  `{ preserveConsecutiveUppercase: false }` as the second parameter to get the
-  same results.
 - Lodash performs normalization on the input before splitting it, including
   [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
@@ -25,7 +22,7 @@ remeda: toKebabCase
 _.kebabCase(input);
 
 // Remeda
-toKebabCase(input, { preserveConsecutiveUppercase: false });
+toKebabCase(input);
 ```
 
 ### Normalized
@@ -37,11 +34,9 @@ _.kebabCase(input);
 // Remeda + Native
 toKebabCase(
   input
+    // "Promote" diacritics to be independent characters in the string.
     .normalize("NFD")
-    .replace(
-      /['\u2019\u0300-\u036f]/g /* remove diacritics and apostrophes */,
-      "",
-    ),
-  { preserveConsecutiveUppercase: false },
+    // Remove apostrophes and all independent diacritic characters.
+    .replace(/['\u2019\u0300-\u036f]/g, ""),
 );
 ```

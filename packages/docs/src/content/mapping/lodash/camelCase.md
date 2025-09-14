@@ -37,11 +37,10 @@ _.camelCase(input);
 // Remeda + Native
 toCamelCase(
   input
+    // "Promote" diacritics to be independent characters in the string.
     .normalize("NFD")
-    .replace(
-      /['\u2019\u0300-\u036f]/g /* remove diacritics and apostrophes */,
-      "",
-    ),
+    // Remove apostrophes and all independent diacritic characters.
+    .replace(/['\u2019\u0300-\u036f]/g, ""),
   { preserveConsecutiveUppercase: false },
 );
 ```
