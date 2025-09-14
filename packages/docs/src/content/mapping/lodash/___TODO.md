@@ -24,7 +24,7 @@
    element encouraging users to share their use-cases if they believe the
    function should be added, allowing us to re-assess past decisions based on
    real-world usage data. Articles to mark as candidates: `pad`, `padStart`,
-   `padEnd`, `parseInt`, `repeat`.
+   `padEnd`, `parseInt`, `repeat`, `replace`.
 
 7. Add `padStart` and `padEnd` functions to Remeda for data-last ergonomics
    in pipes (e.g., `pipe(input, padStart(10, "0"))`) and better typing than
@@ -34,4 +34,7 @@
    literal type support.
 
 9. Consider adding `repeat` function to Remeda for improved TypeScript literal
-   type support.
+   type support. See type-fest `Repeat`
+
+10. Consider adding `replace` for data-last support and maybe improved typing on
+    some edge-cases, See type-fest `Replace`.
