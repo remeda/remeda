@@ -4,16 +4,15 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`String.prototype.repeat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat) instead.
+Use native [`String.prototype.repeat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat)
+instead.
+
+### Basic usage
 
 ```ts
 // Lodash
-_.repeat("*", 3); // "***"
-_.repeat("abc", 2); // "abcabc"
-_.repeat("abc", 0); // ""
+_.repeat(input, n);
 
-// Native (identical behavior)
-"*".repeat(3); // "***"
-"abc".repeat(2); // "abcabc"
-"abc".repeat(0); // ""
+// Native
+input.repeat(n);
 ```
