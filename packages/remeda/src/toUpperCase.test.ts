@@ -29,3 +29,34 @@ describe("data-last", () => {
     expect(pipe("HeLlO WoRlD", toUpperCase())).toBe("HELLO WORLD");
   });
 });
+
+describe("unicode", () => {
+  test("handles diacritics", () => {
+    expect(toUpperCase("café naïve")).toBe("CAFÉ NAÏVE");
+  });
+
+  test("handles non-Latin scripts", () => {
+    expect(toUpperCase("москва")).toBe("МОСКВА");
+    expect(toUpperCase("ελλάδα")).toBe("ΕΛΛΆΔΑ");
+  });
+
+  test("doesn't explode on emojis", () => {
+    expect(toUpperCase("🎉party")).toBe("🎉PARTY");
+  });
+
+  test("handles surrogate pairs (astral plane)", () => {
+    expect(toUpperCase("𝒽ello")).toBe("𝒽ELLO");
+  });
+
+  test("handles combining characters", () => {
+    expect(toUpperCase("e\u0301llo")).toBe("E\u0301LLO");
+  });
+
+  test("handles German eszett", () => {
+    expect(toUpperCase("straße")).toBe("STRASSE");
+  });
+
+  test("handles Turkish dotted I", () => {
+    expect(toUpperCase("i̇stanbul")).toBe("İSTANBUL");
+  });
+});

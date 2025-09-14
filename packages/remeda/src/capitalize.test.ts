@@ -37,3 +37,35 @@ describe("data-last", () => {
     expect(pipe("heLlO WoRlD", capitalize())).toBe("HeLlO WoRlD");
   });
 });
+
+describe("unicode", () => {
+  test("maintains diacritics in rest of word", () => {
+    expect(capitalize("café naïve")).toBe("Café naïve");
+    expect(capitalize("CAFÉ NAÏVE")).toBe("CAFÉ NAÏVE");
+  });
+
+  test("handles non-Latin scripts", () => {
+    expect(capitalize("москва")).toBe("Москва");
+    expect(capitalize("ελλάδα")).toBe("Ελλάδα");
+  });
+
+  test("handles surrogate pairs (astral plane)", () => {
+    expect(capitalize("𝒽ello world")).toBe("𝒽ello world");
+  });
+
+  test("doesn't explode on emojis", () => {
+    expect(capitalize("🎉party time")).toBe("🎉party time");
+  });
+
+  test("handles combining characters", () => {
+    expect(capitalize("é\u0301llo")).toBe("É\u0301llo");
+  });
+
+  test("single accented char", () => {
+    expect(capitalize("é")).toBe("É");
+  });
+
+  test("single surrogate pair", () => {
+    expect(capitalize("𝒽")).toBe("𝒽");
+  });
+});

@@ -9,10 +9,13 @@ import { purry } from "./purry";
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
- * If the output is intended for display (on a browser) consider using
- * [the `text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
- * instead!
+ * !IMPORTANT: This function is designed for ASCII strings and may produce
+ * unexpected results with non-ASCII characters (diacritics, non-Latin
+ * characters, emojis, etc.). For display purposes, use the
+ * [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
+ * For internationalized text processing, use
+ * [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * for more accurate word segmentation.
  *
  * @param data - A string.
  * @signature
@@ -33,10 +36,13 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
- * If the output is intended for display (on a browser) consider using
- * [the `text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
- * instead!
+ * !IMPORTANT: This function is designed for ASCII strings and may produce
+ * unexpected results with non-ASCII characters (diacritics, non-Latin
+ * characters, emojis, etc.). For display purposes, use the
+ * [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
+ * For internationalized text processing, use
+ * [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * for more accurate word segmentation.
  *
  * @signature
  *   R.capitalize()(data);
