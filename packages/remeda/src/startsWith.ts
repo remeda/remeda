@@ -1,11 +1,16 @@
 import { purry } from "./purry";
 
 /**
- * Determines whether the string begins with the provided prefix, and refines
- * the output if possible. Uses the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+ * Determines whether a string begins with the provided prefix, and refines the
+ * output type if possible.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+ * method, but doesn't expose the `startPosition` parameter. To check from a
+ * specific position, use
+ * `startsWith(sliceString(data, startPosition), prefix)`.
  *
  * @param data - The input string.
- * @param prefix - The prefix to check for.
+ * @param prefix - The string to check for at the beginning.
  * @signature
  *   R.startsWith(data, prefix);
  * @example
@@ -21,10 +26,15 @@ export function startsWith<T extends string, Prefix extends string>(
 export function startsWith(data: string, prefix: string): boolean;
 
 /**
- * Determines whether the string begins with the provided prefix, and refines
- * the output if possible. Uses the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith).
+ * Determines whether a string begins with the provided prefix, and refines the
+ * output type if possible.
  *
- * @param prefix - The prefix to check for.
+ * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+ * method, but doesn't expose the `startPosition` parameter. To check from a
+ * specific position, use
+ * `startsWith(sliceString(data, startPosition), prefix)`.
+ *
+ * @param prefix - The string to check for at the beginning.
  * @signature
  *   R.startsWith(prefix)(data);
  * @example

@@ -1,11 +1,15 @@
 import { purry } from "./purry";
 
 /**
- * Determines whether the string ends with the provided suffix, and refines
- * the output if possible. Uses the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith).
+ * Determines whether a string ends with the provided suffix, and refines the
+ * output type if possible.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+ * method, but doesn't expose the `endPosition` parameter. To check only up to a
+ * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
  *
  * @param data - The input string.
- * @param suffix - The prefix to check for.
+ * @param suffix - The string to check for at the end.
  * @signature
  *   R.endsWith(data, suffix);
  * @example
@@ -21,10 +25,14 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith(data: string, suffix: string): boolean;
 
 /**
- * Determines whether the string ends with the provided suffix, and refines
- * the output if possible. Uses the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith).
+ * Determines whether a string ends with the provided suffix, and refines the
+ * output type if possible.
  *
- * @param suffix - The prefix to check for.
+ * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+ * method, but doesn't expose the `endPosition` parameter. To check only up to a
+ * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
+ *
+ * @param suffix - The string to check for at the end.
  * @signature
  *   R.endsWith(suffix)(data);
  * @example
