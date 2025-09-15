@@ -7,13 +7,21 @@ type KebabCase<S extends string> = string extends S
   : Lowercase<Join<Words<S>, "-">>;
 
 /**
- * Convert a text to kebab-Case by splitting it into words and joining them back
- * together with "-", and then lowering the case of the result.
+ * Converts text to **kebab-case** by splitting it into words and joining them
+ * back together with hyphens (`-`), then lowercasing the result.
+ *
+ * Because it uses [`toLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase),
+ * the function shares its _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * which are purpose built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toCamelCase`.
+ * `uncapitalize`, `toCamelCase`, and `toSnakeCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *
  * @param data - A string.
  * @signature
@@ -27,13 +35,21 @@ type KebabCase<S extends string> = string extends S
 export function toKebabCase<S extends string>(data: S): KebabCase<S>;
 
 /**
- * Convert a text to kebabCase by splitting it into words and joining them back
- * together with "-", and then lowering the case of the result.
+ * Converts text to **kebab-case** by splitting it into words and joining them
+ * back together with hyphens (`-`), then lowercasing the result.
+ *
+ * Because it uses [`toLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase),
+ * the function shares its _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * which are purpose built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, and `toCamelCase`.
+ * `uncapitalize`, `toCamelCase`, and `toSnakeCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *
  * @signature
  *   R.toKebabCase()(data);
