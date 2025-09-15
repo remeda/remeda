@@ -4,7 +4,7 @@ import { purry } from "./purry";
  * Replaces all lowercase characters with their uppercase equivalents. It uses
  * the built-in [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
  * for the runtime and the built-in [`Uppercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype)
- * utility type for typing and thus shares their [limitations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase#description).
+ * utility type for typing and thus shares their [locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase#description).
  *
  * For a more linguistically accurate transformation use [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase). And for display purposes use the [`text-transform: uppercase;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform) which is also locale-aware.
  *
@@ -25,7 +25,7 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  * Replaces all lowercase characters with their uppercase equivalents. It uses
  * the built-in [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
  * for the runtime and the built-in [`Uppercase`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype)
- * utility type for typing and thus shares their [limitations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase#description).
+ * utility type for typing and thus shares their [locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase#description).
  *
  * For a more linguistically accurate transformation use [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase). And for display purposes use the [`text-transform: uppercase;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform) which is also locale-aware.
  *
