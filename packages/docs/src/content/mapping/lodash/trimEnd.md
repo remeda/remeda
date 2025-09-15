@@ -11,10 +11,12 @@ _Not provided by Remeda._
   that allows changing the trimmed character. Instead, first convert the string
   to an array (via spreading), use Remeda's [`dropLastWhile`](/docs#dropLastWhile),
   and then rejoin the array back with [`join`](/docs#join).
-- When the input string might contain complex Unicode characters or emojis (like
-  family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈), use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
-  with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity)
-  to convert the string to an array. Lodash does this implicitly.
+- Lodash does complex grapheme parsing, but this is usually not needed unless
+  the `characters` parameter itself contains complex Unicode graphemes (like
+  family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈 that you want to trim). In these
+  cases use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+  with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity).
+  to split the array.
 - Lodash allows calling `trimEnd` without any input (or with an `undefined`
   input), which results in an empty string `""`. This requires explicit handling
   in replacements.
@@ -56,13 +58,12 @@ join(dropLastWhile([...input], isIncludedIn(characters)), "");
 _.trimEnd(input, characters);
 
 // Remeda
+const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+const graphemes = map(segmenter.segment(characters), prop("segment"));
 join(
   dropLastWhile(
-    map(
-      new Intl.Segmenter("en", { granularity: "grapheme" }).segment(input),
-      prop("segment"),
-    ),
-    isIncludedIn(characters),
+    map(segmenter.segment(input), prop("segment")),
+    isIncludedIn(graphemes),
   ),
   "",
 );
