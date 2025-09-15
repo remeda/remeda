@@ -60,14 +60,8 @@ _.trimEnd(input, characters);
 // Remeda
 const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
 const inputGraphemes = Array.from(segmenter.segment(input), prop("segment"));
-const graphemes = Array.from((segmenter.segment(characters), prop("segment"));
-join(
-  dropLastWhile(
-    inputGraphemes,
-    isIncludedIn(graphemes),
-  ),
-  "",
-);
+const graphemes = Array.from(segmenter.segment(characters), prop("segment"));
+join(dropLastWhile(inputGraphemes, isIncludedIn(graphemes)), "");
 ```
 
 ### Missing input data
