@@ -6,7 +6,7 @@ _Not provided by Remeda._
 
 - When the second `characters` parameter is not provided to lodash (or when it
   is `undefined`), all whitespace characters would be trimmed. This is the same
-  as the the native [`String.prototype.trim`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trim).
+  as the native [`String.prototype.trim`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trim).
 - The native `trim` doesn't support the additional `characters` parameter that
   allows changing the trimmed character. Instead, first convert the string to an
   array (via spreading), use Remeda's [`dropWhile`](/docs#dropWhile) (for left
