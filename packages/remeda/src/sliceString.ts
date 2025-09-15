@@ -1,6 +1,8 @@
 /**
- * Extracts a section of this string and returns it as a new string, without
- * modifying the original string. Equivalent to `String.prototype.slice`.
+ * Extracts a section of a string between two indices.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.slice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice)
+ * method.
  *
  * @param data - The string to extract from.
  * @param indexStart - The index of the first character to include in the
@@ -13,7 +15,7 @@
  * @example
  *    R.sliceString("abcdefghijkl", 1) // => `bcdefghijkl`
  *    R.sliceString("abcdefghijkl", 4, 7) // => `efg`
- * @dataLast
+ * @dataFirst
  * @category String
  */
 export function sliceString(
@@ -23,8 +25,10 @@ export function sliceString(
 ): string;
 
 /**
- * Extracts a section of this string and returns it as a new string, without
- * modifying the original string. Equivalent to `String.prototype.slice`.
+ * Extracts a section of a string between two indices.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.slice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice)
+ * method.
  *
  * @param indexStart - The index of the first character to include in the
  * returned substring.

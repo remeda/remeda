@@ -30,7 +30,7 @@ type Split<
 /**
  * Splits a string into an array of substrings using a separator pattern.
  *
- * This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param data - The string to split.
@@ -67,7 +67,7 @@ export function split<
 /**
  * Splits a string into an array of substrings using a separator pattern.
  *
- * This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param separator - The pattern describing where each split should occur. Can
