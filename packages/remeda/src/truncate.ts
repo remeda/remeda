@@ -112,10 +112,10 @@ type IsLongerThan<
     false;
 
 /**
- * Truncates strings longer than `n`, appending an `omission` marker to them
- * (which defaults to '...'); shorter strings are returned as-is. The total
- * length of the output will never exceed `n` (in the rare case where the
- * `omission` itself is too long, it will be truncated too).
+ * Truncates strings to a maximum length, adding an ellipsis when truncated.
+ *
+ * Shorter strings are returned unchanged. If the omission marker is longer than
+ * the maximum length, it will be truncated as well.
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
@@ -161,10 +161,10 @@ export function truncate<
 >(data: S, n: N, options?: Options): Truncate<S, N, Options>;
 
 /**
- * Truncates strings longer than `n`, appending an `omission` marker to them
- * (which defaults to '...'); shorter strings are returned as-is. The total
- * length of the output will never exceed `n` (in the rare case where the
- * `omission` itself is too long, it will be truncated too).
+ * Truncates strings to a maximum length, adding an ellipsis when truncated.
+ *
+ * Shorter strings are returned unchanged. If the omission marker is longer than
+ * the maximum length, it will be truncated as well.
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
@@ -250,6 +250,7 @@ function truncateImplementation(
   }
 
   if (n < omission.length) {
+    // TODO [>3]: This was an oversight, there's no value in returning just parts of the omission string itself, with no actual content. Instead, we should truncate the input without adding the omission at all in cases where the omission would completely eclipse the content.
     // Handle cases where the omission itself is too long.
     return omission.slice(0, n);
   }
