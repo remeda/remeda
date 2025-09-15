@@ -4,7 +4,9 @@ const ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A random alpha-numeric string.
+ *
+ * This string is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @param length - The length of the random string.
  * @returns The random string.
@@ -18,7 +20,9 @@ const ALPHABET =
 export function randomString(length: number): string;
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A random alpha-numeric string.
+ *
+ * This string is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @returns The random string.
  * @signature
