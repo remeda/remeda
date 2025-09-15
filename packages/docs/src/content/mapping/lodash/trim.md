@@ -66,11 +66,12 @@ _.trim(input, characters);
 
 // Remeda
 const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-const graphemes = map(segmenter.segment(characters), prop("segment"));
+const inputGraphemes = Array.from(segmenter.segment(input), prop("segment"));
+const graphemes = Array.from((segmenter.segment(characters), prop("segment"));
 join(
   dropLastWhile(
     dropWhile(
-      Array.from(segmenter.segment(input), prop("segment")),
+      inputGraphemes,
       isIncludedIn(graphemes),
     ),
     isIncludedIn(graphemes),
