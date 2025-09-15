@@ -125,10 +125,10 @@ type IsLongerThan<
  * `omission` or optimizing the cutoff point via `separator`, prefer
  * `sliceString` instead, which runs more efficiently.
  *
- * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
- * the output is rendered in a browser; this function doesn't handle
- * diacritics, emojis, and any sort of semantic understanding of the string
- * contents.
+ * The function counts Unicode characters, not visual graphemes, and may split
+ * emojis, denormalized diacritics, or combining characters, in the middle. For
+ * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * which is locale-aware and purpose built for this task.
  *
  * @param data - The input string.
  * @param n - The maximum length of the output string. The output will **never**
@@ -174,10 +174,10 @@ export function truncate<
  * `omission` or optimizing the cutoff point via `separator`, prefer
  * `sliceString` instead, which runs more efficiently.
  *
- * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
- * the output is rendered in a browser; this function doesn't handle
- * diacritics, emojis, and any sort of semantic understanding of the string
- * contents.
+ * The function counts Unicode characters, not visual graphemes, and may split
+ * emojis, denormalized diacritics, or combining characters, in the middle. For
+ * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * which is locale-aware and purpose built for this task.
  *
  * @param n - The maximum length of the output string. The output will **never**
  * exceed this length.
