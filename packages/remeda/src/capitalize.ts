@@ -1,21 +1,17 @@
 import { purry } from "./purry";
 
 /**
- * Makes first character of a string upper-case. Uses the built-in
- * [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
+ * Makes the first character of a string uppercase while leaving the rest
+ * unchanged. It uses the built-in [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
  * for the runtime, and the built-in [`Capitalize`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#capitalizestringtype)
  * utility type for typing.
  *
+ * For display purposes, prefer using the CSS pseudo-element [`::first-letter`](https://developer.mozilla.org/en-US/docs/Web/CSS/::first-letter) to target
+ * just the first letter of the word, and [`text-transform: uppercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#uppercase)
+ * to capitalize it.
+ *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
- *
- * !IMPORTANT: This function is designed for ASCII strings and may produce
- * unexpected results with non-ASCII characters (diacritics, non-Latin
- * characters, emojis, etc.). For display purposes, use the
- * [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
- * For internationalized text processing, use
- * [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
- * for more accurate word segmentation.
  *
  * @param data - A string.
  * @signature
@@ -28,21 +24,17 @@ import { purry } from "./purry";
 export function capitalize<T extends string>(data: T): Capitalize<T>;
 
 /**
- * Makes first character of a string upper-case. Uses the built-in
- * [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
+ * Makes the first character of a string uppercase while leaving the rest
+ * unchanged. It uses the built-in [`String.prototype.toUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase)
  * for the runtime, and the built-in [`Capitalize`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#capitalizestringtype)
  * utility type for typing.
  *
+ * For display purposes, prefer using the CSS pseudo-element [`::first-letter`](https://developer.mozilla.org/en-US/docs/Web/CSS/::first-letter) to target
+ * just the first letter of the word, and [`text-transform: uppercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#uppercase)
+ * to capitalize it.
+ *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
- *
- * !IMPORTANT: This function is designed for ASCII strings and may produce
- * unexpected results with non-ASCII characters (diacritics, non-Latin
- * characters, emojis, etc.). For display purposes, use the
- * [`text-transform: capitalize;` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
- * For internationalized text processing, use
- * [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
- * for more accurate word segmentation.
  *
  * @signature
  *   R.capitalize()(data);
