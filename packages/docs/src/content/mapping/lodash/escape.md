@@ -13,7 +13,7 @@ instead of basic string substitutions. In the rare case you must have an
 escaping function, copy the reference code below as-is:
 
 ```ts
-const ESCAPED: Readonly<Record<string, `&${string}`>> = {
+const ESCAPED: Readonly<Record<string, `&${string};`>> = {
   // https://github.com/lodash/lodash/blob/main/lodash.js#L399-L403
   "&": "&amp;",
   "<": "&lt;",
