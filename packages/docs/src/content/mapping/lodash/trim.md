@@ -47,11 +47,12 @@ data.map(String.prototype.trim);
 _.trim(input, characters);
 
 // Remeda
-pipe(
-  [...input],
-  dropWhile(isIncludedIn(characters)),
-  dropLastWhile(isIncludedIn(characters)),
-  join(""),
+join(
+  dropLastWhile(
+    dropWhile([...input], isIncludedIn(characters)),
+    isIncludedIn(characters),
+  ),
+  "",
 );
 ```
 
@@ -62,12 +63,18 @@ pipe(
 _.trim(input, characters);
 
 // Remeda
-pipe(
-  new Intl.Segmenter("en", { granularity: "grapheme" }).segment(input),
-  map(prop("segment")),
-  dropWhile(isIncludedIn(characters)),
-  dropLastWhile(isIncludedIn(characters)),
-  join(""),
+join(
+  dropLastWhile(
+    dropWhile(
+      map(
+        new Intl.Segmenter("en", { granularity: "grapheme" }).segment(input),
+        prop("segment"),
+      ),
+      isIncludedIn(characters),
+    ),
+    isIncludedIn(characters),
+  ),
+  "",
 );
 ```
 

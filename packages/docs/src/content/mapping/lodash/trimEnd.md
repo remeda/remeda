@@ -4,28 +4,78 @@ category: String
 
 _Not provided by Remeda._
 
-Use the native JS [`String.prototype.trimEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd) for whitespace, or create a custom function for specific characters.
+- When the second `characters` parameter is not provided to lodash (or when it
+  is `undefined`), all whitespace characters would be trimmed. This is the same
+  as the native [`String.prototype.trimEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd).
+- The native `trimEnd` doesn't support the additional `characters` parameter
+  that allows changing the trimmed character. Instead, first convert the string
+  to an array (via spreading), use Remeda's [`dropLastWhile`](/docs#dropLastWhile),
+  and then rejoin the array back with [`join`](/docs#join).
+- When the input string might contain complex Unicode characters or emojis (like
+  family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈), use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+  with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity)
+  to convert the string to an array. Lodash does this implicitly.
+- Lodash allows calling `trimEnd` without any input (or with an `undefined`
+  input), which results in an empty string `""`. This requires explicit handling
+  in replacements.
+
+### Whitespaces
 
 ```ts
-// Lodash (whitespace)
-_.trimEnd("  abc  "); // "  abc"
+// Lodash
+_.trimEnd(input);
 
-// Native (identical for whitespace)
-"  abc  ".trimEnd(); // "  abc"
+// Native
+input.trimEnd();
+```
 
-// Lodash (custom characters)
-_.trimEnd("-_-abc-_-", "_-"); // "-_-abc"
+### Callback
 
-// Custom implementation for specific characters
-function trimEnd(str: string, chars?: string): string {
-  if (!chars) return str.trimEnd();
+```ts
+// Lodash
+_.map(data, _.trimEnd);
 
-  const pattern = new RegExp(
-    `[${chars.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")}]+$`,
-    "g",
-  );
-  return str.replace(pattern, "");
-}
+// Native
+data.map(String.prototype.trimEnd);
+```
 
-trimEnd("-_-abc-_-", "_-"); // "-_-abc"
+### Characters
+
+```ts
+// Lodash
+_.trimEnd(input, characters);
+
+// Remeda
+join(dropLastWhile([...input], isIncludedIn(characters)), "");
+```
+
+### Graphemes
+
+```ts
+// Lodash
+_.trimEnd(input, characters);
+
+// Remeda
+join(
+  dropLastWhile(
+    map(
+      new Intl.Segmenter("en", { granularity: "grapheme" }).segment(input),
+      prop("segment"),
+    ),
+    isIncludedIn(characters),
+  ),
+  "",
+);
+```
+
+### Missing input data
+
+```ts
+// Lodash
+_.trimEnd();
+_.trimEnd(input);
+
+// Native
+("");
+input?.trimEnd() ?? "";
 ```
