@@ -10,7 +10,7 @@ automatically wherever it matters. If you are working on a low-level application
 that writes directly to the DOM, prefer libraries that take a holistic approach
 to this problem (like [`DOMPurify`](https://www.npmjs.com/package/dompurify))
 instead of basic string substitutions. In the rare case you must have an
-escaping function, copy the reference code below as-is.
+escaping function, copy the reference code below as-is:
 
 ```ts
 const ESCAPED: Readonly<Record<string, `&${string}`>> = {
