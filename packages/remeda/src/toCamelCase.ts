@@ -21,8 +21,7 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
 
 /**
  * Converts text to **camelCase** by splitting it into words, lowercasing the
- * first word, capitalizing the rest, then joining them back together. This is
- * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
+ * first word, capitalizing the rest, then joining them back together.
  *
  * Because it uses the built-in case conversion methods, the function shares
  * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
@@ -60,8 +59,7 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
 
 /**
  * Converts text to **camelCase** by splitting it into words, lowercasing the
- * first word, capitalizing the rest, then joining them back together. This is
- * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
+ * first word, capitalizing the rest, then joining them back together.
  *
  * Because it uses the built-in case conversion methods, the function shares
  * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
