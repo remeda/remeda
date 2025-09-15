@@ -70,7 +70,7 @@ const graphemes = map(segmenter.segment(characters), prop("segment"));
 join(
   dropLastWhile(
     dropWhile(
-      map(segmenter.segment(input), prop("segment")),
+      Array.from(segmenter.segment(input), prop("segment")),
       isIncludedIn(graphemes),
     ),
     isIncludedIn(graphemes),

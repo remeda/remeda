@@ -62,7 +62,7 @@ const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
 const graphemes = map(segmenter.segment(characters), prop("segment"));
 join(
   dropLastWhile(
-    map(segmenter.segment(input), prop("segment")),
+    Array.from(segmenter.segment(input), prop("segment")),
     isIncludedIn(graphemes),
   ),
   "",
