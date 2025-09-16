@@ -8,16 +8,20 @@ _Not provided by Remeda._
   is `undefined`), all whitespace characters would be trimmed. This is the same
   as the native [`String.prototype.trim`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trim).
 - The native `trim` doesn't support the additional `characters` parameter that
-  allows changing the trimmed character. Instead, first convert the string to an
-  array (via spreading), use Remeda's [`dropWhile`](/docs#dropWhile) (for left
-  trimming) and [`dropLastWhile`](/docs#dropLastWhile) (for right trimming), and
-  then rejoin the array back with [`join`](/docs#join).
+  allows changing the trimmed characters. Instead, create a regex that would
+  match `characters` anchored to either the start or the end of the string
+  (`^[${characters}]+|[${characters}]+$`) and then use [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
+  to replace them with the empty string (`""`). Don't forget the [`g`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/global)
+  RegExp flag to properly catch everything, and the [`u`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode)
+  RegExp flag if you need to handle Unicode characters.
 - Lodash does complex grapheme parsing, but this is usually not needed unless
   the `characters` parameter itself contains complex Unicode graphemes (like
   family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈 that you want to trim). In these
   cases use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
-  with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity).
-  to split the string.
+  with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity)
+  to split the string, then use Remeda's [`dropWhile`](/docs#dropWhile) (for
+  left trimming) and [`dropLastWhile`](/docs#dropLastWhile) (for right
+  trimming), and rejoin the array back with [`join`](/docs#join).
 - Lodash allows calling `trim` without any input (or with an `undefined` input),
   which results in an empty string `""`. This requires explicit handling in
   replacements.
@@ -48,14 +52,8 @@ data.map(String.prototype.trim);
 // Lodash
 _.trim(input, characters);
 
-// Remeda
-join(
-  dropLastWhile(
-    dropWhile([...input], isIncludedIn(characters)),
-    isIncludedIn(characters),
-  ),
-  "",
-);
+// Native
+input.replace(new RegExp(`^[${characters}]+|[${characters}]+$`, "gu"), "");
 ```
 
 ### Graphemes
