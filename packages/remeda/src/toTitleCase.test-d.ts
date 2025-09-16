@@ -101,16 +101,6 @@ describe("edge cases", () => {
       toTitleCase("version2Update"),
     ).toEqualTypeOf<"Version 2 Update">();
   });
-
-  test("consecutive uppercase letters", () => {
-    expectTypeOf(
-      toTitleCase("XMLHttpRequest"),
-    ).toEqualTypeOf<"Xml Http Request">();
-    expectTypeOf(toTitleCase("HTMLParser")).toEqualTypeOf<"Html Parser">();
-    expectTypeOf(
-      toTitleCase("getCSSProperty"),
-    ).toEqualTypeOf<"Get Css Property">();
-  });
 });
 
 describe("unicode", () => {
@@ -124,5 +114,62 @@ describe("unicode", () => {
       toTitleCase("москва петербург"),
     ).toEqualTypeOf<"Москва Петербург">();
     expectTypeOf(toTitleCase("ελλάδα_αθήνα")).toEqualTypeOf<"Ελλάδα Αθήνα">();
+  });
+});
+
+describe("preserveConsecutiveUppercase option", () => {
+  test("defaults to true", () => {
+    expectTypeOf(
+      toTitleCase("XMLHttpRequest"),
+    ).toEqualTypeOf<"XML Http Request">();
+    expectTypeOf(
+      toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: true }),
+    ).toEqualTypeOf<"XML Http Request">();
+
+    expectTypeOf(toTitleCase("HTMLParser")).toEqualTypeOf<"HTML Parser">();
+    expectTypeOf(
+      toTitleCase("HTMLParser", { preserveConsecutiveUppercase: true }),
+    ).toEqualTypeOf<"HTML Parser">();
+
+    expectTypeOf(
+      toTitleCase("getCSSProperty"),
+    ).toEqualTypeOf<"Get CSS Property">();
+    expectTypeOf(
+      toTitleCase("getCSSProperty", { preserveConsecutiveUppercase: true }),
+    ).toEqualTypeOf<"Get CSS Property">();
+  });
+
+  test("false", () => {
+    expectTypeOf(
+      toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: false }),
+    ).toEqualTypeOf<"Xml Http Request">();
+    expectTypeOf(
+      toTitleCase("HTMLParser", { preserveConsecutiveUppercase: false }),
+    ).toEqualTypeOf<"Html Parser">();
+    expectTypeOf(
+      toTitleCase("getCSSProperty", { preserveConsecutiveUppercase: false }),
+    ).toEqualTypeOf<"Get Css Property">();
+  });
+
+  test("mixed case examples", () => {
+    expectTypeOf(toTitleCase("fooBAR")).toEqualTypeOf<"Foo BAR">();
+    expectTypeOf(
+      toTitleCase("fooBAR", { preserveConsecutiveUppercase: true }),
+    ).toEqualTypeOf<"Foo BAR">();
+    expectTypeOf(
+      toTitleCase("fooBAR", { preserveConsecutiveUppercase: false }),
+    ).toEqualTypeOf<"Foo Bar">();
+  });
+
+  test("complex examples", () => {
+    expectTypeOf(
+      toTitleCase("foo_BAR-biz_BUZZ"),
+    ).toEqualTypeOf<"Foo BAR Biz BUZZ">();
+    expectTypeOf(
+      toTitleCase("foo_BAR-biz_BUZZ", { preserveConsecutiveUppercase: true }),
+    ).toEqualTypeOf<"Foo BAR Biz BUZZ">();
+    expectTypeOf(
+      toTitleCase("foo_BAR-biz_BUZZ", { preserveConsecutiveUppercase: false }),
+    ).toEqualTypeOf<"Foo Bar Biz Buzz">();
   });
 });

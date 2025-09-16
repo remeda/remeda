@@ -1,18 +1,58 @@
-import type { Join, Words } from "type-fest";
+import type { IsEqual, IsLiteral, Join, Merge, Words } from "type-fest";
 import { words } from "./internal/words";
-import { purry } from "./purry";
 
-type TitleCase<S extends string> = string extends S
-  ? string
-  : Join<TitleCasedArray<Words<S>>, " ">;
+const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
+const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
 
-type TitleCasedArray<W extends ReadonlyArray<string>> = {
-  [I in keyof W]: Capitalize<Lowercase<W[I]>>;
+type TitleCaseOptions = {
+  readonly preserveConsecutiveUppercase?: boolean;
+};
+
+type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions> = Merge<
+  {
+    preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
+  },
+  {
+    [Key in keyof Options as Extract<Options[Key], undefined> extends never
+      ? Key
+      : never]: Options[Key];
+  }
+> &
+  Required<TitleCaseOptions>;
+
+// Merge the default as used in our runtime implementation with the options
+// provided by the user. This allows us to couple typing and runtime so that
+// they don't diverge.
+
+type TitleCase<S extends string, Options extends TitleCaseOptions> =
+  IsLiteral<S> extends true
+    ? Join<
+        TitleCasedArray<
+          Words<IsEqual<S, Uppercase<S>> extends true ? Lowercase<S> : S>,
+          TitleCaseOptionsWithDefaults<Options>
+        >,
+        " "
+      >
+    : string;
+
+type TitleCasedArray<
+  T extends ReadonlyArray<string>,
+  Options extends TitleCaseOptions,
+> = {
+  [I in keyof T]: Capitalize<
+    Options["preserveConsecutiveUppercase"] extends true
+      ? T[I]
+      : Lowercase<T[I]>
+  >;
 };
 
 /**
- * Converts text to **Title Case** by splitting it into words, lowercasing
- * them, capitalizing them, then joining them back together with spaces (` `).
+ * Converts text to **Title Case** by splitting it into words, capitalizing the
+ * first letter of each word, then joining them back together with spaces.
+ *
+ * This function is designed to be a direct replacement for Lodash's `startCase`
+ * function, handling various input formats like camelCase, kebab-case,
+ * snake_case, and mixed case strings consistently.
  *
  * Because it uses the built-in case conversion methods, the function shares
  * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
@@ -27,30 +67,105 @@ type TitleCasedArray<W extends ReadonlyArray<string>> = {
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
  * @param data - A string.
+ * @param options - An _optional_ object with an _optional_ prop
+ * `preserveConsecutiveUppercase` that can be used to change the way consecutive
+ * uppercase characters are handled. Defaults to `false`.
  * @signature
  *   R.toTitleCase(data);
+ *   R.toTitleCase(data, { preserveConsecutiveUppercase });
  * @example
  *   R.toTitleCase("hello world"); // "Hello World"
  *   R.toTitleCase("--foo-bar--"); // "Foo Bar"
  *   R.toTitleCase("fooBar"); // "Foo Bar"
  *   R.toTitleCase("__FOO_BAR__"); // "Foo Bar"
- *   R.toTitleCase("user_id"); // "User Id"
+ *   R.toTitleCase("XMLHttpRequest"); // "Xml Http Request"
+ *   R.toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: true }); // "XML Http Request"
  * @dataFirst
  * @category String
  */
-export function toTitleCase<S extends string>(data: S): TitleCase<S>;
+export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
+  data: S,
+  options?: Options,
+): TitleCase<S, Options>;
 
-export function toTitleCase(): <S extends string>(data: S) => TitleCase<S>;
+export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
+  data: S,
+  options?: Options,
+): TitleCase<S, Options>;
 
-export function toTitleCase(...args: ReadonlyArray<unknown>): unknown {
-  return purry(toTitleCaseImplementation, args);
+/**
+ * Converts text to **Title Case** by splitting it into words, capitalizing the
+ * first letter of each word, then joining them back together with spaces.
+ *
+ * This function is designed to be a direct replacement for Lodash's `startCase`
+ * function, handling various input formats like camelCase, kebab-case,
+ * snake_case, and mixed case strings consistently.
+ *
+ * Because it uses the built-in case conversion methods, the function shares
+ * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
+ * which are purpose-built to handle nuances in languages and locales.
+ *
+ * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
+ *
+ * @param options - An _optional_ object with an _optional_ prop
+ * `preserveConsecutiveUppercase` that can be used to change the way consecutive
+ * uppercase characters are handled. Defaults to `false`.
+ * @signature
+ *   R.toTitleCase()(data);
+ *   R.toTitleCase({ preserveConsecutiveUppercase })(data);
+ * @example
+ *   R.pipe("hello world", R.toTitleCase()); // "Hello World"
+ *   R.pipe("--foo-bar--", R.toTitleCase()); // "Foo Bar"
+ *   R.pipe("fooBar", R.toTitleCase()); // "Foo Bar"
+ *   R.pipe("__FOO_BAR__", R.toTitleCase()); // "Foo Bar"
+ *   R.pipe("XMLHttpRequest", R.toTitleCase()); // "Xml Http Request"
+ *   R.pipe(
+ *     "XMLHttpRequest",
+ *     R.toTitleCase({ preserveConsecutiveUppercase: true }),
+ *   ); // "XML Http Request"
+ * @dataLast
+ * @category String
+ */
+export function toTitleCase<Options extends TitleCaseOptions>(
+  options?: Options,
+): <S extends string>(data: S) => TitleCase<S, Options>;
+
+export function toTitleCase(
+  dataOrOptions?: TitleCaseOptions | string,
+  options?: TitleCaseOptions,
+): unknown {
+  return typeof dataOrOptions === "string"
+    ? toTitleCaseImplementation(dataOrOptions, options)
+    : (data: string) => toTitleCaseImplementation(data, dataOrOptions);
 }
 
-const toTitleCaseImplementation = <S extends string>(data: S): TitleCase<S> =>
-  // @ts-expect-error [ts2322] -- This is too complex for TypeScript to infer
-  // directly via composition, also because the built-in functions don't use the TypeScript utils LowerCase, UpperCase, etc...
-  words(data)
+// Similar to the implementation used in toCamelCase
+const toTitleCaseImplementation = (
+  data: string,
+  {
+    preserveConsecutiveUppercase = DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE,
+  }: TitleCaseOptions = {},
+): string =>
+  words(
+    LOWER_CASE_CHARACTER_RE.test(data)
+      ? data
+      : // If the text doesn't have **any** lower case characters we also lower
+        // case everything, but if it does we need to maintain them as it
+        // affects the word boundaries.
+        data.toLowerCase(),
+  )
     .map(
-      (word) => `${word[0]?.toUpperCase() ?? ""}${word.slice(1).toLowerCase()}`,
+      (word) =>
+        `${word[0]?.toUpperCase() ?? ""}${
+          preserveConsecutiveUppercase
+            ? word.slice(1)
+            : word.slice(1).toLowerCase()
+        }`,
     )
     .join(" ");
