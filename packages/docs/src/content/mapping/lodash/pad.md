@@ -20,7 +20,7 @@ _Not provided by Remeda._
 <pre>{_.pad(user.name, 20)}</pre>
 
 // CSS
-<div style={{ textAlign: "center", width: "20ch" }}>{user.name}</div>
+<div style="text-align:center;width:20ch">{user.name}</div>
 ```
 
 ### Reference Implementation
