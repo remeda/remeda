@@ -26,7 +26,7 @@ type Truncate<
     : TruncateWithOptions<
         S,
         N,
-        // TODO: I don't like how I handled the default options object; i want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
+        // TODO: I don't like how I handled the default options object; I want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
         Options extends Pick<Required<TruncateOptions>, "omission">
           ? Options["omission"]
           : typeof DEFAULT_OMISSION,
@@ -62,7 +62,7 @@ type TruncateWithOptions<
                   // When S isn't literal the output wouldn't be literal
                   // either.
                   IsStringLiteral<S>,
-                  // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                  // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                   IsEqual<Separator, undefined>
                 > extends true
               ? TruncateLiterals<S, N, Omission>
@@ -86,7 +86,7 @@ type TruncateLiterals<
       N,
       StringLength<Omission>
     >
-    ? // The string is only truncated if it's total length is longer than N; at
+    ? // The string is only truncated if its total length is longer than N; at
       // the cutoff point this is simplified to comparing the remaining suffix
       // length to the omission length.
       IsLongerThan<S, Omission> extends true
@@ -128,7 +128,7 @@ type IsLongerThan<
  * The function counts Unicode characters, not visual graphemes, and may split
  * emojis, denormalized diacritics, or combining characters, in the middle. For
  * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
- * which is locale-aware and purpose built for this task.
+ * which is locale-aware and purpose-built for this task.
  *
  * @param data - The input string.
  * @param n - The maximum length of the output string. The output will **never**
@@ -177,7 +177,7 @@ export function truncate<
  * The function counts Unicode characters, not visual graphemes, and may split
  * emojis, denormalized diacritics, or combining characters, in the middle. For
  * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
- * which is locale-aware and purpose built for this task.
+ * which is locale-aware and purpose-built for this task.
  *
  * @param n - The maximum length of the output string. The output will **never**
  * exceed this length.

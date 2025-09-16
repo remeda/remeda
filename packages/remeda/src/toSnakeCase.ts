@@ -16,7 +16,7 @@ type SnakeCase<S extends string> = string extends S
  * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
- * which are purpose built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
@@ -44,7 +44,7 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
- * which are purpose built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
@@ -55,7 +55,7 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  *   R.toSnakeCase()(data);
  * @example
  *   R.pipe("hello world", R.toSnakeCase()); // "hello_world"
- *   R.pipe("__HELLO_WORLD__", toSnakeCase()); // "hello_world"
+ *   R.pipe("__HELLO_WORLD__", R.toSnakeCase()); // "hello_world"
  * @dataLast
  * @category String
  */

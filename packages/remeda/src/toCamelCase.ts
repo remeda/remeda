@@ -30,7 +30,7 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
@@ -68,7 +68,7 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
@@ -83,7 +83,7 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
- *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
+ *   R.pipe("__HELLO_WORLD__", R.toCamelCase()); // "helloWorld"
  *   R.pipe("HasHTML", R.toCamelCase()); // "hasHTML"
  *   R.pipe(
  *     "HasHTML",

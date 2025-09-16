@@ -42,7 +42,7 @@ type Split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
  *   R.split(data, separator, limit);
@@ -78,7 +78,7 @@ export function split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
  *   R.split(separator, limit)(data);
