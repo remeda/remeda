@@ -6,8 +6,10 @@ _Not provided by Remeda._
 
 - `words` is often used to convert between different cases of identifiers and
   keys. Use [`toCamelCase`](/docs#toCamelCase), [`toKebabCase`](/docs#toKebabCase),
-  or [`toSnakeCase`](/docs#toSnakeCase), instead.
-- If `words` is used for simple splitting tasks, it is often replaceable by [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+  [`toSnakeCase`](/docs#toSnakeCase), or [`toTitleCase`](/docs#toTitleCase)
+  instead.
+- If `words` is used for simple splitting tasks, it is often replaceable by
+  [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
   using simple regular expressions like `/\s+/`, `/\W+/`, `/[\p{Z}\p{P}]+/u`, or
   ones tailored specifically for your use-case.
 - Lodash performs a lot of pseudo-lingual heuristics in order to detect special
@@ -24,12 +26,14 @@ _Not provided by Remeda._
 // Lodash
 _.words(input).map(_.toLowerCase).join("-");
 _.words(input).map(_.toLowerCase).join("_");
+_.words(input).map(_.capitalize).join(" ");
 _.words(input).map(_.toUpperCase).join("-");
 _.words(input).map(_.toUpperCase).join("_");
 
 // Remeda
 toKebabCase(input);
 toSnakeCase(input);
+toTitleCase(input, { preserveConsecutiveUppercase: false });
 toUpperCase(toKebabCase(input));
 toUpperCase(toSnakeCase(input));
 ```

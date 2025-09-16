@@ -54,10 +54,7 @@ type TitleCasedArray<
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose-built to handle nuances in languages and locales. The CSS
- * property [`text-transform: capitalize`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#capitalize)
- * *is* locale-aware and performs similarly (it doesn't lowercase the rest of
- * the word).
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
@@ -95,10 +92,7 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose-built to handle nuances in languages and locales. The CSS
- * property [`text-transform: capitalize`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#capitalize)
- * *is* locale-aware and performs similarly (it doesn't lowercase the rest of
- * the word).
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.

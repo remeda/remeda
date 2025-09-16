@@ -1,6 +1,6 @@
 ---
 category: String
-remeda: toCamelCase
+remeda: toTitleCase
 ---
 
 - Lodash attempts pseudo-linguistic word splitting to handle special characters
@@ -17,7 +17,7 @@ remeda: toCamelCase
   [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
   be done manually if required.
-- Lodash allows calling `camelCase` without any input, or with an `undefined`
+- Lodash allows calling `startCase` without any input, or with an `undefined`
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
@@ -25,20 +25,20 @@ remeda: toCamelCase
 
 ```ts
 // Lodash
-_.camelCase(input);
+_.startCase(input);
 
 // Remeda
-toCamelCase(input, { preserveConsecutiveUppercase: false });
+toTitleCase(input, { preserveConsecutiveUppercase: false });
 ```
 
 ### Normalized
 
 ```ts
 // Lodash
-_.camelCase(input);
+_.startCase(input);
 
 // Remeda + Native
-toCamelCase(
+toTitleCase(
   input
     // "Promote" diacritics to be independent characters in the string.
     .normalize("NFD")
@@ -52,15 +52,15 @@ toCamelCase(
 
 ```ts
 // Lodash
-_.camelCase();
-_.camelCase(input);
+_.startCase();
+_.startCase(input);
 
 // Remeda
 ("");
 input !== undefined
-  ? toCamelCase(input, { preserveConsecutiveUppercase: false })
+  ? toTitleCase(input, { preserveConsecutiveUppercase: false })
   : "";
 
 // Or
-toCamelCase(input ?? "", { preserveConsecutiveUppercase: false });
+toTitleCase(input ?? "", { preserveConsecutiveUppercase: false });
 ```

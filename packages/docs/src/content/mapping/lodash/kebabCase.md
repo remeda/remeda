@@ -14,6 +14,9 @@ remeda: toKebabCase
   [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
   be done manually if required.
+- Lodash allows calling `kebabCase` without any input, or with an `undefined`
+  input, which isn't supported in Remeda. Handle these cases before calling the
+  function.
 
 ### Simple strings
 
@@ -39,4 +42,19 @@ toKebabCase(
     // Remove apostrophes and all independent diacritic characters.
     .replace(/['\u2019\u0300-\u036f]/g, ""),
 );
+```
+
+### Missing input
+
+```ts
+// Lodash
+_.kebabCase();
+_.kebabCase(input);
+
+// Remeda
+("");
+input !== undefined ? toKebabCase(input) : "";
+
+// Or
+toKebabCase(input ?? "");
 ```

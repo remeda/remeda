@@ -11,37 +11,22 @@
 4. `pick`, `pickBy`, `omit`, and `omitBy` handle symbol keys differently. We
    need to compare this with how Lodash does it and document any differences.
 
-5. Add `toTitleCase` function to handle 45% of `words` usage (converting
-   identifiers to readable labels). Research shows this is the most common
-   Lodash string operation not covered by Remeda. Use proper name `toTitleCase`
-   instead of `startCase` - matches Python's `str.title()` and .NET's
-   `ToTitleCase()`. This single function enables composition-based migration
-   for both `startCase` (direct replacement) and `lowerCase` (via
-   `toLowerCase(toTitleCase(input))`).
-
-6. Add special remeda flag (e.g., `candidate: true`) for mapping docs where
+5. Add special remeda flag (e.g., `candidate: true`) for mapping docs where
    functions are "Not provided by Remeda". When present, display a banner/UX
    element encouraging users to share their use-cases if they believe the
    function should be added, allowing us to re-assess past decisions based on
    real-world usage data. Articles to mark as candidates: `pad`, `padStart`,
    `padEnd`, `parseInt`, `repeat`, `replace`.
 
-7. Add `padStart` and `padEnd` functions to Remeda for data-last ergonomics
+6. Add `padStart` and `padEnd` functions to Remeda for data-last ergonomics
    in pipes (e.g., `pipe(input, padStart(10, "0"))`) and better typing than
    native methods.
 
-8. Consider adding `parseInt` function to Remeda for improved TypeScript
+7. Consider adding `parseInt` function to Remeda for improved TypeScript
    literal type support.
 
-9. Consider adding `repeat` function to Remeda for improved TypeScript literal
+8. Consider adding `repeat` function to Remeda for improved TypeScript literal
    type support. See type-fest `Repeat`
 
-10. Consider adding `replace` for data-last support and maybe improved typing on
-    some edge-cases, See type-fest `Replace`.
-
-11. When creating migration docs for `startCase`, `lowerCase`, and `upperCase`,
-    include CSS alternatives using `text-transform` properties:
-    - `startCase`: use `text-transform: capitalize`
-    - `lowerCase`: use `text-transform: lowercase`
-    - `upperCase`: use `text-transform: uppercase`
-      These are straightforward display transformations that map directly to CSS.
+9. Consider adding `replace` for data-last support and maybe improved typing on
+   some edge-cases, See type-fest `Replace`.
