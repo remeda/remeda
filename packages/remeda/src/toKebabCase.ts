@@ -19,7 +19,7 @@ type KebabCase<S extends string> = string extends S
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toCamelCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *
@@ -47,7 +47,7 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toCamelCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *

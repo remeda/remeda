@@ -10,10 +10,11 @@ import { purry } from "./purry";
  *
  * For display purposes, prefer using the CSS pseudo-element [`::first-letter`](https://developer.mozilla.org/en-US/docs/Web/CSS/::first-letter) to target
  * just the first letter of the word, and [`text-transform: uppercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#uppercase)
- * to capitalize it. This transformation **is** locale-aware.
+ * to capitalize it This transformation **is** locale-aware.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
- * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, `toSnakeCase`, and
+ * `toTitleCase`.
  *
  * @param data - A string.
  * @signature
@@ -38,7 +39,8 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  * to capitalize it. This transformation **is** locale-aware.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
- * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, `toSnakeCase`, and
+ * `toTitleCase`.
  *
  * @signature
  *   R.capitalize()(data);

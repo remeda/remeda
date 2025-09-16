@@ -19,7 +19,7 @@ type SnakeCase<S extends string> = string extends S
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toTitleCase`.
  *
  * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *
@@ -47,7 +47,7 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toTitleCase`.
  *
  * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *

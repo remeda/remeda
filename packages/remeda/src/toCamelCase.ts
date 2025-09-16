@@ -33,7 +33,7 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
@@ -71,7 +71,7 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
