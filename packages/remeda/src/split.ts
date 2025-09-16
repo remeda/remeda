@@ -28,9 +28,9 @@ type Split<
           : SplitBase<S, Separator>;
 
 /**
- * Takes a pattern and divides this string into an ordered list of substrings by
- * searching for the pattern, puts these substrings into an array, and returns
- * the array. This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * Splits a string into an array of substrings using a separator pattern.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param data - The string to split.
@@ -42,7 +42,7 @@ type Split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
  *   R.split(data, separator, limit);
@@ -65,9 +65,9 @@ export function split<
 >(data: S, separator: Separator, limit?: N): Split<S, Separator, N>;
 
 /**
- * Takes a pattern and divides this string into an ordered list of substrings by
- * searching for the pattern, puts these substrings into an array, and returns
- * the array. This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * Splits a string into an array of substrings using a separator pattern.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param separator - The pattern describing where each split should occur. Can
@@ -78,7 +78,7 @@ export function split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
  *   R.split(separator, limit)(data);

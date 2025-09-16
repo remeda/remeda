@@ -119,23 +119,8 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 
 # String
 
-- capitalize
-- deburr
-- escape
-- escapeRegExp
 - lowerCase
-- pad
-- padEnd
-- padStart
-- parseInt
-- repeat
-- replace
 - startCase
-- template
-- trim
-- trimEnd
-- trimStart
-- unescape
 - upperCase
 
 # Util

@@ -26,7 +26,7 @@ type Truncate<
     : TruncateWithOptions<
         S,
         N,
-        // TODO: I don't like how I handled the default options object; i want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
+        // TODO: I don't like how I handled the default options object; I want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
         Options extends Pick<Required<TruncateOptions>, "omission">
           ? Options["omission"]
           : typeof DEFAULT_OMISSION,
@@ -62,7 +62,7 @@ type TruncateWithOptions<
                   // When S isn't literal the output wouldn't be literal
                   // either.
                   IsStringLiteral<S>,
-                  // TODO: Handling non-trivial separators would add a tonne of complexity to this type! It's possible (but hard!) to support string literals so i'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                  // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
                   IsEqual<Separator, undefined>
                 > extends true
               ? TruncateLiterals<S, N, Omission>
@@ -86,7 +86,7 @@ type TruncateLiterals<
       N,
       StringLength<Omission>
     >
-    ? // The string is only truncated if it's total length is longer than N; at
+    ? // The string is only truncated if its total length is longer than N; at
       // the cutoff point this is simplified to comparing the remaining suffix
       // length to the omission length.
       IsLongerThan<S, Omission> extends true
@@ -112,10 +112,10 @@ type IsLongerThan<
     false;
 
 /**
- * Truncates strings longer than `n`, appending an `omission` marker to them
- * (which defaults to '...'); shorter strings are returned as-is. The total
- * length of the output will never exceed `n` (in the rare case where the
- * `omission` itself is too long, it will be truncated too).
+ * Truncates strings to a maximum length, adding an ellipsis when truncated.
+ *
+ * Shorter strings are returned unchanged. If the omission marker is longer than
+ * the maximum length, it will be truncated as well.
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
@@ -125,10 +125,10 @@ type IsLongerThan<
  * `omission` or optimizing the cutoff point via `separator`, prefer
  * `sliceString` instead, which runs more efficiently.
  *
- * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
- * the output is rendered in a browser; this function doesn't handle
- * diacritics, emojis, and any sort of semantic understanding of the string
- * contents.
+ * The function counts Unicode characters, not visual graphemes, and may split
+ * emojis, denormalized diacritics, or combining characters, in the middle. For
+ * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * which is locale-aware and purpose-built for this task.
  *
  * @param data - The input string.
  * @param n - The maximum length of the output string. The output will **never**
@@ -161,10 +161,10 @@ export function truncate<
 >(data: S, n: N, options?: Options): Truncate<S, N, Options>;
 
 /**
- * Truncates strings longer than `n`, appending an `omission` marker to them
- * (which defaults to '...'); shorter strings are returned as-is. The total
- * length of the output will never exceed `n` (in the rare case where the
- * `omission` itself is too long, it will be truncated too).
+ * Truncates strings to a maximum length, adding an ellipsis when truncated.
+ *
+ * Shorter strings are returned unchanged. If the omission marker is longer than
+ * the maximum length, it will be truncated as well.
  *
  * The `separator` argument provides more control by optimistically searching
  * for a matching cutoff point, which could be used to avoid truncating in the
@@ -174,10 +174,10 @@ export function truncate<
  * `omission` or optimizing the cutoff point via `separator`, prefer
  * `sliceString` instead, which runs more efficiently.
  *
- * **IMPORTANT**: Prefer using CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis) when
- * the output is rendered in a browser; this function doesn't handle
- * diacritics, emojis, and any sort of semantic understanding of the string
- * contents.
+ * The function counts Unicode characters, not visual graphemes, and may split
+ * emojis, denormalized diacritics, or combining characters, in the middle. For
+ * display purposes, prefer CSS [`text-overflow: ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow#ellipsis)
+ * which is locale-aware and purpose-built for this task.
  *
  * @param n - The maximum length of the output string. The output will **never**
  * exceed this length.
@@ -250,6 +250,7 @@ function truncateImplementation(
   }
 
   if (n < omission.length) {
+    // TODO [>3]: This was an oversight, there's no value in returning just parts of the omission string itself, with no actual content. Instead, we should truncate the input without adding the omission at all in cases where the omission would completely eclipse the content.
     // Handle cases where the omission itself is too long.
     return omission.slice(0, n);
   }

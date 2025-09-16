@@ -2,3 +2,43 @@
 category: String
 remeda: toLowerCase
 ---
+
+- For display purposes, prefer using CSS [`text-transform: lowercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#lowercase).
+- Lodash allows calling `toLower` without any input, or with an `undefined`
+  input, which isn't supported in Remeda. Handle these cases before calling the
+  function.
+
+### Basic usage
+
+```ts
+// Lodash
+_.toLower(input);
+
+// Remeda
+toLowerCase(input);
+```
+
+### CSS
+
+```tsx
+// Lodash
+<div>{_.toLower(input)}</div>
+
+// CSS
+<div style="text-transform:lowercase">{input}</div>
+```
+
+### Missing input
+
+```ts
+// Lodash
+_.toLower();
+_.toLower(input);
+
+// Remeda
+("");
+input !== undefined ? toLowerCase(input) : "";
+
+// Or
+toLowerCase(input ?? "");
+```

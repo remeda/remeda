@@ -20,14 +20,20 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
 >;
 
 /**
- * Convert a text to camelCase by splitting it into words, un-capitalizing the
- * first word, capitalizing the rest, then joining them back together. This is
- * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
+ * Converts text to **camelCase** by splitting it into words, lowercasing the
+ * first word, capitalizing the rest, then joining them back together.
+ *
+ * Because it uses the built-in case conversion methods, the function shares
+ * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
- *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
@@ -52,14 +58,20 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
 ): CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
 
 /**
- * Convert a text to camelCase by splitting it into words, un-capitalizing the
- * first word, capitalizing the rest, then joining them back together. This is
- * the runtime implementation of type-fest's [`CamelCase` type](https://github.com/sindresorhus/type-fest/blob/main/source/camel-case.d.ts).
+ * Converts text to **camelCase** by splitting it into words, lowercasing the
+ * first word, capitalizing the rest, then joining them back together.
+ *
+ * Because it uses the built-in case conversion methods, the function shares
+ * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
- *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
@@ -71,7 +83,7 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
  * @example
  *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
- *   R.pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
+ *   R.pipe("__HELLO_WORLD__", R.toCamelCase()); // "helloWorld"
  *   R.pipe("HasHTML", R.toCamelCase()); // "hasHTML"
  *   R.pipe(
  *     "HasHTML",

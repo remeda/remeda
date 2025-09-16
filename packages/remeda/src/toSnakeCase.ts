@@ -7,13 +7,21 @@ type SnakeCase<S extends string> = string extends S
   : Lowercase<Join<Words<S>, "_">>;
 
 /**
- * Convert a text to snake-case by splitting it into words and joining them back
- * together with "_", and then lowering the case of the result.
+ * Converts text to **snake_case** by splitting it into words and joining them
+ * back together with underscores (`_`), then lowercasing the result.
+ *
+ * Because it uses [`toLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase),
+ * the function shares its _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *
  * @param data - A string.
  * @signature
@@ -27,19 +35,27 @@ type SnakeCase<S extends string> = string extends S
 export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
 
 /**
- * Convert a text to snake-case by splitting it into words and joining them back
- * together with "_", and then lowering the case of the result.
+ * Converts text to **snake_case** by splitting it into words and joining them
+ * back together with underscores (`_`), then lowercasing the result.
+ *
+ * Because it uses [`toLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase),
+ * the function shares its _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
+ * too, making it best suited for simple strings like identifiers and internal
+ * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters), and
+ * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
+ * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, and `toKebabCase`.
  *
- * !IMPORTANT: This function might work _incorrectly_ for **non-ascii** inputs.
+ * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *
  * @signature
  *   R.toSnakeCase()(data);
  * @example
  *   R.pipe("hello world", R.toSnakeCase()); // "hello_world"
- *   R.pipe("__HELLO_WORLD__", toSnakeCase()); // "hello_world"
+ *   R.pipe("__HELLO_WORLD__", R.toSnakeCase()); // "hello_world"
  * @dataLast
  * @category String
  */

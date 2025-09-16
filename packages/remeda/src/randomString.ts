@@ -4,7 +4,10 @@ const ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A [pseudo-random](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) [alpha-numeric](https://en.wikipedia.org/wiki/Alphanumericals)
+ * [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String).
+ *
+ * It is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @param length - The length of the random string.
  * @returns The random string.
@@ -18,7 +21,10 @@ const ALPHABET =
 export function randomString(length: number): string;
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A [pseudo-random](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) [alpha-numeric](https://en.wikipedia.org/wiki/Alphanumericals)
+ * [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String).
+ *
+ * It is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @returns The random string.
  * @signature

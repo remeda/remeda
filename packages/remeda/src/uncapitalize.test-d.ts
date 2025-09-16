@@ -77,3 +77,35 @@ describe("data-last", () => {
     expectTypeOf(result).toEqualTypeOf<`pREFIX_${number}`>();
   });
 });
+
+describe("unicode", () => {
+  test("maintains diacritics in rest of word", () => {
+    expectTypeOf(uncapitalize("Café Naïve")).toEqualTypeOf<"café Naïve">();
+    expectTypeOf(uncapitalize("CAFÉ NAÏVE")).toEqualTypeOf<"cAFÉ NAÏVE">();
+  });
+
+  test("handles non-Latin scripts", () => {
+    expectTypeOf(uncapitalize("Москва")).toEqualTypeOf<"москва">();
+    expectTypeOf(uncapitalize("Ελλάδα")).toEqualTypeOf<"ελλάδα">();
+  });
+
+  test("handles surrogate pairs (astral plane)", () => {
+    expectTypeOf(uncapitalize("𝒽Ello World")).toEqualTypeOf<"𝒽Ello World">();
+  });
+
+  test("doesn't explode on emojis", () => {
+    expectTypeOf(uncapitalize("🎉Party Time")).toEqualTypeOf<"🎉Party Time">();
+  });
+
+  test("handles combining characters", () => {
+    expectTypeOf(uncapitalize("É\u0301llo")).toEqualTypeOf<"é\u0301llo">();
+  });
+
+  test("single surrogate pair", () => {
+    expectTypeOf(uncapitalize("𝒽")).toEqualTypeOf<"𝒽">();
+  });
+
+  test("single accented character", () => {
+    expectTypeOf(uncapitalize("É")).toEqualTypeOf<"é">();
+  });
+});

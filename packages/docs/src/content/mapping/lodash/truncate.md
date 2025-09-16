@@ -3,74 +3,46 @@ category: String
 remeda: truncate
 ---
 
-- The `length` param in Remeda is not part of the options object and is required
-  as its own argument. There is no implicit default length.
-- In Lodash, the function also supports some handling of Unicode characters
-  (like Emojis). The Remeda implementation only supports ASCII.
-- In Lodash when `omission` is longer than the provided `length` the output
-  would be the entire `omission` string, which would cause the result to be
-  **longer** than `length`. The Remeda implementation ensures this doesn't
-  happen by truncating the `omission` string itself.
-- When providing a regular expression for `separator` it needs to have the
-  [`global`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags)
-  enabled on it.
+- Remeda requires an explicit `length` parameter, while Lodash defaults to
+  **`30`** when it isn't provided.
+- Lodash computes the length of the `input` and `omission` strings in
+  _graphemes_, unlike Remeda that counts _Unicode characters_. In the vast
+  majority of cases these are identical, but when these strings contain
+  complex Unicode characters (like family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈)
+  the input might not be truncated at the same index.
+- The Remeda function would _never_ return a string longer than `length`, opting
+  to truncate the `omission` itself when it's too long. Lodash will never
+  truncate the `omission` and therefore might return an output that exceeds
+  `length`.
 
-### Implicit default
+### Default length
 
 ```ts
 // Lodash
-_.truncate(DATA);
+_.truncate(input);
 
 // Remeda
-truncate(DATA, 30 /* implicit default in Lodash */);
+truncate(input, 30);
 ```
 
 ### Custom length
 
 ```ts
 // Lodash
-_.truncate(DATA, { length: 24 });
+_.truncate(input, { length });
 
 // Remeda
-truncate(DATA, 24);
+truncate(input, length);
 ```
 
-### Custom omission
+### With options
 
 ```ts
 // Lodash
-_.truncate(DATA, { omission: " [...]" });
+_.truncate(input, { omission, separator });
+_.truncate(input, { length, omission, separator });
 
 // Remeda
-truncate(DATA, 30, { omission: " [...]" });
-```
-
-### String separator
-
-```ts
-// Lodash
-_.truncate(DATA, { separator: "," });
-
-// Remeda
-truncate(DATA, 30, { separator: "," });
-```
-
-### RegExp separator
-
-```ts
-// Lodash
-_.truncate(DATA, { separator: /,? +/ });
-
-// Remeda
-truncate(DATA, 30, { separator: /,? +/g });
-```
-
-### All options
-
-```ts
-// Lodash
-_.truncate(DATA, { length: 24, omission: " [...]", separator: /,? +/ });
-
-// Remeda
-truncate(DATA, 24, { omission: " [...]", separator: /,? +/g });
+truncate(input, 30, { omission, separator });
+truncate(input, length, { omission, separator });
 ```

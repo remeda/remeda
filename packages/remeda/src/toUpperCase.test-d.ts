@@ -77,3 +77,34 @@ describe("data-last", () => {
     expectTypeOf(result).toEqualTypeOf<`PREFIX_${Uppercase<`${number}`>}`>();
   });
 });
+
+describe("unicode", () => {
+  test("handles diacritics", () => {
+    expectTypeOf(toUpperCase("café naïve")).toEqualTypeOf<"CAFÉ NAÏVE">();
+  });
+
+  test("handles non-Latin scripts", () => {
+    expectTypeOf(toUpperCase("москва")).toEqualTypeOf<"МОСКВА">();
+    expectTypeOf(toUpperCase("ελλάδα")).toEqualTypeOf<"ΕΛΛΆΔΑ">();
+  });
+
+  test("doesn't explode on emojis", () => {
+    expectTypeOf(toUpperCase("🎉party")).toEqualTypeOf<"🎉PARTY">();
+  });
+
+  test("handles surrogate pairs (astral plane)", () => {
+    expectTypeOf(toUpperCase("𝒽ello")).toEqualTypeOf<"𝒽ELLO">();
+  });
+
+  test("handles combining characters", () => {
+    expectTypeOf(toUpperCase("e\u0301llo")).toEqualTypeOf<"E\u0301LLO">();
+  });
+
+  test("handles German eszett", () => {
+    expectTypeOf(toUpperCase("straße")).toEqualTypeOf<"STRASSE">();
+  });
+
+  test("handles Turkish dotted I", () => {
+    expectTypeOf(toUpperCase("i̇stanbul")).toEqualTypeOf<"İSTANBUL">();
+  });
+});

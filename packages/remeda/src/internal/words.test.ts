@@ -113,3 +113,53 @@ describe("copied from the type-fest tests", () => {
     expect(words(input)).toStrictEqual(output);
   });
 });
+
+describe("unicode and special characters", () => {
+  test("doesn't break on accented characters", () => {
+    expect(words("naïveApproach")).toStrictEqual(["naïve", "Approach"]);
+    expect(words("résumé-data")).toStrictEqual(["résumé", "data"]);
+  });
+
+  test("doesn't splits at case boundaries with accented characters", () => {
+    expect(words("caféWorld")).toStrictEqual(["caféWorld"]);
+  });
+
+  test("normalization doesn't matter", () => {
+    const data = "caféWorld";
+    const nfc = data.normalize("NFC");
+    const nfd = data.normalize("NFD");
+    const nfkc = data.normalize("NFKC");
+    const nfkd = data.normalize("NFKD");
+
+    expect(words(nfc)).toStrictEqual([nfc]);
+    expect(words(nfd)).toStrictEqual([nfd]);
+    expect(words(nfkc)).toStrictEqual([nfkc]);
+    expect(words(nfkd)).toStrictEqual([nfkd]);
+  });
+
+  test("treats mixed scripts as single words", () => {
+    expect(words("helloМосква")).toStrictEqual(["helloМосква"]);
+    expect(words("dataΕλλάδα")).toStrictEqual(["dataΕλλάδα"]);
+  });
+
+  test("handles contractions and possessives", () => {
+    expect(words("can'tStop")).toStrictEqual(["can't", "Stop"]);
+    expect(words("user's-data")).toStrictEqual(["user's", "data"]);
+  });
+
+  test("handles curly apostrophes (\u2019)", () => {
+    expect(words("user'sData")).toStrictEqual(["user's", "Data"]);
+  });
+
+  test("treats emojis as part of words", () => {
+    expect(words("hello🎉World")).toStrictEqual(["hello🎉World"]);
+  });
+
+  test("treats special Unicode as part of words", () => {
+    expect(words("data𝒽ello")).toStrictEqual(["data𝒽ello"]);
+  });
+
+  test("preserves combining diacritical marks", () => {
+    expect(words("cafe\u0301World")).toStrictEqual(["cafe\u0301World"]);
+  });
+});
