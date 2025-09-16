@@ -5,7 +5,7 @@ remeda: toUpperCase
 
 - For display purposes, prefer using CSS [`text-transform: uppercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#uppercase).
 - Lodash allows calling `toUpper` without any input, or with an `undefined`
-  input, which isn't supported in Remeda, handle these cases before calling the
+  input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
 ### Basic usage

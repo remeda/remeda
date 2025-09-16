@@ -5,7 +5,7 @@ category: String
 _Not provided by Remeda._
 
 - If pad is used with whitespace padding (which is also the default) in order to
-  center text within an HTML component, prefer using CSS instead; Use
+  center text within an HTML component, prefer using CSS instead. Use
   [`width`](https://developer.mozilla.org/en-US/docs/Web/CSS/width) with a
   length in [`ch`](https://developer.mozilla.org/en-US/docs/Web/CSS/length#ch)
   units, and [`text-align: center`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).

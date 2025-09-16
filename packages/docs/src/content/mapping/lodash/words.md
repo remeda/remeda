@@ -7,15 +7,15 @@ _Not provided by Remeda._
 - `words` is often used to convert between different cases of identifiers and
   keys. Use [`toCamelCase`](/docs#toCamelCase), [`toKebabCase`](/docs#toKebabCase),
   or [`toSnakeCase`](/docs#toSnakeCase), instead.
-- If `words` is used for simple splitting tasks it is often replaceable by [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
-  using simple regular expressions like `/\s+/`, `/\W+/`, `/[\p{Z}\p{P}]+/u` or
+- If `words` is used for simple splitting tasks, it is often replaceable by [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+  using simple regular expressions like `/\s+/`, `/\W+/`, `/[\p{Z}\p{P}]+/u`, or
   ones tailored specifically for your use-case.
 - Lodash performs a lot of pseudo-lingual heuristics in order to detect special
   characters like diacritics, emojis, and complex graphemes. If you need
-  accurate language-aware splitting of words prefer [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+  accurate language-aware splitting of words, prefer [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#word).
-- When provided with the optional `pattern` parameter `words` defers the call to
-  [`String.prototype.match`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
+- When provided with the optional `pattern` parameter, `words` defers the call
+  to [`String.prototype.match`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
   as-is.
 
 ### Case conversion

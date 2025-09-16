@@ -4,7 +4,7 @@ category: String
 
 _Not provided by Remeda._
 
-- When the second `characters` parameter is not provided to lodash (or when it
+- When the second `characters` parameter is not provided to Lodash (or when it
   is `undefined`), all whitespace characters would be trimmed. This is the same
   as the native [`String.prototype.trimEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd).
 - The native `trimEnd` doesn't support the additional `characters` parameter
@@ -16,7 +16,7 @@ _Not provided by Remeda._
   family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈 that you want to trim). In these
   cases use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   with [`granularity: "grapheme"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#granularity).
-  to split the array.
+  to split the string.
 - Lodash allows calling `trimEnd` without any input (or with an `undefined`
   input), which results in an empty string `""`. This requires explicit handling
   in replacements.

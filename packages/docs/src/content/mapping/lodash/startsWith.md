@@ -4,8 +4,9 @@ remeda: startsWith
 ---
 
 - Lodash supports an optional `position` parameter to check from a specific
-  index, while Remeda only checks from the beginning of the string. Compose [`sliceString`](/docs#sliceString)
-  with `startsWith` to replicate this behavior.
+  index, while Remeda only checks from the beginning of the string. Compose
+  [`sliceString`](/docs#sliceString) with `startsWith` to replicate this
+  behavior.
 - Lodash allows calling the function without a `target` parameter (or using
   `undefined` for it). These would result in the function always returning
   `true`. In Remeda the `target` is required and handling `undefined` should be

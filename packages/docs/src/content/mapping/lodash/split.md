@@ -5,8 +5,8 @@ remeda: split
 
 - Lodash allows calling `split` without a `separator` parameter (or setting it
   to `undefined`) which returns the input string as a single-element array (the
-  same happens when `split` is used as a callback). Remeda needs
-  wrapping the input in an array manually.
+  same happens when `split` is used as a callback). Remeda needs the input
+  wrapped in an array manually.
 - Lodash accepts `null` and `undefined` input values, converting them to empty
   strings. Remeda needs these values handled separately.
 - When the `separator` parameter is `""`, Lodash uses complex logic to parse

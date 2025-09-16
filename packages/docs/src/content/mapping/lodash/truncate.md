@@ -7,7 +7,7 @@ remeda: truncate
   **`30`** when it isn't provided.
 - Lodash computes the length of the `input` and `omission` strings in
   _graphemes_, unlike Remeda that counts _Unicode characters_. In the vast
-  majority of cases these are identical, but when these string contain
+  majority of cases these are identical, but when these strings contain
   complex Unicode characters (like family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈)
   the input might not be truncated at the same index.
 - The Remeda function would _never_ return a string longer than `length`, opting

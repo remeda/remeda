@@ -5,8 +5,8 @@ category: String
 _Not provided by Remeda._
 
 Lodash's `template` is a complex templating engine that compiles templates into
-executable JavaScript functions. Due to its complexity and security implications
-it is outside the scope that Remeda offers.
+executable JavaScript functions. Due to its complexity and security
+implications, it is outside the scope that Remeda offers.
 
 - In most cases it can be substituted by native [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
 - In many other cases it is redundant with the templating capabilities of

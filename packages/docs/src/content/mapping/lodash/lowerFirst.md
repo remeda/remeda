@@ -7,8 +7,8 @@ remeda: uncapitalize
   to target just the first letter of the word and [`text-transform: lowercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#lowercase)
   to lowercase it.
 - Lodash allows calling `lowerFirst` without any input (or with an `undefined`
-  input), which results in an empty string `""`. Remeda's `capitalize` requires a
-  string input.
+  input), which results in an empty string `""`. Remeda's `uncapitalize`
+  requires a string input.
 
 ### Basic usage
 
