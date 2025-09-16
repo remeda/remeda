@@ -28,8 +28,8 @@ input.padStart(n, padding);
 
 ```tsx
 // Lodash
-<pre>{_.padStart(user.name, 20)}</pre>
+<pre>{_.padStart(input, 20)}</pre>
 
 // CSS
-<div style="text-align:right;width:20ch">{user.name}</div>
+<div style="text-align:right;width:20ch">{input}</div>
 ```

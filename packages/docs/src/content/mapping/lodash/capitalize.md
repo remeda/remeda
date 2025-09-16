@@ -15,17 +15,17 @@ remeda: capitalize
 
 ```ts
 // Lodash
-_.capitalize("javaScript");
+_.capitalize(input);
 
 // Remeda
-capitalize(toLowerCase("javaScript"));
+capitalize(toLowerCase(input));
 ```
 
 ### CSS
 
 ```tsx
 // Lodash
-<div>{_.capitalize(user.name)}</div>
+<div>{_.capitalize(input)}</div>
 
 // CSS
 <style>
@@ -37,5 +37,5 @@ capitalize(toLowerCase("javaScript"));
     text-transform: uppercase;
   }
 </style>
-<div class="capitalize">{user.name}</div>
+<div class="capitalize">{input}</div>
 ```

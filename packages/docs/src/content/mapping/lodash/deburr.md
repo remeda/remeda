@@ -39,10 +39,10 @@ collator.compare("café", "cafe") === 0;
 
 ```ts
 // Lodash
-_.deburr("café");
+_.deburr(input);
 
 // Native JS
-"café"
+input
   .normalize("NFD")
   .replace(
     /[\u0300-\u036f]/g /* The "Combining Diacritical Marks" Unicode block. */,

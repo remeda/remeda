@@ -22,10 +22,10 @@ toLowerCase(input);
 
 ```tsx
 // Lodash
-<div>{_.toLower(user.name)}</div>
+<div>{_.toLower(input)}</div>
 
 // CSS
-<div style="text-transform:lowercase">{user.name}</div>
+<div style="text-transform:lowercase">{input}</div>
 ```
 
 ### Missing input

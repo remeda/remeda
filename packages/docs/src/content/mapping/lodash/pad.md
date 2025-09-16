@@ -17,10 +17,10 @@ _Not provided by Remeda._
 
 ```tsx
 // Lodash
-<pre>{_.pad(user.name, 20)}</pre>
+<pre>{_.pad(input, 20)}</pre>
 
 // CSS
-<div style="text-align:center;width:20ch">{user.name}</div>
+<div style="text-align:center;width:20ch">{input}</div>
 ```
 
 ### Reference Implementation

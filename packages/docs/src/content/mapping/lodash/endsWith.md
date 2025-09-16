@@ -40,8 +40,8 @@ input.endsWith(suffix, position);
 
 ```ts
 // Lodash
-_.endsWith("hello", suffix);
+_.endsWith(input, suffix);
 
 // Remeda
-suffix !== undefined && endsWith("hello", suffix);
+suffix !== undefined && endsWith(input, suffix);
 ```

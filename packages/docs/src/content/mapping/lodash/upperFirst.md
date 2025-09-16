@@ -24,7 +24,7 @@ capitalize(input);
 
 ```tsx
 // Lodash
-<div>{_.upperFirst(user.name)}</div>
+<div>{_.upperFirst(input)}</div>
 
 // CSS
 <style>
@@ -32,7 +32,7 @@ capitalize(input);
     text-transform: uppercase;
   }
 </style>
-<div class="upperFirst">{user.name}</div>
+<div class="upperFirst">{input}</div>
 ```
 
 ### Missing input data

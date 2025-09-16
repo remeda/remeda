@@ -22,10 +22,10 @@ toUpperCase(input);
 
 ```tsx
 // Lodash
-<div>{_.toUpper(user.name)}</div>
+<div>{_.toUpper(input)}</div>
 
 // CSS
-<div style="text-transform:uppercase">{user.name}</div>
+<div style="text-transform:uppercase">{input}</div>
 ```
 
 ### Missing input
