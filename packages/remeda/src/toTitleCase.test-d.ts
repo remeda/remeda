@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { toTitleCase } from "./toTitleCase";
+import { pipe } from "./pipe";
 
 test("empty string", () => {
   expectTypeOf(toTitleCase("")).toEqualTypeOf<"">();
@@ -45,6 +46,12 @@ test("mixed separators", () => {
   expectTypeOf(
     toTitleCase("foo-bar_baz qux"),
   ).toEqualTypeOf<"Foo Bar Baz Qux">();
+});
+
+test("data-last", () => {
+  expectTypeOf(
+    pipe("fooBar" as const, toTitleCase()),
+  ).toEqualTypeOf<"Foo Bar">();
 });
 
 describe("lodash spec", () => {
@@ -171,5 +178,23 @@ describe("preserveConsecutiveUppercase option", () => {
     expectTypeOf(
       toTitleCase("foo_BAR-biz_BUZZ", { preserveConsecutiveUppercase: false }),
     ).toEqualTypeOf<"Foo Bar Biz Buzz">();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe("XMLHttpRequest" as const, toTitleCase(/* default options */)),
+    ).toEqualTypeOf<"XML Http Request">();
+    expectTypeOf(
+      pipe(
+        "XMLHttpRequest" as const,
+        toTitleCase({ preserveConsecutiveUppercase: true }),
+      ),
+    ).toEqualTypeOf<"XML Http Request">();
+    expectTypeOf(
+      pipe(
+        "XMLHttpRequest" as const,
+        toTitleCase({ preserveConsecutiveUppercase: false }),
+      ),
+    ).toEqualTypeOf<"Xml Http Request">();
   });
 });

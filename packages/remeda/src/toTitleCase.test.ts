@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { pipe } from "./pipe";
 import { toTitleCase } from "./toTitleCase";
 
 test("empty string", () => {
@@ -43,6 +44,10 @@ test("single word uppercase", () => {
 
 test("mixed separators", () => {
   expect(toTitleCase("foo-bar_baz qux")).toBe("Foo Bar Baz Qux");
+});
+
+test("data-last", () => {
+  expect(pipe("fooBar" as const, toTitleCase())).toBe("Foo Bar");
 });
 
 describe("lodash spec", () => {
@@ -155,5 +160,23 @@ describe("preserveConsecutiveUppercase option", () => {
     expect(
       toTitleCase("foo_BAR-biz_BUZZ", { preserveConsecutiveUppercase: false }),
     ).toBe("Foo Bar Biz Buzz");
+  });
+
+  test("data-last", () => {
+    expect(
+      pipe("XMLHttpRequest" as const, toTitleCase(/* default options */)),
+    ).toBe("XML Http Request");
+    expect(
+      pipe(
+        "XMLHttpRequest" as const,
+        toTitleCase({ preserveConsecutiveUppercase: true }),
+      ),
+    ).toBe("XML Http Request");
+    expect(
+      pipe(
+        "XMLHttpRequest" as const,
+        toTitleCase({ preserveConsecutiveUppercase: false }),
+      ),
+    ).toBe("Xml Http Request");
   });
 });
