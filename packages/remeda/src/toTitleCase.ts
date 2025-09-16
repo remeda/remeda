@@ -10,6 +10,7 @@ type TitleCaseOptions = {
 
 type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions> = Merge<
   {
+    // We use the runtime const for the default type so they stay coupled.
     preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
   },
   {
@@ -19,10 +20,6 @@ type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions> = Merge<
   }
 > &
   Required<TitleCaseOptions>;
-
-// Merge the default as used in our runtime implementation with the options
-// provided by the user. This allows us to couple typing and runtime so that
-// they don't diverge.
 
 type TitleCase<S extends string, Options extends TitleCaseOptions> =
   IsLiteral<S> extends true
@@ -50,10 +47,6 @@ type TitleCasedArray<
  * Converts text to **Title Case** by splitting it into words, capitalizing the
  * first letter of each word, then joining them back together with spaces.
  *
- * This function is designed to be a direct replacement for Lodash's `startCase`
- * function, handling various input formats like camelCase, kebab-case,
- * snake_case, and mixed case strings consistently.
- *
  * Because it uses the built-in case conversion methods, the function shares
  * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
  * too, making it best suited for simple strings like identifiers and internal
@@ -61,7 +54,10 @@ type TitleCasedArray<
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose-built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales. The CSS
+ * property [`text-transform: capitalize`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#capitalize)
+ * *is* locale-aware and performs similarly (it doesn't lowercase the rest of
+ * the word).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
@@ -69,7 +65,7 @@ type TitleCasedArray<
  * @param data - A string.
  * @param options - An _optional_ object with an _optional_ prop
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
- * uppercase characters are handled. Defaults to `false`.
+ * uppercase characters are handled. Defaults to `true`.
  * @signature
  *   R.toTitleCase(data);
  *   R.toTitleCase(data, { preserveConsecutiveUppercase });
@@ -78,16 +74,11 @@ type TitleCasedArray<
  *   R.toTitleCase("--foo-bar--"); // "Foo Bar"
  *   R.toTitleCase("fooBar"); // "Foo Bar"
  *   R.toTitleCase("__FOO_BAR__"); // "Foo Bar"
- *   R.toTitleCase("XMLHttpRequest"); // "Xml Http Request"
- *   R.toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: true }); // "XML Http Request"
+ *   R.toTitleCase("XMLHttpRequest"); // "XML Http Request"
+ *   R.toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: false }); // "Xml Http Request"
  * @dataFirst
  * @category String
  */
-export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
-  data: S,
-  options?: Options,
-): TitleCase<S, Options>;
-
 export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
   data: S,
   options?: Options,
@@ -97,10 +88,6 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * Converts text to **Title Case** by splitting it into words, capitalizing the
  * first letter of each word, then joining them back together with spaces.
  *
- * This function is designed to be a direct replacement for Lodash's `startCase`
- * function, handling various input formats like camelCase, kebab-case,
- * snake_case, and mixed case strings consistently.
- *
  * Because it uses the built-in case conversion methods, the function shares
  * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
  * too, making it best suited for simple strings like identifiers and internal
@@ -108,14 +95,17 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
- * which are purpose-built to handle nuances in languages and locales.
+ * which are purpose-built to handle nuances in languages and locales. The CSS
+ * property [`text-transform: capitalize`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#capitalize)
+ * *is* locale-aware and performs similarly (it doesn't lowercase the rest of
+ * the word).
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
  * @param options - An _optional_ object with an _optional_ prop
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
- * uppercase characters are handled. Defaults to `false`.
+ * uppercase characters are handled. Defaults to `true`.
  * @signature
  *   R.toTitleCase()(data);
  *   R.toTitleCase({ preserveConsecutiveUppercase })(data);
@@ -124,11 +114,11 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  *   R.pipe("--foo-bar--", R.toTitleCase()); // "Foo Bar"
  *   R.pipe("fooBar", R.toTitleCase()); // "Foo Bar"
  *   R.pipe("__FOO_BAR__", R.toTitleCase()); // "Foo Bar"
- *   R.pipe("XMLHttpRequest", R.toTitleCase()); // "Xml Http Request"
+ *   R.pipe("XMLHttpRequest", R.toTitleCase()); // "XML Http Request"
  *   R.pipe(
  *     "XMLHttpRequest",
- *     R.toTitleCase({ preserveConsecutiveUppercase: true }),
- *   ); // "XML Http Request"
+ *     R.toTitleCase({ preserveConsecutiveUppercase: false }),
+ *   ); // "Xml Http Request"
  * @dataLast
  * @category String
  */
