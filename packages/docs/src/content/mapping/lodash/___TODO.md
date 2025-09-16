@@ -38,3 +38,10 @@
 
 10. Consider adding `replace` for data-last support and maybe improved typing on
     some edge-cases, See type-fest `Replace`.
+
+11. When creating migration docs for `startCase`, `lowerCase`, and `upperCase`,
+    include CSS alternatives using `text-transform` properties:
+    - `startCase`: use `text-transform: capitalize`
+    - `lowerCase`: use `text-transform: lowercase`
+    - `upperCase`: use `text-transform: uppercase`
+      These are straightforward display transformations that map directly to CSS.
