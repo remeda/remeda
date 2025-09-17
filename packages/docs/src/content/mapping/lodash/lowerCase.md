@@ -15,7 +15,7 @@ _Not provided by Remeda._
   the built-in [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   instead.
 - Lodash performs normalization on the input before splitting it, including
-  [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Remeda's word
+  [`deburr`](/migrate/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
   be done manually if required.
 - Lodash allows calling `lowerCase` without any input, or with an `undefined`
