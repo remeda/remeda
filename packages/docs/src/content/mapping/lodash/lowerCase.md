@@ -1,12 +1,10 @@
 ---
 category: String
+remeda: toTitleCase
 ---
 
-_Not provided by Remeda._
-
-- You can replicate `lowerCase` by combining [`toTitleCase`](/docs#toTitleCase)
-  which reformats the string into space-delimited words, and then
-  [`toLowerCase`](/docs#toLowerCase) to convert them to lowercase.
+- Use [`toLowerCase`](/docs#toLowerCase) on the results of [`toTitleCase`](/docs#toTitleCase)
+  which reformats the string into space-delimited words.
 - Lodash attempts pseudo-linguistic word splitting to handle special characters
   which might lead to inaccurate results. Remeda uses a simpler word splitting
   approach based on [`type-fest`'s definition](https://github.com/sindresorhus/type-fest/blob/main/source/words.d.ts)
