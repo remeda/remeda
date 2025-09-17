@@ -12,8 +12,8 @@ _Not provided by Remeda._
   [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
   using simple regular expressions like `/\s+/`, `/\W+/`, `/[\p{Z}\p{P}]+/u`, or
   ones tailored specifically for your use-case.
-- Lodash performs a lot of pseudo-lingual heuristics in order to detect special
-  characters like diacritics, emojis, and complex graphemes. If you need
+- Lodash performs a lot of pseudo-linguistic heuristics in order to detect
+  special characters like diacritics, emojis, and complex graphemes. If you need
   accurate language-aware splitting of words, prefer [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#word).
 - When provided with the optional `pattern` parameter, `words` defers the call

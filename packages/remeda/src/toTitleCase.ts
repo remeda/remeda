@@ -48,9 +48,9 @@ type TitleCasedArray<
  * first letter of each word, then joining them back together with spaces.
  *
  * Because it uses the built-in case conversion methods, the function shares
- * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
- * too, making it best suited for simple strings like identifiers and internal
- * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_,
+ * making it best suited for simple strings like identifiers and internal keys.
+ * For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
@@ -60,7 +60,7 @@ type TitleCasedArray<
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
  * @param data - A string.
- * @param options - An _optional_ object with an _optional_ prop
+ * @param options - An _optional_ object with the _optional_ property
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
@@ -86,9 +86,9 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * first letter of each word, then joining them back together with spaces.
  *
  * Because it uses the built-in case conversion methods, the function shares
- * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_
- * too, making it best suited for simple strings like identifiers and internal
- * keys. For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+ * their _[locale inaccuracies](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase#description)_,
+ * making it best suited for simple strings like identifiers and internal keys.
+ * For linguistic text processing, use [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
  * with [`granularity: "word"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter#parameters),
  * [`toLocaleLowerCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase),
  * and [`toLocaleUpperCase`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleUpperCase)
@@ -97,7 +97,7 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
  * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
  *
- * @param options - An _optional_ object with an _optional_ prop
+ * @param options - An _optional_ object with the _optional_ property
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
@@ -139,9 +139,9 @@ const toTitleCaseImplementation = (
   words(
     LOWER_CASE_CHARACTER_RE.test(data)
       ? data
-      : // If the text doesn't have **any** lower case characters we also lower
-        // case everything, but if it does we need to maintain them as it
-        // affects the word boundaries.
+      : // If the text doesn't have **any** lowercase characters, we lowercase
+        // everything; otherwise we maintain existing case as it affects word
+        // boundaries.
         data.toLowerCase(),
   )
     .map(
