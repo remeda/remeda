@@ -3,7 +3,7 @@ category: String
 remeda: toTitleCase
 ---
 
-- Use [`toLowerCase`](/docs#toLowerCase) on the results of [`toTitleCase`](/docs#toTitleCase)
+- Use [`toLowerCase`](/docs#toLowerCase) on the results of [`toTitleCase`](/docs#toTitleCase),
   which reformats the string into space-delimited words.
 - Lodash attempts pseudo-linguistic word splitting to handle special characters,
   which might lead to inaccurate results. Remeda uses a simpler word splitting
