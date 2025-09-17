@@ -14,7 +14,7 @@ remeda: toCamelCase
   `{ preserveConsecutiveUppercase: false }` as the second parameter to get the
   same results.
 - Lodash performs normalization on the input before splitting it, including
-  [`deburr`](/mapping/lodash#deburr) and removing apostrophes. Remeda's word
+  [`deburr`](/migrate/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
   be done manually if required.
 

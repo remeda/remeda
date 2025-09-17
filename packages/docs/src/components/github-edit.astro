@@ -4,7 +4,7 @@ import type { CollectionEntry, CollectionKey } from "astro:content";
 import { SquarePenIcon } from "lucide-react";
 
 const GITHUB_EDIT_BASE_URL =
-  "https://github.com/remeda/remeda/edit/main/docs/src/content/";
+  "https://github.com/remeda/remeda/blob/main/packages/docs/src/content/";
 
 type Props = {
   readonly entry: CollectionEntry<CollectionKey>;
@@ -14,7 +14,7 @@ const {
   entry: { collection, id },
 } = Astro.props;
 
-const url = new URL(`${collection}/${id}`, GITHUB_EDIT_BASE_URL);
+const url = new URL(`${collection}/${id}.md`, GITHUB_EDIT_BASE_URL);
 ---
 
 <a
