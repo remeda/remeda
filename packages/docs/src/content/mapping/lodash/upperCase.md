@@ -5,7 +5,7 @@ remeda: toTitleCase
 
 - Use [`toUpperCase`](/docs#toUpperCase) on the results of [`toTitleCase`](/docs#toTitleCase)
   which reformats the string into space-delimited words.
-- Lodash attempts pseudo-linguistic word splitting to handle special characters
+- Lodash attempts pseudo-linguistic word splitting to handle special characters,
   which might lead to inaccurate results. Remeda uses a simpler word splitting
   approach based on [`type-fest`'s definition](https://github.com/sindresorhus/type-fest/blob/main/source/words.d.ts)
   that should only be used for simple strings like identifiers and internal

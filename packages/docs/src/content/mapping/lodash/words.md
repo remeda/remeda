@@ -8,7 +8,7 @@ _Not provided by Remeda._
   keys. Use [`toCamelCase`](/docs#toCamelCase), [`toKebabCase`](/docs#toKebabCase),
   [`toSnakeCase`](/docs#toSnakeCase), or [`toTitleCase`](/docs#toTitleCase)
   instead.
-- If `words` is used for simple splitting tasks, it is often replaceable by
+- If `words` is used for simple splitting tasks, it can often be replaced with
   [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
   using simple regular expressions like `/\s+/`, `/\W+/`, `/[\p{Z}\p{P}]+/u`, or
   ones tailored specifically for your use-case.
