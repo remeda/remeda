@@ -4,7 +4,7 @@ category: Array
 
 _Not provided by Remeda._
 
-Compose [`zip`](/doc#zip) and [`fromEntries`](/doc#fromEntries):
+Compose [`zip`](/docs#zip) and [`fromEntries`](/docs#fromEntries):
 
 ```ts
 // Lodash
