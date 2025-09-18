@@ -3,7 +3,7 @@ category: String
 remeda: toSnakeCase
 ---
 
-- Lodash attempts pseudo-linguistic word splitting to handle special characters
+- Lodash attempts pseudo-linguistic word splitting to handle special characters,
   which might lead to inaccurate results. Remeda uses a simpler word splitting
   approach based on [`type-fest`'s definition](https://github.com/sindresorhus/type-fest/blob/main/source/words.d.ts)
   that should only be used for simple strings like identifiers and internal
@@ -14,6 +14,9 @@ remeda: toSnakeCase
   [`deburr`](/migrate/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need
   to be done manually if required.
+- Lodash allows calling `snakeCase` without any input, or with an `undefined`
+  input, which isn't supported in Remeda. Handle these cases before calling the
+  function.
 
 ### Simple strings
 
@@ -39,4 +42,19 @@ toSnakeCase(
     // Remove apostrophes and all independent diacritic characters.
     .replace(/['\u2019\u0300-\u036f]/g, ""),
 );
+```
+
+### Missing input
+
+```ts
+// Lodash
+_.snakeCase();
+_.snakeCase(input);
+
+// Remeda
+("");
+input !== undefined ? toSnakeCase(input) : "";
+
+// Or
+toSnakeCase(input ?? "");
 ```

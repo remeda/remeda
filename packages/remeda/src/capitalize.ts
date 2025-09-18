@@ -13,7 +13,8 @@ import { purry } from "./purry";
  * to capitalize it. This transformation **is** locale-aware.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
- * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, `toSnakeCase`, and
+ * `toTitleCase`.
  *
  * @param data - A string.
  * @signature
@@ -38,7 +39,8 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  * to capitalize it. This transformation **is** locale-aware.
  *
  * For other case manipulations see: `toUpperCase`, `toLowerCase`,
- * `uncapitalize`, `toCamelCase`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toCamelCase`, `toKebabCase`, `toSnakeCase`, and
+ * `toTitleCase`.
  *
  * @signature
  *   R.capitalize()(data);

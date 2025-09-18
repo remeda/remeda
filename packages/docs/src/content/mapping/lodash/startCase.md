@@ -1,6 +1,6 @@
 ---
 category: String
-remeda: toKebabCase
+remeda: toTitleCase
 ---
 
 - Lodash attempts pseudo-linguistic word splitting to handle special characters,
@@ -10,11 +10,14 @@ remeda: toKebabCase
   keys. For linguistic processing where language and locale nuances matter, use
   the built-in [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
   instead.
+- Remeda treats consecutive uppercase characters differently from Lodash. Use
+  `{ preserveConsecutiveUppercase: false }` as the second parameter to get the
+  same results.
 - Lodash performs normalization on the input before splitting it, including
   [`deburr`](/migrate/lodash#deburr) and removing apostrophes. Remeda's word
   splitting is simpler and doesn't include these normalizations, so they need to
   be done manually if required.
-- Lodash allows calling `kebabCase` without any input, or with an `undefined`
+- Lodash allows calling `startCase` without any input, or with an `undefined`
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
@@ -22,25 +25,26 @@ remeda: toKebabCase
 
 ```ts
 // Lodash
-_.kebabCase(input);
+_.startCase(input);
 
 // Remeda
-toKebabCase(input);
+toTitleCase(input, { preserveConsecutiveUppercase: false });
 ```
 
 ### Normalized
 
 ```ts
 // Lodash
-_.kebabCase(input);
+_.startCase(input);
 
 // Remeda + Native
-toKebabCase(
+toTitleCase(
   input
     // "Promote" diacritics to be independent characters in the string.
     .normalize("NFD")
     // Remove apostrophes and all independent diacritic characters.
     .replace(/['\u2019\u0300-\u036f]/g, ""),
+  { preserveConsecutiveUppercase: false },
 );
 ```
 
@@ -48,13 +52,15 @@ toKebabCase(
 
 ```ts
 // Lodash
-_.kebabCase();
-_.kebabCase(input);
+_.startCase();
+_.startCase(input);
 
 // Remeda
 ("");
-input !== undefined ? toKebabCase(input) : "";
+input !== undefined
+  ? toTitleCase(input, { preserveConsecutiveUppercase: false })
+  : "";
 
 // Or
-toKebabCase(input ?? "");
+toTitleCase(input ?? "", { preserveConsecutiveUppercase: false });
 ```

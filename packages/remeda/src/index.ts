@@ -149,6 +149,7 @@ export * from "./toCamelCase";
 export * from "./toKebabCase";
 export * from "./toLowerCase";
 export * from "./toSnakeCase";
+export * from "./toTitleCase";
 export * from "./toUpperCase";
 export * from "./truncate";
 export * from "./uncapitalize";

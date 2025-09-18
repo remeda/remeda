@@ -33,12 +33,12 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
  * @param data - A string.
- * @param options - An _optional_ object with an _optional_ prop
+ * @param options - An _optional_ object with the _optional_ property
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
@@ -71,11 +71,11 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  * which are purpose-built to handle nuances in languages and locales.
  *
  * For other case manipulations see: `toLowerCase`, `toUpperCase`, `capitalize`,
- * `uncapitalize`, `toKebabCase`, and `toSnakeCase`.
+ * `uncapitalize`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * For *PascalCase* use `capitalize(toCamelCase(data))`.
  *
- * @param options - An _optional_ object with an _optional_ prop
+ * @param options - An _optional_ object with the _optional_ property
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature

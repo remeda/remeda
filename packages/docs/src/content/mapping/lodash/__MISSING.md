@@ -117,12 +117,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - chain
 - thru
 
-# String
-
-- lowerCase
-- startCase
-- upperCase
-
 # Util
 
 - attempt
@@ -150,3 +144,7 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - stubString
 - stubTrue
 - uniqueId
+
+# String
+
+(None, we're done with String! 🎉)
