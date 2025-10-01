@@ -24,7 +24,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🏗️ Build Library
         run: npm --workspace=remeda run build
@@ -47,7 +47,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🏗️ Build Library
         run: npm --workspace=remeda run build
@@ -73,7 +73,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 💄 Format
         run: npm --workspace=@remeda/docs run format

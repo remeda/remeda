@@ -23,7 +23,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: ☔ Collect coverage
         run: npm --workspace=remeda run test:coverage
