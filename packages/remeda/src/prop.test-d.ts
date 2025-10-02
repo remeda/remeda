@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { indexBy } from "./indexBy";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -470,5 +471,37 @@ describe("prevents unsupported data types", () => {
   test("symbol", () => {
     // @ts-expect-error [ts2769] -- symbols can't be used as data.
     prop(Symbol("test"), "description");
+  });
+});
+
+describe("preserves generic types (Issue #XXX)", () => {
+  test("works with indexBy and generic constrained types", () => {
+    function testWithProp<T extends { id: string }>(
+      data: T[],
+      key: T["id"],
+    ) {
+      return indexBy(data, prop("id"))[key];
+    }
+
+    const result = testWithProp([{ id: "a", name: "Alice" }], "a");
+
+    expectTypeOf(result).toEqualTypeOf<
+      { id: string; name: string } | undefined
+    >();
+  });
+
+  test("works with inline destructuring (baseline)", () => {
+    function testWithDestructuring<T extends { id: string }>(
+      data: T[],
+      key: T["id"],
+    ) {
+      return indexBy(data, ({ id }) => id)[key];
+    }
+
+    const result = testWithDestructuring([{ id: "a", name: "Alice" }], "a");
+
+    expectTypeOf(result).toEqualTypeOf<
+      { id: string; name: string } | undefined
+    >();
   });
 });
