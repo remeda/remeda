@@ -247,7 +247,8 @@ export function prop<
  * validated against the object type to provide stronger type safety, better
  * compile-time errors, and to enable autocompletion in IDEs.
  *
- * @param key - The key(s) for the property to extract.
+ * @param key0 - The first key to access.
+ * @param key1 - The second key to access.
  * @signature
  *   R.prop(...keys)(data);
  * @example

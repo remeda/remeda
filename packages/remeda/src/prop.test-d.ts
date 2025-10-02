@@ -474,15 +474,22 @@ describe("prevents unsupported data types", () => {
   });
 });
 
+function testWithProp<T extends { id: string }>(
+  data: ReadonlyArray<T>,
+  key: T["id"],
+): T | undefined {
+  return indexBy(data, prop("id"))[key];
+}
+
+function testWithDestructuring<T extends { id: string }>(
+  data: ReadonlyArray<T>,
+  key: T["id"],
+): T | undefined {
+  return indexBy(data, ({ id }) => id)[key];
+}
+
 describe("preserves generic types (Issue #XXX)", () => {
   test("works with indexBy and generic constrained types", () => {
-    function testWithProp<T extends { id: string }>(
-      data: T[],
-      key: T["id"],
-    ) {
-      return indexBy(data, prop("id"))[key];
-    }
-
     const result = testWithProp([{ id: "a", name: "Alice" }], "a");
 
     expectTypeOf(result).toEqualTypeOf<
@@ -491,13 +498,6 @@ describe("preserves generic types (Issue #XXX)", () => {
   });
 
   test("works with inline destructuring (baseline)", () => {
-    function testWithDestructuring<T extends { id: string }>(
-      data: T[],
-      key: T["id"],
-    ) {
-      return indexBy(data, ({ id }) => id)[key];
-    }
-
     const result = testWithDestructuring([{ id: "a", name: "Alice" }], "a");
 
     expectTypeOf(result).toEqualTypeOf<
