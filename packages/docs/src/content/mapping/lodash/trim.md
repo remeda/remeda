@@ -52,7 +52,8 @@ data.map(String.prototype.trim);
 _.trim(input, characters);
 
 // Native
-input.replace(new RegExp(`^[${characters}]+|[${characters}]+$`, "g"), "");
+const escaped = RegExp.escape(characters);
+input.replace(new RegExp(`^[${escaped}]+|[${escaped}]+$`, "g"), "");
 ```
 
 ### Graphemes

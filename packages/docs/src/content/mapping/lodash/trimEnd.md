@@ -50,7 +50,7 @@ data.map(String.prototype.trimEnd);
 _.trimEnd(input, characters);
 
 // Native
-input.replace(new RegExp(`[${characters}]+$`), "");
+input.replace(new RegExp(`[${RegExp.escape(characters)}]+$`), "");
 ```
 
 ### Graphemes
