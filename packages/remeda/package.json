@@ -59,7 +59,7 @@
     "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^4.41.0"
+    "type-fest": "^5.0.1"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
