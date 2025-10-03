@@ -11,8 +11,8 @@ _Not provided by Remeda._
   allows changing the trimmed characters. Instead, create a regex that would
   match `characters` anchored to either the start or the end of the string
   (`^[${characters}]+|[${characters}]+$`) and then use [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
-  to replace them with the empty string (`""`). Don't forget the [`g`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/global)
-  RegExp flag to allow it to match both the start and the end sequences.
+  to replace them with the empty string (`""`) and use the [`g`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/global)
+  RegExp flag so that it matches both the start and the end sequences.
 - Lodash does complex grapheme parsing, but this is usually not needed unless
   the `characters` parameter itself contains complex Unicode graphemes (like
   family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈 that you want to trim). In these
