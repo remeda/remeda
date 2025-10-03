@@ -8,7 +8,7 @@ _Not provided by Remeda._
   instead.
 - When unavailable, `escapeRegExp` could also be replicated using [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
   to replace matches of `/[\\^$.*+?()[\]{}|]/g` (which matches on the
-  characters: ^, $, ., \*, +, ?, (), {}, [], and |) with an backslash-escaped
+  characters: ^, $, ., \*, +, ?, (), {}, [], and |) with a backslash-escaped
   version of the match (using the `"\\$&"` replacement pattern).
 
 ```ts
