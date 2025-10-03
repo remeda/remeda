@@ -12,8 +12,7 @@ _Not provided by Remeda._
   match `characters` anchored to either the start or the end of the string
   (`^[${characters}]+|[${characters}]+$`) and then use [`String.prototype.replace`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
   to replace them with the empty string (`""`). Don't forget the [`g`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/global)
-  RegExp flag to properly catch everything, and the [`u`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/unicode)
-  RegExp flag if you need to handle Unicode characters.
+  RegExp flag to allow it to match both the start and the end sequences.
 - Lodash does complex grapheme parsing, but this is usually not needed unless
   the `characters` parameter itself contains complex Unicode graphemes (like
   family emojis 👨‍👩‍👧‍👦 or flags with modifiers 🏳️‍🌈 that you want to trim). In these
@@ -53,7 +52,7 @@ data.map(String.prototype.trim);
 _.trim(input, characters);
 
 // Native
-input.replace(new RegExp(`^[${characters}]+|[${characters}]+$`, "gu"), "");
+input.replace(new RegExp(`^[${characters}]+|[${characters}]+$`, "g"), "");
 ```
 
 ### Graphemes
