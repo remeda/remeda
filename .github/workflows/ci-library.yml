@@ -27,7 +27,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
@@ -51,7 +51,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
@@ -65,7 +65,7 @@ jobs:
         run: npm --workspace=remeda run build
 
       - name: 🚚 Save distributable
-        uses: actions/cache/save@v4.2.4
+        uses: actions/cache/save@v4.3.0
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -106,7 +106,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -118,7 +118,7 @@ jobs:
       # redundant work if the type tests already failed (which is way more
       # common than the build typing failing).
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.2.4
+        uses: actions/cache/restore@v4.3.0
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -152,7 +152,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🧪 Run tests
         run: npm --workspace=remeda run test:runtime
@@ -175,7 +175,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🧹 Lint
         run: npm --workspace=remeda run lint
@@ -198,7 +198,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 💄 Format
         run: npm --workspace=remeda run format
@@ -221,7 +221,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🐢 Slow Types
         run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
@@ -250,10 +250,10 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.2.4
+        uses: actions/cache/restore@v4.3.0
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -291,7 +291,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
 
       - name: 🔏 Audit Supply Chain
         run: npm --workspace=remeda audit signatures
@@ -338,7 +338,7 @@ jobs:
 
       - name: 📥 Download Dependencies
         if: steps.latest-released.outputs.version != ''
-        uses: bahmutov/npm-install@v1.10.10
+        uses: bahmutov/npm-install@v1.11.1
         env:
           HUSKY: 0
 
