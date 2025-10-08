@@ -40,5 +40,5 @@ test("symbols are not passed to the predicate", () => {
   omitBy(data, mock);
 
   expect(mock).toHaveBeenCalledTimes(1);
-  expect(mock).toHaveBeenCalledWith("hello", "a", data);
+  expect(mock).toHaveBeenCalledExactlyOnceWith("hello", "a", data);
 });

@@ -8,5 +8,7 @@ test("handles numbers that can only be printed in scientific notation", () => {
   roundingFn(Number.parseFloat("1.23e+45"), 6);
 
   // Notice the shift in the exponent!
-  expect(mockRoundingFn).toHaveBeenCalledWith(Number.parseFloat("1.23e+51"));
+  expect(mockRoundingFn).toHaveBeenCalledExactlyOnceWith(
+    Number.parseFloat("1.23e+51"),
+  );
 });

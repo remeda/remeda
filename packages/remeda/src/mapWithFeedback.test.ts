@@ -47,11 +47,11 @@ describe("data first", () => {
 
     mapWithFeedback(data, mockedReducer, 100);
 
-    expect(mockedReducer).toHaveBeenCalledWith(100, 1, 0, data);
-    expect(mockedReducer).toHaveBeenCalledWith(101, 2, 1, data);
-    expect(mockedReducer).toHaveBeenCalledWith(103, 3, 2, data);
-    expect(mockedReducer).toHaveBeenCalledWith(106, 4, 3, data);
-    expect(mockedReducer).toHaveBeenCalledWith(110, 5, 4, data);
+    expect(mockedReducer).toHaveBeenNthCalledWith(1, 100, 1, 0, data);
+    expect(mockedReducer).toHaveBeenNthCalledWith(2, 101, 2, 1, data);
+    expect(mockedReducer).toHaveBeenNthCalledWith(3, 103, 3, 2, data);
+    expect(mockedReducer).toHaveBeenNthCalledWith(4, 106, 4, 3, data);
+    expect(mockedReducer).toHaveBeenNthCalledWith(5, 110, 5, 4, data);
   });
 });
 

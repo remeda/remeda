@@ -1,4 +1,4 @@
-import type { IfNever, Simplify } from "type-fest";
+import type { IsNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
@@ -88,7 +88,9 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
     false
   : IsExactProp<T, P, S> extends true
     ? false
-    : IfNever<Exclude<Required<T>[P], S>, false, true>;
+    : IsNever<Exclude<Required<T>[P], S>> extends true
+      ? false
+      : true;
 
 /**
  * Creates a shallow copy of the data, and then removes any keys that the
