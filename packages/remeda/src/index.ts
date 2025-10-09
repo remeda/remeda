@@ -45,6 +45,7 @@ export * from "./groupByProp";
 export * from "./hasAtLeast";
 export * from "./hasSubObject";
 export * from "./identity";
+export * from "./includesAny";
 export * from "./indexBy";
 export * from "./intersection";
 export * from "./intersectionWith";
