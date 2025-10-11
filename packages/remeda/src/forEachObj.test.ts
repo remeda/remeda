@@ -12,9 +12,9 @@ test("dataFirst", () => {
 
   forEachObj(data, cb);
 
-  expect(cb).toHaveBeenCalledWith(1, "a", data);
-  expect(cb).toHaveBeenCalledWith(2, "b", data);
-  expect(cb).toHaveBeenCalledWith(3, "c", data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, "a", data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, "b", data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, "c", data);
 });
 
 test("doesn't run on symbol keys", () => {
@@ -39,7 +39,7 @@ test("dataLast", () => {
   const cb = vi.fn<(value: number, key: string) => void>();
 
   expect(pipe(data, forEachObj(cb))).toBe(data);
-  expect(cb).toHaveBeenCalledWith(1, "a", data);
-  expect(cb).toHaveBeenCalledWith(2, "b", data);
-  expect(cb).toHaveBeenCalledWith(3, "c", data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, "a", data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, "b", data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, "c", data);
 });

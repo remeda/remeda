@@ -1,23 +1,24 @@
-import type { CamelCase, Merge } from "type-fest";
+import type { CamelCase } from "type-fest";
+import type { OptionalOptionsWithDefaults } from "./internal/types/OptionalOptionsWithDefaults";
 import { words } from "./internal/words";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
+
+const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
 
 type CamelCaseOptions = {
   readonly preserveConsecutiveUppercase?: boolean;
 };
 
-const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
-
-// Merge the default as used in our runtime implementation with the options
-// provided by the user. This allows us to couple typing and runtime so that
-// they don't diverge.
-type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> = Merge<
-  {
-    preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
-  },
-  Options
->;
+type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> =
+  OptionalOptionsWithDefaults<
+    CamelCaseOptions,
+    Options,
+    {
+      // We use the runtime const for the default type so they stay coupled.
+      preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
+    }
+  >;
 
 /**
  * Converts text to **camelCase** by splitting it into words, lowercasing the

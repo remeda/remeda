@@ -12,7 +12,7 @@ describe("data first", () => {
     const fn = vi.fn<() => void>();
     tap(DATA, fn);
 
-    expect(fn).toHaveBeenCalledWith(DATA);
+    expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
@@ -26,7 +26,7 @@ describe("data last", () => {
     const fn = vi.fn<() => void>();
     pipe(DATA, tap(fn));
 
-    expect(fn).toHaveBeenCalledWith(DATA);
+    expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
     expect(fn).toHaveBeenCalledTimes(1);
   });
 

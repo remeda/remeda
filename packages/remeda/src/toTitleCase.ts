@@ -1,25 +1,24 @@
-import type { IsEqual, IsLiteral, Join, Merge, Words } from "type-fest";
+import type { IsEqual, IsLiteral, Join, Words } from "type-fest";
+import type { OptionalOptionsWithDefaults } from "./internal/types/OptionalOptionsWithDefaults";
 import { words } from "./internal/words";
 
 const LOWER_CASE_CHARACTER_RE = /[a-z]/u;
+
 const DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE = true;
 
 type TitleCaseOptions = {
   readonly preserveConsecutiveUppercase?: boolean;
 };
 
-type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions> = Merge<
-  {
-    // We use the runtime const for the default type so they stay coupled.
-    preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
-  },
-  {
-    [Key in keyof Options as Extract<Options[Key], undefined> extends never
-      ? Key
-      : never]: Options[Key];
-  }
-> &
-  Required<TitleCaseOptions>;
+type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions> =
+  OptionalOptionsWithDefaults<
+    TitleCaseOptions,
+    Options,
+    {
+      // We use the runtime const for the default type so they stay coupled.
+      preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
+    }
+  >;
 
 type TitleCase<S extends string, Options extends TitleCaseOptions> =
   IsLiteral<S> extends true
