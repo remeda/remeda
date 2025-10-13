@@ -2,6 +2,7 @@ import type {
   AllUnionFields,
   And,
   ConditionalKeys,
+  EmptyObject,
   IsNever,
   Merge,
 } from "type-fest";
@@ -65,8 +66,7 @@ type ItemsSuperObject<T extends IterableContainer> = AllUnionFields<
 // groupable prop, or when the groupable prop has a value of `undefined` for
 // all items. The former is extra problematic because it would add `| {}` to the
 // result type which effectively cancels out all other parts of the union.
-type FixEmptyObject<T> =
-  IsNever<keyof T> extends true ? Record<PropertyKey, never> : T;
+type FixEmptyObject<T> = IsNever<keyof T> extends true ? EmptyObject : T;
 
 // Group by can never return an empty tuple but our filtered arrays might not
 // represent that. We need to reshape the tuples so that they always have at
