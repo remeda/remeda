@@ -126,7 +126,7 @@ type IsEmpty<T> = T extends readonly [] ? true : false;
  */
 export function groupByProp<
   T extends IterableContainer,
-  Prop extends GroupableProps<T>,
+  const Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop>;
 
 /**
@@ -163,7 +163,7 @@ export function groupByProp<
  */
 export function groupByProp<
   T extends IterableContainer,
-  Prop extends GroupableProps<T>,
+  const Prop extends GroupableProps<T>,
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
 export function groupByProp(...args: ReadonlyArray<unknown>): unknown {
