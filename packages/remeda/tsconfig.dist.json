@@ -25,7 +25,7 @@
     "strict": true,
 
     // MODULES
-    "module": "NodeNext",
+    "module": "node16",
     "moduleResolution": "NodeNext",
 
     // EMIT
