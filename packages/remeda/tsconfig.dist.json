@@ -25,8 +25,8 @@
     "strict": true,
 
     // MODULES
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
     // EMIT
     "noEmit": true,
