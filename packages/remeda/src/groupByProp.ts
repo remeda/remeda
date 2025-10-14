@@ -1,10 +1,10 @@
 import type {
   AllUnionFields,
-  And,
   ConditionalKeys,
   EmptyObject,
   IsNever,
-  Merge,
+  Or,
+  Simplify,
 } from "type-fest";
 import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
@@ -14,19 +14,19 @@ import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>> =
-  // We distribute the union in order to support unions of tuple types.
+  // Distribute unions.
   T extends unknown
-    ? FixEmptyObject<
-        EnsureValuesAreNonEmpty<{
-          // For each possible value of the prop we filter the input tuple with
-          // the prop assigned to the value, e.g. `{ type: "cat" }`
-          [Value in AllPropValues<T, Prop>]: FilteredArray<
-            T,
-            Record<Prop, Value>
-          >;
-        }>
-      >
+    ? FixEmptyObject<EnsureValuesAreNonEmpty<GroupByPropRaw<T, Prop>>>
     : never;
+
+// For each possible value of the prop we filter the input tuple with the prop
+// assigned to the value, e.g. `{ type: "cat" }`
+type GroupByPropRaw<
+  T extends IterableContainer,
+  Prop extends GroupableProps<T>,
+> = {
+  [Value in AllPropValues<T, Prop>]: FilteredArray<T, Record<Prop, Value>>;
+};
 
 // We can only group by props that only have values that could be used to key
 // an object (i.e. PropertyKey), or if they are undefined (which would filter
@@ -72,24 +72,36 @@ type FixEmptyObject<T> = IsNever<keyof T> extends true ? EmptyObject : T;
 // represent that. We need to reshape the tuples so that they always have at
 // least one item in them.
 type EnsureValuesAreNonEmpty<T extends Record<PropertyKey, IterableContainer>> =
-  Merge<
-    T,
-    BoundedPartial<{
-      [P in keyof T as IsPossiblyEmpty<T[P]> extends true
-        ? P
-        : never]: ArrayRequiredPrefix<T[P], 1>;
-    }>
+  Simplify<
+    Omit<T, PossiblyEmptyArrayKeys<T>> &
+      BoundedPartial<CoercedNonEmptyValues<Pick<T, PossiblyEmptyArrayKeys<T>>>>
   >;
 
-// A tuple is possibly empty if non of the fixed parts have any elements in
-// them. This means the tuple is made of optional elements and/or a rest
-// element.
-type IsPossiblyEmpty<T extends IterableContainer> = And<
-  IsEmpty<TupleParts<T>["required"]>,
-  IsEmpty<TupleParts<T>["suffix"]>
+// Go over the keys the object and return those that their value can accept an
+// empty array.
+type PossiblyEmptyArrayKeys<T extends Record<PropertyKey, IterableContainer>> =
+  keyof T extends infer Key extends unknown
+    ? Key extends keyof T
+      ? IsNonEmptyArray<T[Key]> extends true
+        ? never
+        : Key
+      : never
+    : never;
+
+// An array is non-empty if any of the fixed parts are non-empty.
+type IsNonEmptyArray<T extends IterableContainer> = Or<
+  IsNonEmptyFixedTuple<TupleParts<T>["required"]>,
+  IsNonEmptyFixedTuple<TupleParts<T>["suffix"]>
 >;
 
-type IsEmpty<T> = T extends readonly [] ? true : false;
+// A fixed tuple (one without optional or a rest element in it) is non-empty if
+// we can't extract the empty tuple from it.
+type IsNonEmptyFixedTuple<T> = IsNever<Extract<T, readonly []>>;
+
+// We coerce the arbitrary array values to have a prefix of at least one item.
+type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
+  [P in keyof T]: ArrayRequiredPrefix<T[P], 1>;
+};
 
 /**
  * Groups the elements of an array of objects based on the values of a

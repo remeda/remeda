@@ -12,9 +12,9 @@ describe("grouping prop types", () => {
   test("primitive strings", () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }>, "a"),
-    ).branded.toEqualTypeOf<{
-      [x: string]: [{ a: string }, ...Array<{ a: string }>];
-    }>();
+    ).branded.toEqualTypeOf<
+      Record<string, [{ a: string }, ...Array<{ a: string }>]>
+    >();
   });
 
   test("literal strings", () => {
@@ -154,10 +154,7 @@ describe("union of array types", () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }> | Array<{ b: number }>, "a"),
     ).branded.toEqualTypeOf<
-      | EmptyObject
-      | {
-          [x: string]: [{ a: string }, ...Array<{ a: string }>];
-        }
+      EmptyObject | Record<string, [{ a: string }, ...Array<{ a: string }>]>
     >();
   });
 
