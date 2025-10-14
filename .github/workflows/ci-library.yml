@@ -230,11 +230,6 @@ jobs:
     name: 🧑‍🔬 Preview
     needs:
       - build
-      - test-typing
-      - test-runtime
-      - lint
-      - formatting
-      - slowTypes
     runs-on: ubuntu-latest
     permissions:
       contents: read
