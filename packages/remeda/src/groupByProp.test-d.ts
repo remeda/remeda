@@ -2,6 +2,7 @@
  * The autofixer for this rule is breaking our tests!
  */
 
+import type { EmptyObject } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { groupByProp } from "./groupByProp";
 
@@ -11,9 +12,9 @@ describe("grouping prop types", () => {
   test("primitive strings", () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }>, "a"),
-    ).branded.toEqualTypeOf<{
-      [x: string]: [{ a: string }, ...Array<{ a: string }>];
-    }>();
+    ).branded.toEqualTypeOf<
+      Record<string, [{ a: string }, ...Array<{ a: string }>]>
+    >();
   });
 
   test("literal strings", () => {
@@ -153,22 +154,19 @@ describe("union of array types", () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }> | Array<{ b: number }>, "a"),
     ).branded.toEqualTypeOf<
-      | Record<PropertyKey, never>
-      | {
-          [x: string]: [{ a: string }, ...Array<{ a: string }>];
-        }
+      EmptyObject | Record<string, [{ a: string }, ...Array<{ a: string }>]>
     >();
   });
 
   test("empty tuple", () => {
     expectTypeOf(groupByProp([] as [{ a: string }] | [], "a")).toEqualTypeOf<
-      Record<PropertyKey, never> | { [x: string]: [{ a: string }] }
+      EmptyObject | { [x: string]: [{ a: string }] }
     >();
   });
 });
 
 test("all values are undefined", () => {
-  expectTypeOf(groupByProp([] as Array<{ a: undefined }>, "a")).toEqualTypeOf<
-    Record<PropertyKey, never>
-  >();
+  expectTypeOf(
+    groupByProp([] as Array<{ a: undefined }>, "a"),
+  ).toEqualTypeOf<EmptyObject>();
 });

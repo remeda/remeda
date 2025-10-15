@@ -115,7 +115,7 @@ type Funnel<Args extends RestArguments = []> = {
  * be started. Any calls during this time would be passed to the reducer, and
  * when the timers are done, the reduced result would trigger an invocation.
  * - `both` - the function will be invoked immediately, and then the funnel
- * would behave as if it was in the 'end' state. @default 'end'.
+ * would behave as if it was in the 'end' state. Default: 'end'.
  * @param options.minQuietPeriodMs - The burst timer prevents subsequent calls
  * in short succession to cause excessive invocations (aka "debounce"). This
  * duration represents the **minimum** amount of time that needs to pass

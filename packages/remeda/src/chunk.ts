@@ -1,6 +1,6 @@
 import type {
-  IfNever,
   IntRange,
+  IsNever,
   IsNumericLiteral,
   LessThan,
   Subtract,
@@ -101,56 +101,55 @@ type ChunkRestElement<
   Item,
   Suffix extends Array<unknown>,
   N extends number,
-> = IfNever<
-  Item,
-  // The rest param is never when there is no rest param, the whole array is
-  // a finite tuple and is represented already by the prefix chunks. Suffix is
-  // assumed to be empty in this case.
-  PrefixChunks,
-  PrefixChunks extends [
-    ...infer PrefixFullChunks extends Array<Array<unknown>>,
-    infer LastPrefixChunk extends Array<unknown>,
-  ]
-    ? // When our prefix chunks are not empty it means we need to look at all
-      // combinations of mixing the prefix, the suffix, and different counts of
-      // the rest param until we cover all possible scenarios.
-      | ValueOf<{
-            // We want to iterate over all possible padding sizes we can add to
-            // the last prefix chunk until we reach N
-            // (`0..N-LastPrefixChunk.length`). We need to do this because until
-            // the last prefix chunk is full, we need to consider the suffix
-            // being part of it too...
-            [Padding in IntRangeInclusive<
-              0,
-              Subtract<N, LastPrefixChunk["length"]>
-            >]: [
+> =
+  IsNever<Item> extends true
+    ? // The rest param is never when there is no rest param, the whole array is
+      // a finite tuple and is represented already by the prefix chunks. Suffix
+      // is assumed to be empty in this case.
+      PrefixChunks
+    : PrefixChunks extends [
+          ...infer PrefixFullChunks extends Array<Array<unknown>>,
+          infer LastPrefixChunk extends Array<unknown>,
+        ]
+      ? // When our prefix chunks are not empty it means we need to look at all
+        // combinations of mixing the prefix, the suffix, and different counts
+        // of the rest param until we cover all possible scenarios.
+        | ValueOf<{
+              // We want to iterate over all possible padding sizes we can add
+              // to the last prefix chunk until we reach N
+              // (`0..N-LastPrefixChunk.length`). We need to do this because
+              // until the last prefix chunk is full, we need to consider the
+              // suffix being part of it too...
+              [Padding in IntRangeInclusive<
+                0,
+                Subtract<N, LastPrefixChunk["length"]>
+              >]: [
+                ...PrefixFullChunks,
+                ...ChunkFixedTuple<
+                  // Create a new array that would **not** contain a rest param
+                  // (so it's finite) made of the last prefix chunk, padding
+                  // from the rest param, and the suffix.
+                  [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
+                  N
+                >,
+              ];
+            }>
+          // Additionally, we need to consider the case where the last prefix
+          // chunk **is** full, and follow it with an array of chunks of the
+          // rest param (and only them), and then followed by all possible
+          // variations of the suffix chunks.
+          | [
               ...PrefixFullChunks,
-              ...ChunkFixedTuple<
-                // Create a new array that would **not** contain a rest param
-                // (so it's finite) made of the last prefix chunk, padding from
-                // the rest param, and the suffix.
-                [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
-                N
-              >,
-            ];
-          }>
-        // Additionally, we need to consider the case where the last prefix
-        // chunk **is** full, and follow it with an array of chunks of the rest
-        // param (and only them), and then followed by all possible variations
-        // of the suffix chunks.
-        | [
-            ...PrefixFullChunks,
-            [
-              // Fully padded last prefix chunk
-              ...LastPrefixChunk,
-              ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
-            ],
-            ...Array<NTuple<Item, N>>,
-            ...SuffixChunk<Suffix, Item, N>,
-          ]
-    : // When our prefix chunks are empty we only need to handle the suffix
-      [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>]
->;
+              [
+                // Fully padded last prefix chunk
+                ...LastPrefixChunk,
+                ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
+              ],
+              ...Array<NTuple<Item, N>>,
+              ...SuffixChunk<Suffix, Item, N>,
+            ]
+      : // When our prefix chunks are empty we only need to handle the suffix
+        [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>];
 
 /**
  * This type assumes it takes a finite tuple that represents the suffix of our

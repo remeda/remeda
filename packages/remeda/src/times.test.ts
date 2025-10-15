@@ -29,11 +29,11 @@ describe("data_first", () => {
     const fn = vi.fn<(x: number) => void>();
     times(5, fn);
 
-    expect(fn).toHaveBeenCalledWith(0);
-    expect(fn).toHaveBeenCalledWith(1);
-    expect(fn).toHaveBeenCalledWith(2);
-    expect(fn).toHaveBeenCalledWith(3);
-    expect(fn).toHaveBeenCalledWith(4);
+    expect(fn).toHaveBeenNthCalledWith(1, 0);
+    expect(fn).toHaveBeenNthCalledWith(2, 1);
+    expect(fn).toHaveBeenNthCalledWith(3, 2);
+    expect(fn).toHaveBeenNthCalledWith(4, 3);
+    expect(fn).toHaveBeenNthCalledWith(5, 4);
   });
 
   test("returns fn results as arr", () => {
@@ -70,11 +70,11 @@ describe("data_last", () => {
     const fn = vi.fn<(x: number) => void>();
     pipe(5, times(fn));
 
-    expect(fn).toHaveBeenCalledWith(0);
-    expect(fn).toHaveBeenCalledWith(1);
-    expect(fn).toHaveBeenCalledWith(2);
-    expect(fn).toHaveBeenCalledWith(3);
-    expect(fn).toHaveBeenCalledWith(4);
+    expect(fn).toHaveBeenNthCalledWith(1, 0);
+    expect(fn).toHaveBeenNthCalledWith(2, 1);
+    expect(fn).toHaveBeenNthCalledWith(3, 2);
+    expect(fn).toHaveBeenNthCalledWith(4, 3);
+    expect(fn).toHaveBeenNthCalledWith(5, 4);
   });
 
   test("returns fn results as arr", () => {

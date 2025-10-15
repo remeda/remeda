@@ -108,8 +108,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187", () 
 
     await sleep(4 * UT);
 
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockFn).toHaveBeenCalledWith("c");
+    expect(mockFn).toHaveBeenCalledExactlyOnceWith("c");
 
     debounced("d");
     debounced("e");

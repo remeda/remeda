@@ -24,7 +24,7 @@ export function Search(): ReactNode {
       apiKey={API_KEY}
       appId={APP_ID}
       getMissingResultsUrl={getMissingResultsUrl}
-      indexName={INDEX_NAME}
+      indices={[INDEX_NAME]}
       navigator={NAVIGATOR}
     />
   );

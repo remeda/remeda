@@ -6,11 +6,11 @@ import type {
   IsNever,
   ReadonlyTuple,
 } from "type-fest";
+import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
+import type { IterableContainer } from "./IterableContainer";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
-import type { IterableContainer } from "./IterableContainer";
-import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 
 export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
   IsLiteral<N> extends true
