@@ -13,7 +13,6 @@ describe("data first", () => {
     tap(DATA, fn);
 
     expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
-    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("should return input value", () => {
@@ -27,7 +26,6 @@ describe("data last", () => {
     pipe(DATA, tap(fn));
 
     expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
-    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("should return input value", () => {

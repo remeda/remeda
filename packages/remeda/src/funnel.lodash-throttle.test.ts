@@ -212,9 +212,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768", ()
     withoutTrailing("a");
     withoutTrailing("b");
 
-    expect(mockWith).toHaveBeenCalledTimes(1);
     expect(mockWith).toHaveBeenCalledExactlyOnceWith("a");
-    expect(mockWithout).toHaveBeenCalledTimes(1);
     expect(mockWithout).toHaveBeenCalledExactlyOnceWith("a");
 
     await sleep(8 * UT);
