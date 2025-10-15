@@ -192,28 +192,30 @@ function groupByPropImplementation<
   > = Object.create(null);
 
   for (const item of data) {
+    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Because of the error mentioned above the resulting key isn't inferred correctly as `AllPropValues<T, Prop> | undefined` which would be needed to remove this lint error.
     const key = item?.[prop];
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition --  `key` should be typed as `AllPropValues<T, Prop> | undefined`, but isn't because `item` is not inferred as `T[number]` because of a limitation in how TypeScript infers types derived from type-params.
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
+      // @ts-expect-error [ts7053] -- `key` should be typed `AllPropValues<T, Prop>` but TypeScript isn't inferring that correctly, causing an error when we try to access this prop on the output object.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Because of the error mentioned above the resulting items array isn't being inferred correctly as `Array<T[number]> | undefined` which would be needed to remove this lint error.
       const items = output[key];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Similarly to above, once `keys` isn't inferred correctly all other types that would be derived from it fail to be inferred correctly too, including `items` which should be `Array<T[number]> | undefined`.
       if (items === undefined) {
         // It is more performant to create a 1-element array over creating an
         // empty array and falling through to a unified the push. It is also
         // more performant to mutate the existing object over using spread to
         // continually create new objects on every unique key.
         // @ts-expect-error [ts7053] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- similarly, because `key` isn't inferred correctly, lint has an issue with us accessing the output object using it.
         output[key] = [item];
       } else {
         // It is more performant to add the items to an existing array instead
         // of creating a new array via spreading every time we add an item to
         // it (e.g., `[...current, item]`).
-        // @ts-expect-error [ts2339] -- Similarly to the above, `items` is not being inferred correctly because of the issue with `key` so TypeScript can't ensure that `push` exists on it.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- And once the type for `items` isn't good, lint can't ensure correctness either.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Similarly to above, because TypeScript didn't infer `items` correctly, lint can't ensure this code is safe and makes sense.
         items.push(item);
       }
     }

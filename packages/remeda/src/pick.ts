@@ -1,12 +1,7 @@
-import type {
-  EmptyObject,
-  IsNever,
-  IsUnion,
-  KeysOfUnion,
-  Writable,
-} from "type-fest";
+import type { EmptyObject, IsNever, KeysOfUnion, Writable } from "type-fest";
 import type { IsBounded } from "./internal/types/IsBounded";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
+import type { IsUnion } from "./internal/types/IsUnion";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 

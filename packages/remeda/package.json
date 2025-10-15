@@ -12,6 +12,7 @@
     "url": "https://github.com/remeda/remeda/issues"
   },
   "author": "Łukasz Sentkiewicz",
+  "funding": "https://github.com/sponsors/remeda",
   "license": "MIT",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -59,7 +60,7 @@
     "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
   "dependencies": {
-    "type-fest": "^5.1.0"
+    "type-fest": "^4.41.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
