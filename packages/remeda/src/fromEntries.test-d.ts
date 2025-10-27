@@ -29,7 +29,7 @@ describe("readonly inputs", () => {
       [] as ReadonlyArray<["a", 1] | ["b", 2] | ["c", 3]>,
     );
 
-    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
   });
 
   test("mixed tuple with rest (first)", () => {
@@ -38,7 +38,7 @@ describe("readonly inputs", () => {
       ...ReadonlyArray<["b", 2] | ["c", 3]>,
     ]);
 
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
   });
 
   test("mixed tuple with rest (last)", () => {
@@ -47,7 +47,7 @@ describe("readonly inputs", () => {
       ["a", 1],
     ]);
 
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
   });
 
   test("empty generic type", () => {
@@ -61,10 +61,9 @@ describe("readonly inputs", () => {
       readonly ["a", 1] | readonly [`testing_${string}`, boolean]
     >);
 
-    expectTypeOf(result).toEqualTypeOf<{
-      [x: `testing_${string}`]: boolean | undefined;
-      a?: 1;
-    }>();
+    expectTypeOf(result).branded.toEqualTypeOf<
+      { a?: 1 } & Record<`testing_${string}`, boolean>
+    >();
   });
 
   test("array with literal keys", () => {
@@ -72,7 +71,7 @@ describe("readonly inputs", () => {
       readonly ["a" | "b" | "c", "d"]
     >);
 
-    expectTypeOf(result).toEqualTypeOf<Partial<Record<"a" | "b" | "c", "d">>>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a?: "d"; b?: "d"; c?: "d" }>();
   });
 
   test("backwards compatibility (number)", () => {
@@ -89,6 +88,53 @@ describe("readonly inputs", () => {
     >);
 
     expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `${string}foo` (issue #1179)", () => {
+    const result = fromEntries(
+      [] as ReadonlyArray<readonly [`${string}foo`, string]>,
+    );
+
+    expectTypeOf(result).toEqualTypeOf<Record<`${string}foo`, string>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `prefix_${number}`", () => {
+    const result = fromEntries(
+      [] as ReadonlyArray<readonly [`prefix_${number}`, boolean]>,
+    );
+
+    expectTypeOf(result).toEqualTypeOf<Record<`prefix_${number}`, boolean>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `${string}_${number}`", () => {
+    const result = fromEntries(
+      [] as ReadonlyArray<readonly [`${string}_${number}`, number]>,
+    );
+
+    expectTypeOf(result).toEqualTypeOf<Record<`${string}_${number}`, number>>();
+  });
+
+  test("bounded template literal (pure literal)", () => {
+    const result = fromEntries([] as ReadonlyArray<readonly [`foo`, string]>);
+
+    expectTypeOf(result).toEqualTypeOf<{ foo?: string }>();
+  });
+
+  test("union key in required tuple position", () => {
+    const result = fromEntries([["a", 1]] as readonly [
+      readonly ["a" | "b", 1],
+    ]);
+
+    expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 1 }>();
+  });
+
+  test("value is a union type", () => {
+    const result = fromEntries([["a", 1]] as readonly [readonly ["a", 1 | 2]]);
+
+    expectTypeOf(result).toEqualTypeOf<{ a: 1 | 2 }>();
   });
 });
 
@@ -118,7 +164,7 @@ describe("non-readonly inputs", () => {
   test("empty well defined array", () => {
     const result = fromEntries([] as Array<["a", 1] | ["b", 2] | ["c", 3]>);
 
-    expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a?: 1; b?: 2; c?: 3 }>();
   });
 
   test("mixed tuple with rest (first)", () => {
@@ -127,7 +173,7 @@ describe("non-readonly inputs", () => {
       ...Array<["b", 2] | ["c", 3]>,
     ]);
 
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
   });
 
   test("mixed tuple with rest (last)", () => {
@@ -136,7 +182,7 @@ describe("non-readonly inputs", () => {
       ["a", 1],
     ]);
 
-    expectTypeOf(result).toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a: 1; b?: 2; c?: 3 }>();
   });
 
   test("empty generic type", () => {
@@ -150,10 +196,9 @@ describe("non-readonly inputs", () => {
       ["a", 1] | [`testing_${string}`, boolean]
     >);
 
-    expectTypeOf(result).toEqualTypeOf<{
-      [x: `testing_${string}`]: boolean | undefined;
-      a?: 1;
-    }>();
+    expectTypeOf(result).branded.toEqualTypeOf<
+      { a?: 1 } & Record<`testing_${string}`, boolean>
+    >();
   });
 
   test("array with literal keys", () => {
@@ -161,7 +206,7 @@ describe("non-readonly inputs", () => {
       readonly ["a" | "b" | "c", "d"]
     >);
 
-    expectTypeOf(result).toEqualTypeOf<Partial<Record<"a" | "b" | "c", "d">>>();
+    expectTypeOf(result).branded.toEqualTypeOf<{ a?: "d"; b?: "d"; c?: "d" }>();
   });
 
   test("backwards compatibility (number)", () => {
@@ -174,5 +219,44 @@ describe("non-readonly inputs", () => {
     const result = fromEntries([["a", 123]] as Array<[string, 123]>);
 
     expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `${string}foo` (issue #1179)", () => {
+    const result = fromEntries([] as Array<[`${string}foo`, string]>);
+
+    expectTypeOf(result).toEqualTypeOf<Record<`${string}foo`, string>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `prefix_${number}`", () => {
+    const result = fromEntries([] as Array<[`prefix_${number}`, boolean]>);
+
+    expectTypeOf(result).toEqualTypeOf<Record<`prefix_${number}`, boolean>>();
+  });
+
+  // eslint-disable-next-line no-template-curly-in-string
+  test("unbounded template literal: `${string}_${number}`", () => {
+    const result = fromEntries([] as Array<[`${string}_${number}`, number]>);
+
+    expectTypeOf(result).toEqualTypeOf<Record<`${string}_${number}`, number>>();
+  });
+
+  test("bounded template literal (pure literal)", () => {
+    const result = fromEntries([] as Array<[`foo`, string]>);
+
+    expectTypeOf(result).toEqualTypeOf<{ foo?: string }>();
+  });
+
+  test("union key in required tuple position", () => {
+    const result = fromEntries([["a", 1]] as [["a" | "b", 1]]);
+
+    expectTypeOf(result).toEqualTypeOf<{ a: 1; b: 1 }>();
+  });
+
+  test("value is a union type", () => {
+    const result = fromEntries([["a", 1]] as [["a", 1 | 2]]);
+
+    expectTypeOf(result).toEqualTypeOf<{ a: 1 | 2 }>();
   });
 });
