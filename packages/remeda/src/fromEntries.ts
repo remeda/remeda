@@ -1,5 +1,9 @@
-import type { IsNever, Simplify } from "type-fest";
+/* eslint-disable @typescript-eslint/no-empty-object-type -- FIXME! */
+
+import type { EmptyObject, IsNever, Simplify } from "type-fest";
+import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { IsBounded } from "./internal/types/IsBounded";
+import type { IsUnion } from "./internal/types/IsUnion";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
@@ -9,40 +13,64 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   value: Value,
 ];
 
-type FromEntries<T extends IterableContainer<Entry>> = Simplify<
-  FromEntriesTuple<TupleParts<T>["required"]> &
-    FromEntriesTuple<TupleParts<T>["optional"], "optional"> &
-    ProcessRestEntries<TupleParts<T>["item"]> &
-    FromEntriesTuple<TupleParts<T>["suffix"]>
->;
+type FromEntries<T extends IterableContainer<Entry>> = T extends readonly []
+  ? EmptyObject
+  : Simplify<
+      FromEntriesTuple<TupleParts<T>["required"]> &
+        FromEntriesTuple<TupleParts<T>["optional"], "optional"> &
+        ProcessRestEntries<TupleParts<T>["item"]> &
+        FromEntriesTuple<TupleParts<T>["suffix"]>
+    >;
 
 type FromEntriesTuple<
   T,
   Mode extends "required" | "optional" = "required",
-> = T extends readonly [infer Head extends Entry, ...infer Rest]
-  ? FromEntry<Head, Mode> & FromEntriesTuple<Rest, Mode>
-  : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    {};
+> = T extends readonly [
+  readonly [infer Key extends PropertyKey, infer Value],
+  ...infer Rest,
+]
+  ? ProcessKeyValue<Key, Value, Mode> & FromEntriesTuple<Rest, Mode>
+  : {};
 
 type ProcessRestEntries<T extends Entry> =
-  IsNever<T> extends true
-    ? // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-      {}
-    : FromEntry<T, "optional">;
+  IsNever<T> extends true ? {} : ProcessKeyValue<T[0], T[1], "optional">;
 
-type FromEntry<
-  T extends Entry,
+type ProcessKeyValue<
+  Key extends PropertyKey,
+  Value,
   Mode extends "required" | "optional",
-> = T extends unknown ? PartializeOptionals<Record<T[0], T[1]>, Mode> : never;
+> =
+  IsUnion<Key> extends true
+    ? Mode extends "required"
+      ? Key extends unknown
+        ? ProcessSingleKey<Record<Key, Value>, "required">
+        : never
+      : IsBounded<Key> extends true
+        ? Partial<Record<Key, Value>>
+        : (ExtractBounded<Key> extends never
+            ? {}
+            : Partial<Record<ExtractBounded<Key>, Value>>) &
+            (ExtractUnbounded<Key> extends never
+              ? {}
+              : Record<ExtractUnbounded<Key>, Value>)
+    : ProcessSingleKey<Record<Key, Value>, Mode>;
 
-type PartializeOptionals<
+type ExtractBounded<Key> = Key extends unknown
+  ? IsBounded<Key> extends true
+    ? Key
+    : never
+  : never;
+
+type ExtractUnbounded<Key> = Key extends unknown
+  ? IsBounded<Key> extends true
+    ? never
+    : Key
+  : never;
+
+type ProcessSingleKey<
   T,
   Mode extends "required" | "optional",
-> = "optional" extends Mode
-  ? IsBounded<keyof T> extends true
-    ? Partial<T>
-    : T
-  : T;
+> = Mode extends "optional" ? BoundedPartial<T> : T;
 
 /**
  * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
