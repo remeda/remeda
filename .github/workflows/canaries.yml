@@ -28,12 +28,12 @@ jobs:
         uses: actions/checkout@v5.0.0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v5.0.0
+        uses: actions/setup-node@v6.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.1
+        uses: bahmutov/npm-install@v1.11.2
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -79,13 +79,13 @@ jobs:
 
       - name: ⎔ Setup node
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v5.0.0
+        uses: actions/setup-node@v6.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: bahmutov/npm-install@v1.11.1
+        uses: bahmutov/npm-install@v1.11.2
 
       - name: 🏗️ Build
         if: steps.dist-lookup.outputs.cache-hit != 'true'
@@ -116,12 +116,12 @@ jobs:
         uses: actions/checkout@v5.0.0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v5.0.0
+        uses: actions/setup-node@v6.0.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
-        uses: bahmutov/npm-install@v1.11.1
+        uses: bahmutov/npm-install@v1.11.2
 
       - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
