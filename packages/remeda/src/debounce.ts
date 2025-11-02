@@ -152,7 +152,7 @@ export function debounce<F extends StrictFunction>(
       clearTimeout(timeoutId);
     }
 
-    /* v8 ignore next 7 -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing).*/
+    /* v8 ignore if -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing). @preserve */
     if (latestCallArgs === undefined) {
       // If you see this error pop up when using this function please report
       // it on the Remeda github page!
