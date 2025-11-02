@@ -89,37 +89,43 @@ describe("dataLast", () => {
   });
 
   test("works lazily (shallow)", () => {
-    // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
-    const beforeMock = vi.fn(identity());
-    const afterMock = vi.fn<(x: number) => number>(identity());
-    const result = pipe(
-      [[1, 2], 3, [4, 5]],
-      map(beforeMock),
-      flat(1),
-      map(afterMock),
-      find((x) => x - 1 === 2),
-    );
+    const data = [[1, 2], 3, [4, 5]] as const;
 
+    const beforeMock =
+      vi.fn<<T extends (typeof data)[number]>(x: T) => T>(identity());
+    const afterMock = vi.fn<(x: number) => number>(identity());
+
+    expect(
+      pipe(
+        data,
+        map(beforeMock),
+        flat(1),
+        map(afterMock),
+        find((x) => x - 1 === 2),
+      ),
+    ).toBe(3);
     expect(beforeMock).toHaveBeenCalledTimes(2);
     expect(afterMock).toHaveBeenCalledTimes(3);
-    expect(result).toBe(3);
   });
 
   test("works lazily (deep)", () => {
-    // eslint-disable-next-line vitest/require-mock-type-parameters -- TODO: It's hard to type this correctly taking into account the deep structure of the array. We might be able to work around that if we pull the array out and use it's type (e.g. typeof) to build the type for the function here...
-    const beforeMock = vi.fn(identity());
-    const afterMock = vi.fn<(x: number) => number>(identity());
-    const result = pipe(
-      [[[0]], [[[1, 2], [[3]], [[4, 5]]]], 6],
-      map(beforeMock),
-      flat(4),
-      map(afterMock),
-      find((x) => x - 1 === 2),
-    );
+    const data = [[[0]], [[[1, 2], [[3]], [[4, 5]]]], 6] as const;
 
+    const beforeMock =
+      vi.fn<<T extends (typeof data)[number]>(x: T) => T>(identity());
+    const afterMock = vi.fn<(x: number) => number>(identity());
+
+    expect(
+      pipe(
+        data,
+        map(beforeMock),
+        flat(4),
+        map(afterMock),
+        find((x) => x - 1 === 2),
+      ),
+    ).toBe(3);
     expect(beforeMock).toHaveBeenCalledTimes(2);
     expect(afterMock).toHaveBeenCalledTimes(4);
-    expect(result).toBe(3);
   });
 
   test("works lazily with trivial depth === 0", () => {
