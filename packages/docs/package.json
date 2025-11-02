@@ -46,7 +46,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "dompurify": "^3.3.0",
-    "eslint": "^9.39.0",
+    "eslint": "~9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.4.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
