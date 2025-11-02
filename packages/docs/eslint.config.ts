@@ -61,13 +61,13 @@ export default defineConfig(
     },
   },
 
+  reactHooks.configs.flat["recommended-latest"],
   {
     // React Components
     files: ["**/*.tsx"],
 
     plugins: {
       react: eslintPluginReact,
-      "react-hooks": reactHooks,
       "jsx-a11y": jsxA11y,
     },
 
@@ -82,7 +82,6 @@ export default defineConfig(
       ...eslintPluginReact.configs.flat.all!.rules,
       /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
       ...eslintPluginReact.configs.flat["jsx-runtime"]!.rules,
-      ...reactHooks.configs["recommended-latest"].rules,
       ...jsxA11y.flatConfigs.strict.rules,
 
       // We use TypeScript
