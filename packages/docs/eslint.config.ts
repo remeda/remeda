@@ -25,6 +25,7 @@ export default defineConfig(
         ...globals.browser,
         ...globals.es2021,
         ...globals.node,
+        ...globals.astro,
       },
 
       parserOptions: {

@@ -432,7 +432,6 @@ export default defineConfig(
     // All Tests
     files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
     plugins: {
-      // @ts-expect-error [ts2322] -- TODO: follow issue https://github.com/vitest-dev/eslint-plugin-vitest/issues/737 to see how this is resolved.
       vitest,
     },
 
