@@ -42,12 +42,36 @@ test("multiple regex separators within maxLength", () => {
   ).toBe("cat. dog, mouse...");
 });
 
-test("a separator after maxLength", () => {
+test("string separator matches after maxLength", () => {
   expect(
     truncate("A long sentence followed by a period. Another sentence", 20, {
       separator: ".",
     }),
   ).toBe("A long sentence f...");
+});
+
+test("string separator never matches", () => {
+  expect(
+    truncate("A long sentence without the chosen separator", 20, {
+      separator: "|",
+    }),
+  ).toBe("A long sentence w...");
+});
+
+test("regex separator matches after maxLength", () => {
+  expect(
+    truncate("A long sentence followed by a period. Another sentence", 20, {
+      separator: /\./u,
+    }),
+  ).toBe("A long sentence f...");
+});
+
+test("regex separator never matches", () => {
+  expect(
+    truncate("A long sentence without the chosen separator", 20, {
+      separator: /|/u,
+    }),
+  ).toBe("A long sentence w...");
 });
 
 test("omission is longer than maxLength", () => {

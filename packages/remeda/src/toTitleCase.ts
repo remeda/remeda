@@ -145,7 +145,7 @@ const toTitleCaseImplementation = (
   )
     .map(
       (word) =>
-        `${word[0]?.toUpperCase() ?? ""}${
+        `${word[0]!.toUpperCase()}${
           preserveConsecutiveUppercase
             ? word.slice(1)
             : word.slice(1).toLowerCase()
