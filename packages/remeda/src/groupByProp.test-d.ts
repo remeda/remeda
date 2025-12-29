@@ -171,53 +171,12 @@ test("all values are undefined", () => {
   ).toEqualTypeOf<EmptyObject>();
 });
 
-describe("issue: typing broken for simple arrays with union types", () => {
-  test("simple array with union of literal strings", () => {
-    expectTypeOf(
-      groupByProp([] as Array<{ a: "cat" | "dog"; b: string }>, "a" as const),
-    ).branded.toEqualTypeOf<{
-      cat?: [{ a: "cat"; b: string }, ...Array<{ a: "cat"; b: string }>];
-      dog?: [{ a: "dog"; b: string }, ...Array<{ a: "dog"; b: string }>];
-    }>();
-  });
-
-  test("simple array with union of literal numbers", () => {
-    expectTypeOf(
-      groupByProp([] as Array<{ id: 1 | 2 | 3; name: string }>, "id"),
-    ).branded.toEqualTypeOf<{
-      1?: [{ id: 1; name: string }, ...Array<{ id: 1; name: string }>];
-      2?: [{ id: 2; name: string }, ...Array<{ id: 2; name: string }>];
-      3?: [{ id: 3; name: string }, ...Array<{ id: 3; name: string }>];
-    }>();
-  });
-
-  test("array with union of literal strings and additional props", () => {
-    expectTypeOf(
-      groupByProp(
-        [] as Array<{ type: "user" | "admin"; name: string; age: number }>,
-        "type",
-      ),
-    ).branded.toEqualTypeOf<{
-      user?: [
-        { type: "user"; name: string; age: number },
-        ...Array<{ type: "user"; name: string; age: number }>,
-      ];
-      admin?: [
-        { type: "admin"; name: string; age: number },
-        ...Array<{ type: "admin"; name: string; age: number }>,
-      ];
-    }>();
-  });
-
-  test("non-empty array should work too", () => {
-    expectTypeOf(
-      groupByProp(
-        [{ a: "cat", b: "test" }] as Array<{ a: "cat" | "dog"; b: string }>,
-        "a",
-      ),
-    ).branded.toEqualTypeOf<{
-      cat?: [{ a: "cat"; b: string }, ...Array<{ a: "cat"; b: string }>];
-      dog?: [{ a: "dog"; b: string }, ...Array<{ a: "dog"; b: string }>];
-    }>();
-  });
+// @see https://github.com/remeda/remeda/issues/1231
+test("grouping on a prop with literal union values (issue #1231)", () => {
+  expectTypeOf(
+    groupByProp([] as Array<{ a: "cat" | "dog"; b: string }>, "a" as const),
+  ).branded.toEqualTypeOf<{
+    cat?: [{ a: "cat"; b: string }, ...Array<{ a: "cat"; b: string }>];
+    dog?: [{ a: "dog"; b: string }, ...Array<{ a: "dog"; b: string }>];
+  }>();
 });

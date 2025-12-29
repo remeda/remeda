@@ -1,3 +1,4 @@
+import type { IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { TupleParts } from "./TupleParts";
@@ -66,39 +67,20 @@ type SymmetricRefine<Item, Condition> = Item extends Condition
   ? Item
   : Condition extends Item
     ? Condition
-    : // For non-array objects, we need to handle the case where we're filtering
-      // based on a partial match. When both Item and Condition are objects (but
-      // not arrays), we need to narrow the Item type based on the Condition's
-      // properties.
-      [Item, Condition] extends [object, object]
-      ? // Only apply special object handling when neither is an array-like type
-        Item extends ReadonlyArray<unknown>
-        ? never
-        : Condition extends ReadonlyArray<unknown>
-          ? never
-          : NarrowObjectByCondition<Item, Condition>
-      : never;
+    : RefineNonRelated<Item, Condition>;
 
-// Narrows an object type based on a condition object. This handles cases where
-// we want to filter { a: "cat" | "dog", b: string } with { a: "cat" } to get
-// { a: "cat", b: string }.
-type NarrowObjectByCondition<Item, Condition> =
-  // First, check if Item is a union. If so, extract the members that match.
-  [Item] extends [never]
-    ? never
-    : Item extends unknown
-      ? // For each member of the union, check if it's compatible with Condition
-        Condition extends Item
-        ? // Condition is structurally compatible with this Item, so narrow it
-          Item & Condition
-        : // Check if narrowing would make sense (both are objects with overlapping keys)
-          Extract<keyof Item, keyof Condition> extends never
-          ? // No overlapping keys, cannot match
-            never
-          : // There are overlapping keys, try to narrow
-            Item & Condition extends never
-            ? // The intersection is impossible
-              never
-            : // Return the narrowed type
-              Item & Condition
-      : never;
+// When types are non-related (e.g. neither extends the other) they might still
+// have a common refinement; this can happen when two objects share some props,
+// but not others, or when a prop is wider in one of them, allowing more value
+// types than the other.
+type RefineNonRelated<Item, Condition> =
+  Item extends Record<PropertyKey, unknown>
+    ? Condition extends Record<PropertyKey, unknown>
+      ? // We take the intersection symmetric intersection of the two objects;
+        // but only when we know it isn't empty. This would only happen if they
+        // share a least one key.
+        IsNever<Extract<keyof Item, keyof Condition>> extends true
+        ? never
+        : Item & Condition
+      : never
+    : never;
