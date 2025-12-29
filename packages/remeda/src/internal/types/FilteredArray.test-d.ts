@@ -872,3 +872,13 @@ test("null filtering", () => {
     filteredArray([] as Array<string | undefined>, "" as string),
   ).toEqualTypeOf<Array<string>>();
 });
+
+// @see https://github.com/remeda/remeda/issues/1231
+test("object with union property narrowed by literal condition", () => {
+  expectTypeOf(
+    filteredArray(
+      [] as Array<{ a: "cat" | "dog"; b: string }>,
+      { a: "cat" } as const,
+    ),
+  ).branded.toEqualTypeOf<Array<{ a: "cat"; b: string }>>();
+});
