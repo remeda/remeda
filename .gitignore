@@ -1,4 +1,7 @@
 node_modules
+
+# For AI tools:
 .claude
-.env.local
 CLAUDE.local.md
+# dotenv file used for MCP secrets
+.env.local
