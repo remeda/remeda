@@ -76,7 +76,7 @@ type SymmetricRefine<Item, Condition> = Item extends Condition
 type RefineNonRelated<Item, Condition> =
   Item extends Record<PropertyKey, unknown>
     ? Condition extends Record<PropertyKey, unknown>
-      ? // We take the intersection symmetric intersection of the two objects;
+      ? // We take the (symmetric) intersection of the two objects;
         // but only when we know it isn't empty. This would only happen if they
         // share a least one key.
         IsNever<Extract<keyof Item, keyof Condition>> extends true
