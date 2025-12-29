@@ -170,3 +170,13 @@ test("all values are undefined", () => {
     groupByProp([] as Array<{ a: undefined }>, "a"),
   ).toEqualTypeOf<EmptyObject>();
 });
+
+// @see https://github.com/remeda/remeda/issues/1231
+test("grouping on a prop with literal union values (issue #1231)", () => {
+  expectTypeOf(
+    groupByProp([] as Array<{ a: "cat" | "dog"; b: string }>, "a" as const),
+  ).branded.toEqualTypeOf<{
+    cat?: [{ a: "cat"; b: string }, ...Array<{ a: "cat"; b: string }>];
+    dog?: [{ a: "dog"; b: string }, ...Array<{ a: "dog"; b: string }>];
+  }>();
+});
