@@ -67,13 +67,13 @@ type SymmetricRefine<Item, Condition> = Item extends Condition
   ? Item
   : Condition extends Item
     ? Condition
-    : RefineNonRelated<Item, Condition>;
+    : RefineIncomparable<Item, Condition>;
 
 // When types are non-related (e.g. neither extends the other) they might still
 // have a common refinement; this can happen when two objects share some props,
 // but not others, or when a prop is wider in one of them, allowing more value
 // types than the other.
-type RefineNonRelated<Item, Condition> =
+type RefineIncomparable<Item, Condition> =
   Item extends Record<PropertyKey, unknown>
     ? Condition extends Record<PropertyKey, unknown>
       ? // We take the (symmetric) intersection of the two objects;
