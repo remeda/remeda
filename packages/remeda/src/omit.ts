@@ -25,11 +25,11 @@ type OmitFromArray<T, Keys extends ReadonlyArray<PropertyKey>> =
     : never;
 
 type OmitBounded<T, Keys extends ReadonlyArray<PropertyKey>> =
-  // We built our output by first considering any key present in the keys array
-  // as being omitted. This object would contain all key that are unaffected at
+  // We build our output by first considering any key present in the keys array
+  // as being omitted. This object would contain all keys that are unaffected at
   // all by this omit operation.
   FixEmpty<Omit<T, Keys[number]>> &
-    // But we might be be missing keys that are optional in the keys tuple (and
+    // But we might be missing keys that are optional in the keys tuple (and
     // thus might not be removed). Because these keys are optional, their props
     // in the output also need to be optional.
     Partial<
@@ -77,7 +77,7 @@ type OmitUnbounded<T, Keys extends ReadonlyArray<PropertyKey>> = T &
 
 /**
  * When `Omit` omits **all** keys from a bounded record it results in `{}` which
- * is doesn't match what we'd expect to be returned in terms of a useful type as
+ * doesn't match what we'd expect to be returned in terms of a useful type as
  * the output of `Omit`.
  */
 type FixEmpty<T> = IsNever<keyof T> extends true ? EmptyObject : T;
