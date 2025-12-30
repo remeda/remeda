@@ -1,52 +1,40 @@
-import { describe, expectTypeOf, test } from "vitest";
+import type { EmptyObject } from "type-fest";
+import { expectTypeOf, test } from "vitest";
 import { omit } from "./omit";
 import { pipe } from "./pipe";
 
-describe("data first", () => {
-  test("non existing prop", () => {
-    // @ts-expect-error [ts2322] -- should not allow non existing props
-    omit({ a: 1, b: 2, c: 3, d: 4 }, ["not", "in"] as const);
-  });
-
-  test("complex type", () => {
-    const obj = { a: 1 } as { a: number } | { a?: number; b: string };
-    const result = omit(obj, ["a"]);
-
-    expectTypeOf(result).toEqualTypeOf<
-      Omit<{ a: number } | { a?: number; b: string }, "a">
-    >();
-  });
+test("non existing prop", () => {
+  // @ts-expect-error [ts2322] -- should not allow non existing props
+  omit({ a: 1, b: 2, c: 3, d: 4 }, ["not", "in"] as const);
 });
 
-describe("data last", () => {
-  test("non existing prop", () => {
-    pipe(
-      { a: 1, b: 2, c: 3, d: 4 },
-      // @ts-expect-error [ts2345] -- should not allow non existing props
-      omit(["not", "in"] as const),
-    );
-  });
-
-  test("complex type", () => {
-    const obj = { a: 1 } as { a: number } | { a?: number; b: string };
-    const result = pipe(obj, omit(["a"]));
-
-    expectTypeOf(result).toEqualTypeOf<
-      Omit<{ a: number } | { a?: number; b: string }, "a">
-    >();
-  });
+test("union data with common omitted prop", () => {
+  expectTypeOf(
+    omit({ a: 1 } as { a: number } | { a?: number; b: string }, ["a"]),
+  ).toEqualTypeOf<EmptyObject | { b: string }>();
 });
 
-test("multiple keys", () => {
-  type Data = { aProp: string; bProp: string };
+test("omit everything", () => {
+  expectTypeOf(
+    omit({ aProp: "p1", bProp: "p2" }, ["aProp", "bProp"]),
+  ).toEqualTypeOf<EmptyObject>();
+});
 
-  const obj: Data = {
-    aProp: "p1",
+test("omit unbounded", () => {
+  expectTypeOf(
+    omit({} as Record<string, string>, ["" as string]),
+  ).toEqualTypeOf<Record<string, string>>();
+});
 
-    bProp: "p2",
-  };
+test("omit bounded from unbounded", () => {
+  expectTypeOf(omit({} as Record<string, string>, ["a"])).toEqualTypeOf<{
+    [key: string]: string;
+    a: never;
+  }>();
+});
 
-  const result = pipe(obj, omit(["aProp", "bProp"]));
-
-  expectTypeOf(result).toEqualTypeOf<Omit<Data, "aProp" | "bProp">>();
+test("data-last", () => {
+  expectTypeOf(
+    pipe({ a: 1 } as { a: number } | { a?: number; b: string }, omit(["a"])),
+  ).toEqualTypeOf<EmptyObject | { b: string }>();
 });
