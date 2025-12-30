@@ -1,8 +1,8 @@
 import type { IsUnion } from "./IsUnion";
 
 /**
- * We split the fixed tuple item types into **singular** props (e.g., `"a"`),
- * and unions of several props (e.g., `"a" | "b"`). This split allows building
+ * We split the fixed tuple item types into **singular** types (e.g., `"a"`),
+ * and unions of several types (e.g., `"a" | "b"`). This split allows building
  * complex types based on if a specific value would always be present, or if
  * it is *effectively* optional.
  *

@@ -97,7 +97,7 @@ type Bounded<T> = T extends unknown
  *
  * @param keys - The property names.
  * @signature
- *    R.omit(names)(obj);
+ *    R.omit(keys)(obj);
  * @example
  *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
@@ -113,7 +113,7 @@ export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
  * @param data - The object.
  * @param keys - The property names.
  * @signature
- *    R.omit(obj, names);
+ *    R.omit(obj, keys);
  * @example
  *    R.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
  * @dataFirst
