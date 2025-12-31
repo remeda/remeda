@@ -11,7 +11,7 @@ const ITERATIONS = 10_000;
 const HUGE_NUMBER = 9_999_999_999_999_999_999_999n;
 
 test("from is greater than to", () => {
-  expect(() => randomBigInt(10n, 0n)).toThrow(
+  expect(() => randomBigInt(10n, 0n)).toThrowError(
     new RangeError("randomBigInt: The range [10,0] is empty."),
   );
 });

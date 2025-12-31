@@ -194,6 +194,6 @@ describe("showcase", () => {
 
     await expect(
       Promise.all([failingApi.call("hello"), failingApi.call("world")]),
-    ).rejects.toThrow('Batch too big! [["hello"],["world"]]');
+    ).rejects.toThrowError('Batch too big! [["hello"],["world"]]');
   });
 });

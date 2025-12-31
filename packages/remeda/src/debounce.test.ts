@@ -250,7 +250,7 @@ describe("additional functionality", () => {
 
     expect(() => {
       debouncer.cancel();
-    }).not.toThrow();
+    }).not.toThrowError();
 
     expect(debouncer.call("hello")).toBeUndefined();
 
@@ -294,7 +294,7 @@ describe("additional functionality", () => {
     expect(debouncer.call("world")).toBe("hello");
     expect(() => {
       debouncer.cancel();
-    }).not.toThrow();
+    }).not.toThrowError();
   });
 
   test("can cancel maxWait timer", async () => {
@@ -391,9 +391,9 @@ describe("additional functionality", () => {
 
 describe("errors", () => {
   test("prevents maxWaitMs to be less then waitMs", () => {
-    expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrow(
-      "debounce: maxWaitMs (16) cannot be less than waitMs (32)",
-    );
+    expect(() =>
+      debounce(identity(), { waitMs: 32, maxWaitMs: 16 }),
+    ).toThrowError("debounce: maxWaitMs (16) cannot be less than waitMs (32)");
   });
 });
 
