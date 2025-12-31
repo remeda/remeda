@@ -1,0 +1,2 @@
+function e(e,t){let n=0,r=e.length;for(;n<r;){let i=n+r>>>1,a=e[i];t(a,i,e)?n=i+1:r=i}return r}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=binarySearchCutoffIndex-7dzycYsL.cjs.map

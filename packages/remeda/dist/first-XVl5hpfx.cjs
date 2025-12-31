@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./toSingle-Dk7SOb06.cjs`);function n(...n){return e.t(r,n,t.t(i))}const r=([e])=>e,i=()=>a,a=e=>({hasNext:!0,next:e,done:!0});Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
+//# sourceMappingURL=first-XVl5hpfx.cjs.map

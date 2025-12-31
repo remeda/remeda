@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e,t,n){let r=e;for(let e of t){if(r==null)break;r=r[e]}return r??n}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
+//# sourceMappingURL=pathOr-SGmT2wRt.cjs.map

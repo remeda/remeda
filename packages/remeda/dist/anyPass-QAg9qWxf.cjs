@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>t.some(t=>t(e));Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
+//# sourceMappingURL=anyPass-QAg9qWxf.cjs.map

@@ -1,0 +1,2 @@
+function e(e){return e instanceof Error}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=isError-C6MVTvot.cjs.map

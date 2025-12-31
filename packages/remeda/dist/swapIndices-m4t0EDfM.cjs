@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t,n)=>typeof e==`string`?r([...e],t,n).join(``):r(e,t,n);function r(e,t,n){let r=[...e];if(Number.isNaN(t)||Number.isNaN(n))return r;let i=t<0?e.length+t:t,a=n<0?e.length+n:n;return i<0||i>e.length||a<0||a>e.length?r:(r[i]=e[a],r[a]=e[i],r)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
+//# sourceMappingURL=swapIndices-m4t0EDfM.cjs.map

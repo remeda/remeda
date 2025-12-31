@@ -1,0 +1,2 @@
+function e(e,...n){return typeof e==`string`||typeof e==`number`||typeof e==`symbol`?r=>t(r,e,...n):t(e,...n)}function t(e,...t){let n=e;for(let e of t){if(n==null)return;n=n[e]}return n}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=prop-yCzXWrw0.cjs.map

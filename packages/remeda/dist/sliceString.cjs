@@ -1,0 +1,1 @@
+const e=require(`./sliceString-BnHlo7ZL.cjs`);exports.sliceString=e.t;

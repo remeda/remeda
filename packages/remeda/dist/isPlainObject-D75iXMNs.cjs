@@ -1,0 +1,2 @@
+function e(e){if(typeof e!=`object`||!e)return!1;let t=Object.getPrototypeOf(e);return t===null||t===Object.prototype}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=isPlainObject-D75iXMNs.cjs.map

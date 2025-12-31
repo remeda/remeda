@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,{min:t,max:n})=>t!==void 0&&e<t?t:n!==void 0&&e>n?n:e;Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
+//# sourceMappingURL=clamp-DV6QrptB.cjs.map

@@ -1,0 +1,2 @@
+function e(e){return typeof e==`number`&&!Number.isNaN(e)}export{e as t};
+//# sourceMappingURL=isNumber-BkfFBeEb.js.map

@@ -1,0 +1,2 @@
+const e=require(`./lazyDataLastImpl-DjhJE1G_.cjs`),t=require(`./utilityEvaluators-B6h8a_Yr.cjs`);function n(t,n){return typeof t==`object`?r(t,n):e.t(r,t===void 0?[]:[t],i)}const r=(e,t)=>t===void 0?e.flat():e.flat(t),i=e=>e===void 0||e===1?a:e<=0?t.r:t=>Array.isArray(t)?{next:t.flat(e-1),hasNext:!0,hasMany:!0,done:!1}:{next:t,hasNext:!0,done:!1},a=e=>Array.isArray(e)?{next:e,hasNext:!0,hasMany:!0,done:!1}:{next:e,hasNext:!0,done:!1};Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
+//# sourceMappingURL=flat-B80g974o.cjs.map

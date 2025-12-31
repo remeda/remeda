@@ -1,0 +1,1 @@
+import{t as e}from"./isNumber-BkfFBeEb.js";export{e as isNumber};

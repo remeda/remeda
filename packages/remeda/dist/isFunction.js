@@ -1,0 +1,1 @@
+import{t as e}from"./isFunction-yJCcR1YM.js";export{e as isFunction};

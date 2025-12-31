@@ -1,4 +1,4 @@
-dist
+# dist
 
 # Vitests's temporary tsconfig file
 tsconfig.vitest-temp.json

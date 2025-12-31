@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e,t){let n=Object.create(null);for(let r of e){let e=r?.[t];if(e!==void 0){let t=n[e];t===void 0?n[e]=[r]:t.push(r)}}return Object.setPrototypeOf(n,Object.prototype),n}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
+//# sourceMappingURL=groupByProp-BW_oL6qA.cjs.map

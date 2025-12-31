@@ -1,0 +1,1 @@
+const e=require(`./prop-yCzXWrw0.cjs`);exports.prop=e.t;

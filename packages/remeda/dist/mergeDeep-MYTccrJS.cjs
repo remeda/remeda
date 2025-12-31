@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./isPlainObject-D75iXMNs.cjs`);function n(...t){return e.t(r,t)}function r(e,n){let i={...e,...n};for(let a in n){if(!(a in e))continue;let{[a]:o}=e;if(!t.t(o))continue;let{[a]:s}=n;t.t(s)&&(i[a]=r(o,s))}return i}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
+//# sourceMappingURL=mergeDeep-MYTccrJS.cjs.map

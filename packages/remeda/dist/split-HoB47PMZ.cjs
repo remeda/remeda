@@ -1,0 +1,2 @@
+function e(e,t,n){return typeof t==`number`||t===void 0?n=>n.split(e,t):e.split(t,n)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=split-HoB47PMZ.cjs.map

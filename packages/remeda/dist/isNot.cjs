@@ -1,0 +1,1 @@
+const e=require(`./isNot-CKcYeivp.cjs`);exports.isNot=e.t;

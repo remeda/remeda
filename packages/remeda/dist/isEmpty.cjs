@@ -1,0 +1,1 @@
+const e=require(`./isEmpty-lXNZy2Fj.cjs`);exports.isEmpty=e.t;

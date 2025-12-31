@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){let n=Object.create(null);for(let r of e){let e=r?.[t];if(e!==void 0){let t=n[e];t===void 0?n[e]=[r]:t.push(r)}}return Object.setPrototypeOf(n,Object.prototype),n}export{t};
+//# sourceMappingURL=groupByProp-ChEmUVNQ.js.map

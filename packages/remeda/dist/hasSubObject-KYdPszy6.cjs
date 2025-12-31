@@ -1,0 +1,2 @@
+const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./isDeepEqual-C_J_Xi_8.cjs`);function n(...t){return e.t(r,t)}function r(e,n){for(let[r,i]of Object.entries(n))if(!Object.hasOwn(e,r)||!t.t(i,e[r]))return!1;return!0}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
+//# sourceMappingURL=hasSubObject-KYdPszy6.cjs.map

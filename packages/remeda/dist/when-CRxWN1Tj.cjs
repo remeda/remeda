@@ -1,0 +1,2 @@
+function e(...e){return e.length===2?(n,...r)=>t(n,...e,...r):t(...e)}const t=(e,t,n,...r)=>t(e,...r)?typeof n==`function`?n(e,...r):n.onTrue(e,...r):typeof n==`function`?e:n.onFalse(e,...r);Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
+//# sourceMappingURL=when-CRxWN1Tj.cjs.map

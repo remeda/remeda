@@ -1,0 +1,2 @@
+const e=require(`./words-DTXZULvz.cjs`),t=/[a-z]/u,n=!0;function r(e,t){return typeof e==`string`?i(e,t):t=>i(t,e)}const i=(n,{preserveConsecutiveUppercase:r=!0}={})=>e.t(t.test(n)?n:n.toLowerCase()).map((e,t)=>`${t===0?e[0].toLowerCase():e[0].toUpperCase()}${r?e.slice(1):e.slice(1).toLowerCase()}`).join(``);Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return r}});
+//# sourceMappingURL=toCamelCase-CYeyQ4F8.cjs.map
