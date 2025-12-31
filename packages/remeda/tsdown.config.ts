@@ -15,6 +15,9 @@ export default defineConfig([
     ...SHARED,
 
     entry: [
+      // We use a glob on purpose so that our build creates individual files
+      // for each utility function. This will also include the barrel file to
+      // allow importing from the main entrypoint.
       "src/*.ts",
       // Skip test files
       `!**/*.test{,-d}.ts`,
@@ -32,13 +35,19 @@ export default defineConfig([
     dts: false,
 
     minify: true,
+
+    // This makes debugging easier, and also makes stack traces more legible.
+    sourcemap: true,
   },
   {
     ...SHARED,
 
+    // We use the barrel file so that the result is a single monolithic file.
     entry: "src/index.ts",
 
     dts: {
+      // This allows "Go to Definition"-style features within IDEs to improve
+      // the DX when working with Remeda.
       sourcemap: true,
 
       // Inline external types from dependencies (like type-fest) into the
