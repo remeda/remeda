@@ -192,14 +192,14 @@ function groupByPropImplementation<
   > = Object.create(null);
 
   for (const item of data) {
-    // @ts-expect-error [ts18046] -- TypeScript is inferring `item` eagerly based on the general type defined for T (e.g. `IterableContainer[number]` which is `unknown`). This is due to https://github.com/microsoft/TypeScript/issues/61750. If it would have kept it's "generic" nature it would have been typed as `T[number]`.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Similarly, `item[prop]` should be inferred as `T[number][Prop]`, instead of falling back to `any`.
+    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself. This is partially due to This is due to https://github.com/microsoft/TypeScript/issues/61750.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Because of the error mentioned above the resulting key isn't inferred correctly as `AllPropValues<T, Prop> | undefined` which would be needed to remove this lint error.
     const key = item[prop];
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
-      // @ts-expect-error [ts7053] -- Similarly to the above, the type of `key` at this point should be `AllPropValues<T, Prop>`, but TypeScript can't infer this easily following the previous issues it already has.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- These errors are caused by the same reason as the above TypeScript issue.
+      // @ts-expect-error [ts7053] -- `key` should be typed `AllPropValues<T, Prop>` but TypeScript isn't inferring that correctly, causing an error when we try to access this prop on the output object.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Because of the error mentioned above the resulting items array isn't being inferred correctly as `Array<T[number]> | undefined` which would be needed to remove this lint error.
       const items = output[key];
 
       if (items === undefined) {
@@ -207,14 +207,14 @@ function groupByPropImplementation<
         // empty array and falling through to a unified push. It is also more
         // performant to mutate the existing object over using spread to
         // continually create new objects on every unique key.
-        // @ts-expect-error [ts7053] -- Complex generics cause key inference issues.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- See above.
+        // @ts-expect-error [ts7053] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- similarly, because `key` isn't inferred correctly, lint has an issue with us accessing the output object using it.
         output[key] = [item];
       } else {
         // It is more performant to add the items to an existing array instead
         // of creating a new array via spreading every time we add an item to
         // it (e.g., `[...current, item]`).
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- TypeScript infers `items` as `any` even though it could only be `Array<T[number]>` due to the object having a null prototype.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Similarly to above, because TypeScript didn't infer `items` correctly, lint can't ensure this code is safe and makes sense.
         items.push(item);
       }
     }
