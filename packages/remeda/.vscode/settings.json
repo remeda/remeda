@@ -4,9 +4,6 @@
     // structure so we "tuck them" under the file they test.
     "*.ts": "$(capture).*.ts",
 
-    // All configs for a specific tool should be folded together.
-    "*.config.ts": "$(capture).*.config.ts",
-
     // Prettier ignore uses a different naming convention so it needs to be
     // added explicitly.
     "prettier.config.js": ".prettierignore",
