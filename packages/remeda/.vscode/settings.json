@@ -1,8 +1,15 @@
 {
-  // Our tests live next to the files they test, this clutters the folder
-  // structure so we "tuck them" under the file they test. This also comes with
-  // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.patterns": {
-    "*.ts": "${capture}.*.ts"
+    // Our tests live next to the files they test, this clutters the folder
+    // structure so we "tuck them" under the file they test.
+    "*.ts": "$(capture).*.ts",
+
+    // Prettier ignore uses a different naming convention so it needs to be
+    // added explicitly.
+    "prettier.config.js": ".prettierignore",
+
+    // Build artifacts in dist/ - group all formats under the ESM .js file.
+    "*.js": "$(capture).cjs, $(capture).js.map, $(capture).cjs.map, $(capture).d.ts, $(capture).d.ts.map, $(capture).d.cts, $(capture).d.cts.map",
+    "*.cjs": "$(capture).cjs.map"
   }
 }
