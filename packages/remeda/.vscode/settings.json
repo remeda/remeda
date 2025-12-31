@@ -1,14 +1,18 @@
 {
   "explorer.fileNesting.patterns": {
-    // All configs for a specific tool should be folded together.
-    "*.config.ts": "$(capture).*.config.ts",
-
     // Our tests live next to the files they test, this clutters the folder
     // structure so we "tuck them" under the file they test.
     "*.ts": "$(capture).*.ts",
 
+    // All configs for a specific tool should be folded together.
+    "*.config.ts": "$(capture).*.config.ts",
+
     // Prettier ignore uses a different naming convention so it needs to be
     // added explicitly.
-    "prettier.config.js": ".prettierignore"
+    "prettier.config.js": ".prettierignore",
+
+    // Build artifacts in dist/ - group all formats under the ESM .js file.
+    "*.js": "$(capture).cjs, $(capture).js.map, $(capture).cjs.map, $(capture).d.ts, $(capture).d.ts.map, $(capture).d.cts, $(capture).d.cts.map",
+    "*.cjs": "$(capture).cjs.map"
   }
 }
