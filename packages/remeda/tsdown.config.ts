@@ -1,26 +1,56 @@
-import { defineConfig } from "tsdown";
+import { defineConfig, type UserConfig } from "tsdown";
 
-export default defineConfig({
-  entry: [
-    "src/*.ts",
-    // Skip test files
-    `!**/*.test{,-d}.ts`,
-  ],
-
+const SHARED = {
   // TODO [>2]: Remove CJS support?
   format: ["esm", "cjs"],
-
-  dts: {
-    sourcemap: true,
-  },
 
   // We support both client and server envs
   platform: "neutral",
 
-  minify: true,
-
-  attw: true,
-  publint: true,
-
   failOnWarn: true,
-});
+} satisfies UserConfig;
+
+export default defineConfig([
+  {
+    ...SHARED,
+
+    entry: [
+      "src/*.ts",
+      // Skip test files
+      `!**/*.test{,-d}.ts`,
+    ],
+
+    // We split the build into two steps because types and runtime have very
+    // different concerns. To optimize bundle size we need the runtime
+    // artifacts (JS) to be as small as possible so that it plays nicely with
+    // tree-shaking. Types, on the other hand, benefit from being a monolithic
+    // file with all definitions needed to work with the library. This is also
+    // crucial to prevent certain edge-cases in more complex projects using
+    // Remeda where they want to re-export types based on types coming from
+    // Remeda.
+    // @see https://github.com/remeda/remeda/issues/1175
+    dts: false,
+
+    minify: true,
+  },
+  {
+    ...SHARED,
+
+    entry: "src/index.ts",
+
+    dts: {
+      sourcemap: true,
+
+      // Inline external types from dependencies (like type-fest) into the
+      // generated .d.ts files.
+      resolve: true,
+
+      // Disable emitting any runtime files.
+      emitDtsOnly: true,
+    },
+
+    // Lint/verify the outputs
+    attw: true,
+    publint: true,
+  },
+]);
