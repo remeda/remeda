@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){let n={};for(let[r,i]of Object.entries(e))n[r]=t(i,r,e);return n}export{t};

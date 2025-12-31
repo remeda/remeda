@@ -1,1 +1,0 @@
-import"./lazyDataLastImpl-DVyGWGpQ.js";import"./purry-Bd1hMu6w.js";import{t as e}from"./product-CS8MpUWM.js";export{e as product};

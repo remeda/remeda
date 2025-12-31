@@ -1,1 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./words-DTXZULvz.cjs`);function n(...t){return e.t(r,t)}const r=e=>t.t(e).join(`-`).toLowerCase();Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});

@@ -1,1 +1,0 @@
-function e(e){return e instanceof Promise}export{e as t};

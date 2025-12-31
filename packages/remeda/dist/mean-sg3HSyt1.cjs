@@ -1,1 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./sum-BWKjkUyT.cjs`);function n(...t){return e.t(r,t)}function r(e){if(e.length!==0)return t.t(e)/e.length}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});

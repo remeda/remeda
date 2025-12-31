@@ -1,1 +1,0 @@
-function e(e,t,n){let r=n=>e(n,...t);return n===void 0?r:Object.assign(r,{lazy:n,lazyArgs:t})}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});

@@ -1,1 +1,0 @@
-function e(e){return typeof e==`object`&&!!e}export{e as t};

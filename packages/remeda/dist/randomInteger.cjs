@@ -1,1 +1,0 @@
-const e=require(`./randomInteger-CApz2X3Q.cjs`);exports.randomInteger=e.t;

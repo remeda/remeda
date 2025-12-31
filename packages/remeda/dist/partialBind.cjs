@@ -1,1 +1,0 @@
-const e=require(`./partialBind-CqTNmHXD.cjs`);exports.partialBind=e.t;

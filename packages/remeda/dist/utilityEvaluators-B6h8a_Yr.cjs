@@ -1,1 +1,0 @@
-const e={done:!0,hasNext:!1},t={done:!1,hasNext:!1},n=()=>e,r=e=>({hasNext:!0,next:e,done:!1});Object.defineProperty(exports,`n`,{enumerable:!0,get:function(){return n}}),Object.defineProperty(exports,`r`,{enumerable:!0,get:function(){return r}}),Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

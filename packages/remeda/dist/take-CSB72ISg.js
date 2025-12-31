@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";import{n as t}from"./utilityEvaluators-XvjlcSPu.js";function n(...t){return e(r,t,i)}const r=(e,t)=>t<0?[]:e.slice(0,t);function i(e){if(e<=0)return t;let n=e;return e=>(--n,{done:n<=0,hasNext:!0,next:e})}export{n as t};

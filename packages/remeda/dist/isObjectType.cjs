@@ -1,1 +1,0 @@
-const e=require(`./isObjectType-DMpD8XdE.cjs`);exports.isObjectType=e.t;

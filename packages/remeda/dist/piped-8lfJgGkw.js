@@ -1,1 +1,0 @@
-import{t as e}from"./pipe-BVeXEJGy.js";function t(...t){return n=>e(n,...t)}export{t};

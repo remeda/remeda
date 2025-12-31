@@ -1,1 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./withPrecision-D4atDsgU.cjs`);function n(...n){return e.t(t.t(Math.ceil),n)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});

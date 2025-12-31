@@ -1,1 +1,0 @@
-const e=require(`./isBigInt-cf1qGxLp.cjs`);exports.isBigInt=e.t;

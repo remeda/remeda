@@ -1,1 +1,0 @@
-function e(e){return typeof e==`boolean`}export{e as t};

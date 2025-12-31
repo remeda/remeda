@@ -1,1 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e){let t={};for(let[n,r]of Object.entries(e))t[r]=n;return t}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

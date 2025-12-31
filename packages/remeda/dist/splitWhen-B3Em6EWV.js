@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){let n=e.findIndex(t);return n===-1?[[...e],[]]:[e.slice(0,n),e.slice(n)]}export{t};

@@ -1,1 +1,0 @@
-import{t as e}from"./purryFromLazy-ackWJ5sq.js";function t(...t){return e(n,t)}const n=(e,t)=>{let n=t;return(t,r,i)=>(n=e(n,t,r,i),{done:!1,hasNext:!0,next:n})};export{t};

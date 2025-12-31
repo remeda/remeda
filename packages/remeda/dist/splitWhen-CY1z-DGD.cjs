@@ -1,1 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e,t){let n=e.findIndex(t);return n===-1?[[...e],[]]:[e.slice(0,n),e.slice(n)]}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

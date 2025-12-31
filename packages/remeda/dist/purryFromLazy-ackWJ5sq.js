@@ -1,1 +1,0 @@
-import{t as e}from"./pipe-BVeXEJGy.js";function t(t,n){let r=n.length-t.length;if(r===1){let[r,...i]=n;return e(r,{lazy:t,lazyArgs:i})}if(r===0){let r={lazy:t,lazyArgs:n};return Object.assign(t=>e(t,r),r)}throw Error(`Wrong number of arguments`)}export{t};

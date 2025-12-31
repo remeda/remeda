@@ -1,1 +1,0 @@
-function e(e){return e instanceof Error}export{e as t};

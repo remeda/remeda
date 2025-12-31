@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(Object.entries,t)}export{t};

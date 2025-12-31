@@ -1,1 +1,0 @@
-const e={done:!0,hasNext:!1},t={done:!1,hasNext:!1},n=()=>e,r=e=>({hasNext:!0,next:e,done:!1});export{n,r,t};

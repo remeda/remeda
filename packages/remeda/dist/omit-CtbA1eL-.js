@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";import{t}from"./hasAtLeast-DjmpCDWL.js";function n(...t){return e(r,t)}function r(e,n){if(!t(n,1))return{...e};if(!t(n,2)){let{[n[0]]:t,...r}=e;return r}let r={...e};for(let e of n)delete r[e];return r}export{n as t};

@@ -1,1 +1,0 @@
-function e(e){return Array.isArray(e)}export{e as t};

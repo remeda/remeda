@@ -1,2 +1,0 @@
-const e=new Set([`-`,`_`,...`	.
-.\v.\f.\r. ..\xA0. . . . . . . . . . . . .\u2028.\u2029. . .　.﻿`.split(`.`)]),t=t=>{let n=[],r=``,i=()=>{r.length>0&&(n.push(r),r=``)};for(let n of t){if(e.has(n)){i();continue}if(/[a-z]$/u.test(r)&&/[A-Z]/u.test(n))i();else if(/[A-Z][A-Z]$/u.test(r)&&/[a-z]/u.test(n)){let e=r.slice(-1);r=r.slice(0,-1),i(),r=e}else /\d$/u.test(r)!==/\d/u.test(n)&&i();r+=n}return i(),n};Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

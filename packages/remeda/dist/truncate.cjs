@@ -1,1 +1,0 @@
-const e=require(`./truncate-Dz1Z-wR2.cjs`);exports.truncate=e.t;

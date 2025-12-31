@@ -1,1 +1,0 @@
-const e=require(`./identity-CnupnieS.cjs`);exports.identity=e.t;

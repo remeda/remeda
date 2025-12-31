@@ -1,1 +1,0 @@
-function e(e,...t){return(...n)=>e(...n,...t)}export{e as t};

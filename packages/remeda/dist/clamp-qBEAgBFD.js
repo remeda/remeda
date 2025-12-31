@@ -1,1 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}const n=(e,{min:t,max:n})=>t!==void 0&&e<t?t:n!==void 0&&e>n?n:e;export{t};
