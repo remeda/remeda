@@ -1,4 +1,4 @@
-import type { IsUnion } from "./IsUnion";
+import type { IsUnion } from "type-fest";
 
 /**
  * We split the fixed tuple item types into **singular** types (e.g., `"a"`),

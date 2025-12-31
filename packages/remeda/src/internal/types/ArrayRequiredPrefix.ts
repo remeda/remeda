@@ -4,7 +4,7 @@ import type {
   IsEqual,
   IsLiteral,
   IsNever,
-  ReadonlyTuple,
+  TupleOf,
 } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
@@ -62,12 +62,12 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                   // Additionally, if we still haven't satisfied the Remainder
                   // amount we create "new" items in the output array by adding
                   // the item type of the rest element.
-                  ...ReadonlyTuple<
-                    TupleParts<T>["item"],
+                  ...TupleOf<
                     ClampedIntegerSubtract<
                       Remainder,
                       TupleParts<T>["optional"]["length"]
-                    >
+                    >,
+                    TupleParts<T>["item"]
                   >,
 
                   // We then get back to copying the input tuple to the output,
