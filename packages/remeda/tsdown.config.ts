@@ -7,6 +7,11 @@ const SHARED = {
   // We support both client and server envs
   platform: "neutral",
 
+  // We enforce target at the type-checking level via tsconfig.json. Once we
+  // are at the build stage we want to create artifacts which are as close as
+  // possible to our source code.
+  target: false,
+
   failOnWarn: true,
 } satisfies UserConfig;
 
