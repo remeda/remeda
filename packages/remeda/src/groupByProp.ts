@@ -186,15 +186,15 @@ function groupByPropImplementation<
   T extends IterableContainer,
   Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in issue #1046.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
   const output: BoundedPartial<
     Record<AllPropValues<T, Prop>, Array<T[number]>>
   > = Object.create(null);
 
   for (const item of data) {
-    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself. This is partially due to This is due to https://github.com/microsoft/TypeScript/issues/61750.
+    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Because of the error mentioned above the resulting key isn't inferred correctly as `AllPropValues<T, Prop> | undefined` which would be needed to remove this lint error.
-    const key = item[prop];
+    const key = item?.[prop];
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
@@ -204,8 +204,8 @@ function groupByPropImplementation<
 
       if (items === undefined) {
         // It is more performant to create a 1-element array over creating an
-        // empty array and falling through to a unified push. It is also more
-        // performant to mutate the existing object over using spread to
+        // empty array and falling through to a unified the push. It is also
+        // more performant to mutate the existing object over using spread to
         // continually create new objects on every unique key.
         // @ts-expect-error [ts7053] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- similarly, because `key` isn't inferred correctly, lint has an issue with us accessing the output object using it.
