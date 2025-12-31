@@ -59,9 +59,6 @@
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
   },
-  "dependencies": {
-    "type-fest": "^4.41.0"
-  },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
     "@eslint/js": "^9.39.0",
@@ -83,6 +80,7 @@
     "publint": "^0.3.16",
     "semantic-release": "^25.0.1",
     "tsdown": "^0.18.4",
+    "type-fest": "^4.41.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
     "vitest": "^4.0.6"
