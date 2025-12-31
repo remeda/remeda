@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){if(t<=0)return[];if(t>=e.length)return[...e];let n=Math.min(t,e.length-t),r=new Set;for(;r.size<n;){let t=Math.floor(Math.random()*e.length);r.add(t)}return t===n?[...r].sort((e,t)=>e-t).map(t=>e[t]):e.filter((e,t)=>!r.has(t))}export{t};
-//# sourceMappingURL=sample-CoAqPthu.js.map

@@ -14,7 +14,14 @@ export default defineConfig([
   {
     ...SHARED,
 
-    entry: "src/index.ts",
+    entry: [
+      // We use a glob on purpose so that our build creates individual files
+      // for each utility function. This will also include the barrel file to
+      // allow importing from the main entrypoint.
+      "src/*.ts",
+      // Skip test files
+      `!**/*.test{,-d}.ts`,
+    ],
 
     // We split the build into two steps because types and runtime have very
     // different concerns. To optimize bundle size we need the runtime

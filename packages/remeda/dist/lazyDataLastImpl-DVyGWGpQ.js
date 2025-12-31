@@ -1,2 +1,0 @@
-function e(e,t,n){let r=n=>e(n,...t);return n===void 0?r:Object.assign(r,{lazy:n,lazyArgs:t})}export{e as t};
-//# sourceMappingURL=lazyDataLastImpl-DVyGWGpQ.js.map

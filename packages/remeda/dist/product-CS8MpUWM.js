@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e){let t=typeof e[0]==`bigint`?1n:1;for(let n of e)t*=n;return t}export{t};
-//# sourceMappingURL=product-CS8MpUWM.js.map

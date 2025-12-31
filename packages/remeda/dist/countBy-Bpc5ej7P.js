@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}const n=(e,t)=>{let n=new Map;for(let[r,i]of e.entries()){let a=t(i,r,e);if(a!==void 0){let e=n.get(a);e===void 0?n.set(a,1):n.set(a,e+1)}}return Object.fromEntries(n)};export{t};
-//# sourceMappingURL=countBy-Bpc5ej7P.js.map

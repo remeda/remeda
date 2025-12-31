@@ -1,2 +1,0 @@
-const e=require(`./purryOrderRules-rvgj0R4q.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>[...e].sort(t);Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=sortBy-DEtxMkqR.cjs.map

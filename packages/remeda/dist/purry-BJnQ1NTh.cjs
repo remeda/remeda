@@ -1,2 +1,0 @@
-const e=require(`./lazyDataLastImpl-DjhJE1G_.cjs`);function t(t,n,r){let i=t.length-n.length;if(i===0)return t(...n);if(i===1)return e.t(t,n,r);throw Error(`Wrong number of arguments`)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=purry-BJnQ1NTh.cjs.map

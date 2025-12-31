@@ -1,2 +1,0 @@
-const e=require(`./hasAtLeast-4shLl_VN.cjs`),t=require(`./purryOrderRules-rvgj0R4q.cjs`);function n(...e){return t.t(r,e)}function r(t,n){if(!e.t(t,2))return t[0];let[r]=t,[,...i]=t;for(let e of i)n(e,r)<0&&(r=e);return r}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
-//# sourceMappingURL=firstBy-CYHV7es_.cjs.map

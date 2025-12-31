@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./binarySearchCutoffIndex-7dzycYsL.cjs`);function n(...n){return e.t(t.t,n)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
-//# sourceMappingURL=sortedIndexWith-DMScuE2K.cjs.map

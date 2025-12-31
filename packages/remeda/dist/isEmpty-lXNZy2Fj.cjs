@@ -1,2 +1,0 @@
-function e(e){return e===``||e===void 0?!0:Array.isArray(e)?e.length===0:Object.keys(e).length===0}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});
-//# sourceMappingURL=isEmpty-lXNZy2Fj.cjs.map

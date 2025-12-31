@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t,n){let r=e;for(let e of t){if(r==null)break;r=r[e]}return r??n}export{t};
-//# sourceMappingURL=pathOr-BHSPF7xX.js.map

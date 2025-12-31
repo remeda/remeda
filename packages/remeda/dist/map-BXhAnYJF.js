@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t,r)}const n=(e,t)=>e.map(t),r=e=>(t,n,r)=>({done:!1,hasNext:!0,next:e(t,n,r)});export{t};
-//# sourceMappingURL=map-BXhAnYJF.js.map

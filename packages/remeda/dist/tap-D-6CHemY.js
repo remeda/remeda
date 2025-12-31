@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){return t(e),e}export{t};
-//# sourceMappingURL=tap-D-6CHemY.js.map

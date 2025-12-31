@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e){let t=[...e];for(let n=0;n<e.length;n++){let r=n+Math.floor(Math.random()*(e.length-n)),i=t[r];t[r]=t[n],t[n]=i}return t}export{t};
-//# sourceMappingURL=shuffle-COmhqR69.js.map

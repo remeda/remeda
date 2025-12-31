@@ -1,1 +1,0 @@
-import{t as e}from"./prop-BBvDWu78.js";export{e as prop};

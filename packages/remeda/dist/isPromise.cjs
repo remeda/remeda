@@ -1,1 +1,0 @@
-const e=require(`./isPromise-Bn_CUu_6.cjs`);exports.isPromise=e.t;

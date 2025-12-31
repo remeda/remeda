@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e){return[...e].reverse()}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=reverse-BvVUp769.cjs.map

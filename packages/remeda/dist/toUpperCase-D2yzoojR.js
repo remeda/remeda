@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}const n=e=>e.toUpperCase();export{t};
-//# sourceMappingURL=toUpperCase-D2yzoojR.js.map

@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>{let n=new Map;for(let[r,i]of e.entries()){let a=t(i,r,e);if(a!==void 0){let e=n.get(a);e===void 0?n.set(a,1):n.set(a,e+1)}}return Object.fromEntries(n)};Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=countBy-C-CW-qn-.cjs.map

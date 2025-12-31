@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){if(e<1)return[];let n=Number.isInteger(e)?e:Math.floor(e),r=Array(n);for(let e=0;e<n;e++)r[e]=t(e);return r}export{t};
-//# sourceMappingURL=times-BmDCeQTC.js.map

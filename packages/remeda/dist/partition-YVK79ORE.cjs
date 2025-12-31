@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>{let n=[[],[]];for(let[r,i]of e.entries())t(i,r,e)?n[0].push(i):n[1].push(i);return n};Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=partition-YVK79ORE.cjs.map

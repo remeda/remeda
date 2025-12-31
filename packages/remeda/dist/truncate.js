@@ -1,1 +1,0 @@
-import{t as e}from"./truncate-qv9CdrfO.js";export{e as truncate};

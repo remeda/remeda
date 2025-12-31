@@ -1,1 +1,0 @@
-import{t as e}from"./isPromise-lgKDIFHs.js";export{e as isPromise};

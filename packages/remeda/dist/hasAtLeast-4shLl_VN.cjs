@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>e.length>=t;Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=hasAtLeast-4shLl_VN.cjs.map

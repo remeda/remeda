@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t,r){let[i,...a]=t;if(i===void 0)return r;if(Array.isArray(e)){let t=[...e];return t[i]=n(e[i],a,r),t}let{[i]:o,...s}=e;return{...s,[i]:n(o,a,r)}}export{t};
-//# sourceMappingURL=setPath-CTjmSkMr.js.map

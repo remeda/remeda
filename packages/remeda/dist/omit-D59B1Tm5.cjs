@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./hasAtLeast-4shLl_VN.cjs`);function n(...t){return e.t(r,t)}function r(e,n){if(!t.t(n,1))return{...e};if(!t.t(n,2)){let{[n[0]]:t,...r}=e;return r}let r={...e};for(let e of n)delete r[e];return r}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
-//# sourceMappingURL=omit-D59B1Tm5.cjs.map

@@ -1,1 +1,0 @@
-const e=require(`./isDate-3cKCtWqU.cjs`);exports.isDate=e.t;

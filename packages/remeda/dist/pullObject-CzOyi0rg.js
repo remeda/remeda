@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t,n){let r={};for(let[i,a]of e.entries()){let o=t(a,i,e);r[o]=n(a,i,e)}return r}export{t};
-//# sourceMappingURL=pullObject-CzOyi0rg.js.map

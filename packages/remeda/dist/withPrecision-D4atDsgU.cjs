@@ -1,2 +1,0 @@
-const e=15,t=10,n=e=>(t,n)=>{if(n===0)return e(t);if(!Number.isInteger(n))throw TypeError(`precision must be an integer: ${n.toString()}`);if(n>15||n<-15)throw RangeError(`precision must be between -15 and 15`);return Number.isNaN(t)||!Number.isFinite(t)?e(t):r(e(r(t,n)),-n)};function r(e,t){let[n,r]=e.toString().split(`e`),i=`${n}e${((r===void 0?0:Number.parseInt(r,10))+t).toString()}`;return Number.parseFloat(i)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
-//# sourceMappingURL=withPrecision-D4atDsgU.cjs.map

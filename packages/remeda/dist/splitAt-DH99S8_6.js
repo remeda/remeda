@@ -1,2 +1,0 @@
-import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){let n=Math.max(Math.min(t<0?e.length+t:t,e.length),0);return[e.slice(0,n),e.slice(n)]}export{t};
-//# sourceMappingURL=splitAt-DH99S8_6.js.map

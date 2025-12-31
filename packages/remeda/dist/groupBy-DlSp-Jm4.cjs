@@ -1,2 +1,0 @@
-const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}const n=(e,t)=>{let n=Object.create(null);for(let r=0;r<e.length;r++){let i=e[r],a=t(i,r,e);if(a!==void 0){let e=n[a];e===void 0?n[a]=[i]:e.push(i)}}return Object.setPrototypeOf(n,Object.prototype),n};Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});
-//# sourceMappingURL=groupBy-DlSp-Jm4.cjs.map
