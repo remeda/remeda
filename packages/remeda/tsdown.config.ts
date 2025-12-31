@@ -39,8 +39,16 @@ export default defineConfig({
   //! The order we do the build is important. The current config (which handles
   //! types) still generates runtime files too, so the runtime build **has** to
   //! run after it so that it can rewrite the barrel files correctly.
-  async onSuccess() {
+  onSuccess: async () => {
     await build({
+      //! Even the programmatic `build` API tries to load the default config
+      //! file before merging it with the config provided to it. In our case it
+      //! would cause the first step's config to be re-applied here, instead of
+      //! each step being isolated from each other. More importantly, loading
+      //! our previous config here caused us to enter an infinite loop because
+      //! of the `onSuccess` hook!
+      config: false,
+
       ...SHARED,
 
       // This is the second step which relies on the previous step generating
