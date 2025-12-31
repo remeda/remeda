@@ -1,2 +1,1 @@
 import{t as e}from"./words-DoQxT_qp.js";const t=/[a-z]/u;function n(e,t){return typeof e==`string`?r(e,t):t=>r(t,e)}const r=(n,{preserveConsecutiveUppercase:r=!0}={})=>e(t.test(n)?n:n.toLowerCase()).map((e,t)=>`${t===0?e[0].toLowerCase():e[0].toUpperCase()}${r?e.slice(1):e.slice(1).toLowerCase()}`).join(``);export{n as t};
-//# sourceMappingURL=toCamelCase-CcNcIubW.js.map

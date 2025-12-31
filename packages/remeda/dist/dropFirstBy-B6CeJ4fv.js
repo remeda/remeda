@@ -1,2 +1,1 @@
 import{n as e,t}from"./heap-BA5uu_Wb.js";import{n}from"./purryOrderRules-9a8u0zlJ.js";function r(...e){return n(i,e)}function i(n,r,i){if(i>=n.length)return[];if(i<=0)return[...n];let a=n.slice(0,i);e(a,r);let o=[],s=n.slice(i);for(let e of s){let n=t(a,r,e);o.push(n??e)}return o}export{r as t};
-//# sourceMappingURL=dropFirstBy-B6CeJ4fv.js.map

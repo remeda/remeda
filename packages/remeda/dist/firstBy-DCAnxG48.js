@@ -1,2 +1,1 @@
 import{t as e}from"./hasAtLeast-DjmpCDWL.js";import{t}from"./purryOrderRules-9a8u0zlJ.js";function n(...e){return t(r,e)}function r(t,n){if(!e(t,2))return t[0];let[r]=t,[,...i]=t;for(let e of i)n(e,r)<0&&(r=e);return r}export{n as t};
-//# sourceMappingURL=firstBy-DCAnxG48.js.map

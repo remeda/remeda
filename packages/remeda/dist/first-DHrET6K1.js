@@ -1,2 +1,1 @@
 import{t as e}from"./purry-Bd1hMu6w.js";import{t}from"./toSingle-PX8tFY_I.js";function n(...n){return e(r,n,t(i))}const r=([e])=>e,i=()=>a,a=e=>({hasNext:!0,next:e,done:!0});export{n as t};
-//# sourceMappingURL=first-DHrET6K1.js.map

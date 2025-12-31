@@ -1,2 +1,1 @@
 import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){for(let n=e.length-1;n>=0;n--)if(!t(e[n],n,e))return e.slice(0,n+1);return[]}export{t};
-//# sourceMappingURL=dropLastWhile-D1j2Gl1-.js.map

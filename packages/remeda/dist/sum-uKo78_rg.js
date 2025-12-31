@@ -1,2 +1,1 @@
 import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e){let t=typeof e[0]==`bigint`?0n:0;for(let n of e)t+=n;return t}export{t};
-//# sourceMappingURL=sum-uKo78_rg.js.map

@@ -1,2 +1,1 @@
 import{t as e}from"./hasAtLeast-DjmpCDWL.js";import{t}from"./swapInPlace-BncRIG0g.js";function n(e,t){for(let n=Math.floor(e.length/2)-1;n>=0;n--)i(e,n,t)}function r(t,n,r){if(!e(t,1))return;let[a]=t;if(!(n(r,a)>=0))return t[0]=r,i(t,0,n),a}function i(e,n,r){let i=n;for(;i*2+1<e.length;){let n=i*2+1,a=r(e[i],e[n])<0?n:i,o=n+1;if(o<e.length&&r(e[a],e[o])<0&&(a=o),a===i)return;t(e,i,a),i=a}}export{n,r as t};
-//# sourceMappingURL=heap-BA5uu_Wb.js.map

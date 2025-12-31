@@ -1,2 +1,1 @@
 function e(e,...n){return typeof e==`string`||typeof e==`number`||typeof e==`symbol`?r=>t(r,e,...n):t(e,...n)}function t(e,...t){let n=e;for(let e of t){if(n==null)return;n=n[e]}return n}export{e as t};
-//# sourceMappingURL=prop-BBvDWu78.js.map
