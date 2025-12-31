@@ -50,13 +50,13 @@ type FilteredFixedTuple<
             Output
           : Condition extends Head
             ? // But for any other type (mostly primitives), if the condition
-              // extends the item it means that there are situations where the
-              // item could satisfy the condition and cases where it won't
-              // (e.g. if the item type is `string` and the condition type is
-              // `"hello"`, then item could be `"hello"` or it could be any
-              // other string, e.g. `"world"`). In this case we need to take
-              // both into consideration in the output type.
-              Output | [...Output, Condition]
+                // extends the item it means that there are situations where the
+                // item could satisfy the condition and cases where it won't
+                // (e.g. if the item type is `string` and the condition type is
+                // `"hello"`, then item could be `"hello"` or it could be any
+                // other string, e.g. `"world"`). In this case we need to take
+                // both into consideration in the output type.
+                Output | [...Output, Condition]
             : // But if the item and condition are disjoint then we simply skip
               // it as it would never satisfy the condition.
               Output

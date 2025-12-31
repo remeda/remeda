@@ -112,9 +112,9 @@ type ChunkRestElement<
           infer LastPrefixChunk extends Array<unknown>,
         ]
       ? // When our prefix chunks are not empty it means we need to look at all
-        // combinations of mixing the prefix, the suffix, and different counts
-        // of the rest param until we cover all possible scenarios.
-        | ValueOf<{
+          // combinations of mixing the prefix, the suffix, and different counts
+          // of the rest param until we cover all possible scenarios.
+          | ValueOf<{
               // We want to iterate over all possible padding sizes we can add
               // to the last prefix chunk until we reach N
               // (`0..N-LastPrefixChunk.length`). We need to do this because
