@@ -1,0 +1,1 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e,t){let n=Math.max(Math.min(t<0?e.length+t:t,e.length),0);return[e.slice(0,n),e.slice(n)]}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

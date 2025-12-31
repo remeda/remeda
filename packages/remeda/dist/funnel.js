@@ -1,0 +1,1 @@
+import{t as e}from"./funnel-BUUabWZw.js";export{e as funnel};

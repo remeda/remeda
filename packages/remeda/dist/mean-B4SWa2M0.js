@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";import{t}from"./sum-uKo78_rg.js";function n(...t){return e(r,t)}function r(e){if(e.length!==0)return t(e)/e.length}export{n as t};
+//# sourceMappingURL=mean-B4SWa2M0.js.map

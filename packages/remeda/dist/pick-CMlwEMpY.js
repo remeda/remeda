@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){let n={};for(let r of t)r in e&&(n[r]=e[r]);return n}export{t};
+//# sourceMappingURL=pick-CMlwEMpY.js.map

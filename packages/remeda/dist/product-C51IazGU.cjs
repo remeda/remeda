@@ -1,0 +1,1 @@
+const e=require(`./purry-BJnQ1NTh.cjs`);function t(...t){return e.t(n,t)}function n(e){let t=typeof e[0]==`bigint`?1n:1;for(let n of e)t*=n;return t}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

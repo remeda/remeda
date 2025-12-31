@@ -1,0 +1,1 @@
+import{t as e}from"./isBigInt-BroSpMi1.js";export{e as isBigInt};

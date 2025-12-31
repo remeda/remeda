@@ -1,0 +1,1 @@
+import{t as e}from"./isPlainObject-B5lU5-61.js";export{e as isPlainObject};

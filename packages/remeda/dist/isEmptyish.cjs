@@ -1,0 +1,1 @@
+const e=require(`./isEmptyish-CBl2ReGy.cjs`);exports.isEmptyish=e.t;

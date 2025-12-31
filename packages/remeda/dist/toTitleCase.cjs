@@ -1,0 +1,1 @@
+require(`./words-DTXZULvz.cjs`);const e=require(`./toTitleCase-DkqX9zG9.cjs`);exports.toTitleCase=e.t;

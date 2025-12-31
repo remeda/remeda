@@ -1,0 +1,1 @@
+function e(e){if(e==null||e===``)return!0;if(typeof e!=`object`)return!1;if(`length`in e&&typeof e.length==`number`)return e.length===0;if(`size`in e&&typeof e.size==`number`)return e.size===0;for(let t in e)return!1;return Object.getOwnPropertySymbols(e).length===0}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return e}});

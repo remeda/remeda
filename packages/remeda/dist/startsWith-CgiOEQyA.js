@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}const n=(e,t)=>e.startsWith(t);export{t};
+//# sourceMappingURL=startsWith-CgiOEQyA.js.map

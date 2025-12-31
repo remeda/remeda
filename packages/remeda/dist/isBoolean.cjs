@@ -1,0 +1,1 @@
+const e=require(`./isBoolean-gKrD5TMT.cjs`);exports.isBoolean=e.t;

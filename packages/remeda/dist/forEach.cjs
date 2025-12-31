@@ -1,0 +1,1 @@
+require(`./lazyDataLastImpl-DjhJE1G_.cjs`),require(`./purry-BJnQ1NTh.cjs`);const e=require(`./forEach-BFfX5Sch.cjs`);exports.forEach=e.t;

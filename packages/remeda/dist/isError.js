@@ -1,0 +1,1 @@
+import{t as e}from"./isError-Cd8-Wgdq.js";export{e as isError};

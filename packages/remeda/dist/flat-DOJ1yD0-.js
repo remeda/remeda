@@ -1,0 +1,2 @@
+import{t as e}from"./lazyDataLastImpl-DVyGWGpQ.js";import{r as t}from"./utilityEvaluators-XvjlcSPu.js";function n(t,n){return typeof t==`object`?r(t,n):e(r,t===void 0?[]:[t],i)}const r=(e,t)=>t===void 0?e.flat():e.flat(t),i=e=>e===void 0||e===1?a:e<=0?t:t=>Array.isArray(t)?{next:t.flat(e-1),hasNext:!0,hasMany:!0,done:!1}:{next:t,hasNext:!0,done:!1},a=e=>Array.isArray(e)?{next:e,hasNext:!0,hasMany:!0,done:!1}:{next:e,hasNext:!0,done:!1};export{n as t};
+//# sourceMappingURL=flat-DOJ1yD0-.js.map

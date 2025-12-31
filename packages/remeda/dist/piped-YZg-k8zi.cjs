@@ -1,0 +1,1 @@
+const e=require(`./pipe-_j-mAziK.cjs`);function t(...t){return n=>e.t(n,...t)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return t}});

@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";function t(...t){return e(n,t)}function n(e,t){if(t<1)throw RangeError(`chunk: A chunk size of '${t.toString()}' would result in an infinite array`);if(e.length===0)return[];if(t>=e.length)return[[...e]];let n=Math.ceil(e.length/t),r=Array(n);if(t===1)for(let[t,n]of e.entries())r[t]=[n];else for(let i=0;i<n;i+=1){let n=i*t;r[i]=e.slice(n,n+t)}return r}export{t};
+//# sourceMappingURL=chunk-CVcwgbDh.js.map

@@ -1,0 +1,2 @@
+import{t as e}from"./purry-Bd1hMu6w.js";import{t}from"./words-DoQxT_qp.js";function n(...t){return e(r,t)}const r=e=>t(e).join(`_`).toLowerCase();export{n as t};
+//# sourceMappingURL=toSnakeCase-BGuuhZgL.js.map

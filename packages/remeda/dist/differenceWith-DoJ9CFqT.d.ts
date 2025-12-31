@@ -1,0 +1,43 @@
+//#region src/differenceWith.d.ts
+type IsEqual<T, Other> = (data: T, other: Other) => boolean;
+/**
+ * Excludes the values from `other` array.
+ * Elements are compared by custom comparator isEquals.
+ *
+ * @param data - The source array.
+ * @param other - The values to exclude.
+ * @param isEqual - The comparator.
+ * @signature
+ *    R.differenceWith(data, other, isEqual)
+ * @example
+ *    R.differenceWith(
+ *      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }],
+ *      [2, 5, 3],
+ *      ({ a }, b) => a === b,
+ *    ); //=> [{ a: 1 }, { a: 4 }]
+ * @dataFirst
+ * @lazy
+ * @category Array
+ */
+declare function differenceWith<T, Other>(data: ReadonlyArray<T>, other: ReadonlyArray<Other>, isEqual: IsEqual<T, Other>): Array<T>;
+/**
+ * Excludes the values from `other` array.
+ * Elements are compared by custom comparator isEquals.
+ *
+ * @param other - The values to exclude.
+ * @param isEqual - The comparator.
+ * @signature
+ *    R.differenceWith(other, isEqual)(data)
+ * @example
+ *    R.pipe(
+ *      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
+ *      R.differenceWith([2, 3], ({ a }, b) => a === b),
+ *    ); //=> [{ a: 1 }, { a: 4 }, { a: 5 }, { a: 6 }]
+ * @dataLast
+ * @lazy
+ * @category Array
+ */
+declare function differenceWith<T, Other>(other: ReadonlyArray<Other>, isEqual: IsEqual<T, Other>): (data: ReadonlyArray<T>) => Array<T>;
+//#endregion
+export { differenceWith as t };
+//# sourceMappingURL=differenceWith-DoJ9CFqT.d.ts.map

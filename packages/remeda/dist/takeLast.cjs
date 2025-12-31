@@ -1,0 +1,1 @@
+require(`./lazyDataLastImpl-DjhJE1G_.cjs`),require(`./purry-BJnQ1NTh.cjs`);const e=require(`./takeLast-Cy2mCgby.cjs`);exports.takeLast=e.t;

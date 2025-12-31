@@ -1,0 +1,1 @@
+const e=require(`./purry-BJnQ1NTh.cjs`),t=require(`./binarySearchCutoffIndex-7dzycYsL.cjs`);function n(...t){return e.t(r,t)}function r(e,n,r){let i=r(n,void 0,e);return t.t(e,(t,n)=>r(t,n,e)<=i)}Object.defineProperty(exports,`t`,{enumerable:!0,get:function(){return n}});
