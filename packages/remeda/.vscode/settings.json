@@ -1,8 +1,14 @@
 {
-  // Our tests live next to the files they test, this clutters the folder
-  // structure so we "tuck them" under the file they test. This also comes with
-  // several built-in patterns that are useful (like package-lock.json).
   "explorer.fileNesting.patterns": {
-    "*.ts": "${capture}.*.ts"
+    // All configs for a specific tool should be folded together.
+    "*.config.ts": "$(capture).*.config.ts",
+
+    // Our tests live next to the files they test, this clutters the folder
+    // structure so we "tuck them" under the file they test.
+    "*.ts": "$(capture).*.ts",
+
+    // Prettier ignore uses a different naming convention so it needs to be
+    // added explicitly.
+    "prettier.config.js": ".prettierignore"
   }
 }
