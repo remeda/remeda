@@ -29,8 +29,8 @@ export type ArrayAt<T extends IterableContainer, I extends keyof T> =
           HasIndex<Prefix, I> extends true
           ? T[I]
           : // The index is larger than the prefix so the result has to consider
-            // the rest element item type.
-            | TupleParts<T>["item"]
+              // the rest element item type.
+              | TupleParts<T>["item"]
               // We subtract the prefix length from the index to get the index
               // within the suffix.
               | (ClampedIntegerSubtract<
@@ -51,18 +51,18 @@ export type ArrayAt<T extends IterableContainer, I extends keyof T> =
                     HasIndex<TupleParts<T>["suffix"], SuffixIndex> extends true
                     ? TupleParts<T>["suffix"][IntRangeInclusive<0, SuffixIndex>]
                     : // But if the index is out of the suffix it can be out-of-
-                      // bounds, resulting in `undefined`, or it could be any
-                      // of the items in the suffix (depending on how long the
-                      // rest part of the tuple is).
-                      TupleParts<T>["suffix"][number] | undefined
+                        // bounds, resulting in `undefined`, or it could be any
+                        // of the items in the suffix (depending on how long the
+                        // rest part of the tuple is).
+                        TupleParts<T>["suffix"][number] | undefined
                   : never)
         : never
       : never
     : // Even with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`
-      // enabled TypeScript still types T[number] without considering that
-      // number might be out of bounds. We need to manually add the `undefined`
-      // case to make the type accurate.
-      T[number] | undefined;
+        // enabled TypeScript still types T[number] without considering that
+        // number might be out of bounds. We need to manually add the
+        // `undefined`  case to make the type accurate.
+        T[number] | undefined;
 
 type HasIndex<T extends ReadonlyArray<unknown>, I> =
   I extends ArrayIndices<T> ? true : false;

@@ -16,8 +16,8 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "lint-staged": "^16.2.6",
-    "prettier": "^3.6.2",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "prettier-plugin-pkg": "^0.21.2",
     "prettier-plugin-sh": "^0.18.0"
   }

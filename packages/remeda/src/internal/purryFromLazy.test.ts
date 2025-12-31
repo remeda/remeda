@@ -18,7 +18,7 @@ test("throws on wrong number of arguments", () => {
       // throw.
       "world",
     ),
-  ).toThrow("Wrong number of arguments");
+  ).toThrowError("Wrong number of arguments");
 });
 
 const zeroArgsPurried = (...args: ReadonlyArray<unknown>) =>

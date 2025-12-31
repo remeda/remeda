@@ -36,13 +36,13 @@ describe("data last", () => {
 
 describe("edge-cases", () => {
   test("throws on 0 size", () => {
-    expect(() => chunk(["a", "b", "c", "d"], 0)).toThrow(
+    expect(() => chunk(["a", "b", "c", "d"], 0)).toThrowError(
       "chunk: A chunk size of '0' would result in an infinite array",
     );
   });
 
   test("throws on negative size", () => {
-    expect(() => chunk(["a", "b", "c", "d"], -10)).toThrow(
+    expect(() => chunk(["a", "b", "c", "d"], -10)).toThrowError(
       "chunk: A chunk size of '-10' would result in an infinite array",
     );
   });

@@ -51,13 +51,14 @@ type Drop<T extends IterableContainer, N extends number> =
                   ...TupleParts<T>["suffix"],
                 ]
               : // The drop will occur within the rest element or the suffix.
-                // Because the suffix can contain any number of elements this
-                // case adds more complexity as we need to consider all possible
-                // (relevant) lengths. We start by considering the case where
-                // there are enough elements within the rest param; this means
-                // we still maintain the rest element as it could contain even
-                // more elements, and we add the suffix untouched.
-                | [
+                  // Because the suffix can contain any number of elements this
+                  // case adds more complexity as we need to consider all
+                  // possible (relevant) lengths. We start by considering the
+                  // case where there are enough elements within the rest
+                  // param; this means we still maintain the rest element as it
+                  // could contain even more elements, and we add the suffix
+                  // untouched.
+                  | [
                       ...CoercedArray<TupleParts<T>["item"]>,
                       ...TupleParts<T>["suffix"],
                     ]
