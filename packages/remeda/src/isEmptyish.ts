@@ -12,7 +12,6 @@ import type {
   ValueOf,
 } from "type-fest";
 import type { HasWritableKeys } from "./internal/types/HasWritableKeys";
-import type { NoInfer } from "./internal/types/NoInfer";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
