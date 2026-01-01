@@ -19,10 +19,10 @@ jobs:
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -43,10 +43,10 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -65,7 +65,7 @@ jobs:
         run: npm --workspace=remeda run build
 
       - name: 🚚 Save distributable
-        uses: actions/cache/save@v4.3.0
+        uses: actions/cache/save@v5.0.1
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -98,10 +98,10 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -118,7 +118,7 @@ jobs:
       # redundant work if the type tests already failed (which is way more
       # common than the build typing failing).
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.3.0
+        uses: actions/cache/restore@v5.0.1
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -145,10 +145,10 @@ jobs:
           - 18
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version: ${{ matrix.node }}
 
@@ -168,10 +168,10 @@ jobs:
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -191,10 +191,10 @@ jobs:
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -214,10 +214,10 @@ jobs:
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -238,10 +238,10 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -249,7 +249,7 @@ jobs:
         uses: bahmutov/npm-install@v1.11.2
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.3.0
+        uses: actions/cache/restore@v5.0.1
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -277,12 +277,12 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -310,7 +310,7 @@ jobs:
       id-token: write # Enable OIDC for JSR publishing
     steps:
       - name: ⬇️ Checkout Repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
         with:
           fetch-tags: true
 
@@ -325,7 +325,7 @@ jobs:
 
       - name: ⎔ Setup Node
         if: steps.latest-released.outputs.version != ''
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 

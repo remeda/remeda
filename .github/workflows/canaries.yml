@@ -25,10 +25,10 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -57,7 +57,7 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
@@ -69,7 +69,7 @@ jobs:
 
       - name: 🚚 Lookup distributable
         id: dist-lookup
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v5.0.1
         with:
           lookup-only: true
           path: packages/remeda/dist
@@ -79,7 +79,7 @@ jobs:
 
       - name: ⎔ Setup node
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -93,7 +93,7 @@ jobs:
 
       - name: 🚚 Save distributable
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4.3.0
+        uses: actions/cache/save@v5.0.1
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -113,10 +113,10 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: .nvmrc
 
@@ -127,7 +127,7 @@ jobs:
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v4.3.0
+        uses: actions/cache/restore@v5.0.1
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
