@@ -1,15 +1,8 @@
 import { glob, readFile, writeFile } from "node:fs/promises";
-import { build, defineConfig, type UserConfig } from "tsdown";
+import path from "node:path";
+import { build, defineConfig, type TsdownHooks, type UserConfig } from "tsdown";
 
-// Polyfills for types introduced in later TypeScript versions. We support
-// TypeScript 5.1+ but type-fest v5 uses types that were introduced in later
-// versions. We inject these polyfills into the generated declaration files.
-const TYPE_POLYFILLS = `// Polyfills for older TypeScript versions
-// WeakKey was introduced in TypeScript 5.2
-type WeakKey = object;
-// NoInfer was introduced in TypeScript 5.4
-type NoInfer<T> = T extends infer U ? U : never;
-`;
+const SOURCE_DIR = "src";
 
 const SHARED = {
   // TODO [>2]: Remove CJS support?
@@ -20,6 +13,35 @@ const SHARED = {
 
   failOnWarn: true,
 } satisfies UserConfig;
+
+/**
+ * Inject type polyfills at the top of each .d.ts file so that users on older
+ * TypeScript versions can use the library.
+ */
+const injectPolyfills: TsdownHooks["build:done"] = async ({ chunks }) => {
+  const polyfills: Array<string> = [];
+  for await (const file of glob(`${SOURCE_DIR}/internal/types/*.d.ts`)) {
+    const content = await readFile(file, "utf8");
+    // Only include the part starting with a `type` declaration.
+    const typeDeclaration = content.slice(content.indexOf("\ntype ") + 1);
+    polyfills.push(typeDeclaration);
+  }
+
+  const allPolyfills = polyfills.join("");
+
+  await Promise.all(
+    chunks
+      .filter(
+        ({ fileName }) =>
+          fileName.endsWith(".d.ts") || fileName.endsWith(".d.cts"),
+      )
+      .map(async ({ outDir, fileName }) => {
+        const file = path.join(outDir, fileName);
+        const content = await readFile(file, "utf8");
+        await writeFile(file, allPolyfills + content);
+      }),
+  );
+};
 
 // We split the build into two steps because types and runtime have very
 // different concerns. To optimize bundle size we need the runtime artifacts
@@ -32,7 +54,7 @@ export default defineConfig({
   ...SHARED,
 
   // We use the barrel file so that the result is a single monolithic file.
-  entry: "src/index.ts",
+  entry: `${SOURCE_DIR}/index.ts`,
 
   dts: {
     // This enables "Go to Definition"-style features within IDEs.
@@ -48,14 +70,7 @@ export default defineConfig({
   },
 
   hooks: {
-    "build:done": async () => {
-      // Inject type polyfills at the top of each .d.ts file so that users on
-      // older TypeScript versions can use the library.
-      for await (const file of glob("dist/*.d.{ts,cts}")) {
-        const content = await readFile(file, "utf8");
-        await writeFile(file, TYPE_POLYFILLS + content);
-      }
-    },
+    "build:done": injectPolyfills,
   },
 
   //! The order we do the build is important. The current config (which handles
@@ -83,7 +98,7 @@ export default defineConfig({
         // is crucial to allow importing directly from the package root, without
         // needing paths within the import statement: e.g.,
         // `import { map } from "remeda";`
-        "src/*.ts",
+        `${SOURCE_DIR}/*.ts`,
         // Skip test files
         `!**/*.test{,-d}.ts`,
       ],
