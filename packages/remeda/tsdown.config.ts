@@ -1,4 +1,13 @@
+import { glob, readFile, writeFile } from "node:fs/promises";
 import { build, defineConfig, type UserConfig } from "tsdown";
+
+// Polyfill for `NoInfer` which was introduced in TypeScript 5.4. We support
+// TypeScript versions prior to that (5.1-5.3) which don't have this type
+// natively. Type-fest v5 uses `NoInfer` natively, so we need to inject this
+// polyfill into the generated declaration files.
+const NO_INFER_POLYFILL = `// Polyfill for NoInfer (TypeScript <5.4)
+type NoInfer<T> = T extends infer U ? U : never;
+`;
 
 const SHARED = {
   // TODO [>2]: Remove CJS support?
@@ -34,6 +43,17 @@ export default defineConfig({
 
     // Only emit DTS files, skip JS output
     emitDtsOnly: true,
+  },
+
+  hooks: {
+    "build:done": async () => {
+      // Inject the NoInfer polyfill at the top of each .d.ts file so that
+      // users on TypeScript <5.4 can use the library.
+      for await (const file of glob("dist/*.d.{ts,cts}")) {
+        const content = await readFile(file, "utf8");
+        await writeFile(file, NO_INFER_POLYFILL + content);
+      }
+    },
   },
 
   //! The order we do the build is important. The current config (which handles
