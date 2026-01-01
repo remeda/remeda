@@ -27,7 +27,7 @@ const injectPolyfills: TsdownHooks["build:done"] = async ({ chunks }) => {
     polyfills.push(typeDeclaration);
   }
 
-  const allPolyfills = polyfills.join("");
+  const allPolyfills = `//POLYFILLS:\n${polyfills.join("")}`;
 
   await Promise.all(
     chunks
