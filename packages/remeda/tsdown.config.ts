@@ -1,11 +1,13 @@
 import { glob, readFile, writeFile } from "node:fs/promises";
 import { build, defineConfig, type UserConfig } from "tsdown";
 
-// Polyfill for `NoInfer` which was introduced in TypeScript 5.4. We support
-// TypeScript versions prior to that (5.1-5.3) which don't have this type
-// natively. Type-fest v5 uses `NoInfer` natively, so we need to inject this
-// polyfill into the generated declaration files.
-const NO_INFER_POLYFILL = `// Polyfill for NoInfer (TypeScript <5.4)
+// Polyfills for types introduced in later TypeScript versions. We support
+// TypeScript 5.1+ but type-fest v5 uses types that were introduced in later
+// versions. We inject these polyfills into the generated declaration files.
+const TYPE_POLYFILLS = `// Polyfills for older TypeScript versions
+// WeakKey was introduced in TypeScript 5.2
+type WeakKey = object;
+// NoInfer was introduced in TypeScript 5.4
 type NoInfer<T> = T extends infer U ? U : never;
 `;
 
@@ -47,11 +49,11 @@ export default defineConfig({
 
   hooks: {
     "build:done": async () => {
-      // Inject the NoInfer polyfill at the top of each .d.ts file so that
-      // users on TypeScript <5.4 can use the library.
+      // Inject type polyfills at the top of each .d.ts file so that users on
+      // older TypeScript versions can use the library.
       for await (const file of glob("dist/*.d.{ts,cts}")) {
         const content = await readFile(file, "utf8");
-        await writeFile(file, NO_INFER_POLYFILL + content);
+        await writeFile(file, TYPE_POLYFILLS + content);
       }
     },
   },
