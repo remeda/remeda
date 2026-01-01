@@ -1,6 +1,11 @@
 import { glob, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { build, defineConfig, type TsdownHooks, type UserConfig } from "tsdown";
+import {
+  build,
+  defineConfig,
+  type RolldownChunk,
+  type UserConfig,
+} from "tsdown";
 
 const SOURCE_DIR = "src";
 
@@ -14,34 +19,9 @@ const SHARED = {
   failOnWarn: true,
 } satisfies UserConfig;
 
-/**
- * Inject type polyfills at the top of each .d.ts file so that users on older
- * TypeScript versions can use the library.
- */
-const injectPolyfills: TsdownHooks["build:done"] = async ({ chunks }) => {
-  const polyfills: Array<string> = [];
-  for await (const file of glob(`${SOURCE_DIR}/internal/types/*.d.ts`)) {
-    const content = await readFile(file, "utf8");
-    // Only include the part starting with a `type` declaration.
-    const typeDeclaration = content.slice(content.indexOf("\ntype ") + 1);
-    polyfills.push(typeDeclaration);
-  }
-
-  const allPolyfills = `//POLYFILLS:\n${polyfills.join("")}`;
-
-  await Promise.all(
-    chunks
-      .filter(
-        ({ fileName }) =>
-          fileName.endsWith(".d.ts") || fileName.endsWith(".d.cts"),
-      )
-      .map(async ({ outDir, fileName }) => {
-        const file = path.join(outDir, fileName);
-        const content = await readFile(file, "utf8");
-        await writeFile(file, allPolyfills + content);
-      }),
-  );
-};
+// Typescript type definitions assuming they don't contain an inline comment
+// with a semicolon.
+const TYPE_DEF_RE = /^type [^;]+;/mu;
 
 // We split the build into two steps because types and runtime have very
 // different concerns. To optimize bundle size we need the runtime artifacts
@@ -70,7 +50,9 @@ export default defineConfig({
   },
 
   hooks: {
-    "build:done": injectPolyfills,
+    "build:done": async ({ chunks }) => {
+      await injectPolyfills(`${SOURCE_DIR}/internal/types`, chunks);
+    },
   },
 
   //! The order we do the build is important. The current config (which handles
@@ -122,3 +104,41 @@ export default defineConfig({
     });
   },
 });
+
+/**
+ * Inject type polyfills at the top of each .d.ts file so that users on older
+ * TypeScript versions can use the library.
+ */
+async function injectPolyfills(
+  dir: string,
+  chunks: ReadonlyArray<RolldownChunk>,
+): Promise<void> {
+  const polyfills: Array<string> = [];
+  for await (const file of glob(`${dir}/*.d.ts`)) {
+    const content = await readFile(file, "utf8");
+    const match = TYPE_DEF_RE.exec(content);
+    if (match !== null) {
+      polyfills.push(match[0]);
+    }
+  }
+
+  if (polyfills.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    chunks
+      .filter(
+        ({ fileName }) =>
+          fileName.endsWith(".d.ts") || fileName.endsWith(".d.cts"),
+      )
+      .map(async ({ outDir, fileName }) => {
+        const file = path.join(outDir, fileName);
+        const content = await readFile(file, "utf8");
+        await writeFile(
+          file,
+          `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`,
+        );
+      }),
+  );
+}

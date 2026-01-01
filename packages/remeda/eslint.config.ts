@@ -425,6 +425,7 @@ export default defineConfig(
   {
     files: ["*.config.js", "*.config.ts"],
     rules: {
+      "@typescript-eslint/prefer-readonly-parameter-types": "off",
       "unicorn/filename-case": "off",
     },
   },
