@@ -1,4 +1,13 @@
-import { build, defineConfig, type UserConfig } from "tsdown";
+import { glob, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+import {
+  build,
+  defineConfig,
+  type RolldownChunk,
+  type UserConfig,
+} from "tsdown";
+
+const SOURCE_DIR = "src";
 
 const SHARED = {
   // TODO [>2]: Remove CJS support?
@@ -9,6 +18,10 @@ const SHARED = {
 
   failOnWarn: true,
 } satisfies UserConfig;
+
+// Typescript type definitions assuming they don't contain an inline comment
+// with a semicolon.
+const TYPE_DEF_RE = /^type [^;]+;/mu;
 
 // We split the build into two steps because types and runtime have very
 // different concerns. To optimize bundle size we need the runtime artifacts
@@ -21,7 +34,7 @@ export default defineConfig({
   ...SHARED,
 
   // We use the barrel file so that the result is a single monolithic file.
-  entry: "src/index.ts",
+  entry: `${SOURCE_DIR}/index.ts`,
 
   dts: {
     // This enables "Go to Definition"-style features within IDEs.
@@ -34,6 +47,12 @@ export default defineConfig({
 
     // Only emit DTS files, skip JS output
     emitDtsOnly: true,
+  },
+
+  hooks: {
+    "build:done": async ({ chunks }) => {
+      await injectPolyfills(`${SOURCE_DIR}/internal/types`, chunks);
+    },
   },
 
   //! The order we do the build is important. The current config (which handles
@@ -61,7 +80,7 @@ export default defineConfig({
         // is crucial to allow importing directly from the package root, without
         // needing paths within the import statement: e.g.,
         // `import { map } from "remeda";`
-        "src/*.ts",
+        `${SOURCE_DIR}/*.ts`,
         // Skip test files
         `!**/*.test{,-d}.ts`,
       ],
@@ -85,3 +104,41 @@ export default defineConfig({
     });
   },
 });
+
+/**
+ * Inject type polyfills at the top of each .d.ts file so that users on older
+ * TypeScript versions can use the library.
+ */
+async function injectPolyfills(
+  dir: string,
+  chunks: ReadonlyArray<RolldownChunk>,
+): Promise<void> {
+  const polyfills: Array<string> = [];
+  for await (const file of glob(`${dir}/*.d.ts`)) {
+    const content = await readFile(file, "utf8");
+    const match = TYPE_DEF_RE.exec(content);
+    if (match !== null) {
+      polyfills.push(match[0]);
+    }
+  }
+
+  if (polyfills.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    chunks
+      .filter(
+        ({ fileName }) =>
+          fileName.endsWith(".d.ts") || fileName.endsWith(".d.cts"),
+      )
+      .map(async ({ outDir, fileName }) => {
+        const file = path.join(outDir, fileName);
+        const content = await readFile(file, "utf8");
+        await writeFile(
+          file,
+          `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`,
+        );
+      }),
+  );
+}

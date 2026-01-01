@@ -1,5 +1,4 @@
-import type { IsLiteral, Simplify, Writable } from "type-fest";
-import type { IsUnion } from "./IsUnion";
+import type { IsLiteral, IsUnion, Simplify, Writable } from "type-fest";
 
 export type UpsertProp<T, K extends PropertyKey, V> = Simplify<
   // Copy any uninvolved props from the object, they are unaffected by the type.

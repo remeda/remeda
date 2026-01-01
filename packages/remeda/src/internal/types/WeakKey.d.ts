@@ -1,0 +1,2 @@
+// TODO [>2]: We polyfill `WeakKey` which was introduced into the language in TypeScript 5.2 while we still support version 5.1. Starting in type-fest version 5.x.x the minimum TypeScript version was bumped to 5.4 and types now use `WeakKey` natively. To allow us to use the latest version of type-fest while still supporting our minimum TypeScript version we need to "inject" it into the global namespace via this .d.ts file so it looks like it's available natively too.
+type WeakKey = object;

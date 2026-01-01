@@ -1,6 +1,5 @@
 import type { KeysOfUnion } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
-import type { NoInfer } from "./internal/types/NoInfer";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.

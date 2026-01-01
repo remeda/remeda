@@ -192,29 +192,27 @@ function groupByPropImplementation<
   > = Object.create(null);
 
   for (const item of data) {
-    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Because of the error mentioned above the resulting key isn't inferred correctly as `AllPropValues<T, Prop> | undefined` which would be needed to remove this lint error.
     const key = item?.[prop];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- This is incorrect and a result of TypeScript not inferring the type of `key` correctly. It stems from a chain of bad inferences which start with `item` being inferred eagerly as `unknown` (because of: https://github.com/microsoft/TypeScript/issues/61750). When accessing a prop on `unknown` TypeScript then infers the result as `{}[Prop] | undefined`. What follows is that `{}[Prop]` is inferred as `never` (because we are accessing an object with no props defined on it), leading the union to simplify to just `undefined`. The correct type should have been `AllPropValues<T, Prop> | undefined`.
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
-      // @ts-expect-error [ts7053] -- `key` should be typed `AllPropValues<T, Prop>` but TypeScript isn't inferring that correctly, causing an error when we try to access this prop on the output object.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Because of the error mentioned above the resulting items array isn't being inferred correctly as `Array<T[number]> | undefined` which would be needed to remove this lint error.
       const items = output[key];
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Following the problem above, TypeScript then thinks that `key` is `never`, and also types `items` as `never`.
       if (items === undefined) {
         // It is more performant to create a 1-element array over creating an
         // empty array and falling through to a unified the push. It is also
         // more performant to mutate the existing object over using spread to
         // continually create new objects on every unique key.
         // @ts-expect-error [ts7053] -- For the same reasons as mentioned above, TypeScript isn't inferring `key` correctly, and therefore is erroring when trying to access the output object using it.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- similarly, because `key` isn't inferred correctly, lint has an issue with us accessing the output object using it.
         output[key] = [item];
       } else {
         // It is more performant to add the items to an existing array instead
         // of creating a new array via spreading every time we add an item to
         // it (e.g., `[...current, item]`).
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Similarly to above, because TypeScript didn't infer `items` correctly, lint can't ensure this code is safe and makes sense.
+        // @ts-expect-error [ts2339] -- And again here `items` is still `never`.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- See above.
         items.push(item);
       }
     }
