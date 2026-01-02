@@ -24,7 +24,7 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  *
  * @example [
  *   ...TupleParts<T>["required"],
- *   ...Partial<TupleParts<T>["optional"]>,
+ *   ...PartialArray<TupleParts<T>["optional"]>,
  *   ...CoercedArray<TupleParts<T>["item"]>,
  *   ...TupleParts<T>["suffix"],
  * ].
@@ -100,12 +100,12 @@ type TuplePartsWithoutFixed<
          * the optional operator removed (e.g. `[string?]` would be
          * represented as `[string]`). These elements can only follow the
          * `required` part (which could be empty).
-         * To add optional operator back wrap the result with the built-in
-         * `Partial` type.
+         * To add the optional operator back, wrap the result with the
+         * `PartialArray` type.
          * When the array doesn't have a required part this will be an empty
          * tuple (`[]`).
          *
-         * @example Partial<TupleParts<T>["optional"]>
+         * @example PartialArray<TupleParts<T>["optional"]>
          */
         optional: Optional;
       } & TuplePartsRest<T>
