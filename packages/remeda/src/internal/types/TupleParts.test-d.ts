@@ -278,22 +278,6 @@ describe("unions", () => {
         }
     >();
   });
-
-  test("union of non-equivalent optional tuples", () => {
-    // Under exactOptionalPropertyTypes, [string?] and [(string | undefined)?]
-    // are different types, so they produce different TupleParts results
-    expectTypeOf(
-      tupleParts([] as [string?] | [(string | undefined)?]),
-    ).toEqualTypeOf<
-      | { required: []; optional: [string]; item: never; suffix: [] }
-      | {
-          required: [];
-          optional: [string | undefined];
-          item: never;
-          suffix: [];
-        }
-    >();
-  });
 });
 
 describe("handling of undefined values", () => {
@@ -309,9 +293,7 @@ describe("handling of undefined values", () => {
   });
 
   test("undefined optional item", () => {
-    expectTypeOf(
-      tupleParts([undefined] as [(number | undefined)?]),
-    ).toEqualTypeOf<{
+    expectTypeOf(tupleParts([] as [(number | undefined)?])).toEqualTypeOf<{
       required: [];
       optional: [number | undefined];
       item: never;
@@ -319,10 +301,21 @@ describe("handling of undefined values", () => {
     }>();
   });
 
-  test("undefined rest item", () => {
+  test("undefined creates a different item type", () => {
     expectTypeOf(
-      tupleParts([undefined] as Array<number | undefined>),
+      tupleParts(
+        [] as [number?, (number | undefined)?, number?, (number | undefined)?],
+      ),
     ).toEqualTypeOf<{
+      required: [];
+      optional: [number, number | undefined, number, number | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined rest item", () => {
+    expectTypeOf(tupleParts([] as Array<number | undefined>)).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number | undefined;
