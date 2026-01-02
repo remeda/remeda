@@ -162,12 +162,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as [number?, string?, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [
-        number | undefined,
-        string | undefined,
-        boolean | undefined,
-        Date | undefined,
-      ];
+      optional: [number, string, boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -176,12 +171,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as readonly [number?, string?, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [
-        number | undefined,
-        string | undefined,
-        boolean | undefined,
-        Date | undefined,
-      ];
+      optional: [number, string, boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -192,7 +182,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as [number?, string?, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [number | undefined, string | undefined, boolean | undefined];
+      optional: [number, string, boolean];
       item: Date;
       suffix: [];
     }>();
@@ -201,7 +191,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as readonly [number?, string?, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [number | undefined, string | undefined, boolean | undefined];
+      optional: [number, string, boolean];
       item: Date;
       suffix: [];
     }>();
@@ -212,7 +202,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as [number, string, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined, Date | undefined];
+      optional: [boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -221,7 +211,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as readonly [number, string, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined, Date | undefined];
+      optional: [boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -232,7 +222,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as [number, string, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined];
+      optional: [boolean];
       item: Date;
       suffix: [];
     }>();
@@ -246,7 +236,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       ]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined];
+      optional: [boolean];
       item: Date;
       suffix: [];
     }>();
@@ -288,17 +278,6 @@ describe("unions", () => {
         }
     >();
   });
-
-  test("union of equivalent optional tuples", () => {
-    expectTypeOf(
-      tupleParts([] as [string?] | [(string | undefined)?]),
-    ).toEqualTypeOf<{
-      required: [];
-      optional: [string | undefined];
-      item: never;
-      suffix: [];
-    }>();
-  });
 });
 
 describe("handling of undefined values", () => {
@@ -314,9 +293,7 @@ describe("handling of undefined values", () => {
   });
 
   test("undefined optional item", () => {
-    expectTypeOf(
-      tupleParts([undefined] as [(number | undefined)?]),
-    ).toEqualTypeOf<{
+    expectTypeOf(tupleParts([] as [(number | undefined)?])).toEqualTypeOf<{
       required: [];
       optional: [number | undefined];
       item: never;
@@ -324,10 +301,21 @@ describe("handling of undefined values", () => {
     }>();
   });
 
-  test("undefined rest item", () => {
+  test("undefined creates a different item type", () => {
     expectTypeOf(
-      tupleParts([undefined] as Array<number | undefined>),
+      tupleParts(
+        [] as [number?, (number | undefined)?, number?, (number | undefined)?],
+      ),
     ).toEqualTypeOf<{
+      required: [];
+      optional: [number, number | undefined, number, number | undefined];
+      item: never;
+      suffix: [];
+    }>();
+  });
+
+  test("undefined rest item", () => {
+    expectTypeOf(tupleParts([] as Array<number | undefined>)).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number | undefined;

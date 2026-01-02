@@ -815,13 +815,13 @@ describe("tuples with optional elements", () => {
   test("removes the partialness once filtered", () => {
     expectTypeOf(
       filteredArray([] as [number?, string?], "" as string),
-    ).toEqualTypeOf<[] | [string]>();
+    ).toEqualTypeOf<[string?]>();
   });
 
   test("multiple matches", () => {
     expectTypeOf(
       filteredArray([] as [number?, string?, number?, string?], "" as string),
-    ).toEqualTypeOf<[] | [string] | [string, string]>();
+    ).toEqualTypeOf<[string?, string?]>();
   });
 
   test("literal unions, primitive condition", () => {
@@ -831,15 +831,10 @@ describe("tuples with optional elements", () => {
         "" as string,
       ),
     ).toEqualTypeOf<
-      | []
-      | ["hello"]
-      | ["world"]
-      | ["foo"]
-      | ["hello", "foo"]
-      | ["world", "foo"]
-      | ["bar"]
-      | ["hello", "bar"]
-      | ["world", "bar"]
+      | ["hello"?, "foo"?]
+      | ["world"?, "foo"?]
+      | ["hello"?, "bar"?]
+      | ["world"?, "bar"?]
     >();
   });
 
@@ -849,20 +844,20 @@ describe("tuples with optional elements", () => {
         [] as [("hello" | "world")?, ("foo" | "bar")?],
         "hello" as "hello" | "foo",
       ),
-    ).toEqualTypeOf<[] | ["hello"] | ["foo"] | ["hello", "foo"]>();
+    ).toEqualTypeOf<[] | ["hello"?, "foo"?] | ["hello"?] | ["foo"?]>();
   });
 
   test("primitive items, literal union condition", () => {
     expectTypeOf(
       filteredArray([] as [string?, string?], "hello" as "hello" | "foo"),
     ).toEqualTypeOf<
+      | ["hello"?, "foo"?]
       | []
-      | ["hello"]
-      | ["foo"]
-      | ["hello", "foo"]
-      | ["hello", "hello"]
-      | ["foo", "hello"]
-      | ["foo", "foo"]
+      | ["hello"?]
+      | ["foo"?]
+      | ["hello"?, "hello"?]
+      | ["foo"?, "hello"?]
+      | ["foo"?, "foo"?]
     >();
   });
 });

@@ -125,7 +125,7 @@ describe("special tuple shapes", () => {
       [] | ["world"]
     >();
     expectTypeOf(filter(data, isStrictEqual(123 as const))).toEqualTypeOf<
-      [] | [123]
+      [] | [123?]
     >();
   });
 
