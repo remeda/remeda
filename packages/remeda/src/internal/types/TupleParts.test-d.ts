@@ -162,12 +162,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as [number?, string?, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [
-        number | undefined,
-        string | undefined,
-        boolean | undefined,
-        Date | undefined,
-      ];
+      optional: [number, string, boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -176,12 +171,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as readonly [number?, string?, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [
-        number | undefined,
-        string | undefined,
-        boolean | undefined,
-        Date | undefined,
-      ];
+      optional: [number, string, boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -192,7 +182,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as [number?, string?, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [number | undefined, string | undefined, boolean | undefined];
+      optional: [number, string, boolean];
       item: Date;
       suffix: [];
     }>();
@@ -201,7 +191,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([] as readonly [number?, string?, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [];
-      optional: [number | undefined, string | undefined, boolean | undefined];
+      optional: [number, string, boolean];
       item: Date;
       suffix: [];
     }>();
@@ -212,7 +202,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as [number, string, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined, Date | undefined];
+      optional: [boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -221,7 +211,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as readonly [number, string, boolean?, Date?]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined, Date | undefined];
+      optional: [boolean, Date];
       item: never;
       suffix: [];
     }>();
@@ -232,7 +222,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a"] as [number, string, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined];
+      optional: [boolean];
       item: Date;
       suffix: [];
     }>();
@@ -246,7 +236,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       ]),
     ).toEqualTypeOf<{
       required: [number, string];
-      optional: [boolean | undefined];
+      optional: [boolean];
       item: Date;
       suffix: [];
     }>();
@@ -289,15 +279,20 @@ describe("unions", () => {
     >();
   });
 
-  test("union of equivalent optional tuples", () => {
+  test("union of non-equivalent optional tuples", () => {
+    // Under exactOptionalPropertyTypes, [string?] and [(string | undefined)?]
+    // are different types, so they produce different TupleParts results
     expectTypeOf(
       tupleParts([] as [string?] | [(string | undefined)?]),
-    ).toEqualTypeOf<{
-      required: [];
-      optional: [string | undefined];
-      item: never;
-      suffix: [];
-    }>();
+    ).toEqualTypeOf<
+      | { required: []; optional: [string]; item: never; suffix: [] }
+      | {
+          required: [];
+          optional: [string | undefined];
+          item: never;
+          suffix: [];
+        }
+    >();
   });
 });
 

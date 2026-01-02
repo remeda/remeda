@@ -109,7 +109,7 @@ type TuplePartsWithoutFixed<
          */
         optional: Optional;
       } & TuplePartsRest<T>
-    : TuplePartsWithoutFixed<Tail, [...Optional, Head | undefined]>
+    : TuplePartsWithoutFixed<Tail, [...Optional, Head]>
   : RemedaTypeError<
       "TupleParts",
       "Unexpected tuple shape",
