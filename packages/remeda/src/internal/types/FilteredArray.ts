@@ -1,6 +1,7 @@
 import type { IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
+import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
 export type FilteredArray<T extends IterableContainer, Condition> =
@@ -10,11 +11,9 @@ export type FilteredArray<T extends IterableContainer, Condition> =
       // filtered on the condition.
       [
         ...FilteredFixedTuple<TupleParts<T>["required"], Condition>,
-
-        // Optional elements need special handling because each element might
-        // not be present, generating a union of possible outcomes.
-        ...FilteredOptionalTuple<TupleParts<T>["optional"], Condition>,
-
+        ...PartialArray<
+          FilteredFixedTuple<TupleParts<T>["optional"], Condition>
+        >,
         ...CoercedArray<SymmetricRefine<TupleParts<T>["item"], Condition>>,
         ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
       ]
@@ -57,38 +56,6 @@ type FilteredFixedTuple<
                 Output | [...Output, Condition]
             : // But if the item and condition are disjoint then we simply skip
               // it as it would never satisfy the condition.
-              Output
-    >
-  : Output;
-
-/**
- * Similar to FilteredFixedTuple, but for optional elements. Since each optional
- * element might not be present, we always generate a union of possible outcomes
- * (with or without the element).
- */
-type FilteredOptionalTuple<
-  T,
-  Condition,
-  Output extends Array<unknown> = [],
-> = T extends readonly [infer Head, ...infer Rest]
-  ? FilteredOptionalTuple<
-      Rest,
-      Condition,
-      Head extends Condition
-        ? // The element matches the condition. Since it's optional, we generate
-            // a union: either the element is present (and matches), or it's absent.
-            Output | [...Output, Head]
-        : Head | Condition extends object
-          ? // Objects: if the condition doesn't extend the head, skip it.
-            // But since this is optional, we still keep Output as a possibility.
-            Output
-          : Condition extends Head
-            ? // Primitives where condition is narrower than head: the element
-                // might match (when it equals Condition) or might not match
-                // (when it's a different value of Head) or might be absent.
-                Output | [...Output, Condition]
-            : // Disjoint types: element would never match, so just keep output
-              // as-is (element is either absent or present but doesn't match).
               Output
     >
   : Output;
