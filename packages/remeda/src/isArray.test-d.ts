@@ -6,7 +6,7 @@ import {
 } from "../test/typesDataProvider";
 import { isArray } from "./isArray";
 
-test("should infer ReadonlyArray<unknown> when given any", () => {
+test("should infer readonly unknown[] when given any", () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment -- Explicitly testing `any`
   const data = [] as any;
   if (isArray(data)) {
@@ -22,7 +22,7 @@ test("should work as type guard", () => {
   }
 });
 
-test("should infer ReadonlyArray<unknown> when given `unknown`", () => {
+test("should infer readonly unknown[] when given `unknown`", () => {
   const data = TYPES_DATA_PROVIDER.array as unknown;
   if (isArray(data)) {
     expectTypeOf(data).toEqualTypeOf<readonly unknown[]>();

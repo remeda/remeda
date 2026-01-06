@@ -28,8 +28,5 @@ pipe(DATA, concat([operand]));
 // Native
 [...DATA, operand];
 
-const addsAbc = <T extends ReadonlyArray<unknown>>(data: T) => [
-  ...data,
-  operand,
-];
+const addsAbc = <T extends readonly unknown[]>(data: T) => [...data, operand];
 ```

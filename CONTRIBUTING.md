@@ -69,10 +69,10 @@ An example with an array:
 const data = ["a", 1] as [string, number];
 
 // ❌ `T` can be too wide:
-function functionName<T>(data: ReadonlyArray<T>): ReadonlyArray<T> {}
+function functionName<T>(data: readonly T[]): readonly T[] {}
 
 functionName(data); // inside functionName, data[0] has type string | number
-// output has type ReadonlyArray<string | number>
+// output has type readonly (string | number)[]
 
 // ✅ `T` is more specific:
 function functionName<T extends IterableContainer>(data: T): T {}
@@ -177,17 +177,17 @@ test("doesn't accept non-literal depths", () => {
   - Template with a literal slot (`` `id_${1 | 2}` ``)
   - Template with multiple slots (`` `id_${1 | 2}_${3 | 4}` ``)
 - Arrays
-  - Array of a single type (`Array<number>`)
-  - Array of a union type (`Array<string | number>`)
-  - Array of literal types (`Array<"cat" | "dog">`)
-  - Union of similar arrays (`Array<1 | 2> | Array<2 | 3>`)
-  - Nested arrays (`Array<Array<number>>`)
+  - Array of a single type (`number[]`)
+  - Array of a union type (`(string | number)[]`)
+  - Array of literal types (`("cat" | "dog")[]`)
+  - Union of similar arrays (`(1 | 2)[] | (2 | 3)[]`)
+  - Nested arrays (`number[][]`)
 - Tuples
   - Tuple of a single type (`[number, number, number]`)
   - Tuple of different types (`[number, string, boolean]`)
   - Tuple with optional type (`[number, string?]`)
-  - Tuple with spreads (`[...Array<number>, number, number]`)
-  - Tuple with optional type and spread (`[number?, ...Array<string>]`)
+  - Tuple with spreads (`[...number[], number, number]`)
+  - Tuple with optional type and spread (`[number?, ...string[]]`)
   - Tuple with union values (`[number, string | undefined, boolean]`)
   - Tuple with literal values (`[number, "cat" | "dog", true]`)
 - Records

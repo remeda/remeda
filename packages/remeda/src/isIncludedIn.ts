@@ -12,7 +12,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @example
  *   type T1 = IsConstantTuple<["cat", "dog", 3, true]>; // => true;
  *   type T2 = IsConstantTuple<["cat" | "dog"]>; // false;
- *   type T2 = IsConstantTuple<["cat", ...Array<"cat">]>; // false;
+ *   type T2 = IsConstantTuple<["cat", ..."cat"[]]>; // false;
  */
 type IsConstantTuple<T extends IterableContainer> = T extends readonly []
   ? true
@@ -37,7 +37,7 @@ type IsConstantTuple<T extends IterableContainer> = T extends readonly []
  *
  * @example
  *   const data = 1 as 1 | 2 | 3;
- *   const container = [] as Array<1 | 2>;
+ *   const container = [] as (1 | 2)[];
  *   if (isIncludedIn(data, container)) {
  *     ... it makes sense to narrow data to `1 | 2` as the value `3` is not part
  *     ... of the typing of container, so will never result in being true.

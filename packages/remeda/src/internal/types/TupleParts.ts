@@ -15,12 +15,12 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  *   2.  Fixed Tuples: `[string, number]`.
  *   3.  Optional Tuples: `[string?, number?]`.
  *   4.  Mixed Tuples: `[string, number?]`.
- *   5.  Arrays: `Array<string>`.
- *   6.  Fixed-Prefix Arrays: `[string, ...Array<string>]`.
- *   7.  Optional-Prefix Arrays: `[number?, ...Array<boolean>]`.
- *   8.  Mixed-Prefix Arrays: `[string, number?, ...Array<boolean>]`.
- *   9.  Fixed-Suffix Arrays: `[...Array<string>, string]`.
- *   10. Fixed-Elements Arrays: `[string, ...Array<string>, string]`.
+ *   5.  Arrays: `string[]`.
+ *   6.  Fixed-Prefix Arrays: `[string, ...string[]]`.
+ *   7.  Optional-Prefix Arrays: `[number?, ...boolean[]]`.
+ *   8.  Mixed-Prefix Arrays: `[string, number?, ...boolean[]]`.
+ *   9.  Fixed-Suffix Arrays: `[...string[], string]`.
+ *   10. Fixed-Elements Arrays: `[string, ...string[], string]`.
  *
  * @example [
  *   ...TupleParts<T>["required"],

@@ -14,7 +14,7 @@ type GenericEvolver = {
  * @example
  * interface Data {
  *   id: number;
- *   quartile: Array<number>;
+ *   quartile: number[];
  *   time?: { elapsed: number; remaining?: number };
  * }
  * type Nested = Evolver<Data>; //  => type Nested = {

@@ -47,7 +47,7 @@ type LiteralChunk<T extends IterableContainer, N extends number> =
       N
     >
   // If both the prefix and suffix tuples are empty then our input is a simple
-  // array of the form `Array<Item>`. This means it could also be empty, so we
+  // array of the form `Item[]`. This means it could also be empty, so we
   // need to add the empty output to our return type.
   | ([...TuplePrefix<T>, ...TupleParts<T>["suffix"]] extends readonly []
       ? []
