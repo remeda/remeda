@@ -7,7 +7,7 @@ import { doNothing } from "./doNothing";
 import { fromKeys } from "./fromKeys";
 import { funnel } from "./funnel";
 
-type BatchRequest<Params extends Array<any>, Result> = {
+type BatchRequest<Params extends any[], Result> = {
   readonly params: Params;
   readonly promiseCallbacks: Readonly<
     Parameters<ConstructorParameters<typeof Promise<Result>>[0]>
@@ -44,8 +44,8 @@ type BatchRequest<Params extends Array<any>, Result> = {
  * @returns A Funnel object with the `call` method augmented to support async
  * response.
  */
-function batch<Params extends Array<any>, BatchResponse, Result>(
-  callback: (requests: ReadonlyArray<Params>) => Promise<BatchResponse>,
+function batch<Params extends any[], BatchResponse, Result>(
+  callback: (requests: readonly Params[]) => Promise<BatchResponse>,
   extractor: (
     response: BatchResponse,
     index: number,
@@ -55,7 +55,7 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
 ) {
   const batchFunnel = funnel(
     // Passes all accumulated parameters to the callback and then extracts the response for each individual call via the extractor.
-    (requests: ReadonlyArray<BatchRequest<Params, Result>>) => {
+    (requests: readonly BatchRequest<Params, Result>[]) => {
       callback(requests.map(({ params }) => params))
         // On success we iterate again over all calls and allow the extractor
         // to pull a value out of the aggregated response for each one.
@@ -106,13 +106,13 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
 describe("showcase", () => {
   test("results as object", async () => {
     const mockApi = vi.fn<
-      (words: ReadonlyArray<string>) => Promise<Record<string, number>>
+      (words: readonly string[]) => Promise<Record<string, number>>
     >(async (words) => fromKeys(words, (word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
       // All other types are derived from it.
-      async (requests: ReadonlyArray<[word: string]>) =>
+      async (requests: readonly [word: string][]) =>
         await mockApi(requests.flat()),
       (response, _, word) => response[word],
     );
@@ -145,13 +145,13 @@ describe("showcase", () => {
 
   test("results as array", async () => {
     const mockApi = vi.fn<
-      (words: ReadonlyArray<string>) => Promise<ReadonlyArray<number>>
+      (words: readonly string[]) => Promise<readonly number[]>
     >(async (words) => words.map((word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
       // All other types are derived from it.
-      async (requests: ReadonlyArray<[word: string]>) =>
+      async (requests: readonly [word: string][]) =>
         await mockApi(requests.flat()),
       (response, index) => response[index],
     );
@@ -182,7 +182,7 @@ describe("showcase", () => {
     const failingApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
       // All other types are derived from it.
-      async (requests: ReadonlyArray<[id: string]>) => {
+      async (requests: readonly [id: string][]) => {
         if (requests.length > 1) {
           throw new Error(`Batch too big! ${JSON.stringify(requests)}`);
         }

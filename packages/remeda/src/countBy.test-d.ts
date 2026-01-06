@@ -33,7 +33,7 @@ test("callback function type", () => {
 });
 
 test("literal unions", () => {
-  const data = [] as Array<"cat" | "dog">;
+  const data = [] as ("cat" | "dog")[];
   const result = countBy(data, (x) => x);
 
   expectTypeOf(result).toEqualTypeOf<Partial<Record<"cat" | "dog", number>>>();

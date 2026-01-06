@@ -7,8 +7,8 @@
 export type ClampedIntegerSubtract<
   Minuend,
   Subtrahend,
-  SubtrahendBag extends Array<unknown> = [],
-  ResultBag extends Array<unknown> = [],
+  SubtrahendBag extends unknown[] = [],
+  ResultBag extends unknown[] = [],
 > = [...SubtrahendBag, ...ResultBag]["length"] extends Minuend
   ? // than Minuend, or 0 if it is larger (or equal).
     ResultBag["length"]

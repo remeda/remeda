@@ -12,7 +12,7 @@ test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
   if (isNonNullish(data)) {
     expectTypeOf(data).toEqualTypeOf<
-      | Array<number>
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -37,8 +37,8 @@ test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNullish);
 
   expectTypeOf(data).toEqualTypeOf<
-    Array<
-      | Array<number>
+    (
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -55,6 +55,6 @@ test("should work as type guard in filter", () => {
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]
-    >
+    )[]
   >();
 });

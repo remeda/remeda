@@ -160,7 +160,7 @@ export function omitBy<T extends object>(
   ) => boolean,
 ): (data: T) => PartialEnumerableKeys<T>;
 
-export function omitBy(...args: ReadonlyArray<unknown>): unknown {
+export function omitBy(...args: readonly unknown[]): unknown {
   return purry(omitByImplementation, args);
 }
 

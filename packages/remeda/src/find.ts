@@ -31,12 +31,12 @@ import { purry } from "./purry";
  * @category Array
  */
 export function find<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined;
 export function find<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): T | undefined;
 
 /**
@@ -69,24 +69,24 @@ export function find<T>(
  * @category Array
  */
 export function find<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => S | undefined;
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): (data: readonly T[]) => S | undefined;
 export function find<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => T | undefined;
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): (data: readonly T[]) => T | undefined;
 
-export function find(...args: ReadonlyArray<unknown>): unknown {
+export function find(...args: readonly unknown[]): unknown {
   return purry(findImplementation, args, toSingle(lazyImplementation));
 }
 
 const findImplementation = <T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined => data.find(predicate);
 
 const lazyImplementation =
   <T, S extends T>(
-    predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+    predicate: (value: T, index: number, data: readonly T[]) => value is S,
   ): LazyEvaluator<T, S> =>
   (value, index, data) =>
     predicate(value, index, data)

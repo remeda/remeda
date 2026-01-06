@@ -74,7 +74,7 @@ test("stops at optional props", () => {
 });
 
 test("multi-dimensional arrays", () => {
-  const data = [[[["cat"]]]] as Array<Array<Array<Array<"cat">>>>;
+  const data = [[[["cat"]]]] as "cat"[][][][];
 
   expect(prop(data, 0)).toStrictEqual([[["cat"]]]);
   expect(prop(data, 0, 0)).toStrictEqual([["cat"]]);
@@ -165,7 +165,7 @@ describe("lodash spec", () => {
     expect(
       prop(
         { a: [{ b: { c: 123 } }, null] } as {
-          a: Array<{ b: { c: number } } | null>;
+          a: ({ b: { c: number } } | null)[];
         },
         "a",
         1,

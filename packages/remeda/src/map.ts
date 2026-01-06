@@ -49,18 +49,18 @@ export function map<T extends IterableContainer, U>(
   callbackfn: (value: T[number], index: number, data: T) => U,
 ): (data: T) => Mapped<T, U>;
 
-export function map(...args: ReadonlyArray<unknown>): unknown {
+export function map(...args: readonly unknown[]): unknown {
   return purry(mapImplementation, args, lazyImplementation);
 }
 
 const mapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): Array<U> => data.map(callbackfn);
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => U,
+): U[] => data.map(callbackfn);
 
 const lazyImplementation =
   <T, U>(
-    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
+    callbackfn: (value: T, index: number, data: readonly T[]) => U,
   ): LazyEvaluator<T, U> =>
   (value, index, data) => ({
     done: false,

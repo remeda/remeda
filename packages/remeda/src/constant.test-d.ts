@@ -50,7 +50,7 @@ describe("returns narrow types on literals (issue #823)", () => {
 function mockApi(_options: {
   readonly onMixOfParams: (result: string, isOptionalBoolean?: true) => number;
   readonly onNoParams: () => boolean;
-  readonly onVariadicParams: (...args: ReadonlyArray<string>) => "cat" | "dog";
+  readonly onVariadicParams: (...args: readonly string[]) => "cat" | "dog";
 }): void {
   /* do nothing */
 }

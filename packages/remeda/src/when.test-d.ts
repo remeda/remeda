@@ -210,7 +210,7 @@ describe("dataLast", () => {
       });
 
       test("passes extra args to the functions", () => {
-        const data = [] as Array<number | string>;
+        const data = [] as (number | string)[];
         map(
           data,
           when(constant(true), (x, index, array) => {
@@ -243,7 +243,7 @@ describe("dataLast", () => {
     });
 
     test("passes extra args to the functions", () => {
-      const data = [] as Array<number | string>;
+      const data = [] as (number | string)[];
       map(
         data,
         when(isString, (x, index, array) => {
@@ -286,7 +286,7 @@ describe("dataLast", () => {
       });
 
       test("passes extra args to the functions", () => {
-        const data = [] as Array<number | string>;
+        const data = [] as (number | string)[];
         map(
           data,
           when(constant(true), {
@@ -337,7 +337,7 @@ describe("dataLast", () => {
       });
 
       test("passes extra args to the functions", () => {
-        const data = [] as Array<number | string>;
+        const data = [] as (number | string)[];
         map(
           data,
           when(isString, {
@@ -396,7 +396,7 @@ describe("typing mismatches", () => {
 
   test("type of extra args enforced (data-last)", () => {
     map(
-      [] as Array<string>,
+      [] as string[],
       when(
         constant(true),
         // @ts-expect-error [ts2345] -- The extra arg is not a boolean
@@ -407,14 +407,14 @@ describe("typing mismatches", () => {
 
   test("number of extra args enforced (data-last)", () => {
     map(
-      [] as Array<string>,
+      [] as string[],
       when(
         constant(true),
         // @ts-expect-error [ts2345] -- Not enough extra args
         (
           x: string,
           _index: number,
-          _data: ReadonlyArray<string>,
+          _data: readonly string[],
           _isSomething: boolean,
         ) => x,
       ),

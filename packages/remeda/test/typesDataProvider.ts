@@ -9,7 +9,7 @@ const TYPED_ARRAY = new Uint8Array(1);
 export type TypedArray = typeof TYPED_ARRAY;
 
 export const TYPES_DATA_PROVIDER = {
-  array: [1, 2, 3] as Array<number>,
+  array: [1, 2, 3] as number[],
   bigint: 1n,
   boolean: false as boolean,
   date: new Date("1985-07-24T07:40:00.000Z"),

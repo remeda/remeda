@@ -9,13 +9,13 @@ test("works with empty arrays", () => {
 });
 
 test("works with regular arrays", () => {
-  const result = last([1, 2, 3] as Array<number>);
+  const result = last([1, 2, 3] as number[]);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
 test("works with non-empty arrays", () => {
-  const result = last([1] as [number, ...Array<number>]);
+  const result = last([1] as [number, ...number[]]);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });

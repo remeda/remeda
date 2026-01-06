@@ -42,7 +42,7 @@ export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
-export function concat(...args: ReadonlyArray<unknown>): unknown {
+export function concat(...args: readonly unknown[]): unknown {
   return purry(concatImplementation, args);
 }
 

@@ -10,19 +10,19 @@ test("empty arrays", () => {
 
 describe("dataFirst", () => {
   test("arbitrary arrays", () => {
-    const result = median([] as Array<number>);
+    const result = median([] as number[]);
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = median([] as ReadonlyArray<number>);
+    const result = median([] as readonly number[]);
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = median([1, 2] as [number, ...Array<number>]);
+    const result = median([1, 2] as [number, ...number[]]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
@@ -48,13 +48,13 @@ describe("dataLast", () => {
   });
 
   test("arbitrary number arrays", () => {
-    const result = pipe([] as Array<number>, median());
+    const result = pipe([] as number[], median());
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary readonly number arrays", () => {
-    const result = pipe([] as ReadonlyArray<number>, median());
+    const result = pipe([] as readonly number[], median());
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });

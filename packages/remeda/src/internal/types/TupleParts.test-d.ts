@@ -22,14 +22,14 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
   });
 
   test("arrays", () => {
-    expectTypeOf(tupleParts([] as Array<number>)).toEqualTypeOf<{
+    expectTypeOf(tupleParts([] as number[])).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number;
       suffix: [];
     }>();
 
-    expectTypeOf(tupleParts([] as ReadonlyArray<number>)).toEqualTypeOf<{
+    expectTypeOf(tupleParts([] as readonly number[])).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number;
@@ -69,12 +69,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
   test("fixed-prefix arrays", () => {
     expectTypeOf(
-      tupleParts([1, "hello", true] as [
-        number,
-        string,
-        boolean,
-        ...Array<Date>,
-      ]),
+      tupleParts([1, "hello", true] as [number, string, boolean, ...Date[]]),
     ).toEqualTypeOf<{
       required: [number, string, boolean];
       optional: [];
@@ -87,7 +82,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
         number,
         string,
         boolean,
-        ...Array<Date>,
+        ...Date[],
       ]),
     ).toEqualTypeOf<{
       required: [number, string, boolean];
@@ -100,7 +95,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
   test("fixed-suffix arrays", () => {
     expectTypeOf(
       tupleParts(["a", true, new Date()] as [
-        ...Array<number>,
+        ...number[],
         string,
         boolean,
         Date,
@@ -114,7 +109,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
     expectTypeOf(
       tupleParts(["a", true, new Date()] as readonly [
-        ...Array<number>,
+        ...number[],
         string,
         boolean,
         Date,
@@ -129,12 +124,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
   test("fixed-elements arrays", () => {
     expectTypeOf(
-      tupleParts([1, "a", new Date()] as [
-        number,
-        string,
-        ...Array<boolean>,
-        Date,
-      ]),
+      tupleParts([1, "a", new Date()] as [number, string, ...boolean[], Date]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [];
@@ -146,7 +136,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
       tupleParts([1, "a", new Date()] as readonly [
         number,
         string,
-        ...Array<boolean>,
+        ...boolean[],
         Date,
       ]),
     ).toEqualTypeOf<{
@@ -179,7 +169,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
   test("optional-prefix arrays", () => {
     expectTypeOf(
-      tupleParts([] as [number?, string?, boolean?, ...Array<Date>]),
+      tupleParts([] as [number?, string?, boolean?, ...Date[]]),
     ).toEqualTypeOf<{
       required: [];
       optional: [number, string, boolean];
@@ -188,7 +178,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
     }>();
 
     expectTypeOf(
-      tupleParts([] as readonly [number?, string?, boolean?, ...Array<Date>]),
+      tupleParts([] as readonly [number?, string?, boolean?, ...Date[]]),
     ).toEqualTypeOf<{
       required: [];
       optional: [number, string, boolean];
@@ -219,7 +209,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
   test("mixed-prefix arrays", () => {
     expectTypeOf(
-      tupleParts([1, "a"] as [number, string, boolean?, ...Array<Date>]),
+      tupleParts([1, "a"] as [number, string, boolean?, ...Date[]]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [boolean];
@@ -228,12 +218,7 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
     }>();
 
     expectTypeOf(
-      tupleParts([1, "a"] as readonly [
-        number,
-        string,
-        boolean?,
-        ...Array<Date>,
-      ]),
+      tupleParts([1, "a"] as readonly [number, string, boolean?, ...Date[]]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [boolean];
@@ -245,18 +230,14 @@ describe("all tuple/array shapes (mutable and readonly)", () => {
 
 describe("unions", () => {
   test("union of arrays", () => {
-    expectTypeOf(
-      tupleParts([] as Array<boolean> | Array<number>),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleParts([] as boolean[] | number[])).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | { required: []; optional: []; item: number; suffix: [] }
     >();
   });
 
   test("mixed unions", () => {
-    expectTypeOf(
-      tupleParts([] as Array<boolean> | [number, string]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleParts([] as boolean[] | [number, string])).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | {
           required: [number, string];
@@ -315,7 +296,7 @@ describe("handling of undefined values", () => {
   });
 
   test("undefined rest item", () => {
-    expectTypeOf(tupleParts([] as Array<number | undefined>)).toEqualTypeOf<{
+    expectTypeOf(tupleParts([] as (number | undefined)[])).toEqualTypeOf<{
       required: [];
       optional: [];
       item: number | undefined;
@@ -326,7 +307,7 @@ describe("handling of undefined values", () => {
   test("undefined suffix and rest items", () => {
     expectTypeOf(
       tupleParts([undefined] as [
-        ...Array<number | undefined>,
+        ...(number | undefined)[],
         string | undefined,
       ]),
     ).toEqualTypeOf<{
@@ -353,7 +334,7 @@ describe("handling of undefined values", () => {
       tupleParts([undefined] as [
         number | undefined,
         (string | undefined)?,
-        ...Array<boolean | undefined>,
+        ...(boolean | undefined)[],
       ]),
     ).toEqualTypeOf<{
       required: [number | undefined];
@@ -367,7 +348,7 @@ describe("handling of undefined values", () => {
     expectTypeOf(
       tupleParts([undefined, undefined] as [
         number | undefined,
-        ...Array<boolean | undefined>,
+        ...(boolean | undefined)[],
         string | undefined,
       ]),
     ).toEqualTypeOf<{

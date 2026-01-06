@@ -34,10 +34,10 @@ type IsIndexAfterSpread<
 // return 0 (as expected), and if the tuple doesn't contain a spread element it
 // would return never.
 type IndicesAfterSpread<
-  T extends ReadonlyArray<unknown> | [],
+  T extends readonly unknown[] | [],
   // We use this type to count how many items we consumed, it's just a pseudo-
   // element that is used for its length.
-  Iterations extends ReadonlyArray<unknown> = [],
+  Iterations extends readonly unknown[] = [],
 > = T[number] extends never
   ? never
   : T extends readonly [unknown, ...infer Tail]
@@ -49,7 +49,7 @@ type IndicesAfterSpread<
       : Iterations["length"];
 
 type ObjectKeys<T> =
-  T extends Record<PropertyKey, never> ? [] : Array<EnumerableStringKeyOf<T>>;
+  T extends Record<PropertyKey, never> ? [] : EnumerableStringKeyOf<T>[];
 
 /**
  * Returns a new array containing the keys of the array or object.
@@ -78,6 +78,6 @@ export function keys<T extends object>(data: T): Keys<T>;
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
-export function keys(...args: ReadonlyArray<unknown>): unknown {
+export function keys(...args: readonly unknown[]): unknown {
   return purry(Object.keys, args);
 }

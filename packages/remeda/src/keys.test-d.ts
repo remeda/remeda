@@ -17,15 +17,15 @@ describe("arrays", () => {
   });
 
   test("array", () => {
-    const result = keys([] as Array<number>);
+    const result = keys([] as number[]);
 
-    expectTypeOf(result).toEqualTypeOf<Array<`${number}`>>();
+    expectTypeOf(result).toEqualTypeOf<`${number}`[]>();
   });
 
   test("readonly array", () => {
-    const result = keys([] as ReadonlyArray<number>);
+    const result = keys([] as readonly number[]);
 
-    expectTypeOf(result).toEqualTypeOf<Array<`${number}`>>();
+    expectTypeOf(result).toEqualTypeOf<`${number}`[]>();
   });
 
   test("tuple", () => {
@@ -41,43 +41,39 @@ describe("arrays", () => {
   });
 
   test("tuple with rest tail", () => {
-    const result = keys(["a"] as ["a", ...Array<"b">]);
+    const result = keys(["a"] as ["a", ..."b"[]]);
 
-    expectTypeOf(result).toEqualTypeOf<["0", ...Array<`${number}`>]>();
+    expectTypeOf(result).toEqualTypeOf<["0", ...`${number}`[]]>();
   });
 
   test("readonly tuple with rest tail", () => {
-    const result = keys(["a"] as readonly ["a", ...Array<"b">]);
+    const result = keys(["a"] as readonly ["a", ..."b"[]]);
 
-    expectTypeOf(result).toEqualTypeOf<["0", ...Array<`${number}`>]>();
+    expectTypeOf(result).toEqualTypeOf<["0", ...`${number}`[]]>();
   });
 
   test("tuple with rest head", () => {
-    const result = keys(["b"] as [...Array<"a">, "b"]);
+    const result = keys(["b"] as [..."a"[], "b"]);
 
-    expectTypeOf(result).toEqualTypeOf<[...Array<`${number}`>, `${number}`]>();
+    expectTypeOf(result).toEqualTypeOf<[...`${number}`[], `${number}`]>();
   });
 
   test("readonly tuple with rest head", () => {
-    const result = keys(["b"] as readonly [...Array<"a">, "b"]);
+    const result = keys(["b"] as readonly [..."a"[], "b"]);
 
-    expectTypeOf(result).toEqualTypeOf<[...Array<`${number}`>, `${number}`]>();
+    expectTypeOf(result).toEqualTypeOf<[...`${number}`[], `${number}`]>();
   });
 
   test("tuple with rest middle", () => {
-    const result = keys(["a", "c"] as ["a", ...Array<"b">, "c"]);
+    const result = keys(["a", "c"] as ["a", ..."b"[], "c"]);
 
-    expectTypeOf(result).toEqualTypeOf<
-      ["0", ...Array<`${number}`>, `${number}`]
-    >();
+    expectTypeOf(result).toEqualTypeOf<["0", ...`${number}`[], `${number}`]>();
   });
 
   test("readonly tuple with rest middle", () => {
-    const result = keys(["a", "c"] as readonly ["a", ...Array<"b">, "c"]);
+    const result = keys(["a", "c"] as readonly ["a", ..."b"[], "c"]);
 
-    expectTypeOf(result).toEqualTypeOf<
-      ["0", ...Array<`${number}`>, `${number}`]
-    >();
+    expectTypeOf(result).toEqualTypeOf<["0", ...`${number}`[], `${number}`]>();
   });
 });
 
@@ -105,11 +101,11 @@ describe("object types", () => {
 
     const dataFirst = keys(data);
 
-    expectTypeOf(dataFirst).toEqualTypeOf<Array<`${number}`> | Array<string>>();
+    expectTypeOf(dataFirst).toEqualTypeOf<`${number}`[] | string[]>();
 
     const dataLast = pipe(data, keys());
 
-    expectTypeOf(dataLast).toEqualTypeOf<Array<`${number}`> | Array<string>>();
+    expectTypeOf(dataLast).toEqualTypeOf<`${number}`[] | string[]>();
   });
 
   test("simple (required) object", () => {
@@ -119,7 +115,7 @@ describe("object types", () => {
       c: boolean;
     });
 
-    expectTypeOf(result).toEqualTypeOf<Array<"a" | "b" | "c">>();
+    expectTypeOf(result).toEqualTypeOf<("a" | "b" | "c")[]>();
   });
 
   test("simple partial object", () => {
@@ -129,7 +125,7 @@ describe("object types", () => {
       c?: boolean;
     });
 
-    expectTypeOf(result).toEqualTypeOf<Array<"a" | "b" | "c">>();
+    expectTypeOf(result).toEqualTypeOf<("a" | "b" | "c")[]>();
   });
 
   test("object with index signature", () => {
@@ -138,13 +134,13 @@ describe("object types", () => {
       a: string;
     });
 
-    expectTypeOf(result).toEqualTypeOf<Array<string>>();
+    expectTypeOf(result).toEqualTypeOf<string[]>();
   });
 
   test("record with literal union", () => {
     const result = keys({ a: 1, b: 2 } as Record<"a" | "b", number>);
 
-    expectTypeOf(result).toEqualTypeOf<Array<"a" | "b">>();
+    expectTypeOf(result).toEqualTypeOf<("a" | "b")[]>();
   });
 
   test("record with template string literal", () => {
@@ -153,25 +149,25 @@ describe("object types", () => {
       string
     >);
 
-    expectTypeOf(result).toEqualTypeOf<Array<`param_${number}`>>();
+    expectTypeOf(result).toEqualTypeOf<`param_${number}`[]>();
   });
 
   test("object with just symbol keys", () => {
     const actual = keys({ [Symbol("a")]: 1, [Symbol("b")]: "world" });
 
-    expectTypeOf(actual).toEqualTypeOf<Array<never>>();
+    expectTypeOf(actual).toEqualTypeOf<never[]>();
   });
 
   test("object with number keys", () => {
     const actual = keys({ 123: "HELLO" });
 
-    expectTypeOf(actual).toEqualTypeOf<Array<"123">>();
+    expectTypeOf(actual).toEqualTypeOf<"123"[]>();
   });
 
   test("object with combined symbols and keys", () => {
     const actual = keys({ a: 1, [Symbol("b")]: "world", 123: true });
 
-    expectTypeOf(actual).toEqualTypeOf<Array<"123" | "a">>();
+    expectTypeOf(actual).toEqualTypeOf<("123" | "a")[]>();
   });
 });
 
@@ -179,5 +175,5 @@ describe("object types", () => {
 test("branded keys (issue #752)", () => {
   expectTypeOf(
     keys({} as Record<Tagged<string, "color">, string>),
-  ).toEqualTypeOf<Array<Tagged<string, "color">>>();
+  ).toEqualTypeOf<Tagged<string, "color">[]>();
 });

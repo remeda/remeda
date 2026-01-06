@@ -6,7 +6,7 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
   T extends readonly []
     ? 1
     : // Non-empty bigint arrays will always result in a bigint product.
-      T extends readonly [bigint, ...ReadonlyArray<unknown>]
+      T extends readonly [bigint, ...(readonly unknown[])]
       ? bigint
       : // But an empty bigint array would result in a non-bigint 1.
         T[number] extends bigint
@@ -67,7 +67,7 @@ export function product(): <
   data: T,
 ) => Product<T>;
 
-export function product(...args: ReadonlyArray<unknown>): unknown {
+export function product(...args: readonly unknown[]): unknown {
   return purry(productImplementation, args);
 }
 

@@ -14,7 +14,7 @@ test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
   if (isNot(isString)(data)) {
     expectTypeOf(data).toEqualTypeOf<
-      | Array<number>
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -40,8 +40,8 @@ test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
 
   expectTypeOf(data).toEqualTypeOf<
-    Array<
-      | Array<number>
+    (
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -59,6 +59,6 @@ test("should work as type guard in filter", () => {
       | [number, number, number]
       | null
       | undefined
-    >
+    )[]
   >();
 });

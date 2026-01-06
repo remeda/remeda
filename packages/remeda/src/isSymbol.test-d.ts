@@ -31,5 +31,5 @@ test("should work even if data type is `any`", () => {
 test("should work as type guard in array", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isSymbol);
 
-  expectTypeOf(data).toEqualTypeOf<Array<symbol>>();
+  expectTypeOf(data).toEqualTypeOf<symbol[]>();
 });

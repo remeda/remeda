@@ -56,14 +56,14 @@ export function forEach<T extends IterableContainer>(
   callbackfn: (value: T[number], index: number, data: T) => void,
 ): (data: T) => Writable<T>;
 
-export function forEach(...args: ReadonlyArray<unknown>): unknown {
+export function forEach(...args: readonly unknown[]): unknown {
   return purry(forEachImplementation, args, lazyImplementation);
 }
 
 function forEachImplementation<T>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
-): Array<T> {
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => void,
+): T[] {
   // eslint-disable-next-line unicorn/no-array-for-each -- We are intentionally proxying the built in forEach, it's up to the user to decide if they want to use a for loop instead.
   data.forEach(callbackfn);
   // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
@@ -72,7 +72,7 @@ function forEachImplementation<T>(
 
 const lazyImplementation =
   <T>(
-    callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+    callbackfn: (value: T, index: number, data: readonly T[]) => void,
   ): LazyEvaluator<T> =>
   (value, index, data) => {
     callbackfn(value, index, data);

@@ -46,7 +46,7 @@ export function endsWith<Suffix extends string>(
 ): <T extends string>(data: T) => data is T & `${string}${Suffix}`;
 export function endsWith(suffix: string): (data: string) => boolean;
 
-export function endsWith(...args: ReadonlyArray<unknown>): unknown {
+export function endsWith(...args: readonly unknown[]): unknown {
   return purry(endsWithImplementation, args);
 }
 

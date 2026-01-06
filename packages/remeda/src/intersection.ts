@@ -19,9 +19,9 @@ import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
  * @category Array
  */
 export function intersection<T, S>(
-  data: ReadonlyArray<T>,
-  other: ReadonlyArray<S>,
-): Array<S & T>;
+  data: readonly T[],
+  other: readonly S[],
+): (S & T)[];
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -39,15 +39,15 @@ export function intersection<T, S>(
  * @category Array
  */
 export function intersection<S>(
-  other: ReadonlyArray<S>,
-): <T>(data: ReadonlyArray<T>) => Array<S & T>;
+  other: readonly S[],
+): <T>(data: readonly T[]) => (S & T)[];
 
-export function intersection(...args: ReadonlyArray<unknown>): unknown {
+export function intersection(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
 function lazyImplementation<T, S>(
-  other: ReadonlyArray<S>,
+  other: readonly S[],
 ): LazyEvaluator<T, S & T> {
   if (other.length === 0) {
     return lazyEmptyEvaluator;

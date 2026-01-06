@@ -4,7 +4,7 @@ import { sum } from "./sum";
 
 type Mean<T extends IterableContainer<number>> =
   | (T extends readonly [] ? never : number)
-  | (T extends readonly [unknown, ...Array<unknown>] ? never : undefined);
+  | (T extends readonly [unknown, ...unknown[]] ? never : undefined);
 
 /**
  * Returns the mean of the elements of an array.
@@ -51,7 +51,7 @@ export function mean(): <T extends IterableContainer<number>>(
   data: T,
 ) => Mean<T>;
 
-export function mean(...args: ReadonlyArray<unknown>): unknown {
+export function mean(...args: readonly unknown[]): unknown {
   return purry(meanImplementation, args);
 }
 

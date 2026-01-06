@@ -9,9 +9,7 @@ const NON_NEGATIVE_INTEGER_RE = /^(?:0|[1-9][0-9]*)$/u;
 type StringToPath<S> =
   // We can only compute the path type for literals that TypeScript can
   // break down further into parts.
-  IsStringLiteral<S> extends true
-    ? StringToPathImpl<S>
-    : Array<string | number>;
+  IsStringLiteral<S> extends true ? StringToPathImpl<S> : (string | number)[];
 
 type StringToPathImpl<S> =
   // We start by checking the 2 quoted variants of the square bracket access
@@ -92,7 +90,7 @@ type StringToPathImpl<S> =
 export function stringToPath<const Path extends string>(
   path: Path,
 ): StringToPath<Path> {
-  const result: Array<string | number> = [];
+  const result: (string | number)[] = [];
 
   // There are four possible ways to define a path segment::
   // - `propName`: is used to parse dot-notation paths, e.g. 'foo.bar.baz', we

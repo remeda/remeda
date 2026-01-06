@@ -141,6 +141,6 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
   entries: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
+export function fromEntries(...args: readonly unknown[]): unknown {
   return purry(Object.fromEntries, args);
 }

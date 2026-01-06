@@ -137,14 +137,14 @@ export function isIncludedIn<T, S extends T>(
 
 export function isIncludedIn(
   dataOrContainer: unknown,
-  container?: ReadonlyArray<unknown>,
+  container?: readonly unknown[],
 ): unknown {
   if (container === undefined) {
     // === dataLast ===
     // We don't use purry here because we can optimize the dataLast case by
     // memoizing a set and accessing it in O(1) time instead of scanning the
     // array **each time** (O(n)) each time.
-    const asSet = new Set(dataOrContainer as ReadonlyArray<unknown>);
+    const asSet = new Set(dataOrContainer as readonly unknown[]);
     return (data: unknown) => asSet.has(data);
   }
 

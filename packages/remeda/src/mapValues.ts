@@ -55,7 +55,7 @@ export function mapValues<T extends object, Value>(
   ) => Value,
 ): (data: T) => MappedValues<T, Value>;
 
-export function mapValues(...args: ReadonlyArray<unknown>): unknown {
+export function mapValues(...args: readonly unknown[]): unknown {
   return purry(mapValuesImplementation, args);
 }
 

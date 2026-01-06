@@ -3,7 +3,7 @@
  */
 export function swapInPlace(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional
-  data: Array<unknown>,
+  data: unknown[],
   i: number,
   j: number,
 ): void {

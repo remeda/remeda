@@ -29,8 +29,6 @@ export function doNothing(): typeof doesNothing {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- There is no other way to make typescript infer the function arguments "backwards" in data-last invocations without the Args type parameter. @see: https://github.com/typescript-eslint/typescript-eslint/issues/9887
-function doesNothing<Args extends ReadonlyArray<unknown>>(
-  ..._args: Args
-): void {
+function doesNothing<Args extends readonly unknown[]>(..._args: Args): void {
   /* do nothing */
 }

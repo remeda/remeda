@@ -33,21 +33,19 @@ test("doesn't accept non-overlapping types", () => {
 });
 
 test("works deeply", () => {
-  const data = [] as Array<
-    { a: Array<number> | Array<string> } | { b: Array<boolean> }
-  >;
+  const data = [] as ({ a: number[] | string[] } | { b: boolean[] })[];
   if (isDeepEqual(data, [{ a: [1] }])) {
-    expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
+    expectTypeOf(data).toEqualTypeOf<{ a: number[] }[]>();
   } else {
     expectTypeOf(data).toEqualTypeOf<
-      Array<
+      (
         | {
-            a: Array<number> | Array<string>;
+            a: number[] | string[];
           }
         | {
-            b: Array<boolean>;
+            b: boolean[];
           }
-      >
+      )[]
     >();
   }
 });
@@ -66,5 +64,5 @@ test("headless usage can infer types", () => {
   // Tests the issue reported in: https://github.com/remeda/remeda/issues/641
   const result = differenceWith(["a", "b", "c"], ["a", "c", "d"], isDeepEqual);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });

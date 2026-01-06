@@ -36,12 +36,12 @@ export function randomString(length: number): string;
  */
 export function randomString(): (length: number) => string;
 
-export function randomString(...args: ReadonlyArray<unknown>): unknown {
+export function randomString(...args: readonly unknown[]): unknown {
   return purry(randomStringImplementation, args);
 }
 
 function randomStringImplementation(length: number): string {
-  const out: Array<string> = [];
+  const out: string[] = [];
   for (let iteration = 0; iteration < length; iteration++) {
     const randomChar = ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
     out.push(randomChar);

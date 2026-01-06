@@ -13,59 +13,55 @@ declare function isString<T>(x: T): x is Extract<T, string>;
 
 describe("primitives arrays", () => {
   test("predicate", () => {
-    expectTypeOf(filter([] as Array<string>, constant(true))).toEqualTypeOf<
-      Array<string>
+    expectTypeOf(filter([] as string[], constant(true))).toEqualTypeOf<
+      string[]
     >();
   });
 
   test("trivial acceptor", () => {
-    expectTypeOf(filter([] as Array<string>, constant(true))).toEqualTypeOf<
-      Array<string>
+    expectTypeOf(filter([] as string[], constant(true))).toEqualTypeOf<
+      string[]
     >();
   });
 
   test("trivial rejector", () => {
-    expectTypeOf(filter([] as Array<string>, constant(false))).toEqualTypeOf<
-      []
-    >();
+    expectTypeOf(filter([] as string[], constant(false))).toEqualTypeOf<[]>();
   });
 
   test("type predicate", () => {
     expectTypeOf(
-      filter([] as Array<string>, isStrictEqual("hello" as const)),
-    ).toEqualTypeOf<Array<"hello">>();
+      filter([] as string[], isStrictEqual("hello" as const)),
+    ).toEqualTypeOf<"hello"[]>();
   });
 
   test("type predicate of the same type as the array", () => {
-    expectTypeOf(filter([] as Array<string>, isString)).toEqualTypeOf<
-      Array<string>
-    >();
+    expectTypeOf(filter([] as string[], isString)).toEqualTypeOf<string[]>();
   });
 });
 
 describe("arrays with literal unions", () => {
   test("predicate", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(true as boolean)),
-    ).toEqualTypeOf<Array<"cat" | "dog">>();
+      filter([] as ("cat" | "dog")[], constant(true as boolean)),
+    ).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("trivial acceptor", () => {
-    expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(true)),
-    ).toEqualTypeOf<Array<"cat" | "dog">>();
+    expectTypeOf(filter([] as ("cat" | "dog")[], constant(true))).toEqualTypeOf<
+      ("cat" | "dog")[]
+    >();
   });
 
   test("trivial rejector", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, constant(false)),
+      filter([] as ("cat" | "dog")[], constant(false)),
     ).toEqualTypeOf<[]>();
   });
 
   test("type predicate", () => {
     expectTypeOf(
-      filter([] as Array<"cat" | "dog">, isStrictEqual("cat" as const)),
-    ).toEqualTypeOf<Array<"cat">>();
+      filter([] as ("cat" | "dog")[], isStrictEqual("cat" as const)),
+    ).toEqualTypeOf<"cat"[]>();
   });
 });
 
@@ -76,7 +72,7 @@ describe("fixed tuple", () => {
         ["hello", "world", 1, 2, 3, true, "world", 3, "hello"] as const,
         constant(true as boolean),
       ),
-    ).toEqualTypeOf<Array<true | 1 | 2 | 3 | "hello" | "world">>();
+    ).toEqualTypeOf<(true | 1 | 2 | 3 | "hello" | "world")[]>();
   });
 
   test("trivial acceptor", () => {
@@ -130,58 +126,54 @@ describe("special tuple shapes", () => {
   });
 
   test("non-empty array", () => {
-    const data = ["hello"] as [string, ...Array<string>];
+    const data = ["hello"] as [string, ...string[]];
 
     expectTypeOf(filter(data, isStrictEqual("world" as const))).toEqualTypeOf<
-      Array<"world"> | ["world", ...Array<"world">]
+      "world"[] | ["world", ..."world"[]]
     >();
-    expectTypeOf(filter(data, isString)).toEqualTypeOf<
-      [string, ...Array<string>]
-    >();
+    expectTypeOf(filter(data, isString)).toEqualTypeOf<[string, ...string[]]>();
     expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
-      Array<string>
+      string[]
     >();
   });
 
   test("rest element is filtered out", () => {
-    const data = ["hello", "world"] as [string, ...Array<number>, string];
+    const data = ["hello", "world"] as [string, ...number[], string];
 
     expectTypeOf(filter(data, isString)).toEqualTypeOf<[string, string]>();
   });
 
   test("rest element is kept", () => {
-    const data = ["hello", "world"] as [string, ...Array<number>, string];
+    const data = ["hello", "world"] as [string, ...number[], string];
 
-    expectTypeOf(filter(data, isNumber)).toEqualTypeOf<Array<number>>();
+    expectTypeOf(filter(data, isNumber)).toEqualTypeOf<number[]>();
   });
 
   test("non-empty array filtered with regular predicate", () => {
-    const data = ["hello", "world"] as [string, ...Array<number>, string];
+    const data = ["hello", "world"] as [string, ...number[], string];
 
     expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
-      Array<string | number>
+      (string | number)[]
     >();
   });
 
   test("non-empty array with union of types and type-predicate on those types", () => {
     expectTypeOf(
       filter(
-        ["hello", true] as [string, ...Array<number>, boolean],
+        ["hello", true] as [string, ...number[], boolean],
         isStrictEqual("hello" as "hello" | 123 | true),
       ),
     ).toEqualTypeOf<
-      | Array<123>
-      | [...Array<123>, true]
-      | ["hello", ...Array<123>]
-      | ["hello", ...Array<123>, true]
+      123[] | [...123[], true] | ["hello", ...123[]] | ["hello", ...123[], true]
     >();
   });
 });
 
 test("discriminated union filtering", () => {
-  const data = [] as Array<
-    { type: "cat"; hates: string } | { type: "dog"; numFriends: number }
-  >;
+  const data = [] as (
+    | { type: "cat"; hates: string }
+    | { type: "dog"; numFriends: number }
+  )[];
 
   expectTypeOf(
     filter(
@@ -189,14 +181,14 @@ test("discriminated union filtering", () => {
       // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
       ($): $ is { type: "cat" } & (typeof data)[number] => $.type === "cat",
     ),
-  ).toEqualTypeOf<Array<{ type: "cat"; hates: string }>>();
+  ).toEqualTypeOf<{ type: "cat"; hates: string }[]>();
   expectTypeOf(
     filter(
       data,
       // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
       ($): $ is { type: "dog" } & (typeof data)[number] => $.type === "dog",
     ),
-  ).toEqualTypeOf<Array<{ type: "dog"; numFriends: number }>>();
+  ).toEqualTypeOf<{ type: "dog"; numFriends: number }[]>();
 });
 
 describe("accepts readonly arrays, returns mutable ones", () => {
@@ -205,50 +197,50 @@ describe("accepts readonly arrays, returns mutable ones", () => {
   // too
 
   test("predicate", () => {
-    expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(true)),
-    ).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
+      string[]
+    >();
   });
 
   test("trivial acceptor", () => {
-    expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(true)),
-    ).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
+      string[]
+    >();
   });
 
   test("trivial rejector", () => {
     expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(false)),
+      filter([] as readonly string[], constant(false)),
     ).toEqualTypeOf<[]>();
   });
 
   test("type predicate", () => {
     expectTypeOf(
-      filter([] as ReadonlyArray<string>, isStrictEqual("hello" as const)),
-    ).toEqualTypeOf<Array<"hello">>();
+      filter([] as readonly string[], isStrictEqual("hello" as const)),
+    ).toEqualTypeOf<"hello"[]>();
   });
 });
 
 test("null filtering", () => {
   expectTypeOf(
-    filter([] as Array<string | undefined>, isNonNullish),
-  ).toEqualTypeOf<Array<string>>();
+    filter([] as (string | undefined)[], isNonNullish),
+  ).toEqualTypeOf<string[]>();
 
-  expectTypeOf(filter([] as Array<string | null>, isNonNullish)).toEqualTypeOf<
-    Array<string>
+  expectTypeOf(filter([] as (string | null)[], isNonNullish)).toEqualTypeOf<
+    string[]
   >();
 
   expectTypeOf(
-    filter([] as Array<string | null | undefined>, isDefined),
-  ).toEqualTypeOf<Array<string | null>>();
+    filter([] as (string | null | undefined)[], isDefined),
+  ).toEqualTypeOf<(string | null)[]>();
 
   expectTypeOf(
-    filter([] as Array<string | null | undefined>, isNonNull),
-  ).toEqualTypeOf<Array<string | undefined>>();
+    filter([] as (string | null | undefined)[], isNonNull),
+  ).toEqualTypeOf<(string | undefined)[]>();
 
   expectTypeOf(
-    filter([] as Array<string | null | undefined>, isNonNullish),
-  ).toEqualTypeOf<Array<string>>();
+    filter([] as (string | null | undefined)[], isNonNullish),
+  ).toEqualTypeOf<string[]>();
 });
 
 describe("data last", () => {
@@ -258,7 +250,7 @@ describe("data last", () => {
       filter((x) => x % 2 === 1),
     );
 
-    expectTypeOf(result).toEqualTypeOf<Array<1 | 2 | 3>>();
+    expectTypeOf(result).toEqualTypeOf<(1 | 2 | 3)[]>();
   });
 
   test("type-guard", () => {
@@ -271,17 +263,14 @@ describe("data last", () => {
 describe("union of array types", () => {
   test("arrays", () => {
     expectTypeOf(
-      filter(
-        [] as Array<string | undefined> | Array<number | undefined>,
-        isDefined,
-      ),
-    ).toEqualTypeOf<Array<string> | Array<number>>();
+      filter([] as (string | undefined)[] | (number | undefined)[], isDefined),
+    ).toEqualTypeOf<string[] | number[]>();
   });
 
   test("disjoint conditions", () => {
-    expectTypeOf(
-      filter([] as Array<string> | Array<number>, isString),
-    ).toEqualTypeOf<[] | Array<string>>();
+    expectTypeOf(filter([] as string[] | number[], isString)).toEqualTypeOf<
+      [] | string[]
+    >();
   });
 
   test("fixed tuples", () => {

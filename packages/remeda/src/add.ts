@@ -32,7 +32,7 @@ export function add(value: number, addend: number): number;
 export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
-export function add(...args: ReadonlyArray<unknown>): unknown {
+export function add(...args: readonly unknown[]): unknown {
   return purry(addImplementation, args);
 }
 

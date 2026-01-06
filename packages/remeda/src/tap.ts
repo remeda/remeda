@@ -44,7 +44,7 @@ export function tap<
   F extends (value: T) => unknown,
 >(fn: F): (value: T) => T;
 
-export function tap(...args: ReadonlyArray<unknown>): unknown {
+export function tap(...args: readonly unknown[]): unknown {
   return purry(tapImplementation, args);
 }
 

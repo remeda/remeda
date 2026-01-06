@@ -21,7 +21,7 @@ type SplitPrefix<T extends IterableContainer> =
   FixedTupleSplits<TupleParts<T>["required"]> extends infer Req
     ? Req extends {
         left: infer Left;
-        right: infer Right extends Array<unknown>;
+        right: infer Right extends unknown[];
       }
       ? {
           // For required part we take whatever the left split is, and we
@@ -46,8 +46,8 @@ type SplitOptional<T extends IterableContainer> =
   // the splits.
   FixedTupleSplits<TupleParts<T>["optional"]> extends infer Optional
     ? Optional extends {
-        left: infer Left extends Array<unknown>;
-        right: infer Right extends Array<unknown>;
+        left: infer Left extends unknown[];
+        right: infer Right extends unknown[];
       }
       ? {
           // For optional part we need to add the required prefix to each left
@@ -86,7 +86,7 @@ type SplitSuffix<T extends IterableContainer> =
   // the splits.
   FixedTupleSplits<TupleParts<T>["suffix"]> extends infer Suffix
     ? Suffix extends {
-        left: infer Left extends Array<unknown>;
+        left: infer Left extends unknown[];
         right: infer Right;
       }
       ? {
@@ -108,7 +108,7 @@ type SplitSuffix<T extends IterableContainer> =
         >
     : never;
 
-type FixedTupleSplits<L, R extends Array<unknown> = []> =
+type FixedTupleSplits<L, R extends unknown[] = []> =
   | { left: L; right: R }
   | (L extends readonly [...infer Head, infer Tail]
       ? FixedTupleSplits<Head, [Tail, ...R]>

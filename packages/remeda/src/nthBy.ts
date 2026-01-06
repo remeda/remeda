@@ -49,12 +49,12 @@ export function nthBy<T extends IterableContainer>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): (data: T) => T[number] | undefined;
 
-export function nthBy(...args: ReadonlyArray<unknown>): unknown {
+export function nthBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(nthByImplementation, args);
 }
 
 const nthByImplementation = <T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   compareFn: CompareFunction<T>,
   index: number,
 ): T | undefined =>

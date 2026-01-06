@@ -37,7 +37,7 @@ type FunnelTimingOptions =
     };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
-type RestArguments = Array<any>;
+type RestArguments = any[];
 
 type Funnel<Args extends RestArguments = []> = {
   /**

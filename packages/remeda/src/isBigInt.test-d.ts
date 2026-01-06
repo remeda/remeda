@@ -16,7 +16,7 @@ test("should work as type guard", () => {
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isBigInt);
 
-  expectTypeOf(data).toEqualTypeOf<Array<1n>>();
+  expectTypeOf(data).toEqualTypeOf<1n[]>();
 });
 
 test("should work even if data type is unknown", () => {

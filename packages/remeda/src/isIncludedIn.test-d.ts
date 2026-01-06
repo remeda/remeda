@@ -33,7 +33,7 @@ describe("narrowing", () => {
 
   test("data is single literal, container is array === NOT NARROWED", () => {
     const data = 1 as const;
-    if (isIncludedIn(data, [1] as Array<1>)) {
+    if (isIncludedIn(data, [1] as 1[])) {
       expectTypeOf(data).toEqualTypeOf<1>();
     } else {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -42,7 +42,7 @@ describe("narrowing", () => {
 
   test("data is literal union, container is array === NOT NARROWED", () => {
     const data = 1 as 1 | 2 | 3;
-    if (isIncludedIn(data, [1] as Array<1>)) {
+    if (isIncludedIn(data, [1] as 1[])) {
       expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
     } else {
       expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
@@ -60,7 +60,7 @@ describe("narrowing", () => {
 
   test("data is primitive, container is array of typeof data === NOT NARROWED", () => {
     const data = 1 as number;
-    if (isIncludedIn(data, [1] as Array<number>)) {
+    if (isIncludedIn(data, [1] as number[])) {
       expectTypeOf(data).toEqualTypeOf<number>();
     } else {
       expectTypeOf(data).toEqualTypeOf<number>();
@@ -78,7 +78,7 @@ describe("narrowing", () => {
 
   test("data is primitive, container is array of literals === NARROWED", () => {
     const data = 1 as number;
-    if (isIncludedIn(data, [1] as Array<1>)) {
+    if (isIncludedIn(data, [1] as 1[])) {
       expectTypeOf(data).toEqualTypeOf<1>();
     } else {
       expectTypeOf(data).toEqualTypeOf<number>();
@@ -105,7 +105,7 @@ describe("narrowing", () => {
 
   test("data is primitive union, container is array of primitives === NOT NARROWED", () => {
     const data = 1 as number | string;
-    if (isIncludedIn(data, [1] as Array<number>)) {
+    if (isIncludedIn(data, [1] as number[])) {
       expectTypeOf(data).toEqualTypeOf<number | string>();
     } else {
       expectTypeOf(data).toEqualTypeOf<number | string>();

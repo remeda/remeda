@@ -27,10 +27,10 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
-  array: ReadonlyArray<TFirst>,
-  other: ReadonlyArray<TSecond>,
+  array: readonly TFirst[],
+  other: readonly TSecond[],
   comparator: Comparator<TFirst, TSecond>,
-): Array<TFirst>;
+): TFirst[];
 
 /**
  * Returns a list of intersecting values based on a custom
@@ -53,21 +53,21 @@ export function intersectionWith<TFirst, TSecond>(
  * @category Array
  */
 export function intersectionWith<TFirst, TSecond>(
-  other: ReadonlyArray<TSecond>,
+  other: readonly TSecond[],
   /**
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
    */
   comparator: Comparator<TFirst, TSecond>,
-): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
+): (array: readonly TFirst[]) => TFirst[];
 
-export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
+export function intersectionWith(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
 const lazyImplementation =
   <TFirst, TSecond>(
-    other: ReadonlyArray<TSecond>,
+    other: readonly TSecond[],
     comparator: Comparator<TFirst, TSecond>,
   ): LazyEvaluator<TFirst> =>
   (value) =>

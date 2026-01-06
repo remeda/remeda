@@ -36,31 +36,30 @@ type Emptyish<T> =
 // Because of TypeScript's duck-typing, a lot of sub-types of `object` can
 // extend each other so we need to cascade between the different "kinds" of
 // objects.
-type EmptyishObjectLike<T extends object> =
-  T extends ReadonlyArray<unknown>
-    ? EmptyishArray<T>
-    : T extends ReadonlyMap<infer Key, unknown>
-      ? T extends Map<unknown, unknown>
-        ? // Mutable maps should remain mutable so we can't narrow them down.
+type EmptyishObjectLike<T extends object> = T extends readonly unknown[]
+  ? EmptyishArray<T>
+  : T extends ReadonlyMap<infer Key, unknown>
+    ? T extends Map<unknown, unknown>
+      ? // Mutable maps should remain mutable so we can't narrow them down.
+        Empty<T>
+      : // But immutable maps could be rewritten to prevent any mutations.
+        ReadonlyMap<Key, never>
+    : T extends ReadonlySet<unknown>
+      ? T extends Set<unknown>
+        ? // Mutable sets should remain mutable so we can't narrow them down.
           Empty<T>
-        : // But immutable maps could be rewritten to prevent any mutations.
-          ReadonlyMap<Key, never>
-      : T extends ReadonlySet<unknown>
-        ? T extends Set<unknown>
-          ? // Mutable sets should remain mutable so we can't narrow them down.
-            Empty<T>
-          : // But immutable sets could be rewritten to prevent any mutations.
-            ReadonlySet<never>
-        : EmptyishObject<T>;
+        : // But immutable sets could be rewritten to prevent any mutations.
+          ReadonlySet<never>
+      : EmptyishObject<T>;
 
-type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
+type EmptyishArray<T extends readonly unknown[]> = T extends readonly []
   ? // By returning T we effectively narrow the "else" branch to `never`.
     T
   : And<
         IsEqual<TupleParts<T>["required"], []>,
         IsEqual<TupleParts<T>["suffix"], []>
       > extends true
-    ? T extends Array<unknown>
+    ? T extends unknown[]
       ? // A mutable array should remain mutable so we can't narrow it down.
         Empty<T>
       : // But immutable arrays could be rewritten to prevent any mutations.

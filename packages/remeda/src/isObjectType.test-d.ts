@@ -19,7 +19,7 @@ test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
   if (isObjectType(data)) {
     expectTypeOf(data).toEqualTypeOf<
-      | Array<number>
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -46,8 +46,8 @@ test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
 
   expectTypeOf(data).toEqualTypeOf<
-    Array<
-      | Array<number>
+    (
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -59,7 +59,7 @@ test("should work as type guard in filter", () => {
       | (() => void)
       | { readonly a: "asd" }
       | [number, number, number]
-    >
+    )[]
   >();
 });
 

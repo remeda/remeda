@@ -24,7 +24,7 @@ type JoinableItem = bigint | boolean | number | string | null | undefined;
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<JoinableItem> | [],
+  T extends readonly JoinableItem[] | [],
   Glue extends string,
 >(data: T, glue: Glue): Join<T, Glue>;
 
@@ -47,15 +47,13 @@ export function join<
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<JoinableItem> | [],
+  T extends readonly JoinableItem[] | [],
   Glue extends string,
 >(glue: Glue): (data: T) => Join<T, Glue>;
 
-export function join(...args: ReadonlyArray<unknown>): unknown {
+export function join(...args: readonly unknown[]): unknown {
   return purry(joinImplementation, args);
 }
 
-const joinImplementation = (
-  data: ReadonlyArray<unknown>,
-  glue: string,
-): string => data.join(glue);
+const joinImplementation = (data: readonly unknown[], glue: string): string =>
+  data.join(glue);

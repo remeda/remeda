@@ -59,15 +59,15 @@ type ComparablePrimitive = bigint | boolean | number | string;
  * comparer, and manage the purrying of the input arguments.
  */
 export function purryOrderRules<T>(
-  func: (data: ReadonlyArray<T>, compareFn: CompareFunction<T>) => unknown,
-  inputArgs: ReadonlyArray<unknown>,
+  func: (data: readonly T[], compareFn: CompareFunction<T>) => unknown,
+  inputArgs: readonly unknown[],
 ): unknown {
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call purry so it's fine...
   const [dataOrRule, ...rules] = inputArgs as
     | Readonly<NonEmptyArray<OrderRule<T>>>
     | [
-        data: OrderRule<T> | ReadonlyArray<T>,
+        data: OrderRule<T> | readonly T[],
         ...rules: Readonly<NonEmptyArray<OrderRule<T>>>,
       ];
 
@@ -87,7 +87,7 @@ export function purryOrderRules<T>(
   // it's constructed and shared everywhere (it's stateless so should be safe
   // if used multiple times).
   const compareFn = orderRuleComparer(dataOrRule, ...rules);
-  return (data: ReadonlyArray<T>) => func(data, compareFn);
+  return (data: readonly T[]) => func(data, compareFn);
 }
 
 /**
@@ -95,16 +95,16 @@ export function purryOrderRules<T>(
  */
 export function purryOrderRulesWithArgument(
   func: <T>(
-    data: ReadonlyArray<T>,
+    data: readonly T[],
     compareFn: CompareFunction<T>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
     arg: any,
   ) => unknown,
-  [first, second, ...rest]: ReadonlyArray<unknown>,
+  [first, second, ...rest]: readonly unknown[],
 ): unknown {
   // We need to pull the `n` argument out to make it work with purryOrderRules.
   let arg: unknown;
-  let argRemoved: ReadonlyArray<unknown>;
+  let argRemoved: readonly unknown[];
   if (isOrderRule(second)) {
     // dataLast!
     arg = first;
@@ -121,7 +121,7 @@ export function purryOrderRulesWithArgument(
 function orderRuleComparer<T>(
   primaryRule: OrderRule<T>,
   secondaryRule?: OrderRule<T>,
-  ...otherRules: ReadonlyArray<OrderRule<T>>
+  ...otherRules: readonly OrderRule<T>[]
 ): (a: T, b: T) => number {
   const projector =
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
@@ -162,8 +162,7 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest] =
-    x as ReadonlyArray<unknown>;
+  const [maybeProjection, maybeDirection, ...rest] = x as readonly unknown[];
 
   return (
     isProjection(maybeProjection) &&

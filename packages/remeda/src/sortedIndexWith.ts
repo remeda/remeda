@@ -36,8 +36,8 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number;
 
 /**
@@ -73,9 +73,9 @@ export function sortedIndexWith<T>(
  * @category Array
  */
 export function sortedIndexWith<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => number;
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): (data: readonly T[]) => number;
 
-export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
+export function sortedIndexWith(...args: readonly unknown[]): unknown {
   return purry(binarySearchCutoffIndex, args);
 }

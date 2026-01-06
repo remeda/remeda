@@ -247,7 +247,7 @@ describe("https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038", ()
   });
 
   test("supports recursive calls", async () => {
-    const actual = [] as Array<string>;
+    const actual = [] as string[];
     const queue = ["a", "b", "c"];
     const throttled = throttle((chr: string) => {
       actual.push(chr);

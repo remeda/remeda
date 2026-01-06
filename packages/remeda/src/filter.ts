@@ -17,7 +17,7 @@ type NonRefinedFilteredArray<
     // output so we can only safely say that the result is an array with items
     // from the input array.
     // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
-    Array<T[number]>
+    T[number][]
   : IsItemIncluded extends true
     ? // If the predicate is always true we return a shallow copy of the array.
       // If it was originally readonly we need to strip that away.
@@ -91,18 +91,18 @@ export function filter<
   predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function filter(...args: ReadonlyArray<unknown>): unknown {
+export function filter(...args: readonly unknown[]): unknown {
   return purry(filterImplementation, args, lazyImplementation);
 }
 
 const filterImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
-): Array<T> => data.filter(predicate);
+  data: readonly T[],
+  predicate: (value: T, index: number, array: readonly T[]) => boolean,
+): T[] => data.filter(predicate);
 
 const lazyImplementation =
   <T>(
-    predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+    predicate: (value: T, index: number, data: readonly T[]) => boolean,
   ): LazyEvaluator<T> =>
   (value, index, data) =>
     predicate(value, index, data)

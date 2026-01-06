@@ -32,8 +32,8 @@ import { purry } from "./purry";
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  array: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => [K, V],
+  array: readonly T[],
+  fn: (value: T, index: number, data: readonly T[]) => [K, V],
 ): Record<K, V>;
 
 // TODO [>2]: Once we allow fromEntries to run lazily on iterables we need to remove this utility as it's completely replaceable by `fromEntries(map(...))`.
@@ -70,19 +70,19 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @category Array
  */
 export function mapToObj<T, K extends PropertyKey, V>(
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => [K, V],
-): (array: ReadonlyArray<T>) => Record<K, V>;
+  fn: (value: T, index: number, data: readonly T[]) => [K, V],
+): (array: readonly T[]) => Record<K, V>;
 
-export function mapToObj(...args: ReadonlyArray<unknown>): unknown {
+export function mapToObj(...args: readonly unknown[]): unknown {
   return purry(mapToObjImplementation, args);
 }
 
 function mapToObjImplementation(
-  array: ReadonlyArray<unknown>,
+  array: readonly unknown[],
   fn: (
     value: unknown,
     index: number,
-    data: ReadonlyArray<unknown>,
+    data: readonly unknown[],
   ) => [PropertyKey, unknown],
 ): Record<PropertyKey, unknown> {
   const out: Record<PropertyKey, unknown> = {};

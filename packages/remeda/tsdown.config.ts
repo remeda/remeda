@@ -111,9 +111,9 @@ export default defineConfig({
  */
 async function injectPolyfills(
   dir: string,
-  chunks: ReadonlyArray<RolldownChunk>,
+  chunks: readonly RolldownChunk[],
 ): Promise<void> {
-  const polyfills: Array<string> = [];
+  const polyfills: string[] = [];
   for await (const file of glob(`${dir}/*.d.ts`)) {
     const content = await readFile(file, "utf8");
     const match = TYPE_DEF_RE.exec(content);

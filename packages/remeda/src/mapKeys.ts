@@ -48,7 +48,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
   ) => S,
 ): (data: T) => BoundedPartial<Record<S, EnumerableStringKeyedValueOf<T>>>;
 
-export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
+export function mapKeys(...args: readonly unknown[]): unknown {
   return purry(mapKeysImplementation, args);
 }
 

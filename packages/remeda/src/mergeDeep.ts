@@ -41,7 +41,7 @@ export function mergeDeep<Source extends object>(
   target: Destination,
 ) => MergeDeep<Destination, Source>;
 
-export function mergeDeep(...args: ReadonlyArray<unknown>): unknown {
+export function mergeDeep(...args: readonly unknown[]): unknown {
   return purry(mergeDeepImplementation, args);
 }
 

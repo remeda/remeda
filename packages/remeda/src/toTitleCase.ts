@@ -32,7 +32,7 @@ type TitleCase<S extends string, Options extends TitleCaseOptions> =
     : string;
 
 type TitleCasedArray<
-  T extends ReadonlyArray<string>,
+  T extends readonly string[],
   Options extends TitleCaseOptions,
 > = {
   [I in keyof T]: Capitalize<

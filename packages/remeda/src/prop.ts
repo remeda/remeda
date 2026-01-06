@@ -3,12 +3,12 @@ import type { ArrayAt } from "./internal/types/ArrayAt";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
-type KeysDeep<T, Path extends ReadonlyArray<unknown>> = KeysOfUnion<
+type KeysDeep<T, Path extends readonly unknown[]> = KeysOfUnion<
   PropDeep<T, Path>
 >;
 
 // Recursively run `Prop` over `Path` to extract the deeply nested type.
-type PropDeep<T, Path extends ReadonlyArray<unknown>> = Path extends readonly [
+type PropDeep<T, Path extends readonly unknown[]> = Path extends readonly [
   infer Key,
   ...infer Rest,
 ]
@@ -25,7 +25,7 @@ type Prop<T, Key> =
       // specific object within a union of objects, those cases don't contribute
       // to the output type.
       Key extends keyof T
-      ? T extends ReadonlyArray<unknown>
+      ? T extends readonly unknown[]
         ? ArrayAt<T, Key>
         : T[Key]
       : undefined
@@ -204,7 +204,7 @@ export function prop<
     T,
     [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]
   >,
-  AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
+  AdditionalKeys extends readonly PropertyKey[] = [],
 >(
   data: T,
   key0: Key0,
@@ -399,7 +399,7 @@ export function prop<
     T,
     [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]
   >,
-  AdditionalKeys extends ReadonlyArray<PropertyKey> = [],
+  AdditionalKeys extends readonly PropertyKey[] = [],
 >(
   key0: Key0,
   key1: Key1,
@@ -439,7 +439,7 @@ export function prop<K extends PropertyKey>(
 
 export function prop(
   maybeData: NonPropertyKey | PropertyKey,
-  ...args: ReadonlyArray<PropertyKey>
+  ...args: readonly PropertyKey[]
 ): unknown {
   return typeof maybeData === "string" ||
     typeof maybeData === "number" ||
@@ -450,7 +450,7 @@ export function prop(
 
 function propImplementation(
   data: NonPropertyKey,
-  ...keys: ReadonlyArray<PropertyKey>
+  ...keys: readonly PropertyKey[]
 ): unknown {
   let output: unknown = data;
   for (const key of keys) {

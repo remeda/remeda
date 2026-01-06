@@ -5,6 +5,6 @@
  *
  * TODO [>2]: Remove this utility once the minimum TypeScript version is bumped.
  */
-export type PartialArray<T> = T extends ReadonlyArray<unknown> | []
+export type PartialArray<T> = T extends readonly unknown[] | []
   ? Partial<T>
   : never;

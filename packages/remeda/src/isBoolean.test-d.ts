@@ -31,5 +31,5 @@ test("should narrow `any`", () => {
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isBoolean);
 
-  expectTypeOf(data).toEqualTypeOf<Array<boolean>>();
+  expectTypeOf(data).toEqualTypeOf<boolean[]>();
 });

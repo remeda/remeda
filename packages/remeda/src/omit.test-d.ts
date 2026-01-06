@@ -64,7 +64,7 @@ test("data-last", () => {
 // @see https://github.com/remeda/remeda/issues/1186
 test("unbounded keys with simple array (issue #1186)", () => {
   expectTypeOf(
-    omit({} as Record<string, number>, [] as Array<string>),
+    omit({} as Record<string, number>, [] as string[]),
   ).toEqualTypeOf<Record<string, number>>();
 });
 

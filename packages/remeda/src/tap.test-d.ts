@@ -10,7 +10,7 @@ test("should work in the middle of pipe sequence", () => {
     [-1, 2],
     filter((n) => n > 0),
     tap((data) => {
-      expectTypeOf(data).toEqualTypeOf<Array<number>>();
+      expectTypeOf(data).toEqualTypeOf<number[]>();
     }),
     map(multiply(2)),
   );

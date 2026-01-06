@@ -4,25 +4,25 @@ import { split } from "./split";
 test("non-literals", () => {
   const result = split("" as string, "" as string);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("non-literal data", () => {
   const result = split("" as string, ",");
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("non-literal separator", () => {
   const result = split("", "," as string);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("non-literal limit", () => {
   const result = split("", "", 1 as number);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("literal empty strings", () => {
@@ -52,7 +52,7 @@ test("useful split", () => {
 test("regex split", () => {
   const result = split("a,b,c", /,/u);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("limited split", () => {
@@ -112,7 +112,7 @@ test("negative limit", () => {
 test("fractional limits", () => {
   const result = split("a,b,c", ",", 1.5);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("0 limit", () => {

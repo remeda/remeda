@@ -18,5 +18,5 @@ type LazyMany<T> = {
   done: boolean;
   hasNext: true;
   hasMany: true;
-  next: ReadonlyArray<T>;
+  next: readonly T[];
 };

@@ -6,7 +6,7 @@ type SumBy<
   U extends bigint | number,
 > = T extends readonly []
   ? 0
-  : T extends readonly [unknown, ...ReadonlyArray<unknown>]
+  : T extends readonly [unknown, ...(readonly unknown[])]
     ? U
     : U | 0;
 
@@ -80,17 +80,13 @@ export function sumBy<T extends IterableContainer>(
   callbackfn: (value: T[number], index: number, data: T) => bigint,
 ): SumBy<T, bigint>;
 
-export function sumBy(...args: ReadonlyArray<unknown>): unknown {
+export function sumBy(...args: readonly unknown[]): unknown {
   return purry(sumByImplementation, args);
 }
 
 const sumByImplementation = <T>(
-  array: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => bigint | number,
+  array: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => bigint | number,
 ): bigint | number => {
   const iter = array.entries();
 

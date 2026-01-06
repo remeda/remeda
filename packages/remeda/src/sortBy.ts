@@ -89,13 +89,13 @@ export function sortBy<T extends IterableContainer>(
   ...sortRules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): ReorderedArray<T>;
 
-export function sortBy(...args: ReadonlyArray<unknown>): unknown {
+export function sortBy(...args: readonly unknown[]): unknown {
   return purryOrderRules(sortByImplementation, args);
 }
 
 const sortByImplementation = <T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   compareFn: CompareFunction<T>,
-): Array<T> =>
+): T[] =>
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   [...data].sort(compareFn);

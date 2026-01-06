@@ -31,7 +31,7 @@ import type { RemedaTypeError } from "./RemedaTypeError";
  */
 export type TupleParts<
   T extends IterableContainer,
-  Prefix extends Array<unknown> = [],
+  Prefix extends unknown[] = [],
 > = T extends readonly [infer Head, ...infer Tail]
   ? // The first step to building the tuple parts is to remove the extract (and
     // remove) the required prefix from the tuple.
@@ -54,7 +54,7 @@ export type TupleParts<
 // This is an internal type and assumes that the tuple has no required prefix!
 type TuplePartsWithoutRequired<
   T extends IterableContainer,
-  Suffix extends Array<unknown> = [],
+  Suffix extends unknown[] = [],
 > = T extends readonly [...infer Head, infer Tail]
   ? // Our tuple has no required prefix, now we extract (and remove) the
     // required suffix from the tuple.
@@ -79,7 +79,7 @@ type TuplePartsWithoutRequired<
 // (neither prefix nor suffix).
 type TuplePartsWithoutFixed<
   T extends IterableContainer,
-  Optional extends Array<unknown> = [],
+  Optional extends unknown[] = [],
 > = T extends readonly [(infer Head)?, ...infer Tail]
   ? // Optional elements behave differently than required ones, and TypeScript
     // has a hard time telling which is which based on inference alone. This
@@ -91,7 +91,7 @@ type TuplePartsWithoutFixed<
       T extends readonly [] ? true : false,
       // The second check is to catch cases where T is just an array (e.g.
       // `string[]`).
-      Array<T[number]> extends Tail ? true : false
+      T[number][] extends Tail ? true : false
     > extends true
     ? {
         /**

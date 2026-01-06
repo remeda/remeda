@@ -9,10 +9,10 @@ type MAX_LITERAL_SIZE = 46;
 type TimesArray<
   T,
   N extends number,
-  Iteration extends ReadonlyArray<unknown> = [],
+  Iteration extends readonly unknown[] = [],
 > = number extends N
   ? // N is not a literal number, we can't deduce the type
-    Array<T>
+    T[]
   : `${N}` extends `-${number}`
     ? // N is non-positive, the mapper will never run
       []
@@ -22,7 +22,7 @@ type TimesArray<
       : GreaterThan<N, MAX_LITERAL_SIZE> extends true
         ? // We can't build a literal tuple beyond this size, after that we
           // can't add more items to the tuple so we add a rest element instead.
-          [...TimesArray<T, MAX_LITERAL_SIZE, Iteration>, ...Array<T>]
+          [...TimesArray<T, MAX_LITERAL_SIZE, Iteration>, ...T[]]
         : N extends Iteration["length"]
           ? // We finished building the output tuple
             []
@@ -74,14 +74,11 @@ export function times<T>(
   fn: (index: number) => T,
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
-export function times(...args: ReadonlyArray<unknown>): unknown {
+export function times(...args: readonly unknown[]): unknown {
   return purry(timesImplementation, args);
 }
 
-function timesImplementation<T>(
-  count: number,
-  fn: (index: number) => T,
-): Array<T> {
+function timesImplementation<T>(count: number, fn: (index: number) => T): T[] {
   if (count < 1) {
     // We prefer to return trivial results on trivial inputs vs throwing errors.
     return [];

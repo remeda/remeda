@@ -113,9 +113,9 @@ type WithSameReadonly<Source, Destination> =
 // simpler iterative solution to make the beginning of the optional part
 // required and the rest of it optional.
 type OptionalTupleRequiredPrefix<
-  T extends Array<unknown>,
+  T extends unknown[],
   N,
-  Prefix extends Array<unknown> = [],
+  Prefix extends unknown[] = [],
 > = Prefix["length"] extends N
   ? // This case happens when N is smaller than the number of items in T, it
     // means that Prefix contains the required part of the optional part, and

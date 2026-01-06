@@ -48,7 +48,7 @@ export function startsWith<Prefix extends string>(
 ): <T extends string>(data: T) => data is T & `${Prefix}${string}`;
 export function startsWith(prefix: string): (data: string) => boolean;
 
-export function startsWith(...args: ReadonlyArray<unknown>): unknown {
+export function startsWith(...args: readonly unknown[]): unknown {
   return purry(startsWithImplementation, args);
 }
 

@@ -23,13 +23,13 @@ import { purry } from "./purry";
  * @category Array
  */
 export function partition<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): [Array<S>, Array<Exclude<T, S>>];
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): [S[], Exclude<T, S>[]];
 export function partition<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): [Array<T>, Array<T>];
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): [T[], T[]];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -53,21 +53,21 @@ export function partition<T>(
  * @category Array
  */
 export function partition<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): (data: readonly T[]) => [S[], Exclude<T, S>[]];
 export function partition<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => [Array<T>, Array<T>];
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): (data: readonly T[]) => [T[], T[]];
 
-export function partition(...args: ReadonlyArray<unknown>): unknown {
+export function partition(...args: readonly unknown[]): unknown {
   return purry(partitionImplementation, args);
 }
 
 const partitionImplementation = <T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): [Array<S>, Array<T>] => {
-  const ret: [Array<S>, Array<T>] = [[], []];
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): [S[], T[]] => {
+  const ret: [S[], T[]] = [[], []];
   for (const [index, item] of data.entries()) {
     if (predicate(item, index, data)) {
       ret[0].push(item);

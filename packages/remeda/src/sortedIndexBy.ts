@@ -35,12 +35,12 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * @category Array
  */
 export function sortedIndexBy<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   item: T,
   valueFunction: (
     item: T,
     index: number | undefined,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => NonNullable<unknown>,
 ): number;
 
@@ -80,21 +80,21 @@ export function sortedIndexBy<T>(
   valueFunction: (
     item: T,
     index: number | undefined,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => NonNullable<unknown>,
-): (data: ReadonlyArray<T>) => number;
+): (data: readonly T[]) => number;
 
-export function sortedIndexBy(...args: ReadonlyArray<unknown>): unknown {
+export function sortedIndexBy(...args: readonly unknown[]): unknown {
   return purry(sortedIndexByImplementation, args);
 }
 
 function sortedIndexByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   item: T,
   valueFunction: (
     item: T,
     index: number | undefined,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => NonNullable<unknown>,
 ): number {
   const value = valueFunction(item, undefined /* index */, data);

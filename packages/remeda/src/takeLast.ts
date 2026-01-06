@@ -16,7 +16,7 @@ import { purry } from "./purry";
 export function takeLast<T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Take the last `n` elements from the `array`.
@@ -31,14 +31,13 @@ export function takeLast<T extends IterableContainer>(
  */
 export function takeLast<T extends IterableContainer>(
   n: number,
-): (array: T) => Array<T[number]>;
+): (array: T) => T[number][];
 
-export function takeLast(...args: ReadonlyArray<unknown>): unknown {
+export function takeLast(...args: readonly unknown[]): unknown {
   return purry(takeLastImplementation, args);
 }
 
 const takeLastImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]> =>
-  n > 0 ? array.slice(Math.max(0, array.length - n)) : [];
+): T[number][] => (n > 0 ? array.slice(Math.max(0, array.length - n)) : []);

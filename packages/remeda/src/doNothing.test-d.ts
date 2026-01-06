@@ -12,7 +12,7 @@ test("supported in any api", () => {
 function mockApi(_options: {
   readonly onMixOfParams: (result: string, isOptionalBoolean?: true) => void;
   readonly onNoParams: () => void;
-  readonly onVariadicParams: (...args: ReadonlyArray<string>) => void;
+  readonly onVariadicParams: (...args: readonly string[]) => void;
 }): void {
   /* do nothing */
 }

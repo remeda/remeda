@@ -19,7 +19,7 @@ type Drop<T extends IterableContainer, N extends number> =
         // simple array. This is also the case when N is not a literal value
         // (e.g. it is `number`).
         // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
-        Array<T[number]>
+        T[number][]
       : ClampedIntegerSubtract<
             N,
             TupleParts<T>["required"]["length"]
@@ -86,7 +86,7 @@ type DropFixedTuple<
   // This flag controls if we want a union of all possible prefixes, or just the
   // final tuple with all N items dropped.
   IncludePrefixes = false,
-  Dropped extends Array<unknown> = [],
+  Dropped extends unknown[] = [],
 > = Dropped["length"] extends N
   ? T
   : T extends readonly [unknown, ...infer Rest]
@@ -129,14 +129,14 @@ export function drop<N extends number>(
   n: N,
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
-export function drop(...args: ReadonlyArray<unknown>): unknown {
+export function drop(...args: readonly unknown[]): unknown {
   return purry(dropImplementation, args, lazyImplementation);
 }
 
 const dropImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]> => (n < 0 ? [...array] : array.slice(n));
+): T[number][] => (n < 0 ? [...array] : array.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {

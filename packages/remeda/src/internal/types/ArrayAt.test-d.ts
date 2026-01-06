@@ -82,7 +82,7 @@ describe("mixed tuples", () => {
 });
 
 describe("arrays", () => {
-  const DATA = [] as Array<1>;
+  const DATA = [] as 1[];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1 | undefined>();
@@ -94,7 +94,7 @@ describe("arrays", () => {
 });
 
 describe("fixed-prefix arrays", () => {
-  const DATA = [1, 2, 3] as [1, 2, 3, ...Array<4>];
+  const DATA = [1, 2, 3] as [1, 2, 3, ...4[]];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1>();
@@ -110,7 +110,7 @@ describe("fixed-prefix arrays", () => {
 });
 
 describe("optional-prefix arrays", () => {
-  const DATA = [] as [1?, 2?, 3?, ...Array<4>];
+  const DATA = [] as [1?, 2?, 3?, ...4[]];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1 | undefined>();
@@ -126,7 +126,7 @@ describe("optional-prefix arrays", () => {
 });
 
 describe("mixed-prefix arrays", () => {
-  const DATA = [1, 2, 3] as [1, 2, 3, 4?, 5?, 6?, ...Array<7>];
+  const DATA = [1, 2, 3] as [1, 2, 3, 4?, 5?, 6?, ...7[]];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1>();
@@ -146,7 +146,7 @@ describe("mixed-prefix arrays", () => {
 });
 
 describe("fixed-suffix arrays", () => {
-  const DATA = [2, 3, 4] as [...Array<1>, 2, 3, 4];
+  const DATA = [2, 3, 4] as [...1[], 2, 3, 4];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1 | 2>();
@@ -162,7 +162,7 @@ describe("fixed-suffix arrays", () => {
 });
 
 describe("fixed-elements arrays", () => {
-  const DATA = [1, 2, 3, 5, 6, 7] as [1, 2, 3, ...Array<4>, 5, 6, 7];
+  const DATA = [1, 2, 3, 5, 6, 7] as [1, 2, 3, ...4[], 5, 6, 7];
 
   test("first", () => {
     expectTypeOf(arrayAt(DATA, 0)).toEqualTypeOf<1>();
@@ -187,17 +187,12 @@ describe("unions", () => {
   });
 
   test("union of indices, arrays", () => {
-    expectTypeOf(arrayAt([] as Array<1>, 0 as 0 | 1)).toEqualTypeOf<
-      1 | undefined
-    >();
+    expectTypeOf(arrayAt([] as 1[], 0 as 0 | 1)).toEqualTypeOf<1 | undefined>();
   });
 
   test("union of indices, fixed-elements array", () => {
     expectTypeOf(
-      arrayAt(
-        [1, 2, 3, 5, 6, 7] as [1, 2, 3, ...Array<4>, 5, 6, 7],
-        1 as 1 | 4,
-      ),
+      arrayAt([1, 2, 3, 5, 6, 7] as [1, 2, 3, ...4[], 5, 6, 7], 1 as 1 | 4),
     ).toEqualTypeOf<2 | 4 | 5 | 6>();
   });
 
@@ -209,10 +204,10 @@ describe("unions", () => {
 
   test("union of member types", () => {
     expectTypeOf(
-      arrayAt([1, 3, 5] as [1 | 2, 3 | 4, 5 | 6, ...Array<"cat" | "dog">], 1),
+      arrayAt([1, 3, 5] as [1 | 2, 3 | 4, 5 | 6, ...("cat" | "dog")[]], 1),
     ).toEqualTypeOf<3 | 4>();
     expectTypeOf(
-      arrayAt([1, 3, 5] as [1 | 2, 3 | 4, 5 | 6, ...Array<"cat" | "dog">], 50),
+      arrayAt([1, 3, 5] as [1 | 2, 3 | 4, 5 | 6, ...("cat" | "dog")[]], 50),
     ).toEqualTypeOf<"cat" | "dog" | undefined>();
   });
 });

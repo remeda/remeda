@@ -28,5 +28,5 @@ test("should work as type guard", () => {
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isError);
 
-  expectTypeOf(data).toEqualTypeOf<Array<Error>>();
+  expectTypeOf(data).toEqualTypeOf<Error[]>();
 });

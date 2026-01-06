@@ -24,7 +24,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @category Array
  */
 export function rankBy<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   item: T,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): number;
@@ -49,14 +49,14 @@ export function rankBy<T>(
 export function rankBy<T>(
   item: T,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
-): (data: ReadonlyArray<T>) => number;
+): (data: readonly T[]) => number;
 
-export function rankBy(...args: ReadonlyArray<unknown>): unknown {
+export function rankBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(rankByImplementation, args);
 }
 
 function rankByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   compareFn: CompareFunction<T>,
   targetItem: T,
 ): number {

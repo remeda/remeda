@@ -61,7 +61,7 @@ describe("edge-cases", () => {
   });
 
   test("empty array", () => {
-    const array: Array<number> = [];
+    const array: number[] = [];
     const result = join(array, ",");
 
     expect(result).toBe("");

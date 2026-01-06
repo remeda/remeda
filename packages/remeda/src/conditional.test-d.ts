@@ -50,10 +50,7 @@ describe("data-first", () => {
 
   // https://github.com/remeda/remeda/issues/675
   test("narrows types when using `isNullish`/`isNonNullish` with complex data", () => {
-    const data = firstBy(
-      [{ x: 10 }, { x: 20 }] as Array<{ x: number }>,
-      prop("x"),
-    );
+    const data = firstBy([{ x: 10 }, { x: 20 }] as { x: number }[], prop("x"));
 
     conditional(
       data,

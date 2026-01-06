@@ -45,7 +45,7 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  */
 export function purry(
   fn: StrictFunction,
-  args: ReadonlyArray<unknown>,
+  args: readonly unknown[],
   lazy?: (...args: any) => LazyEvaluator,
 ): unknown {
   const diff = fn.length - args.length;

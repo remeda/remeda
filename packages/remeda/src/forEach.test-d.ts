@@ -20,17 +20,17 @@ test("passes the item type to the callback", () => {
 });
 
 test("maintains the array shape", () => {
-  const data = [1, "a"] as [1 | 2, "a" | "b", ...Array<boolean>];
+  const data = [1, "a"] as [1 | 2, "a" | "b", ...boolean[]];
 
   pipe(data, forEach(doNothing()), (x) => {
-    expectTypeOf(x).toEqualTypeOf<[1 | 2, "a" | "b", ...Array<boolean>]>();
+    expectTypeOf(x).toEqualTypeOf<[1 | 2, "a" | "b", ...boolean[]]>();
   });
 });
 
 test("makes the result mutable", () => {
-  const data = [] as ReadonlyArray<number>;
+  const data = [] as readonly number[];
 
   pipe(data, forEach(doNothing()), (x) => {
-    expectTypeOf(x).toEqualTypeOf<Array<number>>();
+    expectTypeOf(x).toEqualTypeOf<number[]>();
   });
 });

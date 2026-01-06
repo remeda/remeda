@@ -23,10 +23,10 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @category Array
  */
 export function takeFirstBy<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
-): Array<T>;
+): T[];
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -46,17 +46,17 @@ export function takeFirstBy<T>(
 export function takeFirstBy<T>(
   n: number,
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
-): (data: ReadonlyArray<T>) => Array<T>;
+): (data: readonly T[]) => T[];
 
-export function takeFirstBy(...args: ReadonlyArray<unknown>): unknown {
+export function takeFirstBy(...args: readonly unknown[]): unknown {
   return purryOrderRulesWithArgument(takeFirstByImplementation, args);
 }
 
 function takeFirstByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   compareFn: CompareFunction<T>,
   n: number,
-): Array<T> {
+): T[] {
   if (n <= 0) {
     return [];
   }

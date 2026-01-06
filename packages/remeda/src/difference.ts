@@ -18,10 +18,7 @@ import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
  * @lazy
  * @category Array
  */
-export function difference<T>(
-  data: ReadonlyArray<T>,
-  other: ReadonlyArray<T>,
-): Array<T>;
+export function difference<T>(data: readonly T[], other: readonly T[]): T[];
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -38,15 +35,13 @@ export function difference<T>(
  * @lazy
  * @category Array
  */
-export function difference<T>(
-  other: ReadonlyArray<T>,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function difference<T>(other: readonly T[]): (data: readonly T[]) => T[];
 
-export function difference(...args: ReadonlyArray<unknown>): unknown {
+export function difference(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
-function lazyImplementation<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
+function lazyImplementation<T>(other: readonly T[]): LazyEvaluator<T> {
   if (other.length === 0) {
     return lazyIdentityEvaluator;
   }

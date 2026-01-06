@@ -8,7 +8,7 @@ import { lazyIdentityEvaluator } from "./internal/utilityEvaluators";
 type FlatArray<
   T,
   Depth extends number,
-  Iteration extends ReadonlyArray<unknown> = [],
+  Iteration extends readonly unknown[] = [],
 > = Depth extends Iteration["length"]
   ? // Stopping condition for the recursion when the array is a tuple.
     T
@@ -30,7 +30,7 @@ type FlatArray<
         ]
       : // For simple arrays we compute the item type, and wrap it with an
         // array.
-        Array<FlatSimpleArrayItems<T, Depth, Iteration>>;
+        FlatSimpleArrayItems<T, Depth, Iteration>[];
 
 // This type is based on the built-in type for `Array.prototype.flat` from the
 // ES2019 Array typescript library, but we improved it to handle any depth
@@ -39,11 +39,11 @@ type FlatArray<
 type FlatSimpleArrayItems<
   T,
   Depth extends number,
-  Iteration extends ReadonlyArray<unknown> = [],
+  Iteration extends readonly unknown[] = [],
   IsDone extends boolean = false,
 > = {
   done: T;
-  recur: T extends ReadonlyArray<infer InnerArr>
+  recur: T extends readonly (infer InnerArr)[]
     ? FlatSimpleArrayItems<
         InnerArr,
         Depth,

@@ -10,19 +10,19 @@ test("empty arrays", () => {
 
 describe("numbers", () => {
   test("arbitrary arrays", () => {
-    const result = product([] as Array<number>);
+    const result = product([] as number[]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = product([] as ReadonlyArray<number>);
+    const result = product([] as readonly number[]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = product([1, 2] as [number, ...Array<number>]);
+    const result = product([1, 2] as [number, ...number[]]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
@@ -42,19 +42,19 @@ describe("numbers", () => {
 
 describe("bigints", () => {
   test("arbitrary arrays", () => {
-    const result = product([] as Array<bigint>);
+    const result = product([] as bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 1>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = product([] as ReadonlyArray<bigint>);
+    const result = product([] as readonly bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 1>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = product([1n, 2n] as [bigint, ...Array<bigint>]);
+    const result = product([1n, 2n] as [bigint, ...bigint[]]);
 
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
@@ -93,7 +93,7 @@ test("doesn't allow mixed arrays", () => {
 
 describe("known issues!", () => {
   test("returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays", () => {
-    const result = product([] as Array<bigint>);
+    const result = product([] as bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 1>();
   });

@@ -16,7 +16,7 @@ test("should work as type guard", () => {
 test("should work as type guard in filter", () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNumber);
 
-  expectTypeOf(data).toEqualTypeOf<Array<number>>();
+  expectTypeOf(data).toEqualTypeOf<number[]>();
 });
 
 test("should work even if data type is unknown", () => {

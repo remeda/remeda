@@ -6,7 +6,7 @@ import { pipe } from "./pipe";
 test("partition with type guard", () => {
   const actual = partition([1, "a", 2, "b"], isNumber);
 
-  expectTypeOf(actual).toEqualTypeOf<[Array<number>, Array<string>]>();
+  expectTypeOf(actual).toEqualTypeOf<[number[], string[]]>();
 });
 
 test("partition with type guard in pipe", () => {
@@ -15,5 +15,5 @@ test("partition with type guard in pipe", () => {
     partition((value): value is number => typeof value === "number"),
   );
 
-  expectTypeOf(actual).toEqualTypeOf<[Array<number>, Array<string>]>();
+  expectTypeOf(actual).toEqualTypeOf<[number[], string[]]>();
 });

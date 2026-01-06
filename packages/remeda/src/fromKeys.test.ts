@@ -4,7 +4,7 @@ import { fromKeys } from "./fromKeys";
 import { pipe } from "./pipe";
 
 test("works on trivially empty arrays", () => {
-  expect(fromKeys([] as Array<string>, (item) => `${item}_`)).toStrictEqual({});
+  expect(fromKeys([] as string[], (item) => `${item}_`)).toStrictEqual({});
 });
 
 test("works on regular arrays", () => {
@@ -50,7 +50,7 @@ describe("dataLast", () => {
   test("works on trivially empty arrays", () => {
     expect(
       pipe(
-        [] as Array<string>,
+        [] as string[],
         fromKeys((item) => `${item}_`),
       ),
     ).toStrictEqual({});

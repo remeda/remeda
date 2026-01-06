@@ -62,15 +62,15 @@ test("doesn't spread arrays", () => {
 test("doesn't recurse into arrays", () => {
   const result = mergeDeep(
     { foo: [{ bar: "baz", x: 123 }] } as {
-      foo: Array<{ bar: string; x: number }>;
+      foo: { bar: string; x: number }[];
     },
     { foo: [{ bar: "hello, world", y: 456 }] } as {
-      foo: Array<{ bar: string; y: number }>;
+      foo: { bar: string; y: number }[];
     },
   );
 
   expectTypeOf(result).toEqualTypeOf<{
-    foo: Array<{ bar: string; y: number }>;
+    foo: { bar: string; y: number }[];
   }>();
 });
 

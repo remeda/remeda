@@ -31,7 +31,7 @@ describe("data first", () => {
   });
 
   test("if an empty array is provided, it should never iterate, returning a new empty array.", () => {
-    const data: Array<unknown> = [];
+    const data: unknown[] = [];
     const result = mapWithFeedback(data, (acc) => acc, "value");
 
     expect(result).toStrictEqual([]);
@@ -78,8 +78,8 @@ describe("data last", () => {
   });
 
   test("should track index and progressively include elements from the original array in the items array during each iteration, forming a growing window", () => {
-    const lazyItems: Array<Array<number>> = [];
-    const indices: Array<number> = [];
+    const lazyItems: number[][] = [];
+    const indices: number[] = [];
     pipe(
       [1, 2, 3, 4, 5],
       mapWithFeedback((acc, x, index, items) => {

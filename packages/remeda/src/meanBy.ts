@@ -16,8 +16,8 @@ import { purry } from "./purry";
  */
 
 export function meanBy<T>(
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): (items: ReadonlyArray<T>) => number;
+  fn: (value: T, index: number, data: readonly T[]) => number,
+): (items: readonly T[]) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
@@ -36,17 +36,17 @@ export function meanBy<T>(
  */
 
 export function meanBy<T>(
-  items: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
+  items: readonly T[],
+  fn: (value: T, index: number, data: readonly T[]) => number,
 ): number;
 
-export function meanBy(...args: ReadonlyArray<unknown>): unknown {
+export function meanBy(...args: readonly unknown[]): unknown {
   return purry(meanByImplementation, args);
 }
 
 const meanByImplementation = <T>(
-  array: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
+  array: readonly T[],
+  fn: (value: T, index: number, data: readonly T[]) => number,
 ): number => {
   if (array.length === 0) {
     return Number.NaN;

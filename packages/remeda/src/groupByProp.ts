@@ -178,7 +178,7 @@ export function groupByProp<
   const Prop extends GroupableProps<T>,
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
-export function groupByProp(...args: ReadonlyArray<unknown>): unknown {
+export function groupByProp(...args: readonly unknown[]): unknown {
   return purry(groupByPropImplementation, args);
 }
 
@@ -187,9 +187,8 @@ function groupByPropImplementation<
   Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
-  const output: BoundedPartial<
-    Record<AllPropValues<T, Prop>, Array<T[number]>>
-  > = Object.create(null);
+  const output: BoundedPartial<Record<AllPropValues<T, Prop>, T[number][]>> =
+    Object.create(null);
 
   for (const item of data) {
     const key = item?.[prop];

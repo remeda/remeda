@@ -22,8 +22,8 @@ import { purry } from "./purry";
  * @category Array
  */
 export function findLastIndex<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number;
 
 /**
@@ -50,16 +50,16 @@ export function findLastIndex<T>(
  * @category Array
  */
 export function findLastIndex<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (array: ReadonlyArray<T>) => number;
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): (array: readonly T[]) => number;
 
-export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
+export function findLastIndex(...args: readonly unknown[]): unknown {
   return purry(findLastIndexImplementation, args);
 }
 
 const findLastIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number => {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLastIndex` here.
 

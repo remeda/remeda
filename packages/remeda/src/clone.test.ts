@@ -205,7 +205,7 @@ describe("nested mixed objects", () => {
 
   describe("clones array with arrays", () => {
     test("nulls", () => {
-      const list: Array<Array<any>> = [[1], [[3]]];
+      const list: any[][] = [[1], [[3]]];
       const cloned = clone(list);
       list[1]![0] = null;
 

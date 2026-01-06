@@ -136,7 +136,7 @@ test("type-fest issue #601?", () => {
         { t1?: number; t2?: number; t3?: number; t4?: number },
         "t2" | "t4"
       >,
-      {} as { list: Array<string> },
+      {} as { list: string[] },
     ),
-  ).toEqualTypeOf<{ t2?: number; t4?: number; list: Array<string> }>();
+  ).toEqualTypeOf<{ t2?: number; t4?: number; list: string[] }>();
 });

@@ -25,19 +25,19 @@ test("disallow mixed mapper", () => {
 
 describe("numbers", () => {
   test("arbitrary arrays", () => {
-    const result = sumBy([] as Array<unknown>, constant(1));
+    const result = sumBy([] as unknown[], constant(1));
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = sumBy([] as ReadonlyArray<unknown>, constant(1));
+    const result = sumBy([] as readonly unknown[], constant(1));
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sumBy([1, 2] as [unknown, ...Array<unknown>], constant(1));
+    const result = sumBy([1, 2] as [unknown, ...unknown[]], constant(1));
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
@@ -57,22 +57,19 @@ describe("numbers", () => {
 
 describe("bigints", () => {
   test("arbitrary arrays", () => {
-    const result = sumBy([] as Array<unknown>, constant(1n));
+    const result = sumBy([] as unknown[], constant(1n));
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = sumBy([] as ReadonlyArray<unknown>, constant(1n));
+    const result = sumBy([] as readonly unknown[], constant(1n));
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sumBy(
-      [1n, 2n] as [unknown, ...Array<unknown>],
-      constant(1n),
-    );
+    const result = sumBy([1n, 2n] as [unknown, ...unknown[]], constant(1n));
 
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });

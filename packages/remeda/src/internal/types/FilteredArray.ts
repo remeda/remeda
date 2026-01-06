@@ -26,7 +26,7 @@ export type FilteredArray<T extends IterableContainer, Condition> =
 type FilteredFixedTuple<
   T,
   Condition,
-  Output extends Array<unknown> = [],
+  Output extends unknown[] = [],
 > = T extends readonly [infer Head, ...infer Rest]
   ? FilteredFixedTuple<
       Rest,

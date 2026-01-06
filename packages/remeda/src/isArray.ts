@@ -15,6 +15,6 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  */
 export function isArray<T>(
   data: ArrayLike<unknown> | T,
-): data is NarrowedTo<T, ReadonlyArray<unknown>> {
+): data is NarrowedTo<T, readonly unknown[]> {
   return Array.isArray(data);
 }

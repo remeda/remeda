@@ -8,5 +8,5 @@
 export type NTuple<
   T,
   N extends number,
-  Result extends Array<unknown> = [],
+  Result extends unknown[] = [],
 > = Result["length"] extends N ? Result : NTuple<T, N, [...Result, T]>;

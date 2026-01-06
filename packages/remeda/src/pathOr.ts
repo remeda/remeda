@@ -174,13 +174,13 @@ export function pathOr<
 ): (object: T) => PathValue3<T, A, B, C>;
 
 // TODO [>2]: Remove this function!
-export function pathOr(...args: ReadonlyArray<unknown>): unknown {
+export function pathOr(...args: readonly unknown[]): unknown {
   return purry(pathOrImplementation, args);
 }
 
 function pathOrImplementation(
   data: unknown,
-  path: ReadonlyArray<PropertyKey>,
+  path: readonly PropertyKey[],
   defaultValue: unknown,
 ): unknown {
   let current = data;

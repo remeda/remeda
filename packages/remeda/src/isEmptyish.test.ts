@@ -214,7 +214,7 @@ describe("unsupported types", () => {
       }
     }
     class ContainerWrapper {
-      public data: Array<unknown> = [];
+      public data: unknown[] = [];
     }
 
     expect(isEmptyish(new Empty())).toBe(true);

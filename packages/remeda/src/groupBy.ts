@@ -30,12 +30,8 @@ import { purry } from "./purry";
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
@@ -71,24 +67,16 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
-): (items: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
+): (items: readonly T[]) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
-export function groupBy(...args: ReadonlyArray<unknown>): unknown {
+export function groupBy(...args: readonly unknown[]): unknown {
   return purry(groupByImplementation, args);
 }
 
 const groupByImplementation = <T, Key extends PropertyKey = PropertyKey>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => Key | undefined,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Using Object.create(null) allows us to remove everything from the prototype chain, leaving it as a pure object that only has the keys *we* add to it. This prevents issues like the one raised in #1046
   const output: BoundedPartial<Record<Key, NonEmptyArray<T>>> =

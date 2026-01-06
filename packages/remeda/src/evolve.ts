@@ -130,7 +130,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,
 ): (object: T) => Evolved<T, E>;
 
-export function evolve(...args: ReadonlyArray<unknown>): unknown {
+export function evolve(...args: readonly unknown[]): unknown {
   return purry(evolveImplementation, args);
 }
 

@@ -79,7 +79,7 @@ export function pullObject<
   valueExtractor: (item: T[number], index: number, data: T) => V,
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
-export function pullObject(...args: ReadonlyArray<unknown>): unknown {
+export function pullObject(...args: readonly unknown[]): unknown {
   return purry(pullObjectImplementation, args);
 }
 

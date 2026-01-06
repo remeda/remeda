@@ -19,7 +19,7 @@ import { purry } from "./purry";
 export function take<T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Returns the first `n` elements of `array`.
@@ -35,16 +35,16 @@ export function take<T extends IterableContainer>(
  */
 export function take(
   n: number,
-): <T extends IterableContainer>(array: T) => Array<T[number]>;
+): <T extends IterableContainer>(array: T) => T[number][];
 
-export function take(...args: ReadonlyArray<unknown>): unknown {
+export function take(...args: readonly unknown[]): unknown {
   return purry(takeImplementation, args, lazyImplementation);
 }
 
 const takeImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]> => (n < 0 ? [] : array.slice(0, n));
+): T[number][] => (n < 0 ? [] : array.slice(0, n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {

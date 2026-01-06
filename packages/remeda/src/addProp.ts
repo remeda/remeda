@@ -49,7 +49,7 @@ export function addProp<T, K extends PropertyKey, V>(
   value: V,
 ): (obj: T) => UpsertProp<T, K, V>;
 
-export function addProp(...args: ReadonlyArray<unknown>): unknown {
+export function addProp(...args: readonly unknown[]): unknown {
   return purry(addPropImplementation, args);
 }
 

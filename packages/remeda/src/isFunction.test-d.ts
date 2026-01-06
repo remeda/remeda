@@ -15,7 +15,7 @@ test("should work as type guard", () => {
     expectTypeOf(data).toEqualTypeOf<() => void>();
   } else {
     expectTypeOf(data).toEqualTypeOf<
-      | Array<number>
+      | number[]
       | Date
       | Error
       | Map<string, string>
@@ -49,7 +49,7 @@ test("union with non-function types", () => {
 
 test("should work as type guard in filter", () => {
   expectTypeOf(ALL_TYPES_DATA_PROVIDER.filter(isFunction)).toEqualTypeOf<
-    Array<() => void>
+    (() => void)[]
   >();
 });
 

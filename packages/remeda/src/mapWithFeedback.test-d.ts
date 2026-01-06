@@ -35,12 +35,12 @@ test("should return a tuple consisting of the initial value type even if the ini
 
 test("should correctly infer type with a non-literal array type", () => {
   const result = mapWithFeedback(
-    [1, 2, 3, 4, 5] as Array<number>,
+    [1, 2, 3, 4, 5] as number[],
     (acc, x) => acc + x,
     100,
   );
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("the items array passed to the callback should be an array type containing the union type of all of the members in the original array", () => {

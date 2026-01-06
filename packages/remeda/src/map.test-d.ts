@@ -4,15 +4,15 @@ import { constant } from "./constant";
 import { map } from "./map";
 
 test("number array", () => {
-  const result = map([1, 2, 3] as Array<number>, add(1));
+  const result = map([1, 2, 3] as number[], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("readonly number array", () => {
-  const result = map([1, 2, 3] as ReadonlyArray<number>, add(1));
+  const result = map([1, 2, 3] as readonly number[], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("number 3-tuple", () => {
@@ -53,43 +53,40 @@ test("readonly mixed type tuple", () => {
 });
 
 test("nonempty (tail) number array", () => {
-  const result = map([1, 2, 3] as [number, ...Array<number>], add(1));
+  const result = map([1, 2, 3] as [number, ...number[]], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
 });
 
 test("nonempty (tail) readonly number array", () => {
-  const result = map([1, 2, 3] as readonly [number, ...Array<number>], add(1));
+  const result = map([1, 2, 3] as readonly [number, ...number[]], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
 });
 
 test("nonempty (head) number array", () => {
-  const result = map([1, 2, 3] as [...Array<number>, number], add(1));
+  const result = map([1, 2, 3] as [...number[], number], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
 });
 
 test("nonempty readonly (head) number array", () => {
-  const result = map([1, 2, 3] as readonly [...Array<number>, number], add(1));
+  const result = map([1, 2, 3] as readonly [...number[], number], add(1));
 
-  expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
 });
 
 describe("indexed", () => {
   test("number array", () => {
-    const result = map([1, 2, 3] as Array<number>, (x, index) => x + index);
+    const result = map([1, 2, 3] as number[], (x, index) => x + index);
 
-    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    expectTypeOf(result).toEqualTypeOf<number[]>();
   });
 
   test("readonly number array", () => {
-    const result = map(
-      [1, 2, 3] as ReadonlyArray<number>,
-      (x, index) => x + index,
-    );
+    const result = map([1, 2, 3] as readonly number[], (x, index) => x + index);
 
-    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    expectTypeOf(result).toEqualTypeOf<number[]>();
   });
 
   test("number 3-tuple", () => {
@@ -143,37 +140,37 @@ describe("indexed", () => {
 
   test("nonempty (tail) number array", () => {
     const result = map(
-      [1, 2, 3] as [number, ...Array<number>],
+      [1, 2, 3] as [number, ...number[]],
       (x, index) => x + index,
     );
 
-    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+    expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
   });
 
   test("nonempty (tail) readonly number array", () => {
     const result = map(
-      [1, 2, 3] as readonly [number, ...Array<number>],
+      [1, 2, 3] as readonly [number, ...number[]],
       (x, index) => x + index,
     );
 
-    expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+    expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
   });
 
   test("nonempty (head) number array", () => {
     const result = map(
-      [1, 2, 3] as [...Array<number>, number],
+      [1, 2, 3] as [...number[], number],
       (x, index) => x + index,
     );
 
-    expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+    expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
   });
 
   test("nonempty readonly (head) number array", () => {
     const result = map(
-      [1, 2, 3] as readonly [...Array<number>, number],
+      [1, 2, 3] as readonly [...number[], number],
       (x, index) => x + index,
     );
 
-    expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+    expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
   });
 });

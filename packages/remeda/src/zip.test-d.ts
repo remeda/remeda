@@ -21,12 +21,12 @@ describe("dataFirst", () => {
   });
 
   test("variadic tuples", () => {
-    const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
-    const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, "b", "c"];
+    const secondVariadic: [string, ...number[]] = ["a", 2, 3];
     const actual = zip(firstVariadic, secondVariadic);
 
     expectTypeOf(actual).toEqualTypeOf<
-      [[number, string], ...Array<[string, number]>]
+      [[number, string], ...[string, number][]]
     >();
   });
 
@@ -45,25 +45,25 @@ describe("dataFirst", () => {
   });
 
   test("on arrays", () => {
-    const array: Array<number> = [];
+    const array: number[] = [];
     const result = zip(array, array);
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, number][]>();
   });
 
   test("on mixed typeds array", () => {
-    const array1: Array<number> = [];
-    const array2: Array<string> = [];
+    const array1: number[] = [];
+    const array2: string[] = [];
     const result = zip(array1, array2);
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, string]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, string][]>();
   });
 
   test("on readonly arrays", () => {
-    const array: ReadonlyArray<number> = [];
+    const array: readonly number[] = [];
     const result = zip(array, array);
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, number][]>();
   });
 
   test("on tuples", () => {
@@ -95,12 +95,12 @@ describe("dataFirst", () => {
   });
 
   test("on variadic tuples", () => {
-    const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
-    const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, "b", "c"];
+    const secondVariadic: [string, ...number[]] = ["a", 2, 3];
     const result = zip(firstVariadic, secondVariadic);
 
     expectTypeOf(result).toEqualTypeOf<
-      [[number, string], ...Array<[string, number]>]
+      [[number, string], ...[string, number][]]
     >();
   });
 });
@@ -124,12 +124,12 @@ describe("dataLast", () => {
   });
 
   test("variadic tuples", () => {
-    const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
-    const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, "b", "c"];
+    const secondVariadic: [string, ...number[]] = ["a", 2, 3];
     const actual = pipe(firstVariadic, zip(secondVariadic));
 
     expectTypeOf(actual).toEqualTypeOf<
-      [[number, string], ...Array<[string, number]>]
+      [[number, string], ...[string, number][]]
     >();
   });
 
@@ -148,25 +148,25 @@ describe("dataLast", () => {
   });
 
   test("on arrays", () => {
-    const array: Array<number> = [];
+    const array: number[] = [];
     const result = pipe(array, zip(array));
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, number][]>();
   });
 
   test("on mixed typeds array", () => {
-    const array1: Array<number> = [];
-    const array2: Array<string> = [];
+    const array1: number[] = [];
+    const array2: string[] = [];
     const result = pipe(array1, zip(array2));
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, string]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, string][]>();
   });
 
   test("on readonly arrays", () => {
-    const array: ReadonlyArray<number> = [];
+    const array: readonly number[] = [];
     const result = pipe(array, zip(array));
 
-    expectTypeOf(result).toEqualTypeOf<Array<[number, number]>>();
+    expectTypeOf(result).toEqualTypeOf<[number, number][]>();
   });
 
   test("on tuples", () => {
@@ -198,12 +198,12 @@ describe("dataLast", () => {
   });
 
   test("on variadic tuples", () => {
-    const firstVariadic: [number, ...Array<string>] = [1, "b", "c"];
-    const secondVariadic: [string, ...Array<number>] = ["a", 2, 3];
+    const firstVariadic: [number, ...string[]] = [1, "b", "c"];
+    const secondVariadic: [string, ...number[]] = ["a", 2, 3];
     const result = pipe(firstVariadic, zip(secondVariadic));
 
     expectTypeOf(result).toEqualTypeOf<
-      [[number, string], ...Array<[string, number]>]
+      [[number, string], ...[string, number][]]
     >();
   });
 });

@@ -13,7 +13,7 @@ test("merge objects", () => {
 });
 
 test("should return an empty object when the input is an empty array", () => {
-  const input: ReadonlyArray<object> = [];
+  const input: readonly object[] = [];
 
   const result = mergeAll(input);
 
