@@ -3,8 +3,8 @@ import type { BlockTag } from "./typedoc/schema";
 
 export type Tag = "Lazy" | "Indexed" | "Strict";
 
-export function extractTags(blockTags: ReadonlyArray<BlockTag> | undefined) {
-  const out: Array<Tag> = [];
+export function extractTags(blockTags: readonly BlockTag[] | undefined) {
+  const out: Tag[] = [];
 
   if (hasTag(blockTags, "strict")) {
     out.push("Strict");
@@ -22,12 +22,12 @@ export function extractTags(blockTags: ReadonlyArray<BlockTag> | undefined) {
 }
 
 export const hasTag = (
-  blockTags: ReadonlyArray<BlockTag> | undefined,
+  blockTags: readonly BlockTag[] | undefined,
   tagName: string,
 ): boolean => blockTags?.some(({ tag }) => tag === `@${tagName}`) ?? false;
 
 export function tagContent(
-  blockTags: ReadonlyArray<BlockTag> | undefined,
+  blockTags: readonly BlockTag[] | undefined,
   tagName: string,
 ): string | undefined {
   const tag = blockTags?.find(({ tag }) => tag === `@${tagName}`);

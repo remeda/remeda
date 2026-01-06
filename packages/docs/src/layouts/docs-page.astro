@@ -6,7 +6,7 @@ import { forNavbar, getArticles } from "@/lib/articles/entries";
 import BaseLayout from "./base.astro";
 
 type Props = {
-  readonly navbarEntries: ReadonlyArray<NavbarCategory>;
+  readonly navbarEntries: readonly NavbarCategory[];
   readonly title?: string;
 };
 

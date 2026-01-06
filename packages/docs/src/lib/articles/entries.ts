@@ -41,7 +41,7 @@ export const getArticles = async (pathname: string) =>
 
 export const forNavbar = (
   result: Awaited<ReturnType<typeof getArticles>>,
-): ReadonlyArray<NavbarCategory> =>
+): readonly NavbarCategory[] =>
   map(
     result,
     ([category, articles]) =>

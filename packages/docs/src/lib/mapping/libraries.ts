@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import { hasAtLeast, split } from "remeda";
 import invariant from "tiny-invariant";
 
-export async function getAllMappedLibraries(): Promise<ReadonlyArray<string>> {
+export async function getAllMappedLibraries(): Promise<readonly string[]> {
   const mappings = await getCollection(mappingCollectionName);
   const libraries = new Set<string>();
   for (const { id } of mappings) {

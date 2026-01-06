@@ -11,7 +11,7 @@ export function toString<S extends string>(data: {
 export function toString(): <S extends string>(data: {
   readonly toString: () => S;
 }) => S;
-export function toString(...args: ReadonlyArray<unknown>): unknown {
+export function toString(...args: readonly unknown[]): unknown {
   return purry(toStringImplementation, args);
 }
 
