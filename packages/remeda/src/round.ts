@@ -38,6 +38,6 @@ export function round(value: number, precision: number): number;
  */
 export function round(precision: number): (value: number) => number;
 
-export function round(...args: ReadonlyArray<unknown>): unknown {
+export function round(...args: readonly unknown[]): unknown {
   return purry(withPrecision(Math.round), args);
 }

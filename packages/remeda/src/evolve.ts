@@ -14,7 +14,7 @@ type GenericEvolver = {
  * @example
  * interface Data {
  *   id: number;
- *   quartile: Array<number>;
+ *   quartile: number[];
  *   time?: { elapsed: number; remaining?: number };
  * }
  * type Nested = Evolver<Data>; //  => type Nested = {
@@ -130,7 +130,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
   evolver: E,
 ): (object: T) => Evolved<T, E>;
 
-export function evolve(...args: ReadonlyArray<unknown>): unknown {
+export function evolve(...args: readonly unknown[]): unknown {
   return purry(evolveImplementation, args);
 }
 

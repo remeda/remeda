@@ -20,7 +20,7 @@ import type { CompareFunction } from "./types/CompareFunction";
  * bounds.
  */
 export const quickSelect = <T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   index: number,
   compareFn: CompareFunction<T>,
 ): T | undefined =>
@@ -41,7 +41,7 @@ export const quickSelect = <T>(
  */
 function quickSelectImplementation<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
-  data: Array<T>,
+  data: T[],
   left: number,
   right: number,
   index: number,
@@ -69,7 +69,7 @@ function quickSelectImplementation<T>(
 
 function partition<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
-  data: Array<T>,
+  data: T[],
   left: number,
   right: number,
   compareFn: CompareFunction<T>,

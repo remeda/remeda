@@ -10,10 +10,8 @@ const SYMBOL = Symbol("sym");
 
 describe("grouping prop types", () => {
   test("primitive strings", () => {
-    expectTypeOf(
-      groupByProp([] as Array<{ a: string }>, "a"),
-    ).branded.toEqualTypeOf<
-      Record<string, [{ a: string }, ...Array<{ a: string }>]>
+    expectTypeOf(groupByProp([] as { a: string }[], "a")).branded.toEqualTypeOf<
+      Record<string, [{ a: string }, ...{ a: string }[]]>
     >();
   });
 
@@ -74,12 +72,12 @@ describe("grouping prop types", () => {
 test("values which might not exist in the input are optional in the output", () => {
   expectTypeOf(
     groupByProp(
-      [{ a: "cat" }] as [{ a: "cat" }, { a: "mouse" }?, ...Array<{ a: "dog" }>],
+      [{ a: "cat" }] as [{ a: "cat" }, { a: "mouse" }?, ...{ a: "dog" }[]],
       "a",
     ),
   ).branded.toEqualTypeOf<{
     cat: [{ a: "cat" }];
-    dog?: [{ a: "dog" }, ...Array<{ a: "dog" }>];
+    dog?: [{ a: "dog" }, ...{ a: "dog" }[]];
     mouse?: [{ a: "mouse" }];
   }>();
 });
@@ -115,7 +113,7 @@ describe("enforces strong typing on the grouping prop", () => {
   });
 
   test("allows grouping on possibly undefined props", () => {
-    groupByProp([] as Array<{ a: string | undefined }>, "a");
+    groupByProp([] as { a: string | undefined }[], "a");
   });
 });
 
@@ -129,32 +127,24 @@ describe("union of array types", () => {
   test("when they share the grouping prop", () => {
     expectTypeOf(
       groupByProp(
-        [] as
-          | Array<{ a: "cat"; cat: number }>
-          | Array<{ a: "dog"; dog: boolean }>,
+        [] as { a: "cat"; cat: number }[] | { a: "dog"; dog: boolean }[],
         "a",
       ),
     ).branded.toEqualTypeOf<
       | {
-          cat?: [
-            { a: "cat"; cat: number },
-            ...Array<{ a: "cat"; cat: number }>,
-          ];
+          cat?: [{ a: "cat"; cat: number }, ...{ a: "cat"; cat: number }[]];
         }
       | {
-          dog?: [
-            { a: "dog"; dog: boolean },
-            ...Array<{ a: "dog"; dog: boolean }>,
-          ];
+          dog?: [{ a: "dog"; dog: boolean }, ...{ a: "dog"; dog: boolean }[]];
         }
     >();
   });
 
   test("when they don't share the grouping prop", () => {
     expectTypeOf(
-      groupByProp([] as Array<{ a: string }> | Array<{ b: number }>, "a"),
+      groupByProp([] as { a: string }[] | { b: number }[], "a"),
     ).branded.toEqualTypeOf<
-      EmptyObject | Record<string, [{ a: string }, ...Array<{ a: string }>]>
+      EmptyObject | Record<string, [{ a: string }, ...{ a: string }[]]>
     >();
   });
 
@@ -167,16 +157,16 @@ describe("union of array types", () => {
 
 test("all values are undefined", () => {
   expectTypeOf(
-    groupByProp([] as Array<{ a: undefined }>, "a"),
+    groupByProp([] as { a: undefined }[], "a"),
   ).toEqualTypeOf<EmptyObject>();
 });
 
 // @see https://github.com/remeda/remeda/issues/1231
 test("grouping on a prop with literal union values (issue #1231)", () => {
   expectTypeOf(
-    groupByProp([] as Array<{ a: "cat" | "dog"; b: string }>, "a" as const),
+    groupByProp([] as { a: "cat" | "dog"; b: string }[], "a" as const),
   ).branded.toEqualTypeOf<{
-    cat?: [{ a: "cat"; b: string }, ...Array<{ a: "cat"; b: string }>];
-    dog?: [{ a: "dog"; b: string }, ...Array<{ a: "dog"; b: string }>];
+    cat?: [{ a: "cat"; b: string }, ...{ a: "cat"; b: string }[]];
+    dog?: [{ a: "dog"; b: string }, ...{ a: "dog"; b: string }[]];
   }>();
 });

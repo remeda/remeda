@@ -11,7 +11,7 @@ export function MigrationSelectorIsland({
   libraries,
   children,
 }: {
-  readonly libraries: ReadonlyArray<string>;
+  readonly libraries: readonly string[];
   readonly children: ReactNode;
 }) {
   return (

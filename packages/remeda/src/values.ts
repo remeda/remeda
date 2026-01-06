@@ -3,8 +3,8 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
 type Values<T extends object> = T extends IterableContainer
-  ? Array<T[number]>
-  : Array<EnumerableStringKeyedValueOf<T>>;
+  ? T[number][]
+  : EnumerableStringKeyedValueOf<T>[];
 
 /**
  * Returns a new array containing the values of the array or object.
@@ -38,6 +38,6 @@ export function values<T extends object>(data: T): Values<T>;
  */
 export function values(): <T extends object>(data: T) => Values<T>;
 
-export function values(...args: ReadonlyArray<unknown>): unknown {
+export function values(...args: readonly unknown[]): unknown {
   return purry(Object.values, args);
 }

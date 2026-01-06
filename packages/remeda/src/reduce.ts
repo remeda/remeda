@@ -25,12 +25,12 @@ import { purry } from "./purry";
  * @category Array
  */
 export function reduce<T, U>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   callbackfn: (
     previousValue: U,
     currentValue: T,
     currentIndex: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => U,
   initialValue: U,
 ): U;
@@ -63,22 +63,22 @@ export function reduce<T, U>(
     previousValue: U,
     currentValue: T,
     currentIndex: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => U,
   initialValue: U,
-): (data: ReadonlyArray<T>) => U;
+): (data: readonly T[]) => U;
 
-export function reduce(...args: ReadonlyArray<unknown>): unknown {
+export function reduce(...args: readonly unknown[]): unknown {
   return purry(reduceImplementation, args);
 }
 
 const reduceImplementation = <T, U>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   callbackfn: (
     previousValue: U,
     currentValue: T,
     currentIndex: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => U,
   initialValue: U,
 ): U =>

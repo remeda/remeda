@@ -76,9 +76,9 @@ type SampledLiteral<T extends IterableContainer, N extends number> =
 // additional element of the type of the rest element in the middle between the
 // prefix and suffix until we "fill" the tuple to size N.
 type SubSampled<
-  Prefix extends ReadonlyArray<unknown>,
+  Prefix extends readonly unknown[],
   Item,
-  Suffix extends ReadonlyArray<unknown>,
+  Suffix extends readonly unknown[],
   N extends number,
 > =
   IsLongerThan<[...Prefix, ...Suffix], N> extends true
@@ -89,7 +89,7 @@ type SubSampled<
       ? never
       : [...Prefix, ...Suffix] | SubSampled<[...Prefix, Item], Item, Suffix, N>;
 
-type IsLongerThan<T extends ReadonlyArray<unknown>, N extends number> =
+type IsLongerThan<T extends readonly unknown[], N extends number> =
   // Checking for `undefined` is a neat trick to avoid needing to compare
   // integer literals because if N overflows the tuple then the type for that
   // element will be `undefined`. This only works for fixed tuples!
@@ -151,14 +151,11 @@ export function sample<const T extends IterableContainer, N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
-export function sample(...args: ReadonlyArray<unknown>): unknown {
+export function sample(...args: readonly unknown[]): unknown {
   return purry(sampleImplementation, args);
 }
 
-function sampleImplementation<T>(
-  data: ReadonlyArray<T>,
-  sampleSize: number,
-): Array<T> {
+function sampleImplementation<T>(data: readonly T[], sampleSize: number): T[] {
   if (sampleSize <= 0) {
     // Trivial
     return [];

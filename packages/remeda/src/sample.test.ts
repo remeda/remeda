@@ -82,7 +82,7 @@ describe("identity", () => {
   });
 
   test("on empty arrays", () => {
-    const array: Array<number> = [];
+    const array: number[] = [];
     const result = sample(array, 1);
 
     expect(result).toStrictEqual(array);
@@ -90,7 +90,7 @@ describe("identity", () => {
   });
 
   test("on empty arrays and sample size 0", () => {
-    const array: Array<number> = [];
+    const array: number[] = [];
     const result = sample(array, 0);
 
     expect(result).toStrictEqual(array);
@@ -166,5 +166,5 @@ function generateRandomArray(): NonEmptyArray<number> {
   return unique(times(100, Math.random));
 }
 
-const allIndices = (array: ReadonlyArray<unknown>): Array<number> =>
+const allIndices = (array: readonly unknown[]): number[] =>
   array.map((_, index) => index);

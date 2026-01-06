@@ -32,7 +32,7 @@ export const getV1Functions = async () =>
 
 export const forNavbar = (
   result: Awaited<ReturnType<typeof getV1Functions>>,
-): ReadonlyArray<NavbarCategory> =>
+): readonly NavbarCategory[] =>
   map(
     result,
     ([category, functions]) =>

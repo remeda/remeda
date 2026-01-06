@@ -25,13 +25,11 @@ describe("tuples", () => {
   });
 
   test("simple array", () => {
-    expectTypeOf(prop([] as Array<"cat">, 3)).toEqualTypeOf<
-      "cat" | undefined
-    >();
+    expectTypeOf(prop([] as "cat"[], 3)).toEqualTypeOf<"cat" | undefined>();
   });
 
   test("prefix array", () => {
-    expectTypeOf(prop([1] as [number, ...Array<string>], 10)).toEqualTypeOf<
+    expectTypeOf(prop([1] as [number, ...string[]], 10)).toEqualTypeOf<
       string | undefined
     >();
   });
@@ -74,13 +72,13 @@ describe("unions", () => {
   });
 
   test("union of arrays", () => {
-    expectTypeOf(prop([] as Array<string> | Array<number>, 10)).toEqualTypeOf<
+    expectTypeOf(prop([] as string[] | number[], 10)).toEqualTypeOf<
       string | number | undefined
     >();
   });
 
   test("arrays of unions", () => {
-    expectTypeOf(prop([] as Array<"cat" | "dog">, 100)).toEqualTypeOf<
+    expectTypeOf(prop([] as ("cat" | "dog")[], 100)).toEqualTypeOf<
       "cat" | "dog" | undefined
     >();
   });
@@ -92,7 +90,7 @@ describe("unions", () => {
   });
 
   test("union of array and object", () => {
-    const data = { a: 1 } as { a: 1 } | ReadonlyArray<"cat">;
+    const data = { a: 1 } as { a: 1 } | readonly "cat"[];
 
     expectTypeOf(prop(data, "a")).toEqualTypeOf<1 | undefined>();
     expectTypeOf(prop(data, 100)).toEqualTypeOf<"cat" | undefined>();
@@ -208,15 +206,11 @@ describe("deep prop", () => {
   });
 
   test("multi-dimensional arrays", () => {
-    const data = [[[[]]]] as Array<Array<Array<Array<"cat">>>>;
+    const data = [[[[]]]] as "cat"[][][][];
 
-    expectTypeOf(prop(data, 10)).toExtend<
-      Array<Array<Array<"cat">>> | undefined
-    >();
-    expectTypeOf(prop(data, 10, 20)).toExtend<
-      Array<Array<"cat">> | undefined
-    >();
-    expectTypeOf(prop(data, 10, 20, 30)).toExtend<Array<"cat"> | undefined>();
+    expectTypeOf(prop(data, 10)).toExtend<"cat"[][][] | undefined>();
+    expectTypeOf(prop(data, 10, 20)).toExtend<"cat"[][] | undefined>();
+    expectTypeOf(prop(data, 10, 20, 30)).toExtend<"cat"[] | undefined>();
     expectTypeOf(prop(data, 10, 20, 30, 40)).toExtend<"cat" | undefined>();
   });
 
@@ -426,14 +420,14 @@ describe("optional props", () => {
 });
 
 describe("with stringToPath", () => {
-  const DATA = {} as { a: { b: Array<{ c: { d: number } }> } };
+  const DATA = {} as { a: { b: { c: { d: number } }[] } };
 
   test("with valid paths", () => {
     expectTypeOf(prop(DATA, ...stringToPath("a"))).toEqualTypeOf<{
-      b: Array<{ c: { d: number } }>;
+      b: { c: { d: number } }[];
     }>();
     expectTypeOf(prop(DATA, ...stringToPath("a.b"))).toEqualTypeOf<
-      Array<{ c: { d: number } }>
+      { c: { d: number } }[]
     >();
     expectTypeOf(prop(DATA, ...stringToPath("a.b[0]"))).toExtend<
       { c: { d: number } } | undefined

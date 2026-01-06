@@ -3,21 +3,21 @@ import { pipe } from "./pipe";
 import { shuffle } from "./shuffle";
 
 test("regular array", () => {
-  const result = shuffle([] as Array<string>);
+  const result = shuffle([] as string[]);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("non-empty tail-rest array", () => {
-  const result = shuffle([1] as [number, ...Array<number>]);
+  const result = shuffle([1] as [number, ...number[]]);
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
 });
 
 test("non-empty head-rest array", () => {
-  const result = shuffle([1] as [...Array<number>, number]);
+  const result = shuffle([1] as [...number[], number]);
 
-  expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
 });
 
 test("fixed size tuple", () => {
@@ -33,9 +33,9 @@ test("fixed size tuple", () => {
 });
 
 test("removes readonlyness from array", () => {
-  const result = shuffle([] as ReadonlyArray<string>);
+  const result = shuffle([] as readonly string[]);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("infers type via a pipe", () => {

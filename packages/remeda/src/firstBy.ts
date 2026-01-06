@@ -6,9 +6,9 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 type FirstBy<T extends IterableContainer> =
   | T[number]
-  | (T extends readonly [unknown, ...ReadonlyArray<unknown>]
+  | (T extends readonly [unknown, ...(readonly unknown[])]
       ? never
-      : T extends readonly [...ReadonlyArray<unknown>, unknown]
+      : T extends readonly [...(readonly unknown[]), unknown]
         ? never
         : undefined);
 
@@ -70,12 +70,12 @@ export function firstBy<T extends IterableContainer>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): FirstBy<T>;
 
-export function firstBy(...args: ReadonlyArray<unknown>): unknown {
+export function firstBy(...args: readonly unknown[]): unknown {
   return purryOrderRules(firstByImplementation, args);
 }
 
 function firstByImplementation<T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   compareFn: CompareFunction<T>,
 ): T | undefined {
   if (!hasAtLeast(data, 2)) {

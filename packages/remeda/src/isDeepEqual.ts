@@ -76,7 +76,7 @@ export function isDeepEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
-export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
+export function isDeepEqual(...args: readonly unknown[]): unknown {
   return purry(isDeepEqualImplementation, args);
 }
 
@@ -111,7 +111,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   if (Array.isArray(data)) {
-    return isDeepEqualArrays(data, other as unknown as ReadonlyArray<unknown>);
+    return isDeepEqualArrays(data, other as unknown as readonly unknown[]);
   }
 
   if (data instanceof Map) {
@@ -160,8 +160,8 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
 }
 
 function isDeepEqualArrays(
-  data: ReadonlyArray<unknown>,
-  other: ReadonlyArray<unknown>,
+  data: readonly unknown[],
+  other: readonly unknown[],
 ): boolean {
   if (data.length !== other.length) {
     return false;

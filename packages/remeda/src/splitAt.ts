@@ -13,10 +13,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function splitAt<T>(
-  array: ReadonlyArray<T>,
-  index: number,
-): [Array<T>, Array<T>];
+export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
 
 /**
  * Splits a given array at a given index.
@@ -30,18 +27,16 @@ export function splitAt<T>(
  * @dataLast
  * @category Array
  */
-export function splitAt<T>(
-  index: number,
-): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
+export function splitAt<T>(index: number): (array: readonly T[]) => [T[], T[]];
 
-export function splitAt(...args: ReadonlyArray<unknown>): unknown {
+export function splitAt(...args: readonly unknown[]): unknown {
   return purry(splitAtImplementation, args);
 }
 
 function splitAtImplementation<T>(
-  array: ReadonlyArray<T>,
+  array: readonly T[],
   index: number,
-): [Array<T>, Array<T>] {
+): [T[], T[]] {
   const effectiveIndex = Math.max(
     Math.min(index < 0 ? array.length + index : index, array.length),
     0,

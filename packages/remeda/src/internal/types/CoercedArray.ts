@@ -9,4 +9,4 @@ import type { IsNever } from "type-fest";
  * `[...CoercedArray<TupleParts<T>["item"]>, ...TupleParts<T>["suffix"]]`.
  *
  */
-export type CoercedArray<T> = IsNever<T> extends true ? [] : Array<T>;
+export type CoercedArray<T> = IsNever<T> extends true ? [] : T[];

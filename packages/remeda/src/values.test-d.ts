@@ -5,37 +5,37 @@ import { values } from "./values";
 test("should correctly types indexed types", () => {
   const result = values<Record<string, string>>({ a: "b" });
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("should correctly type functions", () => {
   const result = values(doNothing());
 
-  expectTypeOf(result).toEqualTypeOf<Array<never>>();
+  expectTypeOf(result).toEqualTypeOf<never[]>();
 });
 
 test("should correctly type arrays", () => {
   const results = values([1, 2, 3]);
 
-  expectTypeOf(results).toEqualTypeOf<Array<number>>();
+  expectTypeOf(results).toEqualTypeOf<number[]>();
 });
 
 test("should correctly type const arrays", () => {
   const results = values([1, 2, 3] as const);
 
-  expectTypeOf(results).toEqualTypeOf<Array<1 | 2 | 3>>();
+  expectTypeOf(results).toEqualTypeOf<(1 | 2 | 3)[]>();
 });
 
 test("should correctly type objects", () => {
   const result = values({ a: true });
 
-  expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
+  expectTypeOf(result).toEqualTypeOf<boolean[]>();
 });
 
 test("should correctly type Records", () => {
   const result = values<Record<string, boolean>>({ a: true });
 
-  expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
+  expectTypeOf(result).toEqualTypeOf<boolean[]>();
 });
 
 test("should correctly type union of Records", () => {
@@ -43,7 +43,7 @@ test("should correctly type union of Records", () => {
     a: "cat",
   } as Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">);
 
-  expectTypeOf(result).toEqualTypeOf<Array<"cat"> | Array<"dog">>();
+  expectTypeOf(result).toEqualTypeOf<"cat"[] | "dog"[]>();
 });
 
 test("should correctly type typed objects", () => {
@@ -52,17 +52,17 @@ test("should correctly type typed objects", () => {
     age: 7,
   });
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | "cat" | "dog">>();
+  expectTypeOf(result).toEqualTypeOf<(number | "cat" | "dog")[]>();
 });
 
 test("should skip symbol keys", () => {
   const result = values({ [Symbol("a")]: true, a: "b", 123: 456 });
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("should return a useful type when all keys are symbols", () => {
   const result = values({ [Symbol("a")]: true, [Symbol("b")]: "c" });
 
-  expectTypeOf(result).toEqualTypeOf<Array<never>>();
+  expectTypeOf(result).toEqualTypeOf<never[]>();
 });

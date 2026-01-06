@@ -43,12 +43,12 @@ describe("'call' method args", () => {
       reducer:
         // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
         // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- rest params can't be readonly, it breaks typing :(
-        (_: "test" | undefined, ...as: Array<string>) => "test" as const,
+        (_: "test" | undefined, ...as: string[]) => "test" as const,
 
       triggerAt: "start",
     });
 
-    expectTypeOf(foo.call).parameters.toEqualTypeOf<Array<string>>();
+    expectTypeOf(foo.call).parameters.toEqualTypeOf<string[]>();
   });
 });
 
@@ -71,14 +71,12 @@ describe("derive the reducer accumulator type from the executor param", () => {
 
   test("arrays", () => {
     funnel(
-      (_: ReadonlyArray<number>) => {
+      (_: readonly number[]) => {
         // do nothing,
       },
       {
         reducer: (reduced) => {
-          expectTypeOf(reduced).toEqualTypeOf<
-            ReadonlyArray<number> | undefined
-          >();
+          expectTypeOf(reduced).toEqualTypeOf<readonly number[] | undefined>();
 
           return reduced!;
         },

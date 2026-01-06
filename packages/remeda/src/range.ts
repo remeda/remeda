@@ -11,7 +11,7 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function range(start: number, end: number): Array<number>;
+export function range(start: number, end: number): number[];
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
@@ -23,14 +23,14 @@ export function range(start: number, end: number): Array<number>;
  * @dataLast
  * @category Array
  */
-export function range(end: number): (start: number) => Array<number>;
+export function range(end: number): (start: number) => number[];
 
-export function range(...args: ReadonlyArray<unknown>): unknown {
+export function range(...args: readonly unknown[]): unknown {
   return purry(rangeImplementation, args);
 }
 
-function rangeImplementation(start: number, end: number): Array<number> {
-  const ret: Array<number> = [];
+function rangeImplementation(start: number, end: number): number[] {
+  const ret: number[] = [];
   for (let i = start; i < end; i++) {
     ret.push(i);
   }

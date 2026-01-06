@@ -50,7 +50,7 @@ test("requires at least one argument", () => {
 
 function mockApi(_options: {
   readonly onMixOfParams: (result: number, isOptionalBoolean?: true) => number;
-  readonly onVariadicParams: (...args: ReadonlyArray<"cat" | "dog">) => string;
+  readonly onVariadicParams: (...args: readonly ("cat" | "dog")[]) => string;
   readonly onNoParams?: () => boolean;
 }): void {
   /* do nothing */

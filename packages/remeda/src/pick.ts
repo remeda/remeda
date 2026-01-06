@@ -5,7 +5,7 @@ import type { PartitionByUnion } from "./internal/types/PartitionByUnion";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
+type PickFromArray<T, Keys extends readonly KeysOfUnion<T>[]> =
   // Distribute unions for both object types and key arrays.
   T extends unknown
     ? Keys extends unknown
@@ -37,7 +37,7 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
  * picked as-is, otherwise, the key might not be present in the keys array so it
  * can only be picked optionally.
  */
-type PickBoundedFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>> =
+type PickBoundedFromArray<T, Keys extends readonly KeysOfUnion<T>[]> =
   // Literal keys in the prefix/suffix are guaranteed present.
   Pick<
     T,
@@ -92,7 +92,7 @@ type PickUnbounded<T, Keys extends keyof T> =
  */
 export function pick<
   T extends object,
-  const Keys extends ReadonlyArray<KeysOfUnion<T>>,
+  const Keys extends readonly KeysOfUnion<T>[],
 >(keys: Keys): (data: T) => PickFromArray<T, Keys>;
 
 /**
@@ -108,16 +108,16 @@ export function pick<
  */
 export function pick<
   T extends object,
-  const Keys extends ReadonlyArray<KeysOfUnion<T>>,
+  const Keys extends readonly KeysOfUnion<T>[],
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
-export function pick(...args: ReadonlyArray<unknown>): unknown {
+export function pick(...args: readonly unknown[]): unknown {
   return purry(pickImplementation, args);
 }
 
 function pickImplementation<
   T extends object,
-  Keys extends ReadonlyArray<keyof T>,
+  Keys extends readonly (keyof T)[],
 >(object: T, keys: Keys): PickFromArray<T, Keys> {
   const out: Partial<Pick<T, Keys[number]>> = {};
   for (const key of keys) {

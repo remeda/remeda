@@ -267,24 +267,24 @@ describe("all tuple shapes", () => {
   });
 
   test("array", () => {
-    const data = [] as Array<"cat">;
+    const data = [] as "cat"[];
     if (isEmptyish(data)) {
       // No narrowing when the array is mutable so that it remains mutable
       // (effectively turning off the "type-predicate"-ness of the function)
-      expectTypeOf(data).toExtend<Array<"cat">>();
+      expectTypeOf(data).toExtend<"cat"[]>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<Array<"cat">>();
+      expectTypeOf(data).toEqualTypeOf<"cat"[]>();
     }
   });
 
   test("readonly array", () => {
-    const data = [] as ReadonlyArray<"cat">;
+    const data = [] as readonly "cat"[];
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
       // change.
       expectTypeOf(data).toEqualTypeOf<readonly []>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<"cat">>();
+      expectTypeOf(data).toEqualTypeOf<readonly "cat"[]>();
     }
   });
 
@@ -311,42 +311,42 @@ describe("all tuple shapes", () => {
   });
 
   test("fixed-prefix array", () => {
-    const data = [1] as [number, ...Array<number>];
+    const data = [1] as [number, ...number[]];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<[number, ...Array<number>]>();
+      expectTypeOf(data).toEqualTypeOf<[number, ...number[]]>();
     }
   });
 
   test("readonly fixed-prefix array", () => {
-    const data = [1] as readonly [number, ...Array<number>];
+    const data = [1] as readonly [number, ...number[]];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<readonly [number, ...Array<number>]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [number, ...number[]]>();
     }
   });
 
   test("fixed-suffix array", () => {
-    const data = [1] as [...Array<number>, number];
+    const data = [1] as [...number[], number];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<[...Array<number>, number]>();
+      expectTypeOf(data).toEqualTypeOf<[...number[], number]>();
     }
   });
 
   test("readonly fixed-suffix array", () => {
-    const data = [1] as readonly [...Array<number>, number];
+    const data = [1] as readonly [...number[], number];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<readonly [...Array<number>, number]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [...number[], number]>();
     }
   });
 
@@ -371,45 +371,45 @@ describe("all tuple shapes", () => {
   });
 
   test("optional prefix arrays", () => {
-    const data = [] as [number?, ...Array<number>];
+    const data = [] as [number?, ...number[]];
     if (isEmptyish(data)) {
       // No narrowing when the array is mutable so that it remains mutable
       // (effectively turning off the "type-predicate"-ness of the function)
-      expectTypeOf(data).toExtend<[number?, ...Array<number>]>();
+      expectTypeOf(data).toExtend<[number?, ...number[]]>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<[number?, ...Array<number>]>();
+      expectTypeOf(data).toEqualTypeOf<[number?, ...number[]]>();
     }
   });
 
   test("readonly optional prefix arrays", () => {
-    const data = [] as readonly [number?, ...Array<number>];
+    const data = [] as readonly [number?, ...number[]];
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
       // change.
       expectTypeOf(data).toEqualTypeOf<readonly []>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<readonly [number?, ...Array<number>]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [number?, ...number[]]>();
     }
   });
 
   test("fixed-elements array", () => {
-    const data = [1, 2] as [number, ...Array<number>, number];
+    const data = [1, 2] as [number, ...number[], number];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<[number, ...Array<number>, number]>();
+      expectTypeOf(data).toEqualTypeOf<[number, ...number[], number]>();
     }
   });
 
   test("readonly fixed-elements array", () => {
-    const data = [1, 2] as readonly [number, ...Array<number>, number];
+    const data = [1, 2] as readonly [number, ...number[], number];
     if (isEmptyish(data)) {
       // Can never be empty
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
       expectTypeOf(data).toEqualTypeOf<
-        readonly [number, ...Array<number>, number]
+        readonly [number, ...number[], number]
       >();
     }
   });

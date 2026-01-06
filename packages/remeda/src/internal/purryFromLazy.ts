@@ -21,7 +21,7 @@ import type { LazyEvaluator } from "./types/LazyEvaluator";
 export function purryFromLazy(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lazy: (...args: any) => LazyEvaluator,
-  args: ReadonlyArray<unknown>,
+  args: readonly unknown[],
 ): unknown {
   const diff = args.length - lazy.length;
 

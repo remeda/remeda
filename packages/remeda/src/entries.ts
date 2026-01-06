@@ -31,7 +31,7 @@ type Entry<T> = Simplify<
  * @dataFirst
  * @category Object
  */
-export function entries<T extends {}>(data: T): Array<Entry<T>>;
+export function entries<T extends {}>(data: T): Entry<T>[];
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -43,8 +43,8 @@ export function entries<T extends {}>(data: T): Array<Entry<T>>;
  * @dataLast
  * @category Object
  */
-export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
+export function entries(): <T extends {}>(data: T) => Entry<T>[];
 
-export function entries(...args: ReadonlyArray<unknown>): unknown {
+export function entries(...args: readonly unknown[]): unknown {
   return purry(Object.entries, args);
 }

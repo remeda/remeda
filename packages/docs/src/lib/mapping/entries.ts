@@ -32,7 +32,7 @@ export const getMigrationMappings = async (library: string) =>
 
 export const forNavbar = (
   result: Awaited<ReturnType<typeof getMigrationMappings>>,
-): ReadonlyArray<NavbarCategory> =>
+): readonly NavbarCategory[] =>
   map(
     result,
     ([category, entries]) =>

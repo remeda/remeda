@@ -10,19 +10,19 @@ test("empty arrays", () => {
 
 describe("numbers", () => {
   test("arbitrary arrays", () => {
-    const result = sum([] as Array<number>);
+    const result = sum([] as number[]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = sum([] as ReadonlyArray<number>);
+    const result = sum([] as readonly number[]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sum([1, 2] as [number, ...Array<number>]);
+    const result = sum([1, 2] as [number, ...number[]]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
@@ -42,19 +42,19 @@ describe("numbers", () => {
 
 describe("bigints", () => {
   test("arbitrary arrays", () => {
-    const result = sum([] as Array<bigint>);
+    const result = sum([] as bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = sum([] as ReadonlyArray<bigint>);
+    const result = sum([] as readonly bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = sum([1n, 2n] as [bigint, ...Array<bigint>]);
+    const result = sum([1n, 2n] as [bigint, ...bigint[]]);
 
     expectTypeOf(result).toEqualTypeOf<bigint>();
   });
@@ -93,7 +93,7 @@ test("doesn't allow mixed arrays", () => {
 
 describe("known issues!", () => {
   test("returns 0 (`number`) instead of 0n (`bigint`) for empty `bigint` arrays", () => {
-    const result = sum([] as Array<bigint>);
+    const result = sum([] as bigint[]);
 
     expectTypeOf(result).toEqualTypeOf<bigint | 0>();
   });

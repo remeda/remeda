@@ -43,9 +43,6 @@ export default defineConfig(
 
     rules: {
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-
-      // We stay consistent with the main project on this...
-      "@typescript-eslint/array-type": ["error", { default: "generic" }],
     },
   },
 

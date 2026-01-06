@@ -19,7 +19,7 @@ describe("invalid types", () => {
 
   test("optional arrays", () => {
     // @ts-expect-error [ts2769] undefined is only allowed with strings
-    isEmpty([] as ReadonlyArray<string> | undefined);
+    isEmpty([] as readonly string[] | undefined);
   });
 
   test("optional objects", () => {

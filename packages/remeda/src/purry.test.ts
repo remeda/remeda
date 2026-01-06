@@ -5,7 +5,7 @@ function sub(a: number, b: number): number {
   return a - b;
 }
 
-function fn(...args: ReadonlyArray<unknown>): unknown {
+function fn(...args: readonly unknown[]): unknown {
   return purry(sub, args);
 }
 
@@ -14,7 +14,7 @@ test("all arguments", () => {
 });
 
 test("1 missing", () => {
-  const purried = fn(5) as (...args: ReadonlyArray<unknown>) => unknown;
+  const purried = fn(5) as (...args: readonly unknown[]) => unknown;
 
   expect(purried(10)).toBe(5);
 });

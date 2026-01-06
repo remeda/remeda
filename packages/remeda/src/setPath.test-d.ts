@@ -5,7 +5,7 @@ import { setPath } from "./setPath";
 declare const TEST_OBJECT: {
   a: {
     b: { c: number; d?: number };
-    e: Array<{ f: { g: number } }>;
+    e: { f: { g: number } }[];
     z?: number | undefined;
   };
   x?: number;
@@ -37,7 +37,7 @@ test("should correctly type partial paths (objects)", () => {
 });
 
 test("should correctly type partial paths (arrays)", () => {
-  const DATA = [[]] as Array<Array<{ c: number }>>;
+  const DATA = [[]] as { c: number }[][];
 
   // @ts-expect-error [ts2345] - this path should yield a type of { c: number }
   setPath(DATA, [1, 2] as const, 123);

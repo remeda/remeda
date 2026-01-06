@@ -100,7 +100,7 @@ export function hasSubObject<S extends object>(
   data: T,
 ) => data is HasSubObjectGuard<T, S>;
 
-export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
+export function hasSubObject(...args: readonly unknown[]): unknown {
   return purry(hasSubObjectImplementation, args);
 }
 

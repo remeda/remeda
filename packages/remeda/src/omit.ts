@@ -7,7 +7,7 @@ import type { SimplifiedWritable } from "./internal/types/SimplifiedWritable";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type OmitFromArray<T, Keys extends ReadonlyArray<PropertyKey>> =
+type OmitFromArray<T, Keys extends readonly PropertyKey[]> =
   // Distribute unions for both object types and key arrays.
   T extends unknown
     ? Keys extends unknown
@@ -24,7 +24,7 @@ type OmitFromArray<T, Keys extends ReadonlyArray<PropertyKey>> =
       : never
     : never;
 
-type OmitBounded<T, Keys extends ReadonlyArray<PropertyKey>> =
+type OmitBounded<T, Keys extends readonly PropertyKey[]> =
   // We build our output by first considering any key present in the keys array
   // as being omitted. This object would contain all keys that are unaffected at
   // all by this omit operation.
@@ -63,7 +63,7 @@ type OmitBounded<T, Keys extends ReadonlyArray<PropertyKey>> =
  *
  * @see https://www.typescriptlang.org/play/?#code/C4TwDgpgBAqgdgIwPYFc4BMLqgXigeQFsBLYAHgCUIBjJAJ3TIGdg7i4BzAGigCIALCABshSXgD4eLNp3EBuAFAB6JVDUA9APxA
  */
-type OmitUnbounded<T, Keys extends ReadonlyArray<PropertyKey>> = T &
+type OmitUnbounded<T, Keys extends readonly PropertyKey[]> = T &
   // Any key we know for sure is being omitted needs to become "impossible" to
   // access; for an unbounded record this means merging it with a bounded record
   // with `never` value for these keys.
@@ -103,7 +103,7 @@ type Bounded<T> = T extends unknown
  * @dataLast
  * @category Object
  */
-export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
+export function omit<T, const Keys extends readonly KeysOfUnion<T>[]>(
   keys: Keys,
 ): (data: T) => OmitFromArray<T, Keys>;
 
@@ -119,18 +119,18 @@ export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
  * @dataFirst
  * @category Object
  */
-export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
+export function omit<T, const Keys extends readonly KeysOfUnion<T>[]>(
   data: T,
   keys: Keys,
 ): OmitFromArray<T, Keys>;
 
-export function omit(...args: ReadonlyArray<unknown>): unknown {
+export function omit(...args: readonly unknown[]): unknown {
   return purry(omitImplementation, args);
 }
 
 function omitImplementation<
   T extends object,
-  Keys extends ReadonlyArray<keyof T>,
+  Keys extends readonly (keyof T)[],
 >(data: T, keys: Keys): OmitFromArray<T, Keys> {
   if (!hasAtLeast(keys, 1)) {
     // No props to omit at all!

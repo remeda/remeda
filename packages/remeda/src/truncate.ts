@@ -79,7 +79,7 @@ type TruncateLiterals<
   S extends string,
   N extends number,
   Omission extends string,
-  Iteration extends ReadonlyArray<unknown> = [],
+  Iteration extends readonly unknown[] = [],
 > = S extends `${infer Character}${infer Rest}`
   ? // The cutoff point N - omission.length leaves room for the omission.
     Iteration["length"] extends ClampedIntegerSubtract<

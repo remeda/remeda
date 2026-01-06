@@ -47,7 +47,7 @@ type LiteralChunk<T extends IterableContainer, N extends number> =
       N
     >
   // If both the prefix and suffix tuples are empty then our input is a simple
-  // array of the form `Array<Item>`. This means it could also be empty, so we
+  // array of the form `Item[]`. This means it could also be empty, so we
   // need to add the empty output to our return type.
   | ([...TuplePrefix<T>, ...TupleParts<T>["suffix"]] extends readonly []
       ? []
@@ -69,8 +69,8 @@ type ChunkFixedTuple<
       Rest,
       N,
       Result extends [
-        ...infer Previous extends Array<Array<unknown>>,
-        infer Current extends Array<unknown>,
+        ...infer Previous extends unknown[][],
+        infer Current extends unknown[],
       ]
         ? // We take a look at the last chunk in the result, this is the
           // "current" chunk where new items would be added, all chunks before
@@ -99,7 +99,7 @@ type ChunkFixedTuple<
 type ChunkRestElement<
   PrefixChunks,
   Item,
-  Suffix extends Array<unknown>,
+  Suffix extends unknown[],
   N extends number,
 > =
   IsNever<Item> extends true
@@ -108,8 +108,8 @@ type ChunkRestElement<
       // is assumed to be empty in this case.
       PrefixChunks
     : PrefixChunks extends [
-          ...infer PrefixFullChunks extends Array<Array<unknown>>,
-          infer LastPrefixChunk extends Array<unknown>,
+          ...infer PrefixFullChunks extends unknown[][],
+          infer LastPrefixChunk extends unknown[],
         ]
       ? // When our prefix chunks are not empty it means we need to look at all
           // combinations of mixing the prefix, the suffix, and different counts
@@ -145,11 +145,11 @@ type ChunkRestElement<
                 ...LastPrefixChunk,
                 ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
               ],
-              ...Array<NTuple<Item, N>>,
+              ...NTuple<Item, N>[],
               ...SuffixChunk<Suffix, Item, N>,
             ]
       : // When our prefix chunks are empty we only need to handle the suffix
-        [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>];
+        [...NTuple<Item, N>[], ...SuffixChunk<Suffix, Item, N>];
 
 /**
  * This type assumes it takes a finite tuple that represents the suffix of our
@@ -158,7 +158,7 @@ type ChunkRestElement<
  * full.
  */
 type SuffixChunk<
-  T extends Array<unknown>,
+  T extends unknown[],
   Item,
   N extends number,
 > = T extends readonly []
@@ -179,10 +179,10 @@ type SuffixChunk<
  * our output based on if we know for sure that the array is empty or not.
  */
 type GenericChunk<T extends IterableContainer> = T extends
-  | readonly [...Array<unknown>, unknown]
-  | readonly [unknown, ...Array<unknown>]
+  | readonly [...unknown[], unknown]
+  | readonly [unknown, ...unknown[]]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
-  : Array<NonEmptyArray<T[number]>>;
+  : NonEmptyArray<T[number]>[];
 
 // TODO: Chunk was built before we handled optional elements correctly. It needs to be fixed to handle these correctly, specifically in regard to optional elements creating whole chunks that themselves need to be optional, but that their items themselves should not be optional, except the last chunk...
 type TuplePrefix<T extends IterableContainer> = [
@@ -224,14 +224,11 @@ export function chunk<N extends number>(
   size: N,
 ): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
-export function chunk(...args: ReadonlyArray<unknown>): unknown {
+export function chunk(...args: readonly unknown[]): unknown {
   return purry(chunkImplementation, args);
 }
 
-function chunkImplementation<T>(
-  data: ReadonlyArray<T>,
-  size: number,
-): Array<Array<T>> {
+function chunkImplementation<T>(data: readonly T[], size: number): T[][] {
   if (size < 1) {
     throw new RangeError(
       `chunk: A chunk size of '${size.toString()}' would result in an infinite array`,
@@ -250,7 +247,7 @@ function chunkImplementation<T>(
   const chunks = Math.ceil(data.length / size);
 
   // eslint-disable-next-line unicorn/no-new-array -- This is OK, a sparse array allows us to handle very large arrays more efficiently.
-  const result = new Array<Array<T>>(chunks);
+  const result = new Array<T[]>(chunks);
 
   if (size === 1) {
     // Optimized for when we don't need slice.

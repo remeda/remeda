@@ -8,7 +8,7 @@ import type { IsStringLiteral } from "type-fest";
  */
 export type StringLength<
   S extends string,
-  Characters extends ReadonlyArray<string> = [],
+  Characters extends readonly string[] = [],
 > =
   IsStringLiteral<S> extends true
     ? S extends `${infer Character}${infer Rest}`

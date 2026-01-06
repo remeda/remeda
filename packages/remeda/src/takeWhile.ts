@@ -16,11 +16,11 @@ import { purry } from "./purry";
 export function takeWhile<T extends IterableContainer, S extends T[number]>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is S,
-): Array<S>;
+): S[];
 export function takeWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Returns elements from the array until predicate returns false.
@@ -35,20 +35,20 @@ export function takeWhile<T extends IterableContainer>(
  */
 export function takeWhile<T extends IterableContainer, S extends T[number]>(
   predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => Array<S>;
+): (array: T) => S[];
 export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
-): (array: T) => Array<T[number]>;
+): (array: T) => T[number][];
 
-export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
+export function takeWhile(...args: readonly unknown[]): unknown {
   return purry(takeWhileImplementation, args);
 }
 
 function takeWhileImplementation<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
-  const ret: Array<T[number]> = [];
+): T[number][] {
+  const ret: T[number][] = [];
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       break;

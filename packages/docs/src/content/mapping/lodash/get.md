@@ -70,7 +70,7 @@ prop(DATA, ...stringToPath("a[0].b.c"));
 ### Default Fallback
 
 ```ts
-const DATA = { a: [] as Array<{ b: number }> };
+const DATA = { a: [] as { b: number }[] };
 
 // Lodash
 _.get(DATA, ["a", "0", "b"], "default");

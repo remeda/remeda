@@ -38,6 +38,6 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil(...args: ReadonlyArray<unknown>): unknown {
+export function ceil(...args: readonly unknown[]): unknown {
   return purry(withPrecision(Math.ceil), args);
 }

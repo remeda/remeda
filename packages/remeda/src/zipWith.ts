@@ -25,11 +25,8 @@ type ZippingFunction<
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
-  fn: ZippingFunction<ReadonlyArray<TItem1>, ReadonlyArray<TItem2>, Value>,
-): (
-  first: ReadonlyArray<TItem1>,
-  second: ReadonlyArray<TItem2>,
-) => Array<Value>;
+  fn: ZippingFunction<readonly TItem1[], readonly TItem2[], Value>,
+): (first: readonly TItem1[], second: readonly TItem2[]) => Value[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -49,7 +46,7 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Array<Value>;
+>(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Value[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -70,7 +67,7 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Array<Value>;
+>(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Value[];
 
 export function zipWith(
   arg0: IterableContainer | ZippingFunction,
@@ -103,7 +100,7 @@ function zipWithImplementation<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Array<Value> {
+>(first: T1, second: T2, fn: ZippingFunction<T1, T2, Value>): Value[] {
   const datum = [first, second] as const;
   return first.length < second.length
     ? first.map((item, index) => fn(item, second[index], index, datum))
@@ -113,7 +110,7 @@ function zipWithImplementation<
 const lazyImplementation =
   <T1, T2 extends IterableContainer, Value>(
     second: T2,
-    fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>,
+    fn: ZippingFunction<readonly T1[], T2, Value>,
   ): LazyEvaluator<T1, Value> =>
   (value, index, data) => ({
     next: fn(value, second[index], index, [data, second]),

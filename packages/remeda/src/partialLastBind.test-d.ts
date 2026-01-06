@@ -34,12 +34,12 @@ describe("simple case (all required, no rest params)", () => {
 
   test("should not accept array typed partial", () => {
     // @ts-expect-error [ts2345] - don't know how many args are bound
-    partialLastBind(fn, ...([] as Array<number>));
+    partialLastBind(fn, ...([] as number[]));
   });
 
   test("should not accept tuple typed partial with prefix", () => {
     // @ts-expect-error [ts2345] - wrong arg type
-    partialLastBind(fn, ...(["a", 1] as [string, ...Array<number>]));
+    partialLastBind(fn, ...(["a", 1] as [string, ...number[]]));
   });
 });
 
@@ -72,17 +72,17 @@ describe("optional params", () => {
 });
 
 describe("simple rest param case", () => {
-  const fn = (...parts: Array<string>): string => parts.join("");
+  const fn = (...parts: string[]): string => parts.join("");
 
   test("should correctly type 0 partial args", () => {
     expectTypeOf(partialLastBind(fn)).toEqualTypeOf<
-      (...parts: ReadonlyArray<string>) => string
+      (...parts: readonly string[]) => string
     >();
   });
 
   test("should correctly type 1 partial arg", () => {
     expectTypeOf(partialLastBind(fn, "hello")).toEqualTypeOf<
-      (...parts: ReadonlyArray<string>) => string
+      (...parts: readonly string[]) => string
     >();
   });
 
@@ -92,56 +92,56 @@ describe("simple rest param case", () => {
   });
 
   test("should accept tuple typed partial arg", () => {
-    expectTypeOf(
-      partialLastBind(fn, ...([] as [...Array<string>])),
-    ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+    expectTypeOf(partialLastBind(fn, ...([] as [...string[]]))).toEqualTypeOf<
+      (...parts: readonly string[]) => string
+    >();
   });
 
   test("should accept tuple typed partial arg with prefix", () => {
     expectTypeOf(
-      partialLastBind(fn, ...(["hello"] as [string, ...Array<string>])),
-    ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+      partialLastBind(fn, ...(["hello"] as [string, ...string[]])),
+    ).toEqualTypeOf<(...parts: readonly string[]) => string>();
   });
 
   test("should accept tuple typed partial arg with prefix and suffix", () => {
     expectTypeOf(
       partialLastBind(
         fn,
-        ...(["hello", "world"] as [string, ...Array<string>, string]),
+        ...(["hello", "world"] as [string, ...string[], string]),
       ),
-    ).toEqualTypeOf<(...parts: ReadonlyArray<string>) => string>();
+    ).toEqualTypeOf<(...parts: readonly string[]) => string>();
   });
 
   test("should not accept tuple typed partial arg with incorrect prefix", () => {
     // @ts-expect-error [ts2345] - wrong arg type
-    partialLastBind(fn, ...([1, "hello"] as [number?, ...Array<string>]));
+    partialLastBind(fn, ...([1, "hello"] as [number?, ...string[]]));
   });
 
   test("should not accept tuple typed partial arg with incorrect suffix", () => {
     // @ts-expect-error [ts2345] - wrong arg type
-    partialLastBind(fn, ...(["hello", 1] as [...Array<string>, number]));
+    partialLastBind(fn, ...(["hello", 1] as [...string[], number]));
   });
 });
 
 describe("known issues!", () => {
   test("does not support readonly rest params", () => {
-    const fn = (...parts: ReadonlyArray<string>): string => parts.join("");
+    const fn = (...parts: readonly string[]): string => parts.join("");
 
     // @ts-expect-error [ts2345]: blocked on https://github.com/microsoft/TypeScript/issues/37193
     expectTypeOf(partialLastBind(fn)).toEqualTypeOf<
       // @ts-expect-error [ts2344]: blocked on https://github.com/microsoft/TypeScript/issues/37193
-      (...parts: ReadonlyArray<string>) => string
+      (...parts: readonly string[]) => string
     >();
   });
 
   describe("does not support optional AND rest params", () => {
-    const fn = (x: string, y = 123, ...parts: Array<string>): string =>
+    const fn = (x: string, y = 123, ...parts: string[]): string =>
       `${x}, ${y}, and ${parts.join("")}`;
 
     expectTypeOf(partialLastBind(fn, "hello")).toEqualTypeOf<
       // @ts-expect-error [ts2344]: I don't think this is possible on the type-level?
       // We don't know whether "hello" is in x or parts.
-      (x: string, y?: number, ...parts: ReadonlyArray<string>) => string
+      (x: string, y?: number, ...parts: readonly string[]) => string
     >();
   });
 });

@@ -42,9 +42,9 @@ export function last<T extends IterableContainer>(data: T): Last<T>;
  */
 export function last(): <T extends IterableContainer>(data: T) => Last<T>;
 
-export function last(...args: ReadonlyArray<unknown>): unknown {
+export function last(...args: readonly unknown[]): unknown {
   return purry(lastImplementation, args);
 }
 
-const lastImplementation = <T>(array: ReadonlyArray<T>): T | undefined =>
+const lastImplementation = <T>(array: readonly T[]): T | undefined =>
   array.at(-1);

@@ -22,8 +22,8 @@ import { purry } from "./purry";
  * @category Array
  */
 export function findIndex<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
 ): number;
 
 /**
@@ -50,14 +50,14 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => number;
+  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
+): (data: readonly T[]) => number;
 
-export function findIndex(...args: ReadonlyArray<unknown>): unknown {
+export function findIndex(...args: readonly unknown[]): unknown {
   return purry(findIndexImplementation, args);
 }
 
 const findIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, obj: readonly T[]) => boolean,
 ): number => data.findIndex(predicate);

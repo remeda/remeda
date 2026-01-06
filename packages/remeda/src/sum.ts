@@ -6,7 +6,7 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
   T extends readonly []
     ? 0
     : // Non-empty bigint arrays will always result in a bigint sum.
-      T extends readonly [bigint, ...ReadonlyArray<unknown>]
+      T extends readonly [bigint, ...(readonly unknown[])]
       ? bigint
       : // But an empty bigint array would result in a non-bigint 0.
         T[number] extends bigint
@@ -65,7 +65,7 @@ export function sum(): <
   data: T,
 ) => Sum<T>;
 
-export function sum(...args: ReadonlyArray<unknown>): unknown {
+export function sum(...args: readonly unknown[]): unknown {
   return purry(sumImplementation, args);
 }
 

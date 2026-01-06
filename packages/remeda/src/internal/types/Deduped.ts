@@ -20,9 +20,9 @@ export type Deduped<T extends IterableContainer> = T extends readonly []
   : T extends readonly [infer Head, ...infer Rest]
     ? // has a first item, we can copy it over. The rest of the array is made of
       // whatever comes after that item.
-      [Head, ...Array<Rest[number]>]
-    : T extends readonly [...Array<unknown>, unknown]
+      [Head, ...Rest[number][]]
+    : T extends readonly [...unknown[], unknown]
       ? // is non empty, we can at least say that the output is non-empty as
         // well.
         NonEmptyArray<T[number]>
-      : Array<T[number]>;
+      : T[number][];

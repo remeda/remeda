@@ -2,21 +2,21 @@ import { expectTypeOf, test } from "vitest";
 import { first } from "./first";
 
 test("simple empty array", () => {
-  const arr: Array<number> = [];
+  const arr: number[] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
 test("simple array", () => {
-  const arr: Array<number> = [1];
+  const arr: number[] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
 test("simple non-empty array", () => {
-  const arr: [number, ...Array<number>] = [1];
+  const arr: [number, ...number[]] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
@@ -30,7 +30,7 @@ test("simple tuple", () => {
 });
 
 test("array with more than one item", () => {
-  const arr: [number, number, ...Array<number>] = [1, 2];
+  const arr: [number, number, ...number[]] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
@@ -44,35 +44,35 @@ test("trivial empty array", () => {
 });
 
 test("array with last", () => {
-  const arr: [...Array<number>, number] = [1];
+  const arr: [...number[], number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
 test("tuple with last", () => {
-  const arr: [...Array<string>, number] = ["a", 1];
+  const arr: [...string[], number] = ["a", 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
 });
 
 test("simple empty readonly array", () => {
-  const arr: ReadonlyArray<number> = [];
+  const arr: readonly number[] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
 test("simple readonly array", () => {
-  const arr: ReadonlyArray<number> = [1];
+  const arr: readonly number[] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
 test("simple non-empty readonly array", () => {
-  const arr: readonly [number, ...Array<number>] = [1];
+  const arr: readonly [number, ...number[]] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
@@ -86,7 +86,7 @@ test("simple readonly tuple", () => {
 });
 
 test("readonly array with more than one item", () => {
-  const arr: readonly [number, number, ...Array<number>] = [1, 2];
+  const arr: readonly [number, number, ...number[]] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
@@ -100,14 +100,14 @@ test("readonly trivial empty array", () => {
 });
 
 test("readonly array with last", () => {
-  const arr: readonly [...Array<number>, number] = [1];
+  const arr: readonly [...number[], number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
 test("readonly tuple with last", () => {
-  const arr: readonly [...Array<string>, number] = ["a", 1];
+  const arr: readonly [...string[], number] = ["a", 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();

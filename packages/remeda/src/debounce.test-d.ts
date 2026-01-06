@@ -91,7 +91,7 @@ test("argument typing to be good (with defaults)", () => {
 
 test("argument typing to be good (with rest param)", () => {
   const debouncer = debounce(
-    (a: string, ...flags: ReadonlyArray<boolean>) =>
+    (a: string, ...flags: readonly boolean[]) =>
       `${a}${flags.map((flag) => (flag ? "y" : "n")).join(",")}`,
     { timing: "leading" },
   );

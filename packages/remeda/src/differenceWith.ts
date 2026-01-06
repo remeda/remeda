@@ -24,10 +24,10 @@ type IsEqual<T, Other> = (data: T, other: Other) => boolean;
  * @category Array
  */
 export function differenceWith<T, Other>(
-  data: ReadonlyArray<T>,
-  other: ReadonlyArray<Other>,
+  data: readonly T[],
+  other: readonly Other[],
   isEqual: IsEqual<T, Other>,
-): Array<T>;
+): T[];
 
 /**
  * Excludes the values from `other` array.
@@ -47,17 +47,17 @@ export function differenceWith<T, Other>(
  * @category Array
  */
 export function differenceWith<T, Other>(
-  other: ReadonlyArray<Other>,
+  other: readonly Other[],
   isEqual: IsEqual<T, Other>,
-): (data: ReadonlyArray<T>) => Array<T>;
+): (data: readonly T[]) => T[];
 
-export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
+export function differenceWith(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
 const lazyImplementation =
   <T, Other>(
-    other: ReadonlyArray<Other>,
+    other: readonly Other[],
     isEqual: IsEqual<T, Other>,
   ): LazyEvaluator<T> =>
   (value) =>

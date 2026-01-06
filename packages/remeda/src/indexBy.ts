@@ -22,8 +22,8 @@ import { purry } from "./purry";
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  data: ReadonlyArray<T>,
-  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  data: readonly T[],
+  mapper: (item: T, index: number, data: readonly T[]) => K,
 ): BoundedPartial<Record<K, T>>;
 
 /**
@@ -49,16 +49,16 @@ export function indexBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, T>>;
+  mapper: (item: T, index: number, data: readonly T[]) => K,
+): (data: readonly T[]) => BoundedPartial<Record<K, T>>;
 
-export function indexBy(...args: ReadonlyArray<unknown>): unknown {
+export function indexBy(...args: readonly unknown[]): unknown {
   return purry(indexByImplementation, args);
 }
 
 function indexByImplementation<T, K extends PropertyKey>(
-  data: ReadonlyArray<T>,
-  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  data: readonly T[],
+  mapper: (item: T, index: number, data: readonly T[]) => K,
 ): BoundedPartial<Record<K, T>> {
   const out: Partial<Record<K, T>> = {};
 

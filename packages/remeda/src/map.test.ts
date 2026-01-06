@@ -54,10 +54,10 @@ describe(pipe, () => {
   });
 
   test("indexed: check index and items", () => {
-    const indexes1: Array<number> = [];
-    const indexes2: Array<number> = [];
-    const anyItems1: Array<Array<number>> = [];
-    const anyItems2: Array<Array<number>> = [];
+    const indexes1: number[] = [];
+    const indexes2: number[] = [];
+    const anyItems1: number[][] = [];
+    const anyItems2: number[][] = [];
 
     expect(
       pipe(

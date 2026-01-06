@@ -57,7 +57,7 @@ export function mergeAll<T extends object>(
 export function mergeAll<T extends IterableContainer<object>>(
   objects: T,
 ): MergeAll<T>;
-export function mergeAll(objects: ReadonlyArray<object>): object {
+export function mergeAll(objects: readonly object[]): object {
   let out = {};
 
   for (const item of objects) {

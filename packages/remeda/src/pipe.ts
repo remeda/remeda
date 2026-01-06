@@ -11,7 +11,7 @@ type PreparedLazyFunction = LazyEvaluator & {
 
   // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
-  items: Array<unknown>;
+  items: unknown[];
 };
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
@@ -283,7 +283,7 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...functions: ReadonlyArray<LazyFunction | ((value: any) => unknown)>
+  ...functions: readonly (LazyFunction | ((value: any) => unknown))[]
 ): any {
   let output = input;
 
@@ -301,7 +301,7 @@ export function pipe(
       continue;
     }
 
-    const lazySequence: Array<PreparedLazyFunction> = [];
+    const lazySequence: PreparedLazyFunction[] = [];
     for (let index = functionIndex; index < functions.length; index++) {
       const lazyOp = lazyFunctions[index];
       if (lazyOp === undefined) {
@@ -314,7 +314,7 @@ export function pipe(
       }
     }
 
-    const accumulator: Array<unknown> = [];
+    const accumulator: unknown[] = [];
 
     for (const value of output) {
       const shouldExitEarly = processItem(value, accumulator, lazySequence);
@@ -333,9 +333,9 @@ export function pipe(
 function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
-  accumulator: Array<unknown>,
+  accumulator: unknown[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: ReadonlyArray<PreparedLazyFunction>,
+  lazySequence: readonly PreparedLazyFunction[],
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -353,7 +353,7 @@ function processItem(
     lazyFn.index += 1;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
-        for (const subItem of lazyResult.next as ReadonlyArray<unknown>) {
+        for (const subItem of lazyResult.next as readonly unknown[]) {
           const subResult = processItem(
             subItem,
             accumulator,
@@ -388,7 +388,7 @@ function prepareLazyFunction(func: LazyFunction): PreparedLazyFunction {
   return Object.assign(fn, {
     isSingle: lazy.single ?? false,
     index: 0,
-    items: [] as Array<unknown>,
+    items: [] as unknown[],
   });
 }
 

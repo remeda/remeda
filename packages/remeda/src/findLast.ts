@@ -27,12 +27,12 @@ import { purry } from "./purry";
  * @category Array
  */
 export function findLast<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined;
 export function findLast<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): T | undefined;
 
 /**
@@ -64,19 +64,19 @@ export function findLast<T>(
  * @category Array
  */
 export function findLast<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): (data: ReadonlyArray<T>) => S | undefined;
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
+): (data: readonly T[]) => S | undefined;
 export function findLast<T = never>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (data: ReadonlyArray<T>) => T | undefined;
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
+): (data: readonly T[]) => T | undefined;
 
-export function findLast(...args: ReadonlyArray<unknown>): unknown {
+export function findLast(...args: readonly unknown[]): unknown {
   return purry(findLastImplementation, args);
 }
 
 const findLastImplementation = <T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  data: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => value is S,
 ): S | undefined => {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLast` here.
 

@@ -19,11 +19,11 @@ import { purry } from "./purry";
  * @category Array
  */
 export function countBy<T, K extends PropertyKey>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   categorizationFn: (
     value: T,
     index: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => K | undefined,
 ): BoundedPartial<Record<K, number>>;
 
@@ -47,20 +47,20 @@ export function countBy<T, K extends PropertyKey>(
   categorizationFn: (
     value: T,
     index: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => K | undefined,
-): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, number>>;
+): (data: readonly T[]) => BoundedPartial<Record<K, number>>;
 
-export function countBy(...args: ReadonlyArray<unknown>): unknown {
+export function countBy(...args: readonly unknown[]): unknown {
   return purry(countByImplementation, args);
 }
 
 const countByImplementation = <T>(
-  data: ReadonlyArray<T>,
+  data: readonly T[],
   categorizationFn: (
     value: T,
     index: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => PropertyKey | undefined,
 ): BoundedPartial<Record<PropertyKey, number>> => {
   const out = new Map<PropertyKey, number>();

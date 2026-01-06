@@ -20,7 +20,7 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
           ? [[Left[number], RightHead], ...Zipped<Left, RightRest>]
           : // Both inputs are not tuples (with a non-rest first item, they might be tuples with non-rest last item(s))
             // So the output is just the "trivial" zip result.
-            Array<[Left[number], Right[number]]>;
+            [Left[number], Right[number]][];
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
@@ -60,7 +60,7 @@ export function zip<S extends IterableContainer>(
   second: S,
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
-export function zip(...args: ReadonlyArray<unknown>): unknown {
+export function zip(...args: readonly unknown[]): unknown {
   return purry(zipImplementation, args, lazyImplementation);
 }
 

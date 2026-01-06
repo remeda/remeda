@@ -18,7 +18,7 @@ import { purry } from "./purry";
 export function dropWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -35,16 +35,16 @@ export function dropWhile<T extends IterableContainer>(
  */
 export function dropWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => Array<T[number]>;
+): (data: T) => T[number][];
 
-export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
+export function dropWhile(...args: readonly unknown[]): unknown {
   return purry(dropWhileImplementation, args);
 }
 
 function dropWhileImplementation<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
+): T[number][] {
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);

@@ -22,7 +22,7 @@ export type ArrayAt<T extends IterableContainer, I extends keyof T> =
         [
           ...TupleParts<T>["required"],
           ...TupleParts<T>["optional"],
-        ] extends infer Prefix extends ReadonlyArray<unknown>
+        ] extends infer Prefix extends readonly unknown[]
         ? // The first two parts of the tuple, the required and the optional
           // prefixes, are simple and TypeScript does a good job of typing them
           // based on indexing the tuple directly.
@@ -64,5 +64,5 @@ export type ArrayAt<T extends IterableContainer, I extends keyof T> =
         // `undefined`  case to make the type accurate.
         T[number] | undefined;
 
-type HasIndex<T extends ReadonlyArray<unknown>, I> =
+type HasIndex<T extends readonly unknown[], I> =
   I extends ArrayIndices<T> ? true : false;

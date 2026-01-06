@@ -19,7 +19,7 @@ type RemoveSuffix<
     ? Suffix extends readonly [...infer SuffixRest, infer _SuffixLast]
       ? // SuffixLast extends TLast.
         RemoveSuffix<TRest, SuffixRest>
-      : // Suffix (as a whole) extends ReadonlyArray<TLast>.
+      : // Suffix (as a whole) extends readonly TLast[].
         // Suffix could possibly be empty, so this has to be TLast?.
         [...RemoveSuffix<TRest, Suffix>, TLast?]
     : // T has an optional or rest parameter last. If T is a parameter list,

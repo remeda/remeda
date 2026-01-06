@@ -48,12 +48,12 @@ export function uniqueBy<T extends IterableContainer>(
   keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): (data: T) => Deduped<T>;
 
-export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
+export function uniqueBy(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
 function lazyImplementation<T>(
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
+  keyFunction: (item: T, index: number, data: readonly T[]) => unknown,
 ): LazyEvaluator<T> {
   // @see https://github.com/typescript-eslint/typescript-eslint/issues/9885
   const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;

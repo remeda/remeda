@@ -259,11 +259,11 @@ describe("binary search correctness via indexed", () => {
 });
 
 function indicesSeen<T>(
-  items: ReadonlyArray<T>,
+  items: readonly T[],
   item: T,
   valueFunction: (item: T) => NonNullable<unknown>,
-): ReadonlyArray<number | undefined> {
-  const indices: Array<number | undefined> = [];
+): readonly (number | undefined)[] {
+  const indices: (number | undefined)[] = [];
   sortedLastIndexBy(items, item, (pivot, index) => {
     indices.push(index);
     return valueFunction(pivot);

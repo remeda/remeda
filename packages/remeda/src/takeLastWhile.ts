@@ -17,11 +17,11 @@ import { purry } from "./purry";
 export function takeLastWhile<T extends IterableContainer, S extends T[number]>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is S,
-): Array<S>;
+): S[];
 export function takeLastWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -37,19 +37,19 @@ export function takeLastWhile<T extends IterableContainer>(
  */
 export function takeLastWhile<T extends IterableContainer, S extends T[number]>(
   predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => Array<S>;
+): (array: T) => S[];
 export function takeLastWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => Array<T[number]>;
+): (data: T) => T[number][];
 
-export function takeLastWhile(...args: ReadonlyArray<unknown>): unknown {
+export function takeLastWhile(...args: readonly unknown[]): unknown {
   return purry(takeLastWhileImplementation, args);
 }
 
 function takeLastWhileImplementation<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
+): T[number][] {
   for (let i = data.length - 1; i >= 0; i--) {
     if (!predicate(data[i], i, data)) {
       return data.slice(i + 1);

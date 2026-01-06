@@ -35,8 +35,8 @@ const WORD_SEPARATORS = new Set(["-", "_", ...WHITESPACE]);
 
 export const words = <S extends string>(
   data: S,
-): string extends S ? Array<string> : Words<S> => {
-  const results: Array<string> = [];
+): string extends S ? string[] : Words<S> => {
+  const results: string[] = [];
   let word = "";
 
   const flush = (): void => {

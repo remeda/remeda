@@ -11,7 +11,7 @@ describe("runtime (dataFirst)", () => {
   });
 
   test("handles empty arrays gracefully", () => {
-    const data: Array<number> = [];
+    const data: number[] = [];
 
     expect(dropFirstBy(data, 1, identity())).toHaveLength(0);
   });
@@ -75,7 +75,7 @@ describe("runtime (dataLast)", () => {
   });
 
   test("handles empty arrays gracefully", () => {
-    const data: Array<number> = [];
+    const data: number[] = [];
 
     expect(
       pipe(

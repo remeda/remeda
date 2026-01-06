@@ -12,7 +12,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @example
  *   type T1 = IsConstantTuple<["cat", "dog", 3, true]>; // => true;
  *   type T2 = IsConstantTuple<["cat" | "dog"]>; // false;
- *   type T2 = IsConstantTuple<["cat", ...Array<"cat">]>; // false;
+ *   type T2 = IsConstantTuple<["cat", ..."cat"[]]>; // false;
  */
 type IsConstantTuple<T extends IterableContainer> = T extends readonly []
   ? true
@@ -37,7 +37,7 @@ type IsConstantTuple<T extends IterableContainer> = T extends readonly []
  *
  * @example
  *   const data = 1 as 1 | 2 | 3;
- *   const container = [] as Array<1 | 2>;
+ *   const container = [] as (1 | 2)[];
  *   if (isIncludedIn(data, container)) {
  *     ... it makes sense to narrow data to `1 | 2` as the value `3` is not part
  *     ... of the typing of container, so will never result in being true.
@@ -137,14 +137,14 @@ export function isIncludedIn<T, S extends T>(
 
 export function isIncludedIn(
   dataOrContainer: unknown,
-  container?: ReadonlyArray<unknown>,
+  container?: readonly unknown[],
 ): unknown {
   if (container === undefined) {
     // === dataLast ===
     // We don't use purry here because we can optimize the dataLast case by
     // memoizing a set and accessing it in O(1) time instead of scanning the
     // array **each time** (O(n)) each time.
-    const asSet = new Set(dataOrContainer as ReadonlyArray<unknown>);
+    const asSet = new Set(dataOrContainer as readonly unknown[]);
     return (data: unknown) => asSet.has(data);
   }
 

@@ -9,7 +9,7 @@ test("data first typings", () => {
     (a, b) => `${a}${b}`,
   );
 
-  expectTypeOf(actual).toEqualTypeOf<Array<string>>();
+  expectTypeOf(actual).toEqualTypeOf<string[]>();
 });
 
 test("data second typings", () => {
@@ -18,7 +18,7 @@ test("data second typings", () => {
     ["a", "b", "c"],
   );
 
-  expectTypeOf(actual).toEqualTypeOf<Array<string>>();
+  expectTypeOf(actual).toEqualTypeOf<string[]>();
 });
 
 test("data second with initial arg typings", () => {
@@ -27,5 +27,5 @@ test("data second with initial arg typings", () => {
     zipWith(["a", "b", "c"], (a, b) => `${a}${b}`),
   );
 
-  expectTypeOf(actual).toEqualTypeOf<Array<string>>();
+  expectTypeOf(actual).toEqualTypeOf<string[]>();
 });

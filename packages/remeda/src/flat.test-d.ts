@@ -9,49 +9,49 @@ test("works on empty arrays", () => {
 });
 
 test("works on already-flat arrays", () => {
-  const result = flat([] as Array<string>, 1);
+  const result = flat([] as string[], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("works on a single level of nesting", () => {
-  const result = flat([] as Array<Array<string>>, 1);
+  const result = flat([] as string[][], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("stops after the first level of nesting (depth === 1)", () => {
-  const threeDeepResult = flat([] as Array<Array<Array<string>>>, 1);
+  const threeDeepResult = flat([] as string[][][], 1);
 
-  expectTypeOf(threeDeepResult).toEqualTypeOf<Array<Array<string>>>();
+  expectTypeOf(threeDeepResult).toEqualTypeOf<string[][]>();
 
-  const fourDeepResult = flat([] as Array<Array<Array<Array<string>>>>, 1);
+  const fourDeepResult = flat([] as string[][][][], 1);
 
-  expectTypeOf(fourDeepResult).toEqualTypeOf<Array<Array<Array<string>>>>();
+  expectTypeOf(fourDeepResult).toEqualTypeOf<string[][][]>();
 });
 
 test("works with mixed types", () => {
-  const result = flat([] as Array<Array<number> | Array<string>>, 1);
+  const result = flat([] as (number[] | string[])[], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("works with mixed levels of nesting", () => {
-  const result = flat([] as Array<Array<number> | string>, 1);
+  const result = flat([] as (number[] | string)[], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("works when depth is deeper than the array", () => {
-  const result = flat([] as Array<string>, 10);
+  const result = flat([] as string[], 10);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("works when depth is really really really really big", () => {
-  const result = flat([] as Array<string>, 9_999_999);
+  const result = flat([] as string[], 9_999_999);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("keeps the typing of trivial tuples", () => {
@@ -91,27 +91,27 @@ test("works with tuples with a lot of nesting", () => {
 });
 
 test("works with a mix of simple arrays and tuples", () => {
-  const result = flat([[]] as [Array<string>], 1);
+  const result = flat([[]] as [string[]], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<string>>();
+  expectTypeOf(result).toEqualTypeOf<string[]>();
 });
 
 test("works with multiple types nested in a tuple", () => {
-  const result = flat([[], []] as [Array<string>, Array<number>], 1);
+  const result = flat([[], []] as [string[], number[]], 1);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("works with a tuple with mixed array and non array items", () => {
-  const result = flat([1, []] as [number, Array<string>], 1);
+  const result = flat([1, []] as [number, string[]], 1);
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<string>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...string[]]>();
 });
 
 test("works with a tuple with mixed array and non array items, deeply", () => {
-  const result = flat([[1], []] as [[number], Array<Array<string>>], 2);
+  const result = flat([[1], []] as [[number], string[][]], 2);
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<string>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...string[]]>();
 });
 
 test("works on non-empty arrays", () => {
@@ -121,15 +121,15 @@ test("works on non-empty arrays", () => {
 });
 
 test("works on tuples inside arrays", () => {
-  const result = flat([] as Array<[Array<string>, Array<number>]>, 2);
+  const result = flat([] as [string[], number[]][], 2);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
+  expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("works on arrays inside tuples", () => {
-  const result = flat([1, [], 4] as [1, Array<[2, 3]>, 4], 2);
+  const result = flat([1, [], 4] as [1, [2, 3][], 4], 2);
 
-  expectTypeOf(result).toEqualTypeOf<[1, ...Array<2 | 3>, 4]>();
+  expectTypeOf(result).toEqualTypeOf<[1, ...(2 | 3)[], 4]>();
 });
 
 test("works with depths beyond 20", () => {

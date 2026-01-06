@@ -35,7 +35,7 @@ import type { GuardType } from "./internal/types/GuardType";
  */
 export function when<
   T,
-  ExtraArgs extends Array<any>,
+  ExtraArgs extends any[],
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
   OnTrue extends (
     data: GuardType<Predicate, T>,
@@ -50,7 +50,7 @@ export function when<
 ) => Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function when<
   T,
-  ExtraArgs extends Array<any>,
+  ExtraArgs extends any[],
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
   OnTrue extends (
     data: GuardType<Predicate, T>,
@@ -105,7 +105,7 @@ export function when<
  */
 export function when<
   T,
-  ExtraArgs extends Array<any>,
+  ExtraArgs extends any[],
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
   OnTrue extends (
     data: GuardType<Predicate, T>,
@@ -119,7 +119,7 @@ export function when<
 ): Exclude<T, GuardType<Predicate>> | ReturnType<OnTrue>;
 export function when<
   T,
-  ExtraArgs extends Array<any>,
+  ExtraArgs extends any[],
   Predicate extends (data: T, ...extraArgs: ExtraArgs) => boolean,
   OnTrue extends (
     data: GuardType<Predicate, T>,
@@ -139,21 +139,16 @@ export function when<
   ...extraArgs: ExtraArgs
 ): ReturnType<OnFalse> | ReturnType<OnTrue>;
 
-export function when(...args: ReadonlyArray<unknown>): unknown {
+export function when(...args: readonly unknown[]): unknown {
   return args.length === 2
-    ? (data: unknown, ...extraArgs: ReadonlyArray<unknown>) =>
+    ? (data: unknown, ...extraArgs: readonly unknown[]) =>
         // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
         whenImplementation(data, ...args, ...extraArgs)
     : // @ts-expect-error [ts2556] -- This is OK, we trust our typing of the overloaded functions
       whenImplementation(...args);
 }
 
-const whenImplementation = <
-  T,
-  ExtraArgs extends Array<any>,
-  WhenTrue,
-  WhenFalse,
->(
+const whenImplementation = <T, ExtraArgs extends any[], WhenTrue, WhenFalse>(
   data: T,
   predicate: (data: T, ...extraArgs: ExtraArgs) => boolean,
   onTrueOrBranches:

@@ -80,74 +80,65 @@ describe("data-first", () => {
 
 describe("data-last", () => {
   test("doesn't narrow on 'string' prefix", () => {
-    const [yes, no] = partition(
-      [] as Array<string>,
-      startsWith("foo" as string),
-    );
+    const [yes, no] = partition([] as string[], startsWith("foo" as string));
 
-    expectTypeOf(yes).toEqualTypeOf<Array<string>>();
-    expectTypeOf(no).toEqualTypeOf<Array<string>>();
+    expectTypeOf(yes).toEqualTypeOf<string[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
   });
 
   test("const data that matches", () => {
-    const [yes, no] = partition([] as Array<"foobar">, startsWith("foo"));
+    const [yes, no] = partition([] as "foobar"[], startsWith("foo"));
 
-    expectTypeOf(yes).toEqualTypeOf<Array<"foobar">>();
-    expectTypeOf(no).toEqualTypeOf<Array<never>>();
+    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
+    expectTypeOf(no).toEqualTypeOf<never[]>();
   });
 
   test("const data that doesn't match", () => {
-    const [yes, no] = partition([] as Array<"helloworld">, startsWith("foo"));
+    const [yes, no] = partition([] as "helloworld"[], startsWith("foo"));
 
-    expectTypeOf(yes).toEqualTypeOf<Array<never>>();
-    expectTypeOf(no).toEqualTypeOf<Array<"helloworld">>();
+    expectTypeOf(yes).toEqualTypeOf<never[]>();
+    expectTypeOf(no).toEqualTypeOf<"helloworld"[]>();
   });
 
   test("primitive string data", () => {
-    const [yes, no] = partition([] as Array<string>, startsWith("foo"));
+    const [yes, no] = partition([] as string[], startsWith("foo"));
 
-    expectTypeOf(yes).toEqualTypeOf<Array<`foo${string}`>>();
-    expectTypeOf(no).toEqualTypeOf<Array<string>>();
+    expectTypeOf(yes).toEqualTypeOf<`foo${string}`[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
   });
 
   test("template literal data that matches", () => {
-    const [yes, no] = partition(
-      [] as Array<`foo_${number}`>,
-      startsWith("foo"),
-    );
+    const [yes, no] = partition([] as `foo_${number}`[], startsWith("foo"));
 
-    expectTypeOf(yes).branded.toEqualTypeOf<Array<`foo_${number}`>>();
-    expectTypeOf(no).toEqualTypeOf<Array<never>>();
+    expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
+    expectTypeOf(no).toEqualTypeOf<never[]>();
   });
 
   test("template literal data that doesn't match", () => {
-    const [yes, no] = partition(
-      [] as Array<`foo_${number}`>,
-      startsWith("hello"),
-    );
+    const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
 
     expectTypeOf(yes).toEqualTypeOf<
       // These should be equivalent to `never` but TypeScript doesn't infer
       // that...
-      Array<`foo_${number}` & `hello${string}`>
+      (`foo_${number}` & `hello${string}`)[]
     >();
-    expectTypeOf(no).toEqualTypeOf<Array<`foo_${number}`>>();
+    expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
   });
 
   test("literal union", () => {
-    const [yes, no] = partition([] as Array<"cat" | "dog">, startsWith("c"));
+    const [yes, no] = partition([] as ("cat" | "dog")[], startsWith("c"));
 
-    expectTypeOf(yes).toEqualTypeOf<Array<"cat">>();
-    expectTypeOf(no).toEqualTypeOf<Array<"dog">>();
+    expectTypeOf(yes).toEqualTypeOf<"cat"[]>();
+    expectTypeOf(no).toEqualTypeOf<"dog"[]>();
   });
 
   test("template union", () => {
     const [yes, no] = partition(
-      [] as Array<`cat_${number}` | `dog_${boolean}`>,
+      [] as (`cat_${number}` | `dog_${boolean}`)[],
       startsWith("c"),
     );
 
-    expectTypeOf(yes).branded.toEqualTypeOf<Array<`cat_${number}`>>();
-    expectTypeOf(no).toEqualTypeOf<Array<`dog_${boolean}`>>();
+    expectTypeOf(yes).branded.toEqualTypeOf<`cat_${number}`[]>();
+    expectTypeOf(no).toEqualTypeOf<`dog_${boolean}`[]>();
   });
 });

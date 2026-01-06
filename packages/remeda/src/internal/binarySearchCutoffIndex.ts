@@ -13,8 +13,8 @@
  * O(N) time.
  */
 export function binarySearchCutoffIndex<T>(
-  array: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  array: readonly T[],
+  predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): number {
   let lowIndex = 0;
   let highIndex = array.length;

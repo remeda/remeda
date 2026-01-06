@@ -16,14 +16,14 @@ test("empty readonly tuple", () => {
 });
 
 test("array", () => {
-  const array: Array<number> = [];
+  const array: number[] = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
 test("readonly array", () => {
-  const array: ReadonlyArray<number> = [];
+  const array: readonly number[] = [];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<string>();
@@ -48,28 +48,28 @@ test("readonly tuple", () => {
 });
 
 test("tuple with rest tail", () => {
-  const array: ["a" | "b", ...Array<"c" | "d">] = ["a", "c"];
+  const array: ["a" | "b", ...("c" | "d")[]] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${string}`>();
 });
 
 test("readonly tuple with rest tail", () => {
-  const array: readonly ["a" | "b", ...Array<"c" | "d">] = ["a", "c"];
+  const array: readonly ["a" | "b", ...("c" | "d")[]] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${string}`>();
 });
 
 test("tuple with rest head", () => {
-  const array: [...Array<"a" | "b">, "c" | "d"] = ["a", "c"];
+  const array: [...("a" | "b")[], "c" | "d"] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${string},${"c" | "d"}`>();
 });
 
 test("readonly tuple with rest head", () => {
-  const array: readonly [...Array<"a" | "b">, "c" | "d"] = ["a", "c"];
+  const array: readonly [...("a" | "b")[], "c" | "d"] = ["a", "c"];
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${string},${"c" | "d"}`>();

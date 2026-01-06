@@ -13,9 +13,9 @@ import { purry } from "./purry";
  * @category Array
  */
 export function splitWhen<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): [Array<T>, Array<T>];
+  data: readonly T[],
+  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+): [T[], T[]];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
@@ -29,17 +29,17 @@ export function splitWhen<T>(
  * @category Array
  */
 export function splitWhen<T>(
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
+  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+): (array: readonly T[]) => [T[], T[]];
 
-export function splitWhen(...args: ReadonlyArray<unknown>): unknown {
+export function splitWhen(...args: readonly unknown[]): unknown {
   return purry(splitWhenImplementation, args);
 }
 
 function splitWhenImplementation<T>(
-  data: ReadonlyArray<T>,
-  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
-): [Array<T>, Array<T>] {
+  data: readonly T[],
+  predicate: (item: T, index: number, data: readonly T[]) => boolean,
+): [T[], T[]] {
   const index = data.findIndex(predicate);
   return index === -1
     ? [[...data], []]

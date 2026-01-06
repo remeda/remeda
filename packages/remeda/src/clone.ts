@@ -38,14 +38,14 @@ export function clone<T>(data: T): T;
  */
 export function clone(): <T>(data: T) => T;
 
-export function clone(...args: ReadonlyArray<unknown>): unknown {
+export function clone(...args: readonly unknown[]): unknown {
   return purry(cloneImplementation, args);
 }
 
 function cloneImplementation<T>(
   value: T,
-  refFrom: Array<unknown> = [],
-  refTo: Array<unknown> = [],
+  refFrom: unknown[] = [],
+  refTo: unknown[] = [],
 ): T {
   if (typeof value === "function") {
     // Functions aren't cloned, we return the same instance.
@@ -91,8 +91,8 @@ function cloneImplementation<T>(
 
 function deepCloneObject<T extends object>(
   value: T,
-  refFrom: Array<unknown>,
-  refTo: Array<unknown>,
+  refFrom: unknown[],
+  refTo: unknown[],
 ): T {
   const copiedValue: Record<PropertyKey, unknown> = {};
 
@@ -107,12 +107,12 @@ function deepCloneObject<T extends object>(
   return copiedValue as T;
 }
 
-function deepCloneArray<T extends ReadonlyArray<unknown>>(
+function deepCloneArray<T extends readonly unknown[]>(
   value: T,
-  refFrom: Array<unknown>,
-  refTo: Array<unknown>,
+  refFrom: unknown[],
+  refTo: unknown[],
 ): T {
-  const copiedValue: Array<unknown> = [];
+  const copiedValue: unknown[] = [];
 
   // It's important to first push the cloned ref so that it's index is kept in
   // sync with the ref to the original value in refFrom.

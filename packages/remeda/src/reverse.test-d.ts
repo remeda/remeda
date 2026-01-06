@@ -6,7 +6,7 @@ describe("data first", () => {
   test("arrays", () => {
     const actual = reverse([1, 2, 3]);
 
-    expectTypeOf(actual).toEqualTypeOf<Array<number>>();
+    expectTypeOf(actual).toEqualTypeOf<number[]>();
   });
 
   test("tuples", () => {
@@ -16,10 +16,10 @@ describe("data first", () => {
   });
 
   test("variadic tuples", () => {
-    const input: [number, ...Array<string>] = [1, "two", "three"];
+    const input: [number, ...string[]] = [1, "two", "three"];
     const actual = reverse(input);
 
-    expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
+    expectTypeOf(actual).toEqualTypeOf<[...string[], number]>();
   });
 });
 
@@ -27,7 +27,7 @@ describe("data last", () => {
   test("arrays", () => {
     const actual = pipe([1, 2, 3], reverse());
 
-    expectTypeOf(actual).toEqualTypeOf<Array<number>>();
+    expectTypeOf(actual).toEqualTypeOf<number[]>();
   });
 
   test("tuples", () => {
@@ -37,9 +37,9 @@ describe("data last", () => {
   });
 
   test("variadic tuples", () => {
-    const input: [number, ...Array<string>] = [1, "two", "three"];
+    const input: [number, ...string[]] = [1, "two", "three"];
     const actual = pipe(input, reverse());
 
-    expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
+    expectTypeOf(actual).toEqualTypeOf<[...string[], number]>();
   });
 });

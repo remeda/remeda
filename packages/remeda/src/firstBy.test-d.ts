@@ -4,7 +4,7 @@ import { identity } from "./identity";
 import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
 
 test("can return undefined on arrays", () => {
-  const data: ReadonlyArray<number> = [1, 2, 3];
+  const data: readonly number[] = [1, 2, 3];
   const result = firstBy(data, identity());
 
   expectTypeOf(result).toBeNullable();

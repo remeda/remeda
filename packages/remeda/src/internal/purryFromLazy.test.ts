@@ -21,7 +21,7 @@ test("throws on wrong number of arguments", () => {
   ).toThrowError("Wrong number of arguments");
 });
 
-const zeroArgsPurried = (...args: ReadonlyArray<unknown>) =>
+const zeroArgsPurried = (...args: readonly unknown[]) =>
   purryFromLazy(zeroArgsLazyImpl, args);
 
 /* v8 ignore next 4 -- We only need the function pointer, we never call it! */

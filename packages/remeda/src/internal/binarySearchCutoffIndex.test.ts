@@ -165,10 +165,10 @@ describe("binary search correctness via the index", () => {
 });
 
 function indicesSeen(
-  items: ReadonlyArray<unknown>,
+  items: readonly unknown[],
   predicate: (item: unknown, index: number) => boolean,
-): ReadonlyArray<number> {
-  const indices: Array<number> = [];
+): readonly number[] {
+  const indices: number[] = [];
   binarySearchCutoffIndex(items, (pivot, index) => {
     indices.push(index);
     return predicate(pivot, index);

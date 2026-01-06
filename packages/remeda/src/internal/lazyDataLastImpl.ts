@@ -12,7 +12,7 @@ import type { StrictFunction } from "./types/StrictFunction";
  */
 export function lazyDataLastImpl(
   fn: StrictFunction,
-  args: ReadonlyArray<unknown>,
+  args: readonly unknown[],
   lazy?: (...args: any) => LazyEvaluator,
   // TODO: We can probably provide better typing to the return type...
 ): unknown {

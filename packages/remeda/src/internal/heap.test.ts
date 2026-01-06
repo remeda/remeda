@@ -6,7 +6,7 @@ import { heapMaybeInsert } from "./heap";
 // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
 describe(heapMaybeInsert, () => {
   test("it works trivially on an empty heap", () => {
-    const heap = [] as Array<number>;
+    const heap = [] as number[];
 
     expect(heapMaybeInsert(heap, (a, b) => a - b, 1)).toBeUndefined();
   });

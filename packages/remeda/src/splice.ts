@@ -16,11 +16,11 @@ import { purry } from "./purry";
  * @category Array
  */
 export function splice<T>(
-  items: ReadonlyArray<T>,
+  items: readonly T[],
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): Array<T>;
+  replacement: readonly T[],
+): T[];
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
@@ -39,19 +39,19 @@ export function splice<T>(
 export function splice<T>(
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): (items: ReadonlyArray<T>) => Array<T>;
+  replacement: readonly T[],
+): (items: readonly T[]) => T[];
 
-export function splice(...args: ReadonlyArray<unknown>): unknown {
+export function splice(...args: readonly unknown[]): unknown {
   return purry(spliceImplementation, args);
 }
 
 function spliceImplementation<T>(
-  items: ReadonlyArray<T>,
+  items: readonly T[],
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): Array<T> {
+  replacement: readonly T[],
+): T[] {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
   const result = [...items];
   result.splice(start, deleteCount, ...replacement);

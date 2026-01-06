@@ -4,7 +4,7 @@ import { sortBy } from "remeda";
 export const sortByCategories = () => sortByCategoriesImpl;
 
 const sortByCategoriesImpl = <T>(
-  data: ReadonlyArray<readonly [category: string, data: T]>,
+  data: readonly (readonly [category: string, data: T])[],
 ) =>
   sortBy(
     data,

@@ -49,7 +49,7 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
  */
 export function toLowerCase(): <T extends string>(data: T) => Lowercase<T>;
 
-export function toLowerCase(...args: ReadonlyArray<unknown>): unknown {
+export function toLowerCase(...args: readonly unknown[]): unknown {
   return purry(toLowerCaseImplementation, args);
 }
 

@@ -6,7 +6,7 @@ import { stringToPath } from "./stringToPath";
 type TestType = {
   a: {
     b: { c: number; d?: number };
-    e: Array<{ f: { g: number } }>;
+    e: { f: { g: number } }[];
     z?: number | undefined;
   };
   x?: number;

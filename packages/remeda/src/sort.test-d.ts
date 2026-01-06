@@ -14,15 +14,15 @@ test("on empty readonly tuple", () => {
 });
 
 test("on array", () => {
-  const result = sort([] as Array<number>, (a, b) => a - b);
+  const result = sort([] as number[], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("on readonly array", () => {
-  const result = sort([] as ReadonlyArray<number>, (a, b) => a - b);
+  const result = sort([] as readonly number[], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("on tuple", () => {
@@ -38,33 +38,27 @@ test("on readonly tuple", () => {
 });
 
 test("on tuple with rest tail", () => {
-  const result = sort([1] as [number, ...Array<number>], (a, b) => a - b);
+  const result = sort([1] as [number, ...number[]], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
 });
 
 test("on readonly tuple with rest tail", () => {
-  const result = sort(
-    [1] as readonly [number, ...Array<number>],
-    (a, b) => a - b,
-  );
+  const result = sort([1] as readonly [number, ...number[]], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
+  expectTypeOf(result).toEqualTypeOf<[number, ...number[]]>();
 });
 
 test("on tuple with rest head", () => {
-  const result = sort([1] as [...Array<number>, number], (a, b) => a - b);
+  const result = sort([1] as [...number[], number], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
 });
 
 test("on readonly tuple with rest head", () => {
-  const result = sort(
-    [1] as readonly [...Array<number>, number],
-    (a, b) => a - b,
-  );
+  const result = sort([1] as readonly [...number[], number], (a, b) => a - b);
 
-  expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
+  expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
 });
 
 test("on mixed types tuple", () => {

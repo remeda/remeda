@@ -69,7 +69,7 @@ describe("data first", () => {
     expectTypeOf(result).toEqualTypeOf<{
       array: number;
       nestedObj: { a: { b: string } };
-      objAry: Array<{ a: number }>;
+      objAry: { a: number }[];
     }>();
   });
 
@@ -82,7 +82,7 @@ describe("data first", () => {
           time: { elapsed: 100, remaining: 1400 },
         } as {
           id: number;
-          quartile: Array<number>;
+          quartile: number[];
           time?: { elapsed: number; remaining?: number };
         },
         {
@@ -96,7 +96,7 @@ describe("data first", () => {
 
       expectTypeOf(result).toEqualTypeOf<{
         id: number;
-        quartile: Array<number>;
+        quartile: number[];
         time?: { elapsed: number; remaining?: number };
       }>();
     });
@@ -109,7 +109,7 @@ describe("data first", () => {
           time: { elapsed: 100, remaining: 1400 },
         } as {
           id: number;
-          quartile: Array<number>;
+          quartile: number[];
           time?: { elapsed: number; remaining?: number };
         },
         {
@@ -123,7 +123,7 @@ describe("data first", () => {
 
       expectTypeOf(result).toEqualTypeOf<{
         id: number;
-        quartile: Array<number>;
+        quartile: number[];
         time?: { elapsed: number; remaining?: number };
       }>();
     });
@@ -144,7 +144,7 @@ describe("data first", () => {
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         number: add(1),
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
-        array: (array: ReadonlyArray<number>) => array.length,
+        array: (array: readonly number[]) => array.length,
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         nestedObj: { a: set<{ b: number }, "b">("b", 0) },
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
@@ -270,7 +270,7 @@ describe("data last", () => {
     expectTypeOf(result).toEqualTypeOf<{
       array: number;
       nestedObj: { a: { b: string } };
-      objAry: Array<{ a: number }>;
+      objAry: { a: number }[];
     }>();
   });
 
@@ -294,7 +294,7 @@ describe("data last", () => {
         evolve({
           number: add(1),
           // @ts-expect-error [ts2345] - Type 'string[]' is not assignable to type 'readonly number[]'.
-          array: (array: ReadonlyArray<number>) => array.length,
+          array: (array: readonly number[]) => array.length,
         }),
       );
     });

@@ -19,7 +19,7 @@ type RemovePrefix<
     ? Prefix extends readonly [infer _PrefixHead, ...infer PrefixRest]
       ? // PrefixHead extends THead.
         RemovePrefix<TRest, PrefixRest>
-      : // Prefix (as a whole) extends ReadonlyArray<THead>.
+      : // Prefix (as a whole) extends readonly THead[].
         // Prefix could possibly be empty, so this has to be THead?.
         [THead?, ...RemovePrefix<TRest, Prefix>]
     : // T has an optional or rest parameter last. If T is a parameter list,

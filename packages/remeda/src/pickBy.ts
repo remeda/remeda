@@ -187,7 +187,7 @@ export function pickBy<T extends object>(
   ) => boolean,
 ): (data: T) => EnumeratedPartial<T>;
 
-export function pickBy(...args: ReadonlyArray<unknown>): unknown {
+export function pickBy(...args: readonly unknown[]): unknown {
   return purry(pickByImplementation, args);
 }
 

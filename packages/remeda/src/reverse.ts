@@ -1,8 +1,8 @@
 import { purry } from "./purry";
 
 type Reverse<
-  T extends ReadonlyArray<unknown>,
-  R extends ReadonlyArray<unknown> = [],
+  T extends readonly unknown[],
+  R extends readonly unknown[] = [],
 > = ReturnType<
   T extends IsNoTuple<T>
     ? () => [...T, ...R]
@@ -11,7 +11,7 @@ type Reverse<
       : () => R
 >;
 
-type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
+type IsNoTuple<T> = T extends readonly [unknown, ...unknown[]] ? never : T;
 
 /**
  * Reverses array.
@@ -24,7 +24,7 @@ type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
  * @dataFirst
  * @category Array
  */
-export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
+export function reverse<T extends readonly unknown[]>(array: T): Reverse<T>;
 
 /**
  * Reverses array.
@@ -36,15 +36,15 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
  * @dataLast
  * @category Array
  */
-export function reverse<T extends ReadonlyArray<unknown>>(): (
+export function reverse<T extends readonly unknown[]>(): (
   array: T,
 ) => Reverse<T>;
 
-export function reverse(...args: ReadonlyArray<unknown>): unknown {
+export function reverse(...args: readonly unknown[]): unknown {
   return purry(reverseImplementation, args);
 }
 
-function reverseImplementation<T>(array: ReadonlyArray<T>): Array<T> {
+function reverseImplementation<T>(array: readonly T[]): T[] {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toReversed` here.
   // eslint-disable-next-line unicorn/no-array-reverse -- See TODO above.
   return [...array].reverse();

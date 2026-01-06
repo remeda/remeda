@@ -57,7 +57,7 @@ test("fixed tuple", () => {
 
 describe("with simple keys", () => {
   test("regular array", () => {
-    const data = [] as Array<string>;
+    const data = [] as string[];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       Record<string, 1>
@@ -68,7 +68,7 @@ describe("with simple keys", () => {
   });
 
   test("non-empty array", () => {
-    const data = ["cat"] as [string, ...Array<string>];
+    const data = ["cat"] as [string, ...string[]];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       Record<string, 1>
@@ -92,7 +92,7 @@ describe("with simple keys", () => {
 
 describe("with literal union keys", () => {
   test("regular array", () => {
-    const data = [] as Array<"cat" | "dog">;
+    const data = [] as ("cat" | "dog")[];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<{
       cat?: 1;
@@ -105,7 +105,7 @@ describe("with literal union keys", () => {
   });
 
   test("non-empty array", () => {
-    const data = ["cat"] as ["cat" | "dog", ...Array<"mouse" | "pig">];
+    const data = ["cat"] as ["cat" | "dog", ...("mouse" | "pig")[]];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       { cat: 1; mouse?: 1; pig?: 1 } | { dog: 1; mouse?: 1; pig?: 1 }
@@ -135,7 +135,7 @@ describe("with literal union keys", () => {
 
 describe("with string template keys", () => {
   test("regular array", () => {
-    const data = [] as Array<`prefix_${number}`>;
+    const data = [] as `prefix_${number}`[];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       Record<`prefix_${number}`, 1>
@@ -146,10 +146,7 @@ describe("with string template keys", () => {
   });
 
   test("non-empty array", () => {
-    const data = ["prefix_1"] as [
-      `prefix_${number}`,
-      ...Array<`prefix_${number}`>,
-    ];
+    const data = ["prefix_1"] as [`prefix_${number}`, ...`prefix_${number}`[]];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       Record<`prefix_${number}`, 1>
@@ -175,7 +172,7 @@ describe("with string template keys", () => {
 
   describe("number keys", () => {
     test("regular array", () => {
-      const data = [] as Array<number>;
+      const data = [] as number[];
 
       expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
         Record<number, 1>
@@ -186,7 +183,7 @@ describe("with string template keys", () => {
     });
 
     test("non-empty array", () => {
-      const data = [1] as [number, ...Array<number>];
+      const data = [1] as [number, ...number[]];
 
       expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
         Record<number, 1>
@@ -225,7 +222,7 @@ describe("with string template keys", () => {
 });
 
 test("typescript doesn't choke on huge literal unions", () => {
-  const data = [] as Array<`${Letter}${Letter}`>;
+  const data = [] as `${Letter}${Letter}`[];
 
   expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
     Partial<Record<`${Letter}${Letter}`, 1>>

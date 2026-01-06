@@ -188,9 +188,7 @@ export function piped<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
   funcO: (input: O) => P,
 ): (data: A) => P;
 
-export function piped(
-  ...functions: ReadonlyArray<(input: unknown) => unknown>
-) {
+export function piped(...functions: readonly ((input: unknown) => unknown)[]) {
   return (value: unknown): unknown =>
     pipe(
       value,

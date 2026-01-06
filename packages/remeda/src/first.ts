@@ -5,7 +5,7 @@ import { purry } from "./purry";
 
 type First<T extends IterableContainer> = T extends []
   ? undefined
-  : T extends readonly [unknown, ...Array<unknown>]
+  : T extends readonly [unknown, ...unknown[]]
     ? T[0]
     : T extends readonly [...infer Pre, infer Last]
       ? Last | Pre[0]
@@ -46,12 +46,11 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(...args: ReadonlyArray<unknown>): unknown {
+export function first(...args: readonly unknown[]): unknown {
   return purry(firstImplementation, args, toSingle(lazyImplementation));
 }
 
-const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined =>
-  item;
+const firstImplementation = <T>([item]: readonly T[]): T | undefined => item;
 
 const lazyImplementation = (): LazyEvaluator => firstLazy;
 

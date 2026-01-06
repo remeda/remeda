@@ -31,7 +31,7 @@ export function multiply(value: number, multiplicand: number): number;
 export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(...args: ReadonlyArray<unknown>): unknown {
+export function multiply(...args: readonly unknown[]): unknown {
   return purry(multiplyImplementation, args);
 }
 

@@ -21,7 +21,7 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
-export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
+export function sortedLastIndex<T>(data: readonly T[], item: T): number;
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -42,14 +42,14 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
  */
-export function sortedLastIndex<T>(item: T): (data: ReadonlyArray<T>) => number;
+export function sortedLastIndex<T>(item: T): (data: readonly T[]) => number;
 
-export function sortedLastIndex(...args: ReadonlyArray<unknown>): unknown {
+export function sortedLastIndex(...args: readonly unknown[]): unknown {
   return purry(sortedLastIndexImplementation, args);
 }
 
 const sortedLastIndexImplementation = <T>(
-  array: ReadonlyArray<T>,
+  array: readonly T[],
   item: T,
 ): number =>
   binarySearchCutoffIndex(

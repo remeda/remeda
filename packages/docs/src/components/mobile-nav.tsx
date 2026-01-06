@@ -14,7 +14,7 @@ export function MobileNav({
   entries,
   title,
 }: {
-  readonly entries: ReadonlyArray<NavbarCategory>;
+  readonly entries: readonly NavbarCategory[];
   readonly title: string | undefined;
 }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);

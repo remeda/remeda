@@ -23,13 +23,9 @@ import { purry } from "./purry";
  * @category Array
  */
 export function flatMap<T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    input: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
-): Array<U>;
+  data: readonly T[],
+  callbackfn: (input: T, index: number, data: readonly T[]) => readonly U[] | U,
+): U[];
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -52,33 +48,25 @@ export function flatMap<T, U>(
  * @category Array
  */
 export function flatMap<T, U>(
-  callbackfn: (
-    input: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
-): (data: ReadonlyArray<T>) => Array<U>;
+  callbackfn: (input: T, index: number, data: readonly T[]) => readonly U[] | U,
+): (data: readonly T[]) => U[];
 
-export function flatMap(...args: ReadonlyArray<unknown>): unknown {
+export function flatMap(...args: readonly unknown[]): unknown {
   return purry(flatMapImplementation, args, lazyImplementation);
 }
 
 const flatMapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
-): Array<U> => data.flatMap(callbackfn);
+  data: readonly T[],
+  callbackfn: (value: T, index: number, data: readonly T[]) => readonly U[] | U,
+): U[] => data.flatMap(callbackfn);
 
 const lazyImplementation =
   <T, K>(
     callbackfn: (
       input: T,
       index: number,
-      data: ReadonlyArray<T>,
-    ) => K | ReadonlyArray<K>,
+      data: readonly T[],
+    ) => K | readonly K[],
   ): LazyEvaluator<T, K> =>
   // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
   (value, index, data) => {

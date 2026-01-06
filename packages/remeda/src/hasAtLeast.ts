@@ -64,7 +64,7 @@ export function hasAtLeast(
   minimum: number,
 ): (data: IterableContainer) => boolean;
 
-export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
+export function hasAtLeast(...args: readonly unknown[]): unknown {
   return purry(hasAtLeastImplementation, args);
 }
 

@@ -28,7 +28,7 @@ type IsNonNegative<T extends number> = number extends T
     : true;
 
 type CharactersTuple<T extends string> = string extends T
-  ? Array<string>
+  ? string[]
   : T extends `${infer C}${infer R}`
     ? [C, ...CharactersTuple<R>]
     : [];
@@ -37,7 +37,7 @@ type SwapArrayInternal<
   T extends IterableContainer,
   Index1 extends number,
   Index2 extends number,
-  Position extends ReadonlyArray<unknown> = [],
+  Position extends readonly unknown[] = [],
   Original extends IterableContainer = T,
 > = T extends readonly [infer AtPosition, ...infer Rest]
   ? [
@@ -68,9 +68,9 @@ type SwapArray<
 > =
   // TODO: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less- strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
   IsNonNegative<K1> extends false
-    ? Array<T[number]>
+    ? T[number][]
     : IsNonNegative<K2> extends false
-      ? Array<T[number]>
+      ? T[number][]
       : // If the indices are not within the input arrays range the result would be
         // trivially the same as the input array.
         isLessThan<K1, T["length"]> extends false
@@ -138,7 +138,7 @@ export function swapIndices<K1 extends number, K2 extends number>(
   index2: K2,
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
-export function swapIndices(...args: ReadonlyArray<unknown>): unknown {
+export function swapIndices(...args: readonly unknown[]): unknown {
   return purry(swapIndicesImplementation, args);
 }
 
@@ -153,10 +153,10 @@ const swapIndicesImplementation = (
     : swapArray(data, index1, index2);
 
 function swapArray(
-  data: ReadonlyArray<unknown>,
+  data: readonly unknown[],
   index1: number,
   index2: number,
-): Array<unknown> {
+): unknown[] {
   const result = [...data];
 
   if (Number.isNaN(index1) || Number.isNaN(index2)) {

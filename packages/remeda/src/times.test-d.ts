@@ -11,7 +11,7 @@ test("works with 0", () => {
 test("works with non-literals", () => {
   const result = times(10 as number, identity());
 
-  expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  expectTypeOf(result).toEqualTypeOf<number[]>();
 });
 
 test("works with positive integer literals", () => {
@@ -75,7 +75,7 @@ test("could be 'disabled' with large literals", () => {
 
   // The result is a tuple of our max length supported for a literal, with an
   // array tail for the rest of the items...
-  expectTypeOf(result).toExtend<Array<number>>();
+  expectTypeOf(result).toExtend<number[]>();
   expectTypeOf(result[0]).toEqualTypeOf<number>();
   expectTypeOf(result[45]).toEqualTypeOf<number>();
   expectTypeOf(result[56]).toEqualTypeOf<number | undefined>();

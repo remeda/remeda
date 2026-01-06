@@ -142,9 +142,6 @@ export default defineConfig(
       // arrow function. Our typing provides the safety needed here.
       "unicorn/no-array-callback-reference": "off",
 
-      // @see https://tkdodo.eu/blog/array-types-in-type-script
-      "@typescript-eslint/array-type": ["error", { default: "generic" }],
-
       // This isn't very useful in a utility library, a lot of utilities need to
       // access arrays in a random-access way.
       "@typescript-eslint/no-non-null-assertion": "off",
@@ -154,7 +151,7 @@ export default defineConfig(
       // correct because assigning a void function to a variable will result in
       // `undefined`), but this is not an error, it's by design. I don't know
       // what this rule expects us to do in those cases so turning it off for
-      // now instead...
+      // now instead...`
       "@typescript-eslint/no-confusing-void-expression": "off",
 
       // TODO: These rules allow us to really standardize our codebase, but they also do sweeping changes to the whole codebase which is very noisy. We should do it in one sweep sometime in the future.

@@ -16,7 +16,7 @@ import { purry } from "./purry";
 export function dropLast<T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]>;
+): T[number][];
 
 /**
  * Removes last `n` elements from the `array`.
@@ -31,14 +31,14 @@ export function dropLast<T extends IterableContainer>(
  */
 export function dropLast(
   n: number,
-): <T extends IterableContainer>(array: T) => Array<T[number]>;
+): <T extends IterableContainer>(array: T) => T[number][];
 
-export function dropLast(...args: ReadonlyArray<unknown>): unknown {
+export function dropLast(...args: readonly unknown[]): unknown {
   return purry(dropLastImplementation, args);
 }
 
 const dropLastImplementation = <T extends IterableContainer>(
   array: T,
   n: number,
-): Array<T[number]> =>
+): T[number][] =>
   n > 0 ? array.slice(0, Math.max(0, array.length - n)) : [...array];

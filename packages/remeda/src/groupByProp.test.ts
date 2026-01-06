@@ -5,7 +5,7 @@ import { pipe } from "./pipe";
 const SYMBOL = Symbol("sym");
 
 test("empty array", () => {
-  expect(groupByProp([] as Array<{ a: string }>, "a")).toStrictEqual({});
+  expect(groupByProp([] as { a: string }[], "a")).toStrictEqual({});
 });
 
 describe("data first", () => {

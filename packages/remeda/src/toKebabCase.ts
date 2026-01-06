@@ -61,7 +61,7 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  */
 export function toKebabCase(): <S extends string>(data: S) => KebabCase<S>;
 
-export function toKebabCase(...args: ReadonlyArray<unknown>): unknown {
+export function toKebabCase(...args: readonly unknown[]): unknown {
   return purry(toKebabCaseImplementation, args);
 }
 

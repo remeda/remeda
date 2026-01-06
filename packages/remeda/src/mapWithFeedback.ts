@@ -68,7 +68,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 
-export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
+export function mapWithFeedback(...args: readonly unknown[]): unknown {
   return purryFromLazy(lazyImplementation, args);
 }
 
@@ -77,7 +77,7 @@ const lazyImplementation = <T, U>(
     previousValue: U,
     currentValue: T,
     index: number,
-    data: ReadonlyArray<T>,
+    data: readonly T[],
   ) => U,
   initialValue: U,
 ): LazyEvaluator<T, U> => {

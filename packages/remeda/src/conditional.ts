@@ -721,13 +721,13 @@ export function conditional<
   | Return9
   | Fallback;
 
-export function conditional(...args: ReadonlyArray<unknown>): unknown {
+export function conditional(...args: readonly unknown[]): unknown {
   return purryOn(isCase, conditionalImplementation, args);
 }
 
 function conditionalImplementation<In, Out>(
   data: In,
-  ...cases: ReadonlyArray<Case<In, Out> | DefaultCase<In, Out>>
+  ...cases: readonly (Case<In, Out> | DefaultCase<In, Out>)[]
 ): Out {
   for (const current of cases) {
     if (typeof current === "function") {
@@ -749,7 +749,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
     return false;
   }
 
-  const [when, then, ...rest] = maybeCase as ReadonlyArray<unknown>;
+  const [when, then, ...rest] = maybeCase as readonly unknown[];
   return (
     typeof when === "function" &&
     when.length <= 1 &&

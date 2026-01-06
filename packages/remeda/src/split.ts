@@ -57,7 +57,7 @@ export function split(
   data: string,
   separator: RegExp,
   limit?: number,
-): Array<string>;
+): string[];
 export function split<
   S extends string,
   Separator extends string,
@@ -92,7 +92,7 @@ export function split<
 export function split(
   separator: RegExp,
   limit?: number,
-): (data: string) => Array<string>;
+): (data: string) => string[];
 export function split<
   S extends string,
   Separator extends string,

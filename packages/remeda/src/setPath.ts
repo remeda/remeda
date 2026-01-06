@@ -2,7 +2,7 @@ import type { ValueOf } from "type-fest";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
-type Paths<T, Prefix extends ReadonlyArray<unknown> = []> =
+type Paths<T, Prefix extends readonly unknown[] = []> =
   | Prefix
   | (T extends object
       ? ValueOf<{
@@ -29,7 +29,7 @@ type Paths<T, Prefix extends ReadonlyArray<unknown> = []> =
  */
 type ProperKeyOf<T> = Extract<
   keyof T,
-  T extends ReadonlyArray<unknown> ? number : keyof T
+  T extends readonly unknown[] ? number : keyof T
 >;
 
 type ValueAtPath<T, Path> = Path extends readonly [
@@ -80,13 +80,13 @@ export function setPath<
   Value extends ValueAtPath<T, Path>,
 >(path: Path, value: Value): (data: T) => T;
 
-export function setPath(...args: ReadonlyArray<unknown>): unknown {
+export function setPath(...args: readonly unknown[]): unknown {
   return purry(setPathImplementation, args);
 }
 
 function setPathImplementation(
   data: unknown,
-  path: ReadonlyArray<PropertyKey>,
+  path: readonly PropertyKey[],
   value: unknown,
 ): unknown {
   const [pivot, ...rest] = path;

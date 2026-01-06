@@ -11,7 +11,7 @@ export function purryOn<T>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
     ...args: any
   ) => unknown,
-  args: ReadonlyArray<unknown>,
+  args: readonly unknown[],
 ): unknown {
   return isArg(args[0])
     ? // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.

@@ -8,19 +8,19 @@ import { TagBadge } from "./tag-badge";
 type NavbarEntry = {
   readonly title: string;
   readonly slug?: string;
-  readonly tags?: ReadonlyArray<Tag>;
+  readonly tags?: readonly Tag[];
 };
 
 export type NavbarCategory = readonly [
   category: string,
-  entries: ReadonlyArray<NavbarEntry>,
+  entries: readonly NavbarEntry[],
 ];
 
 export function Navbar({
   entries,
   onSelect,
 }: {
-  readonly entries: ReadonlyArray<NavbarCategory>;
+  readonly entries: readonly NavbarCategory[];
   readonly onSelect?: () => void;
 }): ReactNode {
   return (

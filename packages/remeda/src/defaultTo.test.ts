@@ -35,9 +35,7 @@ describe("falsy values", () => {
     });
 
     test("empty array", () => {
-      expect(defaultTo([] as Array<unknown> | undefined, ["a"])).toStrictEqual(
-        [],
-      );
+      expect(defaultTo([] as unknown[] | undefined, ["a"])).toStrictEqual([]);
     });
 
     test("empty object", () => {
@@ -62,7 +60,7 @@ describe("truthy values", () => {
   });
 
   test("array", () => {
-    expect(defaultTo(["a"] as Array<string> | undefined, ["b"])).toStrictEqual([
+    expect(defaultTo(["a"] as string[] | undefined, ["b"])).toStrictEqual([
       "a",
     ]);
   });

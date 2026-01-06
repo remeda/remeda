@@ -10,19 +10,19 @@ test("empty arrays", () => {
 
 describe("dataFirst", () => {
   test("arbitrary arrays", () => {
-    const result = mean([] as Array<number>);
+    const result = mean([] as number[]);
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary readonly arrays", () => {
-    const result = mean([] as ReadonlyArray<number>);
+    const result = mean([] as readonly number[]);
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary non-empty arrays", () => {
-    const result = mean([1, 2] as [number, ...Array<number>]);
+    const result = mean([1, 2] as [number, ...number[]]);
 
     expectTypeOf(result).toEqualTypeOf<number>();
   });
@@ -48,13 +48,13 @@ describe("dataLast", () => {
   });
 
   test("arbitrary number arrays", () => {
-    const result = pipe([] as Array<number>, mean());
+    const result = pipe([] as number[], mean());
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });
 
   test("arbitrary readonly number arrays", () => {
-    const result = pipe([] as ReadonlyArray<number>, mean());
+    const result = pipe([] as readonly number[], mean());
 
     expectTypeOf(result).toEqualTypeOf<number | undefined>();
   });

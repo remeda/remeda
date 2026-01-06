@@ -3,7 +3,7 @@ import { purry } from "./purry";
 
 type Median<T extends IterableContainer<number>> =
   | (T extends readonly [] ? never : number)
-  | (T extends readonly [unknown, ...Array<unknown>] ? never : undefined);
+  | (T extends readonly [unknown, ...unknown[]] ? never : undefined);
 
 /**
  * Returns the median of the elements of an array.
@@ -50,7 +50,7 @@ export function median(): <T extends IterableContainer<number>>(
   data: T,
 ) => Median<T>;
 
-export function median(...args: ReadonlyArray<unknown>): unknown {
+export function median(...args: readonly unknown[]): unknown {
   return purry(medianImplementation, args);
 }
 

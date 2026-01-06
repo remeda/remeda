@@ -31,7 +31,7 @@ export const getFunctions = async () =>
 
 export const forNavbar = (
   result: Awaited<ReturnType<typeof getFunctions>>,
-): ReadonlyArray<NavbarCategory> =>
+): readonly NavbarCategory[] =>
   map(
     result,
     ([category, functions]) =>

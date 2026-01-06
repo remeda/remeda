@@ -16,7 +16,7 @@ import type { CompareFunction } from "./types/CompareFunction";
  */
 export function heapify<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
-  heap: Array<T>,
+  heap: T[],
   compareFn: CompareFunction<T>,
 ): void {
   for (let i = Math.floor(heap.length / 2) - 1; i >= 0; i--) {
@@ -38,7 +38,7 @@ export function heapify<T>(
  */
 export function heapMaybeInsert<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
-  heap: Array<T>,
+  heap: T[],
   compareFn: CompareFunction<T>,
   item: T,
 ): T | undefined {
@@ -65,7 +65,7 @@ export function heapMaybeInsert<T>(
  */
 function heapSiftDown<T>(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentional!
-  heap: Array<T>,
+  heap: T[],
   index: number,
   compareFn: CompareFunction<T>,
 ): void {

@@ -33,7 +33,7 @@ export function subtract(value: number, subtrahend: number): number;
 export function subtract(subtrahend: bigint): (value: bigint) => bigint;
 export function subtract(subtrahend: number): (value: number) => number;
 
-export function subtract(...args: ReadonlyArray<unknown>): unknown {
+export function subtract(...args: readonly unknown[]): unknown {
   return purry(subtractImplementation, args);
 }
 
