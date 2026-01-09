@@ -6,7 +6,7 @@
 import type { GuardType } from "./internal/types/GuardType";
 
 /**
- * Conditionally run a function based on a predicate, returning it's result (similar to
+ * Conditionally run a function based on a predicate, returning its result (similar to
  * the [`?:` (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator).)
  * If the optional `onFalse` function is not provided, the data will be passed
  * through in those cases.
@@ -72,7 +72,7 @@ export function when<
 ) => ReturnType<OnFalse> | ReturnType<OnTrue>;
 
 /**
- * Conditionally run a function based on a predicate, returning it's result (similar to
+ * Conditionally run a function based on a predicate, returning its result (similar to
  * the [`?:` (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator).)
  * If the optional `onFalse` function is not provided, the data will be passed
  * through in those cases.
