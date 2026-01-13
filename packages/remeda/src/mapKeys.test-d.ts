@@ -1,7 +1,44 @@
-import { expectTypeOf, test } from "vitest";
+import { expectTypeOf, test, describe } from "vitest";
 import { constant } from "./constant";
 import { mapKeys } from "./mapKeys";
 import { pipe } from "./pipe";
+import { identity } from "./identity";
+
+// @see https://github.com/remeda/remeda/issues/1249
+describe("single bounded mapped key (Issue #1249)", () => {
+  test("empty object", () => {
+    expectTypeOf(mapKeys({}, constant("hello"))).toEqualTypeOf<{
+      hello?: never;
+    }>();
+  });
+
+  test("primitive unbounded record", () => {
+    expectTypeOf(
+      mapKeys({} as Record<string, string>, constant("hello")),
+    ).toEqualTypeOf<{ hello?: string }>();
+  });
+
+  test("possibly empty record", () => {
+    expectTypeOf(
+      mapKeys({} as { a?: "world" }, constant("hello")),
+    ).toEqualTypeOf<{ hello?: "world" }>();
+  });
+
+  test("object with single key", () => {
+    expectTypeOf(mapKeys({ foo: 69 } as const, identity())).toEqualTypeOf<{
+      foo: 69;
+    }>();
+    expectTypeOf(mapKeys({ foo: 69 } as const, constant("bar"))).toEqualTypeOf<{
+      bar: 69;
+    }>();
+  });
+
+  test("object with multiple keys", () => {
+    expectTypeOf(mapKeys({ a: 1, b: 2 }, constant("x"))).toEqualTypeOf<{
+      x: number;
+    }>();
+  });
+});
 
 test("simple string records", () => {
   const result = mapKeys(
@@ -38,10 +75,9 @@ test("symbols are not passed to the mapper", () => {
 
 test("symbols can be used as the return value", () => {
   const mySymbol = Symbol("mySymbol");
-  const result = mapKeys({ a: 1 }, constant(mySymbol));
 
-  expectTypeOf(result).toEqualTypeOf<
-    Partial<Record<typeof mySymbol, number>>
+  expectTypeOf(mapKeys({ a: 1 }, constant(mySymbol))).toEqualTypeOf<
+    Record<typeof mySymbol, number>
   >();
 });
 
@@ -56,7 +92,7 @@ test("number keys are converted to strings", () => {
 
 test("numbers returned from the mapper are used as-is", () => {
   expectTypeOf(mapKeys({ a: "b" }, constant(123))).toEqualTypeOf<
-    Partial<Record<123, string>>
+    Record<123, string>
   >();
 });
 
