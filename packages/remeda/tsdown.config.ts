@@ -159,17 +159,30 @@ async function injectPolyfills(
  * @see https://github.com/remeda/remeda/issues/1248
  * @see https://github.com/remeda/remeda/issues/1175
  */
-const externalizeInternalSymbols = async (
+async function externalizeInternalSymbols(
   chunks: readonly RolldownChunk[],
-): Promise<void> =>
-  await updateTypeDeclarations(chunks, (content) =>
+): Promise<void> {
+  if (INTERNAL_SYMBOLS.length === 0) {
+    return;
+  }
+
+  await updateTypeDeclarations(chunks, (content) => {
     // We export our symbols via the main export statement to avoid having
-    // multiple export statements withing our type declarations.
-    content.replace(
+    // multiple export statements within our type declarations.
+    const updated = content.replace(
       EXPORTS_INSERTION_POINT_RE,
       `, ${INTERNAL_SYMBOLS.join(", ")}`,
-    ),
-  );
+    );
+
+    if (updated === content) {
+      throw new Error(
+        "Failed to inject internal symbols: export statement not found",
+      );
+    }
+
+    return updated;
+  });
+}
 
 async function updateTypeDeclarations(
   chunks: readonly RolldownChunk[],
