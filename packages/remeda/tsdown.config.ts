@@ -137,18 +137,11 @@ async function injectAdditionalTypeDeclarations({
 }: {
   readonly chunks: readonly RolldownChunk[];
 }): Promise<void> {
-  if (INTERNAL_SYMBOLS.length === 0) {
-    throw new Error("No internal symbols defined to export");
-  }
-  console.log(
-    `Externalizing ${INTERNAL_SYMBOLS.length.toString()} internal symbols.`,
-  );
-
   const polyfills = await getTypePolyfills(`${SOURCE_DIR}/internal/types`);
   if (polyfills.length === 0) {
     throw new Error("No type polyfills were found to inject");
   }
-  console.log(`Injecting ${polyfills.length.toString()} type polyfills.`);
+  console.log(`Found ${polyfills.length.toString()} type polyfills to inject.`);
 
   await Promise.all(
     chunks
