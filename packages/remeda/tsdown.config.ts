@@ -23,6 +23,23 @@ const SHARED = {
 // with a semicolon.
 const TYPE_DEF_RE = /^type [^;]+;/mu;
 
+// Matches the insertion point at the end of the main export statement.
+const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
+
+// @see `externalizeInternalSymbols`
+const INTERNAL_SYMBOLS = [
+  // From `isEmptyish`:
+  "EMPTYISH_BRAND",
+  // From `hasSubObject`:
+  "HAS_SUB_OBJECT_BRAND",
+  // From `RemedaTypeError`:
+  "RemedaErrorSymbol",
+
+  // From type-fest:
+  "emptyObjectSymbol",
+  "tag",
+];
+
 // We split the build into two steps because types and runtime have very
 // different concerns. To optimize bundle size we need the runtime artifacts
 // (JS) to be as small as possible so that it plays nicely with tree-shaking.
@@ -52,6 +69,7 @@ export default defineConfig({
   hooks: {
     "build:done": async ({ chunks }) => {
       await injectPolyfills(`${SOURCE_DIR}/internal/types`, chunks);
+      await externalizeInternalSymbols(chunks);
     },
   },
 
@@ -126,6 +144,37 @@ async function injectPolyfills(
     return;
   }
 
+  await updateTypeDeclarations(
+    chunks,
+    (content) => `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`,
+  );
+}
+
+/**
+ * Projects which have the TypeScript `declaration` setting enabled (or
+ * `composite`, which enables it by default) need our internal symbols to be
+ * exported so that TypeScript can serialize the types when they need to be re-
+ * exported.
+ *
+ * @see https://github.com/remeda/remeda/issues/1248
+ * @see https://github.com/remeda/remeda/issues/1175
+ */
+const externalizeInternalSymbols = async (
+  chunks: readonly RolldownChunk[],
+): Promise<void> =>
+  await updateTypeDeclarations(chunks, (content) =>
+    // We export our symbols via the main export statement to avoid having
+    // multiple export statements withing our type declarations.
+    content.replace(
+      EXPORTS_INSERTION_POINT_RE,
+      `, ${INTERNAL_SYMBOLS.join(", ")}`,
+    ),
+  );
+
+async function updateTypeDeclarations(
+  chunks: readonly RolldownChunk[],
+  updater: (content: string) => string,
+): Promise<void> {
   await Promise.all(
     chunks
       .filter(
@@ -135,10 +184,12 @@ async function injectPolyfills(
       .map(async ({ outDir, fileName }) => {
         const file = path.join(outDir, fileName);
         const content = await readFile(file, "utf8");
-        await writeFile(
-          file,
-          `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`,
-        );
+
+        const updatedContent = updater(content);
+
+        if (updatedContent !== content) {
+          await writeFile(file, updatedContent);
+        }
       }),
   );
 }
