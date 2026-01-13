@@ -1,3 +1,5 @@
+/* eslint-disable no-console -- Allows tracing the build process. */
+
 import { glob, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -19,6 +21,8 @@ const SHARED = {
   failOnWarn: true,
 } satisfies UserConfig;
 
+const DECLARATION_FILE_RE = /\.d\.c?ts$/u;
+
 // Typescript type definitions assuming they don't contain an inline comment
 // with a semicolon.
 const TYPE_DEF_RE = /^type [^;]+;/mu;
@@ -26,7 +30,7 @@ const TYPE_DEF_RE = /^type [^;]+;/mu;
 // Matches the insertion point at the end of the main export statement.
 const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
 
-// @see `externalizeInternalSymbols`
+// @see `injectAdditionalTypeDeclarations`
 const INTERNAL_SYMBOLS = [
   // From `isEmptyish`:
   "EMPTYISH_BRAND",
@@ -67,10 +71,7 @@ export default defineConfig({
   },
 
   hooks: {
-    "build:done": async ({ chunks }) => {
-      await injectPolyfills(`${SOURCE_DIR}/internal/types`, chunks);
-      await externalizeInternalSymbols(chunks);
-    },
+    "build:done": injectAdditionalTypeDeclarations,
   },
 
   //! The order we do the build is important. The current config (which handles
@@ -124,85 +125,84 @@ export default defineConfig({
 });
 
 /**
- * Inject type polyfills at the top of each .d.ts file so that users on older
- * TypeScript versions can use the library.
- */
-async function injectPolyfills(
-  dir: string,
-  chunks: readonly RolldownChunk[],
-): Promise<void> {
-  const polyfills: string[] = [];
-  for await (const file of glob(`${dir}/*.d.ts`)) {
-    const content = await readFile(file, "utf8");
-    const match = TYPE_DEF_RE.exec(content);
-    if (match !== null) {
-      polyfills.push(match[0]);
-    }
-  }
-
-  if (polyfills.length === 0) {
-    return;
-  }
-
-  await updateTypeDeclarations(
-    chunks,
-    (content) => `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`,
-  );
-}
-
-/**
- * Projects which have the TypeScript `declaration` setting enabled (or
- * `composite`, which enables it by default) need our internal symbols to be
- * exported so that TypeScript can serialize the types when they need to be re-
- * exported.
+ * To work around some of the limitations of tsdown type declaration build
+ * process in order to enable additional functionality for the library we need
+ * to perform additional manual mutations to the generated declaration files.
  *
- * @see https://github.com/remeda/remeda/issues/1248
- * @see https://github.com/remeda/remeda/issues/1175
+ * See the comments inline to learn more about the different mutations we apply
+ * and the reasoning behind them.
  */
-async function externalizeInternalSymbols(
-  chunks: readonly RolldownChunk[],
-): Promise<void> {
+async function injectAdditionalTypeDeclarations({
+  chunks,
+}: {
+  readonly chunks: readonly RolldownChunk[];
+}): Promise<void> {
   if (INTERNAL_SYMBOLS.length === 0) {
-    return;
+    throw new Error("No internal symbols defined to export");
   }
+  console.log(
+    `Externalizing (${INTERNAL_SYMBOLS.length.toString()}) internal symbols: ${INTERNAL_SYMBOLS.join(", ")}`,
+  );
 
-  await updateTypeDeclarations(chunks, (content) => {
-    // We export our symbols via the main export statement to avoid having
-    // multiple export statements within our type declarations.
-    const updated = content.replace(
-      EXPORTS_INSERTION_POINT_RE,
-      `, ${INTERNAL_SYMBOLS.join(", ")}`,
-    );
+  const polyfills = await getTypePolyfills(`${SOURCE_DIR}/internal/types`);
+  if (polyfills.length === 0) {
+    throw new Error("No type polyfills were found to inject");
+  }
+  console.log(`Injecting (${polyfills.length.toString()}) type polyfills`);
 
-    if (updated === content) {
-      throw new Error(
-        "Failed to inject internal symbols: export statement not found",
-      );
-    }
-
-    return updated;
-  });
-}
-
-async function updateTypeDeclarations(
-  chunks: readonly RolldownChunk[],
-  updater: (content: string) => string,
-): Promise<void> {
   await Promise.all(
     chunks
-      .filter(
-        ({ fileName }) =>
-          fileName.endsWith(".d.ts") || fileName.endsWith(".d.cts"),
-      )
+      .filter(({ fileName }) => DECLARATION_FILE_RE.test(fileName))
       .map(async ({ outDir, fileName }) => {
         const file = path.join(outDir, fileName);
         const content = await readFile(file, "utf8");
 
-        const updatedContent = updater(content);
+        // Inject type polyfills at the top of each .d.ts file so that users on
+        // older TypeScript versions can use the library.
+        const withPolyfills = `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`;
 
-        if (updatedContent !== content) {
-          await writeFile(file, updatedContent);
+        // Projects which have the TypeScript `declaration` setting enabled (or
+        // `composite`, which enables it by default) need our internal symbols
+        // to be exported so that TypeScript can serialize the types when they
+        // are re-exported.
+        // @see https://github.com/remeda/remeda/issues/1248
+        // @see https://github.com/remeda/remeda/issues/1175
+        const withSymbols = withPolyfills.replace(
+          EXPORTS_INSERTION_POINT_RE,
+          `, ${INTERNAL_SYMBOLS.join(", ")}`,
+        );
+        if (withSymbols === withPolyfills) {
+          throw new Error(`Could not find exports statement in: ${file}`);
         }
+
+        await writeFile(file, withSymbols);
+        console.log(`Updated type declarations: ${file}`);
       }),
   );
+}
+
+/**
+ * Dynamically find the polyfills based on declaration files in a given
+ * directory.
+ */
+export async function getTypePolyfills(
+  directory: string,
+): Promise<readonly string[]> {
+  const polyfills: string[] = [];
+
+  for await (const file of glob(`${directory}/*.d.ts`)) {
+    const content = await readFile(file, "utf8");
+    // We use a regex to extract the actual definition to allow files to also
+    // contain comments explaining the polyfill.
+    const match = TYPE_DEF_RE.exec(content);
+    if (match === null) {
+      throw new Error(
+        `Could not extract type definition from polyfill file: ${file}`,
+      );
+    }
+
+    polyfills.push(match[0]);
+  }
+
+  return polyfills;
 }
