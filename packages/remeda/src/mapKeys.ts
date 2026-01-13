@@ -9,7 +9,7 @@ import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKey
 import type { IsBounded } from "./internal/types/IsBounded";
 import { purry } from "./purry";
 
-export type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
+type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
   T,
   Key,
   // We re-key `T` using `Key`, but because we can't infer at the type level
