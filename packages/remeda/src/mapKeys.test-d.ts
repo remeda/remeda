@@ -6,10 +6,22 @@ import { identity } from "./identity";
 
 // @see https://github.com/remeda/remeda/issues/1249
 describe("single bounded mapped key (Issue #1249)", () => {
-  test("possibly empty object", () => {
+  test("empty object", () => {
+    expectTypeOf(mapKeys({}, constant("hello"))).toEqualTypeOf<{
+      hello?: never;
+    }>();
+  });
+
+  test("primitive unbounded record", () => {
     expectTypeOf(
       mapKeys({} as Record<string, string>, constant("hello")),
     ).toEqualTypeOf<{ hello?: string }>();
+  });
+
+  test("possibly empty record", () => {
+    expectTypeOf(
+      mapKeys({} as { a?: "world" }, constant("hello")),
+    ).toEqualTypeOf<{ hello?: "world" }>();
   });
 
   test("object with single key", () => {
