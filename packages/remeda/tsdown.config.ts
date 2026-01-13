@@ -141,14 +141,14 @@ async function injectAdditionalTypeDeclarations({
     throw new Error("No internal symbols defined to export");
   }
   console.log(
-    `Externalizing (${INTERNAL_SYMBOLS.length.toString()}) internal symbols: ${INTERNAL_SYMBOLS.join(", ")}`,
+    `Externalizing ${INTERNAL_SYMBOLS.length.toString()} internal symbols.`,
   );
 
   const polyfills = await getTypePolyfills(`${SOURCE_DIR}/internal/types`);
   if (polyfills.length === 0) {
     throw new Error("No type polyfills were found to inject");
   }
-  console.log(`Injecting (${polyfills.length.toString()}) type polyfills`);
+  console.log(`Injecting ${polyfills.length.toString()} type polyfills.`);
 
   await Promise.all(
     chunks
@@ -176,7 +176,11 @@ async function injectAdditionalTypeDeclarations({
         }
 
         await writeFile(file, withSymbols);
-        console.log(`Updated type declarations: ${file}`);
+        console.log(
+          `Updated type declarations: ${file}. ${(
+            withSymbols.length - content.length
+          ).toString()} bytes added.`,
+        );
       }),
   );
 }
