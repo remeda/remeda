@@ -279,7 +279,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
                 minQuietPeriodMs ?? maxBurstDurationMs,
                 // We need to account for the time already spent so that we
                 // don't wait longer than the maxDelay.
-                maxBurstDurationMs - (now - burstStartTimestamp),
+                Math.max(0, maxBurstDurationMs - (now - burstStartTimestamp)),
               );
 
         burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);
