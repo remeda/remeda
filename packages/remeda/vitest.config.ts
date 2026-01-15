@@ -10,5 +10,25 @@ export default defineConfig({
         "src/internal/types/**/*.ts",
       ],
     },
+    projects: [
+      {
+        test: {
+          name: "runtime",
+          include: ["src/**/*.test.ts"],
+          isolate: false,
+        },
+      },
+      {
+        test: {
+          name: "types",
+          include: ["src/**/*.test-d.ts"],
+          typecheck: {
+            enabled: true,
+            only: true,
+            ignoreSourceErrors: true,
+          },
+        },
+      },
+    ],
   },
 });

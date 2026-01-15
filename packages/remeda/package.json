@@ -54,10 +54,10 @@
     "publish:jsr": "jsr publish",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
     "release": "semantic-release",
-    "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
-    "test:coverage": "vitest run --coverage",
-    "test:runtime": "tsc --project tsconfig.tests.json && vitest",
-    "test:typing": "tsc --version && vitest --typecheck.only --typecheck.ignoreSourceErrors"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage --project runtime",
+    "test:runtime": "vitest --project runtime",
+    "test:types": "vitest --project types"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
