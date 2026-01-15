@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  source-testing:
-    name: 📒 Source Testing [${{ matrix.typescript-version }}]
+  test-source:
+    name: 📒 Test Source [TypeScript ${{ matrix.typescript-version }}]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -45,14 +45,14 @@ jobs:
         run: npm --workspace=remeda run check
 
       - name: 📋 Type tests
-        run: npm --workspace=remeda run test:typing
+        run: npm --workspace=remeda run test:types
 
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
     needs:
       # No need to build if we already have test failures
-      - source-testing
+      - test-source
     outputs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
@@ -98,8 +98,8 @@ jobs:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
-  dist-testing:
-    name: 📦 Distributable Testing [${{ matrix.typescript-version }}]]
+  test-dist:
+    name: 📦 Test Dist [TypeScript ${{ matrix.typescript-version }}]
     needs:
       - build
     runs-on: ubuntu-latest

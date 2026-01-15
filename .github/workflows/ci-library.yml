@@ -70,7 +70,7 @@ jobs:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
-  test-typing:
+  test-types:
     name: Tests/📋 Types [TypeScript ${{ matrix.typescript-version }}]
     needs:
       - build
@@ -112,7 +112,7 @@ jobs:
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 📋 Type tests
-        run: npm --workspace=remeda run test:typing
+        run: npm --workspace=remeda run test:types
 
       # We restore the distributable and check it last so that we don't do
       # redundant work if the type tests already failed (which is way more
@@ -181,7 +181,7 @@ jobs:
       - name: 🧹 Lint
         run: npm --workspace=remeda run lint
 
-  formatting:
+  format:
     name: 💄 Format
     needs:
       - typecheck
@@ -204,7 +204,7 @@ jobs:
       - name: 💄 Format
         run: npm --workspace=remeda run format
 
-  slowTypes:
+  slow-types:
     name: 🐢 Slow Types
     needs:
       - typecheck
@@ -261,11 +261,11 @@ jobs:
   release:
     name: 🚀 Release
     needs:
-      - test-typing
+      - test-types
       - test-runtime
       - lint
-      - formatting
-      - slowTypes
+      - format
+      - slow-types
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
