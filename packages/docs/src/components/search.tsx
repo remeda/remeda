@@ -16,8 +16,14 @@ export function Search(): ReactNode {
     <DocSearch
       apiKey={API_KEY}
       appId={APP_ID}
-      getMissingResultsUrl={getMissingResultsUrl}
       indices={[INDEX_NAME]}
+      // eslint-disable-next-line react/jsx-no-bind -- This callback doesn't need to be stable because it is only used during render. @see https://github.com/algolia/docsearch/blob/104f7d1a986d1aef3d85f8dbca3e7197e66bf067/packages/docsearch-react/src/NoResultsScreen.tsx#L65-L74
+      getMissingResultsUrl={({ query }) => {
+        const issuesUrl = new URL("issues/new", REPO_URL);
+        issuesUrl.searchParams.set("title", `Missing function: ${query}`);
+        issuesUrl.searchParams.set("labels", LABELS);
+        return issuesUrl.toString();
+      }}
       navigator={{
         // When navigating to another hash on the same page via "Enter" there
         // is a bug (in Algolia or Astro) where the scroll position is reset to
@@ -62,11 +68,4 @@ export function Search(): ReactNode {
       }}
     />
   );
-}
-
-function getMissingResultsUrl({ query }: { readonly query: string }): string {
-  const issuesUrl = new URL("issues/new", REPO_URL);
-  issuesUrl.searchParams.set("title", `Missing function: ${query}`);
-  issuesUrl.searchParams.set("labels", LABELS);
-  return issuesUrl.toString();
 }
