@@ -24,6 +24,7 @@ export function Search(): ReactNode {
         issuesUrl.searchParams.set("labels", LABELS);
         return issuesUrl.toString();
       }}
+      // TODO [@docsearch/react@>4.5.3]: Check if @algolia/autocomplete-core is still needed. There's a bug in the Algolia code when trying to define a navigator due to missing types in their package due to the core package being moved to dev dependencies.
       navigator={{
         // When navigating to another hash on the same page via "Enter" there
         // is a bug (in Algolia or Astro) where the scroll position is reset to
