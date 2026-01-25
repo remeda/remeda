@@ -1,6 +1,5 @@
-import type { AutocompleteOptions } from "@algolia/autocomplete-core";
 import "@docsearch/css";
-import { DocSearch, type InternalDocSearchHit } from "@docsearch/react";
+import { DocSearch } from "@docsearch/react";
 import type { ReactNode } from "react";
 
 const APP_ID = "416K8H7DAR";
@@ -12,12 +11,6 @@ const REPO_URL = "https://github.com/remeda/remeda/";
 // We use a label to make it easier to filter issues coming from this flow...
 const LABELS = "docsearch";
 
-const NAVIGATOR = {
-  navigate: ({ itemUrl }) => {
-    handleNavigate(itemUrl);
-  },
-} as const satisfies AutocompleteOptions<InternalDocSearchHit>["navigator"];
-
 export function Search(): ReactNode {
   return (
     <DocSearch
@@ -25,7 +18,11 @@ export function Search(): ReactNode {
       appId={APP_ID}
       getMissingResultsUrl={getMissingResultsUrl}
       indices={[INDEX_NAME]}
-      navigator={NAVIGATOR}
+      navigator={{
+        navigate: ({ itemUrl }) => {
+          handleNavigate(itemUrl);
+        },
+      }}
     />
   );
 }
