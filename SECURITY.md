@@ -13,7 +13,7 @@ If you discover a security vulnerability, please report it through the
 [Security Advisories](https://github.com/remeda/remeda/security/advisories/new)
 page.
 
-I take security seriously and will respond to valid reports promptly.
+We take security seriously and will respond to valid reports promptly.
 
 ## Responsible Disclosure
 
@@ -28,8 +28,3 @@ A good security report includes:
 - A clear description of the vulnerability
 - A minimal, working proof-of-concept demonstrating the issue
 - The impact and potential attack scenarios
-
-If referencing vulnerabilities from other libraries (e.g., CVEs from lodash or
-underscore), please demonstrate how the vulnerability applies specifically to
-Remeda. Due to architectural differences, vulnerabilities in other libraries
-often do not affect Remeda.
