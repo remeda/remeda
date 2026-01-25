@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "prettier-plugin-pkg": "^0.21.2",
     "prettier-plugin-sh": "^0.18.0"
   }
