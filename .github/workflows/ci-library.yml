@@ -17,7 +17,8 @@ jobs:
     name: 👷 Typecheck
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -75,7 +76,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     strategy:
       fail-fast: false
       matrix:
@@ -131,7 +133,8 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     strategy:
       matrix:
         node:
@@ -161,7 +164,8 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -183,7 +187,8 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -205,7 +210,8 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Reports its findings as review comments on the PR
+      # Reports its findings as review comments on the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -227,7 +233,8 @@ jobs:
       - build
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Provides a link to the preview as a comment in the PR
+      # Provides a link to the preview as a comment in the PR
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -298,7 +305,8 @@ jobs:
       - release
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Enable OIDC for JSR publishing
+      # Enable OIDC for JSR publishing
+      id-token: write
     steps:
       - name: ⬇️ Checkout Repo
         uses: actions/checkout@v6.0.1
