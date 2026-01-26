@@ -21,15 +21,15 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
@@ -43,15 +43,15 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
@@ -65,7 +65,7 @@ jobs:
         run: npm --workspace=remeda run build
 
       - name: 🚚 Save distributable
-        uses: actions/cache/save@v5.0.1
+        uses: actions/cache/save@8b402f58fbc84540c8b491a91e594a4576fec3d7 # 5.0.2
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -98,15 +98,15 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 📘 Install Typescript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
@@ -118,7 +118,7 @@ jobs:
       # redundant work if the type tests already failed (which is way more
       # common than the build typing failing).
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v5.0.1
+        uses: actions/cache/restore@8b402f58fbc84540c8b491a91e594a4576fec3d7 # 5.0.2
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -145,15 +145,15 @@ jobs:
           - 18
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version: ${{ matrix.node }}
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🧪 Run tests
         run: npm --workspace=remeda run test:runtime
@@ -168,15 +168,15 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🧹 Lint
         run: npm --workspace=remeda run lint
@@ -191,15 +191,15 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 💄 Format
         run: npm --workspace=remeda run format
@@ -214,15 +214,15 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🐢 Slow Types
         run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
@@ -237,18 +237,18 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v5.0.1
+        uses: actions/cache/restore@8b402f58fbc84540c8b491a91e594a4576fec3d7 # 5.0.2
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
@@ -276,17 +276,17 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
         with:
           fetch-depth: 0
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
 
       - name: 🔏 Audit Supply Chain
         run: npm --workspace=remeda audit signatures
@@ -309,7 +309,7 @@ jobs:
       id-token: write
     steps:
       - name: ⬇️ Checkout Repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # 6.0.1
         with:
           fetch-tags: true
 
@@ -324,13 +324,13 @@ jobs:
 
       - name: ⎔ Setup Node
         if: steps.latest-released.outputs.version != ''
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # 6.2.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download Dependencies
         if: steps.latest-released.outputs.version != ''
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # 1.11.2
         env:
           HUSKY: 0
 
