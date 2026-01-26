@@ -10,12 +10,14 @@ on:
   # etc...).
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   typecheck:
     name: 👷 Typecheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
@@ -37,8 +39,6 @@ jobs:
     needs:
       - typecheck
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     outputs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
@@ -76,7 +76,6 @@ jobs:
       - build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     strategy:
       fail-fast: false
@@ -133,7 +132,6 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     strategy:
       matrix:
@@ -164,7 +162,6 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
@@ -187,7 +184,6 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
@@ -210,7 +206,6 @@ jobs:
       - typecheck
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write # Reports its findings as review comments on the PR
     steps:
       - name: ⬇️ Checkout repo
@@ -233,9 +228,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      # Provides a link to the preview as a comment in the PR
-      pull-requests: write
+      pull-requests: write # Provides a link to the preview as a comment in the PR
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v6.0.1
@@ -306,7 +299,6 @@ jobs:
       - release
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       id-token: write # Enable OIDC for JSR publishing
     steps:
       - name: ⬇️ Checkout Repo
