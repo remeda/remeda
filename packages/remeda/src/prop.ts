@@ -246,7 +246,8 @@ export function prop<
  * validated against the object type to provide stronger type safety, better
  * compile-time errors, and to enable autocompletion in IDEs.
  *
- * @param key - The key(s) for the property to extract.
+ * @param key0 - The first key to access.
+ * @param key1 - The second key to access.
  * @signature
  *   R.prop(...keys)(data);
  * @example
@@ -256,9 +257,12 @@ export function prop<
  * @dataLast
  * @category Object
  */
-export function prop<T extends NonPropertyKey, Key extends KeysOfUnion<T>>(
-  key: Key,
-): (data: T) => NoInfer<Prop<T, Key>>;
+// NOTE: The single-key data-last overload has been intentionally removed to fix
+// an issue where generic constrained types (e.g., T extends { id: string })
+// would lose type information when used with functions like indexBy. The
+// fallback overload at the end of this file handles this case correctly by
+// returning T[Key] instead of Prop<T, Key>, which is compatible with Record
+// indexing. See https://github.com/remeda/remeda/issues/[XXX]
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
