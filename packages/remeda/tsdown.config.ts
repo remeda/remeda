@@ -101,7 +101,7 @@ export default defineConfig({
         // `import { map } from "remeda";`
         `${SOURCE_DIR}/*.ts`,
         // Skip test files
-        `!**/*.test{,-d}.ts`,
+        `!**/*.test{,-d,-prop}.ts`,
       ],
 
       // We enforce target at the type-checking level via tsconfig.json. Once we
