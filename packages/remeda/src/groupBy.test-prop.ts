@@ -43,6 +43,22 @@ test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   },
 );
 
+test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+  "elements within groups maintain their relative order from the input",
+  (data, grouper) => {
+    const result = groupBy(data, grouper);
+
+    // Build expected groups by iterating in order
+    const expected: Record<string, unknown[]> = {};
+    for (const item of data) {
+      const key = grouper(item);
+      (expected[key] ??= []).push(item);
+    }
+
+    expect(result).toStrictEqual(expected);
+  },
+);
+
 test.prop([
   fc.array(fc.anything()),
   fc.func(fc.option(fc.string(), { nil: undefined })).map(pureGrouper),
