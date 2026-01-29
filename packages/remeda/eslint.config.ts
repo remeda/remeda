@@ -428,7 +428,12 @@ export default defineConfig(
   },
   {
     // All Tests
-    files: ["src/**/*.test.ts", "src/**/*.test-d.ts", "test/**/*.*"],
+    files: [
+      "src/**/*.test.ts",
+      "src/**/*.test-d.ts",
+      "src/**/*.test-prop.ts",
+      "test/**/*.*",
+    ],
     plugins: {
       vitest,
     },
@@ -498,6 +503,23 @@ export default defineConfig(
       // because there's no risk of the code not running, the type-checker will
       // check both branches.
       "vitest/no-conditional-in-test": "off",
+    },
+  },
+  {
+    // Property Tests
+    files: ["src/**/*.test-prop.ts"],
+    rules: {
+      // Recognize `test.prop` as a test function.
+      "vitest/no-standalone-expect": [
+        "error",
+        { additionalTestBlockFunctions: ["test.prop"] },
+      ],
+      "vitest/require-hook": ["warn", { allowedFunctionCalls: ["test.prop"] }],
+
+      // The rule is misfiring because `test.prop` is not recognized as a test,
+      // so all expects in the file are grouped together when counted. The rule
+      // can't be configured to fix this so we can only disable it for now.
+      "vitest/max-expects": "off",
     },
   },
   {

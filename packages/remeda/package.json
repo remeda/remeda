@@ -56,12 +56,14 @@
     "release": "semantic-release",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --project runtime",
+    "test:prop": "vitest --project prop",
     "test:runtime": "vitest --project runtime",
     "test:types": "vitest --project types"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
     "@eslint/js": "^9.39.2",
+    "@fast-check/vitest": "^0.2.4",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^25.0.10",
     "@vitest/coverage-v8": "^4.0.18",
