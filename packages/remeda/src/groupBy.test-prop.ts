@@ -58,7 +58,7 @@ test.prop([
           .every(
             // If order is kept within the group then the indices should
             // monotonically increase.
-            (index, i, arr) => i === 0 || (arr.at(-1) ?? Infinity) < index,
+            (index, i, arr) => i === 0 || (arr[i - 1] ?? Infinity) < index,
           ),
       ),
     ).toBe(true);
