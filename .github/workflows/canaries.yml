@@ -25,7 +25,7 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
@@ -57,7 +57,7 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
@@ -69,7 +69,7 @@ jobs:
 
       - name: 🚚 Lookup distributable
         id: dist-lookup
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           lookup-only: true
           path: packages/remeda/dist
@@ -93,7 +93,7 @@ jobs:
 
       - name: 🚚 Save distributable
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/cache/save@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+        uses: actions/cache/save@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
@@ -113,7 +113,7 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
@@ -127,7 +127,7 @@ jobs:
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+        uses: actions/cache/restore@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true
