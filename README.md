@@ -27,7 +27,7 @@ Interested in contributing? Read the [contributing guide](CONTRIBUTING.md).
 ## Features
 
 - First-class TypeScript support, with types that are as specific as possible.
-- Supports data-first (`R.filter(array, fn)`) and data-last (`R.filter(fn)(array)`) approaches.
+- Supports data-first (`filter(array, fn)`) and data-last (`filter(fn)(array)`) approaches.
 - Lazy evaluation support with `pipe` and `piped`.
 - Runtime and types are both extensively tested, with full code coverage.
 - Tree-shakable, supports CJS and ESM.
