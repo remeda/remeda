@@ -21,19 +21,24 @@ type Truncate<
   Options extends TruncateOptions,
 > =
   IsNever<NonNegativeInteger<N>> extends true
-    ? // Exit early when N isn't a literal non-negative integer.
+    ? // There's nothing we can say about the output without a literal, valid,
+      // truncation length `N`.
       string
-    : TruncateWithOptions<
-        S,
-        N,
-        // TODO: I don't like how I handled the default options object; I want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
-        Options extends Pick<Required<TruncateOptions>, "omission">
-          ? Options["omission"]
-          : typeof DEFAULT_OMISSION,
-        Options extends Pick<Required<TruncateOptions>, "separator">
-          ? Options["separator"]
-          : undefined
-      >;
+    : IsStringLiteral<S> extends true
+      ? TruncateWithOptions<
+          S,
+          N,
+          // TODO: I don't like how I handled the default options object; I want to have everything coupled between the runtime and the type system, but this feels both brittle to changes, and over-verbose.
+          Options extends Pick<Required<TruncateOptions>, "omission">
+            ? Options["omission"]
+            : typeof DEFAULT_OMISSION,
+          Options extends Pick<Required<TruncateOptions>, "separator">
+            ? Options["separator"]
+            : undefined
+        >
+      : // There's nothing we can say about the output without a literal input
+        // string `S`, the result would always be, at best, just a `string`.
+        string;
 
 type TruncateWithOptions<
   S extends string,
