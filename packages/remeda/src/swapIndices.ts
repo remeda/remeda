@@ -1,4 +1,4 @@
-import type { IsEqual, Join } from "type-fest";
+import type { And, IsEqual, Join } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -66,18 +66,14 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 > =
-  // TODO: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less- strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
-  IsNonNegative<K1> extends false
-    ? T[number][]
-    : IsNonNegative<K2> extends false
-      ? T[number][]
-      : // If the indices are not within the input arrays range the result would be
-        // trivially the same as the input array.
-        isLessThan<K1, T["length"]> extends false
-        ? T
-        : isLessThan<K2, T["length"]> extends false
-          ? T
-          : SwapArrayInternal<T, K1, K2>;
+  And<IsNonNegative<K1>, IsNonNegative<K2>> extends true
+    ? And<isLessThan<K1, T["length"]>, isLessThan<K2, T["length"]>> extends true
+      ? SwapArrayInternal<T, K1, K2>
+      : // If the indices are not within the input arrays range the result would
+        // be trivially the same as the input array.
+        T
+    : // TODO [>3]: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less-strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
+      T[number][];
 
 type SwappedIndices<
   T extends IterableContainer | string,
