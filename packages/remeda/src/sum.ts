@@ -27,11 +27,11 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>> =
  *
  * @param data - The array of numbers.
  * @signature
- *   R.sum(data);
+ *   sum(data);
  * @example
- *   R.sum([1, 2, 3]); // => 6
- *   R.sum([1n, 2n, 3n]); // => 6n
- *   R.sum([]); // => 0
+ *   sum([1, 2, 3]); // => 6
+ *   sum([1n, 2n, 3n]); // => 6n
+ *   sum([]); // => 0
  * @dataFirst
  * @category Number
  */
@@ -51,11 +51,11 @@ export function sum<
  * `isEmpty`to guard against this case.
  *
  * @signature
- *   R.sum()(data);
+ *   sum()(data);
  * @example
- *   R.pipe([1, 2, 3], R.sum()); // => 6
- *   R.pipe([1n, 2n, 3n], R.sum()); // => 6n
- *   R.pipe([], R.sum()); // => 0
+ *   pipe([1, 2, 3], sum()); // => 6
+ *   pipe([1n, 2n, 3n], sum()); // => 6n
+ *   pipe([], sum()); // => 0
  * @dataLast
  * @category Number
  */

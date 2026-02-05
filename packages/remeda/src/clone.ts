@@ -14,9 +14,9 @@ import { purry } from "./purry";
  *
  * @param data - The object to clone.
  * @signature
- *   R.clone(data)
+ *   clone(data)
  * @example
- *   R.clone({foo: 'bar'}) // {foo: 'bar'}
+ *   clone({foo: 'bar'}) // {foo: 'bar'}
  * @dataFirst
  * @category Object
  */
@@ -30,9 +30,9 @@ export function clone<T>(data: T): T;
  * work).
  *
  * @signature
- *   R.clone()(data)
+ *   clone()(data)
  * @example
- *   R.pipe({foo: 'bar'}, R.clone()) // {foo: 'bar'}
+ *   pipe({foo: 'bar'}, clone()) // {foo: 'bar'}
  * @dataLast
  * @category Object
  */

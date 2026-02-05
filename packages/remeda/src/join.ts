@@ -15,11 +15,11 @@ type JoinableItem = bigint | boolean | number | string | null | undefined;
  * @param data - The array to join.
  * @param glue - The string to put in between every two elements.
  * @signature
- *    R.join(data, glue)
+ *    join(data, glue)
  * @example
- *    R.join([1,2,3], ",") // => "1,2,3" (typed `string`)
- *    R.join(['a','b','c'], "") // => "abc" (typed `string`)
- *    R.join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
+ *    join([1,2,3], ",") // => "1,2,3" (typed `string`)
+ *    join(['a','b','c'], "") // => "abc" (typed `string`)
+ *    join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
  * @dataFirst
  * @category Array
  */
@@ -38,11 +38,11 @@ export function join<
  *
  * @param glue - The string to put in between every two elements.
  * @signature
- *    R.join(glue)(data)
+ *    join(glue)(data)
  * @example
- *    R.pipe([1,2,3], R.join(",")) // => "1,2,3" (typed `string`)
- *    R.pipe(['a','b','c'], R.join("")) // => "abc" (typed `string`)
- *    R.pipe(['hello', 'world'] as const, R.join(" ")) // => "hello world" (typed `hello world`)
+ *    pipe([1,2,3], join(",")) // => "1,2,3" (typed `string`)
+ *    pipe(['a','b','c'], join("")) // => "abc" (typed `string`)
+ *    pipe(['hello', 'world'] as const, join(" ")) // => "hello world" (typed `hello world`)
  * @dataLast
  * @category Array
  */

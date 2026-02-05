@@ -17,9 +17,9 @@
  * @param to - The maximum value.
  * @returns The random integer.
  * @signature
- *   R.randomBigInt(from, to)
+ *   randomBigInt(from, to)
  * @example
- *   R.randomBigInt(1n, 10n) // => 5n
+ *   randomBigInt(1n, 10n) // => 5n
  * @dataFirst
  * @category Number
  */

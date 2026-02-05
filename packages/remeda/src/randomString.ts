@@ -12,9 +12,9 @@ const ALPHABET =
  * @param length - The length of the random string.
  * @returns The random string.
  * @signature
- *   R.randomString(length)
+ *   randomString(length)
  * @example
- *   R.randomString(5) // => aB92J
+ *   randomString(5) // => aB92J
  * @dataFirst
  * @category String
  */
@@ -28,9 +28,9 @@ export function randomString(length: number): string;
  *
  * @returns The random string.
  * @signature
- *   R.randomString()(length)
+ *   randomString()(length)
  * @example
- *   R.pipe(5, R.randomString()) // => aB92J
+ *   pipe(5, randomString()) // => aB92J
  * @dataLast
  * @category String
  */

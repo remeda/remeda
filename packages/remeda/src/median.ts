@@ -18,10 +18,10 @@ type Median<T extends IterableContainer<number>> =
  *
  * @param data - The array of numbers.
  * @signature
- *   R.median(data);
+ *   median(data);
  * @example
- *   R.pipe([6, 10, 11], R.median()); // => 10
- *   R.median([]); // => undefined
+ *   pipe([6, 10, 11], median()); // => 10
+ *   median([]); // => undefined
  * @dataFirst
  * @category Number
  */
@@ -39,10 +39,10 @@ export function median<T extends IterableContainer<number>>(data: T): Median<T>;
  * `hasAtLeast` or `isEmpty` to guard against this case.
  *
  * @signature
- *   R.median()(data);
+ *   median()(data);
  * @example
- *   R.pipe([6, 10, 11], R.median()); // => 10
- *   R.pipe([], R.median()); // => undefined
+ *   pipe([6, 10, 11], median()); // => 10
+ *   pipe([], median()); // => undefined
  * @dataLast
  * @category Number
  */

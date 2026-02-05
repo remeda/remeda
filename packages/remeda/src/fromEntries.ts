@@ -102,9 +102,9 @@ type ValueForKey<
  *
  * @param entries - An array of key-value pairs.
  * @signature
- *   R.fromEntries(tuples)
+ *   fromEntries(tuples)
  * @example
- *   R.fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
+ *   fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
  * @dataFirst
  * @category Object
  */
@@ -128,11 +128,11 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * Refer to the docs for more details.
  *
  * @signature
- *   R.fromEntries()(tuples)
+ *   fromEntries()(tuples)
  * @example
- *   R.pipe(
+ *   pipe(
  *     [['a', 'b'], ['c', 'd']] as const,
- *     R.fromEntries(),
+ *     fromEntries(),
  *   ); // => {a: 'b', c: 'd'}
  * @dataLast
  * @category Object

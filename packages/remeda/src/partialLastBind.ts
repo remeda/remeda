@@ -49,19 +49,19 @@ type RemoveSuffix<
  * @param partial - The arguments to put after.
  * @returns A partially bound function.
  * @signature
- *    R.partialLastBind(func, ...partial);
+ *    partialLastBind(func, ...partial);
  * @example
  *    const fn = (x: number, y: number, z: number) => x * 100 + y * 10 + z;
- *    const partialFn = R.partialLastBind(fn, 2, 3);
+ *    const partialFn = partialLastBind(fn, 2, 3);
  *    partialFn(1); //=> 123
  *
- *    const parseBinary = R.partialLastBind(parseInt, "2");
+ *    const parseBinary = partialLastBind(parseInt, "2");
  *    parseBinary("101"); //=> 5
  *
- *    R.pipe(
+ *    pipe(
  *      { a: 1 },
  *      // instead of (arg) => JSON.stringify(arg, null, 2)
- *      R.partialLastBind(JSON.stringify, null, 2),
+ *      partialLastBind(JSON.stringify, null, 2),
  *    ); //=> '{\n  "a": 1\n}'
  * @dataFirst
  * @category Function

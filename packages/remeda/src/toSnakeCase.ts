@@ -25,10 +25,10 @@ type SnakeCase<S extends string> = string extends S
  *
  * @param data - A string.
  * @signature
- *   R.toSnakeCase(data);
+ *   toSnakeCase(data);
  * @example
- *   R.toSnakeCase("hello world"); // "hello_world"
- *   R.toSnakeCase("__HELLO_WORLD__"); // "hello_world"
+ *   toSnakeCase("hello world"); // "hello_world"
+ *   toSnakeCase("__HELLO_WORLD__"); // "hello_world"
  * @dataFirst
  * @category String
  */
@@ -52,10 +52,10 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *
  * @signature
- *   R.toSnakeCase()(data);
+ *   toSnakeCase()(data);
  * @example
- *   R.pipe("hello world", R.toSnakeCase()); // "hello_world"
- *   R.pipe("__HELLO_WORLD__", R.toSnakeCase()); // "hello_world"
+ *   pipe("hello world", toSnakeCase()); // "hello_world"
+ *   pipe("__HELLO_WORLD__", toSnakeCase()); // "hello_world"
  * @dataLast
  * @category String
  */

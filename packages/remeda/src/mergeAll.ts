@@ -44,10 +44,10 @@ type MergeAll<T extends IterableContainer<object>> =
  * @param objects - The array of objects.
  * @returns A new object merged with all of the objects in the list. If the list is empty, an empty object is returned.
  * @signature
- *    R.mergeAll(objects)
+ *    mergeAll(objects)
  * @example
- *    R.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
- *    R.mergeAll([]) // => {}
+ *    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
+ *    mergeAll([]) // => {}
  * @dataFirst
  * @category Array
  */

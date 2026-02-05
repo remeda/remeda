@@ -10,18 +10,18 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to be checked for being an object type.
  * @returns The input type, narrowed to only objects.
  * @signature
- *    R.isObjectType(data)
+ *    isObjectType(data)
  * @example
  *    // true
- *    R.isObjectType({}) //=> true
- *    R.isObjectType([]) //=> true
- *    R.isObjectType(Promise.resolve("something")) //=> true
- *    R.isObjectType(new Date()) //=> true
- *    R.isObjectType(new Error("error")) //=> true
+ *    isObjectType({}) //=> true
+ *    isObjectType([]) //=> true
+ *    isObjectType(Promise.resolve("something")) //=> true
+ *    isObjectType(new Date()) //=> true
+ *    isObjectType(new Error("error")) //=> true
  *
  *    // false
- *    R.isObjectType('somethingElse') //=> false
- *    R.isObjectType(null) //=> false
+ *    isObjectType('somethingElse') //=> false
+ *    isObjectType(null) //=> false
  * @dataFirst
  * @category Guard
  */

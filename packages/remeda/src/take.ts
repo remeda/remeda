@@ -9,9 +9,9 @@ import { purry } from "./purry";
  * @param array - The array.
  * @param n - The number of elements to take.
  * @signature
- *    R.take(array, n)
+ *    take(array, n)
  * @example
- *    R.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
+ *    take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
  * @lazy
  * @category Array
@@ -26,9 +26,9 @@ export function take<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    R.take(n)(array)
+ *    take(n)(array)
  * @example
- *    R.pipe([1, 2, 3, 4, 3, 2, 1], R.take(3)) // => [1, 2, 3]
+ *    pipe([1, 2, 3, 4, 3, 2, 1], take(3)) // => [1, 2, 3]
  * @dataLast
  * @lazy
  * @category Array

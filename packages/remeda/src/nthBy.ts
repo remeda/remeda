@@ -17,9 +17,9 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
- *   R.nthBy(data, index, ...rules);
+ *   nthBy(data, index, ...rules);
  * @example
- *   R.nthBy([2,1,4,5,3,], 2, identity()); // => 3
+ *   nthBy([2,1,4,5,3,], 2, identity()); // => 3
  * @dataFirst
  * @category Array
  */
@@ -38,9 +38,9 @@ export function nthBy<T extends IterableContainer>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns The element at the specified index in the sorted order, or `undefined` if the index is out of bounds.
  * @signature
- *   R.nthBy(index, ...rules)(data);
+ *   nthBy(index, ...rules)(data);
  * @example
- *   R.pipe([2,1,4,5,3,], R.nthBy(2, identity())); // => 3
+ *   pipe([2,1,4,5,3,], nthBy(2, identity())); // => 3
  * @dataLast
  * @category Array
  */

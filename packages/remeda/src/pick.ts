@@ -84,9 +84,9 @@ type PickUnbounded<T, Keys extends keyof T> =
  * Creates an object composed of the picked `data` properties.
  *
  * @param keys - The property names.
- * @signature R.pick([prop1, prop2])(object)
+ * @signature pick([prop1, prop2])(object)
  * @example
- *    R.pipe({ a: 1, b: 2, c: 3, d: 4 }, R.pick(['a', 'd'])) // => { a: 1, d: 4 }
+ *    pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd'])) // => { a: 1, d: 4 }
  * @dataLast
  * @category Object
  */
@@ -100,9 +100,9 @@ export function pick<
  *
  * @param data - The target object.
  * @param keys - The property names.
- * @signature R.pick(object, [prop1, prop2])
+ * @signature pick(object, [prop1, prop2])
  * @example
- *    R.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
+ *    pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
  * @dataFirst
  * @category Object
  */

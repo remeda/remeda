@@ -120,9 +120,9 @@ type IsPartialProp<T, P extends keyof T, S> =
  * would be narrowed accordingly.
  * @returns A shallow copy of the input object with the rejected entries
  * removed.
- * @signature R.pickBy(data, predicate)
+ * @signature pickBy(data, predicate)
  * @example
- *    R.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
+ *    pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
  * @dataFirst
  * @category Object
  */
@@ -163,9 +163,9 @@ export function pickBy<T extends object>(
  * to remove it. If the function is a type-guard on the value the output type
  * would be narrowed accordingly.
  * @signature
- *   R.pickBy(predicate)(data)
+ *   pickBy(predicate)(data)
  * @example
- *    R.pipe({a: 1, b: 2, A: 3, B: 4}, pickBy((val, key) => key.toUpperCase() === key)); // => {A: 3, B: 4}
+ *    pipe({a: 1, b: 2, A: 3, B: 4}, pickBy((val, key) => key.toUpperCase() === key)); // => {A: 3, B: 4}
  * @dataLast
  * @category Object
  */

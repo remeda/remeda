@@ -4,10 +4,10 @@
  * @param data - The variable to check.
  * @returns True if the passed input is a Date, false otherwise.
  * @signature
- *    R.isDate(data)
+ *    isDate(data)
  * @example
- *    R.isDate(new Date()) //=> true
- *    R.isDate('somethingElse') //=> false
+ *    isDate(new Date()) //=> true
+ *    isDate('somethingElse') //=> false
  * @category Guard
  */
 export function isDate(data: unknown): data is Date {

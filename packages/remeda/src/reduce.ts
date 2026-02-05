@@ -18,9 +18,9 @@ import { purry } from "./purry";
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    R.reduce(data, callbackfn, initialValue)
+ *    reduce(data, callbackfn, initialValue)
  * @example
- *    R.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
+ *    reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
  * @dataFirst
  * @category Array
  */
@@ -52,9 +52,9 @@ export function reduce<T, U>(
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    R.reduce(fn, initialValue)(array)
+ *    reduce(fn, initialValue)(array)
  * @example
- *    R.pipe([1, 2, 3, 4, 5], R.reduce((acc, x) => acc + x, 100)) // => 115
+ *    pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)) // => 115
  * @dataLast
  * @category Array
  */

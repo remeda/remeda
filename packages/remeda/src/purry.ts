@@ -21,7 +21,7 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  * @param fn - The function to purry.
  * @param args - The arguments.
  * @param lazy - A lazy version of the function to purry.
- * @signature R.purry(fn, args);
+ * @signature purry(fn, args);
  * @example
  *    function _findIndex(array, fn) {
  *      for (let i = 0; i < array.length; i++) {
@@ -39,7 +39,7 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
  *    function findIndex(...args: unknown[]) {
- *      return R.purry(_findIndex, args);
+ *      return purry(_findIndex, args);
  *    }
  * @category Function
  */

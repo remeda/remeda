@@ -11,10 +11,10 @@ import { purry } from "./purry";
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
  * @signature
- *   R.endsWith(data, suffix);
+ *   endsWith(data, suffix);
  * @example
- *   R.endsWith("hello world", "hello"); // false
- *   R.endsWith("hello world", "world"); // true
+ *   endsWith("hello world", "hello"); // false
+ *   endsWith("hello world", "world"); // true
  * @dataFirst
  * @category String
  */
@@ -34,10 +34,10 @@ export function endsWith(data: string, suffix: string): boolean;
  *
  * @param suffix - The string to check for at the end.
  * @signature
- *   R.endsWith(suffix)(data);
+ *   endsWith(suffix)(data);
  * @example
- *   R.pipe("hello world", R.endsWith("hello")); // false
- *   R.pipe("hello world", R.endsWith("world")); // true
+ *   pipe("hello world", endsWith("hello")); // false
+ *   pipe("hello world", endsWith("world")); // true
  * @dataLast
  * @category String
  */

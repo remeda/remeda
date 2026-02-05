@@ -6,11 +6,11 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns True if the passed input is an Array, false otherwise.
  * @signature
- *    R.isArray(data)
+ *    isArray(data)
  * @example
- *    R.isArray([5]) //=> true
- *    R.isArray([]) //=> true
- *    R.isArray('somethingElse') //=> false
+ *    isArray([5]) //=> true
+ *    isArray([]) //=> true
+ *    isArray('somethingElse') //=> false
  * @category Guard
  */
 export function isArray<T>(

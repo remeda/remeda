@@ -148,10 +148,10 @@ type IsLongerThan<
  * also supported. Default: <none> (which is equivalent to `""` or the regular
  * expression `/./`).
  * @signature
- *   R.truncate(data, n, { omission, separator });
+ *   truncate(data, n, { omission, separator });
  * @example
- *   R.truncate("Hello, world!", 8); //=> "Hello..."
- *   R.truncate(
+ *   truncate("Hello, world!", 8); //=> "Hello..."
+ *   truncate(
  *     "cat, dog, mouse",
  *     12,
  *     { omission: "__", separator: ","},
@@ -196,12 +196,12 @@ export function truncate<
  * also supported. Default: <none> (which is equivalent to `""` or the regular
  * expression `/./`).
  * @signature
- *   R.truncate(n, { omission, separator })(data);
+ *   truncate(n, { omission, separator })(data);
  * @example
- *   R.pipe("Hello, world!" as const, R.truncate(8)); //=> "Hello..."
- *   R.pipe(
+ *   pipe("Hello, world!" as const, truncate(8)); //=> "Hello..."
+ *   pipe(
  *     "cat, dog, mouse" as const,
- *     R.truncate(12, { omission: "__", separator: ","}),
+ *     truncate(12, { omission: "__", separator: ","}),
  *   ); //=> "cat, dog__"
  * @dataLast
  * @category String

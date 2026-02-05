@@ -6,9 +6,9 @@ import { purry } from "./purry";
  * @param value - The object value.
  * @param key - The property name.
  * @signature
- *    R.objOf(value, key)
+ *    objOf(value, key)
  * @example
- *    R.objOf(10, 'a') // => { a: 10 }
+ *    objOf(10, 'a') // => { a: 10 }
  * @category Object
  */
 export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
@@ -18,9 +18,9 @@ export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
  *
  * @param key - The property name.
  * @signature
- *    R.objOf(key)(value)
+ *    objOf(key)(value)
  * @example
- *    R.pipe(10, R.objOf('a')) // => { a: 10 }
+ *    pipe(10, objOf('a')) // => { a: 10 }
  * @category Object
  */
 export function objOf<T, K extends string>(key: K): (value: T) => Record<K, T>;

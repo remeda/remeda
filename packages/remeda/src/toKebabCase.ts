@@ -25,10 +25,10 @@ type KebabCase<S extends string> = string extends S
  *
  * @param data - A string.
  * @signature
- *   R.toKebabCase(data);
+ *   toKebabCase(data);
  * @example
- *   R.toKebabCase("hello world"); // "hello-world"
- *   R.toKebabCase("__HELLO_WORLD__"); // "hello-world"
+ *   toKebabCase("hello world"); // "hello-world"
+ *   toKebabCase("__HELLO_WORLD__"); // "hello-world"
  * @dataFirst
  * @category String
  */
@@ -52,10 +52,10 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *
  * @signature
- *   R.toKebabCase()(data);
+ *   toKebabCase()(data);
  * @example
- *   R.pipe("hello world", R.toKebabCase()); // "hello-world"
- *   R.pipe("__HELLO_WORLD__", R.toKebabCase()); // "hello-world"
+ *   pipe("hello world", toKebabCase()); // "hello-world"
+ *   pipe("__HELLO_WORLD__", toKebabCase()); // "hello-world"
  * @dataLast
  * @category String
  */

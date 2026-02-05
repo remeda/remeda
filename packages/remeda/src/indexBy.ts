@@ -15,9 +15,9 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
- *    R.indexBy(array, fn)
+ *    indexBy(array, fn)
  * @example
- *    R.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
+ *    indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
  * @category Array
  */
@@ -39,11 +39,11 @@ export function indexBy<T, K extends PropertyKey>(
  *
  * @param mapper - The indexing function.
  * @signature
- *    R.indexBy(fn)(array)
+ *    indexBy(fn)(array)
  * @example
- *    R.pipe(
+ *    pipe(
  *      ['one', 'two', 'three'],
- *      R.indexBy(x => x.length)
+ *      indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
  * @dataLast
  * @category Array

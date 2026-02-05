@@ -63,15 +63,15 @@ type TitleCasedArray<
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
- *   R.toTitleCase(data);
- *   R.toTitleCase(data, { preserveConsecutiveUppercase });
+ *   toTitleCase(data);
+ *   toTitleCase(data, { preserveConsecutiveUppercase });
  * @example
- *   R.toTitleCase("hello world"); // "Hello World"
- *   R.toTitleCase("--foo-bar--"); // "Foo Bar"
- *   R.toTitleCase("fooBar"); // "Foo Bar"
- *   R.toTitleCase("__FOO_BAR__"); // "Foo Bar"
- *   R.toTitleCase("XMLHttpRequest"); // "XML Http Request"
- *   R.toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: false }); // "Xml Http Request"
+ *   toTitleCase("hello world"); // "Hello World"
+ *   toTitleCase("--foo-bar--"); // "Foo Bar"
+ *   toTitleCase("fooBar"); // "Foo Bar"
+ *   toTitleCase("__FOO_BAR__"); // "Foo Bar"
+ *   toTitleCase("XMLHttpRequest"); // "XML Http Request"
+ *   toTitleCase("XMLHttpRequest", { preserveConsecutiveUppercase: false }); // "Xml Http Request"
  * @dataFirst
  * @category String
  */
@@ -100,17 +100,17 @@ export function toTitleCase<S extends string, Options extends TitleCaseOptions>(
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
- *   R.toTitleCase()(data);
- *   R.toTitleCase({ preserveConsecutiveUppercase })(data);
+ *   toTitleCase()(data);
+ *   toTitleCase({ preserveConsecutiveUppercase })(data);
  * @example
- *   R.pipe("hello world", R.toTitleCase()); // "Hello World"
- *   R.pipe("--foo-bar--", R.toTitleCase()); // "Foo Bar"
- *   R.pipe("fooBar", R.toTitleCase()); // "Foo Bar"
- *   R.pipe("__FOO_BAR__", R.toTitleCase()); // "Foo Bar"
- *   R.pipe("XMLHttpRequest", R.toTitleCase()); // "XML Http Request"
- *   R.pipe(
+ *   pipe("hello world", toTitleCase()); // "Hello World"
+ *   pipe("--foo-bar--", toTitleCase()); // "Foo Bar"
+ *   pipe("fooBar", toTitleCase()); // "Foo Bar"
+ *   pipe("__FOO_BAR__", toTitleCase()); // "Foo Bar"
+ *   pipe("XMLHttpRequest", toTitleCase()); // "XML Http Request"
+ *   pipe(
  *     "XMLHttpRequest",
- *     R.toTitleCase({ preserveConsecutiveUppercase: false }),
+ *     toTitleCase({ preserveConsecutiveUppercase: false }),
  *   ); // "Xml Http Request"
  * @dataLast
  * @category String

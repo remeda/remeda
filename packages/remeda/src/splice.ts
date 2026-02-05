@@ -8,10 +8,10 @@ import { purry } from "./purry";
  * @param deleteCount - The number of elements to remove.
  * @param replacement - The elements to insert into the array in place of the deleted elements.
  * @signature
- *    R.splice(items, start, deleteCount, replacement)
+ *    splice(items, start, deleteCount, replacement)
  * @example
- *    R.splice([1,2,3,4,5,6,7,8], 2, 3, []); //=> [1,2,6,7,8]
- *    R.splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
+ *    splice([1,2,3,4,5,6,7,8], 2, 3, []); //=> [1,2,6,7,8]
+ *    splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
  * @dataFirst
  * @category Array
  */
@@ -29,10 +29,10 @@ export function splice<T>(
  * @param deleteCount - The number of elements to remove.
  * @param replacement - The elements to insert into the array in place of the deleted elements.
  * @signature
- *    R.splice(start, deleteCount, replacement)(items)
+ *    splice(start, deleteCount, replacement)(items)
  * @example
- *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3, [])) // => [1,2,6,7,8]
- *    R.pipe([1,2,3,4,5,6,7,8], R.splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
+ *    pipe([1,2,3,4,5,6,7,8], splice(2, 3, [])) // => [1,2,6,7,8]
+ *    pipe([1,2,3,4,5,6,7,8], splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
  * @dataLast
  * @category Array
  */

@@ -157,27 +157,27 @@ type ShouldNotNarrow<T> = Or<
  *
  * @param data - The variable to check.
  * @signature
- *    R.isEmptyish(data)
+ *    isEmptyish(data)
  * @example
- *    R.isEmptyish(undefined); //=> true
- *    R.isEmptyish(null); //=> true
- *    R.isEmptyish(''); //=> true
- *    R.isEmptyish([]); //=> true
- *    R.isEmptyish({}); //=> true
- *    R.isEmptyish(new Map()); //=> true
- *    R.isEmptyish(new Set()); //=> true
- *    R.isEmptyish({ a: "hello", size: 0 }); //=> true
- *    R.isEmptyish(/abc/); //=> true
- *    R.isEmptyish(new Date()); //=> true
- *    R.isEmptyish(new WeakMap()); //=> true
+ *    isEmptyish(undefined); //=> true
+ *    isEmptyish(null); //=> true
+ *    isEmptyish(''); //=> true
+ *    isEmptyish([]); //=> true
+ *    isEmptyish({}); //=> true
+ *    isEmptyish(new Map()); //=> true
+ *    isEmptyish(new Set()); //=> true
+ *    isEmptyish({ a: "hello", size: 0 }); //=> true
+ *    isEmptyish(/abc/); //=> true
+ *    isEmptyish(new Date()); //=> true
+ *    isEmptyish(new WeakMap()); //=> true
  *
- *    R.isEmptyish('test'); //=> false
- *    R.isEmptyish([1, 2, 3]); //=> false
- *    R.isEmptyish({ a: "hello" }); //=> false
- *    R.isEmptyish({ length: 1 }); //=> false
- *    R.isEmptyish(0); //=> false
- *    R.isEmptyish(true); //=> false
- *    R.isEmptyish(() => {}); //=> false
+ *    isEmptyish('test'); //=> false
+ *    isEmptyish([1, 2, 3]); //=> false
+ *    isEmptyish({ a: "hello" }); //=> false
+ *    isEmptyish({ length: 1 }); //=> false
+ *    isEmptyish(0); //=> false
+ *    isEmptyish(true); //=> false
+ *    isEmptyish(() => {}); //=> false
  * @category Guard
  */
 export function isEmptyish<T>(

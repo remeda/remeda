@@ -11,9 +11,9 @@ import { purry } from "./purry";
  * @param items - The array to sort.
  * @param cmp - The comparator function.
  * @signature
- *    R.sort(items, cmp)
+ *    sort(items, cmp)
  * @example
- *    R.sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
+ *    sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
  * @category Array
  */
@@ -30,9 +30,9 @@ export function sort<T extends IterableContainer>(
  *
  * @param cmp - The comparator function.
  * @signature
- *    R.sort(cmp)(items)
+ *    sort(cmp)(items)
  * @example
- *    R.pipe([4, 2, 7, 5], R.sort((a, b) => a - b)) // => [2, 4, 5, 7]
+ *    pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
  * @category Array
  */

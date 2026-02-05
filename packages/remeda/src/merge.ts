@@ -19,9 +19,9 @@ import { purry } from "./purry";
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    R.merge(data, source)
+ *    merge(data, source)
  * @example
- *    R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
+ *    merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
  */
@@ -42,11 +42,11 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    R.merge(source)(data)
+ *    merge(source)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      { x: 1, y: 2 },
- *      R.merge({ y: 10, z: 2 }),
+ *      merge({ y: 10, z: 2 }),
  *    ); // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object

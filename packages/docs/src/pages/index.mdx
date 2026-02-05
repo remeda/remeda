@@ -21,9 +21,7 @@ offer a wide range of functions, from simple utilities like
 [`takeFirstBy`](/docs#takeFirstBy).
 
 ```ts
-import * as R from "remeda";
-// Or import the function directly:
-// import { sortBy } from "remeda";
+import { prop, sortBy } from "remeda";
 
 type User = {
   firstName: string;
@@ -33,12 +31,7 @@ type User = {
 
 declare const USERS: User[];
 
-R.sortBy(
-  USERS,
-  [R.prop("lastLogin"), "desc"],
-  R.prop("lastName"),
-  R.prop("firstName"),
-);
+sortBy(USERS, [prop("lastLogin"), "desc"], prop("lastName"), prop("firstName"));
 ```
 
 ## 👷 Fully Typed
@@ -60,7 +53,7 @@ const DATA = [1, 2, 3] as const;
 const builtin = DATA.map((x) => x.toString());
 //    ^? string[]
 
-const withRemeda = R.map(DATA, (x) => x.toString());
+const withRemeda = map(DATA, (x) => x.toString());
 //    ^? [string, string, string]
 ```
 
@@ -85,8 +78,8 @@ _.pick(obj, ["firstName", "lastName"]);
 R.pick(["firstName", "lastName"], obj);
 
 // In Remeda you get both!
-R.pick(obj, ["firstName", "lastName"]); // data-first
-R.pipe(obj, R.pick(["firstName", "lastName"])); // data-last
+pick(obj, ["firstName", "lastName"]); // data-first
+pipe(obj, pick(["firstName", "lastName"])); // data-last
 ```
 
 In the above example, the "data-first" approach is more natural and programmer-
@@ -107,10 +100,10 @@ const DATA = [
 ];
 
 // Remeda
-R.pipe(
+pipe(
   DATA,
-  R.filter((x) => x.gender === "f"),
-  R.groupBy((x) => x.age),
+  filter((x) => x.gender === "f"),
+  groupBy((x) => x.age),
 );
 
 // Ramda
@@ -152,14 +145,14 @@ computations can be deferred until they are actually needed.
 // Get first 3 unique values
 const DATA = [1, 2, 2, 3, 3, 4, 5, 6];
 
-const result = R.pipe(
+const result = pipe(
   DATA,
-  R.map((x) => {
+  map((x) => {
     console.log("iterate", x);
     return x;
   }),
-  R.unique(),
-  R.take(3),
+  unique(),
+  take(3),
 ); // => [1, 2, 3]
 
 // Console output:

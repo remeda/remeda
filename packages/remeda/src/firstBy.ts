@@ -13,7 +13,7 @@ type FirstBy<T extends IterableContainer> =
         : undefined);
 
 /**
- * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `R.first(R.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `first(sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
  *
  * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
@@ -22,17 +22,17 @@ type FirstBy<T extends IterableContainer> =
  * is empty. (The function provides strong typing if the input type assures the
  * array isn't empty).
  * @signature
- *   R.firstBy(...rules)(data);
+ *   firstBy(...rules)(data);
  * @example
- *   const max = R.pipe([1,2,3], R.firstBy([R.identity(), "desc"])); // => 3;
- *   const min = R.pipe([1,2,3], R.firstBy(R.identity())); // => 1;
+ *   const max = pipe([1,2,3], firstBy([identity(), "desc"])); // => 3;
+ *   const min = pipe([1,2,3], firstBy(identity())); // => 1;
  *
  *   const data = [{ a: "a" }, { a: "aa" }, { a: "aaa" }] as const;
- *   const maxBy = R.pipe(data, R.firstBy([(item) => item.a.length, "desc"])); // => { a: "aaa" };
- *   const minBy = R.pipe(data, R.firstBy((item) => item.a.length)); // => { a: "a" };
+ *   const maxBy = pipe(data, firstBy([(item) => item.a.length, "desc"])); // => { a: "aaa" };
+ *   const minBy = pipe(data, firstBy((item) => item.a.length)); // => { a: "a" };
  *
  *   const data = [{type: "cat", size: 1}, {type: "cat", size: 2}, {type: "dog", size: 3}] as const;
- *   const multi = R.pipe(data, R.firstBy(R.prop('type'), [R.prop('size'), 'desc'])); // => {type: "cat", size: 2}
+ *   const multi = pipe(data, firstBy(prop('type'), [prop('size'), 'desc'])); // => {type: "cat", size: 2}
  * @dataLast
  * @category Array
  */
@@ -41,7 +41,7 @@ export function firstBy<T extends IterableContainer>(
 ): (data: T) => FirstBy<T>;
 
 /**
- * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `R.first(R.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
+ * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `first(sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.
  *
  * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
@@ -51,17 +51,17 @@ export function firstBy<T extends IterableContainer>(
  * is empty. (The function provides strong typing if the input type assures the
  * array isn't empty).
  * @signature
- *   R.firstBy(data, ...rules);
+ *   firstBy(data, ...rules);
  * @example
- *   const max = R.firstBy([1,2,3], [R.identity(), "desc"]); // => 3;
- *   const min = R.firstBy([1,2,3], R.identity()); // => 1;
+ *   const max = firstBy([1,2,3], [identity(), "desc"]); // => 3;
+ *   const min = firstBy([1,2,3], identity()); // => 1;
  *
  *   const data = [{ a: "a" }, { a: "aa" }, { a: "aaa" }] as const;
- *   const maxBy = R.firstBy(data, [(item) => item.a.length, "desc"]); // => { a: "aaa" };
- *   const minBy = R.firstBy(data, (item) => item.a.length); // => { a: "a" };
+ *   const maxBy = firstBy(data, [(item) => item.a.length, "desc"]); // => { a: "aaa" };
+ *   const minBy = firstBy(data, (item) => item.a.length); // => { a: "a" };
  *
  *   const data = [{type: "cat", size: 1}, {type: "cat", size: 2}, {type: "dog", size: 3}] as const;
- *   const multi = R.firstBy(data, R.prop('type'), [R.prop('size'), 'desc']); // => {type: "cat", size: 2}
+ *   const multi = firstBy(data, prop('type'), [prop('size'), 'desc']); // => {type: "cat", size: 2}
  * @dataFirst
  * @category Array
  */

@@ -10,10 +10,10 @@ import { SKIP_ITEM, lazyIdentityEvaluator } from "./internal/utilityEvaluators";
  * @param data - The input items.
  * @param other - The values to exclude.
  * @signature
- *    R.difference(data, other)
+ *    difference(data, other)
  * @example
- *    R.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
- *    R.difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
+ *    difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
+ *    difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
  * @dataFirst
  * @lazy
  * @category Array
@@ -27,10 +27,10 @@ export function difference<T>(data: readonly T[], other: readonly T[]): T[];
  *
  * @param other - The values to exclude.
  * @signature
- *    R.difference(other)(data)
+ *    difference(other)(data)
  * @example
- *    R.pipe([1, 2, 3, 4], R.difference([2, 5, 3])); // => [1, 4]
- *    R.pipe([1, 1, 2, 2], R.difference([1])); // => [1, 2, 2]
+ *    pipe([1, 2, 3, 4], difference([2, 5, 3])); // => [1, 4]
+ *    pipe([1, 1, 2, 2], difference([1])); // => [1, 2, 2]
  * @dataFirst
  * @lazy
  * @category Array

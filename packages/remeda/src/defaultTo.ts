@@ -24,10 +24,10 @@ type FallbackOf<T> =
  * @param fallback - A value of the same type as `data` that would be returned
  * when `data` is nullish.
  * @signature
- *   R.defaultTo(data, fallback);
+ *   defaultTo(data, fallback);
  * @example
- *   R.defaultTo("hello" as string | undefined, "world"); //=> "hello"
- *   R.defaultTo(undefined as string | undefined, "world"); //=> "world"
+ *   defaultTo("hello" as string | undefined, "world"); //=> "hello"
+ *   defaultTo(undefined as string | undefined, "world"); //=> "world"
  * @dataFirst
  * @category Other
  */
@@ -47,10 +47,10 @@ export function defaultTo<T, const Fallback extends FallbackOf<T>>(
  * @param fallback - A value of the same type as `data` that would be returned
  * when `data` is nullish.
  * @signature
- *   R.defaultTo(fallback)(data);
+ *   defaultTo(fallback)(data);
  * @example
- *   R.pipe("hello" as string | undefined, R.defaultTo("world")); //=> "hello"
- *   R.pipe(undefined as string | undefined, R.defaultTo("world")); //=> "world"
+ *   pipe("hello" as string | undefined, defaultTo("world")); //=> "hello"
+ *   pipe(undefined as string | undefined, defaultTo("world")); //=> "world"
  * @dataLast
  * @category Other
  */

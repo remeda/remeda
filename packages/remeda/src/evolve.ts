@@ -69,7 +69,7 @@ type Evolved<T, E> = T extends object
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
- *    R.evolve(data, evolver)
+ *    evolve(data, evolver)
  * @example
  *    const evolver = {
  *      count: add(1),
@@ -106,7 +106,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
- *    R.evolve(evolver)(data)
+ *    evolve(evolver)(data)
  * @example
  *    const evolver = {
  *      count: add(1),
@@ -117,7 +117,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  *      count: 10,
  *      time: { elapsed: 100, remaining: 1400 },
  *    };
- *    R.pipe(data, R.evolve(evolver))
+ *    pipe(data, evolve(evolver))
  *    // => {
  *    //   id: 10,
  *    //   count: 11,

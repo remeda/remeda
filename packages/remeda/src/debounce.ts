@@ -81,7 +81,7 @@ type DebounceOptions = {
  * - `cachedValue` the latest return value of an invocation (if one occurred).
  * - `isPending` flag to check if there is an inflight cool-down window.
  * @signature
- *   R.debounce(func, options);
+ *   debounce(func, options);
  * @example
  *   const debouncer = debounce(identity(), { timing: 'trailing', waitMs: 1000 });
  *   const result1 = debouncer.call(1); // => undefined

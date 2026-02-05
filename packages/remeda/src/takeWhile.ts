@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    R.takeWhile(data, predicate)
+ *    takeWhile(data, predicate)
  * @example
- *    R.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
+ *    takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
  * @dataFirst
  * @category Array
  */
@@ -27,9 +27,9 @@ export function takeWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    R.takeWhile(predicate)(data)
+ *    takeWhile(predicate)(data)
  * @example
- *    R.pipe([1, 2, 3, 4, 3, 2, 1], R.takeWhile(x => x !== 4))  // => [1, 2, 3]
+ *    pipe([1, 2, 3, 4, 3, 2, 1], takeWhile(x => x !== 4))  // => [1, 2, 3]
  * @dataLast
  * @category Array
  */

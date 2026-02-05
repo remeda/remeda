@@ -6,10 +6,10 @@ import { purry } from "./purry";
  * @param value - The number.
  * @param multiplicand - The number to multiply the value by.
  * @signature
- *    R.multiply(value, multiplicand);
+ *    multiply(value, multiplicand);
  * @example
- *    R.multiply(3, 4) // => 12
- *    R.reduce([1, 2, 3, 4], R.multiply, 1) // => 24
+ *    multiply(3, 4) // => 12
+ *    reduce([1, 2, 3, 4], multiply, 1) // => 24
  * @dataFirst
  * @category Number
  */
@@ -21,10 +21,10 @@ export function multiply(value: number, multiplicand: number): number;
  *
  * @param multiplicand - The number to multiply the value by.
  * @signature
- *    R.multiply(multiplicand)(value);
+ *    multiply(multiplicand)(value);
  * @example
- *    R.multiply(4)(3) // => 12
- *    R.map([1, 2, 3, 4], R.multiply(2)) // => [2, 4, 6, 8]
+ *    multiply(4)(3) // => 12
+ *    map([1, 2, 3, 4], multiply(2)) // => [2, 4, 6, 8]
  * @dataLast
  * @category Number
  */

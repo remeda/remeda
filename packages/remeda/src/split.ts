@@ -45,11 +45,11 @@ type Split<
  * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   R.split(data, separator, limit);
+ *   split(data, separator, limit);
  * @example
- *   R.split("a,b,c", ","); //=> ["a", "b", "c"]
- *   R.split("a,b,c", ",", 2); //=> ["a", "b"]
- *   R.split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
+ *   split("a,b,c", ","); //=> ["a", "b", "c"]
+ *   split("a,b,c", ",", 2); //=> ["a", "b"]
+ *   split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
  * @dataFirst
  * @category String
  */
@@ -81,11 +81,11 @@ export function split<
  * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   R.split(separator, limit)(data);
+ *   split(separator, limit)(data);
  * @example
- *   R.pipe("a,b,c", R.split(",")); //=> ["a", "b", "c"]
- *   R.pipe("a,b,c", R.split(",", 2)); //=> ["a", "b"]
- *   R.pipe("a1b2c3d", R.split(/\d/u)); //=> ["a", "b", "c", "d"]
+ *   pipe("a,b,c", split(",")); //=> ["a", "b", "c"]
+ *   pipe("a,b,c", split(",", 2)); //=> ["a", "b"]
+ *   pipe("a1b2c3d", split(/\d/u)); //=> ["a", "b", "c", "d"]
  * @dataLast
  * @category String
  */

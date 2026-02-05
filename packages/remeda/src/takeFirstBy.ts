@@ -16,9 +16,9 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   R.takeFirstBy(data, n, ...rules);
+ *   takeFirstBy(data, n, ...rules);
  * @example
- *   R.takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ *   takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
  * @dataFirst
  * @category Array
  */
@@ -37,9 +37,9 @@ export function takeFirstBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   R.takeFirstBy(n, ...rules)(data);
+ *   takeFirstBy(n, ...rules)(data);
  * @example
- *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.takeFirstBy(2, x => x.length)); // => ['a', 'aa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['a', 'aa']
  * @dataLast
  * @category Array
  */

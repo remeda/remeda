@@ -13,10 +13,10 @@
  * * `identity` - A function that returns the first argument it receives.
  *
  * @signature
- *   R.doNothing();
+ *   doNothing();
  * @example
- *   myApi({ onSuccess: handleSuccess, onError: R.doNothing() });
- *   myApi({ onSuccess: isDemoMode ? R.doNothing(): handleSuccess });
+ *   myApi({ onSuccess: handleSuccess, onError: doNothing() });
+ *   myApi({ onSuccess: isDemoMode ? doNothing(): handleSuccess });
  * @dataLast
  * @category Function
  */

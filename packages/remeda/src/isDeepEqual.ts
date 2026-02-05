@@ -25,11 +25,11 @@ import { purry } from "./purry";
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    R.isDeepEqual(data, other)
+ *    isDeepEqual(data, other)
  * @example
- *    R.isDeepEqual(1, 1) //=> true
- *    R.isDeepEqual(1, '1') //=> false
- *    R.isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *    isDeepEqual(1, 1) //=> true
+ *    isDeepEqual(1, '1') //=> false
+ *    isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
  * @category Guard
  */
@@ -63,11 +63,11 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    R.isDeepEqual(other)(data)
+ *    isDeepEqual(other)(data)
  * @example
- *    R.pipe(1, R.isDeepEqual(1)); //=> true
- *    R.pipe(1, R.isDeepEqual('1')); //=> false
- *    R.pipe([1, 2, 3], R.isDeepEqual([1, 2, 3])); //=> true
+ *    pipe(1, isDeepEqual(1)); //=> true
+ *    pipe(1, isDeepEqual('1')); //=> false
+ *    pipe([1, 2, 3], isDeepEqual([1, 2, 3])); //=> true
  * @dataLast
  * @category Guard
  */

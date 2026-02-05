@@ -17,9 +17,9 @@ import { purry } from "./purry";
  *
  * @param data - A string.
  * @signature
- *   R.toUpperCase(data);
+ *   toUpperCase(data);
  * @example
- *   R.toUpperCase("Hello World"); // "HELLO WORLD"
+ *   toUpperCase("Hello World"); // "HELLO WORLD"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  * `toTitleCase`.
  *
  * @signature
- *   R.toUpperCase()(data);
+ *   toUpperCase()(data);
  * @example
- *   R.pipe("Hello World", R.toUpperCase()); // "HELLO WORLD"
+ *   pipe("Hello World", toUpperCase()); // "HELLO WORLD"
  * @dataLast
  * @category String
  */

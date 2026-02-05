@@ -9,9 +9,9 @@ import { purry } from "./purry";
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature
- *    R.mergeDeep(destination, source)
+ *    mergeDeep(destination, source)
  * @example
- *    R.mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
+ *    mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
  * @dataFirst
  * @category Object
  */
@@ -26,11 +26,11 @@ export function mergeDeep<Destination extends object, Source extends object>(
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns The merged object.
  * @signature
- *    R.mergeDeep(source)(destination)
+ *    mergeDeep(source)(destination)
  * @example
- *    R.pipe(
+ *    pipe(
  *      { foo: 'bar', x: 1 },
- *      R.mergeDeep({ foo: 'baz', y: 2 }),
+ *      mergeDeep({ foo: 'baz', y: 2 }),
  *    );  // => { foo: 'baz', x: 1, y: 2 }
  * @dataLast
  * @category Object

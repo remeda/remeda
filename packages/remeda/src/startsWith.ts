@@ -12,10 +12,10 @@ import { purry } from "./purry";
  * @param data - The input string.
  * @param prefix - The string to check for at the beginning.
  * @signature
- *   R.startsWith(data, prefix);
+ *   startsWith(data, prefix);
  * @example
- *   R.startsWith("hello world", "hello"); // true
- *   R.startsWith("hello world", "world"); // false
+ *   startsWith("hello world", "hello"); // true
+ *   startsWith("hello world", "world"); // false
  * @dataFirst
  * @category String
  */
@@ -36,10 +36,10 @@ export function startsWith(data: string, prefix: string): boolean;
  *
  * @param prefix - The string to check for at the beginning.
  * @signature
- *   R.startsWith(prefix)(data);
+ *   startsWith(prefix)(data);
  * @example
- *   R.pipe("hello world", R.startsWith("hello")); // true
- *   R.pipe("hello world", R.startsWith("world")); // false
+ *   pipe("hello world", startsWith("hello")); // true
+ *   pipe("hello world", startsWith("world")); // false
  * @dataLast
  * @category String
  */

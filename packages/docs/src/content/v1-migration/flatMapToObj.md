@@ -53,9 +53,9 @@ pipe(
 
 ```ts
 // Was
-R.pipe(
+pipe(
   ["a", "b"],
-  R.flatMapToObj.indexed((x, i) => [
+  flatMapToObj.indexed((x, i) => [
     [x, i],
     [x + x, i + i],
   ]),

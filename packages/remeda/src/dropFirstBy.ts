@@ -16,9 +16,9 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   R.dropFirstBy(data, n, ...rules);
+ *   dropFirstBy(data, n, ...rules);
  * @example
- *   R.dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ *   dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
  * @dataFirst
  * @category Array
  */
@@ -37,9 +37,9 @@ export function dropFirstBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   R.dropFirstBy(n, ...rules)(data);
+ *   dropFirstBy(n, ...rules)(data);
  * @example
- *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], R.dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
  * @dataLast
  * @category Array
  */

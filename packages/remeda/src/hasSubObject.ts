@@ -66,11 +66,11 @@ type HasSubObjectSubObject<
  * @param data - The object to test.
  * @param subObject - The sub-object to test against.
  * @signature
- *    R.hasSubObject(data, subObject)
+ *    hasSubObject(data, subObject)
  * @example
- *    R.hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }) //=> true
- *    R.hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }) //=> false
- *    R.hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
+ *    hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }) //=> true
+ *    hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }) //=> false
+ *    hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
  * @dataFirst
  * @category Guard
  */
@@ -86,11 +86,11 @@ export function hasSubObject<
  *
  * @param subObject - The sub-object to test against.
  * @signature
- *    R.hasSubObject(subObject)(data)
+ *    hasSubObject(subObject)(data)
  * @example
- *    R.hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }) //=> true
- *    R.hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }) //=> false
- *    R.hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
+ *    hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }) //=> true
+ *    hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }) //=> false
+ *    hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
  * @dataLast
  * @category Guard
  */

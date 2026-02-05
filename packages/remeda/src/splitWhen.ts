@@ -6,9 +6,9 @@ import { purry } from "./purry";
  * @param data - The array to split.
  * @param predicate - The predicate.
  * @signature
- *    R.splitWhen(array, fn)
+ *    splitWhen(array, fn)
  * @example
- *    R.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
+ *    splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
  * @category Array
  */
@@ -22,9 +22,9 @@ export function splitWhen<T>(
  *
  * @param predicate - The predicate.
  * @signature
- *    R.splitWhen(fn)(array)
+ *    splitWhen(fn)(array)
  * @example
- *    R.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
+ *    splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast
  * @category Array
  */

@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * @param array - The target array.
  * @param n - The number of elements to take.
  * @signature
- *    R.takeLast(array, n)
+ *    takeLast(array, n)
  * @example
- *    R.takeLast([1, 2, 3, 4, 5], 2) // => [4, 5]
+ *    takeLast([1, 2, 3, 4, 5], 2) // => [4, 5]
  * @dataFirst
  * @category Array
  */
@@ -23,9 +23,9 @@ export function takeLast<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    R.takeLast(n)(array)
+ *    takeLast(n)(array)
  * @example
- *    R.takeLast(2)([1, 2, 3, 4, 5]) // => [4, 5]
+ *    takeLast(2)([1, 2, 3, 4, 5]) // => [4, 5]
  * @dataLast
  * @category Array
  */

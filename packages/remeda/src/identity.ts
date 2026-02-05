@@ -12,9 +12,9 @@ type IdentityFunction = <T>(firstParameter: T, ...rest: any) => T;
  * * `constant` - A function that ignores the input arguments and returns the same value on every invocation.
  *
  * @signature
- *    R.identity();
+ *    identity();
  * @example
- *    R.map([1,2,3], R.identity()); // => [1,2,3]
+ *    map([1,2,3], identity()); // => [1,2,3]
  * @category Function
  */
 export function identity(): IdentityFunction {

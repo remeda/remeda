@@ -11,9 +11,9 @@ import { purry } from "./purry";
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    R.set(obj, prop, value)
+ *    set(obj, prop, value)
  * @example
- *    R.set({ a: 1 }, 'a', 2) // => { a: 2 }
+ *    set({ a: 1 }, 'a', 2) // => { a: 2 }
  * @dataFirst
  * @category Object
  */
@@ -32,9 +32,9 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    R.set(prop, value)(obj)
+ *    set(prop, value)(obj)
  * @example
- *    R.pipe({ a: 1 }, R.set('a', 2)) // => { a: 2 }
+ *    pipe({ a: 1 }, set('a', 2)) // => { a: 2 }
  * @dataLast
  * @category Object
  */

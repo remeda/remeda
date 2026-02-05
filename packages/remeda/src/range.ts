@@ -5,9 +5,9 @@ import { purry } from "./purry";
  *
  * @param start - The start number.
  * @param end - The end number.
- * @signature R.range(start, end)
+ * @signature range(start, end)
  * @example
- *    R.range(1, 5) // => [1, 2, 3, 4]
+ *    range(1, 5) // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */
@@ -17,9 +17,9 @@ export function range(start: number, end: number): number[];
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
  *
  * @param end - The end number.
- * @signature R.range(end)(start)
+ * @signature range(end)(start)
  * @example
- *    R.range(5)(1) // => [1, 2, 3, 4]
+ *    range(5)(1) // => [1, 2, 3, 4]
  * @dataLast
  * @category Array
  */

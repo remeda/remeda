@@ -13,9 +13,9 @@ import { purry } from "./purry";
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
  * @signature
- *    R.partition(data, predicate)
+ *    partition(data, predicate)
  * @example
- *    R.partition(
+ *    partition(
  *      ['one', 'two', 'forty two'],
  *      x => x.length === 3,
  *    ); // => [['one', 'two'], ['forty two']]
@@ -43,11 +43,11 @@ export function partition<T>(
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
  * @signature
- *    R.partition(predicate)(data)
+ *    partition(predicate)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      ['one', 'two', 'forty two'],
- *      R.partition(x => x.length === 3),
+ *      partition(x => x.length === 3),
  *    ); // => [['one', 'two'], ['forty two']]
  * @dataLast
  * @category Array

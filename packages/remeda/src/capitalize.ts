@@ -18,9 +18,9 @@ import { purry } from "./purry";
  *
  * @param data - A string.
  * @signature
- *   R.capitalize(data);
+ *   capitalize(data);
  * @example
- *   R.capitalize("hello world"); // "Hello world"
+ *   capitalize("hello world"); // "Hello world"
  * @dataFirst
  * @category String
  */
@@ -43,9 +43,9 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  * `toTitleCase`.
  *
  * @signature
- *   R.capitalize()(data);
+ *   capitalize()(data);
  * @example
- *   R.pipe("hello world", R.capitalize()); // "Hello world"
+ *   pipe("hello world", capitalize()); // "Hello world"
  * @dataLast
  * @category String
  */

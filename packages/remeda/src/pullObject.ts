@@ -19,15 +19,15 @@ import { purry } from "./purry";
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   R.pullObject(data, keyExtractor, valueExtractor);
+ *   pullObject(data, keyExtractor, valueExtractor);
  * @example
- *   R.pullObject(
+ *   pullObject(
  *     [
  *       { name: "john", email: "john@remedajs.com" },
  *       { name: "jane", email: "jane@remedajs.com" }
  *     ],
- *     R.prop("name"),
- *     R.prop("email"),
+ *     prop("name"),
+ *     prop("email"),
  *   ); // => { john: "john@remedajs.com", jane: "jane@remedajs.com" }
  * @dataFirst
  * @category Object
@@ -58,14 +58,14 @@ export function pullObject<
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   R.pullObject(keyExtractor, valueExtractor)(data);
+ *   pullObject(keyExtractor, valueExtractor)(data);
  * @example
- *   R.pipe(
+ *   pipe(
  *     [
  *       { name: "john", email: "john@remedajs.com" },
  *       { name: "jane", email: "jane@remedajs.com" }
  *     ],
- *     R.pullObject(R.prop("name"), R.prop("email")),
+ *     pullObject(prop("name"), prop("email")),
  *   ); // => { john: "john@remedajs.com", jane: "jane@remedajs.com" }
  * @dataLast
  * @category Object

@@ -115,10 +115,10 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
  * @param data - The array.
  * @param sampleSize - The number of elements to take.
  * @signature
- *    R.sample(array, sampleSize)
+ *    sample(array, sampleSize)
  * @example
- *    R.sample(["hello", "world"], 1); // => ["hello"] // typed string[]
- *    R.sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
+ *    sample(["hello", "world"], 1); // => ["hello"] // typed string[]
+ *    sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
  * @dataFirst
  * @category Array
  */
@@ -140,10 +140,10 @@ export function sample<const T extends IterableContainer, N extends number>(
  *
  * @param sampleSize - The number of elements to take.
  * @signature
- *    R.sample(sampleSize)(array)
+ *    sample(sampleSize)(array)
  * @example
- *    R.sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
- *    R.sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
+ *    sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
+ *    sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
  * @dataLast
  * @category Array
  */

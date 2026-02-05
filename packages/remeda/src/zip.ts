@@ -30,9 +30,9 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
  * @param first - The first input list.
  * @param second - The second input list.
  * @signature
- *   R.zip(first, second)
+ *   zip(first, second)
  * @example
- *   R.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
+ *   zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
  * @lazy
  * @category Array
@@ -49,9 +49,9 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  *
  * @param second - The second input list.
  * @signature
- *   R.zip(second)(first)
+ *   zip(second)(first)
  * @example
- *   R.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
+ *   zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
  * @lazy
  * @category Array

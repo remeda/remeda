@@ -12,9 +12,9 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @param other - The second array.
  * @param comparator - The custom comparator.
  * @signature
- *    R.intersectionWith(array, other, comparator)
+ *    intersectionWith(array, other, comparator)
  * @example
- *    R.intersectionWith(
+ *    intersectionWith(
  *      [
  *        { id: 1, name: 'Ryan' },
  *        { id: 3, name: 'Emma' },
@@ -39,9 +39,9 @@ export function intersectionWith<TFirst, TSecond>(
  * @param other - The second array.
  * @param comparator - The custom comparator.
  * @signature
- *    R.intersectionWith(other, comparator)(array)
+ *    intersectionWith(other, comparator)(array)
  * @example
- *    R.intersectionWith(
+ *    intersectionWith(
  *      [3, 5],
  *      (a, b) => a.id === b
  *      )([

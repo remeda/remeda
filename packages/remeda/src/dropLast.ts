@@ -7,9 +7,9 @@ import { purry } from "./purry";
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
- *    R.dropLast(array, n)
+ *    dropLast(array, n)
  * @example
- *    R.dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
+ *    dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]
  * @dataFirst
  * @category Array
  */
@@ -23,9 +23,9 @@ export function dropLast<T extends IterableContainer>(
  *
  * @param n - The number of elements to skip.
  * @signature
- *    R.dropLast(n)(array)
+ *    dropLast(n)(array)
  * @example
- *    R.dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
+ *    dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]
  * @dataLast
  * @category Array
  */

@@ -12,9 +12,9 @@ import { purry } from "./purry";
  * @returns A new array with the items of the first array followed by the items
  * of the second array.
  * @signature
- *    R.concat(data, other);
+ *    concat(data, other);
  * @example
- *    R.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
+ *    concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
  * @category Array
  */
@@ -32,9 +32,9 @@ export function concat<
  * @returns A new array with the items of the first array followed by the items
  * of the second array.
  * @signature
- *    R.concat(arr2)(arr1);
+ *    concat(arr2)(arr1);
  * @example
- *    R.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
+ *    concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
  * @dataLast
  * @category Array
  */

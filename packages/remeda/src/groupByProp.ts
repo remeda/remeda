@@ -126,9 +126,9 @@ type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
  * @param data - The items to group.
  * @param prop - The property name to group by.
  * @signature
- *    R.groupByProp(data, prop)
+ *    groupByProp(data, prop)
  * @example
- *    const result = R.groupByProp(
+ *    const result = groupByProp(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
  *      'a',
@@ -163,12 +163,12 @@ export function groupByProp<
  *
  * @param prop - The property name to group by.
  * @signature
- *    R.groupByProp(prop)(data);
+ *    groupByProp(prop)(data);
  * @example
- *    const result = R.pipe(
+ *    const result = pipe(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
- *      R.groupByProp('a'),
+ *      groupByProp('a'),
  *    );
  * @dataLast
  * @category Array

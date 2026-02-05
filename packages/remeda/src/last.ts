@@ -16,10 +16,10 @@ type Last<T extends IterableContainer> = LastArrayElement<
  *
  * @param data - The array.
  * @signature
- *    R.last(array)
+ *    last(array)
  * @example
- *    R.last([1, 2, 3]) // => 3
- *    R.last([]) // => undefined
+ *    last([1, 2, 3]) // => 3
+ *    last([]) // => undefined
  * @dataFirst
  * @category Array
  */
@@ -29,12 +29,12 @@ export function last<T extends IterableContainer>(data: T): Last<T>;
  * Gets the last element of `array`.
  *
  * @signature
- *    R.last()(array)
+ *    last()(array)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 2, 4, 8, 16],
- *      R.filter(x => x > 3),
- *      R.last(),
+ *      filter(x => x > 3),
+ *      last(),
  *      x => x + 1
  *    ); // => 17
  * @dataLast

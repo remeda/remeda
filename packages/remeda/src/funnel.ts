@@ -139,9 +139,9 @@ type Funnel<Args extends RestArguments = []> = {
  * then resets the funnel to it's initial state.
  * - `isIdle` - Checks if there are any active timeouts.
  * @signature
- *   R.funnel(callback, options);
+ *   funnel(callback, options);
  * @example
- *   const debouncer = R.funnel(
+ *   const debouncer = funnel(
  *     () => {
  *       console.log("Callback executed!");
  *     },
@@ -150,7 +150,7 @@ type Funnel<Args extends RestArguments = []> = {
  *   debouncer.call();
  *   debouncer.call();
  *
- *   const throttle = R.funnel(
+ *   const throttle = funnel(
  *     () => {
  *       console.log("Callback executed!");
  *     },

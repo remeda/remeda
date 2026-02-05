@@ -25,11 +25,11 @@ import type { ReorderedArray } from "./internal/types/ReorderedArray";
  * Use the syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    R.sortBy(...rules)(data)
+ *    sortBy(...rules)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      R.sortBy(R.prop('a')),
+ *      sortBy(prop('a')),
  *    ); // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
  * @dataLast
  * @category Array
@@ -60,13 +60,13 @@ export function sortBy<T extends IterableContainer>(
  * Use the syntax `[projection, "desc"]` for descending order.
  * @returns A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    R.sortBy(data, ...rules)
+ *    sortBy(data, ...rules)
  * @example
- *    R.sortBy(
+ *    sortBy(
  *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
  *      prop('a'),
  *    );  // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]
- *    R.sortBy(
+ *    sortBy(
  *      [
  *        {color: 'red', weight: 2},
  *        {color: 'blue', weight: 3},

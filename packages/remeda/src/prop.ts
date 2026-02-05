@@ -53,11 +53,11 @@ type NonPropertyKey = object | null | undefined;
  * @param data - The object or array to access.
  * @param key - The key(s) for the property to extract.
  * @signature
- *   R.prop(data, ...keys);
+ *   prop(data, ...keys);
  * @example
- *   R.prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
- *   R.prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
- *   R.prop(["cat", "dog"], 1); //=> 'dog'
+ *   prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
+ *   prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
+ *   prop(["cat", "dog"], 1); //=> 'dog'
  * @dataFirst
  * @category Object
  */
@@ -248,11 +248,11 @@ export function prop<
  *
  * @param key - The key(s) for the property to extract.
  * @signature
- *   R.prop(...keys)(data);
+ *   prop(...keys)(data);
  * @example
- *   R.pipe({ foo: { bar: 'baz' } }, R.prop('foo')); //=> { bar: 'baz' }
- *   R.pipe({ foo: { bar: 'baz' } }, R.prop('foo', 'bar')); //=> 'baz'
- *   R.pipe(["cat", "dog"], R.prop(1)); //=> 'dog'
+ *   pipe({ foo: { bar: 'baz' } }, prop('foo')); //=> { bar: 'baz' }
+ *   pipe({ foo: { bar: 'baz' } }, prop('foo', 'bar')); //=> 'baz'
+ *   pipe(["cat", "dog"], prop(1)); //=> 'dog'
  * @dataLast
  * @category Object
  */

@@ -106,9 +106,9 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
  * type would be narrowed accordingly.
  * @returns A shallow copy of the input object with the rejected entries
  * removed.
- * @signature R.omitBy(data, predicate)
+ * @signature omitBy(data, predicate)
  * @example
- *    R.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
+ *    omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
  * @dataFirst
  * @category Object
  */
@@ -136,9 +136,9 @@ export function omitBy<T extends object>(
  * Returns a partial copy of an object omitting the keys matching predicate.
  *
  * @param predicate - The predicate.
- * @signature R.omitBy(fn)(object)
+ * @signature omitBy(fn)(object)
  * @example
- *    R.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
+ *    omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast
  * @category Object
  */

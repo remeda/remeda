@@ -101,9 +101,9 @@ type DropFixedTuple<
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
- *    R.drop(array, n)
+ *    drop(array, n)
  * @example
- *    R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
+ *    drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @dataFirst
  * @lazy
  * @category Array
@@ -118,9 +118,9 @@ export function drop<T extends IterableContainer, N extends number>(
  *
  * @param n - The number of elements to skip.
  * @signature
- *    R.drop(n)(array)
+ *    drop(n)(array)
  * @example
- *    R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
+ *    drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @dataLast
  * @lazy
  * @category Array
