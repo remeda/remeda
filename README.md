@@ -48,17 +48,13 @@ deno add jsr:@remeda/remeda
 ### Usage
 
 ```js
-// Import everything:
-import * as R from "remeda";
+import { pipe, forEach, unique, take } from "remeda";
 
-// Or import methods individually:
-// import { pipe, tap, unique, take } from "remeda";
-
-R.pipe(
+pipe(
   [1, 2, 2, 3, 3, 4, 5, 6],
-  R.tap((value) => console.log(`Got ${value}`)),
-  R.unique(),
-  R.take(3),
+  forEach((value) => console.log(`Got ${value}`)),
+  unique(),
+  take(3),
 ); // => [1, 2, 3]
 
 // Console output:
