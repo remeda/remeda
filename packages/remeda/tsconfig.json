@@ -36,6 +36,7 @@
     // TODO [>2]: These are defined by the minimum still-supported Node.JS version, which is currently 18.
     "target": "ES2022",
     "lib": ["ES2022"],
+    "types": ["node"],
     "moduleDetection": "force",
 
     // COMPLETENESS
