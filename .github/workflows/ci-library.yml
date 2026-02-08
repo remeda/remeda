@@ -375,6 +375,8 @@ jobs:
         uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
 
       - name: 🔏 Sign tarball
+        # We assume the file created by semantic-release follows the pattern
+        # `remeda-<version>.tgz`. If the package name changes this will break.
         run: cosign sign-blob --yes --bundle="remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json" "remeda-${{ needs.release.outputs.version }}.tgz"
 
       - name: 📜 Attest tarball provenance
