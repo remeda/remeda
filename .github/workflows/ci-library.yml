@@ -334,6 +334,8 @@ jobs:
 
       - name: 🏷️ Get released version
         id: released
+        # We rely on semantic-release tagging the commits with the pattern:
+        # `v<major>.<minor>.<patch>` (notice the leading `v`!).
         run: |
           echo "version=$(
             git describe --exact-match --tags HEAD 2>/dev/null \
@@ -347,8 +349,9 @@ jobs:
         with:
           name: tarball
           # Keep in sync with the location of the generated tarball configured
-          # in `release.config.js`.
-          path: packages/remeda/*.tgz
+          # in `release.config.js`. We also on `npm` naming the file:
+          # `remeda-<version>.tgz`.
+          path: packages/remeda/remeda-*.tgz
           if-no-files-found: error
           overwrite: true
           retention-days: 7
