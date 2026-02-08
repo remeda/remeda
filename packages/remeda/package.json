@@ -53,7 +53,6 @@
     "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
     "publish:jsr": "jsr publish",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
-    "release": "semantic-release",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --project runtime",
     "test:prop": "vitest --project prop",

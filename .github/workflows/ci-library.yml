@@ -12,6 +12,10 @@ on:
 
 permissions: {}
 
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
 jobs:
   typecheck:
     name: 👷 Typecheck
@@ -28,7 +32,7 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       - name: 🚨 Type check
@@ -50,15 +54,15 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
         id: hash-dist
-        # for the best results this should be kept in sync with the key used by
-        # the same job in the `ci-library` workflow, that way we can reuse the
-        # cache from committed PRs.
+        # For the best results this should be kept in sync with the key used by
+        # the same job in the `canaries` workflow, that way we can reuse the
+        # cache across workflows.
         run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Build
@@ -105,13 +109,13 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: 📘 Install Typescript
+      - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
-      - name: 📋 Type tests
+      - name: 📋 Run type tests
         run: npm --workspace=remeda run test:types
 
       # We restore the distributable and check it last so that we don't do
@@ -152,7 +156,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       - name: 🧪 Run tests
@@ -175,10 +179,10 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: 🎲 Property tests
+      - name: 🎲 Run property tests
         run: npm --workspace=remeda run test:prop -- --run
 
   lint:
@@ -198,7 +202,7 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       - name: 🧹 Lint
@@ -221,14 +225,14 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       - name: 💄 Format
         run: npm --workspace=remeda run format
 
   slow-types:
-    name: 🐢 Slow Types
+    name: 🐢 Slow types
     needs:
       - typecheck
     runs-on: ubuntu-latest
@@ -244,10 +248,10 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: 🐢 Slow Types
+      - name: 🐢 Slow types
         run: npm --workspace=remeda run publish:jsr -- --dry-run --set-version 0.0.0
 
   preview:
@@ -267,7 +271,7 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
       - name: 🚚 Restore distributable
@@ -291,13 +295,18 @@ jobs:
       - slow-types
     if: github.repository == 'remeda/remeda' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.released.outputs.version }}
     permissions:
       # @see https://semantic-release.gitbook.io/semantic-release/recipes/ci-configurations/github-actions#github-workflows-release.yml-configuration-for-node-projects
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm publishing
-
+      # to be able to publish a GitHub release
+      contents: write
+      # to enable use of OIDC for npm provenance
+      id-token: write
+      # to be able to comment on released issues
+      issues: write
+      # to be able to comment on released pull requests
+      pull-requests: write
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -309,55 +318,99 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: 🔏 Audit Supply Chain
+      - name: 🔍 Audit supply chain
         run: npm --workspace=remeda audit signatures
 
       - name: 🏗️ Build
         run: npm --workspace=remeda run build
 
       - name: 🚀 Release
-        run: npm --workspace=remeda run release
+        run: npx --workspace=remeda --no semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏷️ Get released version
+        id: released
+        run: |
+          echo "version=$(
+            git describe --exact-match --tags HEAD 2>/dev/null \
+            | grep --only-matching --perl-regexp "\B(\d+\.){2}\d+$" \
+            || true
+          )" >> "$GITHUB_OUTPUT"
+
+  sign-release:
+    name: 🔏 Sign release
+    needs:
+      - release
+    if: needs.release.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      # to create SLSA provenance attestations
+      attestations: write
+      # to upload assets to the GitHub release
+      contents: write
+      # to enable OIDC for cosign keyless signing
+      id-token: write
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
+
+      # semantic-release bumps the version in package.json locally but doesn't
+      # commit the change; this job checks out the same commit so we need to
+      # set the version explicitly before packing.
+      - name: 🏷️ Set version
+        run: npm --workspace=remeda version --no-git-tag-version "${{ needs.release.outputs.version }}"
+
+      - name: 📦 Create tarball
+        run: npm --workspace=remeda pack
+
+      - name: 🔧 Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+
+      - name: 🔏 Sign tarball
+        run: cosign sign-blob --yes --bundle="remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json" "remeda-${{ needs.release.outputs.version }}.tgz"
+
+      - name: 📜 Attest tarball provenance
+        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
+        with:
+          subject-path: remeda-${{ needs.release.outputs.version }}.tgz
+
+      - name: 📤 Upload signed artifacts to release
+        run: gh release upload "v${{ needs.release.outputs.version }}" "remeda-${{ needs.release.outputs.version }}.tgz" "remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-jsr:
     name: 🦕 Publish to JSR.io
     needs:
       - release
+    if: needs.release.outputs.version != ''
     runs-on: ubuntu-latest
     permissions:
-      # Enable OIDC for JSR publishing
+      # OIDC for JSR publishing
       id-token: write
     steps:
-      - name: ⬇️ Checkout Repo
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-tags: true
 
-      - name: 🏷️ Repo Latest Released Version?
-        id: latest-released
-        run: |
-          echo "version=$(
-            git describe --exact-match --tags 2>/dev/null \
-            | grep --only-matching --perl-regexp "\B(\d+\.){2}\d+$" \
-            || true
-          )" >> "$GITHUB_OUTPUT"
-
-      - name: ⎔ Setup Node
-        if: steps.latest-released.outputs.version != ''
+      - name: ⎔ Setup node
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download Dependencies
-        if: steps.latest-released.outputs.version != ''
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
-        env:
-          HUSKY: 0
 
       - name: 🦕 Publish to JSR.io
-        if: steps.latest-released.outputs.version != ''
-        run: npm --workspace=remeda run publish:jsr -- --set-version "${{ steps.latest-released.outputs.version }}"
+        run: npm --workspace=remeda run publish:jsr -- --set-version "${{ needs.release.outputs.version }}"

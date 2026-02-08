@@ -11,9 +11,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
 jobs:
   test-source:
-    name: 📒 Test Source [TypeScript ${{ matrix.typescript-version }}]
+    name: 📒 Test source [TypeScript ${{ matrix.typescript-version }}]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,19 +36,19 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: 📘 Install Typescript
+      - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
-      - name: 🎯 Concrete Version
+      - name: 🎯 Concrete version
         run: npx --workspace=remeda tsc --version
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
 
-      - name: 📋 Type tests
+      - name: 📋 Run type tests
         run: npm --workspace=remeda run test:types
 
   build:
@@ -62,7 +66,7 @@ jobs:
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
         id: hash-dist
-        # for the best results this should be kept in sync with the key used by
+        # For the best results this should be kept in sync with the key used by
         # the same job in the `ci-library` workflow, that way we can reuse the
         # cache from committed PRs.
         run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
@@ -99,7 +103,7 @@ jobs:
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
   test-dist:
-    name: 📦 Test Dist [TypeScript ${{ matrix.typescript-version }}]
+    name: 📦 Test dist [TypeScript ${{ matrix.typescript-version }}]
     needs:
       - build
     runs-on: ubuntu-latest

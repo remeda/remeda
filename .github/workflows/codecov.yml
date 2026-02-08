@@ -1,4 +1,4 @@
-name: Codecov
+name: ☔ Codecov
 
 on:
   push:
@@ -10,22 +10,27 @@ permissions:
   contents: read
   pull-requests: write # To allow Codecov to comment on PRs
 
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
 jobs:
   codecov:
+    name: ☔ Coverage
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: ⎔ Setup Node.js
+      - name: ⎔ Setup node
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
+      - name: 📥 Download dependencies
         uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
 
-      - name: ☔ Collect coverage
+      - name: 🪣 Collect coverage
         run: npm --workspace=remeda run test:coverage
 
       - name: 🗺️ Upload coverage
