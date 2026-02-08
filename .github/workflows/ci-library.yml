@@ -351,6 +351,7 @@ jobs:
           path: packages/remeda/*.tgz
           if-no-files-found: error
           overwrite: true
+          retention-days: 7
 
   sign-release:
     name: 🔏 Sign release
