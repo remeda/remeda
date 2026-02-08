@@ -341,6 +341,17 @@ jobs:
             || true
           )" >> "$GITHUB_OUTPUT"
 
+      - name: 📤 Upload tarball
+        if: steps.released.outputs.version != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tarball
+          # Keep in sync with the location of the generated tarball configured
+          # in `release.config.js`.
+          path: packages/remeda/*.tgz
+          if-no-files-found: error
+          overwrite: true
+
   sign-release:
     name: 🔏 Sign release
     needs:
@@ -355,25 +366,10 @@ jobs:
       # to enable OIDC for cosign keyless signing
       id-token: write
     steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+      - name: 📥 Download tarball
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          node-version-file: .nvmrc
-
-      - name: 📥 Download dependencies
-        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
-
-      # semantic-release bumps the version in package.json locally but doesn't
-      # commit the change; this job checks out the same commit so we need to
-      # set the version explicitly before packing.
-      - name: 🏷️ Set version
-        run: npm --workspace=remeda version --no-git-tag-version "${{ needs.release.outputs.version }}"
-
-      - name: 📦 Create tarball
-        run: npm --workspace=remeda pack
+          name: tarball
 
       - name: 🔧 Install cosign
         uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
@@ -387,7 +383,7 @@ jobs:
           subject-path: remeda-${{ needs.release.outputs.version }}.tgz
 
       - name: 📤 Upload signed artifacts to release
-        run: gh release upload "v${{ needs.release.outputs.version }}" "remeda-${{ needs.release.outputs.version }}.tgz" "remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json"
+        run: gh release upload --clobber "v${{ needs.release.outputs.version }}" "remeda-${{ needs.release.outputs.version }}.tgz" "remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
