@@ -389,7 +389,7 @@ jobs:
           subject-path: remeda-${{ needs.release.outputs.version }}.tgz
 
       - name: 📤 Upload signed artifacts to release
-        run: gh release upload --clobber "v${{ needs.release.outputs.version }}" "remeda-${{ needs.release.outputs.version }}.tgz" "remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json"
+        run: gh release upload --repo "${{ github.repository }}" --clobber "v${{ needs.release.outputs.version }}" "remeda-${{ needs.release.outputs.version }}.tgz" "remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
