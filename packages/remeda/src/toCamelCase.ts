@@ -1,4 +1,7 @@
-import type { CamelCase } from "type-fest";
+import type {
+  CamelCase,
+  CamelCaseOptions as BaseCamelCaseOptions,
+} from "type-fest";
 import type { OptionalOptionsWithDefaults } from "./internal/types/OptionalOptionsWithDefaults";
 import { words } from "./internal/words";
 
@@ -56,7 +59,7 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> =
 export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
   data: T,
   options?: Options,
-): CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
+): CamelCase<T, CamelCaseOptionsWithDefaults<Options> & BaseCamelCaseOptions>;
 
 /**
  * Converts text to **camelCase** by splitting it into words, lowercasing the
@@ -97,7 +100,7 @@ export function toCamelCase<Options extends CamelCaseOptions>(
   options?: Options,
 ): <T extends string>(
   data: T,
-) => CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
+) => CamelCase<T, CamelCaseOptionsWithDefaults<Options> & BaseCamelCaseOptions>;
 
 export function toCamelCase(
   dataOrOptions: CamelCaseOptions | string,

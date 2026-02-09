@@ -60,4 +60,5 @@ export function merge(...args: readonly unknown[]): unknown {
 const mergeImplementation = <T, Source>(
   data: T,
   source: Source,
+  // @ts-expect-error [ts2322] - TypeScript is failing to infer that the result of spreading the two objects satisfies the more complex Merge type.
 ): Merge<T, Source> => ({ ...data, ...source });

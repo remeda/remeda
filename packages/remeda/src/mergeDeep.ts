@@ -65,7 +65,7 @@ function mergeDeepImplementation<
 
     const { [key]: destinationValue } = destination;
     if (!isPlainObject(destinationValue)) {
-      // The value in destination is not a mergable object so the value from
+      // The value in destination is not a mergeable object so the value from
       // source (which was already copied in the shallow merge) would be used
       // as-is.
       continue;
@@ -73,16 +73,17 @@ function mergeDeepImplementation<
 
     const { [key]: sourceValue } = source;
     if (!isPlainObject(sourceValue)) {
-      // The value in source is not a mergable object either, so it will
+      // The value in source is not a mergeable object either, so it will
       // override the object in destination.
       continue;
     }
 
-    // Both destination and source have a mergable object for this key, so we
+    // Both destination and source have a mergeable object for this key, so we
     // recursively merge them.
+    // @ts-expect-error [ts2590] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
     output[key] = mergeDeepImplementation(destinationValue, sourceValue);
   }
 
-  // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers the right type.
+  // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
   return output;
 }
