@@ -1,0 +1,38 @@
+name: 🔎 CodeQL Advanced
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions: {}
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      # Required to update the code scanning alerts on the repository
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+          - language: javascript-typescript
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: 👟 Initialize CodeQL
+        uses: github/codeql-action/init@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2 # v4.32.2
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-and-quality
+
+      - name: 🏃 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2 # v4.32.2
+        with:
+          category: "/language:${{matrix.language}}"
