@@ -1,27 +1,21 @@
-import js from "@eslint/js";
+import eslint from "@eslint/js";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: {
-      js,
-    },
-    extends: ["js/recommended"],
-    languageOptions: {
-      globals: globals.nodeBuiltin,
-    },
-  },
-
+  eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs.all,
 
   {
     languageOptions: {
+      globals: {
+        ...globals.nodeBuiltin,
+      },
+
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,

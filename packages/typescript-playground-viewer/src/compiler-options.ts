@@ -1,119 +1,183 @@
-import { fromEntries, mapValues, omit, pipe } from "remeda";
+/* eslint-disable @typescript-eslint/no-deprecated --
+ * The playground still supports legacy TypeScript versions and thus also supports deprecated options and values. This is OK.
+ */
 
-// The playground encodes enum options as numeric strings. These maps translate
-// them back to the string values tsconfig.json expects.
-const ENUM_MAPS: Readonly<Record<string, Readonly<Record<string, string>>>> = {
-  target: {
-    1: "ES5",
-    2: "ES2015",
-    3: "ES2016",
-    4: "ES2017",
-    5: "ES2018",
-    6: "ES2019",
-    7: "ES2020",
-    8: "ES2021",
-    9: "ES2022",
-    10: "ES2023",
-    99: "ESNext",
-  },
-  module: {
-    0: "None",
-    1: "CommonJS",
-    2: "AMD",
-    3: "UMD",
-    4: "System",
-    5: "ES2015",
-    6: "ES2020",
-    7: "ES2022",
-    99: "ESNext",
-    100: "Node16",
-    199: "NodeNext",
-  },
-  moduleResolution: {
-    1: "Classic",
-    2: "Node",
-    3: "Node16",
-    99: "NodeNext",
-    100: "Bundler",
-  },
-  jsx: {
-    1: "preserve",
-    2: "react",
-    3: "react-native",
-    4: "react-jsx",
-    5: "react-jsxdev",
-  },
-} satisfies Record<string, Record<`${number}`, string>>;
+import { keys } from "remeda";
+import {
+  JsxEmit,
+  ModuleKind,
+  ModuleResolutionKind,
+  ScriptTarget,
+  type CompilerOptions,
+} from "typescript";
 
-const SERIALIZED_BOOLEAN: Readonly<Record<string, boolean>> = {
-  true: true,
-  false: false,
-} as const;
-
-// Playground UI params that aren't compiler options.
-const IGNORED_PARAMS = ["ts", "filetype", "install-plugin"] as const;
-
-// Defaults from the TypeScript playground source code:
-// https://github.com/microsoft/TypeScript-Website/blob/v2/packages/sandbox/src/compilerOptions.ts
+// Default compiler options copied from the playground UI.
 const PLAYGROUND_DEFAULT_OPTIONS = {
-  // Type checking
+  target: ScriptTarget.ES2017,
+  jsx: JsxEmit.React,
+  module: ModuleKind.ESNext,
+
+  // Output Formatting
+  preserveWatchOutput: false,
+  pretty: false,
+  noErrorTruncation: false,
+
+  // Emit
+  declaration: true,
+  inlineSourceMap: false,
+  removeComments: false,
+  importHelpers: false,
+  downlevelIteration: false,
+  inlineSources: false,
+  stripInternal: false,
+  noEmitHelpers: false,
+  preserveConstEnums: false,
+
+  // Compiler Diagnostics
+  noCheck: false,
+
+  // Interop Constraints
+  isolatedModules: false,
+  verbatimModuleSyntax: false,
+  isolatedDeclarations: false,
+  erasableSyntaxOnly: false,
+  allowSyntheticDefaultImports: false,
+  esModuleInterop: true,
+
+  // Language and Environment
+  libReplacement: false,
+  experimentalDecorators: false,
+  emitDecoratorMetadata: false,
+  noLib: false,
+  useDefineForClassFields: false,
+
+  // Type Checking
   strict: true,
   noImplicitAny: true,
   strictNullChecks: true,
   strictFunctionTypes: true,
-  strictPropertyInitialization: true,
   strictBindCallApply: true,
+  strictPropertyInitialization: true,
+  strictBuiltinIteratorReturn: false,
   noImplicitThis: true,
-  noImplicitReturns: true,
-  noUncheckedIndexedAccess: false,
-  useDefineForClassFields: false,
+  useUnknownInCatchVariables: false,
   alwaysStrict: true,
-  allowUnreachableCode: false,
-  allowUnusedLabels: false,
-  noStrictGenericChecks: false,
   noUnusedLocals: false,
   noUnusedParameters: false,
+  exactOptionalPropertyTypes: false,
+  noImplicitReturns: true,
+  noFallthroughCasesInSwitch: false,
+  noUncheckedIndexedAccess: false,
+  noImplicitOverride: false,
+  noPropertyAccessFromIndexSignature: false,
+  allowUnusedLabels: false,
+  allowUnreachableCode: false,
 
   // Modules
-  module: "ESNext",
-  moduleResolution: "Node",
-  esModuleInterop: true,
+  allowUmdGlobalAccess: false,
+  allowImportingTsExtensions: false,
+  rewriteRelativeImportExtensions: false,
+  resolvePackageJsonExports: false,
+  resolvePackageJsonImports: false,
+  noUncheckedSideEffectImports: false,
+  allowArbitraryExtensions: false,
+
+  // Projects
+  disableSourceOfProjectReferenceRedirect: false,
+
+  // Backwards Compatibility
+  noImplicitUseStrict: false,
+  suppressExcessPropertyErrors: false,
+  suppressImplicitAnyIndexErrors: false,
+  noStrictGenericChecks: false,
+  preserveValueImports: false,
+  keyofStringsOnly: false,
+} as const satisfies CompilerOptions;
+
+// Defaults from the TypeScript playground source code which are not configurable via the UI.
+// @see https://github.com/microsoft/TypeScript-Website/blob/v2/packages/sandbox/src/compilerOptions.ts
+const PLAYGROUND_IMPLICIT_DEFAULTS = {
+  // Type checking
+  moduleResolution: ModuleResolutionKind.NodeJs,
 
   // Emit
-  downlevelIteration: false,
-  noEmitHelpers: false,
   noEmit: true,
-  declaration: true,
-  preserveConstEnums: false,
-  removeComments: false,
-  importHelpers: false,
 
   // Environment
-  target: "ES2017",
-  jsx: "react",
-  experimentalDecorators: true,
-  emitDecoratorMetadata: true,
   lib: ["ES2017", "DOM"],
 
   // Other
-  noLib: false,
   skipLibCheck: false,
   checkJs: false,
   allowJs: false,
-} as const;
+} as const satisfies Omit<
+  CompilerOptions,
+  keyof typeof PLAYGROUND_DEFAULT_OPTIONS
+>;
 
-export function computeCompilerOptions(
+export const computeCompilerOptions = (
   searchParams: URLSearchParams,
-): Record<string, unknown> {
-  const overrides = pipe(
-    [...searchParams.entries()],
-    fromEntries(),
-    mapValues(
-      (value, key) =>
-        ENUM_MAPS[key]?.[value] ?? SERIALIZED_BOOLEAN[value] ?? value,
-    ),
-    omit(IGNORED_PARAMS),
-  );
+): CompilerOptions => ({
+  ...PLAYGROUND_DEFAULT_OPTIONS,
+  ...PLAYGROUND_IMPLICIT_DEFAULTS,
+  ...extractCustomOptions(searchParams),
+});
 
-  return { ...PLAYGROUND_DEFAULT_OPTIONS, ...overrides };
+function extractCustomOptions(
+  searchParams: URLSearchParams,
+): Partial<CompilerOptions> {
+  const customOptions: CompilerOptions = {};
+
+  for (const option of keys(PLAYGROUND_DEFAULT_OPTIONS)) {
+    // We only allow modifying the options that are available in the UX to begin with, to avoid opening up the query param as a way to inject other settings.
+    const value = searchParams.get(option);
+    if (value === null) {
+      // Option isn't provided in the query.
+      continue;
+    }
+
+    switch (option) {
+      case "target":
+        customOptions.target = parseEnum(ScriptTarget, value);
+        break;
+
+      case "jsx":
+        customOptions.jsx = parseEnum(JsxEmit, value);
+        break;
+
+      case "module":
+        customOptions.module = parseEnum(ModuleKind, value);
+        break;
+
+      default:
+        // A boolean option
+        if (value === "true") {
+          customOptions[option] = true;
+        } else if (value === "false") {
+          customOptions[option] = false;
+        } else {
+          throw new Error(
+            `Invalid value for boolean compiler option "${option}": expected "true" or "false" but got: ${value}`,
+          );
+        }
+    }
+  }
+
+  return customOptions;
+}
+
+function parseEnum<E extends Readonly<Record<number, unknown>>>(
+  enumObject: E,
+  value: string,
+): E[keyof E & string] {
+  const parsed = Number(value);
+
+  if (!(parsed in enumObject)) {
+    throw new Error(
+      `Invalid value for enum compiler option, expected: ${JSON.stringify(enumObject)}, got: ${value}`,
+    );
+  }
+
+  // @ts-expect-error [ts2322] -- TypeScript isn't inferring that parsed is a valid key of E although it satisfies the condition that it is **in** E.
+  return parsed;
 }

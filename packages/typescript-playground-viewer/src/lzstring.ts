@@ -21,13 +21,13 @@ export function* decompressLZString(
     switch (bits) {
       case 0:
         // read word marker.
-        current = String.fromCharCode(readBits(stream, 8 /* numBits */));
+        current = String.fromCodePoint(readBits(stream, 8 /* numBits */));
         dictionary.push(current);
         break;
 
       case 1:
         // read dword marker.
-        current = String.fromCharCode(readBits(stream, 16 /* numBits */));
+        current = String.fromCodePoint(readBits(stream, 16 /* numBits */));
         dictionary.push(current);
         break;
 

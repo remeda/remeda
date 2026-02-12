@@ -3,7 +3,7 @@
 import { main } from "./main.js";
 
 try {
-  main(process.argv.slice(2));
+  await main(process.argv.slice(1));
   process.exit(0);
 } catch (error) {
   console.error("Unexpected error:", error);

@@ -24,12 +24,7 @@ export function runPlayground(
     "." /* basePath */,
   );
 
-  const diagnostics = getDiagnostics(typeScript, code, options);
-
-  return {
-    effectiveVersion: typeScript.version,
-    diagnostics,
-  };
+  return getDiagnostics(typeScript, code, options);
 }
 
 function getDiagnostics(
