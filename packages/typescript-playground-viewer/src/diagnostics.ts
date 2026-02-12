@@ -1,39 +1,19 @@
 import { execSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import type { CompilerOptions } from "typescript";
 
-const TS_CACHE_DIR = path.join(import.meta.dirname, "..", ".ts-cache");
-
 const RE_IMPORT =
   /(?:import|export)\s.*?from\s+["']([^"'./][^"']*)["']|require\(\s*["']([^"'./][^"']*)["']\s*\)/g;
 
-export function runPlayground(
-  version: string,
-  code: string,
-  compilerOptions: Record<string, unknown>,
-) {
-  const typeScript = loadTypeScript(version);
+const PLAYGROUND_FILENAME = "playground.ts";
 
-  // Merge playground defaults with URL overrides, then let TypeScript
-  // convert the JSON representation to proper CompilerOptions (enums etc.).
-  const { options } = typeScript.convertCompilerOptionsFromJson(
-    compilerOptions,
-    "." /* basePath */,
-  );
-
-  return getDiagnostics(typeScript, code, options);
-}
-
-function getDiagnostics(
+export function getDiagnostics(
   ts: typeof import("typescript"),
   code: string,
   compilerOptions: CompilerOptions,
 ): string {
-  const fileName = "playground.ts";
-
   // For ATA: if the code imports packages, install them into a temp dir so
   // module resolution can find their types.
   const imports = extractBareImports(code);
@@ -54,18 +34,23 @@ function getDiagnostics(
     // Virtual playground.ts — no need to write it to disk.
     const originalGetSourceFile = host.getSourceFile.bind(host);
     host.getSourceFile = (name, languageVersionOrOptions, ...rest) => {
-      if (name === fileName) {
-        return ts.createSourceFile(fileName, code, languageVersionOrOptions);
+      if (name === PLAYGROUND_FILENAME) {
+        return ts.createSourceFile(
+          PLAYGROUND_FILENAME,
+          code,
+          languageVersionOrOptions,
+        );
       }
       return originalGetSourceFile(name, languageVersionOrOptions, ...rest);
     };
 
     const originalFileExists = host.fileExists.bind(host);
-    host.fileExists = (name) => name === fileName || originalFileExists(name);
+    host.fileExists = (name) =>
+      name === PLAYGROUND_FILENAME || originalFileExists(name);
 
     const originalReadFile = host.readFile.bind(host);
     host.readFile = (name) =>
-      name === fileName ? code : originalReadFile(name);
+      name === PLAYGROUND_FILENAME ? code : originalReadFile(name);
 
     // Point module resolution at the temp dir so tsc finds installed packages.
     if (tempDir !== undefined) {
@@ -73,7 +58,11 @@ function getDiagnostics(
       host.getCurrentDirectory = () => dir;
     }
 
-    const program = ts.createProgram([fileName], compilerOptions, host);
+    const program = ts.createProgram(
+      [PLAYGROUND_FILENAME],
+      compilerOptions,
+      host,
+    );
     const diagnostics = ts.getPreEmitDiagnostics(program);
 
     if (diagnostics.length === 0) {
@@ -93,22 +82,6 @@ function getDiagnostics(
       rmSync(tempDir, { recursive: true, force: true });
     }
   }
-}
-
-function loadTypeScript(version: string): typeof import("typescript") {
-  const prefix = path.join(TS_CACHE_DIR, version);
-  const modulePath = path.join(prefix, "node_modules", "typescript");
-
-  // Install into the cache on first use.
-  if (!existsSync(modulePath)) {
-    execSync(`npm install --prefix ${prefix} typescript@${version}`, {
-      encoding: "utf8",
-      stdio: "pipe",
-    });
-  }
-
-  const require = createRequire(path.join(prefix, "_"));
-  return require(modulePath) as typeof import("typescript");
 }
 
 /**

@@ -1,11 +1,14 @@
+export type SemanticVersion =
+  `${number}.${number}.${number}${`-${string}.${number}` | ""}`;
+
 // This includes regular versions like `1.2.3`, and dev versions like `1.2.3-dev.20240606`
-const RE_SEMANTIC_VERSION = /^\d+\.\d+\.(\d+-\w+\.)?\d+$/gu;
+const RE_SEMANTIC_VERSION = /^\d+\.\d+\.\d+(-\w+\.\d+)?$/gu;
 
 export async function resolveNPMVersionAlias(
   packageName: string,
   alias: string | null,
-): Promise<string> {
-  if (alias !== null && RE_SEMANTIC_VERSION.test(alias)) {
+): Promise<SemanticVersion> {
+  if (alias !== null && isSemantic(alias)) {
     // Already a version-like string.
     return alias;
   }
@@ -26,5 +29,14 @@ export async function resolveNPMVersionAlias(
     throw new Error(`Unknown TypeScript dist-tag "${alias ?? ""}".`);
   }
 
+  if (!isSemantic(version)) {
+    throw new Error(
+      `Invalid version string "${version}" resolved from dist-tag "${alias ?? ""}".`,
+    );
+  }
+
   return version;
 }
+
+const isSemantic = (version: string): version is SemanticVersion =>
+  RE_SEMANTIC_VERSION.test(version);

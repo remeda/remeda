@@ -1,8 +1,9 @@
 import { computeCompilerOptions } from "./compiler-options.js";
+import { getDiagnostics } from "./diagnostics.js";
 import { decompressLZString } from "./lzstring.js";
 import { outputMarkdown } from "./markdown.js";
-import { runPlayground } from "./playground.js";
 import { resolveNPMVersionAlias } from "./resolve-npm-alias.js";
+import { loadTypeScript } from "./typescript-loader.js";
 
 // We only support absolute URLs which resolve cleanly to the official
 // playground!
@@ -64,7 +65,8 @@ export async function main([
 
   const compilerOptions = computeCompilerOptions(searchParams);
 
-  const diagnostics = runPlayground(effectiveVersion, code, compilerOptions);
+  const typeScript = loadTypeScript(effectiveVersion);
+  const diagnostics = getDiagnostics(typeScript, code, compilerOptions);
 
   outputMarkdown({ code, diagnostics, effectiveVersion, compilerOptions });
 }
