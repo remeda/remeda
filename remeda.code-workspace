@@ -5,13 +5,16 @@
       "path": ".",
     },
     {
-      "path": "packages/remeda",
-    },
-    {
       "path": "packages/docs",
     },
     {
+      "path": "packages/remeda",
+    },
+    {
       "path": "packages/stackblitz-template",
+    },
+    {
+      "path": "packages/typescript-playground-viewer",
     },
   ],
 
