@@ -45,7 +45,7 @@
     "@types/node": "^25.2.2",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "dompurify": "^3.3.1",
+    "dompurify": "^3.3.2",
     "eslint": "~9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.5.0",
