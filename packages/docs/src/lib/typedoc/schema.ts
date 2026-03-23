@@ -7,14 +7,25 @@ const zBlockTag = z
   .object({
     // Zod's string `startsWith` modifier doesn't refine the output type accordingly so we use `refine` with our own `startsWith` too.
     tag: z.string().startsWith("@").refine(startsWith("@")),
-    content: z.array(z.object({ text: z.string() })).readonly(),
+    content: z
+      .array(
+        z
+          .object({
+            text: z.string(),
+          })
+          .readonly(),
+      )
+      .readonly(),
   })
   .readonly();
 
 const zComment = z.object({
   summary: z.array(
     z
-      .object({ kind: z.enum(["code", "text"]), text: z.string() })
+      .object({
+        kind: z.enum(["code", "text"]),
+        text: z.string(),
+      })
       .strict()
       .readonly(),
   ),
@@ -26,7 +37,10 @@ const zSignature = z
   .object({
     type: z.discriminatedUnion("type", [
       z
-        .object({ type: z.literal("intrinsic"), name: z.string() })
+        .object({
+          type: z.literal("intrinsic"),
+          name: z.string(),
+        })
         .strict()
         .readonly(),
       z
@@ -50,7 +64,14 @@ const zSignature = z
     ]),
     comment: zComment,
     parameters: z
-      .array(z.object({ name: z.string(), comment: zComment.optional() }))
+      .array(
+        z
+          .object({
+            name: z.string(),
+            comment: zComment.optional(),
+          })
+          .readonly(),
+      )
       .readonly()
       .optional(),
   })
@@ -61,7 +82,15 @@ export const zFunction = z
   .object({
     name: z.string(),
     kind: z.literal(ReflectionKind.Function).transform(constant("function")),
-    sources: z.array(z.object({ url: z.url() })).readonly(),
+    sources: z
+      .array(
+        z
+          .object({
+            url: z.url(),
+          })
+          .readonly(),
+      )
+      .readonly(),
     signatures: z.tuple([zSignature], zSignature).readonly(),
   })
   .readonly();
