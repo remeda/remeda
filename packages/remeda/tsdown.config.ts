@@ -65,10 +65,12 @@ export default defineConfig({
     emitDtsOnly: true,
   },
 
-  // Inline types we use from external dependencies (type-fest) so that users
-  // don't need to depend on a specific version of type-fest to make our types
-  // work.
-  inlineOnly: false,
+  deps: {
+    // Inline types we use from external dependencies (type-fest) so that users
+    // don't need to depend on a specific version of type-fest to make our types
+    // work.
+    onlyBundle: false,
+  },
 
   hooks: {
     "build:done": injectAdditionalTypeDeclarations,
