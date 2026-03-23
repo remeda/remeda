@@ -8,6 +8,8 @@ import {
 } from "../test/typesDataProvider";
 import { isFunction } from "./isFunction";
 
+declare const DATA: string | ((a: number) => string) | undefined;
+
 test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.function as AllTypesDataProviderTypes;
 
@@ -38,12 +40,10 @@ test("should work as type guard", () => {
 });
 
 test("union with non-function types", () => {
-  let data: string | ((a: number) => string) | undefined;
-
-  if (isFunction(data)) {
-    expectTypeOf(data).toEqualTypeOf<(a: number) => string>();
+  if (isFunction(DATA)) {
+    expectTypeOf(DATA).toEqualTypeOf<(a: number) => string>();
   } else {
-    expectTypeOf(data).toEqualTypeOf<string | undefined>();
+    expectTypeOf(DATA).toEqualTypeOf<string | undefined>();
   }
 });
 

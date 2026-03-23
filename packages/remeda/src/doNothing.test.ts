@@ -8,7 +8,7 @@ test("does nothing when called with no arguments", () => {
 
   expect(() => {
     doesNothing();
-  }).not.toThrowError();
+  }).not.toThrow();
 });
 
 test("ignores any parameters sent to the function", () => {
@@ -16,21 +16,21 @@ test("ignores any parameters sent to the function", () => {
 
   expect(() => {
     doesNothing(1);
-  }).not.toThrowError();
+  }).not.toThrow();
 
   expect(() => {
     doesNothing(1, 2);
-  }).not.toThrowError();
+  }).not.toThrow();
 
   expect(() => {
     doesNothing(1, 2, "a");
-  }).not.toThrowError();
+  }).not.toThrow();
 
   expect(() => {
     doesNothing(undefined);
-  }).not.toThrowError();
+  }).not.toThrow();
 
   expect(() => {
     doesNothing(["a"]);
-  }).not.toThrowError();
+  }).not.toThrow();
 });

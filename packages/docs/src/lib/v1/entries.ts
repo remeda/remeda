@@ -1,9 +1,9 @@
 import type { NavbarCategory } from "@/components/navbar";
 import { categoriesV1CollectionName } from "@/content/functions/v1/content.config";
 import { getCollection, getEntries } from "astro:content";
-import { map, pipe, prop, filter } from "remeda";
-import { extractTags } from "../tags";
+import { filter, map, pipe, prop } from "remeda";
 import { sortByCategories } from "../sort-categories";
+import { extractTags } from "../tags";
 
 export const getV1Functions = async () =>
   await pipe(
@@ -17,7 +17,7 @@ export const getV1Functions = async () =>
         [
           category,
           pipe(
-            await getEntries(children),
+            await getEntries([...children]),
             map(prop("data")),
             // Don't destructure `kind` here! We are relying on TypeScript 5.5's
             // new ability to infer type-predicates to narrow the type of the
