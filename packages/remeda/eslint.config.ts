@@ -1,4 +1,3 @@
-import type { Plugin } from "@eslint/core";
 import eslint from "@eslint/js";
 import vitest from "@vitest/eslint-plugin";
 import prettierConfig from "eslint-config-prettier";
@@ -436,8 +435,8 @@ export default defineConfig(
       "test/**/*.*",
     ],
     plugins: {
-      // TODO [@vitest/eslint-plugin>1]: The plugin's types are built against eslint 9's RuleModule which is incompatible with eslint 10's RuleDefinition. Remove this cast once the plugin ships eslint 10 types.
-      vitest: vitest as unknown as Plugin,
+      // @ts-expect-error [ts2322] -- eslint was bumped to v10 but the vitest plugin still hasn't been updated to support that version. This would probably be fixed in the next non-patch release.
+      vitest,
     },
 
     rules: {
