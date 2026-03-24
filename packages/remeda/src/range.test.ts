@@ -46,9 +46,21 @@ describe("positive step", () => {
   test("simple step", () => {
     expect(range(1, { end: 20, step: 5 })).toStrictEqual([1, 6, 11, 16]);
   });
+
+  test("step larger than range", () => {
+    expect(range(1, { end: 5, step: 100 })).toStrictEqual([1]);
+  });
+
+  test("step exactly divides range", () => {
+    expect(range(0, { end: 10, step: 5 })).toStrictEqual([0, 5]);
+  });
 });
 
 describe("negative step", () => {
+  test("trivial step", () => {
+    expect(range(5, { end: 0, step: -1 })).toStrictEqual([5, 4, 3, 2, 1]);
+  });
+
   test("simple decrementing range", () => {
     expect(range(20, { end: 1, step: -5 })).toStrictEqual([20, 15, 10, 5]);
   });
