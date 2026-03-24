@@ -18,7 +18,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @signature
  *   dropFirstBy(data, n, ...rules);
  * @example
- *   dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ *   dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaaa', 'aaa']
  * @dataFirst
  * @category Array
  */
@@ -39,7 +39,7 @@ export function dropFirstBy<T>(
  * @signature
  *   dropFirstBy(n, ...rules)(data);
  * @example
- *   pipe(['aa', 'aaaa', 'a', 'aaa'], dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], dropFirstBy(2, x => x.length)); // => ['aaaa', 'aaa']
  * @dataLast
  * @category Array
  */
