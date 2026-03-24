@@ -4,7 +4,7 @@ const DEFAULT_STEP = 1;
 
 type RangeOptions = {
   readonly end: number;
-  readonly step: number;
+  readonly step?: number;
 };
 
 /**
@@ -59,10 +59,12 @@ function rangeImplementation(
   start: number,
   endOrOptions: number | RangeOptions,
 ): number[] {
-  const end =
-    typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
-  const step =
-    typeof endOrOptions === "object" ? endOrOptions.step : DEFAULT_STEP;
+  const { end, step = DEFAULT_STEP } =
+    typeof endOrOptions === "object" ? endOrOptions : { end: endOrOptions };
+
+  if (start + step === start) {
+    throw new RangeError(`range: step of '${step.toString()}' is not allowed.`);
+  }
 
   return Array.from(
     { length: Math.max(0, Math.ceil((end - start) / step)) },
