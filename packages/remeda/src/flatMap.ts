@@ -15,9 +15,9 @@ import { purry } from "./purry";
  * @returns A new array with each element being the result of the callback
  * function and flattened by a depth of 1.
  * @signature
- *    R.flatMap(data, callbackfn)
+ *    flatMap(data, callbackfn)
  * @example
- *    R.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
+ *    flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @dataFirst
  * @lazy
  * @category Array
@@ -40,9 +40,9 @@ export function flatMap<T, U>(
  * @returns A new array with each element being the result of the callback
  * function and flattened by a depth of 1.
  * @signature
- *    R.flatMap(callbackfn)(data)
+ *    flatMap(callbackfn)(data)
  * @example
- *    R.pipe([1, 2, 3], R.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
+ *    pipe([1, 2, 3], flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @dataLast
  * @lazy
  * @category Array

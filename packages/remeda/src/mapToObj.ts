@@ -25,9 +25,9 @@ import { purry } from "./purry";
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    R.mapToObj(array, fn)
+ *    mapToObj(array, fn)
  * @example
- *    R.mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
+ *    mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  * @dataFirst
  * @category Array
  */
@@ -60,11 +60,11 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @param fn - The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries.
  * @returns The new mapped object.
  * @signature
- *    R.mapToObj(fn)(array)
+ *    mapToObj(fn)(array)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 2, 3],
- *      R.mapToObj(x => [String(x), x * 2])
+ *      mapToObj(x => [String(x), x * 2])
  *    ) // => {1: 2, 2: 4, 3: 6}
  * @dataLast
  * @category Array

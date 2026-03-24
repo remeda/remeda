@@ -54,32 +54,32 @@ type DefaultCase<In, Out> = (x: In) => Out;
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
- *   R.conditional(...cases)(data);
+ *   conditional(...cases)(data);
  * @example
  *   const nameOrId = 3 as string | number | boolean;
  *
- *   R.pipe(
+ *   pipe(
  *     nameOrId,
- *     R.conditional(
- *       [R.isString, (name) => `Hello ${name}`],
- *       [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     conditional(
+ *       [isString, (name) => `Hello ${name}`],
+ *       [isNumber, (id) => `Hello ID: ${id}`],
  *     ),
  *   ); //=> 'Hello ID: 3' (typed as `string`), can throw!.
  *
- *   R.pipe(
+ *   pipe(
  *     nameOrId,
- *     R.conditional(
- *       [R.isString, (name) => `Hello ${name}`],
- *       [R.isNumber, (id) => `Hello ID: ${id}`],
- *       R.constant(undefined),
+ *     conditional(
+ *       [isString, (name) => `Hello ${name}`],
+ *       [isNumber, (id) => `Hello ID: ${id}`],
+ *       constant(undefined),
  *     ),
  *   ); //=> 'Hello ID: 3' (typed as `string | undefined`), won't throw.
  *
- *   R.pipe(
+ *   pipe(
  *     nameOrId,
- *     R.conditional(
- *       [R.isString, (name) => `Hello ${name}`],
- *       [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     conditional(
+ *       [isString, (name) => `Hello ${name}`],
+ *       [isNumber, (id) => `Hello ID: ${id}`],
  *       (something) => `Hello something (${JSON.stringify(something)})`,
  *     ),
  *   ); //=> 'Hello ID: 3' (typed as `string`), won't throw.
@@ -412,27 +412,27 @@ export function conditional<
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
- *   R.conditional(data, ...cases);
+ *   conditional(data, ...cases);
  * @example
  *   const nameOrId = 3 as string | number | boolean;
  *
- *   R.conditional(
+ *   conditional(
  *     nameOrId,
- *     [R.isString, (name) => `Hello ${name}`],
- *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     [isString, (name) => `Hello ${name}`],
+ *     [isNumber, (id) => `Hello ID: ${id}`],
  *   ); //=> 'Hello ID: 3' (typed as `string`), can throw!.
  *
- *   R.conditional(
+ *   conditional(
  *     nameOrId,
- *     [R.isString, (name) => `Hello ${name}`],
- *     [R.isNumber, (id) => `Hello ID: ${id}`],
- *     R.constant(undefined),
+ *     [isString, (name) => `Hello ${name}`],
+ *     [isNumber, (id) => `Hello ID: ${id}`],
+ *     constant(undefined),
  *   ); //=> 'Hello ID: 3' (typed as `string | undefined`), won't throw.
  *
- *   R.conditional(
+ *   conditional(
  *     nameOrId,
- *     [R.isString, (name) => `Hello ${name}`],
- *     [R.isNumber, (id) => `Hello ID: ${id}`],
+ *     [isString, (name) => `Hello ${name}`],
+ *     [isNumber, (id) => `Hello ID: ${id}`],
  *     (something) => `Hello something (${JSON.stringify(something)})`,
  *   ); //=> 'Hello ID: 3' (typed as `string`), won't throw.
  * @dataFirst

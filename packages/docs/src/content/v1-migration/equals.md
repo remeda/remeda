@@ -9,20 +9,20 @@ different return type (in some cases) allowing it to narrow the result.
 
 ```ts
 // Was
-R.equals({ a: { b: 123 } }, { a: { b: 456 } });
+equals({ a: { b: 123 } }, { a: { b: 456 } });
 
 // Now
-R.isDeepEqual({ a: { b: 123 } }, { a: { b: 456 } });
+isDeepEqual({ a: { b: 123 } }, { a: { b: 456 } });
 ```
 
 ### Type Predicate
 
 ```ts
 // Was
-const result = R.filter([] as ("cat" | "dog")[], R.equals("cat"));
+const result = filter([] as ("cat" | "dog")[], equals("cat"));
 //    ^? ("cat" | "dog")[]
 
 // Now
-const result = R.filter([] as ("cat" | "dog")[], R.isDeepEqual("cat"));
+const result = filter([] as ("cat" | "dog")[], isDeepEqual("cat"));
 //    ^? "dog"[]
 ```

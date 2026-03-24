@@ -13,11 +13,11 @@ import { purry } from "./purry";
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    R.map(data, callbackfn)
+ *    map(data, callbackfn)
  * @example
- *    R.map([1, 2, 3], R.multiply(2)); // => [2, 4, 6]
- *    R.map([0, 0], R.add(1)); // => [1, 1]
- *    R.map([0, 0], (value, index) => value + index); // => [0, 1]
+ *    map([1, 2, 3], multiply(2)); // => [2, 4, 6]
+ *    map([0, 0], add(1)); // => [1, 1]
+ *    map([0, 0], (value, index) => value + index); // => [0, 1]
  * @dataFirst
  * @lazy
  * @category Array
@@ -36,11 +36,11 @@ export function map<T extends IterableContainer, U>(
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    R.map(callbackfn)(data)
+ *    map(callbackfn)(data)
  * @example
- *    R.pipe([1, 2, 3], R.map(R.multiply(2))); // => [2, 4, 6]
- *    R.pipe([0, 0], R.map(R.add(1))); // => [1, 1]
- *    R.pipe([0, 0], R.map((value, index) => value + index)); // => [0, 1]
+ *    pipe([1, 2, 3], map(multiply(2))); // => [2, 4, 6]
+ *    pipe([0, 0], map(add(1))); // => [1, 1]
+ *    pipe([0, 0], map((value, index) => value + index)); // => [0, 1]
  * @dataLast
  * @lazy
  * @category Array

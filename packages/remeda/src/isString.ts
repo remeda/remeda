@@ -6,10 +6,10 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns True if the passed input is a string, false otherwise.
  * @signature
- *    R.isString(data)
+ *    isString(data)
  * @example
- *    R.isString('string') //=> true
- *    R.isString(1) //=> false
+ *    isString('string') //=> true
+ *    isString(1) //=> false
  * @category Guard
  */
 export function isString<T>(data: T | string): data is NarrowedTo<T, string> {

@@ -246,11 +246,35 @@ describe("skips unsupported 'n' values", () => {
   });
 });
 
-test("returns literal empty string for `n === 0` even when other inputs are not literals", () => {
-  expectTypeOf(
-    truncate("Hello, world!" as string, 0, {
-      omission: "..." as string,
-      separator: "," as string,
-    }),
-  ).toEqualTypeOf<"">();
+describe("primitive string inputs", () => {
+  test("n === 0", () => {
+    expectTypeOf(
+      truncate("Hello, world!" as string, 0),
+    ).toEqualTypeOf<string>();
+  });
+
+  test("n < omission.length", () => {
+    expectTypeOf(
+      truncate("Hello, world!" as string, 2),
+    ).toEqualTypeOf<string>();
+  });
+
+  test("n === omission.length", () => {
+    expectTypeOf(
+      truncate("Hello, world!" as string, 3),
+    ).toEqualTypeOf<string>();
+  });
+
+  test("n is longer than omission", () => {
+    expectTypeOf(
+      truncate("Hello, world!" as string, 8),
+    ).toEqualTypeOf<string>();
+  });
+
+  // @see https://github.com/remeda/remeda/issues/1276
+  test("n is huge (issue #1276)", () => {
+    expectTypeOf(
+      truncate("Hello, world!" as string, 1_000_000),
+    ).toEqualTypeOf<string>();
+  });
 });

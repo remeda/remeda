@@ -1,4 +1,7 @@
-import type { CamelCase } from "type-fest";
+import type {
+  CamelCase,
+  CamelCaseOptions as BaseCamelCaseOptions,
+} from "type-fest";
 import type { OptionalOptionsWithDefaults } from "./internal/types/OptionalOptionsWithDefaults";
 import { words } from "./internal/words";
 
@@ -43,20 +46,20 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions> =
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
- *   R.toCamelCase(data);
- *   R.toCamelCase(data, { preserveConsecutiveUppercase });
+ *   toCamelCase(data);
+ *   toCamelCase(data, { preserveConsecutiveUppercase });
  * @example
- *   R.toCamelCase("hello world"); // "helloWorld"
- *   R.toCamelCase("__HELLO_WORLD__"); // "helloWorld"
- *   R.toCamelCase("HasHTML"); // "hasHTML"
- *   R.toCamelCase("HasHTML", { preserveConsecutiveUppercase: false }); // "hasHtml"
+ *   toCamelCase("hello world"); // "helloWorld"
+ *   toCamelCase("__HELLO_WORLD__"); // "helloWorld"
+ *   toCamelCase("HasHTML"); // "hasHTML"
+ *   toCamelCase("HasHTML", { preserveConsecutiveUppercase: false }); // "hasHtml"
  * @dataFirst
  * @category String
  */
 export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
   data: T,
   options?: Options,
-): CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
+): CamelCase<T, CamelCaseOptionsWithDefaults<Options> & BaseCamelCaseOptions>;
 
 /**
  * Converts text to **camelCase** by splitting it into words, lowercasing the
@@ -80,15 +83,15 @@ export function toCamelCase<T extends string, Options extends CamelCaseOptions>(
  * `preserveConsecutiveUppercase` that can be used to change the way consecutive
  * uppercase characters are handled. Defaults to `true`.
  * @signature
- *   R.toCamelCase()(data);
- *   R.toCamelCase({ preserveConsecutiveUppercase })(data);
+ *   toCamelCase()(data);
+ *   toCamelCase({ preserveConsecutiveUppercase })(data);
  * @example
- *   R.pipe("hello world", R.toCamelCase()); // "helloWorld"
- *   R.pipe("__HELLO_WORLD__", R.toCamelCase()); // "helloWorld"
- *   R.pipe("HasHTML", R.toCamelCase()); // "hasHTML"
- *   R.pipe(
+ *   pipe("hello world", toCamelCase()); // "helloWorld"
+ *   pipe("__HELLO_WORLD__", toCamelCase()); // "helloWorld"
+ *   pipe("HasHTML", toCamelCase()); // "hasHTML"
+ *   pipe(
  *     "HasHTML",
- *     R.toCamelCase({ preserveConsecutiveUppercase: false }),
+ *     toCamelCase({ preserveConsecutiveUppercase: false }),
  *   ); // "hasHtml"
  * @dataLast
  * @category String
@@ -97,7 +100,7 @@ export function toCamelCase<Options extends CamelCaseOptions>(
   options?: Options,
 ): <T extends string>(
   data: T,
-) => CamelCase<T, CamelCaseOptionsWithDefaults<Options>>;
+) => CamelCase<T, CamelCaseOptionsWithDefaults<Options> & BaseCamelCaseOptions>;
 
 export function toCamelCase(
   dataOrOptions: CamelCaseOptions | string,

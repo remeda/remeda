@@ -6,11 +6,11 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns True if the passed input is a boolean, false otherwise.
  * @signature
- *    R.isBoolean(data)
+ *    isBoolean(data)
  * @example
- *    R.isBoolean(true) //=> true
- *    R.isBoolean(false) //=> true
- *    R.isBoolean('somethingElse') //=> false
+ *    isBoolean(true) //=> true
+ *    isBoolean(false) //=> true
+ *    isBoolean('somethingElse') //=> false
  * @category Guard
  */
 export function isBoolean<T>(

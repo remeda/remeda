@@ -12,9 +12,9 @@ type IsEqual<T, Other> = (data: T, other: Other) => boolean;
  * @param other - The values to exclude.
  * @param isEqual - The comparator.
  * @signature
- *    R.differenceWith(data, other, isEqual)
+ *    differenceWith(data, other, isEqual)
  * @example
- *    R.differenceWith(
+ *    differenceWith(
  *      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }],
  *      [2, 5, 3],
  *      ({ a }, b) => a === b,
@@ -36,11 +36,11 @@ export function differenceWith<T, Other>(
  * @param other - The values to exclude.
  * @param isEqual - The comparator.
  * @signature
- *    R.differenceWith(other, isEqual)(data)
+ *    differenceWith(other, isEqual)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
- *      R.differenceWith([2, 3], ({ a }, b) => a === b),
+ *      differenceWith([2, 3], ({ a }, b) => a === b),
  *    ); //=> [{ a: 1 }, { a: 4 }, { a: 5 }, { a: 6 }]
  * @dataLast
  * @lazy

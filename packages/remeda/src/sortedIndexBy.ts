@@ -28,9 +28,9 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * on `item`. When called on `item` the `index` argument is `undefined`.
  * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    R.sortedIndexBy(data, item, valueFunction)
+ *    sortedIndexBy(data, item, valueFunction)
  * @example
- *    R.sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @dataFirst
  * @category Array
  */
@@ -69,9 +69,9 @@ export function sortedIndexBy<T>(
  * each items that is compared against in the array, and once at the beginning
  * on `item`. When called on `item` the `index` argument is `undefined`.
  * @signature
- *    R.sortedIndexBy(data, item, valueFunction)
+ *    sortedIndexBy(data, item, valueFunction)
  * @example
- *    R.sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @dataLast
  * @category Array
  */

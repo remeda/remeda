@@ -14,9 +14,9 @@ import { purry } from "./purry";
  * @param prop - The property name.
  * @param value - The property value.
  * @signature
- *    R.addProp(obj, prop, value)
+ *    addProp(obj, prop, value)
  * @example
- *    R.addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
+ *    addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
  * @dataFirst
  * @category Object
  */
@@ -38,9 +38,9 @@ export function addProp<T, K extends PropertyKey, V>(
  * @param prop - The property name.
  * @param value - The property value.
  * @signature
- *    R.addProp(prop, value)(obj)
+ *    addProp(prop, value)(obj)
  * @example
- *    R.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
+ *    addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
  * @dataLast
  * @category Object
  */

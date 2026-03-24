@@ -19,10 +19,10 @@ type Mean<T extends IterableContainer<number>> =
  *
  * @param data - The array of numbers.
  * @signature
- *   R.mean(data);
+ *   mean(data);
  * @example
- *   R.mean([1, 2, 3]); // => 2
- *   R.mean([]); // => undefined
+ *   mean([1, 2, 3]); // => 2
+ *   mean([]); // => undefined
  * @dataFirst
  * @category Number
  */
@@ -40,10 +40,10 @@ export function mean<T extends IterableContainer<number>>(data: T): Mean<T>;
  * `hasAtLeast` or `isEmpty` to guard against this case.
  *
  * @signature
- *   R.mean()(data);
+ *   mean()(data);
  * @example
- *   R.pipe([1, 2, 3], R.mean()); // => 2
- *   R.pipe([], R.mean()); // => undefined
+ *   pipe([1, 2, 3], mean()); // => 2
+ *   pipe([], mean()); // => undefined
  * @dataLast
  * @category Number
  */

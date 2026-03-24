@@ -9,11 +9,11 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param categorizationFn - The categorization function.
  * @signature
- *   R.countBy(data, categorizationFn)
+ *   countBy(data, categorizationFn)
  * @example
- *    R.countBy(
+ *    countBy(
  *      ["a", "b", "c", "B", "A", "a"],
- *      R.toLowerCase()
+ *      toLowerCase()
  *    ); //=> { a: 3, b: 2, c: 1 }
  * @dataFirst
  * @category Array
@@ -34,11 +34,11 @@ export function countBy<T, K extends PropertyKey>(
  *
  * @param categorizationFn - The categorization function.
  * @signature
- *   R.countBy(categorizationFn)(data)
+ *   countBy(categorizationFn)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      ["a", "b", "c", "B", "A", "a"],
- *      R.countBy(R.toLowerCase()),
+ *      countBy(toLowerCase()),
  *    ); //=> { a: 3, b: 2, c: 1 }
  * @dataLast
  * @category Array

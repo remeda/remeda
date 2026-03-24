@@ -11,9 +11,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
 jobs:
   test-source:
-    name: 📒 Test Source [TypeScript ${{ matrix.typescript-version }}]
+    name: 📒 Test source [TypeScript ${{ matrix.typescript-version }}]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,26 +29,26 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
-      - name: 📘 Install Typescript
+      - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
-      - name: 🎯 Concrete Version
+      - name: 🎯 Concrete version
         run: npx --workspace=remeda tsc --version
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
 
-      - name: 📋 Type tests
+      - name: 📋 Run type tests
         run: npm --workspace=remeda run test:types
 
   build:
@@ -57,19 +61,19 @@ jobs:
       distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       # Generate the cache key so we can reuse it in the next job.
       - name: 🔑 Hash distributable
         id: hash-dist
-        # for the best results this should be kept in sync with the key used by
+        # For the best results this should be kept in sync with the key used by
         # the same job in the `ci-library` workflow, that way we can reuse the
         # cache from committed PRs.
         run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
 
       - name: 🚚 Lookup distributable
         id: dist-lookup
-        uses: actions/cache@v5.0.1
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           lookup-only: true
           path: packages/remeda/dist
@@ -79,13 +83,13 @@ jobs:
 
       - name: ⎔ Setup node
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
       - name: 🏗️ Build
         if: steps.dist-lookup.outputs.cache-hit != 'true'
@@ -93,13 +97,13 @@ jobs:
 
       - name: 🚚 Save distributable
         if: steps.dist-lookup.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5.0.1
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: packages/remeda/dist
           key: ${{ steps.hash-dist.outputs.distCacheKey }}
 
   test-dist:
-    name: 📦 Test Dist [TypeScript ${{ matrix.typescript-version }}]
+    name: 📦 Test dist [TypeScript ${{ matrix.typescript-version }}]
     needs:
       - build
     runs-on: ubuntu-latest
@@ -113,21 +117,21 @@ jobs:
           - beta # New features ready to be tested by the general public.
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
       - name: 📥 Download dependencies
-        uses: bahmutov/npm-install@v1.11.2
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
       - name: 📘 Install TypeScript
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🚚 Restore distributable
-        uses: actions/cache/restore@v5.0.1
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: packages/remeda/dist
           fail-on-cache-miss: true

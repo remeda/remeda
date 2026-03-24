@@ -6,10 +6,10 @@ import { purry } from "./purry";
  * @param array - The array to split.
  * @param index - The index to split at.
  * @signature
- *    R.splitAt(array, index)
+ *    splitAt(array, index)
  * @example
- *    R.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
- *    R.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
+ *    splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
+ *    splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
  * @dataFirst
  * @category Array
  */
@@ -20,10 +20,10 @@ export function splitAt<T>(array: readonly T[], index: number): [T[], T[]];
  *
  * @param index - The index to split at.
  * @signature
- *    R.splitAt(index)(array)
+ *    splitAt(index)(array)
  * @example
- *    R.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
- *    R.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
+ *    splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
+ *    splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
  * @dataLast
  * @category Array
  */

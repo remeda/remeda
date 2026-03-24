@@ -9,9 +9,9 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    R.dropWhile(data, predicate)
+ *    dropWhile(data, predicate)
  * @example
- *    R.dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
+ *    dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
  * @category Array
  */
@@ -27,9 +27,9 @@ export function dropWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    R.dropWhile(predicate)(data)
+ *    dropWhile(predicate)(data)
  * @example
- *    R.pipe([1, 2, 10, 3, 4], R.dropWhile(x => x < 10))  // => [10, 3, 4]
+ *    pipe([1, 2, 10, 3, 4], dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
  * @category Array
  */

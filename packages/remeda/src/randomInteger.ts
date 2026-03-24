@@ -39,10 +39,10 @@ type RandomInteger<From extends number, To extends number> =
  * @param to - The maximum value.
  * @returns The random integer.
  * @signature
- *   R.randomInteger(from, to)
+ *   randomInteger(from, to)
  * @example
- *   R.randomInteger(1, 10) // => 5
- *   R.randomInteger(1.5, 2.6) // => 2
+ *   randomInteger(1, 10) // => 5
+ *   randomInteger(1.5, 2.6) // => 2
  * @dataFirst
  * @category Number
  */

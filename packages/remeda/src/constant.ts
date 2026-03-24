@@ -15,12 +15,12 @@
  * The value is not copied/cloned on every invocation so care should be taken
  * with mutable objects (like arrays, objects, Maps, etc...).
  * @signature
- *   R.constant(value);
+ *   constant(value);
  * @example
- *   R.map([1, 2, 3], R.constant('a')); // => ['a', 'a', 'a']
- *   R.map(
+ *   map([1, 2, 3], constant('a')); // => ['a', 'a', 'a']
+ *   map(
  *     [1, 2, 3],
- *     isDemoMode ? R.add(1) : R.constant(0),
+ *     isDemoMode ? add(1) : constant(0),
  *   ); // => [2, 3, 4] or [0, 0, 0]
  * @dataLast
  * @category Function

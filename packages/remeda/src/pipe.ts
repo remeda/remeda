@@ -48,55 +48,55 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * @param functions - A sequence of functions that take one argument and
  * return a value.
  * @signature
- *   R.pipe(data, ...functions);
+ *   pipe(data, ...functions);
  * @example
- *    R.pipe([1, 2, 3], R.map(R.multiply(3))); //=> [3, 6, 9]
+ *    pipe([1, 2, 3], map(multiply(3))); //=> [3, 6, 9]
  *
  *    // = Early termination with lazy evaluation =
- *    R.pipe(
+ *    pipe(
  *      hugeArray,
- *      R.map(expensiveComputation),
- *      R.filter(complexPredicate),
+ *      map(expensiveComputation),
+ *      filter(complexPredicate),
  *      // Only processes items until 2 results are found, then stops.
  *      // Most of hugeArray never gets processed.
- *      R.take(2),
+ *      take(2),
  *    );
  *
  *    // = Custom logic within a pipe =
- *    R.pipe(
+ *    pipe(
  *      input,
- *      R.toLowerCase(),
+ *      toLowerCase(),
  *      normalize,
  *      ($) => validate($, CONFIG),
- *      R.split(","),
- *      R.unique(),
+ *      split(","),
+ *      unique(),
  *    );
  *
  *    // = Migrating nested transformations to pipes =
  *    // Nested
- *    const result = R.prop(
- *      R.mapValues(R.groupByProp(users, "department"), R.length()),
+ *    const result = prop(
+ *      mapValues(groupByProp(users, "department"), length()),
  *      "engineering",
  *    );
  *
  *    // Piped
- *    const result = R.pipe(
+ *    const result = pipe(
  *      users,
- *      R.groupByProp("department"),
- *      R.mapValues(R.length()),
- *      R.prop("engineering"),
+ *      groupByProp("department"),
+ *      mapValues(length()),
+ *      prop("engineering"),
  *    );
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
  *    // of `data`.
- *    R.forEach([1, 2, 3, 4], (_item, _index, data) => {
+ *    forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
  *    // index
- *    R.pipe([1, 2, 3, 4], R.forEach((_item, _index, data) => {
+ *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
  * @dataFirst

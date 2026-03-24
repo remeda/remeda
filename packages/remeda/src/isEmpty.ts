@@ -16,17 +16,17 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  *
  * @param data - The variable to check.
  * @signature
- *    R.isEmpty(data)
+ *    isEmpty(data)
  * @example
- *    R.isEmpty(''); //=> true
- *    R.isEmpty([]); //=> true
- *    R.isEmpty({}); //=> true
+ *    isEmpty(''); //=> true
+ *    isEmpty([]); //=> true
+ *    isEmpty({}); //=> true
  *
- *    R.isEmpty('test'); //=> false
- *    R.isEmpty([1, 2, 3]); //=> false
- *    R.isEmpty({ a: "hello" }); //=> false
+ *    isEmpty('test'); //=> false
+ *    isEmpty([1, 2, 3]); //=> false
+ *    isEmpty({ a: "hello" }); //=> false
  *
- *    R.isEmpty(undefined); // Deprecated: use `isEmptyish`
+ *    isEmpty(undefined); // Deprecated: use `isEmptyish`
  * @category Guard
  */
 export function isEmpty(data: IterableContainer): data is [];

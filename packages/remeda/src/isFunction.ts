@@ -7,10 +7,10 @@ import type { StrictFunction } from "./internal/types/StrictFunction";
  * @param data - The variable to check.
  * @returns True if the passed input is a Function, false otherwise.
  * @signature
- *    R.isFunction(data)
+ *    isFunction(data)
  * @example
- *    R.isFunction(() => {}) //=> true
- *    R.isFunction('somethingElse') //=> false
+ *    isFunction(() => {}) //=> true
+ *    isFunction('somethingElse') //=> false
  * @category Guard
  */
 export const isFunction = <T>(

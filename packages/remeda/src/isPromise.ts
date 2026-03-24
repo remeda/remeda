@@ -6,11 +6,11 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns True if the passed input is a Promise, false otherwise.
  * @signature
- *    R.isPromise(data)
+ *    isPromise(data)
  * @example
- *    R.isPromise(Promise.resolve(5)) //=> true
- *    R.isPromise(Promise.reject(5)) //=> true
- *    R.isPromise('somethingElse') //=> false
+ *    isPromise(Promise.resolve(5)) //=> true
+ *    isPromise(Promise.reject(5)) //=> true
+ *    isPromise('somethingElse') //=> false
  * @category Guard
  */
 export function isPromise<T>(

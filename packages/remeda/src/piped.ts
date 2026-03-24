@@ -14,11 +14,11 @@ import { pipe } from "./pipe";
  * then use `pipe` in its implementation.
  *
  * @signature
- *    R.piped(...functions)(data);
+ *    piped(...functions)(data);
  * @example
- *    R.map(
+ *    map(
  *      [{ a: 1 }, { a: 2 }, { a: 3 }],
- *      R.piped(R.prop('a'), R.add(1)),
+ *      piped(prop('a'), add(1)),
  *    ); //=> [2, 3, 4]
  * @dataLast
  * @category Function

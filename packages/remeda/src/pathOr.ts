@@ -79,10 +79,10 @@ type PathValue3<
  * @param object - The target object.
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature R.pathOr(object, array, defaultValue)
+ * @signature pathOr(object, array, defaultValue)
  * @example
- *    R.pathOr({x: 10}, ['y'], 2) // 2
- *    R.pathOr({y: 10}, ['y'], 2) // 10
+ *    pathOr({x: 10}, ['y'], 2) // 2
+ *    pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
  * @deprecated Use `defaultTo(prop(object, ...path), defaultValue)` instead.
@@ -129,10 +129,10 @@ export function pathOr<
  *
  * @param path - The path of the property to get.
  * @param defaultValue - The default value.
- * @signature R.pathOr(array, defaultValue)(object)
+ * @signature pathOr(array, defaultValue)(object)
  * @example
- *    R.pipe({x: 10}, R.pathOr(['y'], 2)) // 2
- *    R.pipe({y: 10}, R.pathOr(['y'], 2)) // 10
+ *    pipe({x: 10}, pathOr(['y'], 2)) // 2
+ *    pipe({y: 10}, pathOr(['y'], 2)) // 10
  * @dataLast
  * @category Object
  * @deprecated Use `($) => defaultTo(prop($, ...path), defaultValue)` instead,

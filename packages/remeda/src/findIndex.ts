@@ -15,9 +15,9 @@ import { purry } from "./purry";
  * @returns The index of the first element in the array that passes the test.
  * Otherwise, -1.
  * @signature
- *    R.findIndex(data, predicate)
+ *    findIndex(data, predicate)
  * @example
- *    R.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
+ *    findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  * @dataFirst
  * @category Array
  */
@@ -40,11 +40,11 @@ export function findIndex<T>(
  * @returns The index of the first element in the array that passes the test.
  * Otherwise, -1.
  * @signature
- *    R.findIndex(predicate)(data)
+ *    findIndex(predicate)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      R.findIndex(n => n % 2 === 0)
+ *      findIndex(n => n % 2 === 0)
  *    ); // => 2
  * @dataLast
  * @category Array

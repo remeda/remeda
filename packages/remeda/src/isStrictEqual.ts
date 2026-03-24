@@ -22,11 +22,11 @@ import { purry } from "./purry";
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    R.isStrictEqual(data, other)
+ *    isStrictEqual(data, other)
  * @example
- *    R.isStrictEqual(1, 1) //=> true
- *    R.isStrictEqual(1, '1') //=> false
- *    R.isStrictEqual([1, 2, 3], [1, 2, 3]) //=> false
+ *    isStrictEqual(1, 1) //=> true
+ *    isStrictEqual(1, '1') //=> false
+ *    isStrictEqual([1, 2, 3], [1, 2, 3]) //=> false
  * @dataFirst
  * @category Guard
  */
@@ -57,11 +57,11 @@ export function isStrictEqual<T>(data: T, other: T): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    R.isStrictEqual(other)(data)
+ *    isStrictEqual(other)(data)
  * @example
- *    R.pipe(1, R.isStrictEqual(1)); //=> true
- *    R.pipe(1, R.isStrictEqual('1')); //=> false
- *    R.pipe([1, 2, 3], R.isStrictEqual([1, 2, 3])); //=> false
+ *    pipe(1, isStrictEqual(1)); //=> true
+ *    pipe(1, isStrictEqual('1')); //=> false
+ *    pipe([1, 2, 3], isStrictEqual([1, 2, 3])); //=> false
  * @dataLast
  * @category Guard
  */

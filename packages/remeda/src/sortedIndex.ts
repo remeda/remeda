@@ -14,9 +14,9 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * @param item - The item to insert.
  * @returns Insertion index (In the range 0..array.length).
  * @signature
- *    R.sortedIndex(data, item)
+ *    sortedIndex(data, item)
  * @example
- *    R.sortedIndex(['a','a','b','c','c'], 'c') // => 3
+ *    sortedIndex(['a','a','b','c','c'], 'c') // => 3
  * @dataFirst
  * @category Array
  * @see sortedIndexBy, sortedIndexWith, sortedLastIndex, sortedLastIndexBy
@@ -35,9 +35,9 @@ export function sortedIndex<T>(data: readonly T[], item: T): number;
  * @param item - The item to insert.
  * @returns Insertion index (In the range 0..array.length).
  * @signature
- *    R.sortedIndex(item)(data)
+ *    sortedIndex(item)(data)
  * @example
- *    R.pipe(['a','a','b','c','c'], R.sortedIndex('c')) // => 3
+ *    pipe(['a','a','b','c','c'], sortedIndex('c')) // => 3
  * @dataLast
  * @category Array
  * @see sortedIndexBy, sortedIndexWith, sortedLastIndex, sortedLastIndexBy

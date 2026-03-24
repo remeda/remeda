@@ -10,10 +10,10 @@ import { SKIP_ITEM, lazyEmptyEvaluator } from "./internal/utilityEvaluators";
  * @param data - The input items.
  * @param other - The items to compare against.
  * @signature
- *    R.intersection(data, other)
+ *    intersection(data, other)
  * @example
- *    R.intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
- *    R.intersection([1, 1, 2, 2], [1]); // => [1]
+ *    intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
+ *    intersection([1, 1, 2, 2], [1]); // => [1]
  * @dataFirst
  * @lazy
  * @category Array
@@ -30,11 +30,11 @@ export function intersection<T, S>(
  *
  * @param other - The items to compare against.
  * @signature
- *    R.intersection(other)(data)
+ *    intersection(other)(data)
  * @example
- *    R.pipe([1, 2, 3], R.intersection([2, 3, 5])); // => [2, 3]
- *    R.pipe([1, 1, 2, 2], R.intersection([1])); // => [1]
- * @dataFirst
+ *    pipe([1, 2, 3], intersection([2, 3, 5])); // => [2, 3]
+ *    pipe([1, 1, 2, 2], intersection([1])); // => [1]
+ * @dataLast
  * @lazy
  * @category Array
  */

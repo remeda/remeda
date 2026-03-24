@@ -38,9 +38,9 @@ type NonRefinedFilteredArray<
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *    R.filter(data, predicate)
+ *    filter(data, predicate)
  * @example
- *    R.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
+ *    filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @dataFirst
  * @lazy
  * @category Array
@@ -71,9 +71,9 @@ export function filter<
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *    R.filter(predicate)(data)
+ *    filter(predicate)(data)
  * @example
- *    R.pipe([1, 2, 3], R.filter(x => x % 2 === 1)) // => [1, 3]
+ *    pipe([1, 2, 3], filter(x => x % 2 === 1)) // => [1, 3]
  * @dataLast
  * @lazy
  * @category Array

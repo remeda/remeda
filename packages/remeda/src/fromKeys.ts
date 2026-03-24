@@ -34,10 +34,10 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   R.fromKeys(data, mapper);
+ *   fromKeys(data, mapper);
  * @example
- *   R.fromKeys(["cat", "dog"], R.length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   R.fromKeys([1, 2], R.add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   fromKeys(["cat", "dog"], length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   fromKeys([1, 2], add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataFirst
  * @category Object
  */
@@ -61,10 +61,10 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   R.fromKeys(mapper)(data);
+ *   fromKeys(mapper)(data);
  * @example
- *   R.pipe(["cat", "dog"], R.fromKeys(R.length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   R.pipe([1, 2], R.fromKeys(R.add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   pipe(["cat", "dog"], fromKeys(length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   pipe([1, 2], fromKeys(add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataLast
  * @category Object
  */

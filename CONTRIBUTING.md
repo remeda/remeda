@@ -213,6 +213,35 @@ test("doesn't accept non-literal depths", () => {
 
 </details>
 
+### Writing property tests
+
+Property tests live in `fileName.test-prop.ts`. These tests verify invariants using [fast-check](https://fast-check.dev/) for property-based testing. New functions should include property tests. For existing functions, only add to an existing `.test-prop.ts` file—don't create one for a small change.
+
+Use property tests for functions with clear mathematical properties:
+
+- **Idempotence**: `sort(sort(arr))` equals `sort(arr)`
+- **Involutions**: `reverse(reverse(arr))` equals `arr`
+- **Round-trips**: `flat(chunk(arr, n))` equals `arr`
+- **Preservation**: All input elements appear in output
+
+<details>
+<summary>Example:</summary>
+
+```ts
+import { fc, test } from "@fast-check/vitest";
+import { expect } from "vitest";
+import { sort } from "./sort";
+
+test.prop([fc.array(fc.integer())])("sorting is idempotent", (data) => {
+  const cmp = (a: number, b: number) => a - b;
+  expect(sort(sort(data, cmp), cmp)).toStrictEqual(sort(data, cmp));
+});
+```
+
+</details>
+
+Run with `npm run test:prop` or `npm run test:prop -- --watch`.
+
 ### Design philosophy
 
 **No type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience.

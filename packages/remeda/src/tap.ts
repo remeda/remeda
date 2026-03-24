@@ -10,9 +10,9 @@ import { purry } from "./purry";
  * @param value - The value to pass into the function.
  * @param fn - The function to call.
  * @signature
- *    R.tap(value, fn)
+ *    tap(value, fn)
  * @example
- *    R.tap("foo", console.log) // => "foo"
+ *    tap("foo", console.log) // => "foo"
  * @dataFirst
  * @category Other
  */
@@ -27,13 +27,13 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *
  * @param fn - The function to call.
  * @signature
- *    R.tap(fn)(value)
+ *    tap(fn)(value)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [-5, -1, 2, 3],
- *      R.filter(n => n > 0),
- *      R.tap(console.log), // prints [2, 3]
- *      R.map(n => n * 2)
+ *      filter(n => n > 0),
+ *      tap(console.log), // prints [2, 3]
+ *      map(n => n * 2)
  *    ) // => [4, 6]
  * @dataLast
  * @category Other

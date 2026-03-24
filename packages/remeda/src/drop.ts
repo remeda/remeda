@@ -13,17 +13,11 @@ type Drop<T extends IterableContainer, N extends number> =
     ? // Negative numbers result in nothing being dropped, we return a shallow
       // clone of the array.
       Writable<T>
-    : IsInteger<N> extends false
-      ? // We can't compute accurate types for non-integer numbers so we
-        // fallback to the "legacy" typing where we convert our output to a
-        // simple array. This is also the case when N is not a literal value
-        // (e.g. it is `number`).
-        // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
-        T[number][]
-      : ClampedIntegerSubtract<
-            N,
-            TupleParts<T>["required"]["length"]
-          > extends infer RemainingPrefix extends number
+    : IsInteger<N> extends true
+      ? ClampedIntegerSubtract<
+          N,
+          TupleParts<T>["required"]["length"]
+        > extends infer RemainingPrefix extends number
         ? RemainingPrefix extends 0
           ? // The drop will occur within the required part of the tuple, we
             // simply remove those elements from it and reconstruct the rest of
@@ -78,7 +72,13 @@ type Drop<T extends IterableContainer, N extends number> =
                       TupleParts<T>["suffix"]
                     >
             : never
-        : never;
+        : never
+      : // We can't compute accurate types for non-integer numbers so we
+        // fallback to the "legacy" typing where we convert our output to a
+        // simple array. This is also the case when N is not a literal value
+        // (e.g. it is `number`).
+        // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
+        T[number][];
 
 type DropFixedTuple<
   T,
@@ -101,9 +101,9 @@ type DropFixedTuple<
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
- *    R.drop(array, n)
+ *    drop(array, n)
  * @example
- *    R.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
+ *    drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @dataFirst
  * @lazy
  * @category Array
@@ -118,9 +118,9 @@ export function drop<T extends IterableContainer, N extends number>(
  *
  * @param n - The number of elements to skip.
  * @signature
- *    R.drop(n)(array)
+ *    drop(n)(array)
  * @example
- *    R.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
+ *    drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @dataLast
  * @lazy
  * @category Array

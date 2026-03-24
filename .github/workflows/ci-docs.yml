@@ -1,4 +1,4 @@
-name: 🌐 CI - Docs
+name: 📖 CI - Docs
 
 on:
   push:
@@ -10,23 +10,27 @@ permissions:
   contents: read
   pull-requests: write # To allow inline comments for warnings/errors
 
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
 jobs:
   typecheck:
     name: 👷 Typecheck
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
-      - name: 🏗️ Build Library
+      - name: 🏗️ Build library
         run: npm --workspace=remeda run build
 
       - name: 🚨 Type check
@@ -39,20 +43,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
-      - name: 🏗️ Build Library
+      - name: 🏗️ Build library
         run: npm --workspace=remeda run build
 
-      - name: 🔄 Sync Docs
+      - name: 🔄 Sync documentation
         run: npm --workspace=@remeda/docs run sync
 
       - name: 🧹 Lint
@@ -65,15 +69,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1.11.2
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
       - name: 💄 Format
         run: npm --workspace=@remeda/docs run format

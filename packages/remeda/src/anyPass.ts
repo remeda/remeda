@@ -6,13 +6,13 @@ import { purry } from "./purry";
  * @param data - The input data for predicates.
  * @param fns - The list of predicates.
  * @signature
- *    R.anyPass(data, fns)
+ *    anyPass(data, fns)
  * @example
  *    const isDivisibleBy3 = (x: number) => x % 3 === 0
  *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
- *    R.anyPass(8, fns) // => true
- *    R.anyPass(11, fns) // => false
+ *    anyPass(8, fns) // => true
+ *    anyPass(11, fns) // => false
  * @dataFirst
  * @category Array
  */
@@ -26,13 +26,13 @@ export function anyPass<T>(
  *
  * @param fns - The list of predicates.
  * @signature
- *    R.anyPass(fns)(data)
+ *    anyPass(fns)(data)
  * @example
  *    const isDivisibleBy3 = (x: number) => x % 3 === 0
  *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
- *    R.anyPass(fns)(8) // => true
- *    R.anyPass(fns)(11) // => false
+ *    anyPass(fns)(8) // => true
+ *    anyPass(fns)(11) // => false
  * @dataLast
  * @category Array
  */

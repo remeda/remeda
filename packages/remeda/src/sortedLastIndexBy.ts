@@ -28,9 +28,9 @@ import { binarySearchCutoffIndex } from "./internal/binarySearchCutoffIndex";
  * on `item`. When called on `item` the `index` argument is `undefined`.
  * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    R.sortedLastIndexBy(data, item, valueFunction)
+ *    sortedLastIndexBy(data, item, valueFunction)
  * @example
- *    R.sortedLastIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *    sortedLastIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @dataFirst
  * @category Array
  */
@@ -70,9 +70,9 @@ export function sortedLastIndexBy<T>(
  * on `item`. When called on `item` the `index` argument is `undefined`.
  * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    R.sortedLastIndexBy(item, valueFunction)(data)
+ *    sortedLastIndexBy(item, valueFunction)(data)
  * @example
- *    R.pipe([{age:20},{age:22}],sortedLastIndexBy({age:21},prop('age'))) // => 1
+ *    pipe([{age:20},{age:22}],sortedLastIndexBy({age:21},prop('age'))) // => 1
  * @dataLast
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndex

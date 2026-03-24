@@ -12,9 +12,9 @@ import { purry } from "./purry";
  * @param data - The object who'se entries would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    R.forEachObj(object, fn)
+ *    forEachObj(object, fn)
  * @example
- *    R.forEachObj({a: 1}, (val, key, obj) => {
+ *    forEachObj({a: 1}, (val, key, obj) => {
  *      console.log(`${key}: ${val}`)
  *    }) // "a: 1"
  * @dataFirst
@@ -39,11 +39,11 @@ export function forEachObj<T extends object>(
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
- *    R.forEachObj(fn)(object)
+ *    forEachObj(fn)(object)
  * @example
- *    R.pipe(
+ *    pipe(
  *      {a: 1},
- *      R.forEachObj((val, key) => console.log(`${key}: ${val}`))
+ *      forEachObj((val, key) => console.log(`${key}: ${val}`))
  *    ) // "a: 1"
  * @dataLast
  * @category Object

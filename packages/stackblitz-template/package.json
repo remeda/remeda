@@ -11,8 +11,8 @@
     "remeda": "*"
   },
   "devDependencies": {
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.5.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.0"
   }
 }

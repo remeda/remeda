@@ -23,9 +23,9 @@ import { purry } from "./purry";
  * @returns The first element in the array that satisfies the provided testing
  * function. Otherwise, `undefined` is returned.
  * @signature
- *    R.find(data, predicate)
+ *    find(data, predicate)
  * @example
- *    R.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
+ *    find([1, 3, 4, 6], n => n % 2 === 0) // => 4
  * @dataFirst
  * @lazy
  * @category Array
@@ -58,11 +58,11 @@ export function find<T>(
  * @returns The first element in the array that satisfies the provided testing
  * function. Otherwise, `undefined` is returned.
  * @signature
- *    R.find(predicate)(data)
+ *    find(predicate)(data)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      R.find(n => n % 2 === 0)
+ *      find(n => n % 2 === 0)
  *    ) // => 4
  * @dataLast
  * @lazy

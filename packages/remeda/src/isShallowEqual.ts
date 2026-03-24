@@ -27,12 +27,12 @@ import { purry } from "./purry";
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    R.isShallowEqual(data, other)
+ *    isShallowEqual(data, other)
  * @example
- *    R.isShallowEqual(1, 1) //=> true
- *    R.isShallowEqual(1, '1') //=> false
- *    R.isShallowEqual([1, 2, 3], [1, 2, 3]) //=> true
- *    R.isShallowEqual([[1], [2], [3]], [[1], [2], [3]]) //=> false
+ *    isShallowEqual(1, 1) //=> true
+ *    isShallowEqual(1, '1') //=> false
+ *    isShallowEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *    isShallowEqual([[1], [2], [3]], [[1], [2], [3]]) //=> false
  * @dataFirst
  * @category Guard
  */
@@ -68,12 +68,12 @@ export function isShallowEqual<T>(data: T, other: T): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    R.isShallowEqual(other)(data)
+ *    isShallowEqual(other)(data)
  * @example
- *    R.pipe(1, R.isShallowEqual(1)) //=> true
- *    R.pipe(1, R.isShallowEqual('1')) //=> false
- *    R.pipe([1, 2, 3], R.isShallowEqual([1, 2, 3])) //=> true
- *    R.pipe([[1], [2], [3]], R.isShallowEqual([[1], [2], [3]])) //=> false
+ *    pipe(1, isShallowEqual(1)) //=> true
+ *    pipe(1, isShallowEqual('1')) //=> false
+ *    pipe([1, 2, 3], isShallowEqual([1, 2, 3])) //=> true
+ *    pipe([[1], [2], [3]], isShallowEqual([[1], [2], [3]])) //=> false
  * @dataFirst
  * @category Guard
  */

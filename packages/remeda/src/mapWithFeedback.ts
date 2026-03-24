@@ -15,9 +15,9 @@ import type { Mapped } from "./internal/types/Mapped";
  * @returns An array of successively computed values from the left side of the
  * array.
  * @signature
- *    R.mapWithFeedback(data, callbackfn, initialValue);
+ *    mapWithFeedback(data, callbackfn, initialValue);
  * @example
- *    R.mapWithFeedback(
+ *    mapWithFeedback(
  *      [1, 2, 3, 4, 5],
  *      (prev, x) => prev + x,
  *      100,
@@ -48,11 +48,11 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @returns An array of successively computed values from the left side of the
  * array.
  * @signature
- *    R.mapWithFeedback(callbackfn, initialValue)(data);
+ *    mapWithFeedback(callbackfn, initialValue)(data);
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 2, 3, 4, 5],
- *      R.mapWithFeedback((prev, x) => prev + x, 100),
+ *      mapWithFeedback((prev, x) => prev + x, 100),
  *    ); // => [101, 103, 106, 110, 115]
  * @dataLast
  * @lazy

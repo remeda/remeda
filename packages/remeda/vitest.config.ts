@@ -6,6 +6,7 @@ export default defineConfig({
       include: ["src/**"],
       exclude: [
         "src/**/*.test-d.ts",
+        "src/**/*.test-prop.ts",
         "src/index.ts",
         "src/internal/types/**/*.ts",
       ],
@@ -27,6 +28,13 @@ export default defineConfig({
             only: true,
             ignoreSourceErrors: true,
           },
+        },
+      },
+      {
+        test: {
+          name: "prop",
+          include: ["src/**/*.test-prop.ts"],
+          isolate: false,
         },
       },
     ],

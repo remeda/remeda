@@ -10,19 +10,19 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns The input type, narrowed to only plain objects.
  * @signature
- *    R.isPlainObject(data)
+ *    isPlainObject(data)
  * @example
  *    // true
- *    R.isPlainObject({}) //=> true
- *    R.isPlainObject({ a: 123 }) //=> true
+ *    isPlainObject({}) //=> true
+ *    isPlainObject({ a: 123 }) //=> true
  *
  *    // false
- *    R.isPlainObject([]) //=> false
- *    R.isPlainObject(Promise.resolve("something")) //=> false
- *    R.isPlainObject(new Date()) //=> false
- *    R.isPlainObject(new Error("error")) //=> false
- *    R.isPlainObject('somethingElse') //=> false
- *    R.isPlainObject(null) //=> false
+ *    isPlainObject([]) //=> false
+ *    isPlainObject(Promise.resolve("something")) //=> false
+ *    isPlainObject(new Date()) //=> false
+ *    isPlainObject(new Error("error")) //=> false
+ *    isPlainObject('somethingElse') //=> false
+ *    isPlainObject(null) //=> false
  * @category Guard
  */
 export function isPlainObject<T>(

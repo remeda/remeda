@@ -15,9 +15,9 @@ import { purry } from "./purry";
  * @returns The index of the last (highest-index) element in the array that
  * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    R.findLastIndex(data, predicate)
+ *    findLastIndex(data, predicate)
  * @example
- *    R.findLastIndex([1, 3, 4, 6], n => n % 2 === 1) // => 1
+ *    findLastIndex([1, 3, 4, 6], n => n % 2 === 1) // => 1
  * @dataFirst
  * @category Array
  */
@@ -40,11 +40,11 @@ export function findLastIndex<T>(
  * @returns The index of the last (highest-index) element in the array that
  * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    R.findLastIndex(fn)(items)
+ *    findLastIndex(fn)(items)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      R.findLastIndex(n => n % 2 === 1)
+ *      findLastIndex(n => n % 2 === 1)
  *    ) // => 1
  * @dataLast
  * @category Array

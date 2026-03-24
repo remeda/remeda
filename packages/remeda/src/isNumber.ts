@@ -7,11 +7,11 @@ import type { NarrowedTo } from "./internal/types/NarrowedTo";
  * @param data - The variable to check.
  * @returns True if the passed input is a number, false otherwise.
  * @signature
- *    R.isNumber(data)
+ *    isNumber(data)
  * @example
- *    R.isNumber(1); // => true
- *    R.isNumber(1n); // => false
- *    R.isNumber('notANumber'); // => false
+ *    isNumber(1); // => true
+ *    isNumber(1n); // => false
+ *    isNumber('notANumber'); // => false
  * @category Guard
  */
 export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {

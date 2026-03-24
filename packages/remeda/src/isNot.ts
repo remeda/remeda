@@ -4,10 +4,10 @@
  * @param predicate - The guard function to negate.
  * @returns Function A guard function.
  * @signature
- *    R.isNot(R.isTruthy)(data)
+ *    isNot(isTruthy)(data)
  * @example
- *    R.isNot(R.isTruthy)(false) //=> true
- *    R.isNot(R.isTruthy)(true) //=> false
+ *    isNot(isTruthy)(false) //=> true
+ *    isNot(isTruthy)(true) //=> false
  * @dataLast
  * @category Guard
  */

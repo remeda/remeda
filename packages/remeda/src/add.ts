@@ -6,10 +6,10 @@ import { purry } from "./purry";
  * @param value - The number.
  * @param addend - The number to add to the value.
  * @signature
- *    R.add(value, addend);
+ *    add(value, addend);
  * @example
- *    R.add(10, 5) // => 15
- *    R.add(10, -5) // => 5
+ *    add(10, 5) // => 15
+ *    add(10, -5) // => 5
  * @dataFirst
  * @category Number
  */
@@ -21,11 +21,11 @@ export function add(value: number, addend: number): number;
  *
  * @param addend - The number to add to the value.
  * @signature
- *    R.add(addend)(value);
+ *    add(addend)(value);
  * @example
- *    R.add(5)(10) // => 15
- *    R.add(-5)(10) // => 5
- *    R.map([1, 2, 3, 4], R.add(1)) // => [2, 3, 4, 5]
+ *    add(5)(10) // => 15
+ *    add(-5)(10) // => 5
+ *    map([1, 2, 3, 4], add(1)) // => [2, 3, 4, 5]
  * @dataLast
  * @category Number
  */

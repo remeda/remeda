@@ -42,9 +42,9 @@ type TimesArray<
  * `n`.
  * @returns An array containing the return values of all calls to `fn`.
  * @signature
- *    R.times(count, fn)
+ *    times(count, fn)
  * @example
- *    R.times(5, R.identity()); //=> [0, 1, 2, 3, 4]
+ *    times(5, identity()); //=> [0, 1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */
@@ -64,9 +64,9 @@ export function times<T, N extends number>(
  * `n`.
  * @returns An array containing the return values of all calls to `fn`.
  * @signature
- *    R.times(fn)(count)
+ *    times(fn)(count)
  * @example
- *    R.times(R.identity())(5); //=> [0, 1, 2, 3, 4]
+ *    times(identity())(5); //=> [0, 1, 2, 3, 4]
  * @dataLast
  * @category Array
  */

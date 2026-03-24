@@ -5,11 +5,11 @@ import { purry } from "./purry";
  *
  * @param fn - Predicate function.
  * @signature
- *   R.meanBy(fn)(array)
+ *   meanBy(fn)(array)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
- *      R.meanBy(x => x.a)
+ *      meanBy(x => x.a)
  *    ) // 3
  * @dataLast
  * @category Array
@@ -25,9 +25,9 @@ export function meanBy<T>(
  * @param items - The array.
  * @param fn - Predicate function.
  * @signature
- *   R.meanBy(array, fn)
+ *   meanBy(array, fn)
  * @example
- *    R.meanBy(
+ *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 3

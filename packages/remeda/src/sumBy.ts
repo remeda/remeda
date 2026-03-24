@@ -23,16 +23,16 @@ type SumBy<
  *
  * @param callbackfn - Predicate function.
  * @signature
- *   R.sumBy(fn)(array)
+ *   sumBy(fn)(array)
  * @example
- *    R.pipe(
+ *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
- *      R.sumBy(x => x.a)
+ *      sumBy(x => x.a)
  *    ) // 9
  *
- *    R.pipe(
+ *    pipe(
  *      [{a: 5n}, {a: 1n}, {a: 3n}],
- *      R.sumBy(x => x.a)
+ *      sumBy(x => x.a)
  *    ) // 9n
  * @dataLast
  * @category Array
@@ -58,13 +58,13 @@ export function sumBy<T extends IterableContainer>(
  * @param data - The array.
  * @param callbackfn - Predicate function.
  * @signature
- *   R.sumBy(array, fn)
+ *   sumBy(array, fn)
  * @example
- *    R.sumBy(
+ *    sumBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 9
- *    R.sumBy(
+ *    sumBy(
  *      [{a: 5n}, {a: 1n}, {a: 3n}],
  *      x => x.a
  *    ) // 9n

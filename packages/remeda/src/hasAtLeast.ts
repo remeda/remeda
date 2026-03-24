@@ -15,12 +15,12 @@ import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
  * is a literal value, the output is narrowed to ensure the first items are
  * guaranteed.
  * @signature
- *   R.hasAtLeast(data, minimum)
+ *   hasAtLeast(data, minimum)
  * @example
- *   R.hasAtLeast([], 4); // => false
+ *   hasAtLeast([], 4); // => false
  *
  *   const data: number[] = [1,2,3,4];
- *   R.hasAtLeast(data, 1); // => true
+ *   hasAtLeast(data, 1); // => true
  *   data[0]; // 1, with type `number`
  * @dataFirst
  * @category Array
@@ -42,15 +42,15 @@ export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
  * is a literal value, the output is narrowed to ensure the first items are
  * guaranteed.
  * @signature
- *   R.hasAtLeast(minimum)(data)
+ *   hasAtLeast(minimum)(data)
  * @example
- *   R.pipe([], R.hasAtLeast(4)); // => false
+ *   pipe([], hasAtLeast(4)); // => false
  *
  *   const data = [[1,2], [3], [4,5]];
- *   R.pipe(
+ *   pipe(
  *     data,
- *     R.filter(R.hasAtLeast(2)),
- *     R.map(([, second]) => second),
+ *     filter(hasAtLeast(2)),
+ *     map(([, second]) => second),
  *   ); // => [2,5], with type `number[]`
  * @dataLast
  * @category Array

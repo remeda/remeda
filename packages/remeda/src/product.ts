@@ -28,11 +28,11 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>> =
  *
  * @param data - The array of numbers.
  * @signature
- *   R.product(data);
+ *   product(data);
  * @example
- *   R.product([1, 2, 3]); // => 6
- *   R.product([1n, 2n, 3n]); // => 6n
- *   R.product([]); // => 1
+ *   product([1, 2, 3]); // => 6
+ *   product([1n, 2n, 3n]); // => 6n
+ *   product([]); // => 1
  * @dataFirst
  * @category Number
  */
@@ -53,11 +53,11 @@ export function product<
  * `isEmpty` to guard against this case.
  *
  * @signature
- *   R.product()(data);
+ *   product()(data);
  * @example
- *   R.pipe([1, 2, 3], R.product()); // => 6
- *   R.pipe([1n, 2n, 3n], R.product()); // => 6n
- *   R.pipe([], R.product()); // => 1
+ *   pipe([1, 2, 3], product()); // => 6
+ *   pipe([1n, 2n, 3n], product()); // => 6n
+ *   pipe([], product()); // => 1
  * @dataLast
  * @category Number
  */

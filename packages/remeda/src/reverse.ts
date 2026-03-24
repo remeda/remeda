@@ -18,9 +18,9 @@ type IsNoTuple<T> = T extends readonly [unknown, ...unknown[]] ? never : T;
  *
  * @param array - The array.
  * @signature
- *    R.reverse(arr);
+ *    reverse(arr);
  * @example
- *    R.reverse([1, 2, 3]) // [3, 2, 1]
+ *    reverse([1, 2, 3]) // [3, 2, 1]
  * @dataFirst
  * @category Array
  */
@@ -30,9 +30,9 @@ export function reverse<T extends readonly unknown[]>(array: T): Reverse<T>;
  * Reverses array.
  *
  * @signature
- *    R.reverse()(array);
+ *    reverse()(array);
  * @example
- *    R.reverse()([1, 2, 3]) // [3, 2, 1]
+ *    reverse()([1, 2, 3]) // [3, 2, 1]
  * @dataLast
  * @category Array
  */

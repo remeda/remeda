@@ -81,9 +81,9 @@ type StringToPathImpl<S> =
  *
  * @param path - A string path.
  * @signature
- *   R.stringToPath(path)
+ *   stringToPath(path)
  * @example
- *   R.stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
+ *   stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category Utility
  */

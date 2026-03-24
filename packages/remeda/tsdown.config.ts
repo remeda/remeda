@@ -65,10 +65,12 @@ export default defineConfig({
     emitDtsOnly: true,
   },
 
-  // Inline types we use from external dependencies (type-fest) so that users
-  // don't need to depend on a specific version of type-fest to make our types
-  // work.
-  inlineOnly: false,
+  deps: {
+    // Inline types we use from external dependencies (type-fest) so that users
+    // don't need to depend on a specific version of type-fest to make our types
+    // work.
+    onlyBundle: false,
+  },
 
   hooks: {
     "build:done": injectAdditionalTypeDeclarations,
@@ -101,7 +103,7 @@ export default defineConfig({
         // `import { map } from "remeda";`
         `${SOURCE_DIR}/*.ts`,
         // Skip test files
-        `!**/*.test{,-d}.ts`,
+        `!**/*.test{,-d,-prop}.ts`,
       ],
 
       // We enforce target at the type-checking level via tsconfig.json. Once we

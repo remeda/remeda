@@ -196,10 +196,10 @@ type TuplePrefix<T extends IterableContainer> = [
  * @param array - The array.
  * @param size - The length of the chunk.
  * @signature
- *    R.chunk(array, size)
+ *    chunk(array, size)
  * @example
- *    R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
- *    R.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
+ *    chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
+ *    chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
  * @dataFirst
  * @category Array
  */
@@ -213,10 +213,10 @@ export function chunk<T extends IterableContainer, N extends number>(
  *
  * @param size - The length of the chunk.
  * @signature
- *    R.chunk(size)(array)
+ *    chunk(size)(array)
  * @example
- *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
- *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
+ *    chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
+ *    chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
  * @dataLast
  * @category Array
  */

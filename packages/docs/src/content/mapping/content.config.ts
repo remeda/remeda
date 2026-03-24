@@ -1,5 +1,6 @@
 import { glob } from "astro/loaders";
-import { defineCollection, reference, z } from "astro:content";
+import { z } from "astro/zod";
+import { defineCollection, reference } from "astro:content";
 import { functionsCollectionName } from "../functions/content.config";
 
 export const mappingCollectionName = "mapping";
@@ -13,8 +14,11 @@ export const mappingCollection = defineCollection({
     generateId: ({ entry }) => entry.replace(/\.md$/, ""),
   }),
 
-  schema: z.strictObject({
-    category: z.string().min(1),
-    remeda: reference(functionsCollectionName).optional(),
-  }),
+  schema: z
+    .object({
+      category: z.string().min(1),
+      remeda: reference(functionsCollectionName).optional(),
+    })
+    .strict()
+    .readonly(),
 });

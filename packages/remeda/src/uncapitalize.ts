@@ -17,9 +17,9 @@ import { purry } from "./purry";
  *
  * @param data - A string.
  * @signature
- *   R.uncapitalize(data);
+ *   uncapitalize(data);
  * @example
- *   R.uncapitalize("HELLO WORLD"); // "hELLO WORLD"
+ *   uncapitalize("HELLO WORLD"); // "hELLO WORLD"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * `toCamelCase`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * @signature
- *   R.uncapitalize()(data);
+ *   uncapitalize()(data);
  * @example
- *   R.pipe("HELLO WORLD", R.uncapitalize()); // "hELLO WORLD"
+ *   pipe("HELLO WORLD", uncapitalize()); // "hELLO WORLD"
  * @dataLast
  * @category String
  */

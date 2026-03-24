@@ -22,10 +22,10 @@ import { purry } from "./purry";
  * @returns An object with properties for all groups, each assigned to an array
  * containing the elements of the associated group.
  * @signature
- *    R.groupBy(data, callbackfn)
+ *    groupBy(data, callbackfn)
  * @example
- *    R.groupBy([{a: 'cat'}, {a: 'dog'}] as const, R.prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
- *    R.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
+ *    groupBy([{a: 'cat'}, {a: 'dog'}] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
+ *    groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
  * @dataFirst
  * @category Array
  */
@@ -53,15 +53,15 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @returns An object with properties for all groups, each assigned to an array
  * containing the elements of the associated group.
  * @signature
- *    R.groupBy(callbackfn)(data);
+ *    groupBy(callbackfn)(data);
  * @example
- *    R.pipe(
+ *    pipe(
  *      [{a: 'cat'}, {a: 'dog'}] as const,
- *      R.groupBy(R.prop('a')),
+ *      groupBy(prop('a')),
  *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
- *    R.pipe(
+ *    pipe(
  *      [0, 1],
- *      R.groupBy(x => x % 2 === 0 ? 'even' : undefined),
+ *      groupBy(x => x % 2 === 0 ? 'even' : undefined),
  *    ); // => {even: [0]}
  * @dataLast
  * @category Array

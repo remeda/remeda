@@ -68,11 +68,11 @@ type FlatSimpleArrayItems<
  * "unlimited" depth use a literal value that would exceed your expected
  * practical maximum nesting level.
  * @signature
- *   R.flat(data)
- *   R.flat(data, depth)
+ *   flat(data)
+ *   flat(data, depth)
  * @example
- *   R.flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
- *   R.flat([[[1]], [[2]]], 2); // => [1, 2]
+ *   flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
+ *   flat([[[1]], [[2]]], 2); // => [1, 2]
  * @dataFirst
  * @lazy
  * @category Array
@@ -90,11 +90,11 @@ export function flat<T extends IterableContainer, Depth extends number = 1>(
  * @param depth - The depth level specifying how deep a nested array structure
  * should be flattened. Defaults to 1.
  * @signature
- *   R.flat()(data)
- *   R.flat(depth)(data)
+ *   flat()(data)
+ *   flat(depth)(data)
  * @example
- *   R.pipe([[1, 2], [3, 4], [5], [[6]]], R.flat()); // => [1, 2, 3, 4, 5, [6]]
- *   R.pipe([[[1]], [[2]]], R.flat(2)); // => [1, 2]
+ *   pipe([[1, 2], [3, 4], [5], [[6]]], flat()); // => [1, 2, 3, 4, 5, [6]]
+ *   pipe([[[1]], [[2]]], flat(2)); // => [1, 2]
  * @dataLast
  * @lazy
  * @category Array

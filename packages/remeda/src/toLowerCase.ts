@@ -17,9 +17,9 @@ import { purry } from "./purry";
  *
  * @param data - A string.
  * @signature
- *   R.toLowerCase(data);
+ *   toLowerCase(data);
  * @example
- *   R.toLowerCase("Hello World"); // "hello world"
+ *   toLowerCase("Hello World"); // "hello world"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
  * `toTitleCase`.
  *
  * @signature
- *   R.toLowerCase()(data);
+ *   toLowerCase()(data);
  * @example
- *   R.pipe("Hello World", R.toLowerCase()); // "hello world"
+ *   pipe("Hello World", toLowerCase()); // "hello world"
  * @dataLast
  * @category String
  */

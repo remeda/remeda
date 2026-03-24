@@ -19,9 +19,9 @@ type ZippingFunction<
  *
  * @param fn - The function applied to each position of the list.
  * @signature
- *   R.zipWith(fn)(first, second)
+ *   zipWith(fn)(first, second)
  * @example
- *   R.zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ *   zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
@@ -35,9 +35,9 @@ export function zipWith<TItem1, TItem2, Value>(
  * @param second - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   R.zipWith(second, fn)(first)
+ *   zipWith(second, fn)(first)
  * @example
- *   R.pipe(['1', '2', '3'], R.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
+ *   pipe(['1', '2', '3'], zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
  * @lazy
  * @category Array
@@ -56,9 +56,9 @@ export function zipWith<
  * @param second - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   R.zipWith(first, second, fn)
+ *   zipWith(first, second, fn)
  * @example
- *   R.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
+ *   zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
  * @lazy
  * @category Array

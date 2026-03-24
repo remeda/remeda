@@ -48,9 +48,9 @@ type ValueAtPath<T, Path> = Path extends readonly [
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    R.setPath(obj, path, value)
+ *    setPath(obj, path, value)
  * @example
- *    R.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
+ *    setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
  * @dataFirst
  * @category Object
  */
@@ -66,9 +66,9 @@ export function setPath<T, Path extends Paths<T>>(
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    R.setPath(path, value)(obj)
+ *    setPath(path, value)(obj)
  * @example
- *    R.pipe({ a: { b: 1 } }, R.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
+ *    pipe({ a: { b: 1 } }, setPath(['a', 'b'], 2)) // { a: { b: 2 } }
  * @dataLast
  * @category Object
  */

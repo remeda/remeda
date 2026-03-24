@@ -82,13 +82,13 @@ type IsNarrowable<T, S extends IterableContainer<T>> =
  * @returns `true` if the item is in the container, or `false` otherwise. In
  * cases the type of `data` is also narrowed down.
  * @signature
- *   R.isIncludedIn(data, container);
+ *   isIncludedIn(data, container);
  * @example
- *   R.isIncludedIn(2, [1, 2, 3]); // => true
- *   R.isIncludedIn(4, [1, 2, 3]); // => false
+ *   isIncludedIn(2, [1, 2, 3]); // => true
+ *   isIncludedIn(4, [1, 2, 3]); // => false
  *
  *   const data = "cat" as "cat" | "dog" | "mouse";
- *   R.isIncludedIn(data, ["cat", "dog"] as const); // true (typed "cat" | "dog");
+ *   isIncludedIn(data, ["cat", "dog"] as const); // true (typed "cat" | "dog");
  * @dataFirst
  * @category Guard
  */
@@ -115,15 +115,15 @@ export function isIncludedIn<T, S extends T>(
  * @returns `true` if the item is in the container, or `false` otherwise. In
  * cases the type of `data` is also narrowed down.
  * @signature
- *   R.isIncludedIn(container)(data);
+ *   isIncludedIn(container)(data);
  * @example
- *   R.pipe(2, R.isIncludedIn([1, 2, 3])); // => true
- *   R.pipe(4, R.isIncludedIn([1, 2, 3])); // => false
+ *   pipe(2, isIncludedIn([1, 2, 3])); // => true
+ *   pipe(4, isIncludedIn([1, 2, 3])); // => false
  *
  *   const data = "cat" as "cat" | "dog" | "mouse";
- *   R.pipe(
+ *   pipe(
  *     data,
- *     R.isIncludedIn(["cat", "dog"] as const),
+ *     isIncludedIn(["cat", "dog"] as const),
  *   ); // => true (typed "cat" | "dog");
  * @dataLast
  * @category Guard

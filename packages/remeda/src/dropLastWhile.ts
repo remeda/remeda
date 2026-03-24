@@ -9,9 +9,9 @@ import { purry } from "./purry";
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    R.dropLastWhile(data, predicate)
+ *    dropLastWhile(data, predicate)
  * @example
- *    R.dropLastWhile([1, 2, 10, 3, 4], x => x < 10) // => [1, 2, 10]
+ *    dropLastWhile([1, 2, 10, 3, 4], x => x < 10) // => [1, 2, 10]
  * @dataFirst
  * @category Array
  */
@@ -27,9 +27,9 @@ export function dropLastWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    R.dropLastWhile(predicate)(data)
+ *    dropLastWhile(predicate)(data)
  * @example
- *    R.pipe([1, 2, 10, 3, 4], R.dropLastWhile(x => x < 10))  // => [1, 2, 10]
+ *    pipe([1, 2, 10, 3, 4], dropLastWhile(x => x < 10))  // => [1, 2, 10]
  * @dataLast
  * @category Array
  */
