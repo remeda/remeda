@@ -13,15 +13,16 @@ class MyError extends Error {
   }
 }
 
+declare const MAYBE_ERROR: MyError | undefined;
+
 test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.error as AllTypesDataProviderTypes;
   if (isError(data)) {
     expectTypeOf(data).toEqualTypeOf<Error>();
   }
 
-  let maybeError: MyError | undefined;
-  if (isError(maybeError)) {
-    expectTypeOf(maybeError).toEqualTypeOf<MyError>();
+  if (isError(MAYBE_ERROR)) {
+    expectTypeOf(MAYBE_ERROR).toEqualTypeOf<MyError>();
   }
 });
 

@@ -435,6 +435,7 @@ export default defineConfig(
       "test/**/*.*",
     ],
     plugins: {
+      // @ts-expect-error [ts2322] -- eslint was bumped to v10 but the vitest plugin still hasn't been updated to support that version. This would probably be fixed in the next non-patch release.
       vitest,
     },
 
