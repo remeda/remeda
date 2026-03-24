@@ -384,7 +384,7 @@ jobs:
         run: cosign sign-blob --yes --bundle="remeda-${{ needs.release.outputs.version }}.tgz.sigstore.json" "remeda-${{ needs.release.outputs.version }}.tgz"
 
       - name: 📜 Attest tarball provenance
-        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           subject-path: remeda-${{ needs.release.outputs.version }}.tgz
 
