@@ -18,7 +18,7 @@ import type { NonEmptyArray } from "./internal/types/NonEmptyArray";
  * @signature
  *   takeFirstBy(data, n, ...rules);
  * @example
- *   takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ *   takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aa', 'a']
  * @dataFirst
  * @category Array
  */
@@ -39,7 +39,7 @@ export function takeFirstBy<T>(
  * @signature
  *   takeFirstBy(n, ...rules)(data);
  * @example
- *   pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['a', 'aa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['aa', 'a']
  * @dataLast
  * @category Array
  */
