@@ -28,8 +28,14 @@ test("switched bounds", () => {
   expect(range(20, 1)).toStrictEqual([]);
 });
 
-test("data last", () => {
-  expect(pipe(1, range(5))).toStrictEqual([1, 2, 3, 4]);
+describe("data last", () => {
+  test("simple range", () => {
+    expect(pipe(1, range(5))).toStrictEqual([1, 2, 3, 4]);
+  });
+
+  test("with step", () => {
+    expect(pipe(1, range({ end: 20, step: 5 }))).toStrictEqual([1, 6, 11, 16]);
+  });
 });
 
 describe("positive step", () => {
