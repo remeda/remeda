@@ -1,8 +1,9 @@
 import { zFunction } from "@/lib/typedoc/schema";
-import { defineCollection, reference, z } from "astro:content";
-import { categoriesLoader, functionsLoader } from "./loaders";
-import { ReflectionKind } from "typedoc";
+import { z } from "astro/zod";
+import { defineCollection, reference } from "astro:content";
 import { constant } from "remeda";
+import { ReflectionKind } from "typedoc";
+import { categoriesLoader, functionsLoader } from "./loaders";
 
 export const functionsV1CollectionName = "functions-v1";
 export const categoriesV1CollectionName = "categories-v1";
@@ -28,7 +29,8 @@ export const categoriesV1Collection = defineCollection({
   schema: z
     .object({
       id: z.string(),
-      children: z.array(reference(functionsV1CollectionName)),
+      children: z.array(reference(functionsV1CollectionName)).readonly(),
     })
-    .strict(),
+    .strict()
+    .readonly(),
 });
