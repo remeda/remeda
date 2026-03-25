@@ -3,14 +3,13 @@ category: Util
 remeda: range
 ---
 
-- In Lodash `rangeRight` has an **exclusive** `start` and an inclusive `end`,
-  unlike Remeda's `range`. To match the same values the ends of the range need
-  to be adjusted by `-1`.
-- When Lodash's `rangeRight` accepts a single argument it treats it as the
-  `start` value and uses `0` for the `end`. In Remeda both `start` and `end` are
+- Lodash's `rangeRight` has the same inclusive `start` and exclusive `end` as
+  `range`, but returns values in descending order. In Remeda, use `range` with a
+  negative `step`, swapping `start` and `end` and shifting each by one `step` to
+  preserve the same inclusive/exclusive semantics.
+- When Lodash's `rangeRight` accepts a single argument it treats it as the `end`
+  value and uses `0` for the `start`. In Remeda both `start` and `end` are
   required.
-- Lodash's `rangeRight` generates a sequence in descending order. Use `range`
-  with a negative step, adjusting start and end to match the same values.
 
 ### Implicit 0 start
 
@@ -32,7 +31,7 @@ _.rangeRight(start, end);
 
 // Remeda
 range(19, { end: 9, step: -1 });
-range(start - 1, { end: end - 1, step: -1 });
+range(end - 1, { end: start - 1, step: -1 });
 ```
 
 ### With step
@@ -44,5 +43,5 @@ _.rangeRight(start, end, step);
 
 // Remeda
 range(15, { end: -5, step: -5 });
-range(start - 1, { end: end - 1, step: -step });
+range(end - step, { end: start - step, step: -step });
 ```
