@@ -3,16 +3,31 @@ category: List
 remeda: range
 ---
 
-Ramda's `range` does not support a `step` parameter. Remeda's `range` supports
-step via an options object.
+Remeda curries functions by stripping the first parameter. This means that
+unlike in Ramda, a curried call to `range` would result in a function that has
+a pre-set `end` value, and not a pre-set `start` value. This means that curried
+calls need to be swapped.
+
+### Simple
 
 ```ts
 // Ramda
-R.range(1, 5);
+R.range(10, 20);
+R.range(start, end);
 
 // Remeda
-range(1, 5);
+range(10, 20);
+range(start, end);
+```
 
-// Remeda (with step)
-range(1, { end: 5, step: 2 });
+### Curried
+
+```ts
+// Ramda
+range(10)(20);
+range(start)(end);
+
+// Remeda
+range(20)(10);
+range(end)(start);
 ```
