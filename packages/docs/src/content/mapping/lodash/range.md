@@ -3,8 +3,8 @@ category: Util
 remeda: range
 ---
 
-- Lodash's `range` accepts a single argument (`range(end)`) where `start`
-  defaults to `0`. In Remeda, `start` is always required.
+- When calling Lodash's `range` with a single argument, an implicit `start` of
+  `0` is used. In Remeda, `start` is always required.
 - Lodash also takes `step` as a third positional parameter; in Remeda, `step` is
   provided via an options object.
 
@@ -13,13 +13,13 @@ remeda: range
 ```ts
 // Lodash
 _.range(5);
-_.range(start);
+_.range(end);
 
 // Remeda
 range(0, 5);
 range(0, { end: 5, step: 1 });
-range(0, start);
-range(0, { end: start, step: 1 });
+range(0, end);
+range(0, { end, step: 1 });
 ```
 
 ### With start
