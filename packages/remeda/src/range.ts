@@ -12,6 +12,7 @@ type RangeOptions = {
   readonly step: number;
 };
 
+// TODO [>2]: Change the signature so that range takes a required "end" parameter and an optional Options object with `start` and `step` defaulting to `0` and `1` respectively to better align with how `range` works in other libraries and languages.
 /**
  * Returns a sequence of numbers from `start` (inclusive) to `end` (exclusive),
  * adding `step` (default is `1`) to each number in the sequence.
