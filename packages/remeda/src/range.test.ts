@@ -86,14 +86,25 @@ describe("non-integer inputs", () => {
   });
 });
 
-test("double-precision limits", () => {
-  expect(
-    range(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER + 5),
-  ).toStrictEqual([
-    Number.MAX_SAFE_INTEGER,
-    Number.MAX_SAFE_INTEGER + 1,
-    Number.MAX_SAFE_INTEGER + 2,
-    Number.MAX_SAFE_INTEGER + 3,
-    Number.MAX_SAFE_INTEGER + 4,
-  ]);
+describe("double-precision limits", () => {
+  test("ranges crossing MAX_SAFE_INTEGER", () => {
+    expect(
+      range(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER + 5),
+    ).toStrictEqual([
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER + 1,
+      Number.MAX_SAFE_INTEGER + 2,
+      Number.MAX_SAFE_INTEGER + 3,
+      Number.MAX_SAFE_INTEGER + 4,
+    ]);
+  });
+
+  test("off-by-one when computing length", () => {
+    expect(range(0.1, { end: 0.4, step: 0.1 })).toStrictEqual([
+      0.1,
+      0.2,
+      // This is not 0.3 due to floating-point precision issues.
+      0.2 + 0.1,
+    ]);
+  });
 });
