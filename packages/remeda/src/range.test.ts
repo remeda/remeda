@@ -86,6 +86,10 @@ describe("non-integer inputs", () => {
   test("floating-point end", () => {
     expect(range(1, 5.5)).toStrictEqual([1, 2, 3, 4, 5]);
   });
+
+  test("floating-point snap prevents extra element", () => {
+    expect(range(0, { end: 3, step: 0.1 })).toHaveLength(30);
+  });
 });
 
 describe("lodash spec", () => {

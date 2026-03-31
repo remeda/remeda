@@ -78,10 +78,6 @@ function rangeImplementation(
     return [];
   }
 
-  if (length === Infinity) {
-    throw new RangeError("range: only finite ranges are supported!");
-  }
-
   return Array.from({ length }, (_, i) => (i === 0 ? start : start + i * step));
 }
 

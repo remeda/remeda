@@ -71,5 +71,5 @@ _.range(start, end, 0);
 
 // Native
 Array.from({ length: 4 }).fill(1);
-Array.from({ length: end - start }).fill(start);
+Array.from({ length: Math.abs(end - start) }).fill(start);
 ```

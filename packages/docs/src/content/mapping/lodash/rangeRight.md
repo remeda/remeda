@@ -9,7 +9,5 @@ guides for those functions to fully migrate to Remeda.
 ```ts
 // Lodash
 _.rangeRight(start, end, step);
-
-// Lodash
 _.reverse(_.range(start, end, step));
 ```
