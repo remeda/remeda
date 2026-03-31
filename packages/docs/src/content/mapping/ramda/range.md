@@ -24,8 +24,8 @@ range(start, end);
 
 ```ts
 // Ramda
-range(10)(20);
-range(start)(end);
+R.range(10)(20);
+R.range(start)(end);
 
 // Remeda
 range(20)(10);

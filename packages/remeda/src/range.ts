@@ -89,9 +89,12 @@ function rangeImplementation(
 // need an error margin where ceiling would ignore very small floating point
 // artifacts so that it effectively "rounds" down instead of up.
 function ceilingWithSnap(raw: number): number {
+  if (raw === 0) {
+    return 0;
+  }
+
   const rounded = Math.round(raw);
-  return Math.abs(raw - rounded) / Math.max(1, Math.abs(rounded)) <
-    SNAP_TOLERANCE
+  return Math.abs(raw - rounded) / Math.abs(raw) < SNAP_TOLERANCE
     ? rounded
     : Math.ceil(raw);
 }
