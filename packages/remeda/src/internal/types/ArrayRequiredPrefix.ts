@@ -67,6 +67,7 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                       Remainder,
                       TupleParts<T>["optional"]["length"]
                     >,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments -- False positive! TypeScript infers this as `unknown` which is then compared to the default value for this type parameter, but that's not how this type works!
                     TupleParts<T>["item"]
                   >,
 

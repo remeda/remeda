@@ -112,7 +112,13 @@ describe("reducer behavior", () => {
   });
 
   test("reducer isn't called again when 'invokedAt: start'", async () => {
-    const mockFn = vi.fn<typeof ARGS_COLLECTOR>(ARGS_COLLECTOR);
+    const mockFn =
+      vi.fn<
+        (
+          accumulator: readonly string[] | undefined,
+          item: string,
+        ) => readonly string[]
+      >();
     const foo = funnel(doNothing(), {
       reducer: mockFn,
       triggerAt: "start",
