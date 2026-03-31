@@ -14,7 +14,7 @@ remeda: differenceWith
 
 - When the `comparator` parameter is not provided to the Lodash `differenceWith`
   function (or is provided as `undefined`) it behaves like a call to
-  [`difference`](/migrate/lodash#difference).
+  [`difference`](#difference).
 
 ### Single exclusion array
 

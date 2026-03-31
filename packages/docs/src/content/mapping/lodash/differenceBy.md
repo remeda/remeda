@@ -19,7 +19,7 @@ _Not provided by Remeda._
 
 - When the `iteratee` parameter is not provided to the Lodash `differenceBy`
   function (or is provided as `undefined`) it behaves like a call to
-  [`difference`](/migrate/lodash#difference).
+  [`difference`](#difference).
 
 ### Function iteratee
 
