@@ -5,3 +5,5 @@ node_modules
 CLAUDE.local.md
 # dotenv file used for MCP secrets
 .env.local
+# LLMs sometime runs coverage testing manually in the root
+/coverage/

@@ -5,8 +5,8 @@ remeda: range
 
 Remeda curries functions by stripping the first parameter. This means that
 unlike in Ramda, a curried call to `range` would result in a function that has
-a pre-set `end` value, and not a pre-set `start` value. This means that curried
-calls need to be swapped.
+a pre-set `end` value, and not a pre-set `start` value; curried calls need their
+`start` and `end` parameters swapped!
 
 ### Simple
 

@@ -17,10 +17,10 @@ type RangeOptions = {
  * Returns a sequence of numbers from `start` (inclusive) to `end` (exclusive),
  * adding `step` (default is `1`) to each number in the sequence.
  *
- * @param start - The start number.
- * @param endOrOptions - The end number or an object which also defines a step
- * size.
- * @param endOrOptions.end - The end number.
+ * @param start - The first number in the sequence.
+ * @param endOrOptions - The end number **or** an object which is used to
+ * **also** define a step size.
+ * @param endOrOptions.end - The non-inclusive end of the range.
  * @param endOrOptions.step - The gap between consecutive numbers.
  * @signature
  *   range(start, end)
@@ -40,9 +40,9 @@ export function range(
  * Returns a sequence of numbers from `start` (inclusive) to `end` (exclusive),
  * adding `step` (default is `1`) to each number in the sequence.
  *
- * @param endOrOptions - The end number or an object which also defines a step
- * size.
- * @param endOrOptions.end - The end number.
+ * @param endOrOptions - The end number **or** an object which is used to
+ * **also** define a step size.
+ * @param endOrOptions.end - The non-inclusive end of the range.
  * @param endOrOptions.step - The gap between consecutive numbers.
  * @signature
  *   range(end)(start)
@@ -75,11 +75,14 @@ function rangeImplementation(
     typeof endOrOptions === "object" ? endOrOptions.end : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
   if (length <= 0) {
-    // The range is trivially empty!
     return [];
   }
 
-  return Array.from({ length }, (_, i) => start + i * step);
+  if (length === Infinity) {
+    throw new RangeError("range: only finite ranges are supported!");
+  }
+
+  return Array.from({ length }, (_, i) => (i === 0 ? start : start + i * step));
 }
 
 // JS's floating-point math can create numbers that are slightly larger than
