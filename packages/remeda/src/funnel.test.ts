@@ -112,13 +112,8 @@ describe("reducer behavior", () => {
   });
 
   test("reducer isn't called again when 'invokedAt: start'", async () => {
-    const mockFn =
-      vi.fn<
-        (
-          accumulator: readonly string[] | undefined,
-          item: string,
-        ) => readonly string[]
-      >();
+    // eslint-disable-next-line vitest/require-mock-type-parameters -- We provide a fully typed mock implementation which allows the type parameter to be fully inferred. There's no point in re-defining it, and anyway, that triggers a different eslint error.
+    const mockFn = vi.fn(ARGS_COLLECTOR);
     const foo = funnel(doNothing(), {
       reducer: mockFn,
       triggerAt: "start",
