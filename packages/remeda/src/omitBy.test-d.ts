@@ -6,6 +6,9 @@ import { isString } from "./isString";
 import { omitBy } from "./omitBy";
 import { pipe } from "./pipe";
 
+declare const SYMBOL_1: unique symbol;
+declare const SYMBOL_2: unique symbol;
+
 describe("data first", () => {
   test("it should omit props", () => {
     const result = omitBy({ a: 1, b: 2, A: 3, B: 4 } as const, constant(true));
@@ -44,16 +47,14 @@ describe("data last", () => {
 });
 
 test("symbols are passed through", () => {
-  const requiredSymbol = Symbol("required");
-  const optionalSymbol = Symbol("optional");
   const result = omitBy(
-    {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
+    {} as { [SYMBOL_1]: number; [SYMBOL_2]?: boolean; a: string },
     constant(true),
   );
 
   expectTypeOf(result).toEqualTypeOf<{
-    [requiredSymbol]: number;
-    [optionalSymbol]?: boolean;
+    [SYMBOL_1]: number;
+    [SYMBOL_2]?: boolean;
     a?: string;
   }>();
 });

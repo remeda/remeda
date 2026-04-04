@@ -4,6 +4,8 @@ import { constant } from "./constant";
 import { mapValues } from "./mapValues";
 import { pipe } from "./pipe";
 
+declare const SYMBOL: unique symbol;
+
 describe("interface", () => {
   test("should set the type of the key to be the union of the keys of the object", () => {
     mapValues({} as { foo: unknown; bar: unknown }, (_, key) =>
@@ -12,9 +14,8 @@ describe("interface", () => {
   });
 
   test("should exclude symbols from keys", () => {
-    const mySymbol = Symbol("mySymbol");
     mapValues(
-      {} as { [mySymbol]: unknown; foo: unknown; bar: unknown },
+      {} as { [SYMBOL]: unknown; foo: unknown; bar: unknown },
       (_, key) => expectTypeOf(key).toEqualTypeOf<"bar" | "foo">(),
     );
   });

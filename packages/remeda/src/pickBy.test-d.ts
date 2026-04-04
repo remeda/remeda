@@ -8,6 +8,8 @@ import { isString } from "./isString";
 import { pickBy } from "./pickBy";
 import { pipe } from "./pipe";
 
+declare const SYMBOL: unique symbol;
+
 describe("data first", () => {
   test("it should pick props", () => {
     const data = { a: 1, b: 2, A: 3, B: 4 };
@@ -68,12 +70,11 @@ test("makes wide types partial", () => {
 });
 
 test("works with type-guards", () => {
-  const mySymbol = Symbol("test");
   const result = pickBy(
     {} as {
       a: number;
       b: string;
-      [mySymbol]: string;
+      [SYMBOL]: string;
       literalUnion: "cat" | "dog";
       optionalA: number;
       optionalB?: string;
