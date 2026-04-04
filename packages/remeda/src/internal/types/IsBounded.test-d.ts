@@ -17,7 +17,7 @@ test("number", () => {
 });
 
 test("symbol", () => {
-  expectTypeOf(isBounded(SYMBOL_1 as symbol)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded(Symbol("hello"))).toEqualTypeOf<false>();
 });
 
 test("union of string, number, symbol", () => {

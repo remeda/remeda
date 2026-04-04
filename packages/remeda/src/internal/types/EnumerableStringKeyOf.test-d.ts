@@ -2,6 +2,7 @@ import type { Tagged } from "type-fest";
 import { expectTypeOf, test } from "vitest";
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Intentional! These are type-tests and this is only used to set up the test type.
 declare const SYMBOL: unique symbol;
 
 declare function enumerableStringKeyOf<T>(data: T): EnumerableStringKeyOf<T>;
@@ -72,7 +73,7 @@ test("symbol keys", () => {
   ).toEqualTypeOf<string>();
 
   expectTypeOf(
-    enumerableStringKeyOf({ [SYMBOL]: "hello", a: "world" }),
+    enumerableStringKeyOf({ [Symbol("hello")]: "hello", a: "world" }),
   ).toEqualTypeOf<"a">();
 
   expectTypeOf(
