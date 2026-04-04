@@ -4,6 +4,8 @@ import { mapKeys } from "./mapKeys";
 import { pipe } from "./pipe";
 import { identity } from "./identity";
 
+declare const SYMBOL: unique symbol;
+
 // @see https://github.com/remeda/remeda/issues/1249
 describe("single bounded mapped key (Issue #1249)", () => {
   test("empty object", () => {
@@ -65,7 +67,7 @@ test("mapping to a string literal", () => {
 });
 
 test("symbols are not passed to the mapper", () => {
-  mapKeys({ [Symbol("mySymbol")]: 1, b: "hellO", c: true }, (key, value) => {
+  mapKeys({ [SYMBOL]: 1, b: "hellO", c: true }, (key, value) => {
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
 
@@ -74,10 +76,8 @@ test("symbols are not passed to the mapper", () => {
 });
 
 test("symbols can be used as the return value", () => {
-  const mySymbol = Symbol("mySymbol");
-
-  expectTypeOf(mapKeys({ a: 1 }, constant(mySymbol))).toEqualTypeOf<
-    Record<typeof mySymbol, number>
+  expectTypeOf(mapKeys({ a: 1 }, constant(SYMBOL))).toEqualTypeOf<
+    Record<typeof SYMBOL, number>
   >();
 });
 

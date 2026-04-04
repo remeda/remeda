@@ -2,6 +2,9 @@ import { expectTypeOf, test } from "vitest";
 import { doNothing } from "./doNothing";
 import { values } from "./values";
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+
 test("should correctly types indexed types", () => {
   const result = values<Record<string, string>>({ a: "b" });
 
@@ -56,13 +59,13 @@ test("should correctly type typed objects", () => {
 });
 
 test("should skip symbol keys", () => {
-  const result = values({ [Symbol("a")]: true, a: "b", 123: 456 });
+  const result = values({ [SYMBOL_A]: true, a: "b", 123: 456 });
 
   expectTypeOf(result).toEqualTypeOf<(number | string)[]>();
 });
 
 test("should return a useful type when all keys are symbols", () => {
-  const result = values({ [Symbol("a")]: true, [Symbol("b")]: "c" });
+  const result = values({ [SYMBOL_A]: true, [SYMBOL_B]: "c" });
 
   expectTypeOf(result).toEqualTypeOf<never[]>();
 });

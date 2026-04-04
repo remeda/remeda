@@ -6,6 +6,9 @@ import { isString } from "./isString";
 import { omitBy } from "./omitBy";
 import { pipe } from "./pipe";
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+
 describe("data first", () => {
   test("it should omit props", () => {
     const result = omitBy({ a: 1, b: 2, A: 3, B: 4 } as const, constant(true));
@@ -44,22 +47,20 @@ describe("data last", () => {
 });
 
 test("symbols are passed through", () => {
-  const requiredSymbol = Symbol("required");
-  const optionalSymbol = Symbol("optional");
   const result = omitBy(
-    {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
+    {} as { [SYMBOL_A]: number; [SYMBOL_B]?: boolean; a: string },
     constant(true),
   );
 
   expectTypeOf(result).toEqualTypeOf<{
-    [requiredSymbol]: number;
-    [optionalSymbol]?: boolean;
+    [SYMBOL_A]: number;
+    [SYMBOL_B]?: boolean;
     a?: string;
   }>();
 });
 
 test("symbols are not passed to the predicate", () => {
-  omitBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
+  omitBy({ [SYMBOL_A]: 1, b: "hello", c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
 

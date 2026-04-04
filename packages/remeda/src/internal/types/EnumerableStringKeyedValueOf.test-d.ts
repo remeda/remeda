@@ -2,11 +2,11 @@ import type { EmptyObject } from "type-fest";
 import { expectTypeOf, test } from "vitest";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
 
+declare const SYMBOL: unique symbol;
+
 declare function enumerableStringKeyedValueOf<const T>(
   data: T,
 ): EnumerableStringKeyedValueOf<T>;
-
-const SymbolFoo = Symbol("foo");
 
 test("string values", () => {
   expectTypeOf(
@@ -80,16 +80,16 @@ test("nullish and undefined values", () => {
 
 test("symbol keys", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ [SymbolFoo]: "hello" } as const),
+    enumerableStringKeyedValueOf({ [SYMBOL]: "hello" } as const),
   ).toEqualTypeOf<never>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ [SymbolFoo]: "hello", b: "1" } as const),
+    enumerableStringKeyedValueOf({ [SYMBOL]: "hello", b: "1" } as const),
   ).toEqualTypeOf<"1">();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey | typeof SymbolFoo, string>,
+      {} as Record<PropertyKey | typeof SYMBOL, string>,
     ),
   ).toEqualTypeOf<string>();
 });

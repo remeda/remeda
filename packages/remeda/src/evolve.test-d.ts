@@ -9,6 +9,8 @@ import { pipe } from "./pipe";
 import { reduce } from "./reduce";
 import { set } from "./set";
 
+declare const SYMBOL: unique symbol;
+
 describe("data first", () => {
   test("creates a new object by evolving the `data` according to the `transformation` functions", () => {
     const result = evolve(
@@ -193,12 +195,11 @@ describe("data first", () => {
   });
 
   test("doesn't provide typing for symbol key evolvers", () => {
-    const mySymbol = Symbol("a");
     evolve(
-      { [mySymbol]: "hello" },
+      { [SYMBOL]: "hello" },
       {
-        // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
-        [mySymbol]: identity(),
+        // @ts-expect-error [ts2418] - SYMBOL shouldn't be usable.
+        [SYMBOL]: identity(),
       },
     );
   });

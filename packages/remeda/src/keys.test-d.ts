@@ -3,6 +3,9 @@ import { describe, expectTypeOf, test } from "vitest";
 import { keys } from "./keys";
 import { pipe } from "./pipe";
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+
 describe("arrays", () => {
   test("empty tuple", () => {
     const result = keys([] as []);
@@ -153,7 +156,7 @@ describe("object types", () => {
   });
 
   test("object with just symbol keys", () => {
-    const actual = keys({ [Symbol("a")]: 1, [Symbol("b")]: "world" });
+    const actual = keys({ [SYMBOL_A]: 1, [SYMBOL_B]: "world" });
 
     expectTypeOf(actual).toEqualTypeOf<never[]>();
   });
@@ -165,7 +168,7 @@ describe("object types", () => {
   });
 
   test("object with combined symbols and keys", () => {
-    const actual = keys({ a: 1, [Symbol("b")]: "world", 123: true });
+    const actual = keys({ a: 1, [SYMBOL_B]: "world", 123: true });
 
     expectTypeOf(actual).toEqualTypeOf<("123" | "a")[]>();
   });

@@ -2,7 +2,7 @@ import type { Tagged } from "type-fest";
 import { expectTypeOf, test } from "vitest";
 import type { EnumerableStringKeyOf } from "./EnumerableStringKeyOf";
 
-declare const SymbolFoo: unique symbol;
+declare const SYMBOL: unique symbol;
 
 declare function enumerableStringKeyOf<T>(data: T): EnumerableStringKeyOf<T>;
 
@@ -72,11 +72,11 @@ test("symbol keys", () => {
   ).toEqualTypeOf<string>();
 
   expectTypeOf(
-    enumerableStringKeyOf({ [SymbolFoo]: "hello", a: "world" }),
+    enumerableStringKeyOf({ [SYMBOL]: "hello", a: "world" }),
   ).toEqualTypeOf<"a">();
 
   expectTypeOf(
-    enumerableStringKeyOf({} as Record<string | typeof SymbolFoo, unknown>),
+    enumerableStringKeyOf({} as Record<string | typeof SYMBOL, unknown>),
   ).toEqualTypeOf<string>();
 });
 

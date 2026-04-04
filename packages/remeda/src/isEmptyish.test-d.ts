@@ -2,6 +2,8 @@ import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { isEmptyish } from "./isEmptyish";
 
+declare const SYMBOL: unique symbol;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- This is a trick in order to bypass breaking changes introduced in TypeScript that made TypedArrays like `Int8Array` accept a required type parameter.
 const TYPED_ARRAY = new Int8Array(1);
 export type TypedArray = typeof TYPED_ARRAY;
@@ -650,32 +652,29 @@ describe("plain objects", () => {
   });
 
   test("required symbol prop", () => {
-    const mySymbol = Symbol("hello");
-    const data = { [mySymbol]: "world" };
+    const data = { [SYMBOL]: "world" };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ [SYMBOL]: string }>();
     }
   });
 
   test("optional symbol prop", () => {
-    const mySymbol = Symbol("hello");
-    const data = {} as { [mySymbol]?: string };
+    const data = {} as { [SYMBOL]?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<{ [mySymbol]?: string }>();
+      expectTypeOf(data).toExtend<{ [SYMBOL]?: string }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ [SYMBOL]?: string }>();
     }
   });
 
   test("readonly optional symbol prop", () => {
-    const mySymbol = Symbol("hello");
-    const data = {} as { readonly [mySymbol]?: string };
+    const data = {} as { readonly [SYMBOL]?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: never }>();
+      expectTypeOf(data).toEqualTypeOf<{ readonly [SYMBOL]?: never }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ readonly [SYMBOL]?: string }>();
     }
   });
 });

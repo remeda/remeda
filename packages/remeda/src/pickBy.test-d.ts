@@ -8,6 +8,8 @@ import { isString } from "./isString";
 import { pickBy } from "./pickBy";
 import { pipe } from "./pipe";
 
+declare const SYMBOL: unique symbol;
+
 describe("data first", () => {
   test("it should pick props", () => {
     const data = { a: 1, b: 2, A: 3, B: 4 };
@@ -42,14 +44,13 @@ describe("data last", () => {
 });
 
 test("symbols are filtered out", () => {
-  const mySymbol = Symbol("mySymbol");
-  const result = pickBy({ [mySymbol]: 1, a: 123 }, constant(true));
+  const result = pickBy({ [SYMBOL]: 1, a: 123 }, constant(true));
 
   expectTypeOf(result).toEqualTypeOf<{ a?: number }>();
 });
 
 test("symbols are not passed to the predicate", () => {
-  pickBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
+  pickBy({ [SYMBOL]: 1, b: "hello", c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
 
@@ -68,12 +69,11 @@ test("makes wide types partial", () => {
 });
 
 test("works with type-guards", () => {
-  const mySymbol = Symbol("test");
   const result = pickBy(
     {} as {
       a: number;
       b: string;
-      [mySymbol]: string;
+      [SYMBOL]: string;
       literalUnion: "cat" | "dog";
       optionalA: number;
       optionalB?: string;

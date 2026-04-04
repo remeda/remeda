@@ -6,7 +6,7 @@ import type { EmptyObject } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { groupByProp } from "./groupByProp";
 
-const SYMBOL = Symbol("sym");
+declare const SYMBOL: unique symbol;
 
 describe("grouping prop types", () => {
   test("primitive strings", () => {

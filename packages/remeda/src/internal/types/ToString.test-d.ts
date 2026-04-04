@@ -2,6 +2,8 @@ import type { Tagged } from "type-fest";
 import { expectTypeOf, test, describe } from "vitest";
 import type { ToString } from "./ToString";
 
+declare const SYMBOL: unique symbol;
+
 declare function toString<const T>(data: T): ToString<T>;
 
 test("primitive strings", () => {
@@ -56,7 +58,7 @@ test("union with a mix of branded and number keys", () => {
 
 describe("symbols", () => {
   test("primitive", () => {
-    expectTypeOf(toString(Symbol("foo"))).toEqualTypeOf<never>();
+    expectTypeOf(toString(SYMBOL)).toEqualTypeOf<never>();
   });
 
   test("union with primitive string", () => {
