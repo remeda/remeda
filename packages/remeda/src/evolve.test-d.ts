@@ -198,7 +198,7 @@ describe("data first", () => {
     evolve(
       { [SYMBOL]: "hello" },
       {
-        // @ts-expect-error [ts2418] - mySymbol shouldn't be usable.
+        // @ts-expect-error [ts2418] - SYMBOL shouldn't be usable.
         [SYMBOL]: identity(),
       },
     );
