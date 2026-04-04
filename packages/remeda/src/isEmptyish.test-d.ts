@@ -652,12 +652,11 @@ describe("plain objects", () => {
   });
 
   test("required symbol prop", () => {
-    const mySymbol = Symbol("hello");
-    const data = { [mySymbol]: "world" };
+    const data = { [SYMBOL]: "world" };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ [SYMBOL]: string }>();
     }
   });
 

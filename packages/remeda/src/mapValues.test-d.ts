@@ -90,22 +90,20 @@ describe("branded types", () => {
 });
 
 test("symbols are filtered out", () => {
-  const mySymbol = Symbol("mySymbol");
-
   expectTypeOf(
-    mapValues({ [mySymbol]: 1, a: "hello" }, constant(true)),
+    mapValues({ [SYMBOL]: 1, a: "hello" }, constant(true)),
   ).toEqualTypeOf<{ a: true }>();
 });
 
 test("symbols are ignored by the mapper", () => {
-  mapValues({ [Symbol("a")]: "hello", b: 1, c: true }, (value, key) => {
+  mapValues({ [SYMBOL]: "hello", b: 1, c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | number>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
   });
 });
 
 test("objects with just symbol keys are still well defined", () => {
-  const result = mapValues({ [Symbol("a")]: 1 }, constant(true));
+  const result = mapValues({ [SYMBOL]: 1 }, constant(true));
 
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();

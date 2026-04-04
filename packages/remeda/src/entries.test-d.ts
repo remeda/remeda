@@ -2,6 +2,9 @@ import { expectTypeOf, test } from "vitest";
 import { entries } from "./entries";
 import type { Tagged } from "type-fest";
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+
 test("with known properties", () => {
   const actual = entries({ a: 1, b: 2, c: 3 });
 
@@ -45,7 +48,7 @@ test("with unknown properties", () => {
 });
 
 test("object with just symbol keys", () => {
-  const actual = entries({ [Symbol("a")]: 1, [Symbol("b")]: "world" });
+  const actual = entries({ [SYMBOL_A]: 1, [SYMBOL_B]: "world" });
 
   expectTypeOf(actual).toEqualTypeOf<never[]>();
 });
@@ -57,7 +60,7 @@ test("object with number keys", () => {
 });
 
 test("object with combined symbols and keys", () => {
-  const actual = entries({ a: 1, [Symbol("b")]: "world", 123: true });
+  const actual = entries({ a: 1, [SYMBOL_B]: "world", 123: true });
 
   expectTypeOf(actual).toEqualTypeOf<(["123", boolean] | ["a", number])[]>();
 });

@@ -5,6 +5,8 @@ import { prop } from "./prop";
 import { sortBy } from "./sortBy";
 import { stringToPath } from "./stringToPath";
 
+declare const SYMBOL: unique symbol;
+
 describe("data-last", () => {
   test("inferred directly", () => {
     expectTypeOf(sortBy([{ a: 1 }] as const, prop("a"))).toEqualTypeOf<
@@ -463,6 +465,6 @@ describe("prevents unsupported data types", () => {
 
   test("symbol", () => {
     // @ts-expect-error [ts2769] -- symbols can't be used as data.
-    prop(Symbol("test"), "description");
+    prop(SYMBOL, "description");
   });
 });

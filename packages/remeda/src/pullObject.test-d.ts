@@ -4,6 +4,10 @@ import { identity } from "./identity";
 import { pipe } from "./pipe";
 import { pullObject } from "./pullObject";
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+declare const SYMBOL_C: unique symbol;
+
 test("string keys", () => {
   const data = ["a", "b"];
 
@@ -27,15 +31,19 @@ test("number keys", () => {
 });
 
 test("symbol keys", () => {
-  const data = [Symbol("a"), Symbol("b")];
+  const data = [SYMBOL_A, SYMBOL_B] as const;
 
-  const dataFirst = pullObject(data, identity(), constant(Symbol("c")));
+  const dataFirst = pullObject(data, identity(), constant(SYMBOL_C));
 
-  expectTypeOf(dataFirst).toEqualTypeOf<Record<symbol, symbol>>();
+  expectTypeOf(dataFirst).toEqualTypeOf<
+    Partial<Record<typeof SYMBOL_A | typeof SYMBOL_B, typeof SYMBOL_C>>
+  >();
 
-  const dataLast = pipe(data, pullObject(identity(), constant(Symbol("c"))));
+  const dataLast = pipe(data, pullObject(identity(), constant(SYMBOL_C)));
 
-  expectTypeOf(dataLast).toEqualTypeOf<Record<symbol, symbol>>();
+  expectTypeOf(dataLast).toEqualTypeOf<
+    Partial<Record<typeof SYMBOL_A | typeof SYMBOL_B, typeof SYMBOL_C>>
+  >();
 });
 
 test("number constants", () => {

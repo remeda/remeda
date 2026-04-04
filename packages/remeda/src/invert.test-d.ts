@@ -1,6 +1,8 @@
 import { expectTypeOf, test } from "vitest";
 import { invert } from "./invert";
 
+declare const SYMBOL: unique symbol;
+
 test("simple string records", () => {
   const result = invert({} as Record<string, string>);
 
@@ -44,7 +46,7 @@ test("partial record", () => {
 });
 
 test("symbol keys are filtered out", () => {
-  const result = invert({ [Symbol("a")]: 4, a: "hello" } as const);
+  const result = invert({ [SYMBOL]: 4, a: "hello" } as const);
 
   expectTypeOf(result).toEqualTypeOf<{ hello: "a" }>();
 });
@@ -56,15 +58,13 @@ test("number keys are converted to strings", () => {
 });
 
 test("symbol values are fine", () => {
-  const mySymbol = Symbol("my");
-  const result = invert({ a: mySymbol } as const);
+  const result = invert({ a: SYMBOL } as const);
 
-  expectTypeOf(result).toEqualTypeOf<{ [mySymbol]: "a" }>();
+  expectTypeOf(result).toEqualTypeOf<{ [SYMBOL]: "a" }>();
 });
 
 test("only symbol keys", () => {
-  const mySymbol = Symbol("my");
-  const result = invert({ [mySymbol]: 4 });
+  const result = invert({ [SYMBOL]: 4 });
 
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   expectTypeOf(result).toEqualTypeOf<{}>();

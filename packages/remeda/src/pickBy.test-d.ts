@@ -44,14 +44,13 @@ describe("data last", () => {
 });
 
 test("symbols are filtered out", () => {
-  const mySymbol = Symbol("mySymbol");
-  const result = pickBy({ [mySymbol]: 1, a: 123 }, constant(true));
+  const result = pickBy({ [SYMBOL]: 1, a: 123 }, constant(true));
 
   expectTypeOf(result).toEqualTypeOf<{ a?: number }>();
 });
 
 test("symbols are not passed to the predicate", () => {
-  pickBy({ [Symbol("mySymbol")]: 1, b: "hello", c: true }, (value, key) => {
+  pickBy({ [SYMBOL]: 1, b: "hello", c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<"b" | "c">();
 
