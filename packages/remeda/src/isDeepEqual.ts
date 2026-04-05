@@ -1,6 +1,21 @@
 import { purry } from "./purry";
 
 /**
+ * Options for `isDeepEqual`.
+ */
+export type IsDeepEqualOptions = {
+  /**
+   * When `true`, the prototype check is skipped, allowing objects with
+   * different prototypes (e.g., objects created via `Object.create(null)` or
+   * `querystring.parse()` output) to be compared. This provides backward
+   * compatibility with v1's `equals` behavior.
+   *
+   * Defaults to `false`.
+   */
+  strict?: boolean;
+};
+
+/**
  * Performs a *deep structural* comparison between two values to determine if
  * they are equivalent. For primitive values this is equivalent to `===`, for
  * arrays the check would be performed on every item recursively, in order, and
@@ -24,20 +39,23 @@ import { purry } from "./purry";
  *
  * @param data - The first value to compare.
  * @param other - The second value to compare.
+ * @param options - Optional configuration.
  * @signature
- *    isDeepEqual(data, other)
+ *    isDeepEqual(data, other, options?)
  * @example
  *    isDeepEqual(1, 1) //=> true
  *    isDeepEqual(1, '1') //=> false
  *    isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *    isDeepEqual(Object.create(null), {}, { strict: false }) //=> true
  * @dataFirst
  * @category Guard
  */
 export function isDeepEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
+  options?: IsDeepEqualOptions,
 ): data is S;
-export function isDeepEqual<T>(data: T, other: T): boolean;
+export function isDeepEqual<T>(data: T, other: T, options?: IsDeepEqualOptions): boolean;
 
 /**
  * Performs a *deep structural* comparison between two values to determine if
@@ -62,8 +80,9 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  * don't want to recurse into their values.
  *
  * @param other - The second value to compare.
+ * @param options - Optional configuration.
  * @signature
- *    isDeepEqual(other)(data)
+ *    isDeepEqual(other, options?)(data)
  * @example
  *    pipe(1, isDeepEqual(1)); //=> true
  *    pipe(1, isDeepEqual('1')); //=> false
@@ -73,14 +92,21 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  */
 export function isDeepEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
+  options?: IsDeepEqualOptions,
 ): (data: T) => data is S;
-export function isDeepEqual<T>(other: T): (data: T) => boolean;
+export function isDeepEqual<T>(other: T, options?: IsDeepEqualOptions): (data: T) => boolean;
 
 export function isDeepEqual(...args: readonly unknown[]): unknown {
   return purry(isDeepEqualImplementation, args);
 }
 
-function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
+function isDeepEqualImplementation<T>(
+  data: unknown,
+  other: T,
+  options?: IsDeepEqualOptions,
+): data is T {
+  const strict = options?.strict ?? true;
+
   if (data === other) {
     return true;
   }
@@ -99,7 +125,10 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return false;
   }
 
-  if (Object.getPrototypeOf(data) !== Object.getPrototypeOf(other)) {
+  if (
+    strict &&
+    Object.getPrototypeOf(data) !== Object.getPrototypeOf(other)
+  ) {
     // If the objects don't share a prototype it's unlikely that they are
     // semantically equal. It is technically possible to build 2 prototypes that
     // act the same but are not equal (at the reference level, checked via
@@ -111,15 +140,27 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   if (Array.isArray(data)) {
-    return isDeepEqualArrays(data, other as unknown as readonly unknown[]);
+    return isDeepEqualArrays(
+      data,
+      other as unknown as readonly unknown[],
+      options,
+    );
   }
 
   if (data instanceof Map) {
-    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
+    return isDeepEqualMaps(
+      data,
+      other as unknown as Map<unknown, unknown>,
+      options,
+    );
   }
 
   if (data instanceof Set) {
-    return isDeepEqualSets(data, other as unknown as Set<unknown>);
+    return isDeepEqualSets(
+      data,
+      other as unknown as Set<unknown>,
+      options,
+    );
   }
 
   if (data instanceof Date) {
@@ -150,6 +191,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
         value,
         // @ts-expect-error [ts7053] - We already checked that `other` has `key`
         other[key],
+        options,
       )
     ) {
       return false;
@@ -162,13 +204,14 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
 function isDeepEqualArrays(
   data: readonly unknown[],
   other: readonly unknown[],
+  options?: IsDeepEqualOptions,
 ): boolean {
   if (data.length !== other.length) {
     return false;
   }
 
   for (const [index, item] of data.entries()) {
-    if (!isDeepEqualImplementation(item, other[index])) {
+    if (!isDeepEqualImplementation(item, other[index], options)) {
       return false;
     }
   }
@@ -179,6 +222,7 @@ function isDeepEqualArrays(
 function isDeepEqualMaps(
   data: ReadonlyMap<unknown, unknown>,
   other: ReadonlyMap<unknown, unknown>,
+  options?: IsDeepEqualOptions,
 ): boolean {
   if (data.size !== other.size) {
     return false;
@@ -189,7 +233,7 @@ function isDeepEqualMaps(
       return false;
     }
 
-    if (!isDeepEqualImplementation(value, other.get(key))) {
+    if (!isDeepEqualImplementation(value, other.get(key), options)) {
       return false;
     }
   }
@@ -200,6 +244,7 @@ function isDeepEqualMaps(
 function isDeepEqualSets(
   data: ReadonlySet<unknown>,
   other: ReadonlySet<unknown>,
+  options?: IsDeepEqualOptions,
 ): boolean {
   if (data.size !== other.size) {
     return false;
@@ -215,7 +260,7 @@ function isDeepEqualSets(
     let isFound = false;
 
     for (const [index, otherItem] of otherCopy.entries()) {
-      if (isDeepEqualImplementation(dataItem, otherItem)) {
+      if (isDeepEqualImplementation(dataItem, otherItem, options)) {
         isFound = true;
         otherCopy.splice(index, 1);
         break;

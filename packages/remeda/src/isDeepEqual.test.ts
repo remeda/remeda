@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { isDeepEqual } from "./isDeepEqual";
+import { pipe } from "./pipe";
 
 describe("scalars", () => {
   test("equal numbers", () => {
@@ -410,3 +411,66 @@ function func1(): void {
 function func2(): void {
   throw new Error("This function should never be called!");
 }
+
+describe("options", () => {
+  describe("strict option", () => {
+    test("strict: true (default) - objects with different prototypes are not equal", () => {
+      const nullProtoObj = Object.create(null);
+      nullProtoObj.a = 1;
+      expect(isDeepEqual(nullProtoObj, { a: 1 })).toBe(false);
+    });
+
+    test("strict: false - objects with different prototypes are equal", () => {
+      const nullProtoObj = Object.create(null);
+      nullProtoObj.a = 1;
+      expect(isDeepEqual(nullProtoObj, { a: 1 }, { strict: false })).toBe(true);
+    });
+
+    test("strict: false - querystring.parse-like objects work like plain objects", () => {
+      // Simulating querystring.parse() output which doesn't inherit from Object
+      const queryStringLike = Object.create(null);
+      queryStringLike.foo = "bar";
+      queryStringLike.baz = "qux";
+
+      expect(isDeepEqual(queryStringLike, { foo: "bar", baz: "qux" })).toBe(
+        false,
+      );
+      expect(
+        isDeepEqual(queryStringLike, { foo: "bar", baz: "qux" }, {
+          strict: false,
+        }),
+      ).toBe(true);
+    });
+
+    test("strict: false - nested objects with different prototypes", () => {
+      const nullProtoObj = Object.create(null);
+      nullProtoObj.nested = { a: 1 };
+
+      expect(
+        isDeepEqual(nullProtoObj, { nested: { a: 1 } }, { strict: false }),
+      ).toBe(true);
+    });
+
+    test("strict: false - arrays still work correctly", () => {
+      expect(isDeepEqual([1, 2, 3], [1, 2, 3], { strict: false })).toBe(true);
+      expect(isDeepEqual([1, 2, 3], [1, 2, 4], { strict: false })).toBe(false);
+    });
+
+    test("strict: false - primitives still work correctly", () => {
+      expect(isDeepEqual(1, 1, { strict: false })).toBe(true);
+      expect(isDeepEqual("a", "a", { strict: false })).toBe(true);
+      expect(isDeepEqual(1, 2, { strict: false })).toBe(false);
+    });
+  });
+
+  describe("data-last with options", () => {
+    test("strict: false works in data-last form", () => {
+      const nullProtoObj = Object.create(null);
+      nullProtoObj.a = 1;
+
+      expect(pipe({ a: 1 }, isDeepEqual(nullProtoObj, { strict: false }))).toBe(
+        true,
+      );
+    });
+  });
+});
