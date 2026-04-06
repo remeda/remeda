@@ -20,7 +20,7 @@ PRs should be titled following using the format: `< TYPE >(< scope >)?: descript
 ### Available Types:
 
 - `feat`: new functions or expanded, backwards compatible, capabilities on existing functions.
-- `fix`: changes to the runtime behavior of an existing function, or refinements to it's type.
+- `fix`: changes to the runtime behavior of an existing function, or refinements to its type.
 - `docs`: changes to the documentation of a function **or the documentation site**.
 - `chore`: anything else that isn't noticeable to library users. This includes test-only changes.
 

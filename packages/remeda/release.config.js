@@ -6,10 +6,10 @@ export default {
       "@semantic-release/commit-analyzer",
       {
         releaseRules: [
-          // Flipped from the default config, new features don't posses a risk
-          // to existing users and thus shouldn't prevent users from upgrading,
-          // but fixes usually impact how utilities already used by users work
-          // (or their typing) and can cause breakages in existing code.
+          // Flipped from the default config! New features don't pose a risk to
+          // existing code and thus shouldn't prevent users from upgrading, but
+          // fixes to existing utilities can impact how they work and might
+          // cause compile or runtime errors for users.
           { type: "feat", release: "patch" },
           { type: "fix", release: "minor" },
         ],
