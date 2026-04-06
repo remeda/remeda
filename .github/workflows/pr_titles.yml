@@ -18,10 +18,9 @@ jobs:
       - name: 📐 Conventional commit format
         uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         with:
-          # see @semantic-release/commit-analyzer for semantics
           types: |
             fix
-            feat 
+            feat
             docs
             chore
         env:
