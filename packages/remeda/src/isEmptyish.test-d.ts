@@ -461,17 +461,11 @@ describe("array-like", () => {
   });
 
   test("array-like (e.g., `arguments`)", () => {
-    // @ts-expect-error [ts6133] -- This is the best way to initialize a proper
-    // `arguments` array.
-    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars
-    function foo(): void {
-      // eslint-disable-next-line prefer-rest-params
-      const args = arguments;
-      if (isEmptyish(args)) {
-        expectTypeOf(args).toExtend<IArguments>();
-      } else {
-        expectTypeOf(args).toEqualTypeOf<IArguments>();
-      }
+    const args = getIArguments();
+    if (isEmptyish(args)) {
+      expectTypeOf(args).toExtend<IArguments>();
+    } else {
+      expectTypeOf(args).toEqualTypeOf<IArguments>();
     }
   });
 });
@@ -834,3 +828,8 @@ describe("generic types", () => {
     }
   });
 });
+
+function getIArguments(): IArguments {
+  // eslint-disable-next-line prefer-rest-params -- Intentional! This is the whole purpose of this function!
+  return arguments;
+}

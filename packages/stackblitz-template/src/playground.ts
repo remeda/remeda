@@ -17,5 +17,6 @@
 import { filter } from "remeda";
 
 const DATA = ["hello", 123, "world", 456] as const;
-
 const result = filter(DATA, ($) => typeof $ === "string");
+
+console.log(result);
