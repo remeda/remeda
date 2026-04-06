@@ -2,7 +2,19 @@
 export default {
   branches: ["main"],
   plugins: [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        releaseRules: [
+          // Flipped from the default config! New features don't pose a risk to
+          // existing code and thus shouldn't prevent users from upgrading, but
+          // fixes to existing utilities can impact how they work and might
+          // cause compile or runtime errors for users.
+          { type: "feat", release: "patch" },
+          { type: "fix", release: "minor" },
+        ],
+      },
+    ],
 
     "@semantic-release/release-notes-generator",
 
