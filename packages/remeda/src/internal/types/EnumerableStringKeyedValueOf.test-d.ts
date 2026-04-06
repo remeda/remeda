@@ -100,16 +100,25 @@ test("empty object", () => {
   ).toEqualTypeOf<never>();
 });
 
+// @see https://github.com/remeda/remeda/issues/1122
 test("parameterized record key (Issue #1122)", () => {
-  // @ts-expect-error [ts6133] -- Only functions allow us to define a parametrized record (I think...)
-  // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars -- The function inside this test IS the main point of the test and can't be pulled out or used.
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- A generic function is the only way to introduce a free type parameter for testing.
   const foo = <K extends string>(data: Record<K, { a: "hello" }>): void => {
-    // TypeScript/Vitest (?!) is failing to infer the result of our function
-    // on this type directly, but still manages to typecheck it once we
-    // destructure the result and only test the type of the property. I don't
-    // know why that is and if there's any better more idiomatic way to do this.
+    // Because of the type parameter TypeScript doesn't infer the concrete
+    // return type here, preventing us from being able to compare it to an
+    // expected type (that doesn't use EnumerableStringKeyedValueOf itself);
+    // but once we treat it as an object by accessing a specific property
+    // TypeScript attempts to eagerly infer it (and succeeds). This provides us
+    // a good enough workaround for testing the expected type.
+    // @see https://github.com/microsoft/TypeScript/issues/48810
     const { a } = enumerableStringKeyedValueOf(data);
 
     expectTypeOf(a).toEqualTypeOf<"hello">();
   };
+
+  // We need to "use" the function above to prevent GitHub's CodeQL from
+  // surfacing it as unused (`js/unused-local-variable`), which it technically
+  // is, albeit this being a **type test** where execution is meaningless to
+  // begin with...
+  void foo;
 });
