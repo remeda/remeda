@@ -118,7 +118,7 @@ test("parameterized record key (Issue #1122)", () => {
 
   // We need to "use" the function above to prevent GitHub's CodeQL from
   // surfacing it as unused (`js/unused-local-variable`), which it technically
-  // is, albeit this being a **type test** were execution is meaningless to
+  // is, albeit this being a **type test** where execution is meaningless to
   // begin with...
   void foo;
 });
