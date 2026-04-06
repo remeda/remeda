@@ -20,18 +20,14 @@ jobs:
         with:
           # We use the default types (as defined in:
           # https://github.com/commitizen/conventional-commit-types).
-          # "feat" would trigger a minor version bump; "fix" would
-          # trigger a patch version bump; anything else would **not**
+          # "feat" would trigger a patch version bump; "fix" would
+          # trigger a minor version bump; anything else would **not**
           # trigger a release.
           types: |
             feat
             fix
-            test
             docs
-            build
-            ci
             chore
-            revert
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required by the action
 
