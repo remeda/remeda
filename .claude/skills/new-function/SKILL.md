@@ -4,7 +4,7 @@ description: >
   Checklist for adding a new utility function to Remeda. Use this skill whenever
   you are adding a new function to the library, OR when reviewing a PR that adds
   a new function. If you see a new file in `packages/remeda/src/` that exports a
-  purry-based function and it wasn't there before — this skill applies.
+  function and it wasn't there before — this skill applies.
 ---
 
 # Adding a New Function to Remeda
