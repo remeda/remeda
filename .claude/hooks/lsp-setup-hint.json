@@ -1,0 +1,6 @@
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PostToolUse",
+    "additionalContext": "The TypeScript LSP call failed because `typescript-language-server` isn't on PATH. This repo ships a CWD-aware shim at `.claude/bin/typescript-language-server` that walks up from the current directory to find the local `node_modules/.bin/typescript-language-server` devDependency. To enable it:\n\n1. Confirm `~/.local/bin` is on the user's PATH; help them set it up if it isn't.\n2. Offer to run the symlink install:\n\n     mkdir -p ~/.local/bin && ln -sf \"$(git rev-parse --show-toplevel)/.claude/bin/typescript-language-server\" ~/.local/bin/typescript-language-server\n\n3. Tell the user to restart Claude Code."
+  }
+}

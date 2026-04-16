@@ -1,0 +1,18 @@
+{
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "LSP",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/lsp-setup-hint.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

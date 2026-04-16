@@ -25,6 +25,10 @@ TypeScript-first utility library with 100+ functions. Dual calling styles via `p
 - Functions are differentiated by name, not by overloaded signatures with different behavior
 - Type-level constraints over runtime checks when possible
 
+## Tooling
+
+For symbol navigation (go-to-definition, find-references, type hover, workspace symbol search) prefer the `LSP` tool over Grep — it follows TypeScript semantics rather than text matches.
+
 ## Commands
 
 Install dependencies from the repo root with `npm install`. All commands run from `packages/remeda/`:

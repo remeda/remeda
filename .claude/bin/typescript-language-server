@@ -1,0 +1,19 @@
+#!/bin/sh
+# Resolves `typescript-language-server` to the repo's devDependency by
+# walking up from $PWD to find a `node_modules/.bin` install. Contributors
+# can place this shim on their PATH (e.g. ~/.local/bin) so Claude Code's
+# TypeScript LSP uses the pinned version instead of a global install —
+# which would otherwise break when `nvm` switches node versions.
+
+dir="$PWD"
+while [ "$dir" != "/" ]; do
+  bin="$dir/node_modules/.bin/typescript-language-server"
+  if [ -x "$bin" ]; then
+    exec "$bin" "$@"
+  fi
+  dir="$(dirname "$dir")"
+done
+
+echo "typescript-language-server: no local install found under $PWD." >&2
+echo "Run \`npm install\` at the repo root." >&2
+exit 127
