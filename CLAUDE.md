@@ -63,21 +63,11 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
 `pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by `purry`), `pipe` batches them and processes items **one-by-one** through the batch instead of eagerly running each function on the full array. This enables short-circuiting (e.g., `take(3)` stops after 3 items) and skip-filtering without intermediate arrays.
 
-Key internal files: `purry.ts`, `internal/purryFromLazy.ts`, `internal/lazyDataLastImpl.ts`, `internal/utilityEvaluators.ts`, `internal/toSingle.ts`.
-
 ## Conventions
 
 - `exactOptionalPropertyTypes` is a hard requirement — all types assume it is enabled
 - Prefer `@ts-expect-error` with the TS error code over type assertions (`as`) — suppressions surface when TS improves; casts hide errors silently. Never use `as never`; prefer `@ts-expect-error [TS####]` instead
 - Benchmarks, not intuition, for performance: >=15% improvement, no regressions, same readability
-
-### Adding a New Function
-
-1. Create `src/functionName.ts` with purry-based implementation
-2. Add runtime tests (`functionName.test.ts`) and type tests (`functionName.test-d.ts`)
-3. Add JSDoc to each overload (see `eslint.config.ts` for required tags)
-4. Export from `src/index.ts`
-5. Check for Lodash/Ramda equivalents and add to `packages/docs/src/content/mapping`
 
 ### PR & Commit Titles
 

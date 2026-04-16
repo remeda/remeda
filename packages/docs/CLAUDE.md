@@ -48,7 +48,7 @@ Astro components (`.astro`) handle data loading and server rendering. React comp
 
 - `src/lib/typedoc/` — Custom Astro content loader that bridges TypeDoc and Astro's content system
 - `src/lib/functions/entries.ts` — `getFunctions()` and `forNavbar()` helpers that group and sort functions by `@category` tag
-- `src/lib/tags.ts` — Extracts `@lazy`, `@indexed`, `@strict` tags from JSDoc for UI badges
+- `src/lib/tags.ts` — Extracts `@lazy` and other tags from JSDoc for UI badges
 - `src/components/ui/` — shadcn/ui components (Radix UI + Tailwind)
 - `src/scripts/` — Static scripts compiled by a custom Vite plugin in `astro.config.ts` (e.g., theme init)
 
