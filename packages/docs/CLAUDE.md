@@ -13,7 +13,7 @@ npm run lint    # eslint with autofix
 
 ## Overview
 
-This is the documentation site for [Remeda](https://remedajs.com), built with **Astro 6** and deployed as a static site. Function documentation is **auto-generated** from the library's JSDoc/TypeDoc comments — there are no hand-written pages for individual functions.
+This is the documentation site for [Remeda](https://remedajs.com), built with **Astro** and deployed as a static site. Function documentation is **auto-generated** from the library's JSDoc/TypeDoc comments — there are no hand-written pages for individual functions.
 
 There are no tests in this package.
 
@@ -21,7 +21,7 @@ There are no tests in this package.
 
 ### Content Pipeline
 
-The site has five content collections, each with its own `content.config.ts` co-located in its content directory, aggregated by `src/content.config.ts`:
+The site has six content collections, each with its own `content.config.ts` co-located in its content directory, aggregated by `src/content.config.ts`:
 
 1. **functions** — Auto-generated at build/dev time via a custom TypeDoc Astro Loader (`src/lib/typedoc/loader.ts`). TypeDoc parses `packages/remeda/src/index.ts`, extracts all exported functions, and feeds them through a Zod schema (`src/lib/typedoc/schema.ts`). During dev, TypeDoc watches the library source and incrementally updates the store (only changed functions, via digest comparison).
 

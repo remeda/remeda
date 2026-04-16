@@ -1,4 +1,4 @@
-TypeScript-first utility library with 150+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
+TypeScript-first utility library with 100+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
 ## Core Philosophy
 
@@ -19,7 +19,7 @@ TypeScript-first utility library with 150+ functions. Dual calling styles via `p
 - Implementations: small and self-contained (<500B bundle impact)
 - Optional parameters are a code smell — the complexity is rarely worth it
 - Data-last API and lazy evaluation in `pipe` are core identity
-- Full names over abbreviations (`conditionally` not `cond`, `entries` not `toPairs`)
+- Full names over abbreviations (`conditional` not `cond`, `entries` not `toPairs`)
 - Close to native JS naming; override when JS design was historically wrong
 - API consistency: if `groupBy` allows `undefined` returns for filtering, similar functions should too
 - Functions are differentiated by name, not by overloaded signatures with different behavior
@@ -57,24 +57,13 @@ Each function is a single file with up to 3 companion test files:
 
 Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
-### Pipe & Lazy Evaluation
+### Purry & Pipe
 
-`pipe(data, fn1, fn2, fn3)` normally calls each function eagerly on the full array. But when consecutive functions in a pipe have a `lazy` property (attached by `purry`), `pipe` batches them and processes items **one-by-one** through the batch instead.
+`purry` enables dual calling styles by counting arguments: all args = data-first (calls directly), one fewer = data-last (returns curried function). Every exported function that operates on data uses `purry`.
 
-A lazy evaluator receives `(item, index, items)` and returns a `LazyResult<T>`:
+`pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by `purry`), `pipe` batches them and processes items **one-by-one** through the batch instead of eagerly running each function on the full array. This enables short-circuiting (e.g., `take(3)` stops after 3 items) and skip-filtering without intermediate arrays.
 
-- **`LazyNext`**: emit a value (`{ hasNext: true, next: value, done }`)
-- **`LazyEmpty`**: skip this item — use `SKIP_ITEM` from `utilityEvaluators.ts`
-- **`LazyMany`**: expand into multiple values (`{ hasNext: true, hasMany: true, next: values[] }`)
-
-Setting `done: true` short-circuits the pipe (e.g., `take(3)` stops after 3 items). `toSingle(lazyImpl)` marks scalar-returning functions like `first()` so the pipe knows to stop after one result.
-
-Key internal files:
-
-- `purry.ts` — dual-API dispatch (counts args vs function arity)
-- `internal/purryFromLazy.ts` — for functions where only the lazy impl exists
-- `internal/utilityEvaluators.ts` — `SKIP_ITEM`, `lazyIdentityEvaluator`
-- `internal/toSingle.ts` — marks evaluators as scalar-returning
+Key internal files: `purry.ts`, `internal/purryFromLazy.ts`, `internal/utilityEvaluators.ts`, `internal/toSingle.ts`.
 
 ## Conventions
 
@@ -88,7 +77,7 @@ Key internal files:
 2. Add runtime tests (`functionName.test.ts`) and type tests (`functionName.test-d.ts`)
 3. Add JSDoc to each overload (see `eslint.config.ts` for required tags)
 4. Export from `src/index.ts`
-5. Check for Lodash/Ramda equivalents and add to `docs/src/content/mapping`
+5. Check for Lodash/Ramda equivalents and add to `packages/docs/src/content/mapping`
 
 ### PR & Commit Titles
 

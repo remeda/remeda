@@ -5,27 +5,27 @@ paths:
 
 # Function Implementation Conventions
 
-## The Purry Pattern
+## Implementing a Function with Purry
 
-Every dual-API function uses `purry` (see `src/purry.ts`). The pattern:
+Every dual-API function uses `purry`. The structure:
 
-- Separate overloads for data-first and data-last, each with its own JSDoc block
-- The implementation function does NOT get JSDoc
-- Implementation signature returns `unknown` — `purry` uses argument counting, not generics
-- `purry(implementation, args, lazyImplementation)` — third arg is optional lazy evaluator
-- `purryFromLazy` (`src/internal/purryFromLazy.ts`) — for functions with no meaningful eager implementation
+- Two overload signatures: data-first and data-last, each with its own JSDoc block
+- One implementation signature — no JSDoc, returns `unknown` (purry dispatches by argument count, not generics)
+- The implementation calls `purry(impl, args, lazyImpl?)` — the third arg is the optional lazy evaluator
 
-`purry` counts `args.length` vs `fn.length`: equal = data-first (calls directly), one less = data-last (returns curried function).
+Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when the function has no meaningful eager implementation (the eager path just delegates to the lazy one).
 
-## Lazy Evaluation
+## Adding Lazy Evaluation
 
-The lazy evaluator processes items one-by-one, returning `LazyResult<T>`:
+A function should support lazy evaluation when it operates on arrays item-by-item in a `pipe` and would benefit from short-circuiting or avoiding intermediate arrays. Existing examples: `map`, `filter`, `take`, `first`, `flatMap`.
 
-- `LazyNext<T>`: `{ done, hasNext: true, next: T }` — emit a value
-- `LazyEmpty`: `{ done, hasNext: false }` — skip (use `SKIP_ITEM` from `utilityEvaluators.ts`)
-- `LazyMany<T>`: `{ done, hasNext: true, hasMany: true, next: readonly T[] }` — expand into many
+The lazy evaluator is a function `(item, index, items) => LazyResult<T>`:
 
-`done: true` stops the pipe (short-circuiting). `toSingle(lazyImpl)` wraps evaluators for scalar-returning functions like `first()`.
+- **Emit a value**: `{ hasNext: true, next: value, done }` (`LazyNext`)
+- **Skip an item**: use `SKIP_ITEM` from `utilityEvaluators.ts` (`LazyEmpty`)
+- **Expand into multiple values**: `{ hasNext: true, hasMany: true, next: values[], done }` (`LazyMany`)
+
+Set `done: true` to short-circuit the pipe — no further items will be processed (e.g., `take(3)` stops after emitting 3). For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
 
 ## `null`, `undefined`, and `NaN`
 
@@ -45,7 +45,7 @@ The lazy evaluator processes items one-by-one, returning `LazyResult<T>`:
 - Use `extends readonly []` to check for empty arrays (not `X["length"] extends 0`)
 - Minimize type parameter count — don't add a generic for items when inferrable from container
 - Extract complex inline conditional types into named utility types for readability
-- Inline types used once whose type parameters duplicate the function's — the alias adds indirection without value
+- Single-use types whose type parameters duplicate the function's should be inlined — the alias adds indirection without value
 - Check if `type-fest` provides a utility before writing a new one
 
 ### Output vs. Input Types

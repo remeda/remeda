@@ -5,5 +5,5 @@ node_modules/
 
 .ts-cache/
 
-# LLMs sometime runs coverage testing manually in the root
+# LLMs sometimes run coverage testing manually in the root
 coverage/

@@ -40,4 +40,3 @@ Runtime and type tests are **strictly separated** — never mix `expect()` and `
 - Test names must be distinct — duplicate names make failure reports ambiguous
 - Test names describe what's being tested — "lazy early exit with hasMany" not "take and flat"
 - Input arrays need enough variation to produce different outputs — overly simple inputs hide bugs
-- `describe("KNOWN ISSUES", ...)` uses uppercase
