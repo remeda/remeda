@@ -75,4 +75,4 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
 ### Release Semantics
 
-IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `release.config.js`.
+IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `packages/remeda/release.config.js`.
