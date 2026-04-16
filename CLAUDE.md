@@ -1,5 +1,3 @@
-# Remeda
-
 TypeScript-first utility library with 150+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
 ## Core Philosophy
@@ -59,6 +57,25 @@ Each function is a single file with up to 3 companion test files:
 
 Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
+### Pipe & Lazy Evaluation
+
+`pipe(data, fn1, fn2, fn3)` normally calls each function eagerly on the full array. But when consecutive functions in a pipe have a `lazy` property (attached by `purry`), `pipe` batches them and processes items **one-by-one** through the batch instead.
+
+A lazy evaluator receives `(item, index, items)` and returns a `LazyResult<T>`:
+
+- **`LazyNext`**: emit a value (`{ hasNext: true, next: value, done }`)
+- **`LazyEmpty`**: skip this item — use `SKIP_ITEM` from `utilityEvaluators.ts`
+- **`LazyMany`**: expand into multiple values (`{ hasNext: true, hasMany: true, next: values[] }`)
+
+Setting `done: true` short-circuits the pipe (e.g., `take(3)` stops after 3 items). `toSingle(lazyImpl)` marks scalar-returning functions like `first()` so the pipe knows to stop after one result.
+
+Key internal files:
+
+- `purry.ts` — dual-API dispatch (counts args vs function arity)
+- `internal/purryFromLazy.ts` — for functions where only the lazy impl exists
+- `internal/utilityEvaluators.ts` — `SKIP_ITEM`, `lazyIdentityEvaluator`
+- `internal/toSingle.ts` — marks evaluators as scalar-returning
+
 ## Conventions
 
 - `exactOptionalPropertyTypes` is a hard requirement — all types assume it is enabled
@@ -73,6 +90,13 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 4. Export from `src/index.ts`
 5. Check for Lodash/Ramda equivalents and add to `docs/src/content/mapping`
 
-### Release Semantics
+### PR & Commit Titles
+
+Format: `<TYPE>(<scope>): description` where scope is the function name.
+
+- `feat` — new function or expanded, backwards-compatible capability (releases as **patch**)
+- `fix` — change to runtime behavior or type refinement of an existing function (releases as **minor**)
+- `docs` — documentation or docs site changes
+- `chore` — anything else not noticeable to library users (tests-only, deps, CI)
 
 IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `packages/remeda/release.config.js`.
