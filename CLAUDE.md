@@ -88,4 +88,6 @@ Format: `<TYPE>(<scope>): description` where scope is the function name.
 - `docs` — documentation or docs site changes
 - `chore` — anything else not noticeable to library users (tests-only, deps, CI)
 
+* scope is used to communicate which utility function was changed in `feat`, `fix`, and `docs` commits (which touch specific functions). It is optional for `chore` commits were there isn't a specific sub-component that is being changed.
+
 IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `packages/remeda/release.config.js`.

@@ -10,7 +10,7 @@ paths:
 ## Runtime Tests (`.test.ts`)
 
 - Data-last tests use `pipe` (matches real-world usage)
-- One `expect` per `test` block — failures must pinpoint the exact case
+- Prefer one `expect` per `test` block — failures should pinpoint the exact case
 - Keep tests simple and short — more tests are better than tests that do more
 - Tests must be self-contained — no shared utilities or helpers; inline everything
 - Use Remeda's own utilities in tests when applicable (`prop`, `constant`, etc.)
@@ -25,9 +25,9 @@ Runtime and type tests are **strictly separated** — never mix `expect()` and `
 - Don't annotate generics explicitly — define types on data, not via `<T>` on the call
 - Only test inferred or "magic" types, not trivial signature parts with no inference
 - Use `unknown` in type slots you don't care about — `Record<string, unknown>` not `Record<string, string>`
-- Use disjoint value types in union tests — `Record<string, number> | Record<string, number>` doesn't test union logic
+- Use disjoint value types in union tests — `Record<string, number> | Record<string, boolean>`, not `Record<string, number> | Record<string, number>` (identical sides don't test union logic)
 - Pull type definitions to module level, not inside test blocks
-- `as const` is meaningless in runtime tests — don't use it there
+- `as const` doesn't affect runtime behavior and isn't needed in `.test.ts` files — only use it in `.test-d.ts` where it narrows types
 
 ## Property Tests (`.test-prop.ts`)
 

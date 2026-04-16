@@ -19,10 +19,10 @@ Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when the function has no m
 
 A function should support lazy evaluation when it operates on arrays item-by-item in a `pipe` and would benefit from short-circuiting or avoiding intermediate arrays. Existing examples: `map`, `filter`, `take`, `first`, `flatMap`.
 
-The lazy evaluator is a function `(item, index, items) => LazyResult<T>`:
+The lazy evaluator is a function `(item, index, data) => LazyResult<T>`:
 
 - **Emit a value**: `{ hasNext: true, next: value, done }` (`LazyNext`)
-- **Skip an item**: use `SKIP_ITEM` from `utilityEvaluators.ts` (`LazyEmpty`)
+- **Skip an item (continue processing)**: use `SKIP_ITEM` from `utilityEvaluators.ts` — `{ done: false, hasNext: false }`
 - **Expand into multiple values**: `{ hasNext: true, hasMany: true, next: values[], done }` (`LazyMany`)
 
 Set `done: true` to short-circuit the pipe — no further items will be processed (e.g., `take(3)` stops after emitting 3). For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
