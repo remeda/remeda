@@ -66,8 +66,14 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 ## Conventions
 
 - `exactOptionalPropertyTypes` is a hard requirement — all types assume it is enabled
-- Prefer `@ts-expect-error` with the TS error code over type assertions (`as`) — suppressions surface when TS improves; casts hide errors silently. Never use `as never`; prefer `@ts-expect-error [TS####]` instead
+- Prefer `@ts-expect-error` over type assertions (`as`) — suppressions surface when TS improves; casts hide errors silently. Never use `as never`; prefer `@ts-expect-error` instead. Every `@ts-expect-error` must include the TS error code **and** an explanation of why the suppression is safe (e.g., `// @ts-expect-error [ts2345] -- purry infers this correctly at the call site`)
+- Every `eslint-disable` comment must include an explanation of why the rule is safe to suppress in that specific case
+- Workarounds for known dependency bugs must always link to the upstream GitHub issue or PR (so we know when the fix lands and the workaround can be removed)
 - Benchmarks, not intuition, for performance: >=15% improvement, no regressions, same readability
+- **Code as copy-paste source**: This is MIT-licensed code that gets copied verbatim into other projects and then expanded or remixed. The base that gets copied must be high quality — clean, idiomatic, well-commented. Variable and parameter names must be descriptive, unabbreviated, and fitting for the algorithm (e.g., `comparator` not `cmp`, `accumulator` not `acc`). Comments explain **why**, never **what**; focus on complex types and non-obvious algorithmic choices. Never state the obvious; this is a canonical utility library, not a tutorial. The code itself should be clear enough that "what" comments are redundant
+- **Expiring TODOs**: Use `TODO [>N]` syntax to surface stale TODOs at lint time. **Never use date-based expiration** (those explode unexpectedly for whoever runs lint that day). Two forms:
+  - `TODO [>2]` — Remeda package version; marks work for the next major bump (e.g., `[>2]` = "do this for v3")
+  - `TODO [typescript>5.5]` — dependency version; for workarounds tied to bugs/missing features in a specific dep version
 
 ### PR & Commit Titles
 

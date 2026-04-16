@@ -41,24 +41,30 @@ Each overload needs its own JSDoc block. Required tags (enforced by ESLint — s
 
 Tag order is enforced: `@param`, `@returns`, `@signature`, `@example`, `@dataFirst`/`@dataLast`, `@lazy`, `@category`.
 
+If the new function is closely related to other functions where a user might need to pick the right one, list those alternatives in the description body of every overload. See `indexBy` for an example — it lists `fromKeys`, `pullObject`, and `fromEntries` with a one-line explanation of each. Update the related functions' JSDoc to cross-reference back to the new function too.
+
 ## 4. Export
 
 Add `export * from "./functionName";` to `src/index.ts` (alphabetical order).
 
 ## 5. Migration Mappings
 
-Check whether the new function is an equivalent of a Lodash or Ramda function. If so, add a mapping file:
+Check whether the new function is an equivalent of a Lodash or Ramda function. If so:
 
-- `packages/docs/src/content/mapping/lodash/functionName.md`
-- `packages/docs/src/content/mapping/ramda/functionName.md`
+1. Add a mapping file in the relevant directory:
+   - `packages/docs/src/content/mapping/lodash/functionName.md`
+   - `packages/docs/src/content/mapping/ramda/functionName.md`
 
-Format:
+   Format:
 
-```markdown
----
-category: CategoryName
-remeda: functionName
----
-```
+   ```markdown
+   ---
+   category: CategoryName
+   remeda: functionName
+   ---
+   ```
 
-If there's no equivalent, skip this step.
+2. Remove the function from `__MISSING.md` in the same directory if it's listed there.
+3. Check `___TODO.md` in the same directory for any related items that are now resolved and remove them.
+
+If there's no Lodash/Ramda equivalent, skip this step.
