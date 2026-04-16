@@ -63,7 +63,7 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 
 `pipe(data, fn1, fn2, fn3)` chains data-last functions. When consecutive functions in a pipe have a `lazy` property (attached by `purry`), `pipe` batches them and processes items **one-by-one** through the batch instead of eagerly running each function on the full array. This enables short-circuiting (e.g., `take(3)` stops after 3 items) and skip-filtering without intermediate arrays.
 
-Key internal files: `purry.ts`, `internal/purryFromLazy.ts`, `internal/utilityEvaluators.ts`, `internal/toSingle.ts`.
+Key internal files: `purry.ts`, `internal/purryFromLazy.ts`, `internal/lazyDataLastImpl.ts`, `internal/utilityEvaluators.ts`, `internal/toSingle.ts`.
 
 ## Conventions
 
@@ -88,6 +88,6 @@ Format: `<TYPE>(<scope>): description` where scope is the function name.
 - `docs` — documentation or docs site changes
 - `chore` — anything else not noticeable to library users (tests-only, deps, CI)
 
-* scope is used to communicate which utility function was changed in `feat`, `fix`, and `docs` commits (which touch specific functions). It is optional for `chore` commits were there isn't a specific sub-component that is being changed.
+* scope is used to communicate which utility function was changed in `feat`, `fix`, and `docs` commits (which touch specific functions). It is optional for `chore` commits where there isn't a specific sub-component that is being changed.
 
 IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `packages/remeda/release.config.js`.

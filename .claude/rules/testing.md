@@ -1,8 +1,8 @@
 ---
 paths:
-  - "**/*.test.ts"
-  - "**/*.test-d.ts"
-  - "**/*.test-prop.ts"
+  - "packages/remeda/src/**/*.test.ts"
+  - "packages/remeda/src/**/*.test-d.ts"
+  - "packages/remeda/src/**/*.test-prop.ts"
 ---
 
 # Testing Conventions
