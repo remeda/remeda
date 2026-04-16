@@ -1,0 +1,78 @@
+# Remeda
+
+TypeScript-first utility library with 150+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
+
+## Core Philosophy
+
+1. **Move errors from runtime to compile time.** Types are coupled to the runtime — stricter types over looser flexibility.
+2. **Composition over wrapper functions.** A new function must justify why `fn1(fn2(...))` isn't enough. No `reject` — use `filter(isNot)`. No `compact` — use `filter(isDefined)`.
+3. **No mutation.** Every function returns a new (shallow) clone.
+4. **Prefer not throwing.** Only throw when the algorithm genuinely cannot proceed.
+5. **TypeScript-only.** Non-TS usage is unsupported.
+
+### Scope
+
+- **In**: Functions providing meaningful typing, correctness, or composability not achievable by composing existing functions; Lodash migration blockers (even reluctantly)
+- **Out**: Simple compositions, native JS/TS equivalents, runtime safety nets, recursive/traversal functions, ambiguous semantics
+
+### Design Defaults
+
+- Type parameters are always inferred, never explicitly provided
+- Implementations: small and self-contained (<500B bundle impact)
+- Optional parameters are a code smell — the complexity is rarely worth it
+- Data-last API and lazy evaluation in `pipe` are core identity
+- Full names over abbreviations (`conditionally` not `cond`, `entries` not `toPairs`)
+- Close to native JS naming; override when JS design was historically wrong
+- API consistency: if `groupBy` allows `undefined` returns for filtering, similar functions should too
+- Functions are differentiated by name, not by overloaded signatures with different behavior
+- Type-level constraints over runtime checks when possible
+
+## Commands
+
+Install dependencies from the repo root with `npm install`. All commands run from `packages/remeda/`:
+
+```bash
+npm run test:runtime # runtime tests
+npm run test:types   # type-level tests
+npm run test:prop    # property-based tests
+npm run build        # build with tsdown (ESM + CJS)
+npm run check        # typecheck source files
+npm run lint         # eslint with autofix
+```
+
+## Architecture
+
+### Monorepo (npm workspaces)
+
+- `packages/remeda/` — the library (where nearly all work happens)
+- `packages/docs/` — Astro docs site (auto-generated from JSDoc)
+- `packages/stackblitz-template/` — StackBlitz playground
+
+### Source Layout (`packages/remeda/src/`)
+
+Each function is a single file with up to 3 companion test files:
+
+- `functionName.ts` — implementation
+- `functionName.test.ts` — runtime tests (Vitest)
+- `functionName.test-d.ts` — type tests (`expectTypeOf` from Vitest)
+- `functionName.test-prop.ts` — property-based tests (fast-check)
+
+Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
+
+## Conventions
+
+- `exactOptionalPropertyTypes` is a hard requirement — all types assume it is enabled
+- Prefer `@ts-expect-error` with the TS error code over type assertions (`as`) — suppressions surface when TS improves; casts hide errors silently. Never use `as never`; prefer `@ts-expect-error [TS####]` instead
+- Benchmarks, not intuition, for performance: >=15% improvement, no regressions, same readability
+
+### Adding a New Function
+
+1. Create `src/functionName.ts` with purry-based implementation
+2. Add runtime tests (`functionName.test.ts`) and type tests (`functionName.test-d.ts`)
+3. Add JSDoc to each overload (see `eslint.config.ts` for required tags)
+4. Export from `src/index.ts`
+5. Check for Lodash/Ramda equivalents and add to `docs/src/content/mapping`
+
+### Release Semantics
+
+IMPORTANT: Remeda uses **inverted** `semantic-release` semantics — `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See `release.config.js`.
