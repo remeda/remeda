@@ -27,7 +27,13 @@ TypeScript-first utility library with 160+ functions. Dual calling styles via `p
 
 ## Tooling
 
-For symbol navigation (go-to-definition, find-references, type hover, workspace symbol search) prefer the `LSP` tool over Grep — it follows TypeScript semantics rather than text matches.
+For symbol navigation (go-to-definition, find-references, workspace symbol search) prefer the `LSP` tool over Grep — it follows TypeScript semantics rather than text matches.
+
+For type-checking during development, lean on `LSP` rather than terminal `check` runs:
+
+- After editing a type-heavy file, read diagnostics on it before moving on — don't wait for the turn-end hook to surface errors.
+- When iterating on a generic, hover to inspect the inferred type at each step rather than guessing.
+- When a `.test-d.ts` type test fails, read diagnostics on the file to see the full type mismatch (often clearer than the test runner output).
 
 ### Hooks that run automatically
 
