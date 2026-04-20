@@ -26,7 +26,7 @@ tests, documentation, and migration mappings. Work through each item in order.
 
 ## 3. JSDoc
 
-Each overload needs its own JSDoc block. Required tags (enforced by ESLint — see `eslint.config.ts`):
+Each overload needs its own JSDoc block. Required tags:
 
 | Tag                         | Notes                                                                                                      |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -38,8 +38,6 @@ Each overload needs its own JSDoc block. Required tags (enforced by ESLint — s
 | `@dataFirst` or `@dataLast` | One per overload.                                                                                          |
 | `@lazy`                     | Only if lazy evaluation is supported.                                                                      |
 | `@category`                 | The function's category (e.g., `Array`, `Object`, `String`).                                               |
-
-Tag order is enforced: `@param`, `@returns`, `@signature`, `@example`, `@dataFirst`/`@dataLast`, `@lazy`, `@category`.
 
 If the new function is closely related to other functions where a user might need to pick the right one, list those alternatives in the description body of every overload. See `indexBy` for an example — it lists `fromKeys`, `pullObject`, and `fromEntries` with a one-line explanation of each. Update the related functions' JSDoc to cross-reference back to the new function too.
 

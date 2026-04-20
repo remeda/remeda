@@ -1,4 +1,4 @@
-TypeScript-first utility library with 100+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
+TypeScript-first utility library with 160+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
 ## Core Philosophy
 
@@ -32,7 +32,7 @@ For symbol navigation (go-to-definition, find-references, type hover, workspace 
 ### Hooks that run automatically
 
 - **On edit** — prettier formats the touched file; don't run `npm run format` manually.
-- **On turn end** — check, lint (with `--fix`), and tests run in sequence; the turn blocks on the first failure, and any lint auto-fixes are surfaced as a diff to review. Don't run these manually mid-turn.
+- **On turn end** — check, lint (with `--fix`), and tests (including coverage) run in sequence; the turn blocks on the first failure, and any lint auto-fixes are surfaced as a diff to review. Don't run these manually mid-turn.
 
 ## Commands
 

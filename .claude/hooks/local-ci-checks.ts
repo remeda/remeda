@@ -15,7 +15,11 @@ import {
 import { diff } from "./lib/diff.ts";
 import { runCommand } from "./lib/exec.ts";
 
-const REMEDA_PACKAGE_PATH = path.resolve(projectRoot(), "packages", "remeda");
+const REMEDA_PACKAGE_PATH = path.resolve(
+  env["CLAUDE_PROJECT_DIR"]!,
+  "packages",
+  "remeda",
+);
 
 const DIRTY_CHECK_COMMAND = {
   cmd: "git",
@@ -215,41 +219,25 @@ function getDirtyFiles(): readonly string[] {
 function snapshotDirtyFiles(dirtyFilePaths: readonly string[]): string {
   const snapshotDir = mkdtempSync(path.join(tmpdir(), "workspace-diff-"));
 
-  for (const filePath of dirtyFilePaths) {
-    const sourceFilePath = path.resolve(REMEDA_PACKAGE_PATH, filePath);
+  try {
+    for (const filePath of dirtyFilePaths) {
+      const sourceFilePath = path.resolve(REMEDA_PACKAGE_PATH, filePath);
 
-    // Deletions (staged or unstaged) leave no file to snapshot — the post-lint
-    // diff naturally produces an empty patch and gets filtered out downstream.
-    if (!existsSync(sourceFilePath)) {
-      continue;
+      // Deletions (staged or unstaged) leave no file to snapshot — the post-lint
+      // diff naturally produces an empty patch and gets filtered out downstream.
+      if (!existsSync(sourceFilePath)) {
+        continue;
+      }
+
+      const destinationFilePath = path.join(snapshotDir, filePath);
+      mkdirSync(path.dirname(destinationFilePath), { recursive: true });
+      copyFileSync(sourceFilePath, destinationFilePath);
     }
 
-    const destinationFilePath = path.join(snapshotDir, filePath);
-    mkdirSync(path.dirname(destinationFilePath), { recursive: true });
-    copyFileSync(sourceFilePath, destinationFilePath);
+    return snapshotDir;
+  } catch (error) {
+    // cleanup
+    rmSync(snapshotDir, { recursive: true, force: true });
+    throw error;
   }
-
-  return snapshotDir;
-}
-
-function projectRoot(): string {
-  if (
-    env["CLAUDE_PROJECT_DIR"] !== undefined &&
-    env["CLAUDE_PROJECT_DIR"] !== ""
-  ) {
-    return env["CLAUDE_PROJECT_DIR"];
-  }
-
-  let dir = new URL(import.meta.url).pathname;
-  while (dir !== path.dirname(dir)) {
-    if (existsSync(path.resolve(dir, ".git"))) {
-      return dir;
-    }
-
-    dir = path.dirname(dir);
-  }
-
-  throw new Error(
-    "Could not determine project root (no CLAUDE_PROJECT_DIR, no .git ancestor).",
-  );
 }

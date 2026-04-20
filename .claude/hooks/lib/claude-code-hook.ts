@@ -99,8 +99,8 @@ export async function handleClaudeCodeHook<EventName extends keyof HookData>(
     const input = await readStdinJson();
     const output = await handler(
       // We don't validate the input shape, we assume it's fine. Validating here
-      // would add runtime and might not be worthwhile if we assume claude is a
-      // good boy!
+      // would add to the run time and might not be worthwhile if we assume
+      // claude is a good boy!
       input as HookData[EventName]["input"],
     );
     stdout.write(JSON.stringify(output));

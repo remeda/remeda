@@ -28,12 +28,10 @@ export function runCommand(
   },
   throwOnFailure = false,
 ) {
-  const {
-    error,
-    stdout,
-    stderr,
-    status = -1,
-  } = spawnSync(cmd, [...args], { cwd, ...SPAWN_SYNC_OPTIONS });
+  const { error, stdout, stderr, status, signal } = spawnSync(cmd, [...args], {
+    cwd,
+    ...SPAWN_SYNC_OPTIONS,
+  });
 
   if (error !== undefined) {
     throw new Error(
@@ -41,16 +39,15 @@ export function runCommand(
     );
   }
 
+  const combined = [stdout, stderr]
+    .filter((stream) => stream.length > 0)
+    .join("\n");
+
   if (throwOnFailure && status !== 0) {
     throw new Error(
-      `Command \`${cmd} ${args.join(" ")}\` exited with code ${status}: ${stderr}`,
+      `Command \`${cmd} ${args.join(" ")}\` exited with code ${status?.toString() ?? signal ?? "<unknown>"}: ${combined}`,
     );
   }
 
-  return {
-    status,
-    stdout,
-    stderr,
-    combined: [stdout, stderr].filter((stream) => stream.length > 0).join("\n"),
-  } as const;
+  return { status, stdout, stderr, combined } as const;
 }

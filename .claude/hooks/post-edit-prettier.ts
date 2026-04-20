@@ -37,7 +37,7 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
       resolveConfig: true,
     });
     if (ignored || inferredParser === null) {
-      // Prettier doesn't want or knows how to work with this file.
+      // Prettier doesn't want to, or doesn't know how to, work with this file.
       return {};
     }
 
@@ -49,7 +49,6 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
       filepath: filePath,
     });
     if (afterPrettier === beforePrettier) {
-      // No changes...
       return {};
     }
 
