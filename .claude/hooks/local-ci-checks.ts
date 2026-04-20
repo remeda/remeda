@@ -17,19 +17,6 @@ import { runCommand } from "./lib/exec.ts";
 
 const REMEDA_PACKAGE_PATH = path.resolve(projectRoot(), "packages", "remeda");
 
-const LIST_FILES_COMMANDS = [
-  // Tracked files
-  {
-    cmd: "git",
-    args: ["--no-pager", "ls-files"],
-  },
-  // Untracked files
-  {
-    cmd: "git",
-    args: ["--no-pager", "ls-files", "--others", "--exclude-standard"],
-  },
-];
-
 const DIRTY_CHECK_COMMAND = {
   cmd: "git",
   args: [
@@ -90,7 +77,8 @@ const SCRIPTS: readonly ClaudeCodeHookHandler<"Stop">[] = [
 
   // lint
   ({ stop_hook_active }) => {
-    const { dirtyFilePaths, snapshotDir } = snapshotDirtyFiles();
+    const dirtyFilePaths = getDirtyFiles();
+    const snapshotDir = snapshotDirtyFiles(dirtyFilePaths);
     try {
       const { status, combined } = runCommand(LINT_COMMAND);
       if (status !== 0) {
@@ -207,32 +195,49 @@ await handleClaudeCodeHook<"Stop">(async (input) => {
   }
 });
 
-function snapshotDirtyFiles() {
+function getDirtyFiles(): readonly string[] {
+  const { stdout } = runCommand(
+    { ...DIRTY_CHECK_COMMAND, cwd: REMEDA_PACKAGE_PATH },
+    true /* throwOnFailure */,
+  );
+  return stdout
+    .split("\n")
+    .filter((line) => line.length > 0)
+    .map((line) => {
+      // Porcelain v1 format: `XY path`, or `XY old -> new` for
+      // renames/copies. The worktree-side path is always the last one.
+      const pathPart = line.slice(3);
+      const arrowIndex = pathPart.indexOf(" -> ");
+      return arrowIndex === -1 ? pathPart : pathPart.slice(arrowIndex + 4);
+    });
+}
+
+function snapshotDirtyFiles(dirtyFilePaths: readonly string[]): string {
   const snapshotDir = mkdtempSync(path.join(tmpdir(), "workspace-diff-"));
 
-  const dirtyFilePaths = LIST_FILES_COMMANDS.flatMap((command) =>
-    runCommand(
-      { ...command, cwd: REMEDA_PACKAGE_PATH },
-      true /* throwOnFailure */,
-    ).stdout.split("\n"),
-  ).filter((line) => line.length > 0);
-
   for (const filePath of dirtyFilePaths) {
-    const destinationFilePath = path.join(snapshotDir, filePath);
-    mkdirSync(path.dirname(destinationFilePath), { recursive: true });
-
     const sourceFilePath = path.resolve(REMEDA_PACKAGE_PATH, filePath);
 
+    // Deletions (staged or unstaged) leave no file to snapshot — the post-lint
+    // diff naturally produces an empty patch and gets filtered out downstream.
+    if (!existsSync(sourceFilePath)) {
+      continue;
+    }
+
+    const destinationFilePath = path.join(snapshotDir, filePath);
+    mkdirSync(path.dirname(destinationFilePath), { recursive: true });
     copyFileSync(sourceFilePath, destinationFilePath);
   }
 
-  return { dirtyFilePaths, snapshotDir } as const;
+  return snapshotDir;
 }
 
 function projectRoot(): string {
-  const { CLAUDE_PROJECT_DIR = "" } = env;
-  if (CLAUDE_PROJECT_DIR !== "") {
-    return CLAUDE_PROJECT_DIR;
+  if (
+    env["CLAUDE_PROJECT_DIR"] !== undefined &&
+    env["CLAUDE_PROJECT_DIR"] !== ""
+  ) {
+    return env["CLAUDE_PROJECT_DIR"];
   }
 
   let dir = new URL(import.meta.url).pathname;

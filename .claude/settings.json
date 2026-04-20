@@ -9,7 +9,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/lsp-setup-hint.sh\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/lsp-setup-hint.ts\"",
+            "timeout": 5
           }
         ]
       },
