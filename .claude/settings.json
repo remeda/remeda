@@ -12,6 +12,29 @@
             "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/lsp-setup-hint.sh\""
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/post-edit-prettier.ts\"",
+            "timeout": 10,
+            "statusMessage": "Formatting"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/local-ci-checks.ts\"",
+            "timeout": 60,
+            "statusMessage": "Running critical CI checks locally"
+          }
+        ]
       }
     ]
   }

@@ -29,6 +29,11 @@ TypeScript-first utility library with 100+ functions. Dual calling styles via `p
 
 For symbol navigation (go-to-definition, find-references, type hover, workspace symbol search) prefer the `LSP` tool over Grep — it follows TypeScript semantics rather than text matches.
 
+### Hooks that run automatically
+
+- **On edit** — prettier formats the touched file; don't run `npm run format` manually.
+- **On turn end** — check, lint (with `--fix`), and tests run in sequence; the turn blocks on the first failure, and any lint auto-fixes are surfaced as a diff to review. Don't run these manually mid-turn.
+
 ## Commands
 
 Install dependencies from the repo root with `npm install`. All commands run from `packages/remeda/`:
