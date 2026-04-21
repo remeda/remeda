@@ -19,7 +19,7 @@ await handleClaudeCodeHook(
         : {
             decision: "block",
             reason:
-              "docs-local-ci-checks: packages/remeda/dist missing. Run `npm --workspace=remeda run build` first — docs resolves `remeda` imports against that build.",
+              "docs-local-ci-checks: packages/remeda/dist/index.js missing. Run `npm --workspace=remeda run build` first — docs resolves `remeda` imports against that build.",
           },
 
     readonlyCommandStopHandler({
