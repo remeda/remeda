@@ -31,9 +31,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/local-ci-checks.ts\"",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/remeda-local-ci-checks.ts\"",
             "timeout": 60,
-            "statusMessage": "Running critical CI checks locally"
+            "statusMessage": "Running critical CI checks for the remeda package locally"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-local-ci-checks.ts\"",
+            "timeout": 60,
+            "statusMessage": "Running critical CI checks for the docs package locally"
           }
         ]
       }

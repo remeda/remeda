@@ -107,7 +107,7 @@ export async function handleClaudeCodeHook<EventName extends keyof HookData>(
   } catch (error) {
     stdout.write(
       JSON.stringify({
-        systemMessage: `${path.basename(argv[1] ?? "claude-code-hook")}: internal error before the handler could complete normally. ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
+        systemMessage: `${path.basename(argv[1] ?? "claude-code-hook")}: internal error. ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
       }),
     );
   }

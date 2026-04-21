@@ -38,7 +38,9 @@ For type-checking during development, lean on `LSP` rather than terminal `check`
 ### Hooks that run automatically
 
 - **On edit** — prettier formats the touched file; don't run `npm run format` manually.
-- **On turn end** — check, lint (with `--fix`), and tests (including coverage) run in sequence; the turn blocks on the first failure, and any lint auto-fixes are surfaced as a diff to review. Don't run these manually mid-turn.
+- **On turn end** — a per-package checks hook runs for each workspace that has dirty files. The turn blocks on the first failure, and any lint auto-fixes are surfaced as a diff to review. Don't run these manually mid-turn.
+  - `packages/remeda` — `check` → `lint` (with `--fix`) → `test:coverage` (with 100% thresholds) → `test:types`.
+  - `packages/docs` — precondition that `packages/remeda/dist` exists → `sync` → `check` → `lint` (with `--fix`) → `build`.
 
 ## Commands
 
