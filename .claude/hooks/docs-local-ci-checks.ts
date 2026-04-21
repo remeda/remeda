@@ -29,7 +29,7 @@ await handleClaudeCodeHook(
 
     readonlyCommandStopHandler({
       cmd: "npm",
-      args: ["--workspace=@remeda/docs", "run", "check", "--", "--no-sync"],
+      args: ["--workspace=@remeda/docs", "run", "check", "--", "--noSync"],
     }),
 
     mutatingCommandStopHandler(
@@ -42,7 +42,7 @@ await handleClaudeCodeHook(
 
     readonlyCommandStopHandler({
       cmd: "npm",
-      args: ["--workspace=@remeda/docs", "run", "build", "--", "--no-sync"],
+      args: ["--workspace=@remeda/docs", "run", "build"],
     }),
   ]),
 );
