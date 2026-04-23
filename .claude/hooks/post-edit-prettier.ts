@@ -15,7 +15,7 @@ import { handleClaudeCodeHook } from "./lib/claude-code-hook.ts";
 await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
   if (tool_name !== "Write" && tool_name !== "Edit") {
     return {
-      systemMessage: `post-edit-prettier: hook triggered for unexpected tool "${tool_name}". The matcher in .claude/settings.json should match only "Write|Edit".`,
+      systemMessage: `post-edit-prettier: unexpected tool "${tool_name}" — the settings.json matcher should be "Write|Edit".`,
     };
   }
 
@@ -23,13 +23,13 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
     const filePath = tool_input?.file_path;
     if (filePath === undefined) {
       return {
-        systemMessage: `post-edit-prettier: "${tool_name}" tool payload is missing tool_input.file_path. The hook cannot format anything until this is resolved — check the Claude Code release notes for a payload schema change.`,
+        systemMessage: `post-edit-prettier: "${tool_name}" payload missing tool_input.file_path — likely a Claude Code schema change.`,
       };
     }
 
     if (!existsSync(filePath)) {
       return {
-        systemMessage: `post-edit-prettier: "${tool_name}" reported success for ${filePath} but the file isn't on disk. Something removed or moved it between the tool completing and this hook running.`,
+        systemMessage: `post-edit-prettier: "${tool_name}" succeeded for ${filePath} but it's missing — removed or moved between the tool and this hook.`,
       };
     }
 
@@ -69,7 +69,7 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
   } catch (error) {
     return {
       hookSpecificOutput: {
-        additionalContext: `post-edit-prettier (Write|Edit PostToolUse hook) failed for ${tool_input?.file_path ?? "<unknown>"}. ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
+        additionalContext: `post-edit-prettier: failed for ${tool_input?.file_path ?? "<unknown>"}. ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
       },
     };
   }

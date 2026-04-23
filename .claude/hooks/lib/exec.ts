@@ -16,16 +16,14 @@ const SPAWN_SYNC_OPTIONS = {
   maxBuffer: 64 * 1024 * 1024, // 64 MiB,
 } satisfies SpawnSyncOptionsWithStringEncoding;
 
+export type CommandDefinition = {
+  readonly cmd: string;
+  readonly args: readonly string[];
+  readonly cwd?: string;
+};
+
 export function runCommand(
-  {
-    cmd,
-    args,
-    cwd,
-  }: {
-    readonly cmd: string;
-    readonly args: readonly string[];
-    readonly cwd?: string;
-  },
+  { cmd, args, cwd }: CommandDefinition,
   throwOnFailure = false,
 ) {
   const { error, stdout, stderr, status, signal } = spawnSync(cmd, [...args], {
