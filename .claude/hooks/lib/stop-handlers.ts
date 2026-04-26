@@ -94,6 +94,9 @@ export function mutatingCommandStopHandler(
 
         const sourceFilePath = path.resolve(packageDirectory, filePath);
         if (!existsSync(sourceFilePath)) {
+          // Deletions (staged or unstaged) leave no file to snapshot — the
+          // post-lint diff naturally produces an empty patch and gets filtered
+          // out downstream.
           continue;
         }
 
