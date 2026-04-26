@@ -99,7 +99,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return false;
   }
 
-  if (hasDifferentComparablePrototypes(data, other)) {
+  if (!isComparablePrototype(data, other)) {
     // If the objects don't share a prototype it's unlikely that they are
     // semantically equal. It is technically possible to build 2 prototypes that
     // act the same but are not equal (at the reference level, checked via
@@ -160,20 +160,21 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   return true;
 }
 
-function hasDifferentComparablePrototypes(
-  data: object,
-  other: object,
-): boolean {
-  const dataPrototype: unknown = Object.getPrototypeOf(data);
-  const otherPrototype: unknown = Object.getPrototypeOf(other);
+function isComparablePrototype(data: object, other: object): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is a low-level check, we can't avoid it being typed as `any`.
+  const dataPrototype = Object.getPrototypeOf(data);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is a low-level check, we can't avoid it being typed as `any`.
+  const otherPrototype = Object.getPrototypeOf(other);
 
-  return (
-    dataPrototype !== otherPrototype &&
-    !(
-      (dataPrototype === null && otherPrototype === Object.prototype) ||
-      (dataPrototype === Object.prototype && otherPrototype === null)
-    )
-  );
+  if (dataPrototype === otherPrototype) {
+    return true;
+  }
+
+  if (dataPrototype === null) {
+    return otherPrototype === Object.prototype;
+  }
+
+  return dataPrototype === Object.prototype && otherPrototype === null;
 }
 
 function isDeepEqualArrays(

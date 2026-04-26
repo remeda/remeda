@@ -414,24 +414,48 @@ function func2(): void {
 
 describe("null-prototype objects", () => {
   test("are equal to equivalent plain objects", () => {
-    const nullProtoObject = createNullPrototypeObject({ a: 1, b: "2" });
+    const data = { a: 1, b: "2" };
+    const nullProtoObject = withNullPrototype(data);
 
-    expect(isDeepEqual(nullProtoObject, { a: 1, b: "2" })).toBe(true);
-    expect(isDeepEqual({ a: 1, b: "2" }, nullProtoObject)).toBe(true);
+    expect(isDeepEqual(nullProtoObject, data)).toBe(true);
+    expect(isDeepEqual(data, nullProtoObject)).toBe(true);
+  });
+
+  test("are equal to equivalent null-prototype objects", () => {
+    const data = { a: 1, b: "2" };
+
+    expect(isDeepEqual(withNullPrototype(data), withNullPrototype(data))).toBe(
+      true,
+    );
   });
 
   test("are compared recursively", () => {
-    const nullProtoObject = createNullPrototypeObject({
-      nested: createNullPrototypeObject({ a: 1 }),
+    const nullProtoObject = withNullPrototype({
+      nested: withNullPrototype({ a: 1 }),
     });
 
     expect(isDeepEqual(nullProtoObject, { nested: { a: 1 } })).toBe(true);
   });
 
-  test("work in data-last form", () => {
-    const nullProtoObject = createNullPrototypeObject({ a: 1 });
+  test("still compare properties against plain objects", () => {
+    const data = { a: 1 };
+    const nullProtoObject = withNullPrototype({ a: 2 });
 
-    expect(pipe({ a: 1 }, isDeepEqual(nullProtoObject))).toBe(true);
+    expect(isDeepEqual(data, nullProtoObject)).toBe(false);
+    expect(isDeepEqual(nullProtoObject, data)).toBe(false);
+  });
+
+  test("still compare properties against null-prototype objects", () => {
+    expect(
+      isDeepEqual(withNullPrototype({ a: 1 }), withNullPrototype({ a: 2 })),
+    ).toBe(false);
+  });
+
+  test("work in data-last form", () => {
+    const data = { a: 1 };
+    const nullProtoObject = withNullPrototype(data);
+
+    expect(pipe(data, isDeepEqual(nullProtoObject))).toBe(true);
   });
 
   test("objects with different non-null prototypes are not equal", () => {
@@ -439,10 +463,11 @@ describe("null-prototype objects", () => {
       public readonly a = 1;
     }
 
-    expect(isDeepEqual(new TestObject() as unknown, { a: 1 })).toBe(false);
+    expect(isDeepEqual(new TestObject(), { a: 1 })).toBe(false);
   });
 });
 
-function createNullPrototypeObject<T extends object>(data: T): T {
-  return Object.assign(Object.create(null) as object, data);
+function withNullPrototype<T extends object>(data: T): T {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- Object.create(null) intentionally creates a null-prototype object and is typed as `any`.
+  return Object.assign(Object.create(null), data);
 }
