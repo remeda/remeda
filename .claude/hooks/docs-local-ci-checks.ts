@@ -27,7 +27,7 @@ await handleClaudeCodeHook(
 
       const { mtimeMs } = statSync(REMEDA_DIST_ENTRY);
       const librarySourceDirectory = path.join(REMEDA_DIRECTORY, "src");
-      if (hasFreshFiles(librarySourceDirectory, mtimeMs)) {
+      if (hasFilesNewerThan(librarySourceDirectory, mtimeMs)) {
         return {
           decision: "block",
           reason: `docs-local-ci-checks: ${REMEDA_DIST_ENTRY} is stale (source changed since the last build). Run \`npm --workspace=remeda run build\`.`,
@@ -62,12 +62,12 @@ await handleClaudeCodeHook(
   ]),
 );
 
-function hasFreshFiles(directory: string, timestampMs: number): boolean {
+function hasFilesNewerThan(directory: string, timestampMs: number): boolean {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const fullPath = path.join(directory, entry.name);
 
     if (entry.isDirectory()) {
-      if (hasFreshFiles(fullPath, timestampMs)) {
+      if (hasFilesNewerThan(fullPath, timestampMs)) {
         return true;
       }
     } else if (
