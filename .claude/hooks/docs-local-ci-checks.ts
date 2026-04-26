@@ -21,7 +21,7 @@ await handleClaudeCodeHook(
       if (!existsSync(REMEDA_DIST_ENTRY)) {
         return {
           decision: "block",
-          reason: `docs-local-ci-checks: ${REMEDA_DIST_ENTRY} missing. Run \`npm --workspace=remeda run build\` first.`,
+          reason: `${REMEDA_DIST_ENTRY} missing. Run \`npm --workspace=remeda run build\` first.`,
         };
       }
 
@@ -30,7 +30,7 @@ await handleClaudeCodeHook(
       if (hasFilesNewerThan(librarySourceDirectory, mtimeMs)) {
         return {
           decision: "block",
-          reason: `docs-local-ci-checks: ${REMEDA_DIST_ENTRY} is stale (source changed since the last build). Run \`npm --workspace=remeda run build\`.`,
+          reason: `${REMEDA_DIST_ENTRY} is stale (source changed since the last build). Run \`npm --workspace=remeda run build\`.`,
         };
       }
 
@@ -62,29 +62,20 @@ await handleClaudeCodeHook(
   ]),
 );
 
-function hasFilesNewerThan(directory: string, timestampMs: number): boolean {
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const fullPath = path.join(directory, entry.name);
-
-    if (entry.isDirectory()) {
-      if (hasFilesNewerThan(fullPath, timestampMs)) {
-        return true;
-      }
-    } else if (
-      entry.isFile() &&
-      entry.name.endsWith(".ts") &&
-      // Test files are not bundled into dist, so changes to them don't invalidate
-      // the build.
-      !entry.name.endsWith(".test.ts") &&
-      !entry.name.endsWith(".test-d.ts") &&
-      !entry.name.endsWith(".test-prop.ts")
-    ) {
-      const { mtimeMs } = statSync(fullPath);
-      if (mtimeMs > timestampMs) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
+const hasFilesNewerThan = (directory: string, timestampMs: number) =>
+  readdirSync(directory, { withFileTypes: true, recursive: true })
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        entry.name.endsWith(".ts") &&
+        // Test files are not bundled into dist, so changes to them don't
+        // invalidate
+        // the build.
+        !entry.name.endsWith(".test.ts") &&
+        !entry.name.endsWith(".test-d.ts") &&
+        !entry.name.endsWith(".test-prop.ts"),
+    )
+    .some(
+      ({ name, parentPath }) =>
+        statSync(path.join(parentPath, name)).mtimeMs > timestampMs,
+    );

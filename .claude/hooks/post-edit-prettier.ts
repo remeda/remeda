@@ -45,7 +45,7 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
     writeFileSync(filePath, afterPrettier);
     return {
       hookSpecificOutput: {
-        additionalContext: `Prettier reformatted ${filePath}. Re-read it before further edits — the in-memory copy is stale.`,
+        additionalContext: `Prettier reformatted ${filePath}. Run \`Read ${filePath}\` before any further Edit — the in-memory copy is stale.`,
       },
     };
   } catch (error) {

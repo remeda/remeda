@@ -32,7 +32,7 @@ export function multiScriptStopHandler(
   packageDirectory: string,
   scripts: readonly ClaudeCodeHookHandler<"Stop">[],
 ): ClaudeCodeHookHandler<"Stop"> {
-  const packageName = `${path.basename(packageDirectory)}`;
+  const preamble = `local-ci-checks (packages/${path.basename(packageDirectory)})`;
 
   return async (input) => {
     try {
@@ -45,7 +45,7 @@ export function multiScriptStopHandler(
         // turn's changes live elsewhere (other packages, root configs,
         // tooling).
         return {
-          systemMessage: `local-ci-checks (packages/${packageName}): clean — skipped. Run its checks manually if your turn changed it indirectly.`,
+          systemMessage: `${preamble}: clean — skipped. Run its checks manually if your turn changed it indirectly.`,
         };
       }
 
@@ -57,12 +57,16 @@ export function multiScriptStopHandler(
         const result = await script(input);
 
         if (result.systemMessage !== undefined) {
-          systemMessages.push(result.systemMessage);
+          systemMessages.push(`${preamble}: ${result.systemMessage}`);
         }
 
         if (result.decision === "block") {
           return {
             ...result,
+            reason:
+              result.reason === undefined
+                ? preamble
+                : `${preamble}: ${result.reason}`,
             systemMessage: systemMessages.join("\n\n"),
           };
         }
@@ -74,7 +78,6 @@ export function multiScriptStopHandler(
     } catch (error) {
       const detail =
         error instanceof Error ? (error.stack ?? error.message) : String(error);
-      const preamble = `local-ci-checks (packages/${packageName})`;
       return {
         decision: "block",
         reason: `${preamble}: ${detail}`,
@@ -93,7 +96,7 @@ export function readonlyCommandStopHandler(
       ? {}
       : {
           decision: "block",
-          reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
+          reason: `${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
         };
   };
 }
@@ -125,7 +128,7 @@ export function mutatingCommandStopHandler(
       if (status !== 0) {
         return {
           decision: "block",
-          reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
+          reason: `${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
         };
       }
 
@@ -149,13 +152,13 @@ export function mutatingCommandStopHandler(
         // this we signal it to the agent, but don't block the turn again.
 
         return {
-          systemMessage: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} modified ${String(changed.length)} file(s) on retry — review them:\n${changed.map(({ file }) => file).join("\n")}`,
+          systemMessage: `${command.cmd} ${command.args.join(" ")} modified ${String(changed.length)} file(s) on retry — review them:\n${changed.map(({ file }) => file).join("\n")}`,
         };
       }
 
       return {
         decision: "block",
-        reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} changed ${String(changed.length)} file(s). Review the diff:\n\n${changed.map(({ patch }) => patch).join("\n")}`,
+        reason: `${command.cmd} ${command.args.join(" ")} changed ${String(changed.length)} file(s). Review the diff:\n\n${changed.map(({ patch }) => patch).join("\n")}`,
       };
     } finally {
       rmSync(snapshotDir, { recursive: true, force: true });
