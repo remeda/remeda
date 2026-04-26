@@ -1,15 +1,5 @@
-import {
-  copyFileSync,
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
-import { tmpdir } from "node:os";
-import path from "node:path";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { format, getFileInfo, resolveConfig } from "prettier";
-import { diff } from "./lib/diff.ts";
 import { handleClaudeCodeHook } from "./lib/claude-code-hook.ts";
 
 await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
@@ -52,20 +42,12 @@ await handleClaudeCodeHook<"PostToolUse">(async ({ tool_name, tool_input }) => {
       return {};
     }
 
-    const tmp = mkdtempSync(path.join(tmpdir(), "hook-diff-"));
-    try {
-      const beforeTmpPath = path.join(tmp, `${path.basename(filePath)}.pre`);
-      copyFileSync(filePath, beforeTmpPath);
-      writeFileSync(filePath, afterPrettier);
-      const changes = diff(beforeTmpPath, filePath);
-      return {
-        hookSpecificOutput: {
-          additionalContext: `Prettier reformatted ${filePath}:\n\n${changes}`,
-        },
-      };
-    } finally {
-      rmSync(tmp, { recursive: true, force: true });
-    }
+    writeFileSync(filePath, afterPrettier);
+    return {
+      hookSpecificOutput: {
+        additionalContext: `Prettier reformatted ${filePath}. Re-read it before further edits — the in-memory copy is stale.`,
+      },
+    };
   } catch (error) {
     return {
       hookSpecificOutput: {

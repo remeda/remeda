@@ -1,7 +1,9 @@
 import path from "node:path";
 import { env } from "node:process";
 
-export function getPackageDirectory(packageName: string): string {
+export function getPackageDirectory(
+  packageName: "docs" | "remeda" | "stackblitz-template",
+): string {
   if (
     env["CLAUDE_PROJECT_DIR"] === undefined ||
     env["CLAUDE_PROJECT_DIR"] === ""

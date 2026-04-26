@@ -1,4 +1,8 @@
 import {
+  spawnSync,
+  type SpawnSyncOptionsWithStringEncoding,
+} from "node:child_process";
+import {
   copyFileSync,
   existsSync,
   mkdirSync,
@@ -9,13 +13,27 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { env } from "node:process";
 import type { ClaudeCodeHookHandler } from "./claude-code-hook.ts";
-import { diff } from "./diff.ts";
-import { runCommand, type CommandDefinition } from "./exec.ts";
+
+const SPAWN_SYNC_OPTIONS = {
+  encoding: "utf8",
+  env: process.env,
+  stdio: ["ignore", "pipe", "pipe"],
+  // Some vitest/coverage outputs can exceed the 1 MiB default.
+  maxBuffer: 64 * 1024 * 1024, // 64 MiB,
+} satisfies SpawnSyncOptionsWithStringEncoding;
+
+type CommandDefinition = {
+  readonly cmd: string;
+  readonly args: readonly string[];
+  readonly cwd?: string;
+};
 
 export function multiScriptStopHandler(
   packageDirectory: string,
   scripts: readonly ClaudeCodeHookHandler<"Stop">[],
 ): ClaudeCodeHookHandler<"Stop"> {
+  const packageName = `${path.basename(packageDirectory)}`;
+
   return async (input) => {
     try {
       const dirtyFilePaths = getDirtyFilePaths(packageDirectory);
@@ -27,12 +45,12 @@ export function multiScriptStopHandler(
         // turn's changes live elsewhere (other packages, root configs,
         // tooling).
         return {
-          systemMessage: `local-ci-checks: ${path.relative(env["CLAUDE_PROJECT_DIR"]!, packageDirectory)} clean — skipped. Run its checks manually if your turn changed it indirectly.`,
+          systemMessage: `local-ci-checks (packages/${packageName}): clean — skipped. Run its checks manually if your turn changed it indirectly.`,
         };
       }
 
       // System messages provide context to the user, we preserve them from all
-      // jobs so that the user gets the full picture.
+      // scripts so that the user gets the full picture.
       const systemMessages: string[] = [];
 
       for (const script of scripts) {
@@ -56,11 +74,11 @@ export function multiScriptStopHandler(
     } catch (error) {
       const detail =
         error instanceof Error ? (error.stack ?? error.message) : String(error);
+      const preamble = `local-ci-checks (packages/${packageName})`;
       return {
         decision: "block",
-        reason: `local-ci-checks: ${detail}`,
-        systemMessage:
-          "local-ci-checks: internal failure — see the block reason.",
+        reason: `${preamble}: ${detail}`,
+        systemMessage: `${preamble}: internal failure — see the block reason.`,
       };
     }
   };
@@ -70,12 +88,12 @@ export function readonlyCommandStopHandler(
   command: CommandDefinition,
 ): ClaudeCodeHookHandler<"Stop"> {
   return () => {
-    const { status, combined } = runCommand(command);
+    const { status, stdout, stderr } = runCommand(command);
     return status === 0
       ? {}
       : {
           decision: "block",
-          reason: `${command.cmd} ${command.args.join(" ")} failed:\n\n${combined}`,
+          reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
         };
   };
 }
@@ -90,8 +108,6 @@ export function mutatingCommandStopHandler(
     const snapshotDir = mkdtempSync(path.join(tmpdir(), "claude-local-ci-"));
     try {
       for (const filePath of dirtyFilePaths) {
-        // Copy the dirty files to our snapshot temp dir.
-
         const sourceFilePath = path.resolve(packageDirectory, filePath);
         if (!existsSync(sourceFilePath)) {
           // Deletions (staged or unstaged) leave no file to snapshot — the
@@ -105,11 +121,11 @@ export function mutatingCommandStopHandler(
         copyFileSync(sourceFilePath, destinationFilePath);
       }
 
-      const { status, combined } = runCommand(command);
+      const { status, stdout, stderr } = runCommand(command);
       if (status !== 0) {
         return {
           decision: "block",
-          reason: `${command.cmd} ${command.args.join(" ")} failed:\n\n${combined}`,
+          reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} failed:\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
         };
       }
 
@@ -126,8 +142,11 @@ export function mutatingCommandStopHandler(
       }
 
       if (stop_hook_active) {
-        // To prevent mutation infinite loops we don't block the second time
-        // the command caused changes and instead notify the user about this.
+        // If a mutating command still produces changes on a re-Stop we _might_
+        // be in an infinite loop where changes are either being reverted,
+        // cascading, or require manual intervention to resolve (this can
+        // happen, for example, when lint has two contradicting rules); to avoid
+        // this we signal it to the agent, but don't block the turn again.
 
         return {
           systemMessage: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} modified ${String(changed.length)} file(s) on retry — review them:\n${changed.map(({ file }) => file).join("\n")}`,
@@ -136,33 +155,36 @@ export function mutatingCommandStopHandler(
 
       return {
         decision: "block",
-        reason: `${command.cmd} ${command.args.join(" ")} changed ${String(changed.length)} file(s). Review the diff:\n\n${changed.map(({ patch }) => patch).join("\n")}`,
+        reason: `local-ci-checks: ${command.cmd} ${command.args.join(" ")} changed ${String(changed.length)} file(s). Review the diff:\n\n${changed.map(({ patch }) => patch).join("\n")}`,
       };
     } finally {
-      // cleanup
       rmSync(snapshotDir, { recursive: true, force: true });
     }
   };
 }
 
 function getDirtyFilePaths(cwd: string): readonly string[] {
-  const { stdout } = runCommand(
-    {
-      cmd: "git",
-      args: [
-        "--no-pager",
-        "status",
-        "--porcelain",
-        // The `.` pathspec scopes the output to files under `cwd`. Without it,
-        // `git status --porcelain` reports repo-wide regardless of the working
-        // directory.
-        "--",
-        ".",
-      ],
-      cwd,
-    },
-    true /* throwOnFailure */,
-  );
+  const { status, signal, stdout, stderr } = runCommand({
+    cmd: "git",
+    args: [
+      "--no-pager",
+      "status",
+      "--porcelain",
+      // The `.` pathspec scopes the output to files under `cwd`. Without it,
+      // `git status --porcelain` reports repo-wide regardless of the working
+      // directory.
+      "--",
+      ".",
+    ],
+    cwd,
+  });
+
+  if (status !== 0) {
+    throw new Error(
+      `Command \`git status --porcelain\` exited with code ${status?.toString() ?? signal ?? "<unknown>"} when run on cwd '${cwd}'!\n\nSTDOUT: ${stdout}\nSTDERR: ${stderr}`,
+    );
+  }
+
   return stdout
     .split("\n")
     .filter((line) => line.length > 0)
@@ -181,4 +203,62 @@ function getDirtyFilePaths(cwd: string): readonly string[] {
       // (the package directory), so rebase via the repo root.
       return path.relative(cwd, absolutePath);
     });
+}
+
+function diff(
+  fileAPath: string,
+  fileBPath: string,
+  canonicalFilePath: string,
+): string {
+  const { stdout, stderr, status } = runCommand({
+    cmd: "git",
+    args: [
+      "--no-pager",
+      "diff",
+      "--no-index",
+      "--no-color",
+      "--",
+      fileAPath,
+      fileBPath,
+    ],
+  });
+  if (status !== 0 && status !== 1) {
+    throw new Error(
+      `git diff --no-index failed for ${canonicalFilePath} (exit ${String(status)}): ${stderr}`,
+    );
+  }
+
+  return stdout
+    .split("\n")
+    .map((line) => {
+      if (line.startsWith("diff --git ")) {
+        return `diff --git a/${canonicalFilePath} b/${canonicalFilePath}`;
+      }
+
+      if (line.startsWith("--- ")) {
+        return `--- a/${canonicalFilePath}`;
+      }
+
+      if (line.startsWith("+++ ")) {
+        return `+++ b/${canonicalFilePath}`;
+      }
+
+      return line;
+    })
+    .join("\n");
+}
+
+function runCommand({ cmd, args, cwd }: CommandDefinition) {
+  const { error, ...rest } = spawnSync(cmd, [...args], {
+    cwd,
+    ...SPAWN_SYNC_OPTIONS,
+  });
+
+  if (error !== undefined) {
+    throw new Error(
+      `Failed to spawn \`${cmd} ${args.join(" ")}\`: ${error.message}`,
+    );
+  }
+
+  return rest;
 }
