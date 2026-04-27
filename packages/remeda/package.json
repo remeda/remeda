@@ -50,7 +50,7 @@
     "check": "tsc --project tsconfig.source.json",
     "check:dist": "tsc --project tsconfig.dist.json",
     "format": "prettier . --write",
-    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
+    "lint": "eslint --fix --max-warnings 0",
     "publish:jsr": "jsr publish",
     "publish:preview": "pkg-pr-new publish --compact --template ../stackblitz-template/",
     "test": "vitest",
