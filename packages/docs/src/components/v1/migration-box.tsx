@@ -19,7 +19,7 @@ export function MigrationBox({
           Breaking changes in v2
         </h6>
         <CollapsibleTrigger asChild className="absolute right-0">
-          <Button size="sm">
+          <Button size="icon-sm">
             <span className="sr-only">Expand</span>
             <ChevronsUpDownIcon />
           </Button>

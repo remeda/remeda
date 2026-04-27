@@ -27,17 +27,13 @@ export function CopyButton({
 
   return (
     <Button
-      className={cn("relative z-10 size-6", className)}
-      size="icon"
+      className={cn("relative z-10", className)}
+      size="icon-xs"
       variant="ghost"
       onClick={handleClick}
     >
       <span className="sr-only">Copy</span>
-      {hasCopied ? (
-        <CheckIcon className="size-3" />
-      ) : (
-        <CopyIcon className="size-3" />
-      )}
+      {hasCopied ? <CheckIcon /> : <CopyIcon />}
     </Button>
   );
 }
