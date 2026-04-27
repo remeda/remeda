@@ -62,8 +62,8 @@ await handleClaudeCodeHook(
   ]),
 );
 
-const hasFilesNewerThan = (directory: string, timestampMs: number) =>
-  readdirSync(directory, { withFileTypes: true, recursive: true })
+function hasFilesNewerThan(directory: string, timestampMs: number) {
+  return readdirSync(directory, { withFileTypes: true, recursive: true })
     .filter(
       (entry) =>
         entry.isFile() &&
@@ -79,3 +79,4 @@ const hasFilesNewerThan = (directory: string, timestampMs: number) =>
       ({ name, parentPath }) =>
         statSync(path.join(parentPath, name)).mtimeMs > timestampMs,
     );
+}
