@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { isDeepEqual } from "./isDeepEqual";
+import { pipe } from "./pipe";
 
 describe("scalars", () => {
   test("equal numbers", () => {
@@ -409,4 +410,64 @@ function func1(): void {
 /* v8 ignore next 3 -- We only need the function pointer, we never call it! */
 function func2(): void {
   throw new Error("This function should never be called!");
+}
+
+describe("null-prototype objects", () => {
+  test("are equal to equivalent plain objects", () => {
+    const data = { a: 1, b: "2" };
+    const nullProtoObject = withNullPrototype(data);
+
+    expect(isDeepEqual(nullProtoObject, data)).toBe(true);
+    expect(isDeepEqual(data, nullProtoObject)).toBe(true);
+  });
+
+  test("are equal to equivalent null-prototype objects", () => {
+    const data = { a: 1, b: "2" };
+
+    expect(isDeepEqual(withNullPrototype(data), withNullPrototype(data))).toBe(
+      true,
+    );
+  });
+
+  test("are compared recursively", () => {
+    const nullProtoObject = withNullPrototype({
+      nested: withNullPrototype({ a: 1 }),
+    });
+
+    expect(isDeepEqual(nullProtoObject, { nested: { a: 1 } })).toBe(true);
+  });
+
+  test("compare property values against plain objects", () => {
+    const data = { a: 1 };
+    const nullProtoObject = withNullPrototype({ a: 2 });
+
+    expect(isDeepEqual(data, nullProtoObject)).toBe(false);
+    expect(isDeepEqual(nullProtoObject, data)).toBe(false);
+  });
+
+  test("compare property values between null-prototype objects", () => {
+    expect(
+      isDeepEqual(withNullPrototype({ a: 1 }), withNullPrototype({ a: 2 })),
+    ).toBe(false);
+  });
+
+  test("work in data-last form", () => {
+    const data = { a: 1 };
+    const nullProtoObject = withNullPrototype(data);
+
+    expect(pipe(data, isDeepEqual(nullProtoObject))).toBe(true);
+  });
+
+  test("objects with different non-null prototypes are not equal", () => {
+    class TestObject {
+      public readonly a = 1;
+    }
+
+    expect(isDeepEqual(new TestObject(), { a: 1 })).toBe(false);
+  });
+});
+
+function withNullPrototype<T extends object>(data: T): T {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- we rely on the type of Object.create which isn't typed.
+  return Object.assign(Object.create(null), data);
 }

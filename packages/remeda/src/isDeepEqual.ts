@@ -7,7 +7,8 @@ import { purry } from "./purry";
  * for objects all props will be compared recursively.
  *
  * The built-in Date and RegExp are special-cased and will be compared by their
- * values.
+ * values. Objects with a `null` prototype are comparable to plain objects by
+ * their enumerable properties.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
@@ -46,7 +47,8 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  * for objects all props will be compared recursively.
  *
  * The built-in Date and RegExp are special-cased and will be compared by their
- * values.
+ * values. Objects with a `null` prototype are comparable to plain objects by
+ * their enumerable properties.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
@@ -99,7 +101,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return false;
   }
 
-  if (Object.getPrototypeOf(data) !== Object.getPrototypeOf(other)) {
+  if (!isComparablePrototype(data, other)) {
     // If the objects don't share a prototype it's unlikely that they are
     // semantically equal. It is technically possible to build 2 prototypes that
     // act the same but are not equal (at the reference level, checked via
@@ -130,7 +132,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return data.toString() === (other as unknown as RegExp).toString();
   }
 
-  // At this point we only know that the 2 objects share a prototype and are not
+  // At this point we only know that the 2 objects have a comparable prototype and are not
   // any of the previous types. They could be plain objects (Object.prototype),
   // they could be classes, they could be other built-ins, or they could be
   // something weird. We assume that comparing values by keys is enough to judge
@@ -157,6 +159,23 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   return true;
+}
+
+function isComparablePrototype(data: object, other: object): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is a low-level check, we can't avoid it being typed as `any`.
+  const dataPrototype = Object.getPrototypeOf(data);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is a low-level check, we can't avoid it being typed as `any`.
+  const otherPrototype = Object.getPrototypeOf(other);
+
+  if (dataPrototype === otherPrototype) {
+    return true;
+  }
+
+  if (dataPrototype === null) {
+    return otherPrototype === Object.prototype;
+  }
+
+  return dataPrototype === Object.prototype && otherPrototype === null;
 }
 
 function isDeepEqualArrays(
