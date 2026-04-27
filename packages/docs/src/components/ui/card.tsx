@@ -58,10 +58,13 @@ export function CardTitle({
 
 export function CardDescription({
   className,
+  asChild = false,
   ...props
-}: ComponentProps<"div">) {
+}: ComponentProps<"div"> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div";
+
   return (
-    <div
+    <Comp
       data-slot="card-description"
       className={cn("text-sm text-muted-foreground", className)}
       {...props}
