@@ -1,9 +1,7 @@
-node_modules
+*.local.*
+*.local
 
-# For AI tools:
-.claude
-CLAUDE.local.md
-# dotenv file used for MCP secrets
-.env.local
-# LLMs sometime runs coverage testing manually in the root
-/coverage/
+node_modules/
+
+# LLMs sometimes run coverage testing manually in the root
+coverage/
