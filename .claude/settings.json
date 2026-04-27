@@ -1,0 +1,48 @@
+{
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "LSP",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/lsp-setup-hint.ts\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/post-edit-prettier.ts\"",
+            "timeout": 10,
+            "statusMessage": "Formatting"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/remeda-local-ci-checks.ts\"",
+            "timeout": 60,
+            "statusMessage": "Running critical CI checks for the remeda package locally"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/docs-local-ci-checks.ts\"",
+            "timeout": 60,
+            "statusMessage": "Running critical CI checks for the docs package locally"
+          }
+        ]
+      }
+    ]
+  }
+}

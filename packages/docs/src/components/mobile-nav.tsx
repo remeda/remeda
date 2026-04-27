@@ -6,6 +6,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { MenuIcon } from "lucide-react";
 import { useCallback, useState, type ReactNode } from "react";
 import { Navbar, type NavbarCategory } from "./navbar";
@@ -33,9 +34,10 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent className="p-6">
         <SheetTitle
-          className={
-            title === undefined ? "sr-only" : "text-lg font-bold capitalize"
-          }
+          className={cn(
+            "text-lg font-bold capitalize",
+            title === undefined && "sr-only",
+          )}
         >
           {title ?? "Library Entries"}
         </SheetTitle>

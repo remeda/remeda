@@ -113,6 +113,7 @@ export default defineConfig(
     // These are shadcn files, we don't want to meddle with them too much...
     files: ["src/components/ui/*.tsx"],
     rules: {
+      "react/jsx-no-leaked-render": "off",
       "react/jsx-sort-props": "off",
       "react/prefer-read-only-props": "off",
     },
