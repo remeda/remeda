@@ -7,7 +7,8 @@ import { purry } from "./purry";
  * for objects all props will be compared recursively.
  *
  * The built-in Date and RegExp are special-cased and will be compared by their
- * values.
+ * values. Objects with a `null` prototype are comparable to plain objects by
+ * their enumerable properties.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
@@ -46,7 +47,8 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  * for objects all props will be compared recursively.
  *
  * The built-in Date and RegExp are special-cased and will be compared by their
- * values.
+ * values. Objects with a `null` prototype are comparable to plain objects by
+ * their enumerable properties.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
  * right now and might result in unexpected behavior. Please open an issue in
@@ -130,8 +132,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return data.toString() === (other as unknown as RegExp).toString();
   }
 
-  // At this point we only know that the 2 objects share a prototype (or one of
-  // them has a null prototype while the other uses Object.prototype) and are not
+  // At this point we only know that the 2 objects have a comparable prototype and are not
   // any of the previous types. They could be plain objects (Object.prototype),
   // they could be classes, they could be other built-ins, or they could be
   // something weird. We assume that comparing values by keys is enough to judge

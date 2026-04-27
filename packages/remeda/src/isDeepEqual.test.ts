@@ -437,7 +437,7 @@ describe("null-prototype objects", () => {
     expect(isDeepEqual(nullProtoObject, { nested: { a: 1 } })).toBe(true);
   });
 
-  test("still compare properties against plain objects", () => {
+  test("compare property values against plain objects", () => {
     const data = { a: 1 };
     const nullProtoObject = withNullPrototype({ a: 2 });
 
@@ -445,7 +445,7 @@ describe("null-prototype objects", () => {
     expect(isDeepEqual(nullProtoObject, data)).toBe(false);
   });
 
-  test("still compare properties against null-prototype objects", () => {
+  test("compare property values between null-prototype objects", () => {
     expect(
       isDeepEqual(withNullPrototype({ a: 1 }), withNullPrototype({ a: 2 })),
     ).toBe(false);
@@ -468,6 +468,6 @@ describe("null-prototype objects", () => {
 });
 
 function withNullPrototype<T extends object>(data: T): T {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- Object.create(null) intentionally creates a null-prototype object and is typed as `any`.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- we rely on the type of Object.create which isn't typed.
   return Object.assign(Object.create(null), data);
 }
