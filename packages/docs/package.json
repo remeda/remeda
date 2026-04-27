@@ -10,7 +10,7 @@
     "check": "astro check",
     "dev": "astro dev",
     "format": "prettier . --write",
-    "lint": "eslint --fix --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint/",
+    "lint": "eslint --fix --max-warnings 0",
     "preview": "astro preview",
     "sync": "astro sync"
   },
