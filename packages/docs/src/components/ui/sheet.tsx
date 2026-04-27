@@ -1,37 +1,62 @@
 import { cn } from "@/lib/utils";
-import * as Dialog from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
+import { Dialog as SheetPrimitive } from "radix-ui";
 import type { ComponentProps } from "react";
 
-export function Sheet({ ...props }: ComponentProps<typeof Dialog.Root>) {
-  return <Dialog.Root data-slot="sheet" {...props} />;
+export function Sheet({
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Root>) {
+  return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
 export function SheetTrigger({
   ...props
-}: ComponentProps<typeof Dialog.Trigger>) {
-  return <Dialog.Trigger data-slot="sheet-trigger" {...props} />;
+}: ComponentProps<typeof SheetPrimitive.Trigger>) {
+  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
-export function SheetClose({ ...props }: ComponentProps<typeof Dialog.Close>) {
-  return <Dialog.Close data-slot="sheet-close" {...props} />;
+export function SheetClose({
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Close>) {
+  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
+}
+
+export function SheetPortal({
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Portal>) {
+  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
+}
+
+export function SheetOverlay({
+  className,
+  ...props
+}: ComponentProps<typeof SheetPrimitive.Overlay>) {
+  return (
+    <SheetPrimitive.Overlay
+      data-slot="sheet-overlay"
+      className={cn(
+        "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function SheetContent({
   className,
   children,
   side = "right",
+  showCloseButton = true,
   ...props
-}: ComponentProps<typeof Dialog.Content> & {
+}: ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
+  showCloseButton?: boolean;
 }) {
   return (
-    <Dialog.Portal data-slot="sheet-portal">
-      <Dialog.Overlay
-        data-slot="sheet-overlay"
-        className="fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0"
-      />
-      <Dialog.Content
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
           "fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:animate-in data-[state=open]:duration-500",
@@ -48,12 +73,14 @@ export function SheetContent({
         {...props}
       >
         {children}
-        <Dialog.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary">
-          <XIcon className="size-4" />
-          <span className="sr-only">Close</span>
-        </Dialog.Close>
-      </Dialog.Content>
-    </Dialog.Portal>
+        {showCloseButton ? (
+          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary">
+            <XIcon className="size-4" />
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
+        ) : undefined}
+      </SheetPrimitive.Content>
+    </SheetPortal>
   );
 }
 
@@ -80,9 +107,9 @@ export function SheetFooter({ className, ...props }: ComponentProps<"div">) {
 export function SheetTitle({
   className,
   ...props
-}: ComponentProps<typeof Dialog.Title>) {
+}: ComponentProps<typeof SheetPrimitive.Title>) {
   return (
-    <Dialog.Title
+    <SheetPrimitive.Title
       data-slot="sheet-title"
       className={cn("font-semibold text-foreground", className)}
       {...props}
@@ -93,9 +120,9 @@ export function SheetTitle({
 export function SheetDescription({
   className,
   ...props
-}: ComponentProps<typeof Dialog.Description>) {
+}: ComponentProps<typeof SheetPrimitive.Description>) {
   return (
-    <Dialog.Description
+    <SheetPrimitive.Description
       data-slot="sheet-description"
       className={cn("text-sm text-muted-foreground", className)}
       {...props}
