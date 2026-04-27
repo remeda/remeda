@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -20,9 +21,11 @@ export function ThemeSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <ThemeItem theme="light" />
-        <ThemeItem theme="dark" />
-        <ThemeItem theme="system" />
+        <DropdownMenuGroup>
+          <ThemeItem theme="light" />
+          <ThemeItem theme="dark" />
+          <ThemeItem theme="system" />
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
