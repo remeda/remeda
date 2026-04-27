@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
-import { Dialog as SheetPrimitive } from "radix-ui";
+import { Dialog as SheetPrimitive, Slot } from "radix-ui";
 import type { ComponentProps } from "react";
 
 export function Sheet({
@@ -84,9 +84,15 @@ export function SheetContent({
   );
 }
 
-export function SheetHeader({ className, ...props }: ComponentProps<"div">) {
+export function SheetHeader({
+  className,
+  asChild = false,
+  ...props
+}: ComponentProps<"div"> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div";
+
   return (
-    <div
+    <Comp
       data-slot="sheet-header"
       className={cn("flex flex-col gap-1.5 p-4", className)}
       {...props}
@@ -94,9 +100,15 @@ export function SheetHeader({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-export function SheetFooter({ className, ...props }: ComponentProps<"div">) {
+export function SheetFooter({
+  className,
+  asChild = false,
+  ...props
+}: ComponentProps<"div"> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div";
+
   return (
-    <div
+    <Comp
       data-slot="sheet-footer"
       className={cn("mt-auto flex flex-col gap-2 p-4", className)}
       {...props}
