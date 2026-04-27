@@ -11,5 +11,5 @@ export default {
   // @see https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#specifying-your-tailwind-stylesheet-path
   tailwindStylesheet: "./src/styles/global.css",
   // @see https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-function-calls
-  tailwindFunctions: ["cn"],
+  tailwindFunctions: ["cn", "cva"],
 };
