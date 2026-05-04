@@ -1,5 +1,4 @@
 import { describe, test } from "vitest";
-import { $typed } from "../test/$typed";
 import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 
@@ -88,5 +87,6 @@ test("support interfaces (issue #990)", () => {
     name: { first: string };
   }
 
-  setPath($typed<User>(), ["name", "first"], "Jane");
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+  setPath({ name: { first: "John" } } as User, ["name", "first"], "Jane");
 });

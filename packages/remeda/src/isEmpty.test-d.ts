@@ -1,5 +1,4 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { $typed } from "../test/$typed";
 import { isEmpty } from "./isEmpty";
 
 describe("invalid types", () => {
@@ -63,7 +62,8 @@ describe("objects", () => {
     interface MyInterface {
       a: number;
     }
-    const data = $typed<MyInterface>();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+    const data = { a: 123 } as MyInterface;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<"a", never>>();
     } else {

@@ -1,5 +1,4 @@
 import { expectTypeOf, test } from "vitest";
-import { $typed } from "../test/$typed";
 import { mergeDeep } from "./mergeDeep";
 
 test("trivially merges disjoint objects", () => {
@@ -70,7 +69,8 @@ test("works with interfaces", () => {
     c: boolean;
   }
 
-  const result = mergeDeep($typed<Foo>(), $typed<Bar>());
-
-  expectTypeOf(result).toEqualTypeOf<{ a: string; b: number; c: boolean }>();
+  expectTypeOf(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+    mergeDeep({ a: "foo", b: 123 } as Foo, { a: "bar", c: true } as Bar),
+  ).toEqualTypeOf<{ a: string; b: number; c: boolean }>();
 });

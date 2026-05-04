@@ -136,7 +136,8 @@ describe("data-first", () => {
     }
 
     expectTypeOf(
-      hasSubObject($typed<AB>(), $typed<A>()),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+      hasSubObject({ a: 1, b: 2 } as AB, { a: 1 } as A),
     ).toEqualTypeOf<boolean>();
   });
 
@@ -456,8 +457,10 @@ describe("data-last", () => {
       a: number;
     }
 
-    hasSubObject($typed<A>())($typed<AB>());
-    pipe($typed<AB>(), hasSubObject($typed<A>()));
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+    hasSubObject({ a: 1 } as A)({ a: 1, b: 2 } as AB);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
+    pipe({ a: 1, b: 2 } as AB, hasSubObject({ a: 1 } as A));
   });
 
   test("narrows with empty object", () => {
