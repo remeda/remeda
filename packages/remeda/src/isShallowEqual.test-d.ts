@@ -51,8 +51,8 @@ test("works deeply", () => {
 });
 
 test("doesn't narrow when comparing objects of the same type", () => {
-  const data1 = { a: 1 } as { a: number };
-  const data2 = { a: 2 } as { a: number };
+  const data1 = { a: 1 };
+  const data2 = { a: 2 };
   if (isShallowEqual(data1, data2)) {
     expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
   } else {

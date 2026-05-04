@@ -1,4 +1,5 @@
 import { describe, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { pipe } from "./pipe";
 import { setPath } from "./setPath";
 
@@ -87,5 +88,5 @@ test("support interfaces (issue #990)", () => {
     name: { first: string };
   }
 
-  setPath({ name: { first: "John" } } as User, ["name", "first"], "Jane");
+  setPath($typed<User>(), ["name", "first"], "Jane");
 });

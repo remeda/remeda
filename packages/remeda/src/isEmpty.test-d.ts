@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { isEmpty } from "./isEmpty";
 
 describe("invalid types", () => {
@@ -62,7 +63,7 @@ describe("objects", () => {
     interface MyInterface {
       a: number;
     }
-    const data = { a: 123 } as MyInterface;
+    const data = $typed<MyInterface>();
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<"a", never>>();
     } else {

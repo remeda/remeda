@@ -222,44 +222,32 @@ describe("condition is a literal", () => {
 
 describe("condition is a simple object", () => {
   test("array of matching objects", () => {
-    expectTypeOf(
-      filteredArray([] as { a: string }[], { a: "" } as { a: string }),
-    ).toEqualTypeOf<{ a: string }[]>();
+    expectTypeOf(filteredArray([] as { a: string }[], { a: "" })).toEqualTypeOf<
+      { a: string }[]
+    >();
   });
 
   test("array of objects with matching and additional properties", () => {
     expectTypeOf(
-      filteredArray(
-        [] as { a: string; b: number }[],
-        { a: "" } as { a: string },
-      ),
+      filteredArray([] as { a: string; b: number }[], { a: "" }),
     ).toEqualTypeOf<{ a: string; b: number }[]>();
   });
 
   test("array with mixed types including matching objects", () => {
     expectTypeOf(
-      filteredArray(
-        [] as ({ a: string } | string | number)[],
-        { a: "" } as { a: string },
-      ),
+      filteredArray([] as ({ a: string } | string | number)[], { a: "" }),
     ).toEqualTypeOf<{ a: string }[]>();
   });
 
   test("tuple with mixed types including matching objects", () => {
     expectTypeOf(
-      filteredArray(
-        [""] as [{ a: string } | string | number],
-        { a: "" } as { a: string },
-      ),
+      filteredArray([""] as [{ a: string } | string | number], { a: "" }),
     ).toEqualTypeOf<[] | [{ a: string }]>();
   });
 
   test("array with no matching objects", () => {
     expectTypeOf(
-      filteredArray(
-        [] as ({ b: string } | string)[],
-        { a: "" } as { a: string },
-      ),
+      filteredArray([] as ({ b: string } | string)[], { a: "" }),
     ).toEqualTypeOf<[]>();
   });
 
@@ -277,7 +265,7 @@ describe("condition is a simple object", () => {
           { b: number },
           { a: string; c: boolean },
         ],
-        { a: "" } as { a: string },
+        { a: "" },
       ),
     ).toEqualTypeOf<
       [{ a: string }, { a: "hello" }, { a: string; c: boolean }]
@@ -724,10 +712,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
 
   test("filtering for only one variant", () => {
     expectTypeOf(
-      filteredArray(
-        [] as ({ a: string } | { b: number })[],
-        { a: "" } as { a: string },
-      ),
+      filteredArray([] as ({ a: string } | { b: number })[], { a: "" }),
     ).toEqualTypeOf<{ a: string }[]>();
   });
 

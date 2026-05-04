@@ -1,45 +1,34 @@
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { mergeDeep } from "./mergeDeep";
 
 test("trivially merges disjoint objects", () => {
-  const result = mergeDeep(
-    { foo: "bar" } as { foo: string },
-    { bar: "baz" } as { bar: string },
-  );
+  const result = mergeDeep({ foo: "bar" }, { bar: "baz" });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
 });
 
 test("merges fully overlapping types", () => {
-  const result = mergeDeep(
-    { foo: "bar" } as { foo: string },
-    { foo: "baz" } as { foo: string },
-  );
+  const result = mergeDeep({ foo: "bar" }, { foo: "baz" });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string }>();
 });
 
 test("merges semi-overlapping types", () => {
-  const result = mergeDeep(
-    { foo: "bar", x: 1 } as { foo: string; x: number },
-    { foo: "baz", y: 2 } as { foo: string; y: number },
-  );
+  const result = mergeDeep({ foo: "bar", x: 1 }, { foo: "baz", y: 2 });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string; x: number; y: number }>();
 });
 
 test("deeply merges", () => {
-  const result = mergeDeep(
-    { foo: { bar: "bar" } } as { foo: { bar: string } },
-    { foo: { qux: "qux" } } as { foo: { qux: string } },
-  );
+  const result = mergeDeep({ foo: { bar: "bar" } }, { foo: { qux: "qux" } });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
 });
 
 test("overrides types", () => {
-  const a = { foo: { bar: "baz" } } as { foo: { bar: string } };
-  const b = { foo: "qux" } as { foo: string };
+  const a = { foo: { bar: "baz" } };
+  const b = { foo: "qux" };
 
   const resultAB = mergeDeep(a, b);
 
@@ -61,12 +50,8 @@ test("doesn't spread arrays", () => {
 
 test("doesn't recurse into arrays", () => {
   const result = mergeDeep(
-    { foo: [{ bar: "baz", x: 123 }] } as {
-      foo: { bar: string; x: number }[];
-    },
-    { foo: [{ bar: "hello, world", y: 456 }] } as {
-      foo: { bar: string; y: number }[];
-    },
+    { foo: [{ bar: "baz", x: 123 }] },
+    { foo: [{ bar: "hello, world", y: 456 }] },
   );
 
   expectTypeOf(result).toEqualTypeOf<{
@@ -85,10 +70,7 @@ test("works with interfaces", () => {
     c: boolean;
   }
 
-  const result = mergeDeep(
-    { a: "foo", b: 123 } as Foo,
-    { a: "bar", c: true } as Bar,
-  );
+  const result = mergeDeep($typed<Foo>(), $typed<Bar>());
 
   expectTypeOf(result).toEqualTypeOf<{ a: string; b: number; c: boolean }>();
 });

@@ -363,7 +363,6 @@ export default defineConfig(
       ],
       "@typescript-eslint/no-unnecessary-parameter-property-assignment": "warn",
       "@typescript-eslint/no-unnecessary-qualifier": "warn",
-      "@typescript-eslint/no-unnecessary-type-assertion": "off",
       "@typescript-eslint/parameter-properties": [
         "warn",
         { prefer: "parameter-property" },

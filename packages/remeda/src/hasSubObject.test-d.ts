@@ -136,7 +136,7 @@ describe("data-first", () => {
     }
 
     expectTypeOf(
-      hasSubObject({ a: 1, b: 2 } as AB, { a: 1 } as A),
+      hasSubObject($typed<AB>(), $typed<A>()),
     ).toEqualTypeOf<boolean>();
   });
 
@@ -456,8 +456,8 @@ describe("data-last", () => {
       a: number;
     }
 
-    hasSubObject({ a: 1 } as A)({ a: 1, b: 2 } as AB);
-    pipe({ a: 1, b: 2 } as AB, hasSubObject({ a: 1 } as A));
+    hasSubObject($typed<A>())($typed<AB>());
+    pipe($typed<AB>(), hasSubObject($typed<A>()));
   });
 
   test("narrows with empty object", () => {
