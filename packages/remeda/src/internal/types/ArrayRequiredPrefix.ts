@@ -48,8 +48,8 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                 [
                   // We recreate the array by largely copying the input tuple to
                   // the output as-is, but we make two modifications to it:
-                  ...TupleParts<T>["required"],
 
+                  ...TupleParts<T>["required"],
                   // We first make optional items required, we do this as many
                   // times as needed to fulfil the Remainder amount. If we have
                   // leftover optional items they are added to the output as
@@ -67,7 +67,6 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                       Remainder,
                       TupleParts<T>["optional"]["length"]
                     >,
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments -- False positive! TypeScript infers this as `unknown` which is then compared to the default value for this type parameter, but that's not how this type works!
                     TupleParts<T>["item"]
                   >,
 

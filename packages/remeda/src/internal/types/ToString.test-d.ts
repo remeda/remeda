@@ -1,5 +1,6 @@
 import type { Tagged } from "type-fest";
-import { expectTypeOf, test, describe } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { ToString } from "./ToString";
 
 declare const SYMBOL: unique symbol;
@@ -7,7 +8,7 @@ declare const SYMBOL: unique symbol;
 declare function toString<const T>(data: T): ToString<T>;
 
 test("primitive strings", () => {
-  expectTypeOf(toString("" as string)).toEqualTypeOf<string>();
+  expectTypeOf(toString($typed<string>())).toEqualTypeOf<string>();
 });
 
 test("literal string", () => {
@@ -15,7 +16,7 @@ test("literal string", () => {
 });
 
 test("primitive numbers", () => {
-  expectTypeOf(toString(123 as number)).toEqualTypeOf<`${number}`>();
+  expectTypeOf(toString($typed<number>())).toEqualTypeOf<`${number}`>();
 });
 
 test("literal number", () => {
@@ -24,16 +25,16 @@ test("literal number", () => {
 
 test("template string", () => {
   expectTypeOf(
-    toString("prefix_123" as `prefix_${number}`),
+    toString($typed<`prefix_${number}`>()),
   ).toEqualTypeOf<`prefix_${number}`>();
 });
 
 test("union of literal numbers", () => {
-  expectTypeOf(toString(123 as 123 | 456)).toEqualTypeOf<"123" | "456">();
+  expectTypeOf(toString($typed<123 | 456>())).toEqualTypeOf<"123" | "456">();
 });
 
 test("union of number and template string", () => {
-  expectTypeOf(toString(123 as number | `prefix_${number}`)).toEqualTypeOf<
+  expectTypeOf(toString($typed<number | `prefix_${number}`>())).toEqualTypeOf<
     `${number}` | `prefix_${number}`
   >();
 });
@@ -51,7 +52,7 @@ test("union of branded types", () => {
 });
 
 test("union with a mix of branded and number keys", () => {
-  expectTypeOf(toString(123 as 123 | Tagged<string, "brand">)).toEqualTypeOf<
+  expectTypeOf(toString($typed<123 | Tagged<string, "brand">>())).toEqualTypeOf<
     "123" | Tagged<string, "brand">
   >();
 });
@@ -62,20 +63,22 @@ describe("symbols", () => {
   });
 
   test("union with primitive string", () => {
-    expectTypeOf(toString("hello" as string | symbol)).toEqualTypeOf<string>();
+    expectTypeOf(toString($typed<string | symbol>())).toEqualTypeOf<string>();
   });
 
   test("union with primitive number", () => {
-    expectTypeOf(toString(123 as number | symbol)).toEqualTypeOf<`${number}`>();
+    expectTypeOf(
+      toString($typed<number | symbol>()),
+    ).toEqualTypeOf<`${number}`>();
   });
 
   test("union with literal number", () => {
-    expectTypeOf(toString(123 as 123 | symbol)).toEqualTypeOf<"123">();
+    expectTypeOf(toString($typed<123 | symbol>())).toEqualTypeOf<"123">();
   });
 
   test("union with template string", () => {
     expectTypeOf(
-      toString("prefix_123" as `prefix_${number}` | symbol),
+      toString($typed<`prefix_${number}` | symbol>()),
     ).toEqualTypeOf<`prefix_${number}`>();
   });
 

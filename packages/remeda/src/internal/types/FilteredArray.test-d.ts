@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { FilteredArray } from "./FilteredArray";
 import type { IterableContainer } from "./IterableContainer";
 
@@ -8,59 +9,64 @@ declare function filteredArray<T extends IterableContainer, C>(
 ): FilteredArray<T, C>;
 
 test("empty array", () => {
-  expectTypeOf(filteredArray([], "" as string)).toEqualTypeOf<[]>();
+  expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
 });
 
 test("empty readonly array", () => {
-  expectTypeOf(filteredArray([] as const, "" as string)).toEqualTypeOf<[]>();
+  expectTypeOf(filteredArray([] as const, $typed<string>())).toEqualTypeOf<
+    []
+  >();
 });
 
 describe("condition is a primitive", () => {
   test("primitive array", () => {
-    expectTypeOf(filteredArray([] as string[], "" as string)).toEqualTypeOf<
+    expectTypeOf(filteredArray([] as string[], $typed<string>())).toEqualTypeOf<
       string[]
     >();
   });
 
   test("primitive readonly array", () => {
     expectTypeOf(
-      filteredArray([] as readonly string[], "" as string),
+      filteredArray([] as readonly string[], $typed<string>()),
     ).toEqualTypeOf<string[]>();
   });
 
   test("union of primitives array", () => {
     expectTypeOf(
-      filteredArray([] as (string | number | boolean)[], "" as string),
+      filteredArray([] as (string | number | boolean)[], $typed<string>()),
     ).toEqualTypeOf<string[]>();
   });
 
   test("union of primitives readonly array", () => {
     expectTypeOf(
-      filteredArray([] as readonly (string | number | boolean)[], "" as string),
+      filteredArray(
+        [] as readonly (string | number | boolean)[],
+        $typed<string>(),
+      ),
     ).toEqualTypeOf<string[]>();
   });
 
   test("array of literals", () => {
-    expectTypeOf(filteredArray([] as "hello"[], "" as string)).toEqualTypeOf<
-      "hello"[]
-    >();
+    expectTypeOf(
+      filteredArray([] as "hello"[], $typed<string>()),
+    ).toEqualTypeOf<"hello"[]>();
   });
 
   test("readonly array of literals", () => {
     expectTypeOf(
-      filteredArray([] as readonly "hello"[], "" as string),
+      filteredArray([] as readonly "hello"[], $typed<string>()),
     ).toEqualTypeOf<"hello"[]>();
   });
 
   test("array with a union of literals", () => {
     expectTypeOf(
-      filteredArray([] as ("hello" | 3 | true)[], "" as string),
+      filteredArray([] as ("hello" | 3 | true)[], $typed<string>()),
     ).toEqualTypeOf<"hello"[]>();
   });
 
   test("readonly array with a union of literals", () => {
     expectTypeOf(
-      filteredArray([] as readonly ("hello" | 3 | true)[], "" as string),
+      filteredArray([] as readonly ("hello" | 3 | true)[], $typed<string>()),
     ).toEqualTypeOf<"hello"[]>();
   });
 
@@ -68,7 +74,7 @@ describe("condition is a primitive", () => {
     expectTypeOf(
       filteredArray(
         [1, "hello", true] as [number, string, boolean],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<[string]>();
   });
@@ -77,20 +83,20 @@ describe("condition is a primitive", () => {
     expectTypeOf(
       filteredArray(
         [1, "hello", true] as readonly [number, string, boolean],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<[string]>();
   });
 
   test("tuple of literals", () => {
     expectTypeOf(
-      filteredArray([1, "hello", true] as [1, "hello", true], "" as string),
+      filteredArray([1, "hello", true] as [1, "hello", true], $typed<string>()),
     ).toEqualTypeOf<["hello"]>();
   });
 
   test("readonly tuple of literals", () => {
     expectTypeOf(
-      filteredArray([1, "hello", true] as const, "" as string),
+      filteredArray([1, "hello", true] as const, $typed<string>()),
     ).toEqualTypeOf<["hello"]>();
   });
 
@@ -98,14 +104,17 @@ describe("condition is a primitive", () => {
     expectTypeOf(
       filteredArray(
         ["hello", 3] as [string, ...boolean[], number],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<[string]>();
   });
 
   test("complex tuple of primitives, filtered on the rest", () => {
     expectTypeOf(
-      filteredArray([true, 3] as [boolean, ...string[], number], "" as string),
+      filteredArray(
+        [true, 3] as [boolean, ...string[], number],
+        $typed<string>(),
+      ),
     ).toEqualTypeOf<string[]>();
   });
 
@@ -113,7 +122,7 @@ describe("condition is a primitive", () => {
     expectTypeOf(
       filteredArray(
         [true, "hello"] as [boolean, ...number[], string],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<[string]>();
   });
@@ -122,7 +131,7 @@ describe("condition is a primitive", () => {
     expectTypeOf(
       filteredArray(
         ["hello", "foo"] as ["hello" | "world", "foo" | "bar"],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<
       ["hello", "foo"] | ["world", "foo"] | ["hello", "bar"] | ["world", "bar"]
@@ -137,7 +146,7 @@ describe("condition is a primitive", () => {
           ...("rest" | true)[],
           "suffix" | Date,
         ],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<
       | "rest"[]
@@ -148,7 +157,7 @@ describe("condition is a primitive", () => {
   });
 
   test("disjoint types", () => {
-    expectTypeOf(filteredArray([] as number[], "" as string)).toEqualTypeOf<
+    expectTypeOf(filteredArray([] as number[], $typed<string>())).toEqualTypeOf<
       []
     >();
   });
@@ -281,7 +290,7 @@ describe("condition is a complex object", () => {
     expectTypeOf(
       filteredArray(
         [] as { a: "hello"; b?: number }[],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<{ a: "hello"; b?: number }[]>();
   });
@@ -290,7 +299,7 @@ describe("condition is a complex object", () => {
     expectTypeOf(
       filteredArray(
         [] as { a: "hello" | "world"; b?: number }[],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<{ a: "hello"; b?: number }[]>();
   });
@@ -299,7 +308,7 @@ describe("condition is a complex object", () => {
     expectTypeOf(
       filteredArray(
         [] as { a: "world"; b?: number }[],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<[]>();
   });
@@ -308,7 +317,7 @@ describe("condition is a complex object", () => {
     expectTypeOf(
       filteredArray(
         [] as { a: "hello" }[],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<{ a: "hello" }[]>();
   });
@@ -317,7 +326,7 @@ describe("condition is a complex object", () => {
     expectTypeOf(
       filteredArray(
         [] as ({ a: "hello"; b: number } | { a: "world" } | string)[],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<{ a: "hello"; b: number }[]>();
   });
@@ -330,7 +339,7 @@ describe("condition is a complex object", () => {
           { a: "world" },
           { a: "hello"; b: number },
         ],
-        { a: "hello" } as { a: "hello"; b?: number },
+        $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<[{ a: "hello" }, { a: "hello"; b: number }]>();
   });
@@ -346,7 +355,7 @@ describe("condition is a complex object", () => {
           { a: "hello", b: "world" },
           { a: "hello", b: "world", c: 1234 },
         ] as const,
-        { a: "hello", b: "world" } as { a: "hello"; b: "world" },
+        $typed<{ a: "hello"; b: "world" }>(),
       ),
     ).toEqualTypeOf<
       [
@@ -365,7 +374,7 @@ describe("condition is a complex object", () => {
           { a: "hello", b: "world" },
           { a: "world" },
         ] as const,
-        { a: "hello" } as { a: "hello" | "world" },
+        $typed<{ a: "hello" | "world" }>(),
       ),
     ).toEqualTypeOf<
       [
@@ -576,13 +585,16 @@ describe("condition is a tuple", () => {
 describe("condition is a union of primitives", () => {
   test("array with elements matching multiple parts of the union", () => {
     expectTypeOf(
-      filteredArray([] as (string | number | boolean)[], "" as string | number),
+      filteredArray(
+        [] as (string | number | boolean)[],
+        $typed<string | number>(),
+      ),
     ).toEqualTypeOf<(string | number)[]>();
   });
 
   test("array with only one union member type", () => {
     expectTypeOf(
-      filteredArray([] as string[], "" as string | number),
+      filteredArray([] as string[], $typed<string | number>()),
     ).toEqualTypeOf<string[]>();
   });
 
@@ -590,14 +602,14 @@ describe("condition is a union of primitives", () => {
     expectTypeOf(
       filteredArray(
         ["hello", 42, true] as [string, number, boolean],
-        "" as string | number,
+        $typed<string | number>(),
       ),
     ).toEqualTypeOf<[string, number]>();
   });
 
   test("tuple with literal types that extend union members", () => {
     expectTypeOf(
-      filteredArray(["hello", 42, true] as const, "" as string | number),
+      filteredArray(["hello", 42, true] as const, $typed<string | number>()),
     ).toEqualTypeOf<["hello", 42]>();
   });
 
@@ -605,7 +617,7 @@ describe("condition is a union of primitives", () => {
     expectTypeOf(
       filteredArray(
         ["", "", 123] as [string | number, string | boolean, number | boolean],
-        "cat" as string | number,
+        $typed<string | number>(),
       ),
     ).toEqualTypeOf<
       | [string, number]
@@ -623,19 +635,22 @@ describe("condition is a union of primitives", () => {
 describe("condition is a union of literals", () => {
   test("array with elements matching any part of the union", () => {
     expectTypeOf(
-      filteredArray(["cat", "dog", "fish"] as string[], "cat" as "cat" | "dog"),
+      filteredArray(
+        ["cat", "dog", "fish"] as string[],
+        $typed<"cat" | "dog">(),
+      ),
     ).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("array with union literals only", () => {
     expectTypeOf(
-      filteredArray([] as ("cat" | "dog" | "fish")[], "cat" as "cat" | "dog"),
+      filteredArray([] as ("cat" | "dog" | "fish")[], $typed<"cat" | "dog">()),
     ).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("tuple with mixed elements", () => {
     expectTypeOf(
-      filteredArray(["cat", "fish", "dog"] as const, "cat" as "cat" | "dog"),
+      filteredArray(["cat", "fish", "dog"] as const, $typed<"cat" | "dog">()),
     ).toEqualTypeOf<["cat", "dog"]>();
   });
 
@@ -643,7 +658,7 @@ describe("condition is a union of literals", () => {
     expectTypeOf(
       filteredArray(
         ["cat", "cat", "dog"] as ["cat" | "dog", "cat" | "foo", "dog" | "bar"],
-        "cat" as "cat" | "dog",
+        $typed<"cat" | "dog">(),
       ),
     ).toEqualTypeOf<
       | ["cat"]
@@ -663,7 +678,7 @@ describe("condition is a discriminated union", () => {
     expectTypeOf(
       filteredArray(
         [] as ({ a: "cat"; b: number } | { a: "dog"; c: boolean })[],
-        { a: "cat" } as { a: "cat" } | { a: "dog" },
+        $typed<{ a: "cat" } | { a: "dog" }>(),
       ),
     ).toEqualTypeOf<({ a: "cat"; b: number } | { a: "dog"; c: boolean })[]>();
   });
@@ -676,7 +691,7 @@ describe("condition is a discriminated union", () => {
           { a: "dog", c: true },
           { a: "cat", b: 2 },
         ] as const,
-        { a: "cat" } as { a: "cat" } | { a: "dog" },
+        $typed<{ a: "cat" } | { a: "dog" }>(),
       ),
     ).toEqualTypeOf<
       [
@@ -691,7 +706,7 @@ describe("condition is a discriminated union", () => {
     expectTypeOf(
       filteredArray(
         [] as ({ a: "cat"; b: number } | { a: "dog"; c: boolean })[],
-        { a: "cat" } as { a: "cat" | "dog" },
+        $typed<{ a: "cat" | "dog" }>(),
       ),
     ).toEqualTypeOf<({ a: "cat"; b: number } | { a: "dog"; c: boolean })[]>();
   });
@@ -702,7 +717,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
     expectTypeOf(
       filteredArray(
         [] as ({ a: string } | { b: number })[],
-        { a: "" } as { a: string } | { b: number },
+        $typed<{ a: string } | { b: number }>(),
       ),
     ).toEqualTypeOf<({ a: string } | { b: number })[]>();
   });
@@ -720,7 +735,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
     expectTypeOf(
       filteredArray(
         [] as ({ a: string } | { b: number } | { a: string; b: number })[],
-        { a: "" } as { a: string } | { b: number },
+        $typed<{ a: string } | { b: number }>(),
       ),
     ).toEqualTypeOf<
       ({ a: string } | { b: number } | { a: string; b: number })[]
@@ -731,7 +746,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
     expectTypeOf(
       filteredArray(
         [{ a: "hello" }, { b: 42 }, { a: "world", b: 123 }] as const,
-        { b: 0 } as { a: string } | { b: number },
+        $typed<{ a: string } | { b: number }>(),
       ),
     ).toEqualTypeOf<
       [
@@ -770,13 +785,16 @@ describe("complex nested union conditions", () => {
 describe("tuples with optional elements", () => {
   test("removes the partialness once filtered", () => {
     expectTypeOf(
-      filteredArray([] as [number?, string?], "" as string),
+      filteredArray([] as [number?, string?], $typed<string>()),
     ).toEqualTypeOf<[string?]>();
   });
 
   test("multiple matches", () => {
     expectTypeOf(
-      filteredArray([] as [number?, string?, number?, string?], "" as string),
+      filteredArray(
+        [] as [number?, string?, number?, string?],
+        $typed<string>(),
+      ),
     ).toEqualTypeOf<[string?, string?]>();
   });
 
@@ -784,7 +802,7 @@ describe("tuples with optional elements", () => {
     expectTypeOf(
       filteredArray(
         [] as [("hello" | "world")?, ("foo" | "bar")?],
-        "" as string,
+        $typed<string>(),
       ),
     ).toEqualTypeOf<
       | ["hello"?, "foo"?]
@@ -798,14 +816,14 @@ describe("tuples with optional elements", () => {
     expectTypeOf(
       filteredArray(
         [] as [("hello" | "world")?, ("foo" | "bar")?],
-        "hello" as "hello" | "foo",
+        $typed<"hello" | "foo">(),
       ),
     ).toEqualTypeOf<[] | ["hello"?, "foo"?] | ["hello"?] | ["foo"?]>();
   });
 
   test("primitive items, literal union condition", () => {
     expectTypeOf(
-      filteredArray([] as [string?, string?], "hello" as "hello" | "foo"),
+      filteredArray([] as [string?, string?], $typed<"hello" | "foo">()),
     ).toEqualTypeOf<
       | ["hello"?, "foo"?]
       | []
@@ -820,7 +838,7 @@ describe("tuples with optional elements", () => {
 
 test("null filtering", () => {
   expectTypeOf(
-    filteredArray([] as (string | undefined)[], "" as string),
+    filteredArray([] as (string | undefined)[], $typed<string>()),
   ).toEqualTypeOf<string[]>();
 });
 

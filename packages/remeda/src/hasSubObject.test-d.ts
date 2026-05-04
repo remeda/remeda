@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { hasSubObject } from "./hasSubObject";
 import { pipe } from "./pipe";
 
@@ -33,13 +34,16 @@ describe("data-first", () => {
 
   test("allows keys to have different types when types are overlapping", () => {
     // ok - union type in super-object
-    hasSubObject({ a: "a" as number | string }, { a: 1 });
+    hasSubObject({ a: $typed<number | string>() }, { a: 1 });
 
     // ok - union type in sub-object
-    hasSubObject({ a: "a" }, { a: 1 as number | string });
+    hasSubObject({ a: "a" }, { a: $typed<number | string>() });
 
     // ok - union type in both super-object and sub-object
-    hasSubObject({ a: "a" as number | string }, { a: 1 as boolean | number });
+    hasSubObject(
+      { a: $typed<number | string>() },
+      { a: $typed<boolean | number>() },
+    );
   });
 
   test("allows const types", () => {
@@ -109,15 +113,15 @@ describe("data-first", () => {
 
   test("allows nested objects keys to have different types when types are overlapping", () => {
     // ok - union type in nested super-object
-    hasSubObject({ a: { b: 1 as number | string } }, { a: { b: 1 } });
+    hasSubObject({ a: { b: $typed<number | string>() } }, { a: { b: 1 } });
 
     // ok - union type in nested sub-object
-    hasSubObject({ a: { b: 1 } }, { a: { b: 1 as number | string } });
+    hasSubObject({ a: { b: 1 } }, { a: { b: $typed<number | string>() } });
 
     // ok - union type in both nested super-object and sub-object
     hasSubObject(
-      { a: { b: 1 as boolean | number } },
-      { a: { b: 1 as number | string } },
+      { a: { b: $typed<boolean | number>() } },
+      { a: { b: $typed<number | string>() } },
     );
   });
 
@@ -179,7 +183,7 @@ describe("data-first", () => {
   test("narrows with sub-object union type field", () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
-    if (hasSubObject(obj, { c: true as boolean | number })) {
+    if (hasSubObject(obj, { c: $typed<boolean | number>() })) {
       expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
@@ -220,8 +224,8 @@ describe("data-first", () => {
 
     if (
       hasSubObject(obj, {
-        a: { foo: 12 as number | string, bar: true },
-        b: { foo: "test", bar: true as boolean | number },
+        a: { foo: $typed<number | string>(), bar: true },
+        b: { foo: "test", bar: $typed<boolean | number>() },
       })
     ) {
       expectTypeOf(obj).toMatchObjectType<{
@@ -306,20 +310,20 @@ describe("data-last", () => {
 
   test("allows keys to have different types when types are overlapping", () => {
     // ok - union type in super-object
-    hasSubObject({ a: 1 })({ a: "a" as number | string });
-    pipe({ a: "a" as number | string }, hasSubObject({ a: 1 }));
+    hasSubObject({ a: 1 })({ a: $typed<number | string>() });
+    pipe({ a: $typed<number | string>() }, hasSubObject({ a: 1 }));
 
     // ok - union type in sub-object
-    hasSubObject({ a: 1 as number | string })({ a: "a" });
-    pipe({ a: "a" }, hasSubObject({ a: 1 as number | string }));
+    hasSubObject({ a: $typed<number | string>() })({ a: "a" });
+    pipe({ a: "a" }, hasSubObject({ a: $typed<number | string>() }));
 
     // ok - union type in both super-object and sub-object
-    hasSubObject({ a: 1 as boolean | number })({
-      a: "a" as number | string,
+    hasSubObject({ a: $typed<boolean | number>() })({
+      a: $typed<number | string>(),
     });
     pipe(
-      { a: "a" as number | string },
-      hasSubObject({ a: 1 as boolean | number }),
+      { a: $typed<number | string>() },
+      hasSubObject({ a: $typed<boolean | number>() }),
     );
   });
 
@@ -330,7 +334,7 @@ describe("data-last", () => {
 
   test("only allows valid objects to be passed", () => {
     // @ts-expect-error [ts2345] - only allow valid objects to be passed
-    hasSubObject({ a: 1 })({ a: 2 } as unknown);
+    hasSubObject({ a: 1 })($typed<unknown>());
     // @ts-expect-error [ts2345] - only allow valid objects to be passed
     pipe({ a: 2 } as unknown, hasSubObject({ a: 1 }));
   });
@@ -352,7 +356,7 @@ describe("data-last", () => {
     );
 
     // ok - optional keys in super-object
-    hasSubObject({ a: { b: 1 } })({ a: { b: 1 } } as { a?: { b?: number } });
+    hasSubObject({ a: { b: 1 } })($typed<{ a?: { b?: number } }>());
     pipe(
       { a: { b: 1 } } as { a?: { b?: number } },
       hasSubObject({ a: { b: 1 } }),
@@ -417,22 +421,28 @@ describe("data-last", () => {
 
   test("allows nested objects keys to have different types when types are overlapping", () => {
     // ok - union type in nested super-object
-    hasSubObject({ a: { b: 1 } })({ a: { b: 1 as number | string } });
-    pipe({ a: { b: 1 as number | string } }, hasSubObject({ a: { b: 1 } }));
+    hasSubObject({ a: { b: 1 } })({ a: { b: $typed<number | string>() } });
+    pipe(
+      { a: { b: $typed<number | string>() } },
+      hasSubObject({ a: { b: 1 } }),
+    );
 
     // ok - union type in nested sub-object
-    hasSubObject({ a: { b: 1 as number | string } })({ a: { b: 1 } });
-    pipe({ a: { b: 1 } }, hasSubObject({ a: { b: 1 as number | string } }));
+    hasSubObject({ a: { b: $typed<number | string>() } })({ a: { b: 1 } });
+    pipe(
+      { a: { b: 1 } },
+      hasSubObject({ a: { b: $typed<number | string>() } }),
+    );
 
     // ok - union type in both nested super-object and sub-object
     hasSubObject({
-      a: { b: 1 as number | string },
+      a: { b: $typed<number | string>() },
     })({
-      a: { b: 1 as boolean | number },
+      a: { b: $typed<boolean | number>() },
     });
     pipe(
-      { a: { b: 1 as boolean | number } },
-      hasSubObject({ a: { b: 1 as number | string } }),
+      { a: { b: $typed<boolean | number>() } },
+      hasSubObject({ a: { b: $typed<number | string>() } }),
     );
   });
 
@@ -493,7 +503,7 @@ describe("data-last", () => {
   test("narrows with sub-object union type field", () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
-    if (hasSubObject({ c: true as boolean | number })(obj)) {
+    if (hasSubObject({ c: $typed<boolean | number>() })(obj)) {
       expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
@@ -534,8 +544,8 @@ describe("data-last", () => {
 
     if (
       hasSubObject({
-        a: { foo: 12 as number | string, bar: true },
-        b: { foo: "test", bar: true as boolean | number },
+        a: { foo: $typed<number | string>(), bar: true },
+        b: { foo: "test", bar: $typed<boolean | number>() },
       })(obj)
     ) {
       expectTypeOf(obj).toMatchObjectType<{

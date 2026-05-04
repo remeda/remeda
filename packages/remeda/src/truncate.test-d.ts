@@ -1,6 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { truncate } from "./truncate";
+import { $typed } from "../test/$typed";
 import { pipe } from "./pipe";
+import { truncate } from "./truncate";
 
 describe("default options", () => {
   test("literals, truncated", () => {
@@ -75,26 +76,26 @@ describe("custom omission, no separator", () => {
 
   test("primitive 'omission'", () => {
     expectTypeOf(
-      truncate("Hello, world!", 9, { omission: "bye" as string }),
+      truncate("Hello, world!", 9, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   test("primitive 'data' and 'omission'", () => {
     expectTypeOf(
-      truncate("Hello, world!" as string, 9, { omission: "bye" as string }),
+      truncate("Hello, world!" as string, 9, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   test("primitive 'n' and 'omission'", () => {
     expectTypeOf(
-      truncate("Hello, world!", 9 as number, { omission: "bye" as string }),
+      truncate("Hello, world!", 9 as number, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   test("all primitive", () => {
     expectTypeOf(
       truncate("Hello, world!" as string, 9 as number, {
-        omission: "bye" as string,
+        omission: $typed<string>(),
       }),
     ).toEqualTypeOf<string>();
   });
@@ -109,7 +110,7 @@ describe("with separator", () => {
 
   test("primitive separator", () => {
     expectTypeOf(
-      truncate("Hello, world!", 8, { separator: " " as string }),
+      truncate("Hello, world!", 8, { separator: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 

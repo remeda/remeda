@@ -1,5 +1,6 @@
 import type { EmptyObject } from "type-fest";
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { EnumerableStringKeyedValueOf } from "./EnumerableStringKeyedValueOf";
 
 declare const SYMBOL: unique symbol;
@@ -10,33 +11,35 @@ declare function enumerableStringKeyedValueOf<const T>(
 
 test("string values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, string>),
+    enumerableStringKeyedValueOf($typed<Record<PropertyKey, string>>()),
   ).toEqualTypeOf<string>();
 });
 
 test("number values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, number>),
+    enumerableStringKeyedValueOf($typed<Record<PropertyKey, number>>()),
   ).toEqualTypeOf<number>();
 });
 
 test("union of records", () => {
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">,
+      $typed<Record<PropertyKey, "cat"> | Record<PropertyKey, "dog">>(),
     ),
   ).toEqualTypeOf<"cat" | "dog">();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey, number> | Record<PropertyKey, string>,
+      $typed<Record<PropertyKey, number> | Record<PropertyKey, string>>(),
     ),
   ).toEqualTypeOf<number | string>();
 });
 
 test("union values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, number | string>),
+    enumerableStringKeyedValueOf(
+      $typed<Record<PropertyKey, number | string>>(),
+    ),
   ).toEqualTypeOf<number | string>();
 });
 
@@ -46,34 +49,36 @@ test("literal values", () => {
   ).toEqualTypeOf<1>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 1 } as { a: "1" | "2" | 1 }),
+    enumerableStringKeyedValueOf($typed<{ a: "1" | "2" | 1 }>()),
   ).toEqualTypeOf<"1" | "2" | 1>();
 });
 
 test("optional values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 1 } as { a: 1; b?: 4 }),
+    enumerableStringKeyedValueOf($typed<{ a: 1; b?: 4 }>()),
   ).toEqualTypeOf<1 | 4>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: "hello" } as { a: string; b?: number }),
+    enumerableStringKeyedValueOf($typed<{ a: string; b?: number }>()),
   ).toEqualTypeOf<number | string>();
 });
 
 test("nullish and undefined values", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: "hello", b: "world" } as {
-      a: string | undefined;
-      b: string | null;
-    }),
+    enumerableStringKeyedValueOf(
+      $typed<{
+        a: string | undefined;
+        b: string | null;
+      }>(),
+    ),
   ).toEqualTypeOf<string | null | undefined>();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as {
+      $typed<{
         a?: number | null;
         b?: number | null | undefined;
-      },
+      }>(),
     ),
   ).toEqualTypeOf<number | null | undefined>();
 });
@@ -89,14 +94,14 @@ test("symbol keys", () => {
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey | typeof SYMBOL, string>,
+      $typed<Record<PropertyKey | typeof SYMBOL, string>>(),
     ),
   ).toEqualTypeOf<string>();
 });
 
 test("empty object", () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as EmptyObject),
+    enumerableStringKeyedValueOf($typed<EmptyObject>()),
   ).toEqualTypeOf<never>();
 });
 
