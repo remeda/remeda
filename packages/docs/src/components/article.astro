@@ -15,6 +15,6 @@ const { article, ...props } = Astro.props;
 const { Content } = await render(article);
 ---
 
-<Prose {...props}>
+<Prose as="article" {...props}>
   <Content />
 </Prose>

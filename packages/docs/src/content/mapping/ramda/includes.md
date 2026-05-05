@@ -12,7 +12,7 @@ remeda: isIncludedIn
   For deep equality use the native [`Array.prototype.some`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
   with Remeda's [`isDeepEqual`](/docs#isDeepEqual).
 
-### Arrays
+#### Arrays
 
 ```ts
 // Ramda
@@ -22,7 +22,7 @@ includes(1, [1, 2, 3]);
 isIncludedIn(1, [1, 2, 3]);
 ```
 
-### Strings
+#### Strings
 
 ```ts
 const DATA = "Hello, World!";
@@ -34,7 +34,7 @@ includes("lo", DATA);
 DATA.includes("lo");
 ```
 
-### Object items
+#### Object items
 
 ```ts
 const DATA = [{ name: "Fred" }];
@@ -46,7 +46,7 @@ includes({ name: "Fred" }, DATA);
 DATA.some(isDeepEqual({ name: "Fred" }));
 ```
 
-### Array items
+#### Array items
 
 ```ts
 const DATA = [[42]];

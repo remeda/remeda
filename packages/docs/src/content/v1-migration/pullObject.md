@@ -1,4 +1,4 @@
-# Runtime
+#### Runtime
 
 The mapper functions now takes 2 additional parameters: `index` - The index of
 the current element being processed in array, and `data` - the array the
@@ -11,9 +11,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### New Params
+###### New Params
 
 ```ts
 pullObject(
@@ -24,7 +24,7 @@ pullObject(
 );
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 function callback(item: string, index?: number): string {

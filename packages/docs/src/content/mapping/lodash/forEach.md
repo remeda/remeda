@@ -12,7 +12,7 @@ remeda: forEach
   feature isn't available. You can build a [`pipe`](/docs#pipe) that would
   replicate this logic.
 
-### Array
+#### Array
 
 ```ts
 // Lodash
@@ -24,7 +24,7 @@ forEach([1, 2, 3], (item) => {
 });
 ```
 
-### Object
+#### Object
 
 ```ts
 // Lodash
@@ -36,7 +36,7 @@ forEachObj({ a: 1, b: 2, c: 3 }, (value) => {
 });
 ```
 
-### Early exit
+#### Early exit
 
 ```ts
 // Lodash

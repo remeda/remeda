@@ -1,10 +1,10 @@
-# Typing
+#### Typing
 
 The typing for the `other` operand was widened so that it could accept any
 value. This allows the returned type to be narrowed to items that are in the
 intersection (type-wise) of the two types.
 
-# Runtime
+#### Runtime
 
 The previous implementation did not have a predictable handling of inputs with
 duplicate values (e.g. `[1, 1]`, aka bag/multi-set). This could lead to
@@ -20,9 +20,9 @@ If you want to maintain the same runtime behavior for dealing with duplicates
 use [`filter`](/docs/#filter) with [`isIncludedIn`](/docs/#isIncludedIn) as the
 predicate.
 
-## Examples
+##### Examples
 
-### Narrowed result
+###### Narrowed result
 
 ```ts
 const DATA1 = [] as (string | number)[];
@@ -33,7 +33,7 @@ const intersected = intersection(DATA1, DATA2);
 //    ^? number[];
 ```
 
-### No duplicates
+###### No duplicates
 
 ```ts
 // Was
@@ -43,7 +43,7 @@ intersection([1, 2, 3], [2]); // => [2]
 intersection([1, 2, 3], [2]); // => [2]
 ```
 
-### Duplicates
+###### Duplicates
 
 ```ts
 // Was
@@ -53,7 +53,7 @@ intersection([1, 1, 2, 2], [1]); // => [1, 1]
 intersection([1, 1, 2, 2], [1]); // => [1]
 ```
 
-### Legacy (dataFirst)
+###### Legacy (dataFirst)
 
 ```ts
 // Was
@@ -63,7 +63,7 @@ intersection([1, 1, 2, 2], [1]); // => [1, 1]
 filter([1, 1, 2, 2], isIncludedIn([1])); // => [1, 1]
 ```
 
-### Legacy (dataLast)
+###### Legacy (dataLast)
 
 ```ts
 // Was

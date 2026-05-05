@@ -1,8 +1,8 @@
-# Renamed
+#### Renamed
 
 Called [`piped`](/docs/#piped) instead.
 
-## Example
+##### Example
 
 ```ts
 // Was

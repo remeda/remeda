@@ -20,7 +20,7 @@ remeda: toTitleCase
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -30,7 +30,7 @@ _.lowerCase(input);
 toLowerCase(toTitleCase(input));
 ```
 
-### Normalized
+#### Normalized
 
 ```ts
 // Lodash
@@ -48,7 +48,7 @@ toLowerCase(
 );
 ```
 
-### Missing input
+#### Missing input
 
 ```ts
 // Lodash

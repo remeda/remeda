@@ -16,7 +16,7 @@ remeda: startsWith
   `false` (unless `target` is _also_ `""` or `undefined`). This parameter is
   also required in Remeda; handle the `undefined` explicitly.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -26,7 +26,7 @@ _.startsWith(input, target);
 startsWith(input, target);
 ```
 
-### Position parameter
+#### Position parameter
 
 ```ts
 // Lodash
@@ -36,7 +36,7 @@ _.startsWith(input, target, position);
 startsWith(sliceString(input, position), target);
 ```
 
-### Missing parameters
+#### Missing parameters
 
 ```ts
 // Lodash
@@ -48,7 +48,7 @@ true;
 true;
 ```
 
-### Undefined target
+#### Undefined target
 
 ```ts
 // Lodash
@@ -61,7 +61,7 @@ target === undefined || startsWith(input, target);
 startsWith(input, target ?? "");
 ```
 
-### Undefined input
+#### Undefined input
 
 ```ts
 // Lodash

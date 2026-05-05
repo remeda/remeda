@@ -1,11 +1,11 @@
-# Removed
+#### Removed
 
 Replaced with [`filter`](/docs/#filter) with [`isNot`](/docs/#isNot) wrapping
 the predicate. The result would now be narrowed if possible.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -15,7 +15,7 @@ reject([1, "hello", 3], isString);
 filter([1, "hello", 3], isNot(isString));
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was
@@ -25,7 +25,7 @@ pipe([1, "hello", 3], reject(isString));
 pipe([1, "hello", 3], filter(isNot(isString)));
 ```
 
-### Narrowed result
+###### Narrowed result
 
 ```ts
 // Was

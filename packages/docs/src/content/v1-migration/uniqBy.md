@@ -1,9 +1,9 @@
-# Renamed
+#### Renamed
 
 Called [`uniqueBy`](/docs/#uniqueBy) instead. Also see the migration guide for
 [`uniqueBy`](/v1/#uniqueBy).
 
-## Example
+##### Example
 
 ```ts
 // Was

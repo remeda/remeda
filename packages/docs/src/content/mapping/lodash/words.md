@@ -20,7 +20,7 @@ _Not provided by Remeda._
   to [`String.prototype.match`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match)
   as-is.
 
-### Case conversion
+#### Case conversion
 
 ```ts
 // Lodash
@@ -38,7 +38,7 @@ toUpperCase(toKebabCase(input));
 toUpperCase(toSnakeCase(input));
 ```
 
-### Naive splitting
+#### Naive splitting
 
 ```ts
 // Lodash
@@ -50,7 +50,7 @@ split(input, /\W+/); // spaces, punctuation
 split(input, /[\p{Z}\p{P}]+/u); // support for unicode spaces and punctuation.
 ```
 
-### Proper NLP
+#### Proper NLP
 
 ```ts
 // Lodash
@@ -61,7 +61,7 @@ const segmenter = new Intl.Segmenter("en", { granularity: "word" });
 Array.from(segmenter.segment(input)).map(({ segment }) => segment);
 ```
 
-### Custom pattern
+#### Custom pattern
 
 ```ts
 // Lodash

@@ -17,7 +17,7 @@ remeda: merge
   there is no equivalent function in Remeda which would perform a deep merge of
   multiple objects.
 
-### New object
+#### New object
 
 ```ts
 // Just
@@ -27,7 +27,7 @@ const result = extend({}, a, b);
 const result = merge(a, b);
 ```
 
-### Replace
+#### Replace
 
 ```ts
 // Just
@@ -39,7 +39,7 @@ let DATA = { ... };
 DATA = merge(DATA, b);
 ```
 
-### Deep
+#### Deep
 
 ```ts
 // Just
@@ -49,7 +49,7 @@ extend(true /* deep */, a, b);
 mergeDeep(a, b);
 ```
 
-### Arrays
+#### Arrays
 
 ```ts
 // Just
@@ -61,7 +61,7 @@ let DATA = [...];
 DATA = splice(DATA, 0 /* start */, b.length /* deleteCount */, b /* replacement */);
 ```
 
-### Multiple objects
+#### Multiple objects
 
 ```ts
 // Just

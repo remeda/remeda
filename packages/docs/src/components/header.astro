@@ -35,7 +35,9 @@ const NAVLINK_CLASS =
       </span>
     </MigrationSelector>
     <div class="flex-1"></div>
-    <Search client:only="react" />
+    <search>
+      <Search client:only="react" />
+    </search>
     <a
       class:list={buttonVariants({ variant: "ghost", size: "icon" })}
       href="https://github.com/remeda/remeda"

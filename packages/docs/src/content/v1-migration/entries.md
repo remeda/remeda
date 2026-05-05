@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 If you weren't using the `strict` variant, The returned type is now stricter and
 more reflective of the input type. The returned entries are typed according to
@@ -8,9 +8,9 @@ using `entries.strict` simply remove the `.strict` suffix.
 Also, the return type now filters `symbol` keys, and casts `number` keys as
 strings.
 
-## Examples
+##### Examples
 
-### Strict
+###### Strict
 
 ```ts
 // Was
@@ -20,14 +20,14 @@ entries.strict(obj);
 entries(obj);
 ```
 
-### Better typing
+###### Better typing
 
 ```ts
 const result = entries({ a: 123 } as const);
 //    ^? ['a', 123][], Was: [string, number][]
 ```
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");
@@ -41,7 +41,7 @@ const result = entries({ [mySymbol]: 123, a: 456 } as const);
 //    ^? ['a', 456][]
 ```
 
-### Number keys
+###### Number keys
 
 ```ts
 // Was

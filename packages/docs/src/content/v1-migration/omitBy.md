@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 The predicate function is typed to no longer accept `symbol` keys or their
 corresponding values, and `number` keys will be cast as `string`, Aligning with
@@ -9,7 +9,7 @@ breakages.
 Using a type-guard as the predicate will now narrow the resulting type (similar
 to how `filter` narrows the result, when used with `isNot`).
 
-# Runtime
+#### Runtime
 
 Props with `symbol` keys are no longer omitted implicitly from the output.
 
@@ -23,9 +23,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Mapper typing
+###### Mapper typing
 
 ```ts
 const mySymbol = Symbol("a");
@@ -35,7 +35,7 @@ omitBy({ [mySymbol]: "hello", a: 123, 456: true }, (key, value) => {
 });
 ```
 
-### Narrowed return
+###### Narrowed return
 
 ```ts
 const DATA = { a: 123, b: 456 } as {
@@ -48,14 +48,14 @@ const result = omitBy(DATA, isString);
 //    ^? { a: number, b?: number, c?: number }, Was: typeof DATA
 ```
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");
 omitBy({ [mySymbol]: 123, a: "hello" }, isString); // => { [mySymbol]: 123 }, Was: {};
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 const DATA = { hello: "world", helloworld: 123 };

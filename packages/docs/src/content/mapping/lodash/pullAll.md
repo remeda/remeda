@@ -26,7 +26,7 @@ Remeda!
 - If mutability wasn't desired, and instead the input was cloned (shallowly)
   before calling `pullAll`, that cloning is now redundant.
 
-### In-place mutation
+#### In-place mutation
 
 ```ts
 // pullAll
@@ -38,7 +38,7 @@ let DATA = ["a", "b", "c", "d"];
 DATA = _.difference(DATA, values);
 ```
 
-### Non-mutating usage
+#### Non-mutating usage
 
 ```ts
 // pullAll
@@ -48,7 +48,7 @@ const pulled = _.pullAll([...DATA], values);
 const pulled = _.difference(DATA, values);
 ```
 
-### Nested inside an object
+#### Nested inside an object
 
 ```ts
 // pullAll

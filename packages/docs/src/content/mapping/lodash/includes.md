@@ -12,7 +12,7 @@ remeda: isIncludedIn
 - The order of the parameters is flipped in Remeda, the item is first, and then
   the array.
 
-### Arrays
+#### Arrays
 
 ```ts
 // Lodash
@@ -22,7 +22,7 @@ includes([1, 2, 3], 1);
 isIncludedIn(1, [1, 2, 3]);
 ```
 
-### Objects
+#### Objects
 
 ```ts
 // Lodash
@@ -32,7 +32,7 @@ includes({ a: 1, b: 2 }, 1);
 isIncludedIn(1, values({ a: 1, b: 2 }));
 ```
 
-### Strings
+#### Strings
 
 ```ts
 const DATA = "Hello, World!";
@@ -44,7 +44,7 @@ includes(DATA, "lo");
 DATA.includes("lo");
 ```
 
-### fromIndex: non-negative
+#### fromIndex: non-negative
 
 ```ts
 // Lodash
@@ -54,7 +54,7 @@ includes([1, 2, 3], 1, 2);
 isIncludedIn(1, drop([1, 2, 3], 2));
 ```
 
-### fromIndex: non-positive
+#### fromIndex: non-positive
 
 ```ts
 // Lodash

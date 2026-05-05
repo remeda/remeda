@@ -1,12 +1,15 @@
 ---
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import type { mappingCollectionName } from "@/content/mapping/content.config";
 import { mappingUrl } from "@/lib/mapping/urls";
 import type { CollectionEntry } from "astro:content";
 import { getEntry, render } from "astro:content";
 import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 import path from "node:path";
+import { ArticleCard } from "./article-card";
 import GithubEdit from "./github-edit.astro";
+import { H3CardTitle } from "./h3-card-title";
+import { HeaderCardHeader } from "./header-card-header";
 import Prose from "./prose.astro";
 import { Badge } from "./ui/badge";
 import { buttonVariants } from "./ui/button";
@@ -29,12 +32,12 @@ const name = path.basename(entry.id);
 const mappedUrl = mappingUrl(library, name);
 ---
 
-<Card className="scroll-mt-24" id={name}>
-  <CardHeader>
+<ArticleCard className="scroll-mt-24" id={name}>
+  <HeaderCardHeader>
     <div class="flex gap-2 overflow-hidden">
-      <CardTitle className="flex-1 truncate text-2xl">
+      <H3CardTitle className="flex-1 truncate text-2xl">
         {name}
-      </CardTitle>
+      </H3CardTitle>
       <a
         class:list={buttonVariants({ variant: "secondary", size: "sm" })}
         href={mappedUrl}
@@ -44,16 +47,17 @@ const mappedUrl = mappingUrl(library, name);
       <Badge className="hidden h-8 sm:flex">{entry.data.category}</Badge>
       <GithubEdit entry={entry} />
     </div>
-  </CardHeader>
+  </HeaderCardHeader>
   <CardContent className="flex flex-col gap-3">
     {
       mappedFunction !== undefined && (
-        <h6 class="flex items-center gap-1 text-xl font-medium">
+        <a
+          class="flex items-center gap-1 text-xl font-medium"
+          href={`/docs#${mappedFunction.id}`}
+        >
           <ArrowRightIcon className="ms-2 size-5" />
-          <a class="truncate text-primary" href={`/docs#${mappedFunction.id}`}>
-            {mappedFunction.data.name}
-          </a>
-        </h6>
+          <span class="truncate text-primary">{mappedFunction.data.name}</span>
+        </a>
       )
     }
     {
@@ -64,4 +68,4 @@ const mappedUrl = mappingUrl(library, name);
       )
     }
   </CardContent>
-</Card>
+</ArticleCard>

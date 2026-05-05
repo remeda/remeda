@@ -1,4 +1,4 @@
-# Renamed
+#### Renamed
 
 Called [`entries`](/docs/#entries) instead. Also see the migration guide for
 [`entries`](/v1/#entries).
@@ -6,9 +6,9 @@ Called [`entries`](/docs/#entries) instead. Also see the migration guide for
 The "headless" dataLast form is no longer supported, use the functional style
 instead.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 const DATA = { a: "b", c: "d" } as const;
@@ -22,7 +22,7 @@ const result = entries(DATA);
 //    ^? (["a", "b"] | ["c", "d"])[]
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 const DATA = { a: "b", c: "d" } as const;
@@ -36,7 +36,7 @@ const result = pipe(DATA, entries());
 //    ^? (["a", "b"] | ["c", "d"])[]
 ```
 
-### Strict variant
+###### Strict variant
 
 ```ts
 const DATA = { a: "b", c: "d" } as const;

@@ -11,7 +11,7 @@ remeda: when
   provide full typing to all params, in Remeda this isn't needed as the extra
   arguments would be inferred from the call site.
 
-### if-else
+#### if-else
 
 ```ts
 // Ramda
@@ -24,7 +24,7 @@ when(data, predicate, { onTrue, onFalse });
 pipe(data, when(predicate, { onTrue, onFalse }));
 ```
 
-### if
+#### if
 
 ```ts
 ifElse(predicate, onTrue, identity)(data);
@@ -36,7 +36,7 @@ when(data, predicate, onTrue);
 pipe(data, when(predicate, onTrue));
 ```
 
-### extra args
+#### extra args
 
 ```ts
 // Ramda

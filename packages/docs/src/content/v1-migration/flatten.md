@@ -1,11 +1,11 @@
-# Removed
+#### Removed
 
 Replaced with [`flat`](/docs/#flat), with the optional "depth" param either left
 out, or set to **1**.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -18,7 +18,7 @@ flat([[1, 2], [3], [4, 5]]);
 flat([[1, 2], [3], [4, 5]], 1 /* depth */);
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was

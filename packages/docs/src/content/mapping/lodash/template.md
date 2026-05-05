@@ -14,7 +14,7 @@ implications, it is outside the scope that Remeda offers.
 - For the most complex cases there are dedicated libraries that offer robust
   templating features (e.g., [Handlebars](https://handlebarsjs.com/)).
 
-### Template Literals
+#### Template Literals
 
 ```ts
 // Lodash
@@ -30,7 +30,7 @@ const greet = ({
 }) => `Hello ${firstName} ${lastName}!`;
 ```
 
-### HTML
+#### HTML
 
 ```tsx
 // Lodash
@@ -45,7 +45,7 @@ function Bold({ value }: { value: string }) {
 <Bold value="<script>" />;
 ```
 
-### With complex logic
+#### With complex logic
 
 ```tsx
 // Lodash

@@ -19,7 +19,7 @@ remeda: prop
   [`defaultTo`](/docs#defaultTo), or use the native [Nullish coalescing operator `??`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
   instead if the fallback is of a different type.
 
-### Shallow Access
+#### Shallow Access
 
 ```ts
 const DATA = { a: 123 };
@@ -31,7 +31,7 @@ _.get(DATA, ["a"]);
 prop(DATA, "a");
 ```
 
-### Array indices
+#### Array indices
 
 ```ts
 const DATA = [1, 2, 3];
@@ -43,7 +43,7 @@ _.get(DATA, ["0"]);
 prop(DATA, 0);
 ```
 
-### Path Arrays
+#### Path Arrays
 
 ```ts
 const DATA = { a: [{ b: { c: 3 } }] };
@@ -55,7 +55,7 @@ _.get(DATA, ["a", "0", "b", "c"]);
 prop(DATA, "a", 0, "b", "c");
 ```
 
-### Path Strings
+#### Path Strings
 
 ```ts
 const DATA = { a: [{ b: { c: 3 } }] };
@@ -67,7 +67,7 @@ _.get(DATA, "a[0].b.c");
 prop(DATA, ...stringToPath("a[0].b.c"));
 ```
 
-### Default Fallback
+#### Default Fallback
 
 ```ts
 const DATA = { a: [] as { b: number }[] };

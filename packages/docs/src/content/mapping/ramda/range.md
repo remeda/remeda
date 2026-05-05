@@ -8,7 +8,7 @@ unlike in Ramda, a curried call to `range` would result in a function that has
 a pre-set `end` value, and not a pre-set `start` value; curried calls need their
 `start` and `end` parameters swapped!
 
-### Simple
+#### Simple
 
 ```ts
 // Ramda
@@ -20,7 +20,7 @@ range(10, 20);
 range(start, end);
 ```
 
-### Curried
+#### Curried
 
 ```ts
 // Ramda

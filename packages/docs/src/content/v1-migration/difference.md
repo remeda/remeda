@@ -1,4 +1,4 @@
-# Runtime
+#### Runtime
 
 The previous implementation did not have a predictable handling of inputs with
 duplicate values (e.g. `[1, 1]`, aka bag/multi-set). This could lead to
@@ -14,9 +14,9 @@ If you want to maintain the same runtime behavior for dealing with duplicates
 use [`filter`](/docs/#filter) with [`isNot`](/docs/#isNot) and
 [`isIncludedIn`](/docs/#isIncludedIn) as the predicate.
 
-## Examples
+##### Examples
 
-### No duplicates
+###### No duplicates
 
 ```ts
 // Was
@@ -26,7 +26,7 @@ difference([1, 2, 3], [2]); // => [1, 3]
 difference([1, 2, 3], [2]); // => [1, 3]
 ```
 
-### Duplicates
+###### Duplicates
 
 ```ts
 // Was
@@ -36,7 +36,7 @@ difference([1, 1, 2, 2], [1]); // => [2, 2]
 difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
 ```
 
-### Legacy (dataFirst)
+###### Legacy (dataFirst)
 
 ```ts
 // Was
@@ -46,7 +46,7 @@ difference([1, 1, 2, 2], [1]); // => [2, 2]
 filter([1, 1, 2, 2], isNot(isIncludedIn([1]))); // => [2, 2]
 ```
 
-### Legacy (dataLast)
+###### Legacy (dataLast)
 
 ```ts
 // Was

@@ -1,4 +1,4 @@
-# Renamed
+#### Renamed
 
 Called [`fromEntries`](/docs/#fromEntries) instead. Also see the migration guide
 for [`fromEntries`](/v1/#fromEntries).
@@ -6,9 +6,9 @@ for [`fromEntries`](/v1/#fromEntries).
 The "headless" dataLast form is no longer supported, use the functional style
 instead.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 const DATA = [
@@ -25,7 +25,7 @@ const result = fromEntries(DATA);
 //    ^? { a: 'b', c: 'd' }
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 const DATA = [
@@ -42,7 +42,7 @@ const result = pipe(DATA, fromEntries());
 //    ^? { a: 'b', c: 'd' }
 ```
 
-### Strict variant
+###### Strict variant
 
 ```ts
 const DATA = [

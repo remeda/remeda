@@ -1,4 +1,4 @@
-# Removed
+#### Removed
 
 This function was doing 3 _different_ type checks combined together: it was
 checking the object is `typeof === "object"`, is not `null`, and is not an
@@ -11,9 +11,9 @@ operator. If unsure what to use try `isPlainObject` first, and if not then use
 exact same behavior as the current function use `isObjectType`, together with
 [`isNonNull`](/docs/#isNonNull) and a negated [`isArray`](/docs/#isArray).
 
-## Examples
+##### Examples
 
-### Plain object
+###### Plain object
 
 ```ts
 const DATA = [] as (Date | { a: number })[];
@@ -27,7 +27,7 @@ const filtered = filter(DATA, isPlainObject);
 //    ^? { a: number }[]
 ```
 
-### Object type
+###### Object type
 
 ```ts
 const DATA = [] as ({ a: number } | number[])[];
@@ -41,7 +41,7 @@ const filtered = filter(DATA, isObjectType);
 //    ^? ({ a: number } | number[])[]
 ```
 
-### Legacy (dataFirst)
+###### Legacy (dataFirst)
 
 ```ts
 // Was
@@ -55,7 +55,7 @@ if (isObjectType(DATA) && isNonNull(DATA) && !isArray(DATA)) {
 }
 ```
 
-### Legacy (dataLast)
+###### Legacy (dataLast)
 
 ```ts
 // Was

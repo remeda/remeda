@@ -1,11 +1,11 @@
-# Typing
+#### Typing
 
 The "headless" mode of the function is no longer available. For dataLast
 invocations use `randomString()`.
 
-## Examples
+##### Examples
 
-### No headless version
+###### No headless version
 
 ```ts
 // Was:

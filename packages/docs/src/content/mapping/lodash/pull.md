@@ -29,7 +29,7 @@ your codebase that need to be handled before migrating to Remeda!
 - If mutability wasn't desired, and instead the input was cloned (shallowly)
   before calling `pull`, that cloning is now redundant.
 
-### Exclusion Items
+#### Exclusion Items
 
 ```ts
 // pull
@@ -39,7 +39,7 @@ _.pull(DATA, a, b, c, ...additional);
 _.difference(DATA, [a, b, c, ...additional]);
 ```
 
-### In-place mutation
+#### In-place mutation
 
 ```ts
 // pull
@@ -51,7 +51,7 @@ let DATA = ["a", "b", "c", "d"];
 DATA = _.difference(DATA, values);
 ```
 
-### Non-mutating usage
+#### Non-mutating usage
 
 ```ts
 // pull
@@ -61,7 +61,7 @@ const pulled = _.pull([...DATA], ...values);
 const pulled = _.difference(DATA, values);
 ```
 
-### Nested inside an object
+#### Nested inside an object
 
 ```ts
 // pull

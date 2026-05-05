@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 The `indexed` variant was removed; the base implementation takes the same
 parameters. If you are using `indexed` you can simply remove it without any
@@ -9,7 +9,7 @@ also excluded from the typing.
 
 Number keys are cast to strings when passed to the predicate.
 
-# Runtime
+#### Runtime
 
 The callback function now takes 2 additional parameters: `key` - The key of the
 current entry being processed in data, and `data` - the object the function was
@@ -21,9 +21,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Indexed variant removed
+###### Indexed variant removed
 
 ```ts
 // Was
@@ -37,7 +37,7 @@ forEachObj({ a: 1, b: 2 }, (value, key) => {
 });
 ```
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");
@@ -47,7 +47,7 @@ forEachObj({ [mySymbol]: "hello", a: 123 }, (value, key) => {
 });
 ```
 
-### Number Keys
+###### Number Keys
 
 ```ts
 forEachObj({ 123: "hello" }, (value, key) => {
@@ -55,7 +55,7 @@ forEachObj({ 123: "hello" }, (value, key) => {
 });
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 function callback(value: number, key = "X"): boolean {

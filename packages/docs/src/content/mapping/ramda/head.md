@@ -5,7 +5,7 @@ remeda: first
 
 - For strings use [`sliceString`](/docs#sliceString) with `0` and `1` as arguments instead.
 
-### Arrays
+#### Arrays
 
 ```ts
 // Ramda
@@ -15,7 +15,7 @@ head([1, 2, 3]);
 first([1, 2, 3]);
 ```
 
-### Strings
+#### Strings
 
 ```ts
 // Ramda

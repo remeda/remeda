@@ -17,7 +17,7 @@ remeda: split
   for proper Unicode handling. This is rarely needed - simple Unicode characters
   (like non-Latin alphabets) work fine.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -29,7 +29,7 @@ split(input, separator);
 split(input, separator, limit);
 ```
 
-### Without separator
+#### Without separator
 
 ```ts
 // Lodash
@@ -41,7 +41,7 @@ _.map(data, _.split);
 map(data, (item) => [item]);
 ```
 
-### Nullish inputs
+#### Nullish inputs
 
 ```ts
 // Lodash
@@ -57,7 +57,7 @@ split(input ?? "", separator);
 split(input ?? "", separator, limit);
 ```
 
-### Unicode grapheme splitting
+#### Unicode grapheme splitting
 
 ```ts
 // Lodash

@@ -12,7 +12,7 @@ _Not provided by Remeda._
   length in [`ch`](https://developer.mozilla.org/en-US/docs/Web/CSS/length#ch)
   units, and [`text-align: left`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).
 
-### Basic Usage
+#### Basic Usage
 
 ```ts
 // Lodash
@@ -24,7 +24,7 @@ input.padEnd(n);
 input.padEnd(n, padding);
 ```
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash

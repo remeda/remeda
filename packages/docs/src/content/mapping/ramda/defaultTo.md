@@ -12,7 +12,7 @@ remeda: defaultTo
   directly, or use [`when`](/docs#when) with [`isNullish`](/docs#isNullish) and
   [`constant`](/docs#constant).
 
-### Nullish
+#### Nullish
 
 ```ts
 const DATA: number | undefined | null;
@@ -24,7 +24,7 @@ R.defaultTo(456)(DATA);
 defaultTo(DATA, 456);
 ```
 
-### NaN
+#### NaN
 
 ```ts
 const DATA = Number.NaN;
@@ -36,7 +36,7 @@ R.defaultTo(10)(DATA);
 when(DATA, Number.isNaN, constant(10));
 ```
 
-### Both
+#### Both
 
 ```ts
 const DATA: number | null | undefined;
@@ -52,7 +52,7 @@ when(
 );
 ```
 
-### Non-matching fallback
+#### Non-matching fallback
 
 ```ts
 const DATA: string | null | undefined;

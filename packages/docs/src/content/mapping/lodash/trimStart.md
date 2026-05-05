@@ -24,7 +24,7 @@ _Not provided by Remeda._
   input), which results in an empty string `""`. This requires explicit handling
   in replacements.
 
-### Whitespaces
+#### Whitespaces
 
 ```ts
 // Lodash
@@ -34,7 +34,7 @@ _.trimStart(input);
 input.trimStart();
 ```
 
-### Callback
+#### Callback
 
 ```ts
 // Lodash
@@ -44,7 +44,7 @@ _.map(data, _.trimStart);
 data.map(String.prototype.trimStart);
 ```
 
-### Characters
+#### Characters
 
 ```ts
 // Lodash
@@ -54,7 +54,7 @@ _.trimStart(input, characters);
 input.replace(new RegExp(`^[${RegExp.escape(characters)}]+`), "");
 ```
 
-### Graphemes
+#### Graphemes
 
 ```ts
 // Lodash
@@ -67,7 +67,7 @@ const graphemes = Array.from(segmenter.segment(characters), prop("segment"));
 join(dropWhile(inputGraphemes, isIncludedIn(graphemes)), "");
 ```
 
-### Missing input data
+#### Missing input data
 
 ```ts
 // Lodash

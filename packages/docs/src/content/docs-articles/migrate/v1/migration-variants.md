@@ -4,13 +4,13 @@ category: Migrating to v2
 priority: 20
 ---
 
-# Removed Variants
+## Removed Variants
 
 In v1, Remeda offered several "variants" of the base runtime implementation and
 typing via properties added to the exported function. These have been removed in
 v2, and their usage merged into the base functions.
 
-## Indexed
+### Indexed
 
 The `indexed` variant allowed callback functions (predicates, mappers, etc.) to
 use 2 additional parameters in their signature: the `index`, representing the
@@ -35,7 +35,7 @@ Object-based functions (like `mapKeys`) also got the same treatment, where the
 callbacks are called with the prop's `key` as the 2nd parameter (instead of the
 numerical `index` for arrays).
 
-### Migration
+#### Migration
 
 For calls that used the indexed variant, simply remove the `.indexed` suffix.
 For the rest, you _most likely_ don't need to do anything.
@@ -62,7 +62,7 @@ map(DATA, Number.parseInt); //=> [1, NaN, NaN]
 map(DATA, (item) => Number.parseInt(item)); //=> [1, 2, 3]
 ```
 
-## Strict
+### Strict
 
 We sometimes come up with improved typing for a function's return value. The
 type is often more complex and makes more assumptions about the inputs, making
@@ -84,7 +84,7 @@ const now = map(DATA, (item) => Number.parseInt(item));
 //    ^? [number, number, number]
 ```
 
-### Migration
+#### Migration
 
 For calls that used the strict variant, simply remove the `.strict` suffix. For
 the rest, you _most likely_ don't need to do anything.
@@ -144,14 +144,14 @@ const castedOutput = map(["1", "2", "3"] as const, (x) =>
 ) as number[];
 ```
 
-## Lazy (_Internal_)
+### Lazy (_Internal_)
 
 The `lazy` variant _wasn't documented_ but still existed on many functions.
 Unlike the previous variants, it wasn't another implementation of the function,
 but a tool used internally by the `purry` and `pipe` functions to allow lazy
 evaluation of functions. This abstraction has been completely removed.
 
-### Migration
+#### Migration
 
 If you exported a `lazy` property from your **internal** functions to make them
 lazy within Remeda's `pipe`, use `purry` with the lazy implementation as the 3rd

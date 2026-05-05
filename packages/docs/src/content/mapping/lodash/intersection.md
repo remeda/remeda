@@ -8,7 +8,7 @@ In Remeda `intersection` treats the inputs as multisets/bags which respect
 matters for cases where _both_ arrays might have duplicate values. To achieve
 the same output pass the result to [`unique`](/docs#unique).
 
-### No duplicates
+#### No duplicates
 
 ```ts
 // Lodash
@@ -18,7 +18,7 @@ intersection([2, 1], [2, 3]);
 intersection([2, 1], [2, 3]);
 ```
 
-### With duplicates
+#### With duplicates
 
 ```ts
 // Lodash

@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 If you weren't using the `strict` variant, the returned type is now stricter and
 more reflective of the input type. Instead of `string`, the keys are typed based
@@ -13,9 +13,9 @@ suffix.
 The "headless" dataLast form is no longer supported, use the functional style
 instead.
 
-## Examples
+##### Examples
 
-### Strict
+###### Strict
 
 ```ts
 // Was
@@ -25,34 +25,34 @@ keys.strict(obj);
 keys(obj);
 ```
 
-### Better typing
+###### Better typing
 
 ```ts
 const result = keys({ a: 123 } as const);
 //    ^? "a"[], Was: string[]
 ```
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");
 keys({ [mySymbol]: 123 }); // => [];
 ```
 
-### Number keys
+###### Number keys
 
 ```ts
 keys({ 123: "hello" }); // ["123"];
 ```
 
-### Legacy
+###### Legacy
 
 ```ts
 const result = keys({ 123: "hello" } as Record<string, unknown>);
 //    ^? string[]
 ```
 
-### No headless version
+###### No headless version
 
 ```ts
 // Was

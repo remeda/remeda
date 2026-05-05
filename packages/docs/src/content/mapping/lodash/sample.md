@@ -11,7 +11,7 @@ remeda: sample
 - If you are using `sample` in an extremely hot path where you need the most
   efficient implementation possible, prefer a native implementation instead.
 
-### Simple
+#### Simple
 
 ```ts
 // Lodash
@@ -29,7 +29,7 @@ sample(DATA, 1 /* size */).at(0)!;
 const [result] = sample(DATA, 1 /* size */);
 ```
 
-### Native
+#### Native
 
 ```ts
 // Lodash

@@ -5,7 +5,7 @@ remeda: last
 
 For strings use [`sliceString`](/docs#sliceString) with `-1` as an argument instead.
 
-### Arrays
+#### Arrays
 
 ```ts
 // Ramda
@@ -15,7 +15,7 @@ last([1, 2, 3]);
 last([1, 2, 3]);
 ```
 
-### Strings
+#### Strings
 
 ```ts
 // Ramda

@@ -9,7 +9,7 @@ _Not provided by Remeda._
 - Lodash typing incorrectly allows calling `replace` with two arguments. These
   calls return strings as-is, while RegExp inputs are converted to strings.
 
-### Regular Usage
+#### Regular Usage
 
 ```ts
 // Lodash
@@ -19,7 +19,7 @@ _.replace(input, pattern, replacement);
 input.replace(pattern, replacement);
 ```
 
-### Invalid 2-parameter usage
+#### Invalid 2-parameter usage
 
 ```ts
 // Lodash

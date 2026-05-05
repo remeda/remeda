@@ -28,6 +28,12 @@ const { title } = Astro.props;
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
   <body>
+    <a
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-60 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:shadow-md focus:ring-2 focus:ring-ring"
+      href="#main"
+    >
+      Skip to main content
+    </a>
     <div class="container mx-auto flex flex-col items-stretch">
       <Header />
       <slot />

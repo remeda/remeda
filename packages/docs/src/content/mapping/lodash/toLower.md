@@ -8,7 +8,7 @@ remeda: toLowerCase
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -18,7 +18,7 @@ _.toLower(input);
 toLowerCase(input);
 ```
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash
@@ -28,7 +28,7 @@ toLowerCase(input);
 <div style="text-transform:lowercase">{input}</div>
 ```
 
-### Missing input
+#### Missing input
 
 ```ts
 // Lodash

@@ -1,4 +1,4 @@
-# Runtime
+#### Runtime
 
 The function no longer tries to use a `clone` function of the cloned object. It
 will only clone based on our own cloning logic. If you want to use an
@@ -7,9 +7,9 @@ object's exported `clone` function you will need to call it directly.
 We no longer support "headless" invocations. In dataLast invocations call the
 function with an empty args list (e.g. `clone()`).
 
-## Examples
+##### Examples
 
-### clone function
+###### clone function
 
 ```ts
 type MyType = {
@@ -25,7 +25,7 @@ const cloned = clone(DATA);
 const cloned = DATA.clone();
 ```
 
-### Headless
+###### Headless
 
 ```ts
 // Was

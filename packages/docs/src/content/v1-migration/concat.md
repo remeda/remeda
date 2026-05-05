@@ -1,10 +1,10 @@
-# Typing
+#### Typing
 
 The return type was made stricter. If the 2 arrays have different types of
 items, or the inputs are tuples, the new output type maintains more of the shape
 of the input.
 
-## Examples
+##### Examples
 
 ```ts
 const a = [1, 2, 3] as const;

@@ -38,9 +38,7 @@ const signature = tagContent(blockTags, "signature");
   </MethodSignature>
   {
     example !== undefined && (
-      <section class="text-xs lg:text-base">
-        <CodeBlock code={example} />
-      </section>
+      <CodeBlock class="text-xs lg:text-base" code={example} />
     )
   }
 </section>

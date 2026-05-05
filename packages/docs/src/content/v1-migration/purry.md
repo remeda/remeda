@@ -1,12 +1,12 @@
-# Runtime
+#### Runtime
 
 The function no longer looks for a `lazy` prop on the dataFirst function
 implementation itself, and will only use the lazy impl provided as the third
 argument to the `purry` call itself.
 
-## Examples
+##### Examples
 
-### Implicit lazy removed (with Object.assign)
+###### Implicit lazy removed (with Object.assign)
 
 ```ts
 function myFunc(...args: readonly unknown[]): unknown {
@@ -29,7 +29,7 @@ function lazyImpl(...): LazyEvaluator {
 }
 ```
 
-### Implicit lazy removed (with a namespace)
+###### Implicit lazy removed (with a namespace)
 
 ```ts
 function myFunc(...args: readonly unknown[]): unknown {

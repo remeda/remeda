@@ -14,7 +14,7 @@ remeda: range
 - Lodash coerces `NaN` to `0` (e.g., `_.range(NaN, 3)` → `[0, 1, 2]`). Remeda
   does not handle `NaN` inputs and their behavior is unspecified.
 
-### Implicit 0 start
+#### Implicit 0 start
 
 ```ts
 // Lodash
@@ -26,7 +26,7 @@ range(0, 5);
 range(0, end);
 ```
 
-### With start
+#### With start
 
 ```ts
 // Lodash
@@ -38,7 +38,7 @@ range(1, 5);
 range(start, end);
 ```
 
-### With step
+#### With step
 
 ```ts
 // Lodash
@@ -50,7 +50,7 @@ range(1, { end: 20, step: 5 });
 range(start, { end, step });
 ```
 
-### Descending range (start > end)
+#### Descending range (start > end)
 
 ```ts
 // Lodash
@@ -62,7 +62,7 @@ range(5, { end: 1, step: -1 });
 range(start, { end, step: -1 });
 ```
 
-### Step of 0
+#### Step of 0
 
 ```ts
 // Lodash

@@ -16,7 +16,7 @@ remeda: differenceWith
   function (or is provided as `undefined`) it behaves like a call to
   [`difference`](#difference).
 
-### Single exclusion array
+#### Single exclusion array
 
 ```ts
 // Lodash
@@ -26,7 +26,7 @@ _.differenceWith(DATA, values, comparator);
 differenceWith(DATA, values, comparator);
 ```
 
-### Multiple exclusion arrays
+#### Multiple exclusion arrays
 
 ```ts
 // Lodash
@@ -36,7 +36,7 @@ _.differenceWith(DATA, a, b, c, comparator);
 differenceWith(DATA, [...a, ...b, ...c], comparator);
 ```
 
-### Nullish inputs
+#### Nullish inputs
 
 ```ts
 // Lodash
@@ -49,7 +49,7 @@ isNonNullish(DATA) ? differenceWith(DATA, values, comparator) : [];
 differenceWith(DATA ?? [], values, comparator);
 ```
 
-### Missing iteratee function
+#### Missing iteratee function
 
 ```ts
 // Lodash

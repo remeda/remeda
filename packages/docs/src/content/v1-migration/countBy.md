@@ -1,12 +1,12 @@
-# Removed
+#### Removed
 
 Replaced with [`filter`](/docs/#filter) using the same predicate, followed by
 either the [`Array.prototype.length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length)
 prop, or using the [`length`](/docs/#length) utility function on the result.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -19,7 +19,7 @@ filter([1, 2, 3, 4], (item) => item % 2 === 0).length;
 length(filter([1, 2, 3, 4], (item) => item % 2 === 0));
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was

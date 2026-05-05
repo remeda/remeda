@@ -10,7 +10,7 @@ remeda: capitalize
   input), which results in an empty string `""`. Remeda's `capitalize` requires
   a string input.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -20,7 +20,7 @@ _.upperFirst(input);
 capitalize(input);
 ```
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash
@@ -35,7 +35,7 @@ capitalize(input);
 <div class="upperFirst">{input}</div>
 ```
 
-### Missing input data
+#### Missing input data
 
 ```ts
 // Lodash

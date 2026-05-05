@@ -14,7 +14,7 @@ _Not provided by Remeda._
 - If the native solution doesn't suffice please open an issue at Remeda's
   GitHub project so we can learn about your use-case.
 
-### Arrays
+#### Arrays
 
 ```ts
 const DATA = [1, 2, 3];
@@ -33,7 +33,7 @@ for (const index = DATA.length - 1; index >= 0; index--) {
 }
 ```
 
-### Objects
+#### Objects
 
 ```ts
 const DATA = { a: 1, b: 2, c: 3 };

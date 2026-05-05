@@ -1,8 +1,8 @@
-# Renamed
+#### Renamed
 
 Called [`unique`](/docs/#unique) instead.
 
-## Example
+##### Example
 
 ```ts
 // Was

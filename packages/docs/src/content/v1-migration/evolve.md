@@ -1,11 +1,11 @@
-# Typing
+#### Typing
 
 Symbol keys were previously skipped silently during runtime, the typing is now
 fixed to prevent defining transformers for these keys.
 
-## Examples
+##### Examples
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");

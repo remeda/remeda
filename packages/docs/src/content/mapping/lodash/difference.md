@@ -26,7 +26,7 @@ remeda: difference
   either by skipping the call to `difference`, or by coalescing the input to an
   empty array.
 
-### Without duplicate values (unique)
+#### Without duplicate values (unique)
 
 ```ts
 // Lodash
@@ -36,7 +36,7 @@ _.difference(uniqueData, uniqueValues);
 difference(uniqueData, uniqueValues);
 ```
 
-### With duplicate values
+#### With duplicate values
 
 ```ts
 // Lodash
@@ -54,7 +54,7 @@ filter(dataWithDuplicates, isNot(isIncludedIn(valuesWithDuplicates)));
 filter(dataWithDuplicates, isNot(isIncludedIn(unique(valuesWithDuplicates))));
 ```
 
-### Multiple exclusion arrays
+#### Multiple exclusion arrays
 
 ```ts
 // Lodash
@@ -64,7 +64,7 @@ _.difference(DATA, a, b, c);
 difference(DATA, [...a, ...b, ...c]);
 ```
 
-### Missing 2nd (exclusions) parameter
+#### Missing 2nd (exclusions) parameter
 
 ```ts
 // Lodash
@@ -77,7 +77,7 @@ difference(DATA, []);
 [...DATA];
 ```
 
-### Nullish inputs
+#### Nullish inputs
 
 ```ts
 // Lodash

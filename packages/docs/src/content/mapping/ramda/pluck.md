@@ -9,7 +9,7 @@ _Not provided by Remeda._
 
 - When data is an **object** (and not an _array_) use `mapValues` instead.
 
-### Arrays
+#### Arrays
 
 ```ts
 const DATA = [{ val: "hello" }, { val: "world" }];
@@ -21,7 +21,7 @@ R.pluck("val", DATA); //=> ["hello", "world"];
 map(DATA, prop("val"));
 ```
 
-### Objects
+#### Objects
 
 ```ts
 const DATA = { a: { val: "hello" }, b: { val: "world" } };

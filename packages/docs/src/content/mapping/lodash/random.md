@@ -12,7 +12,7 @@ remeda: randomInteger
 - Lodash's `random` parameters are optional. In Remeda all parameters are
   required.
 
-### Two integer params
+#### Two integer params
 
 ```ts
 // Lodash
@@ -22,7 +22,7 @@ random(1, 10);
 randomInteger(1, 10);
 ```
 
-### Single integer param
+#### Single integer param
 
 ```ts
 // Lodash
@@ -32,7 +32,7 @@ random(10);
 randomInteger(0, 10);
 ```
 
-### No params
+#### No params
 
 ```ts
 // Lodash
@@ -42,7 +42,7 @@ random();
 randomInteger(0, 1);
 ```
 
-### Not supported: floating-point numbers
+#### Not supported: floating-point numbers
 
 ```ts
 random(1.5, 3.5);
