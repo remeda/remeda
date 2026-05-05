@@ -22,16 +22,16 @@ const { parameters, type } = Astro.props;
     />
   </summary>
   <div class="flex flex-col gap-3 p-2">
-    <section>
-      <h5>Parameters</h5>
+    <figure>
+      <figcaption>Parameters</figcaption>
       <Parameters
         class="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm"
         parameters={parameters}
       />
-    </section>
-    <section>
-      <h5>Returns</h5>
+    </figure>
+    <figure>
+      <figcaption>Returns</figcaption>
       <FunctionReturnType class="text-sm font-semibold" type={type} />
-    </section>
+    </figure>
   </div>
 </details>
