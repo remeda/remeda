@@ -1,15 +1,12 @@
+---
 import type { Signature } from "@/lib/typedoc/schema";
-import type { ReactNode } from "react";
 
-export function FunctionReturnType({
-  type,
-  className,
-}: {
+type Props = {
   readonly type: Signature["type"];
-  readonly className?: string | undefined;
-}): ReactNode {
-  return <div className={className}>{extractReturnType(type)}</div>;
-}
+  readonly class?: string;
+};
+
+const { type, class: class_ } = Astro.props;
 
 function extractReturnType(type: Signature["type"]): string {
   switch (type.type) {
@@ -38,3 +35,6 @@ function extractReturnType(type: Signature["type"]): string {
       return "Object";
   }
 }
+---
+
+<div class:list={[class_]}>{extractReturnType(type)}</div>

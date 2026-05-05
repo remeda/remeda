@@ -9,16 +9,23 @@ const PRETTIER_OPTIONS = {
 type Props = {
   readonly class?: string;
   readonly code: string;
+  readonly inline?: boolean;
 };
 
-const { code, class: class_ } = Astro.props;
+const { code, class: class_, inline = false } = Astro.props;
 
-const formattedCode = await format(code, PRETTIER_OPTIONS);
+const prettierOutput = await format(code, {
+  ...PRETTIER_OPTIONS,
+  // For inline rendering, disable Prettier's line wrapping so the snippet stays
+  // on one line; trim the trailing newline Prettier always appends.
+  ...(inline && { printWidth: Number.POSITIVE_INFINITY }),
+});
 ---
 
 <ThemedCode
   class:list={["rounded-sm px-4 py-2", class_]}
-  code={formattedCode}
+  code={prettierOutput.trimEnd()}
+  inline={inline}
   lang="typescript"
   wrap
 />

@@ -29,7 +29,7 @@ map(DATA, identity());
 filter(DATA, isString); // Not changed!
 ```
 
-#### Migration
+### Migration
 
 Most call sites should now show an error when using the headless function
 because TypeScript wouldn't be able to infer the type correctly. However,

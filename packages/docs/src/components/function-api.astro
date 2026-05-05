@@ -2,7 +2,7 @@
 import { hasTag, tagContent } from "@/lib/tags";
 import type { Signature } from "@/lib/typedoc/schema";
 import CodeBlock from "./code-block.astro";
-import { MethodSignature } from "./signature";
+import MethodSignature from "./method-signature.astro";
 
 type Props = {
   readonly signature: Signature;
@@ -33,8 +33,12 @@ const signature = tagContent(blockTags, "signature");
       <h4 class="text-sm font-bold text-secondary-foreground">{variant}</h4>
     )
   }
-  <MethodSignature client:visible parameters={parameters} type={type}>
-    {signature !== undefined && <CodeBlock class="flex-1" code={signature} />}
+  <MethodSignature parameters={parameters} type={type}>
+    {
+      signature !== undefined && (
+        <CodeBlock class="flex-1" code={signature} inline />
+      )
+    }
   </MethodSignature>
   {
     example !== undefined && (
