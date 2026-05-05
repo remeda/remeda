@@ -4,7 +4,7 @@ category: Migrating to v2
 priority: 60
 ---
 
-## Re-Implementations
+### Re-Implementations
 
 Several functions had their runtime implementation changed, including changes to
 their _semantics_, so that they'd return different results in v2 for some edge
