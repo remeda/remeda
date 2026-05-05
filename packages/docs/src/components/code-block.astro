@@ -14,17 +14,17 @@ type Props = {
 
 const { code, class: class_, inline = false } = Astro.props;
 
-const prettierOutput = await format(code, {
+const formattedCode = await format(code, {
   ...PRETTIER_OPTIONS,
   // For inline rendering, disable Prettier's line wrapping so the snippet stays
-  // on one line; trim the trailing newline Prettier always appends.
+  // on one line.
   ...(inline && { printWidth: Number.POSITIVE_INFINITY }),
 });
 ---
 
 <ThemedCode
   class:list={["rounded-sm px-4 py-2", class_]}
-  code={prettierOutput.trimEnd()}
+  code={formattedCode.trimEnd()}
   inline={inline}
   lang="typescript"
   wrap
