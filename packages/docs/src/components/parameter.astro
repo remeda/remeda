@@ -1,0 +1,19 @@
+---
+import type { Signature } from "@/lib/typedoc/schema";
+import { prop } from "remeda";
+
+type Props = {
+  readonly parameter: NonNullable<Signature["parameters"]>[number];
+};
+
+const {
+  parameter: { name, comment },
+} = Astro.props;
+---
+
+<>
+  <dt class="font-semibold">{name}</dt>
+  <dd class="text-muted-foreground">
+    {comment?.summary.map(prop("text")).join("")}
+  </dd>
+</>
