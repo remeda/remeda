@@ -1,5 +1,6 @@
 import type { EmptyObject } from "type-fest";
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { omit } from "./omit";
 import { pipe } from "./pipe";
 
@@ -44,7 +45,7 @@ test("omit everything", () => {
 
 test("omit unbounded", () => {
   expectTypeOf(
-    omit({} as Record<string, string>, ["" as string]),
+    omit({} as Record<string, string>, [$typed<string>()]),
   ).toEqualTypeOf<Record<string, string>>();
 });
 
@@ -73,7 +74,9 @@ test("readonly data becomes writable", () => {
 });
 
 test("keys with union type", () => {
-  expectTypeOf(omit({ a: 1, b: 2, c: 3 }, ["a" as "a" | "b"])).toEqualTypeOf<{
+  expectTypeOf(
+    omit({ a: 1, b: 2, c: 3 }, [$typed<"a" | "b">()]),
+  ).toEqualTypeOf<{
     a?: number;
     b?: number;
     c: number;

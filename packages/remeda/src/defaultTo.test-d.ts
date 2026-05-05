@@ -1,4 +1,5 @@
-import { expectTypeOf, test, describe } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { defaultTo } from "./defaultTo";
 import { pipe } from "./pipe";
 
@@ -228,17 +229,14 @@ describe("object types", () => {
       expectTypeOf(
         defaultTo(
           { a: "a" } as { a: string } | undefined,
-          { a: "b" } as { a: string },
+          $typed<{ a: string }>(),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
 
     test("nullable object", () => {
       expectTypeOf(
-        defaultTo(
-          { a: "a" } as { a: string } | null,
-          { a: "b" } as { a: string },
-        ),
+        defaultTo({ a: "a" } as { a: string } | null, $typed<{ a: string }>()),
       ).toEqualTypeOf<{ a: string }>();
     });
 
@@ -258,7 +256,7 @@ describe("object types", () => {
       test("non-nullish object", () => {
         // @ts-expect-error [ts2345] -- the fallback is never because it will
         // never be used.
-        defaultTo({ a: "a" } as { a: string }, { a: "b" });
+        defaultTo({ a: "a" }, { a: "b" });
       });
 
       test("incompatible object fallback", () => {
@@ -274,7 +272,7 @@ describe("object types", () => {
       expectTypeOf(
         pipe(
           { a: "a" } as { a: string } | undefined,
-          defaultTo({ a: "b" } as { a: string }),
+          defaultTo($typed<{ a: string }>()),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
@@ -283,7 +281,7 @@ describe("object types", () => {
       expectTypeOf(
         pipe(
           { a: "a" } as { a: string } | null,
-          defaultTo({ a: "b" } as { a: string }),
+          defaultTo($typed<{ a: string }>()),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
@@ -292,7 +290,7 @@ describe("object types", () => {
       test("non-nullish object", () => {
         // @ts-expect-error [ts2345] -- the fallback is never because it will
         // never be used.
-        pipe({ a: "a" } as { a: string }, defaultTo({ a: "b" }));
+        pipe({ a: "a" }, defaultTo({ a: "b" }));
       });
 
       test("incompatible object fallback", () => {

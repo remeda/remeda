@@ -62,6 +62,7 @@ describe("objects", () => {
     interface MyInterface {
       a: number;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
     const data = { a: 123 } as MyInterface;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<"a", never>>();

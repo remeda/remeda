@@ -59,7 +59,7 @@ test("symbols are not passed to the predicate", () => {
 });
 
 test("makes wide types partial", () => {
-  const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+  const wide = pickBy({ a: 0 }, isDeepEqual(1 as const));
 
   expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
 

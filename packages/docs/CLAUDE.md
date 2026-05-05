@@ -42,7 +42,7 @@ The site has six content collections, each with its own `content.config.ts` co-l
 
 ### Component Pattern
 
-Astro components (`.astro`) handle data loading and server rendering. React components (`.tsx`) are hydrated as islands using `client:*` directives — `client:visible` for interactive UI (navbar, collapsible signatures), `client:idle` for low-priority (theme switcher), `client:only="react"` for search (Algolia DocSearch). The `src/components/ui/` directory contains unmodified shadcn/ui components (Radix UI + Tailwind) — lint rules are relaxed for these files.
+Astro components (`.astro`) handle data loading and server rendering. React components (`.tsx`) are hydrated as islands using `client:*` directives — `client:visible` for interactive UI (navbar, collapsible signatures), `client:idle` for low-priority (theme switcher), `client:only="react"` for search (Algolia DocSearch). The `src/components/ui/` directory contains shadcn/ui components (Radix UI + Tailwind).
 
 ### Key Directories
 

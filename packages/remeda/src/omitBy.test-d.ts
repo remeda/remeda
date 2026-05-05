@@ -98,7 +98,7 @@ test("handles type-predicates", () => {
 });
 
 test("makes wide types partial", () => {
-  const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+  const wide = omitBy({ a: 0 }, isDeepEqual(1 as const));
 
   expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
 

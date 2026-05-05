@@ -87,5 +87,6 @@ test("support interfaces (issue #990)", () => {
     name: { first: string };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- preserves the named interface; that's what this test exercises.
   setPath({ name: { first: "John" } } as User, ["name", "first"], "Jane");
 });
