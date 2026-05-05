@@ -1,11 +1,12 @@
 ---
 import NetlifyAttribution from "@/components/netlify-attribution.astro";
 import Prose from "@/components/prose.astro";
+import { SKIP_LINK_TARGET_ID } from "@/lib/skip-link-target";
 import BaseLayout from "./base.astro";
 ---
 
 <BaseLayout>
-  <main class="overflow-hidden p-6" id="main" tabindex="-1">
+  <main class="overflow-hidden p-6" id={SKIP_LINK_TARGET_ID} tabindex="-1">
     <Prose as="article" class="container mx-auto max-w-4xl px-4">
       <slot />
     </Prose>

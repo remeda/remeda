@@ -3,6 +3,7 @@ import Article from "@/components/article.astro";
 import DocsSection from "@/components/docs-section.astro";
 import { Navbar, type NavbarCategory } from "@/components/navbar";
 import { forNavbar, getArticles } from "@/lib/articles/entries";
+import { SKIP_LINK_TARGET_ID } from "@/lib/skip-link-target";
 import BaseLayout from "./base.astro";
 
 type Props = {
@@ -28,7 +29,7 @@ const entries = [...forNavbar(articles), ...navbarEntries];
     </aside>
     <main
       class="flex-1 space-y-3 overflow-hidden sm:space-y-8"
-      id="main"
+      id={SKIP_LINK_TARGET_ID}
       tabindex="-1"
     >
       <h1 class="mb-12 text-3xl font-thin tracking-widest capitalize">
