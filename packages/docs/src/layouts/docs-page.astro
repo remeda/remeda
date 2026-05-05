@@ -26,7 +26,11 @@ const entries = [...forNavbar(articles), ...navbarEntries];
     >
       <Navbar client:visible entries={entries} />
     </aside>
-    <main class="flex-1 space-y-3 overflow-hidden sm:space-y-8" id="main">
+    <main
+      class="flex-1 space-y-3 overflow-hidden sm:space-y-8"
+      id="main"
+      tabindex="-1"
+    >
       <h1 class="mb-12 text-3xl font-thin tracking-widest capitalize">
         {title}
       </h1>
