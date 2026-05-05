@@ -98,9 +98,9 @@ function extractReturnType(type: Signature["type"]): string {
       </figure>
     </div>
   </details>
+  {
+    example !== undefined && (
+      <CodeBlock class="text-xs lg:text-base" code={example} />
+    )
+  }
 </section>
-{
-  example !== undefined && (
-    <CodeBlock class="text-xs lg:text-base" code={example} />
-  )
-}
