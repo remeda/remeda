@@ -43,7 +43,7 @@ jobs:
         run: npm --workspace=remeda install -D typescript@${{ matrix.typescript-version }}
 
       - name: 🎯 Concrete version
-        run: npx --workspace=remeda tsc --version
+        run: npx --workspace=remeda tsc --version | tee -a $GITHUB_STEP_SUMMARY
 
       - name: 🚨 Type check
         run: npm --workspace=remeda run check
