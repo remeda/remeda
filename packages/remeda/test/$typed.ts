@@ -16,10 +16,10 @@
  * - "This assertion is unnecessary since the receiver accepts the original type of the expression."
  * - "This assertion is unnecessary since it does not change the type of the expression."
  *
- * The rule is wrong about test intent — removing the assertion collapses `T` to
- * the literal type and changes what's being tested — but it's also right that
- * this assertion is redundant because it deals with a runtime object that we
- * don't actually use.
+ * The rule misreads test intent: removing the assertion lets `T` infer from
+ * the value's narrow type instead of the wider type the test wants to
+ * exercise. It's also right, though, that the assertion is redundant — the
+ * runtime object it casts is never used.
  *
  * `$typed` replaces both at once:
  *
@@ -28,10 +28,12 @@
  *
  * ## When not to use
  *
- * `interface`s are surfaced as false positives because they *look* like they
- * are equivalent to their `type` version, but they aren't exactly, because they
- * don't extends `Record<PropertyKey, unknown>`. When testing interfaces prefer
- * suppressing the eslint rule and avoid using this helper!
+ * - `interface` types: The rule fires on `value as SomeInterface` as a false
+ * positive: the cast *is* doing real work, because TypeScript does not treat
+ * an interface as extending `Record<PropertyKey, unknown>`, so an interface is
+ * not equivalent to the type inferred from a value literal. Leave the cast in
+ * place and add an `eslint-disable-next-line` with the suspected bug noted in
+ * the reason.
  */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- Intentional, this is how we do it...
-export declare function $typed<T>(): T;
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- T is supplied explicitly by the caller and surfaced as the return type; making T appear elsewhere would defeat the helper's purpose.
+export declare function $typed<T = never>(): T;
