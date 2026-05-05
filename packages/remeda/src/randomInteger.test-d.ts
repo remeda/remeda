@@ -1,4 +1,5 @@
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { randomInteger } from "./randomInteger";
 
 test("returns number when from is float", () => {
@@ -47,15 +48,17 @@ test("returns number when to is a negative decimal", () => {
 });
 
 test("returns number when from is number", () => {
-  expectTypeOf(randomInteger(1 as number, 5)).toEqualTypeOf<number>();
+  expectTypeOf(randomInteger($typed<number>(), 5)).toEqualTypeOf<number>();
 });
 
 test("returns number when to is number", () => {
-  expectTypeOf(randomInteger(1, 5 as number)).toEqualTypeOf<number>();
+  expectTypeOf(randomInteger(1, $typed<number>())).toEqualTypeOf<number>();
 });
 
 test("returns number when from and to are number", () => {
-  expectTypeOf(randomInteger(1 as number, 5 as number)).toEqualTypeOf<number>();
+  expectTypeOf(
+    randomInteger($typed<number>(), $typed<number>()),
+  ).toEqualTypeOf<number>();
 });
 
 test("returns number when from and to are very big numbers", () => {

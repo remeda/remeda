@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { ArrayRequiredPrefix } from "./ArrayRequiredPrefix";
 import type { IterableContainer } from "./IterableContainer";
 
@@ -348,7 +349,9 @@ describe("works with all array shapes", () => {
 });
 
 test("errs on non-literal param", () => {
-  expectTypeOf(arrayRequiredPrefix([] as string[], 123 as number)).toBeNever();
+  expectTypeOf(
+    arrayRequiredPrefix([] as string[], $typed<number>()),
+  ).toBeNever();
 });
 
 describe("union types", () => {
@@ -356,7 +359,7 @@ describe("union types", () => {
     expectTypeOf(
       arrayRequiredPrefix(
         [1, true] as [number, ...string[], boolean],
-        3 as 3 | 20,
+        $typed<3 | 20>(),
       ),
     ).toEqualTypeOf<[number, string, ...string[], boolean]>();
   });

@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { constant } from "./constant";
 
 test("supported in any api", () => {
@@ -40,7 +41,9 @@ describe("returns narrow types on literals (issue #823)", () => {
   });
 
   test("doesn't narrow explicitly defined types", () => {
-    expectTypeOf(constant({ a: 1 as number, b: 2 })).returns.toEqualTypeOf<{
+    expectTypeOf(
+      constant({ a: $typed<number>(), b: 2 }),
+    ).returns.toEqualTypeOf<{
       readonly a: number;
       readonly b: 2;
     }>();

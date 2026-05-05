@@ -1,5 +1,6 @@
 import type { Tagged } from "type-fest";
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { IsBounded } from "./IsBounded";
 
 declare const SYMBOL_A: unique symbol;
@@ -21,18 +22,18 @@ test("symbol", () => {
 });
 
 test("union of string, number, symbol", () => {
-  expectTypeOf(isBounded("" as string | number)).toEqualTypeOf<false>();
-  expectTypeOf(isBounded("" as string | symbol)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<string | number>())).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<string | symbol>())).toEqualTypeOf<false>();
 });
 
 test("string literals and their union", () => {
   expectTypeOf(isBounded("a" as const)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded("a" as "a" | "b")).toEqualTypeOf<true>();
+  expectTypeOf(isBounded($typed<"a" | "b">())).toEqualTypeOf<true>();
 });
 
 test("number literals and their union", () => {
   expectTypeOf(isBounded(1 as const)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded(1 as 1 | 2)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded($typed<1 | 2>())).toEqualTypeOf<true>();
 });
 
 test("symbol literals and their union", () => {
@@ -43,17 +44,19 @@ test("symbol literals and their union", () => {
 });
 
 test("unions between string, number, symbol", () => {
-  expectTypeOf(isBounded("a" as "a" | 1)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded("a" as "a" | typeof SYMBOL_A)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded(1 as 1 | typeof SYMBOL_A)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded($typed<"a" | 1>())).toEqualTypeOf<true>();
   expectTypeOf(
-    isBounded("a" as "a" | 1 | typeof SYMBOL_A),
+    isBounded($typed<"a" | typeof SYMBOL_A>()),
+  ).toEqualTypeOf<true>();
+  expectTypeOf(isBounded($typed<1 | typeof SYMBOL_A>())).toEqualTypeOf<true>();
+  expectTypeOf(
+    isBounded($typed<"a" | 1 | typeof SYMBOL_A>()),
   ).toEqualTypeOf<true>();
 });
 
 test("unions with unbounded types", () => {
-  expectTypeOf(isBounded("a" as "a" | number)).toEqualTypeOf<false>();
-  expectTypeOf(isBounded(1 as 1 | string)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<"a" | number>())).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<1 | string>())).toEqualTypeOf<false>();
 });
 
 test("branded types", () => {
@@ -62,24 +65,22 @@ test("branded types", () => {
 });
 
 test("bounded template strings", () => {
-  expectTypeOf(isBounded("a_1" as `a_${1 | 2}`)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded($typed<`a_${1 | 2}`>())).toEqualTypeOf<true>();
   expectTypeOf(
-    isBounded("a_1" as `${"a" | "b"}_${1 | 2}`),
+    isBounded($typed<`${"a" | "b"}_${1 | 2}`>()),
   ).toEqualTypeOf<true>();
   expectTypeOf(
-    isBounded("1_1_1_1_1" as `${1 | 2}_${1 | 2}_${1 | 2}_${1 | 2}_${1 | 2}`),
+    isBounded($typed<`${1 | 2}_${1 | 2}_${1 | 2}_${1 | 2}_${1 | 2}`>()),
   ).toEqualTypeOf<true>();
 });
 
 test("unbounded template strings", () => {
-  expectTypeOf(isBounded("a_1" as `a_${number}`)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<`a_${number}`>())).toEqualTypeOf<false>();
   expectTypeOf(
-    isBounded("a_1" as `${"a" | "b"}_${number}`),
+    isBounded($typed<`${"a" | "b"}_${number}`>()),
   ).toEqualTypeOf<false>();
-  expectTypeOf(isBounded("a_hello" as `a_${string}`)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded($typed<`a_${string}`>())).toEqualTypeOf<false>();
   expectTypeOf(
-    isBounded(
-      "a_1_b_2_c" as `${string}_${number}_${string}_${number}_${string}`,
-    ),
+    isBounded($typed<`${string}_${number}_${string}_${number}_${string}`>()),
   ).toEqualTypeOf<false>();
 });

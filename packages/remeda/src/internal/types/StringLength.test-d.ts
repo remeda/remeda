@@ -1,4 +1,5 @@
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../../../test/$typed";
 import type { StringLength } from "./StringLength";
 
 declare function stringLength<S extends string>(data: S): StringLength<S>;
@@ -18,21 +19,21 @@ test("union of simple strings", () => {
 });
 
 test("primitive string", () => {
-  expectTypeOf(stringLength("hello" as string)).toEqualTypeOf<number>();
+  expectTypeOf(stringLength($typed<string>())).toEqualTypeOf<number>();
 });
 
 test("bounded template string", () => {
-  expectTypeOf(stringLength("h1" as `h${1 | 22 | 333}`)).toEqualTypeOf<
+  expectTypeOf(stringLength($typed<`h${1 | 22 | 333}`>())).toEqualTypeOf<
     2 | 3 | 4
   >();
 });
 
 test("unbounded template string", () => {
-  expectTypeOf(stringLength("hello" as `h${string}`)).toEqualTypeOf<number>();
+  expectTypeOf(stringLength($typed<`h${string}`>())).toEqualTypeOf<number>();
 });
 
 test("union of bounded and unbounded string", () => {
   expectTypeOf(
-    stringLength("hello" as `h${1 | 22 | 333}` | `h${string}`),
+    stringLength($typed<`h${1 | 22 | 333}` | `h${string}`>()),
   ).toEqualTypeOf<number>();
 });
