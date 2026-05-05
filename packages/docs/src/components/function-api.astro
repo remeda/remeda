@@ -65,7 +65,11 @@ function extractReturnType(type: Signature["type"]): string {
     <summary
       class="relative flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
     >
-      <slot />
+      {
+        signature !== undefined && (
+          <CodeBlock class="flex-1" code={signature} inline />
+        )
+      }
       <ChevronsUpDownIcon
         className="absolute right-0 mr-2 size-4 text-background dark:text-foreground"
       />
@@ -94,11 +98,6 @@ function extractReturnType(type: Signature["type"]): string {
       </figure>
     </div>
   </details>
-  {
-    signature !== undefined && (
-      <CodeBlock class="flex-1" code={signature} inline />
-    )
-  }
 </section>
 {
   example !== undefined && (
