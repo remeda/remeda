@@ -1,8 +1,9 @@
 ---
 import { hasTag, tagContent } from "@/lib/tags";
 import type { Signature } from "@/lib/typedoc/schema";
+import { ChevronsUpDownIcon } from "lucide-react";
+import { prop } from "remeda";
 import CodeBlock from "./code-block.astro";
-import MethodSignature from "./method-signature.astro";
 
 type Props = {
   readonly signature: Signature;
@@ -23,8 +24,35 @@ const variant = hasTag(blockTags, "dataFirst")
     : undefined;
 
 const example = tagContent(blockTags, "example");
-
 const signature = tagContent(blockTags, "signature");
+
+function extractReturnType(type: Signature["type"]): string {
+  switch (type.type) {
+    case "intrinsic":
+      return type.name;
+
+    case "array":
+      return "Array";
+
+    case "predicate":
+      return "boolean";
+
+    case "indexedAccess":
+    case "intersection":
+    case "query":
+    case "reference":
+    case "reflection":
+    case "tuple":
+    case "union":
+      // TODO: Can we improve our docs by making these more specific?
+      return "Object";
+
+    case "mapped":
+    case "conditional":
+      // These only show up in V1!
+      return "Object";
+  }
+}
 ---
 
 <section class="flex flex-col gap-2">
@@ -33,16 +61,47 @@ const signature = tagContent(blockTags, "signature");
       <h4 class="text-sm font-bold text-secondary-foreground">{variant}</h4>
     )
   }
-  <MethodSignature parameters={parameters} type={type}>
-    {
-      signature !== undefined && (
-        <CodeBlock class="flex-1" code={signature} inline />
-      )
-    }
-  </MethodSignature>
+  <details>
+    <summary
+      class="relative flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
+    >
+      <slot />
+      <ChevronsUpDownIcon
+        className="absolute right-0 mr-2 size-4 text-background dark:text-foreground"
+      />
+    </summary>
+    <div class="flex flex-col gap-3 p-2">
+      <figure>
+        <figcaption>Parameters</figcaption>
+        <dl
+          class="mt-1 grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1 text-sm"
+        >
+          {
+            parameters?.map(({ name, comment }) => (
+              <>
+                <dt class="font-semibold">{name}</dt>
+                <dd class="text-muted-foreground">
+                  {comment?.summary.map(prop("text")).join("")}
+                </dd>
+              </>
+            ))
+          }
+        </dl>
+      </figure>
+      <figure>
+        <figcaption>Returns</figcaption>
+        <div class="text-sm font-semibold">{extractReturnType(type)}</div>
+      </figure>
+    </div>
+  </details>
   {
-    example !== undefined && (
-      <CodeBlock class="text-xs lg:text-base" code={example} />
+    signature !== undefined && (
+      <CodeBlock class="flex-1" code={signature} inline />
     )
   }
 </section>
+{
+  example !== undefined && (
+    <CodeBlock class="text-xs lg:text-base" code={example} />
+  )
+}
