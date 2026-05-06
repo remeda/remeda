@@ -27,8 +27,12 @@ export function MobileNav({
   return (
     <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className="md:hidden" size="icon" variant="ghost">
-          <span className="sr-only">Library navigation menu</span>
+        <Button
+          className="md:hidden"
+          size="icon"
+          title="Library navigation menu"
+          variant="ghost"
+        >
           <MenuIcon />
         </Button>
       </SheetTrigger>
