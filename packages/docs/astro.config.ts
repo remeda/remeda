@@ -11,11 +11,18 @@ import {
   defineConfig as defineViteConfig,
   type PluginOption,
 } from "vite";
+import { SHIKI_THEME } from "./src/lib/shiki";
 
 export default defineConfig({
   site: "https://remedajs.com",
 
   integrations: [react(), mdx(), sitemap()],
+
+  markdown: {
+    shikiConfig: {
+      theme: SHIKI_THEME,
+    },
+  },
 
   vite: {
     plugins: [
