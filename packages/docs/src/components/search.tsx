@@ -11,7 +11,13 @@ const REPO_URL = "https://github.com/remeda/remeda/";
 // We use a label to make it easier to filter issues coming from this flow...
 const LABELS = "docsearch";
 
-export function Search({ url }: { readonly url: URL }): ReactNode {
+export function Search({
+  site,
+  pathname,
+}: {
+  readonly site: URL | undefined;
+  readonly pathname: string;
+}): ReactNode {
   return (
     <DocSearch
       apiKey={API_KEY}
@@ -26,14 +32,14 @@ export function Search({ url }: { readonly url: URL }): ReactNode {
       indices={[
         {
           name: INDEX_NAME,
-          ...(url.pathname !== "/" && {
+          ...(pathname !== "/" && {
             searchParameters: {
               // We allow the index to boost results based on the current page
               // url so that results within the same page are preferred. We
               // avoid this for the homepage because it is largely a marketing
               // page without substantial content users might be searching for.
               optionalFilters: [
-                `url_without_anchor:${url.origin}${url.pathname}`,
+                `url_without_anchor:${site?.origin ?? ""}${pathname}`,
               ],
             },
           }),
