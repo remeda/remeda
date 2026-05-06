@@ -36,7 +36,11 @@ const NAVLINK_CLASS =
     </MigrationSelector>
     <div class="flex-1"></div>
     <search>
-      <Search client:only="react" />
+      <Search
+        client:only="react"
+        pathname={Astro.url.pathname}
+        site={Astro.site}
+      />
     </search>
     <a
       class:list={buttonVariants({ variant: "ghost", size: "icon" })}

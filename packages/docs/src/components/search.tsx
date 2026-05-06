@@ -11,12 +11,17 @@ const REPO_URL = "https://github.com/remeda/remeda/";
 // We use a label to make it easier to filter issues coming from this flow...
 const LABELS = "docsearch";
 
-export function Search(): ReactNode {
+export function Search({
+  site,
+  pathname,
+}: {
+  readonly site: URL | undefined;
+  readonly pathname: string;
+}): ReactNode {
   return (
     <DocSearch
       apiKey={API_KEY}
       appId={APP_ID}
-      indices={[INDEX_NAME]}
       // eslint-disable-next-line react/jsx-no-bind -- This callback doesn't need to be stable because it is only used during render. @see https://github.com/algolia/docsearch/blob/104f7d1a986d1aef3d85f8dbca3e7197e66bf067/packages/docsearch-react/src/NoResultsScreen.tsx#L65-L74
       getMissingResultsUrl={({ query }) => {
         const issuesUrl = new URL("issues/new", REPO_URL);
@@ -24,6 +29,22 @@ export function Search(): ReactNode {
         issuesUrl.searchParams.set("labels", LABELS);
         return issuesUrl.toString();
       }}
+      indices={[
+        {
+          name: INDEX_NAME,
+          ...(pathname !== "/" && {
+            searchParameters: {
+              // We allow the index to boost results based on the current page
+              // url so that results within the same page are preferred. We
+              // avoid this for the homepage because it is largely a marketing
+              // page without substantial content users might be searching for.
+              optionalFilters: [
+                `url_without_anchor:${site?.origin ?? ""}${pathname}`,
+              ],
+            },
+          }),
+        },
+      ]}
       navigator={{
         // When navigating to another hash on the same page via "Enter" there
         // is a bug (in Algolia or Astro) where the scroll position is reset to
