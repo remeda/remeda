@@ -27,11 +27,11 @@ export function Search({ url }: { readonly url: URL }): ReactNode {
         {
           name: INDEX_NAME,
           ...(url.pathname !== "/" && {
-            // We allow the index to filter results based on the current page
-            // url so that results within the same page are preferred. We avoid
-            // this for the homepage because it is largely a marketing page
-            // without substantial content users might be searching for.
             searchParameters: {
+              // We allow the index to boost results based on the current page
+              // url so that results within the same page are preferred. We
+              // avoid this for the homepage because it is largely a marketing
+              // page without substantial content users might be searching for.
               optionalFilters: [
                 `url_without_anchor:${url.origin}${url.pathname}`,
               ],
