@@ -24,7 +24,7 @@ purpose-built for this task:
   built-in mechanisms of databases and other systems that offer more robust
   query normalization.
 
-### Comparison
+#### Comparison
 
 ```ts
 // Lodash
@@ -35,7 +35,7 @@ const collator = new Intl.Collator("en", { sensitivity: "base" });
 collator.compare("café", "cafe") === 0;
 ```
 
-### Simplifying
+#### Simplifying
 
 ```ts
 // Lodash

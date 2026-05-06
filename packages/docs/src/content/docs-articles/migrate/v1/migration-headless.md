@@ -4,7 +4,7 @@ category: Migrating to v2
 priority: 30
 ---
 
-# Headless Invocation
+### Headless Invocation
 
 A few single-parameter functions in v1 did not offer a properly curried
 "dataLast" implementation and instead suggested using a "headless" version for
@@ -29,7 +29,7 @@ map(DATA, identity());
 filter(DATA, isString); // Not changed!
 ```
 
-### Migration
+#### Migration
 
 Most call sites should now show an error when using the headless function
 because TypeScript wouldn't be able to infer the type correctly. However,

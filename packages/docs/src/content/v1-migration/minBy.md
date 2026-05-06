@@ -1,4 +1,4 @@
-# Removed
+#### Removed
 
 Replaced with the broader, more general purpose function: [`firstBy`](/docs/#firstBy).
 Use it with a single sort function set (see example).
@@ -6,9 +6,9 @@ Use it with a single sort function set (see example).
 The return type of `firstBy` observes the input type and can ensure a defined
 result if the input is non-empty.
 
-## Examples
+##### Examples
 
-### firstBy (dataFirst)
+###### firstBy (dataFirst)
 
 ```ts
 // Was
@@ -18,7 +18,7 @@ minBy(DATA, criteria);
 firstBy(DATA, criteria);
 ```
 
-### firstBy (dataLast)
+###### firstBy (dataLast)
 
 ```ts
 // Was
@@ -28,7 +28,7 @@ pipe(DATA, minBy(criteria));
 pipe(DATA, firstBy(criteria));
 ```
 
-### Ensured return
+###### Ensured return
 
 ```ts
 const DATA = [1, 2, 3] as const;

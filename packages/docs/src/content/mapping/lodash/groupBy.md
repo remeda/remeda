@@ -11,7 +11,7 @@ remeda: groupBy
   property name use Remeda's [`groupBy`](/docs#groupBy) composed with
   [`prop`](/docs#prop).
 
-### Callback
+#### Callback
 
 ```ts
 const DATA = [6.1, 4.2, 6.3];
@@ -23,7 +23,7 @@ groupBy(DATA, Math.floor);
 groupBy(DATA, Math.floor);
 ```
 
-### Property Name (on objects)
+#### Property Name (on objects)
 
 ```ts
 const DATA = [
@@ -38,7 +38,7 @@ groupBy(DATA, "type");
 groupByProp(DATA, "type");
 ```
 
-### Property Name (on primitives)
+#### Property Name (on primitives)
 
 ```ts
 const DATA = ["one", "two", "three"];

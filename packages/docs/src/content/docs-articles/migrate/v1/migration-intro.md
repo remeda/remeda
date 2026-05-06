@@ -4,7 +4,7 @@ category: Migrating to v2
 priority: 00
 ---
 
-# Migrating to v2
+### Migrating to v2
 
 v2 is the first major version release of Remeda in almost 2 years. We took this
 opportunity to gather as many **breaking changes** as possible into a single
@@ -13,7 +13,7 @@ _doesn't_ change any major aspect of Remeda's architecture. Almost half of
 Remeda's exported functions don't have _any_ breaking changes, neither in their
 runtime nor their typing!
 
-## Migrating
+#### Migrating
 
 For most projects, only minor changes to how some functions are called will be
 necessary.

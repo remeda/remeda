@@ -1,6 +1,6 @@
-# Typing
+#### Typing
 
-## Strict
+##### Strict
 
 If you weren't using the `strict` variant, the return type is now stricter by
 using the type returned from the mapper as the type for the keys of the result.
@@ -8,13 +8,13 @@ To maintain the previous return value make sure your function returns `string`
 instead of a narrower type. If you are already using `strict` simply remove the
 `.strict` suffix.
 
-## Indexed
+##### Indexed
 
 The `indexed` variant was removed; the base implementation takes the same
 parameters. If you are using `indexed` you can simply remove it without any
 other changes.
 
-# Runtime
+#### Runtime
 
 The grouping function now takes 2 additional parameters: `index` - The index of
 the current element being processed in array, and `data` - the array the
@@ -27,9 +27,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Strict variant removed
+###### Strict variant removed
 
 ```ts
 // Was
@@ -39,7 +39,7 @@ indexBy.strict(array, mapper);
 indexBy(array, mapper);
 ```
 
-### Indexed variant removed
+###### Indexed variant removed
 
 ```ts
 // Was
@@ -49,7 +49,7 @@ indexBy.indexed(array, groupingFunc);
 indexBy(array, groupingFunc);
 ```
 
-### Better typing
+###### Better typing
 
 ```ts
 type Pet = { type: "cat" | "dog"; name: string };
@@ -61,7 +61,7 @@ const indexed = indexBy(
 );
 ```
 
-### Legacy typing
+###### Legacy typing
 
 ```ts
 type Pet = { type: "cat" | "dog"; name: string };
@@ -70,7 +70,7 @@ const grouped = indexBy([] as Pet[], ({ type }) => type as string);
 //    ^? Record<string, Pet>
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 type Pet = { type: "cat" | "dog"; name: string };

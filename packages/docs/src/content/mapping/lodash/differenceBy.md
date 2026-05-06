@@ -21,7 +21,7 @@ _Not provided by Remeda._
   function (or is provided as `undefined`) it behaves like a call to
   [`difference`](#difference).
 
-### Function iteratee
+#### Function iteratee
 
 ```ts
 // Lodash
@@ -38,7 +38,7 @@ filter(
 );
 ```
 
-### Property iteratee
+#### Property iteratee
 
 ```ts
 // Lodash
@@ -55,7 +55,7 @@ filter(
 );
 ```
 
-### Multiple exclusion arrays
+#### Multiple exclusion arrays
 
 ```ts
 // Lodash
@@ -78,7 +78,7 @@ filter(
 );
 ```
 
-### Nullish inputs
+#### Nullish inputs
 
 ```ts
 // Lodash
@@ -93,7 +93,7 @@ isNonNullish(DATA)
 filter(DATA ?? [], piped(iteratee, isNot(isIncludedIn(map(values, iteratee)))));
 ```
 
-### Missing iteratee function
+#### Missing iteratee function
 
 ```ts
 // Lodash

@@ -1,9 +1,10 @@
 ---
 const VARIANTS = {
-  accent: "https://www.netlify.com/v3/img/components/netlify-color-accent.svg",
-  bg: "https://www.netlify.com/v3/img/components/netlify-color-bg.svg",
-  light: "https://www.netlify.com/v3/img/components/netlify-light.svg",
-  dark: "https://www.netlify.com/v3/img/components/netlify-dark.svg",
+  accent:
+    "https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg",
+  bg: "https://www.netlify.com/assets/badges/netlify-badge-color-bg.svg",
+  light: "https://www.netlify.com/assets/badges/netlify-badge-light.svg",
+  dark: "https://www.netlify.com/assets/badges/netlify-badge-dark.svg",
 } as const;
 
 type Props = {
@@ -13,6 +14,6 @@ type Props = {
 const { variant = "accent" } = Astro.props;
 ---
 
-<a href="https://www.netlify.com">
+<a href="https://www.netlify.com" rel="noopener noreferrer" target="_blank">
   <img alt="Deploys by Netlify" src={VARIANTS[variant]} />
 </a>

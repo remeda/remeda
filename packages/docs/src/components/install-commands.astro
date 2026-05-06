@@ -11,10 +11,10 @@ const COMMANDS = [
 ];
 ---
 
-<section class="max-w-80">
+<ul class="max-w-80 list-none p-0">
   {
     COMMANDS.map((command) => (
-      <article class="relative">
+      <li class="relative">
         <ThemedCode code={command} lang="bash" />
         <div class="absolute top-1/2 right-2 -translate-y-1/2">
           <CopyButton
@@ -23,7 +23,7 @@ const COMMANDS = [
             value={command}
           />
         </div>
-      </article>
+      </li>
     ))
   }
-</section>
+</ul>

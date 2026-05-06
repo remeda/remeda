@@ -2,7 +2,7 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { endsWith, filter, pipe, pullObject } from "remeda";
@@ -11,11 +11,26 @@ import {
   defineConfig as defineViteConfig,
   type PluginOption,
 } from "vite";
+import { SHIKI_THEME } from "./src/lib/shiki";
 
 export default defineConfig({
   site: "https://remedajs.com",
 
   integrations: [react(), mdx(), sitemap()],
+
+  markdown: {
+    shikiConfig: {
+      theme: SHIKI_THEME,
+    },
+  },
+
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "Inter",
+      cssVariable: "--font-inter",
+    },
+  ],
 
   vite: {
     plugins: [

@@ -1,11 +1,11 @@
-# Renamed
+#### Renamed
 
 Called [`isDeepEqual`](/docs/#isDeepEqual) instead. isDeepEqual has a slightly
 different return type (in some cases) allowing it to narrow the result.
 
-## Examples
+##### Examples
 
-### Simple
+###### Simple
 
 ```ts
 // Was
@@ -15,7 +15,7 @@ equals({ a: { b: 123 } }, { a: { b: 456 } });
 isDeepEqual({ a: { b: 123 } }, { a: { b: 456 } });
 ```
 
-### Type Predicate
+###### Type Predicate
 
 ```ts
 // Was

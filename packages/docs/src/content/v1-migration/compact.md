@@ -1,11 +1,11 @@
-# Removed
+#### Removed
 
 Replaced with [`filter`](/docs/#filter) with [`isTruthy`](/docs/#isTruthy) as
 the predicate.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -15,7 +15,7 @@ compact([1, null, 3]);
 filter([1, null, 3], isTruthy);
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was

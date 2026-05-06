@@ -15,7 +15,7 @@ remeda: truncate
   truncate the `omission` and therefore might return an output that exceeds
   `length`.
 
-### Default length
+#### Default length
 
 ```ts
 // Lodash
@@ -25,7 +25,7 @@ _.truncate(input);
 truncate(input, 30);
 ```
 
-### Custom length
+#### Custom length
 
 ```ts
 // Lodash
@@ -35,7 +35,7 @@ _.truncate(input, { length });
 truncate(input, length);
 ```
 
-### With options
+#### With options
 
 ```ts
 // Lodash

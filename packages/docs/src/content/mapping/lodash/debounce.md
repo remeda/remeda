@@ -15,7 +15,7 @@ remeda: funnel
   inlining only the parts you need you can take advantage of capabilities not
   available in Lodash.
 
-### Reference
+#### Reference
 
 ```ts
 function debounce<F extends (...args: any) => void>(
@@ -51,7 +51,7 @@ function debounce<F extends (...args: any) => void>(
 }
 ```
 
-### With call arguments
+#### With call arguments
 
 ```ts
 function debounce<F extends (...args: any) => void>(
@@ -88,7 +88,7 @@ function debounce<F extends (...args: any) => void>(
 }
 ```
 
-### With cached value
+#### With cached value
 
 ```ts
 function debounce<F extends (...args: any) => any>(

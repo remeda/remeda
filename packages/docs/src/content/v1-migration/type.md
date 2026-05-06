@@ -1,12 +1,12 @@
-# Removed
+#### Removed
 
 Use the built-in `typeof` and `instanceof` operators instead, or use a type-
 guard, [`isString`](/docs/#isString), [`isNumber`](/docs/#isNumber),
 [`isPlainObject`](/docs/#isPlainObject), [`isArray`](/docs/#isArray), etc...
 
-## Examples
+##### Examples
 
-### Object
+###### Object
 
 ```ts
 const DATA = {};
@@ -21,7 +21,7 @@ typeof DATA === "object";
 isPlainObject(DATA);
 ```
 
-### Number
+###### Number
 
 ```ts
 const DATA = 123;
@@ -36,7 +36,7 @@ typeof DATA === "number";
 isNumber(DATA);
 ```
 
-### Boolean
+###### Boolean
 
 ```ts
 const DATA = true;
@@ -51,7 +51,7 @@ typeof DATA === "boolean";
 isBoolean(DATA);
 ```
 
-### String
+###### String
 
 ```ts
 const DATA = "abc";
@@ -66,7 +66,7 @@ typeof DATA === "string";
 isString(DATA);
 ```
 
-### Null
+###### Null
 
 ```ts
 const DATA = null;
@@ -78,7 +78,7 @@ type(DATA) === "Null";
 DATA === null;
 ```
 
-### Array
+###### Array
 
 ```ts
 const DATA = [];
@@ -93,7 +93,7 @@ Array.isArray(DATA);
 isArray(DATA);
 ```
 
-### RegExp
+###### RegExp
 
 ```ts
 const DATA = /abc/;
@@ -105,7 +105,7 @@ type(DATA) === "RegExp";
 DATA instanceof RegExp;
 ```
 
-### Function
+###### Function
 
 ```ts
 const DATA = () => {};
@@ -120,7 +120,7 @@ typeof DATA === "function";
 isFunction(DATA);
 ```
 
-### Undefined
+###### Undefined
 
 ```ts
 const DATA = undefined;

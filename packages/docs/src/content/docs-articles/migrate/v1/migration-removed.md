@@ -4,9 +4,9 @@ category: Migrating to v2
 priority: 40
 ---
 
-# Renamed and Removed
+### Renamed and Removed
 
-## Removed
+#### Removed
 
 To offer the best possible functions, we deemed several functions as redundant
 when they could be easily replaced with other existing functions, resulting in
@@ -39,7 +39,7 @@ The functions are: `compact`, `countBy`, `flatMapToObj`, `flatten`,
 `flattenDeep`, `isObject`, `maxBy`, `minBy`, `noop`, `reject`, `type`, _and_
 `zipObj`.
 
-## Renamed
+#### Renamed
 
 Remeda took a lot of its early inspiration from Lodash and Ramda. Many functions
 were named similarly to their equivalents in those libraries, but these names
@@ -68,7 +68,7 @@ unique(DATA);
 The functions are: `createPipe`, `equals`, `fromPairs`, `isNil`, `toPairs`,
 `uniq`, `uniqBy`, _and_ `uniqWith`.
 
-### Migration
+##### Migration
 
 The latest versions of Remeda v1 have all renamed and removed functions
 deprecated with suggestions for how to migrate. Doing this while still in v1

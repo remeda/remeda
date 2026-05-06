@@ -1,33 +1,56 @@
 ---
 import Header from "@/components/header.astro";
+import SkipLink from "@/components/skip-link.astro";
 import "@/styles/global.css";
+import { Font } from "astro:assets";
+
+const SITE_NAME = "Remeda";
+const DESCRIPTION =
+  'The first "data-first" and "data-last" utility library designed specifically for TypeScript';
 
 type Props = {
   readonly title?: string | undefined;
 };
 
 const { title } = Astro.props;
+
+const fullTitle = title === undefined ? SITE_NAME : `${title} - ${SITE_NAME}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content='The first "data-first" and "data-last" utility library designed specifically for TypeScript'
-    />
+
     <meta name="viewport" content="width=device-width" />
+
+    <meta name="description" content={DESCRIPTION} />
     <meta name="generator" content={Astro.generator} />
+
+    <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="preconnect"
       href="https://416K8H7DAR-dsn.algolia.net"
       crossorigin
     />
-    <title>{`${title === undefined ? "" : `${title} - `}Remeda`}</title>
+    <Font cssVariable="--font-inter" preload />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={DESCRIPTION} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={DESCRIPTION} />
+
+    <title>{fullTitle}</title>
+
     <script is:inline src="/dist/scripts/init-theme.js"></script>
   </head>
   <body>
+    <SkipLink />
     <div class="container mx-auto flex flex-col items-stretch">
       <Header />
       <slot />

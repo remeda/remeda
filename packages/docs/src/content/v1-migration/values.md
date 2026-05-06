@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 Values for `symbol` keys were never returned by the function in runtime, but the
 typing didn't filter them out. This has been fixed.
@@ -6,9 +6,9 @@ typing didn't filter them out. This has been fixed.
 The "headless" dataLast form is no longer supported, use the functional style
 instead.
 
-## Examples
+##### Examples
 
-### Symbol keys
+###### Symbol keys
 
 ```ts
 const mySymbol = Symbol("a");
@@ -16,7 +16,7 @@ const result = values({ [mySymbol]: 123, a: "hello" });
 //    ^? string[], Was: (string | number)[]
 ```
 
-### No headless version
+###### No headless version
 
 ```ts
 // Was

@@ -20,9 +20,9 @@ const url = new URL(`${collection}/${id}.md`, GITHUB_EDIT_BASE_URL);
 <a
   class:list={buttonVariants({ variant: "secondary", size: "sm" })}
   href={url}
+  rel="noopener"
   target="_blank"
-  title="Edit on Github"
+  title="Edit on GitHub"
 >
   <SquarePenIcon />
-  <span class="sr-only">View source on GitHub</span>
 </a>

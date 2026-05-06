@@ -6,7 +6,7 @@ remeda: drop
 - Equivalent to `drop` with an argument of `1`.
 - On strings use [`sliceString`](/docs#sliceString) instead.
 
-### Arrays
+#### Arrays
 
 ```ts
 // Ramda
@@ -16,7 +16,7 @@ tail([1, 2, 3]);
 drop([1, 2, 3], 1);
 ```
 
-### Strings
+#### Strings
 
 ```ts
 // Ramda

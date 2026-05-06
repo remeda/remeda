@@ -10,7 +10,7 @@ _Not provided by Remeda._
   unintentionally redefining the `radix`. To avoid this issue, wrap the callback
   with an arrow function.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -22,7 +22,7 @@ Number.parseInt(input);
 Number.parseInt(input, radix);
 ```
 
-### Callback
+#### Callback
 
 ```ts
 // Lodash

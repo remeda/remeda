@@ -4,7 +4,7 @@ category: Migrating to v2
 priority: 50
 ---
 
-# Object Keys
+### Object Keys
 
 Most of the functions that provided a way to traverse `object`s relied on the
 built-in [`Object.entries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries).
@@ -27,7 +27,7 @@ to _preserve_ symbol keys.
 
 Read more about this on [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties).
 
-### Migration
+#### Migration
 
 The biggest differences are due to the change in how we handle `symbol` keys.
 `symbol` usage is rare, and if you don't know you use it in your project, you

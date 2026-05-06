@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 The mapping function is typed to no longer accept `symbol` keys or their
 corresponding values, and `number` keys will be cast as `string`, Aligning with
@@ -11,7 +11,7 @@ optionality of the keys. This would fix a common bug where the return type could
 cause accessing non-existent properties (see example). It also filters out
 `symbol` keys, as they cannot be mapped.
 
-# Runtime
+#### Runtime
 
 A third parameter was added to the predicate with the input object that was
 passed into the function (this is similar to how the built-in `Array.prototype`
@@ -23,9 +23,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Mapper typing
+###### Mapper typing
 
 ```ts
 const mySymbol = Symbol("a");
@@ -35,7 +35,7 @@ mapValues({ [mySymbol]: "hello", a: 123, 456: true }, (key, value) => {
 });
 ```
 
-### Input shape is preserved
+###### Input shape is preserved
 
 ```ts
 const DATA = { a: 123 } as { a: number; b?: boolean };
@@ -50,7 +50,7 @@ console.log(result.b);
 //                 ^? string | undefined, Was: string
 ```
 
-### Symbol keys are removed
+###### Symbol keys are removed
 
 ```ts
 const mySymbol = Symbol("a");
@@ -64,7 +64,7 @@ const result = mapValues(DATA, constant(456));
 //    ^? { a: number }, Was: Record<symbol | "a", number>
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 function callback(

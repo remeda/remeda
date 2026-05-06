@@ -1,11 +1,13 @@
 ---
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { functionsCollectionName } from "@/content/functions/content.config";
 import { hasTag, tagContent } from "@/lib/tags";
 import type { CollectionEntry } from "astro:content";
 import { map, pipe, sortBy, uniqueBy } from "remeda";
+import { ArticleCard } from "./article-card";
 import FunctionApi from "./function-api.astro";
 import FunctionDescription from "./function-description.astro";
+import { HeaderCardHeader } from "./header-card-header";
 
 type Props = {
   readonly func: CollectionEntry<typeof functionsCollectionName>;
@@ -20,14 +22,14 @@ const {
 const category = tagContent(data.signatures[0].comment.blockTags, "category");
 ---
 
-<Card className="scroll-mt-24" id={id}>
-  <CardHeader>
+<ArticleCard className="scroll-mt-24" id={id}>
+  <HeaderCardHeader>
     <FunctionDescription
       category={category}
       func={data}
       internalNames={internalNames}
     />
-  </CardHeader>
+  </HeaderCardHeader>
   <CardContent className="grid gap-8">
     {
       pipe(
@@ -41,4 +43,4 @@ const category = tagContent(data.signatures[0].comment.blockTags, "category");
       )
     }
   </CardContent>
-</Card>
+</ArticleCard>

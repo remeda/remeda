@@ -1,8 +1,8 @@
-# Renamed
+#### Renamed
 
 Called [`isNullish`](/docs/#isNullish) instead.
 
-## Example
+##### Example
 
 ```ts
 // Was

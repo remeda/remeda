@@ -10,7 +10,7 @@ remeda: endsWith
 - Lodash allows the suffix to be `undefined` (converts to `"undefined"` string)
   but this is not supported by Remeda and needs to be handled explicitly.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -23,7 +23,7 @@ endsWith(input, suffix);
 input.endsWith(suffix);
 ```
 
-### Position parameter
+#### Position parameter
 
 ```ts
 // Lodash
@@ -36,7 +36,7 @@ endsWith(sliceString(input, 0, position), suffix);
 input.endsWith(suffix, position);
 ```
 
-### Undefined suffix
+#### Undefined suffix
 
 ```ts
 // Lodash

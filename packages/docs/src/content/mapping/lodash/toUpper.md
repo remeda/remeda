@@ -8,7 +8,7 @@ remeda: toUpperCase
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
-### Basic usage
+#### Basic usage
 
 ```ts
 // Lodash
@@ -18,7 +18,7 @@ _.toUpper(input);
 toUpperCase(input);
 ```
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash
@@ -28,7 +28,7 @@ toUpperCase(input);
 <div style="text-transform:uppercase">{input}</div>
 ```
 
-### Missing input
+#### Missing input
 
 ```ts
 // Lodash

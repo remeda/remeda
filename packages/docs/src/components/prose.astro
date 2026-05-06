@@ -1,12 +1,16 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-type Props = HTMLAttributes<"article">;
+type Tags = "article" | "div";
 
-const { class: class_, ...props } = Astro.props;
+type Props = HTMLAttributes<Tags> & {
+  readonly as?: Tags;
+};
+
+const { as: Tag = "div", class: class_, ...props } = Astro.props;
 ---
 
-<article
+<Tag
   class:list={[
     "prose max-w-2xl prose-slate dark:prose-invert prose-code:text-primary prose-code:before:content-none prose-code:after:content-none",
     class_,
@@ -14,4 +18,4 @@ const { class: class_, ...props } = Astro.props;
   {...props}
 >
   <slot />
-</article>
+</Tag>

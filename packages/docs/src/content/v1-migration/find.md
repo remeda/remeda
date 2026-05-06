@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 The `indexed` variant was removed; the base implementation takes the same
 parameters. If you are using `indexed` you can simply remove it without any
@@ -8,7 +8,7 @@ When using with a type-predicate, the returned item would now be narrowed to the
 type of the type-predicate, similar to how `filter` with a type-predicate
 narrows the resulting items in the array.
 
-# Runtime
+#### Runtime
 
 The predicate function now takes 2 additional parameters: `index` - The index of
 the current element being processed in array, and `data` - the array the
@@ -21,9 +21,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Indexed variant removed
+###### Indexed variant removed
 
 ```ts
 // Was
@@ -33,14 +33,14 @@ find.indexed([1, 2, 3], (item, index) => item + (index % 2) === 0);
 find([1, 2, 3], (item, index) => item + (index % 2) === 0);
 ```
 
-### Narrowed Result
+###### Narrowed Result
 
 ```ts
 const result = find([1, "a"] as (string | number)[], isString);
 //    ^? string | undefined, Was: string | number | undefined
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 function callback(value: number, index = 0): boolean {

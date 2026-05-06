@@ -1,4 +1,4 @@
-# Runtime
+#### Runtime
 
 The order of parameters in the dataLast invocation has been flipped so that the
 second array to zip with is now the first parameter, and the zipping function is
@@ -15,9 +15,9 @@ run into compile-time (or run-time!) issues because of the extra params being
 sent on each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Param reordered
+###### Param reordered
 
 ```ts
 // Was
@@ -33,14 +33,14 @@ pipe(
 );
 ```
 
-### New Params
+###### New Params
 
 ```ts
 // This was previously unavailable
 zipWith([1, 2, 3], [4, 5, 6], (itemA, itemB, index) => itemA + itemB - index);
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 const DATA_A = [1, 2, 3] as const;

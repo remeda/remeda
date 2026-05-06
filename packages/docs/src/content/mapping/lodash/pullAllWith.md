@@ -26,7 +26,7 @@ Remeda!
 - If mutability wasn't desired, and instead the input was cloned (shallowly)
   before calling `pullAllWith`, that cloning is now redundant.
 
-### In-place mutation
+#### In-place mutation
 
 ```ts
 // pullAllWith
@@ -38,7 +38,7 @@ let DATA = [{ x: 1 }, { x: 2 }, { x: 3 }];
 DATA = _.differenceWith(DATA, values, comparator);
 ```
 
-### Non-mutating usage
+#### Non-mutating usage
 
 ```ts
 // pullAllWith
@@ -48,7 +48,7 @@ const pulled = _.pullAllWith([...DATA], values, comparator);
 const pulled = _.differenceWith(DATA, values, comparator);
 ```
 
-### Nested inside an object
+#### Nested inside an object
 
 ```ts
 // pullAllWith

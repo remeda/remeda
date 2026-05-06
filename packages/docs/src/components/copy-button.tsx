@@ -27,12 +27,12 @@ export function CopyButton({
 
   return (
     <Button
+      aria-label={hasCopied ? "Copied" : "Copy"}
       className={cn("relative z-10", className)}
       size="icon-xs"
       variant="ghost"
       onClick={handleClick}
     >
-      <span className="sr-only">Copy</span>
       {hasCopied ? <CheckIcon /> : <CopyIcon />}
     </Button>
   );

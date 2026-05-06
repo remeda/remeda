@@ -13,7 +13,7 @@ _Not provided by Remeda._
   and [`padEnd`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd),
   by computing the amount of effective padding you need on one side.
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash
@@ -23,7 +23,7 @@ _Not provided by Remeda._
 <div style="text-align:center;width:20ch">{input}</div>
 ```
 
-### Reference Implementation
+#### Reference Implementation
 
 ```ts
 const pad = (data: string, length: number, padding = " ") =>

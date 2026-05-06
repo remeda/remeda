@@ -6,7 +6,7 @@ remeda: isNot
 The function only accepts boolean values, to support arbitrary values compose
 it with [`isTruthy`](/docs#isTruthy).
 
-### Booleans
+#### Booleans
 
 ```ts
 // Ramda
@@ -16,7 +16,7 @@ not(val);
 isNot(val);
 ```
 
-### Arbitrary
+#### Arbitrary
 
 ```ts
 // Ramda

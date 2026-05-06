@@ -27,7 +27,7 @@ _Not provided by Remeda._
   which results in an empty string `""`. This requires explicit handling in
   replacements.
 
-### Whitespaces
+#### Whitespaces
 
 ```ts
 // Lodash
@@ -37,7 +37,7 @@ _.trim(input);
 input.trim();
 ```
 
-### Callback
+#### Callback
 
 ```ts
 // Lodash
@@ -47,7 +47,7 @@ _.map(data, _.trim);
 data.map(String.prototype.trim);
 ```
 
-### Characters
+#### Characters
 
 ```ts
 // Lodash
@@ -58,7 +58,7 @@ const escaped = RegExp.escape(characters);
 input.replace(new RegExp(`^[${escaped}]+|[${escaped}]+$`, "g"), "");
 ```
 
-### Graphemes
+#### Graphemes
 
 ```ts
 // Lodash
@@ -77,7 +77,7 @@ join(
 );
 ```
 
-### Missing input data
+#### Missing input data
 
 ```ts
 // Lodash

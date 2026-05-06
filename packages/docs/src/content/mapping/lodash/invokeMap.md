@@ -9,7 +9,7 @@ remeda: map
   narrow the name first (so you can handle errors explicitly), and then use the
   name to access the object.
 
-### No arguments
+#### No arguments
 
 ```ts
 // Lodash
@@ -31,7 +31,7 @@ map(
 );
 ```
 
-### With arguments
+#### With arguments
 
 ```ts
 // Lodash
@@ -41,7 +41,7 @@ invokeMap([123, 456], String.prototype.split, "");
 map([123, 456], (num) => num.toString().split(""));
 ```
 
-### Dynamic
+#### Dynamic
 
 ```ts
 const DATA = [

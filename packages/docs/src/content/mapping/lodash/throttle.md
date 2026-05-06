@@ -15,7 +15,7 @@ remeda: funnel
   inlining only the parts you need you can take advantage of capabilities not
   available in Lodash.
 
-### Reference
+#### Reference
 
 ```ts
 function throttle<F extends (...args: any) => void>(
@@ -46,7 +46,7 @@ function throttle<F extends (...args: any) => void>(
 }
 ```
 
-### With call arguments
+#### With call arguments
 
 ```ts
 function throttle<F extends (...args: any) => void>(
@@ -78,7 +78,7 @@ function throttle<F extends (...args: any) => void>(
 }
 ```
 
-### With cached value
+#### With cached value
 
 ```ts
 function throttle<F extends (...args: any) => any>(

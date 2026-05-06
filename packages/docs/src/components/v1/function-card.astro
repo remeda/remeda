@@ -1,13 +1,15 @@
 ---
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { functionsV1CollectionName } from "@/content/functions/v1/content.config";
 import { name as migrationCollectionName } from "@/content/v1-migration/content.config";
 import type { InferEntrySchema } from "astro:content";
 import { getCollection, render } from "astro:content";
+import { ArticleCard } from "../article-card";
 import FunctionApi from "../function-api.astro";
 import FunctionDescription from "../function-description.astro";
+import { HeaderCardHeader } from "../header-card-header";
 import Prose from "../prose.astro";
-import { MigrationBox } from "./migration-box";
+import { ChevronsUpDownIcon } from "lucide-react";
 
 type Props = {
   readonly category: string;
@@ -31,21 +33,25 @@ const Migration = entry === undefined ? undefined : await render(entry);
   // Some of the top-level functions in V1 are namespaces which we don't show
   // in the docs.
   data.kind === "function" && (
-    <Card className="scroll-mt-24" id={data.name}>
-      <CardHeader>
+    <ArticleCard className="scroll-mt-24" id={data.name}>
+      <HeaderCardHeader>
         <FunctionDescription
           category={category}
           func={data}
           internalNames={internalNames}
         />
-      </CardHeader>
+      </HeaderCardHeader>
       {Migration !== undefined && (
         <CardContent>
-          <MigrationBox client:visible>
-            <Prose class="max-w-none prose-h1:text-xl prose-h1:font-bold prose-h2:mb-2 prose-h2:text-lg prose-h2:font-semibold prose-h3:text-base prose-h3:font-semibold prose-p:max-w-prose">
+          <details class="group rounded-md border border-sky-100 bg-linear-to-tl from-sky-50 to-sky-100 p-3 shadow-xs dark:border-sky-900 dark:from-sky-900 dark:to-sky-950">
+            <summary class="relative flex cursor-pointer list-none items-center text-sm font-semibold tracking-wider text-neutral-800 uppercase dark:text-neutral-200 [&::-webkit-details-marker]:hidden">
+              Breaking changes in v2
+              <ChevronsUpDownIcon className="absolute right-0 size-4" />
+            </summary>
+            <Prose class="mt-4 max-w-none prose-h4:text-xl prose-h4:font-bold prose-h5:mb-2 prose-h5:text-lg prose-h5:font-semibold prose-h6:text-base prose-h6:font-semibold prose-p:max-w-prose">
               <Migration.Content />
             </Prose>
-          </MigrationBox>
+          </details>
         </CardContent>
       )}
       <CardContent className="grid gap-8">
@@ -53,6 +59,6 @@ const Migration = entry === undefined ? undefined : await render(entry);
           <FunctionApi signature={signature} />
         ))}
       </CardContent>
-    </Card>
+    </ArticleCard>
   )
 }

@@ -1,4 +1,4 @@
-# Removed
+#### Removed
 
 Replaced with [`flat`](/docs/#flat), with the "depth" param set to **>1**.
 
@@ -9,9 +9,9 @@ migrating if you aren't sure what value to use.
 For the best typing for a fully flattened array (unlimited depth) use a big,
 constant number (like 50), and not `Number.POSITIVE_INFINITY`.
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -24,7 +24,7 @@ flattenDeep([
 flat([[1, 2], [3], [4, 5]], 4 /* depth */);
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was
@@ -46,7 +46,7 @@ pipe(
 );
 ```
 
-### Unlimited depth
+###### Unlimited depth
 
 ```ts
 pipe(

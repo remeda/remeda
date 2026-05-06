@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 If you are already using `fromEntries.strict` simply remove the `.strict`
 suffix.
@@ -10,9 +10,9 @@ individual tuple in the input type to define a set of output props. If you want
 to maintain the same output type cast your input array as `[string, T][]` or
 `[number, T][]` (see examples).
 
-## Examples
+##### Examples
 
-### Strict Variant
+###### Strict Variant
 
 ```ts
 // Was
@@ -22,7 +22,7 @@ fromEntries.strict(["a", 1] as const);
 fromEntries(["a", 1] as const);
 ```
 
-### Legacy (string keys)
+###### Legacy (string keys)
 
 ```ts
 const DATA = [
@@ -37,7 +37,7 @@ fromEntries(DATA);
 fromEntries(DATA as [string, 123 | 456][]);
 ```
 
-### Legacy (number keys)
+###### Legacy (number keys)
 
 ```ts
 const DATA = [

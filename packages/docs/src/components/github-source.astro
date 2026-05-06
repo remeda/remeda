@@ -12,9 +12,9 @@ const { url } = Astro.props;
 <a
   class:list={buttonVariants({ variant: "secondary", size: "sm" })}
   href={url}
+  rel="noopener"
   target="_blank"
-  title="View source on Github"
+  title="View source on GitHub"
 >
   <GitHubLogoIcon />
-  <span class="sr-only">View source on GitHub</span>
 </a>

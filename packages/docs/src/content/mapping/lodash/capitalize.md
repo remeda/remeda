@@ -11,7 +11,7 @@ remeda: capitalize
   to target just the first letter of the word, and use [`text-transform: uppercase`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform#uppercase)
   to capitalize it.
 
-### Runtime
+#### Runtime
 
 ```ts
 // Lodash
@@ -21,7 +21,7 @@ _.capitalize(input);
 capitalize(toLowerCase(input));
 ```
 
-### CSS
+#### CSS
 
 ```tsx
 // Lodash

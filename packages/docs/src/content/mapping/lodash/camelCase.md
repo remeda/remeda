@@ -21,7 +21,7 @@ remeda: toCamelCase
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
-### Simple strings
+#### Simple strings
 
 ```ts
 // Lodash
@@ -31,7 +31,7 @@ _.camelCase(input);
 toCamelCase(input, { preserveConsecutiveUppercase: false });
 ```
 
-### Normalized
+#### Normalized
 
 ```ts
 // Lodash
@@ -48,7 +48,7 @@ toCamelCase(
 );
 ```
 
-### Missing input
+#### Missing input
 
 ```ts
 // Lodash

@@ -1,10 +1,10 @@
-# Removed
+#### Removed
 
 Replaced by composing [`fromEntries`](/docs/#fromEntries) on [`flatMap`](/docs/#flatMap).
 
-## Examples
+##### Examples
 
-### dataFirst
+###### dataFirst
 
 ```ts
 // Was
@@ -14,7 +14,7 @@ flatMapToObj([1, 2, 3], (x) => (x % 2 === 1 ? [[String(x), x]] : []));
 fromEntries(flatMap([1, 2, 3], (x) => (x % 2 === 1 ? [[String(x), x]] : [])));
 ```
 
-### dataFirst (indexed)
+###### dataFirst (indexed)
 
 ```ts
 // Was
@@ -32,7 +32,7 @@ fromEntries(
 );
 ```
 
-### dataLast
+###### dataLast
 
 ```ts
 // Was
@@ -49,7 +49,7 @@ pipe(
 );
 ```
 
-### dataLast (indexed)
+###### dataLast (indexed)
 
 ```ts
 // Was

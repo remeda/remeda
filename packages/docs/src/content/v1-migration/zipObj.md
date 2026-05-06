@@ -1,11 +1,11 @@
-# Removed
+#### Removed
 
 Use [`zip`](/docs/#zip), and then [`fromEntries`](/docs/#fromEntries) on the
 result.
 
-## Examples
+##### Examples
 
-### fromEntries
+###### fromEntries
 
 ```ts
 // Was

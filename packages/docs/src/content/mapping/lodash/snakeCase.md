@@ -18,7 +18,7 @@ remeda: toSnakeCase
   input, which isn't supported in Remeda. Handle these cases before calling the
   function.
 
-### Simple strings
+#### Simple strings
 
 ```ts
 // Lodash
@@ -28,7 +28,7 @@ _.snakeCase(input);
 toSnakeCase(input);
 ```
 
-### Normalized
+#### Normalized
 
 ```ts
 // Lodash
@@ -44,7 +44,7 @@ toSnakeCase(
 );
 ```
 
-### Missing input
+#### Missing input
 
 ```ts
 // Lodash

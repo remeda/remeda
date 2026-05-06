@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 The predicate function is typed to no longer accept `symbol` keys or their
 corresponding values, and `number` keys will be cast as `string`, Aligning with
@@ -9,7 +9,7 @@ breakages.
 Using a type-guard as the predicate will now narrow the resulting type (similar
 to how `filter` narrows the result).
 
-# Runtime
+#### Runtime
 
 A third parameter was added to the predicate with the input object that was
 passed into the function (this is similar to how the built-in `Array.prototype`
@@ -21,9 +21,9 @@ compile-time (or run-time!) issues because of the extra params being sent on
 each invocation of the function. We highly recommend using [unicorn/no-array-callback-reference](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md)
 to warn against these issues.
 
-## Examples
+##### Examples
 
-### Mapper typing
+###### Mapper typing
 
 ```ts
 const mySymbol = Symbol("a");
@@ -33,7 +33,7 @@ pickBy({ [mySymbol]: "hello", a: 123, 456: true }, (key, value) => {
 });
 ```
 
-### Narrowed return
+###### Narrowed return
 
 ```ts
 const DATA = { a: 123, b: 456 } as {
@@ -46,7 +46,7 @@ const result = pickBy(DATA, isNumber);
 //    ^? { a: number, b?: number, c?: number }, Was: typeof DATA
 ```
 
-### Potential bug
+###### Potential bug
 
 ```ts
 const DATA = { hello: "world", helloworld: 123 };

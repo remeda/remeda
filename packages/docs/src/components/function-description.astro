@@ -1,10 +1,10 @@
 ---
 import { Badge } from "@/components/ui/badge";
-import { CardTitle } from "@/components/ui/card";
 import { extractTags } from "@/lib/tags";
 import type { FunctionEntry } from "@/lib/typedoc/schema";
 import { hasAtLeast } from "remeda";
 import GithubSource from "./github-source.astro";
+import { H3CardTitle } from "./h3-card-title";
 import Markdown from "./markdown.astro";
 import Prose from "./prose.astro";
 import { TagBadge } from "./tag-badge";
@@ -32,9 +32,9 @@ const {
 
 <>
   <div class="flex items-center gap-2">
-    <CardTitle className="flex-1 overflow-hidden text-2xl">
+    <H3CardTitle className="flex-1 overflow-hidden text-2xl">
       {name}
-    </CardTitle>
+    </H3CardTitle>
     {
       extractTags(blockTags).map((tag) => (
         <TagBadge className="h-8" tag={tag} />
@@ -48,13 +48,26 @@ const {
       <Prose>
         <Markdown
           markdown={summary
-            .map(({ kind, text }) => {
+            .map(({ kind, text }, i) => {
               if (kind !== "code") {
                 return text;
               }
 
               const codeContent = text.slice(1, -1);
               if (!internalNames.has(codeContent)) {
+                return text;
+              }
+
+              const previous = summary[i - 1];
+              const next = summary[i + 1];
+              if (
+                previous?.kind === "text" &&
+                previous.text.endsWith("[") &&
+                next?.kind === "text" &&
+                next.text.startsWith("]")
+              ) {
+                // Skip when this code token is already the text of a markdown
+                // link the author wrote (e.g. `[`toLowerCase`](MDN_URL)`)
                 return text;
               }
 

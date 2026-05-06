@@ -35,14 +35,17 @@ const NAVLINK_CLASS =
       </span>
     </MigrationSelector>
     <div class="flex-1"></div>
-    <Search client:only="react" />
+    <search>
+      <Search client:only="react" />
+    </search>
     <a
       class:list={buttonVariants({ variant: "ghost", size: "icon" })}
       href="https://github.com/remeda/remeda"
+      rel="noopener"
       target="_blank"
+      title="GitHub repository"
     >
       <GitHubLogoIcon />
-      <span class="sr-only">GitHub</span>
     </a>
   </nav>
   <ThemeSwitcher client:idle />

@@ -1,4 +1,4 @@
-# Typing
+#### Typing
 
 If you weren't using the `strict` variant, The returned type is now stricter by
 taking the positional type of each item in tuples correctly, allowing the
@@ -6,9 +6,9 @@ taking the positional type of each item in tuples correctly, allowing the
 If you are zipping simple arrays the result is unchanged. If you are already
 using the `strict` variant simply remove the `.strict` suffix.
 
-## Examples
+##### Examples
 
-### Strict
+###### Strict
 
 ```ts
 // Was
@@ -18,7 +18,7 @@ zip.strict(a, b);
 zip(a, b);
 ```
 
-### Better typing
+###### Better typing
 
 ```ts
 const A = [1, 2, 3] as const;
