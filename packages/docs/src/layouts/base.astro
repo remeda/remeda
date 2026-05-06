@@ -2,6 +2,7 @@
 import Header from "@/components/header.astro";
 import SkipLink from "@/components/skip-link.astro";
 import "@/styles/global.css";
+import { Font } from "astro:assets";
 
 const SITE_NAME = "Remeda";
 const DESCRIPTION =
@@ -33,6 +34,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       href="https://416K8H7DAR-dsn.algolia.net"
       crossorigin
     />
+    <Font cssVariable="--font-inter" preload />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
