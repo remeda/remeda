@@ -1,0 +1,21 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import { SKIP_LINK_TARGET_ID } from "@/lib/skip-link-target";
+---
+
+<BaseLayout title="Page not found">
+  <main
+    class="flex flex-1 flex-col items-center justify-center gap-6 p-6 text-center"
+    id={SKIP_LINK_TARGET_ID}
+    tabindex="-1"
+  >
+    <p class="text-6xl font-thin tracking-widest">404</p>
+    <h1 class="text-2xl font-semibold">Page not found</h1>
+    <p class="max-w-md text-muted-foreground">
+      Looking for a specific utility? Remeda documents them all on
+      <a class="text-primary underline-offset-4 hover:underline" href="/docs">
+        a single page
+      </a>.
+    </p>
+  </main>
+</BaseLayout>
