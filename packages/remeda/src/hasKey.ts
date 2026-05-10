@@ -1,25 +1,24 @@
-import type { KeysOfUnion } from "type-fest";
+import type { KeysOfUnion, SetRequired } from "type-fest";
 import { purry } from "./purry";
 
-// Distribute over `T`'s union members. Each member that has `Key` keeps it,
-// with the optional modifier removed; members that don't have `Key` drop out
-// because the runtime check rules them out. The `T &` prefix makes the
-// resulting type structurally a subtype of `T`, satisfying the type-predicate
-// assignability constraint without an explicit suppression.
+// Distribute over `T`'s union members. Each member that has `Key` keeps it
+// (with the optional modifier removed via type-fest's `SetRequired`); members
+// that don't have `Key` drop out because the runtime check rules them out.
+// The leading `T &` makes the result structurally a subtype of `T`, which is
+// required for the type-predicate assignability check.
 type HasKey<T, Key extends PropertyKey> = T extends unknown
   ? Key extends keyof T
-    ? T & Required<Pick<T, Key>>
+    ? T & SetRequired<T, Key>
     : never
   : never;
 
 /**
- * Checks whether `key` is an own property of `data`. Mirrors `Object.hasOwn`,
- * so own properties whose value is `undefined` return `true` and inherited
- * prototype properties (like `toString`) return `false`.
+ * Checks whether `key` is an own property of `data`, mirroring
+ * [`Object.hasOwn`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn).
+ * Inherited properties on the prototype chain are ignored.
  *
- * Acts as a type-predicate: when `key` is declared as optional on `data`, the
- * narrowed type drops the optional modifier; when `data` is a union, members
- * that don't contain `key` are dropped.
+ * - Use `prop` to read the value.
+ * - Use `hasSubObject` to test multiple keys at once.
  *
  * @param data - The object to test.
  * @param key - The key to look up. Constrained to keys that could plausibly
@@ -28,7 +27,6 @@ type HasKey<T, Key extends PropertyKey> = T extends unknown
  *   hasKey(data, key)
  * @example
  *   hasKey({ a: 1 }, "a"); //=> true
- *   hasKey({ a: undefined }, "a"); //=> true
  *   hasKey({}, "toString"); //=> false (inherited, not own)
  * @dataFirst
  * @category Object
@@ -39,13 +37,12 @@ export function hasKey<T extends object, Key extends KeysOfUnion<T>>(
 ): data is HasKey<T, Key>;
 
 /**
- * Checks whether `key` is an own property of `data`. Mirrors `Object.hasOwn`,
- * so own properties whose value is `undefined` return `true` and inherited
- * prototype properties (like `toString`) return `false`.
+ * Checks whether `key` is an own property of `data`, mirroring
+ * [`Object.hasOwn`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn).
+ * Inherited properties on the prototype chain are ignored.
  *
- * Acts as a type-predicate: when `key` is declared as optional on `data`, the
- * narrowed type drops the optional modifier; when `data` is a union, members
- * that don't contain `key` are dropped.
+ * - Use `prop` to read the value.
+ * - Use `hasSubObject` to test multiple keys at once.
  *
  * @param key - The key to look up. Constrained to keys that could plausibly
  * exist on `data` so typos surface as type errors.
