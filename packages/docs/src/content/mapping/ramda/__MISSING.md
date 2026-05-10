@@ -112,8 +112,6 @@
 - dissoc
 - dissocPath
 - eqProps
-- has
-- hasIn
 - hasPath
 - invert
 - keysIn

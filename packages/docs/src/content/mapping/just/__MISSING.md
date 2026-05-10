@@ -20,7 +20,6 @@ priority of 40+ and are not widely used.
 - entries
 - filter-object
 - flip-object
-- has (38)
 - is-circular
 - is-empty (15)
 - is-primitive

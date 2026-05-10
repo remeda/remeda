@@ -44,7 +44,6 @@ export * from "./groupBy";
 export * from "./groupByProp";
 export * from "./hasAtLeast";
 export * from "./hasKey";
-export * from "./hasOwnKey";
 export * from "./hasSubObject";
 export * from "./identity";
 export * from "./indexBy";

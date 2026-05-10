@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { filter } from "./filter";
 import { hasKey } from "./hasKey";
 import { pipe } from "./pipe";
 
@@ -7,57 +8,57 @@ describe("data-first", () => {
     expect(hasKey({ a: 1 }, "a")).toBe(true);
   });
 
-  test("returns false for a missing property", () => {
-    expect(hasKey({ a: 1 }, "b")).toBe(false);
-  });
-
   test("returns true for an own property whose value is undefined", () => {
     expect(hasKey({ a: undefined }, "a")).toBe(true);
   });
 
-  test("returns true for inherited properties on the prototype chain", () => {
-    expect(hasKey({}, "toString")).toBe(true);
+  test("returns false for a missing optional property", () => {
+    expect(hasKey({} as { a?: number }, "a")).toBe(false);
   });
 
-  test("returns true for inherited properties from a custom prototype", () => {
+  test("returns false for inherited prototype properties", () => {
+    expect(hasKey({} as Record<string, unknown>, "toString")).toBe(false);
+  });
+
+  test("returns false for properties only on a custom prototype", () => {
     const proto = { inherited: 1 };
-    const data = Object.create(proto) as object;
+    const data = Object.create(proto) as Record<string, unknown>;
 
-    expect(hasKey(data, "inherited")).toBe(true);
-  });
-
-  test("returns false for properties not present on a null-prototype object", () => {
-    const data = Object.create(null) as object;
-
-    expect(hasKey(data, "toString")).toBe(false);
+    expect(hasKey(data, "inherited")).toBe(false);
   });
 
   test("returns true for own properties on a null-prototype object", () => {
-    const data = Object.assign(Object.create(null) as object, { a: 1 });
+    const data = Object.assign(Object.create(null) as Record<string, unknown>, {
+      a: 1,
+    });
 
     expect(hasKey(data, "a")).toBe(true);
   });
 
-  test("returns true for symbol keys", () => {
+  test("returns false for missing properties on a null-prototype object", () => {
+    const data = Object.create(null) as Record<string, unknown>;
+
+    expect(hasKey(data, "toString")).toBe(false);
+  });
+
+  test("returns true for own symbol keys", () => {
     const symbol = Symbol("test");
 
-    expect(hasKey({ [symbol]: 1 }, symbol)).toBe(true);
+    expect(hasKey({ [symbol]: 1 } as Record<symbol, unknown>, symbol)).toBe(
+      true,
+    );
   });
 
   test("returns true for numeric keys", () => {
-    expect(hasKey({ 0: "a" }, 0)).toBe(true);
+    expect(hasKey({ 0: "a" } as Record<number, unknown>, 0)).toBe(true);
   });
 
   test("returns true for an array index that exists", () => {
-    expect(hasKey([1, 2, 3], 1)).toBe(true);
+    expect(hasKey([1, 2, 3] as number[], 1)).toBe(true);
   });
 
   test("returns false for an array index past the end", () => {
-    expect(hasKey([1, 2, 3], 5)).toBe(false);
-  });
-
-  test("returns true for inherited array members", () => {
-    expect(hasKey([1, 2, 3], "length")).toBe(true);
+    expect(hasKey([1, 2, 3] as number[], 5)).toBe(false);
   });
 });
 
@@ -66,31 +67,21 @@ describe("data-last", () => {
     expect(pipe({ a: 1 }, hasKey("a"))).toBe(true);
   });
 
-  test("returns false for a missing property", () => {
-    expect(pipe({ a: 1 }, hasKey("b"))).toBe(false);
+  test("returns false for a missing optional property", () => {
+    expect(pipe({} as { a?: number }, hasKey("a"))).toBe(false);
   });
 
   test("returns true for an own property whose value is undefined", () => {
     expect(pipe({ a: undefined }, hasKey("a"))).toBe(true);
   });
 
-  test("returns true for inherited properties on the prototype chain", () => {
-    expect(pipe({}, hasKey("toString"))).toBe(true);
+  test("returns false for inherited prototype properties", () => {
+    expect(pipe({} as Record<string, unknown>, hasKey("toString"))).toBe(false);
   });
 
-  test("returns false for properties not present on a null-prototype object", () => {
-    const data = Object.create(null) as object;
+  test("filters and narrows union members", () => {
+    const data = [{ a: 1 }, { b: 2 }] as { a?: number; b?: number }[];
 
-    expect(pipe(data, hasKey("toString"))).toBe(false);
-  });
-
-  test("returns true for symbol keys", () => {
-    const symbol = Symbol("test");
-
-    expect(pipe({ [symbol]: 1 }, hasKey(symbol))).toBe(true);
-  });
-
-  test("returns true for numeric keys", () => {
-    expect(pipe({ 0: "a" }, hasKey(0))).toBe(true);
+    expect(filter(data, hasKey("a"))).toStrictEqual([{ a: 1 }]);
   });
 });
