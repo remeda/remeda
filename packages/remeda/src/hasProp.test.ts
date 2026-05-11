@@ -1,27 +1,26 @@
 import { describe, expect, test } from "vitest";
-import { filter } from "./filter";
-import { hasKey } from "./hasKey";
+import { hasProp } from "./hasProp";
 import { pipe } from "./pipe";
 
 test("returns true for an own property", () => {
-  expect(hasKey({ a: 1 }, "a")).toBe(true);
+  expect(hasProp({ a: 1 }, "a")).toBe(true);
 });
 
 test("returns true for an own property whose value is undefined", () => {
-  expect(hasKey({ a: undefined }, "a")).toBe(true);
+  expect(hasProp({ a: undefined }, "a")).toBe(true);
 });
 
 test("returns false for a missing optional property", () => {
-  expect(hasKey({} as { a?: number }, "a")).toBe(false);
+  expect(hasProp({} as { a?: number }, "a")).toBe(false);
 });
 
 test("returns false for inherited prototype properties", () => {
-  expect(hasKey({} as Record<string, unknown>, "toString")).toBe(false);
+  expect(hasProp({} as Record<string, unknown>, "toString")).toBe(false);
 });
 
 test("returns false for properties only on a custom prototype", () => {
   expect(
-    hasKey(
+    hasProp(
       Object.create({ inherited: 1 }) as Record<string, unknown>,
       "inherited",
     ),
@@ -30,7 +29,7 @@ test("returns false for properties only on a custom prototype", () => {
 
 test("returns true for own properties on a null-prototype object", () => {
   expect(
-    hasKey(
+    hasProp(
       Object.assign(Object.create(null) as Record<string, unknown>, { a: 1 }),
       "a",
     ),
@@ -40,43 +39,47 @@ test("returns true for own properties on a null-prototype object", () => {
 test("returns true for own symbol keys", () => {
   const symbol = Symbol("test");
 
-  expect(hasKey({ [symbol]: 1 } as Record<symbol, unknown>, symbol)).toBe(true);
+  expect(hasProp({ [symbol]: 1 }, symbol)).toBe(true);
 });
 
 test("returns true for numeric keys", () => {
-  expect(hasKey({ 0: "a" } as Record<number, unknown>, 0)).toBe(true);
+  expect(hasProp({ 0: "a" }, 0)).toBe(true);
 });
 
 describe("arrays", () => {
   test("returns true for an array index that exists", () => {
-    expect(hasKey([1, 2, 3] as number[], 1)).toBe(true);
+    expect(hasProp([1, 2, 3], 1)).toBe(true);
   });
 
   test("returns false for an array index past the end", () => {
-    expect(hasKey([1, 2, 3] as number[], 5)).toBe(false);
+    expect(hasProp([1, 2, 3], 5)).toBe(false);
+  });
+
+  test("returns true for the array length own property", () => {
+    expect(hasProp([1, 2, 3], "length")).toBe(true);
+  });
+
+  test("returns false for inherited array members", () => {
+    expect(hasProp([1, 2, 3], "push")).toBe(false);
   });
 });
 
 describe("data-last", () => {
   test("returns true for an own property", () => {
-    expect(pipe({ a: 1 }, hasKey("a"))).toBe(true);
+    expect(pipe({ a: 1 }, hasProp("a"))).toBe(true);
   });
 
   test("returns false for a missing optional property", () => {
-    expect(pipe({} as { a?: number }, hasKey("a"))).toBe(false);
+    expect(pipe({} as { a?: number }, hasProp("a"))).toBe(false);
   });
 
   test("returns true for an own property whose value is undefined", () => {
-    expect(pipe({ a: undefined }, hasKey("a"))).toBe(true);
+    expect(pipe({ a: undefined }, hasProp("a"))).toBe(true);
   });
 
   test("returns false for inherited prototype properties", () => {
-    expect(pipe({} as Record<string, unknown>, hasKey("toString"))).toBe(false);
-  });
-
-  test("filters and narrows union members", () => {
-    const data = [{ a: 1 }, { b: 2 }] as { a?: number; b?: number }[];
-
-    expect(filter(data, hasKey("a"))).toStrictEqual([{ a: 1 }]);
+    expect(pipe({} as Record<string, unknown>, hasProp("toString"))).toBe(
+      false,
+    );
   });
 });

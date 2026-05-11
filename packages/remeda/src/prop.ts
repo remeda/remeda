@@ -50,6 +50,8 @@ type NonPropertyKey = object | null | undefined;
  * validated against the object type to provide stronger type safety, better
  * compile-time errors, and to enable autocompletion in IDEs.
  *
+ * To check whether a key exists on the object, use `hasProp`.
+ *
  * @param data - The object or array to access.
  * @param key - The key(s) for the property to extract.
  * @signature
@@ -245,6 +247,8 @@ export function prop<
  * `undefined` early for any non-existing property on the path. Paths are
  * validated against the object type to provide stronger type safety, better
  * compile-time errors, and to enable autocompletion in IDEs.
+ *
+ * To check whether a key exists on the object, use `hasProp`.
  *
  * @param key - The key(s) for the property to extract.
  * @signature

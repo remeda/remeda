@@ -1,17 +1,15 @@
 ---
 category: Objects
-remeda: hasKey
+remeda: hasProp
 ---
 
-- Just's `has` accepts deep paths (e.g. `["a", "b"]`). Remeda's `hasKey` only
-  checks a single key — for nested paths, narrow step by step.
-- Remeda's `hasKey` is also a type-predicate: it removes optionality from the
-  matched key and drops union members that don't have the key.
+- Just's `has` accepts deep paths (e.g. `["a", "b"]`, `"a.b"`). Remeda's `hasProp` only
+  checks a single key.
 
 ```ts
 // Just
 has(obj, "a");
 
 // Remeda
-hasKey(obj, "a");
+hasProp(obj, "a");
 ```

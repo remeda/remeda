@@ -1,20 +1,23 @@
 ---
 category: Object
-remeda: hasKey
+remeda: hasProp
 ---
 
-- Lodash's `hasIn` walks the prototype chain, so it returns `true` for
-  inherited properties (e.g. `hasIn({}, "toString")`). `hasKey` mirrors
-  `Object.hasOwn` and only considers own properties.
-- In modern code, the distinction between own and inherited properties rarely
-  matters — most objects users care about don't sit on a custom prototype, and
-  edge cases like `toString` are usually unintentional matches anyway.
-- `hasIn` accepts deep paths; `hasKey` only checks a single key.
+- Lodash's `hasIn` uses [the `in` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in)
+  which returns `true` for **inherited** properties. Remeda uses
+  [`Object.hasOwn`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn)
+  which ignores them.
+- Lodash's `hasIn` accepts deep paths (`"a.b.c"` or `["a", "b", "c"]`).
+  Remeda's `hasProp` only checks a single key.
 
 ```ts
 // Lodash
 hasIn(obj, "a");
 
 // Remeda
-hasKey(obj, "a");
+hasProp(obj, "a");
+
+// Inherited properties
+hasIn({}, "toString"); //=> true
+hasProp({}, "toString"); //=> false
 ```

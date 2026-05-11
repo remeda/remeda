@@ -1,18 +1,21 @@
 ---
 category: Object
-remeda: hasKey
+remeda: hasProp
 ---
 
-- Ramda's `hasIn` uses the `in` operator and walks the prototype chain;
-  `hasKey` mirrors `Object.hasOwn` and only checks own properties.
-- In modern code the distinction between own and inherited properties rarely
-  matters — most objects users care about don't sit on a custom prototype, and
-  edge cases like `toString` are usually unintentional matches anyway.
+- Ramda's `hasIn` uses [the `in` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in)
+  which returns `true` for **inherited** properties. Remeda uses
+  [`Object.hasOwn`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn)
+  which ignores them.
 
 ```ts
 // Ramda
 hasIn("a", obj);
 
 // Remeda
-hasKey(obj, "a");
+hasProp(obj, "a");
+
+// Inherited properties
+hasIn("toString", {}); //=> true
+hasProp({}, "toString"); //=> false
 ```
