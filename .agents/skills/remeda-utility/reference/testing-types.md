@@ -1,5 +1,3 @@
-Runtime and type tests are **strictly separated** — never mix `expect()` and `expectTypeOf()` in the same test block. Exception: testing callback parameter types inline with `expectTypeOf` inside a callback is acceptable.
-
 - Use `expectTypeOf(...).toEqualTypeOf<...>()` (not `assertType`)
 - `interface` tests are NOT redundant with `type` tests of the same shape — they exercise different TS-level paths through `Record`-extending constraints.
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`

@@ -1,10 +1,14 @@
 ---
 name: remeda-utility
-description: Guidelines for how to properly develop, maintain, and test, a Remeda utility function. Use this skill whenever a file is being edited in the `packages/remeda/src`, when reviewing a PR or local changes to those files, or whenever an issue, PR, or a chat session, refers to a specific function or file in that directory.
+description: Conventions for authoring, modifying, testing, and documenting a Remeda utility function — including the migration mapping pages for Lodash/Ramda/Just users. Use this skill whenever editing a file under `packages/remeda/src/` or `packages/docs/src/content/mapping/{lodash,ramda,just}/`, when reviewing a PR or local changes touching those directories, or whenever an issue, PR, or chat refers to a specific Remeda function or to a migration mapping page.
 ---
 
-This checklist ensures every function ships with the right implementation,
-tests, documentation, and migration mappings. Work through each item in order.
+A new or modified Remeda function ships across five surfaces: implementation,
+tests, JSDoc, the public export, and — when there's a Lodash/Ramda equivalent —
+migration mappings on the docs site. Skipping any one of them leaves the
+function half-shipped (e.g., a working implementation that isn't re-exported,
+or a behavior change with no test covering it). Work through the sections in
+order — later sections assume the earlier ones are in place.
 
 # 1. Implementation (`src/functionName.ts`)
 
@@ -15,33 +19,38 @@ its overloading function signatures, or any of the type definitions that it uses
 
 # 2. Tests
 
-- **Runtime tests** (`functionName.test.ts`) — cover the happy path, edge cases, empty inputs, and both calling styles (data-first and data-last / inside `pipe`).
-  - If editing runtime tests read `reference/testing-runtime.md`.
-- **Type tests** (`functionName.test-d.ts`) — use `expectTypeOf` to verify inferred return types, type narrowing, and that invalid inputs produce compile errors.
-  - If editing type tests read `reference/testing-types.md`.
-- **Property-based tests** (`functionName.test-prop.ts`) are optional but encouraged for functions with well-defined algebraic properties.
-  - If adding property-based tests, read `reference/testing-properties.md`.
-- Runtime and type tests are **strictly separated** — never mix `expect()` and `expectTypeOf()` in the same test block. Exception: testing callback parameter types inline with `expectTypeOf` inside a callback is acceptable.
-- Tests covering specific bugs should reference the issue number in the test name or a comment
-- Test names must be distinct — duplicate names make failure reports ambiguous
-- Test names describe what's being tested — "lazy early exit with hasMany" not "take and flat"
-- Input arrays need enough variation to produce different outputs — overly simple inputs hide bugs
+Each function has up to three test files, one per kind:
+
+- **Runtime tests** (`functionName.test.ts`) — Vitest. Cover happy path, edge cases, empty inputs, and both calling styles (data-first and data-last inside `pipe`, `map` or `filter`). When editing, read `reference/testing-runtime.md`.
+- **Type tests** (`functionName.test-d.ts`) — `expectTypeOf` from Vitest. Verify inferred return types, narrowing, and that invalid inputs are compile errors. When editing, read `reference/testing-types.md`.
+- **Property-based tests** (`functionName.test-prop.ts`) — `@fast-check/vitest`. Optional but encouraged for functions with well-defined algebraic properties (idempotence, involutions, round-trips). When adding, read `reference/testing-properties.md`.
+
+Conventions that apply across all three kinds:
+
+- Runtime and type assertions are **strictly separated** — `expect()` lives in `.test.ts`, `expectTypeOf()` lives in `.test-d.ts`. Never mix them in the same test block, and never put one kind in the other file.
+- Test names describe **what** is being tested in the function's own vocabulary — "lazy early exit with hasMany", not "take and flat".
+- Test names should be terse and concise, and should rely on context from parent `describe()` blocks and not repeat them.
+- Test names do not need to read as prose!
+- Tests for a specific bug must reference the issue number, either in the test name or a comment so that the reporting issue can always be traced back.
+- Input data needs enough variation to produce distinct outputs — `[1, 1, 1]` hides bugs that `[1, 2, 3]` catches.
 
 # 3. JSDoc
 
 Each overload needs its own JSDoc block. Required tags:
 
-| Tag                         | Notes                                                                                                                                                            |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Description                 | Present tense, precise vocabulary. First sentence should be concise and terse, and act as one-liner description, followed by a newline, then further expansions. |
-| `@param`                    | One per parameter, hyphen before description.                                                                                                                    |
-| `@signature`                | The call signature as it looks in user code (e.g., `filter(data, predicate)` / `filter(predicate)(data)`).                                                       |
-| `@example`                  | Simple, almost trivial. Data-last examples use `pipe` or `filter`.                                                                                               |
-| `@dataFirst` or `@dataLast` | One per overload.                                                                                                                                                |
-| `@lazy`                     | Only if lazy evaluation is supported.                                                                                                                            |
-| `@category`                 | The function's category (e.g., `Array`, `Object`, `String`).                                                                                                     |
+| Tag                        | Notes                                                                                                                           |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Description                | Present tense, precise vocabulary. First sentence is a concise one-line summary; further detail goes after a blank line.        |
+| `@param`                   | One per parameter.                                                                                                              |
+| `@signature`               | The call as it looks at the call site, e.g., `filter(data, predicate)` for data-first, `filter(predicate)(data)` for data-last. |
+| `@example`                 | Simple, almost trivial — show params and output, not a full usage pattern. Data-last examples use `pipe`, `map`, of `filter`.   |
+| `@dataFirst` / `@dataLast` | One per overload, matching the signature style. The docs site uses these to label and group overloads.                          |
+| `@lazy`                    | Only if the function supports lazy evaluation in `pipe`.                                                                        |
+| `@category`                | The function's category (`Array`, `Object`, `String`, etc.) — drives docs-site navigation.                                      |
 
-If the new function is closely related to other functions where a user might need to pick the right one, list those alternatives in the description body of every overload. See `indexBy` for an example — it lists `fromKeys`, `pullObject`, and `fromEntries` with a one-line explanation of each. Update the related functions' JSDoc to cross-reference back to the new function too.
+If the new function is closely related to others where a user might pick the wrong one (e.g., `indexBy` vs. `fromKeys` vs. `pullObject` vs. `fromEntries`), list those alternatives with a one-line "use this when…" gloss in the description body of every overload. Update the related functions' JSDoc to cross-reference back, so the disambiguation is symmetric — a user who lands on either function discovers the others.
+
+The function description, `@params`, `@returns`, and `@deprecated` should be copied verbatim between the overloads, unless there is a strong reason not to, and then that reason should be made extremely clear in both blocks.
 
 # 4. Export
 
@@ -49,22 +58,12 @@ Add `export * from "./functionName";` to `src/index.ts` (alphabetical order).
 
 # 5. Migration Mappings
 
-Check whether the new function is an equivalent of a Lodash or Ramda function. If so:
+Many Remeda functions are genuinely novel and have no Lodash, Ramda, or Just counterpart — those skip this section entirely. But if the function **has** a matching upstream function (or replaces one), it needs a per-library mapping page on the docs site so migrators landing from a search for the upstream name find a clean answer for their call site.
 
-1. Add a mapping file in the relevant directory:
-   - `packages/docs/src/content/mapping/lodash/functionName.md`
-   - `packages/docs/src/content/mapping/ramda/functionName.md`
+Read `reference/migration.md` when:
 
-   Format:
+- Authoring a new Remeda function that has a Lodash, Ramda, or Just equivalent.
+- Editing any existing file under `packages/docs/src/content/mapping/{lodash,ramda,just}/`.
+- Reviewing changes that add or modify a mapping page.
 
-   ```markdown
-   ---
-   category: CategoryName
-   remeda: functionName
-   ---
-   ```
-
-2. Remove the function from `__MISSING.md` in the same directory if it's listed there.
-3. Check `___TODO.md` in the same directory for any related items that are now resolved and remove them.
-
-If there's no Lodash/Ramda equivalent, skip this step.
+`reference/migration.md` covers the file location and frontmatter, the bullets-then-examples body structure, the comment-header convention inside code blocks (`// Lodash` / `// Remeda` / `// Native`), the linking rules, and the `__MISSING.md` cleanup. This is interim guidance — eventually migration work will live behind its own skill, but until then this reference is the source of truth.

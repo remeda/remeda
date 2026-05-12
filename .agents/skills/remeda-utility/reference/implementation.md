@@ -1,91 +1,91 @@
 # Function Implementation Conventions
 
-## Implementing a Function with Purry
+## Purry: the dual-API skeleton
 
-Every dual-API function uses `purry`. The structure:
+Every function with a data-first / data-last API uses `purry` (`src/purry.ts`). The structure is fixed:
 
-- Two overload signatures: data-first and data-last, each with its own JSDoc block
-- One implementation signature — no JSDoc, returns `unknown` (purry dispatches by argument count, not generics)
-- The implementation calls `purry(impl, args, lazyImpl?)` — the third arg is the optional lazy evaluator
+- Two overload signatures: data-first **and** data-last, each with its own JSDoc block.
+- One implementation signature — no JSDoc, returns `unknown`. `purry` dispatches by argument count at runtime, not by the typed overloads.
+- The body calls `purry(impl, args, lazyImpl?)`. The third arg is the optional lazy evaluator (see below).
 
-Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when the function has no meaningful eager implementation (the eager path just delegates to the lazy one).
+Use `purryFromLazy` (`src/internal/purryFromLazy.ts`) when there is no meaningful eager implementation — i.e., the eager path would just iterate and delegate to the lazy one. This avoids writing the eager loop twice.
 
-## Adding Lazy Evaluation
+## Lazy evaluation
 
-A function should support lazy evaluation when it operates on arrays item-by-item in a `pipe` and would benefit from short-circuiting or avoiding intermediate arrays. Existing examples: `map`, `filter`, `take`, `first`, `flatMap`.
+A function should support lazy evaluation when it operates on arrays item-by-item inside a `pipe` and would benefit from either short-circuiting (e.g., `take(3)` stops after three items) or skip-filtering without materializing an intermediate array. Existing examples to study: `map`, `filter`, `take`, `first`, `flatMap`.
 
-The lazy evaluator is a function `(item, index, data) => LazyResult<T>`:
+The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`:
 
-- **Emit a value**: `{ hasNext: true, next: value, done }` (`LazyNext`)
-- **Skip an item (continue processing)**: use `SKIP_ITEM` from `utilityEvaluators.ts` — `{ done: false, hasNext: false }`
-- **Expand into multiple values**: `{ hasNext: true, hasMany: true, next: values[], done }` (`LazyMany`)
+- **Emit one value** — `{ hasNext: true, next: value, done }` (`LazyNext`).
+- **Skip the current item, keep going** — use `SKIP_ITEM` from `src/internal/utilityEvaluators.ts` (it expands to `{ done: false, hasNext: false }`).
+- **Expand into multiple values** — `{ hasNext: true, hasMany: true, next: values[], done }` (`LazyMany`).
 
-Set `done: true` to short-circuit the pipe — no further items will be processed (e.g., `take(3)` stops after emitting 3). For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
+Set `done: true` to short-circuit the pipe — no further items will be requested. For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
 
-## `null`, `undefined`, and `NaN`
+## Handling `null`, `undefined`, and `NaN`
 
-- `undefined` means "no value" — Remeda's canonical absent value
-- `null` is a proper value, not interchangeable with `undefined`
-- `NaN` is a JS accident — return `undefined` instead; it allows chaining and coalescing
+These three "empty-ish" values are not interchangeable in Remeda:
+
+- `undefined` is the canonical "no value" — return it from operations that have no meaningful result.
+- `null` is a real value, not a stand-in for absence. Don't coerce between the two.
+- `NaN` is a JavaScript accident. Prefer returning `undefined` instead — that lets the result chain through `??` and other coalescing without false negatives.
 
 ## Type System
 
-- Use `IterableContainer` (not `readonly T[]`) for array inputs — preserves tuple shapes
-- Use `object` for object inputs — preserves per-key types instead of widening to `Record<string, T>`. Avoid `T extends Record<PropertyKey, unknown>` in generic constraints — it silently rejects `interface` and `class` inputs even when their shape would satisfy the type-literal form.
-- Internal types are not exported — they change frequently and are not designed as external API
-- Use `PropertyKey` when you don't care about specific key type, not `string` or `number`
-- Use `unknown` for irrelevant type slots and infer positions
-- Prefer `readonly` in the type definition itself, not wrapping with `Readonly<>`
-- Wrap records with bounded keys using `BoundedPartial<T>` — makes result partial for finite key sets while leaving unbounded records unchanged
-- Use `extends readonly []` to check for empty arrays (not `X["length"] extends 0`)
-- Minimize type parameter count — don't add a generic for items when inferrable from container
-- Extract complex inline conditional types into named utility types for readability
-- Single-use types whose type parameters duplicate the function's should be inlined — the alias adds indirection without value
-- Check if `type-fest` provides a utility before writing a new one
+### Inputs
 
-### Output vs. Input Types
+- Use `IterableContainer` (not `readonly T[]`) for array inputs — it preserves tuple shapes (fixed-length, named-element tuples) through the function instead of widening to a homogeneous array.
+- Use `PropertyKey` when you don't care about the specific key type (not `string` or `number`) — matches what TS uses for index signatures.
+- Use `unknown` for type slots you don't care about — `Record<string, unknown>` rather than `Record<string, string>` when the value type is irrelevant to the type-level logic.
+- Wrap records with bounded keys using `BoundedPartial<T>` — keeps the result partial when keys are a finite union but leaves unbounded records (e.g., `Record<string, V>`) unchanged.
+- Use `extends readonly []` to test for empty arrays (not `X["length"] extends 0` — the former works on tuples without widening).
 
-- **Output**: use `never` to remove cases from possible return values
-- **Input**: use unsatisfiable constraints (e.g., `RemedaTypeError<"message">`) for clear errors
-- `RemedaTypeError` uses a branded symbol, not a raw string — raw strings pass through downstream without being caught
+### Outputs and errors
 
-### Type Preservation
+- **Output narrowing** — use `never` to remove a case from the possible return types.
+- **Input rejection** — use unsatisfiable constraints (`RemedaTypeError<"message">`) for clear errors at the call site. `RemedaTypeError` uses a branded symbol, not a raw string — raw strings pass through downstream without being caught.
 
-- Preserve input shape in output — use `{ [K in keyof T]: S }` to maintain tuple structure
-- Don't widen unnecessarily — `Array<1 | 2 | 3>` stays narrow, not `Array<number>`
-- Compile-time errors over runtime flexibility — this is a deliberate trade-off
+### Shape preservation
 
-## JSDoc Style
+- Preserve input shape in output where possible — `{ [K in keyof T]: S }` maintains tuple structure (length, order, named elements).
+- Don't widen — `Array<1 | 2 | 3>` stays narrow, not `Array<number>`.
 
-- Examples: simple and almost trivial — show params and output, not full usage patterns
-- Start with simple case, then build to complex
-- Data-last examples use `pipe`
-- Use Remeda's own utilities in examples (e.g., `toLowerCase()`)
-- Descriptions: present tense, precise vocabulary
-- Document behavior differences from Lodash/Ramda explicitly with examples
-- Non-obvious type choices in internal code must have inline comments
-- Complex type utility files should describe what each utility does
+### Generic hygiene
+
+- Minimize type parameters — don't add a generic for items when the type is inferable from the container.
+- Single-use types whose parameters duplicate the function's should be inlined — the alias adds indirection without value.
+- Extract complex inline conditional types into named utility types for readability.
+- Check `type-fest` before writing a new type utility — it covers a lot already.
+
+### Internal types
+
+- Internal types are not exported. They change frequently and are not designed as external API.
+- Non-obvious type choices in internal code must have an inline comment explaining the reasoning (the **why**, not the what).
+- Complex type utility files should open with a comment describing what each exported utility does.
 
 ## File Layout
 
-- Exported items first, then non-exported ("private") items — easier to scan
-- Place constants above logic
-
-## Code Quality
-
-- Error messages must include the function name and the user-provided values
+- Exported items first, then non-exported ("private") items — readers scan top-to-bottom.
+- Place constants above the logic that uses them.
 
 ## Naming
 
-- Names communicate **what**, not **how** — `Value` not `InferredRecord`
-- Communicate differences clearly — `takeLast`/`dropLast`, not `takeRight`/`dropRight`
-- Avoid conflicts with built-in TS/JS types (`Partial`, `Function`, etc.)
-- Callback terminology: "predicate" (boolean), "mapper" (transforms), "grouper" (categorizes)
-- Type parameter names should be descriptive when role isn't obvious
-- Terminology precedence (highest to lowest):
-  1. ECMAScript spec terminology (e.g. "receiver", "iterable", "record")
-  2. V8 usage — when the spec is silent or ambiguous
-  3. MDN usage — when V8 doesn't clarify
-  4. Mathematics / statistics / scientific terms (e.g. "median", "clamp", "interpolate")
-  5. Equivalent concept in Python, Rust, or other mainstream languages
-  6. Lodash / Ramda naming — last resort, legacy migration convenience only
+Most naming guidance is in AGENTS.md (`Design Defaults`). The Remeda-specific terminology precedence, when there's a choice between equivalent words:
+
+1. **ECMAScript spec** terminology (e.g., "receiver", "iterable", "record")
+2. **V8** usage — when the spec is silent or ambiguous
+3. **MDN** usage — when V8 doesn't clarify
+4. **Mathematics / statistics / scientific** terms (e.g., "median", "clamp", "interpolate")
+5. **Equivalent concept in Python, Rust, or other mainstream languages**
+6. **Lodash / Ramda** naming — last resort, only for legacy migration convenience
+
+Other Remeda-specific naming rules:
+
+- Avoid conflicts with built-in TS/JS types (`Partial`, `Function`, etc.) — they shadow at usage sites.
+- Use full disambiguating suffixes: `takeLast`/`dropLast`, not `takeRight`/`dropRight` (Lodash's `Right` is ambiguous for non-array contexts).
+- Callback parameter names follow their semantic role: `predicate` (boolean), `mapper` (transforms), `grouper` (categorizes).
+- Type parameter names should be descriptive when the role isn't obvious from position — `Value` not `InferredRecord`; communicate **what**, not **how**.
+
+## Code Quality
+
+- Error messages must include the function name and the user-provided values — makes the error self-locating at the call site.
