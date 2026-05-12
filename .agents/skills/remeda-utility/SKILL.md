@@ -1,28 +1,30 @@
 ---
-name: new-function
-description: >
-  Checklist for adding a new utility function to Remeda. Use this skill whenever
-  you are adding a new function to the library, OR when reviewing a PR that adds
-  a new function. If you see a new file in `packages/remeda/src/` that exports a
-  function and it wasn't there before — this skill applies.
+name: remeda-utility
+description: Guidelines for how to properly code a Remeda utility function. Use this skill whenever a non-test file is being edited in the `packages/remeda/src`, or when reviewing a PR or local changes to those files.
 ---
 
-# Adding a New Function to Remeda
-
-This checklist ensures every new function ships with the right implementation,
+This checklist ensures every function ships with the right implementation,
 tests, documentation, and migration mappings. Work through each item in order.
 
-## 1. Implementation (`src/functionName.ts`)
+# 1. Implementation (`src/functionName.ts`)
 
-- Build on `purry` (or `purryFromLazy` when the eager path just delegates to the lazy one).
-- Follow the dual-overload pattern: data-first and data-last signatures, each with its own JSDoc block.
-- See `.claude/rules/implementation.md` for full conventions (lazy evaluation, type system, naming, etc.).
+When any of the edits involves the runtime implementation of a function, one of
+it's overloading function signatures, or any of the type definitions that it
+uses (either directly on the same file, or indirectly via imports) read
+`reference/implementation.md`.
 
 ## 2. Tests
 
 - **Runtime tests** (`functionName.test.ts`) — cover the happy path, edge cases, empty inputs, and both calling styles (data-first and data-last / inside `pipe`).
+  - If editing runtime tests read `reference/testing-runtime.md`.
 - **Type tests** (`functionName.test-d.ts`) — use `expectTypeOf` to verify inferred return types, type narrowing, and that invalid inputs produce compile errors.
-- Property-based tests (`functionName.test-prop.ts`) are optional but encouraged for functions with well-defined algebraic properties.
+  - If editing type tests read `reference/testing-types.md`.
+- **Property-based tests** (`functionName.test-prop.ts`) are optional but encouraged for functions with well-defined algebraic properties.
+  - If adding property-based tests, read `reference/testing-properties.md`.
+- Tests covering specific bugs should reference the issue number in the test name or a comment
+- Test names must be distinct — duplicate names make failure reports ambiguous
+- Test names describe what's being tested — "lazy early exit with hasMany" not "take and flat"
+- Input arrays need enough variation to produce different outputs — overly simple inputs hide bugs
 
 ## 3. JSDoc
 
