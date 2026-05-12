@@ -6,6 +6,6 @@ node_modules/
 # LLMs sometimes run coverage testing manually in the root
 coverage/
 
-# local, project-specific, untracked skill files, use `private-xxx` as the skill
-# name.
-.claude/skills/private-*
+# local, project-specific, untracked skill files, prefix the skill name with
+# `local-` (e.g., `local-my-skill`), mirroring the `.env.local` convention.
+.agents/skills/local-*
