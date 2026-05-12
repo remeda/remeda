@@ -36,7 +36,7 @@ Set `done: true` to short-circuit the pipe — no further items will be processe
 ## Type System
 
 - Use `IterableContainer` (not `readonly T[]`) for array inputs — preserves tuple shapes
-- Use `object` for object inputs — preserves per-key types instead of widening to `Record<string, T>`
+- Use `object` for object inputs — preserves per-key types instead of widening to `Record<string, T>`. Avoid `T extends Record<PropertyKey, unknown>` in generic constraints — it silently rejects `interface` and `class` inputs even when their shape would satisfy the type-literal form (see CLAUDE.md).
 - Internal types are not exported — they change frequently and are not designed as external API
 - Use `PropertyKey` when you don't care about specific key type, not `string` or `number`
 - Use `unknown` for irrelevant type slots and infer positions
