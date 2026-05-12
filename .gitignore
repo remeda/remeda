@@ -5,3 +5,6 @@ node_modules/
 
 # LLMs sometimes run coverage testing manually in the root
 coverage/
+
+# We consider "local-" skills to be untracked private skills.
+.agents/skills/local-*
