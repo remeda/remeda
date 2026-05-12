@@ -1,21 +1,9 @@
 ---
 paths:
-  - "packages/remeda/src/**/*.test.ts"
   - "packages/remeda/src/**/*.test-d.ts"
-  - "packages/remeda/src/**/*.test-prop.ts"
 ---
 
 # Testing Conventions
-
-## Runtime Tests (`.test.ts`)
-
-- Data-last tests use `pipe` (matches real-world usage)
-- Prefer one `expect` per `test` block — failures should pinpoint the exact case
-- Keep tests simple and short — more tests are better than tests that do more
-- Tests must be self-contained — no shared utilities or helpers; inline everything
-- Use Remeda's own utilities in tests when applicable (`prop`, `constant`, etc.)
-
-## Type Tests (`.test-d.ts`)
 
 Runtime and type tests are **strictly separated** — never mix `expect()` and `expectTypeOf()` in the same test block. Exception: testing callback parameter types inline with `expectTypeOf` inside a callback is acceptable.
 
@@ -33,12 +21,7 @@ Runtime and type tests are **strictly separated** — never mix `expect()` and `
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression"
   - Proceed cautiously for other reasons; for `interface` types, suppress per-site with a reason comment instead — see `$typed` JSDoc
 
-## Property Tests (`.test-prop.ts`)
-
-- Use `test.prop([arbitraries])("description", (values) => { expect(...) })` from `@fast-check/vitest`
-- Verify invariants: idempotence, involutions, round-trips, preservation
-
-## Test Hygiene
+# Test Hygiene
 
 - Tests covering specific bugs should reference the issue number in the test name or a comment
 - Test names must be distinct — duplicate names make failure reports ambiguous
