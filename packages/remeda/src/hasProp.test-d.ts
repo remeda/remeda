@@ -26,16 +26,64 @@ test("accepts a union of literal keys", () => {
   }
 });
 
-test("accepts a primitive string key", () => {
+test("falls back to boolean for unbounded primitive string keys", () => {
   const data = {} as Record<string, number>;
   const key = "foo" as string;
+
+  // The non-narrowing overload kicks in, so neither branch collapses to
+  // `never` — the predicate behaves like a plain boolean check.
+  if (hasProp(data, key)) {
+    expectTypeOf(data).toEqualTypeOf<Record<string, number>>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<Record<string, number>>();
+  }
+});
+
+test("falls back to boolean for unbounded template-literal keys", () => {
+  const data = {} as Record<string, number>;
+  const key = "prefix_x" as `prefix_${string}`;
 
   if (hasProp(data, key)) {
     expectTypeOf(data).toEqualTypeOf<Record<string, number>>();
   } else {
-    // The predicate type equals the input type, so TS proves the else
-    // branch is unreachable and narrows to `never`.
-    expectTypeOf(data).toEqualTypeOf<never>();
+    expectTypeOf(data).toEqualTypeOf<Record<string, number>>();
+  }
+});
+
+test("falls back to boolean for array inputs", () => {
+  const data = [] as number[];
+
+  // Arrays route to the non-narrowing overload — neither branch collapses
+  // to `never`. Use `hasAtLeast` to narrow array indices and `isArray` to
+  // discriminate array vs. object unions.
+  if (hasProp(data, 1)) {
+    expectTypeOf(data).toEqualTypeOf<number[]>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<number[]>();
+  }
+});
+
+test("narrows interfaces", () => {
+  interface AB {
+    a: number;
+    b?: string;
+  }
+  const data = {} as AB;
+
+  if (hasProp(data, "b")) {
+    expectTypeOf(data).toEqualTypeOf<{ a: number; b: string }>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<AB>();
+  }
+});
+
+test("preserves an explicit `undefined` in the value type", () => {
+  const data = {} as { a?: string | undefined };
+
+  if (hasProp(data, "a")) {
+    expectTypeOf(data).toEqualTypeOf<{ a: string | undefined }>();
+  } else {
+    expectTypeOf(data).toEqualTypeOf<{ a?: string | undefined }>();
   }
 });
 
@@ -123,6 +171,36 @@ test("rejects keys that can't exist on the data", () => {
     // @ts-expect-error [ts2345] - "naem" is a typo
     "naem",
   );
+});
+
+describe("known limitations", () => {
+  // The narrowing overload still fires for built-in types whose `keyof`
+  // includes prototype methods (Map, Set, Date, RegExp, custom classes).
+  // At the type level the method appears as an own property; at runtime
+  // `Object.hasOwn` returns `false`. TypeScript can't distinguish own from
+  // inherited properties (microsoft/TypeScript#58877 — closed as "not
+  // planned"). Arrays are special-cased away via the `T extends readonly
+  // unknown[]` filter; the cases below are accepted as known limitations.
+
+  test("map: prototype methods narrow the else branch to never", () => {
+    const data = new Map<string, number>();
+
+    if (hasProp(data, "get")) {
+      expectTypeOf(data).toEqualTypeOf<Map<string, number>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("set: prototype methods narrow the else branch to never", () => {
+    const data = new Set<number>();
+
+    if (hasProp(data, "has")) {
+      expectTypeOf(data).toEqualTypeOf<Set<number>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
 });
 
 describe("data-last", () => {

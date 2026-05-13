@@ -1,10 +1,20 @@
 import type { KeysOfUnion, Simplify } from "type-fest";
+import type { IsBounded } from "./internal/types/IsBounded";
 import { purry } from "./purry";
 
-type HasProp<T, Key extends PropertyKey> =
-  // Distribute over `T`'s union members so members that don't have `Key` drop
-  // out of the narrowed type.
-  T extends unknown
+// Arrays route to the `boolean`-returning overload below: their `keyof`
+// includes prototype methods (`push`, `pop`, …) that aren't own properties
+// at runtime, which would otherwise collapse the predicate's else branch to
+// `never`. The leading `extends readonly unknown[]` filter is mirrored on
+// both the predicate type and the parameter type so the type-predicate
+// assignability check stays satisfied.
+type NonArray<T> = T extends readonly unknown[] ? never : T;
+
+type HasProp<T, Key extends PropertyKey> = T extends readonly unknown[]
+  ? never
+  : // Distribute over `T`'s union members so members that don't have `Key`
+    // drop out of the narrowed type.
+    T extends unknown
     ? Key extends keyof T
       ? // `T &` makes the result structurally a subtype of `T`, satisfying
         // the type-predicate assignability check.
@@ -31,9 +41,21 @@ type HasProp<T, Key extends PropertyKey> =
  * @category Guard
  */
 export function hasProp<T extends object, Key extends KeysOfUnion<T>>(
-  data: T,
-  key: Key,
+  // Arrays route to the `boolean`-returning overload below: their `keyof`
+  // includes prototype methods (`push`, `pop`, …) that aren't own properties
+  // at runtime, which would otherwise collapse the predicate's else branch
+  // to `never`. Use `hasAtLeast` to narrow array indices and `isArray` to
+  // discriminate array vs. object unions.
+  data: NonArray<T>,
+  // Bounded literal keys narrow; unbounded keys (`string`, template
+  // literals, etc.) route to the `boolean`-returning overload below so the
+  // predicate doesn't collapse the else-branch to `never`.
+  key: IsBounded<Key> extends true ? Key : never,
 ): data is HasProp<T, Key>;
+export function hasProp<T extends object>(
+  data: T,
+  key: KeysOfUnion<T>,
+): boolean;
 
 /**
  * Checks if `data` has a prop `key`.
@@ -54,8 +76,11 @@ export function hasProp<T extends object, Key extends KeysOfUnion<T>>(
  * @category Guard
  */
 export function hasProp<T extends object, Key extends KeysOfUnion<T>>(
-  key: Key,
-): (data: T) => data is HasProp<T, Key>;
+  key: IsBounded<Key> extends true ? Key : never,
+): (data: NonArray<T>) => data is HasProp<T, Key>;
+export function hasProp<T extends object>(
+  key: KeysOfUnion<T>,
+): (data: T) => boolean;
 
 export function hasProp(...args: readonly unknown[]): unknown {
   return purry(hasPropImplementation, args);

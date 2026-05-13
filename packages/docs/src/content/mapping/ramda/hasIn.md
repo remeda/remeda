@@ -8,14 +8,22 @@ remeda: hasProp
   [`Object.hasOwn`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn)
   which ignores them.
 
+#### Own properties
+
 ```ts
 // Ramda
 hasIn("a", obj);
 
 // Remeda
 hasProp(obj, "a");
+```
 
-// Inherited properties
+#### Inherited properties
+
+```ts
+// Ramda
 hasIn("toString", {}); //=> true
+
+// Remeda
 hasProp({}, "toString"); //=> false
 ```

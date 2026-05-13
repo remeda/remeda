@@ -10,14 +10,22 @@ remeda: hasProp
 - Lodash's `hasIn` accepts deep paths (`"a.b.c"` or `["a", "b", "c"]`).
   Remeda's `hasProp` only checks a single key.
 
+#### Own properties
+
 ```ts
 // Lodash
 hasIn(obj, "a");
 
 // Remeda
 hasProp(obj, "a");
+```
 
-// Inherited properties
+#### Inherited properties
+
+```ts
+// Lodash
 hasIn({}, "toString"); //=> true
+
+// Remeda
 hasProp({}, "toString"); //=> false
 ```
