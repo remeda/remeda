@@ -27,7 +27,6 @@ type HasProp<T, Key extends PropertyKey> =
  *   hasProp(data, key)
  * @example
  *   hasProp({ a: 1 }, "a"); //=> true
- *   hasProp({}, "toString"); //=> false (inherited, not own)
  * @dataFirst
  * @category Guard
  */
