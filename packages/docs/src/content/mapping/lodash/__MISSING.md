@@ -98,8 +98,6 @@ TODO: Go over: https://you-dont-need.github.io/You-Dont-Need-Lodash-Underscore/#
 - forOwnRight
 - functions
 - functionsIn
-- has
-- hasIn
 - invertBy
 - invoke
 - keysIn
