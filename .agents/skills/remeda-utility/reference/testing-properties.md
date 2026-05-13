@@ -1,0 +1,2 @@
+- Use `test.prop([arbitraries])("description", (values) => { expect(...) })` from `@fast-check/vitest`
+- Verify invariants: idempotence, involutions, round-trips, preservation

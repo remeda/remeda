@@ -1,0 +1,5 @@
+- Data-last tests use `pipe` (matches real-world usage)
+- Prefer one `expect` per `test` block — failures should pinpoint the exact case
+- Keep tests simple and short — more tests are better than tests that do more
+- Tests must be self-contained — no shared utilities or helpers; inline everything
+- Use Remeda's own utilities in tests when applicable (`prop`, `constant`, etc.)
