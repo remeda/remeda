@@ -92,7 +92,7 @@ Internal helpers: `src/internal/`. Type utilities: `src/internal/types/`.
 - **Code as copy-paste source**: This is MIT-licensed code that gets copied verbatim into other projects and then expanded or remixed. The base that gets copied must be high quality — clean, idiomatic, well-commented. Variable and parameter names must be descriptive, unabbreviated, and fitting for the algorithm (e.g., `comparator` not `cmp`, `accumulator` not `acc`). Comments explain **why**, never **what**; focus on complex types and non-obvious algorithmic choices. Never state the obvious; this is a canonical utility library, not a tutorial. The code itself should be clear enough that "what" comments are redundant
 - **Expiring TODOs**: Use `TODO [>N]` syntax to surface stale TODOs at lint time. **Never use date-based expiration** (those explode unexpectedly for whoever runs lint that day). Two forms:
   - `TODO [>2]` — Remeda package version; marks work for the next major bump (e.g., `[>2]` = "do this for v3")
-  - `TODO [typescript>5.5]` — dependency version; for workarounds tied to bugs/missing features in a specific dep version
+  - `TODO [typescript@>5.5]` — dependency version; for workarounds tied to bugs/missing features in a specific dep version
 
 ### PR & Commit Titles
 
