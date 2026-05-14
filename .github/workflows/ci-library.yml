@@ -1,4 +1,5 @@
-name: 📦 CI - Library
+# TODO [jsr@>0.14.3]: We can't use an emoji in the workflow name because of https://github.com/denoland/deno/issues/29671
+name: CI - Library
 
 on:
   push:
