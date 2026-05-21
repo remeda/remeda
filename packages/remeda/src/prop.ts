@@ -1,4 +1,4 @@
-import type { KeysOfUnion } from "type-fest";
+import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
@@ -27,7 +27,16 @@ type Prop<T, Key> =
       Key extends keyof T
       ? T extends readonly unknown[]
         ? ArrayAt<T, Key>
-        : T[Key]
+        : Key extends keyof OmitIndexSignature<T>
+          ? // The key is an explicitly declared property, so it's guaranteed to
+            // be present and we can rely on the built-in indexed access type.
+            T[Key]
+          : // The key is only matched by an index signature (e.g. accessing any
+              // `string` key of a `Record<string, V>`), so there's no guarantee a
+              // value exists for it at runtime. This mirrors `noUncheckedIndexed-
+              // Access`, but we add `undefined` ourselves so the output is sound
+              // regardless of the consumer's `tsconfig`.
+              T[Key] | undefined
       : undefined
     : never;
 
