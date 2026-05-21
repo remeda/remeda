@@ -421,6 +421,110 @@ describe("optional props", () => {
   });
 });
 
+describe("simple records (Issue #1274)", () => {
+  describe("data-first", () => {
+    test("string keys add undefined", () => {
+      expectTypeOf(prop({} as Record<string, number>, "a")).toEqualTypeOf<
+        number | undefined
+      >();
+    });
+
+    test("number keys add undefined", () => {
+      expectTypeOf(prop({} as Record<number, string>, 1)).toEqualTypeOf<
+        string | undefined
+      >();
+    });
+
+    test("union keys add undefined", () => {
+      expectTypeOf(
+        prop({} as Record<string | number, boolean>, "a"),
+      ).toEqualTypeOf<boolean | undefined>();
+    });
+
+    test("template-literal keys add undefined", () => {
+      expectTypeOf(
+        prop({} as Record<`id_${number}`, string>, "id_1"),
+      ).toEqualTypeOf<string | undefined>();
+    });
+
+    test("literal values add undefined", () => {
+      expectTypeOf(prop({} as Record<string, 1 | 2>, "a")).toEqualTypeOf<
+        1 | 2 | undefined
+      >();
+    });
+
+    test("a union of keys is still missing", () => {
+      expectTypeOf(
+        prop({} as Record<string, number>, "a" as "a" | "b"),
+      ).toEqualTypeOf<number | undefined>();
+    });
+
+    test("nested records propagate undefined down the path", () => {
+      const data = {} as {
+        a: Record<string, { b: { c: "hello"; d: boolean; e: string } }>;
+      };
+
+      // The top-level key is declared, so it stays exact.
+      expectTypeOf(prop(data, "a")).toEqualTypeOf<
+        Record<string, { b: { c: "hello"; d: boolean; e: string } }>
+      >();
+      // Indexing into the record adds undefined, which then propagates.
+      expectTypeOf(prop(data, "a", "x")).toExtend<
+        { b: { c: "hello"; d: boolean; e: string } } | undefined
+      >();
+      expectTypeOf(prop(data, "a", "x", "b")).toExtend<
+        { c: "hello"; d: boolean; e: string } | undefined
+      >();
+      expectTypeOf(prop(data, "a", "x", "b", "c")).toEqualTypeOf<
+        "hello" | undefined
+      >();
+      expectTypeOf(prop(data, "a", "x", "b", "d")).toEqualTypeOf<
+        boolean | undefined
+      >();
+      expectTypeOf(prop(data, "a", "x", "b", "e")).toEqualTypeOf<
+        string | undefined
+      >();
+    });
+  });
+
+  describe("data-last", () => {
+    test("string keys add undefined", () => {
+      expectTypeOf(pipe({} as Record<string, number>, prop("a"))).toEqualTypeOf<
+        number | undefined
+      >();
+    });
+
+    test("nested records propagate undefined down the path", () => {
+      const data = {} as {
+        a: Record<string, { b: { c: "hello"; d: boolean; e: string } }>;
+      };
+
+      expectTypeOf(pipe(data, prop("a", "x", "b", "c"))).toEqualTypeOf<
+        "hello" | undefined
+      >();
+    });
+  });
+
+  describe("preserves exact types for declared keys", () => {
+    test("declared keys on object types stay exact", () => {
+      expectTypeOf(prop({} as { a: number }, "a")).toEqualTypeOf<number>();
+    });
+
+    test("declared keys win over an index signature", () => {
+      const data = {} as { a: number } & Record<string, string>;
+
+      expectTypeOf(prop(data, "a")).toEqualTypeOf<number>();
+      expectTypeOf(prop(data, "b")).toEqualTypeOf<string | undefined>();
+    });
+
+    test("literal-keyed records stay exact", () => {
+      expectTypeOf(
+        prop({} as Record<"cat" | "dog", number>, "cat"),
+      ).toEqualTypeOf<number>();
+    });
+  });
+});
+
 describe("with stringToPath", () => {
   const DATA = {} as { a: { b: { c: { d: number } }[] } };
 
