@@ -1,19 +1,28 @@
 # Contributing guide
 
-We're always looking for new contributors and are happy to help you get started! Some ideas:
+Every PR is read end-to-end by a maintainer before it merges; No exceptions, but there is only one maintainer, so every PR matters! We use coding agents to help with parts of the review (catching patterns, running checks, drafting feedback), but the decision on what ships is always a human one. Reviewing a PR thoroughly takes hours, and that time is the project's scarcest resource.
 
-- Add a test to a function, like an interesting edge case we haven't thought about.
-- Improve a function's documentation.
-- Fix a bug or an edge case.
-- Improve the documentation's migration guides.
-- Work on [![issues labeled good first issue](https://img.shields.io/github/issues/remeda/remeda/good%20first%20issue?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- Work on [![issues labeled help wanted](https://img.shields.io/github/issues/remeda/remeda/help%20wanted?style=flat-square)](https://github.com/remeda/remeda/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
+## Skin in the game
+
+We look for contributors with a personal stake in the change:
+
+- **You hit a bug** in your own project and figured out the fix.
+- **You need a function/feature** the library doesn't have, and you'll use it.
+- **You have insights from your personal experience** that you think is valuable to fix, e.g., how we structure our docs site, or something that other libraries have adopted and you think we should too.
+
+What we discourage are "I just want to help out", "this looks cool", or "this is easy/small" PRs: picking low-hanging items off our issues without a personal stake. Adding PR load is the single highest-cost thing a well-intentioned contributor can do on this project.
+
+If you're unsure whether your contribution fits, open an issue (or comment on an existing one) before writing code.
+
+## Working with a coding agent
+
+Using a coding agent to write or polish a PR is fine. Remeda's [`AGENTS.md`](AGENTS.md) and contributor harness are set up for exactly that. What matters is that you, the contributor, are driving: you understand your PR thoroughly! Respond to review comments directly, iterate the PR through to merge, and engage on the underlying issue.
+
+**Please no auto-piloted PRs!**
 
 ## Getting started
 
-We use `npm` as the package manager. We recommend using [`nvm`](https://github.com/nvm-sh/nvm) to manage `Node.js` and `npm` versions. If you're not using `nvm`, the `.nvmrc` has the recommended Node version.
-
-Install dependencies:
+We use `npm`. The `.nvmrc` has the recommended Node version (we recommend [`nvm`](https://github.com/nvm-sh/nvm)).
 
 ```bash
 git clone git@github.com:remeda/remeda.git
@@ -21,235 +30,69 @@ cd remeda
 npm install
 ```
 
-Run tests and watch for changes:
+The library lives in [`packages/remeda/`](packages/remeda/); run scripts from there:
 
 ```bash
-npm test                     # every test
-npm test -i src/file.test.ts # specific test
+cd packages/remeda
+npm test           # runtime tests, watch mode
+npm run test:types # type-level tests
+npm run test:prop  # property-based tests
+npm run format     # format (also runs on commit)
+npm run lint       # lint with auto-fix
 ```
 
-We have a pre-commit script that will format and lint the project, but if you want to run it manually:
+## What we accept
 
-```bash
-npm run prettier # format
-npm run lint     # lint
-```
+- **In**: functions providing typing, correctness, or composability that can't be achieved by composing existing functions; Lodash migration blockers (even reluctantly).
+- **Out**: simple compositions, native JS/TS equivalents, runtime safety nets, recursive/traversal functions, ambiguous semantics.
+
+We don't ship `reject` because it's `filter(isNot)`, and we don't ship `zipObject` because it's `fromEntries(zip)`. A new function must justify why `fn1(fn2(...))` isn't enough.
+
+## Adding a new function
+
+- Add a JSDoc block with a description, parameters, signature, an example, and tags. This becomes the website docs.
+- Add runtime tests in `functionName.test.ts` and type tests in `functionName.test-d.ts`. Cover both data-first and data-last calling styles.
+- Add an export to [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetical).
+- If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
+
+Pick a recent function as a template; [`packages/remeda/src/`](packages/remeda/src/) is full of small, self-contained examples. For the type-utility conventions used inside implementations (`IterableContainer`, `type-fest`, naming hierarchy), see [`AGENTS.md`](AGENTS.md).
+
+## Writing tests
+
+- Runtime assertions (`expect`) and type assertions (`expectTypeOf`) live in separate files (`.test.ts` and `.test-d.ts`). Never mix them.
+- Cover both calling styles. For data-last tests, prefer `pipe`; it matches real-world usage.
+- Each `test` block tests one thing; most have a single `expect`.
+- Tests must provide 100% coverage. Codecov comments on the PR.
+- Use [`expectTypeOf`](https://vitest.dev/api/expect-typeof) for type tests, not [`assertType`](https://vitest.dev/api/assert-type.html).
+- Prefer [`@ts-expect-error` over `@ts-ignore`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#ts-ignore-or-ts-expect-error). Include the TS error code and a one-line reason:
+  ```ts
+  // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
+  flat([], 1 as number);
+  ```
+- Regression tests for bug fixes must be **red-green verified**: revert the fix, confirm the test fails, then restore. A test that passes against the buggy code doesn't protect against regression. Reference the issue or PR number in the test name or a comment so the case can be traced back.
+
+### Property tests
+
+Property tests live in `functionName.test-prop.ts` and verify invariants with [fast-check](https://fast-check.dev/). Use them when a function has clear mathematical properties: idempotence (`sort(sort(x))` = `sort(x)`), involutions (`reverse(reverse(x))` = `x`), round-trips (`flat(chunk(x, n))` = `x`), or preservation (every input element appears in output). Run with `npm run test:prop`.
+
+## Commit and PR titles
+
+Format: `<TYPE>(<scope>): description`, where scope is the function name (optional for `chore`).
+
+- `feat` - new function or backwards-compatible capability - releases as **patch**
+- `fix` - change to runtime behavior or type refinement - releases as **minor**
+- `docs` - documentation changes
+- `chore` - anything else not user-visible (tests-only, deps, CI)
+
+> Remeda uses **inverted** `semantic-release` semantics: `feat:` -> patch (additive, safe), `fix:` -> minor (behavior change, risky). See [`packages/remeda/release.config.js`](packages/remeda/release.config.js).
 
 ## Documentation
 
-Most of the content in the documentation is generated from the JSDoc comments. If you want to work on the design of the docs website or the migration guides, see [`docs/README.md`](https://github.com/remeda/remeda/blob/main/docs/README.md).
+Most documentation is generated from JSDoc comments. For the docs website or migration guides, see [`packages/docs/README.md`](packages/docs/README.md).
 
-## Guidelines
+## What we value
 
-### Adding a new function
-
-When adding a new function, remember to:
-
-- Add a JSDoc comment with a description, parameters, signature, an example, and tags.
-  - This will end up as the documentation on the website.
-- Add tests for runtime, typing, data-first, and data-last forms.
-  - See [Writing tests](#writing-tests) for guidelines on writing tests.
-- Add exports to `src/index.ts`.
-- Check for equivalent functions in [Lodash](https://lodash.com/docs/4.17.15) and [Ramda](https://ramdajs.com/docs/), and add them to `docs/src/content/mapping`.
-
-### Writing types
-
-We pay careful attention to types. Some tips for writing good types:
-
-- We use [`type-fest`](https://github.com/sindresorhus/type-fest) as our type utility library. We also have type utilities in [`internal/types`](src/internal/types.ts).
-- We use the [`Simplify`](https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts) type from `type-fest` for simplifying some output types.
-- We generally use the `IterableContainer` type from `internal/types` for input arrays. Similarly, we generally use the `object` type for input objects.
-
-<details>
-<summary>Examples:</summary>
-
-An example with an array:
-
-```ts
-const data = ["a", 1] as [string, number];
-
-// ❌ `T` can be too wide:
-function functionName<T>(data: readonly T[]): readonly T[] {}
-
-functionName(data); // inside functionName, data[0] has type string | number
-// output has type readonly (string | number)[]
-
-// ✅ `T` is more specific:
-function functionName<T extends IterableContainer>(data: T): T {}
-
-functionName(data); // inside functionName, data[0] has type string
-// output has type [string, number]
-```
-
-An example with an object:
-
-```ts
-const data = { a: "a", b: 1 };
-
-// ❌ `T` can be too wide:
-function functionName<T>(data: Readonly<Record<PropertyKey, T>>) {}
-
-functionName(data); // inside functionName, data.a has type string | number
-
-// ✅ `T` is more specific:
-function functionName<T extends object>(data: T) {}
-
-functionName(data); // inside functionName, data.a has type string
-```
-
-</details>
-
-### Writing tests
-
-Runtime tests for `fileName.ts` live in `fileName.test.ts`, and typing tests live in `fileName.test-d.ts`. Some guidelines:
-
-- We have separate tests for data-first and data-last forms.
-
-<details>
-<summary>This typically looks like this:</summary>
-
-```ts
-// <functionName>.test.ts
-
-describe("data-first", () => {
-  test("test description", () => {
-    expect(/* ... */).toBe(/* ... */);
-  });
-});
-
-describe("data-last", () => {
-  test("test description", () => {
-    expect(/* ... */).toBe(/* ... */);
-  });
-});
-```
-
-```ts
-// <functionName>.test-d.ts
-
-describe("data-first", () => {
-  test("test description", () => {
-    expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
-  });
-});
-
-describe("data-last", () => {
-  test("test description", () => {
-    expectTypeOf(/* ... */).toEqualTypeOf</* ... */>();
-  });
-});
-```
-
-</details>
-
-- For data-last tests, both runtime and typing, prefer tests using `pipe`. This better matches real-world usage.
-- Each `test` block should test one thing. Most of the time this means having only one `expect` per `test`.
-- Tests should provide 100% coverage; the Codecov bot will comment on your PR with a coverage report.
-- We test for types using [`expectTypeOf`](https://vitest.dev/api/expect-typeof), rather than [`assertType`](https://vitest.dev/api/assert-type.html).
-- We also test for _meaningful_ type errors. Prefer [`ts-expect-error`, rather than `@ts-ignore`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#ts-ignore-or-ts-expect-error):
-
-```ts
-test("doesn't accept non-literal depths", () => {
-  // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
-  flat([], 1 as number);
-});
-```
-
-- We don't test runtime behavior for type errors, as we can only guarantee behavior when the types are correct.
-- When testing types, cover as many use-cases as possible.
-
-<details>
-<summary>Some types to consider:</summary>
-
-- Numbers
-  - Number type (`number`)
-  - Single literal (`1`)
-  - Union of literals (`1 | 2`)
-  - Bigint type (`bigint`)
-  - Single bigint literal (`1n`)
-  - Union of bigint literals (`1n | 2n`)
-  - Unions of numbers and bigints (`1 | 2n`)
-- Strings
-  - String type (`string`)
-  - Single literal (`"cat"`)
-  - Union of literals (`"cat" | "dog"`)
-  - Template with a type slot (`` `id_${number}` ``)
-  - Template with a literal slot (`` `id_${1 | 2}` ``)
-  - Template with multiple slots (`` `id_${1 | 2}_${3 | 4}` ``)
-- Arrays
-  - Array of a single type (`number[]`)
-  - Array of a union type (`(string | number)[]`)
-  - Array of literal types (`("cat" | "dog")[]`)
-  - Union of similar arrays (`(1 | 2)[] | (2 | 3)[]`)
-  - Nested arrays (`number[][]`)
-- Tuples
-  - Tuple of a single type (`[number, number, number]`)
-  - Tuple of different types (`[number, string, boolean]`)
-  - Tuple with optional type (`[number, string?]`)
-  - Tuple with spreads (`[...number[], number, number]`)
-  - Tuple with optional type and spread (`[number?, ...string[]]`)
-  - Tuple with union values (`[number, string | undefined, boolean]`)
-  - Tuple with literal values (`[number, "cat" | "dog", true]`)
-- Records
-  - Record with string keys (`Record<string, number>`)
-  - Record with number keys (`Record<number, string>`)
-  - Record with union keys (`Record<string | number, unknown>`)
-  - Record with union values (`Record<string, string | number>`)
-  - Record with undefined values (`Record<string, string | undefined>`)
-  - Record with literal keys (`Record<"cat" | "dog", number>`)
-  - Record with literal values (`Record<string, 1 | 2>`)
-  - Record with template keys (``Record<`id_${number}`, string>``)
-  - Union of records (`Record<string, unknown> | Record<number, unknown>`)
-- Objects
-  - Object with named keys (`{ a: number }`)
-  - Object with union values (`{ a: string | number }`)
-  - Object with literal union values (`{ a: "cat" | 1 }`)
-  - Object with optional keys (`{ a?: number }`)
-  - Object with symbol keys (`{ [Symbol("a")]: number }`)
-  - Union of objects (`{ a: 1, b: 2 } | { b: 2, c: 3 }`)
-  - Nested objects (`{ a: { b: { c: 1 } } }`)
-- `readonly` versions of the above
-- `null` and `undefined`
-
-</details>
-
-### Writing property tests
-
-Property tests live in `fileName.test-prop.ts`. These tests verify invariants using [fast-check](https://fast-check.dev/) for property-based testing. New functions should include property tests. For existing functions, only add to an existing `.test-prop.ts` file—don't create one for a small change.
-
-Use property tests for functions with clear mathematical properties:
-
-- **Idempotence**: `sort(sort(arr))` equals `sort(arr)`
-- **Involutions**: `reverse(reverse(arr))` equals `arr`
-- **Round-trips**: `flat(chunk(arr, n))` equals `arr`
-- **Preservation**: All input elements appear in output
-
-<details>
-<summary>Example:</summary>
-
-```ts
-import { fc, test } from "@fast-check/vitest";
-import { expect } from "vitest";
-import { sort } from "./sort";
-
-test.prop([fc.array(fc.integer())])("sorting is idempotent", (data) => {
-  const cmp = (a: number, b: number) => a - b;
-  expect(sort(sort(data, cmp), cmp)).toStrictEqual(sort(data, cmp));
-});
-```
-
-</details>
-
-Run with `npm run test:prop` or `npm run test:prop -- --watch`.
-
-### Design philosophy
-
-**No type annotations.** Functions shouldn't require type annotations to have good types. This gives the best developer experience.
-
-**Have good output types.** One reason Remeda provide "one-liner" functions is if we can have better output types than the defaults. While `data.filter(item => typeof item === 'number')` works, `filter(data, isNumber)` gives a better output type. This is why we have type guards, `hasAtLeast`, `prop`, etc.
-
-**Readability counts.** The other reason Remeda provides one-liner functions is if they make things more readable. Compare `map((item) => item + 3)` to `map(add(3))`, where we don't need to come up with a name for `item`. This is why we have `constant`, `doNothing`, `identity`, etc.
-
-**Prefer composition.** We don't provide simple compositions of functions. Having a smaller surface area makes it easier for users to remember Remeda's functions, and easier for us to maintain. We don't have `reject` because it's the same as `filter(isNot)`, and we don't have `zipObject` because it's the same as `fromEntries(zip)`.
-
-**Minimal implementations.** Implementations should be small and self-contained. Importing an individual function should add less than 500 B to the bundle size in most cases.
+- **No type annotations needed.** Functions should have good types without callers writing them.
+- **Good output types.** `filter(data, isNumber)` exists because it returns a narrower type than `data.filter(item => typeof item === 'number')`.
+- **Readability.** `map(add(3))` reads better than `map(item => item + 3)`. That's why we ship `constant`, `doNothing`, `identity`.
+- **Minimal implementations.** Importing a function should add less than ~500 B to the bundle in most cases.
