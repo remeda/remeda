@@ -1,6 +1,6 @@
 TypeScript-first utility library with 160+ functions. Dual calling styles via `purry`: data-first (`filter(array, fn)`) and data-last (`pipe(array, filter(fn))`). Many functions support lazy evaluation in `pipe` chains.
 
-All conventions in [CONTRIBUTING.md](CONTRIBUTING.md) apply to agent contributors too. Read it before opening a PR, fixing a bug, or adding a function. This file complements it with agent-specific guidance, not replaces it.
+All conventions in [CONTRIBUTING.md](CONTRIBUTING.md) apply to agent contributors too. Read it before opening a PR, fixing a bug, or adding a function. This file complements it with agent-specific guidance rather than replacing it.
 
 ## Working toward a PR
 
