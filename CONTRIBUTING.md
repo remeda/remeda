@@ -1,6 +1,6 @@
 # Contributing guide
 
-Every PR is read end-to-end by a maintainer before it merges; No exceptions, but there is only one maintainer, so every PR matters! We use coding agents to help with parts of the review (catching patterns, running checks, drafting feedback), but the decision on what ships is always a human one. Reviewing a PR thoroughly takes hours, and that time is the project's scarcest resource.
+Every PR is read end-to-end by a maintainer before it merges. There is only one maintainer, so every PR matters. We use coding agents to help with parts of the review (catching patterns, running checks, drafting feedback), but the decision on what ships is always a human one. Reviewing a PR thoroughly takes hours, and that time is the project's scarcest resource.
 
 ## Skin in the game
 
@@ -8,7 +8,7 @@ We look for contributors with a personal stake in the change:
 
 - **You hit a bug** in your own project and figured out the fix.
 - **You need a function/feature** the library doesn't have, and you'll use it.
-- **You have insights from your personal experience** that you think is valuable to fix, e.g., how we structure our docs site, or something that other libraries have adopted and you think we should too.
+- **You have insights from your personal experience** that you think are valuable, e.g., how we structure our docs site, or something that other libraries have adopted and you think we should too.
 
 What we discourage are "I just want to help out", "this looks cool", or "this is easy/small" PRs: picking low-hanging items off our issues without a personal stake. Adding PR load is the single highest-cost thing a well-intentioned contributor can do on this project.
 
@@ -16,7 +16,7 @@ If you're unsure whether your contribution fits, open an issue (or comment on an
 
 ## Working with a coding agent
 
-Using a coding agent to write or polish a PR is fine. Remeda's [`AGENTS.md`](AGENTS.md) and contributor harness are set up for exactly that. What matters is that you, the contributor, are driving: you understand your PR thoroughly! Respond to review comments directly, iterate the PR through to merge, and engage on the underlying issue.
+Using a coding agent to write or polish a PR is fine. Remeda's [`AGENTS.md`](AGENTS.md) and contributor harness are set up for exactly that. What matters is that you, the contributor, are driving: understand the PR thoroughly, respond to review comments directly, iterate it through to merge, and engage on the underlying issue.
 
 **Please no auto-piloted PRs!**
 
