@@ -1,4 +1,5 @@
 - Use `expectTypeOf(...).toEqualTypeOf<...>()` (not `assertType`)
+- Before writing, open a similar function's `.test-d.ts` to see which variation axes were covered (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable). The relevant subset varies per function.
 - `interface` tests are NOT redundant with `type` tests of the same shape — they exercise different TS-level paths through `Record`-extending constraints.
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`
 - Prefer casting (`as`) over explicit typing (`: Type`) — they don't always behave the same
