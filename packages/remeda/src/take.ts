@@ -6,6 +6,11 @@ import { purry } from "./purry";
 /**
  * Returns the first `n` elements of `array`.
  *
+ * Related operations:
+ * - `drop` - to skip past the first `n` instead.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `takeLast` - same, but from the end of the array.
+ *
  * @param array - The array.
  * @param n - The number of elements to take.
  * @signature
@@ -23,6 +28,11 @@ export function take<T extends IterableContainer>(
 
 /**
  * Returns the first `n` elements of `array`.
+ *
+ * Related operations:
+ * - `drop` - to skip past the first `n` instead.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `takeLast` - same, but from the end of the array.
  *
  * @param n - The number of elements to take.
  * @signature

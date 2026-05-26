@@ -108,7 +108,7 @@ describe("regression tests", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([], 0, -1, [3])).toStrictEqual([3]);
+        expect(splice([] as number[], 0, -1, [3])).toStrictEqual([3]);
       });
     });
   });
@@ -196,7 +196,7 @@ describe("overflow indices", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([], -1, -1, [3])).toStrictEqual([3]);
+        expect(splice([] as number[], -1, -1, [3])).toStrictEqual([3]);
       });
     });
 
@@ -206,7 +206,7 @@ describe("overflow indices", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([], 1, -1, [3])).toStrictEqual([3]);
+        expect(splice([] as number[], 1, -1, [3])).toStrictEqual([3]);
       });
     });
   });
@@ -216,4 +216,18 @@ test("a purried data-last implementation", () => {
   expect(pipe([1, 2, 3, 4, 5, 6, 7, 8], splice(2, 3, [9, 10]))).toStrictEqual([
     1, 2, 9, 10, 6, 7, 8,
   ]);
+});
+
+describe("replacement defaults to an empty array", () => {
+  test("data-first", () => {
+    expect(splice([1, 2, 3, 4, 5], 1, 2)).toStrictEqual(
+      splice([1, 2, 3, 4, 5], 1, 2, []),
+    );
+  });
+
+  test("data-last", () => {
+    expect(pipe([1, 2, 3, 4, 5], splice(1, 2))).toStrictEqual(
+      pipe([1, 2, 3, 4, 5], splice(1, 2, [])),
+    );
+  });
 });

@@ -31,6 +31,9 @@ type NonRefinedFilteredArray<
  * the elements from the given array that pass the test implemented by the
  * provided function. Equivalent to `Array.prototype.filter`.
  *
+ * Related operations:
+ * - `splice` - to shape the array by *position* rather than by *value*.
+ *
  * @param data - The array to filter.
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep the element in the resulting array, and `false`
@@ -64,6 +67,9 @@ export function filter<
  * Creates a shallow copy of a portion of a given array, filtered down to just
  * the elements from the given array that pass the test implemented by the
  * provided function. Equivalent to `Array.prototype.filter`.
+ *
+ * Related operations:
+ * - `splice` - to shape the array by *position* rather than by *value*.
  *
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep the element in the resulting array, and `false`

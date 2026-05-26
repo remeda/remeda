@@ -4,6 +4,11 @@ import { purry } from "./purry";
 /**
  * Takes the last `n` elements from the `array`.
  *
+ * Related operations:
+ * - `dropLast` - to skip past the last `n` instead.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `take` - same, but from the start of the array.
+ *
  * @param array - The target array.
  * @param n - The number of elements to take.
  * @signature
@@ -20,6 +25,11 @@ export function takeLast<T extends IterableContainer>(
 
 /**
  * Take the last `n` elements from the `array`.
+ *
+ * Related operations:
+ * - `dropLast` - to skip past the last `n` instead.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `take` - same, but from the start of the array.
  *
  * @param n - The number of elements to take.
  * @signature

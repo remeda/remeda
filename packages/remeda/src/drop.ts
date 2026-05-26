@@ -98,6 +98,11 @@ type DropFixedTuple<
 /**
  * Removes first `n` elements from the `array`.
  *
+ * Related operations:
+ * - `dropLast` - same, but from the end of the array.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `take` - to keep the first `n` instead.
+ *
  * @param array - The target array.
  * @param n - The number of elements to skip.
  * @signature
@@ -115,6 +120,11 @@ export function drop<T extends IterableContainer, N extends number>(
 
 /**
  * Removes first `n` elements from the `array`.
+ *
+ * Related operations:
+ * - `dropLast` - same, but from the end of the array.
+ * - `splice` - to remove or insert at an arbitrary index.
+ * - `take` - to keep the first `n` instead.
  *
  * @param n - The number of elements to skip.
  * @signature
