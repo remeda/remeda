@@ -1,0 +1,141 @@
+# Canary CI for @typescript/native-preview (tsgo, the future TS 7).
+#
+# This workflow lives in its own file so it can be deleted as a unit once
+# tsgo replaces tsc in the typescript package - at that point, the regular
+# canaries.yml will cover it via the existing `typescript@next` matrix row.
+# Pairs with packages/remeda/tsconfig.canary-tsgo-test-d.json (delete both
+# together).
+
+name: 🐹 Canaries (tsgo)
+on:
+  schedule:
+    # Run daily to make it the easiest to track down what changed
+    - cron: "30 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # @see https://typicode.github.io/husky/how-to.html#ci-server-and-docker
+  HUSKY: 0
+
+jobs:
+  test-source:
+    name: 📒 Test source [tsgo ${{ matrix.native-preview-version }}]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        native-preview-version:
+          - latest # The bleeding-edge daily nightly
+          - beta # The slower-moving tag
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
+
+      - name: 📘 Install tsgo
+        run: npm --workspace=remeda install -D @typescript/native-preview@${{ matrix.native-preview-version }}
+
+      - name: 🎯 Concrete version
+        run: npx --workspace=remeda tsgo --version | tee -a $GITHUB_STEP_SUMMARY
+
+      - name: 🚨 Type check
+        run: npx --workspace=remeda tsgo --project tsconfig.source.json
+
+      - name: 📋 Run type tests
+        run: npx --workspace=remeda tsgo --project tsconfig.canary-tsgo-test-d.json
+
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    needs:
+      # No need to build if we already have test failures
+      - test-source
+    outputs:
+      distCacheKey: ${{ steps.hash-dist.outputs.distCacheKey }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Generate the cache key so we can reuse it in the next job. Key
+      # intentionally matches the one used by canaries.yml's build job so
+      # the cache can be shared across the two workflows.
+      - name: 🔑 Hash distributable
+        id: hash-dist
+        run: echo "distCacheKey=dist-${{ hashFiles('package-lock.json', 'packages/remeda/src/**/*.ts', 'packages/remeda/tsdown.config.ts') }}" >> $GITHUB_OUTPUT
+
+      - name: 🚚 Lookup distributable
+        id: dist-lookup
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          lookup-only: true
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+      # Only on cache misses do we proceed to building the library.
+
+      - name: ⎔ Setup node
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
+
+      - name: 🏗️ Build
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        run: npm --workspace=remeda run build
+
+      - name: 🚚 Save distributable
+        if: steps.dist-lookup.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: packages/remeda/dist
+          key: ${{ steps.hash-dist.outputs.distCacheKey }}
+
+  test-dist:
+    name: 📦 Test dist [tsgo ${{ matrix.native-preview-version }}]
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        native-preview-version:
+          - latest
+          - beta
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: 📥 Download dependencies
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
+
+      - name: 📘 Install tsgo
+        run: npm --workspace=remeda install -D @typescript/native-preview@${{ matrix.native-preview-version }}
+
+      - name: 🚚 Restore distributable
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: packages/remeda/dist
+          fail-on-cache-miss: true
+          key: ${{ needs.build.outputs.distCacheKey }}
+
+      - name: 🧐 Check distributable
+        run: npx --workspace=remeda tsgo --project tsconfig.dist.json
