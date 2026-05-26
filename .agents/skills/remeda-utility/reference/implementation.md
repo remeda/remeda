@@ -63,6 +63,16 @@ These three "empty-ish" values are not interchangeable in Remeda:
 - Non-obvious type choices in internal code must have an inline comment explaining the reasoning (the **why**, not the what).
 - Complex type utility files should open with a comment describing what each exported utility does.
 
+### Type-level performance
+
+Combinatorial / recursive types can blow `tsc` up 100x+ in symbols, memory, and check time in ways that pass all tests but make consumer editors unusable. Two patterns to reach for, and one technique to confirm:
+
+- **Keep recursion accumulators opaque.** When recursing with an accumulator, track _count_ (a tuple of `unknown`) rather than the actual elements being built. Sibling branches at the same depth share an opaque accumulator's type, which TS dedupes; carrying real types makes every path structurally unique and explodes the intermediate state space from `O(M * N)` to `O(M * 2^M)`. Stitch real elements together on unwind via `[Head, ...recurse]`.
+
+- **Grow accumulators on pick; don't pre-build and shrink.** `Counter["length"] extends N` with a counter that grows by `[unknown, ...Counter]` is cheaper than pre-building `NTuple<unknown, N>` and destructuring `[unknown, ...infer Rest]` at every step. Skips the upfront build (N type-construction steps) and replaces a per-step destructure-and-infer with a constant-cost length lookup. Small win (~1-4% on instantiations) but consistent across N and M.
+
+- **Measure with `tsc --extendedDiagnostics`.** Set up a small consumer-style repro that imports from the _built_ `dist/index.d.ts` (not source - source-mode compiles all of remeda and drowns the signal in ~115K symbols of baseline overhead). Rebuild (`npm run build`), warm up once (discard), then run 2-3 timed passes - numbers are stable across runs. Watch `Symbols`, `Types`, `Instantiations`, `Memory used`, `Check time`. `Instantiations` is the most sensitive early indicator - regressions show up there before time/memory budge.
+
 ## File Layout
 
 - Exported items first, then non-exported ("private") items — readers scan top-to-bottom.

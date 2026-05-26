@@ -874,6 +874,98 @@ describe("literal sampleSize > n", () => {
       | [true, true, true, true, true, true, true, true, true, true]
     >();
   });
+
+  // @see https://github.com/remeda/remeda/pull/1355
+  test("large literal tuples (pr #1355)", () => {
+    // Our previous implementation computed the full set of all sub-tuples
+    // before narrowing it down to just those of size N. This meant that as the
+    // tuple grew bigger, the computation grew exponentially (`2^|T|`) and even
+    // at modest sizes would cause TypeScript to slow down and potentially blow
+    // up. This test protects against regressing on this by testing those kinds
+    // of inputs directly. We expect a `ts2590` error for the unoptimized case.
+    expectTypeOf(
+      sample(
+        [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i",
+          "j",
+          "k",
+          "l",
+          "m",
+          "n",
+          "o",
+          "p",
+          "q",
+          "r",
+          "s",
+          "t",
+          "u",
+          "v",
+          "w",
+          "x",
+          "y",
+          "z",
+        ],
+        1,
+      ),
+    ).toEqualTypeOf<
+      | ["a"]
+      | ["b"]
+      | ["c"]
+      | ["d"]
+      | ["e"]
+      | ["f"]
+      | ["g"]
+      | ["h"]
+      | ["i"]
+      | ["j"]
+      | ["k"]
+      | ["l"]
+      | ["m"]
+      | ["n"]
+      | ["o"]
+      | ["p"]
+      | ["q"]
+      | ["r"]
+      | ["s"]
+      | ["t"]
+      | ["u"]
+      | ["v"]
+      | ["w"]
+      | ["x"]
+      | ["y"]
+      | ["z"]
+    >();
+  });
+});
+
+describe("literal union sampleSize", () => {
+  test("fixed tuples", () => {
+    expectTypeOf(sample(FIXED, 1 as 1 | 2)).toEqualTypeOf<
+      | ["a"]
+      | ["b"]
+      | ["c"]
+      | ["d"]
+      | ["e"]
+      | ["a", "b"]
+      | ["a", "c"]
+      | ["a", "d"]
+      | ["a", "e"]
+      | ["b", "c"]
+      | ["b", "d"]
+      | ["b", "e"]
+      | ["c", "d"]
+      | ["c", "e"]
+      | ["d", "e"]
+    >();
+  });
 });
 
 describe("primitive sampleSize", () => {
