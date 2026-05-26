@@ -1,6 +1,5 @@
 import { purryOn } from "./internal/purryOn";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import { isNumber } from "./isNumber";
 
 /**
  * Removes elements from an array and, optionally, inserts new elements in
@@ -19,7 +18,8 @@ import { isNumber } from "./isNumber";
  * @param deleteCount - The number of elements to remove.
  * @param replacement - Optional elements to insert into the array in place of the deleted elements. Defaults to no elements.
  * @signature
- *    splice(items, start, deleteCount, replacement?)
+ *    splice(data, start, deleteCount);
+ *    splice(data, start, deleteCount, replacement);
  * @example
  *    splice([1,2,3,4,5,6,7,8], 2, 3); //=> [1,2,6,7,8]
  *    splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
@@ -49,7 +49,8 @@ export function splice<T extends IterableContainer>(
  * @param deleteCount - The number of elements to remove.
  * @param replacement - Optional elements to insert into the array in place of the deleted elements. Defaults to no elements.
  * @signature
- *    splice(start, deleteCount, replacement?)(items)
+ *    splice(start, deleteCount)(data);
+ *    splice(start, deleteCount, replacement)(data);
  * @example
  *    pipe([1,2,3,4,5,6,7,8], splice(2, 3)) // => [1,2,6,7,8]
  *    pipe([1,2,3,4,5,6,7,8], splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
@@ -59,21 +60,25 @@ export function splice<T extends IterableContainer>(
 export function splice<T extends IterableContainer>(
   start: number,
   deleteCount: number,
+  // We use NoInfer to prevent TypeScript from inferring T over-eagerly when the
+  // value of replacement is ambiguous which then prevents the type coming from
+  // the type to override it. We need `data` to be the inference source for T.
+  //  @see https://github.com/remeda/remeda/pull/1358
   replacement?: readonly NoInfer<T>[number][],
 ): (data: T) => T[number][];
 
 export function splice(...args: readonly unknown[]): unknown {
-  return purryOn(isNumber, spliceImplementation, args);
+  return purryOn(($) => typeof $ === "number", spliceImplementation, args);
 }
 
 function spliceImplementation<T extends IterableContainer>(
-  items: T,
+  data: T,
   start: number,
   deleteCount: number,
   replacement: readonly T[number][] = [],
 ): T[number][] {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
-  const result = [...items];
+  const result = [...data];
   result.splice(start, deleteCount, ...replacement);
   return result;
 }
