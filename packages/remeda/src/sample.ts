@@ -1,5 +1,4 @@
 import type {
-  FixedLengthArray,
   IsEqual,
   IsNever,
   NonNegativeInteger,
@@ -44,22 +43,19 @@ type SampledPrimitive<T extends IterableContainer> = [
  * of T that are exactly N elements long.
  */
 type SampledLiteral<T extends IterableContainer, N extends number> =
-  | Extract<
-      FixedSubTuples<
-        [
-          ...TupleParts<T>["required"],
-          // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
-          // We add N elements of the `item` type to the tuple so that we
-          // consider any combination possible of elements of the prefix items,
-          // any amount of rest items, and suffix items.
-          ...(IsNever<TupleParts<T>["item"]> extends true
-            ? []
-            : NTuple<TupleParts<T>["item"], N>),
-          ...TupleParts<T>["suffix"],
-        ]
-      >,
-      // This is just [unknown, unknown, ..., unknown] with N elements.
-      FixedLengthArray<unknown, N>
+  | Combinations<
+      [
+        ...TupleParts<T>["required"],
+        // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
+        // We add N elements of the `item` type to the tuple so that we
+        // consider any combination possible of elements of the prefix items,
+        // any amount of rest items, and suffix items.
+        ...(IsNever<TupleParts<T>["item"]> extends true
+          ? []
+          : NTuple<TupleParts<T>["item"], N>),
+        ...TupleParts<T>["suffix"],
+      ],
+      N
     >
   // In addition to all sub-tuples of length N, we also need to consider all
   // tuples where the input is shorter than N. This will contribute exactly
@@ -100,6 +96,21 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
   ? // For each element we either take it or skip it, and recurse over the rest.
       FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
   : [];
+
+/**
+ * Compute all combinations (sub-tuples) of T of exactly length N.
+ */
+type Combinations<
+  T extends readonly unknown[],
+  N extends number,
+  Counter extends readonly unknown[] = [],
+> = Counter["length"] extends N
+  ? []
+  : T extends readonly [infer Head, ...infer Tail]
+    ?
+        | [Head, ...Combinations<Tail, N, [unknown, ...Counter]>]
+        | Combinations<Tail, N, Counter>
+    : never;
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.

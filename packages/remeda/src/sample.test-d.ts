@@ -1191,3 +1191,45 @@ describe("primitive sampleSize", () => {
     >();
   });
 });
+
+test("large literal tuples (pr #????)", () => {
+  // Our previous implementation computed the full set of all sub-tuples before
+  // narrowing it down to just those of size N. This meant that as the tuple
+  // grew bigger, the computation grew exponentially (`2^|T|`) and even at
+  // modest sizes would cause TypeScript to slow down and potentially blow up.
+  // This test protects against regressing on this by testing those kinds of
+  // inputs directly. We expect a `ts2590` error for the unoptimized case.
+  const LARGE = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+  ] as const;
+
+  // The mere call forces TS to compute the return type; if that requires
+  // eager sub-tuple enumeration, tsc errors with TS2590 before any
+  // assertion runs. The matchTypeOf is just a sanity check on shape.
+  expectTypeOf(sample(LARGE, 1)).toExtend<readonly [(typeof LARGE)[number]]>();
+});
