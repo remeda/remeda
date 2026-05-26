@@ -1192,7 +1192,8 @@ describe("primitive sampleSize", () => {
   });
 });
 
-test("large literal tuples (pr #????)", () => {
+// @see https://github.com/remeda/remeda/pull/1355
+test("large literal tuples (pr #1355)", () => {
   // Our previous implementation computed the full set of all sub-tuples before
   // narrowing it down to just those of size N. This meant that as the tuple
   // grew bigger, the computation grew exponentially (`2^|T|`) and even at
