@@ -101,15 +101,22 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
  * Compute all combinations (sub-tuples) of T of exactly length N.
  */
 type Combinations<
-  T extends readonly unknown[],
+  T extends IterableContainer,
   N extends number,
+  // Used an an incrementor that keeps track of the depth of the recursion.
   Counter extends readonly unknown[] = [],
-> = Counter["length"] extends N
-  ? []
-  : T extends readonly [infer Head, ...infer Tail]
-    ?
-        | [Head, ...Combinations<Tail, N, [unknown, ...Counter]>]
-        | Combinations<Tail, N, Counter>
+> =
+  // Distribute over N so the result is the union for all values, otherwise we
+  // will only compute combinations for the smallest literal in the union.
+  N extends unknown
+    ? Counter["length"] extends N
+      ? []
+      : T extends readonly [infer Head, ...infer Rest]
+        ? // For each element we either take it or skip it, and recurse over
+            // the rest.
+            | [Head, ...Combinations<Rest, N, [unknown, ...Counter]>]
+            | Combinations<Rest, N, Counter>
+        : never
     : never;
 
 /**
