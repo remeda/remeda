@@ -16,7 +16,7 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
  * @param data - The array to splice.
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.
- * @param replacement - Optional elements to insert into the array in place of the deleted elements. Defaults to no elements.
+ * @param replacement - Elements to insert at the cutoff point.
  * @signature
  *    splice(data, start, deleteCount);
  *    splice(data, start, deleteCount, replacement);
@@ -47,7 +47,7 @@ export function splice<T extends IterableContainer>(
  *
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.
- * @param replacement - Optional elements to insert into the array in place of the deleted elements. Defaults to no elements.
+ * @param replacement - Elements to insert at the cutoff point.
  * @signature
  *    splice(start, deleteCount)(data);
  *    splice(start, deleteCount, replacement)(data);
