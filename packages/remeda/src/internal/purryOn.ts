@@ -1,16 +1,12 @@
 /**
  * Utility for purrying functions based on a predicate for the first argument.
  *
- * This is useful for purrying functions with a variadic argument list.
+ * This is useful for purrying functions with an optional parameter or a
+ * variadic argument list.
  */
 export function purryOn<T>(
   isArg: (firstArg: unknown) => firstArg is T,
-  implementation: (
-    data: unknown,
-    firstArg: T,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Function inference in typescript relies on `any` to work, it doesn't work with `unknown`
-    ...args: any
-  ) => unknown,
+  implementation: (data: never, firstArg: T, ...args: never) => unknown,
   args: readonly unknown[],
 ): unknown {
   return isArg(args[0])
