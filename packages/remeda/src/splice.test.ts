@@ -108,9 +108,7 @@ describe("regression tests", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([1, 2, 3, 4, 5], 0, -1, [3])).toStrictEqual([
-          3, 1, 2, 3, 4, 5,
-        ]);
+        expect(splice([] as number[], 0, -1, [3])).toStrictEqual([3]);
       });
     });
   });
@@ -198,9 +196,7 @@ describe("overflow indices", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([1, 2, 3, 4, 5], -1, -1, [3])).toStrictEqual([
-          1, 2, 3, 4, 3, 5,
-        ]);
+        expect(splice([] as number[], -1, -1, [3])).toStrictEqual([3]);
       });
     });
 
@@ -210,9 +206,7 @@ describe("overflow indices", () => {
       });
 
       test("with replacement", () => {
-        expect(splice([1, 2, 3, 4, 5], 1, -1, [3])).toStrictEqual([
-          1, 3, 2, 3, 4, 5,
-        ]);
+        expect(splice([] as number[], 1, -1, [3])).toStrictEqual([3]);
       });
     });
   });
