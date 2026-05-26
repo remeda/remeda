@@ -60,11 +60,7 @@ export function splice<T extends IterableContainer>(
 export function splice<T extends IterableContainer>(
   start: number,
   deleteCount: number,
-  // We use NoInfer to prevent TypeScript from inferring T over-eagerly when the
-  // value of replacement is ambiguous which then prevents the type coming from
-  // the type to override it. We need `data` to be the inference source for T.
-  //  @see https://github.com/remeda/remeda/pull/1358
-  replacement?: readonly NoInfer<T>[number][],
+  replacement?: readonly T[number][],
 ): (data: T) => T[number][];
 
 export function splice(...args: readonly unknown[]): unknown {

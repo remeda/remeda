@@ -157,9 +157,8 @@ describe("data-last", () => {
     ).toEqualTypeOf<(number | string)[]>();
   });
 
-  test("doesn't infer `never` from an empty `replacement` literal (#1359)", () => {
-    // Regression: replacement `[]` previously locked T to `never`, making the
-    // returned function require `readonly never[]`.
+  // @see https://github.com/remeda/remeda/pull/1358
+  test("doesn't infer `never` from an empty `replacement` literal (#1358)", () => {
     expectTypeOf(pipe([] as number[], splice(0, 0, []))).toEqualTypeOf<
       number[]
     >();
