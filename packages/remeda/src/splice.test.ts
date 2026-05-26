@@ -218,12 +218,16 @@ test("a purried data-last implementation", () => {
   ]);
 });
 
-describe("replacement is optional", () => {
-  test("data-first omits replacement", () => {
-    expect(splice([1, 2, 3, 4, 5], 1, 2)).toStrictEqual([1, 4, 5]);
+describe("replacement defaults to an empty array", () => {
+  test("data-first", () => {
+    expect(splice([1, 2, 3, 4, 5], 1, 2)).toStrictEqual(
+      splice([1, 2, 3, 4, 5], 1, 2, []),
+    );
   });
 
-  test("data-last omits replacement", () => {
-    expect(pipe([1, 2, 3, 4, 5], splice(1, 2))).toStrictEqual([1, 4, 5]);
+  test("data-last", () => {
+    expect(pipe([1, 2, 3, 4, 5], splice(1, 2))).toStrictEqual(
+      pipe([1, 2, 3, 4, 5], splice(1, 2, [])),
+    );
   });
 });
