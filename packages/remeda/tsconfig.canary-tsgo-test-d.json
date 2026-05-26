@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  // Canary-only typecheck scope for @typescript/native-preview (tsgo, the
+  // future TS 7). Mirrors `vitest --project types`, which uses TypeScript
+  // programmatically and cannot be pointed at tsgo today. Used exclusively by
+  // `.github/workflows/canaries-tsgo.yml`. Delete both this file and that
+  // workflow together once tsgo replaces tsc in the typescript package.
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.test-d.ts"]
+}
