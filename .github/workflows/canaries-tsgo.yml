@@ -10,7 +10,7 @@ name: 🐹 Canaries (tsgo)
 on:
   schedule:
     # Run daily to make it the easiest to track down what changed
-    - cron: "0 7 * * *"
+    - cron: "30 7 * * *"
   workflow_dispatch:
 
 permissions:
