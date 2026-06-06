@@ -67,7 +67,7 @@
     "@eslint/js": "^10.0.1",
     "@fast-check/vitest": "^0.4.1",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.2",
     "@vitest/coverage-v8": "^4.1.8",
     "@vitest/eslint-plugin": "^1.6.19",
     "eslint": "~10.2.0",
@@ -83,10 +83,10 @@
     "prettier-plugin-sh": "^0.18.1",
     "publint": "^0.3.21",
     "semantic-release": "^25.0.3",
-    "tsdown": "^0.21.10",
+    "tsdown": "^0.22.2",
     "type-fest": "^5.5.0",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.59.1",
+    "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.5"
   },
   "sideEffects": false
