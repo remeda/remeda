@@ -9,7 +9,6 @@ import type { ArrayRequiredPrefix } from "./internal/types/ArrayRequiredPrefix";
 import type { BoundedPartial } from "./internal/types/BoundedPartial";
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { Or } from "./internal/types/Or";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
@@ -89,12 +88,12 @@ type PossiblyEmptyArrayKeys<T extends Record<PropertyKey, IterableContainer>> =
     : never;
 
 // An array is non-empty if any of the fixed parts are non-empty.
-type IsNonEmptyArray<T extends IterableContainer> = Or<
-  [
-    IsNonEmptyFixedTuple<TupleParts<T>["required"]>,
-    IsNonEmptyFixedTuple<TupleParts<T>["suffix"]>,
-  ]
->;
+type IsNonEmptyArray<T extends IterableContainer> =
+  IsNonEmptyFixedTuple<TupleParts<T>["required"]> extends true
+    ? true
+    : IsNonEmptyFixedTuple<TupleParts<T>["suffix"]> extends true
+      ? true
+      : false;
 
 // A fixed tuple (one without optional or a rest element in it) is non-empty if
 // we can't extract the empty tuple from it.

@@ -2,19 +2,18 @@ import type {
   GreaterThan,
   GreaterThanOrEqual,
   IsEqual,
-  IsNever,
   NonNegativeInteger,
 } from "type-fest";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
-import type { Or } from "./internal/types/Or";
 
 // This limitation is defined by type-fest
 type MaxLiteral = 1000;
 
-type RandomInteger<From extends number, To extends number> =
-  Or<
-    [IsNever<NonNegativeInteger<From>>, IsNever<NonNegativeInteger<To>>]
-  > extends true
+type RandomInteger<From extends number, To extends number> = [
+  NonNegativeInteger<From>,
+] extends [never]
+  ? number
+  : [NonNegativeInteger<To>] extends [never]
     ? number
     : IsEqual<From, To> extends true
       ? From

@@ -4,11 +4,9 @@
  */
 
 import type { IsUnion } from "type-fest";
-import type { And } from "./internal/types/And";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IsBounded } from "./internal/types/IsBounded";
-import type { Or } from "./internal/types/Or";
 import { purry } from "./purry";
 
 type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
@@ -27,13 +25,17 @@ type MappedKeys<T, Key extends PropertyKey> = MaybePartial<
  * @see BoundedPartial
  */
 type MaybePartial<T, Key extends PropertyKey, Output> =
-  And<[IsBounded<Key>, Or<[IsUnion<Key>, CouldBeEmpty<T>]>]> extends true
+  IsBounded<Key> extends true
     ? // When keys are bounded we need to consider what assurances we can make
       // about the presence of keys in the output; mainly if there is more than
       // one possible result from the mapper (so we can't know what it would
       // return for a specific input, at the type level), or if object itself
       // might be empty and thus also the output object.
-      Partial<Output>
+      IsUnion<Key> extends true
+      ? Partial<Output>
+      : CouldBeEmpty<T> extends true
+        ? Partial<Output>
+        : Output
     : // If keys are not bounded TypeScript treats the Record as implicitly
       // Partial so we don't need to do that here.
       Output;

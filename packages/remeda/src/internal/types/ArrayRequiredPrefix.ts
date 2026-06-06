@@ -1,16 +1,43 @@
-import type {
-  GreaterThan,
-  IsEqual,
-  IsLiteral,
-  IsNever,
-  TupleOf,
-} from "type-fest";
-import type { And } from "./And";
+import type { GreaterThan, IsEqual, IsLiteral, TupleOf } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
+
+// This is the crux of the type, there are two important things to note here:
+// 1. We need to make sure we don't remove the readonly modifier from the output
+// so we copy it from the input, if it exists.
+type ExpandedRequiredPrefix<
+  T extends IterableContainer,
+  Remainder extends number,
+> = WithSameReadonly<
+  T,
+  [
+    // We recreate the array by largely copying the input tuple to
+    // the output as-is, but we make two modifications to it:
+    ...TupleParts<T>["required"],
+
+    // We first make optional items required, we do this as many
+    // times as needed to fulfil the Remainder amount. If we have
+    // leftover optional items they are added to the output as
+    // they were originally defined as optional.
+    ...OptionalTupleRequiredPrefix<TupleParts<T>["optional"], Remainder>,
+
+    // Additionally, if we still haven't satisfied the Remainder
+    // amount we create "new" items in the output array by adding
+    // the item type of the rest element.
+    ...TupleOf<
+      ClampedIntegerSubtract<Remainder, TupleParts<T>["optional"]["length"]>,
+      TupleParts<T>["item"]
+    >,
+
+    // We then get back to copying the input tuple to the output,
+    // we add the rest element itself, and the required suffix.
+    ...CoercedArray<TupleParts<T>["item"]>,
+    ...TupleParts<T>["suffix"],
+  ]
+>;
 
 export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
   IsLiteral<N> extends true
@@ -24,60 +51,25 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
           ? // The array already has enough required items in it's prefix or
             // suffix so it satisfies the requirement without modifications.
             T
-          : And<
-                [
-                  // We need more items than the optional part of the tuple can
-                  // provide
-                  GreaterThan<Remainder, TupleParts<T>["optional"]["length"]>,
-                  // ...and there is no rest element we can use
-                  IsNever<TupleParts<T>["item"]>,
-                ]
+          : // We need more items than the optional part of the tuple can
+            // provide...
+            GreaterThan<
+                Remainder,
+                TupleParts<T>["optional"]["length"]
               > extends true
-            ? RemedaTypeError<
-                "ArrayRequiredPrefix",
-                "The input tuple cannot satisfy the minimum",
-                {
-                  type: never;
-                  metadata: [T, N];
-                }
-              >
-            : // This is the crux of the type, there are two important things to
-              // note here:
-              // 1. We need to make sure we don't remove the readonly modifier
-              // from the output so we copy it from the input, if it exists.
-              WithSameReadonly<
-                T,
-                [
-                  // We recreate the array by largely copying the input tuple to
-                  // the output as-is, but we make two modifications to it:
-                  ...TupleParts<T>["required"],
-
-                  // We first make optional items required, we do this as many
-                  // times as needed to fulfil the Remainder amount. If we have
-                  // leftover optional items they are added to the output as
-                  // they were originally defined as optional.
-                  ...OptionalTupleRequiredPrefix<
-                    TupleParts<T>["optional"],
-                    Remainder
-                  >,
-
-                  // Additionally, if we still haven't satisfied the Remainder
-                  // amount we create "new" items in the output array by adding
-                  // the item type of the rest element.
-                  ...TupleOf<
-                    ClampedIntegerSubtract<
-                      Remainder,
-                      TupleParts<T>["optional"]["length"]
-                    >,
-                    TupleParts<T>["item"]
-                  >,
-
-                  // We then get back to copying the input tuple to the output,
-                  // we add the rest element itself, and the required suffix.
-                  ...CoercedArray<TupleParts<T>["item"]>,
-                  ...TupleParts<T>["suffix"],
-                ]
-              >
+            ? // ...and there is no rest element we can use, so the tuple cannot
+              // satisfy the minimum.
+              [TupleParts<T>["item"]] extends [never]
+              ? RemedaTypeError<
+                  "ArrayRequiredPrefix",
+                  "The input tuple cannot satisfy the minimum",
+                  {
+                    type: never;
+                    metadata: [T, N];
+                  }
+                >
+              : ExpandedRequiredPrefix<T, Remainder>
+            : ExpandedRequiredPrefix<T, Remainder>
         : RemedaTypeError<
             "ArrayRequiredPrefix",
             "Remainder didn't compute to a number?!",

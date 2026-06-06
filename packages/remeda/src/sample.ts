@@ -1,24 +1,25 @@
-import type { IsEqual, IsNever, NonNegativeInteger, Writable } from "type-fest";
+import type { IsEqual, NonNegativeInteger, Writable } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
-import type { Or } from "./internal/types/Or";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> =
-  Or<[IsEqual<N, 0>, IsEqual<T["length"], 0>]> extends true
+  IsEqual<N, 0> extends true
     ? // Short-circuit on trivial inputs.
       []
-    : IsNever<NonNegativeInteger<N>> extends true
-      ? SampledPrimitive<T>
-      : IsLongerThan<T, N> extends true
-        ? SampledLiteral<T, N>
-        : // If our tuple can never fulfil the sample size the only valid sample
-          // is the whole input tuple. Because it's a shallow clone we also
-          // strip any readonly-ness.
-          Writable<T>;
+    : IsEqual<T["length"], 0> extends true
+      ? []
+      : [NonNegativeInteger<N>] extends [never]
+        ? SampledPrimitive<T>
+        : IsLongerThan<T, N> extends true
+          ? SampledLiteral<T, N>
+          : // If our tuple can never fulfil the sample size the only valid sample
+            // is the whole input tuple. Because it's a shallow clone we also
+            // strip any readonly-ness.
+            Writable<T>;
 
 /**
  * When N is not a non-negative integer **literal** we can't use it in our
@@ -45,7 +46,7 @@ type SampledLiteral<T extends IterableContainer, N extends number> =
         // We add N elements of the `item` type to the tuple so that we
         // consider any combination possible of elements of the prefix items,
         // any amount of rest items, and suffix items.
-        ...(IsNever<TupleParts<T>["item"]> extends true
+        ...([TupleParts<T>["item"]] extends [never]
           ? []
           : NTuple<TupleParts<T>["item"], N>),
         ...TupleParts<T>["suffix"],
