@@ -1,7 +1,8 @@
-import type { GreaterThan, IsEqual, IsLiteral, TupleOf } from "type-fest";
+import type { GreaterThan, IsEqual, IsLiteral } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
+import type { NTuple } from "./NTuple";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 
@@ -83,9 +84,9 @@ type ExpandedRequiredPrefix<
     // Additionally, if we still haven't satisfied the Remainder
     // amount we create "new" items in the output array by adding
     // the item type of the rest element.
-    ...TupleOf<
-      ClampedIntegerSubtract<Remainder, TupleParts<T>["optional"]["length"]>,
-      TupleParts<T>["item"]
+    ...NTuple<
+      TupleParts<T>["item"],
+      ClampedIntegerSubtract<Remainder, TupleParts<T>["optional"]["length"]>
     >,
 
     // We then get back to copying the input tuple to the output,
