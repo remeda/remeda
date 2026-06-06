@@ -5,40 +5,6 @@ import type { IterableContainer } from "./IterableContainer";
 import type { RemedaTypeError } from "./RemedaTypeError";
 import type { TupleParts } from "./TupleParts";
 
-// This is the crux of the type, there are two important things to note here:
-// 1. We need to make sure we don't remove the readonly modifier from the output
-// so we copy it from the input, if it exists.
-type ExpandedRequiredPrefix<
-  T extends IterableContainer,
-  Remainder extends number,
-> = WithSameReadonly<
-  T,
-  [
-    // We recreate the array by largely copying the input tuple to
-    // the output as-is, but we make two modifications to it:
-    ...TupleParts<T>["required"],
-
-    // We first make optional items required, we do this as many
-    // times as needed to fulfil the Remainder amount. If we have
-    // leftover optional items they are added to the output as
-    // they were originally defined as optional.
-    ...OptionalTupleRequiredPrefix<TupleParts<T>["optional"], Remainder>,
-
-    // Additionally, if we still haven't satisfied the Remainder
-    // amount we create "new" items in the output array by adding
-    // the item type of the rest element.
-    ...TupleOf<
-      ClampedIntegerSubtract<Remainder, TupleParts<T>["optional"]["length"]>,
-      TupleParts<T>["item"]
-    >,
-
-    // We then get back to copying the input tuple to the output,
-    // we add the rest element itself, and the required suffix.
-    ...CoercedArray<TupleParts<T>["item"]>,
-    ...TupleParts<T>["suffix"],
-  ]
->;
-
 export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
   IsLiteral<N> extends true
     ? // Distribute T to support union types
@@ -94,6 +60,40 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
           metadata: N;
         }
       >;
+
+// This is the crux of the type, there are two important things to note here:
+// 1. We need to make sure we don't remove the readonly modifier from the output
+// so we copy it from the input, if it exists.
+type ExpandedRequiredPrefix<
+  T extends IterableContainer,
+  Remainder extends number,
+> = WithSameReadonly<
+  T,
+  [
+    // We recreate the array by largely copying the input tuple to
+    // the output as-is, but we make two modifications to it:
+    ...TupleParts<T>["required"],
+
+    // We first make optional items required, we do this as many
+    // times as needed to fulfil the Remainder amount. If we have
+    // leftover optional items they are added to the output as
+    // they were originally defined as optional.
+    ...OptionalTupleRequiredPrefix<TupleParts<T>["optional"], Remainder>,
+
+    // Additionally, if we still haven't satisfied the Remainder
+    // amount we create "new" items in the output array by adding
+    // the item type of the rest element.
+    ...TupleOf<
+      ClampedIntegerSubtract<Remainder, TupleParts<T>["optional"]["length"]>,
+      TupleParts<T>["item"]
+    >,
+
+    // We then get back to copying the input tuple to the output,
+    // we add the rest element itself, and the required suffix.
+    ...CoercedArray<TupleParts<T>["item"]>,
+    ...TupleParts<T>["suffix"],
+  ]
+>;
 
 // A trivial utility that makes the output Readonly if T is also readonly.
 // Notice that we make the decision based on T, but output the type based on U.

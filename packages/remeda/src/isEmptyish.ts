@@ -53,8 +53,8 @@ type EmptyishObjectLike<T extends object> = T extends readonly unknown[]
 type EmptyishArray<T extends readonly unknown[]> = T extends readonly []
   ? // By returning T we effectively narrow the "else" branch to `never`.
     T
-  : IsEqual<TupleParts<T>["required"], []> extends true
-    ? IsEqual<TupleParts<T>["suffix"], []> extends true
+  : TupleParts<T>["required"] extends readonly []
+    ? TupleParts<T>["suffix"] extends readonly []
       ? T extends unknown[]
         ? // A mutable array should remain mutable so we can't narrow it down.
           Empty<T>

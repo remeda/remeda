@@ -1,4 +1,4 @@
-import type { IsEqual, NonNegativeInteger, Writable } from "type-fest";
+import type { NonNegativeInteger, Writable } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
@@ -6,20 +6,19 @@ import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type Sampled<T extends IterableContainer, N extends number> =
-  IsEqual<N, 0> extends true
-    ? // Short-circuit on trivial inputs.
-      []
-    : IsEqual<T["length"], 0> extends true
-      ? []
-      : [NonNegativeInteger<N>] extends [never]
-        ? SampledPrimitive<T>
-        : IsLongerThan<T, N> extends true
-          ? SampledLiteral<T, N>
-          : // If our tuple can never fulfil the sample size the only valid sample
-            // is the whole input tuple. Because it's a shallow clone we also
-            // strip any readonly-ness.
-            Writable<T>;
+type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
+  ? // Short-circuit on trivial inputs.
+    []
+  : [T["length"]] extends [0]
+    ? []
+    : [NonNegativeInteger<N>] extends [never]
+      ? SampledPrimitive<T>
+      : IsLongerThan<T, N> extends true
+        ? SampledLiteral<T, N>
+        : // If our tuple can never fulfil the sample size the only valid sample
+          // is the whole input tuple. Because it's a shallow clone we also
+          // strip any readonly-ness.
+          Writable<T>;
 
 /**
  * When N is not a non-negative integer **literal** we can't use it in our
@@ -85,7 +84,7 @@ type IsLongerThan<T extends readonly unknown[], N extends number> =
   // Checking for `undefined` is a neat trick to avoid needing to compare
   // integer literals because if N overflows the tuple then the type for that
   // element will be `undefined`. This only works for fixed tuples!
-  IsEqual<T[N], undefined> extends true ? false : true;
+  [T[N]] extends [undefined] ? false : true;
 
 // Assuming T is a fixed tuple we build all it's possible sub-tuples.
 type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]

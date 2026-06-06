@@ -1,9 +1,4 @@
-import type {
-  IsEqual,
-  IsNever,
-  IsStringLiteral,
-  NonNegativeInteger,
-} from "type-fest";
+import type { IsNever, IsStringLiteral, NonNegativeInteger } from "type-fest";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { StringLength } from "./internal/types/StringLength";
 
@@ -48,7 +43,7 @@ type TruncateWithOptions<
   // Distribute the result over unions.
   N extends unknown
     ? // We can short-circuit most of our logic when N is a literal 0.
-      IsEqual<N, 0> extends true
+      [N] extends [0]
       ? ""
       : // Distribute the result over unions.
         Omission extends unknown
@@ -57,15 +52,12 @@ type TruncateWithOptions<
           ? // This mirrors the runtime logic where if `n - omission.length`
             // is not positive then what we end up truncating is Omission
             // itself and not S.
-            IsEqual<
-              ClampedIntegerSubtract<N, StringLength<Omission>>,
-              0
-            > extends true
+            [ClampedIntegerSubtract<N, StringLength<Omission>>] extends [0]
             ? TruncateLiterals<Omission, N, "">
             : // When S isn't literal the output wouldn't be literal either.
               IsStringLiteral<S> extends true
               ? // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
-                IsEqual<Separator, undefined> extends true
+                [Separator] extends [undefined]
                 ? TruncateLiterals<S, N, Omission>
                 : string
               : string
