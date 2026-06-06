@@ -1,10 +1,10 @@
 import type {
-  And,
   IsEqual,
   IsNever,
   IsStringLiteral,
   NonNegativeInteger,
 } from "type-fest";
+import type { And } from "./internal/types/And";
 import type { ClampedIntegerSubtract } from "./internal/types/ClampedIntegerSubtract";
 import type { StringLength } from "./internal/types/StringLength";
 
@@ -64,11 +64,13 @@ type TruncateWithOptions<
             > extends true
             ? TruncateLiterals<Omission, N, "">
             : And<
-                  // When S isn't literal the output wouldn't be literal
-                  // either.
-                  IsStringLiteral<S>,
-                  // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
-                  IsEqual<Separator, undefined>
+                  [
+                    // When S isn't literal the output wouldn't be literal
+                    // either.
+                    IsStringLiteral<S>,
+                    // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                    IsEqual<Separator, undefined>,
+                  ]
                 > extends true
               ? TruncateLiterals<S, N, Omission>
               : string

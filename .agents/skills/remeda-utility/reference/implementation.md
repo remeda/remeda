@@ -50,12 +50,19 @@ These three "empty-ish" values are not interchangeable in Remeda:
 - Preserve input shape in output where possible — `{ [K in keyof T]: S }` maintains tuple structure (length, order, named elements).
 - Don't widen — `Array<1 | 2 | 3>` stays narrow, not `Array<number>`.
 
+### Tuple decomposition
+
+When a type needs to handle tuple **regions** differently (required vs. optional vs. rest vs. suffix elements), reach for `TupleParts` (`src/internal/types/TupleParts.ts`) — the canonical decomposition into `{ required, optional, item, suffix }` covering all 10 TS-supported tuple shapes. Reconstruct with `[...required, ...PartialArray<optional>, ...CoercedArray<item>, ...suffix]`. Always consider it before hand-rolling a tuple-shape check. Two caveats:
+
+- It **drops element labels** — fine, Remeda doesn't preserve labels anywhere (`filter` etc. don't either), and labels don't affect type identity so they're untestable regardless.
+- It's **recursive**, so for a _uniform_ transform that replaces every element with the same type, a homomorphic mapped type is both simpler and far cheaper — measure (see Type-level performance) before putting `TupleParts` on a hot path.
+
 ### Generic hygiene
 
 - Minimize type parameters — don't add a generic for items when the type is inferable from the container.
 - Single-use types whose parameters duplicate the function's should be inlined — the alias adds indirection without value.
 - Extract complex inline conditional types into named utility types for readability.
-- Check `type-fest` before writing a new type utility — it covers a lot already.
+- Check `type-fest` before writing a new type utility — it covers a lot already. But on hot/widely-instantiated types, weigh its instantiation cost (see Type-level performance for the `Or`/`And` case, where it warranted local replacements).
 
 ### Internal types
 
@@ -70,6 +77,8 @@ Combinatorial / recursive types can blow `tsc` up 100x+ in symbols, memory, and 
 - **Keep recursion accumulators opaque.** When recursing with an accumulator, track _count_ (a tuple of `unknown`) rather than the actual elements being built. Sibling branches at the same depth share an opaque accumulator's type, which TS dedupes; carrying real types makes every path structurally unique and explodes the intermediate state space from `O(M * N)` to `O(M * 2^M)`. Stitch real elements together on unwind via `[Head, ...recurse]`.
 
 - **Grow accumulators on pick; don't pre-build and shrink.** `Counter["length"] extends N` with a counter that grows by `[unknown, ...Counter]` is cheaper than pre-building `NTuple<unknown, N>` and destructuring `[unknown, ...infer Rest]` at every step. Skips the upfront build (N type-construction steps) and replaces a per-step destructure-and-infer with a constant-cost length lookup. Small win (~1-4% on instantiations) but consistent across N and M.
+
+- **type-fest's boolean combinators (`Or`/`And`/`OrAll`/`AndAll`) carry a large fixed import tax: ~9.8k instantiations just to load and use one, paid once per compilation that pulls them in (not per-use).** `Simplify`/`IsEqual` from the same package are cheap; the tax is specific to these combinators (they build on a general `SomeExtend` machine). Use the local `Or`/`And` (`src/internal/types/Or.ts`, `And.ts`) instead: variadic (`Or<[A, B, C]>`, `And<[...]>`), a handful of instantiations, behaviorally identical to type-fest for every operand we pass (resolved or deferred booleans, `boolean` distribution, `any`) except `never`. Replacing type-fest's `Or` cut `TupleParts<number[]>` from ~10.6k instantiations to ~600 (17x). At a downstream consumer's call site the tax lands per their compilation, so it shows up even when Remeda's own build (which already imports `Or` somewhere) doesn't move.
 
 - **Measure with `tsc --extendedDiagnostics`.** Set up a small consumer-style repro that imports from the _built_ `dist/index.d.ts` (not source - source-mode compiles all of remeda and drowns the signal in ~115K symbols of baseline overhead). Rebuild (`npm run build`), warm up once (discard), then run 2-3 timed passes - numbers are stable across runs. Watch `Symbols`, `Types`, `Instantiations`, `Memory used`, `Check time`. `Instantiations` is the most sensitive early indicator - regressions show up there before time/memory budge.
 

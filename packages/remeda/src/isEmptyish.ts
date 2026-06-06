@@ -1,5 +1,4 @@
 import type {
-  And,
   HasRequiredKeys,
   IsAny,
   IsEqual,
@@ -7,11 +6,12 @@ import type {
   IsNumericLiteral,
   IsUnknown,
   OmitIndexSignature,
-  Or,
   Tagged,
   ValueOf,
 } from "type-fest";
+import type { And } from "./internal/types/And";
 import type { HasWritableKeys } from "./internal/types/HasWritableKeys";
+import type { Or } from "./internal/types/Or";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
@@ -56,8 +56,10 @@ type EmptyishArray<T extends readonly unknown[]> = T extends readonly []
   ? // By returning T we effectively narrow the "else" branch to `never`.
     T
   : And<
-        IsEqual<TupleParts<T>["required"], []>,
-        IsEqual<TupleParts<T>["suffix"], []>
+        [
+          IsEqual<TupleParts<T>["required"], []>,
+          IsEqual<TupleParts<T>["suffix"], []>,
+        ]
       > extends true
     ? T extends unknown[]
       ? // A mutable array should remain mutable so we can't narrow it down.
@@ -123,12 +125,15 @@ type EmptyishArbitrary<T, N> =
 // To make our lives easier we can filter them out at the function declaration
 // step and we never need to think about them again.
 type ShouldNotNarrow<T> = Or<
-  Or<IsAny<T>, IsUnknown<T>>,
-  IsEqual<
-    T,
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    {}
-  >
+  [
+    IsAny<T>,
+    IsUnknown<T>,
+    IsEqual<
+      T,
+      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+      {}
+    >,
+  ]
 >;
 
 /**

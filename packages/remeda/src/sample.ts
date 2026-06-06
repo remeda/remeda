@@ -1,19 +1,14 @@
-import type {
-  IsEqual,
-  IsNever,
-  NonNegativeInteger,
-  Or,
-  Writable,
-} from "type-fest";
+import type { IsEqual, IsNever, NonNegativeInteger, Writable } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
+import type { Or } from "./internal/types/Or";
 import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
 type Sampled<T extends IterableContainer, N extends number> =
-  Or<IsEqual<N, 0>, IsEqual<T["length"], 0>> extends true
+  Or<[IsEqual<N, 0>, IsEqual<T["length"], 0>]> extends true
     ? // Short-circuit on trivial inputs.
       []
     : IsNever<NonNegativeInteger<N>> extends true

@@ -1,5 +1,6 @@
-import type { Or, Simplify } from "type-fest";
+import type { Simplify } from "type-fest";
 import type { IterableContainer } from "./IterableContainer";
+import type { Or } from "./Or";
 import type { RemedaTypeError } from "./RemedaTypeError";
 
 /**
@@ -86,12 +87,14 @@ type TuplePartsWithoutFixed<
     // requires we do additional checks on the inferred types in order to
     // determine if the optional part has been fully extracted yet or not.
     Or<
-      // The first check is obvious and allows us to stop the recursion when
-      // dealing with tuples that don't have a rest element.
-      T extends readonly [] ? true : false,
-      // The second check is to catch cases where T is just an array (e.g.
-      // `string[]`).
-      T[number][] extends Tail ? true : false
+      [
+        // The first check is obvious and allows us to stop the recursion when
+        // dealing with tuples that don't have a rest element.
+        T extends readonly [] ? true : false,
+        // The second check is to catch cases where T is just an array (e.g.
+        // `string[]`).
+        T[number][] extends Tail ? true : false,
+      ]
     > extends true
     ? {
         /**

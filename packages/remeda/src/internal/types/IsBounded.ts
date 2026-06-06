@@ -2,9 +2,9 @@ import type {
   IsNumericLiteral,
   IsStringLiteral,
   IsSymbolLiteral,
-  Or,
   Split,
 } from "type-fest";
+import type { Or } from "./Or";
 
 /**
  * Checks if a type is a bounded key: a union of bounded strings, numeric
@@ -17,7 +17,7 @@ export type IsBounded<T> =
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
   (
     T extends unknown
-      ? Or<IsBoundedString<T>, Or<IsNumericLiteral<T>, IsSymbolLiteral<T>>>
+      ? Or<[IsBoundedString<T>, IsNumericLiteral<T>, IsSymbolLiteral<T>]>
       : never
   ) extends true
     ? // When some parts of the union result in `true` and others in `false`

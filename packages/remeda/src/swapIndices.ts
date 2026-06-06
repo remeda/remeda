@@ -1,4 +1,5 @@
-import type { And, IsEqual, Join } from "type-fest";
+import type { IsEqual, Join } from "type-fest";
+import type { And } from "./internal/types/And";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -66,8 +67,10 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 > =
-  And<IsNonNegative<K1>, IsNonNegative<K2>> extends true
-    ? And<isLessThan<K1, T["length"]>, isLessThan<K2, T["length"]>> extends true
+  And<[IsNonNegative<K1>, IsNonNegative<K2>]> extends true
+    ? And<
+        [isLessThan<K1, T["length"]>, isLessThan<K2, T["length"]>]
+      > extends true
       ? SwapArrayInternal<T, K1, K2>
       : // If the indices are not within the input arrays range the result would
         // be trivially the same as the input array.

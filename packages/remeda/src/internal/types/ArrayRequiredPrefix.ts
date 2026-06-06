@@ -1,11 +1,11 @@
 import type {
-  And,
   GreaterThan,
   IsEqual,
   IsLiteral,
   IsNever,
   TupleOf,
 } from "type-fest";
+import type { And } from "./And";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
@@ -25,11 +25,13 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
             // suffix so it satisfies the requirement without modifications.
             T
           : And<
-                // We need more items than the optional part of the tuple can
-                // provide
-                GreaterThan<Remainder, TupleParts<T>["optional"]["length"]>,
-                // ...and there is no rest element we can use
-                IsNever<TupleParts<T>["item"]>
+                [
+                  // We need more items than the optional part of the tuple can
+                  // provide
+                  GreaterThan<Remainder, TupleParts<T>["optional"]["length"]>,
+                  // ...and there is no rest element we can use
+                  IsNever<TupleParts<T>["item"]>,
+                ]
               > extends true
             ? RemedaTypeError<
                 "ArrayRequiredPrefix",
