@@ -4,7 +4,6 @@ import type {
   IsEqual,
   IsNever,
   IsNumericLiteral,
-  IsUnknown,
   OmitIndexSignature,
   Tagged,
   ValueOf,
@@ -122,7 +121,9 @@ type EmptyishArbitrary<T, N> =
 type ShouldNotNarrow<T> =
   IsAny<T> extends true
     ? true
-    : IsUnknown<T> extends true
+    : // `any` is already handled above, so a plain `unknown extends T` is
+      // equivalent to `IsUnknown<T>` here (its only extra job is excluding `any`).
+      unknown extends T
       ? true
       : IsEqual<
             T,

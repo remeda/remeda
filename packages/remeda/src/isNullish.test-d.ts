@@ -1,4 +1,4 @@
-import type { IsEqual, IsUnknown, Or } from "type-fest";
+import type { IsEqual } from "type-fest";
 import { expectTypeOf, test } from "vitest";
 import { ALL_TYPES_DATA_PROVIDER } from "../test/typesDataProvider";
 import { isNullish } from "./isNullish";
@@ -45,12 +45,13 @@ test("narrows unknowns", () => {
     expectTypeOf(data).toEqualTypeOf<null | undefined>();
   } else {
     expectTypeOf(
-      true as Or<
-        // Since TypeScript 5.8 the type is narrowed in the else branch.
-        IsEqual<typeof data, NonNullable<unknown>>,
-        // Previous versions couldn't do that and kept the type as `unknown`.
-        IsUnknown<typeof data>
-      >,
+      // Since TypeScript 5.8 the type is narrowed in the else branch; previous
+      // versions couldn't do that and kept the type as `unknown`.
+      true as IsEqual<typeof data, NonNullable<unknown>> extends true
+        ? true
+        : unknown extends typeof data
+          ? true
+          : false,
     ).toEqualTypeOf<true>();
   }
 });
