@@ -1,4 +1,4 @@
-import type { Simplify, Tagged } from "type-fest";
+import type { IsNever, Simplify, Tagged } from "type-fest";
 import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
@@ -10,7 +10,7 @@ type HasSubObjectGuard<T, S> = Simplify<
 >;
 
 type HasSubObjectObjectValue<A, B> = Partial<{
-  [Key in keyof A & keyof B]: A[Key] & B[Key] extends never
+  [Key in keyof A & keyof B]: IsNever<A[Key] & B[Key]> extends true
     ? B[Key]
     : A[Key] | B[Key] extends object
       ? HasSubObjectObjectValue<A[Key], B[Key]>
@@ -29,8 +29,9 @@ type HasSubObjectData<
   RData = Required<Data>,
   RSubObject = Required<SubObject>,
 > = Partial<{
-  [Key in keyof RData & keyof RSubObject]: RData[Key] &
-    RSubObject[Key] extends never
+  [Key in keyof RData & keyof RSubObject]: IsNever<
+    RData[Key] & RSubObject[Key]
+  > extends true
     ? RSubObject[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RData[Key], RSubObject[Key]>
@@ -47,8 +48,9 @@ type HasSubObjectSubObject<
   RSubObject = Required<SubObject>,
   RData = Required<Data>,
 > = Partial<{
-  [Key in keyof RData & keyof RSubObject]: RData[Key] &
-    RSubObject[Key] extends never
+  [Key in keyof RData & keyof RSubObject]: IsNever<
+    RData[Key] & RSubObject[Key]
+  > extends true
     ? RData[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RSubObject[Key], RData[Key]>

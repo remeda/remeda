@@ -4,7 +4,6 @@ import type {
   IsEqual,
   IsNever,
   NonNegativeInteger,
-  Or,
 } from "type-fest";
 import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 
@@ -12,18 +11,17 @@ import type { IntRangeInclusive } from "./internal/types/IntRangeInclusive";
 type MaxLiteral = 1000;
 
 type RandomInteger<From extends number, To extends number> =
-  Or<
-    IsNever<NonNegativeInteger<From>>,
-    IsNever<NonNegativeInteger<To>>
-  > extends true
+  IsNever<NonNegativeInteger<From>> extends true
     ? number
-    : IsEqual<From, To> extends true
-      ? From
-      : GreaterThan<From, To> extends true
-        ? never
-        : GreaterThanOrEqual<To, MaxLiteral> extends true
-          ? number
-          : IntRangeInclusive<From, To>;
+    : IsNever<NonNegativeInteger<To>> extends true
+      ? number
+      : IsEqual<From, To> extends true
+        ? From
+        : GreaterThan<From, To> extends true
+          ? never
+          : GreaterThanOrEqual<To, MaxLiteral> extends true
+            ? number
+            : IntRangeInclusive<From, To>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).

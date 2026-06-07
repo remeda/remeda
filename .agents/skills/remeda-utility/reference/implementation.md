@@ -50,12 +50,17 @@ These three "empty-ish" values are not interchangeable in Remeda:
 - Preserve input shape in output where possible — `{ [K in keyof T]: S }` maintains tuple structure (length, order, named elements).
 - Don't widen — `Array<1 | 2 | 3>` stays narrow, not `Array<number>`.
 
+### Tuple decomposition
+
+When a type needs to handle tuple **regions** differently (required vs. optional vs. rest vs. suffix elements), reach for `TupleParts` (`src/internal/types/TupleParts.ts`) — the canonical decomposition into `{ required, optional, item, suffix }` covering all 10 TS-supported tuple shapes. Reconstruct with `[...required, ...PartialArray<optional>, ...CoercedArray<item>, ...suffix]`. Always consider it before hand-rolling a tuple-shape check.
+
 ### Generic hygiene
 
 - Minimize type parameters — don't add a generic for items when the type is inferable from the container.
 - Single-use types whose parameters duplicate the function's should be inlined — the alias adds indirection without value.
 - Extract complex inline conditional types into named utility types for readability.
-- Check `type-fest` before writing a new type utility — it covers a lot already.
+- Check `type-fest` before writing a new type utility — it covers a lot already. But type breadth can inflate type-logic overhead (see Type-level performance).
+- For boolean logic in conditional types, write explicit nested ternary `extends` checks rather than type-fest's `Or`/`And`/`OrAll`/`AndAll` which are very expensive to instantiate, and collapse conditions to a `boolean`, losing implicit narrowing in the branches.
 
 ### Internal types
 
@@ -68,9 +73,7 @@ These three "empty-ish" values are not interchangeable in Remeda:
 Combinatorial / recursive types can blow `tsc` up 100x+ in symbols, memory, and check time in ways that pass all tests but make consumer editors unusable. Two patterns to reach for, and one technique to confirm:
 
 - **Keep recursion accumulators opaque.** When recursing with an accumulator, track _count_ (a tuple of `unknown`) rather than the actual elements being built. Sibling branches at the same depth share an opaque accumulator's type, which TS dedupes; carrying real types makes every path structurally unique and explodes the intermediate state space from `O(M * N)` to `O(M * 2^M)`. Stitch real elements together on unwind via `[Head, ...recurse]`.
-
 - **Grow accumulators on pick; don't pre-build and shrink.** `Counter["length"] extends N` with a counter that grows by `[unknown, ...Counter]` is cheaper than pre-building `NTuple<unknown, N>` and destructuring `[unknown, ...infer Rest]` at every step. Skips the upfront build (N type-construction steps) and replaces a per-step destructure-and-infer with a constant-cost length lookup. Small win (~1-4% on instantiations) but consistent across N and M.
-
 - **Measure with `tsc --extendedDiagnostics`.** Set up a small consumer-style repro that imports from the _built_ `dist/index.d.ts` (not source - source-mode compiles all of remeda and drowns the signal in ~115K symbols of baseline overhead). Rebuild (`npm run build`), warm up once (discard), then run 2-3 timed passes - numbers are stable across runs. Watch `Symbols`, `Types`, `Instantiations`, `Memory used`, `Check time`. `Instantiations` is the most sensitive early indicator - regressions show up there before time/memory budge.
 
 ## File Layout

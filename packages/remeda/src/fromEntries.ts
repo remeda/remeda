@@ -1,4 +1,4 @@
-import type { Simplify } from "type-fest";
+import type { IsNever, Simplify } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
@@ -81,7 +81,7 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
 type ValueForKey<
   Entries extends IterableContainer<Entry>,
   K extends PropertyKey,
-> = (Extract<Entries[number], Entry<K>> extends never
+> = (IsNever<Extract<Entries[number], Entry<K>>> extends true
   ? Entries[number]
   : Extract<Entries[number], Entry<K>>)[1];
 

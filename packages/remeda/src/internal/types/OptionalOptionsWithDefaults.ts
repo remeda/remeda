@@ -1,4 +1,4 @@
-import type { Merge } from "type-fest";
+import type { IsNever, Merge } from "type-fest";
 
 /**
  * A simplified version of type-fest's `ApplyDefaultOptions` which isn't
@@ -14,7 +14,9 @@ export type OptionalOptionsWithDefaults<
     // Defaults are only relevant for optional properties and need to be merged
     // with a non-optional version of the provided options to remove the
     // unreachable `undefined` parts.
-    [Key in keyof Provided as Extract<Provided[Key], undefined> extends never
+    [Key in keyof Provided as IsNever<
+      Extract<Provided[Key], undefined>
+    > extends true
       ? Key
       : never]: Provided[Key];
   }

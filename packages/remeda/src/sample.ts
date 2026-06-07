@@ -1,10 +1,4 @@
-import type {
-  IsEqual,
-  IsNever,
-  NonNegativeInteger,
-  Or,
-  Writable,
-} from "type-fest";
+import type { IsNever, NonNegativeInteger, Writable } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
@@ -12,10 +6,11 @@ import type { PartialArray } from "./internal/types/PartialArray";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { purry } from "./purry";
 
-type Sampled<T extends IterableContainer, N extends number> =
-  Or<IsEqual<N, 0>, IsEqual<T["length"], 0>> extends true
-    ? // Short-circuit on trivial inputs.
-      []
+type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
+  ? // Short-circuit on trivial inputs.
+    []
+  : [T["length"]] extends [0]
+    ? []
     : IsNever<NonNegativeInteger<N>> extends true
       ? SampledPrimitive<T>
       : IsLongerThan<T, N> extends true
@@ -89,7 +84,7 @@ type IsLongerThan<T extends readonly unknown[], N extends number> =
   // Checking for `undefined` is a neat trick to avoid needing to compare
   // integer literals because if N overflows the tuple then the type for that
   // element will be `undefined`. This only works for fixed tuples!
-  IsEqual<T[N], undefined> extends true ? false : true;
+  [T[N]] extends [undefined] ? false : true;
 
 // Assuming T is a fixed tuple we build all it's possible sub-tuples.
 type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]

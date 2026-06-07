@@ -1,4 +1,4 @@
-import type { IsNever, Or, Simplify } from "type-fest";
+import type { IsNever, Simplify } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { EnumerableStringKeyedValueOf } from "./internal/types/EnumerableStringKeyedValueOf";
 import type { IsBoundedRecord } from "./internal/types/IsBoundedRecord";
@@ -86,9 +86,11 @@ type IsExactProp<T, P extends keyof T, S> = P extends symbol
 type IsPartialProp<T, P extends keyof T, S> = P extends symbol
   ? // Symbols are passed through via the PickSymbolKeys type
     false
-  : Or<IsExactProp<T, P, S>, IsNever<Exclude<Required<T>[P], S>>> extends true
+  : IsExactProp<T, P, S> extends true
     ? false
-    : true;
+    : IsNever<Exclude<Required<T>[P], S>> extends true
+      ? false
+      : true;
 
 /**
  * Creates a shallow copy of the data, and then removes any keys that the

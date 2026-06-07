@@ -1,4 +1,4 @@
-import type { Or, Simplify } from "type-fest";
+import type { Simplify } from "type-fest";
 import type { IterableContainer } from "./IterableContainer";
 import type { RemedaTypeError } from "./RemedaTypeError";
 
@@ -85,14 +85,17 @@ type TuplePartsWithoutFixed<
     // has a hard time telling which is which based on inference alone. This
     // requires we do additional checks on the inferred types in order to
     // determine if the optional part has been fully extracted yet or not.
-    Or<
-      // The first check is obvious and allows us to stop the recursion when
-      // dealing with tuples that don't have a rest element.
-      T extends readonly [] ? true : false,
-      // The second check is to catch cases where T is just an array (e.g.
-      // `string[]`).
-      T[number][] extends Tail ? true : false
-    > extends true
+    (
+      T extends readonly []
+        ? // The first check is obvious and allows us to stop the recursion when
+          // dealing with tuples that don't have a rest element.
+          true
+        : T[number][] extends Tail
+          ? // The second check is to catch cases where T is just an array (e.g.
+            // `string[]`).
+            true
+          : false
+    ) extends true
     ? {
         /**
          * A *fixed* tuple that defines the part of a tuple where all its
@@ -113,10 +116,7 @@ type TuplePartsWithoutFixed<
   : RemedaTypeError<
       "TupleParts",
       "Unexpected tuple shape",
-      {
-        type: never;
-        metadata: T;
-      }
+      { type: never; metadata: T }
     >;
 
 // This is an internal type and assumes that the tuple is either an empty tuple

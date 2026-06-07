@@ -1,3 +1,4 @@
+import type { IsNever } from "type-fest";
 import type { EnumerableStringKeyOf } from "./internal/types/EnumerableStringKeyOf";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { ToString } from "./internal/types/ToString";
@@ -22,7 +23,7 @@ type IsIndexAfterSpread<
   T extends IterableContainer,
   Index extends number | string,
 > =
-  IndicesAfterSpread<T> extends never
+  IsNever<IndicesAfterSpread<T>> extends true
     ? false
     : Index extends `${IndicesAfterSpread<T>}`
       ? true
@@ -38,15 +39,16 @@ type IndicesAfterSpread<
   // We use this type to count how many items we consumed, it's just a pseudo-
   // element that is used for its length.
   Iterations extends readonly unknown[] = [],
-> = T[number] extends never
-  ? never
-  : T extends readonly [unknown, ...infer Tail]
-    ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
-    : T extends readonly [...infer Head, unknown]
-      ?
-          | IndicesAfterSpread<Head, [unknown, ...Iterations]>
-          | Iterations["length"]
-      : Iterations["length"];
+> =
+  IsNever<T[number]> extends true
+    ? never
+    : T extends readonly [unknown, ...infer Tail]
+      ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
+      : T extends readonly [...infer Head, unknown]
+        ?
+            | IndicesAfterSpread<Head, [unknown, ...Iterations]>
+            | Iterations["length"]
+        : Iterations["length"];
 
 type ObjectKeys<T> =
   T extends Record<PropertyKey, never> ? [] : EnumerableStringKeyOf<T>[];
