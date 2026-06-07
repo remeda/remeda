@@ -59,8 +59,8 @@ type EmptyishArray<T extends readonly unknown[]> = T extends readonly []
           Empty<T>
         : // But immutable arrays could be rewritten to prevent any mutations.
           readonly []
-      : // An array with a required prefix or suffix would never be empty, we can
-        // use that fact to narrow the "if" branch to `never`.
+      : // An array with a required prefix or suffix would never be empty, we
+        // can use that fact to narrow the "if" branch to `never`.
         never
     : never;
 
@@ -118,20 +118,17 @@ type EmptyishArbitrary<T, N> =
 // Overly generic types interfere with our already pretty complex return type.
 // To make our lives easier we can filter them out at the function declaration
 // step and we never need to think about them again.
-type ShouldNotNarrow<T> =
-  IsAny<T> extends true
+type ShouldNotNarrow<T> = unknown extends T
+  ? true
+  : IsAny<T> extends true
     ? true
-    : // `any` is already handled above, so a plain `unknown extends T` is
-      // equivalent to `IsUnknown<T>` here (its only extra job is excluding `any`).
-      unknown extends T
+    : IsEqual<
+          T,
+          // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+          {}
+        > extends true
       ? true
-      : IsEqual<
-            T,
-            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-            {}
-          > extends true
-        ? true
-        : false;
+      : false;
 
 /**
  * A function that checks if the input is empty. Empty is defined as anything
