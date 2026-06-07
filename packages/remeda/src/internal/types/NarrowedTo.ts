@@ -1,4 +1,4 @@
-import type { IsAny } from "type-fest";
+import type { IsAny, IsNever } from "type-fest";
 
 /**
  * An extension of Extract for type predicates which falls back to the base
@@ -8,7 +8,7 @@ import type { IsAny } from "type-fest";
  *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
  */
 export type NarrowedTo<T, Base> =
-  Extract<T, Base> extends never
+  IsNever<Extract<T, Base>> extends true
     ? Base
     : IsAny<T> extends true
       ? Base

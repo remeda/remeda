@@ -1,4 +1,4 @@
-import type { NonNegativeInteger, Writable } from "type-fest";
+import type { IsNever, NonNegativeInteger, Writable } from "type-fest";
 import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NTuple } from "./internal/types/NTuple";
@@ -11,7 +11,7 @@ type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
     []
   : [T["length"]] extends [0]
     ? []
-    : [NonNegativeInteger<N>] extends [never]
+    : IsNever<NonNegativeInteger<N>> extends true
       ? SampledPrimitive<T>
       : IsLongerThan<T, N> extends true
         ? SampledLiteral<T, N>
@@ -45,7 +45,7 @@ type SampledLiteral<T extends IterableContainer, N extends number> =
         // We add N elements of the `item` type to the tuple so that we
         // consider any combination possible of elements of the prefix items,
         // any amount of rest items, and suffix items.
-        ...([TupleParts<T>["item"]] extends [never]
+        ...(IsNever<TupleParts<T>["item"]> extends true
           ? []
           : NTuple<TupleParts<T>["item"], N>),
         ...TupleParts<T>["suffix"],

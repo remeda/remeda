@@ -1,4 +1,4 @@
-import type { GreaterThan, IsEqual, IsLiteral } from "type-fest";
+import type { GreaterThan, IsEqual, IsLiteral, IsNever } from "type-fest";
 import type { ClampedIntegerSubtract } from "./ClampedIntegerSubtract";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
@@ -26,7 +26,7 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
               > extends true
             ? // ...and there is no rest element we can use, so the tuple cannot
               // satisfy the minimum.
-              [TupleParts<T>["item"]] extends [never]
+              IsNever<TupleParts<T>["item"]> extends true
               ? RemedaTypeError<
                   "ArrayRequiredPrefix",
                   "The input tuple cannot satisfy the minimum",
