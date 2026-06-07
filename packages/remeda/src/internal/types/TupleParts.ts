@@ -85,49 +85,39 @@ type TuplePartsWithoutFixed<
     // has a hard time telling which is which based on inference alone. This
     // requires we do additional checks on the inferred types in order to
     // determine if the optional part has been fully extracted yet or not.
-    // The first check is obvious and allows us to stop the recursion when
-    // dealing with tuples that don't have a rest element.
     (
       T extends readonly []
-        ? true
-        : // The second check is to catch cases where T is just an array (e.g.
-          // `string[]`).
-          T[number][] extends Tail
-          ? true
+        ? // The first check is obvious and allows us to stop the recursion when
+          // dealing with tuples that don't have a rest element.
+          true
+        : T[number][] extends Tail
+          ? // The second check is to catch cases where T is just an array (e.g.
+            // `string[]`).
+            true
           : false
     ) extends true
-    ? OptionalAndRest<Optional, T>
+    ? {
+        /**
+         * A *fixed* tuple that defines the part of a tuple where all its
+         * elements are suffixed with the optional operator (`?`); but with
+         * the optional operator removed (e.g. `[string?]` would be
+         * represented as `[string]`). These elements can only follow the
+         * `required` part (which could be empty).
+         * To add the optional operator back, wrap the result with the
+         * `PartialArray` type.
+         * When the array doesn't have a required part this will be an empty
+         * tuple (`[]`).
+         *
+         * @example PartialArray<TupleParts<T>["optional"]>
+         */
+        optional: Optional;
+      } & TuplePartsRest<T>
     : TuplePartsWithoutFixed<Tail, [...Optional, Head]>
   : RemedaTypeError<
       "TupleParts",
       "Unexpected tuple shape",
-      {
-        type: never;
-        metadata: T;
-      }
+      { type: never; metadata: T }
     >;
-
-// The "optional + rest" portion of a decomposed tuple, shared by the two
-// branches that produce it.
-type OptionalAndRest<
-  Optional extends unknown[],
-  T extends IterableContainer,
-> = {
-  /**
-   * A *fixed* tuple that defines the part of a tuple where all its
-   * elements are suffixed with the optional operator (`?`); but with
-   * the optional operator removed (e.g. `[string?]` would be
-   * represented as `[string]`). These elements can only follow the
-   * `required` part (which could be empty).
-   * To add the optional operator back, wrap the result with the
-   * `PartialArray` type.
-   * When the array doesn't have a required part this will be an empty
-   * tuple (`[]`).
-   *
-   * @example PartialArray<TupleParts<T>["optional"]>
-   */
-  optional: Optional;
-} & TuplePartsRest<T>;
 
 // This is an internal type and assumes that the tuple is either an empty tuple
 // `[]` or a simple array, all other parts of the tuple should be stripped
