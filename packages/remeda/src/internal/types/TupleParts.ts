@@ -87,13 +87,17 @@ type TuplePartsWithoutFixed<
     // determine if the optional part has been fully extracted yet or not.
     // The first check is obvious and allows us to stop the recursion when
     // dealing with tuples that don't have a rest element.
-    T extends readonly []
+    (
+      T extends readonly []
+        ? true
+        : // The second check is to catch cases where T is just an array (e.g.
+          // `string[]`).
+          T[number][] extends Tail
+          ? true
+          : false
+    ) extends true
     ? OptionalAndRest<Optional, T>
-    : // The second check is to catch cases where T is just an array (e.g.
-      // `string[]`).
-      T[number][] extends Tail
-      ? OptionalAndRest<Optional, T>
-      : TuplePartsWithoutFixed<Tail, [...Optional, Head]>
+    : TuplePartsWithoutFixed<Tail, [...Optional, Head]>
   : RemedaTypeError<
       "TupleParts",
       "Unexpected tuple shape",
