@@ -24,47 +24,33 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                 Remainder,
                 TupleParts<T>["optional"]["length"]
               > extends true
-            ? // ...and there is no rest element we can use, so the tuple cannot
-              // satisfy the minimum.
+            ? // ...but there is no rest element we can use.
               IsNever<TupleParts<T>["item"]> extends true
               ? RemedaTypeError<
                   "ArrayRequiredPrefix",
                   "The input tuple cannot satisfy the minimum",
-                  {
-                    type: never;
-                    metadata: [T, N];
-                  }
+                  { type: never; metadata: [T, N] }
                 >
-              : ExpandedRequiredPrefix<T, Remainder>
-            : ExpandedRequiredPrefix<T, Remainder>
+              : // When there *is* a rest element we can use
+                ExpandedRequiredPrefix<T, Remainder>
+            : // Or the optional part has enough items
+              ExpandedRequiredPrefix<T, Remainder>
         : RemedaTypeError<
             "ArrayRequiredPrefix",
             "Remainder didn't compute to a number?!",
-            {
-              type: never;
-              metadata: [T, N];
-            }
+            { type: never; metadata: [T, N] }
           >
       : RemedaTypeError<
           "ArrayRequiredPrefix",
           "Failed to distribute union?!",
-          {
-            type: never;
-            metadata: T;
-          }
+          { type: never; metadata: T }
         >
     : RemedaTypeError<
         "ArrayRequiredPrefix",
         "Only literal minimums are supported!",
-        {
-          type: never;
-          metadata: N;
-        }
+        { type: never; metadata: N }
       >;
 
-// This is the crux of the type, there are two important things to note here:
-// 1. We need to make sure we don't remove the readonly modifier from the output
-// so we copy it from the input, if it exists.
 type ExpandedRequiredPrefix<
   T extends IterableContainer,
   Remainder extends number,
