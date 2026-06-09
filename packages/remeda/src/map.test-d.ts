@@ -84,7 +84,7 @@ test("empty tuple", () => {
 });
 
 test("all-optional tuple", () => {
-  expectTypeOf(map([1] as [a?: number, b?: number], identity())).toEqualTypeOf<
+  expectTypeOf(map([] as [a?: number, b?: number], identity())).toEqualTypeOf<
     [a?: number, b?: number]
   >();
 });
