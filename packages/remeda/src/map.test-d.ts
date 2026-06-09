@@ -188,27 +188,29 @@ describe("indexed", () => {
   });
 });
 
-// @see https://github.com/remeda/remeda/issues/1364.
+// @see https://github.com/remeda/remeda/issues/1364
 describe("limited type inference through `NoInfer` (#1364)", () => {
   test("data-first returns a plain array", () => {
-    expectTypeOf(map([] as NoInfer<{ a: number }[]>, identity())).toEqualTypeOf<
-      { a: number }[]
+    expectTypeOf(map([] as NoInfer<number[]>, identity())).toEqualTypeOf<
+      number[]
     >();
   });
 
-  test("result flows into a downstream IterableContainer constraint", () => {
-    const mapped = map([] as NoInfer<{ a: number }[]>, identity());
+  test("works with readonly arrays", () => {
+    expectTypeOf(
+      map([] as NoInfer<readonly number[]>, identity()),
+    ).toEqualTypeOf<number[]>();
+  });
 
-    expectTypeOf(sortBy(mapped, ({ a }) => a)).toEqualTypeOf<{ a: number }[]>();
+  test("result flows into a downstream IterableContainer constraint", () => {
+    const mapped = map([] as NoInfer<number[]>, identity());
+
+    expectTypeOf(sortBy(mapped, identity())).toEqualTypeOf<number[]>();
   });
 
   test("data-last in a pipe flows into sortBy", () => {
     expectTypeOf(
-      pipe(
-        [] as NoInfer<{ a: number }[]>,
-        map(identity()),
-        sortBy(({ a }) => a),
-      ),
-    ).toEqualTypeOf<{ a: number }[]>();
+      pipe([] as NoInfer<number[]>, map(identity()), sortBy(identity())),
+    ).toEqualTypeOf<number[]>();
   });
 });
