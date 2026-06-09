@@ -1,7 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { add } from "./add";
 import { constant } from "./constant";
+import { identity } from "./identity";
 import { map } from "./map";
+import { pipe } from "./pipe";
+import { sortBy } from "./sortBy";
 
 test("number array", () => {
   const result = map([1, 2, 3] as number[], add(1));
@@ -74,6 +77,16 @@ test("nonempty readonly (head) number array", () => {
   const result = map([1, 2, 3] as readonly [...number[], number], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
+});
+
+test("empty tuple", () => {
+  expectTypeOf(map([], add(1))).toEqualTypeOf<[]>();
+});
+
+test("all-optional tuple", () => {
+  expectTypeOf(map([] as [a?: number, b?: number], identity())).toEqualTypeOf<
+    [a?: number, b?: number]
+  >();
 });
 
 describe("indexed", () => {
@@ -172,5 +185,32 @@ describe("indexed", () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<[...number[], number]>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/issues/1364
+describe("limited type inference through `NoInfer` (#1364)", () => {
+  test("data-first returns a plain array", () => {
+    expectTypeOf(map([] as NoInfer<number[]>, identity())).toEqualTypeOf<
+      number[]
+    >();
+  });
+
+  test("works with readonly arrays", () => {
+    expectTypeOf(
+      map([] as NoInfer<readonly number[]>, identity()),
+    ).toEqualTypeOf<number[]>();
+  });
+
+  test("result flows into a downstream IterableContainer constraint", () => {
+    const mapped = map([] as NoInfer<number[]>, identity());
+
+    expectTypeOf(sortBy(mapped, identity())).toEqualTypeOf<number[]>();
+  });
+
+  test("data-last in a pipe flows into sortBy", () => {
+    expectTypeOf(
+      pipe([] as NoInfer<number[]>, map(identity()), sortBy(identity())),
+    ).toEqualTypeOf<number[]>();
   });
 });
