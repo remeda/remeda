@@ -105,7 +105,11 @@ function setPathImplementation(
     return copy;
   }
 
-  const { [pivot]: currentValue, ...remaining } = data as Record<
+  // When the path descends into a property that doesn't exist on `data` (e.g.
+  // a missing key of a `Record`, or a missing optional property) the value
+  // here would be nullish. The path is still valid type-wise, so instead of
+  // throwing when trying to destructure it we build the missing object.
+  const { [pivot]: currentValue, ...remaining } = (data ?? {}) as Record<
     PropertyKey,
     unknown
   >;

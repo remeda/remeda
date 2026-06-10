@@ -53,6 +53,22 @@ describe("data first", () => {
       a: { ...TEST_OBJECT.a, b: { c: 2 } },
     });
   });
+
+  test("should build missing segments instead of throwing (issue #554)", () => {
+    expect(
+      setPath({} as Record<string, { b: number }>, ["a", "b"], 123),
+    ).toStrictEqual({ a: { b: 123 } });
+  });
+
+  test("should build deeply nested missing segments", () => {
+    expect(
+      setPath(
+        {} as Record<string, Record<string, { c: number }>>,
+        ["a", "b", "c"],
+        123,
+      ),
+    ).toStrictEqual({ a: { b: { c: 123 } } });
+  });
 });
 
 describe("data last", () => {
