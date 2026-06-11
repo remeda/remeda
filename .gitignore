@@ -11,3 +11,10 @@ coverage/
 
 .tmp/
 .playwright-mcp/
+
+.DS_Store
+
+# Logo exploration scratch (preserved locally / in PR attachments, not in the repo)
+.logo-scratch/
+# Derived brand assets for manual upload (regenerate with `npm run assets -w @remeda/brand`)
+packages/brand/dist/

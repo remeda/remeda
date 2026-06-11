@@ -1,0 +1,15 @@
+{
+  "name": "@remeda/brand",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "The remeda logo: sources, parametric generators, and surface asset rendering",
+  "private": true,
+  "scripts": {
+    "assets": "node generate-assets.cjs",
+    "generate": "node generate.cjs"
+  },
+  "devDependencies": {
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.34.5"
+  }
+}
