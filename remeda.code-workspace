@@ -13,6 +13,9 @@
     {
       "path": "packages/stackblitz-template",
     },
+    {
+      "path": "packages/brand",
+    },
   ],
 
   "settings": {
