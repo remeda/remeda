@@ -1,15 +1,21 @@
 {
   "name": "@remeda/brand",
   "version": "1.0.0",
-  "type": "commonjs",
+  "type": "module",
   "description": "The remeda logo: sources, parametric generators, and surface asset rendering",
   "private": true,
   "scripts": {
-    "assets": "node generate-assets.cjs",
-    "generate": "node generate.cjs"
+    "assets": "node scripts/generate-assets.ts",
+    "format": "prettier . --write",
+    "generate": "node scripts/generate.ts"
   },
   "devDependencies": {
+    "@types/opentype.js": "^1.3.10",
     "opentype.js": "^2.0.0",
+    "prettier": "^3.8.4",
+    "prettier-plugin-pkg": "^0.22.1",
+    "prettier-plugin-sh": "^0.18.1",
+    "remeda": "^2.0.0",
     "sharp": "^0.34.5"
   }
 }
