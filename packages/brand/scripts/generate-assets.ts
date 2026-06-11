@@ -12,33 +12,129 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
+type Image = {
+  readonly size: number;
+  readonly buf: Buffer;
+};
+
+type Dimensions = {
+  readonly width: number;
+  readonly height: number;
+};
+
 const PACKAGE_ROOT = path.join(import.meta.dirname, "..");
 
-const MARK = path.join(PACKAGE_ROOT, "assets", "remeda-mark.svg");
-const LOCKUP_LIGHT = path.join(
-  PACKAGE_ROOT,
-  "assets",
-  "remeda-lockup-light.svg",
-);
-const DOCS_PUBLIC = path.join(PACKAGE_ROOT, "..", "docs", "public");
-const DIST = path.join(PACKAGE_ROOT, "dist");
-fs.mkdirSync(DIST, { recursive: true });
+const ASSETS_DIR = path.join(PACKAGE_ROOT, "assets");
+const MARK = "remeda-mark.svg";
+const LOCKUP_LIGHT = "remeda-lockup-light.svg";
 
-const renderMark = (size: number): Promise<Buffer> =>
-  sharp(fs.readFileSync(MARK), { density: 300 })
-    .resize(size, size)
+const OUT_DIR = path.join(PACKAGE_ROOT, "dist");
+const OUT_GITHUB_AVATAR = "github-avatar.png";
+const OUT_GITHUB_SOCIAL_PREVIEW = "github-social-preview.png";
+const OUT_GITHUB_PADDED = "github-avatar-padded.png";
+
+const DOCS_PUBLIC = path.join(PACKAGE_ROOT, "..", "docs", "public");
+const DOCS_SVG_FAVICON = "favicon.svg";
+const DOCS_ICO_FAVICON = "favicon.ico";
+const DOCS_APPLE_FAVICON = "apple-touch-icon.png";
+const DOCS_OG = "og.png";
+
+const ICON_SIZES = [16, 32, 48] as const;
+
+const MARK_OPTIONS = {
+  density: 300,
+} as const satisfies sharp.SharpOptions;
+
+const SOCIAL_CANVAS_OPTIONS = {
+  density: 300,
+} as const satisfies sharp.SharpOptions;
+const SOCIAL_CANVAS_RESIZE_FACTOR = 0.72;
+
+const DOCS_SITE_SOCIAL_CANVAS_DIMENSIONS = {
+  width: 1200,
+  height: 630,
+} satisfies Dimensions;
+
+const GITHUB_SOCIAL_CANVAS_DIMENSIONS = {
+  width: 1280,
+  height: 640,
+} satisfies Dimensions;
+
+async function main(): Promise<void> {
+  await Promise.all([injectDocSiteAssets(), generateGithubAssets()]);
+}
+
+// --- docs site (served from packages/docs/public/) ---
+async function injectDocSiteAssets(): Promise<void> {
+  fs.copyFileSync(
+    path.join(ASSETS_DIR, MARK),
+    path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON),
+  );
+
+  const icoPngs = await Promise.all(
+    ICON_SIZES.map(
+      async (size) => ({ size, buf: await renderMark(size) }) satisfies Image,
+    ),
+  );
+  const ico = buildIco(icoPngs);
+
+  fs.writeFileSync(path.join(DOCS_PUBLIC, DOCS_ICO_FAVICON), ico);
+  fs.writeFileSync(
+    path.join(DOCS_PUBLIC, DOCS_APPLE_FAVICON),
+    await renderMark(180),
+  );
+  await socialCanvas(
+    DOCS_SITE_SOCIAL_CANVAS_DIMENSIONS,
+    path.join(DOCS_PUBLIC, DOCS_OG),
+  );
+
+  console.log(
+    `docs: ${[DOCS_SVG_FAVICON, DOCS_ICO_FAVICON, DOCS_APPLE_FAVICON, DOCS_OG].join(", ")}`,
+  );
+}
+
+// --- manually uploaded surfaces (brand/dist/) ---
+async function generateGithubAssets(): Promise<void> {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  const [avatar, inner] = await Promise.all([
+    renderMark(1024),
+    // padded variant for circle-cropping contexts (the letter sits near the
+    // bottom-right corner of the full-bleed tile)
+    renderMark(880),
+    socialCanvas(
+      GITHUB_SOCIAL_CANVAS_DIMENSIONS,
+      path.join(OUT_DIR, OUT_GITHUB_SOCIAL_PREVIEW),
+    ),
+  ]);
+
+  fs.writeFileSync(path.join(OUT_DIR, OUT_GITHUB_AVATAR), avatar);
+
+  await sharp({
+    create: { width: 1024, height: 1024, channels: 3, background: "#ffffff" },
+  })
+    .composite([{ input: inner, left: 72, top: 72 }])
     .png()
-    .toBuffer();
+    .toFile(path.join(OUT_DIR, OUT_GITHUB_PADDED));
+
+  console.log(
+    `dist: ${[OUT_GITHUB_AVATAR, OUT_GITHUB_PADDED, OUT_GITHUB_SOCIAL_PREVIEW].join(", ")}`,
+  );
+}
+
+async function renderMark(size: number): Promise<Buffer> {
+  const mark = fs.readFileSync(path.join(ASSETS_DIR, MARK));
+  return await sharp(mark, MARK_OPTIONS).resize(size, size).png().toBuffer();
+}
 
 // .ico container with embedded PNGs (valid since Windows Vista)
-function buildIco(pngs: ReadonlyArray<{ size: number; buf: Buffer }>): Buffer {
-  const count = pngs.length;
+function buildIco(pngs: readonly Image[]): Buffer {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0); // reserved
   header.writeUInt16LE(1, 2); // type: icon
-  header.writeUInt16LE(count, 4);
+  header.writeUInt16LE(pngs.length, 4);
   const entries: Buffer[] = [];
-  let offset = 6 + 16 * count;
+  let offset = 6 + 16 * pngs.length;
   for (const { size, buf } of pngs) {
     const entry = Buffer.alloc(16);
     entry.writeUInt8(size >= 256 ? 0 : size, 0); // width
@@ -52,19 +148,22 @@ function buildIco(pngs: ReadonlyArray<{ size: number; buf: Buffer }>): Buffer {
     entries.push(entry);
     offset += buf.length;
   }
-  return Buffer.concat([header, ...entries, ...pngs.map((p) => p.buf)]);
+  return Buffer.concat([header, ...entries, ...pngs.map(({ buf }) => buf)]);
 }
 
 // wide social/OG canvas: the lockup centered on white
 async function socialCanvas(
-  width: number,
-  height: number,
+  { width, height }: Dimensions,
   file: string,
 ): Promise<void> {
-  const lockup = await sharp(fs.readFileSync(LOCKUP_LIGHT), { density: 300 })
-    .resize({ width: Math.round(width * 0.72) })
+  const lockup = await sharp(
+    fs.readFileSync(path.join(ASSETS_DIR, LOCKUP_LIGHT)),
+    SOCIAL_CANVAS_OPTIONS,
+  )
+    .resize({ width: Math.round(width * SOCIAL_CANVAS_RESIZE_FACTOR) })
     .png()
     .toBuffer();
+
   const meta = await sharp(lockup).metadata();
   await sharp({
     create: { width, height, channels: 3, background: "#ffffff" },
@@ -80,33 +179,5 @@ async function socialCanvas(
     .toFile(file);
 }
 
-// --- docs site (served from packages/docs/public/) ---
-fs.copyFileSync(MARK, path.join(DOCS_PUBLIC, "favicon.svg"));
-const icoPngs: Array<{ size: number; buf: Buffer }> = [];
-for (const size of [16, 32, 48]) {
-  icoPngs.push({ size, buf: await renderMark(size) });
-}
-fs.writeFileSync(path.join(DOCS_PUBLIC, "favicon.ico"), buildIco(icoPngs));
-fs.writeFileSync(
-  path.join(DOCS_PUBLIC, "apple-touch-icon.png"),
-  await renderMark(180),
-);
-await socialCanvas(1200, 630, path.join(DOCS_PUBLIC, "og.png"));
-
-// --- manually uploaded surfaces (brand/dist/) ---
-fs.writeFileSync(path.join(DIST, "github-avatar.png"), await renderMark(1024));
-// padded variant for circle-cropping contexts (the letter sits near the
-// bottom-right corner of the full-bleed tile)
-const inner = await renderMark(880);
-await sharp({
-  create: { width: 1024, height: 1024, channels: 3, background: "#ffffff" },
-})
-  .composite([{ input: inner, left: 72, top: 72 }])
-  .png()
-  .toFile(path.join(DIST, "github-avatar-padded.png"));
-await socialCanvas(1280, 640, path.join(DIST, "github-social-preview.png"));
-
-console.log("docs: favicon.svg, favicon.ico, apple-touch-icon.png, og.png");
-console.log(
-  "dist: github-avatar.png, github-avatar-padded.png, github-social-preview.png",
-);
+// ENTRY POINT
+await main();
