@@ -75,6 +75,7 @@ async function main(): Promise<void> {
   const inkHex = toHexColor(COLOR.ink);
   const whiteHex = toHexColor(COLOR.white);
 
+  const flatInner = markInner(blueHex, yellowHex, whiteHex, inkHex);
   const flatSvg = renderMark(blueHex, yellowHex, whiteHex, inkHex);
   const monoSvg = renderMark(inkHex, whiteHex, whiteHex, inkHex);
   const stencilSvg = renderStencil(inkHex);
@@ -159,8 +160,11 @@ async function main(): Promise<void> {
   write("remeda-mark.svg", flatSvg);
   write("remeda-mark-mono.svg", monoSvg);
   write("remeda-mark-mono-transparent.svg", stencilSvg);
-  write("remeda-lockup-light.svg", lockupSvg(flatSvg, inkHex));
-  write("remeda-lockup-dark.svg", lockupSvg(flatSvg, toHexColor(COLOR.paper)));
+  write("remeda-lockup-light.svg", lockupSvg(flatInner, inkHex));
+  write(
+    "remeda-lockup-dark.svg",
+    lockupSvg(flatInner, toHexColor(COLOR.paper)),
+  );
   console.log("wrote 5 SVGs to packages/brand/");
 }
 
@@ -352,6 +356,23 @@ function cutAll(keepLeft: boolean): Point[][] {
   return rings(getGlyph(font, "R")).flatMap((ring) => cutRing(ring, keepLeft));
 }
 
+// The mark's interior (seam-split field plus the two glyph halves), without the
+// enclosing <svg>. Kept separate so the lockup can drop it straight into a
+// <g transform> alongside the wordmark instead of stripping a rendered <svg>.
+function markInner(
+  cBlue: string,
+  cYellow: string,
+  cWhite: string,
+  cInk: string,
+): string {
+  return [
+    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="${cBlue}"/>`,
+    `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}" fill="${cYellow}"/>`,
+    `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
+    `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
+  ].join("");
+}
+
 function renderMark(
   cBlue: string,
   cYellow: string,
@@ -360,10 +381,7 @@ function renderMark(
 ): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
-    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="${cBlue}"/>`,
-    `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}" fill="${cYellow}"/>`,
-    `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
-    `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
+    markInner(cBlue, cYellow, cWhite, cInk),
     `</svg>`,
   ].join("");
 }
@@ -436,7 +454,7 @@ function pathDataFull({ commands }: Path): string {
 }
 
 // lockup: mark + "remeda" wordmark in the same Sora 800
-function lockupSvg(flatSvg: string, textColor: string): string {
+function lockupSvg(markBody: string, textColor: string): string {
   const font = loadFont();
 
   const wordProbe = font.getPath("remeda", 0, 0, 100).getBoundingBox();
@@ -452,7 +470,7 @@ function lockupSvg(flatSvg: string, textColor: string): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${DIMENSION_PX}" viewBox="0 0 ${width} ${DIMENSION_PX}">`,
     `<g transform="translate(${markX},${(DIMENSION_PX - MARK_BOX) / 2}) scale(${scale})">`,
-    flatSvg.replaceAll(/<\/?svg[^>]*>/g, ""),
+    markBody,
     `</g>`,
     `<path d="${wPath}" fill="${textColor}"/>`,
     `</svg>`,
