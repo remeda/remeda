@@ -31,7 +31,8 @@ const SEAM_BOTTOM_POINT = [286, DIMENSION_PX] satisfies Point;
 
 const GLYPH_FONT = "sora-extrabold.ttf";
 const GLYPH_HEIGHT_PX = 250;
-const GLYPH_BOTTOM_RIGHT_POINT = [490, 486] satisfies Point;
+const GLYPH_PADDING_RIGHT_PX = 22;
+const GLYPH_PADDING_BOTTOM_PX = 26;
 
 const COLOR = {
   // official TypeScript blue
@@ -68,7 +69,7 @@ const OUT_DIR = "assets";
 // Probe at an arbitrary size to read the glyph's natural height, then rescale
 // so it renders exactly GLYPH_HEIGHT_PX tall. The probe size cancels in the
 // ratio, so its value is irrelevant as long as both uses match.
-const PROBE = 100;
+const PROBE_FONT_SIZE = 100;
 
 type Chain = {
   entry: Point | undefined;
@@ -523,15 +524,18 @@ function loadFont(): Font {
 }
 
 function getGlyph(font: Font, char: string): Path {
-  const probeBox = font.getPath(char, 0, 0, PROBE).getBoundingBox();
-  const size = (GLYPH_HEIGHT_PX / (probeBox.y2 - probeBox.y1)) * PROBE;
+  const probeBox = font.getPath(char, 0, 0, PROBE_FONT_SIZE).getBoundingBox();
+  const effectiveSize =
+    (GLYPH_HEIGHT_PX / (probeBox.y2 - probeBox.y1)) * PROBE_FONT_SIZE;
 
-  const { x2, y2 } = font.getPath(char, 0, 0, size).getBoundingBox();
+  const { x2: right, y2: bottom } = font
+    .getPath(char, 0, 0, effectiveSize)
+    .getBoundingBox();
   return font.getPath(
     char,
-    GLYPH_BOTTOM_RIGHT_POINT[0] - x2,
-    GLYPH_BOTTOM_RIGHT_POINT[1] - y2,
-    size,
+    DIMENSION_PX - GLYPH_PADDING_RIGHT_PX - right,
+    DIMENSION_PX - GLYPH_PADDING_BOTTOM_PX - bottom,
+    effectiveSize,
   );
 }
 
