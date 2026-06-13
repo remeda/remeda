@@ -61,11 +61,11 @@ const GITHUB_SOCIAL_CANVAS_DIMENSIONS = {
 } satisfies Dimensions;
 
 async function main(): Promise<void> {
-  await Promise.all([injectDocSiteAssets(), generateGithubAssets()]);
+  await Promise.all([injectDocumentationSiteAssets(), generateGithubAssets()]);
 }
 
 // --- docs site (served from packages/docs/public/) ---
-async function injectDocSiteAssets(): Promise<void> {
+async function injectDocumentationSiteAssets(): Promise<void> {
   fs.copyFileSync(
     path.join(ASSETS_DIR, MARK),
     path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON),

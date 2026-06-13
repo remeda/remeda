@@ -10,6 +10,9 @@
  *   npm run generate -w @remeda/brand
  */
 
+/* eslint-disable @typescript-eslint/no-non-null-assertion -- `noUncheckedIndexedAccess` is on, and the heavy random-access geometry below relies on non-null assertions for array indices it knows are present. */
+/* eslint-disable @typescript-eslint/restrict-template-expressions -- This script builds SVG path data and geometry by interpolating numeric coordinates into strings; that's the bulk of the work. */
+
 import fs from "node:fs";
 import path from "node:path";
 import opentype, { type Path } from "opentype.js";
@@ -49,9 +52,9 @@ const OUT_DIR = "assets";
 type Point = readonly [x: number, y: number];
 
 type Chain = {
-  entry: Point | null;
+  entry: Point | undefined;
   pts: Point[];
-  exit: Point | null;
+  exit: Point | undefined;
 };
 
 type Crossing = {
@@ -84,8 +87,8 @@ async function main(): Promise<void> {
   );
 
   let d = 0;
-  for (let i = 0; i < color.length; i++) {
-    if (Math.abs(color[i]! - clipBased[i]!) > 24) {
+  for (const [index, element] of color.entries()) {
+    if (Math.abs(element - clipBased[index]!) > 24) {
       d++;
     }
   }
@@ -98,14 +101,21 @@ async function main(): Promise<void> {
 
   let mm = 0;
   const px = color.length / 3;
-  for (let i = 0; i < px; i++) {
-    const r = color[3 * i]!;
-    const g = color[3 * i + 1]!;
-    const b = color[3 * i + 2]!;
+  for (let index = 0; index < px; index++) {
+    const r = color[3 * index]!;
+    const g = color[3 * index + 1]!;
+    const b = color[3 * index + 2]!;
     const expectDark =
-      Math.min(dist2(r, g, b, COLOR.blue), dist2(r, g, b, COLOR.ink)) <
-      Math.min(dist2(r, g, b, COLOR.yellow), dist2(r, g, b, COLOR.white));
-    const isDark = mono[3 * i]! + mono[3 * i + 1]! + mono[3 * i + 2]! < 384;
+      Math.min(
+        distanceSquared(r, g, b, COLOR.blue),
+        distanceSquared(r, g, b, COLOR.ink),
+      ) <
+      Math.min(
+        distanceSquared(r, g, b, COLOR.yellow),
+        distanceSquared(r, g, b, COLOR.white),
+      );
+    const isDark =
+      mono[3 * index]! + mono[3 * index + 1]! + mono[3 * index + 2]! < 384;
     if (expectDark !== isDark) {
       mm++;
     }
@@ -117,8 +127,8 @@ async function main(): Promise<void> {
   });
 
   let d2 = 0;
-  for (let i = 0; i < stencil.length; i++) {
-    if (Math.abs(stencil[i]! - mono[i]!) > 24) {
+  for (const [index, element] of stencil.entries()) {
+    if (Math.abs(element - mono[index]!) > 24) {
       d2++;
     }
   }
@@ -142,6 +152,7 @@ async function main(): Promise<void> {
 
   if (failed) {
     console.error("verification failed; SVGs not written");
+    // eslint-disable-next-line unicorn/no-process-exit -- This is a CLI script, and a non-zero exit code is the correct way to signal that verification failed and nothing was written.
     process.exit(1);
   }
 
@@ -157,7 +168,7 @@ function write(filename: string, content: string): void {
   fs.writeFileSync(path.join(PACKAGE_ROOT, OUT_DIR, filename), content);
 }
 
-function dist2(r: number, g: number, b: number, c: Color): number {
+function distanceSquared(r: number, g: number, b: number, c: Color): number {
   return (r - c[0]) ** 2 + (g - c[1]) ** 2 + (b - c[2]) ** 2;
 }
 
@@ -166,45 +177,61 @@ function rings(otPath: Path): readonly Point[][] {
   const out: Point[][] = [];
   // every contour opens with an M command, which resets both of these
   let ring: Point[] = [];
-  let cur: Point = [0, 0];
+  let current: Point = [0, 0];
   const SEG = 14;
   for (const c of otPath.commands) {
-    if (c.type === "M") {
-      if (ring.length > 2) out.push(ring);
-      ring = [[c.x, c.y]];
-      cur = [c.x, c.y];
-    } else if (c.type === "L") {
-      ring.push([c.x, c.y]);
-      cur = [c.x, c.y];
-    } else if (c.type === "Q") {
-      for (let i = 1; i <= SEG; i++) {
-        const t = i / SEG;
-        const mt = 1 - t;
-        ring.push([
-          mt * mt * cur[0] + 2 * mt * t * c.x1 + t * t * c.x,
-          mt * mt * cur[1] + 2 * mt * t * c.y1 + t * t * c.y,
-        ]);
-      }
-      cur = [c.x, c.y];
-    } else if (c.type === "C") {
-      for (let i = 1; i <= SEG; i++) {
-        const t = i / SEG;
-        const mt = 1 - t;
-        ring.push([
-          mt ** 3 * cur[0] +
-            3 * mt * mt * t * c.x1 +
-            3 * mt * t * t * c.x2 +
-            t ** 3 * c.x,
-          mt ** 3 * cur[1] +
-            3 * mt * mt * t * c.y1 +
-            3 * mt * t * t * c.y2 +
-            t ** 3 * c.y,
-        ]);
-      }
-      cur = [c.x, c.y];
-    } else if (c.type === "Z" && ring.length > 2) {
-      out.push(ring);
-      ring = [];
+    switch (c.type) {
+      case "M":
+        if (ring.length > 2) out.push(ring);
+        ring = [[c.x, c.y]];
+        current = [c.x, c.y];
+
+        break;
+
+      case "L":
+        ring.push([c.x, c.y]);
+        current = [c.x, c.y];
+
+        break;
+
+      case "Q":
+        for (let index = 1; index <= SEG; index++) {
+          const t = index / SEG;
+          const mt = 1 - t;
+          ring.push([
+            mt * mt * current[0] + 2 * mt * t * c.x1 + t * t * c.x,
+            mt * mt * current[1] + 2 * mt * t * c.y1 + t * t * c.y,
+          ]);
+        }
+        current = [c.x, c.y];
+
+        break;
+
+      case "C":
+        for (let index = 1; index <= SEG; index++) {
+          const t = index / SEG;
+          const mt = 1 - t;
+          ring.push([
+            mt ** 3 * current[0] +
+              3 * mt * mt * t * c.x1 +
+              3 * mt * t * t * c.x2 +
+              t ** 3 * c.x,
+            mt ** 3 * current[1] +
+              3 * mt * mt * t * c.y1 +
+              3 * mt * t * t * c.y2 +
+              t ** 3 * c.y,
+          ]);
+        }
+        current = [c.x, c.y];
+
+        break;
+
+      case "Z":
+        if (ring.length > 2) {
+          out.push(ring);
+          ring = [];
+        }
+        break;
     }
   }
   if (ring.length > 2) out.push(ring);
@@ -226,34 +253,34 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
   };
 
   const chains: Chain[] = [];
-  let chain: Chain | null = null;
-  let openedAtStart: Chain | null = null;
-  for (let i = 0; i < ring.length; i++) {
-    const a = ring[i]!;
-    const b = ring[(i + 1) % ring.length]!;
+  let chain: Chain | undefined = undefined;
+  let openedAtStart: Chain | undefined = undefined;
+  for (let index = 0; index < ring.length; index++) {
+    const a = ring[index]!;
+    const b = ring[(index + 1) % ring.length]!;
     const ia = inside(a);
     const ib = inside(b);
     if (ia) {
-      if (chain === null) {
-        chain = { entry: null, pts: [a], exit: null };
-        if (i === 0) openedAtStart = chain;
+      if (chain === undefined) {
+        chain = { entry: undefined, pts: [a], exit: undefined };
+        if (index === 0) openedAtStart = chain;
       } else {
         chain.pts.push(a);
       }
       if (!ib) {
         chain.exit = intersect(a, b);
         chains.push(chain);
-        chain = null;
+        chain = undefined;
       }
     } else if (ib) {
-      chain = { entry: intersect(a, b), pts: [], exit: null };
+      chain = { entry: intersect(a, b), pts: [], exit: undefined };
     }
   }
-  if (chain !== null) {
-    if (openedAtStart !== null && openedAtStart !== chain) {
+  if (chain !== undefined) {
+    if (openedAtStart !== undefined && openedAtStart !== chain) {
       openedAtStart.entry = chain.entry;
       openedAtStart.pts = [...chain.pts, ...openedAtStart.pts];
-    } else if (chain.entry === null) {
+    } else if (chain.entry === undefined) {
       return [[...ring]]; // never crossed: fully inside
     } else {
       chains.push(chain);
@@ -266,8 +293,8 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
     readonly exit: Point;
   }[] = [];
   for (const { entry, pts, exit } of chains) {
-    if (entry === null || exit === null) {
-      return chains.length === 1 && chains[0]?.entry === null
+    if (entry === undefined || exit === undefined) {
+      return chains.length === 1 && chains[0]?.entry === undefined
         ? [[...ring]]
         : [];
     }
@@ -275,20 +302,22 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
   }
 
   const crossings: Crossing[] = [];
-  closedChains.forEach((c, ci) => {
-    crossings.push({ y: c.entry[1], type: "entry", ci });
-    crossings.push({ y: c.exit[1], type: "exit", ci });
-  });
+  for (const [ci, c] of closedChains.entries()) {
+    crossings.push(
+      { y: c.entry[1], type: "entry", ci },
+      { y: c.exit[1], type: "exit", ci },
+    );
+  }
   crossings.sort((p, q) => p.y - q.y);
   const partner = new Map<string, Crossing>();
-  for (let i = 0; i + 1 < crossings.length; i += 2) {
-    const lower = crossings[i]!;
-    const upper = crossings[i + 1]!;
+  for (let index = 0; index + 1 < crossings.length; index += 2) {
+    const lower = crossings[index]!;
+    const upper = crossings[index + 1]!;
     partner.set(`${lower.type}:${lower.ci}`, upper);
     partner.set(`${upper.type}:${upper.ci}`, lower);
   }
 
-  const used = new Array<boolean>(closedChains.length).fill(false);
+  const used = Array.from({ length: closedChains.length }).fill(false);
   const out: Point[][] = [];
   for (let start = 0; start < closedChains.length; start++) {
     if (used[start]) continue;
@@ -299,7 +328,7 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
       const c = closedChains[ci]!;
       piece.push(c.entry, ...c.pts, c.exit);
       const next = partner.get(`exit:${ci}`);
-      if (!next || next.type !== "entry") break;
+      if (next?.type !== "entry") break;
       if (next.ci === start) break;
       ci = next.ci;
     }
@@ -319,11 +348,7 @@ function ringsToPath(rs: readonly (readonly Point[])[]): string {
 }
 
 function cutAll(keepLeft: boolean): Point[][] {
-  const font = opentype.parse(
-    fs
-      .readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE))
-      .buffer.slice(0),
-  );
+  const font = loadFont();
   return rings(getGlyph(font, "R")).flatMap((ring) => cutRing(ring, keepLeft));
 }
 
@@ -365,11 +390,7 @@ function renderStencil(color: string): string {
 }
 
 function renderClipReference(): string {
-  const font = opentype.parse(
-    fs
-      .readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE))
-      .buffer.slice(0),
-  );
+  const font = loadFont();
   const glyph = getGlyph(font, "R");
   return [
     // independent clip-based construction, used only to verify the
@@ -416,11 +437,7 @@ function pathDataFull({ commands }: Path): string {
 
 // lockup: mark + "remeda" wordmark in the same Sora 800
 function lockupSvg(flatSvg: string, textColor: string): string {
-  const font = opentype.parse(
-    fs
-      .readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE))
-      .buffer.slice(0),
-  );
+  const font = loadFont();
 
   const wordProbe = font.getPath("remeda", 0, 0, 100).getBoundingBox();
   const wSize = (250 / (wordProbe.y2 - wordProbe.y1)) * 100;
@@ -435,7 +452,7 @@ function lockupSvg(flatSvg: string, textColor: string): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${DIMENSION_PX}" viewBox="0 0 ${width} ${DIMENSION_PX}">`,
     `<g transform="translate(${markX},${(DIMENSION_PX - MARK_BOX) / 2}) scale(${scale})">`,
-    flatSvg.replace(/<\/?svg[^>]*>/g, ""),
+    flatSvg.replaceAll(/<\/?svg[^>]*>/g, ""),
     `</g>`,
     `<path d="${wPath}" fill="${textColor}"/>`,
     `</svg>`,
@@ -447,6 +464,16 @@ function renderNative(svg: string): Promise<Buffer> {
     .flatten({ background: "#ffffff" })
     .raw()
     .toBuffer();
+}
+
+function loadFont(): opentype.Font {
+  // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
+  // into a larger pooled ArrayBuffer, so we slice out exactly this file's
+  // bytes rather than handing over the whole backing store.
+  const data = fs.readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE));
+  return opentype.parse(
+    data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
+  );
 }
 
 function getGlyph(font: opentype.Font, char: string): Path {
