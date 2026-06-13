@@ -8,7 +8,7 @@
  * Usage (from the repo root):
  *   npm run assets -w @remeda/brand
  */
-import fs from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
 
 // --- docs site (served from packages/docs/public/) ---
 async function injectDocumentationSiteAssets(): Promise<void> {
-  fs.copyFileSync(
+  copyFileSync(
     path.join(ASSETS_DIR, MARK),
     path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON),
   );
@@ -78,8 +78,8 @@ async function injectDocumentationSiteAssets(): Promise<void> {
   );
   const ico = buildIco(icoPngs);
 
-  fs.writeFileSync(path.join(DOCS_PUBLIC, DOCS_ICO_FAVICON), ico);
-  fs.writeFileSync(
+  writeFileSync(path.join(DOCS_PUBLIC, DOCS_ICO_FAVICON), ico);
+  writeFileSync(
     path.join(DOCS_PUBLIC, DOCS_APPLE_FAVICON),
     await renderMark(180),
   );
@@ -95,7 +95,7 @@ async function injectDocumentationSiteAssets(): Promise<void> {
 
 // --- manually uploaded surfaces (brand/dist/) ---
 async function generateGithubAssets(): Promise<void> {
-  fs.mkdirSync(OUT_DIR, { recursive: true });
+  mkdirSync(OUT_DIR, { recursive: true });
 
   const [avatar, inner] = await Promise.all([
     renderMark(1024),
@@ -108,7 +108,7 @@ async function generateGithubAssets(): Promise<void> {
     ),
   ]);
 
-  fs.writeFileSync(path.join(OUT_DIR, OUT_GITHUB_AVATAR), avatar);
+  writeFileSync(path.join(OUT_DIR, OUT_GITHUB_AVATAR), avatar);
 
   await sharp({
     create: { width: 1024, height: 1024, channels: 3, background: "#ffffff" },
@@ -123,7 +123,7 @@ async function generateGithubAssets(): Promise<void> {
 }
 
 async function renderMark(size: number): Promise<Buffer> {
-  const mark = fs.readFileSync(path.join(ASSETS_DIR, MARK));
+  const mark = readFileSync(path.join(ASSETS_DIR, MARK));
   return await sharp(mark, MARK_OPTIONS).resize(size, size).png().toBuffer();
 }
 
@@ -157,7 +157,7 @@ async function socialCanvas(
   file: string,
 ): Promise<void> {
   const lockup = await sharp(
-    fs.readFileSync(path.join(ASSETS_DIR, LOCKUP_LIGHT)),
+    readFileSync(path.join(ASSETS_DIR, LOCKUP_LIGHT)),
     SOCIAL_CANVAS_OPTIONS,
   )
     .resize({ width: Math.round(width * SOCIAL_CANVAS_RESIZE_FACTOR) })

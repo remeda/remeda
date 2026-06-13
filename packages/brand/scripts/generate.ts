@@ -13,11 +13,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion -- `noUncheckedIndexedAccess` is on, and the heavy random-access geometry below relies on non-null assertions for array indices it knows are present. */
 /* eslint-disable @typescript-eslint/restrict-template-expressions -- This script builds SVG path data and geometry by interpolating numeric coordinates into strings; that's the bulk of the work. */
 
-import fs from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import opentype, { type Path } from "opentype.js";
-import sharp from "sharp";
 import { map } from "remeda";
+import sharp from "sharp";
 
 type Color = readonly [red: number, green: number, blue: number];
 
@@ -169,7 +169,7 @@ async function main(): Promise<void> {
 }
 
 function write(filename: string, content: string): void {
-  fs.writeFileSync(path.join(PACKAGE_ROOT, OUT_DIR, filename), content);
+  writeFileSync(path.join(PACKAGE_ROOT, OUT_DIR, filename), content);
 }
 
 function distanceSquared(r: number, g: number, b: number, c: Color): number {
@@ -488,7 +488,7 @@ function loadFont(): opentype.Font {
   // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
   // into a larger pooled ArrayBuffer, so we slice out exactly this file's
   // bytes rather than handing over the whole backing store.
-  const data = fs.readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE));
+  const data = readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE));
   return opentype.parse(
     data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
   );
