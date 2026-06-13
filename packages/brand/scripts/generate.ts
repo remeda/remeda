@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion -- `noUncheckedIndexedAccess` is on, and the heavy random-access geometry below relies on non-null assertions for array indices it knows are present. */
+/* eslint-disable @typescript-eslint/restrict-template-expressions -- This script builds SVG path data and geometry by interpolating numeric coordinates into strings; that's the bulk of the work. */
+
 /**
  * Regenerates the remeda mark and lockup SVGs from first principles.
  *
@@ -10,24 +13,25 @@
  *   npm run generate -w @remeda/brand
  */
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion -- `noUncheckedIndexedAccess` is on, and the heavy random-access geometry below relies on non-null assertions for array indices it knows are present. */
-/* eslint-disable @typescript-eslint/restrict-template-expressions -- This script builds SVG path data and geometry by interpolating numeric coordinates into strings; that's the bulk of the work. */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { parse, type Font, type Path } from "opentype.js";
+import opentype, { type Font, type Path } from "opentype.js";
 import { map } from "remeda";
 import sharp from "sharp";
 
-type Color = readonly [red: number, green: number, blue: number];
-
 // ---------------------- DEFINITION -------------------------------------------
+
+type Color = readonly [red: number, green: number, blue: number];
+type Point = readonly [x: number, y: number];
 
 const DIMENSION_PX = 512;
 
-// FINAL CUT: seam from (446,0) to (286,DIMENSION_PX), hugging the bowl's inner corner
-const TOP_X_PX = 446;
-const BOTTOM_X_PX = 286;
+const SEAM_TOP_POINT = [446, 0] satisfies Point;
+const SEAM_BOTTOM_POINT = [286, DIMENSION_PX] satisfies Point;
+
+const GLYPH_FONT = "sora-extrabold.ttf";
+const GLYPH_HEIGHT_PX = 250;
+const GLYPH_BOTTOM_RIGHT_POINT = [490, 486] satisfies Point;
 
 const COLOR = {
   // official TypeScript blue
@@ -41,15 +45,30 @@ const COLOR = {
   paper: [241, 245, 249],
 } as const satisfies Readonly<Record<string, Color>>;
 
-const FONT_FILE = "sora-extrabold.ttf";
-
 // -----------------------------------------------------------------------------
+
+const BLUE_AREA_POLYGON = [
+  [0, 0],
+  SEAM_TOP_POINT,
+  SEAM_BOTTOM_POINT,
+  [0, DIMENSION_PX],
+] satisfies readonly Point[];
+
+const YELLOW_AREA_POLYGON = [
+  SEAM_TOP_POINT,
+  [DIMENSION_PX, 0],
+  [DIMENSION_PX, DIMENSION_PX],
+  SEAM_BOTTOM_POINT,
+] satisfies readonly Point[];
 
 const PACKAGE_ROOT = path.join(import.meta.dirname, "..");
 const FONTS_DIR = "fonts";
 const OUT_DIR = "assets";
 
-type Point = readonly [x: number, y: number];
+// Probe at an arbitrary size to read the glyph's natural height, then rescale
+// so it renders exactly GLYPH_HEIGHT_PX tall. The probe size cancels in the
+// ratio, so its value is irrelevant as long as both uses match.
+const PROBE = 100;
 
 type Chain = {
   entry: Point | undefined;
@@ -242,29 +261,38 @@ function rings(otPath: Path): readonly Point[][] {
   return out;
 }
 
+function signedSeamOffset([x, y]: Point): number {
+  return (
+    x -
+    (SEAM_TOP_POINT[0] +
+      ((SEAM_BOTTOM_POINT[0] - SEAM_TOP_POINT[0]) * y) / DIMENSION_PX)
+  );
+}
+
+function seamCrossingPoint(a: Point, b: Point): Point {
+  const signedSeamOffsetA = signedSeamOffset(a);
+  const signedSeamOffsetB = signedSeamOffset(b);
+  const crossingFraction =
+    signedSeamOffsetA / (signedSeamOffsetA - signedSeamOffsetB);
+  return [
+    a[0] + crossingFraction * (b[0] - a[0]),
+    a[1] + crossingFraction * (b[1] - a[1]),
+  ];
+}
+
 // Cut a simple ring by the seam, returning CLEAN separate rings per side.
 // Chains of kept vertices are stitched via interior intervals along the
 // seam: crossings sorted by y alternate interior/exterior, so consecutive
 // pairs are the connectors. No Sutherland-Hodgman bridge edges.
 function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
-  const f = ([x, y]: Point): number => x - seamX(y);
-  const inside = (p: Point): boolean => (keepLeft ? f(p) < 0 : f(p) > 0);
-  const intersect = (a: Point, b: Point): Point => {
-    const fa = f(a);
-    const fb = f(b);
-    const t = fa / (fa - fb);
-    return [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
-  };
-
   const chains: Chain[] = [];
   let chain: Chain | undefined = undefined;
   let openedAtStart: Chain | undefined = undefined;
   for (let index = 0; index < ring.length; index++) {
     const a = ring[index]!;
     const b = ring[(index + 1) % ring.length]!;
-    const ia = inside(a);
-    const ib = inside(b);
-    if (ia) {
+    const ib = keepLeft ? signedSeamOffset(b) < 0 : signedSeamOffset(b) > 0;
+    if (keepLeft ? signedSeamOffset(a) < 0 : signedSeamOffset(a) > 0) {
       if (chain === undefined) {
         chain = { entry: undefined, pts: [a], exit: undefined };
         if (index === 0) openedAtStart = chain;
@@ -272,12 +300,12 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
         chain.pts.push(a);
       }
       if (!ib) {
-        chain.exit = intersect(a, b);
+        chain.exit = seamCrossingPoint(a, b);
         chains.push(chain);
         chain = undefined;
       }
     } else if (ib) {
-      chain = { entry: intersect(a, b), pts: [], exit: undefined };
+      chain = { entry: seamCrossingPoint(a, b), pts: [], exit: undefined };
     }
   }
   if (chain !== undefined) {
@@ -366,8 +394,8 @@ function markInner(
   cInk: string,
 ): string {
   return [
-    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="${cBlue}"/>`,
-    `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}" fill="${cYellow}"/>`,
+    `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}" fill="${cBlue}"/>`,
+    `<polygon points="${toPolygonPoints(YELLOW_AREA_POLYGON)}" fill="${cYellow}"/>`,
     `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
     `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
   ].join("");
@@ -386,19 +414,19 @@ function renderMark(
   ].join("");
 }
 
+// One-color mark, light = transparent. The Sora "R" is built from overlapping
+// contours (stem, bowl, leg), so the per-side pieces overlap each other. A
+// single winding path would double-subtract in those overlaps and leak fill,
+// so instead the two-tone construction is mirrored into a luminance mask
+// where every piece fills solidly and overlaps union cleanly: the dark field
+// and the ink pieces paint white (kept), the white pieces paint black
+// (knocked out), and one ink rect shows through. Counters fall out for free
+// as the regions no piece covers, exactly as they do in the two-tone mark.
 function renderStencil(color: string): string {
-  // One-color mark, light = transparent. The Sora "R" is built from overlapping
-  // contours (stem, bowl, leg), so the per-side pieces overlap each other. A
-  // single winding path would double-subtract in those overlaps and leak fill,
-  // so instead the two-tone construction is mirrored into a luminance mask where
-  // every piece fills solidly and overlaps union cleanly: the dark field and the
-  // ink pieces paint white (kept), the white pieces paint black (knocked out),
-  // and one ink rect shows through. Counters fall out for free as the regions no
-  // piece covers, exactly as they do in the two-tone mark.
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
     `<mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="${DIMENSION_PX}" height="${DIMENSION_PX}">`,
-    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="#fff"/>`,
+    `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}" fill="#fff"/>`,
     `<path d="${ringsToPath(cutAll(true))}" fill="#000"/>`,
     `<path d="${ringsToPath(cutAll(false))}" fill="#fff"/>`,
     `</mask>`,
@@ -416,14 +444,14 @@ function renderClipReference(): string {
     `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
     `<defs>`,
     `<clipPath id="t">`,
-    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}"/>`,
+    `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}"/>`,
     `</clipPath>`,
     `<clipPath id="u">`,
-    `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}"/>`,
+    `<polygon points="${toPolygonPoints(YELLOW_AREA_POLYGON)}"/>`,
     `</clipPath>`,
     `</defs>`,
     `<rect width="${DIMENSION_PX}" height="${DIMENSION_PX}" fill="${toHexColor(COLOR.blue)}"/>`,
-    `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}" fill="${toHexColor(COLOR.yellow)}"/>`,
+    `<polygon points="${toPolygonPoints(YELLOW_AREA_POLYGON)}" fill="${toHexColor(COLOR.yellow)}"/>`,
     `<path d="${pathDataFull(glyph)}" fill="${toHexColor(COLOR.white)}" clip-path="url(#t)"/>`,
     `<path d="${pathDataFull(glyph)}" fill="${toHexColor(COLOR.ink)}" clip-path="url(#u)"/>`,
     `</svg>`,
@@ -488,29 +516,31 @@ function loadFont(): Font {
   // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
   // into a larger pooled ArrayBuffer, so we slice out exactly this file's
   // bytes rather than handing over the whole backing store.
-  const data = readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE));
-  return parse(
+  const data = readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, GLYPH_FONT));
+  return opentype.parse(
     data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
   );
 }
 
 function getGlyph(font: Font, char: string): Path {
-  const { y1, y2 } = font.getPath(char, 0, 0, 100).getBoundingBox();
-  const size = (250 / (y2 - y1)) * 100;
-  const { x2, y2: y2b } = font.getPath(char, 0, 0, size).getBoundingBox();
-  return font.getPath(char, 490 - x2, 486 - y2b, size);
+  const probeBox = font.getPath(char, 0, 0, PROBE).getBoundingBox();
+  const size = (GLYPH_HEIGHT_PX / (probeBox.y2 - probeBox.y1)) * PROBE;
+
+  const { x2, y2 } = font.getPath(char, 0, 0, size).getBoundingBox();
+  return font.getPath(
+    char,
+    GLYPH_BOTTOM_RIGHT_POINT[0] - x2,
+    GLYPH_BOTTOM_RIGHT_POINT[1] - y2,
+    size,
+  );
 }
 
-function seamX(y: number): number {
-  return TOP_X_PX + ((BOTTOM_X_PX - TOP_X_PX) * y) / DIMENSION_PX;
+function toHexColor(colors: Color): `#${string}` {
+  return `#${colors.map((color) => color.toString(16 /* radix */).padStart(2, "0")).join("")}`;
 }
 
-function toHex(x: number): string {
-  return x.toString(16).padStart(2, "0");
-}
-
-function toHexColor([red, green, blue]: Color): `#${string}` {
-  return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+function toPolygonPoints(coordinates: readonly Point[]): string {
+  return coordinates.map(([x, y]) => `${x},${y}`).join(" ");
 }
 
 // ENTRY POINT
