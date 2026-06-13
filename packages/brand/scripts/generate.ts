@@ -15,7 +15,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import opentype, { type Path } from "opentype.js";
+import { parse, type Font, type Path } from "opentype.js";
 import { map } from "remeda";
 import sharp from "sharp";
 
@@ -484,17 +484,17 @@ function renderNative(svg: string): Promise<Buffer> {
     .toBuffer();
 }
 
-function loadFont(): opentype.Font {
+function loadFont(): Font {
   // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
   // into a larger pooled ArrayBuffer, so we slice out exactly this file's
   // bytes rather than handing over the whole backing store.
   const data = readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE));
-  return opentype.parse(
+  return parse(
     data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
   );
 }
 
-function getGlyph(font: opentype.Font, char: string): Path {
+function getGlyph(font: Font, char: string): Path {
   const { y1, y2 } = font.getPath(char, 0, 0, 100).getBoundingBox();
   const size = (250 / (y2 - y1)) * 100;
   const { x2, y2: y2b } = font.getPath(char, 0, 0, size).getBoundingBox();
