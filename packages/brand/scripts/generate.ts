@@ -211,16 +211,6 @@ function rings(otPath: Path): readonly Point[][] {
   return out;
 }
 
-function signedArea(ring: readonly Point[]): number {
-  let a = 0;
-  for (let i = 0; i < ring.length; i++) {
-    const [x1, y1] = ring[i]!;
-    const [x2, y2] = ring[(i + 1) % ring.length]!;
-    a += x1 * y2 - x2 * y1;
-  }
-  return a / 2;
-}
-
 // Cut a simple ring by the seam, returning CLEAN separate rings per side.
 // Chains of kept vertices are stitched via interior intervals along the
 // seam: crossings sorted by y alternate interior/exterior, so consecutive
@@ -328,29 +318,13 @@ function ringsToPath(rs: readonly (readonly Point[])[]): string {
     .join("");
 }
 
-function cutAll(keepLeft: boolean) {
+function cutAll(keepLeft: boolean): Point[][] {
   const font = opentype.parse(
     fs
       .readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, FONT_FILE))
       .buffer.slice(0),
   );
-  const glyph = getGlyph(font, "R");
-  const glyphRings = rings(glyph);
-
-  const sign = Math.sign(
-    signedArea(
-      glyphRings.reduce((m, r) =>
-        Math.abs(signedArea(r)) > Math.abs(signedArea(m)) ? r : m,
-      ),
-    ),
-  );
-
-  return glyphRings.flatMap((ring) =>
-    cutRing(ring, keepLeft).map((pts) => ({
-      pts,
-      isCounter: Math.sign(signedArea(ring)) !== sign,
-    })),
-  );
+  return rings(getGlyph(font, "R")).flatMap((ring) => cutRing(ring, keepLeft));
 }
 
 function renderMark(
@@ -363,33 +337,29 @@ function renderMark(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
     `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="${cBlue}"/>`,
     `<polygon points="${TOP_X_PX},0 ${DIMENSION_PX},0 ${DIMENSION_PX},${DIMENSION_PX} ${BOTTOM_X_PX},${DIMENSION_PX}" fill="${cYellow}"/>`,
-    `<path d="${ringsToPath(cutAll(true).map(({ pts }) => pts))}" fill="${cWhite}"/>`,
-    `<path d="${ringsToPath(cutAll(false).map(({ pts }) => pts))}" fill="${cInk}"/>`,
+    `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
+    `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
     `</svg>`,
   ].join("");
 }
 
 function renderStencil(color: string): string {
-  const sign = Math.sign(
-    // one-color mark, light = transparent: field quad with the white pieces
-    // knocked out (counters restored), ink pieces filled; windings computed
-    signedArea([
-      [0, 0],
-      [TOP_X_PX, 0],
-      [BOTTOM_X_PX, DIMENSION_PX],
-      [0, DIMENSION_PX],
-    ]),
-  );
-
+  // One-color mark, light = transparent. The Sora "R" is built from overlapping
+  // contours (stem, bowl, leg), so the per-side pieces overlap each other. A
+  // single winding path would double-subtract in those overlaps and leak fill,
+  // so instead the two-tone construction is mirrored into a luminance mask where
+  // every piece fills solidly and overlaps union cleanly: the dark field and the
+  // ink pieces paint white (kept), the white pieces paint black (knocked out),
+  // and one ink rect shows through. Counters fall out for free as the regions no
+  // piece covers, exactly as they do in the two-tone mark.
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
-    `<path d="M0 0L${TOP_X_PX} 0L${BOTTOM_X_PX} ${DIMENSION_PX}L0 ${DIMENSION_PX}Z${ringsToPath(
-      [...cutAll(true), ...cutAll(false)].map(({ pts, isCounter }) =>
-        Math.sign(signedArea(pts)) === (isCounter ? sign : -sign)
-          ? pts
-          : [...pts].reverse(),
-      ),
-    )}" fill="${color}"/>`,
+    `<mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="${DIMENSION_PX}" height="${DIMENSION_PX}">`,
+    `<polygon points="0,0 ${TOP_X_PX},0 ${BOTTOM_X_PX},${DIMENSION_PX} 0,${DIMENSION_PX}" fill="#fff"/>`,
+    `<path d="${ringsToPath(cutAll(true))}" fill="#000"/>`,
+    `<path d="${ringsToPath(cutAll(false))}" fill="#fff"/>`,
+    `</mask>`,
+    `<rect width="${DIMENSION_PX}" height="${DIMENSION_PX}" fill="${color}" mask="url(#cut)"/>`,
     `</svg>`,
   ].join("");
 }
