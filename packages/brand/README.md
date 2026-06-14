@@ -11,16 +11,14 @@ exactly underneath.
 Every concrete value - the tile size, the colors, the seam endpoints, the
 glyph and font, the lockup spacing - lives in
 [`scripts/spec.ts`](scripts/spec.ts). That file is the single source of truth;
-this section describes the decisions behind those numbers, not the numbers
-themselves. To change how the mark looks, edit `spec.ts` and regenerate.
+this section describes the decisions behind those numbers. To change how the
+mark looks, edit `spec.ts` and regenerate.
 
 - **Two layers, one letter.** The tile is TypeScript blue over JavaScript
   yellow. A single "R" is printed through both in perfect registration: white
   where it sits on the type layer, ink where it sits on the runtime layer.
 - **The seam.** A straight diagonal cut runs from the top edge to the bottom
-  edge, passing just inside the bowl's inner corner so the letter splits at its
-  natural joint - white stem, ink body - with no trapped slivers. The generator
-  solves for this and pixel-verifies it.
+  edge.
 - **Counterchange.** Blue+ink flatten to one tone, yellow+white to the other.
   Because the letter is always the opposite tone of the layer behind it, local
   contrast survives flattening, so the monochrome marks keep both the letter and
