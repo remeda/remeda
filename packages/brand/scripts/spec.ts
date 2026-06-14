@@ -3,14 +3,14 @@ export type Point = readonly [x: number, y: number];
 
 export const DIMENSION_PX = 512;
 
-export const SEAM_TOP_POINT = [416, 0] satisfies Point;
-export const SEAM_BOTTOM_POINT = [258, DIMENSION_PX] satisfies Point;
+export const SEAM_TOP_POINT = [391, 0] satisfies Point;
+export const SEAM_BOTTOM_POINT = [316, DIMENSION_PX] satisfies Point;
 
 export const GLYPH = "R";
 export const GLYPH_FONT = "sora-bold.ttf";
 export const GLYPH_HEIGHT_PX = 285;
-export const GLYPH_PADDING_RIGHT_PX = 22;
-export const GLYPH_PADDING_BOTTOM_PX = 26;
+export const GLYPH_PADDING_RIGHT_PX = 28;
+export const GLYPH_PADDING_BOTTOM_PX = 28;
 
 export const WORDMARK = "Remeda";
 
