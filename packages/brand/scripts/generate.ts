@@ -1,53 +1,45 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion -- `noUncheckedIndexedAccess` is on, and the heavy random-access geometry below relies on non-null assertions for array indices it knows are present. */
-/* eslint-disable @typescript-eslint/restrict-template-expressions -- This script builds SVG path data and geometry by interpolating numeric coordinates into strings; that's the bulk of the work. */
-
 /**
  * Regenerates the remeda mark and lockup SVGs from first principles.
  *
- * The mark is fully parametric: the Sora 800 "R" is polygonized, cut by the
- * seam, and re-stitched into clean per-side pieces (no clip paths, no
- * degenerate bridge edges), then every output is pixel-verified against an
- * independent clip-based construction at native resolution.
+ * The mark is fully parametric: the "R" is polygonized, cut by the seam, and
+ * re-stitched into clean per-side pieces, then every output is pixel-verified
+ * against an independent clip-based construction at native resolution.
  *
  * Usage (from the repo root):
  *   npm run generate -w @remeda/brand
  */
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion, @typescript-eslint/restrict-template-expressions -- This is fine for a script */
 
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import opentype, { type Font, type Path } from "opentype.js";
 import { map } from "remeda";
 import sharp from "sharp";
+import {
+  LOCKUP_DARK_FILE,
+  LOCKUP_LIGHT_FILE,
+  MARK_FILE,
+  MONO_FILE,
+  STENCIL_FILE,
+} from "./config.js";
+import {
+  COLOR,
+  DIMENSION_PX,
+  GLYPH_FONT,
+  GLYPH_HEIGHT_PX,
+  GLYPH_PADDING_BOTTOM_PX,
+  GLYPH_PADDING_RIGHT_PX,
+  SEAM_BOTTOM_POINT,
+  SEAM_TOP_POINT,
+  type Color,
+  type Point,
+} from "./spec.js";
 
-// ---------------------- DEFINITION -------------------------------------------
+const FONTS_DIR = path.join(import.meta.dirname, "..", "fonts");
 
-type Color = readonly [red: number, green: number, blue: number];
-type Point = readonly [x: number, y: number];
-
-const DIMENSION_PX = 512;
-
-const SEAM_TOP_POINT = [446, 0] satisfies Point;
-const SEAM_BOTTOM_POINT = [286, DIMENSION_PX] satisfies Point;
-
-const GLYPH_FONT = "sora-extrabold.ttf";
-const GLYPH_HEIGHT_PX = 250;
-const GLYPH_PADDING_RIGHT_PX = 22;
-const GLYPH_PADDING_BOTTOM_PX = 26;
-
-const COLOR = {
-  // official TypeScript blue
-  blue: [49, 120, 198],
-  white: [255, 255, 255],
-
-  // official JavaScript yellow
-  yellow: [247, 223, 30],
-  ink: [28, 31, 38],
-
-  paper: [241, 245, 249],
-} as const satisfies Readonly<Record<string, Color>>;
-
-// -----------------------------------------------------------------------------
-
+// Our computations assume the seam creates two right trapezoids. This means we
+// will have two points on y=0 and two on y=DIMENSION_PX
 const BLUE_AREA_POLYGON = [
   [0, 0],
   SEAM_TOP_POINT,
@@ -62,13 +54,8 @@ const YELLOW_AREA_POLYGON = [
   SEAM_BOTTOM_POINT,
 ] satisfies readonly Point[];
 
-const PACKAGE_ROOT = path.join(import.meta.dirname, "..");
-const FONTS_DIR = "fonts";
-const OUT_DIR = "assets";
-
 // Probe at an arbitrary size to read the glyph's natural height, then rescale
-// so it renders exactly GLYPH_HEIGHT_PX tall. The probe size cancels in the
-// ratio, so its value is irrelevant as long as both uses match.
+// so it renders exactly GLYPH_HEIGHT_PX tall.
 const PROBE_FONT_SIZE = 100;
 
 type Chain = {
@@ -177,19 +164,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  write("remeda-mark.svg", flatSvg);
-  write("remeda-mark-mono.svg", monoSvg);
-  write("remeda-mark-mono-transparent.svg", stencilSvg);
-  write("remeda-lockup-light.svg", lockupSvg(flatInner, inkHex));
-  write(
-    "remeda-lockup-dark.svg",
+  writeFileSync(MARK_FILE, flatSvg);
+  writeFileSync(MONO_FILE, monoSvg);
+  writeFileSync(STENCIL_FILE, stencilSvg);
+  writeFileSync(LOCKUP_LIGHT_FILE, lockupSvg(flatInner, inkHex));
+  writeFileSync(
+    LOCKUP_DARK_FILE,
     lockupSvg(flatInner, toHexColor(COLOR.paper)),
   );
   console.log("wrote 5 SVGs to packages/brand/");
-}
-
-function write(filename: string, content: string): void {
-  writeFileSync(path.join(PACKAGE_ROOT, OUT_DIR, filename), content);
 }
 
 function distanceSquared(r: number, g: number, b: number, c: Color): number {
@@ -517,7 +500,7 @@ function loadFont(): Font {
   // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
   // into a larger pooled ArrayBuffer, so we slice out exactly this file's
   // bytes rather than handing over the whole backing store.
-  const data = readFileSync(path.join(PACKAGE_ROOT, FONTS_DIR, GLYPH_FONT));
+  const data = readFileSync(path.join(FONTS_DIR, GLYPH_FONT));
   return opentype.parse(
     data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
   );

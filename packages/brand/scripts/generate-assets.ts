@@ -11,6 +11,7 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.js";
 
 type Image = {
   readonly size: number;
@@ -22,18 +23,18 @@ type Dimensions = {
   readonly height: number;
 };
 
-const PACKAGE_ROOT = path.join(import.meta.dirname, "..");
-
-const ASSETS_DIR = path.join(PACKAGE_ROOT, "assets");
-const MARK = "remeda-mark.svg";
-const LOCKUP_LIGHT = "remeda-lockup-light.svg";
-
-const OUT_DIR = path.join(PACKAGE_ROOT, "dist");
+const DIST_DIR = path.join(import.meta.dirname, "..", "dist");
 const OUT_GITHUB_AVATAR = "github-avatar.png";
 const OUT_GITHUB_SOCIAL_PREVIEW = "github-social-preview.png";
 const OUT_GITHUB_PADDED = "github-avatar-padded.png";
 
-const DOCS_PUBLIC = path.join(PACKAGE_ROOT, "..", "docs", "public");
+const DOCS_PUBLIC = path.join(
+  import.meta.dirname,
+  "..",
+  "..",
+  "docs",
+  "public",
+);
 const DOCS_SVG_FAVICON = "favicon.svg";
 const DOCS_ICO_FAVICON = "favicon.ico";
 const DOCS_APPLE_FAVICON = "apple-touch-icon.png";
@@ -66,10 +67,7 @@ async function main(): Promise<void> {
 
 // --- docs site (served from packages/docs/public/) ---
 async function injectDocumentationSiteAssets(): Promise<void> {
-  copyFileSync(
-    path.join(ASSETS_DIR, MARK),
-    path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON),
-  );
+  copyFileSync(MARK_FILE, path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON));
 
   const icoPngs = await Promise.all(
     ICON_SIZES.map(
@@ -95,7 +93,7 @@ async function injectDocumentationSiteAssets(): Promise<void> {
 
 // --- manually uploaded surfaces (brand/dist/) ---
 async function generateGithubAssets(): Promise<void> {
-  mkdirSync(OUT_DIR, { recursive: true });
+  mkdirSync(DIST_DIR, { recursive: true });
 
   const [avatar, inner] = await Promise.all([
     renderMark(1024),
@@ -104,18 +102,18 @@ async function generateGithubAssets(): Promise<void> {
     renderMark(880),
     socialCanvas(
       GITHUB_SOCIAL_CANVAS_DIMENSIONS,
-      path.join(OUT_DIR, OUT_GITHUB_SOCIAL_PREVIEW),
+      path.join(DIST_DIR, OUT_GITHUB_SOCIAL_PREVIEW),
     ),
   ]);
 
-  writeFileSync(path.join(OUT_DIR, OUT_GITHUB_AVATAR), avatar);
+  writeFileSync(path.join(DIST_DIR, OUT_GITHUB_AVATAR), avatar);
 
   await sharp({
     create: { width: 1024, height: 1024, channels: 3, background: "#ffffff" },
   })
     .composite([{ input: inner, left: 72, top: 72 }])
     .png()
-    .toFile(path.join(OUT_DIR, OUT_GITHUB_PADDED));
+    .toFile(path.join(DIST_DIR, OUT_GITHUB_PADDED));
 
   console.log(
     `dist: ${[OUT_GITHUB_AVATAR, OUT_GITHUB_PADDED, OUT_GITHUB_SOCIAL_PREVIEW].join(", ")}`,
@@ -123,7 +121,7 @@ async function generateGithubAssets(): Promise<void> {
 }
 
 async function renderMark(size: number): Promise<Buffer> {
-  const mark = readFileSync(path.join(ASSETS_DIR, MARK));
+  const mark = readFileSync(MARK_FILE);
   return await sharp(mark, MARK_OPTIONS).resize(size, size).png().toBuffer();
 }
 
@@ -157,7 +155,7 @@ async function socialCanvas(
   file: string,
 ): Promise<void> {
   const lockup = await sharp(
-    readFileSync(path.join(ASSETS_DIR, LOCKUP_LIGHT)),
+    readFileSync(LOCKUP_LIGHT_FILE),
     SOCIAL_CANVAS_OPTIONS,
   )
     .resize({ width: Math.round(width * SOCIAL_CANVAS_RESIZE_FACTOR) })
