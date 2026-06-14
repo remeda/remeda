@@ -14,8 +14,8 @@ exactly underneath.
 | `remeda-mark-mono.svg`                  | Two-tone monochrome (blue+ink flattened to dark, yellow+white to light).                   |
 | `remeda-mark-mono-transparent.svg`      | One color, one path; light areas are transparent. For stamps, embroidery, terminal badges. |
 | `remeda-lockup-light.svg` / `-dark.svg` | Mark + "remeda" wordmark, for light and dark surfaces.                                     |
-| `generate.cjs`                          | Regenerates the five SVGs from first principles and pixel-verifies them.                   |
-| `generate-assets.cjs`                   | Renders every surface asset (favicons, OG images, avatars) from the SVGs.                  |
+| `scripts/generate.ts`                   | Regenerates the five SVGs from first principles and pixel-verifies them.                   |
+| `scripts/generate-assets.ts`            | Renders every surface asset (favicons, OG images, avatars) from the SVGs.                  |
 
 ## Specification
 
@@ -37,16 +37,16 @@ npm run generate -w @remeda/brand # regenerate + verify the SVGs (only needed if
 npm run assets -w @remeda/brand   # render all surface assets
 ```
 
-| Surface                    | Asset                                                                       | How it updates                                                             |
-| -------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Docs favicon               | `packages/docs/public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`   | `generate-assets.cjs` writes them; linked from `src/layouts/base.astro`.   |
-| Docs / link-preview image  | `packages/docs/public/og.png`                                               | `generate-assets.cjs`; referenced by `og:image` in `base.astro`.           |
-| GitHub org avatar          | `packages/brand/dist/github-avatar.png` (or `-padded.png` for circle crops) | Manual upload: github.com organization settings.                           |
-| GitHub repo social preview | `packages/brand/dist/github-social-preview.png`                             | Manual upload: repository Settings > Social preview.                       |
-| README hero (GitHub + npm) | `packages/brand/remeda-lockup-{light,dark}.svg`                             | Referenced by absolute raw.githubusercontent.com URLs from both READMEs.   |
-| npm                        | -                                                                           | npm has no logo field; the README hero is the npm surface.                 |
-| JSR                        | -                                                                           | JSR scopes show the linked GitHub org avatar; updates with the org upload. |
-| StackBlitz template        | -                                                                           | No avatar surface.                                                         |
+| Surface                    | Asset                                                                       | How it updates                                                                  |
+| -------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Docs favicon               | `packages/docs/public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`   | `scripts/generate-assets.ts` writes them; linked from `src/layouts/base.astro`. |
+| Docs / link-preview image  | `packages/docs/public/og.png`                                               | `scripts/generate-assets.ts`; referenced by `og:image` in `base.astro`.         |
+| GitHub org avatar          | `packages/brand/dist/github-avatar.png` (or `-padded.png` for circle crops) | Manual upload: github.com organization settings.                                |
+| GitHub repo social preview | `packages/brand/dist/github-social-preview.png`                             | Manual upload: repository Settings > Social preview.                            |
+| README hero (GitHub + npm) | `packages/brand/remeda-lockup-{light,dark}.svg`                             | Referenced by absolute raw.githubusercontent.com URLs from both READMEs.        |
+| npm                        | -                                                                           | npm has no logo field; the README hero is the npm surface.                      |
+| JSR                        | -                                                                           | JSR scopes show the linked GitHub org avatar; updates with the org upload.      |
+| StackBlitz template        | -                                                                           | No avatar surface.                                                              |
 
 ## Licensing
 
