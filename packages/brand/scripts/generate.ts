@@ -416,8 +416,8 @@ function renderLogo(
   cInk: string,
 ): string {
   return [
+    `<rect width="${DIMENSION_PX}" height="${DIMENSION_PX}" fill="${cYellow}"/>`,
     `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}" fill="${cBlue}"/>`,
-    `<polygon points="${toPolygonPoints(YELLOW_AREA_POLYGON)}" fill="${cYellow}"/>`,
     `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
     `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
   ].join("");
