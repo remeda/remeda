@@ -12,7 +12,7 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.ts";
+import { LOCKUP_DARK_FILE, LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.ts";
 
 type Image = {
   readonly size: number;
@@ -40,6 +40,9 @@ const DOCS_SVG_FAVICON = "favicon.svg";
 const DOCS_ICO_FAVICON = "favicon.ico";
 const DOCS_APPLE_FAVICON = "apple-touch-icon.png";
 const DOCS_OG = "og.png";
+// The nav header swaps between the two by theme; both are live surfaces.
+const DOCS_LOCKUP_LIGHT = "remeda-lockup-light.svg";
+const DOCS_LOCKUP_DARK = "remeda-lockup-dark.svg";
 
 const ICON_SIZES = [16, 32, 48] as const;
 
@@ -69,6 +72,8 @@ async function main(): Promise<void> {
 // --- docs site (served from packages/docs/public/) ---
 async function injectDocumentationSiteAssets(): Promise<void> {
   copyFileSync(MARK_FILE, path.join(DOCS_PUBLIC, DOCS_SVG_FAVICON));
+  copyFileSync(LOCKUP_LIGHT_FILE, path.join(DOCS_PUBLIC, DOCS_LOCKUP_LIGHT));
+  copyFileSync(LOCKUP_DARK_FILE, path.join(DOCS_PUBLIC, DOCS_LOCKUP_DARK));
 
   const icoPngs = await Promise.all(
     ICON_SIZES.map(
@@ -88,7 +93,7 @@ async function injectDocumentationSiteAssets(): Promise<void> {
   );
 
   console.log(
-    `docs: ${[DOCS_SVG_FAVICON, DOCS_ICO_FAVICON, DOCS_APPLE_FAVICON, DOCS_OG].join(", ")}`,
+    `docs: ${[DOCS_SVG_FAVICON, DOCS_LOCKUP_LIGHT, DOCS_LOCKUP_DARK, DOCS_ICO_FAVICON, DOCS_APPLE_FAVICON, DOCS_OG].join(", ")}`,
   );
 }
 

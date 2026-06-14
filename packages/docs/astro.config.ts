@@ -30,6 +30,17 @@ export default defineConfig({
       name: "Inter",
       cssVariable: "--font-inter",
     },
+    {
+      // Headings only; the brand wordmark is also Sora. Body stays Inter.
+      provider: fontProviders.fontsource(),
+      name: "Sora",
+      cssVariable: "--font-sora",
+      // h3/h4 (600), h2 (700), h1 (800) per the typography scale; no italics.
+      weights: [600, 700, 800],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["sans-serif"],
+    },
   ],
 
   vite: {

@@ -76,7 +76,7 @@
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-sora);
   --font-sans: var(--font-inter);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -127,6 +127,14 @@
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
   }
 }
 

@@ -47,16 +47,17 @@ npm run generate -w @remeda/brand # regenerate + verify the SVGs (only needed if
 npm run assets -w @remeda/brand   # render all surface assets
 ```
 
-| Surface                    | Asset                                                                       | How it updates                                                                  |
-| -------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Docs favicon               | `packages/docs/public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`   | `scripts/generate-assets.ts` writes them; linked from `src/layouts/base.astro`. |
-| Docs / link-preview image  | `packages/docs/public/og.png`                                               | `scripts/generate-assets.ts`; referenced by `og:image` in `base.astro`.         |
-| GitHub org avatar          | `packages/brand/dist/github-avatar.png` (or `-padded.png` for circle crops) | Manual upload: github.com organization settings.                                |
-| GitHub repo social preview | `packages/brand/dist/github-social-preview.png`                             | Manual upload: repository Settings > Social preview.                            |
-| README hero (GitHub + npm) | `packages/brand/assets/remeda-lockup-{light,dark}.svg`                      | Referenced by absolute raw.githubusercontent.com URLs from both READMEs.        |
-| npm                        | -                                                                           | npm has no logo field; the README hero is the npm surface.                      |
-| JSR                        | -                                                                           | JSR scopes show the linked GitHub org avatar; updates with the org upload.      |
-| StackBlitz template        | -                                                                           | No avatar surface.                                                              |
+| Surface                    | Asset                                                                       | How it updates                                                                            |
+| -------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Docs favicon               | `packages/docs/public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`   | `scripts/generate-assets.ts` writes them; linked from `src/layouts/base.astro`.           |
+| Docs nav header            | `packages/docs/public/remeda-lockup-{light,dark}.svg`                       | `scripts/generate-assets.ts` writes them; theme-swapped in `src/components/header.astro`. |
+| Docs / link-preview image  | `packages/docs/public/og.png`                                               | `scripts/generate-assets.ts`; referenced by `og:image` in `base.astro`.                   |
+| GitHub org avatar          | `packages/brand/dist/github-avatar.png` (or `-padded.png` for circle crops) | Manual upload: github.com organization settings.                                          |
+| GitHub repo social preview | `packages/brand/dist/github-social-preview.png`                             | Manual upload: repository Settings > Social preview.                                      |
+| README hero (GitHub + npm) | `packages/brand/assets/remeda-lockup-{light,dark}.svg`                      | Referenced by absolute raw.githubusercontent.com URLs from both READMEs.                  |
+| npm                        | -                                                                           | npm has no logo field; the README hero is the npm surface.                                |
+| JSR                        | -                                                                           | JSR scopes show the linked GitHub org avatar; updates with the org upload.                |
+| StackBlitz template        | -                                                                           | No avatar surface.                                                                        |
 
 ## Licensing
 
