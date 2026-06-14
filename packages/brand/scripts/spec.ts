@@ -6,10 +6,20 @@ export const DIMENSION_PX = 512;
 export const SEAM_TOP_POINT = [446, 0] satisfies Point;
 export const SEAM_BOTTOM_POINT = [286, DIMENSION_PX] satisfies Point;
 
+export const GLYPH = "R";
 export const GLYPH_FONT = "sora-extrabold.ttf";
 export const GLYPH_HEIGHT_PX = 250;
 export const GLYPH_PADDING_RIGHT_PX = 22;
 export const GLYPH_PADDING_BOTTOM_PX = 26;
+
+export const WORDMARK = "Remeda";
+
+// Lockup layout: the mark sits in a square this size, with LOCKUP_PAD_PX of
+// breathing room on every outer edge and LOCKUP_GAP_PX between mark and
+// wordmark.
+export const LOCKUP_MARK_BOX_PX = 430;
+export const LOCKUP_PAD_PX = 36;
+export const LOCKUP_GAP_PX = 88;
 
 export const COLOR = {
   // official TypeScript blue

@@ -1,7 +1,7 @@
 /**
  * Regenerates the remeda mark and lockup SVGs from first principles.
  *
- * The mark is fully parametric: the "R" is polygonized, cut by the seam, and
+ * The mark is fully parametric: the glyph is polygonized, cut by the seam, and
  * re-stitched into clean per-side pieces, then every output is pixel-verified
  * against an independent clip-based construction at native resolution.
  *
@@ -27,12 +27,17 @@ import {
 import {
   COLOR,
   DIMENSION_PX,
+  GLYPH,
   GLYPH_FONT,
   GLYPH_HEIGHT_PX,
   GLYPH_PADDING_BOTTOM_PX,
   GLYPH_PADDING_RIGHT_PX,
+  LOCKUP_GAP_PX,
+  LOCKUP_MARK_BOX_PX,
+  LOCKUP_PAD_PX,
   SEAM_BOTTOM_POINT,
   SEAM_TOP_POINT,
+  WORDMARK,
   type Color,
   type Point,
 } from "./spec.ts";
@@ -409,7 +414,7 @@ function cutAll(keepLeft: boolean): (readonly Point[])[] {
 
 function fullGlyphRings(): (readonly Point[])[] {
   const font = loadFont();
-  const glyph = getGlyph(font, "R");
+  const glyph = getGlyph(font, GLYPH);
   return rings(glyph);
 }
 
@@ -442,7 +447,7 @@ function renderStencil(color: string): string[] {
 // flattening
 function renderClipReference(): string[] {
   const font = loadFont();
-  const glyph = getGlyph(font, "R");
+  const glyph = getGlyph(font, GLYPH);
   return [
     `<defs>`,
     `<clipPath id="t">`,
@@ -490,23 +495,28 @@ function pathDataFull({ commands }: Path): string {
     .join("");
 }
 
-// lockup: mark + "remeda" wordmark in the same font
+// lockup: mark + wordmark in the same font. The wordmark's cap height is matched
+// to the mark's interior glyph: both the mark's "R" and the word's leading "R"
+// resolve to GLYPH_HEIGHT_PX scaled by the same factor, so the two read as the
+// same letter at the same size rather than two coincidentally-close R's.
 function lockupSvg(markBody: string, textColor: string): string {
   const font = loadFont();
 
-  const wordProbe = font.getPath("remeda", 0, 0, 100).getBoundingBox();
-  const wSize = (250 / (wordProbe.y2 - wordProbe.y1)) * 100;
-  const wb = font.getPath("remeda", 0, 0, wSize).getBoundingBox();
-  const MARK_BOX = 430;
-  const markX = 36;
-  const textX = markX + MARK_BOX + 72 - wb.x1;
-  const textY = 256 + (wb.y2 - wb.y1) / 2 - wb.y2;
-  const wPath = pathDataFull(font.getPath("remeda", textX, textY, wSize));
-  const width = Math.ceil(textX + wb.x2 - wb.x1 + 72);
-  const scale = (MARK_BOX / DIMENSION_PX).toFixed(4);
+  const markScale = LOCKUP_MARK_BOX_PX / DIMENSION_PX;
+
+  const capProbe = font.getPath(GLYPH, 0, 0, PROBE_FONT_SIZE).getBoundingBox();
+  const wSize =
+    ((GLYPH_HEIGHT_PX * markScale) / (capProbe.y2 - capProbe.y1)) *
+    PROBE_FONT_SIZE;
+
+  const wb = font.getPath(WORDMARK, 0, 0, wSize).getBoundingBox();
+  const textX = LOCKUP_PAD_PX + LOCKUP_MARK_BOX_PX + LOCKUP_GAP_PX - wb.x1;
+  const textY = DIMENSION_PX / 2 + (wb.y2 - wb.y1) / 2 - wb.y2;
+  const wPath = pathDataFull(font.getPath(WORDMARK, textX, textY, wSize));
+  const width = Math.ceil(textX + wb.x2 - wb.x1 + LOCKUP_PAD_PX);
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${DIMENSION_PX}" viewBox="0 0 ${width} ${DIMENSION_PX}">`,
-    `<g transform="translate(${markX},${(DIMENSION_PX - MARK_BOX) / 2}) scale(${scale})">`,
+    `<g transform="translate(${LOCKUP_PAD_PX},${(DIMENSION_PX - LOCKUP_MARK_BOX_PX) / 2}) scale(${markScale.toFixed(4)})">`,
     markBody,
     `</g>`,
     `<path d="${wPath}" fill="${textColor}"/>`,
