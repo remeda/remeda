@@ -16,6 +16,7 @@ const { title } = Astro.props;
 
 const fullTitle = title === undefined ? SITE_NAME : `${title} - ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og.png", Astro.site).href;
 ---
 
 <html lang="en">
@@ -29,21 +30,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preconnect"
       href="https://416K8H7DAR-dsn.algolia.net"
       crossorigin
     />
     <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-sora" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={DESCRIPTION} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={DESCRIPTION} />
+    <meta name="twitter:image" content={ogImage} />
 
     <title>{fullTitle}</title>
 

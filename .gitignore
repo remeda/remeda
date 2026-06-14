@@ -11,3 +11,5 @@ coverage/
 
 .tmp/
 .playwright-mcp/
+
+.DS_Store

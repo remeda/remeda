@@ -18,7 +18,21 @@ const NAVLINK_CLASS =
   <nav
     class="flex flex-1 items-center gap-3 overflow-hidden text-xs sm:gap-8 sm:text-base"
   >
-    <a class="font-bold" href="/">Remeda</a>
+    <a class="flex items-center" href="/">
+      <img alt="Remeda" class="size-8 sm:hidden" src="/favicon.svg" />
+      <span class="hidden sm:block">
+        <img
+          alt="Remeda"
+          class="h-10 dark:hidden"
+          src="/remeda-lockup-light.svg"
+        />
+        <img
+          alt="Remeda"
+          class="hidden h-10 dark:block"
+          src="/remeda-lockup-dark.svg"
+        />
+      </span>
+    </a>
     <a
       aria-current={"/docs" === pathname ? "page" : undefined}
       class:list={NAVLINK_CLASS}
