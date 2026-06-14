@@ -13,6 +13,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { exit } from "node:process";
 import opentype, { type Font, type Path } from "opentype.js";
 import { map } from "remeda";
 import sharp from "sharp";
@@ -70,49 +71,69 @@ type Crossing = {
   readonly ci: number;
 };
 
-async function main(): Promise<void> {
-  const checks: {
-    readonly name: string;
-    readonly ratio: number;
-    readonly budget: number;
-  }[] = [];
-
+async function main(): Promise<number> {
   const blueHex = toHexColor(COLOR.blue);
   const yellowHex = toHexColor(COLOR.yellow);
   const inkHex = toHexColor(COLOR.ink);
   const whiteHex = toHexColor(COLOR.white);
 
-  const flatInner = markInner(blueHex, yellowHex, whiteHex, inkHex);
-  const flatSvg = renderMark(blueHex, yellowHex, whiteHex, inkHex);
-  const monoSvg = renderMark(inkHex, whiteHex, whiteHex, inkHex);
-  const stencilSvg = renderStencil(inkHex);
+  const colorLogo = renderLogo(blueHex, yellowHex, whiteHex, inkHex);
+  const colorSvg = renderSvg(colorLogo);
+  const monoSvg = renderSvg(renderLogo(inkHex, whiteHex, whiteHex, inkHex));
+  const stencilSvg = renderSvg(...renderStencil(inkHex));
+  const referenceSvg = renderSvg(...renderClipReference());
 
-  const [color, mono, stencil, clipBased] = await Promise.all(
-    map(
-      [flatSvg, monoSvg, stencilSvg, renderClipReference()],
-      async (path) => await renderNative(path),
-    ),
+  const isInvalid = await validate(colorSvg, monoSvg, stencilSvg, referenceSvg);
+  if (isInvalid) {
+    console.error("verification failed; SVGs not written");
+    return 1;
+  }
+
+  writeFileSync(MARK_FILE, colorSvg);
+  writeFileSync(MONO_FILE, monoSvg);
+  writeFileSync(STENCIL_FILE, stencilSvg);
+  writeFileSync(LOCKUP_LIGHT_FILE, lockupSvg(colorLogo, inkHex));
+  writeFileSync(
+    LOCKUP_DARK_FILE,
+    lockupSvg(colorLogo, toHexColor(COLOR.paper)),
   );
 
-  let d = 0;
-  for (const [index, element] of color.entries()) {
-    if (Math.abs(element - clipBased[index]!) > 24) {
-      d++;
+  console.log("wrote 5 SVGs to packages/brand/");
+
+  return 0;
+}
+
+async function validate(
+  colorSvg: string,
+  monoSvg: string,
+  stencilSvg: string,
+  referenceSvg: string,
+): Promise<boolean> {
+  const [colorRender, monoRender, stencilRender, referenceRender] =
+    await Promise.all(
+      map(
+        [colorSvg, monoSvg, stencilSvg, referenceSvg],
+        async (path) =>
+          await sharp(Buffer.from(path), { density: 72 })
+            .flatten({ background: "#ffffff" })
+            .raw()
+            .toBuffer(),
+      ),
+    );
+
+  let differingBytes = 0;
+  for (const [index, element] of colorRender.entries()) {
+    if (Math.abs(element - referenceRender[index]!) > 24) {
+      differingBytes++;
     }
   }
 
-  checks.push({
-    name: "flatten vs clip reference",
-    ratio: d / color.length,
-    budget: 0.002,
-  });
-
-  let mm = 0;
-  const px = color.length / 3;
+  let mismatches = 0;
+  const px = colorRender.length / 3;
   for (let index = 0; index < px; index++) {
-    const r = color[3 * index]!;
-    const g = color[3 * index + 1]!;
-    const b = color[3 * index + 2]!;
+    const r = colorRender[3 * index]!;
+    const g = colorRender[3 * index + 1]!;
+    const b = colorRender[3 * index + 2]!;
     const expectDark =
       Math.min(
         distanceSquared(r, g, b, COLOR.blue),
@@ -123,34 +144,43 @@ async function main(): Promise<void> {
         distanceSquared(r, g, b, COLOR.white),
       );
     const isDark =
-      mono[3 * index]! + mono[3 * index + 1]! + mono[3 * index + 2]! < 384;
+      monoRender[3 * index]! +
+        monoRender[3 * index + 1]! +
+        monoRender[3 * index + 2]! <
+      384;
     if (expectDark !== isDark) {
-      mm++;
+      mismatches++;
     }
   }
-  checks.push({
-    name: "mono vs color flattening rule",
-    ratio: mm / px,
-    budget: 0.002,
-  });
 
-  let d2 = 0;
-  for (const [index, element] of stencil.entries()) {
-    if (Math.abs(element - mono[index]!) > 24) {
-      d2++;
+  let divergentBytes = 0;
+  for (const [index, element] of stencilRender.entries()) {
+    if (Math.abs(element - monoRender[index]!) > 24) {
+      divergentBytes++;
     }
   }
-  checks.push({
-    name: "mono-transparent vs two-tone mono",
-    ratio: d2 / stencil.length,
-    budget: 0.01,
-  });
 
-  let failed = false;
-  for (const { name, ratio, budget } of checks) {
+  let isInvalid = false;
+  for (const { name, ratio, budget } of [
+    {
+      name: "flatten vs clip reference",
+      ratio: differingBytes / colorRender.length,
+      budget: 0.002,
+    },
+    {
+      name: "mono vs color flattening rule",
+      ratio: mismatches / px,
+      budget: 0.002,
+    },
+    {
+      name: "mono-transparent vs two-tone mono",
+      ratio: divergentBytes / stencilRender.length,
+      budget: 0.01,
+    },
+  ]) {
     const isOk = ratio <= budget;
     if (!isOk) {
-      failed = true;
+      isInvalid = true;
     }
 
     console.log(
@@ -158,30 +188,16 @@ async function main(): Promise<void> {
     );
   }
 
-  if (failed) {
-    console.error("verification failed; SVGs not written");
-    // eslint-disable-next-line unicorn/no-process-exit -- This is a CLI script, and a non-zero exit code is the correct way to signal that verification failed and nothing was written.
-    process.exit(1);
-  }
-
-  writeFileSync(MARK_FILE, flatSvg);
-  writeFileSync(MONO_FILE, monoSvg);
-  writeFileSync(STENCIL_FILE, stencilSvg);
-  writeFileSync(LOCKUP_LIGHT_FILE, lockupSvg(flatInner, inkHex));
-  writeFileSync(
-    LOCKUP_DARK_FILE,
-    lockupSvg(flatInner, toHexColor(COLOR.paper)),
-  );
-  console.log("wrote 5 SVGs to packages/brand/");
+  return isInvalid;
 }
 
 function distanceSquared(r: number, g: number, b: number, c: Color): number {
   return (r - c[0]) ** 2 + (g - c[1]) ** 2 + (b - c[2]) ** 2;
 }
 
-// ---------------- polygonize glyph (TTF quadratics), split into rings
-function rings(otPath: Path): readonly Point[][] {
-  const out: Point[][] = [];
+// polygonize glyph (TTF quadratics), split into rings
+function rings(otPath: Path): (readonly Point[])[] {
+  const out: (readonly Point[])[] = [];
   // every contour opens with an M command, which resets both of these
   let ring: Point[] = [];
   let current: Point = [0, 0];
@@ -189,7 +205,9 @@ function rings(otPath: Path): readonly Point[][] {
   for (const c of otPath.commands) {
     switch (c.type) {
       case "M":
-        if (ring.length > 2) out.push(ring);
+        if (ring.length > 2) {
+          out.push(ring);
+        }
         ring = [[c.x, c.y]];
         current = [c.x, c.y];
 
@@ -241,7 +259,11 @@ function rings(otPath: Path): readonly Point[][] {
         break;
     }
   }
-  if (ring.length > 2) out.push(ring);
+
+  if (ring.length > 2) {
+    out.push(ring);
+  }
+
   return out;
 }
 
@@ -268,7 +290,10 @@ function seamCrossingPoint(a: Point, b: Point): Point {
 // Chains of kept vertices are stitched via interior intervals along the
 // seam: crossings sorted by y alternate interior/exterior, so consecutive
 // pairs are the connectors. No Sutherland-Hodgman bridge edges.
-function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
+function cutRing(
+  ring: readonly Point[],
+  keepLeft: boolean,
+): (readonly Point[])[] {
   const chains: Chain[] = [];
   let chain: Chain | undefined = undefined;
   let openedAtStart: Chain | undefined = undefined;
@@ -279,7 +304,9 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
     if (keepLeft ? signedSeamOffset(a) < 0 : signedSeamOffset(a) > 0) {
       if (chain === undefined) {
         chain = { entry: undefined, pts: [a], exit: undefined };
-        if (index === 0) openedAtStart = chain;
+        if (index === 0) {
+          openedAtStart = chain;
+        }
       } else {
         chain.pts.push(a);
       }
@@ -302,7 +329,9 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
       chains.push(chain);
     }
   }
-  if (chains.length === 0) return [];
+  if (chains.length === 0) {
+    return [];
+  }
   const closedChains: {
     readonly entry: Point;
     readonly pts: readonly Point[];
@@ -336,7 +365,9 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
   const used = Array.from({ length: closedChains.length }).fill(false);
   const out: Point[][] = [];
   for (let start = 0; start < closedChains.length; start++) {
-    if (used[start]) continue;
+    if (used[start]) {
+      continue;
+    }
     const piece: Point[] = [];
     let ci = start;
     for (let guard = 0; guard <= closedChains.length; guard++) {
@@ -344,34 +375,41 @@ function cutRing(ring: readonly Point[], keepLeft: boolean): Point[][] {
       const c = closedChains[ci]!;
       piece.push(c.entry, ...c.pts, c.exit);
       const next = partner.get(`exit:${ci}`);
-      if (next?.type !== "entry") break;
-      if (next.ci === start) break;
+      if (next?.type !== "entry") {
+        break;
+      }
+      if (next.ci === start) {
+        break;
+      }
       ci = next.ci;
     }
-    if (piece.length > 2) out.push(piece);
+    if (piece.length > 2) {
+      out.push(piece);
+    }
   }
   return out;
 }
 
-function fmt(n: number): number {
-  return Math.round(n * 100) / 100;
+function roundToHundredths(value: number): number {
+  return Math.round(value * 100) / 100;
 }
 
 function ringsToPath(rs: readonly (readonly Point[])[]): string {
   return rs
-    .map((ring) => `M${ring.map(([x, y]) => `${fmt(x)} ${fmt(y)}`).join("L")}Z`)
+    .map(
+      (ring) =>
+        `M${ring.map(([x, y]) => `${roundToHundredths(x)} ${roundToHundredths(y)}`).join("L")}Z`,
+    )
     .join("");
 }
 
-function cutAll(keepLeft: boolean): Point[][] {
+function cutAll(keepLeft: boolean): (readonly Point[])[] {
   const font = loadFont();
-  return rings(getGlyph(font, "R")).flatMap((ring) => cutRing(ring, keepLeft));
+  const glyph = getGlyph(font, "R");
+  return rings(glyph).flatMap((ring) => cutRing(ring, keepLeft));
 }
 
-// The mark's interior (seam-split field plus the two glyph halves), without the
-// enclosing <svg>. Kept separate so the lockup can drop it straight into a
-// <g transform> alongside the wordmark instead of stripping a rendered <svg>.
-function markInner(
+function renderLogo(
   cBlue: string,
   cYellow: string,
   cWhite: string,
@@ -385,47 +423,23 @@ function markInner(
   ].join("");
 }
 
-function renderMark(
-  cBlue: string,
-  cYellow: string,
-  cWhite: string,
-  cInk: string,
-): string {
+function renderStencil(color: string): string[] {
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
-    markInner(cBlue, cYellow, cWhite, cInk),
-    `</svg>`,
-  ].join("");
-}
-
-// One-color mark, light = transparent. The Sora "R" is built from overlapping
-// contours (stem, bowl, leg), so the per-side pieces overlap each other. A
-// single winding path would double-subtract in those overlaps and leak fill,
-// so instead the two-tone construction is mirrored into a luminance mask
-// where every piece fills solidly and overlaps union cleanly: the dark field
-// and the ink pieces paint white (kept), the white pieces paint black
-// (knocked out), and one ink rect shows through. Counters fall out for free
-// as the regions no piece covers, exactly as they do in the two-tone mark.
-function renderStencil(color: string): string {
-  return [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
     `<mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="${DIMENSION_PX}" height="${DIMENSION_PX}">`,
     `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}" fill="#fff"/>`,
     `<path d="${ringsToPath(cutAll(true))}" fill="#000"/>`,
     `<path d="${ringsToPath(cutAll(false))}" fill="#fff"/>`,
     `</mask>`,
     `<rect width="${DIMENSION_PX}" height="${DIMENSION_PX}" fill="${color}" mask="url(#cut)"/>`,
-    `</svg>`,
-  ].join("");
+  ];
 }
 
-function renderClipReference(): string {
+// independent clip-based construction, used only to verify the
+// flattening
+function renderClipReference(): string[] {
   const font = loadFont();
   const glyph = getGlyph(font, "R");
   return [
-    // independent clip-based construction, used only to verify the
-    // flattening
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
     `<defs>`,
     `<clipPath id="t">`,
     `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}"/>`,
@@ -438,6 +452,13 @@ function renderClipReference(): string {
     `<polygon points="${toPolygonPoints(YELLOW_AREA_POLYGON)}" fill="${toHexColor(COLOR.yellow)}"/>`,
     `<path d="${pathDataFull(glyph)}" fill="${toHexColor(COLOR.white)}" clip-path="url(#t)"/>`,
     `<path d="${pathDataFull(glyph)}" fill="${toHexColor(COLOR.ink)}" clip-path="url(#u)"/>`,
+  ];
+}
+
+function renderSvg(...body: readonly string[]): string {
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${DIMENSION_PX}" height="${DIMENSION_PX}" viewBox="0 0 ${DIMENSION_PX} ${DIMENSION_PX}">`,
+    ...body,
     `</svg>`,
   ].join("");
 }
@@ -447,16 +468,16 @@ function pathDataFull({ commands }: Path): string {
     .map((command) => {
       switch (command.type) {
         case "M":
-          return `M${fmt(command.x)} ${fmt(command.y)}`;
+          return `M${roundToHundredths(command.x)} ${roundToHundredths(command.y)}`;
 
         case "L":
-          return `L${fmt(command.x)} ${fmt(command.y)}`;
+          return `L${roundToHundredths(command.x)} ${roundToHundredths(command.y)}`;
 
         case "Q":
-          return `Q${fmt(command.x1)} ${fmt(command.y1)} ${fmt(command.x)} ${fmt(command.y)}`;
+          return `Q${roundToHundredths(command.x1)} ${roundToHundredths(command.y1)} ${roundToHundredths(command.x)} ${roundToHundredths(command.y)}`;
 
         case "C":
-          return `C${fmt(command.x1)} ${fmt(command.y1)} ${fmt(command.x2)} ${fmt(command.y2)} ${fmt(command.x)} ${fmt(command.y)}`;
+          return `C${roundToHundredths(command.x1)} ${roundToHundredths(command.y1)} ${roundToHundredths(command.x2)} ${roundToHundredths(command.y2)} ${roundToHundredths(command.x)} ${roundToHundredths(command.y)}`;
 
         default:
           return "Z";
@@ -465,7 +486,7 @@ function pathDataFull({ commands }: Path): string {
     .join("");
 }
 
-// lockup: mark + "remeda" wordmark in the same Sora 800
+// lockup: mark + "remeda" wordmark in the same font
 function lockupSvg(markBody: string, textColor: string): string {
   const font = loadFont();
 
@@ -489,31 +510,30 @@ function lockupSvg(markBody: string, textColor: string): string {
   ].join("");
 }
 
-function renderNative(svg: string): Promise<Buffer> {
-  return sharp(Buffer.from(svg), { density: 72 })
-    .flatten({ background: "#ffffff" })
-    .raw()
-    .toBuffer();
-}
-
 function loadFont(): Font {
+  const fontPath = path.join(FONTS_DIR, GLYPH_FONT);
+  const { buffer, byteOffset, byteLength } = readFileSync(fontPath);
+
   // `opentype.parse` needs the raw ArrayBuffer. A Node Buffer can be a view
   // into a larger pooled ArrayBuffer, so we slice out exactly this file's
   // bytes rather than handing over the whole backing store.
-  const data = readFileSync(path.join(FONTS_DIR, GLYPH_FONT));
-  return opentype.parse(
-    data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength),
-  );
+  const fontData = buffer.slice(byteOffset, byteOffset + byteLength);
+
+  return opentype.parse(fontData);
 }
 
 function getGlyph(font: Font, char: string): Path {
-  const probeBox = font.getPath(char, 0, 0, PROBE_FONT_SIZE).getBoundingBox();
+  const { y1: probeTop, y2: probeBottom } = font
+    .getPath(char, 0, 0, PROBE_FONT_SIZE)
+    .getBoundingBox();
+
   const effectiveSize =
-    (GLYPH_HEIGHT_PX / (probeBox.y2 - probeBox.y1)) * PROBE_FONT_SIZE;
+    (GLYPH_HEIGHT_PX / (probeBottom - probeTop)) * PROBE_FONT_SIZE;
 
   const { x2: right, y2: bottom } = font
     .getPath(char, 0, 0, effectiveSize)
     .getBoundingBox();
+
   return font.getPath(
     char,
     DIMENSION_PX - GLYPH_PADDING_RIGHT_PX - right,
@@ -531,4 +551,4 @@ function toPolygonPoints(coordinates: readonly Point[]): string {
 }
 
 // ENTRY POINT
-await main();
+exit(await main());
