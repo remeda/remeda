@@ -1,7 +1,9 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/remeda/remeda/main/packages/brand/remeda-lockup-dark.svg" />
-  <img alt="Remeda" src="https://raw.githubusercontent.com/remeda/remeda/main/packages/brand/remeda-lockup-light.svg" width="400" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/remeda/remeda/main/packages/brand/assets/remeda-lockup-dark.svg" />
+  <img alt="Remeda" src="https://raw.githubusercontent.com/remeda/remeda/main/packages/brand/assets/remeda-lockup-light.svg" width="400" />
 </picture>
+
+# Remeda
 
 The first "data-first" and "data-last" utility library designed especially for TypeScript.
 
