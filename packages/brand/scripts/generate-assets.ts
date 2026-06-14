@@ -8,10 +8,11 @@
  * Usage (from the repo root):
  *   npm run assets -w @remeda/brand
  */
+
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.js";
+import { LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.ts";
 
 type Image = {
   readonly size: number;

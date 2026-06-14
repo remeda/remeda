@@ -17,9 +17,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
 
-    // MODULES -- the scripts run directly via `node`, which strips types but
-    // performs no other transformation, so they must be valid Node ESM.
+    // MODULES
     "module": "nodenext",
+    "allowImportingTsExtensions": true,
 
     // EMIT
     "noEmit": true,

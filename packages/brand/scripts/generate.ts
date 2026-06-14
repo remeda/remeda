@@ -23,7 +23,7 @@ import {
   MARK_FILE,
   MONO_FILE,
   STENCIL_FILE,
-} from "./config.js";
+} from "./config.ts";
 import {
   COLOR,
   DIMENSION_PX,
@@ -35,7 +35,7 @@ import {
   SEAM_TOP_POINT,
   type Color,
   type Point,
-} from "./spec.js";
+} from "./spec.ts";
 
 const FONTS_DIR = path.join(import.meta.dirname, "..", "fonts");
 
