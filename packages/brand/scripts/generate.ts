@@ -404,9 +404,13 @@ function ringsToPath(rs: readonly (readonly Point[])[]): string {
 }
 
 function cutAll(keepLeft: boolean): (readonly Point[])[] {
+  return fullGlyphRings().flatMap((ring) => cutRing(ring, keepLeft));
+}
+
+function fullGlyphRings(): (readonly Point[])[] {
   const font = loadFont();
   const glyph = getGlyph(font, "R");
-  return rings(glyph).flatMap((ring) => cutRing(ring, keepLeft));
+  return rings(glyph);
 }
 
 function renderLogo(
@@ -418,8 +422,8 @@ function renderLogo(
   return [
     `<rect width="${DIMENSION_PX}" height="${DIMENSION_PX}" fill="${cYellow}"/>`,
     `<polygon points="${toPolygonPoints(BLUE_AREA_POLYGON)}" fill="${cBlue}"/>`,
+    `<path d="${ringsToPath(fullGlyphRings())}" fill="${cInk}"/>`,
     `<path d="${ringsToPath(cutAll(true))}" fill="${cWhite}"/>`,
-    `<path d="${ringsToPath(cutAll(false))}" fill="${cInk}"/>`,
   ].join("");
 }
 
