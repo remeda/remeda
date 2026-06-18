@@ -24,6 +24,10 @@ jobs:
   test-source:
     name: 📒 Test source [tsgo ${{ matrix.native-preview-version }}]
     runs-on: ubuntu-latest
+    # We test beta so we have the data, but because `beta` doesn't change,
+    # failing on it would simply fail our canary even when bugs are detected
+    # and fixed.
+    continue-on-error: ${{ matrix.native-preview-version == 'beta' }}
     strategy:
       fail-fast: false
       matrix:
@@ -109,6 +113,8 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
+    # See rationale above...
+    continue-on-error: ${{ matrix.native-preview-version == 'beta' }}
     strategy:
       fail-fast: false
       matrix:
