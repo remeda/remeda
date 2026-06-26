@@ -172,11 +172,11 @@ function swapArray(
   const positiveIndexA = index1 < 0 ? data.length + index1 : index1;
   const positiveIndexB = index2 < 0 ? data.length + index2 : index2;
 
-  if (positiveIndexA < 0 || positiveIndexA > data.length) {
+  if (positiveIndexA < 0 || positiveIndexA >= data.length) {
     return result;
   }
 
-  if (positiveIndexB < 0 || positiveIndexB > data.length) {
+  if (positiveIndexB < 0 || positiveIndexB >= data.length) {
     return result;
   }
 
