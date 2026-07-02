@@ -17,8 +17,8 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.8",
-    "lint-staged": "^17.0.7",
+    "@vitest/coverage-v8": "^4.1.9",
+    "lint-staged": "^17.0.8",
     "prettier": "^3.8.3",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.18.1",
