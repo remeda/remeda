@@ -18,15 +18,15 @@
     "eslint": "~10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unicorn": "^64.0.0",
-    "globals": "^17.6.0",
+    "globals": "^17.7.0",
     "jiti": "^2.6.1",
     "opentype.js": "^2.0.0",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.4",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.18.1",
     "remeda": "^2.0.0",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.60.1"
+    "typescript-eslint": "^8.62.1"
   }
 }
