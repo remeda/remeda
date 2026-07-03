@@ -1,4 +1,7 @@
-import "@docsearch/css";
+// The explicit file path allows TypeScript to resolve this side-effect import
+// via the ambient `*.css` module declarations; the package's bare specifier
+// points at the same file but has no type declarations.
+import "@docsearch/css/dist/style.css";
 import { DocSearch } from "@docsearch/react";
 import type { ReactNode } from "react";
 

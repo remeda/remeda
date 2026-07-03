@@ -1,3 +1,4 @@
+import { fixupPluginRules } from "@eslint/compat";
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
@@ -65,8 +66,10 @@ export default defineConfig(
     files: ["**/*.tsx"],
 
     plugins: {
-      react: eslintPluginReact,
-      "jsx-a11y": jsxA11y,
+      // The `fixup` utility patches back the deprecated rule context APIs
+      // that were removed in ESLint v10 but are still used by these plugins.
+      react: fixupPluginRules(eslintPluginReact),
+      "jsx-a11y": fixupPluginRules(jsxA11y),
     },
 
     settings: {
