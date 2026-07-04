@@ -16,6 +16,11 @@ import { SHIKI_THEME } from "./src/lib/shiki";
 export default defineConfig({
   site: "https://remedajs.com",
 
+  // The default ("jsx") strips the whitespace that Prettier creates when it
+  // wraps an inline element onto its own line mid-sentence, visibly gluing
+  // words together in prose.
+  compressHTML: true,
+
   integrations: [react(), mdx(), sitemap()],
 
   markdown: {
