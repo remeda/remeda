@@ -1,4 +1,4 @@
-import "@docsearch/css";
+import "@docsearch/css/dist/style.css";
 import { DocSearch } from "@docsearch/react";
 import type { ReactNode } from "react";
 

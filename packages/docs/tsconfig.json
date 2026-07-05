@@ -3,14 +3,13 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"],
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "allowArbitraryExtensions": true,
-    "plugins": [{ "name": "@astro/ts-plugin" }],
+    "plugins": [{ "name": "@astrojs/ts-plugin" }],
     "moduleDetection": "force",
     "lib": ["es2022", "dom", "dom.iterable"]
   }

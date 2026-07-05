@@ -1,7 +1,8 @@
+import { fixupPluginRules } from "@eslint/compat";
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
-import jsxA11y from "eslint-plugin-jsx-a11y";
+import jsxA11yX from "eslint-plugin-jsx-a11y-x";
 import eslintPluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
@@ -65,8 +66,9 @@ export default defineConfig(
     files: ["**/*.tsx"],
 
     plugins: {
-      react: eslintPluginReact,
-      "jsx-a11y": jsxA11y,
+      // TODO [eslint-plugin-react@>7.37.5]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-react/issues/3977), unwrap the plugin, drop its `eslint` override in the root package.json, and remove `@eslint/compat`.
+      react: fixupPluginRules(eslintPluginReact),
+      "jsx-a11y-x": jsxA11yX,
     },
 
     settings: {
@@ -80,7 +82,7 @@ export default defineConfig(
       ...eslintPluginReact.configs.flat.all!.rules,
       /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
       ...eslintPluginReact.configs.flat["jsx-runtime"]!.rules,
-      ...jsxA11y.flatConfigs.strict.rules,
+      ...jsxA11yX.configs.strict.rules,
 
       // We use TypeScript
       "react/jsx-filename-extension": ["error", { extensions: [".tsx"] }],
@@ -120,6 +122,8 @@ export default defineConfig(
   },
 
   eslintPluginAstro.configs["flat/recommended"],
+  // TODO [eslint-plugin-astro@>2.1.1]: If astro's a11y configs support `eslint-plugin-jsx-a11y-x` (https://github.com/ota-meshi/eslint-plugin-astro/issues/565), switch to it and drop `eslint-plugin-jsx-a11y` (only these configs consume it) and its root `eslint` override.
+  // TODO [eslint-plugin-jsx-a11y@>6.10.2]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1075), drop its `eslint` override in the root package.json.
   eslintPluginAstro.configs["jsx-a11y-strict"],
   {
     files: ["**/*.astro"],
