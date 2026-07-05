@@ -84,7 +84,7 @@
     "publint": "^0.3.21",
     "semantic-release": "^25.0.5",
     "tsdown": "^0.22.3",
-    "type-fest": "^5.5.0",
+    "type-fest": "5.7.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.62.1",
     "vitest": "^4.1.5"
