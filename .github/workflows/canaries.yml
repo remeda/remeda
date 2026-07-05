@@ -129,8 +129,9 @@ jobs:
       - name: 📥 Download dependencies
         uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
 
-      # See the note on the same step in test-source above.
       - name: 📘 Install TypeScript
+        # legacy-peer-deps allows us to avoid peer dependency conflicts for
+        # packages which are not relevant for this check anyway.
         run: npm --workspace=remeda install -D --legacy-peer-deps typescript@${{ matrix.typescript-version }}
 
       - name: 🚚 Restore distributable
