@@ -21,7 +21,7 @@
     "globals": "^17.7.0",
     "jiti": "^2.6.1",
     "opentype.js": "^2.0.0",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.6",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.18.1",
     "remeda": "^2.0.0",
