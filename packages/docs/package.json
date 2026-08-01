@@ -48,7 +48,7 @@
     "eslint-plugin-jsx-a11y-x": "^0.2.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-unicorn": "^64.0.0",
+    "eslint-plugin-unicorn": "^72.0.0",
     "globals": "^17.7.0",
     "jiti": "^2.6.1",
     "jsdom": "^29.1.1",

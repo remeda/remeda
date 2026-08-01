@@ -73,7 +73,7 @@
     "eslint": "~10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^63.0.10",
-    "eslint-plugin-unicorn": "^64.0.0",
+    "eslint-plugin-unicorn": "^72.0.0",
     "jiti": "^2.6.1",
     "jsr": "^0.14.3",
     "lint-staged": "^17.0.8",
