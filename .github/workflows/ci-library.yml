@@ -87,6 +87,7 @@ jobs:
       fail-fast: false
       matrix:
         typescript-version:
+          - "7.0"
           - "6.0"
           - "5.9"
           - "5.8"
