@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,  @typescript-eslint/no-explicit-any,  @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/require-await,  @typescript-eslint/use-unknown-in-catch-callback-variable --
+/* eslint-disable @typescript-eslint/explicit-function-return-type,  @typescript-eslint/no-explicit-any,  @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/require-await --
  * These aren't useful for a reference implementation!
  */
 
@@ -56,30 +56,28 @@ function batch<Params extends any[], BatchResponse, Result>(
   const batchFunnel = funnel(
     // Passes all accumulated parameters to the callback and then extracts the response for each individual call via the extractor.
     (requests: readonly BatchRequest<Params, Result>[]) => {
-      callback(requests.map(({ params }) => params))
-        // On success we iterate again over all calls and allow the extractor
-        // to pull a value out of the aggregated response for each one.
-        .then((response) => {
+      const executeBatch = async () => {
+        try {
+          const response = await callback(requests.map(({ params }) => params));
           for (const [
             index,
-            {
-              params,
-              promiseCallbacks: [resolve],
-            },
+            { params, promiseCallbacks },
           ] of requests.entries()) {
+            // On success we iterate again over all calls and allow the
+            // extractor to pull a value out of the aggregated response for
+            // each one.
             const result = extractor(response, index, ...params);
-            resolve(result);
+            promiseCallbacks[0](result);
           }
-        })
+        } catch (error) {
+          for (const { promiseCallbacks } of requests) {
+            // On error we simply pass the error along to all reject callbacks.
+            promiseCallbacks[1](error);
+          }
+        }
+      };
 
-        // On error we simply pass the error along to all reject callbacks.
-        .catch((error) => {
-          for (const {
-            promiseCallbacks: [, reject],
-          } of requests) {
-            reject(error);
-          }
-        });
+      void executeBatch();
     },
     {
       // Reducer: Accumulates the parameters for each call, together with the

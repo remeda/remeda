@@ -29,3 +29,19 @@ test("picking from non-existent keys (in a union)", () => {
     {},
   );
 });
+
+// @see https://github.com/remeda/remeda/issues/107
+test("supports inherited properties (issue #107)", () => {
+  class BaseClass {
+    // eslint-disable-next-line @typescript-eslint/class-methods-use-this -- This is fine...
+    public testProp(): string {
+      return "abc";
+    }
+  }
+  class TestClass extends BaseClass {}
+
+  const picked = pick(new TestClass(), ["testProp"]);
+
+  expect(Object.keys(picked)).toStrictEqual(["testProp"]);
+  expect(picked.testProp()).toBe("abc");
+});

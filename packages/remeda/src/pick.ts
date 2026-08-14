@@ -121,6 +121,7 @@ function pickImplementation<
 >(object: T, keys: Keys): PickFromArray<T, Keys> {
   const out: Partial<Pick<T, Keys[number]>> = {};
   for (const key of keys) {
+    // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: for class instances the picked keys (methods and accessors) live on the prototype, and `Object.hasOwn` would wrongly skip them (https://github.com/remeda/remeda/issues/107).
     if (key in object) {
       out[key] = object[key];
     }

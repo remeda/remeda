@@ -194,7 +194,7 @@ describe("lodash spec", () => {
     //=> Calling `range` with a single parameter results in the data-last version of `range` being returned.
     () => {
       expect(range(0)).toStrictEqual([]);
-      expect(range(Number.NaN)).toStrictEqual([]);
+      expect(range(NaN)).toStrictEqual([]);
     },
   );
 
@@ -242,7 +242,7 @@ describe("lodash spec", () => {
     "should treat falsey `start` as `0` - NaN",
     //=> NaN is not treated as `0` implicitly, instead, we don't consider the input valid and thus the we don't define the expected output either.
     () => {
-      expect(range(Number.NaN, 1)).toStrictEqual([0]);
+      expect(range(NaN, 1)).toStrictEqual([0]);
     },
   );
 
@@ -279,7 +279,7 @@ describe("lodash spec", () => {
     // and `end` are NaN they happen to result in an empty range, but this is
     // not strictly enforced and is implementation dependent, and might break
     // in the future (without it being considered a breaking API change!)
-    expect(range(Number.NaN, Number.NaN)).toStrictEqual([]);
+    expect(range(NaN, NaN)).toStrictEqual([]);
   });
 
   test.fails(

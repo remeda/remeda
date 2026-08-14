@@ -4,8 +4,6 @@
 // for the negative precision limit, too.
 const MAX_PRECISION = 15;
 
-const RADIX = 10;
-
 export const withPrecision =
   (roundingFn: (value: number) => number) =>
   (value: number, precision: number): number => {
@@ -13,13 +11,13 @@ export const withPrecision =
       return roundingFn(value);
     }
 
-    if (!Number.isInteger(precision)) {
+    if (!Number.isSafeInteger(precision)) {
       throw new TypeError(
         `precision must be an integer: ${precision.toString()}`,
       );
     }
 
-    if (precision > MAX_PRECISION || precision < -MAX_PRECISION) {
+    if (Math.abs(precision) > MAX_PRECISION) {
       throw new RangeError("precision must be between -15 and 15");
     }
 
@@ -42,12 +40,12 @@ export const withPrecision =
  */
 function shiftDecimalPoint(value: number, shift: number): number {
   const asString = value.toString();
-  const [n, exponent] = asString.split("e");
+  const [n, exponent] = asString.split("e", 2);
 
   const shiftedExponent =
-    (exponent === undefined ? 0 : Number.parseInt(exponent, RADIX)) + shift;
+    (exponent === undefined ? 0 : Math.trunc(Number(exponent))) + shift;
 
   const shiftedValueAsString = `${n!}e${shiftedExponent.toString()}`;
 
-  return Number.parseFloat(shiftedValueAsString);
+  return Number(shiftedValueAsString);
 }

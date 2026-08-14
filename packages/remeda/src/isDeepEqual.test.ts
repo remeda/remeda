@@ -56,7 +56,7 @@ describe("scalars", () => {
   });
 
   test("naN and NaN are equal", () => {
-    expect(isDeepEqual(Number.NaN, Number.NaN)).toBe(true);
+    expect(isDeepEqual(NaN, NaN)).toBe(true);
   });
 
   test("0 and -0 are equal", () => {
@@ -64,15 +64,11 @@ describe("scalars", () => {
   });
 
   test("infinity and Infinity are equal", () => {
-    expect(
-      isDeepEqual(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY),
-    ).toBe(true);
+    expect(isDeepEqual(Infinity, Infinity)).toBe(true);
   });
 
   test("infinity and -Infinity are not equal", () => {
-    expect(
-      isDeepEqual(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY),
-    ).toBe(false);
+    expect(isDeepEqual(Infinity, -Infinity)).toBe(false);
   });
 });
 

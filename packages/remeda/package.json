@@ -85,7 +85,7 @@
     "semantic-release": "^25.0.9",
     "tsdown": "^0.22.14",
     "type-fest": "5.8.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.67.0",
     "vitest": "^4.1.10"
   },

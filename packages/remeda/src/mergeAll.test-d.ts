@@ -15,13 +15,13 @@ describe("arrays", () => {
     const mergedUserUnion = mergeAll(userUnionArray);
 
     expectTypeOf(mergedUserUnion).toEqualTypeOf<
+      | EmptyObject
       | {
           id: string;
           phone?: string | number;
           name?: string;
           optionalTitle?: string;
         }
-      | EmptyObject
     >();
   });
 
@@ -30,7 +30,7 @@ describe("arrays", () => {
     const result = mergeAll(input);
 
     expectTypeOf(result).toEqualTypeOf<
-      { a: string; b: number; c: boolean } | EmptyObject
+      EmptyObject | { a: string; b: number; c: boolean }
     >();
   });
 
@@ -46,35 +46,32 @@ describe("arrays", () => {
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        | { a?: number; b: string; c?: number; d?: boolean; e?: string }
         | EmptyObject
+        | { a?: number; b: string; c?: number; d?: boolean; e?: string }
       >();
     });
 
     test("should preserve undefined in fields when converting fields from non-optional to optional", () => {
       const input: readonly (
-        | { a: string }
-        | { a: string; b: string | undefined; c: undefined }
+        { a: string } | { a: string; b: string | undefined; c: undefined }
       )[] = [];
 
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        { a: string; b?: string | undefined; c?: undefined } | EmptyObject
+        EmptyObject | { a: string; b?: string | undefined; c?: undefined }
       >();
     });
 
     test("should prefer optional over non-optional when the same field across all members of the union has different optionalities, because it is type safe", () => {
       // there is no "optionality union", we should prefer the safer option for these ambiguities
       const input: readonly (
-        | { a?: number }
-        | { a: number }
-        | { a?: number; b: string }
+        { a?: number } | { a: number } | { a?: number; b: string }
       )[] = [];
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        { a?: number; b?: string } | EmptyObject
+        EmptyObject | { a?: number; b?: string }
       >();
     });
   });
@@ -82,27 +79,25 @@ describe("arrays", () => {
   describe("should merge different types on same fields into a union", () => {
     test("when the types are different, they form a union", () => {
       const input: readonly (
-        | { a: number; b: string }
-        | { a: string; b: string }
+        { a: number; b: string } | { a: string; b: string }
       )[] = [];
 
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        { a: string | number; b: string } | EmptyObject
+        EmptyObject | { a: string | number; b: string }
       >();
     });
 
     test("when the fields are unions, they are combined into a single union", () => {
       const input: readonly (
-        | { a: number | boolean; b: string }
-        | { a: string | Date; b: string }
+        { a: number | boolean; b: string } | { a: string | Date; b: string }
       )[] = [];
 
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
-        { a: string | number | boolean | Date; b: string } | EmptyObject
+        EmptyObject | { a: string | number | boolean | Date; b: string }
       >();
     });
 
@@ -115,13 +110,13 @@ describe("arrays", () => {
       const result = mergeAll(input);
 
       expectTypeOf(result).toEqualTypeOf<
+        | EmptyObject
         | {
             a:
               | ({ a1: string } & { b1: string })
               | ({ a2: string } & { b2: string });
             b: string;
           }
-        | EmptyObject
       >();
     });
   });

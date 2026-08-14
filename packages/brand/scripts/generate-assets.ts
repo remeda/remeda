@@ -11,7 +11,7 @@
 
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import sharp from "sharp";
+import sharp, { type SharpOptions } from "sharp";
 import { LOCKUP_DARK_FILE, LOCKUP_LIGHT_FILE, MARK_FILE } from "./config.ts";
 
 type Image = {
@@ -48,11 +48,11 @@ const ICON_SIZES = [16, 32, 48] as const;
 
 const MARK_OPTIONS = {
   density: 300,
-} as const satisfies sharp.SharpOptions;
+} as const satisfies SharpOptions;
 
 const SOCIAL_CANVAS_OPTIONS = {
   density: 300,
-} as const satisfies sharp.SharpOptions;
+} as const satisfies SharpOptions;
 const SOCIAL_CANVAS_RESIZE_FACTOR = 0.72;
 
 const DOCS_SITE_SOCIAL_CANVAS_DIMENSIONS = {

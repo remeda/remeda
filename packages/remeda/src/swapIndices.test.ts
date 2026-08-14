@@ -11,9 +11,9 @@ describe("data_first", () => {
   });
 
   test("fails gracefully on NaN indices", () => {
-    expect(swapIndices("apple", Number.NaN, 1)).toBe("apple");
-    expect(swapIndices("apple", 1, Number.NaN)).toBe("apple");
-    expect(swapIndices("apple", Number.NaN, Number.NaN)).toBe("apple");
+    expect(swapIndices("apple", NaN, 1)).toBe("apple");
+    expect(swapIndices("apple", 1, NaN)).toBe("apple");
+    expect(swapIndices("apple", NaN, NaN)).toBe("apple");
   });
 
   test("fails gracefully on overflow indices", () => {

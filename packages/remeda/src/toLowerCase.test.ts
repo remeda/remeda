@@ -49,7 +49,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expect(toLowerCase("É\u0301LLO")).toBe("é\u0301llo");
+    expect(toLowerCase("É\u{301}LLO")).toBe("é\u{301}llo");
   });
 
   test("handles Turkish dotted I", () => {

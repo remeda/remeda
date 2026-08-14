@@ -16,18 +16,13 @@ type Props = {
 };
 
 const {
-  func: {
-    name,
-    signatures: [
-      {
-        comment: { blockTags, summary },
-      },
-    ],
-    sources,
-  },
+  func: { name, signatures, sources },
   category,
   internalNames,
 } = Astro.props;
+
+// We only consider the first signature's comment.
+const [{ comment }] = signatures;
 ---
 
 <>
@@ -36,7 +31,7 @@ const {
       {name}
     </H3CardTitle>
     {
-      extractTags(blockTags).map((tag) => (
+      extractTags(comment.blockTags).map((tag) => (
         <TagBadge className="h-8" tag={tag} />
       ))
     }
@@ -44,10 +39,10 @@ const {
     {hasAtLeast(sources, 1) && <GithubSource url={sources[0].url} />}
   </div>
   {
-    hasAtLeast(summary, 1) && (
+    hasAtLeast(comment.summary, 1) && (
       <Prose>
         <Markdown
-          markdown={summary
+          markdown={comment.summary
             .map(({ kind, text }, i) => {
               if (kind !== "code") {
                 return text;
@@ -58,8 +53,8 @@ const {
                 return text;
               }
 
-              const previous = summary[i - 1];
-              const next = summary[i + 1];
+              const previous = comment.summary[i - 1];
+              const next = comment.summary[i + 1];
               if (
                 previous?.kind === "text" &&
                 previous.text.endsWith("[") &&

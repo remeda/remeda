@@ -98,7 +98,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expectTypeOf(capitalize("é\u0301llo")).toEqualTypeOf<"É\u0301llo">();
+    expectTypeOf(capitalize("é\u{301}llo")).toEqualTypeOf<"É\u{301}llo">();
   });
 
   test("single accented char", () => {

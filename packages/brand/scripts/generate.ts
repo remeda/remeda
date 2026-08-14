@@ -1,3 +1,9 @@
+/* eslint-disable unicorn/no-break-in-nested-loop --
+ * TODO: We have a switch nested inside a loop so we rely on it mutating state
+ * via closure and therefore can't externalize the switch. Is there an elegant
+ * workaround?
+ */
+
 /**
  * Regenerates the remeda mark and lockup SVGs from first principles.
  *
@@ -88,8 +94,8 @@ async function main(): Promise<number> {
   const stencilSvg = renderSvg(...renderStencil(inkHex));
   const referenceSvg = renderSvg(...renderClipReference());
 
-  const isInvalid = await validate(colorSvg, monoSvg, stencilSvg, referenceSvg);
-  if (isInvalid) {
+  const isOk = await isRenderedOk(colorSvg, monoSvg, stencilSvg, referenceSvg);
+  if (!isOk) {
     console.error("verification failed; SVGs not written");
     return 1;
   }
@@ -108,7 +114,7 @@ async function main(): Promise<number> {
   return 0;
 }
 
-async function validate(
+async function isRenderedOk(
   colorSvg: string,
   monoSvg: string,
   stencilSvg: string,
@@ -139,7 +145,7 @@ async function validate(
     const r = colorRender[3 * index]!;
     const g = colorRender[3 * index + 1]!;
     const b = colorRender[3 * index + 2]!;
-    const expectDark =
+    const isExpectDark =
       Math.min(
         distanceSquared(r, g, b, COLOR.blue),
         distanceSquared(r, g, b, COLOR.ink),
@@ -153,7 +159,7 @@ async function validate(
         monoRender[3 * index + 1]! +
         monoRender[3 * index + 2]! <
       384;
-    if (expectDark !== isDark) {
+    if (isExpectDark !== isDark) {
       mismatches++;
     }
   }
@@ -165,7 +171,7 @@ async function validate(
     }
   }
 
-  let isInvalid = false;
+  let isOk = true;
   for (const { name, ratio, budget } of [
     {
       name: "flatten vs clip reference",
@@ -183,17 +189,13 @@ async function validate(
       budget: 0.01,
     },
   ]) {
-    const isOk = ratio <= budget;
-    if (!isOk) {
-      isInvalid = true;
-    }
-
+    isOk &&= ratio <= budget;
     console.log(
-      `${isOk ? "ok  " : "FAIL"} ${name}: ${(ratio * 100).toFixed(3)}% (budget ${budget * 100}%)`,
+      `${ratio <= budget ? "ok  " : "FAIL"} ${name}: ${(ratio * 100).toFixed(3)}% (budget ${budget * 100}%)`,
     );
   }
 
-  return isInvalid;
+  return isOk;
 }
 
 function distanceSquared(r: number, g: number, b: number, c: Color): number {
@@ -297,16 +299,18 @@ function seamCrossingPoint(a: Point, b: Point): Point {
 // pairs are the connectors. No Sutherland-Hodgman bridge edges.
 function cutRing(
   ring: readonly Point[],
-  keepLeft: boolean,
+  shouldKeepLeft: boolean,
 ): (readonly Point[])[] {
   const chains: Chain[] = [];
-  let chain: Chain | undefined = undefined;
-  let openedAtStart: Chain | undefined = undefined;
+  let chain: Chain | undefined;
+  let openedAtStart: Chain | undefined;
   for (let index = 0; index < ring.length; index++) {
     const a = ring[index]!;
     const b = ring[(index + 1) % ring.length]!;
-    const ib = keepLeft ? signedSeamOffset(b) < 0 : signedSeamOffset(b) > 0;
-    if (keepLeft ? signedSeamOffset(a) < 0 : signedSeamOffset(a) > 0) {
+    const isNextVertexKept = shouldKeepLeft
+      ? signedSeamOffset(b) < 0
+      : signedSeamOffset(b) > 0;
+    if (shouldKeepLeft ? signedSeamOffset(a) < 0 : signedSeamOffset(a) > 0) {
       if (chain === undefined) {
         chain = { entry: undefined, pts: [a], exit: undefined };
         if (index === 0) {
@@ -315,12 +319,12 @@ function cutRing(
       } else {
         chain.pts.push(a);
       }
-      if (!ib) {
+      if (!isNextVertexKept) {
         chain.exit = seamCrossingPoint(a, b);
         chains.push(chain);
         chain = undefined;
       }
-    } else if (ib) {
+    } else if (isNextVertexKept) {
       chain = { entry: seamCrossingPoint(a, b), pts: [], exit: undefined };
     }
   }
@@ -367,16 +371,16 @@ function cutRing(
     partner.set(`${upper.type}:${upper.ci}`, lower);
   }
 
-  const used = Array.from({ length: closedChains.length }).fill(false);
+  const used = new Set<number>();
   const out: Point[][] = [];
   for (let start = 0; start < closedChains.length; start++) {
-    if (used[start]) {
+    if (used.has(start)) {
       continue;
     }
     const piece: Point[] = [];
     let ci = start;
     for (let guard = 0; guard <= closedChains.length; guard++) {
-      used[ci] = true;
+      used.add(ci);
       const c = closedChains[ci]!;
       piece.push(c.entry, ...c.pts, c.exit);
       const next = partner.get(`exit:${ci}`);
@@ -408,8 +412,8 @@ function ringsToPath(rs: readonly (readonly Point[])[]): string {
     .join("");
 }
 
-function cutAll(keepLeft: boolean): (readonly Point[])[] {
-  return fullGlyphRings().flatMap((ring) => cutRing(ring, keepLeft));
+function cutAll(shouldKeepLeft: boolean): (readonly Point[])[] {
+  return fullGlyphRings().flatMap((ring) => cutRing(ring, shouldKeepLeft));
 }
 
 function fullGlyphRings(): (readonly Point[])[] {

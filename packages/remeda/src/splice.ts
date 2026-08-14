@@ -70,6 +70,7 @@ export function splice(...args: readonly unknown[]): unknown {
 function spliceImplementation<T extends IterableContainer>(
   data: T,
   start: number,
+  // eslint-disable-next-line unicorn/no-non-function-verb-prefix -- This is the exact term used in the lib itself for this...
   deleteCount: number,
   replacement: readonly T[number][] = [],
 ): T[number][] {

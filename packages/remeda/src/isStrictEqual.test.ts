@@ -93,8 +93,8 @@ describe("built-ins", () => {
 
 describe("special cases", () => {
   test("literal NaN", () => {
-    // eslint-disable-next-line unicorn/prefer-number-properties
     expect(isStrictEqual(NaN, NaN)).toBe(true);
+    // eslint-disable-next-line unicorn/prefer-global-number-constants -- Intentional
     expect(isStrictEqual(Number.NaN, Number.NaN)).toBe(true);
   });
 

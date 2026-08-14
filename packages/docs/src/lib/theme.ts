@@ -10,9 +10,7 @@ const ALGOLIA_DOCSEARCH_DARK_THEME_VALUE = "dark";
 export function initTheme(): void {
   const storedTheme = getStoredTheme();
 
-  const prefersDarkMediaQuery = globalThis.matchMedia(
-    "(prefers-color-scheme: dark)",
-  );
+  const prefersDarkMediaQuery = matchMedia("(prefers-color-scheme: dark)");
 
   setDarkMode(
     storedTheme === "dark" ||
@@ -31,9 +29,7 @@ export function switchTheme(theme: Theme): void {
   setDarkMode(false);
 
   if (theme === "system") {
-    const { matches: prefersDark } = globalThis.matchMedia(
-      "(prefers-color-scheme: dark)",
-    );
+    const { matches: prefersDark } = matchMedia("(prefers-color-scheme: dark)");
 
     if (prefersDark) {
       setDarkMode();

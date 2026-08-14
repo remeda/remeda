@@ -192,7 +192,7 @@ export function isEmptyish(data: unknown): boolean;
 
 export function isEmptyish(data: unknown): boolean {
   // eslint-disable-next-line eqeqeq -- Less code to ship...
-  if (data == undefined || data === "") {
+  if (data === "" || data == undefined) {
     // These are the only literal values that are considered emptyish.
     return true;
   }

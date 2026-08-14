@@ -22,12 +22,11 @@ export function Search({
     <DocSearch
       apiKey={API_KEY}
       appId={APP_ID}
-      // eslint-disable-next-line react/jsx-no-bind -- This callback doesn't need to be stable because it is only used during render. @see https://github.com/algolia/docsearch/blob/104f7d1a986d1aef3d85f8dbca3e7197e66bf067/packages/docsearch-react/src/NoResultsScreen.tsx#L65-L74
       getMissingResultsUrl={({ query }) => {
         const issuesUrl = new URL("issues/new", REPO_URL);
         issuesUrl.searchParams.set("title", `Missing function: ${query}`);
         issuesUrl.searchParams.set("labels", LABELS);
-        return issuesUrl.toString();
+        return issuesUrl.href;
       }}
       indices={[
         {
@@ -63,24 +62,24 @@ export function Search({
           const originalDestination = new URL(itemUrl);
           const destination = new URL(
             `${originalDestination.pathname}${originalDestination.search}${originalDestination.hash}`,
-            globalThis.location.origin,
+            location.origin,
           );
 
           const goToResult = () => {
             // The default implementation of the Algolia 'navigate' action
             // @see https://www.algolia.com/doc/ui-libraries/autocomplete/core-concepts/keyboard-navigation/
-            globalThis.location.assign(destination.toString());
+            location.assign(destination.href);
           };
 
           if (
-            globalThis.location.hash !== "" &&
-            globalThis.location.pathname === destination.pathname &&
-            globalThis.location.hash !== destination.hash
+            location.hash !== "" &&
+            location.pathname === destination.pathname &&
+            location.hash !== destination.hash
           ) {
             // We defer the update so that it fires after the code in the
             // Algolia/Astro infra that resets the scroll position when
             // handling the Enter key press.
-            setTimeout(goToResult);
+            setTimeout(goToResult, 0);
           } else {
             // Otherwise, run as usual (immediately).
             goToResult();

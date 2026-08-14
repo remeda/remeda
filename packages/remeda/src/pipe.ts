@@ -301,33 +301,53 @@ export function pipe(
       continue;
     }
 
-    const lazySequence: PreparedLazyFunction[] = [];
-    for (let index = functionIndex; index < functions.length; index++) {
-      const lazyOp = lazyFunctions[index];
-      if (lazyOp === undefined) {
-        break;
-      }
-
-      lazySequence.push(lazyOp);
-      if (lazyOp.isSingle) {
-        break;
-      }
-    }
-
-    const accumulator: unknown[] = [];
-
-    for (const value of output) {
-      const shouldExitEarly = processItem(value, accumulator, lazySequence);
-      if (shouldExitEarly) {
-        break;
-      }
-    }
+    const lazySequence = extractLazySequence(lazyFunctions, functionIndex);
+    const accumulator = processIterable(output, lazySequence);
 
     const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
   return output;
+}
+
+function extractLazySequence(
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy functions are stateful and contain the state needed to compute the next value lazily.
+  lazyFunctions: readonly (PreparedLazyFunction | undefined)[],
+  startIndex: number,
+): readonly PreparedLazyFunction[] {
+  const lazySequence: PreparedLazyFunction[] = [];
+
+  for (let index = startIndex; index < lazyFunctions.length; index++) {
+    const lazyFunction = lazyFunctions[index];
+    if (lazyFunction === undefined) {
+      break;
+    }
+
+    lazySequence.push(lazyFunction);
+    if (lazyFunction.isSingle) {
+      break;
+    }
+  }
+
+  return lazySequence;
+}
+
+function processIterable(
+  iterable: Iterable<unknown>,
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy sequence is stateful and contains the state needed to compute the next value lazily.
+  lazySequence: readonly PreparedLazyFunction[],
+): unknown[] {
+  const accumulator: unknown[] = [];
+
+  for (const value of iterable) {
+    const shouldExitEarly = processItem(value, accumulator, lazySequence);
+    if (shouldExitEarly) {
+      break;
+    }
+  }
+
+  return accumulator;
 }
 
 function processItem(
@@ -354,20 +374,19 @@ function processItem(
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
         for (const subItem of lazyResult.next as readonly unknown[]) {
-          const subResult = processItem(
+          const shouldExitEarly = processItem(
             subItem,
             accumulator,
             lazySequence.slice(functionsIndex + 1),
           );
-          if (subResult) {
+          if (shouldExitEarly) {
             return true;
           }
         }
         return isDone;
       }
       currentItem = lazyResult.next;
-    }
-    if (!lazyResult.hasNext) {
+    } else {
       break;
     }
     // process remaining functions in the pipe
@@ -398,6 +417,7 @@ function isIterable(something: unknown): something is Iterable<unknown> {
     typeof something === "string" ||
     (typeof something === "object" &&
       something !== null &&
+      // eslint-disable-next-line unicorn/no-computed-property-existence-check -- The prototype-chain check is intentional: iterables inherit `Symbol.iterator` from their prototype (e.g. `Array.prototype`), and `Object.hasOwn` would reject them all.
       Symbol.iterator in something)
   );
 }

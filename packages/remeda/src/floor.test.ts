@@ -4,7 +4,7 @@ import { floor } from "./floor";
 describe("data-first", () => {
   test("should work with positive precision", () => {
     expect(floor(8123.4317, 3)).toBe(8123.431);
-    expect(floor(483.222_43, 1)).toBe(483.2);
+    expect(floor(483.22243, 1)).toBe(483.2);
     expect(floor(123.4317, 5)).toBe(123.4317);
   });
 
@@ -22,14 +22,9 @@ describe("data-first", () => {
     expect(floor(8123.4317, 0)).toBe(8123);
   });
 
-  test.each([Number.NaN, Number.POSITIVE_INFINITY])(
-    "should throw for %d precision",
-    (val) => {
-      expect(() => floor(1, val)).toThrow(
-        `precision must be an integer: ${val}`,
-      );
-    },
-  );
+  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
+    expect(() => floor(1, val)).toThrow(`precision must be an integer: ${val}`);
+  });
 
   test("should throw for non integer precision", () => {
     expect(() => floor(1, 21.37)).toThrow(
@@ -42,7 +37,7 @@ describe("data-first", () => {
     expect(() => floor(1, -16)).toThrow("precision must be between -15 and 15");
   });
 
-  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+  test.each([NaN, Infinity, -Infinity])(
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {
@@ -55,7 +50,7 @@ describe("data-first", () => {
 describe("data-last", () => {
   test("should work with positive precision", () => {
     expect(floor(3)(8123.4317)).toBe(8123.431);
-    expect(floor(1)(483.222_43)).toBe(483.2);
+    expect(floor(1)(483.22243)).toBe(483.2);
     expect(floor(5)(123.4317)).toBe(123.4317);
   });
 
@@ -68,14 +63,9 @@ describe("data-last", () => {
     expect(floor(0)(8123.4317)).toBe(8123);
   });
 
-  test.each([Number.NaN, Number.POSITIVE_INFINITY])(
-    "should throw for %d precision",
-    (val) => {
-      expect(() => floor(val)(1)).toThrow(
-        `precision must be an integer: ${val}`,
-      );
-    },
-  );
+  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
+    expect(() => floor(val)(1)).toThrow(`precision must be an integer: ${val}`);
+  });
 
   test("should throw for non integer precision", () => {
     expect(() => floor(21.37)(1)).toThrow(
@@ -88,7 +78,7 @@ describe("data-last", () => {
     expect(() => floor(-16)(1)).toThrow("precision must be between -15 and 15");
   });
 
-  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+  test.each([NaN, Infinity, -Infinity])(
     "should return %d when passed as value regardless of precision",
     (val) => {
       for (const precision of [-1, 0, 1]) {

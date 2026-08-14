@@ -58,7 +58,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expect(capitalize("é\u0301llo")).toBe("É\u0301llo");
+    expect(capitalize("é\u{301}llo")).toBe("É\u{301}llo");
   });
 
   test("single accented char", () => {

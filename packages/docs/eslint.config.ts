@@ -1,9 +1,8 @@
-import { fixupPluginRules } from "@eslint/compat";
+import eslintReact from "@eslint-react/eslint-plugin";
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
 import jsxA11yX from "eslint-plugin-jsx-a11y-x";
-import eslintPluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import { defineConfig } from "eslint/config";
@@ -53,10 +52,14 @@ export default defineConfig(
       ...eslintPluginUnicorn.configs.recommended.rules,
 
       // Not useful!
-      "unicorn/prevent-abbreviations": "off",
+      "unicorn/max-nested-calls": "off",
+      "unicorn/name-replacements": "off",
 
       // We prefer the "avoid" syntax which isn't the default...
       "unicorn/switch-case-braces": ["error", "avoid"],
+
+      // We prefer the single-line comment style which isn't the default...
+      "unicorn/single-line-block-comment-style": ["error", "single-line"],
     },
   },
 
@@ -65,65 +68,31 @@ export default defineConfig(
     // React Components
     files: ["**/*.tsx"],
 
+    extends: [eslintReact.configs["strict-type-checked"]],
+
     plugins: {
-      // TODO [eslint-plugin-react@>7.37.5]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-react/issues/3977), unwrap the plugin, drop its `eslint` override in the root package.json, and remove `@eslint/compat`.
-      react: fixupPluginRules(eslintPluginReact),
       "jsx-a11y-x": jsxA11yX,
     },
 
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
-
     rules: {
-      /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
-      ...eslintPluginReact.configs.flat.all!.rules,
-      /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The types defined in the plugin aren't accurate! We need to trust the docs instead */
-      ...eslintPluginReact.configs.flat["jsx-runtime"]!.rules,
       ...jsxA11yX.configs.strict.rules,
 
-      // We use TypeScript
-      "react/jsx-filename-extension": ["error", { extensions: [".tsx"] }],
-
-      // Tiny components that are just extracted for clarity or reuse are less
-      // readable when they are extracted out of context.
-      "react/no-multi-comp": ["error", { ignoreStateless: true }],
-
-      // Makes reading components easier because props are consistent.
-      "react/jsx-sort-props": [
-        "warn",
-        {
-          reservedFirst: true,
-          shorthandFirst: true,
-          multiline: "last",
-          callbacksLast: true,
-        },
-      ],
-
-      // Not relevant to us
-      "react/forbid-component-props": "off",
-      "react/jsx-max-depth": "off",
-      "react/jsx-no-literals": "off",
-      "react/jsx-props-no-spreading": "off",
-      "react/require-default-props": "off",
-    },
-  },
-
-  {
-    // These are shadcn files, we don't want to meddle with them too much...
-    files: ["src/components/ui/*.tsx"],
-    rules: {
-      "react/jsx-no-leaked-render": "off",
-      "react/jsx-sort-props": "off",
-      "react/prefer-read-only-props": "off",
+      // ESLint React mirrors several rules of the official React ESLint plugin
+      // (e.g. `exhaustive-deps` and `rules-of-hooks`); when both are enabled
+      // every violation is reported twice. We prefer the React team's
+      // implementations, so the mirrored copies are disabled.
+      ...Object.fromEntries(
+        Object.keys(reactHooks.rules).map((ruleName) => [
+          `@eslint-react/${ruleName}`,
+          "off",
+        ]),
+      ),
     },
   },
 
   eslintPluginAstro.configs["flat/recommended"],
-  // TODO [eslint-plugin-astro@>2.1.1]: If astro's a11y configs support `eslint-plugin-jsx-a11y-x` (https://github.com/ota-meshi/eslint-plugin-astro/issues/565), switch to it and drop `eslint-plugin-jsx-a11y` (only these configs consume it) and its root `eslint` override.
-  // TODO [eslint-plugin-jsx-a11y@>6.10.2]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1075), drop its `eslint` override in the root package.json.
+  // TODO [eslint-plugin-astro@>3.1.0]: If astro's a11y configs support `eslint-plugin-jsx-a11y-x` (https://github.com/ota-meshi/eslint-plugin-astro/issues/565), switch to it and drop `eslint-plugin-jsx-a11y` (only these configs consume it) and its root `eslint` override.
+  // TODO [eslint-plugin-jsx-a11y@>6.10.2]: If this release ships native ESLint 10 support (https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1075), drop its `eslint` override in the root package.json. Until then the override's version range must match the `eslint` range in the workspace package.jsons: when they diverge npm can hoist the override's (older) copy to the root node_modules, where other hoisted plugins bind to it and break on cross-version rule metadata (e.g. eslint-plugin-unicorn wrapping core rules whose `defaultOptions` only exist in newer ESLint).
   eslintPluginAstro.configs["jsx-a11y-strict"],
   {
     files: ["**/*.astro"],
@@ -136,6 +105,7 @@ export default defineConfig(
         projectService: false,
       },
     },
+    // TODO [eslint-plugin-astro@>3.1.0]: astro-eslint-parser 3.0.0 reads `ts.JsxEmit.Preserve`, which TypeScript 7's JS API doesn't expose, so every `.astro` file fails parsing with "Cannot read properties of undefined (reading 'Preserve')". This is one of the reasons `typescript` is held back to `^6.0.2` across the repo (typescript-eslint's peer range and tsdown's dts generation are the others); retest with TypeScript 7 when a newer parser ships.
     rules: {
       // Possible Errors
       "astro/no-exports-from-components": "error",

@@ -164,7 +164,7 @@ async function injectAdditionalTypeDeclarations({
         // @see https://github.com/remeda/remeda/issues/1175
         const withSymbols = withPolyfills.replace(
           EXPORTS_INSERTION_POINT_RE,
-          `, ${INTERNAL_SYMBOLS.join(", ")}`,
+          () => `, ${INTERNAL_SYMBOLS.join(", ")}`,
         );
         if (withSymbols === withPolyfills) {
           throw new Error(`Could not find exports statement in: ${file}`);

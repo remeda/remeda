@@ -79,17 +79,17 @@ type StringToPathImpl<S> =
  * intentional. See the tests for this utility for more details and the
  * expected outputs*.
  *
- * @param path - A string path.
+ * @param stringPath - A string path.
  * @signature
- *   stringToPath(path)
+ *   stringToPath(stringPath)
  * @example
  *   stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category Utility
  */
-export function stringToPath<const Path extends string>(
-  path: Path,
-): StringToPath<Path> {
+export function stringToPath<const S extends string>(
+  stringPath: S,
+): StringToPath<S> {
   const result: (string | number)[] = [];
 
   // There are four possible ways to define a path segment::
@@ -116,7 +116,7 @@ export function stringToPath<const Path extends string>(
     /\.{0,4096}(?<propName>[^.[\]]+)|\['(?<quoted>.{0,4096}?)'\]|\["(?<doubleQuoted>.{0,4096}?)"\]|\[(?<unquoted>.{0,4096}?)\]/uy;
 
   let match: RegExpExecArray | null;
-  while ((match = pathSegmentRe.exec(path)) !== null) {
+  while ((match = pathSegmentRe.exec(stringPath)) !== null) {
     const { propName, quoted, doubleQuoted, unquoted } = match.groups!;
 
     if (unquoted !== undefined) {
@@ -136,5 +136,6 @@ export function stringToPath<const Path extends string>(
     );
   }
 
+  // @ts-expect-error [ts2322] -- It's impossible for TypeScript to infer that our algorithm actually computes StringToPath.
   return result;
 }

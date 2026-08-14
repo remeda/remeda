@@ -40,10 +40,12 @@ export const words = <S extends string>(
   let word = "";
 
   const flush = (): void => {
-    if (word.length > 0) {
-      results.push(word);
-      word = "";
+    if (word.length === 0) {
+      return;
     }
+
+    results.push(word);
+    word = "";
   };
 
   for (const character of data) {

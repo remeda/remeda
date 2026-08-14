@@ -154,7 +154,7 @@ describe("unsupported types", () => {
     test("numbers", () => {
       expect(isEmptyish(0)).toBe(false);
       expect(isEmptyish(-0)).toBe(false);
-      expect(isEmptyish(Number.NaN)).toBe(false);
+      expect(isEmptyish(NaN)).toBe(false);
       expect(isEmptyish(Infinity)).toBe(false);
       expect(isEmptyish(100)).toBe(false);
       expect(isEmptyish(12.34)).toBe(false);

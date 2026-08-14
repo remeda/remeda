@@ -30,6 +30,10 @@ These three "empty-ish" values are not interchangeable in Remeda:
 - `null` is a real value, not a stand-in for absence. Don't coerce between the two.
 - `NaN` is a JavaScript accident. Prefer returning `undefined` instead — that lets the result chain through `??` and other coalescing without false negatives.
 
+## Plain objects first
+
+The vast majority of users pass plain objects: arbitrarily deep, but plain. Correctness for that case is enough. When an implementation choice trades off between behavior that is better for plain objects and behavior that supports prototype chains or class instances, always take the plain-object side (e.g., `Object.hasOwn` over `in` for key-existence checks).
+
 ## Type System
 
 ### Inputs

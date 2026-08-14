@@ -118,9 +118,8 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
       return false;
     }
 
-    const { [key as keyof T]: valueA } = a;
-    const { [key as keyof T]: valueB } = b;
-
+    const valueA = a[key as keyof T];
+    const valueB = b[key as keyof T];
     if (valueA !== valueB || !Object.is(valueA, valueB)) {
       return false;
     }

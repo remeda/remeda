@@ -58,21 +58,20 @@ function mergeDeepImplementation<
   // now just scan the output and look for values that should have been deep-
   // merged
   for (const key in source) {
-    if (!(key in destination)) {
+    if (!Object.hasOwn(destination, key)) {
       // They don't share this key.
       continue;
     }
 
-    const { [key]: destinationValue } = destination;
-    if (!isPlainObject(destinationValue)) {
+    // @ts-expect-error [ts2538] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
+    if (!isPlainObject(destination[key])) {
       // The value in destination is not a mergeable object so the value from
       // source (which was already copied in the shallow merge) would be used
       // as-is.
       continue;
     }
 
-    const { [key]: sourceValue } = source;
-    if (!isPlainObject(sourceValue)) {
+    if (!isPlainObject(source[key])) {
       // The value in source is not a mergeable object either, so it will
       // override the object in destination.
       continue;
@@ -81,7 +80,7 @@ function mergeDeepImplementation<
     // Both destination and source have a mergeable object for this key, so we
     // recursively merge them.
     // @ts-expect-error [ts2590] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
-    output[key] = mergeDeepImplementation(destinationValue, sourceValue);
+    output[key] = mergeDeepImplementation(destination[key], source[key]);
   }
 
   // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
