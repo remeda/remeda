@@ -38,16 +38,9 @@ export const forNavbar = (
     ([category, functions]) =>
       [
         category,
-        map(
-          functions,
-          ({
-            name: title,
-            signatures: [
-              {
-                comment: { blockTags },
-              },
-            ],
-          }) => ({ title, tags: extractTags(blockTags) }),
-        ),
+        map(functions, ({ name: title, signatures }) => ({
+          title,
+          tags: extractTags(signatures[0].comment.blockTags),
+        })),
       ] as const,
   );

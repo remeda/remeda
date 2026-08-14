@@ -156,7 +156,7 @@ export default defineConfig(
 
       // TODO: These rules allow us to really standardize our codebase, but they also do sweeping changes to the whole codebase which is very noisy. We should do it in one sweep sometime in the future.
       "@typescript-eslint/naming-convention": "off",
-      "unicorn/prevent-abbreviations": "off",
+      "unicorn/name-replacements": "off",
 
       // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and remove this suppression to allow the rule to find these cases.
       "unicorn/no-array-sort": "off",
@@ -409,13 +409,30 @@ export default defineConfig(
       // (We are assuming that the config is extended by unicorns's:
       // flat/recommended config)
 
-      "unicorn/better-regex": "warn",
+      "unicorn/consistent-boolean-name": [
+        "error",
+        {
+          // The data-last overload always trips this rule because it returns
+          // the curried function and not the boolean result.
+          checkFunctions: "never",
+          ignore: [
+            // Predicate is a very common way to refer to a callback that
+            // returns a boolean value, and is used heavily in MDN
+            // documentation too.
+            "predicate",
+            // The rule doesn't handle the unused params naming convention by
+            // default...
+            /^_.*$/gu,
+          ],
+        },
+      ],
       "unicorn/consistent-destructuring": "warn",
       "unicorn/custom-error-definition": "warn",
       "unicorn/filename-case": ["error", { case: "camelCase" }],
       "unicorn/no-keyword-prefix": "warn",
       "unicorn/no-unused-properties": "warn",
       "unicorn/no-useless-undefined": ["warn", { checkArguments: false }],
+      "unicorn/single-line-block-comment-style": ["error", "single-line"],
       "unicorn/switch-case-braces": ["error", "avoid"],
     },
   },
@@ -461,6 +478,8 @@ export default defineConfig(
       // harder to read and maintain.
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
+      "unicorn/max-nested-calls": "off",
+      "unicorn/no-duplicate-if-branches": "off",
       "unicorn/no-null": "off",
     },
   },
@@ -533,7 +552,15 @@ export default defineConfig(
   {
     files: ["src/internal/types/*.ts"],
     rules: {
-      "unicorn/filename-case": ["error", { case: "pascalCase" }],
+      "unicorn/filename-case": [
+        "error",
+        {
+          case: "pascalCase",
+          // Our internal directories are not part of our public API and we
+          // don't need them to follow the same convention.
+          checkDirectories: false,
+        },
+      ],
     },
   },
 );

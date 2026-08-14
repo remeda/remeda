@@ -27,8 +27,8 @@ test("should work as type guard", () => {
       | symbol
       | 1n
       | (() => void)
-      | { readonly a: "asd" }
       | [number, number, number]
+      | { readonly a: "asd" }
       | undefined
     >();
   }
@@ -54,8 +54,8 @@ test("should work as type guard in filter", () => {
       | symbol
       | 1n
       | (() => void)
-      | { readonly a: "asd" }
       | [number, number, number]
+      | { readonly a: "asd" }
       | undefined
     )[]
   >(data);

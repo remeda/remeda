@@ -164,14 +164,14 @@ describe("recipes", () => {
     ).toStrictEqual([42, 42, 1]);
 
     // NaN
-    expect(
-      map([Number.NaN, 1], when(Number.isNaN, constant(42))),
-    ).toStrictEqual([42, 1]);
+    expect(map([NaN, 1], when(Number.isNaN, constant(42)))).toStrictEqual([
+      42, 1,
+    ]);
 
     // All
     expect(
       map(
-        [Number.NaN, undefined, null, 1],
+        [NaN, undefined, null, 1],
         when(
           (x) => Number.isNaN(x) || x === null || x === undefined,
           constant(42),

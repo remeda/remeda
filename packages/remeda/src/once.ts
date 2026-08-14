@@ -11,12 +11,12 @@
  * @category Function
  */
 export function once<T>(fn: () => T): () => T {
-  let called = false;
+  let wasCalled = false;
   let ret: T;
   return () => {
-    if (!called) {
+    if (!wasCalled) {
       ret = fn();
-      called = true;
+      wasCalled = true;
     }
     return ret;
   };

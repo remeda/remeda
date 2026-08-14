@@ -58,7 +58,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expect(uncapitalize("É\u0301llo")).toBe("é\u0301llo");
+    expect(uncapitalize("É\u{301}llo")).toBe("é\u{301}llo");
   });
 
   test("single surrogate pair", () => {

@@ -78,11 +78,13 @@ function partition<T>(
 
   let i = left;
   for (let j = left; j < right; j++) {
-    if (compareFn(data[j]!, pivot) < 0) {
-      // Move items smaller then the pivot to the start of the array.
-      swapInPlace(data, i, j);
-      i += 1;
+    if (!(compareFn(data[j]!, pivot) < 0)) {
+      continue;
     }
+
+    // Move items smaller then the pivot to the start of the array.
+    swapInPlace(data, i, j);
+    i += 1;
   }
 
   swapInPlace(data, i, right);

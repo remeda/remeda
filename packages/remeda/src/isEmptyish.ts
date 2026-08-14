@@ -12,14 +12,14 @@ import type { HasWritableKeys } from "./internal/types/HasWritableKeys";
 import type { TupleParts } from "./internal/types/TupleParts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
-declare const EMPTYISH_BRAND: unique symbol;
+declare const BRAND_EMPTYISH: unique symbol;
 
 // Because our function is a type-predicate and it narrows the input based on
 // the result of our type, we sometimes need a way to "turn off" narrowing while
 // still returning the input type. By tagging/branding our return type we stop
 // TypeScript from narrowing it while still allowing it to be used as if it was
 // the input type (because it still extends the type).
-type Empty<T> = Tagged<T, typeof EMPTYISH_BRAND>;
+type Empty<T> = Tagged<T, typeof BRAND_EMPTYISH>;
 
 // The goal of this type is to return the empty "view" of the input type. This
 // makes it possible for TypeScript to narrow it precisely.
@@ -192,7 +192,7 @@ export function isEmptyish(data: unknown): boolean;
 
 export function isEmptyish(data: unknown): boolean {
   // eslint-disable-next-line eqeqeq -- Less code to ship...
-  if (data == undefined || data === "") {
+  if (data === "" || data == undefined) {
     // These are the only literal values that are considered emptyish.
     return true;
   }

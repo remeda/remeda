@@ -98,7 +98,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expectTypeOf(uncapitalize("É\u0301llo")).toEqualTypeOf<"é\u0301llo">();
+    expectTypeOf(uncapitalize("É\u{301}llo")).toEqualTypeOf<"é\u{301}llo">();
   });
 
   test("single surrogate pair", () => {

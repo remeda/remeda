@@ -61,11 +61,11 @@ function cloneImplementation<T>(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const prototype = Object.getPrototypeOf(value);
   if (
-    !Array.isArray(value) &&
     // Keep this check in sync with the same check in the impl of
     // `isPlainObject`.
     prototype !== null &&
-    prototype !== Object.prototype
+    prototype !== Object.prototype &&
+    !Array.isArray(value)
   ) {
     // Our cloning logic is only designed for plain objects and arrays; other
     // object types (like `Date`, `RegExp`, `File`, and user-defined classes)

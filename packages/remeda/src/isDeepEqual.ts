@@ -143,7 +143,7 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   }
 
   for (const [key, value] of Object.entries(data)) {
-    if (!(key in other)) {
+    if (!Object.hasOwn(other, key)) {
       return false;
     }
 
@@ -203,7 +203,7 @@ function isDeepEqualMaps(
     return false;
   }
 
-  for (const [key, value] of data.entries()) {
+  for (const [key, value] of data) {
     if (!other.has(key)) {
       return false;
     }
@@ -231,19 +231,15 @@ function isDeepEqualSets(
   const otherCopy = [...other];
 
   for (const dataItem of data) {
-    let isFound = false;
+    const matchIndex = otherCopy.findIndex((otherItem) =>
+      isDeepEqualImplementation(dataItem, otherItem),
+    );
 
-    for (const [index, otherItem] of otherCopy.entries()) {
-      if (isDeepEqualImplementation(dataItem, otherItem)) {
-        isFound = true;
-        otherCopy.splice(index, 1);
-        break;
-      }
-    }
-
-    if (!isFound) {
+    if (matchIndex === -1) {
       return false;
     }
+
+    otherCopy.splice(matchIndex, 1);
   }
 
   return true;

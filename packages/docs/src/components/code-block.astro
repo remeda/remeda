@@ -18,7 +18,7 @@ const formattedCode = await format(code, {
   ...PRETTIER_OPTIONS,
   // For inline rendering, disable Prettier's line wrapping so the snippet stays
   // on one line.
-  ...(inline && { printWidth: Number.POSITIVE_INFINITY }),
+  ...(inline && { printWidth: Infinity }),
 });
 ---
 

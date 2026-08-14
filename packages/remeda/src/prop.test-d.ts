@@ -92,7 +92,7 @@ describe("unions", () => {
   });
 
   test("union of array and object", () => {
-    const data = { a: 1 } as { a: 1 } | readonly "cat"[];
+    const data = { a: 1 } as readonly "cat"[] | { a: 1 };
 
     expectTypeOf(prop(data, "a")).toEqualTypeOf<1 | undefined>();
     expectTypeOf(prop(data, 100)).toEqualTypeOf<"cat" | undefined>();

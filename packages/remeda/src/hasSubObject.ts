@@ -3,10 +3,10 @@ import { isDeepEqual } from "./isDeepEqual";
 import { purry } from "./purry";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- We want to confine the typing to a specific symbol
-declare const HAS_SUB_OBJECT_BRAND: unique symbol;
+declare const BRAND_HAS_SUB_OBJECT: unique symbol;
 
 type HasSubObjectGuard<T, S> = Simplify<
-  Tagged<S & T, typeof HAS_SUB_OBJECT_BRAND>
+  Tagged<S & T, typeof BRAND_HAS_SUB_OBJECT>
 >;
 
 type HasSubObjectObjectValue<A, B> = Partial<{
@@ -18,9 +18,9 @@ type HasSubObjectObjectValue<A, B> = Partial<{
         ? B[Key]
         : A[Key];
 }> & {
-  [Key in
-    | Exclude<keyof A, keyof B>
-    | Exclude<keyof B, keyof A>]: Key extends keyof B ? B[Key] : never;
+  [
+    Key in Exclude<keyof A, keyof B> | Exclude<keyof B, keyof A>
+  ]: Key extends keyof B ? B[Key] : never;
 };
 
 type HasSubObjectData<

@@ -24,9 +24,10 @@ test("non-negative bigints", () => {
 });
 
 test("negative bigints", () => {
-  for (const v of randomBigInts(-10n, -5n)) {
-    expect(v).toBeGreaterThanOrEqual(-10n);
-    expect(v).toBeLessThanOrEqual(-5n);
+  const values = randomBigInts(-10n, -5n);
+  for (const value of values) {
+    expect(value).toBeGreaterThanOrEqual(-10n);
+    expect(value).toBeLessThanOrEqual(-5n);
   }
 });
 
@@ -48,19 +49,15 @@ test("huge bigints", () => {
 });
 
 test("tiny ranges with huge numbers", () => {
-  for (const v of randomBigInts(HUGE_NUMBER, HUGE_NUMBER + 1n)) {
-    expect(v).toBeGreaterThanOrEqual(HUGE_NUMBER);
-    expect(v).toBeLessThanOrEqual(HUGE_NUMBER + 1n);
+  const values = randomBigInts(HUGE_NUMBER, HUGE_NUMBER + 1n);
+  for (const value of values) {
+    expect(value).toBeGreaterThanOrEqual(HUGE_NUMBER);
+    expect(value).toBeLessThanOrEqual(HUGE_NUMBER + 1n);
   }
 });
 
 test("results are varied", () => {
-  const results = new Set<bigint>();
-  for (const v of randomBigInts(1n, 10n)) {
-    results.add(v);
-  }
-
-  expect(results).toHaveLength(10);
+  expect(new Set<bigint>(randomBigInts(1n, 10n))).toHaveLength(10);
 });
 
 describe("crypto module polyfill", () => {
@@ -80,9 +77,10 @@ describe("crypto module polyfill", () => {
   });
 
   test("negative bigints", () => {
-    for (const v of randomBigInts(-10n, -5n)) {
-      expect(v).toBeGreaterThanOrEqual(-10n);
-      expect(v).toBeLessThanOrEqual(-5n);
+    const values = randomBigInts(-10n, -5n);
+    for (const value of values) {
+      expect(value).toBeGreaterThanOrEqual(-10n);
+      expect(value).toBeLessThanOrEqual(-5n);
     }
   });
 
@@ -104,19 +102,15 @@ describe("crypto module polyfill", () => {
   });
 
   test("tiny ranges with huge numbers", () => {
-    for (const v of randomBigInts(HUGE_NUMBER, HUGE_NUMBER + 1n)) {
-      expect(v).toBeGreaterThanOrEqual(HUGE_NUMBER);
-      expect(v).toBeLessThanOrEqual(HUGE_NUMBER + 1n);
+    const values = randomBigInts(HUGE_NUMBER, HUGE_NUMBER + 1n);
+    for (const value of values) {
+      expect(value).toBeGreaterThanOrEqual(HUGE_NUMBER);
+      expect(value).toBeLessThanOrEqual(HUGE_NUMBER + 1n);
     }
   });
 
   test("results are varied", () => {
-    const results = new Set<bigint>();
-    for (const v of randomBigInts(1n, 10n)) {
-      results.add(v);
-    }
-
-    expect(results).toHaveLength(10);
+    expect(new Set<bigint>(randomBigInts(1n, 10n))).toHaveLength(10);
   });
 });
 

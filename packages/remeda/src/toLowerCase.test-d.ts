@@ -97,7 +97,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expectTypeOf(toLowerCase("É\u0301LLO")).toEqualTypeOf<"é\u0301llo">();
+    expectTypeOf(toLowerCase("É\u{301}LLO")).toEqualTypeOf<"é\u{301}llo">();
   });
 
   test("handles Turkish dotted I", () => {

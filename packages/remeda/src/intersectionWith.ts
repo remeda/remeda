@@ -2,7 +2,7 @@ import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
+type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
 /**
  * Returns a list of intersecting values based on a custom
@@ -10,9 +10,9 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *
  * @param array - The source array.
  * @param other - The second array.
- * @param comparator - The custom comparator.
+ * @param isEqual - The custom comparator.
  * @signature
- *    intersectionWith(array, other, comparator)
+ *    intersectionWith(array, other, isEqual)
  * @example
  *    intersectionWith(
  *      [
@@ -29,7 +29,7 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 export function intersectionWith<TFirst, TSecond>(
   array: readonly TFirst[],
   other: readonly TSecond[],
-  comparator: Comparator<TFirst, TSecond>,
+  isEqual: IsEqual<TFirst, TSecond>,
 ): TFirst[];
 
 /**
@@ -37,9 +37,9 @@ export function intersectionWith<TFirst, TSecond>(
  * comparator function that compares elements of both arrays.
  *
  * @param other - The second array.
- * @param comparator - The custom comparator.
+ * @param isEqual - The custom comparator.
  * @signature
- *    intersectionWith(other, comparator)(array)
+ *    intersectionWith(other, isEqual)(array)
  * @example
  *    intersectionWith(
  *      [3, 5],
@@ -58,7 +58,7 @@ export function intersectionWith<TFirst, TSecond>(
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
    */
-  comparator: Comparator<TFirst, TSecond>,
+  isEqual: IsEqual<TFirst, TSecond>,
 ): (array: readonly TFirst[]) => TFirst[];
 
 export function intersectionWith(...args: readonly unknown[]): unknown {
@@ -68,9 +68,9 @@ export function intersectionWith(...args: readonly unknown[]): unknown {
 const lazyImplementation =
   <TFirst, TSecond>(
     other: readonly TSecond[],
-    comparator: Comparator<TFirst, TSecond>,
+    isEqual: IsEqual<TFirst, TSecond>,
   ): LazyEvaluator<TFirst> =>
   (value) =>
-    other.some((otherValue) => comparator(value, otherValue))
+    other.some((otherValue) => isEqual(value, otherValue))
       ? { done: false, hasNext: true, next: value }
       : SKIP_ITEM;

@@ -33,9 +33,9 @@ const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
 // @see `injectAdditionalTypeDeclarations`
 const INTERNAL_SYMBOLS = [
   // From `isEmptyish`:
-  "EMPTYISH_BRAND",
+  "BRAND_EMPTYISH",
   // From `hasSubObject`:
-  "HAS_SUB_OBJECT_BRAND",
+  "BRAND_HAS_SUB_OBJECT",
   // From `RemedaTypeError`:
   "RemedaErrorSymbol",
 
@@ -154,7 +154,18 @@ async function injectAdditionalTypeDeclarations({
 
         // Inject type polyfills at the top of each .d.ts file so that users on
         // older TypeScript versions can use the library.
-        const withPolyfills = `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content}`;
+        const withPolyfills = `//POLYFILLS:\n${polyfills.join("\n")}\n\n${content
+          // The dts bundler prints string literal types with raw characters
+          // instead of preserving the `\u{...}` escape sequences used in the
+          // source (these reach our declarations via type-fest's `Whitespace`
+          // type). TypeScript versions before 5.3 treat raw U+2028 (LINE
+          // SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) inside string literals
+          // as line terminators and fail to parse the whole file ("TS1002:
+          // Unterminated string literal"), so we re-escape them.
+          // @see https://github.com/yuku-toolchain/yuku (`yuku-codegen`,
+          // the printer used by `rolldown-plugin-dts` since 0.27)
+          .replaceAll("\u{2028}", String.raw`\u{2028}`)
+          .replaceAll("\u{2029}", String.raw`\u{2029}`)}`;
 
         // Projects which have the TypeScript `declaration` setting enabled (or
         // `composite`, which enables it by default) need our internal symbols
@@ -164,7 +175,7 @@ async function injectAdditionalTypeDeclarations({
         // @see https://github.com/remeda/remeda/issues/1175
         const withSymbols = withPolyfills.replace(
           EXPORTS_INSERTION_POINT_RE,
-          `, ${INTERNAL_SYMBOLS.join(", ")}`,
+          () => `, ${INTERNAL_SYMBOLS.join(", ")}`,
         );
         if (withSymbols === withPolyfills) {
           throw new Error(`Could not find exports statement in: ${file}`);

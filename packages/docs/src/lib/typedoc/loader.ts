@@ -84,10 +84,12 @@ async function incrementalLoad(
   }
 
   for (const key of store.keys()) {
-    if (!existingFuncNames.has(key)) {
-      logger.info(`Removing ${key} from store`);
-      store.delete(key);
+    if (existingFuncNames.has(key)) {
+      continue;
     }
+
+    logger.info(`Removing ${key} from store`);
+    store.delete(key);
   }
 }
 

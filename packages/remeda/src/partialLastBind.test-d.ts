@@ -44,11 +44,12 @@ describe("simple case (all required, no rest params)", () => {
 });
 
 describe("optional params", () => {
-  const fn = (x: string, y = 123, z = true): string => `${x}, ${y}, and ${z}`;
+  const fn = (x: string, y = 123, isZ = true): string =>
+    `${x}, ${y}, and ${isZ}`;
 
   test("should correctly type 0 partial args", () => {
     expectTypeOf(partialLastBind(fn)).toEqualTypeOf<
-      (x: string, y?: number, z?: boolean) => string
+      (x: string, y?: number, isZ?: boolean) => string
     >();
   });
 

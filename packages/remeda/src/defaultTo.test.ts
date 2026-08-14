@@ -19,7 +19,7 @@ describe("falsy values", () => {
       // We handle NaN differently than Lodash and Ramda intentionally, we
       // prefer to maintain the ECMAScript semantics for the nullish coalescing
       // operator `??`.
-      expect(defaultTo(Number.NaN as number | undefined, 42)).toBe(Number.NaN);
+      expect(defaultTo(NaN as number | undefined, 42)).toBeNaN();
     });
 
     test("empty string", () => {

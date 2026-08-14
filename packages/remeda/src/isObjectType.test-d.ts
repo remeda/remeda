@@ -29,8 +29,8 @@ test("should work as type guard", () => {
       | TestClass
       | TypedArray
       | (() => void)
-      | { readonly a: "asd" }
       | [number, number, number]
+      | { readonly a: "asd" }
     >();
   }
 });
@@ -57,8 +57,8 @@ test("should work as type guard in filter", () => {
       | TestClass
       | TypedArray
       | (() => void)
-      | { readonly a: "asd" }
       | [number, number, number]
+      | { readonly a: "asd" }
     )[]
   >();
 });

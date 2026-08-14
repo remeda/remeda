@@ -11,8 +11,8 @@ export type TupleSplits<T extends IterableContainer> =
   // Use a distributive conditional type, in case T is a union.
   T extends unknown
     ? // The complete set of all splits is the union of splitting each part of
-        // the tuple individually.
-        SplitPrefix<T> | SplitOptional<T> | SplitRest<T> | SplitSuffix<T>
+      // the tuple individually.
+      SplitPrefix<T> | SplitOptional<T> | SplitRest<T> | SplitSuffix<T>
     : never;
 
 type SplitPrefix<T extends IterableContainer> =
@@ -109,7 +109,7 @@ type SplitSuffix<T extends IterableContainer> =
     : never;
 
 type FixedTupleSplits<L, R extends unknown[] = []> =
-  | { left: L; right: R }
   | (L extends readonly [...infer Head, infer Tail]
       ? FixedTupleSplits<Head, [Tail, ...R]>
-      : never);
+      : never)
+  | { left: L; right: R };

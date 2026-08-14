@@ -127,7 +127,7 @@ function orderRuleComparer<T>(
     typeof primaryRule === "function" ? primaryRule : primaryRule[0];
 
   const direction = typeof primaryRule === "function" ? "asc" : primaryRule[1];
-  const { [direction]: comparator } = COMPARATORS;
+  const comparator = COMPARATORS[direction];
 
   const nextComparer =
     secondaryRule === undefined
@@ -167,7 +167,7 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
   return (
     isProjection(maybeProjection) &&
     typeof maybeDirection === "string" &&
-    maybeDirection in COMPARATORS &&
+    Object.hasOwn(COMPARATORS, maybeDirection) &&
     // Has to be a 2-tuple
     rest.length === 0
   );
