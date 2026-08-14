@@ -11,14 +11,14 @@ export const withPrecision =
       return roundingFn(value);
     }
 
+    if (Math.abs(precision) > MAX_PRECISION) {
+      throw new RangeError("precision must be between -15 and 15");
+    }
+
     if (!Number.isSafeInteger(precision)) {
       throw new TypeError(
         `precision must be an integer: ${precision.toString()}`,
       );
-    }
-
-    if (Math.abs(precision) > MAX_PRECISION) {
-      throw new RangeError("precision must be between -15 and 15");
     }
 
     if (Number.isNaN(value) || !Number.isFinite(value)) {
@@ -43,7 +43,7 @@ function shiftDecimalPoint(value: number, shift: number): number {
   const [n, exponent] = asString.split("e", 2);
 
   const shiftedExponent =
-    (exponent === undefined ? 0 : Math.trunc(Number(exponent))) + shift;
+    (exponent === undefined ? 0 : Number(exponent)) + shift;
 
   const shiftedValueAsString = `${n!}e${shiftedExponent.toString()}`;
 

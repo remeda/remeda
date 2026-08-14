@@ -12,7 +12,7 @@ type IsEqual<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @param other - The second array.
  * @param isEqual - The custom comparator.
  * @signature
- *    intersectionWith(array, other, comparator)
+ *    intersectionWith(array, other, isEqual)
  * @example
  *    intersectionWith(
  *      [

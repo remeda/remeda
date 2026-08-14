@@ -22,20 +22,24 @@ describe("data-first", () => {
     expect(floor(8123.4317, 0)).toBe(8123);
   });
 
-  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
-    expect(() => floor(1, val)).toThrow(`precision must be an integer: ${val}`);
+  test("should throw for NaN precision", () => {
+    expect(() => floor(1, NaN)).toThrow("precision must be an integer: NaN");
   });
 
   test("should throw for non integer precision", () => {
-    expect(() => floor(1, 21.37)).toThrow(
-      "precision must be an integer: 21.37",
+    expect(() => floor(1, 2.137)).toThrow(
+      "precision must be an integer: 2.137",
     );
   });
 
-  test("should throw for precision higher than 15 and lower than -15", () => {
-    expect(() => floor(1, 16)).toThrow("precision must be between -15 and 15");
-    expect(() => floor(1, -16)).toThrow("precision must be between -15 and 15");
-  });
+  test.each([16, -16, 21.37, Infinity, 2 ** 53])(
+    "should throw for out-of-range precision %d",
+    (val) => {
+      expect(() => floor(1, val)).toThrow(
+        "precision must be between -15 and 15",
+      );
+    },
+  );
 
   test.each([NaN, Infinity, -Infinity])(
     "should return %d when passed as value regardless of precision",
@@ -63,20 +67,24 @@ describe("data-last", () => {
     expect(floor(0)(8123.4317)).toBe(8123);
   });
 
-  test.each([NaN, Infinity])("should throw for %d precision", (val) => {
-    expect(() => floor(val)(1)).toThrow(`precision must be an integer: ${val}`);
+  test("should throw for NaN precision", () => {
+    expect(() => floor(NaN)(1)).toThrow("precision must be an integer: NaN");
   });
 
   test("should throw for non integer precision", () => {
-    expect(() => floor(21.37)(1)).toThrow(
-      "precision must be an integer: 21.37",
+    expect(() => floor(2.137)(1)).toThrow(
+      "precision must be an integer: 2.137",
     );
   });
 
-  test("should throw for precision higher than 15 and lower than -15", () => {
-    expect(() => floor(16)(1)).toThrow("precision must be between -15 and 15");
-    expect(() => floor(-16)(1)).toThrow("precision must be between -15 and 15");
-  });
+  test.each([16, -16, 21.37, Infinity, 2 ** 53])(
+    "should throw for out-of-range precision %d",
+    (val) => {
+      expect(() => floor(val)(1)).toThrow(
+        "precision must be between -15 and 15",
+      );
+    },
+  );
 
   test.each([NaN, Infinity, -Infinity])(
     "should return %d when passed as value regardless of precision",

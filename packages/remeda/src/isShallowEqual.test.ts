@@ -118,6 +118,30 @@ describe("built-ins", () => {
   });
 });
 
+// The contained values are compared with SameValueZero semantics (like
+// `Array.prototype.includes` and `isDeepEqual`), matching how the values
+// themselves compare at the top level.
+describe("sameValueZero", () => {
+  test("nan", () => {
+    expect(isShallowEqual(NaN, NaN)).toBe(true);
+    expect(isShallowEqual({ a: NaN }, { a: NaN })).toBe(true);
+    expect(isShallowEqual([NaN], [NaN])).toBe(true);
+    expect(isShallowEqual(new Map([["a", NaN]]), new Map([["a", NaN]]))).toBe(
+      true,
+    );
+    expect(isShallowEqual(new Set([NaN]), new Set([NaN]))).toBe(true);
+  });
+
+  test("signed zeros", () => {
+    expect(isShallowEqual(0, -0)).toBe(true);
+    expect(isShallowEqual({ a: 0 }, { a: -0 })).toBe(true);
+    expect(isShallowEqual([0], [-0])).toBe(true);
+    expect(isShallowEqual(new Map([["a", 0]]), new Map([["a", -0]]))).toBe(
+      true,
+    );
+  });
+});
+
 describe("shallow inequality", () => {
   test("arrays of objects", () => {
     const a = { a: 1 };

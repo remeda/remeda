@@ -105,7 +105,7 @@ export default defineConfig(
         projectService: false,
       },
     },
-    // TODO [eslint-plugin-astro@>3.1.0]: astro-eslint-parser 3.0.0 reads `ts.JsxEmit.Preserve`, which TypeScript 7's JS API doesn't expose, so every `.astro` file fails parsing with "Cannot read properties of undefined (reading 'Preserve')". This is one of the reasons `typescript` is held back to `^6.0.2` across the repo (typescript-eslint's peer range and tsdown's dts generation are the others); retest with TypeScript 7 when a newer parser ships.
+    // TODO [eslint-plugin-astro@>3.1.0]: astro-eslint-parser reads `ts.JsxEmit.Preserve`, which TypeScript 7's JS API doesn't expose, so every `.astro` file fails parsing with "Cannot read properties of undefined (reading 'Preserve')". This is one of the reasons `typescript` is held back to `^6.0.2` across the repo (typescript-eslint's peer range and tsdown's dts generation are the others); retest with TypeScript 7 when a newer parser ships.
     rules: {
       // Possible Errors
       "astro/no-exports-from-components": "error",

@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/consistent-boolean-name --
- * TODO[>2] -- This rule is on-point! The function's param should communicate
+ * TODO [>2] -- This rule is on-point! The function's param should communicate
  * more clearly that it takes a boolean value.
  */
 

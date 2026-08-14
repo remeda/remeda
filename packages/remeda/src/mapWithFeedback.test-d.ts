@@ -24,7 +24,7 @@ test("should maintain the input shape via a pipe", () => {
 test("should return a tuple consisting of the initial value type even if the initial iterable contains a different type", () => {
   const result = mapWithFeedback(
     ["1", "2", "3", "4", "5"],
-    (acc, x) => acc + Math.trunc(Number(x)),
+    (acc, x) => acc + Number(x),
     100,
   );
 
