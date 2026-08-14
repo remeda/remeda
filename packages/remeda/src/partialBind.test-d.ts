@@ -44,23 +44,24 @@ describe("simple case (all required, no rest params)", () => {
 });
 
 describe("optional params", () => {
-  const fn = (x: string, y = 123, z = true): string => `${x}, ${y}, and ${z}`;
+  const fn = (x: string, y = 123, isZ = true): string =>
+    `${x}, ${y}, and ${isZ}`;
 
   test("should correctly type 0 partial args", () => {
     expectTypeOf(partialBind(fn)).toEqualTypeOf<
-      (x: string, y?: number, z?: boolean) => string
+      (x: string, y?: number, isZ?: boolean) => string
     >();
   });
 
   test("should correctly type 1 partial arg", () => {
     expectTypeOf(partialBind(fn, "hello")).toEqualTypeOf<
-      (y?: number, z?: boolean) => string
+      (y?: number, isZ?: boolean) => string
     >();
   });
 
   test("should correctly type 2 partial args", () => {
     expectTypeOf(partialBind(fn, "hello", undefined)).toEqualTypeOf<
-      (z?: boolean) => string
+      (isZ?: boolean) => string
     >();
   });
 

@@ -96,11 +96,11 @@ describe("reducer behavior", () => {
   test("supports multiple arguments", () => {
     const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
-      reducer: (ret: unknown, a: number, b: string, c: boolean) => [
+      reducer: (ret: unknown, a: number, b: string, isC: boolean) => [
         ret,
         a,
         b,
-        c,
+        isC,
       ],
       triggerAt: "start",
       minQuietPeriodMs: UT,

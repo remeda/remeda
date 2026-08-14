@@ -147,7 +147,7 @@ describe("unicode and special characters", () => {
     expect(words("user's-data")).toStrictEqual(["user's", "data"]);
   });
 
-  test("handles curly apostrophes (\u2019)", () => {
+  test("handles curly apostrophes (\u{2019})", () => {
     expect(words("user'sData")).toStrictEqual(["user's", "Data"]);
   });
 
@@ -160,6 +160,6 @@ describe("unicode and special characters", () => {
   });
 
   test("preserves combining diacritical marks", () => {
-    expect(words("cafe\u0301World")).toStrictEqual(["cafe\u0301World"]);
+    expect(words("cafe\u{301}World")).toStrictEqual(["cafe\u{301}World"]);
   });
 });

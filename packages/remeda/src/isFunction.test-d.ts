@@ -31,8 +31,8 @@ test("should work as type guard", () => {
       | string
       | symbol
       | 1n
-      | { readonly a: "asd" }
       | [number, number, number]
+      | { readonly a: "asd" }
       | null
       | undefined
     >();

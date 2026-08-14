@@ -152,11 +152,11 @@ test("doesn't accept built-in 'infinite' numbers", () => {
   // They are all typed as `number` by typescript's libs.
 
   // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L9
-  flat([], Number.POSITIVE_INFINITY);
+  flat([], Infinity);
 
   // @ts-expect-error [ts2345] - Max number is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L576
   flat([], Number.MAX_VALUE);
 
   // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
-  flat([], Number.POSITIVE_INFINITY);
+  flat([], Infinity);
 });

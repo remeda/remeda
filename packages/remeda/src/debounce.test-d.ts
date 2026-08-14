@@ -36,7 +36,7 @@ test("doesn't return undefined on 'both' timing", () => {
 
 test("argument typing to be good (all required)", () => {
   const debouncer = debounce(
-    (a: string, b: number, c: boolean) => `${a}${b}${c ? "y" : "n"}`,
+    (a: string, b: number, isC: boolean) => `${a}${b}${isC ? "y" : "n"}`,
     {},
   );
   // @ts-expect-error [ts2554]: Expected 3 arguments, but got 0.
@@ -55,8 +55,8 @@ test("argument typing to be good (all required)", () => {
 
 test("argument typing to be good (with optional)", () => {
   const debouncer = debounce(
-    (a: string, b?: number, c?: boolean) =>
-      `${a}${b ?? "undefined"}${c === undefined ? "undefined" : c ? "y" : "n"}`,
+    (a: string, b?: number, isC?: boolean) =>
+      `${a}${b ?? "undefined"}${isC === undefined ? "undefined" : isC ? "y" : "n"}`,
     {},
   );
   // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
@@ -74,7 +74,8 @@ test("argument typing to be good (with optional)", () => {
 test("argument typing to be good (with defaults)", () => {
   const debouncer = debounce(
     // eslint-disable-next-line @typescript-eslint/no-inferrable-types -- otherwise typing doesn't work for the test
-    (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c ? "y" : "n"}`,
+    (a: string, b: number = 2, isC: boolean = true) =>
+      `${a}${b}${isC ? "y" : "n"}`,
     {},
   );
   // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.

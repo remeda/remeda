@@ -142,7 +142,7 @@ function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {
   const out: Record<string, unknown> = { ...data };
 
   for (const [key, value] of Object.entries(evolver)) {
-    if (key in out) {
+    if (Object.hasOwn(out, key)) {
       out[key] =
         typeof value === "function"
           ? value(out[key])

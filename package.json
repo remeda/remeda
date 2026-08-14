@@ -17,11 +17,11 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.9",
-    "lint-staged": "^17.0.8",
-    "prettier": "^3.9.4",
+    "@vitest/coverage-v8": "^4.1.10",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
     "prettier-plugin-pkg": "^0.22.1",
-    "prettier-plugin-sh": "^0.18.1",
+    "prettier-plugin-sh": "^0.19.0",
     "typescript-language-server": "^5.3.0"
   },
   "overrides": {
@@ -29,17 +29,11 @@
       "vite": "~7.3.1"
     },
     "eslint-plugin-jsx-a11y": {
-      "eslint": "~10.2.0"
+      "eslint": "~10.8.1"
     },
-    "eslint-plugin-react": {
-      "eslint": "~10.2.0"
-    },
-    "vite": "~8.1.3",
+    "vite": "~8.2.1",
     "vitest": {
       "vite": "~7.3.1"
-    },
-    "yaml-language-server": {
-      "yaml": "^2.8.3"
     }
   }
 }

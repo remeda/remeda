@@ -10,21 +10,17 @@ type Props = {
 };
 
 const {
-  signature: {
-    comment: { blockTags },
-    parameters,
-    type,
-  },
+  signature: { comment, parameters, type },
 } = Astro.props;
 
-const variant = hasTag(blockTags, "dataFirst")
+const variant = hasTag(comment.blockTags, "dataFirst")
   ? "Data First"
-  : hasTag(blockTags, "dataLast")
+  : hasTag(comment.blockTags, "dataLast")
     ? "Data Last"
     : undefined;
 
-const example = tagContent(blockTags, "example");
-const signature = tagContent(blockTags, "signature");
+const example = tagContent(comment.blockTags, "example");
+const signature = tagContent(comment.blockTags, "signature");
 
 function extractReturnType(type: Signature["type"]): string {
   switch (type.type) {

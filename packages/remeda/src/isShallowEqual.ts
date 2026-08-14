@@ -118,10 +118,9 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
       return false;
     }
 
-    const { [key as keyof T]: valueA } = a;
-    const { [key as keyof T]: valueB } = b;
-
-    if (valueA !== valueB || !Object.is(valueA, valueB)) {
+    const valueA = a[key as keyof T];
+    const valueB = b[key as keyof T];
+    if (valueA !== valueB && !Object.is(valueA, valueB)) {
       return false;
     }
   }
@@ -139,7 +138,7 @@ function isMapShallowEqual(
 
   for (const [key, value] of a) {
     const valueB = b.get(key);
-    if (value !== valueB || !Object.is(value, valueB)) {
+    if (value !== valueB && !Object.is(value, valueB)) {
       return false;
     }
   }

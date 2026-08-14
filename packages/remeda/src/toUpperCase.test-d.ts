@@ -97,7 +97,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expectTypeOf(toUpperCase("e\u0301llo")).toEqualTypeOf<"E\u0301LLO">();
+    expectTypeOf(toUpperCase("e\u{301}llo")).toEqualTypeOf<"E\u{301}LLO">();
   });
 
   test("handles German eszett", () => {

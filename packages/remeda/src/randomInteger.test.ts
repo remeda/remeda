@@ -23,9 +23,10 @@ test("non-negative integers", () => {
 });
 
 test("negative integers", () => {
-  for (const v of randomIntegers(-10, -5)) {
-    expect(v).toBeGreaterThanOrEqual(-10);
-    expect(v).toBeLessThanOrEqual(-5);
+  const values = randomIntegers(-10, -5);
+  for (const value of values) {
+    expect(value).toBeGreaterThanOrEqual(-10);
+    expect(value).toBeLessThanOrEqual(-5);
   }
 });
 
@@ -37,9 +38,10 @@ test("positive decimals", () => {
 });
 
 test("negative decimals", () => {
-  for (const v of randomIntegers(-10.9, -0.1)) {
-    expect(v).toBeGreaterThanOrEqual(-10.9);
-    expect(v).toBeLessThanOrEqual(-0.1);
+  const values = randomIntegers(-10.9, -0.1);
+  for (const value of values) {
+    expect(value).toBeGreaterThanOrEqual(-10.9);
+    expect(value).toBeLessThanOrEqual(-0.1);
   }
 });
 

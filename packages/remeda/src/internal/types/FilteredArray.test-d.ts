@@ -235,19 +235,19 @@ describe("condition is a simple object", () => {
 
   test("array with mixed types including matching objects", () => {
     expectTypeOf(
-      filteredArray([] as ({ a: string } | string | number)[], { a: "" }),
+      filteredArray([] as (string | number | { a: string })[], { a: "" }),
     ).toEqualTypeOf<{ a: string }[]>();
   });
 
   test("tuple with mixed types including matching objects", () => {
     expectTypeOf(
-      filteredArray([""] as [{ a: string } | string | number], { a: "" }),
+      filteredArray([""] as [string | number | { a: string }], { a: "" }),
     ).toEqualTypeOf<[] | [{ a: string }]>();
   });
 
   test("array with no matching objects", () => {
     expectTypeOf(
-      filteredArray([] as ({ b: string } | string)[], { a: "" }),
+      filteredArray([] as (string | { b: string })[], { a: "" }),
     ).toEqualTypeOf<[]>();
   });
 
@@ -313,7 +313,7 @@ describe("condition is a complex object", () => {
   test("array with mixed types including matching objects", () => {
     expectTypeOf(
       filteredArray(
-        [] as ({ a: "hello"; b: number } | { a: "world" } | string)[],
+        [] as (string | { a: "hello"; b: number } | { a: "world" })[],
         $typed<{ a: "hello"; b?: number }>(),
       ),
     ).toEqualTypeOf<{ a: "hello"; b: number }[]>();

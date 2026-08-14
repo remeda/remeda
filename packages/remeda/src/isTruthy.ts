@@ -14,7 +14,6 @@
  *    isTruthy('') //=> false
  * @category Guard
  */
-// eslint-disable-next-line unicorn/prefer-native-coercion-functions -- This is not entirely correct, our isTruthy also coerces the type.
 export function isTruthy<T>(
   data: T,
 ): data is Exclude<T, "" | 0 | false | null | undefined> {

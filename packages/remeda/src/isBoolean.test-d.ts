@@ -1,3 +1,7 @@
+/* eslint-disable unicorn/consistent-boolean-name --
+ * This is not the kind of files where this rule is valuable...
+ */
+
 import { expectTypeOf, test } from "vitest";
 import {
   ALL_TYPES_DATA_PROVIDER,

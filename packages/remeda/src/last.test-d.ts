@@ -3,9 +3,7 @@ import { last } from "./last";
 import { pipe } from "./pipe";
 
 test("works with empty arrays", () => {
-  const result = last([] as const);
-
-  expectTypeOf(result).toEqualTypeOf<never>();
+  expectTypeOf(last([] as const)).toEqualTypeOf<undefined>();
 });
 
 test("works with regular arrays", () => {
@@ -28,9 +26,7 @@ test("should infer type in pipes", () => {
 });
 
 test("can infer last type from const arrays", () => {
-  const result = last([3, "a", false] as const);
-
-  expectTypeOf(result).toEqualTypeOf<false>();
+  expectTypeOf(last([3, "a", false] as const)).toEqualTypeOf<false>();
 });
 
 test("a bit more complex example", () => {

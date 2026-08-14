@@ -910,8 +910,7 @@ describe("union object types", () => {
       expectTypeOf(
         pick(
           { a: "a", b: "b", c: "c" } as
-            | { a: "a"; b: "b"; c: "c" }
-            | { a: "a"; b: "b"; d: "d" },
+            { a: "a"; b: "b"; c: "c" } | { a: "a"; b: "b"; d: "d" },
           ["a", "b"],
         ),
       ).toEqualTypeOf<{ a: "a"; b: "b" }>();
@@ -921,8 +920,7 @@ describe("union object types", () => {
       expectTypeOf(
         pick(
           { a: "a", b: "b", c: "c" } as
-            | { a: "a"; b: "b"; c: "c" }
-            | { a?: "a"; b: "b"; d: "d" },
+            { a: "a"; b: "b"; c: "c" } | { a?: "a"; b: "b"; d: "d" },
           ["a", "b"],
         ),
       ).toEqualTypeOf<{ a: "a"; b: "b" } | { a?: "a"; b: "b" }>();
@@ -932,8 +930,7 @@ describe("union object types", () => {
       expectTypeOf(
         pick(
           { a: "a", b: "b", c: "c" } as
-            | { a: "a"; b: "b"; c: "c" }
-            | { a: "alt_a"; b: "alt_b"; d: "d" },
+            { a: "a"; b: "b"; c: "c" } | { a: "alt_a"; b: "alt_b"; d: "d" },
           ["a", "b"],
         ),
       ).toEqualTypeOf<{ a: "a"; b: "b" } | { a: "alt_a"; b: "alt_b" }>();
@@ -943,8 +940,7 @@ describe("union object types", () => {
   describe("keys exist in some union members", () => {
     test("same type", () => {
       const DATA = { a: "a", b: "b", c: "c" } as
-        | { a: "a"; b: "b"; c: "c" }
-        | { a: "a"; b: "b"; d: "d" };
+        { a: "a"; b: "b"; c: "c" } | { a: "a"; b: "b"; d: "d" };
 
       expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
         { a: "a"; c: "c" } | { a: "a" }
@@ -956,8 +952,7 @@ describe("union object types", () => {
 
     test("different optionality", () => {
       const DATA = { a: "a", b: "b", c: "c" } as
-        | { a: "a"; b: "b"; c: "c" }
-        | { a?: "a"; b: "b"; d: "d" };
+        { a: "a"; b: "b"; c: "c" } | { a?: "a"; b: "b"; d: "d" };
 
       expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
         { a: "a"; c: "c" } | { a?: "a" }
@@ -969,8 +964,7 @@ describe("union object types", () => {
 
     test("different types", () => {
       const DATA = { a: "a", b: "b", c: "c" } as
-        | { a: "a"; b: "b"; c: "c" }
-        | { a: "alt_a"; b: "alt_b"; d: "alt_d" };
+        { a: "a"; b: "b"; c: "c" } | { a: "alt_a"; b: "alt_b"; d: "alt_d" };
 
       expectTypeOf(pick(DATA, ["a", "c"])).toEqualTypeOf<
         { a: "a"; c: "c" } | { a: "alt_a" }
@@ -985,11 +979,10 @@ describe("union object types", () => {
     expectTypeOf(
       pick(
         { a: "a", b: "b", c: "c" } as
-          | { a: "a"; b: "b"; c: "c" }
-          | { d: "d"; e: "e"; f: "f" },
+          { a: "a"; b: "b"; c: "c" } | { d: "d"; e: "e"; f: "f" },
         ["a", "b"],
       ),
-    ).toEqualTypeOf<{ a: "a"; b: "b" } | EmptyObject>();
+    ).toEqualTypeOf<EmptyObject | { a: "a"; b: "b" }>();
   });
 
   test("keys distributed across union members", () => {

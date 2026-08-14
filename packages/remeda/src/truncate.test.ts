@@ -144,6 +144,6 @@ describe("lodash spec", () => {
 
   test("should coerce `length` to an integer", () => {
     expect(truncate("hi-diddly-ho there, neighborino", 4.6)).toBe("h...");
-    expect(truncate("hi-diddly-ho there, neighborino", Number.NaN)).toBe("...");
+    expect(truncate("hi-diddly-ho there, neighborino", NaN)).toBe("...");
   });
 });

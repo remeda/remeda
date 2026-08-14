@@ -47,15 +47,12 @@ export function swapProps(...args: readonly unknown[]): unknown {
   return purry(swapPropsImplementation, args);
 }
 
-function swapPropsImplementation<T extends object>(
+const swapPropsImplementation = <T extends object>(
   obj: T,
   key1: keyof T,
   key2: keyof T,
-): Record<PropertyKey, unknown> {
-  const { [key1]: value1, [key2]: value2 } = obj;
-  return {
-    ...obj,
-    [key1]: value2,
-    [key2]: value1,
-  };
-}
+): Record<PropertyKey, unknown> => ({
+  ...obj,
+  [key1]: obj[key2],
+  [key2]: obj[key1],
+});

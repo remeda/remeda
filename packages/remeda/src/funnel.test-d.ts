@@ -17,7 +17,7 @@ describe("'call' method args", () => {
   test("non-optional args", () => {
     const foo = funnel(doNothing(), {
       // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
-      reducer: (_: "test" | undefined, a: string, b: number, c: boolean) =>
+      reducer: (_: "test" | undefined, a: string, b: number, isC: boolean) =>
         "test" as const,
 
       triggerAt: "start",

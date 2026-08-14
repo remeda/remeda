@@ -49,7 +49,7 @@ describe("unicode", () => {
   });
 
   test("handles combining characters", () => {
-    expect(toUpperCase("e\u0301llo")).toBe("E\u0301LLO");
+    expect(toUpperCase("e\u{301}llo")).toBe("E\u{301}LLO");
   });
 
   test("handles German eszett", () => {

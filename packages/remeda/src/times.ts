@@ -86,8 +86,9 @@ function timesImplementation<T>(count: number, fn: (index: number) => T): T[] {
 
   // Non-integer numbers would cause `new Array` to throw, but it makes more
   // sense to simply round them down to the nearest integer instead; but
-  // rounding has some performance implications so we only do it when we have to
-  const length = Number.isInteger(count) ? count : Math.floor(count);
+  // rounding has some performance implications so we only do it when we have
+  // to
+  const length = Number.isSafeInteger(count) ? count : Math.floor(count);
 
   // eslint-disable-next-line unicorn/no-new-array -- This is the most efficient way to create the array, check out the benchmarks in the PR that added this comment.
   const res = new Array<T>(length);

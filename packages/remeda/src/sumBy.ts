@@ -95,10 +95,8 @@ const sumByImplementation = <T>(
     return 0;
   }
 
-  const {
-    value: [, firstValue],
-  } = firstEntry;
-  let sum = callbackfn(firstValue, 0, array);
+  const { value } = firstEntry;
+  let sum = callbackfn(value[1], 0, array);
   for (const [index, item] of iter) {
     const summand = callbackfn(item, index, array);
 
