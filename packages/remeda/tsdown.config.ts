@@ -33,9 +33,9 @@ const EXPORTS_INSERTION_POINT_RE = /(?<=export \{ [^}]+)(?= \};)/u;
 // @see `injectAdditionalTypeDeclarations`
 const INTERNAL_SYMBOLS = [
   // From `isEmptyish`:
-  "EMPTYISH_BRAND",
+  "BRAND_EMPTYISH",
   // From `hasSubObject`:
-  "HAS_SUB_OBJECT_BRAND",
+  "BRAND_HAS_SUB_OBJECT",
   // From `RemedaTypeError`:
   "RemedaErrorSymbol",
 
