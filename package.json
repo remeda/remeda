@@ -25,6 +25,9 @@
     "typescript-language-server": "^5.3.0"
   },
   "overrides": {
+    "@ai-sdk/provider-utils": {
+      "undici": "^7.29.0"
+    },
     "@vitest/mocker": {
       "vite": "~7.3.1"
     },
