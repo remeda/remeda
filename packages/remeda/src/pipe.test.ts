@@ -132,6 +132,21 @@ describe("lazy", () => {
     expect(result).toStrictEqual([100, 200]);
   });
 
+  test("early exit when done without a next value", () => {
+    const count = vi.fn<() => void>();
+    const result = pipe(
+      [1, 2, 3, 4, 5],
+      map((x) => {
+        count();
+        return x * 10;
+      }),
+      take(0),
+    );
+
+    expect(count).toHaveBeenCalledTimes(1);
+    expect(result).toStrictEqual([]);
+  });
+
   test("lazy early exit with hasMany", () => {
     const result = pipe(
       [

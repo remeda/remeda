@@ -6,8 +6,9 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type PreparedLazyFunction = LazyEvaluator & {
-  readonly isSingle: boolean;
+type PreparedLazyFunction = {
+  readonly fn: LazyEvaluator;
+  readonly isSingle: boolean | undefined;
 
   // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
@@ -304,7 +305,7 @@ export function pipe(
     const lazySequence = extractLazySequence(lazyFunctions, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
-    const { isSingle } = lazySequence.at(-1)!;
+    const { isSingle = false } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
@@ -325,7 +326,7 @@ function extractLazySequence(
     }
 
     lazySequence.push(lazyFunction);
-    if (lazyFunction.isSingle) {
+    if (lazyFunction.isSingle ?? false) {
       break;
     }
   }
@@ -369,8 +370,16 @@ function processItem(
   for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
     items.push(currentItem);
-    lazyResult = lazyFn(currentItem, index, items);
+    lazyResult = lazyFn.fn(currentItem, index, items);
     lazyFn.index += 1;
+
+    // Process remaining functions in the pipe but don't process remaining
+    // elements in the input array. This must be checked before `hasNext`
+    // because results without a value also stop the iteration.
+    if (lazyResult.done) {
+      isDone = true;
+    }
+
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
         for (const subItem of lazyResult.next as readonly unknown[]) {
@@ -389,11 +398,6 @@ function processItem(
     } else {
       break;
     }
-    // process remaining functions in the pipe
-    // but don't process remaining elements in the input array
-    if (lazyResult.done) {
-      isDone = true;
-    }
   }
   if (lazyResult.hasNext) {
     accumulator.push(currentItem);
@@ -401,15 +405,15 @@ function processItem(
   return isDone;
 }
 
-function prepareLazyFunction(func: LazyFunction): PreparedLazyFunction {
-  const { lazy, lazyArgs } = func;
-  const fn = lazy(...lazyArgs);
-  return Object.assign(fn, {
-    isSingle: lazy.single ?? false,
-    index: 0,
-    items: [] as unknown[],
-  });
-}
+const prepareLazyFunction = ({
+  lazy,
+  lazyArgs,
+}: LazyFunction): PreparedLazyFunction => ({
+  fn: lazy(...lazyArgs),
+  isSingle: lazy.single,
+  index: 0,
+  items: [],
+});
 
 function isIterable(something: unknown): something is Iterable<unknown> {
   // Check for null and undefined to avoid errors when accessing Symbol.iterator
