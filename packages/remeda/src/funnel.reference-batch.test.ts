@@ -98,8 +98,6 @@ function batch<Params extends any[], BatchResponse, Result>(
   return {
     ...batchFunnel,
 
-    // The spread copies `isIdle`'s value at this point instead of its getter,
-    // so it needs to be redefined to keep it reflecting the funnel's state.
     get isIdle() {
       return batchFunnel.isIdle;
     },
