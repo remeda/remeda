@@ -5,9 +5,15 @@
 import { describe, expect, test, vi } from "vitest";
 import { sleep } from "../test/sleep";
 import { constant } from "./constant";
-import { funnel } from "./funnel";
 import { identity } from "./identity";
-import type { StrictFunction } from "./internal/types/StrictFunction";
+
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project.
+// --- REFERENCE START -------------------------------------------------------
+import { funnel } from "remeda";
+
+// Using `never` as the type for args allows this to extend *any* function.
+type StrictFunction = (...args: never) => unknown;
 
 type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
   readonly call: (
@@ -25,15 +31,11 @@ type DebounceOptions = {
 };
 
 /**
- * A reference implementation of the now deprecated `debounce` function using
- * the `funnel` function instead. While you update your codebase you can copy
- * this function as-is and use it as a drop-in replacement; but we recommend
- * eventually inlining the call to `funnel` so you can adjust the function to
- * your specific needs.
+ * A drop-in replacement for Remeda's deprecated `debounce` function,
+ * implemented on top of `funnel`. We recommend eventually inlining the call
+ * to `funnel` and adjusting the implementation to your specific needs.
  *
- * The following tests in this file are the original tests for debounce.
- *
- * @see debounce
+ * @see https://remedajs.com/docs#funnel
  */
 function debounce<F extends StrictFunction>(
   func: F,
@@ -109,6 +111,11 @@ function debounce<F extends StrictFunction>(
     },
   };
 }
+// --- REFERENCE END ---------------------------------------------------------
+
+// The following tests are the original tests for the deprecated `debounce`
+// function. The names of the test cases have been preserved to ease comparing
+// them to the original tests.
 
 describe("main functionality", () => {
   test("should debounce a function", async () => {

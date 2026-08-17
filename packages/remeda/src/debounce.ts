@@ -51,7 +51,7 @@ type DebounceOptions = {
  * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
  *
- *! **DEPRECATED**: This implementation of debounce is known to have issues and might not behave as expected. It should be replaced with the `funnel` utility instead. The test file [funnel.remeda-debounce.test.ts](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.remeda-debounce.test.ts) offers a reference implementation that replicates `debounce` via `funnel`!
+ *! **DEPRECATED**: This implementation of debounce is known to have issues and might not behave as expected. It should be replaced with the `funnel` utility instead. The test file [funnel.remeda-debounce.test.ts](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.remeda-debounce.test.ts) offers a drop-in replacement implemented via `funnel`: copy everything between its REFERENCE START and REFERENCE END markers into your project!
  *
  * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
@@ -94,8 +94,9 @@ type DebounceOptions = {
  * @category Function
  * @deprecated This implementation of debounce is known to have issues and might
  * not behave as expected. It should be replaced with the `funnel` utility
- * instead. The test file `funnel.remeda-debounce.test.ts` offers a reference
- * implementation that replicates `debounce` via `funnel`.
+ * instead. The test file [funnel.remeda-debounce.test.ts](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.remeda-debounce.test.ts)
+ * offers a drop-in replacement implemented via `funnel`: copy everything
+ * between its REFERENCE START and REFERENCE END markers into your project.
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<F extends StrictFunction>(

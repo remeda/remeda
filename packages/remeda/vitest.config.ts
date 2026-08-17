@@ -1,6 +1,8 @@
+import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  plugins: [tsconfigPaths()],
   test: {
     coverage: {
       include: ["src/**"],
@@ -13,6 +15,7 @@ export default defineConfig({
     },
     projects: [
       {
+        extends: true,
         test: {
           name: "runtime",
           include: ["src/**/*.test.ts"],
@@ -20,6 +23,7 @@ export default defineConfig({
         },
       },
       {
+        extends: true,
         test: {
           name: "types",
           include: ["src/**/*.test-d.ts"],
@@ -31,6 +35,7 @@ export default defineConfig({
         },
       },
       {
+        extends: true,
         test: {
           name: "prop",
           include: ["src/**/*.test-prop.ts"],

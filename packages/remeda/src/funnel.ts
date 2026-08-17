@@ -88,9 +88,21 @@ type Funnel<Args extends RestArguments = []> = {
  * execute anything when called. The returned object should be used to execute
  * the funnel via the its `call` method.
  *
- * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`.
+ * The type of the funnel object is not exported; when you need to reference
+ * it explicitly (e.g., a class property holding a funnel) use
+ * `ReturnType<typeof funnel<[]>>`, replacing `[]` with the `reducer`'s rest
+ * params when one is used (e.g., `ReturnType<typeof funnel<[string]>>`).
+ *
+ * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`. Copy-paste
+ * reference implementations are available for Remeda's deprecated `debounce`
+ * function in [`funnel.remeda-debounce.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.remeda-debounce.test.ts),
+ * and for the Lodash `debounce` function in the [Lodash migration docs](https://remedajs.com/migrate/lodash#debounce).
  * - Throttling: use `minGapMs` and `triggerAt: "start"` or `"both"`.
- * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.reference-batch.test.ts).
+ * Copy-paste reference implementations for the Lodash `throttle` function
+ * (which maps onto the burst options `minQuietPeriodMs` and
+ * `maxBurstDurationMs` instead of `minGapMs`) are available in the
+ * [Lodash migration docs](https://remedajs.com/migrate/lodash#throttle).
+ * - Batching: a copy-paste reference implementation is available in [`funnel.reference-batch.test.ts`](https://github.com/remeda/remeda/blob/main/packages/remeda/src/funnel.reference-batch.test.ts).
  *
  * @param callback - The main function that would be invoked periodically based
  * on `options`. The function would take the latest result of the `reducer`; if
