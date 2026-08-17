@@ -13,8 +13,9 @@ remeda: funnel
 - These implementations can be copied as-is into your project, but might contain
   redundant parts which are not relevant for your specific use cases. By
   inlining only the parts you need you can take advantage of capabilities not
-  available in Lodash. In the test files, copy everything between the
-  `REFERENCE START` and `REFERENCE END` markers.
+  available in Lodash. To copy the expanded versions from the test files
+  instead, take everything between the `REFERENCE START` and `REFERENCE END`
+  markers.
 
 #### Reference
 

@@ -113,6 +113,10 @@ function debounce<F extends StrictFunction>(
 }
 // --- REFERENCE END ---------------------------------------------------------
 
+// The following tests are the original tests for the deprecated `debounce`
+// function. The names of the test cases have been preserved to ease comparing
+// them to the original tests.
+
 describe("main functionality", () => {
   test("should debounce a function", async () => {
     const mockFn = vi.fn<(x: string) => string>(identity());

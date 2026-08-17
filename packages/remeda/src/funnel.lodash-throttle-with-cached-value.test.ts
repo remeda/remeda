@@ -47,8 +47,8 @@ function throttleWithCachedValue<F extends StrictFunction>(
       if (!leading && !trailing) {
         // In Lodash you can disable both the trailing and leading edges of the
         // throttle window, effectively causing the function to never be
-        // invoked. Remeda uses the invokedAt enum exactly to prevent such a
-        // situation; so to simulate Lodash we need to only pass the callback
+        // invoked. Remeda's `triggerAt` option exists exactly to prevent such
+        // a situation; so to simulate Lodash we need to only pass the callback
         // when at least one of them is enabled.
         return;
       }
