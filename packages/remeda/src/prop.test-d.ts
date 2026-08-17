@@ -471,6 +471,20 @@ describe("unbounded records (issue #1274)", () => {
     expectTypeOf(prop(data, "b")).toEqualTypeOf<number | undefined>();
   });
 
+  test("declared props alongside a template-literal index signature", () => {
+    const data = {} as { [key: `data-${string}`]: number; a: 1 };
+
+    expectTypeOf(prop(data, "a")).toEqualTypeOf<1>();
+    expectTypeOf(prop(data, "data-foo")).toEqualTypeOf<number | undefined>();
+  });
+
+  test("record intersected with declared props", () => {
+    const data = {} as Record<string, number> & { a: boolean };
+
+    expectTypeOf(prop(data, "a")).toEqualTypeOf<boolean>();
+    expectTypeOf(prop(data, "b")).toEqualTypeOf<number | undefined>();
+  });
+
   test("interface with an index signature", () => {
     const data = {} as InterfaceWithIndexSignature;
 
@@ -509,6 +523,9 @@ describe("unbounded records (issue #1274)", () => {
   });
 
   test("data-last", () => {
+    expectTypeOf(pipe({} as Record<string, number>, prop("x"))).toEqualTypeOf<
+      number | undefined
+    >();
     expectTypeOf(
       pipe({} as { a: Record<string, number> }, prop("a", "x")),
     ).toEqualTypeOf<number | undefined>();

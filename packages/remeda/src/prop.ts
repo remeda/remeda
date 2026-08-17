@@ -29,8 +29,7 @@ type Prop<T, Key> =
         ? ArrayAt<T, Key>
         : | T[Key]
           // Keys that are only matched by an index signature (and not declared
-          // explicitly) might be missing at runtime; mirroring
-          // `noUncheckedIndexedAccess`.
+          // explicitly) are not guaranteed to exist and need to be widened.
           | (Key extends keyof OmitIndexSignature<T> ? never : undefined)
       : undefined
     : never;

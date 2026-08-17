@@ -1,5 +1,5 @@
 - Use `expectTypeOf(...).toEqualTypeOf<...>()` (not `assertType`)
-- When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` explicitly; when inferred implicitly inline the unresolved type makes the assertion fail even when the types match (suspected expect-type limitation).
+- When a call's inferred return type is a deferred union of a non-primitive type and `undefined`, assign the result to a `const` first; asserting inline on the unresolved type makes the assertion fail even when the types match (suspected expect-type limitation).
 - Before writing, open a similar function's `.test-d.ts` to see which variation axes were covered (literal vs primitive, single vs union vs template-literal, exact-position vs spread vs optional tuple slots, bounded vs unbounded record, readonly vs mutable). The relevant subset varies per function.
 - `interface` tests are NOT redundant with `type` tests of the same shape — they exercise different TS-level paths through `Record`-extending constraints.
 - Cast empty arrays for type data: `[] as Array<{ name: string }>`
