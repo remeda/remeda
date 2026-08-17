@@ -12,7 +12,7 @@ import { identity } from "./identity";
 // --- REFERENCE START -------------------------------------------------------
 import { funnel } from "remeda";
 
-// `never` is intentional; function params are contravariant.
+// Using `never` as the type for args allows this to extend *any* function.
 type StrictFunction = (...args: never) => unknown;
 
 /**
