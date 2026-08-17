@@ -1,4 +1,5 @@
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
+import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 
@@ -107,13 +108,14 @@ function zipWithImplementation<
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
 
-const lazyImplementation =
-  <T1, T2 extends IterableContainer, Value>(
-    second: T2,
-    fn: ZippingFunction<readonly T1[], T2, Value>,
-  ): LazyEvaluator<T1, Value> =>
-  (value, index, data) => ({
-    next: fn(value, second[index], index, [data, second]),
-    hasNext: true,
-    done: index >= second.length - 1,
-  });
+const lazyImplementation = <T1, T2 extends IterableContainer, Value>(
+  second: T2,
+  fn: ZippingFunction<readonly T1[], T2, Value>,
+): LazyEvaluator<T1, Value> =>
+  second.length === 0
+    ? lazyEmptyEvaluator
+    : (value, index, data) => ({
+        next: fn(value, second[index], index, [data, second]),
+        hasNext: true,
+        done: index >= second.length - 1,
+      });

@@ -1,5 +1,6 @@
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
@@ -75,12 +76,16 @@ const zipImplementation = <
     ? first.map((item, index) => [item, second[index]])
     : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 
-const lazyImplementation =
-  <F extends IterableContainer, S extends IterableContainer>(
-    second: S,
-  ): LazyEvaluator<F[number], [F[number], S[number]]> =>
-  (value, index) => ({
-    hasNext: true,
-    next: [value, second[index]],
-    done: index >= second.length - 1,
-  });
+const lazyImplementation = <
+  F extends IterableContainer,
+  S extends IterableContainer,
+>(
+  second: S,
+): LazyEvaluator<F[number], [F[number], S[number]]> =>
+  second.length === 0
+    ? lazyEmptyEvaluator
+    : (value, index) => ({
+        hasNext: true,
+        next: [value, second[index]],
+        done: index >= second.length - 1,
+      });
