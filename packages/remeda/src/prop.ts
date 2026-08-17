@@ -1,5 +1,6 @@
 import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
+import type { Resolved } from "./internal/types/Resolved";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
 // keys from any of the results, not just those **shared** by all of them.
@@ -70,12 +71,12 @@ type NonPropertyKey = object | null | undefined;
 export function prop<T extends NonPropertyKey, Key extends KeysDeep<T, []>>(
   data: T,
   key: Key,
-): NoInfer<Prop<T, Key>>;
+): Resolved<Prop<T, Key>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
   Key1 extends KeysDeep<T, [Key0]>,
->(data: T, key0: Key0, key1: Key1): NoInfer<PropDeep<T, [Key0, Key1]>>;
+>(data: T, key0: Key0, key1: Key1): Resolved<PropDeep<T, [Key0, Key1]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -86,7 +87,7 @@ export function prop<
   key0: Key0,
   key1: Key1,
   key2: Key2,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -99,7 +100,7 @@ export function prop<
   key1: Key1,
   key2: Key2,
   key3: Key3,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -114,7 +115,7 @@ export function prop<
   key2: Key2,
   key3: Key3,
   key4: Key4,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -131,7 +132,7 @@ export function prop<
   key3: Key3,
   key4: Key4,
   key5: Key5,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -150,7 +151,7 @@ export function prop<
   key4: Key4,
   key5: Key5,
   key6: Key6,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -171,7 +172,7 @@ export function prop<
   key5: Key5,
   key6: Key6,
   key7: Key7,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
+): Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -194,7 +195,9 @@ export function prop<
   key6: Key6,
   key7: Key7,
   key8: Key8,
-): NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>>;
+): Resolved<
+  PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>
+>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -224,7 +227,7 @@ export function prop<
   key8: Key8,
   key9: Key9,
   ...additionalKeys: AdditionalKeys
-): NoInfer<
+): Resolved<
   PropDeep<
     T,
     [
@@ -267,12 +270,12 @@ export function prop<
  */
 export function prop<T extends NonPropertyKey, Key extends KeysOfUnion<T>>(
   key: Key,
-): (data: T) => NoInfer<Prop<T, Key>>;
+): (data: T) => Resolved<Prop<T, Key>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
   Key1 extends KeysDeep<T, [Key0]>,
->(key0: Key0, key1: Key1): (data: T) => NoInfer<PropDeep<T, [Key0, Key1]>>;
+>(key0: Key0, key1: Key1): (data: T) => Resolved<PropDeep<T, [Key0, Key1]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -282,7 +285,7 @@ export function prop<
   key0: Key0,
   key1: Key1,
   key2: Key2,
-): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2]>>;
+): (data: T) => Resolved<PropDeep<T, [Key0, Key1, Key2]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -294,7 +297,7 @@ export function prop<
   key1: Key1,
   key2: Key2,
   key3: Key3,
-): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
+): (data: T) => Resolved<PropDeep<T, [Key0, Key1, Key2, Key3]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -308,7 +311,7 @@ export function prop<
   key2: Key2,
   key3: Key3,
   key4: Key4,
-): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
+): (data: T) => Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -324,7 +327,7 @@ export function prop<
   key3: Key3,
   key4: Key4,
   key5: Key5,
-): (data: T) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
+): (data: T) => Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -344,7 +347,7 @@ export function prop<
   key6: Key6,
 ): (
   data: T,
-) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
+) => Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -366,7 +369,7 @@ export function prop<
   key7: Key7,
 ): (
   data: T,
-) => NoInfer<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
+) => Resolved<PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7]>>;
 export function prop<
   T extends NonPropertyKey,
   Key0 extends KeysDeep<T, []>,
@@ -390,7 +393,7 @@ export function prop<
   key8: Key8,
 ): (
   data: T,
-) => NoInfer<
+) => Resolved<
   PropDeep<T, [Key0, Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8]>
 >;
 export function prop<
@@ -423,7 +426,7 @@ export function prop<
   ...additionalKeys: AdditionalKeys
 ): (
   data: T,
-) => NoInfer<
+) => Resolved<
   PropDeep<
     T,
     [
