@@ -87,6 +87,7 @@
     "type-fest": "5.8.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.67.0",
+    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.10"
   },
   "sideEffects": false

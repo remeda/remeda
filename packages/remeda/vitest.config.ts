@@ -1,7 +1,8 @@
-import { fileURLToPath } from "node:url";
+import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  plugins: [tsconfigPaths()],
   test: {
     coverage: {
       include: ["src/**"],
@@ -14,23 +15,15 @@ export default defineConfig({
     },
     projects: [
       {
+        extends: true,
         test: {
           name: "runtime",
           include: ["src/**/*.test.ts"],
           isolate: false,
         },
-        resolve: {
-          alias: {
-            // Allow us to import utilities directly from "remeda" so we can
-            // write copy-pasteable reference implementations in our test files
-            // (e.g., like the ones for mimicking lodash-like `debounce` and
-            // `throttle` functions).
-            // @see https://github.com/remeda/remeda/pull/1419
-            remeda: fileURLToPath(new URL("src/index.ts", import.meta.url)),
-          },
-        },
       },
       {
+        extends: true,
         test: {
           name: "types",
           include: ["src/**/*.test-d.ts"],
@@ -42,6 +35,7 @@ export default defineConfig({
         },
       },
       {
+        extends: true,
         test: {
           name: "prop",
           include: ["src/**/*.test-prop.ts"],
