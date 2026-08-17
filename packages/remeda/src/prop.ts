@@ -1,4 +1,4 @@
-import type { KeysOfUnion } from "type-fest";
+import type { KeysOfUnion, OmitIndexSignature } from "type-fest";
 import type { ArrayAt } from "./internal/types/ArrayAt";
 
 // Computes all possible keys of `T` at `Path` spread over unions, allowing
@@ -27,7 +27,11 @@ type Prop<T, Key> =
       Key extends keyof T
       ? T extends readonly unknown[]
         ? ArrayAt<T, Key>
-        : T[Key]
+        : | T[Key]
+          // Keys that are only matched by an index signature (and not declared
+          // explicitly) might be missing at runtime; mirroring
+          // `noUncheckedIndexedAccess`.
+          | (Key extends keyof OmitIndexSignature<T> ? never : undefined)
       : undefined
     : never;
 
@@ -45,10 +49,11 @@ type NonPropertyKey = object | null | undefined;
  * Gets the value of the given property from an object. Nested properties can
  * be accessed by providing a variadic array of keys that define the path from
  * the root to the desired property. Arrays can be accessed by using numeric
- * keys. Unions and optional properties are handled gracefully by returning
- * `undefined` early for any non-existing property on the path. Paths are
- * validated against the object type to provide stronger type safety, better
- * compile-time errors, and to enable autocompletion in IDEs.
+ * keys. Unions, optional properties, and index signatures are handled
+ * gracefully by returning `undefined` early for any non-existing property on
+ * the path. Paths are validated against the object type to provide stronger
+ * type safety, better compile-time errors, and to enable autocompletion in
+ * IDEs.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
@@ -243,10 +248,11 @@ export function prop<
  * Gets the value of the given property from an object. Nested properties can
  * be accessed by providing a variadic array of keys that define the path from
  * the root to the desired property. Arrays can be accessed by using numeric
- * keys. Unions and optional properties are handled gracefully by returning
- * `undefined` early for any non-existing property on the path. Paths are
- * validated against the object type to provide stronger type safety, better
- * compile-time errors, and to enable autocompletion in IDEs.
+ * keys. Unions, optional properties, and index signatures are handled
+ * gracefully by returning `undefined` early for any non-existing property on
+ * the path. Paths are validated against the object type to provide stronger
+ * type safety, better compile-time errors, and to enable autocompletion in
+ * IDEs.
  *
  * To check whether a key exists on the object, use `hasProp`.
  *
