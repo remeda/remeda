@@ -13,11 +13,14 @@ remeda: funnel
 - These implementations can be copied as-is into your project, but might contain
   redundant parts which are not relevant for your specific use cases. By
   inlining only the parts you need you can take advantage of capabilities not
-  available in Lodash.
+  available in Lodash. In the test files, copy everything between the
+  `REFERENCE START` and `REFERENCE END` markers.
 
 #### Reference
 
 ```ts
+import { funnel } from "remeda";
+
 function throttle<F extends (...args: any) => void>(
   func: F,
   wait = 0,
@@ -37,9 +40,13 @@ function throttle<F extends (...args: any) => void>(
       }
     },
     {
-      burstCoolDownMs: wait,
+      minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
-      invokedAt: trailing ? (leading ? "both" : "end") : "start",
+      ...(trailing
+        ? leading
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
   return Object.assign(call, rest);
@@ -49,6 +56,8 @@ function throttle<F extends (...args: any) => void>(
 #### With call arguments
 
 ```ts
+import { funnel } from "remeda";
+
 function throttle<F extends (...args: any) => void>(
   func: F,
   wait = 0,
@@ -71,7 +80,11 @@ function throttle<F extends (...args: any) => void>(
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
-      triggerAt: trailing ? (leading ? "both" : "end") : "start",
+      ...(trailing
+        ? leading
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
   return Object.assign(call, rest);
@@ -81,6 +94,8 @@ function throttle<F extends (...args: any) => void>(
 #### With cached value
 
 ```ts
+import { funnel } from "remeda";
+
 function throttle<F extends (...args: any) => any>(
   func: F,
   wait = 0,
@@ -101,7 +116,11 @@ function throttle<F extends (...args: any) => any>(
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
-      triggerAt: trailing ? (leading ? "both" : "end") : "start",
+      ...(trailing
+        ? leading
+          ? { triggerAt: "both" }
+          : { triggerAt: "end" }
+        : { triggerAt: "start" }),
     },
   );
 

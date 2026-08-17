@@ -20,6 +20,11 @@
     // MODULES
     "module": "Preserve",
     "moduleResolution": "Bundler",
+    // Allow us to import utilities directly from "remeda" so we can write copy-
+    // pasteable reference implementations in our test files (e.g., like the
+    // ones for mimicking lodash-like `debounce` and `throttle` functions).
+    // @see https://github.com/remeda/remeda/pull/1419
+    "paths": { "remeda": ["./src/index.ts"] },
 
     // EMIT
     "noEmit": true,
