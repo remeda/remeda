@@ -14,6 +14,11 @@ export default defineConfig({
     },
     projects: [
       {
+        test: {
+          name: "runtime",
+          include: ["src/**/*.test.ts"],
+          isolate: false,
+        },
         resolve: {
           alias: {
             // Allow us to import utilities directly from "remeda" so we can
@@ -23,11 +28,6 @@ export default defineConfig({
             // @see https://github.com/remeda/remeda/pull/1419
             remeda: fileURLToPath(new URL("src/index.ts", import.meta.url)),
           },
-        },
-        test: {
-          name: "runtime",
-          include: ["src/**/*.test.ts"],
-          isolate: false,
         },
       },
       {
