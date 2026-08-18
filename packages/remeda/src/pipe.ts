@@ -7,8 +7,8 @@ import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
 type PreparedLazyFunction = {
-  readonly fn: LazyEvaluator;
-  readonly isSingle: boolean | undefined;
+  readonly lazyEvaluator: LazyEvaluator;
+  readonly isSingle: boolean;
 
   // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
@@ -305,7 +305,7 @@ export function pipe(
     const lazySequence = extractLazySequence(lazyFunctions, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
-    const { isSingle = false } = lazySequence.at(-1)!;
+    const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
@@ -326,7 +326,7 @@ function extractLazySequence(
     }
 
     lazySequence.push(lazyFunction);
-    if (lazyFunction.isSingle ?? false) {
+    if (lazyFunction.isSingle) {
       break;
     }
   }
@@ -370,7 +370,7 @@ function processItem(
   for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
     const { index, items } = lazyFn;
     items.push(currentItem);
-    lazyResult = lazyFn.fn(currentItem, index, items);
+    lazyResult = lazyFn.lazyEvaluator(currentItem, index, items);
     lazyFn.index += 1;
 
     // Process remaining functions in the pipe but don't process remaining
@@ -409,8 +409,8 @@ const prepareLazyFunction = ({
   lazy,
   lazyArgs,
 }: LazyFunction): PreparedLazyFunction => ({
-  fn: lazy(...lazyArgs),
-  isSingle: lazy.single,
+  lazyEvaluator: lazy(...lazyArgs),
+  isSingle: lazy.single ?? false,
   index: 0,
   items: [],
 });
