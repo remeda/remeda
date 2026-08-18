@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { pipe } from "./pipe";
 import { zipWith } from "./zipWith";
 
@@ -77,5 +77,21 @@ describe("data second with initial arg", () => {
         zipWith(["a", "b", "c"], (a, b) => `${a}${b}`),
       ),
     ).toStrictEqual(["1a", "2b"]);
+  });
+
+  test("should return empty when second is empty", () => {
+    const mockFn = vi.fn<(a: string, b: string) => string>();
+
+    expect(pipe(["1", "2"], zipWith([], mockFn))).toStrictEqual([]);
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  test("should return empty when first is empty", () => {
+    expect(
+      pipe(
+        [],
+        zipWith(["a", "b"], (a, b) => `${a}${b}`),
+      ),
+    ).toStrictEqual([]);
   });
 });
