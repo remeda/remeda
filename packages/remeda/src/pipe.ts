@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
+/* eslint-disable jsdoc/check-param-names --
+ * We document pipe's function params as a single parameter entry in the docs.
+ */
 
 import type { LazyDefinition } from "./internal/types/LazyDefinition";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
@@ -9,10 +10,9 @@ import { SKIP_ITEM } from "./internal/utilityEvaluators";
 type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
-
-  // These are intentionally mutable, they maintain the lazy piped state.
-  index: number;
-  items: unknown[];
+  // Notice the array is mutable, we will be adding items as the pipe is
+  // evaluating them.
+  readonly items: unknown[];
 };
 
 type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
@@ -284,8 +284,8 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...functions: readonly (LazyFunction | ((value: any) => unknown))[]
-): any {
+  ...functions: readonly (LazyFunction | ((value: unknown) => unknown))[]
+): unknown {
   let output = input;
 
   const lazySteps = functions.map((op) =>
@@ -320,7 +320,7 @@ export function pipe(
 }
 
 function extractLazySequence(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy functions are stateful and contain the state needed to compute the next value lazily.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
   lazySteps: readonly (LazyStep | undefined)[],
   startIndex: number,
 ): readonly LazyStep[] {
@@ -343,7 +343,7 @@ function extractLazySequence(
 
 function processIterable(
   iterable: Iterable<unknown>,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy sequence is stateful and contains the state needed to compute the next value lazily.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
   lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
@@ -362,7 +362,7 @@ function processItem(
   item: unknown,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: unknown[],
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The items array is mutable for efficiency.
   lazySequence: readonly LazyStep[],
 ): boolean {
   if (lazySequence.length === 0) {
@@ -372,17 +372,15 @@ function processItem(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<any> = SKIP_ITEM;
+  let lazyResult: LazyResult<unknown> = SKIP_ITEM;
   let isDone = false;
-  for (const [functionsIndex, lazyFn] of lazySequence.entries()) {
-    const { index, items } = lazyFn;
+  for (const [
+    functionsIndex,
+    { items, lazyEvaluator },
+  ] of lazySequence.entries()) {
     items.push(currentItem);
-    lazyResult = lazyFn.lazyEvaluator(currentItem, index, items);
-    lazyFn.index += 1;
+    lazyResult = lazyEvaluator(currentItem, items.length - 1, items);
 
-    // Process remaining functions in the pipe but don't process remaining
-    // elements in the input array. This must be checked before `hasNext`
-    // because results without a value also stop the iteration.
     if (lazyResult.done) {
       isDone = true;
     }

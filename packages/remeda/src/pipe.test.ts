@@ -178,7 +178,7 @@ describe("lazy", () => {
   });
 });
 
-// We want to test a a lazy evaluator that returns both `done === true` and
+// We want to test a lazy evaluator that returns both `done === true` and
 // `hasMany === true` at the same time but don't have any utility that does it.
 const firstTwice: () => (data: readonly number[]) => number[] = () =>
   // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
