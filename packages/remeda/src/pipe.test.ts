@@ -2,6 +2,8 @@ import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { flat } from "./flat";
 import { identity } from "./identity";
+import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -132,6 +134,26 @@ describe("lazy", () => {
     expect(result).toStrictEqual([100, 200]);
   });
 
+  test("early exit when done without a next value", () => {
+    const mockMapper = vi.fn<(x: number) => number>();
+
+    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
+    // An element must be pulled before `take(0)` can report `done`, so the
+    // callback runs exactly once even though the result is empty.
+    expect(mockMapper).toHaveBeenCalledTimes(1);
+  });
+
+  test("early exit when done without a next value mid-pipe", () => {
+    const mockMapper = vi.fn<(x: number) => number>();
+    const downstream = vi.fn<(x: number) => number>();
+
+    expect(
+      pipe([1, 2, 3, 4, 5], map(mockMapper), take(0), map(downstream)),
+    ).toStrictEqual([]);
+    expect(mockMapper).toHaveBeenCalledTimes(1);
+    expect(downstream).not.toHaveBeenCalled();
+  });
+
   test("lazy early exit with hasMany", () => {
     const result = pipe(
       [
@@ -145,4 +167,26 @@ describe("lazy", () => {
 
     expect(result).toStrictEqual([1, 2]);
   });
+
+  test("early exit when done with many next values", () => {
+    const mockMapper = vi.fn<(x: number) => number>(identity());
+
+    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), firstTwice())).toStrictEqual([
+      1, 1,
+    ]);
+    expect(mockMapper).toHaveBeenCalledTimes(1);
+  });
+});
+
+// We want to test a lazy evaluator that returns both `done === true` and
+// `hasMany === true` at the same time but don't have any utility that does it.
+const firstTwice: () => (data: readonly number[]) => number[] = () =>
+  // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
+  purryFromLazy(() => firstTwiceEvaluator, []);
+
+const firstTwiceEvaluator: LazyEvaluator = (value) => ({
+  done: true,
+  hasNext: true,
+  hasMany: true,
+  next: [value, value],
 });
