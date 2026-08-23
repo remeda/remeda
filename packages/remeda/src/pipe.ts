@@ -6,7 +6,7 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { LazyResult } from "./internal/types/LazyResult";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 
-type PreparedLazyFunction = {
+type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
   readonly isSingle: boolean;
 
@@ -288,13 +288,20 @@ export function pipe(
 ): any {
   let output = input;
 
-  const lazyFunctions = functions.map((op) =>
-    "lazy" in op ? prepareLazyFunction(op) : undefined,
+  const lazySteps = functions.map((op) =>
+    "lazy" in op
+      ? {
+          lazyEvaluator: op.lazy(...op.lazyArgs),
+          isSingle: op.lazy.single ?? false,
+          index: 0,
+          items: [],
+        }
+      : undefined,
   );
 
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyFunction = lazyFunctions[functionIndex];
+    const lazyFunction = lazySteps[functionIndex];
     if (lazyFunction === undefined || !isIterable(output)) {
       const func = functions[functionIndex]!;
       output = func(output);
@@ -302,7 +309,7 @@ export function pipe(
       continue;
     }
 
-    const lazySequence = extractLazySequence(lazyFunctions, functionIndex);
+    const lazySequence = extractLazySequence(lazySteps, functionIndex);
     const accumulator = processIterable(output, lazySequence);
 
     const { isSingle } = lazySequence.at(-1)!;
@@ -314,19 +321,19 @@ export function pipe(
 
 function extractLazySequence(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy functions are stateful and contain the state needed to compute the next value lazily.
-  lazyFunctions: readonly (PreparedLazyFunction | undefined)[],
+  lazySteps: readonly (LazyStep | undefined)[],
   startIndex: number,
-): readonly PreparedLazyFunction[] {
-  const lazySequence: PreparedLazyFunction[] = [];
+): readonly LazyStep[] {
+  const lazySequence: LazyStep[] = [];
 
-  for (let index = startIndex; index < lazyFunctions.length; index++) {
-    const lazyFunction = lazyFunctions[index];
-    if (lazyFunction === undefined) {
+  for (let index = startIndex; index < lazySteps.length; index++) {
+    const lazyStep = lazySteps[index];
+    if (lazyStep === undefined) {
       break;
     }
 
-    lazySequence.push(lazyFunction);
-    if (lazyFunction.isSingle) {
+    lazySequence.push(lazyStep);
+    if (lazyStep.isSingle) {
       break;
     }
   }
@@ -337,7 +344,7 @@ function extractLazySequence(
 function processIterable(
   iterable: Iterable<unknown>,
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- The lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: readonly PreparedLazyFunction[],
+  lazySequence: readonly LazyStep[],
 ): unknown[] {
   const accumulator: unknown[] = [];
 
@@ -356,7 +363,7 @@ function processItem(
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, we use the accumulator directly to accumulate the results.
   accumulator: unknown[],
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the lazy sequence is stateful and contains the state needed to compute the next value lazily.
-  lazySequence: readonly PreparedLazyFunction[],
+  lazySequence: readonly LazyStep[],
 ): boolean {
   if (lazySequence.length === 0) {
     accumulator.push(item);
@@ -404,16 +411,6 @@ function processItem(
   }
   return isDone;
 }
-
-const prepareLazyFunction = ({
-  lazy,
-  lazyArgs,
-}: LazyFunction): PreparedLazyFunction => ({
-  lazyEvaluator: lazy(...lazyArgs),
-  isSingle: lazy.single ?? false,
-  index: 0,
-  items: [],
-});
 
 function isIterable(something: unknown): something is Iterable<unknown> {
   // Check for null and undefined to avoid errors when accessing Symbol.iterator
