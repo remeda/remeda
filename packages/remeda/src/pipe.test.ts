@@ -2,12 +2,12 @@ import { describe, expect, test, vi } from "vitest";
 import { filter } from "./filter";
 import { flat } from "./flat";
 import { identity } from "./identity";
+import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
-import { purry } from "./purry";
 import { take } from "./take";
 
 test("should pass through data with 0 functions", () => {
@@ -136,38 +136,23 @@ describe("lazy", () => {
   });
 
   test("early exit when done without a next value", () => {
-    const count = vi.fn<() => void>();
-    const result = pipe(
-      [1, 2, 3, 4, 5],
-      map((x) => {
-        count();
-        return x * 10;
-      }),
-      take(0),
-    );
+    const mockMapper = vi.fn<(x: number) => number>();
 
+    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), take(0))).toStrictEqual([]);
     // An element must be pulled before `take(0)` can report `done`, so the
     // callback runs exactly once even though the result is empty.
-    expect(count).toHaveBeenCalledTimes(1);
-    expect(result).toStrictEqual([]);
+    expect(mockMapper).toHaveBeenCalledTimes(1);
   });
 
   test("early exit when done without a next value mid-pipe", () => {
-    const count = vi.fn<() => void>();
+    const mockMapper = vi.fn<(x: number) => number>();
     const downstream = vi.fn<(x: number) => number>();
-    const result = pipe(
-      [1, 2, 3],
-      map((x) => {
-        count();
-        return x * 10;
-      }),
-      take(0),
-      map(downstream),
-    );
 
-    expect(count).toHaveBeenCalledTimes(1);
+    expect(
+      pipe([1, 2, 3, 4, 5], map(mockMapper), take(0), map(downstream)),
+    ).toStrictEqual([]);
+    expect(mockMapper).toHaveBeenCalledTimes(1);
     expect(downstream).not.toHaveBeenCalled();
-    expect(result).toStrictEqual([]);
   });
 
   test("lazy early exit with hasMany", () => {
@@ -185,29 +170,12 @@ describe("lazy", () => {
   });
 
   test("early exit when done with many next values", () => {
-    // No built-in function emits `hasMany` results together with `done`; the
-    // combination is only reachable via custom `purry` lazy implementations,
-    // but it is part of the lazy protocol and must stop the input iteration.
-    const duplicateFirst = purry(
-      /* v8 ignore next 2 -- `pipe` only ever runs the lazy implementation. */
-      (data: readonly number[]) =>
-        data.slice(0, 1).flatMap((value) => [value, value]),
-      [],
-      () => duplicateFirstEvaluator,
-    ) as (data: readonly number[]) => number[];
+    const mockMapper = vi.fn<(x: number) => number>(identity());
 
-    const count = vi.fn<() => void>();
-    const result = pipe(
-      [1, 2, 3],
-      map((x) => {
-        count();
-        return x * 10;
-      }),
-      duplicateFirst,
-    );
-
-    expect(count).toHaveBeenCalledTimes(1);
-    expect(result).toStrictEqual([10, 10]);
+    expect(
+      pipe([1, 2, 3, 4, 5], map(mockMapper), duplicateFirst()),
+    ).toStrictEqual([1, 1]);
+    expect(mockMapper).toHaveBeenCalledTimes(1);
   });
 
   test("doesn't mutate shared singleton evaluators", () => {
@@ -218,6 +186,13 @@ describe("lazy", () => {
     expect(lazyEmptyEvaluator).not.toHaveProperty("items");
   });
 });
+
+// A dummy utility that returns the first value twice using a lazy evaluator
+// that returns `done`, `hasNext`, and `hasMany` all true. We don't have a real
+//  utility that does this and still want to check how `pipe` handles it.
+const duplicateFirst: () => (data: readonly number[]) => number[] = () =>
+  // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
+  purryFromLazy(() => duplicateFirstEvaluator, []);
 
 const duplicateFirstEvaluator: LazyEvaluator = (value) => ({
   done: true,
