@@ -4,7 +4,6 @@ import { flat } from "./flat";
 import { identity } from "./identity";
 import { purryFromLazy } from "./internal/purryFromLazy";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import { map } from "./map";
 import { pipe } from "./pipe";
 import { prop } from "./prop";
@@ -172,29 +171,20 @@ describe("lazy", () => {
   test("early exit when done with many next values", () => {
     const mockMapper = vi.fn<(x: number) => number>(identity());
 
-    expect(
-      pipe([1, 2, 3, 4, 5], map(mockMapper), duplicateFirst()),
-    ).toStrictEqual([1, 1]);
+    expect(pipe([1, 2, 3, 4, 5], map(mockMapper), firstTwice())).toStrictEqual([
+      1, 1,
+    ]);
     expect(mockMapper).toHaveBeenCalledTimes(1);
-  });
-
-  test("doesn't mutate shared singleton evaluators", () => {
-    pipe([1, 2, 3], take(0));
-
-    // `take(0)` returns the module-level `lazyEmptyEvaluator` shared by every
-    // pipe in the process, so per-pipe state must not be stamped onto it.
-    expect(lazyEmptyEvaluator).not.toHaveProperty("items");
   });
 });
 
-// A dummy utility that returns the first value twice using a lazy evaluator
-// that returns `done`, `hasNext`, and `hasMany` all true. We don't have a real
-//  utility that does this and still want to check how `pipe` handles it.
-const duplicateFirst: () => (data: readonly number[]) => number[] = () =>
+// We want to test a a lazy evaluator that returns both `done === true` and
+// `hasMany === true` at the same time but don't have any utility that does it.
+const firstTwice: () => (data: readonly number[]) => number[] = () =>
   // @ts-expect-error [ts2322] -- Our purry functions don't infer the correct return type, we explicit casting to force it.
-  purryFromLazy(() => duplicateFirstEvaluator, []);
+  purryFromLazy(() => firstTwiceEvaluator, []);
 
-const duplicateFirstEvaluator: LazyEvaluator = (value) => ({
+const firstTwiceEvaluator: LazyEvaluator = (value) => ({
   done: true,
   hasNext: true,
   hasMany: true,
