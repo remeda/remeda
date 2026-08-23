@@ -372,7 +372,7 @@ function processItem(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<unknown> = SKIP_ITEM;
+  let lazyResult: LazyResult = SKIP_ITEM;
   let isDone = false;
   for (const [
     functionsIndex,
