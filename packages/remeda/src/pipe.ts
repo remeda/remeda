@@ -301,8 +301,8 @@ export function pipe(
 
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyFunction = lazySteps[functionIndex];
-    if (lazyFunction === undefined || !isIterable(output)) {
+    const lazyStep = lazySteps[functionIndex];
+    if (lazyStep === undefined || !isIterable(output)) {
       const func = functions[functionIndex]!;
       output = func(output);
       functionIndex += 1;
