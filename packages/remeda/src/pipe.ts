@@ -404,9 +404,11 @@ function processItem(
       break;
     }
   }
+
   if (lazyResult.hasNext) {
     accumulator.push(currentItem);
   }
+
   return isDone;
 }
 
