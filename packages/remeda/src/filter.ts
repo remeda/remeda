@@ -48,10 +48,7 @@ type NonRefinedFilteredArray<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
+export function filter<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): FilteredArray<T, Condition>;
@@ -84,10 +81,7 @@ export function filter<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
+export function filter<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (data: T) => FilteredArray<T, Condition>;
 export function filter<
