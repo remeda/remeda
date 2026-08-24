@@ -5,6 +5,7 @@ import { filter } from "./filter";
 import { isDefined } from "./isDefined";
 import { isNonNull } from "./isNonNull";
 import { isNonNullish } from "./isNonNullish";
+import { isNullish } from "./isNullish";
 import { isStrictEqual } from "./isStrictEqual";
 import { pipe } from "./pipe";
 
@@ -300,6 +301,3 @@ describe("predicate wider than the item", () => {
 test("predicate disjoint from the item", () => {
   expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
 });
-
-const isNullish = (value: unknown): value is null | undefined =>
-  value === null || value === undefined;
