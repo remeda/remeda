@@ -161,6 +161,23 @@ test("all values are undefined", () => {
   ).toEqualTypeOf<EmptyObject>();
 });
 
+test("tuple, grouping on a prop with literal union values", () => {
+  expectTypeOf(
+    groupByProp(
+      [
+        { a: "cat", b: 1 },
+        { a: "cat", c: 2 },
+      ] as [{ a: "cat" | "dog"; b: 1 }, { a: "cat"; c: 2 }],
+      "a",
+    ),
+  ).toEqualTypeOf<{
+    cat:
+      | [{ a: "cat"; c: 2 }]
+      | [{ a: "cat" | "dog"; b: 1 } & Record<"a", "cat">, { a: "cat"; c: 2 }];
+    dog?: [{ a: "cat" | "dog"; b: 1 } & Record<"a", "dog">];
+  }>();
+});
+
 // @see https://github.com/remeda/remeda/issues/1231
 test("grouping on a prop with literal union values (issue #1231)", () => {
   expectTypeOf(

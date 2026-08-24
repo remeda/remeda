@@ -3,6 +3,26 @@ import { $typed } from "../../../test/$typed";
 import type { FilteredArray } from "./FilteredArray";
 import type { IterableContainer } from "./IterableContainer";
 
+interface ItemInterface {
+  readonly type: "cat" | "dog";
+  readonly legs: number;
+}
+
+interface ConditionInterface {
+  readonly type: "cat";
+  readonly name: string;
+}
+
+class ItemClass {
+  declare public readonly type: "cat" | "dog";
+  declare public readonly legs: number;
+}
+
+class ConditionClass {
+  declare public readonly type: "cat";
+  declare public readonly name: string;
+}
+
 declare function filteredArray<T extends IterableContainer, C>(
   data: T,
   condition: C,
@@ -893,5 +913,38 @@ describe("condition is never", () => {
     expectTypeOf(
       filteredArray([""] as [string, ...number[]], $typed()),
     ).toEqualTypeOf<[]>();
+  });
+
+  test("tuple with an `any` item", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional...
+        $typed<[any]>(),
+        $typed(),
+      ),
+    ).toEqualTypeOf<[]>();
+  });
+});
+
+describe("item and condition aren't type literals", () => {
+  test("interface", () => {
+    expectTypeOf(
+      filteredArray([] as ItemInterface[], $typed<ConditionInterface>()),
+    ).toEqualTypeOf<(ItemInterface & ConditionInterface)[]>();
+  });
+
+  test("interface in a fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        [{ type: "cat", legs: 4 }] as [ItemInterface],
+        $typed<ConditionInterface>(),
+      ),
+    ).toEqualTypeOf<[] | [ItemInterface & ConditionInterface]>();
+  });
+
+  test("class", () => {
+    expectTypeOf(
+      filteredArray([] as ItemClass[], $typed<ConditionClass>()),
+    ).toEqualTypeOf<(ItemClass & ConditionClass)[]>();
   });
 });

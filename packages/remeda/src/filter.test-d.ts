@@ -11,6 +11,16 @@ import { isStrictEqual } from "./isStrictEqual";
 import { isString } from "./isString";
 import { pipe } from "./pipe";
 
+interface Animal {
+  readonly name: string;
+}
+
+interface Dog extends Animal {
+  readonly bark: () => void;
+}
+
+declare function isAnimal(x: unknown): x is Animal;
+
 describe("primitives arrays", () => {
   test("predicate", () => {
     expectTypeOf(filter([] as string[], constant(true))).toEqualTypeOf<
@@ -297,5 +307,15 @@ describe("condition isn't a subtype of the item", () => {
 
   test("disjoint", () => {
     expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  });
+
+  test("supertype", () => {
+    expectTypeOf(filter([] as Dog[], isAnimal)).toEqualTypeOf<Dog[]>();
+  });
+
+  test("supertype, fixed tuple", () => {
+    expectTypeOf(filter($typed<[Dog, Dog]>(), isAnimal)).toEqualTypeOf<
+      [Dog, Dog]
+    >();
   });
 });
