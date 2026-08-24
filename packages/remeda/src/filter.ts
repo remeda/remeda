@@ -70,7 +70,7 @@ export function filter<
  *
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep the element in the resulting array, and `false`
- * otherwise.
+ * otherwise. A type-predicate can also be used to narrow the result.
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
