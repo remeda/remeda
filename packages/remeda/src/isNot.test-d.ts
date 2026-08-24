@@ -9,6 +9,7 @@ import {
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
 import { isString } from "./isString";
+import { $typed } from "../test/$typed";
 
 test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
@@ -61,4 +62,12 @@ test("should work as type guard in filter", () => {
       | undefined
     )[]
   >();
+});
+
+test("negates a predicate wider than the data", () => {
+  expectTypeOf(
+    $typed<(string | null)[]>().filter(
+      isNot((x: unknown) => x === null || x === undefined),
+    ),
+  ).items.toEqualTypeOf<string>();
 });
