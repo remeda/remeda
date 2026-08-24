@@ -85,7 +85,7 @@ type RefineIncomparable<Item, Condition> = Item extends object
         ? never
         : // We take the (symmetric) intersection of the two objects;
           // but only when we know it isn't empty. This would only happen if
-          // they share a least one key.
+          // they share at least one key.
           IsNever<Extract<keyof Item, keyof Condition>> extends true
           ? never
           : Item & Condition
