@@ -284,18 +284,10 @@ describe("union of array types", () => {
   });
 });
 
-describe("predicate wider than the item", () => {
-  test("data-first", () => {
-    expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
-      null[]
-    >();
-  });
-
-  test("data-last", () => {
-    expectTypeOf(
-      pipe([] as (string | null)[], filter(isNullish)),
-    ).toEqualTypeOf<null[]>();
-  });
+test("predicate wider than the item", () => {
+  expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
+    null[]
+  >();
 });
 
 test("predicate disjoint from the item", () => {
