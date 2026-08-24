@@ -309,13 +309,71 @@ describe("condition isn't a subtype of the item", () => {
     expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
   });
 
-  test("supertype", () => {
-    expectTypeOf(filter([] as Dog[], isAnimal)).toEqualTypeOf<Dog[]>();
-  });
+  describe("supertype", () => {
+    test("empty tuple", () => {
+      expectTypeOf(filter($typed<[]>(), isAnimal)).toEqualTypeOf<[]>();
+    });
 
-  test("supertype, fixed tuple", () => {
-    expectTypeOf(filter($typed<[Dog, Dog]>(), isAnimal)).toEqualTypeOf<
-      [Dog, Dog]
-    >();
+    test("fixed tuple", () => {
+      expectTypeOf(filter($typed<[Dog, Dog]>(), isAnimal)).toEqualTypeOf<
+        [Dog, Dog]
+      >();
+    });
+
+    test("readonly fixed tuple", () => {
+      expectTypeOf(
+        filter($typed<readonly [Dog, Dog]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, Dog]>();
+    });
+
+    test("optional tuple", () => {
+      expectTypeOf(filter($typed<[Dog?]>(), isAnimal)).toEqualTypeOf<[Dog?]>();
+    });
+
+    test("mixed tuple", () => {
+      expectTypeOf(filter($typed<[Dog, Dog?]>(), isAnimal)).toEqualTypeOf<
+        [Dog, Dog?]
+      >();
+    });
+
+    test("array", () => {
+      expectTypeOf(filter([] as Dog[], isAnimal)).toEqualTypeOf<Dog[]>();
+    });
+
+    test("fixed-prefix array", () => {
+      expectTypeOf(filter($typed<[Dog, ...Dog[]]>(), isAnimal)).toEqualTypeOf<
+        [Dog, ...Dog[]]
+      >();
+    });
+
+    test("optional-prefix array", () => {
+      expectTypeOf(filter($typed<[Dog?, ...Dog[]]>(), isAnimal)).toEqualTypeOf<
+        [Dog?, ...Dog[]]
+      >();
+    });
+
+    test("mixed-prefix array", () => {
+      expectTypeOf(
+        filter($typed<[Dog, Dog?, ...Dog[]]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, Dog?, ...Dog[]]>();
+    });
+
+    test("fixed-suffix array", () => {
+      expectTypeOf(filter($typed<[...Dog[], Dog]>(), isAnimal)).toEqualTypeOf<
+        [...Dog[], Dog]
+      >();
+    });
+
+    test("fixed-elements array", () => {
+      expectTypeOf(
+        filter($typed<[Dog, ...Dog[], Dog]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, ...Dog[], Dog]>();
+    });
+
+    test("union of arrays", () => {
+      expectTypeOf(filter($typed<Dog[] | string[]>(), isAnimal)).toEqualTypeOf<
+        [] | Dog[]
+      >();
+    });
   });
 });
