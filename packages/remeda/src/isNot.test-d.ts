@@ -1,4 +1,5 @@
 import { expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import {
   ALL_TYPES_DATA_PROVIDER,
   TYPES_DATA_PROVIDER,
@@ -9,7 +10,6 @@ import {
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
 import { isString } from "./isString";
-import { $typed } from "../test/$typed";
 
 test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
