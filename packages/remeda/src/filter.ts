@@ -48,10 +48,7 @@ type NonRefinedFilteredArray<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
+export function filter<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): FilteredArray<T, Condition>;
@@ -73,7 +70,7 @@ export function filter<
  *
  * @param predicate - A function to execute for each element in the array. It
  * should return `true` to keep the element in the resulting array, and `false`
- * otherwise.
+ * otherwise. A type-predicate can also be used to narrow the result.
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
@@ -84,10 +81,7 @@ export function filter<
  * @lazy
  * @category Array
  */
-export function filter<
-  T extends IterableContainer,
-  Condition extends T[number],
->(
+export function filter<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (data: T) => FilteredArray<T, Condition>;
 export function filter<

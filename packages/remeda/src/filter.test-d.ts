@@ -5,12 +5,21 @@ import { filter } from "./filter";
 import { isDefined } from "./isDefined";
 import { isNonNull } from "./isNonNull";
 import { isNonNullish } from "./isNonNullish";
+import { isNullish } from "./isNullish";
+import { isNumber } from "./isNumber";
 import { isStrictEqual } from "./isStrictEqual";
+import { isString } from "./isString";
 import { pipe } from "./pipe";
 
-// TODO [>2]: Our type-narrowing utilities aren't narrowing our types correctly in these tests due to them inferring the types "too soon" (because they are invoked "headless"ly). This is also a problem with TypeScript before version 5.5 because we can't use a simple arrow function too without being explicit about it's return type, which makes the whole code messy. In Remeda v3 we plan to bump the minimum TypeScript version so this wouldn't be an issue any way, but we also plan to deprecate headless type predicates.
-declare function isNumber<T>(x: T): x is Extract<T, number>;
-declare function isString<T>(x: T): x is Extract<T, string>;
+interface Animal {
+  readonly name: string;
+}
+
+interface Dog extends Animal {
+  readonly bark: () => void;
+}
+
+declare function isAnimal(x: unknown): x is Animal;
 
 describe("primitives arrays", () => {
   test("predicate", () => {
@@ -172,8 +181,7 @@ describe("special tuple shapes", () => {
 
 test("discriminated union filtering", () => {
   const data = [] as (
-    | { type: "cat"; hates: string }
-    | { type: "dog"; numFriends: number }
+    { type: "cat"; hates: string } | { type: "dog"; numFriends: number }
   )[];
 
   expectTypeOf(
@@ -259,6 +267,12 @@ describe("data last", () => {
 
     expectTypeOf(result).toEqualTypeOf<[1, 2, 3]>();
   });
+
+  test("partially overlapping", () => {
+    expectTypeOf(
+      pipe([] as (string | null)[], filter(isNullish)),
+    ).toEqualTypeOf<null[]>();
+  });
 });
 
 describe("union of array types", () => {
@@ -281,5 +295,85 @@ describe("union of array types", () => {
         isNumber,
       ),
     ).toEqualTypeOf<[0] | [1, 2, 3, 4]>();
+  });
+});
+
+describe("condition isn't a subtype of the item", () => {
+  test("partially overlapping", () => {
+    expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
+      null[]
+    >();
+  });
+
+  test("disjoint", () => {
+    expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  });
+
+  describe("supertype", () => {
+    test("empty tuple", () => {
+      expectTypeOf(filter($typed<[]>(), isAnimal)).toEqualTypeOf<[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(filter($typed<[Dog, Dog]>(), isAnimal)).toEqualTypeOf<
+        [Dog, Dog]
+      >();
+    });
+
+    test("readonly fixed tuple", () => {
+      expectTypeOf(
+        filter($typed<readonly [Dog, Dog]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, Dog]>();
+    });
+
+    test("optional tuple", () => {
+      expectTypeOf(filter($typed<[Dog?]>(), isAnimal)).toEqualTypeOf<[Dog?]>();
+    });
+
+    test("mixed tuple", () => {
+      expectTypeOf(filter($typed<[Dog, Dog?]>(), isAnimal)).toEqualTypeOf<
+        [Dog, Dog?]
+      >();
+    });
+
+    test("array", () => {
+      expectTypeOf(filter([] as Dog[], isAnimal)).toEqualTypeOf<Dog[]>();
+    });
+
+    test("fixed-prefix array", () => {
+      expectTypeOf(filter($typed<[Dog, ...Dog[]]>(), isAnimal)).toEqualTypeOf<
+        [Dog, ...Dog[]]
+      >();
+    });
+
+    test("optional-prefix array", () => {
+      expectTypeOf(filter($typed<[Dog?, ...Dog[]]>(), isAnimal)).toEqualTypeOf<
+        [Dog?, ...Dog[]]
+      >();
+    });
+
+    test("mixed-prefix array", () => {
+      expectTypeOf(
+        filter($typed<[Dog, Dog?, ...Dog[]]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, Dog?, ...Dog[]]>();
+    });
+
+    test("fixed-suffix array", () => {
+      expectTypeOf(filter($typed<[...Dog[], Dog]>(), isAnimal)).toEqualTypeOf<
+        [...Dog[], Dog]
+      >();
+    });
+
+    test("fixed-elements array", () => {
+      expectTypeOf(
+        filter($typed<[Dog, ...Dog[], Dog]>(), isAnimal),
+      ).toEqualTypeOf<[Dog, ...Dog[], Dog]>();
+    });
+
+    test("union of arrays", () => {
+      expectTypeOf(filter($typed<Dog[] | string[]>(), isAnimal)).toEqualTypeOf<
+        [] | Dog[]
+      >();
+    });
   });
 });

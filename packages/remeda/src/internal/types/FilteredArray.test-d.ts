@@ -3,6 +3,26 @@ import { $typed } from "../../../test/$typed";
 import type { FilteredArray } from "./FilteredArray";
 import type { IterableContainer } from "./IterableContainer";
 
+interface ItemInterface {
+  readonly type: "cat" | "dog";
+  readonly legs: number;
+}
+
+interface ConditionInterface {
+  readonly type: "cat";
+  readonly name: string;
+}
+
+class ItemClass {
+  declare public readonly type: "cat" | "dog";
+  declare public readonly legs: number;
+}
+
+class ConditionClass {
+  declare public readonly type: "cat";
+  declare public readonly name: string;
+}
+
 declare function filteredArray<T extends IterableContainer, C>(
   data: T,
   condition: C,
@@ -346,10 +366,21 @@ describe("condition is a complex object", () => {
         $typed<{ a: "hello"; b: "world" }>(),
       ),
     ).toEqualTypeOf<
-      [
-        { readonly a: "hello"; readonly b: "world" },
-        { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
-      ]
+      | [
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
+      | [
+          { a: "hello"; b: "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
+      | [
+          { a: "hello"; b: "world" },
+          { a: "hello"; b: "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
     >();
   });
 
@@ -486,7 +517,7 @@ describe("condition is an array of literals", () => {
         [[], []] as [readonly "hello"[], readonly "world"[]],
         [] as "hello"[],
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<[] | ["hello"[]]>();
 
     expectTypeOf(
       filteredArray(
@@ -556,7 +587,7 @@ describe("condition is a tuple", () => {
         ] as [readonly [string, number], readonly [number, string]],
         ["", 0] as [string, number],
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<[] | [[string, number]]>();
 
     expectTypeOf(
       filteredArray(
@@ -765,6 +796,37 @@ describe("complex nested union conditions", () => {
       ),
     ).toEqualTypeOf<[[string, number], [boolean, string]]>();
   });
+
+  describe("union of object and a primitive", () => {
+    test("array", () => {
+      expectTypeOf(
+        filteredArray(
+          [] as { a: "cat" | "dog"; b: number }[],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<({ a: "cat" | "dog"; b: number } & { a: "cat" })[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(
+        filteredArray(
+          [{ a: "cat", b: 1 }] as [{ a: "cat" | "dog"; b: number }],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<[] | [{ a: "cat" | "dog"; b: number } & { a: "cat" }]>();
+    });
+
+    test("tuple with an optional element", () => {
+      expectTypeOf(
+        filteredArray(
+          [] as [{ a: "cat" | "dog"; b: number }?],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<
+        [] | [({ a: "cat" | "dog"; b: number } & { a: "cat" })?]
+      >();
+    });
+  });
 });
 
 describe("tuples with optional elements", () => {
@@ -810,13 +872,7 @@ describe("tuples with optional elements", () => {
     expectTypeOf(
       filteredArray([] as [string?, string?], $typed<"hello" | "foo">()),
     ).toEqualTypeOf<
-      | ["hello"?, "foo"?]
-      | []
-      | ["hello"?]
-      | ["foo"?]
-      | ["hello"?, "hello"?]
-      | ["foo"?, "hello"?]
-      | ["foo"?, "foo"?]
+      [] | [("hello" | "foo")?] | [("hello" | "foo")?, ("hello" | "foo")?]
     >();
   });
 });
@@ -842,4 +898,70 @@ test("prop with literal union value filtered by disjoint value", () => {
       a: "bird" as const,
     }),
   ).toEqualTypeOf<[]>();
+});
+
+describe("condition is never", () => {
+  test("array", () => {
+    expectTypeOf(filteredArray([] as string[], $typed())).toEqualTypeOf<[]>();
+  });
+
+  test("fixed tuple", () => {
+    expectTypeOf(filteredArray([""] as [string], $typed())).toEqualTypeOf<[]>();
+  });
+
+  test("tuple with a rest element", () => {
+    expectTypeOf(
+      filteredArray([""] as [string, ...number[]], $typed()),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("tuple with an `any` item", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional...
+        $typed<[any]>(),
+        $typed(),
+      ),
+    ).toEqualTypeOf<[]>();
+  });
+});
+
+describe("item and condition aren't type literals", () => {
+  test("interface", () => {
+    expectTypeOf(
+      filteredArray([] as ItemInterface[], $typed<ConditionInterface>()),
+    ).toEqualTypeOf<(ItemInterface & ConditionInterface)[]>();
+  });
+
+  test("interface in a fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        [{ type: "cat", legs: 4 }] as [ItemInterface],
+        $typed<ConditionInterface>(),
+      ),
+    ).toEqualTypeOf<[] | [ItemInterface & ConditionInterface]>();
+  });
+
+  test("class", () => {
+    expectTypeOf(
+      filteredArray([] as ItemClass[], $typed<ConditionClass>()),
+    ).toEqualTypeOf<(ItemClass & ConditionClass)[]>();
+  });
+});
+
+describe("arrays and non-array objects never share a refinement", () => {
+  test("array item, object condition", () => {
+    expectTypeOf(
+      filteredArray($typed<[string[]]>(), $typed<{ length: 3 }>()),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("object item, array condition", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ length: number; foo: string }]>(),
+        $typed<["a"]>(),
+      ),
+    ).toEqualTypeOf<[]>();
+  });
 });
