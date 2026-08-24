@@ -257,6 +257,12 @@ describe("data last", () => {
 
     expectTypeOf(result).toEqualTypeOf<[1, 2, 3]>();
   });
+
+  test("predicate wider than the item", () => {
+    expectTypeOf(
+      pipe([] as (string | null)[], filter(isNullish)),
+    ).toEqualTypeOf<null[]>();
+  });
 });
 
 describe("union of array types", () => {
