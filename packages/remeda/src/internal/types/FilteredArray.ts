@@ -35,27 +35,11 @@ type FilteredFixedTuple<T, Condition, Output extends unknown[] = []> =
             ? // If the item in the array already satisfies the condition we
               // pass it through to the output.
               [...Output, Head]
-            : // For items that don't satisfy the condition they still _might_
-              // satisfy it in certain situations, so we construct the type
-              // assuming both
-              | Output
-              | (Head | Condition extends object
-                  ? // If both item and condition are objects...
-                    IsNever<SymmetricRefine<Head, Condition>> extends true
-                    ? // If the item is entirely disjoint we skip it.
-                      never
-                    : // Otherwise we add the more specific type to the output.
-                      [...Output, SymmetricRefine<Head, Condition>]
-                  : Condition extends Head
-                    ? // But for any other type (mostly primitives), if the
-                      // condition extends the item it means that there are
-                      // situations where the item could satisfy the condition
-                      // (e.g., if the item type is `string` and the condition
-                      // type is `"hello"`, then item could be `"hello"` or it
-                      // could be any other string, e.g. `"world"`).
-                      [...Output, Condition]
-                    : // If the item is entirely disjoint we skip it.
-                      never)
+            : // Otherwise, the item _might_ satisfy the condition in certain
+              // cases (e.g., an item of `string` against a condition of
+              // `"hello"`), and in other cases it might not, so we build the
+              // output once without the item, and once with it appended.
+              Output | Push<Output, SymmetricRefine<Head, Condition>>
         >
       : Output;
 
@@ -91,3 +75,9 @@ type RefineIncomparable<Item, Condition> = Item extends object
           : Item & Condition
       : never
   : never;
+
+/**
+ * Add an item to a tuple, skipping `never` values...
+ */
+type Push<Output extends unknown[], Refined> =
+  IsNever<Refined> extends true ? never : [...Output, Refined];

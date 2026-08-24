@@ -776,6 +776,37 @@ describe("complex nested union conditions", () => {
       ),
     ).toEqualTypeOf<[[string, number], [boolean, string]]>();
   });
+
+  describe("union of object and a primitive", () => {
+    test("array", () => {
+      expectTypeOf(
+        filteredArray(
+          [] as { a: "cat" | "dog"; b: number }[],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<({ a: "cat" | "dog"; b: number } & { a: "cat" })[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(
+        filteredArray(
+          [{ a: "cat", b: 1 }] as [{ a: "cat" | "dog"; b: number }],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<[] | [{ a: "cat" | "dog"; b: number } & { a: "cat" }]>();
+    });
+
+    test("tuple with an optional element", () => {
+      expectTypeOf(
+        filteredArray(
+          [] as [{ a: "cat" | "dog"; b: number }?],
+          $typed<string | { a: "cat" }>(),
+        ),
+      ).toEqualTypeOf<
+        [] | [({ a: "cat" | "dog"; b: number } & { a: "cat" })?]
+      >();
+    });
+  });
 });
 
 describe("tuples with optional elements", () => {
@@ -821,13 +852,7 @@ describe("tuples with optional elements", () => {
     expectTypeOf(
       filteredArray([] as [string?, string?], $typed<"hello" | "foo">()),
     ).toEqualTypeOf<
-      | ["hello"?, "foo"?]
-      | []
-      | ["hello"?]
-      | ["foo"?]
-      | ["hello"?, "hello"?]
-      | ["foo"?, "hello"?]
-      | ["foo"?, "foo"?]
+      [] | [("hello" | "foo")?] | [("hello" | "foo")?, ("hello" | "foo")?]
     >();
   });
 });
