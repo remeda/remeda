@@ -172,8 +172,7 @@ describe("special tuple shapes", () => {
 
 test("discriminated union filtering", () => {
   const data = [] as (
-    | { type: "cat"; hates: string }
-    | { type: "dog"; numFriends: number }
+    { type: "cat"; hates: string } | { type: "dog"; numFriends: number }
   )[];
 
   expectTypeOf(
@@ -283,3 +282,24 @@ describe("union of array types", () => {
     ).toEqualTypeOf<[0] | [1, 2, 3, 4]>();
   });
 });
+
+describe("predicate wider than the item", () => {
+  test("data-first", () => {
+    expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
+      null[]
+    >();
+  });
+
+  test("data-last", () => {
+    expectTypeOf(
+      pipe([] as (string | null)[], filter(isNullish)),
+    ).toEqualTypeOf<null[]>();
+  });
+});
+
+test("predicate disjoint from the item", () => {
+  expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+});
+
+const isNullish = (value: unknown): value is null | undefined =>
+  value === null || value === undefined;
