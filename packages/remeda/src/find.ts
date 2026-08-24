@@ -1,5 +1,7 @@
 import { toSingle } from "./internal/toSingle";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { SymmetricRefine } from "./internal/types/SymmetricRefine";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
@@ -30,10 +32,10 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function find<T, S extends T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined;
+export function find<T extends IterableContainer, Condition>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): SymmetricRefine<T[number], Condition> | undefined;
 export function find<T>(
   data: readonly T[],
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
@@ -68,9 +70,9 @@ export function find<T>(
  * @lazy
  * @category Array
  */
-export function find<T, S extends T>(
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): (data: readonly T[]) => S | undefined;
+export function find<T extends IterableContainer, Condition>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): (data: T) => SymmetricRefine<T[number], Condition> | undefined;
 export function find<T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): (data: readonly T[]) => T | undefined;

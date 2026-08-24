@@ -1,3 +1,5 @@
+import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { SymmetricRefine } from "./internal/types/SymmetricRefine";
 import { purry } from "./purry";
 
 /**
@@ -26,10 +28,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function findLast<T, S extends T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined;
+export function findLast<T extends IterableContainer, Condition>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): SymmetricRefine<T[number], Condition> | undefined;
 export function findLast<T>(
   data: readonly T[],
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
@@ -63,9 +65,9 @@ export function findLast<T>(
  * @dataLast
  * @category Array
  */
-export function findLast<T, S extends T>(
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): (data: readonly T[]) => S | undefined;
+export function findLast<T extends IterableContainer, Condition>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): (data: T) => SymmetricRefine<T[number], Condition> | undefined;
 export function findLast<T = never>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): (data: readonly T[]) => T | undefined;

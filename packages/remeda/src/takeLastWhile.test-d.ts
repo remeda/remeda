@@ -239,3 +239,26 @@ describe("data-last", () => {
     });
   });
 });
+
+describe("predicate wider than the item", () => {
+  test("data-first", () => {
+    const result = takeLastWhile([] as (string | null)[], isNullish);
+
+    expectTypeOf(result).toEqualTypeOf<null[]>();
+  });
+
+  test("data-last", () => {
+    const result = pipe([] as (string | null)[], takeLastWhile(isNullish));
+
+    expectTypeOf(result).toEqualTypeOf<null[]>();
+  });
+});
+
+test("predicate disjoint from the item", () => {
+  const result = takeLastWhile([] as string[], isNullish);
+
+  expectTypeOf(result).toEqualTypeOf<never[]>();
+});
+
+const isNullish = (value: unknown): value is null | undefined =>
+  value === null || value === undefined;

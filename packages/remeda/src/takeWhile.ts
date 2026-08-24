@@ -1,4 +1,5 @@
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { SymmetricRefine } from "./internal/types/SymmetricRefine";
 import { purry } from "./purry";
 
 /**
@@ -13,10 +14,10 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, S extends T[number]>(
+export function takeWhile<T extends IterableContainer, S>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is S,
-): S[];
+): SymmetricRefine<T[number], S>[];
 export function takeWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
@@ -33,9 +34,9 @@ export function takeWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function takeWhile<T extends IterableContainer, S extends T[number]>(
+export function takeWhile<T extends IterableContainer, S>(
   predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => S[];
+): (array: T) => SymmetricRefine<T[number], S>[];
 export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): (array: T) => T[number][];
