@@ -258,7 +258,7 @@ describe("data last", () => {
     expectTypeOf(result).toEqualTypeOf<[1, 2, 3]>();
   });
 
-  test("predicate wider than the item", () => {
+  test("partially overlapping", () => {
     expectTypeOf(
       pipe([] as (string | null)[], filter(isNullish)),
     ).toEqualTypeOf<null[]>();
@@ -288,12 +288,14 @@ describe("union of array types", () => {
   });
 });
 
-test("predicate wider than the item", () => {
-  expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
-    null[]
-  >();
-});
+describe("condition isn't a subtype of the item", () => {
+  test("partially overlapping", () => {
+    expectTypeOf(filter([] as (string | null)[], isNullish)).toEqualTypeOf<
+      null[]
+    >();
+  });
 
-test("predicate disjoint from the item", () => {
-  expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  test("disjoint", () => {
+    expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  });
 });

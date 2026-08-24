@@ -346,10 +346,21 @@ describe("condition is a complex object", () => {
         $typed<{ a: "hello"; b: "world" }>(),
       ),
     ).toEqualTypeOf<
-      [
-        { readonly a: "hello"; readonly b: "world" },
-        { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
-      ]
+      | [
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
+      | [
+          { a: "hello"; b: "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
+      | [
+          { a: "hello"; b: "world" },
+          { a: "hello"; b: "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "hello"; readonly b: "world"; readonly c: 1234 },
+        ]
     >();
   });
 
@@ -486,7 +497,7 @@ describe("condition is an array of literals", () => {
         [[], []] as [readonly "hello"[], readonly "world"[]],
         [] as "hello"[],
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<[] | ["hello"[]]>();
 
     expectTypeOf(
       filteredArray(
@@ -556,7 +567,7 @@ describe("condition is a tuple", () => {
         ] as [readonly [string, number], readonly [number, string]],
         ["", 0] as [string, number],
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<[] | [[string, number]]>();
 
     expectTypeOf(
       filteredArray(
@@ -842,4 +853,20 @@ test("prop with literal union value filtered by disjoint value", () => {
       a: "bird" as const,
     }),
   ).toEqualTypeOf<[]>();
+});
+
+describe("condition is never", () => {
+  test("array", () => {
+    expectTypeOf(filteredArray([] as string[], $typed())).toEqualTypeOf<[]>();
+  });
+
+  test("fixed tuple", () => {
+    expectTypeOf(filteredArray([""] as [string], $typed())).toEqualTypeOf<[]>();
+  });
+
+  test("tuple with a rest element", () => {
+    expectTypeOf(
+      filteredArray([""] as [string, ...number[]], $typed()),
+    ).toEqualTypeOf<[]>();
+  });
 });

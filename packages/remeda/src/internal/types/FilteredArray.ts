@@ -23,42 +23,41 @@ export type FilteredArray<T extends IterableContainer, Condition> =
  * The real logic for filtering an array is done on fixed tuples (as those make
  * up the required prefix, the optional prefix, and the suffix of the array).
  */
-type FilteredFixedTuple<
-  T,
-  Condition,
-  Output extends unknown[] = [],
-> = T extends readonly [infer Head, ...infer Rest]
-  ? FilteredFixedTuple<
-      Rest,
-      Condition,
-      Head extends Condition
-        ? // If the item in the array already satisfies the condition we pass
-          // it through to the output.
-          [...Output, Head]
-        : Head | Condition extends object
-          ? // TypeScript defines "extends" for objects differently than it
-            // does for primitives, e.g. `{ a: string, b: number }` extends
-            // `{ a: string }` because any function that would accept the latter
-            // would be able to accept the former (by ignoring the extra props)
-            // because TypeScript is structurally typed; but for filtering we
-            // want the opposite semantics, and at this point we already know
-            // that that is false, so we can safely say this item doesn't meet
-            // the condition and skip it.
-            Output
-          : Condition extends Head
-            ? // But for any other type (mostly primitives), if the condition
-                // extends the item it means that there are situations where the
-                // item could satisfy the condition and cases where it won't
-                // (e.g. if the item type is `string` and the condition type is
-                // `"hello"`, then item could be `"hello"` or it could be any
-                // other string, e.g. `"world"`). In this case we need to take
-                // both into consideration in the output type.
-                Output | [...Output, Condition]
-            : // But if the item and condition are disjoint then we simply skip
-              // it as it would never satisfy the condition.
-              Output
-    >
-  : Output;
+type FilteredFixedTuple<T, Condition, Output extends unknown[] = []> =
+  IsNever<Condition> extends true
+    ? // A condition of `never` can never be satisfied so nothing is kept.
+      []
+    : T extends readonly [infer Head, ...infer Rest]
+      ? FilteredFixedTuple<
+          Rest,
+          Condition,
+          Head extends Condition
+            ? // If the item in the array already satisfies the condition we
+              // pass it through to the output.
+              [...Output, Head]
+            : // For items that don't satisfy the condition they still _might_
+              // satisfy it in certain situations, so we construct the type
+              // assuming both
+              | Output
+              | (Head | Condition extends object
+                  ? // If both item and condition are objects...
+                    IsNever<SymmetricRefine<Head, Condition>> extends true
+                    ? // If the item is entirely disjoint we skip it.
+                      never
+                    : // Otherwise we add the more specific type to the output.
+                      [...Output, SymmetricRefine<Head, Condition>]
+                  : Condition extends Head
+                    ? // But for any other type (mostly primitives), if the
+                      // condition extends the item it means that there are
+                      // situations where the item could satisfy the condition
+                      // (e.g., if the item type is `string` and the condition
+                      // type is `"hello"`, then item could be `"hello"` or it
+                      // could be any other string, e.g. `"world"`).
+                      [...Output, Condition]
+                    : // If the item is entirely disjoint we skip it.
+                      never)
+        >
+      : Output;
 
 /**
  * This type is similar to the built-in `Extract` type, but allows us to have
@@ -78,14 +77,17 @@ type SymmetricRefine<Item, Condition> = Item extends Condition
  * allowing more value types than the other (e.g.,
  * `{ a: "cat" | "dog", b: number }` and `{ a: "cat" }`).
  */
-type RefineIncomparable<Item, Condition> =
-  Item extends Record<PropertyKey, unknown>
-    ? Condition extends Record<PropertyKey, unknown>
-      ? // We take the (symmetric) intersection of the two objects;
-        // but only when we know it isn't empty. This would only happen if they
-        // share a least one key.
-        IsNever<Extract<keyof Item, keyof Condition>> extends true
+type RefineIncomparable<Item, Condition> = Item extends object
+  ? Item extends readonly unknown[]
+    ? never
+    : Condition extends object
+      ? Condition extends readonly unknown[]
         ? never
-        : Item & Condition
+        : // We take the (symmetric) intersection of the two objects;
+          // but only when we know it isn't empty. This would only happen if
+          // they share a least one key.
+          IsNever<Extract<keyof Item, keyof Condition>> extends true
+          ? never
+          : Item & Condition
       : never
-    : never;
+  : never;
