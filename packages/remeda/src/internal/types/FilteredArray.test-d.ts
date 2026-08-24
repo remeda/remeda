@@ -948,3 +948,20 @@ describe("item and condition aren't type literals", () => {
     ).toEqualTypeOf<(ItemClass & ConditionClass)[]>();
   });
 });
+
+describe("arrays and non-array objects never share a refinement", () => {
+  test("array item, object condition", () => {
+    expectTypeOf(
+      filteredArray($typed<[string[]]>(), $typed<{ length: 3 }>()),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("object item, array condition", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ length: number; foo: string }]>(),
+        $typed<["a"]>(),
+      ),
+    ).toEqualTypeOf<[]>();
+  });
+});
