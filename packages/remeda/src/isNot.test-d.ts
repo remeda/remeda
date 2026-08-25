@@ -8,6 +8,7 @@ import {
   type TypedArray,
 } from "../test/typesDataProvider";
 import { isNot } from "./isNot";
+import { isNullish } from "./isNullish";
 import { isPromise } from "./isPromise";
 import { isString } from "./isString";
 import { isTruthy } from "./isTruthy";
@@ -90,4 +91,16 @@ test("type predicates which are too narrow for the wrapper", () => {
     // predicate.
     isNot(startsWith("hello")),
   );
+});
+
+test("negates a generic guard", () => {
+  expectTypeOf(
+    $typed<(string | null)[]>().filter(isNot(isNullish)),
+  ).items.toEqualTypeOf<string>();
+});
+
+test("non-narrowing predicates stay non-narrowing", () => {
+  expectTypeOf(
+    $typed<string[]>().filter(isNot((data: string) => data.length > 3)),
+  ).items.toEqualTypeOf<string>();
 });

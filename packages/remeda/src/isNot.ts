@@ -15,14 +15,23 @@ import type { GuardType } from "./internal/types/GuardType";
  * @category Guard
  */
 export function isNot<T extends (data: unknown) => data is unknown>(
-  // Prevent guards which would result in narrowing to `never` from using this signature; allowing the next signature to handle them.
-  predicate: IsUnknown<GuardType<T>> extends true ? never : T,
+  // Guards whose guarded type is `unknown` would make the `Exclude` below
+  // collapse to `never`, so they are rejected here and handled by the next
+  // signature instead. The rejection is spelled as a guard narrowing to `never`
+  // (rather than as a bare `never`) so that this position stays function-shaped
+  // and keeps mentioning `T`: against a bare `never` no candidate is inferred
+  // for `T`, so every generic guard (`isString`, `isNullish`, ...) falls back
+  // to the constraint, whose guarded type is `unknown`, and gets rejected too.
+  predicate: IsUnknown<GuardType<T>> extends true
+    ? (data: Parameters<T>[0]) => data is never
+    : T,
 ): <Wide extends Parameters<T>[0]>(
   data: Wide,
 ) => data is Exclude<Wide, GuardType<T>>;
 
-// Fallback for type-predicates which take a type parameter and resolve eagerly
-// to `unknown`.
+// Fallback for guards the signature above rejects: those whose guarded type is
+// `unknown` (e.g. `isTruthy`), and those whose parameter is narrower than
+// `unknown` (e.g. `startsWith`), which the constraint above can't accept.
 export function isNot<T, Narrow extends T>(
   predicate: (data: T) => data is Narrow,
 ): (data: T) => data is Exclude<T, Narrow>;
