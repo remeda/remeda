@@ -20,7 +20,7 @@ export function isNot<T extends (data: unknown) => data is unknown>(
   data: Wide,
 ) => data is Exclude<Wide, GuardType<T>>;
 
-// Fallback for type-predicates which take a type parameter and resolves eagerly
+// Fallback for type-predicates which take a type parameter and resolve eagerly
 // to `unknown`.
 export function isNot<T, Narrow extends T>(
   predicate: (data: T) => data is Narrow,
