@@ -79,15 +79,25 @@ test("negates a predicate wider than the data", () => {
 
 test("type predicates that take a type parameter", () => {
   expectTypeOf(
-    $typed<(true | false)[]>().filter(isNot(isTruthy)),
+    $typed<boolean[]>().filter(isNot(isTruthy)),
   ).items.toEqualTypeOf<false>();
 });
 
 test("type predicates which are too narrow for the wrapper", () => {
   // eslint-disable-next-line unicorn/no-unused-array-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
-  $typed<(string | undefined)[]>().filter(
+  $typed<(string | number)[]>().filter(
     // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
-    // here. The `undefined` in the data type cannot be processed by the type
+    // here. The `number` in the data type cannot be processed by the type
+    // predicate.
+    isNot(startsWith("hello")),
+  );
+});
+
+test("type predicates which are disjoint for the wrapper", () => {
+  // eslint-disable-next-line unicorn/no-unused-array-method-return -- We use `filter` as a canonical usage of `isNot`, we need it so that we have a wrapper around `isNot` which defines the type for the items being checked.
+  $typed<number[]>().filter(
+    // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
+    // here. The `number` in the data type cannot be processed by the type
     // predicate.
     isNot(startsWith("hello")),
   );

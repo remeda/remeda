@@ -25,9 +25,7 @@ export function isNot<T extends (data: unknown) => data is unknown>(
   predicate: IsUnknown<GuardType<T>> extends true
     ? (data: Parameters<T>[0]) => data is never
     : T,
-): <Wide extends Parameters<T>[0]>(
-  data: Wide,
-) => data is Exclude<Wide, GuardType<T>>;
+): <Wide>(data: Wide) => data is Exclude<Wide, GuardType<T>>;
 
 // Fallback for guards the signature above rejects: those whose guarded type is
 // `unknown` (e.g. `isTruthy`), and those whose parameter is narrower than
