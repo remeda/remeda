@@ -5,7 +5,6 @@ import type { GuardType } from "./internal/types/GuardType";
  * A function that takes a guard function as predicate and returns a guard that negates it.
  *
  * @param predicate - The guard function to negate.
- * @returns Function A guard function.
  * @signature
  *    isNot(isTruthy)(data)
  * @example
@@ -23,7 +22,7 @@ export function isNot<T extends (data: unknown) => data is unknown>(
   // for `T`, so every generic guard (`isString`, `isNullish`, ...) falls back
   // to the constraint, whose guarded type is `unknown`, and gets rejected too.
   predicate: IsUnknown<GuardType<T>> extends true
-    ? (data: Parameters<T>[0]) => data is never
+    ? (data: unknown) => data is never
     : T,
 ): <Wide>(data: Wide) => data is Exclude<Wide, GuardType<T>>;
 
