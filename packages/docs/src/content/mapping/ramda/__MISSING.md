@@ -92,7 +92,6 @@
 
 - and
 - both
-- complement
 - either
 - isNotEmpty
 - or
