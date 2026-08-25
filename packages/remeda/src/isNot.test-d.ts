@@ -10,6 +10,8 @@ import {
 import { isNot } from "./isNot";
 import { isPromise } from "./isPromise";
 import { isString } from "./isString";
+import { isTruthy } from "./isTruthy";
+import { startsWith } from "./startsWith";
 
 test("should work as type guard", () => {
   const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
@@ -70,4 +72,20 @@ test("negates a predicate wider than the data", () => {
       isNot((x: unknown) => x === null || x === undefined),
     ),
   ).items.toEqualTypeOf<string>();
+});
+
+test("type predicates that take a type parameter", () => {
+  expectTypeOf(
+    $typed<(true | false)[]>().filter(isNot(isTruthy)),
+  ).items.toEqualTypeOf<false>();
+});
+
+test("type predicates which are too narrow for the wrapper", () => {
+  // eslint-disable-next-line unicorn/no-unused-array-method-return
+  $typed<(string | undefined)[]>().filter(
+    // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
+    // here. The `undefined` in the data type cannot be processed by the type
+    // predicate.
+    isNot(startsWith("hello")),
+  );
 });
