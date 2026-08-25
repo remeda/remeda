@@ -69,7 +69,9 @@ test("should work as type guard in filter", () => {
 test("negates a predicate wider than the data", () => {
   expectTypeOf(
     $typed<(string | null)[]>().filter(
-      isNot((x: unknown) => x === null || x === undefined),
+      isNot(
+        (x: unknown): x is null | undefined => x === null || x === undefined,
+      ),
     ),
   ).items.toEqualTypeOf<string>();
 });
