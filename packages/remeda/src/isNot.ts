@@ -15,6 +15,7 @@ import type { GuardType } from "./internal/types/GuardType";
  * @category Guard
  */
 export function isNot<T extends (data: unknown) => data is unknown>(
+  // Prevent guards which would result in narrowing to `never` from using this signature; allowing the next signature to handle them.
   predicate: IsUnknown<GuardType<T>> extends true ? never : T,
 ): <Wide extends Parameters<T>[0]>(
   data: Wide,
