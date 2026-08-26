@@ -1,5 +1,5 @@
+import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { SymmetricRefine } from "./internal/types/SymmetricRefine";
 import { purry } from "./purry";
 
 /**
@@ -17,7 +17,7 @@ import { purry } from "./purry";
 export function takeWhile<T extends IterableContainer, S>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is S,
-): SymmetricRefine<T[number], S>[];
+): CommonSubtype<T[number], S>[];
 export function takeWhile<T extends IterableContainer>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => boolean,
@@ -36,7 +36,7 @@ export function takeWhile<T extends IterableContainer>(
  */
 export function takeWhile<T extends IterableContainer, S>(
   predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => SymmetricRefine<T[number], S>[];
+): (array: T) => CommonSubtype<T[number], S>[];
 export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,
 ): (array: T) => T[number][];

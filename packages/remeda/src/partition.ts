@@ -1,5 +1,5 @@
+import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { SymmetricRefine } from "./internal/types/SymmetricRefine";
 import { purry } from "./purry";
 
 /**
@@ -27,7 +27,7 @@ import { purry } from "./purry";
 export function partition<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): [SymmetricRefine<T[number], Condition>[], Exclude<T[number], Condition>[]];
+): [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
 export function partition<T>(
   data: readonly T[],
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
@@ -58,7 +58,7 @@ export function partition<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (
   data: T,
-) => [SymmetricRefine<T[number], Condition>[], Exclude<T[number], Condition>[]];
+) => [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
 export function partition<T>(
   predicate: (value: T, index: number, data: readonly T[]) => boolean,
 ): (data: readonly T[]) => [T[], T[]];

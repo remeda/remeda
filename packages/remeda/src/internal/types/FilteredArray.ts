@@ -1,8 +1,8 @@
 import type { IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
+import type { CommonSubtype } from "./CommonSubtype";
 import type { IterableContainer } from "./IterableContainer";
 import type { PartialArray } from "./PartialArray";
-import type { SymmetricRefine } from "./SymmetricRefine";
 import type { TupleParts } from "./TupleParts";
 
 export type FilteredArray<T extends IterableContainer, Condition> =
@@ -18,7 +18,7 @@ export type FilteredArray<T extends IterableContainer, Condition> =
           ...PartialArray<
             FilteredFixedTuple<TupleParts<T>["optional"], Condition>
           >,
-          ...CoercedArray<SymmetricRefine<TupleParts<T>["item"], Condition>>,
+          ...CoercedArray<CommonSubtype<TupleParts<T>["item"], Condition>>,
           ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
         ]
       : never;
@@ -39,14 +39,14 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
       // type with it, so it would still show up in the output; to accommodate
       // for this we consider both cases for the output.
       | FilteredFixedTuple<Rest, Condition>
-      | (IsNever<SymmetricRefine<Head, Condition>> extends true
+      | (IsNever<CommonSubtype<Head, Condition>> extends true
           ? // The item is entirely disjoint from the condition, it would never
             // match.
             never
           : [
               // Instead of adding the item as-is, we add the common refined
               // base type.
-              SymmetricRefine<Head, Condition>,
+              CommonSubtype<Head, Condition>,
               ...FilteredFixedTuple<Rest, Condition>,
             ])
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
