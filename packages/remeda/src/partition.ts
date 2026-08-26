@@ -1,4 +1,5 @@
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
+import type { GuardType } from "./internal/types/GuardType";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -24,14 +25,16 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function partition<T extends IterableContainer, Condition>(
+export function partition<
+  T extends IterableContainer,
+  Predicate extends (value: T[number], index: number, data: T) => boolean,
+>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
-): [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
-export function partition<T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): [T[], T[]];
+  predicate: Predicate,
+): [
+  CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
+  Exclude<T[number], GuardType<Predicate, T[number]>>[],
+];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -54,14 +57,17 @@ export function partition<T>(
  * @dataLast
  * @category Array
  */
-export function partition<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+export function partition<
+  T extends IterableContainer,
+  Predicate extends (value: T[number], index: number, data: T) => boolean,
+>(
+  predicate: Predicate,
 ): (
   data: T,
-) => [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
-export function partition<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (data: readonly T[]) => [T[], T[]];
+) => [
+  CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
+  Exclude<T[number], GuardType<Predicate, T[number]>>[],
+];
 
 export function partition(...args: readonly unknown[]): unknown {
   return purry(partitionImplementation, args);

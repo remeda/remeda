@@ -1,5 +1,6 @@
 import { toSingle } from "./internal/toSingle";
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
+import type { GuardType } from "./internal/types/GuardType";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
@@ -32,14 +33,13 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function find<T extends IterableContainer, Condition>(
+export function find<
+  T extends IterableContainer,
+  Predicate extends (value: T[number], index: number, data: T) => boolean,
+>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
-): CommonSubtype<T[number], Condition> | undefined;
-export function find<T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): T | undefined;
+  predicate: Predicate,
+): CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 /**
  * Returns the first element in the provided array that satisfies the provided
@@ -70,12 +70,14 @@ export function find<T>(
  * @lazy
  * @category Array
  */
-export function find<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
-): (data: T) => CommonSubtype<T[number], Condition> | undefined;
-export function find<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (data: readonly T[]) => T | undefined;
+export function find<
+  T extends IterableContainer,
+  Predicate extends (value: T[number], index: number, data: T) => boolean,
+>(
+  predicate: Predicate,
+): (
+  data: T,
+) => CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 export function find(...args: readonly unknown[]): unknown {
   return purry(findImplementation, args, toSingle(lazyImplementation));
