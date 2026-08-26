@@ -3,7 +3,7 @@ import type { IsAny, IsNever } from "type-fest";
 /**
  * Find the widest subtype which extends both T0 and T1 (
  * `CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
- * similar to the built-in `Extract`, but allows either T0 or T1 to be wider \
+ * similar to the built-in `Extract`, but allows either T0 or T1 to be wider
  * than the other.
  */
 export type CommonSubtype<T0, T1> =
