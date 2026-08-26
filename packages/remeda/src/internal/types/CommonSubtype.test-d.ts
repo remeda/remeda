@@ -27,6 +27,11 @@ class NamedClass {
   declare public readonly age: number;
 }
 
+class LeggedClass {
+  declare public readonly legs: number;
+  declare public readonly tail: boolean;
+}
+
 declare function commonSubtype<const T0, const T1>(
   t0: T0,
   t1: T1,
@@ -186,6 +191,12 @@ describe("objects", () => {
     expectTypeOf(
       commonSubtype($typed<CatClass>(), $typed<NamedClass>()),
     ).toEqualTypeOf<never>();
+  });
+
+  test("incomparable classes with common props", () => {
+    expectTypeOf(
+      commonSubtype($typed<CatClass>(), $typed<LeggedClass>()),
+    ).toEqualTypeOf<CatClass & LeggedClass>();
   });
 });
 

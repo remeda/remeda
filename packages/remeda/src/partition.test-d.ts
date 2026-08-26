@@ -1,4 +1,5 @@
-import { expectTypeOf, test } from "vitest";
+import { expectTypeOf, test, describe } from "vitest";
+import { constant } from "./constant";
 import { isNullish } from "./isNullish";
 import { isNumber } from "./isNumber";
 import { isString } from "./isString";
@@ -7,12 +8,6 @@ import { pipe } from "./pipe";
 
 test("partition with type guard", () => {
   expectTypeOf(partition([1, "a", 2, "b"], isNumber)).toEqualTypeOf<
-    [number[], string[]]
-  >();
-});
-
-test("partition with type guard in pipe", () => {
-  expectTypeOf(pipe([1, "a", 2, "b"], partition(isNumber))).toEqualTypeOf<
     [number[], string[]]
   >();
 });
@@ -33,4 +28,24 @@ test("predicate disjoint from the item", () => {
   expectTypeOf(partition([] as string[], isNullish)).toEqualTypeOf<
     [never[], string[]]
   >();
+});
+
+test("non-guard predicate keeps both sides unnarrowed", () => {
+  expectTypeOf(partition([1, "a"], constant(true))).toEqualTypeOf<
+    [(number | string)[], (number | string)[]]
+  >();
+});
+
+describe("data-last", () => {
+  test("non-guard predicate", () => {
+    expectTypeOf(pipe([1, "a"], partition(constant(true)))).toEqualTypeOf<
+      [(number | string)[], (number | string)[]]
+    >();
+  });
+
+  test("partition with type guard", () => {
+    expectTypeOf(pipe([1, "a", 2, "b"], partition(isNumber))).toEqualTypeOf<
+      [number[], string[]]
+    >();
+  });
 });
