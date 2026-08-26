@@ -1,4 +1,5 @@
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
+import type { GuardType } from "./internal/types/GuardType";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -15,14 +16,13 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, S>(
+export function takeLastWhile<
+  T extends IterableContainer,
+  Predicate extends (item: T[number], index: number, data: T) => boolean,
+>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => item is S,
-): CommonSubtype<T[number], S>[];
-export function takeLastWhile<T extends IterableContainer>(
-  data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): T[number][];
+  predicate: Predicate,
+): CommonSubtype<T[number], GuardType<Predicate, T[number]>>[];
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -36,12 +36,12 @@ export function takeLastWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, S>(
-  predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => CommonSubtype<T[number], S>[];
-export function takeLastWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => T[number][];
+export function takeLastWhile<
+  T extends IterableContainer,
+  Predicate extends (item: T[number], index: number, data: T) => boolean,
+>(
+  predicate: Predicate,
+): (data: T) => CommonSubtype<T[number], GuardType<Predicate, T[number]>>[];
 
 export function takeLastWhile(...args: readonly unknown[]): unknown {
   return purry(takeLastWhileImplementation, args);

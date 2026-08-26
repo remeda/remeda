@@ -33,7 +33,7 @@ export function partition<
   predicate: Predicate,
 ): [
   CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
-  Exclude<T[number], GuardType<Predicate, T[number]>>[],
+  Exclude<T[number], GuardType<Predicate>>[],
 ];
 
 /**
@@ -66,7 +66,7 @@ export function partition<
   data: T,
 ) => [
   CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
-  Exclude<T[number], GuardType<Predicate, T[number]>>[],
+  Exclude<T[number], GuardType<Predicate>>[],
 ];
 
 export function partition(...args: readonly unknown[]): unknown {
