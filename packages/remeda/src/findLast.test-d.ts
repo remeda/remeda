@@ -27,6 +27,34 @@ test("non-guard predicate", () => {
   >();
 });
 
+test("narrows tuples down to the matching item", () => {
+  expectTypeOf(
+    findLast([1, "a", true] as [1, "a", true], isString),
+  ).toEqualTypeOf<"a" | undefined>();
+});
+
+test("accepts a union of array types", () => {
+  expectTypeOf(findLast([] as string[] | number[], isString)).toEqualTypeOf<
+    string | undefined
+  >();
+});
+
+test("readonly tuple", () => {
+  expectTypeOf(findLast([1, "a", true] as const, isString)).toEqualTypeOf<
+    "a" | undefined
+  >();
+});
+
+test("predicate is typed correctly", () => {
+  findLast([] as (number | string)[], (value, index, data) => {
+    expectTypeOf(value).toEqualTypeOf<number | string>();
+    expectTypeOf(index).toEqualTypeOf<number>();
+    expectTypeOf(data).toEqualTypeOf<(number | string)[]>();
+
+    return true;
+  });
+});
+
 describe("data-last", () => {
   test("narrowing predicate", () => {
     expectTypeOf(pipe([1, "a"], findLast(isString))).toEqualTypeOf<
@@ -50,5 +78,18 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([] as number[], findLast(isArray)),
     ).toEqualTypeOf<undefined>();
+  });
+
+  test("predicate is typed correctly", () => {
+    pipe(
+      [] as (number | string)[],
+      findLast((value, index, data) => {
+        expectTypeOf(value).toEqualTypeOf<number | string>();
+        expectTypeOf(index).toEqualTypeOf<number>();
+        expectTypeOf(data).toEqualTypeOf<(number | string)[]>();
+
+        return true;
+      }),
+    );
   });
 });

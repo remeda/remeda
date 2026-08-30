@@ -900,6 +900,26 @@ test("prop with literal union value filtered by disjoint value", () => {
   ).toEqualTypeOf<[]>();
 });
 
+describe("condition is a template literal", () => {
+  test("overlapping template item", () => {
+    expectTypeOf(
+      filteredArray([] as `a${string}`[], $typed<`${string}b`>()),
+    ).toEqualTypeOf<(`a${string}` & `${string}b`)[]>();
+  });
+
+  test("overlapping template item in a fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(["ab"] as [`a${string}`], $typed<`${string}b`>()),
+    ).toEqualTypeOf<[] | [`a${string}` & `${string}b`]>();
+  });
+
+  test("disjoint literal item", () => {
+    expectTypeOf(
+      filteredArray([] as "foo"[], $typed<`bar${string}`>()),
+    ).toEqualTypeOf<[]>();
+  });
+});
+
 describe("condition is never", () => {
   test("array", () => {
     expectTypeOf(filteredArray([] as string[], $typed())).toEqualTypeOf<[]>();

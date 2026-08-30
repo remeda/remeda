@@ -5,6 +5,18 @@ import { isArray } from "./isArray";
 import { isString } from "./isString";
 import { pipe } from "./pipe";
 
+interface Cat {
+  readonly type: "cat";
+  readonly legs: number;
+}
+
+interface Legged {
+  readonly legs: number;
+  readonly tail: boolean;
+}
+
+declare function isLegged(x: unknown): x is Legged;
+
 test("can narrow types", () => {
   expectTypeOf(find([1, "a"], isString)).toEqualTypeOf<string | undefined>();
 });
@@ -37,6 +49,28 @@ test("non-guard predicate", () => {
   >();
 });
 
+test("readonly tuple", () => {
+  expectTypeOf(find([1, "a", true] as const, isString)).toEqualTypeOf<
+    "a" | undefined
+  >();
+});
+
+test("narrows with a guard incomparable to the item", () => {
+  expectTypeOf(find([] as Cat[], isLegged)).toEqualTypeOf<
+    (Cat & Legged) | undefined
+  >();
+});
+
+test("predicate is typed correctly", () => {
+  find([] as (number | string)[], (value, index, data) => {
+    expectTypeOf(value).toEqualTypeOf<number | string>();
+    expectTypeOf(index).toEqualTypeOf<number>();
+    expectTypeOf(data).toEqualTypeOf<(number | string)[]>();
+
+    return true;
+  });
+});
+
 describe("data-last", () => {
   test("narrowing predicate", () => {
     expectTypeOf(pipe([1, "a"], find(isString))).toEqualTypeOf<
@@ -60,5 +94,18 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([] as number[], find(isArray)),
     ).toEqualTypeOf<undefined>();
+  });
+
+  test("predicate is typed correctly", () => {
+    pipe(
+      [] as (number | string)[],
+      find((value, index, data) => {
+        expectTypeOf(value).toEqualTypeOf<number | string>();
+        expectTypeOf(index).toEqualTypeOf<number>();
+        expectTypeOf(data).toEqualTypeOf<(number | string)[]>();
+
+        return true;
+      }),
+    );
   });
 });

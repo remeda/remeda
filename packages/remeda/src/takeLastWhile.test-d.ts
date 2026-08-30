@@ -57,6 +57,28 @@ describe("data-first", () => {
   test("assert type using predicate", () => {
     expectTypeOf(takeLastWhile([1, "a"], isNumber)).toEqualTypeOf<number[]>();
   });
+
+  test("predicate is typed correctly", () => {
+    takeLastWhile([] as (number | string)[], (item, index, array) => {
+      expectTypeOf(item).toEqualTypeOf<number | string>();
+      expectTypeOf(index).toEqualTypeOf<number>();
+      expectTypeOf(array).toEqualTypeOf<(number | string)[]>();
+
+      return true;
+    });
+  });
+
+  test("predicate wider than the item", () => {
+    expectTypeOf(
+      takeLastWhile([] as (string | null)[], isNullish),
+    ).toEqualTypeOf<null[]>();
+  });
+
+  test("predicate disjoint from the item", () => {
+    expectTypeOf(takeLastWhile([] as string[], isNullish)).toEqualTypeOf<
+      never[]
+    >();
+  });
 });
 
 describe("data-last", () => {
@@ -222,24 +244,16 @@ describe("data-last", () => {
       );
     });
   });
-});
 
-describe("predicate wider than the item", () => {
-  test("data-first", () => {
-    expectTypeOf(
-      takeLastWhile([] as (string | null)[], isNullish),
-    ).toEqualTypeOf<null[]>();
-  });
-
-  test("data-last", () => {
+  test("predicate wider than the item", () => {
     expectTypeOf(
       pipe([] as (string | null)[], takeLastWhile(isNullish)),
     ).toEqualTypeOf<null[]>();
   });
-});
 
-test("predicate disjoint from the item", () => {
-  expectTypeOf(takeLastWhile([] as string[], isNullish)).toEqualTypeOf<
-    never[]
-  >();
+  test("predicate disjoint from the item", () => {
+    expectTypeOf(pipe([] as string[], takeLastWhile(isNullish))).toEqualTypeOf<
+      never[]
+    >();
+  });
 });

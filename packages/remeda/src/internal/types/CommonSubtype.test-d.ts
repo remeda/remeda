@@ -1,3 +1,4 @@
+import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { CommonSubtype } from "./CommonSubtype";
@@ -69,6 +70,47 @@ describe("incomparable types", () => {
       commonSubtype($typed<string>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
+
+  test("functions", () => {
+    expectTypeOf(
+      commonSubtype($typed<() => string>(), $typed<() => number>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded strings", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<Tagged<string, "a">>(),
+        $typed<Tagged<string, "b">>(),
+      ),
+    ).toEqualTypeOf<Tagged<string, "a"> & Tagged<string, "b">>();
+  });
+});
+
+describe("template literals", () => {
+  test("literal extends the template", () => {
+    expectTypeOf(
+      commonSubtype("abc", $typed<`a${string}`>()),
+    ).toEqualTypeOf<"abc">();
+  });
+
+  test("literal disjoint from the template", () => {
+    expectTypeOf(
+      commonSubtype("foo", $typed<`bar${string}`>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("overlapping templates", () => {
+    expectTypeOf(
+      commonSubtype($typed<`a${string}`>(), $typed<`${string}b`>()),
+    ).toEqualTypeOf<`a${string}` & `${string}b`>();
+  });
+
+  test("disjoint templates", () => {
+    expectTypeOf(
+      commonSubtype($typed<`foo_${number}`>(), $typed<`hello${string}`>()),
+    ).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
+  });
 });
 
 describe("unions", () => {
@@ -97,6 +139,28 @@ describe("unions", () => {
       commonSubtype($typed<string>(), $typed<"a" | "b">()),
     ).toEqualTypeOf<"a" | "b">();
   });
+
+  test("boolean distributes as a union of its literals", () => {
+    expectTypeOf(commonSubtype($typed<boolean>(), true)).toEqualTypeOf<true>();
+  });
+
+  test("union of objects on the first type", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<{ readonly a: string } | { readonly b: number }>(),
+        $typed<{ readonly a: string }>(),
+      ),
+    ).toEqualTypeOf<{ readonly a: string }>();
+  });
+
+  test("union of objects on the second type", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<{ readonly a: string }>(),
+        $typed<{ readonly a: string } | { readonly b: number }>(),
+      ),
+    ).toEqualTypeOf<{ readonly a: string }>();
+  });
 });
 
 describe("top and bottom types", () => {
@@ -112,6 +176,14 @@ describe("top and bottom types", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       commonSubtype($typed<string>(), $typed<any>()),
     ).toEqualTypeOf<string>();
+  });
+
+  test("any as both types", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      commonSubtype($typed<any>(), $typed<any>()),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+    ).toEqualTypeOf<any>();
   });
 
   test("unknown as the first type", () => {
@@ -175,6 +247,29 @@ describe("objects", () => {
     ).toEqualTypeOf<never>();
   });
 
+  test("incomparable objects with a conflicting common prop", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<{ readonly a: string; readonly b: number }>(),
+        $typed<{ readonly a: number; readonly c: boolean }>(),
+      ),
+    ).toEqualTypeOf<
+      {
+        readonly a: string;
+        readonly b: number;
+      } & {
+        readonly a: number;
+        readonly c: boolean;
+      }
+    >();
+  });
+
+  test("index-signature type and an interface", () => {
+    expectTypeOf(
+      commonSubtype($typed<Record<string, unknown>>(), $typed<Cat>()),
+    ).toEqualTypeOf<Record<string, unknown> & Cat>();
+  });
+
   test("incomparable interfaces without common props", () => {
     expectTypeOf(
       commonSubtype($typed<Cat>(), $typed<Named>()),
@@ -225,5 +320,48 @@ describe("arrays", () => {
     expectTypeOf(
       commonSubtype($typed<[string, number]>(), $typed<[string]>()),
     ).toEqualTypeOf<never>();
+  });
+
+  test("mutable array extends the readonly array", () => {
+    expectTypeOf(
+      commonSubtype($typed<string[]>(), $typed<readonly string[]>()),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("mutable tuple extends the readonly tuple", () => {
+    expectTypeOf(
+      commonSubtype($typed<[string]>(), $typed<readonly [string]>()),
+    ).toEqualTypeOf<[string]>();
+  });
+});
+
+describe("argument order doesn't matter", () => {
+  test("incomparable objects with common props", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<{ readonly a: string; readonly c: boolean }>(),
+        $typed<{ readonly a: string; readonly b: number }>(),
+      ),
+    ).toEqualTypeOf<
+      {
+        readonly a: string;
+        readonly c: boolean;
+      } & {
+        readonly a: string;
+        readonly b: number;
+      }
+    >();
+  });
+
+  test("array and an incomparable object sharing a prop", () => {
+    expectTypeOf(
+      commonSubtype($typed<{ readonly length: 3 }>(), $typed<string[]>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("index-signature type and an interface", () => {
+    expectTypeOf(
+      commonSubtype($typed<Cat>(), $typed<Record<string, unknown>>()),
+    ).toEqualTypeOf<Cat & Record<string, unknown>>();
   });
 });
