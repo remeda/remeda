@@ -153,9 +153,7 @@ describe("condition is a primitive", () => {
         ["hello", "foo"] as ["hello" | "world", "foo" | "bar"],
         $typed<string>(),
       ),
-    ).toEqualTypeOf<
-      ["hello", "foo"] | ["world", "foo"] | ["hello", "bar"] | ["world", "bar"]
-    >();
+    ).toEqualTypeOf<["hello" | "world", "foo" | "bar"]>();
   });
 
   test("complex tuple with union of literals", () => {
@@ -639,14 +637,10 @@ describe("condition is a union of primitives", () => {
         $typed<string | number>(),
       ),
     ).toEqualTypeOf<
-      | [string, number]
-      | [number, string]
-      | [string]
-      | [string, string, number]
-      | [number]
-      | [string, string]
-      | [number, string, number]
-      | [number, number]
+      | [string | number]
+      | [string | number, string]
+      | [string | number, number]
+      | [string | number, string, number]
     >();
   });
 });
@@ -680,14 +674,10 @@ describe("condition is a union of literals", () => {
         $typed<"cat" | "dog">(),
       ),
     ).toEqualTypeOf<
-      | ["cat"]
-      | ["dog"]
-      | ["cat", "dog"]
-      | ["cat", "cat", "dog"]
-      | ["cat", "cat"]
-      | ["dog", "cat"]
-      | ["dog", "dog"]
-      | ["dog", "cat", "dog"]
+      | ["cat" | "dog"]
+      | ["cat" | "dog", "cat"]
+      | ["cat" | "dog", "dog"]
+      | ["cat" | "dog", "cat", "dog"]
     >();
   });
 });
@@ -851,12 +841,7 @@ describe("tuples with optional elements", () => {
         [] as [("hello" | "world")?, ("foo" | "bar")?],
         $typed<string>(),
       ),
-    ).toEqualTypeOf<
-      | ["hello"?, "foo"?]
-      | ["world"?, "foo"?]
-      | ["hello"?, "bar"?]
-      | ["world"?, "bar"?]
-    >();
+    ).toEqualTypeOf<[("hello" | "world")?, ("foo" | "bar")?]>();
   });
 
   test("literal unions, matching condition", () => {

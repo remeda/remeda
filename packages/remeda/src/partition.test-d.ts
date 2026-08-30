@@ -1,4 +1,4 @@
-import { expectTypeOf, test, describe } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";

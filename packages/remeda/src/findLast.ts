@@ -1,4 +1,4 @@
-// TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
+// TODO: findLast's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate))` which provides stricter typing).
 
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";

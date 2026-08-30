@@ -1,4 +1,4 @@
-// TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate)))` which provides stricter typing).
+// TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate))` which provides stricter typing).
 
 import { toSingle } from "./internal/toSingle";
 import type { CommonSubtype } from "./internal/types/CommonSubtype";

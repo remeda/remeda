@@ -38,7 +38,7 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
       // case.
       | FilteredFixedTuple<Rest, Condition>
       | [CommonSubtype<Head, Condition>, ...FilteredFixedTuple<Rest, Condition>]
-    : Head extends Condition
+    : [Head] extends [Condition]
       ? // If the item in the array already satisfies the condition we pass it
         // through to the output.
         [Head, ...FilteredFixedTuple<Rest, Condition>]
