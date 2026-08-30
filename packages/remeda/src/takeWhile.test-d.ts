@@ -8,6 +8,24 @@ import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 import { takeWhile } from "./takeWhile";
 
+interface Cat {
+  readonly type: "cat";
+  readonly legs: number;
+}
+
+interface Legged {
+  readonly legs: number;
+  readonly tail: boolean;
+}
+
+interface Named {
+  readonly name: string;
+}
+
+declare function isLegged(x: unknown): x is Legged;
+
+declare function isNamed(x: unknown): x is Named;
+
 describe("data-first", () => {
   test("empty array", () => {
     expectTypeOf(takeWhile([] as [], constant(true))).toEqualTypeOf<never[]>();
@@ -89,6 +107,23 @@ describe("data-first", () => {
     expectTypeOf(
       takeWhile([1, "a"] as (number | string)[], isNot(isString)),
     ).toEqualTypeOf<number[]>();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(takeWhile([] as Cat[], isLegged)).toEqualTypeOf<
+      (Cat & Legged)[]
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(takeWhile([] as Cat[], isNamed)).toEqualTypeOf<never[]>();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      takeWhile([] as any[], isString),
+    ).toEqualTypeOf<string[]>();
   });
 });
 

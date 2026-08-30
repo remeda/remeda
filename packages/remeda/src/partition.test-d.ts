@@ -18,7 +18,13 @@ interface Legged {
   readonly tail: boolean;
 }
 
+interface Named {
+  readonly name: string;
+}
+
 declare function isLegged(x: unknown): x is Legged;
+
+declare function isNamed(x: unknown): x is Named;
 
 test("partition with type guard", () => {
   expectTypeOf(partition([1, "a", 2, "b"], isNumber)).toEqualTypeOf<
@@ -47,6 +53,12 @@ test("readonly tuple", () => {
 test("narrows with a guard incomparable to the item", () => {
   expectTypeOf(partition([] as Cat[], isLegged)).toEqualTypeOf<
     [(Cat & Legged)[], Cat[]]
+  >();
+});
+
+test("object guard sharing no keys with the item", () => {
+  expectTypeOf(partition([] as Cat[], isNamed)).toEqualTypeOf<
+    [never[], Cat[]]
   >();
 });
 

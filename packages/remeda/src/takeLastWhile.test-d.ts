@@ -8,6 +8,24 @@ import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 import { takeLastWhile } from "./takeLastWhile";
 
+interface Cat {
+  readonly type: "cat";
+  readonly legs: number;
+}
+
+interface Legged {
+  readonly legs: number;
+  readonly tail: boolean;
+}
+
+interface Named {
+  readonly name: string;
+}
+
+declare function isLegged(x: unknown): x is Legged;
+
+declare function isNamed(x: unknown): x is Named;
+
 describe("data-first", () => {
   test("empty array", () => {
     expectTypeOf(takeLastWhile([] as [], constant(true))).toEqualTypeOf<
@@ -93,6 +111,23 @@ describe("data-first", () => {
     expectTypeOf(
       takeLastWhile([1, "a"] as (number | string)[], isNot(isString)),
     ).toEqualTypeOf<number[]>();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(takeLastWhile([] as Cat[], isLegged)).toEqualTypeOf<
+      (Cat & Legged)[]
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(takeLastWhile([] as Cat[], isNamed)).toEqualTypeOf<never[]>();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      takeLastWhile([] as any[], isString),
+    ).toEqualTypeOf<string[]>();
   });
 });
 

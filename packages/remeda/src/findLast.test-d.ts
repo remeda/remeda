@@ -7,6 +7,24 @@ import { isString } from "./isString";
 import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 
+interface Cat {
+  readonly type: "cat";
+  readonly legs: number;
+}
+
+interface Legged {
+  readonly legs: number;
+  readonly tail: boolean;
+}
+
+interface Named {
+  readonly name: string;
+}
+
+declare function isLegged(x: unknown): x is Legged;
+
+declare function isNamed(x: unknown): x is Named;
+
 test("can narrow types", () => {
   expectTypeOf(findLast([1, "a"], isString)).toEqualTypeOf<
     string | undefined
@@ -45,6 +63,23 @@ test("readonly tuple", () => {
   expectTypeOf(findLast([1, "a", true] as const, isString)).toEqualTypeOf<
     "a" | undefined
   >();
+});
+
+test("narrows with a guard incomparable to the item", () => {
+  expectTypeOf(findLast([] as Cat[], isLegged)).toEqualTypeOf<
+    (Cat & Legged) | undefined
+  >();
+});
+
+test("object guard sharing no keys with the item", () => {
+  expectTypeOf(findLast([] as Cat[], isNamed)).toEqualTypeOf<undefined>();
+});
+
+test("`any` data", () => {
+  expectTypeOf(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+    findLast([] as any[], isString),
+  ).toEqualTypeOf<string | undefined>();
 });
 
 test("narrows with a generic guard", () => {
