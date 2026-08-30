@@ -125,6 +125,17 @@ describe("data-first", () => {
       takeWhile([] as any[], isString),
     ).toEqualTypeOf<string[]>();
   });
+
+  test("`unknown` data", () => {
+    expectTypeOf(takeWhile([] as unknown[], isString)).toEqualTypeOf<
+      string[]
+    >();
+  });
+
+  test("predicate with a mismatched param is an error", () => {
+    // @ts-expect-error [ts2769] -- The predicate must accept the item type.
+    takeWhile([] as number[], (x: string) => x.length > 0);
+  });
 });
 
 describe("data-last", () => {
@@ -311,5 +322,24 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([1, "a"] as (number | string)[], takeWhile(isNot(isString))),
     ).toEqualTypeOf<number[]>();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(pipe([] as Cat[], takeWhile(isLegged))).toEqualTypeOf<
+      (Cat & Legged)[]
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(pipe([] as Cat[], takeWhile(isNamed))).toEqualTypeOf<
+      never[]
+    >();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      pipe([] as any[], takeWhile(isString)),
+    ).toEqualTypeOf<string[]>();
   });
 });

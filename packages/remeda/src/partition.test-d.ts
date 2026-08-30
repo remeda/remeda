@@ -98,6 +98,17 @@ test("`any` data", () => {
   >();
 });
 
+test("`unknown` data", () => {
+  expectTypeOf(partition([] as unknown[], isString)).toEqualTypeOf<
+    [string[], unknown[]]
+  >();
+});
+
+test("predicate with a mismatched param is an error", () => {
+  // @ts-expect-error [ts2769] -- The predicate must accept the item type.
+  partition([] as number[], (x: string) => x.length > 0);
+});
+
 test("non-guard predicate keeps both sides unnarrowed", () => {
   expectTypeOf(partition([1, "a"], constant(true))).toEqualTypeOf<
     [(number | string)[], (number | string)[]]
@@ -139,6 +150,32 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([1, "a"] as (number | string)[], partition(isNot(isString))),
     ).toEqualTypeOf<[number[], string[]]>();
+  });
+
+  test("narrows tuples down to the matching items", () => {
+    expectTypeOf(
+      pipe([1, "a", true] as const, partition(isString)),
+    ).toEqualTypeOf<["a"[], (true | 1)[]]>();
+  });
+
+  test("narrows with a guard incomparable to the item", () => {
+    expectTypeOf(pipe([] as Cat[], partition(isLegged))).toEqualTypeOf<
+      [(Cat & Legged)[], Cat[]]
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(pipe([] as Cat[], partition(isNamed))).toEqualTypeOf<
+      [never[], Cat[]]
+    >();
+  });
+
+  test("`any` data", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+    expectTypeOf(pipe([] as any[], partition(isString))).toEqualTypeOf<
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      [string[], any[]]
+    >();
   });
 
   test("predicate is typed correctly", () => {

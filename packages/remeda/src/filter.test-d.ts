@@ -384,3 +384,7 @@ test("`any` data", () => {
     filter([] as any[], isString),
   ).toEqualTypeOf<string[]>();
 });
+
+test("`unknown` data", () => {
+  expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
+});

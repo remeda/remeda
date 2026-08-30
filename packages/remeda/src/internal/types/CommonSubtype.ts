@@ -5,8 +5,8 @@ import type { IsAny, IsNever } from "type-fest";
  * (`CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
  * similar to the built-in `Extract` but allows either T0 or T1 to be wider than
  * the other. Incomparable types are treated as disjoint (resulting in `never`)
- * unless they are both strings, or objects sharing at least one key, which
- * fall back to their intersection.
+ * unless they are both strings, or both non-array objects sharing at least one
+ * key, which fall back to their intersection.
  *
  * The type should be used instead of the intersection operator (`&`) because
  * TypeScript doesn't reduce most disjoint intersections to `never`.
@@ -37,23 +37,32 @@ type NonEmptyIntersection<T0, T1> = T0 extends string
       // still keep our type useful for strings.
       T0 & T1
     : never
-  : IsNonArrayObject<T0> extends true
-    ? IsNonArrayObject<T1> extends true
-      ? // Incomparable objects might still have a common refinement: they might
-        // share some props while each having distinct ones too (e.g.,
-        // `{ a: string; b: number }` and `{ b: number; c: boolean }`), or a
-        // shared prop might be wider in one of them (e.g.,
-        // `{ a: "cat" | "dog"; b: number }` and `{ a: "cat" }`). We take the
-        // intersection of the two objects, but only when we know it isn't
-        // empty, which we approximate by them sharing at least one key.
-        HaveCommonProps<T0, T1> extends true
-        ? T0 & T1
+  : T1 extends string
+    ? // Mirror of the string check above: without it a branded/tagged string
+      // in the T1 position would fall through to the object branch (a
+      // primitive-object intersection is a non-array object sharing
+      // `String`'s keys) and produce an inhabited intersection instead of
+      // `never`.
+      never
+    : IsNonArrayObject<T0> extends true
+      ? IsNonArrayObject<T1> extends true
+        ? // Incomparable objects might still have a common refinement: they might
+          // share some props while each having distinct ones too (e.g.,
+          // `{ a: string; b: number }` and `{ b: number; c: boolean }`), or a
+          // shared prop might be wider in one of them (e.g.,
+          // `{ a: "cat" | "dog"; b: number }` and `{ a: "cat" }`). We take the
+          // intersection of the two objects, but only when we know it isn't
+          // empty, which we approximate by them sharing at least one key.
+          HaveCommonProps<T0, T1> extends true
+          ? T0 & T1
+          : never
         : never
-      : never
-    : never;
+      : never;
 
-// Arrays are objects but they don't behave like ones because they have
-// different `extend` and `keyof` semantics.
+// Arrays are objects, but the shared-key heuristic breaks down for them:
+// every array shares `length` and the array methods with all other arrays (and
+// with many objects), so it would bless bogus intersections like
+// `string[] & number[]`.
 type IsNonArrayObject<T> = T extends object
   ? T extends readonly unknown[]
     ? false

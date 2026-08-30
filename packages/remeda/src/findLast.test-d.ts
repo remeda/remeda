@@ -82,6 +82,12 @@ test("`any` data", () => {
   ).toEqualTypeOf<string | undefined>();
 });
 
+test("`unknown` data", () => {
+  expectTypeOf(findLast([] as unknown[], isString)).toEqualTypeOf<
+    string | undefined
+  >();
+});
+
 test("narrows with a generic guard", () => {
   expectTypeOf(findLast(["a", 0] as (string | 0)[], isTruthy)).toEqualTypeOf<
     string | undefined
@@ -102,6 +108,11 @@ test("predicate is typed correctly", () => {
 
     return true;
   });
+});
+
+test("predicate with a mismatched param is an error", () => {
+  // @ts-expect-error [ts2769] -- The predicate must accept the item type.
+  findLast([] as number[], (x: string) => x.length > 0);
 });
 
 describe("data-last", () => {
@@ -139,6 +150,31 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([1, "a"] as (number | string)[], findLast(isNot(isString))),
     ).toEqualTypeOf<number | undefined>();
+  });
+
+  test("narrows tuples down to the matching item", () => {
+    expectTypeOf(
+      pipe([1, "a", true] as const, findLast(isString)),
+    ).toEqualTypeOf<"a" | undefined>();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(pipe([] as Cat[], findLast(isLegged))).toEqualTypeOf<
+      (Cat & Legged) | undefined
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(
+      pipe([] as Cat[], findLast(isNamed)),
+    ).toEqualTypeOf<undefined>();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      pipe([] as any[], findLast(isString)),
+    ).toEqualTypeOf<string | undefined>();
   });
 
   test("predicate is typed correctly", () => {

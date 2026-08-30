@@ -85,6 +85,15 @@ describe("incomparable types", () => {
       ),
     ).toEqualTypeOf<Tagged<string, "a"> & Tagged<string, "b">>();
   });
+
+  test("branded string and an object sharing a prop", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<Tagged<string, "a">>(),
+        $typed<{ readonly length: 3 }>(),
+      ),
+    ).toEqualTypeOf<never>();
+  });
 });
 
 describe("template literals", () => {
@@ -356,6 +365,15 @@ describe("argument order doesn't matter", () => {
   test("array and an incomparable object sharing a prop", () => {
     expectTypeOf(
       commonSubtype($typed<{ readonly length: 3 }>(), $typed<string[]>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded string and an object sharing a prop", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<{ readonly length: 3 }>(),
+        $typed<Tagged<string, "a">>(),
+      ),
     ).toEqualTypeOf<never>();
   });
 

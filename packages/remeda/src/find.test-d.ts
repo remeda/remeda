@@ -87,6 +87,12 @@ test("`any` data", () => {
   ).toEqualTypeOf<string | undefined>();
 });
 
+test("`unknown` data", () => {
+  expectTypeOf(find([] as unknown[], isString)).toEqualTypeOf<
+    string | undefined
+  >();
+});
+
 test("narrows with a generic guard", () => {
   expectTypeOf(find(["a", 0] as (string | 0)[], isTruthy)).toEqualTypeOf<
     string | undefined
@@ -159,6 +165,29 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([1, "a"] as (number | string)[], find(isNot(isString))),
     ).toEqualTypeOf<number | undefined>();
+  });
+
+  test("narrows tuples down to the matching item", () => {
+    expectTypeOf(pipe([1, "a", true] as const, find(isString))).toEqualTypeOf<
+      "a" | undefined
+    >();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(pipe([] as Cat[], find(isLegged))).toEqualTypeOf<
+      (Cat & Legged) | undefined
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(pipe([] as Cat[], find(isNamed))).toEqualTypeOf<undefined>();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      pipe([] as any[], find(isString)),
+    ).toEqualTypeOf<string | undefined>();
   });
 
   test("predicate is typed correctly", () => {

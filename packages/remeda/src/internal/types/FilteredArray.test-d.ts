@@ -953,6 +953,20 @@ describe("item is `any`", () => {
   });
 });
 
+describe("item is `unknown`", () => {
+  test("rest element", () => {
+    expectTypeOf(
+      filteredArray($typed<unknown[]>(), $typed<string>()),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("fixed tuple element", () => {
+    expectTypeOf(
+      filteredArray($typed<[unknown, string]>(), $typed<string>()),
+    ).toEqualTypeOf<[string] | [string, string]>();
+  });
+});
+
 describe("item and condition aren't type literals", () => {
   test("interface", () => {
     expectTypeOf(

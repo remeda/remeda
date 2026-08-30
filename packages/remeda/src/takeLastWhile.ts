@@ -7,7 +7,9 @@ import { purry } from "./purry";
  * The returned elements will be in the same order as in the original array.
  *
  * @param data - The array.
- * @param predicate - The predicate.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to indicate a matching element has been found, and
+ * `false` otherwise. A type-predicate can also be used to narrow the result.
  * @signature
  *    takeLastWhile(data, predicate)
  * @example
@@ -29,7 +31,9 @@ export function takeLastWhile<T extends IterableContainer>(
  * Returns elements from the end of the array until the predicate returns false.
  * The returned elements will be in the same order as in the original array.
  *
- * @param predicate - The predicate.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to indicate a matching element has been found, and
+ * `false` otherwise. A type-predicate can also be used to narrow the result.
  * @signature
  *    takeLastWhile(predicate)(data)
  * @example

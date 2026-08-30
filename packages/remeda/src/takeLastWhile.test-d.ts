@@ -129,6 +129,17 @@ describe("data-first", () => {
       takeLastWhile([] as any[], isString),
     ).toEqualTypeOf<string[]>();
   });
+
+  test("`unknown` data", () => {
+    expectTypeOf(takeLastWhile([] as unknown[], isString)).toEqualTypeOf<
+      string[]
+    >();
+  });
+
+  test("predicate with a mismatched param is an error", () => {
+    // @ts-expect-error [ts2769] -- The predicate must accept the item type.
+    takeLastWhile([] as number[], (x: string) => x.length > 0);
+  });
 });
 
 describe("data-last", () => {
@@ -317,5 +328,24 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([1, "a"] as (number | string)[], takeLastWhile(isNot(isString))),
     ).toEqualTypeOf<number[]>();
+  });
+
+  test("guard incomparable to the item", () => {
+    expectTypeOf(pipe([] as Cat[], takeLastWhile(isLegged))).toEqualTypeOf<
+      (Cat & Legged)[]
+    >();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(pipe([] as Cat[], takeLastWhile(isNamed))).toEqualTypeOf<
+      never[]
+    >();
+  });
+
+  test("`any` data", () => {
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      pipe([] as any[], takeLastWhile(isString)),
+    ).toEqualTypeOf<string[]>();
   });
 });
