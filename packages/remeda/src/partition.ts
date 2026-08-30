@@ -9,9 +9,9 @@ import { purry } from "./purry";
  *
  * @param data - The items to split.
  * @param predicate - A function to execute for each element in the array. It
- * should return `true` to add the element to the first partition, and and
- * `false` to add the element to the other partition. A type-predicate can also
- * be used to narrow the result.
+ * should return `true` to add the element to the first partition, and `false`
+ * to add the element to the other partition. A type-predicate can also be used
+ * to narrow the result.
  * @returns A 2-tuple of arrays where the first array contains the elements that
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
@@ -41,9 +41,9 @@ export function partition<
  * `predicate` type guard passes, and the second one containing the rest.
  *
  * @param predicate - A function to execute for each element in the array. It
- * should return `true` to add the element to the first partition, and and
- * `false` to add the element to the other partition. A type-predicate can also
- * be used to narrow the result.
+ * should return `true` to add the element to the first partition, and `false`
+ * to add the element to the other partition. A type-predicate can also be used
+ * to narrow the result.
  * @returns A 2-tuple of arrays where the first array contains the elements that
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
