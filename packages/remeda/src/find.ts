@@ -39,6 +39,7 @@ export function find<
 >(
   data: T,
   predicate: Predicate,
+  // TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate)))` which provides stricter typing).
 ): CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 /**
@@ -77,6 +78,7 @@ export function find<
   predicate: Predicate,
 ): (
   data: T,
+  // TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate)))` which provides stricter typing).
 ) => CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 export function find(...args: readonly unknown[]): unknown {

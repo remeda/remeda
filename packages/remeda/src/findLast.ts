@@ -35,6 +35,7 @@ export function findLast<
 >(
   data: T,
   predicate: Predicate,
+  // TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
 ): CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 /**
@@ -72,6 +73,7 @@ export function findLast<
   predicate: Predicate,
 ): (
   data: T,
+  // TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
 ) => CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
 
 export function findLast(...args: readonly unknown[]): unknown {
