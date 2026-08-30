@@ -31,6 +31,7 @@ export function partition<
 >(
   data: T,
   predicate: Predicate,
+  // TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
 ): [
   CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
   Exclude<T[number], GuardType<Predicate>>[],
@@ -64,6 +65,7 @@ export function partition<
   predicate: Predicate,
 ): (
   data: T,
+  // TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
 ) => [
   CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
   Exclude<T[number], GuardType<Predicate>>[],
