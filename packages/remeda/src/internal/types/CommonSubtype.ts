@@ -5,6 +5,10 @@ import type { IsAny, IsNever } from "type-fest";
  * (`CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
  * similar to the built-in `Extract` but allows either T0 or T1 to be wider than
  * the other.
+ *
+ * The type should be used instead of the intersection operator (`&`) to work
+ * around TypeScript's shortcoming when intersecting disjoint types doesn't
+ * narrow cleanly to `never`.
  */
 export type CommonSubtype<T0, T1> =
   IsAny<T0> extends true
