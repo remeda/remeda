@@ -1,5 +1,6 @@
+// TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
+
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
-import type { GuardType } from "./internal/types/GuardType";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -29,14 +30,15 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function findLast<
-  T extends IterableContainer,
-  Predicate extends (value: T[number], index: number, data: T) => boolean,
->(
+export function findLast<T extends IterableContainer, Condition>(
   data: T,
-  predicate: Predicate,
-  // TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
-): CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): CommonSubtype<T[number], Condition> | undefined;
+
+export function findLast<T extends IterableContainer>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): T[number] | undefined;
 
 /**
  * Iterates the array in reverse order and returns the value of the first
@@ -66,15 +68,13 @@ export function findLast<
  * @dataLast
  * @category Array
  */
-export function findLast<
-  T extends IterableContainer,
-  Predicate extends (value: T[number], index: number, data: T) => boolean,
->(
-  predicate: Predicate,
-): (
-  data: T,
-  // TODO: findLasts's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate)))` which provides stricter typing).
-) => CommonSubtype<T[number], GuardType<Predicate, T[number]>> | undefined;
+export function findLast<T extends IterableContainer, Condition>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): (data: T) => CommonSubtype<T[number], Condition> | undefined;
+
+export function findLast<T extends IterableContainer>(
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): (data: T) => T[number] | undefined;
 
 export function findLast(...args: readonly unknown[]): unknown {
   return purry(findLastImplementation, args);

@@ -1,7 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
+import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
 import { isNumber } from "./isNumber";
+import { isString } from "./isString";
+import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 import { takeLastWhile } from "./takeLastWhile";
 
@@ -78,6 +81,18 @@ describe("data-first", () => {
     expectTypeOf(takeLastWhile([] as string[], isNullish)).toEqualTypeOf<
       never[]
     >();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(
+      takeLastWhile(["a", 0] as (string | 0)[], isTruthy),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      takeLastWhile([1, "a"] as (number | string)[], isNot(isString)),
+    ).toEqualTypeOf<number[]>();
   });
 });
 
@@ -255,5 +270,17 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as string[], takeLastWhile(isNullish))).toEqualTypeOf<
       never[]
     >();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(
+      pipe(["a", 0] as (string | 0)[], takeLastWhile(isTruthy)),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      pipe([1, "a"] as (number | string)[], takeLastWhile(isNot(isString))),
+    ).toEqualTypeOf<number[]>();
   });
 });

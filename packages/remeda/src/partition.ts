@@ -1,5 +1,6 @@
+// TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
+
 import type { CommonSubtype } from "./internal/types/CommonSubtype";
-import type { GuardType } from "./internal/types/GuardType";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import { purry } from "./purry";
 
@@ -25,17 +26,15 @@ import { purry } from "./purry";
  * @dataFirst
  * @category Array
  */
-export function partition<
-  T extends IterableContainer,
-  Predicate extends (value: T[number], index: number, data: T) => boolean,
->(
+export function partition<T extends IterableContainer, Condition>(
   data: T,
-  predicate: Predicate,
-  // TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
-): [
-  CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
-  Exclude<T[number], GuardType<Predicate>>[],
-];
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
+
+export function partition<T extends IterableContainer>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): [T[number][], T[number][]];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -58,18 +57,15 @@ export function partition<
  * @dataLast
  * @category Array
  */
-export function partition<
-  T extends IterableContainer,
-  Predicate extends (value: T[number], index: number, data: T) => boolean,
->(
-  predicate: Predicate,
+export function partition<T extends IterableContainer, Condition>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (
   data: T,
-  // TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
-) => [
-  CommonSubtype<T[number], GuardType<Predicate, T[number]>>[],
-  Exclude<T[number], GuardType<Predicate>>[],
-];
+) => [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
+
+export function partition<T extends IterableContainer>(
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): (data: T) => [T[number][], T[number][]];
 
 export function partition(...args: readonly unknown[]): unknown {
   return purry(partitionImplementation, args);

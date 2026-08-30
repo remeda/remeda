@@ -1,9 +1,12 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
+import { isNot } from "./isNot";
+import { isNullish } from "./isNullish";
 import { isNumber } from "./isNumber";
+import { isString } from "./isString";
+import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 import { takeWhile } from "./takeWhile";
-import { isNullish } from "./isNullish";
 
 describe("data-first", () => {
   test("empty array", () => {
@@ -74,6 +77,18 @@ describe("data-first", () => {
 
   test("predicate disjoint from the item", () => {
     expectTypeOf(takeWhile([] as string[], isNullish)).toEqualTypeOf<never[]>();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(takeWhile(["a", 0] as (string | 0)[], isTruthy)).toEqualTypeOf<
+      string[]
+    >();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      takeWhile([1, "a"] as (number | string)[], isNot(isString)),
+    ).toEqualTypeOf<number[]>();
   });
 });
 
@@ -249,5 +264,17 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as string[], takeWhile(isNullish))).toEqualTypeOf<
       never[]
     >();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(
+      pipe(["a", 0] as (string | 0)[], takeWhile(isTruthy)),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      pipe([1, "a"] as (number | string)[], takeWhile(isNot(isString))),
+    ).toEqualTypeOf<number[]>();
   });
 });

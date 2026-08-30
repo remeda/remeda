@@ -2,7 +2,9 @@ import { describe, expectTypeOf, test } from "vitest";
 import { constant } from "./constant";
 import { findLast } from "./findLast";
 import { isArray } from "./isArray";
+import { isNot } from "./isNot";
 import { isString } from "./isString";
+import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 
 test("can narrow types", () => {
@@ -45,6 +47,18 @@ test("readonly tuple", () => {
   >();
 });
 
+test("narrows with a generic guard", () => {
+  expectTypeOf(findLast(["a", 0] as (string | 0)[], isTruthy)).toEqualTypeOf<
+    string | undefined
+  >();
+});
+
+test("narrows with a negated guard", () => {
+  expectTypeOf(
+    findLast([1, "a"] as (number | string)[], isNot(isString)),
+  ).toEqualTypeOf<number | undefined>();
+});
+
 test("predicate is typed correctly", () => {
   findLast([] as (number | string)[], (value, index, data) => {
     expectTypeOf(value).toEqualTypeOf<number | string>();
@@ -78,6 +92,18 @@ describe("data-last", () => {
     expectTypeOf(
       pipe([] as number[], findLast(isArray)),
     ).toEqualTypeOf<undefined>();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(
+      pipe(["a", 0] as (string | 0)[], findLast(isTruthy)),
+    ).toEqualTypeOf<string | undefined>();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      pipe([1, "a"] as (number | string)[], findLast(isNot(isString))),
+    ).toEqualTypeOf<number | undefined>();
   });
 
   test("predicate is typed correctly", () => {

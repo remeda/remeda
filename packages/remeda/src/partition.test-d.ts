@@ -1,5 +1,7 @@
 import { expectTypeOf, test, describe } from "vitest";
 import { constant } from "./constant";
+import { isDefined } from "./isDefined";
+import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
 import { isNumber } from "./isNumber";
 import { isString } from "./isString";
@@ -46,6 +48,18 @@ test("narrows with a guard incomparable to the item", () => {
   expectTypeOf(partition([] as Cat[], isLegged)).toEqualTypeOf<
     [(Cat & Legged)[], Cat[]]
   >();
+});
+
+test("narrows with a generic guard", () => {
+  expectTypeOf(
+    partition([1, undefined] as (number | undefined)[], isDefined),
+  ).toEqualTypeOf<[number[], undefined[]]>();
+});
+
+test("narrows with a negated guard", () => {
+  expectTypeOf(
+    partition([1, "a"] as (number | string)[], isNot(isString)),
+  ).toEqualTypeOf<[number[], string[]]>();
 });
 
 test("predicate is typed correctly", () => {
@@ -101,6 +115,18 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as string[], partition(isNullish))).toEqualTypeOf<
       [never[], string[]]
     >();
+  });
+
+  test("generic guard", () => {
+    expectTypeOf(
+      pipe([1, undefined] as (number | undefined)[], partition(isDefined)),
+    ).toEqualTypeOf<[number[], undefined[]]>();
+  });
+
+  test("negated guard", () => {
+    expectTypeOf(
+      pipe([1, "a"] as (number | string)[], partition(isNot(isString))),
+    ).toEqualTypeOf<[number[], string[]]>();
   });
 
   test("predicate is typed correctly", () => {
