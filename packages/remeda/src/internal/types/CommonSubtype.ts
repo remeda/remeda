@@ -49,4 +49,4 @@ type IsNonArrayObject<T> = T extends object
   : false;
 
 type HaveCommonProps<T0, T1> =
-  IsNever<Extract<keyof T0, keyof T1>> extends true ? false : true;
+  IsNever<keyof T0 & keyof T1> extends true ? false : true;
