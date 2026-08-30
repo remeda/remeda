@@ -117,7 +117,11 @@ describe("data-last", () => {
   test("template literal data that doesn't match", () => {
     const [yes, no] = partition([] as `${number}_bar`[], endsWith("world"));
 
-    expectTypeOf(yes).toEqualTypeOf<never[]>();
+    expectTypeOf(yes).toEqualTypeOf<
+      // These should be equivalent to `never` but TypeScript doesn't infer
+      // that...
+      (`${number}_bar` & `${string}world`)[]
+    >();
     expectTypeOf(no).toEqualTypeOf<`${number}_bar`[]>();
   });
 
