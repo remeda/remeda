@@ -51,8 +51,8 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
               // never match.
               never
             : [
-                // Instead of adding the item as-is, we add the common refined
-                // base type.
+                // Instead of adding the item as-is, we add the common sub-type
+                // of both `Head` and `Condition`.
                 CommonSubtype<Head, Condition>,
                 ...FilteredFixedTuple<Rest, Condition>,
               ])
