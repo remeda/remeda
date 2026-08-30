@@ -1,4 +1,4 @@
-import type { IsNever } from "type-fest";
+import type { IsAny, IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
 import type { CommonSubtype } from "./CommonSubtype";
 import type { IterableContainer } from "./IterableContainer";
@@ -31,23 +31,30 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
   infer Head,
   ...infer Rest,
 ]
-  ? Head extends Condition
-    ? // If the item in the array already satisfies the condition we pass it
-      // through to the output.
-      [Head, ...FilteredFixedTuple<Rest, Condition>]
-    : // The item doesn't satisfy the condition, but it might share a refined
-      // type with it, so it would still show up in the output; to accommodate
-      // for this we consider both cases for the output.
+  ? IsAny<Head> extends true
+    ? // `any` would match both branches of the `Head extends Condition` check
+      // below, leaking `any` itself into the output. But it isn't a guaranteed
+      // match either, so we consider both the skipped case and the matched
+      // case.
       | FilteredFixedTuple<Rest, Condition>
-      | (IsNever<CommonSubtype<Head, Condition>> extends true
-          ? // The item is entirely disjoint from the condition, it would never
-            // match.
-            never
-          : [
-              // Instead of adding the item as-is, we add the common refined
-              // base type.
-              CommonSubtype<Head, Condition>,
-              ...FilteredFixedTuple<Rest, Condition>,
-            ])
+      | [CommonSubtype<Head, Condition>, ...FilteredFixedTuple<Rest, Condition>]
+    : Head extends Condition
+      ? // If the item in the array already satisfies the condition we pass it
+        // through to the output.
+        [Head, ...FilteredFixedTuple<Rest, Condition>]
+      : // The item doesn't satisfy the condition, but it might share a refined
+        // type with it, so it would still show up in the output; to
+        // accommodate for this we consider both cases for the output.
+        | FilteredFixedTuple<Rest, Condition>
+        | (IsNever<CommonSubtype<Head, Condition>> extends true
+            ? // The item is entirely disjoint from the condition, it would
+              // never match.
+              never
+            : [
+                // Instead of adding the item as-is, we add the common refined
+                // base type.
+                CommonSubtype<Head, Condition>,
+                ...FilteredFixedTuple<Rest, Condition>,
+              ])
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
     [];

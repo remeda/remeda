@@ -30,6 +30,14 @@ test("predicate disjoint from the item", () => {
   >();
 });
 
+test("`any` data", () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+  expectTypeOf(partition([] as any[], isString)).toEqualTypeOf<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+    [string[], any[]]
+  >();
+});
+
 test("non-guard predicate keeps both sides unnarrowed", () => {
   expectTypeOf(partition([1, "a"], constant(true))).toEqualTypeOf<
     [(number | string)[], (number | string)[]]

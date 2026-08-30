@@ -926,6 +926,28 @@ describe("condition is never", () => {
   });
 });
 
+describe("item is `any`", () => {
+  test("rest element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<any[]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("fixed tuple element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[any, string]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<[string] | [string, string]>();
+  });
+});
+
 describe("item and condition aren't type literals", () => {
   test("interface", () => {
     expectTypeOf(
