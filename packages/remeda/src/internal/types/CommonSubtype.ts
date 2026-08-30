@@ -5,8 +5,8 @@ import type { IsAny, IsNever } from "type-fest";
  * (`CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
  * similar to the built-in `Extract` but allows either T0 or T1 to be wider than
  * the other. Incomparable types are treated as disjoint (resulting in `never`)
- * unless they are objects sharing at least one key, which fall back to their
- * intersection.
+ * unless they are both strings, or objects sharing at least one key, which
+ * fall back to their intersection.
  *
  * The type should be used instead of the intersection operator (`&`) because
  * TypeScript doesn't reduce most disjoint intersections to `never`.

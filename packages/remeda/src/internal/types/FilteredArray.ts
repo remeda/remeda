@@ -32,13 +32,16 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
   ...infer Rest,
 ]
   ? IsAny<Head> extends true
-    ? // `any` would match both branches of the `Head extends Condition` check
-      // below, leaking `any` itself into the output. But it isn't a guaranteed
+    ? // `any` would satisfy the `[Head] extends [Condition]` check below,
+      // leaking `any` itself into the output. But it isn't a guaranteed
       // match either, so we consider both the skipped case and the matched
       // case.
       | FilteredFixedTuple<Rest, Condition>
       | [CommonSubtype<Head, Condition>, ...FilteredFixedTuple<Rest, Condition>]
-    : [Head] extends [Condition]
+    : // The check is wrapped in tuples so that it doesn't distribute over
+      // union heads; a union item stays a single union-typed element in the
+      // output instead of fanning out into every combination.
+      [Head] extends [Condition]
       ? // If the item in the array already satisfies the condition we pass it
         // through to the output.
         [Head, ...FilteredFixedTuple<Rest, Condition>]
