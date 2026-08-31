@@ -120,7 +120,9 @@ describe("data-first", () => {
   });
 
   test("object guard sharing no keys with the item", () => {
-    expectTypeOf(takeLastWhile([] as Cat[], isNamed)).toEqualTypeOf<never[]>();
+    expectTypeOf(takeLastWhile([] as Cat[], isNamed)).toEqualTypeOf<
+      (Cat & Named)[]
+    >();
   });
 
   test("`any` data", () => {
@@ -338,7 +340,7 @@ describe("data-last", () => {
 
   test("object guard sharing no keys with the item", () => {
     expectTypeOf(pipe([] as Cat[], takeLastWhile(isNamed))).toEqualTypeOf<
-      never[]
+      (Cat & Named)[]
     >();
   });
 

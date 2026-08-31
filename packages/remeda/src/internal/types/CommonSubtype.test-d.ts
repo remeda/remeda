@@ -159,7 +159,9 @@ describe("unions", () => {
         $typed<{ readonly a: string } | { readonly b: number }>(),
         $typed<{ readonly a: string }>(),
       ),
-    ).toEqualTypeOf<{ readonly a: string }>();
+    ).toEqualTypeOf<
+      { readonly a: string } | ({ readonly b: number } & { readonly a: string })
+    >();
   });
 
   test("union of objects on the second type", () => {
@@ -253,7 +255,7 @@ describe("objects", () => {
         $typed<{ readonly a: string }>(),
         $typed<{ readonly b: number }>(),
       ),
-    ).toEqualTypeOf<never>();
+    ).toEqualTypeOf<{ readonly a: string } & { readonly b: number }>();
   });
 
   test("incomparable objects with a conflicting common prop", () => {
@@ -280,9 +282,9 @@ describe("objects", () => {
   });
 
   test("incomparable interfaces without common props", () => {
-    expectTypeOf(
-      commonSubtype($typed<Cat>(), $typed<Named>()),
-    ).toEqualTypeOf<never>();
+    expectTypeOf(commonSubtype($typed<Cat>(), $typed<Named>())).toEqualTypeOf<
+      Cat & Named
+    >();
   });
 
   test("incomparable interfaces with common props", () => {
@@ -294,7 +296,7 @@ describe("objects", () => {
   test("incomparable classes without common props", () => {
     expectTypeOf(
       commonSubtype($typed<CatClass>(), $typed<NamedClass>()),
-    ).toEqualTypeOf<never>();
+    ).toEqualTypeOf<CatClass & NamedClass>();
   });
 
   test("incomparable classes with common props", () => {

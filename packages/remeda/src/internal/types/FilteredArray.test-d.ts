@@ -266,7 +266,7 @@ describe("condition is a simple object", () => {
   test("array with no matching objects", () => {
     expectTypeOf(
       filteredArray([] as (string | { b: string })[], { a: "" }),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<({ b: string } & { a: string })[]>();
   });
 
   test("tuple with matching and non-matching objects", () => {
@@ -734,7 +734,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
   test("filtering for only one variant", () => {
     expectTypeOf(
       filteredArray([] as ({ a: string } | { b: number })[], { a: "" }),
-    ).toEqualTypeOf<{ a: string }[]>();
+    ).toEqualTypeOf<({ a: string } | ({ b: number } & { a: string }))[]>();
   });
 
   test("array with objects having both properties", () => {
@@ -1004,5 +1004,48 @@ describe("arrays and non-array objects never share a refinement", () => {
         $typed<["a"]>(),
       ),
     ).toEqualTypeOf<[]>();
+  });
+});
+
+describe("proving a tuple slot can match", () => {
+  test("no shared keys drops the slot", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ readonly a: string }]>(),
+        $typed<{ readonly b: number }>(),
+      ),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("shared keys keep the slot as an intersection", () => {
+    expectTypeOf(
+      filteredArray($typed<[ItemInterface]>(), $typed<ConditionInterface>()),
+    ).toEqualTypeOf<[] | [ItemInterface & ConditionInterface]>();
+  });
+
+  test("a condition narrower than a keyless item keeps the slot", () => {
+    expectTypeOf(
+      filteredArray($typed<[object]>(), $typed<{ readonly a: string }>()),
+    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+  });
+});
+
+describe("union tuple slots are checked per member", () => {
+  test("a member that can't match is dropped, not intersected", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ readonly a: string } | { readonly b: number }]>(),
+        $typed<{ readonly a: string }>(),
+      ),
+    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+  });
+
+  test("a member narrower than a keyless condition survives", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string | { readonly a: string }]>(),
+        $typed<object>(),
+      ),
+    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
   });
 });

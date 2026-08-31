@@ -71,7 +71,9 @@ test("narrows with a guard incomparable to the item", () => {
 });
 
 test("object guard sharing no keys with the item", () => {
-  expectTypeOf(find([] as Cat[], isNamed)).toEqualTypeOf<undefined>();
+  expectTypeOf(find([] as Cat[], isNamed)).toEqualTypeOf<
+    (Cat & Named) | undefined
+  >();
 });
 
 test("isPlainObject guard on interface items", () => {
@@ -180,7 +182,9 @@ describe("data-last", () => {
   });
 
   test("object guard sharing no keys with the item", () => {
-    expectTypeOf(pipe([] as Cat[], find(isNamed))).toEqualTypeOf<undefined>();
+    expectTypeOf(pipe([] as Cat[], find(isNamed))).toEqualTypeOf<
+      (Cat & Named) | undefined
+    >();
   });
 
   test("`any` data", () => {

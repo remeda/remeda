@@ -37,7 +37,10 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
       // match either, so we consider both the skipped case and the matched
       // case.
       | FilteredFixedTuple<Rest, Condition>
-      | [CommonSubtype<Head, Condition>, ...FilteredFixedTuple<Rest, Condition>]
+      | [
+          CommonSubtype<Head, Condition, { requireSharedKey: true }>,
+          ...FilteredFixedTuple<Rest, Condition>,
+        ]
     : // The check is wrapped in tuples so that it doesn't distribute over
       // union heads; a union item stays a single union-typed element in the
       // output instead of fanning out into every combination.
@@ -49,14 +52,16 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
         // type with it, so it would still show up in the output; to
         // accommodate for this we consider both cases for the output.
         | FilteredFixedTuple<Rest, Condition>
-        | (IsNever<CommonSubtype<Head, Condition>> extends true
+        | (IsNever<
+            CommonSubtype<Head, Condition, { requireSharedKey: true }>
+          > extends true
             ? // The item is entirely disjoint from the condition, it would
               // never match.
               never
             : [
                 // Instead of adding the item as-is, we add the common sub-type
                 // of both `Head` and `Condition`.
-                CommonSubtype<Head, Condition>,
+                CommonSubtype<Head, Condition, { requireSharedKey: true }>,
                 ...FilteredFixedTuple<Rest, Condition>,
               ])
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.

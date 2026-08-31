@@ -58,7 +58,7 @@ test("narrows with a guard incomparable to the item", () => {
 
 test("object guard sharing no keys with the item", () => {
   expectTypeOf(partition([] as Cat[], isNamed)).toEqualTypeOf<
-    [never[], Cat[]]
+    [(Cat & Named)[], Cat[]]
   >();
 });
 
@@ -166,7 +166,7 @@ describe("data-last", () => {
 
   test("object guard sharing no keys with the item", () => {
     expectTypeOf(pipe([] as Cat[], partition(isNamed))).toEqualTypeOf<
-      [never[], Cat[]]
+      [(Cat & Named)[], Cat[]]
     >();
   });
 

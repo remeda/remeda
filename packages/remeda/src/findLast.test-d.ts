@@ -72,7 +72,9 @@ test("narrows with a guard incomparable to the item", () => {
 });
 
 test("object guard sharing no keys with the item", () => {
-  expectTypeOf(findLast([] as Cat[], isNamed)).toEqualTypeOf<undefined>();
+  expectTypeOf(findLast([] as Cat[], isNamed)).toEqualTypeOf<
+    (Cat & Named) | undefined
+  >();
 });
 
 test("`any` data", () => {
@@ -165,9 +167,9 @@ describe("data-last", () => {
   });
 
   test("object guard sharing no keys with the item", () => {
-    expectTypeOf(
-      pipe([] as Cat[], findLast(isNamed)),
-    ).toEqualTypeOf<undefined>();
+    expectTypeOf(pipe([] as Cat[], findLast(isNamed))).toEqualTypeOf<
+      (Cat & Named) | undefined
+    >();
   });
 
   test("`any` data", () => {
