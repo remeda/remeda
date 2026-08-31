@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
+import { isNamed, type Cat, type Named } from "../test/interfaces";
 import { constant } from "./constant";
 import { filter } from "./filter";
 import { isDefined } from "./isDefined";
@@ -307,6 +308,10 @@ describe("condition isn't a subtype of the item", () => {
 
   test("disjoint", () => {
     expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
+  });
+
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(filter([] as Cat[], isNamed)).toEqualTypeOf<(Cat & Named)[]>();
   });
 
   describe("supertype", () => {

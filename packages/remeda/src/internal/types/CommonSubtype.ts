@@ -3,12 +3,13 @@ import type { StrictFunction } from "./StrictFunction";
 
 type CanIntersectOptions = {
   /**
-   * When using the subtype for **filtering** (e.g., `filter`) the subtype
-   * should be stricter so we don't consider disjoint objects as plausible
-   * (because  TypeScript's duck-typing would actually consider them valid);
-   * But when using the subtype for **selection** (e.g., `find`) the subtype
-   * should be narrower to allow for matches on props that are missing in the
-   * type but would be present in the runtime object.
+   * Whether two objects that share no keys should be treated as disjoint.
+   *
+   * This allows us some flexibility in supporting duck-typed types which might
+   * not represent fully the runtime shape (e.g., when considering larger
+   * objects via the "lens" of a specific interface it implements). This is
+   * important for `filter`-like functions where we want to re-shape the input
+   * on a per-item basis.
    */
   readonly requireSharedKey?: boolean;
 };

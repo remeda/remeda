@@ -1,8 +1,10 @@
 import { describe, expectTypeOf, test } from "vitest";
 import {
+  isCat,
   isLegged,
   isNamed,
   type Cat,
+  type Kitten,
   type Legged,
   type Named,
 } from "../test/interfaces";
@@ -48,6 +50,12 @@ test("narrows with a guard incomparable to the item", () => {
 test("object guard sharing no keys with the item", () => {
   expectTypeOf(partition([] as Cat[], isNamed)).toEqualTypeOf<
     [(Cat & Named)[], Cat[]]
+  >();
+});
+
+test("guard for a supertype of the item can't reject", () => {
+  expectTypeOf(partition([] as Kitten[], isCat)).toEqualTypeOf<
+    [Kitten[], never[]]
   >();
 });
 
@@ -126,6 +134,12 @@ describe("data-last", () => {
   test("predicate disjoint from the item", () => {
     expectTypeOf(pipe([] as string[], partition(isNullish))).toEqualTypeOf<
       [never[], string[]]
+    >();
+  });
+
+  test("guard for a supertype of the item can't reject", () => {
+    expectTypeOf(pipe([] as Kitten[], partition(isCat))).toEqualTypeOf<
+      [Kitten[], never[]]
     >();
   });
 

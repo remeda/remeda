@@ -18,9 +18,7 @@ export type FilteredArray<T extends IterableContainer, Condition> =
           ...PartialArray<
             FilteredFixedTuple<TupleParts<T>["optional"], Condition>
           >,
-          ...CoercedArray<
-            StrictCommonSubtype<TupleParts<T>["item"], Condition>
-          >,
+          ...CoercedArray<CommonSubtype<TupleParts<T>["item"], Condition>>,
           ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition>,
         ]
       : never;
