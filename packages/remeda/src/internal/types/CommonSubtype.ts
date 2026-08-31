@@ -5,16 +5,22 @@ import type { StrictFunction } from "./StrictFunction";
  * A best-effort common subtype of T0 and T1
  * (`CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
  * similar to the built-in `Extract` but allows either T0 or T1 to be wider than
- * the other. Types we can prove are disjoint result in `never`; incomparable
- * types that we can't prove either way fall back to their intersection.
+ * the other.
  *
  * The type should be used instead of the intersection operator (`&`) because
  * TypeScript doesn't reduce most disjoint intersections to `never`.
  *
- * Use `StrictCommonSubtype` when two objects sharing no keys should be treated
- * as disjoint rather than intersected.
+ * Reducing to `never` is a heuristic, and it errs in both directions: pairs we
+ * can cheaply rule out are rejected even when a value could inhabit both (two
+ * incomparable functions, or two incomparable arrays, which `readonly []`
+ * inhabits), and pairs we can't are kept even when they are provably disjoint
+ * (`a${string}` and `b${string}` stay an uninhabited intersection).
+ *
+ * `RequireSharedKey` makes the reduction stricter: two objects with no key in
+ * common become `never` instead of being intersected. Leave it off when the
+ * result stands for a value that passed a runtime check, where duck typing
+ * allows props the declared type doesn't mention.
  */
-
 export type CommonSubtype<T0, T1, RequireSharedKey extends boolean = false> =
   IsAny<T0> extends true
     ? T1
@@ -74,9 +80,10 @@ type HasMeaningfulProps<T> = T extends object
  * some props while each having distinct ones too (e.g.,
  * `{ a: string; b: number }` and `{ b: number; c: boolean }`), or a shared
  * prop might be wider in one of them (e.g., `{ a: "cat" | "dog"; b: number }`
- * and `{ a: "cat" }`). We take the intersection of the two objects, but only
- * when we know it isn't empty, which we approximate by them sharing at least
- * one key.
+ * and `{ a: "cat" }`). Sharing at least one key is our approximation for the
+ * intersection being inhabited; it isn't a proof, but the case it lets through
+ * most often is one TypeScript reduces on its own
+ * (`{ a: "cat" } & { a: "dog" }` is already `never`).
  */
 type HaveCommonProps<T0, T1> =
   IsNever<keyof T0 & keyof T1> extends true ? false : true;
