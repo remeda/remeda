@@ -266,7 +266,7 @@ describe("condition is a simple object", () => {
   test("array with no matching objects", () => {
     expectTypeOf(
       filteredArray([] as (string | { b: string })[], { a: "" }),
-    ).toEqualTypeOf<({ b: string } & { a: string })[]>();
+    ).toEqualTypeOf<[]>();
   });
 
   test("tuple with matching and non-matching objects", () => {
@@ -734,7 +734,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
   test("filtering for only one variant", () => {
     expectTypeOf(
       filteredArray([] as ({ a: string } | { b: number })[], { a: "" }),
-    ).toEqualTypeOf<({ a: string } | ({ b: number } & { a: string }))[]>();
+    ).toEqualTypeOf<{ a: string }[]>();
   });
 
   test("array with objects having both properties", () => {
