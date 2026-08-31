@@ -6,10 +6,8 @@ import { purry } from "./purry";
  * Returns elements from the array until predicate returns false.
  *
  * @param data - The array.
- * @param predicate - A function to execute for the elements in the array. It
- * should return `true` to indicate elements that should remain in the output,
- * and `false` otherwise. A type-predicate can also be used to narrow the
- * result.
+ * @param predicate - Executed on each item of `data` until it returns `false`.
+ * If provided a type-predicate the result would also be narrowed.
  * @signature
  *    takeWhile(data, predicate)
  * @example
@@ -30,10 +28,8 @@ export function takeWhile<T extends IterableContainer>(
 /**
  * Returns elements from the array until predicate returns false.
  *
- * @param predicate - A function to execute for the elements in the array. It
- * should return `true` to indicate elements that should remain in the output,
- * and `false` otherwise. A type-predicate can also be used to narrow the
- * result.
+ * @param predicate - Executed on each item of `data` until it returns `false`.
+ * If provided a type-predicate the result would also be narrowed.
  * @signature
  *    takeWhile(predicate)(data)
  * @example
