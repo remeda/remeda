@@ -1,4 +1,11 @@
 import { describe, expectTypeOf, test } from "vitest";
+import {
+  isLegged,
+  isNamed,
+  type Cat,
+  type Legged,
+  type Named,
+} from "../test/interfaces";
 import { constant } from "./constant";
 import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
@@ -7,24 +14,6 @@ import { isString } from "./isString";
 import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
 import { takeWhile } from "./takeWhile";
-
-interface Cat {
-  readonly type: "cat";
-  readonly legs: number;
-}
-
-interface Legged {
-  readonly legs: number;
-  readonly tail: boolean;
-}
-
-interface Named {
-  readonly name: string;
-}
-
-declare function isLegged(x: unknown): x is Legged;
-
-declare function isNamed(x: unknown): x is Named;
 
 describe("data-first", () => {
   test("empty array", () => {

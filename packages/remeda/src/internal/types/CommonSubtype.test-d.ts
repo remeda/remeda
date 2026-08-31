@@ -1,37 +1,9 @@
 import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
+import type { CatClass, LeggedClass, NamedClass } from "../../../test/classes";
+import type { Cat, Legged, Named } from "../../../test/interfaces";
 import type { CommonSubtype } from "./CommonSubtype";
-
-interface Cat {
-  readonly type: "cat";
-  readonly legs: number;
-}
-
-interface Named {
-  readonly name: string;
-  readonly age: number;
-}
-
-interface Legged {
-  readonly legs: number;
-  readonly tail: boolean;
-}
-
-class CatClass {
-  declare public readonly type: "cat";
-  declare public readonly legs: number;
-}
-
-class NamedClass {
-  declare public readonly name: string;
-  declare public readonly age: number;
-}
-
-class LeggedClass {
-  declare public readonly legs: number;
-  declare public readonly tail: boolean;
-}
 
 declare function commonSubtype<const T0, const T1>(
   t0: T0,

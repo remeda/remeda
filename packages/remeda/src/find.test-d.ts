@@ -1,4 +1,11 @@
 import { describe, expectTypeOf, test } from "vitest";
+import {
+  isLegged,
+  isNamed,
+  type Cat,
+  type Legged,
+  type Named,
+} from "../test/interfaces";
 import { constant } from "./constant";
 import { find } from "./find";
 import { isArray } from "./isArray";
@@ -7,24 +14,6 @@ import { isPlainObject } from "./isPlainObject";
 import { isString } from "./isString";
 import { isTruthy } from "./isTruthy";
 import { pipe } from "./pipe";
-
-interface Cat {
-  readonly type: "cat";
-  readonly legs: number;
-}
-
-interface Legged {
-  readonly legs: number;
-  readonly tail: boolean;
-}
-
-interface Named {
-  readonly name: string;
-}
-
-declare function isLegged(x: unknown): x is Legged;
-
-declare function isNamed(x: unknown): x is Named;
 
 test("can narrow types", () => {
   expectTypeOf(find([1, "a"], isString)).toEqualTypeOf<string | undefined>();

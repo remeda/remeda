@@ -1,4 +1,11 @@
 import { describe, expectTypeOf, test } from "vitest";
+import {
+  isLegged,
+  isNamed,
+  type Cat,
+  type Legged,
+  type Named,
+} from "../test/interfaces";
 import { constant } from "./constant";
 import { isDefined } from "./isDefined";
 import { isNot } from "./isNot";
@@ -7,24 +14,6 @@ import { isNumber } from "./isNumber";
 import { isString } from "./isString";
 import { partition } from "./partition";
 import { pipe } from "./pipe";
-
-interface Cat {
-  readonly type: "cat";
-  readonly legs: number;
-}
-
-interface Legged {
-  readonly legs: number;
-  readonly tail: boolean;
-}
-
-interface Named {
-  readonly name: string;
-}
-
-declare function isLegged(x: unknown): x is Legged;
-
-declare function isNamed(x: unknown): x is Named;
 
 test("partition with type guard", () => {
   expectTypeOf(partition([1, "a", 2, "b"], isNumber)).toEqualTypeOf<
