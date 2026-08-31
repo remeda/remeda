@@ -66,6 +66,39 @@ describe("incomparable types", () => {
       ),
     ).toEqualTypeOf<never>();
   });
+
+  test("branded numbers", () => {
+    expectTypeOf(
+      commonSubtype(
+        $typed<Tagged<number, "a">>(),
+        $typed<Tagged<number, "b">>(),
+      ),
+    ).toEqualTypeOf<Tagged<number, "a"> & Tagged<number, "b">>();
+  });
+
+  test("branded number and an object", () => {
+    expectTypeOf(
+      commonSubtype($typed<Tagged<number, "a">>(), $typed<Cat>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded boolean and an object", () => {
+    expectTypeOf(
+      commonSubtype($typed<Tagged<boolean, "a">>(), $typed<Cat>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded bigint and an object", () => {
+    expectTypeOf(
+      commonSubtype($typed<Tagged<bigint, "a">>(), $typed<Cat>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded symbol and an object", () => {
+    expectTypeOf(
+      commonSubtype($typed<Tagged<symbol, "a">>(), $typed<Cat>()),
+    ).toEqualTypeOf<never>();
+  });
 });
 
 describe("template literals", () => {
@@ -348,6 +381,12 @@ describe("argument order doesn't matter", () => {
         $typed<{ readonly length: 3 }>(),
         $typed<Tagged<string, "a">>(),
       ),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("branded number and an object", () => {
+    expectTypeOf(
+      commonSubtype($typed<Cat>(), $typed<Tagged<number, "a">>()),
     ).toEqualTypeOf<never>();
   });
 

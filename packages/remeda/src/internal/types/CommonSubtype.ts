@@ -1,4 +1,4 @@
-import type { IsAny, IsNever } from "type-fest";
+import type { IsAny, IsNever, Primitive } from "type-fest";
 import type { StrictFunction } from "./StrictFunction";
 
 type CanIntersectOptions = {
@@ -48,21 +48,17 @@ type CanIntersect<
   T0,
   T1,
   Options extends CanIntersectOptions,
-> = T0 extends string
-  ? T1 extends string
-    ? // We only reach here if both strings are disjoint string literals, or
-      // template literals, or are branded/tagged. TypeScript doesn't compare
-      // two template literals against each other, so those come back as-is;
-      // this is the best result we can return that would still keep our type
-      // useful for strings.
+> = T0 extends Primitive
+  ? T1 extends Primitive
+    ? // When both types are primitives it is safe to intersect them because
+      // TypeScript would reduce them to `never` implicitly for most cases. Only
+      // template string literals would remain "unresolved", but we can't prove
+      // if they are disjoint or not so it's a better outcome than `never`.
       true
     : false
-  : T1 extends string
-    ? // Mirror of the string check above: without it a branded/tagged string
-      // in the T1 position would fall through to the props check (a
-      // primitive-object intersection has meaningful props, sharing
-      // `String`'s keys) and produce an inhabited intersection instead of
-      // `never`.
+  : T1 extends Primitive
+    ? // The previous case catches when T0 is branded/tagged; but we need this
+      // case when T1 is branded/tagged for symmetry.
       false
     : HasMeaningfulProps<T0> extends true
       ? HasMeaningfulProps<T1> extends true
