@@ -5,15 +5,15 @@ import type { CatClass, LeggedClass, NamedClass } from "../../../test/classes";
 import type { Cat, Legged, Named } from "../../../test/interfaces";
 import type { CommonSubtype } from "./CommonSubtype";
 
-declare function commonSubtype<const T0, const T1>(
+declare function commonSubtype<
+  const T0,
+  const T1,
+  const RequireSharedKey extends boolean = false,
+>(
   t0: T0,
   t1: T1,
-): CommonSubtype<T0, T1>;
-
-declare function strictCommonSubtype<const T0, const T1>(
-  t0: T0,
-  t1: T1,
-): CommonSubtype<T0, T1, { requireSharedKey: true }>;
+  requireSharedKey?: RequireSharedKey,
+): CommonSubtype<T0, T1, RequireSharedKey>;
 
 test("identical types", () => {
   expectTypeOf(
@@ -406,22 +406,31 @@ describe("requireSharedKey", () => {
   describe("objects sharing no keys", () => {
     test("type literals", () => {
       expectTypeOf(
-        strictCommonSubtype(
+        commonSubtype(
           $typed<{ readonly a: string }>(),
           $typed<{ readonly b: number }>(),
+          true /* requireSharedKey */,
         ),
       ).toEqualTypeOf<never>();
     });
 
     test("interfaces", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<Cat>(), $typed<Named>()),
+        commonSubtype(
+          $typed<Cat>(),
+          $typed<Named>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<never>();
     });
 
     test("classes", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<CatClass>(), $typed<NamedClass>()),
+        commonSubtype(
+          $typed<CatClass>(),
+          $typed<NamedClass>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<never>();
     });
   });
@@ -429,9 +438,10 @@ describe("requireSharedKey", () => {
   describe("objects sharing a key", () => {
     test("type literals", () => {
       expectTypeOf(
-        strictCommonSubtype(
+        commonSubtype(
           $typed<{ readonly a: string; readonly b: number }>(),
           $typed<{ readonly a: string; readonly c: boolean }>(),
+          true /* requireSharedKey */,
         ),
       ).toEqualTypeOf<
         {
@@ -446,19 +456,31 @@ describe("requireSharedKey", () => {
 
     test("interfaces", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<Cat>(), $typed<Legged>()),
+        commonSubtype(
+          $typed<Cat>(),
+          $typed<Legged>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<Cat & Legged>();
     });
 
     test("classes", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<CatClass>(), $typed<LeggedClass>()),
+        commonSubtype(
+          $typed<CatClass>(),
+          $typed<LeggedClass>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<CatClass & LeggedClass>();
     });
 
     test("index-signature type and an interface", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<Cat>(), $typed<Record<string, unknown>>()),
+        commonSubtype(
+          $typed<Cat>(),
+          $typed<Record<string, unknown>>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<Cat & Record<string, unknown>>();
     });
   });
@@ -467,9 +489,10 @@ describe("requireSharedKey", () => {
   // shared key's types conflict TypeScript reduces it for us.
   test("conflicting shared key", () => {
     expectTypeOf(
-      strictCommonSubtype(
+      commonSubtype(
         $typed<{ readonly a: "cat" }>(),
         $typed<{ readonly a: "dog" }>(),
+        true /* requireSharedKey */,
       ),
     ).toEqualTypeOf<never>();
   });
@@ -477,21 +500,30 @@ describe("requireSharedKey", () => {
   describe("cases resolved before the shared-key check", () => {
     test("one type extends the other", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<Cat>(), $typed<{ readonly legs: number }>()),
+        commonSubtype(
+          $typed<Cat>(),
+          $typed<{ readonly legs: number }>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<Cat>();
     });
 
     test("incomparable primitives", () => {
       expectTypeOf(
-        strictCommonSubtype($typed<string>(), $typed<number>()),
+        commonSubtype(
+          $typed<string>(),
+          $typed<number>(),
+          true /* requireSharedKey */,
+        ),
       ).toEqualTypeOf<never>();
     });
 
     test("array and an object sharing a prop", () => {
       expectTypeOf(
-        strictCommonSubtype(
+        commonSubtype(
           $typed<string[]>(),
           $typed<{ readonly length: 3 }>(),
+          true /* requireSharedKey */,
         ),
       ).toEqualTypeOf<never>();
     });

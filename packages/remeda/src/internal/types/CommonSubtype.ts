@@ -1,19 +1,6 @@
 import type { IsAny, IsNever, Primitive } from "type-fest";
 import type { StrictFunction } from "./StrictFunction";
 
-type CanIntersectOptions = {
-  /**
-   * Whether two objects that share no keys should be treated as disjoint.
-   *
-   * This allows us some flexibility in supporting duck-typed types which might
-   * not represent fully the runtime shape (e.g., when considering larger
-   * objects via the "lens" of a specific interface it implements). This is
-   * important for `filter`-like functions where we want to re-shape the input
-   * on a per-item basis.
-   */
-  readonly requireSharedKey?: boolean;
-};
-
 /**
  * A best-effort common subtype of T0 and T1
  * (`CommonSubtype<T0, T1> extends T0` and `CommonSubtype<T0, T1> extends T1`);
@@ -23,19 +10,19 @@ type CanIntersectOptions = {
  *
  * The type should be used instead of the intersection operator (`&`) because
  * TypeScript doesn't reduce most disjoint intersections to `never`.
+ *
+ * Use `StrictCommonSubtype` when two objects sharing no keys should be treated
+ * as disjoint rather than intersected.
  */
-export type CommonSubtype<
-  T0,
-  T1,
-  Options extends CanIntersectOptions = { requireSharedKey: false },
-> =
+
+export type CommonSubtype<T0, T1, RequireSharedKey extends boolean = false> =
   IsAny<T0> extends true
     ? T1
     : T0 extends T1
       ? T0
       : T1 extends T0
         ? T1
-        : CanIntersect<T0, T1, Options> extends true
+        : CanIntersect<T0, T1, RequireSharedKey> extends true
           ? T0 & T1
           : never;
 
@@ -48,7 +35,7 @@ export type CommonSubtype<
 type CanIntersect<
   T0,
   T1,
-  Options extends CanIntersectOptions,
+  RequireSharedKey extends boolean,
 > = T0 extends Primitive
   ? T1 extends Primitive
     ? // When both types are primitives it is safe to intersect them because
@@ -63,7 +50,7 @@ type CanIntersect<
       false
     : HasMeaningfulProps<T0> extends true
       ? HasMeaningfulProps<T1> extends true
-        ? Options["requireSharedKey"] extends true
+        ? RequireSharedKey extends true
           ? HaveCommonProps<T0, T1>
           : true
         : false

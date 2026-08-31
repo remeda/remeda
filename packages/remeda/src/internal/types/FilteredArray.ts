@@ -38,7 +38,7 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
       // case.
       | FilteredFixedTuple<Rest, Condition>
       | [
-          StrictCommonSubtype<Head, Condition>,
+          CommonSubtype<Head, Condition, true /* RequireSharedKey */>,
           ...FilteredFixedTuple<Rest, Condition>,
         ]
     : // The check is wrapped in tuples so that it doesn't distribute over
@@ -52,21 +52,17 @@ type FilteredFixedTuple<T, Condition> = T extends readonly [
         // type with it, so it would still show up in the output; to
         // accommodate for this we consider both cases for the output.
         | FilteredFixedTuple<Rest, Condition>
-        | (IsNever<StrictCommonSubtype<Head, Condition>> extends true
+        | (IsNever<
+            CommonSubtype<Head, Condition, true /* RequireSharedKey */>
+          > extends true
             ? // The item is entirely disjoint from the condition, it would
               // never match.
               never
             : [
                 // Instead of adding the item as-is, we add the common sub-type
                 // of both `Head` and `Condition`.
-                StrictCommonSubtype<Head, Condition>,
+                CommonSubtype<Head, Condition, true /* RequireSharedKey */>,
                 ...FilteredFixedTuple<Rest, Condition>,
               ])
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
     [];
-
-type StrictCommonSubtype<Item, Condition> = CommonSubtype<
-  Item,
-  Condition,
-  { requireSharedKey: true }
->;
