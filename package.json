@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.11",
-    "lint-staged": "^17.3.0",
+    "lint-staged": "^17.4.1",
     "prettier": "^3.9.6",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.19.0",
