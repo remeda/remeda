@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.4.0",
     "@types/opentype.js": "^1.3.10",
     "eslint": "~10.8.1",
     "eslint-config-prettier": "^10.1.8",
@@ -27,6 +27,6 @@
     "remeda": "*",
     "sharp": "^0.35.3",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.68.0"
   }
 }
