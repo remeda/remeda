@@ -22,7 +22,7 @@
     "prettier": "^3.9.6",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.19.0",
-    "typescript-language-server": "^5.3.0"
+    "typescript-language-server": "^6.0.0"
   },
   "overrides": {
     "@ai-sdk/provider-utils": {
