@@ -1,13 +1,16 @@
+import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
+import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { purry } from "./purry";
 
 /**
  * Returns elements from the array until predicate returns false.
  *
  * @param data - The array.
- * @param predicate - Executed on each item of `data` until it returns `false`.
- * If provided a type-predicate the result would also be narrowed.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to keep taking elements, and `false` to stop. A
+ * type-predicate can also be used to narrow the result.
  * @signature
  *    takeWhile(data, predicate)
  * @example
@@ -18,18 +21,22 @@ import { purry } from "./purry";
 export function takeWhile<T extends IterableContainer, Condition>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): Narrowed<T[number], Condition>[];
+): CoercedArray<Narrowed<T[number], Condition>>;
 
-export function takeWhile<T extends IterableContainer>(
+export function takeWhile<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): T[number][];
+  predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
+): NonRefinedFilteredArray<T, IsItemIncluded>;
 
 /**
  * Returns elements from the array until predicate returns false.
  *
- * @param predicate - Executed on each item of `data` until it returns `false`.
- * If provided a type-predicate the result would also be narrowed.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to keep taking elements, and `false` to stop. A
+ * type-predicate can also be used to narrow the result.
  * @signature
  *    takeWhile(predicate)(data)
  * @example
@@ -39,11 +46,14 @@ export function takeWhile<T extends IterableContainer>(
  */
 export function takeWhile<T extends IterableContainer, Condition>(
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): (data: T) => Narrowed<T[number], Condition>[];
+): (data: T) => CoercedArray<Narrowed<T[number], Condition>>;
 
-export function takeWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => T[number][];
+export function takeWhile<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
+  predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
+): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeWhile(...args: readonly unknown[]): unknown {
   return purry(takeWhileImplementation, args);

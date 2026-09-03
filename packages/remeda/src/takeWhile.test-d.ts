@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import {
   isLegged,
   isNamed,
@@ -17,49 +18,66 @@ import { takeWhile } from "./takeWhile";
 
 describe("data-first", () => {
   test("empty array", () => {
-    expectTypeOf(takeWhile([] as [], constant(true))).toEqualTypeOf<never[]>();
+    expectTypeOf(
+      takeWhile([] as [], constant($typed<boolean>())),
+    ).toEqualTypeOf<never[]>();
   });
 
   test("regular array", () => {
-    expectTypeOf(takeWhile([] as number[], constant(true))).toEqualTypeOf<
-      number[]
-    >();
+    expectTypeOf(
+      takeWhile([] as number[], constant($typed<boolean>())),
+    ).toEqualTypeOf<number[]>();
   });
 
   test("regular array with union type", () => {
     expectTypeOf(
-      takeWhile([] as (number | string)[], constant(true)),
+      takeWhile([] as (number | string)[], constant($typed<boolean>())),
     ).toEqualTypeOf<(number | string)[]>();
   });
 
   test("prefix array", () => {
     expectTypeOf(
-      takeWhile([1] as [number, ...boolean[]], constant(true)),
+      takeWhile([1] as [number, ...boolean[]], constant($typed<boolean>())),
     ).toEqualTypeOf<(boolean | number)[]>();
   });
 
   test("suffix array", () => {
     expectTypeOf(
-      takeWhile([1] as [...boolean[], number], constant(true)),
+      takeWhile([1] as [...boolean[], number], constant($typed<boolean>())),
     ).toEqualTypeOf<(boolean | number)[]>();
   });
 
   test("array with suffix and prefix", () => {
     expectTypeOf(
-      takeWhile([1, "a"] as [number, ...boolean[], string], constant(true)),
+      takeWhile(
+        [1, "a"] as [number, ...boolean[], string],
+        constant($typed<boolean>()),
+      ),
     ).toEqualTypeOf<(boolean | number | string)[]>();
   });
 
   test("tuple", () => {
     expectTypeOf(
-      takeWhile([1, "a", true] as const, constant(true)),
+      takeWhile([1, "a", true] as const, constant($typed<boolean>())),
     ).toEqualTypeOf<("a" | 1 | true)[]>();
   });
 
   test("union of arrays", () => {
     expectTypeOf(
-      takeWhile([] as boolean[] | string[], constant(true)),
+      takeWhile([] as boolean[] | string[], constant($typed<boolean>())),
     ).toEqualTypeOf<(boolean | string)[]>();
+  });
+
+  test("trivial acceptor", () => {
+    expectTypeOf(
+      takeWhile([1, "a"] as readonly [number, string], constant(true)),
+    ).toEqualTypeOf<[number, string]>();
+  });
+
+  test("trivial rejector", () => {
+    expectTypeOf(takeWhile([] as number[], constant(false))).toEqualTypeOf<
+      []
+    >();
   });
 
   test("assert type using predicate", () => {
@@ -95,7 +113,7 @@ describe("data-first", () => {
   });
 
   test("predicate disjoint from the item", () => {
-    expectTypeOf(takeWhile([] as string[], isNullish)).toEqualTypeOf<never[]>();
+    expectTypeOf(takeWhile([] as string[], isNullish)).toEqualTypeOf<[]>();
   });
 
   test("generic guard", () => {
@@ -143,32 +161,38 @@ describe("data-first", () => {
 
 describe("data-last", () => {
   test("empty array", () => {
-    expectTypeOf(pipe([] as [], takeWhile(constant(true)))).toEqualTypeOf<
-      never[]
-    >();
+    expectTypeOf(
+      pipe([] as [], takeWhile(constant($typed<boolean>()))),
+    ).toEqualTypeOf<never[]>();
   });
 
   test("regular array", () => {
-    expectTypeOf(pipe([] as number[], takeWhile(constant(true)))).toEqualTypeOf<
-      number[]
-    >();
+    expectTypeOf(
+      pipe([] as number[], takeWhile(constant($typed<boolean>()))),
+    ).toEqualTypeOf<number[]>();
   });
 
   test("regular array with union type", () => {
     expectTypeOf(
-      pipe([] as (number | string)[], takeWhile(constant(true))),
+      pipe([] as (number | string)[], takeWhile(constant($typed<boolean>()))),
     ).toEqualTypeOf<(number | string)[]>();
   });
 
   test("prefix array", () => {
     expectTypeOf(
-      pipe([1] as [number, ...boolean[]], takeWhile(constant(true))),
+      pipe(
+        [1] as [number, ...boolean[]],
+        takeWhile(constant($typed<boolean>())),
+      ),
     ).toEqualTypeOf<(boolean | number)[]>();
   });
 
   test("suffix array", () => {
     expectTypeOf(
-      pipe([1] as [...boolean[], number], takeWhile(constant(true))),
+      pipe(
+        [1] as [...boolean[], number],
+        takeWhile(constant($typed<boolean>())),
+      ),
     ).toEqualTypeOf<(boolean | number)[]>();
   });
 
@@ -176,21 +200,33 @@ describe("data-last", () => {
     expectTypeOf(
       pipe(
         [1, "a"] as [number, ...boolean[], string],
-        takeWhile(constant(true)),
+        takeWhile(constant($typed<boolean>())),
       ),
     ).toEqualTypeOf<(boolean | number | string)[]>();
   });
 
   test("tuple", () => {
     expectTypeOf(
-      pipe([1, "a", true] as const, takeWhile(constant(true))),
+      pipe([1, "a", true] as const, takeWhile(constant($typed<boolean>()))),
     ).toEqualTypeOf<("a" | 1 | true)[]>();
   });
 
   test("union of arrays", () => {
     expectTypeOf(
-      pipe([] as boolean[] | string[], takeWhile(constant(true))),
+      pipe([] as boolean[] | string[], takeWhile(constant($typed<boolean>()))),
     ).toEqualTypeOf<(boolean | string)[]>();
+  });
+
+  test("trivial acceptor", () => {
+    expectTypeOf(
+      pipe([1, "a"] as readonly [number, string], takeWhile(constant(true))),
+    ).toEqualTypeOf<[number, string]>();
+  });
+
+  test("trivial rejector", () => {
+    expectTypeOf(
+      pipe([] as number[], takeWhile(constant(false))),
+    ).toEqualTypeOf<[]>();
   });
 
   test("assert type using predicate", () => {
@@ -323,7 +359,7 @@ describe("data-last", () => {
 
   test("predicate disjoint from the item", () => {
     expectTypeOf(pipe([] as string[], takeWhile(isNullish))).toEqualTypeOf<
-      never[]
+      []
     >();
   });
 
