@@ -1,6 +1,6 @@
-import type { Configuration } from "lint-staged";
+import { defineConfig } from "lint-staged/config";
 
-export default {
+export default defineConfig({
   // The Typescript compiler can't type-check a single file, it needs to run on
   // the whole project. To do that we use a function (instead of a string or
   // array) so that no matter what file or how many, we will always run the same
@@ -16,4 +16,4 @@ export default {
   // instead, we add all previous file extensions to the glob here so it doesn't run on
   // any of those files.
   "!(*.@(js|jsx|ts|tsx|cjs|mjs|astro))": "prettier --ignore-unknown --write",
-} satisfies Configuration;
+});
