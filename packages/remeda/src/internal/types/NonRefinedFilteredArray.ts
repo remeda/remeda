@@ -1,5 +1,5 @@
-import type { Writable } from "type-fest";
 import type { IterableContainer } from "./IterableContainer";
+import type { Writable } from "./Writable";
 
 /**
  * When the predicate used for filter isn't refining (like a type-predicate) we

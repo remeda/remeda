@@ -131,6 +131,12 @@ test("always-false predicate", () => {
   >();
 });
 
+test("all-optional tuple with a trivial rejector", () => {
+  expectTypeOf(
+    partition([] as readonly [string?, number?], constant(false)),
+  ).toEqualTypeOf<[[], [string?, number?]]>();
+});
+
 test("readonly array with a non-guard predicate", () => {
   expectTypeOf(
     partition([] as readonly number[], constant($typed<boolean>())),

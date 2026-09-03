@@ -136,6 +136,12 @@ describe("special tuple shapes", () => {
     >();
   });
 
+  test("all-optional tuple with a trivial acceptor", () => {
+    expectTypeOf(
+      filter([] as readonly [string?, number?], constant(true)),
+    ).toEqualTypeOf<[string?, number?]>();
+  });
+
   test("non-empty array", () => {
     const data = ["hello"] as [string, ...string[]];
 

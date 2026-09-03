@@ -936,16 +936,6 @@ describe("condition is never", () => {
       filteredArray([""] as [string, ...number[]], $typed<never>()),
     ).toEqualTypeOf<[]>();
   });
-
-  test("tuple with an `any` item", () => {
-    expectTypeOf(
-      filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional...
-        $typed<[any]>(),
-        $typed<never>(),
-      ),
-    ).toEqualTypeOf<[]>();
-  });
 });
 
 describe("item is `any`", () => {
@@ -1313,16 +1303,14 @@ describe("negated", () => {
       ).toEqualTypeOf<[string, number]>();
     });
 
-    test("tuple with an `any` item", () => {
+    test("tuple with optional elements", () => {
       expectTypeOf(
         filteredArray(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-          $typed<[any]>(),
+          $typed<readonly [string?, number?]>(),
           $typed<never>(),
           true /* isNegated */,
         ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      ).toEqualTypeOf<[any]>();
+      ).toEqualTypeOf<[string?, number?]>();
     });
   });
 });

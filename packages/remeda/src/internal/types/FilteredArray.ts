@@ -1,4 +1,4 @@
-import type { IsAny, IsNever, Writable } from "type-fest";
+import type { IsAny, IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
 import type { IterableContainer } from "./IterableContainer";
 import type { Narrowed } from "./Narrowed";
@@ -19,32 +19,21 @@ export type FilteredArray<
   Condition,
   IsNegated extends boolean = false,
 > =
-  IsNever<Condition> extends true
-    ? // Nothing can satisfy a condition of `never`, so every item fails it.
-      // We can't rely on the general path for this because it considers `any`
-      // items as possible matches.
-      IsNegated extends true
-      ? Writable<T>
-      : []
-    : // We distribute the array type to support unions of arrays/tuples.
-      T extends unknown
-      ? // Reconstruct the array from its parts, but with each part being
-        // filtered on the condition.
-        [
-          ...FilteredFixedTuple<
-            TupleParts<T>["required"],
-            Condition,
-            IsNegated
-          >,
-          ...PartialArray<
-            FilteredFixedTuple<TupleParts<T>["optional"], Condition, IsNegated>
-          >,
-          ...CoercedArray<
-            RefinedItem<TupleParts<T>["item"], Condition, IsNegated>
-          >,
-          ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition, IsNegated>,
-        ]
-      : never;
+  // We distribute the array type to support unions of arrays/tuples.
+  T extends unknown
+    ? // Reconstruct the array from its parts, but with each part being
+      // filtered on the condition.
+      [
+        ...FilteredFixedTuple<TupleParts<T>["required"], Condition, IsNegated>,
+        ...PartialArray<
+          FilteredFixedTuple<TupleParts<T>["optional"], Condition, IsNegated>
+        >,
+        ...CoercedArray<
+          RefinedItem<TupleParts<T>["item"], Condition, IsNegated>
+        >,
+        ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition, IsNegated>,
+      ]
+    : never;
 
 /**
  * The real logic for filtering an array is done on fixed tuples (as those make
