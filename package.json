@@ -17,12 +17,12 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.10",
-    "lint-staged": "^17.3.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "lint-staged": "^17.4.1",
     "prettier": "^3.9.6",
     "prettier-plugin-pkg": "^0.22.1",
     "prettier-plugin-sh": "^0.19.0",
-    "typescript-language-server": "^5.3.0"
+    "typescript-language-server": "^6.0.0"
   },
   "overrides": {
     "@ai-sdk/provider-utils": {
