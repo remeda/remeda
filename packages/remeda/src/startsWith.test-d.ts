@@ -90,13 +90,13 @@ describe("data-last", () => {
     const [yes, no] = partition([] as "foobar"[], startsWith("foo"));
 
     expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
-    expectTypeOf(no).toEqualTypeOf<never[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
   test("const data that doesn't match", () => {
     const [yes, no] = partition([] as "helloworld"[], startsWith("foo"));
 
-    expectTypeOf(yes).toEqualTypeOf<never[]>();
+    expectTypeOf(yes).toEqualTypeOf<[]>();
     expectTypeOf(no).toEqualTypeOf<"helloworld"[]>();
   });
 
@@ -111,7 +111,7 @@ describe("data-last", () => {
     const [yes, no] = partition([] as `foo_${number}`[], startsWith("foo"));
 
     expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
-    expectTypeOf(no).toEqualTypeOf<never[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
   test("template literal data that doesn't match", () => {

@@ -1,7 +1,7 @@
-// TODO: partition's return type could be refined to also take the *shape* of `data` into account when computing the output partitions (partition is a more runtime efficient version of `[filter(data, predicate), filter(data, isNot(predicate))]` which provides stricter typing).
-
-import type { CommonSubtype } from "./internal/types/CommonSubtype";
+import type { FilteredArray } from "./internal/types/FilteredArray";
+import type { IsNot } from "./internal/types/IsNot";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { purry } from "./purry";
 
 /**
@@ -29,12 +29,21 @@ import { purry } from "./purry";
 export function partition<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
+): [
+  FilteredArray<T, Condition>,
+  FilteredArray<T, Condition, true /* Inverted */>,
+];
 
-export function partition<T extends IterableContainer>(
+export function partition<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => boolean,
-): [T[number][], T[number][]];
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): [
+  NonRefinedFilteredArray<T, IsItemIncluded>,
+  NonRefinedFilteredArray<T, IsNot<IsItemIncluded>>,
+];
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -61,11 +70,22 @@ export function partition<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): (
   data: T,
-) => [CommonSubtype<T[number], Condition>[], Exclude<T[number], Condition>[]];
+) => [
+  FilteredArray<T, Condition>,
+  FilteredArray<T, Condition, true /* Inverted */>,
+];
 
-export function partition<T extends IterableContainer>(
-  predicate: (value: T[number], index: number, data: T) => boolean,
-): (data: T) => [T[number][], T[number][]];
+export function partition<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): (
+  data: T,
+) => [
+  NonRefinedFilteredArray<T, IsItemIncluded>,
+  NonRefinedFilteredArray<T, IsNot<IsItemIncluded>>,
+];
 
 export function partition(...args: readonly unknown[]): unknown {
   return purry(partitionImplementation, args);

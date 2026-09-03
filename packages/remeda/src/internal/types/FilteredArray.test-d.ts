@@ -23,10 +23,15 @@ class ConditionClass {
   declare public readonly name: string;
 }
 
-declare function filteredArray<T extends IterableContainer, C>(
+declare function filteredArray<
+  T extends IterableContainer,
+  C,
+  IsInverted extends boolean = false,
+>(
   data: T,
   condition: C,
-): FilteredArray<T, C>;
+  isInverted?: IsInverted,
+): FilteredArray<T, C, IsInverted>;
 
 test("empty array", () => {
   expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
@@ -1047,5 +1052,211 @@ describe("union tuple slots are checked per member", () => {
         $typed<object>(),
       ),
     ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+  });
+});
+
+describe("inverted", () => {
+  test("empty array", () => {
+    expectTypeOf(
+      filteredArray([], $typed<string>(), true /* isInverted */),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("array of matching items", () => {
+    expectTypeOf(
+      filteredArray([] as string[], $typed<string>(), true /* isInverted */),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("array of disjoint items", () => {
+    expectTypeOf(
+      filteredArray([] as string[], $typed<number>(), true /* isInverted */),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("readonly array", () => {
+    expectTypeOf(
+      filteredArray(
+        [] as readonly string[],
+        $typed<number>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("array with a union of items", () => {
+    expectTypeOf(
+      filteredArray(
+        [] as (string | number)[],
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<number[]>();
+  });
+
+  test("fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string, number]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("readonly fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<readonly [string, number]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("optional element", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string, number?]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[number?]>();
+  });
+
+  test("rest element following a prefix", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[number, ...string[]]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("suffix element", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[...string[], number]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("union of arrays", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<string[] | [number, string]>(),
+        $typed<string>(),
+        true /* isInverted */,
+      ),
+    ).toEqualTypeOf<[] | [number]>();
+  });
+
+  describe("tuple slots that might match", () => {
+    test("shared keys make the slot optional", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[ItemInterface]>(),
+          $typed<ConditionInterface>(),
+          true /* isInverted */,
+        ),
+      ).toEqualTypeOf<[] | [ItemInterface]>();
+    });
+
+    test("no shared keys keep the slot", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[{ readonly a: string }]>(),
+          $typed<{ readonly b: number }>(),
+          true /* isInverted */,
+        ),
+      ).toEqualTypeOf<[{ readonly a: string }]>();
+    });
+  });
+
+  describe("item is `any`", () => {
+    test("rest element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<any[]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<any[]>();
+    });
+
+    test("fixed tuple element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[any, string]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any]>();
+    });
+  });
+
+  describe("item is `unknown`", () => {
+    test("rest element", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<unknown[]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+      ).toEqualTypeOf<unknown[]>();
+    });
+
+    test("fixed tuple element", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[unknown, string]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+      ).toEqualTypeOf<[] | [unknown]>();
+    });
+  });
+
+  describe("condition is never", () => {
+    test("array", () => {
+      expectTypeOf(
+        filteredArray([] as string[], $typed(), true /* isInverted */),
+      ).toEqualTypeOf<string[]>();
+    });
+
+    test("readonly array", () => {
+      expectTypeOf(
+        filteredArray([] as readonly string[], $typed(), true /* isInverted */),
+      ).toEqualTypeOf<string[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<readonly [string, number]>(),
+          $typed(),
+          true /* isInverted */,
+        ),
+      ).toEqualTypeOf<[string, number]>();
+    });
+
+    test("tuple with an `any` item", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[any]>(),
+          $typed(),
+          true /* isInverted */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[any]>();
+    });
   });
 });
