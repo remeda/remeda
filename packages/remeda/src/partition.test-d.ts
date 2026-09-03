@@ -114,15 +114,45 @@ test("predicate with a mismatched param is an error", () => {
 });
 
 test("non-guard predicate keeps both sides unnarrowed", () => {
+  expectTypeOf(partition([1, "a"], constant($typed<boolean>()))).toEqualTypeOf<
+    [(number | string)[], (number | string)[]]
+  >();
+});
+
+test("always-true predicate", () => {
   expectTypeOf(partition([1, "a"], constant(true))).toEqualTypeOf<
     [[number, string], []]
   >();
 });
 
+test("always-false predicate", () => {
+  expectTypeOf(partition([1, "a"], constant(false))).toEqualTypeOf<
+    [[], [number, string]]
+  >();
+});
+
+test("readonly array with a non-guard predicate", () => {
+  expectTypeOf(
+    partition([] as readonly number[], constant($typed<boolean>())),
+  ).toEqualTypeOf<[number[], number[]]>();
+});
+
 describe("data-last", () => {
   test("non-guard predicate", () => {
+    expectTypeOf(
+      pipe([1, "a"], partition(constant($typed<boolean>()))),
+    ).toEqualTypeOf<[(string | number)[], (string | number)[]]>();
+  });
+
+  test("always-true predicate", () => {
     expectTypeOf(pipe([1, "a"], partition(constant(true)))).toEqualTypeOf<
       [(string | number)[], []]
+    >();
+  });
+
+  test("always-false predicate", () => {
+    expectTypeOf(pipe([1, "a"], partition(constant(false)))).toEqualTypeOf<
+      [[], (string | number)[]]
     >();
   });
 

@@ -27,6 +27,12 @@ describe("one type extends the other", () => {
       narrowed($typed<Cat>(), $typed<{ readonly legs: number }>()),
     ).toEqualTypeOf<Cat>();
   });
+
+  test("function satisfies an object type through `Function`'s props", () => {
+    expectTypeOf(narrowed($typed<() => void>(), $typed<Named>())).toEqualTypeOf<
+      () => void
+    >();
+  });
 });
 
 describe("incomparable types", () => {
@@ -49,6 +55,18 @@ describe("incomparable types", () => {
   test("functions", () => {
     expectTypeOf(
       narrowed($typed<() => string>(), $typed<() => number>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("function and an object", () => {
+    expectTypeOf(
+      narrowed($typed<() => void>(), $typed<Cat>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("function and an array", () => {
+    expectTypeOf(
+      narrowed($typed<() => void>(), $typed<string[]>()),
     ).toEqualTypeOf<never>();
   });
 
@@ -396,5 +414,17 @@ describe("argument order doesn't matter", () => {
     expectTypeOf(
       narrowed($typed<Cat>(), $typed<Record<string, unknown>>()),
     ).toEqualTypeOf<Cat & Record<string, unknown>>();
+  });
+
+  test("function and an object", () => {
+    expectTypeOf(
+      narrowed($typed<Cat>(), $typed<() => void>()),
+    ).toEqualTypeOf<never>();
+  });
+
+  test("function and an array", () => {
+    expectTypeOf(
+      narrowed($typed<string[]>(), $typed<() => void>()),
+    ).toEqualTypeOf<never>();
   });
 });

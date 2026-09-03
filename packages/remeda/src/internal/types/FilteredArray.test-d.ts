@@ -972,6 +972,26 @@ describe("item is `any`", () => {
       ),
     ).toEqualTypeOf<[string] | [string, string]>();
   });
+
+  test("optional element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[string, any?]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<[string] | [string, string?]>();
+  });
+
+  test("suffix element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[...string[], any]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<string[] | [...string[], string]>();
+  });
 });
 
 describe("item is `unknown`", () => {
@@ -1216,6 +1236,30 @@ describe("inverted", () => {
         filteredArray(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[any, string]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any]>();
+    });
+
+    test("optional element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[string, any?]>(),
+          $typed<string>(),
+          true /* isInverted */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any?]>();
+    });
+
+    test("suffix element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[...string[], any]>(),
           $typed<string>(),
           true /* isInverted */,
         ),

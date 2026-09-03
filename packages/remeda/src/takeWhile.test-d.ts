@@ -66,6 +66,18 @@ describe("data-first", () => {
     expectTypeOf(takeWhile([1, "a"], isNumber)).toEqualTypeOf<number[]>();
   });
 
+  test("guard on a tuple", () => {
+    expectTypeOf(takeWhile([1, "a", true] as const, isNumber)).toEqualTypeOf<
+      1[]
+    >();
+  });
+
+  test("guard on a union of arrays", () => {
+    expectTypeOf(takeWhile([] as string[] | number[], isString)).toEqualTypeOf<
+      string[]
+    >();
+  });
+
   test("predicate is typed correctly", () => {
     takeWhile([] as (number | string)[], (item, index, array) => {
       expectTypeOf(item).toEqualTypeOf<number | string>();
@@ -183,6 +195,18 @@ describe("data-last", () => {
 
   test("assert type using predicate", () => {
     expectTypeOf(pipe([1, "a"], takeWhile(isNumber))).toEqualTypeOf<number[]>();
+  });
+
+  test("guard on a tuple", () => {
+    expectTypeOf(
+      pipe([1, "a", true] as const, takeWhile(isNumber)),
+    ).toEqualTypeOf<1[]>();
+  });
+
+  test("guard on a union of arrays", () => {
+    expectTypeOf(
+      pipe([] as string[] | number[], takeWhile(isString)),
+    ).toEqualTypeOf<string[]>();
   });
 
   describe("predicate is typed correctly", () => {
