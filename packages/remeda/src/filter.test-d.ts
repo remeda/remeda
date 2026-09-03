@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
+import { isNamed, type Cat, type Named } from "../test/interfaces";
 import { constant } from "./constant";
 import { filter } from "./filter";
 import { isDefined } from "./isDefined";
@@ -133,6 +134,12 @@ describe("special tuple shapes", () => {
     expectTypeOf(filter(data, isStrictEqual(123 as const))).toEqualTypeOf<
       [] | [123?]
     >();
+  });
+
+  test("all-optional tuple with a trivial acceptor", () => {
+    expectTypeOf(
+      filter([] as readonly [string?, number?], constant(true)),
+    ).toEqualTypeOf<[string?, number?]>();
   });
 
   test("non-empty array", () => {
@@ -309,6 +316,16 @@ describe("condition isn't a subtype of the item", () => {
     expectTypeOf(filter([] as string[], isNullish)).toEqualTypeOf<[]>();
   });
 
+  test("object guard sharing no keys with the item", () => {
+    expectTypeOf(filter([] as Cat[], isNamed)).toEqualTypeOf<(Cat & Named)[]>();
+  });
+
+  test("object guard sharing no keys with a tuple item", () => {
+    expectTypeOf(filter($typed<[Cat]>(), isNamed)).toEqualTypeOf<
+      [] | [Cat & Named]
+    >();
+  });
+
   describe("supertype", () => {
     test("empty tuple", () => {
       expectTypeOf(filter($typed<[]>(), isAnimal)).toEqualTypeOf<[]>();
@@ -376,4 +393,15 @@ describe("condition isn't a subtype of the item", () => {
       >();
     });
   });
+});
+
+test("`any` data", () => {
+  expectTypeOf(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+    filter([] as any[], isString),
+  ).toEqualTypeOf<string[]>();
+});
+
+test("`unknown` data", () => {
+  expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
 });

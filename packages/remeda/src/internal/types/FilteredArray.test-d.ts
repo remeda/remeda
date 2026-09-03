@@ -23,10 +23,11 @@ class ConditionClass {
   declare public readonly name: string;
 }
 
-declare function filteredArray<T extends IterableContainer, C>(
-  data: T,
-  condition: C,
-): FilteredArray<T, C>;
+declare function filteredArray<
+  T extends IterableContainer,
+  C,
+  IsNegated extends boolean = false,
+>(data: T, condition: C, isNegated?: IsNegated): FilteredArray<T, C, IsNegated>;
 
 test("empty array", () => {
   expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
@@ -153,9 +154,7 @@ describe("condition is a primitive", () => {
         ["hello", "foo"] as ["hello" | "world", "foo" | "bar"],
         $typed<string>(),
       ),
-    ).toEqualTypeOf<
-      ["hello", "foo"] | ["world", "foo"] | ["hello", "bar"] | ["world", "bar"]
-    >();
+    ).toEqualTypeOf<["hello" | "world", "foo" | "bar"]>();
   });
 
   test("complex tuple with union of literals", () => {
@@ -268,7 +267,7 @@ describe("condition is a simple object", () => {
   test("array with no matching objects", () => {
     expectTypeOf(
       filteredArray([] as (string | { b: string })[], { a: "" }),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<({ b: string } & { a: string })[]>();
   });
 
   test("tuple with matching and non-matching objects", () => {
@@ -288,7 +287,13 @@ describe("condition is a simple object", () => {
         { a: "" },
       ),
     ).toEqualTypeOf<
-      [{ a: string }, { a: "hello" }, { a: string; c: boolean }]
+      | [{ a: string }, { a: "hello" }, { a: string; c: boolean }]
+      | [
+          { a: string },
+          { a: "hello" },
+          { b: number } & { a: string },
+          { a: string; c: boolean },
+        ]
     >();
   });
 });
@@ -396,11 +401,17 @@ describe("condition is a complex object", () => {
         $typed<{ a: "hello" | "world" }>(),
       ),
     ).toEqualTypeOf<
-      [
-        { readonly a: "hello" },
-        { readonly a: "hello"; readonly b: "world" },
-        { readonly a: "world" },
-      ]
+      | [
+          { readonly a: "hello" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "world" },
+        ]
+      | [
+          { readonly a: "hello" },
+          { readonly b: "world" } & { a: "hello" | "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "world" },
+        ]
     >();
   });
 });
@@ -639,14 +650,10 @@ describe("condition is a union of primitives", () => {
         $typed<string | number>(),
       ),
     ).toEqualTypeOf<
-      | [string, number]
-      | [number, string]
-      | [string]
-      | [string, string, number]
-      | [number]
-      | [string, string]
-      | [number, string, number]
-      | [number, number]
+      | [string | number]
+      | [string | number, string]
+      | [string | number, number]
+      | [string | number, string, number]
     >();
   });
 });
@@ -680,14 +687,10 @@ describe("condition is a union of literals", () => {
         $typed<"cat" | "dog">(),
       ),
     ).toEqualTypeOf<
-      | ["cat"]
-      | ["dog"]
-      | ["cat", "dog"]
-      | ["cat", "cat", "dog"]
-      | ["cat", "cat"]
-      | ["dog", "cat"]
-      | ["dog", "dog"]
-      | ["dog", "cat", "dog"]
+      | ["cat" | "dog"]
+      | ["cat" | "dog", "cat"]
+      | ["cat" | "dog", "dog"]
+      | ["cat" | "dog", "cat", "dog"]
     >();
   });
 });
@@ -744,7 +747,7 @@ describe("disjoint object types ({ a: string } | { b: number })", () => {
   test("filtering for only one variant", () => {
     expectTypeOf(
       filteredArray([] as ({ a: string } | { b: number })[], { a: "" }),
-    ).toEqualTypeOf<{ a: string }[]>();
+    ).toEqualTypeOf<({ a: string } | ({ b: number } & { a: string }))[]>();
   });
 
   test("array with objects having both properties", () => {
@@ -851,12 +854,7 @@ describe("tuples with optional elements", () => {
         [] as [("hello" | "world")?, ("foo" | "bar")?],
         $typed<string>(),
       ),
-    ).toEqualTypeOf<
-      | ["hello"?, "foo"?]
-      | ["world"?, "foo"?]
-      | ["hello"?, "bar"?]
-      | ["world"?, "bar"?]
-    >();
+    ).toEqualTypeOf<[("hello" | "world")?, ("foo" | "bar")?]>();
   });
 
   test("literal unions, matching condition", () => {
@@ -900,29 +898,99 @@ test("prop with literal union value filtered by disjoint value", () => {
   ).toEqualTypeOf<[]>();
 });
 
+describe("condition is a template literal", () => {
+  test("overlapping template item", () => {
+    expectTypeOf(
+      filteredArray([] as `a${string}`[], $typed<`${string}b`>()),
+    ).toEqualTypeOf<(`a${string}` & `${string}b`)[]>();
+  });
+
+  test("overlapping template item in a fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(["ab"] as [`a${string}`], $typed<`${string}b`>()),
+    ).toEqualTypeOf<[] | [`a${string}` & `${string}b`]>();
+  });
+
+  test("disjoint literal item", () => {
+    expectTypeOf(
+      filteredArray([] as "foo"[], $typed<`bar${string}`>()),
+    ).toEqualTypeOf<[]>();
+  });
+});
+
 describe("condition is never", () => {
   test("array", () => {
-    expectTypeOf(filteredArray([] as string[], $typed())).toEqualTypeOf<[]>();
+    expectTypeOf(filteredArray([] as string[], $typed<never>())).toEqualTypeOf<
+      []
+    >();
   });
 
   test("fixed tuple", () => {
-    expectTypeOf(filteredArray([""] as [string], $typed())).toEqualTypeOf<[]>();
+    expectTypeOf(
+      filteredArray([""] as [string], $typed<never>()),
+    ).toEqualTypeOf<[]>();
   });
 
   test("tuple with a rest element", () => {
     expectTypeOf(
-      filteredArray([""] as [string, ...number[]], $typed()),
+      filteredArray([""] as [string, ...number[]], $typed<never>()),
     ).toEqualTypeOf<[]>();
   });
+});
 
-  test("tuple with an `any` item", () => {
+describe("item is `any`", () => {
+  test("rest element", () => {
     expectTypeOf(
       filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional...
-        $typed<[any]>(),
-        $typed(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<any[]>(),
+        $typed<string>(),
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("fixed tuple element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[any, string]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<[string] | [string, string]>();
+  });
+
+  test("optional element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[string, any?]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<[string] | [string, string?]>();
+  });
+
+  test("suffix element", () => {
+    expectTypeOf(
+      filteredArray(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+        $typed<[...string[], any]>(),
+        $typed<string>(),
+      ),
+    ).toEqualTypeOf<string[] | [...string[], string]>();
+  });
+});
+
+describe("item is `unknown`", () => {
+  test("rest element", () => {
+    expectTypeOf(
+      filteredArray($typed<unknown[]>(), $typed<string>()),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("fixed tuple element", () => {
+    expectTypeOf(
+      filteredArray($typed<[unknown, string]>(), $typed<string>()),
+    ).toEqualTypeOf<[string] | [string, string]>();
   });
 });
 
@@ -963,5 +1031,286 @@ describe("arrays and non-array objects never share a refinement", () => {
         $typed<["a"]>(),
       ),
     ).toEqualTypeOf<[]>();
+  });
+});
+
+describe("tuple slots that might match", () => {
+  test("no shared keys keep the slot as an intersection", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ readonly a: string }]>(),
+        $typed<{ readonly b: number }>(),
+      ),
+    ).toEqualTypeOf<[] | [{ readonly a: string } & { readonly b: number }]>();
+  });
+
+  test("shared keys keep the slot as an intersection", () => {
+    expectTypeOf(
+      filteredArray($typed<[ItemInterface]>(), $typed<ConditionInterface>()),
+    ).toEqualTypeOf<[] | [ItemInterface & ConditionInterface]>();
+  });
+
+  test("a condition narrower than a keyless item keeps the slot", () => {
+    expectTypeOf(
+      filteredArray($typed<[object]>(), $typed<{ readonly a: string }>()),
+    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+  });
+});
+
+describe("union tuple slots are checked per member", () => {
+  test("each member is refined separately", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[{ readonly a: string } | { readonly b: number }]>(),
+        $typed<{ readonly a: string }>(),
+      ),
+    ).toEqualTypeOf<
+      | []
+      | [
+          | { readonly a: string }
+          | ({ readonly b: number } & { readonly a: string }),
+        ]
+    >();
+  });
+
+  test("a member narrower than a keyless condition survives", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string | { readonly a: string }]>(),
+        $typed<object>(),
+      ),
+    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+  });
+});
+
+describe("negated", () => {
+  test("empty array", () => {
+    expectTypeOf(
+      filteredArray([], $typed<string>(), true /* isNegated */),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("array of matching items", () => {
+    expectTypeOf(
+      filteredArray([] as string[], $typed<string>(), true /* isNegated */),
+    ).toEqualTypeOf<[]>();
+  });
+
+  test("array of disjoint items", () => {
+    expectTypeOf(
+      filteredArray([] as string[], $typed<number>(), true /* isNegated */),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("readonly array", () => {
+    expectTypeOf(
+      filteredArray(
+        [] as readonly string[],
+        $typed<number>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<string[]>();
+  });
+
+  test("array with a union of items", () => {
+    expectTypeOf(
+      filteredArray(
+        [] as (string | number)[],
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<number[]>();
+  });
+
+  test("fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string, number]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("readonly fixed tuple", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<readonly [string, number]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("optional element", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[string, number?]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[number?]>();
+  });
+
+  test("rest element following a prefix", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[number, ...string[]]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("suffix element", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<[...string[], number]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[number]>();
+  });
+
+  test("union of arrays", () => {
+    expectTypeOf(
+      filteredArray(
+        $typed<string[] | [number, string]>(),
+        $typed<string>(),
+        true /* isNegated */,
+      ),
+    ).toEqualTypeOf<[] | [number]>();
+  });
+
+  describe("tuple slots that might match", () => {
+    test("shared keys make the slot optional", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[ItemInterface]>(),
+          $typed<ConditionInterface>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<[] | [ItemInterface]>();
+    });
+
+    test("no shared keys make the slot optional", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[{ readonly a: string }]>(),
+          $typed<{ readonly b: number }>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+    });
+  });
+
+  describe("item is `any`", () => {
+    test("rest element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<any[]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<any[]>();
+    });
+
+    test("fixed tuple element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[any, string]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any]>();
+    });
+
+    test("optional element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[string, any?]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any?]>();
+    });
+
+    test("suffix element", () => {
+      expectTypeOf(
+        filteredArray(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+          $typed<[...string[], any]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
+      ).toEqualTypeOf<[] | [any]>();
+    });
+  });
+
+  describe("item is `unknown`", () => {
+    test("rest element", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<unknown[]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<unknown[]>();
+    });
+
+    test("fixed tuple element", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<[unknown, string]>(),
+          $typed<string>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<[] | [unknown]>();
+    });
+  });
+
+  describe("condition is never", () => {
+    test("array", () => {
+      expectTypeOf(
+        filteredArray([] as string[], $typed<never>(), true /* isNegated */),
+      ).toEqualTypeOf<string[]>();
+    });
+
+    test("readonly array", () => {
+      expectTypeOf(
+        filteredArray(
+          [] as readonly string[],
+          $typed<never>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<string[]>();
+    });
+
+    test("fixed tuple", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<readonly [string, number]>(),
+          $typed<never>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<[string, number]>();
+    });
+
+    test("tuple with optional elements", () => {
+      expectTypeOf(
+        filteredArray(
+          $typed<readonly [string?, number?]>(),
+          $typed<never>(),
+          true /* isNegated */,
+        ),
+      ).toEqualTypeOf<[string?, number?]>();
+    });
   });
 });

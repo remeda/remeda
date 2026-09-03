@@ -1,5 +1,9 @@
+// TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate))` which provides stricter typing).
+
 import { toSingle } from "./internal/toSingle";
+import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { Narrowed } from "./internal/types/Narrowed";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
@@ -30,14 +34,15 @@ import { purry } from "./purry";
  * @lazy
  * @category Array
  */
-export function find<T, S extends T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): S | undefined;
-export function find<T>(
-  data: readonly T[],
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): T | undefined;
+export function find<T extends IterableContainer, Condition>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): Narrowed<T[number], Condition> | undefined;
+
+export function find<T extends IterableContainer>(
+  data: T,
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): T[number] | undefined;
 
 /**
  * Returns the first element in the provided array that satisfies the provided
@@ -68,12 +73,13 @@ export function find<T>(
  * @lazy
  * @category Array
  */
-export function find<T, S extends T>(
-  predicate: (value: T, index: number, data: readonly T[]) => value is S,
-): (data: readonly T[]) => S | undefined;
-export function find<T>(
-  predicate: (value: T, index: number, data: readonly T[]) => boolean,
-): (data: readonly T[]) => T | undefined;
+export function find<T extends IterableContainer, Condition>(
+  predicate: (value: T[number], index: number, data: T) => value is Condition,
+): (data: T) => Narrowed<T[number], Condition> | undefined;
+
+export function find<T extends IterableContainer>(
+  predicate: (value: T[number], index: number, data: T) => boolean,
+): (data: T) => T[number] | undefined;
 
 export function find(...args: readonly unknown[]): unknown {
   return purry(findImplementation, args, toSingle(lazyImplementation));
