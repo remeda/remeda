@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import {
   isCat,
   isLegged,
@@ -50,6 +51,12 @@ test("narrows with a guard incomparable to the item", () => {
 test("object guard sharing no keys with the item", () => {
   expectTypeOf(partition([] as Cat[], isNamed)).toEqualTypeOf<
     [(Cat & Named)[], Cat[]]
+  >();
+});
+
+test("object guard sharing no keys with a tuple item", () => {
+  expectTypeOf(partition($typed<[Cat]>(), isNamed)).toEqualTypeOf<
+    [[] | [Cat & Named], [] | [Cat]]
   >();
 });
 

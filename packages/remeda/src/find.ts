@@ -1,9 +1,9 @@
 // TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate))` which provides stricter typing).
 
 import { toSingle } from "./internal/toSingle";
-import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { Narrowed } from "./internal/types/Narrowed";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
 
@@ -37,7 +37,7 @@ import { purry } from "./purry";
 export function find<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): CommonSubtype<T[number], Condition> | undefined;
+): Narrowed<T[number], Condition> | undefined;
 
 export function find<T extends IterableContainer>(
   data: T,
@@ -75,7 +75,7 @@ export function find<T extends IterableContainer>(
  */
 export function find<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): (data: T) => CommonSubtype<T[number], Condition> | undefined;
+): (data: T) => Narrowed<T[number], Condition> | undefined;
 
 export function find<T extends IterableContainer>(
   predicate: (value: T[number], index: number, data: T) => boolean,

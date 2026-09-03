@@ -1,5 +1,5 @@
-import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { Narrowed } from "./internal/types/Narrowed";
 import { purry } from "./purry";
 
 /**
@@ -18,7 +18,7 @@ import { purry } from "./purry";
 export function takeWhile<T extends IterableContainer, Condition>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): CommonSubtype<T[number], Condition>[];
+): Narrowed<T[number], Condition>[];
 
 export function takeWhile<T extends IterableContainer>(
   data: T,
@@ -39,7 +39,7 @@ export function takeWhile<T extends IterableContainer>(
  */
 export function takeWhile<T extends IterableContainer, Condition>(
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): (data: T) => CommonSubtype<T[number], Condition>[];
+): (data: T) => Narrowed<T[number], Condition>[];
 
 export function takeWhile<T extends IterableContainer>(
   predicate: (item: T[number], index: number, data: T) => boolean,

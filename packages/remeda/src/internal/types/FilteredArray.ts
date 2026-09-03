@@ -1,7 +1,7 @@
 import type { IsAny, IsNever, Writable } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
-import type { CommonSubtype } from "./CommonSubtype";
 import type { IterableContainer } from "./IterableContainer";
+import type { Narrowed } from "./Narrowed";
 import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
@@ -11,17 +11,17 @@ import type { TupleParts } from "./TupleParts";
  * Items which might or might not satisfy the condition turn the result into a
  * union of every shape they could yield.
  *
- * `Inverted` computes the complementary array instead: the items that *fail*
+ * `IsNegated` computes the complementary array instead: the items that *fail*
  * the condition.
  */
 export type FilteredArray<
   T extends IterableContainer,
   Condition,
-  IsInverted extends boolean = false,
+  IsNegated extends boolean = false,
 > =
   IsNever<Condition> extends true
     ? // Nothing can satisfy a condition of `never`, so every item fails it.
-      IsInverted extends true
+      IsNegated extends true
       ? Writable<T>
       : []
     : // We distribute the array type to support unions of arrays/tuples.
@@ -32,20 +32,15 @@ export type FilteredArray<
           ...FilteredFixedTuple<
             TupleParts<T>["required"],
             Condition,
-            IsInverted
+            IsNegated
           >,
           ...PartialArray<
-            FilteredFixedTuple<TupleParts<T>["optional"], Condition, IsInverted>
+            FilteredFixedTuple<TupleParts<T>["optional"], Condition, IsNegated>
           >,
           ...CoercedArray<
-            RefinedItem<
-              TupleParts<T>["item"],
-              Condition,
-              IsInverted,
-              false /* RequireSharedKey */
-            >
+            RefinedItem<TupleParts<T>["item"], Condition, IsNegated>
           >,
-          ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition, IsInverted>,
+          ...FilteredFixedTuple<TupleParts<T>["suffix"], Condition, IsNegated>,
         ]
       : never;
 
@@ -56,71 +51,55 @@ export type FilteredArray<
 type FilteredFixedTuple<
   T,
   Condition,
-  IsInverted extends boolean,
+  IsNegated extends boolean = false,
 > = T extends readonly [infer Head, ...infer Rest]
   ? IsAny<Head> extends true
     ? // `any` would satisfy the `[Head] extends [Condition]` check below,
       // leaking `any` itself into the output. But it isn't a guaranteed
       // match either, so we consider both the case where it is skipped and
       // the case where it is kept.
-      | FilteredFixedTuple<Rest, Condition, IsInverted>
+      | FilteredFixedTuple<Rest, Condition, IsNegated>
       | [
-          RefinedItem<Head, Condition, IsInverted, true /* RequireSharedKey */>,
-          ...FilteredFixedTuple<Rest, Condition, IsInverted>,
+          RefinedItem<Head, Condition, IsNegated>,
+          ...FilteredFixedTuple<Rest, Condition, IsNegated>,
         ]
     : // The check is wrapped in tuples so that it doesn't distribute over
       // union heads; a union item stays a single union-typed element in the
       // output instead of fanning out into every combination.
       [Head] extends [Condition]
       ? // The item always satisfies the condition, so it is always part of the
-        // filtered output, and never part of the inverted one.
-        IsInverted extends true
-        ? FilteredFixedTuple<Rest, Condition, true /* IsInverted */>
-        : [Head, ...FilteredFixedTuple<Rest, Condition, false /* IsInverted */>]
-      : IsNever<
-            CommonSubtype<Head, Condition, true /* RequireSharedKey */>
-          > extends true
+        // filtered output, and never part of the negated one.
+        IsNegated extends true
+        ? FilteredFixedTuple<Rest, Condition, IsNegated>
+        : [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
+      : IsNever<Narrowed<Head, Condition>> extends true
         ? // The item is entirely disjoint from the condition, so it is the
           // mirror image of the previous case.
-          IsInverted extends true
-          ? [
-              Head,
-              ...FilteredFixedTuple<Rest, Condition, true /* IsInverted */>,
-            ]
-          : FilteredFixedTuple<Rest, Condition, false /* IsInverted */>
+          IsNegated extends true
+          ? [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
+          : FilteredFixedTuple<Rest, Condition, IsNegated>
         : // The item doesn't satisfy the condition, but it shares a refined
           // type with it, so it could end up in either output; to accommodate
           // for this we consider both cases.
-          | FilteredFixedTuple<Rest, Condition, IsInverted>
+          | FilteredFixedTuple<Rest, Condition, IsNegated>
           | [
               // Instead of adding the item as-is, we add the part of it that
               // the output it lands in can guarantee.
-              RefinedItem<
-                Head,
-                Condition,
-                IsInverted,
-                true /* RequireSharedKey */
-              >,
-              ...FilteredFixedTuple<Rest, Condition, IsInverted>,
+              RefinedItem<Head, Condition, IsNegated>,
+              ...FilteredFixedTuple<Rest, Condition, IsNegated>,
             ]
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
     [];
 
 /**
  * The type an item takes once it lands in the output: the common sub-type it
- * shares with the condition, or, for the inverted output, what is left of it
+ * shares with the condition, or, for the negated output, what is left of it
  * when the condition is subtracted.
- *
- * A tuple slot stands for a single value, so we can demand a shared key before
- * intersecting it with the condition; a rest element stands for an unknown
- * number of values, where doing so would drop items that a duck-typed value
- * could still match.
  */
 type RefinedItem<
   Item,
   Condition,
-  Inverted extends boolean,
-  RequireSharedKey extends boolean,
-> = Inverted extends true
+  IsNegated extends boolean = false,
+> = IsNegated extends true
   ? Exclude<Item, Condition>
-  : CommonSubtype<Item, Condition, RequireSharedKey>;
+  : Narrowed<Item, Condition>;

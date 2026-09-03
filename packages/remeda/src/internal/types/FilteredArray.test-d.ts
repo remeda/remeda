@@ -291,7 +291,13 @@ describe("condition is a simple object", () => {
         { a: "" },
       ),
     ).toEqualTypeOf<
-      [{ a: string }, { a: "hello" }, { a: string; c: boolean }]
+      | [{ a: string }, { a: "hello" }, { a: string; c: boolean }]
+      | [
+          { a: string },
+          { a: "hello" },
+          { b: number } & { a: string },
+          { a: string; c: boolean },
+        ]
     >();
   });
 });
@@ -399,11 +405,17 @@ describe("condition is a complex object", () => {
         $typed<{ a: "hello" | "world" }>(),
       ),
     ).toEqualTypeOf<
-      [
-        { readonly a: "hello" },
-        { readonly a: "hello"; readonly b: "world" },
-        { readonly a: "world" },
-      ]
+      | [
+          { readonly a: "hello" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "world" },
+        ]
+      | [
+          { readonly a: "hello" },
+          { readonly b: "world" } & { a: "hello" | "world" },
+          { readonly a: "hello"; readonly b: "world" },
+          { readonly a: "world" },
+        ]
     >();
   });
 });
@@ -1012,14 +1024,14 @@ describe("arrays and non-array objects never share a refinement", () => {
   });
 });
 
-describe("proving a tuple slot can match", () => {
-  test("no shared keys drops the slot", () => {
+describe("tuple slots that might match", () => {
+  test("no shared keys keep the slot as an intersection", () => {
     expectTypeOf(
       filteredArray(
         $typed<[{ readonly a: string }]>(),
         $typed<{ readonly b: number }>(),
       ),
-    ).toEqualTypeOf<[]>();
+    ).toEqualTypeOf<[] | [{ readonly a: string } & { readonly b: number }]>();
   });
 
   test("shared keys keep the slot as an intersection", () => {
@@ -1036,13 +1048,19 @@ describe("proving a tuple slot can match", () => {
 });
 
 describe("union tuple slots are checked per member", () => {
-  test("a member that can't match is dropped, not intersected", () => {
+  test("each member is refined separately", () => {
     expectTypeOf(
       filteredArray(
         $typed<[{ readonly a: string } | { readonly b: number }]>(),
         $typed<{ readonly a: string }>(),
       ),
-    ).toEqualTypeOf<[] | [{ readonly a: string }]>();
+    ).toEqualTypeOf<
+      | []
+      | [
+          | { readonly a: string }
+          | ({ readonly b: number } & { readonly a: string }),
+        ]
+    >();
   });
 
   test("a member narrower than a keyless condition survives", () => {
@@ -1165,14 +1183,14 @@ describe("inverted", () => {
       ).toEqualTypeOf<[] | [ItemInterface]>();
     });
 
-    test("no shared keys keep the slot", () => {
+    test("no shared keys make the slot optional", () => {
       expectTypeOf(
         filteredArray(
           $typed<[{ readonly a: string }]>(),
           $typed<{ readonly b: number }>(),
           true /* isInverted */,
         ),
-      ).toEqualTypeOf<[{ readonly a: string }]>();
+      ).toEqualTypeOf<[] | [{ readonly a: string }]>();
     });
   });
 

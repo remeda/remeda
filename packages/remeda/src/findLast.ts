@@ -1,7 +1,7 @@
 // TODO: findLast's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (findLast is a more runtime efficient version of `last(filter(data, predicate))` which provides stricter typing).
 
-import type { CommonSubtype } from "./internal/types/CommonSubtype";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { Narrowed } from "./internal/types/Narrowed";
 import { purry } from "./purry";
 
 /**
@@ -33,7 +33,7 @@ import { purry } from "./purry";
 export function findLast<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): CommonSubtype<T[number], Condition> | undefined;
+): Narrowed<T[number], Condition> | undefined;
 
 export function findLast<T extends IterableContainer>(
   data: T,
@@ -70,7 +70,7 @@ export function findLast<T extends IterableContainer>(
  */
 export function findLast<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): (data: T) => CommonSubtype<T[number], Condition> | undefined;
+): (data: T) => Narrowed<T[number], Condition> | undefined;
 
 export function findLast<T extends IterableContainer>(
   predicate: (value: T[number], index: number, data: T) => boolean,

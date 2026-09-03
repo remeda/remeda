@@ -314,6 +314,12 @@ describe("condition isn't a subtype of the item", () => {
     expectTypeOf(filter([] as Cat[], isNamed)).toEqualTypeOf<(Cat & Named)[]>();
   });
 
+  test("object guard sharing no keys with a tuple item", () => {
+    expectTypeOf(filter($typed<[Cat]>(), isNamed)).toEqualTypeOf<
+      [] | [Cat & Named]
+    >();
+  });
+
   describe("supertype", () => {
     test("empty tuple", () => {
       expectTypeOf(filter($typed<[]>(), isAnimal)).toEqualTypeOf<[]>();
