@@ -19,7 +19,7 @@ import { pipe } from "./pipe";
 
 test("partition with type guard", () => {
   expectTypeOf(partition([1, "a", 2, "b"], isNumber)).toEqualTypeOf<
-    [number[], string[]]
+    [[number, number], [string, string]]
   >();
 });
 
@@ -32,12 +32,12 @@ test("narrows both sides when the predicate is wider than the item", () => {
 test("narrows tuples down to the matching items", () => {
   expectTypeOf(
     partition([1, "a", true] as [1, "a", true], isString),
-  ).toEqualTypeOf<["a"[], (true | 1)[]]>();
+  ).toEqualTypeOf<[["a"], [1, true]]>();
 });
 
 test("readonly tuple", () => {
   expectTypeOf(partition([1, "a", true] as const, isString)).toEqualTypeOf<
-    ["a"[], (true | 1)[]]
+    [["a"], [1, true]]
   >();
 });
 
@@ -55,7 +55,7 @@ test("object guard sharing no keys with the item", () => {
 
 test("guard for a supertype of the item can't reject", () => {
   expectTypeOf(partition([] as Kitten[], isCat)).toEqualTypeOf<
-    [Kitten[], never[]]
+    [Kitten[], []]
   >();
 });
 
@@ -83,7 +83,7 @@ test("predicate is typed correctly", () => {
 
 test("predicate disjoint from the item", () => {
   expectTypeOf(partition([] as string[], isNullish)).toEqualTypeOf<
-    [never[], string[]]
+    [[], string[]]
   >();
 });
 
@@ -108,14 +108,14 @@ test("predicate with a mismatched param is an error", () => {
 
 test("non-guard predicate keeps both sides unnarrowed", () => {
   expectTypeOf(partition([1, "a"], constant(true))).toEqualTypeOf<
-    [(number | string)[], (number | string)[]]
+    [[number, string], []]
   >();
 });
 
 describe("data-last", () => {
   test("non-guard predicate", () => {
     expectTypeOf(pipe([1, "a"], partition(constant(true)))).toEqualTypeOf<
-      [(number | string)[], (number | string)[]]
+      [(string | number)[], []]
     >();
   });
 
@@ -133,13 +133,13 @@ describe("data-last", () => {
 
   test("predicate disjoint from the item", () => {
     expectTypeOf(pipe([] as string[], partition(isNullish))).toEqualTypeOf<
-      [never[], string[]]
+      [[], string[]]
     >();
   });
 
   test("guard for a supertype of the item can't reject", () => {
     expectTypeOf(pipe([] as Kitten[], partition(isCat))).toEqualTypeOf<
-      [Kitten[], never[]]
+      [Kitten[], []]
     >();
   });
 
@@ -158,7 +158,7 @@ describe("data-last", () => {
   test("narrows tuples down to the matching items", () => {
     expectTypeOf(
       pipe([1, "a", true] as const, partition(isString)),
-    ).toEqualTypeOf<["a"[], (true | 1)[]]>();
+    ).toEqualTypeOf<[["a"], [1, true]]>();
   });
 
   test("narrows with a guard incomparable to the item", () => {
