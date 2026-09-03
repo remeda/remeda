@@ -209,11 +209,15 @@ describe("top and bottom types", () => {
   });
 
   test("never as the first type", () => {
-    expectTypeOf(narrowed($typed(), $typed<string>())).toEqualTypeOf<never>();
+    expectTypeOf(
+      narrowed($typed<never>(), $typed<string>()),
+    ).toEqualTypeOf<never>();
   });
 
   test("never as the second type", () => {
-    expectTypeOf(narrowed($typed<string>(), $typed())).toEqualTypeOf<never>();
+    expectTypeOf(
+      narrowed($typed<string>(), $typed<never>()),
+    ).toEqualTypeOf<never>();
   });
 });
 

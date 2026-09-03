@@ -35,6 +35,5 @@
  * place and add an `eslint-disable-next-line` with the suspected bug noted in
  * the reason.
  */
-// TODO: Remove the `never` default so that we can enter explicit `never` values without `@typescript-eslint/no-unnecessary-type-arguments` autofixing them back to bare calls which are not readable in this context.
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- T is supplied explicitly by the caller and surfaced as the return type; making T appear elsewhere would defeat the helper's purpose.
-export declare function $typed<T = never>(): T;
+export declare function $typed<T>(): T;

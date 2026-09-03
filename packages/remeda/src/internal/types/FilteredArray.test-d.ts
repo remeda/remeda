@@ -924,16 +924,20 @@ describe("condition is a template literal", () => {
 
 describe("condition is never", () => {
   test("array", () => {
-    expectTypeOf(filteredArray([] as string[], $typed())).toEqualTypeOf<[]>();
+    expectTypeOf(filteredArray([] as string[], $typed<never>())).toEqualTypeOf<
+      []
+    >();
   });
 
   test("fixed tuple", () => {
-    expectTypeOf(filteredArray([""] as [string], $typed())).toEqualTypeOf<[]>();
+    expectTypeOf(
+      filteredArray([""] as [string], $typed<never>()),
+    ).toEqualTypeOf<[]>();
   });
 
   test("tuple with a rest element", () => {
     expectTypeOf(
-      filteredArray([""] as [string, ...number[]], $typed()),
+      filteredArray([""] as [string, ...number[]], $typed<never>()),
     ).toEqualTypeOf<[]>();
   });
 
@@ -942,7 +946,7 @@ describe("condition is never", () => {
       filteredArray(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentional...
         $typed<[any]>(),
-        $typed(),
+        $typed<never>(),
       ),
     ).toEqualTypeOf<[]>();
   });
@@ -1245,13 +1249,17 @@ describe("inverted", () => {
   describe("condition is never", () => {
     test("array", () => {
       expectTypeOf(
-        filteredArray([] as string[], $typed(), true /* isInverted */),
+        filteredArray([] as string[], $typed<never>(), true /* isInverted */),
       ).toEqualTypeOf<string[]>();
     });
 
     test("readonly array", () => {
       expectTypeOf(
-        filteredArray([] as readonly string[], $typed(), true /* isInverted */),
+        filteredArray(
+          [] as readonly string[],
+          $typed<never>(),
+          true /* isInverted */,
+        ),
       ).toEqualTypeOf<string[]>();
     });
 
@@ -1259,7 +1267,7 @@ describe("inverted", () => {
       expectTypeOf(
         filteredArray(
           $typed<readonly [string, number]>(),
-          $typed(),
+          $typed<never>(),
           true /* isInverted */,
         ),
       ).toEqualTypeOf<[string, number]>();
@@ -1270,7 +1278,7 @@ describe("inverted", () => {
         filteredArray(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[any]>(),
-          $typed(),
+          $typed<never>(),
           true /* isInverted */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
