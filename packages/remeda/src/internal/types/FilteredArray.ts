@@ -21,6 +21,8 @@ export type FilteredArray<
 > =
   IsNever<Condition> extends true
     ? // Nothing can satisfy a condition of `never`, so every item fails it.
+      // We can't rely on the general path for this because it considers `any`
+      // items as possible matches.
       IsNegated extends true
       ? Writable<T>
       : []
@@ -55,9 +57,10 @@ type FilteredFixedTuple<
 > = T extends readonly [infer Head, ...infer Rest]
   ? IsAny<Head> extends true
     ? // `any` would satisfy the `[Head] extends [Condition]` check below,
-      // leaking `any` itself into the output. But it isn't a guaranteed
-      // match either, so we consider both the case where it is skipped and
-      // the case where it is kept.
+      // leaking `any` itself into the filtered output and dropping it entirely
+      // from the negated one. But it isn't a guaranteed match either, so we
+      // consider both the case where it is skipped and the case where it is
+      // kept.
       | FilteredFixedTuple<Rest, Condition, IsNegated>
       | [
           RefinedItem<Head, Condition, IsNegated>,
@@ -94,7 +97,9 @@ type FilteredFixedTuple<
 /**
  * The type an item takes once it lands in the output: the common sub-type it
  * shares with the condition, or, for the negated output, what is left of it
- * when the condition is subtracted.
+ * once the union members that always satisfy the condition are removed (a
+ * non-union item stays as-is, mirroring how TypeScript narrows a type guard's
+ * `else` branch).
  */
 type RefinedItem<
   Item,

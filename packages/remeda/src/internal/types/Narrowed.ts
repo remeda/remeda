@@ -3,11 +3,12 @@ import type { StrictFunction } from "./StrictFunction";
 
 /**
  * A wrapper around the built-in intersection operator (`&`) that allows us to
- * reshape the output in cases where TypeScript would leave them broader and
- * more vague than what we believe is useful. This comes into play when we need
- * to narrow array/tuple items in filtering functions that take type-narrowing
- * predicates, enabling them to accept wider and disjoint types and still refine
- * to useful types.
+ * reshape the output in cases where TypeScript would leave it broader (`any`)
+ * or more vague (see `CanIntersect`) than what we believe is useful. This comes
+ * into play when we need to narrow array/tuple items in filtering functions
+ * that take type-narrowing predicates (like `filter`, `find`, `partition`,
+ * `takeWhile`, etc...), enabling them to accept wider and incomparable types
+ * and still refine to useful types.
  */
 export type Narrowed<T, Condition> =
   IsAny<T> extends true
