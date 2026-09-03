@@ -26,12 +26,8 @@ class ConditionClass {
 declare function filteredArray<
   T extends IterableContainer,
   C,
-  IsInverted extends boolean = false,
->(
-  data: T,
-  condition: C,
-  isInverted?: IsInverted,
-): FilteredArray<T, C, IsInverted>;
+  IsNegated extends boolean = false,
+>(data: T, condition: C, isNegated?: IsNegated): FilteredArray<T, C, IsNegated>;
 
 test("empty array", () => {
   expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
@@ -1097,22 +1093,22 @@ describe("union tuple slots are checked per member", () => {
   });
 });
 
-describe("inverted", () => {
+describe("negated", () => {
   test("empty array", () => {
     expectTypeOf(
-      filteredArray([], $typed<string>(), true /* isInverted */),
+      filteredArray([], $typed<string>(), true /* isNegated */),
     ).toEqualTypeOf<[]>();
   });
 
   test("array of matching items", () => {
     expectTypeOf(
-      filteredArray([] as string[], $typed<string>(), true /* isInverted */),
+      filteredArray([] as string[], $typed<string>(), true /* isNegated */),
     ).toEqualTypeOf<[]>();
   });
 
   test("array of disjoint items", () => {
     expectTypeOf(
-      filteredArray([] as string[], $typed<number>(), true /* isInverted */),
+      filteredArray([] as string[], $typed<number>(), true /* isNegated */),
     ).toEqualTypeOf<string[]>();
   });
 
@@ -1121,7 +1117,7 @@ describe("inverted", () => {
       filteredArray(
         [] as readonly string[],
         $typed<number>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<string[]>();
   });
@@ -1131,7 +1127,7 @@ describe("inverted", () => {
       filteredArray(
         [] as (string | number)[],
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<number[]>();
   });
@@ -1141,7 +1137,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<[string, number]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[number]>();
   });
@@ -1151,7 +1147,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<readonly [string, number]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[number]>();
   });
@@ -1161,7 +1157,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<[string, number?]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[number?]>();
   });
@@ -1171,7 +1167,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<[number, ...string[]]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[number]>();
   });
@@ -1181,7 +1177,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<[...string[], number]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[number]>();
   });
@@ -1191,7 +1187,7 @@ describe("inverted", () => {
       filteredArray(
         $typed<string[] | [number, string]>(),
         $typed<string>(),
-        true /* isInverted */,
+        true /* isNegated */,
       ),
     ).toEqualTypeOf<[] | [number]>();
   });
@@ -1202,7 +1198,7 @@ describe("inverted", () => {
         filteredArray(
           $typed<[ItemInterface]>(),
           $typed<ConditionInterface>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<[] | [ItemInterface]>();
     });
@@ -1212,7 +1208,7 @@ describe("inverted", () => {
         filteredArray(
           $typed<[{ readonly a: string }]>(),
           $typed<{ readonly b: number }>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<[] | [{ readonly a: string }]>();
     });
@@ -1225,7 +1221,7 @@ describe("inverted", () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<any[]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       ).toEqualTypeOf<any[]>();
@@ -1237,7 +1233,7 @@ describe("inverted", () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[any, string]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       ).toEqualTypeOf<[] | [any]>();
@@ -1249,7 +1245,7 @@ describe("inverted", () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[string, any?]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       ).toEqualTypeOf<[] | [any?]>();
@@ -1261,7 +1257,7 @@ describe("inverted", () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[...string[], any]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       ).toEqualTypeOf<[] | [any]>();
@@ -1274,7 +1270,7 @@ describe("inverted", () => {
         filteredArray(
           $typed<unknown[]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<unknown[]>();
     });
@@ -1284,7 +1280,7 @@ describe("inverted", () => {
         filteredArray(
           $typed<[unknown, string]>(),
           $typed<string>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<[] | [unknown]>();
     });
@@ -1293,7 +1289,7 @@ describe("inverted", () => {
   describe("condition is never", () => {
     test("array", () => {
       expectTypeOf(
-        filteredArray([] as string[], $typed<never>(), true /* isInverted */),
+        filteredArray([] as string[], $typed<never>(), true /* isNegated */),
       ).toEqualTypeOf<string[]>();
     });
 
@@ -1302,7 +1298,7 @@ describe("inverted", () => {
         filteredArray(
           [] as readonly string[],
           $typed<never>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<string[]>();
     });
@@ -1312,7 +1308,7 @@ describe("inverted", () => {
         filteredArray(
           $typed<readonly [string, number]>(),
           $typed<never>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
       ).toEqualTypeOf<[string, number]>();
     });
@@ -1323,7 +1319,7 @@ describe("inverted", () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
           $typed<[any]>(),
           $typed<never>(),
-          true /* isInverted */,
+          true /* isNegated */,
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       ).toEqualTypeOf<[any]>();
