@@ -42,7 +42,7 @@ export type FilteredArray<
 type FilteredFixedTuple<
   T,
   Condition,
-  IsNegated extends boolean = false,
+  IsNegated extends boolean,
 > = T extends readonly [infer Head, ...infer Rest]
   ? IsAny<Head> extends true
     ? // `any` would satisfy the `[Head] extends [Condition]` check below,
@@ -93,7 +93,7 @@ type FilteredFixedTuple<
 type RefinedItem<
   Item,
   Condition,
-  IsNegated extends boolean = false,
+  IsNegated extends boolean,
 > = IsNegated extends true
   ? Exclude<Item, Condition>
   : Narrowed<Item, Condition>;

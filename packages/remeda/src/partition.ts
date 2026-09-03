@@ -3,11 +3,8 @@ import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { purry } from "./purry";
 
-type IsNot<T extends boolean> = boolean extends T
-  ? boolean
-  : T extends true
-    ? false
-    : true;
+// Does what it says on the tin...
+type Not<T extends boolean> = T extends true ? false : true;
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -47,7 +44,7 @@ export function partition<
   predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
 ): [
   NonRefinedFilteredArray<T, IsItemIncluded>,
-  NonRefinedFilteredArray<T, IsNot<IsItemIncluded>>,
+  NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
 ];
 
 /**
@@ -89,7 +86,7 @@ export function partition<
   data: T,
 ) => [
   NonRefinedFilteredArray<T, IsItemIncluded>,
-  NonRefinedFilteredArray<T, IsNot<IsItemIncluded>>,
+  NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
 ];
 
 export function partition(...args: readonly unknown[]): unknown {
