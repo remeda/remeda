@@ -6,13 +6,11 @@ import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
 /**
- * The array that is left when `T` is filtered down to the items that satisfy
- * `Condition`, preserving as much of the input's shape as the condition allows.
- * Items which might or might not satisfy the condition turn the result into a
- * union of every shape they could yield.
+ * The result of filtering `T` by the `Condition`, with an optional `IsNegated`
+ * to flip the condition semantics.
  *
- * `IsNegated` computes the complementary array instead: the items that *fail*
- * the condition.
+ * @see filter
+ * @see groupByProp
  */
 export type FilteredArray<
   T extends IterableContainer,
@@ -21,8 +19,8 @@ export type FilteredArray<
 > =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
-    ? // Reconstruct the array from its parts, but with each part being
-      // filtered on the condition.
+    ? // Reconstruct the tuple shape after filtering the items in each of it's
+      // parts, based on the example in  the docs for `TupleParts`.
       [
         ...FilteredFixedTuple<TupleParts<T>["required"], Condition, IsNegated>,
         ...PartialArray<
@@ -35,50 +33,46 @@ export type FilteredArray<
       ]
     : never;
 
-/**
- * The real logic for filtering an array is done on fixed tuples (as those make
- * up the required prefix, the optional prefix, and the suffix of the array).
- */
+//! We assume that T is a fixed tuple without any optional items or a rest item.
 type FilteredFixedTuple<
   T,
   Condition,
   IsNegated extends boolean,
 > = T extends readonly [infer Head, ...infer Rest]
-  ? ItemMatch<Head, Condition> extends "always"
-    ? // The item is always part of the filtered output, and never part of the
-      // negated one.
-      IsNegated extends true
-      ? FilteredFixedTuple<Rest, Condition, IsNegated>
-      : [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
-    : ItemMatch<Head, Condition> extends "never"
-      ? // The item is entirely disjoint from the condition, so it is the
-        // mirror image of the previous case.
-        IsNegated extends true
-        ? [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
-        : FilteredFixedTuple<Rest, Condition, IsNegated>
-      : // The item could end up in either output; to accommodate for this we
-        // consider both cases.
-        | FilteredFixedTuple<Rest, Condition, IsNegated>
-        | [
-            // Instead of adding the item as-is, we add the part of it that
-            // the output it lands in can guarantee.
-            RefinedItem<Head, Condition, IsNegated>,
-            ...FilteredFixedTuple<Rest, Condition, IsNegated>,
-          ]
-  : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
-    [];
+  ? [
+      ...FilteredItem<Head, Condition, IsNegated>,
+      ...FilteredFixedTuple<Rest, Condition, IsNegated>,
+    ]
+  : [];
 
-/**
- * The type an item takes once it lands in the output: the common sub-type it
- * shares with the condition, or, for the negated output, what is left of it
- * once the union members that always satisfy the condition are removed (a
- * non-union item stays as-is, mirroring how TypeScript narrows a type guard's
- * `else` branch).
- */
+// What we add to the output depends on two things, how well does the item
+// match the condition, and if we are negating the condition or not.
+type FilteredItem<Item, Condition, IsNegated extends boolean> =
+  ItemMatch<Item, Condition> extends "always"
+    ? IsNegated extends true
+      ? []
+      : [Item]
+    : ItemMatch<Item, Condition> extends "never"
+      ? IsNegated extends true
+        ? [Item]
+        : []
+      : // The interesting case comes when the item might or might not match the
+        // condition. We fork our output to cover both cases; to handle the
+        // case the item matches the condition we narrow its type so that it
+        // always matches the condition and add it to the output; and to handle
+        // the case the item doesn't match we simply don't add anything to the
+        // output.
+        [RefinedItem<Item, Condition, IsNegated>] | [];
+
 type RefinedItem<
   Item,
   Condition,
   IsNegated extends boolean,
 > = IsNegated extends true
-  ? Exclude<Item, Condition>
-  : Narrowed<Item, Condition>;
+  ? // This is the closest type TypeScript provides to what the `else` branch of
+    // `if` statements with narrowing conditions produces.
+    Exclude<Item, Condition>
+  : // For the non-negated case our `Narrowed` type allows `Condition` to be
+    // wider than the `Item` type, generating a type that can still be
+    // assignable to both types.
+    Narrowed<Item, Condition>;
