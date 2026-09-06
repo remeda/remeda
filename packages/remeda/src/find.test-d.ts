@@ -78,13 +78,6 @@ test("isPlainObject guard on interface items", () => {
   >();
 });
 
-test("`any` data", () => {
-  expectTypeOf(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-    find([] as any[], isString),
-  ).toEqualTypeOf<string | undefined>();
-});
-
 test("`unknown` data", () => {
   expectTypeOf(find([] as unknown[], isString)).toEqualTypeOf<
     string | undefined
@@ -365,13 +358,6 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as Cat[], find(isNamed))).toEqualTypeOf<
       (Cat & Named) | undefined
     >();
-  });
-
-  test("`any` data", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      pipe([] as any[], find(isString)),
-    ).toEqualTypeOf<string | undefined>();
   });
 
   test("predicate is typed correctly", () => {

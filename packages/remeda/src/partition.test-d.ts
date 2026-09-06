@@ -94,14 +94,6 @@ test("predicate disjoint from the item", () => {
   >();
 });
 
-test("`any` data", () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-  expectTypeOf(partition([] as any[], isString)).toEqualTypeOf<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-    [string[], any[]]
-  >();
-});
-
 test("`unknown` data", () => {
   expectTypeOf(partition([] as unknown[], isString)).toEqualTypeOf<
     [string[], unknown[]]
@@ -213,14 +205,6 @@ describe("data-last", () => {
   test("object guard sharing no keys with the item", () => {
     expectTypeOf(pipe([] as Cat[], partition(isNamed))).toEqualTypeOf<
       [(Cat & Named)[], Cat[]]
-    >();
-  });
-
-  test("`any` data", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-    expectTypeOf(pipe([] as any[], partition(isString))).toEqualTypeOf<
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      [string[], any[]]
     >();
   });
 

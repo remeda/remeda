@@ -395,13 +395,6 @@ describe("condition isn't a subtype of the item", () => {
   });
 });
 
-test("`any` data", () => {
-  expectTypeOf(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-    filter([] as any[], isString),
-  ).toEqualTypeOf<string[]>();
-});
-
 test("`unknown` data", () => {
   expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
 });

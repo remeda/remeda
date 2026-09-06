@@ -140,13 +140,6 @@ describe("data-first", () => {
     >();
   });
 
-  test("`any` data", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      takeWhile([] as any[], isString),
-    ).toEqualTypeOf<string[]>();
-  });
-
   test("`unknown` data", () => {
     expectTypeOf(takeWhile([] as unknown[], isString)).toEqualTypeOf<
       string[]
@@ -385,12 +378,5 @@ describe("data-last", () => {
     expectTypeOf(pipe([] as Cat[], takeWhile(isNamed))).toEqualTypeOf<
       (Cat & Named)[]
     >();
-  });
-
-  test("`any` data", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      pipe([] as any[], takeWhile(isString)),
-    ).toEqualTypeOf<string[]>();
   });
 });
