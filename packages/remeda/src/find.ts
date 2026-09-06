@@ -1,6 +1,6 @@
 import { toSingle } from "./internal/toSingle";
+import type { Assignability } from "./internal/types/Assignability";
 import type { First } from "./internal/types/First";
-import type { ItemMatch } from "./internal/types/ItemMatch";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
@@ -42,19 +42,21 @@ type FoundInFixedTuple<T, Condition, Fallback> = T extends readonly [
   infer Head,
   ...infer Rest,
 ]
-  ? ItemMatch<Head, Condition> extends "always"
-    ? // We found a definite match that is always correct!
-      Head
-    : | (ItemMatch<Head, Condition> extends "never"
-          ? // We found a definite non-match, we skip it.
-            never
-          : // We found a non-definite match, it might match, and it might not,
-            // so we fork the type on it.
-            Narrowed<Head, Condition>)
-      // Regardless, we continue searching for other matches too...
-      | FoundInFixedTuple<Rest, Condition, Fallback>
-  : // T must be exactly `[]` here, so the match must come from the fallback.
-    Fallback;
+  ? Assignability<
+      Head,
+      Condition,
+      {
+        full: Head;
+
+        // Because the match isn't full we need to also consider the rest of the
+        // items too because in runtime we might skip the current item.
+        partial:
+          | Narrowed<Head, Condition>
+          | FoundInFixedTuple<Rest, Condition, Fallback>;
+        none: FoundInFixedTuple<Rest, Condition, Fallback>;
+      }
+    >
+  : Fallback;
 
 // For non-type-narrowing predicates, we can only provide more refined type when
 // we know the predicate returns a constant literal boolean value.

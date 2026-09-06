@@ -1,5 +1,5 @@
 import type { LastArrayElement } from "type-fest";
-import type { ItemMatch } from "./internal/types/ItemMatch";
+import type { Assignability } from "./internal/types/Assignability";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { Narrowed } from "./internal/types/Narrowed";
 import type { TupleParts } from "./internal/types/TupleParts";
@@ -39,17 +39,20 @@ type FoundLastInFixedTuple<T, Condition, Fallback> = T extends readonly [
   ...infer Rest,
   infer Last,
 ]
-  ? ItemMatch<Last, Condition> extends "always"
-    ? // We found a definite match that is always correct!
-      Last
-    : | (ItemMatch<Last, Condition> extends "never"
-          ? // We found a definite non-match, we skip it.
-            never
-          : // We found a non-definite match, it might match, and it might not,
-            // so we fork the type on it.
-            Narrowed<Last, Condition>)
-      // Regardless, we continue searching for other matches too...
-      | FoundLastInFixedTuple<Rest, Condition, Fallback>
+  ? Assignability<
+      Last,
+      Condition,
+      {
+        full: Last;
+
+        // Because the match isn't full we need to also consider the rest of the
+        // items too because in runtime we might skip the current item.
+        partial:
+          | Narrowed<Last, Condition>
+          | FoundLastInFixedTuple<Rest, Condition, Fallback>;
+        none: FoundLastInFixedTuple<Rest, Condition, Fallback>;
+      }
+    >
   : // T must be exactly `[]` here, so the match must come from the fallback.
     Fallback;
 

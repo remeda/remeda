@@ -1,5 +1,5 @@
+import type { Assignability } from "./Assignability";
 import type { CoercedArray } from "./CoercedArray";
-import type { ItemMatch } from "./ItemMatch";
 import type { IterableContainer } from "./IterableContainer";
 import type { Narrowed } from "./Narrowed";
 import type { PartialArray } from "./PartialArray";
@@ -47,22 +47,22 @@ type FilteredFixedTuple<
 
 // What we add to the output depends on two things, how well does the item
 // match the condition, and if we are negating the condition or not.
-type FilteredItem<Item, Condition, IsNegated extends boolean> =
-  ItemMatch<Item, Condition> extends "always"
-    ? IsNegated extends true
-      ? []
-      : [Item]
-    : ItemMatch<Item, Condition> extends "never"
-      ? IsNegated extends true
-        ? [Item]
-        : []
-      : // The interesting case comes when the item might or might not match the
-        // condition. We fork our output to cover both cases; to handle the
-        // case the item matches the condition we narrow its type so that it
-        // always matches the condition and add it to the output; and to handle
-        // the case the item doesn't match we simply don't add anything to the
-        // output.
-        [RefinedItem<Item, Condition, IsNegated>] | [];
+type FilteredItem<Item, Condition, IsNegated extends boolean> = Assignability<
+  Item,
+  Condition,
+  {
+    full: IsNegated extends true ? [] : [Item];
+    none: IsNegated extends true ? [Item] : [];
+
+    // The interesting case comes when the item might or might not match the
+    // condition. We fork our output to cover both cases; to handle the
+    // case the item matches the condition we narrow its type so that it
+    // always matches the condition and add it to the output; and to handle
+    // the case the item doesn't match we simply don't add anything to the
+    // output.
+    partial: [RefinedItem<Item, Condition, IsNegated>] | [];
+  }
+>;
 
 type RefinedItem<
   Item,
