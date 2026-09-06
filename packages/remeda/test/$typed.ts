@@ -36,4 +36,4 @@
  * the reason.
  */
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- T is supplied explicitly by the caller and surfaced as the return type; making T appear elsewhere would defeat the helper's purpose.
-export declare function $typed<T = never>(): T;
+export declare function $typed<T>(): T;

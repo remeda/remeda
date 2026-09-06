@@ -1,15 +1,8 @@
 import { toSingle } from "./internal/toSingle";
+import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { purry } from "./purry";
-
-type First<T extends IterableContainer> = T extends []
-  ? undefined
-  : T extends readonly [unknown, ...unknown[]]
-    ? T[0]
-    : T extends readonly [...infer Pre, infer Last]
-      ? Last | Pre[0]
-      : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.

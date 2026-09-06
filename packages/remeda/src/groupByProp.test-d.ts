@@ -120,7 +120,11 @@ describe("enforces strong typing on the grouping prop", () => {
 test("group by prop that doesn't exist on all items", () => {
   expectTypeOf(
     groupByProp([{ a: "cat" }, { b: "dog" }] as const, "a"),
-  ).toEqualTypeOf<{ cat: [{ readonly a: "cat" }] }>();
+  ).toEqualTypeOf<{
+    cat:
+      | [{ readonly a: "cat" }]
+      | [{ readonly a: "cat" }, { readonly b: "dog" } & { a: "cat" }];
+  }>();
 });
 
 describe("union of array types", () => {

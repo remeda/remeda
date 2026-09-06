@@ -8,7 +8,7 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig(
   {
-    ignores: ["coverage", "dist"],
+    ignores: [".tmp", "coverage", "dist"],
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
