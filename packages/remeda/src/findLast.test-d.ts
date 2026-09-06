@@ -293,9 +293,9 @@ describe("data-last", () => {
   });
 
   test("non-guard predicate", () => {
-    expectTypeOf(pipe([1, "a"], findLast(constant(true)))).toEqualTypeOf<
-      number | string | undefined
-    >();
+    expectTypeOf(
+      pipe([1, "a"] as [number, string], findLast(constant($typed<boolean>()))),
+    ).toEqualTypeOf<number | string | undefined>();
   });
 
   test("predicate disjoint from the item", () => {

@@ -5,7 +5,7 @@ import type { TupleParts } from "./TupleParts";
 
 // TODO: Migrate all usages of type-fest's `Writable` to this one!
 /**
- * Drop-in replacement for type-fest's `Writable`type  (for arrays/tuples) that
+ * Drop-in replacement for type-fest's `Writable` type (for arrays/tuples) that
  * retains the input's shape.
  */
 export type WritableTuple<T extends IterableContainer> =

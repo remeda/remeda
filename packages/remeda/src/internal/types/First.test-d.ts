@@ -54,8 +54,28 @@ describe("tuple shapes", () => {
   });
 });
 
-test("union of arrays", () => {
-  expectTypeOf(first([] as "a"[] | "b"[])).toEqualTypeOf<
-    "a" | "b" | undefined
-  >();
+describe("unions", () => {
+  test("arrays", () => {
+    expectTypeOf(first([] as "a"[] | "b"[])).toEqualTypeOf<
+      "a" | "b" | undefined
+    >();
+  });
+
+  test("tuple and array", () => {
+    expectTypeOf(first([] as ["a"] | "b"[])).toEqualTypeOf<
+      "a" | "b" | undefined
+    >();
+  });
+
+  test("optional and fixed tuples", () => {
+    expectTypeOf(first([] as ["a"?] | ["b"])).toEqualTypeOf<
+      "a" | "b" | undefined
+    >();
+  });
+
+  test("non-empty members", () => {
+    expectTypeOf(first(["b"] as [..."a"[], "b"] | ["c"])).toEqualTypeOf<
+      "a" | "b" | "c"
+    >();
+  });
 });

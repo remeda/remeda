@@ -16,7 +16,7 @@ type FoundLast<T extends IterableContainer, Condition> =
         | Narrowed<TupleParts<T>["item"], Condition>
         | Narrowed<TupleParts<T>["optional"][number], Condition>
         // The required part is always present, but it precedes every other
-        // part or the tuple, so any match in it is only the last one when the
+        // part of the tuple, so any match in it is only the last one when the
         // parts after it have none; this makes it the fallback of them all.
         | FoundLastInFixedTuple<
             TupleParts<T>["required"],

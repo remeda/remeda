@@ -1,6 +1,5 @@
-import type { CoercedArray } from "./internal/types/CoercedArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { Narrowed } from "./internal/types/Narrowed";
+import type { NarrowedArray } from "./internal/types/NarrowedArray";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { purry } from "./purry";
 
@@ -21,7 +20,7 @@ import { purry } from "./purry";
 export function takeWhile<T extends IterableContainer, Condition>(
   data: T,
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): CoercedArray<Narrowed<T[number], Condition>>;
+): NarrowedArray<T, Condition>;
 
 export function takeWhile<
   T extends IterableContainer,
@@ -46,7 +45,7 @@ export function takeWhile<
  */
 export function takeWhile<T extends IterableContainer, Condition>(
   predicate: (item: T[number], index: number, data: T) => item is Condition,
-): (data: T) => CoercedArray<Narrowed<T[number], Condition>>;
+): (data: T) => NarrowedArray<T, Condition>;
 
 export function takeWhile<
   T extends IterableContainer,

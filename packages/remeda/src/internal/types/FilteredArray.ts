@@ -11,6 +11,7 @@ import type { TupleParts } from "./TupleParts";
  *
  * @see filter
  * @see groupByProp
+ * @see partition (uses `IsNegated`)
  */
 export type FilteredArray<
   T extends IterableContainer,

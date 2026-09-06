@@ -243,6 +243,12 @@ describe("non-guard predicate", () => {
     ).toEqualTypeOf<string>();
   });
 
+  test("trivial acceptor on a union of arrays", () => {
+    expectTypeOf(find([] as [string] | number[], constant(true))).toEqualTypeOf<
+      string | number | undefined
+    >();
+  });
+
   test("trivial rejector", () => {
     expectTypeOf(
       find([1, "a"] as [number, string], constant(false)),
@@ -289,9 +295,9 @@ describe("data-last", () => {
   });
 
   test("non-guard predicate", () => {
-    expectTypeOf(pipe([1, "a"], find(constant(true)))).toEqualTypeOf<
-      number | string | undefined
-    >();
+    expectTypeOf(
+      pipe([1, "a"] as [number, string], find(constant($typed<boolean>()))),
+    ).toEqualTypeOf<number | string | undefined>();
   });
 
   test("predicate disjoint from the item", () => {

@@ -92,8 +92,28 @@ describe("data-first", () => {
 
   test("guard on a union of arrays", () => {
     expectTypeOf(takeWhile([] as string[] | number[], isString)).toEqualTypeOf<
-      string[]
+      [] | string[]
     >();
+  });
+
+  test("guard on a union of tuples", () => {
+    expectTypeOf(takeWhile([1] as [1] | ["a"], isNumber)).toEqualTypeOf<
+      [] | [1]
+    >();
+  });
+
+  test("guard on an empty tuple", () => {
+    expectTypeOf(takeWhile([] as [], isString)).toEqualTypeOf<[]>();
+  });
+
+  test("guard matching every item of a tuple", () => {
+    expectTypeOf(takeWhile([1, 2] as const, isNumber)).toEqualTypeOf<[1, 2]>();
+  });
+
+  test("guard matching every item of an array with suffix and prefix", () => {
+    expectTypeOf(
+      takeWhile([1, 2] as readonly [1, ...number[], 2], isNumber),
+    ).toEqualTypeOf<[1, ...number[], 2]>();
   });
 
   test("predicate is typed correctly", () => {
@@ -235,7 +255,29 @@ describe("data-last", () => {
   test("guard on a union of arrays", () => {
     expectTypeOf(
       pipe([] as string[] | number[], takeWhile(isString)),
-    ).toEqualTypeOf<string[]>();
+    ).toEqualTypeOf<[] | string[]>();
+  });
+
+  test("guard on a union of tuples", () => {
+    expectTypeOf(pipe([1] as [1] | ["a"], takeWhile(isNumber))).toEqualTypeOf<
+      [] | [1]
+    >();
+  });
+
+  test("guard on an empty tuple", () => {
+    expectTypeOf(pipe([] as [], takeWhile(isString))).toEqualTypeOf<[]>();
+  });
+
+  test("guard matching every item of a tuple", () => {
+    expectTypeOf(pipe([1, 2] as const, takeWhile(isNumber))).toEqualTypeOf<
+      [1, 2]
+    >();
+  });
+
+  test("guard matching every item of an array with suffix and prefix", () => {
+    expectTypeOf(
+      pipe([1, 2] as readonly [1, ...number[], 2], takeWhile(isNumber)),
+    ).toEqualTypeOf<[1, ...number[], 2]>();
   });
 
   describe("predicate is typed correctly", () => {

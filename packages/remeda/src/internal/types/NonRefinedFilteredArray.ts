@@ -14,7 +14,7 @@ export type NonRefinedFilteredArray<
   ? // We don't know which items of the array the predicate would allow in the
     // output so we can only safely say that the result is an array with items
     // from the input array.
-    // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
+    // NOTE: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
     T[number][]
   : IsItemIncluded extends true
     ? // If the predicate is always true we return a shallow copy of the array.

@@ -15,6 +15,8 @@ import type { Narrowed } from "./Narrowed";
  * type before applying `Narrowed` to the result.
  *
  * @see FilteredArray
+ * @see Find
+ * @see FindLast
  */
 export type Assignability<
   T,
