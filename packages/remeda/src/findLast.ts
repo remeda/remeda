@@ -12,12 +12,11 @@ type FoundLast<T extends IterableContainer, Condition> =
         TupleParts<T>["suffix"],
         Condition,
         // When the suffix part doesn't have any item that would always match
-        // we fall back to the optional parts of the tuple which might match,
-        // but might also just not exist.
+        // we fall back to the optional parts of the tuple which might match.
         | Narrowed<TupleParts<T>["item"], Condition>
         | Narrowed<TupleParts<T>["optional"][number], Condition>
         // The required part is always present, but it precedes every other
-        // part of the tuple, so any match in it is only the last one when the
+        // part or the tuple, so any match in it is only the last one when the
         // parts after it have none; this makes it the fallback of them all.
         | FoundLastInFixedTuple<
             TupleParts<T>["required"],

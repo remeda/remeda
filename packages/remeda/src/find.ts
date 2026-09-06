@@ -15,12 +15,11 @@ type Found<T extends IterableContainer, Condition> =
         TupleParts<T>["required"],
         Condition,
         // When the required part doesn't have any item that would always match
-        // we fall back to the optional parts of the tuple which might match,
-        // but might also just not exist.
+        // we fall back to the optional parts of the tuple which might match.
         | Narrowed<TupleParts<T>["optional"][number], Condition>
         | Narrowed<TupleParts<T>["item"], Condition>
         // A non-trivial suffix part can only show up if a non-trivial optional
-        // part of a non-trivial item exists, so it is always part of the
+        // part or a non-trivial item exists, so it is always part of the
         // fallback of the required part.
         | FoundInFixedTuple<
             TupleParts<T>["suffix"],
