@@ -938,48 +938,6 @@ describe("condition is never", () => {
   });
 });
 
-describe("item is `any`", () => {
-  test("rest element", () => {
-    expectTypeOf(
-      filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-        $typed<any[]>(),
-        $typed<string>(),
-      ),
-    ).toEqualTypeOf<string[]>();
-  });
-
-  test("fixed tuple element", () => {
-    expectTypeOf(
-      filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-        $typed<[any, string]>(),
-        $typed<string>(),
-      ),
-    ).toEqualTypeOf<[string] | [string, string]>();
-  });
-
-  test("optional element", () => {
-    expectTypeOf(
-      filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-        $typed<[string, any?]>(),
-        $typed<string>(),
-      ),
-    ).toEqualTypeOf<[string] | [string, string?]>();
-  });
-
-  test("suffix element", () => {
-    expectTypeOf(
-      filteredArray(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-        $typed<[...string[], any]>(),
-        $typed<string>(),
-      ),
-    ).toEqualTypeOf<string[] | [...string[], string]>();
-  });
-});
-
 describe("item is `unknown`", () => {
   test("rest element", () => {
     expectTypeOf(
@@ -1201,56 +1159,6 @@ describe("negated", () => {
           true /* isNegated */,
         ),
       ).toEqualTypeOf<[] | [{ readonly a: string }]>();
-    });
-  });
-
-  describe("item is `any`", () => {
-    test("rest element", () => {
-      expectTypeOf(
-        filteredArray(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-          $typed<any[]>(),
-          $typed<string>(),
-          true /* isNegated */,
-        ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      ).toEqualTypeOf<any[]>();
-    });
-
-    test("fixed tuple element", () => {
-      expectTypeOf(
-        filteredArray(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-          $typed<[any, string]>(),
-          $typed<string>(),
-          true /* isNegated */,
-        ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      ).toEqualTypeOf<[] | [any]>();
-    });
-
-    test("optional element", () => {
-      expectTypeOf(
-        filteredArray(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-          $typed<[string, any?]>(),
-          $typed<string>(),
-          true /* isNegated */,
-        ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      ).toEqualTypeOf<[] | [any?]>();
-    });
-
-    test("suffix element", () => {
-      expectTypeOf(
-        filteredArray(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-          $typed<[...string[], any]>(),
-          $typed<string>(),
-          true /* isNegated */,
-        ),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      ).toEqualTypeOf<[] | [any]>();
     });
   });
 

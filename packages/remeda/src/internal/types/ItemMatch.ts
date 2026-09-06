@@ -1,4 +1,4 @@
-import type { IsAny, IsNever } from "type-fest";
+import type { IsNever } from "type-fest";
 import type { Narrowed } from "./Narrowed";
 
 /**
@@ -8,15 +8,10 @@ import type { Narrowed } from "./Narrowed";
  * `Narrowed<Item, Condition>` when it matches.
  */
 export type ItemMatch<Item, Condition> =
-  IsAny<Item> extends true
-    ? // `any` would satisfy the `[Item] extends [Condition]` check below, but
-      // it isn't a guaranteed match; `Narrowed` already refines it down to the
-      // condition itself, so it behaves like any other item that might match.
-      "maybe"
-    : // The check is wrapped in tuples so that it doesn't distribute over
-      // union items; a union item is checked as a whole.
-      [Item] extends [Condition]
-      ? "always"
-      : IsNever<Narrowed<Item, Condition>> extends true
-        ? "never"
-        : "maybe";
+  // The check is wrapped in tuples so that it doesn't distribute over
+  // union items; a union item is checked as a whole.
+  [Item] extends [Condition]
+    ? "always"
+    : IsNever<Narrowed<Item, Condition>> extends true
+      ? "never"
+      : "maybe";

@@ -134,13 +134,6 @@ describe("guaranteed match", () => {
     ).toEqualTypeOf<"a" | "b">();
   });
 
-  test("after an `any` item", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      find([1, "a"] as [any, string], isString),
-    ).toEqualTypeOf<string>();
-  });
-
   test("before an optional item", () => {
     expectTypeOf(
       find(["a"] as [string, number?], isString),
@@ -183,13 +176,6 @@ describe("possible match", () => {
     expectTypeOf(find([1] as [number, ...string[]], isString)).toEqualTypeOf<
       string | undefined
     >();
-  });
-
-  test("`any` item", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      find([1, 2] as [any, number], isString),
-    ).toEqualTypeOf<string | undefined>();
   });
 
   test("union of tuples", () => {

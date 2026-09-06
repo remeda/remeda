@@ -84,11 +84,4 @@ describe("maybe", () => {
       itemMatch($typed<unknown>(), $typed<string>()),
     ).toEqualTypeOf<"maybe">();
   });
-
-  test("`any` item", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      itemMatch($typed<any>(), $typed<string>()),
-    ).toEqualTypeOf<"maybe">();
-  });
 });

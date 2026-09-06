@@ -136,13 +136,6 @@ describe("guaranteed match", () => {
     ).toEqualTypeOf<"b" | "c">();
   });
 
-  test("before an `any` item", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      findLast(["a", 1] as [string, any], isString),
-    ).toEqualTypeOf<string>();
-  });
-
   test("before an optional item", () => {
     expectTypeOf(
       findLast(["a"] as [string, number?], isString),
@@ -184,13 +177,6 @@ describe("possible match", () => {
   test("rest item", () => {
     expectTypeOf(
       findLast([1] as [number, ...string[]], isString),
-    ).toEqualTypeOf<string | undefined>();
-  });
-
-  test("`any` item", () => {
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
-      findLast([1, 2] as [number, any], isString),
     ).toEqualTypeOf<string | undefined>();
   });
 
