@@ -1,5 +1,5 @@
-import type { IsAny, IsNever } from "type-fest";
 import type { CoercedArray } from "./CoercedArray";
+import type { ItemMatch } from "./ItemMatch";
 import type { IterableContainer } from "./IterableContainer";
 import type { Narrowed } from "./Narrowed";
 import type { PartialArray } from "./PartialArray";
@@ -44,42 +44,27 @@ type FilteredFixedTuple<
   Condition,
   IsNegated extends boolean,
 > = T extends readonly [infer Head, ...infer Rest]
-  ? IsAny<Head> extends true
-    ? // `any` would satisfy the `[Head] extends [Condition]` check below,
-      // leaking `any` itself into the filtered output and dropping it entirely
-      // from the negated one. But it isn't a guaranteed match either, so we
-      // consider both the case where it is skipped and the case where it is
-      // kept.
-      | FilteredFixedTuple<Rest, Condition, IsNegated>
-      | [
-          RefinedItem<Head, Condition, IsNegated>,
-          ...FilteredFixedTuple<Rest, Condition, IsNegated>,
-        ]
-    : // The check is wrapped in tuples so that it doesn't distribute over
-      // union heads; a union item stays a single union-typed element in the
-      // output instead of fanning out into every combination.
-      [Head] extends [Condition]
-      ? // The item always satisfies the condition, so it is always part of the
-        // filtered output, and never part of the negated one.
+  ? ItemMatch<Head, Condition> extends "always"
+    ? // The item is always part of the filtered output, and never part of the
+      // negated one.
+      IsNegated extends true
+      ? FilteredFixedTuple<Rest, Condition, IsNegated>
+      : [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
+    : ItemMatch<Head, Condition> extends "never"
+      ? // The item is entirely disjoint from the condition, so it is the
+        // mirror image of the previous case.
         IsNegated extends true
-        ? FilteredFixedTuple<Rest, Condition, IsNegated>
-        : [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
-      : IsNever<Narrowed<Head, Condition>> extends true
-        ? // The item is entirely disjoint from the condition, so it is the
-          // mirror image of the previous case.
-          IsNegated extends true
-          ? [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
-          : FilteredFixedTuple<Rest, Condition, IsNegated>
-        : // The item doesn't satisfy the condition, but it shares a refined
-          // type with it, so it could end up in either output; to accommodate
-          // for this we consider both cases.
-          | FilteredFixedTuple<Rest, Condition, IsNegated>
-          | [
-              // Instead of adding the item as-is, we add the part of it that
-              // the output it lands in can guarantee.
-              RefinedItem<Head, Condition, IsNegated>,
-              ...FilteredFixedTuple<Rest, Condition, IsNegated>,
-            ]
+        ? [Head, ...FilteredFixedTuple<Rest, Condition, IsNegated>]
+        : FilteredFixedTuple<Rest, Condition, IsNegated>
+      : // The item could end up in either output; to accommodate for this we
+        // consider both cases.
+        | FilteredFixedTuple<Rest, Condition, IsNegated>
+        | [
+            // Instead of adding the item as-is, we add the part of it that
+            // the output it lands in can guarantee.
+            RefinedItem<Head, Condition, IsNegated>,
+            ...FilteredFixedTuple<Rest, Condition, IsNegated>,
+          ]
   : // Our inputs are fixed-tuples so we reach here only when T is exactly `[]`.
     [];
 

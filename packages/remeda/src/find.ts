@@ -1,11 +1,72 @@
-// TODO: find's return type could be refined to remove the `undefined` when we know that a matching item exists in the data (find is a more runtime efficient version of `first(filter(data, predicate))` which provides stricter typing).
-
 import { toSingle } from "./internal/toSingle";
+import type { First } from "./internal/types/First";
+import type { ItemMatch } from "./internal/types/ItemMatch";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
+import type { TupleParts } from "./internal/types/TupleParts";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
+
+type Found<T extends IterableContainer, Condition> =
+  // We distribute the array type to support unions of arrays/tuples.
+  T extends unknown
+    ? FoundInFixedTuple<
+        TupleParts<T>["required"],
+        Condition,
+        // When the required part doesn't have any item that would always match
+        // we fall back to the optional parts of the tuple which might match,
+        // but might also just not exist.
+        | Narrowed<TupleParts<T>["optional"][number], Condition>
+        | Narrowed<TupleParts<T>["item"], Condition>
+        // A non-trivial suffix part can only show up if a non-trivial optional
+        // part of a non-trivial item exists, so it is always part of the
+        // fallback of the required part.
+        | FoundInFixedTuple<
+            TupleParts<T>["suffix"],
+            Condition,
+            // When an item isn't found we need to return `undefined`, but
+            // because it might still always exist in the suffix we set this
+            // return value as the fallback of the suffix part, this way if the
+            // suffix has a match the fallback isn't reached and we don't add
+            // the `undefined`, and in any other case the fallback would make
+            // sure we cover this case too.
+            undefined
+          >
+      >
+    : never;
+
+// This type only works under the assumption that T is a simple fixed tuple (no
+// optional items and no rest items)!
+type FoundInFixedTuple<T, Condition, Fallback> = T extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? ItemMatch<Head, Condition> extends "always"
+    ? // We found a definite match that is always correct!
+      Head
+    : | (ItemMatch<Head, Condition> extends "never"
+          ? // We found a definite non-match, we skip it.
+            never
+          : // We found a non-definite match, it might match, and it might not,
+            // so we fork the type on it.
+            Narrowed<Head, Condition>)
+      // Regardless, we continue searching for other matches too...
+      | FoundInFixedTuple<Rest, Condition, Fallback>
+  : // T must be exactly `[]` here, so the match must come from the fallback.
+    Fallback;
+
+// For non-type-narrowing predicates, we can only provide more refined type when
+// we know the predicate returns a constant literal boolean value.
+type FoundNonRefined<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+> = boolean extends IsItemIncluded
+  ? T[number] | undefined
+  : IsItemIncluded extends true
+    ? // `find(data, constant(true))` is equivalent to `first(data)`.
+      First<T>
+    : undefined;
 
 /**
  * Returns the first element in the provided array that satisfies the provided
@@ -37,12 +98,15 @@ import { purry } from "./purry";
 export function find<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): Narrowed<T[number], Condition> | undefined;
+): Found<T, Condition>;
 
-export function find<T extends IterableContainer>(
+export function find<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => boolean,
-): T[number] | undefined;
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): FoundNonRefined<T, IsItemIncluded>;
 
 /**
  * Returns the first element in the provided array that satisfies the provided
@@ -75,11 +139,14 @@ export function find<T extends IterableContainer>(
  */
 export function find<T extends IterableContainer, Condition>(
   predicate: (value: T[number], index: number, data: T) => value is Condition,
-): (data: T) => Narrowed<T[number], Condition> | undefined;
+): (data: T) => Found<T, Condition>;
 
-export function find<T extends IterableContainer>(
-  predicate: (value: T[number], index: number, data: T) => boolean,
-): (data: T) => T[number] | undefined;
+export function find<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
+  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: readonly unknown[]): unknown {
   return purry(findImplementation, args, toSingle(lazyImplementation));
