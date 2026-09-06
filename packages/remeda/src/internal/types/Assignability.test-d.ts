@@ -1,3 +1,4 @@
+import type { Tagged } from "type-fest";
 import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../../../test/$typed";
 import type { Cat, Legged } from "../../../test/interfaces";
@@ -36,6 +37,18 @@ describe("full", () => {
       assignability($typed<Cat>(), $typed<object>()),
     ).toEqualTypeOf<"full">();
   });
+
+  test("branded item with its base as the condition", () => {
+    expectTypeOf(
+      assignability($typed<Tagged<string, "a">>(), $typed<string>()),
+    ).toEqualTypeOf<"full">();
+  });
+
+  test("template literal item with its base as the condition", () => {
+    expectTypeOf(
+      assignability($typed<`foo${string}`>(), $typed<string>()),
+    ).toEqualTypeOf<"full">();
+  });
 });
 
 describe("none", () => {
@@ -62,6 +75,12 @@ describe("none", () => {
       assignability($typed<string>(), $typed<never>()),
     ).toEqualTypeOf<"none">();
   });
+
+  test("branded item with a disjoint primitive condition", () => {
+    expectTypeOf(
+      assignability($typed<Tagged<string, "a">>(), $typed<number>()),
+    ).toEqualTypeOf<"none">();
+  });
 });
 
 describe("partial", () => {
@@ -86,6 +105,27 @@ describe("partial", () => {
   test("`unknown` item", () => {
     expectTypeOf(
       assignability($typed<unknown>(), $typed<string>()),
+    ).toEqualTypeOf<"partial">();
+  });
+
+  test("base item with a branded condition", () => {
+    expectTypeOf(
+      assignability($typed<string>(), $typed<Tagged<string, "a">>()),
+    ).toEqualTypeOf<"partial">();
+  });
+
+  test("branded item with a differently branded condition", () => {
+    expectTypeOf(
+      assignability(
+        $typed<Tagged<string, "a">>(),
+        $typed<Tagged<string, "b">>(),
+      ),
+    ).toEqualTypeOf<"partial">();
+  });
+
+  test("overlapping template literals", () => {
+    expectTypeOf(
+      assignability($typed<`${string}_${number}`>(), $typed<`foo${string}`>()),
     ).toEqualTypeOf<"partial">();
   });
 });

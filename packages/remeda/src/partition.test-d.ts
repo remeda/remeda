@@ -42,6 +42,24 @@ test("readonly tuple", () => {
   >();
 });
 
+test("tuple with a rest item", () => {
+  expectTypeOf(
+    partition($typed<[string, ...number[], boolean]>(), isString),
+  ).toEqualTypeOf<[[string], [...number[], boolean]]>();
+});
+
+test("tuple with an optional item", () => {
+  expectTypeOf(partition($typed<[string, number?]>(), isString)).toEqualTypeOf<
+    [[string], [number?]]
+  >();
+});
+
+test("union of arrays", () => {
+  expectTypeOf(partition([] as string[] | number[], isString)).toEqualTypeOf<
+    [[] | string[], [] | number[]]
+  >();
+});
+
 test("narrows with a guard incomparable to the item", () => {
   expectTypeOf(partition([] as Cat[], isLegged)).toEqualTypeOf<
     [(Cat & Legged)[], Cat[]]

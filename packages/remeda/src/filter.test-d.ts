@@ -213,15 +213,27 @@ describe("accepts readonly arrays, returns mutable ones", () => {
   // too
 
   test("predicate", () => {
-    expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
-      string[]
-    >();
+    expectTypeOf(
+      filter([] as readonly string[], constant($typed<boolean>())),
+    ).toEqualTypeOf<string[]>();
   });
 
   test("trivial acceptor", () => {
     expectTypeOf(filter([] as readonly string[], constant(true))).toEqualTypeOf<
       string[]
     >();
+  });
+
+  test("trivial acceptor on a tuple with a rest item", () => {
+    expectTypeOf(
+      filter($typed<readonly [number, ...string[], boolean]>(), constant(true)),
+    ).toEqualTypeOf<[number, ...string[], boolean]>();
+  });
+
+  test("trivial acceptor on a union of arrays", () => {
+    expectTypeOf(
+      filter($typed<readonly string[] | readonly [number]>(), constant(true)),
+    ).toEqualTypeOf<string[] | [number]>();
   });
 
   test("trivial rejector", () => {
