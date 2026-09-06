@@ -19,7 +19,7 @@ export type FilteredArray<
 > =
   // We distribute the array type to support unions of arrays/tuples.
   T extends unknown
-    ? // Reconstruct the tuple shape after filtering the items in each of it's
+    ? // Reconstruct the tuple shape after filtering the items in each of its
       // parts, based on the example in  the docs for `TupleParts`.
       [
         ...FilteredFixedTuple<TupleParts<T>["required"], Condition, IsNegated>,
@@ -33,7 +33,7 @@ export type FilteredArray<
       ]
     : never;
 
-//! We assume that T is a fixed tuple without any optional items or a rest item.
+// We assume that T is a fixed tuple without any optional items or a rest item.
 type FilteredFixedTuple<
   T,
   Condition,

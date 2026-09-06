@@ -57,7 +57,7 @@ describe("none", () => {
     ).toEqualTypeOf<"none">();
   });
 
-  test("`none` condition", () => {
+  test("`never` condition", () => {
     expectTypeOf(
       assignability($typed<string>(), $typed<never>()),
     ).toEqualTypeOf<"none">();

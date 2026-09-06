@@ -2,10 +2,10 @@ import type { IterableContainer } from "./IterableContainer";
 import type { WritableTuple } from "./WritableTuple";
 
 /**
- * When the predicate used for filter isn't refining (like a type-predicate) we
- * can narrow the result slightly if it's also trivial (it returns the same
- * result for all items). This is uncommon, but can be useful to
- * "short-circuit" the filter.
+ * When a predicate used for filtering isn't refining (a type-predicate) we can
+ * narrow the result slightly if it's also trivial (it returns the same result
+ * for all items). This is uncommon, but can be useful for users with
+ * "short-circuit" mechanics in their project.
  */
 export type NonRefinedFilteredArray<
   T extends IterableContainer,

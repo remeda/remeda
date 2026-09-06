@@ -7,7 +7,7 @@ import type { Narrowed } from "./Narrowed";
  * types, as a types switch-case statement.
  *
  * `full` - the type is fully assignable into the condition.
- * `none` - the type is never assignable to the the condition.
+ * `none` - the type is never assignable to the condition.
  * `partial` - means that there is a common subtype that allows assigning the
  * type through it, based on our semantics for `Narrowed`.
  *

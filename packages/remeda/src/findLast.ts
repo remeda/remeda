@@ -52,8 +52,7 @@ type FoundLastInFixedTuple<T, Condition, Fallback> = T extends readonly [
         none: FoundLastInFixedTuple<Rest, Condition, Fallback>;
       }
     >
-  : // T must be exactly `[]` here, so the match must come from the fallback.
-    Fallback;
+  : Fallback;
 
 // For non-type-narrowing predicates, we can only provide more refined type when
 // we know the predicate returns a constant literal boolean value.
