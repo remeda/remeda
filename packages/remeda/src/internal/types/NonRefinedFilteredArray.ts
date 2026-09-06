@@ -1,5 +1,5 @@
 import type { IterableContainer } from "./IterableContainer";
-import type { Writable } from "./Writable";
+import type { WritableTuple } from "./WritableTuple";
 
 /**
  * When the predicate used for filter isn't refining (like a type-predicate) we
@@ -19,7 +19,7 @@ export type NonRefinedFilteredArray<
   : IsItemIncluded extends true
     ? // If the predicate is always true we return a shallow copy of the array.
       // If it was originally readonly we need to strip that away.
-      Writable<T>
+      WritableTuple<T>
     : // If the predicate is always false we will always return an empty
       // array.
       [];
