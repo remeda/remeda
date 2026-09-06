@@ -1,5 +1,6 @@
 import type { IsAny, IsNever } from "type-fest";
 
+// TODO: Migrate call sites to `Narrowed` instead.
 /**
  * An extension of Extract for type predicates which falls back to the base
  * in order to narrow the `unknown` case.
