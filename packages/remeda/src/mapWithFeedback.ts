@@ -2,6 +2,7 @@ import { purryFromLazy } from "./internal/purryFromLazy";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
+import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
 /**
  * Applies a function on each element of the array, using the result of the
@@ -63,7 +64,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
     previousValue: U,
     currentValue: T[number],
     currentIndex: number,
-    data: T,
+    data: Readonly<NonEmptyPrefix<T>>,
   ) => U,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;

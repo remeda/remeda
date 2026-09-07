@@ -54,3 +54,26 @@ test("the items array passed to the callback should be an array type containing 
     100,
   );
 });
+
+test("data param is complete in data-first", () => {
+  mapWithFeedback(
+    [1, 2, 3] as const,
+    (_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return 0;
+    },
+    0,
+  );
+});
+
+test("data param is lazily reconstructed in data-last", () => {
+  pipe(
+    [1, 2, 3] as const,
+    mapWithFeedback((_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+      return 0;
+    }, 0),
+  );
+});

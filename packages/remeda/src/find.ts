@@ -4,6 +4,10 @@ import type { First } from "./internal/types/First";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Narrowed } from "./internal/types/Narrowed";
+import type {
+  LazyCallback,
+  LazyTypePredicate,
+} from "./internal/types/NonEmptyPrefix";
 import type { TupleParts } from "./internal/types/TupleParts";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
@@ -139,14 +143,14 @@ export function find<
  * @category Array
  */
 export function find<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => Found<T, Condition>;
 
 export function find<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: readonly unknown[]): unknown {

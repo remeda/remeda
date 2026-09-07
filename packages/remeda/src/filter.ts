@@ -1,6 +1,10 @@
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type {
+  LazyCallback,
+  LazyTypePredicate,
+} from "./internal/types/NonEmptyPrefix";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";
@@ -31,6 +35,7 @@ export function filter<T extends IterableContainer, Condition>(
   data: T,
   predicate: (value: T[number], index: number, data: T) => value is Condition,
 ): FilteredArray<T, Condition>;
+
 export function filter<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
@@ -61,13 +66,14 @@ export function filter<
  * @category Array
  */
 export function filter<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: LazyTypePredicate<T, Condition>,
 ): (data: T) => FilteredArray<T, Condition>;
+
 export function filter<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: readonly unknown[]): unknown {
