@@ -1,10 +1,10 @@
 import type { FilteredArray } from "./internal/types/FilteredArray";
 import type { IterableContainer } from "./internal/types/IterableContainer";
-import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type {
   LazyCallback,
   LazyTypePredicate,
-} from "./internal/types/NonEmptyPrefix";
+} from "./internal/types/LazyCallback";
+import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { NonRefinedFilteredArray } from "./internal/types/NonRefinedFilteredArray";
 import { SKIP_ITEM } from "./internal/utilityEvaluators";
 import { purry } from "./purry";

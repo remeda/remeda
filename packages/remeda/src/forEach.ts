@@ -1,7 +1,7 @@
 import type { Writable } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { LazyCallback } from "./internal/types/NonEmptyPrefix";
 import { purry } from "./purry";
 
 /**

@@ -428,4 +428,15 @@ describe("data param", () => {
       }),
     );
   });
+
+  test("lazily reconstructed in data-last with a type predicate", () => {
+    pipe(
+      [1, 2, 3] as const,
+      filter((value, _index, data): value is 2 => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return value === 2;
+      }),
+    );
+  });
 });

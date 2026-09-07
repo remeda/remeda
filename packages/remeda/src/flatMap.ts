@@ -1,5 +1,5 @@
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
-import type { LazyCallback } from "./internal/types/NonEmptyPrefix";
 import { purry } from "./purry";
 
 /**
@@ -49,7 +49,7 @@ export function flatMap<T, U>(
  * @category Array
  */
 export function flatMap<T, U>(
-  callbackfn: LazyCallback<T[], readonly U[] | U>,
+  callbackfn: LazyCallback<readonly T[], readonly U[] | U>,
 ): (data: readonly T[]) => U[];
 
 export function flatMap(...args: readonly unknown[]): unknown {

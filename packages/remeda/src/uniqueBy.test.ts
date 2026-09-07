@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
-import type { LazyCallback } from "./internal/types/NonEmptyPrefix";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
 import { take } from "./take";
 import { uniqueBy } from "./uniqueBy";

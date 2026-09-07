@@ -5,29 +5,6 @@ import type { PartialArray } from "./PartialArray";
 import type { TupleParts } from "./TupleParts";
 
 /**
- * Helper type for lazy data-last callbacks.
- *
- * @see NonEmptyPrefix
- */
-export type LazyCallback<T extends IterableContainer, R> = (
-  item: T[number],
-  index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
-) => R;
-
-/**
- * Helper type for lazy data-last type predicates (because TypeScript doesn't
- * support the syntax `LazyCallback<T, is S>`).
- *
- * @see NonEmptyPrefix
- */
-export type LazyTypePredicate<T extends IterableContainer, S> = (
-  item: T[number],
-  index: number,
-  data: Readonly<NonEmptyPrefix<T>>,
-) => item is S;
-
-/**
  * For utilities that support lazy evaluation (like `map`, `filter`, etc...)
  * `pipe` computes the 3rd callback parameter (which is usually the same
  * reference as the input array in the standard library) lazily too, item by
@@ -95,31 +72,31 @@ type HeadPrefixes<Prefix, Item> = Prefix extends readonly []
     // exists.
     [...PartialTail<Prefix>, ...CoercedArray<Item>];
 
-// Non-trivial suffixes can only show up in two tuple shapes, fixed-suffix
-// arrays, and fixed-elements arrays (see the definitions in the `TupleParts`
-// docs). Both contain no optional part, contain a non-trivial rest item, and
-// are differentiated by the presence of a required prefix, or lack thereof.
-// TypeScript doesn't support optional elements after the rest element, so we
-// can't just rewrite the suffix and add it to the end of the tuple to support
-// the lazily reconstructed prefixes, instead, we need to consider each prefix
-// of the suffix as it's own type and add them in a union. For **any** other
-// tuple shape this type resolves to `never` (via the TypeScript mechanism that
-// reduces `[...never]` to `never`).
+// Non-trivial suffixes only show up in two tuple shapes: fixed-suffix arrays
+// and fixed-elements arrays (see the definitions in the `TupleParts` docs).
+// Both have no optional part and a non-trivial rest item, and differ only in
+// whether they have a required prefix. TypeScript doesn't support optional
+// elements after a rest element, so the suffix can't be partialized in place;
+// instead each prefix of the suffix becomes it's own union member. For every
+// other tuple shape `Suffix` is `[]`, so `Prefixes<[]>` and `PartialTail<[]>`
+// are both `never` and spreading them collapses the whole member to `never`.
 type SuffixPrefixes<
   Required extends unknown[],
   Item,
   Suffix,
 > = Required extends readonly []
-  ? // For fixed-suffix arrays we have 2 situations we need to handle, the first
-    // handles the rest item, taking the first iteration of it as required and
-    // constructing the rest of the tuple after it.
+  ? // Without a required prefix the general formula below would yield
+    // `[...Item[], ...Suffix]`. TypeScript doesn't consider a tuple with a
+    // leading rest element assignable to `[T, ...T[]]` (`NonEmptyArray`), even
+    // though its minimum length is 1, so `data` could no longer be passed to
+    // anything typed as non-empty. To keep every member structurally non-empty
+    // we hoist the rest item's first iteration into a required slot...
     | [Item, ...Item[], ...Prefixes<Suffix>]
-    // The second situation is that the rest item contributed no elements, in
-    // this case we don't have a rest item at all so we can treat the suffix
-    // the same way we treat the prefix, partializing the tail.
+    // ...and enumerate the zero-iteration case separately, where the suffix is
+    // the whole tuple and can be partialized like a prefix.
     | PartialTail<Suffix>
-  : // For fixed-elements arrays the required prefix is always fully included
-    // when we reach the suffix.
+  : // With a required prefix the first element is already required, so the
+    // rest item can stay a plain rest element.
     [...Required, ...CoercedArray<Item>, ...Prefixes<Suffix>];
 
 /**
@@ -138,13 +115,13 @@ type PartialTail<T> = T extends readonly [infer Head, ...infer Tail]
  * This type assumes that T is a fixed tuple (no optional part and no rest
  * item).
  *
- * @returns The union of the fixed tuples of length L in range `(1, n]`
+ * @returns The union of the fixed tuples of length L in range `[1, n]`
  * where `[T[0], T[1], ..., T[L-1]]`.
  * @example Prefixes<['a', 'b', 'c', 'd']> //=> ['a'] | ['a', 'b'] | ['a', 'b', 'c'] | ['a', 'b', 'c', 'd']
  */
-type Prefixes<T, Prefix extends unknown[] = []> = T extends readonly [
-  infer Head,
-  ...infer Rest,
-]
-  ? [...Prefix, Head] | Prefixes<Rest, [...Prefix, Head]>
-  : never;
+type Prefixes<T> = T extends readonly [infer Head, ...infer Rest]
+  ? [Head] | [Head, ...Prefixes<Rest>]
+  : // We return `never` for the empty array to skip adding `[]` to every
+    // output. This also works with the recursion above when `[Head, ...never]`
+    // would fold to `never`.
+    never;

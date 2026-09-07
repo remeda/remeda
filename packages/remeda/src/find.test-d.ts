@@ -383,14 +383,6 @@ describe("data-last", () => {
 });
 
 describe("data param", () => {
-  test("complete in data-first", () => {
-    find([1, 2, 3] as const, (_value, _index, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
-
-      return true;
-    });
-  });
-
   test("lazily reconstructed in data-last", () => {
     pipe(
       [1, 2, 3] as const,
@@ -398,6 +390,17 @@ describe("data param", () => {
         expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
 
         return true;
+      }),
+    );
+  });
+
+  test("lazily reconstructed in data-last with a type predicate", () => {
+    pipe(
+      [1, 2, 3] as const,
+      find((value, _index, data): value is 2 => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return value === 2;
       }),
     );
   });

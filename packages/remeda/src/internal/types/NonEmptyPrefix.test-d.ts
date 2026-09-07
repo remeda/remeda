@@ -1,5 +1,6 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { IterableContainer } from "./IterableContainer";
+import type { NonEmptyArray } from "./NonEmptyArray";
 import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 
 declare function nonEmptyPrefix<T extends IterableContainer>(
@@ -70,6 +71,20 @@ describe("tuple shapes", () => {
       | ["a", "b", ..."c"[], "d"]
       | ["a", "b", ..."c"[], "d", "e"]
     >();
+  });
+});
+
+describe("structurally non-empty", () => {
+  test("fixed-suffix array", () => {
+    expectTypeOf(nonEmptyPrefix(["b", "c"] as [..."a"[], "b", "c"])).toExtend<
+      NonEmptyArray<unknown>
+    >();
+  });
+
+  test("fixed-elements array", () => {
+    expectTypeOf(
+      nonEmptyPrefix(["a", "b", "d", "e"] as ["a", "b", ..."c"[], "d", "e"]),
+    ).toExtend<NonEmptyArray<unknown>>();
   });
 });
 
