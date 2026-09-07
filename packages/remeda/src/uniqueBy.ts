@@ -25,7 +25,7 @@ import { SKIP_ITEM } from "./internal/utilityEvaluators";
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (item: T[number], index: number, data: T) => unknown,
+  keyFunction: LazyCallback<T, unknown>,
 ): Deduped<T>;
 
 /**

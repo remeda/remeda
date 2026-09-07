@@ -43,24 +43,26 @@ export type LazyTypePredicate<T extends IterableContainer, S> = (
  * a required first item (e.g., the array is not empty), similar to calling
  * `hasAtLeast(1)` on the shape we computed.
  *
- * Use this type in all utilities that are computed lazily, but *only* in the
- * data-last overload. When used as a type for a function parameter it should
- * also be wrapped in `Readonly` to discourage mutations.
+ * Use this type for any callback that `pipe` invokes lazily. That is always
+ * the data-last overload, and for utilities built on `purryFromLazy` (which
+ * routes data-first calls through `pipe` as well) it is the data-first overload
+ * too. This is a low-level type, prefer `LazyCallback` and
+ * `LazyTypePredicate` over direct usage.
+ *
+ * When the type is used for a callback used in `pipe` it should be wrapped in
+ * `Readonly` to prevent the callback from mutating it, as it is owned by `pipe`
+ * and can corrupt future iterations.
  *
  * @example
- *   // data-first
+ *   // data-first (eager, via `purry`)
  *   function forEach<T extends IterableContainer>(
  *     data: T,
  *     callbackfn: (value: T[number], index: number, data: T) => void,
  *   ): void;
  *
- *   // data-last
+ *   // data-last (lazy, via `pipe`)
  *   function forEach<T extends IterableContainer>(
- *     callbackfn: (
- *       value: T[number],
- *       index: number,
- *       data: Readonly<LazilyReconstructed<T>>,
- *     ) => void,
+ *     callbackfn: LazyCallback<T, void>,
  *   ): (data: T) => void;
  */
 export type NonEmptyPrefix<T extends IterableContainer> =

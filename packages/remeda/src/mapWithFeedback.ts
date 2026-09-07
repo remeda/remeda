@@ -33,7 +33,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
     previousValue: U,
     currentValue: T[number],
     currentIndex: number,
-    data: T,
+    data: Readonly<NonEmptyPrefix<T>>,
   ) => U,
   initialValue: U,
 ): Mapped<T, U>;
