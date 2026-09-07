@@ -1,5 +1,6 @@
 import type { Writable } from "type-fest";
 import type { IterableContainer } from "./internal/types/IterableContainer";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { purry } from "./purry";
 
@@ -53,7 +54,7 @@ export function forEach<T extends IterableContainer>(
  * @category Array
  */
 export function forEach<T extends IterableContainer>(
-  callbackfn: (value: T[number], index: number, data: T) => void,
+  callbackfn: LazyCallback<T, void>,
 ): (data: T) => Writable<T>;
 
 export function forEach(...args: readonly unknown[]): unknown {

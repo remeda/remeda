@@ -34,3 +34,18 @@ test("makes the result mutable", () => {
     expectTypeOf(x).toEqualTypeOf<number[]>();
   });
 });
+
+test("data param is complete in data-first", () => {
+  forEach([1, 2, 3] as const, (_value, _index, data) => {
+    expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+  });
+});
+
+test("data param is lazily reconstructed in data-last", () => {
+  pipe(
+    [1, 2, 3] as const,
+    forEach((_value, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+    }),
+  );
+});

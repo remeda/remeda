@@ -372,9 +372,35 @@ describe("data-last", () => {
       find((value, index, data) => {
         expectTypeOf(value).toEqualTypeOf<number | string>();
         expectTypeOf(index).toEqualTypeOf<number>();
-        expectTypeOf(data).toEqualTypeOf<(number | string)[]>();
+        expectTypeOf(data).toEqualTypeOf<
+          readonly [number | string, ...(number | string)[]]
+        >();
 
         return true;
+      }),
+    );
+  });
+});
+
+describe("callback data param", () => {
+  test("lazily reconstructed in data-last", () => {
+    pipe(
+      [1, 2, 3] as const,
+      find((_value, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return true;
+      }),
+    );
+  });
+
+  test("lazily reconstructed in data-last with a type predicate", () => {
+    pipe(
+      [1, 2, 3] as const,
+      find((value, _index, data): value is 2 => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return value === 2;
       }),
     );
   });

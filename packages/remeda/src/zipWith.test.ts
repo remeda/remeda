@@ -86,6 +86,23 @@ describe("data second with initial arg", () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 
+  test("provides the first items processed so far", () => {
+    const other = ["a", "b", "c"];
+    const mock = vi.fn<
+      (
+        first: unknown,
+        second: unknown,
+        index: unknown,
+        data: readonly [readonly unknown[], readonly unknown[]],
+      ) => unknown
+    >((_first, _second, _index, data) => structuredClone(data));
+    pipe([1, 2, 3], zipWith(other, mock));
+
+    expect(mock).toHaveNthReturnedWith(1, [[1], other]);
+    expect(mock).toHaveNthReturnedWith(2, [[1, 2], other]);
+    expect(mock).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
+  });
+
   test("should return empty when first is empty", () => {
     expect(
       pipe(

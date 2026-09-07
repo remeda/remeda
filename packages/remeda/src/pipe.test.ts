@@ -3,6 +3,7 @@ import { filter } from "./filter";
 import { flat } from "./flat";
 import { identity } from "./identity";
 import { purryFromLazy } from "./internal/purryFromLazy";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import { map } from "./map";
 import { pipe } from "./pipe";
@@ -175,6 +176,17 @@ describe("lazy", () => {
       1, 1,
     ]);
     expect(mockMapper).toHaveBeenCalledTimes(1);
+  });
+
+  test("callbacks receive the items processed so far", () => {
+    const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+      (_value, _index, data) => [...data],
+    );
+    pipe([1, 2, 3], map(mock));
+
+    expect(mock).toHaveNthReturnedWith(1, [1]);
+    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
   });
 });
 

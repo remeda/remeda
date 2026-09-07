@@ -408,3 +408,35 @@ describe("condition isn't a subtype of the item", () => {
 test("`unknown` data", () => {
   expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
 });
+
+describe("callback data param", () => {
+  test("complete in data-first", () => {
+    filter([1, 2, 3] as const, (_value, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return true;
+    });
+  });
+
+  test("lazily reconstructed in data-last", () => {
+    pipe(
+      [1, 2, 3] as const,
+      filter((_value, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return true;
+      }),
+    );
+  });
+
+  test("lazily reconstructed in data-last with a type predicate", () => {
+    pipe(
+      [1, 2, 3] as const,
+      filter((value, _index, data): value is 2 => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return value === 2;
+      }),
+    );
+  });
+});

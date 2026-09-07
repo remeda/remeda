@@ -38,20 +38,23 @@ describe("data first", () => {
     expect(result).not.toBe(data);
   });
 
-  test("should track index and provide entire items array", () => {
-    const data = [1, 2, 3, 4, 5];
+  test("should provide the items processed so far", () => {
+    const mock = vi.fn<
+      (
+        acc: unknown,
+        x: unknown,
+        index: unknown,
+        items: readonly unknown[],
+      ) => unknown
+    >((_acc, _x, _index, items) => [...items]);
 
-    const mockedReducer = vi.fn<(acc: number, x: number) => number>(
-      (acc, x) => acc + x,
-    );
+    mapWithFeedback([1, 2, 3, 4, 5], mock, []);
 
-    mapWithFeedback(data, mockedReducer, 100);
-
-    expect(mockedReducer).toHaveBeenNthCalledWith(1, 100, 1, 0, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(2, 101, 2, 1, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(3, 103, 3, 2, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(4, 106, 4, 3, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(5, 110, 5, 4, data);
+    expect(mock).toHaveNthReturnedWith(1, [1]);
+    expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+    expect(mock).toHaveNthReturnedWith(3, [1, 2, 3]);
+    expect(mock).toHaveNthReturnedWith(4, [1, 2, 3, 4]);
+    expect(mock).toHaveNthReturnedWith(5, [1, 2, 3, 4, 5]);
   });
 });
 

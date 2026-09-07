@@ -1,7 +1,8 @@
 import { lazyDataLastImpl } from "./internal/lazyDataLastImpl";
-import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 import type { IterableContainer } from "./internal/types/IterableContainer";
 import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
+import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
+import { lazyEmptyEvaluator } from "./internal/utilityEvaluators";
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,
@@ -12,6 +13,20 @@ type ZippingFunction<
   second: T2[number],
   index: number,
   data: readonly [first: T1, second: T2],
+) => Value;
+
+// Inside `pipe` the first list flows through lazily, so the callback only sees
+// the items processed so far, while the second list is provided upfront and is
+// always complete.
+type LazyZippingFunction<
+  T1 extends IterableContainer = IterableContainer,
+  T2 extends IterableContainer = IterableContainer,
+  Value = unknown,
+> = (
+  first: T1[number],
+  second: T2[number],
+  index: number,
+  data: readonly [first: Readonly<NonEmptyPrefix<T1>>, second: T2],
 ) => Value;
 
 /**
@@ -47,7 +62,7 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Value[];
+>(second: T2, fn: LazyZippingFunction<T1, T2, Value>): (first: T1) => Value[];
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -72,7 +87,7 @@ export function zipWith<
 
 export function zipWith(
   arg0: IterableContainer | ZippingFunction,
-  arg1?: IterableContainer | ZippingFunction,
+  arg1?: IterableContainer | LazyZippingFunction | ZippingFunction,
   arg2?: ZippingFunction,
 ): unknown {
   if (typeof arg0 === "function") {

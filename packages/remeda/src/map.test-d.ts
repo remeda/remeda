@@ -214,3 +214,24 @@ describe("limited type inference through `NoInfer` (#1364)", () => {
     ).toEqualTypeOf<number[]>();
   });
 });
+
+describe("callback data param", () => {
+  test("complete in data-first", () => {
+    map([1, 2, 3] as const, (_value, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return 0;
+    });
+  });
+
+  test("lazily reconstructed in data-last", () => {
+    pipe(
+      [1, 2, 3] as const,
+      map((_value, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+
+        return 0;
+      }),
+    );
+  });
+});

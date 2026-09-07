@@ -22,6 +22,29 @@ The lazy evaluator has the shape `(item, index, data) => LazyResult<T>`:
 
 Set `done: true` to short-circuit the pipe — no further items will be requested. For functions that return a single scalar (e.g., `first()`), wrap the evaluator with `toSingle(lazyImpl)` so `pipe` knows to stop after one result.
 
+### Typing the callback's `data` parameter
+
+Inside `pipe`, the lazy evaluator is invoked once per item with the accumulator of items processed so far as its `data` argument, not the complete input. Any user callback the evaluator forwards `data` to sees that same growing prefix, so its type has to say so. `NonEmptyPrefix<T>` (`src/internal/types/NonEmptyPrefix.ts`) computes that type from the input: the first element is required (the callback never runs on an empty accumulator), every later element is optional, and the tuple shape is preserved as far as TypeScript allows.
+
+Which overloads need it depends on the purrying helper:
+
+- `purry` with a lazy evaluator: the data-first overload runs the eager implementation and receives the complete input, so it keeps the standard `(value: T[number], index: number, data: T) => R` shape. Only the data-last overload is lazy.
+- `purryFromLazy`: both overloads route through `pipe`, so both use the lazy types.
+
+How to type a lazy overload:
+
+- Standard `(value, index, data)` callback: `LazyCallback<T, R>` (`src/internal/types/LazyCallback.ts`). For a type predicate use `LazyTypePredicate<T, S>`; TypeScript can't route `value is S` through a generic return type.
+- Any other shape (extra parameters like `mapWithFeedback`'s `previousValue`, or `data` nested inside a tuple like `zipWith`): declare a local alias next to the eager one and type the slot as `Readonly<NonEmptyPrefix<T>>`. Never drop the `Readonly`: `pipe` hands the same array to every invocation, so a callback that mutates it changes what later invocations see.
+- Only the array flowing through the pipe is a prefix. Arrays passed as arguments (`zipWith`'s `second`) are complete and keep their type.
+- If the implementation signature unions the eager and lazy callback types (as `zipWith` does), include the lazy alias in that union; without it the data-last overload fails with `ts2394`, because a callback accepting the full `T` is not assignable to one accepting only its prefix.
+
+Callbacks that never receive `data` (`uniqueWith`'s comparator, `differenceWith`'s `isEquals`) are unaffected.
+
+Known limitations:
+
+- On tuple inputs the prefix isn't assignable to a plain array (`sum(data)` fails on `[1, 2, 3] as const`) because TypeScript adds `undefined` to reads of optional tuple elements. Pinned in the known issues block of `NonEmptyPrefix.test-d.ts`.
+- A data-last call used as a callback outside `pipe` (`map(data, map(fn))`) runs eagerly and receives the complete array, yet is typed as a prefix. A single overload can't tell the two callers apart, so the type is pessimistic there by design.
+
 ## Handling `null`, `undefined`, and `NaN`
 
 These three "empty-ish" values are not interchangeable in Remeda:

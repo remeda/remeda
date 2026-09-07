@@ -13,3 +13,4 @@
 - When `@typescript-eslint/no-unnecessary-type-assertion` flags an inference-controlling cast, replace `value as T` with `$typed<T>()` from `test/$typed` rather than autofixing
   - Safe when the rule's reason is "This assertion is unnecessary since the receiver accepts the original type of the expression"
   - Proceed cautiously for other reasons; for `interface` types, suppress per-site with a reason comment instead — see `$typed` JSDoc
+- Lazy callbacks (any overload typed with `LazyCallback`, `LazyTypePredicate`, or `NonEmptyPrefix`): assert the exact `data` type inside the callback body, on an `as const` tuple (`readonly [1, 2?, 3?]`) and on a plain array (`readonly [number, ...number[]]`). For `purry`-based functions also assert that the data-first overload still receives the complete input. Data-last assertions must run inside `pipe` to hit the lazy overload. Template: the `callback data param` block in `map.test-d.ts`

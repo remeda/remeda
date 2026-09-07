@@ -1,6 +1,7 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { createLazyInvocationCounter } from "../test/lazyInvocationCounter";
 import { identity } from "./identity";
+import type { LazyCallback } from "./internal/types/LazyCallback";
 import { pipe } from "./pipe";
 import { take } from "./take";
 import { uniqueBy } from "./uniqueBy";
@@ -48,6 +49,18 @@ test("returns people with uniq first letter of name", () => {
     { name: "Kim", age: 22 },
     { name: "Emily", age: 42 },
   ]);
+});
+
+test("provides the items processed so far to the key function", () => {
+  const mock = vi.fn<LazyCallback<unknown[], unknown>>(
+    (_item, _index, data) => [...data],
+  );
+  uniqueBy([1, 2, 2, 3], mock);
+
+  expect(mock).toHaveNthReturnedWith(1, [1]);
+  expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+  expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
+  expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
 });
 
 // eslint-disable-next-line vitest/valid-title -- This seems to be a bug in the rule, @see https://github.com/vitest-dev/eslint-plugin-vitest/issues/692
