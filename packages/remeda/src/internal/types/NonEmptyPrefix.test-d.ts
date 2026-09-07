@@ -93,3 +93,24 @@ test("union of tuples with different shapes", () => {
     nonEmptyPrefix(["a", "b"] as ["a", "b"] | ["c", ..."d"[]]),
   ).toEqualTypeOf<["a", "b"?] | ["c", ..."d"[]]>();
 });
+
+describe("known issues!", () => {
+  test("tuple prefixes aren't assignable to arrays", () => {
+    const result = nonEmptyPrefix(["a", "b", "c"]);
+
+    expectTypeOf(result).toEqualTypeOf<[string, string?, string?]>();
+
+    // TypeScript adds `undefined` to reads of optional tuple elements even
+    // under `exactOptionalPropertyTypes`, where `undefined` is rejected as a
+    // value in those slots (@see
+    // https://github.com/microsoft/TypeScript/pull/50831). So the prefix of a
+    // tuple isn't assignable to an array of its items, although every value it
+    // describes would be. Users hit this when the input to `pipe` is a tuple
+    // and the callback passes `data` to something that expects an array (e.g.,
+    // `sum(data)`). If this test fails, TypeScript changed this behavior and
+    // the limitation should be removed from the docs.
+    expectTypeOf(result).items.toEqualTypeOf<string | undefined>();
+    expectTypeOf(result).items.not.toEqualTypeOf<string>();
+    expectTypeOf(result).not.toExtend<readonly ("a" | "b" | "c")[]>();
+  });
+});

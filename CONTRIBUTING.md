@@ -52,6 +52,7 @@ We don't ship `reject` because it's `filter(isNot)`, and we don't ship `zipObjec
 
 - Add a JSDoc block with a description, parameters, signature, an example, and tags. This becomes the website docs.
 - Add runtime tests in `functionName.test.ts` and type tests in `functionName.test-d.ts`. Cover both data-first and data-last calling styles.
+- If the function supports lazy evaluation in `pipe` (tagged `@lazy`), type the lazy overload's callback with `LazyCallback` from [`packages/remeda/src/internal/types/`](packages/remeda/src/internal/types/): inside `pipe` the callback's `data` argument holds only the items processed so far, not the complete input.
 - Add an export to [`packages/remeda/src/index.ts`](packages/remeda/src/index.ts) (alphabetical).
 - If a Lodash, Ramda, or Just equivalent exists, add a mapping page under [`packages/docs/src/content/mapping/`](packages/docs/src/content/mapping/).
 

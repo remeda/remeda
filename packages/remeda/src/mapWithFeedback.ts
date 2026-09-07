@@ -4,6 +4,13 @@ import type { LazyEvaluator } from "./internal/types/LazyEvaluator";
 import type { Mapped } from "./internal/types/Mapped";
 import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
 
+type LazyFeedbackCallback<T extends IterableContainer, U> = (
+  previousValue: U,
+  currentValue: T[number],
+  currentIndex: number,
+  data: Readonly<NonEmptyPrefix<T>>,
+) => U;
+
 /**
  * Applies a function on each element of the array, using the result of the
  * previous application, and returns an array of the successively computed
@@ -29,12 +36,7 @@ import type { NonEmptyPrefix } from "./internal/types/NonEmptyPrefix";
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
   data: T,
-  callbackfn: (
-    previousValue: U,
-    currentValue: T[number],
-    currentIndex: number,
-    data: Readonly<NonEmptyPrefix<T>>,
-  ) => U,
+  callbackfn: LazyFeedbackCallback<T, U>,
   initialValue: U,
 ): Mapped<T, U>;
 
@@ -60,12 +62,7 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @category Array
  */
 export function mapWithFeedback<T extends IterableContainer, U>(
-  callbackfn: (
-    previousValue: U,
-    currentValue: T[number],
-    currentIndex: number,
-    data: Readonly<NonEmptyPrefix<T>>,
-  ) => U,
+  callbackfn: LazyFeedbackCallback<T, U>,
   initialValue: U,
 ): (data: T) => Mapped<T, U>;
 

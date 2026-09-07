@@ -6,14 +6,13 @@ import type { TupleParts } from "./TupleParts";
 
 /**
  * For utilities that support lazy evaluation (like `map`, `filter`, etc...)
- * `pipe` computes the 3rd callback parameter (which is usually the same
- * reference as the input array in the standard library) lazily too, item by
- * item, as the items flow through the pipe. This means that unlike the standard
- * library, we can't type the parameter as the plain input array T, instead, we
- * need to compute a shape that represents a partial prefix of the input T, and
- * we want to maintain as much of the input shape as possible. This will prevent
- * unchecked array access for items which haven't been computed and added to the
- * array yet.
+ * `pipe` builds the callback's `data` parameter (which in the standard library
+ * is the array reference itself) lazily too, item by item, as the items flow
+ * through the pipe. This means that unlike the standard library, we can't type
+ * the parameter as the plain input array T. Instead, we need to compute a shape
+ * that represents a partial prefix of the input T, and we want to maintain as
+ * much of the input shape as possible. This will prevent unchecked array access
+ * for items which haven't been computed and added to the array yet.
  *
  * Additionally, because the callback is always called when at least the first
  * item is already being processed we can further refine our type so that it has
@@ -32,15 +31,15 @@ import type { TupleParts } from "./TupleParts";
  *
  * @example
  *   // data-first (eager, via `purry`)
- *   function forEach<T extends IterableContainer>(
+ *   function map<T extends IterableContainer, U>(
  *     data: T,
- *     callbackfn: (value: T[number], index: number, data: T) => void,
- *   ): void;
+ *     callbackfn: (value: T[number], index: number, data: T) => U,
+ *   ): Mapped<T, U>;
  *
  *   // data-last (lazy, via `pipe`)
- *   function forEach<T extends IterableContainer>(
- *     callbackfn: LazyCallback<T, void>,
- *   ): (data: T) => void;
+ *   function map<T extends IterableContainer, U>(
+ *     callbackfn: LazyCallback<T, U>,
+ *   ): (data: T) => Mapped<T, U>;
  */
 export type NonEmptyPrefix<T extends IterableContainer> =
   // Distribute over unions so that each member is decomposed on its own.
@@ -61,7 +60,7 @@ export type NonEmptyPrefix<T extends IterableContainer> =
 // the rest item.
 type HeadPrefixes<Prefix, Item> = Prefix extends readonly []
   ? IsNever<Item> extends true
-    ? // Only empty tuple types have neither a prefix or a rest item, they also
+    ? // Only empty tuple types have neither a prefix nor a rest item, they also
       // don't have any prefixes!
       never
     : // Without a prefix part the prefix is just a simple non-empty array
@@ -77,7 +76,7 @@ type HeadPrefixes<Prefix, Item> = Prefix extends readonly []
 // Both have no optional part and a non-trivial rest item, and differ only in
 // whether they have a required prefix. TypeScript doesn't support optional
 // elements after a rest element, so the suffix can't be partialized in place;
-// instead each prefix of the suffix becomes it's own union member. For every
+// instead each prefix of the suffix becomes its own union member. For every
 // other tuple shape `Suffix` is `[]`, so `Prefixes<[]>` and `PartialTail<[]>`
 // are both `never` and spreading them collapses the whole member to `never`.
 type SuffixPrefixes<
@@ -100,11 +99,10 @@ type SuffixPrefixes<
     [...Required, ...CoercedArray<Item>, ...Prefixes<Suffix>];
 
 /**
- * This type assumes that T is a fixed tuple (no optional part and no rest
- * item).
+ * Reconstructs a fixed tuple so that its first item is required and all the
+ * rest are optional. Assumes that T is a fixed tuple (no optional part and no
+ * rest item).
  *
- * @returns A reconstructed tuple where the first item in T is required, and
- * all the rest are optional.
  * @example PartialTail<['a', 'b', 'c']> //=> ['a', 'b'?, 'c'?]
  */
 type PartialTail<T> = T extends readonly [infer Head, ...infer Tail]
@@ -112,11 +110,10 @@ type PartialTail<T> = T extends readonly [infer Head, ...infer Tail]
   : never;
 
 /**
- * This type assumes that T is a fixed tuple (no optional part and no rest
- * item).
+ * The union of every non-empty prefix of a fixed tuple: for each L in
+ * `[1, n]`, the tuple `[T[0], ..., T[L-1]]`. Assumes that T is a fixed tuple
+ * (no optional part and no rest item).
  *
- * @returns The union of the fixed tuples of length L in range `[1, n]`
- * where `[T[0], T[1], ..., T[L-1]]`.
  * @example Prefixes<['a', 'b', 'c', 'd']> //=> ['a'] | ['a', 'b'] | ['a', 'b', 'c'] | ['a', 'b', 'c', 'd']
  */
 type Prefixes<T> = T extends readonly [infer Head, ...infer Rest]

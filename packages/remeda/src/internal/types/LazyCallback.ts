@@ -2,7 +2,7 @@ import type { IterableContainer } from "./IterableContainer";
 import type { NonEmptyPrefix } from "./NonEmptyPrefix";
 
 /**
- * Helper type for lazy data-last callbacks.
+ * Helper type for lazy callbacks.
  *
  * @see NonEmptyPrefix
  */
@@ -13,8 +13,8 @@ export type LazyCallback<T extends IterableContainer, R> = (
 ) => R;
 
 /**
- * Helper type for lazy data-last type predicates (because TypeScript doesn't
- * support the syntax `LazyCallback<T, is S>`).
+ * Helper type for lazy type predicates (because TypeScript doesn't support a
+ * syntax like `LazyCallback<T, is S>`).
  *
  * @see NonEmptyPrefix
  */
