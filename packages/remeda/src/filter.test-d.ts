@@ -409,7 +409,7 @@ test("`unknown` data", () => {
   expectTypeOf(filter([] as unknown[], isString)).toEqualTypeOf<string[]>();
 });
 
-describe("data param", () => {
+describe("callback data param", () => {
   test("complete in data-first", () => {
     filter([1, 2, 3] as const, (_value, _index, data) => {
       expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();

@@ -382,7 +382,7 @@ describe("data-last", () => {
   });
 });
 
-describe("data param", () => {
+describe("callback data param", () => {
   test("lazily reconstructed in data-last", () => {
     pipe(
       [1, 2, 3] as const,

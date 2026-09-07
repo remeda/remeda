@@ -215,7 +215,7 @@ describe("limited type inference through `NoInfer` (#1364)", () => {
   });
 });
 
-describe("data param", () => {
+describe("callback data param", () => {
   test("complete in data-first", () => {
     map([1, 2, 3] as const, (_value, _index, data) => {
       expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();

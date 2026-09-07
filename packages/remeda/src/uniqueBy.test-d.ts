@@ -2,7 +2,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import { pipe } from "./pipe";
 import { uniqueBy } from "./uniqueBy";
 
-describe("data param", () => {
+describe("callback data param", () => {
   test("lazily reconstructed in data-first", () => {
     uniqueBy([1, 2, 3] as const, (_item, _index, data) => {
       expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
