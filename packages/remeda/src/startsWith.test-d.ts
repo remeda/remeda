@@ -22,12 +22,12 @@ describe("data-first", () => {
   });
 
   test("const data that doesn't match", () => {
-    // @ts-expect-error [ts2769] -- "helloworld" can't start with "foo", #1432
+    // @ts-expect-error [ts2769] -- This is what we are testing...
     startsWith("helloworld" as const, "foo");
   });
 
   test("literal union where no member matches", () => {
-    // @ts-expect-error [ts2769] -- neither member starts with "bird", #1432
+    // @ts-expect-error [ts2769] -- This is what we are testing...
     startsWith("cat" as "cat" | "dog", "bird");
   });
 
@@ -86,7 +86,7 @@ describe("data-last", () => {
   test("const data that doesn't match", () => {
     partition(
       [] as "helloworld"[],
-      // @ts-expect-error [ts2769] -- "helloworld" can't start with "foo", #1432
+      // @ts-expect-error [ts2769] -- This is what we are testing...
       startsWith("foo"),
     );
   });
@@ -94,7 +94,7 @@ describe("data-last", () => {
   test("literal union where no member matches", () => {
     partition(
       [] as ("cat" | "dog")[],
-      // @ts-expect-error [ts2769] -- neither member starts with "bird", #1432
+      // @ts-expect-error [ts2769] -- This is what we are testing...
       startsWith("bird"),
     );
   });
