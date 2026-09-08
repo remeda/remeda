@@ -142,6 +142,7 @@ describe("known issues!", () => {
       // unreduced, so a prefix that no value could start with is still
       // accepted and the `true` branch stays inhabited by an impossible type
       // instead.
+      expectTypeOf(data).not.toEqualTypeOf<never>();
       expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
     } else {
       expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();

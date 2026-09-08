@@ -141,6 +141,7 @@ describe("known issues!", () => {
       // for bounded members; for unbounded ones it keeps the intersection
       // unreduced, so a suffix that no value could end with is still accepted
       // and the `true` branch stays inhabited by an impossible type instead.
+      expectTypeOf(data).not.toEqualTypeOf<never>();
       expectTypeOf(data).toEqualTypeOf<`${number}_bar` & `${string}world`>();
     } else {
       expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
