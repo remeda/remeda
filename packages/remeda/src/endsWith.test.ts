@@ -13,7 +13,7 @@ test("ends with", () => {
   expect(endsWith("hello world", "hello world")).toBe(true);
 });
 
-test("doesn't ends with", () => {
+test("doesn't end with", () => {
   expect(endsWith("hello world" as string, "hello")).toBe(false);
   expect(endsWith("hello world" as string, "hello ")).toBe(false);
   expect(endsWith("hello world" as string, "hello world ")).toBe(false);
@@ -26,4 +26,8 @@ test("matches case", () => {
 
 test("data-last", () => {
   expect(pipe("hello world", endsWith("world"))).toBe(true);
+});
+
+test("data-last, no match", () => {
+  expect(pipe("hello world" as string, endsWith("hello"))).toBe(false);
 });

@@ -1,4 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
+import { filter } from "./filter";
+import { isNot } from "./isNot";
 import { partition } from "./partition";
 import { startsWith } from "./startsWith";
 
@@ -19,16 +22,6 @@ describe("data-first", () => {
     } else {
       expectTypeOf(data).toEqualTypeOf<never>();
     }
-  });
-
-  test("const data that doesn't match", () => {
-    // @ts-expect-error [ts2769] -- This is what we are testing...
-    startsWith("helloworld" as const, "foo");
-  });
-
-  test("literal union where no member matches", () => {
-    // @ts-expect-error [ts2769] -- This is what we are testing...
-    startsWith("cat" as "cat" | "dog", "bird");
   });
 
   test("primitive string data", () => {
@@ -66,6 +59,16 @@ describe("data-first", () => {
       expectTypeOf(data).toEqualTypeOf<`dog_${boolean}`>();
     }
   });
+
+  test("generic data", () => {
+    expectTypeOf(startsWithFoo($typed<string>())).toEqualTypeOf<
+      `foo${string}` | undefined
+    >();
+  });
+
+  test("generic prefix", () => {
+    expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
+  });
 });
 
 describe("data-last", () => {
@@ -81,22 +84,6 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
-  });
-
-  test("const data that doesn't match", () => {
-    partition(
-      [] as "helloworld"[],
-      // @ts-expect-error [ts2769] -- This is what we are testing...
-      startsWith("foo"),
-    );
-  });
-
-  test("literal union where no member matches", () => {
-    partition(
-      [] as ("cat" | "dog")[],
-      // @ts-expect-error [ts2769] -- This is what we are testing...
-      startsWith("bird"),
-    );
   });
 
   test("primitive string data", () => {
@@ -129,23 +116,99 @@ describe("data-last", () => {
     expectTypeOf(yes).branded.toEqualTypeOf<`cat_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<`dog_${boolean}`[]>();
   });
+
+  test("type parameters inferred through composition", () => {
+    expectTypeOf(
+      filter([] as ("cat" | "dog")[], isNot(startsWith("c"))),
+    ).toEqualTypeOf<"dog"[]>();
+  });
+
+  test("generic data", () => {
+    expectTypeOf(startsWithFooAll([] as string[])).toEqualTypeOf<
+      `foo${string}`[]
+    >();
+  });
+});
+
+// @see https://github.com/remeda/remeda/issues/1432
+describe("reject disjoint prefixes (#1432)", () => {
+  test("const data that doesn't match", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !startsWith("helloworld" as const, "foo");
+  });
+
+  test("literal union where no member matches", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !startsWith("cat" as "cat" | "dog", "bird");
+  });
+
+  describe("data-last", () => {
+    test("const data that doesn't match", () => {
+      filter(
+        [] as "helloworld"[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("foo"),
+      );
+    });
+
+    test("literal union where no member matches", () => {
+      filter(
+        [] as ("cat" | "dog")[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("bird"),
+      );
+    });
+  });
 });
 
 describe("known issues!", () => {
-  test("unbounded data with an impossible prefix", () => {
-    const data = "foo_1" as `foo_${number}`;
+  describe("template literals with an impossible prefix aren't rejected", () => {
+    test("data-first", () => {
+      const data = "foo_1" as `foo_${number}`;
 
-    if (startsWith(data, "hello")) {
-      // Rejecting an impossible prefix relies on TypeScript reducing the
-      // intersection with the template literal to `never`. It only does that
-      // for bounded members; for unbounded ones it keeps the intersection
-      // unreduced, so a prefix that no value could start with is still
-      // accepted and the `true` branch stays inhabited by an impossible type
-      // instead.
-      expectTypeOf(data).not.toEqualTypeOf<never>();
-      expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
-    }
+      if (startsWith(data, "hello")) {
+        // Rejecting an impossible prefix relies on TypeScript reducing the
+        // intersection with the prefix template to `never`. It only does that for
+        // bounded types; an intersection of two unbounded template literals is
+        // left as-is even when they are disjoint, so the check is accepted and
+        // the `true` branch is typed with an uninhabitable intersection instead.
+        // @see https://github.com/microsoft/TypeScript/issues/60446
+        expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
+      }
+    });
+
+    test("data-last", () => {
+      const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
+
+      expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
+      expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
+    });
+  });
+
+  // TODO: Ask claude if changing the return value from void to never would work and would fix this known issue...
+  test("native array methods don't reject a dead-code check", () => {
+    // `Array.prototype.filter` accepts any callback returning `unknown`, so it
+    // also accepts the `void`-returning predicate a dead-code check resolves
+    // to. Remeda's own `filter` requires a `boolean` and does reject it.
+    expectTypeOf(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
+      ([] as ("cat" | "dog")[]).filter(startsWith("bird")),
+    ).toEqualTypeOf<("cat" | "dog")[]>();
   });
 });
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
+const startsWithFoo = <T extends string>(data: T) =>
+  startsWith(data, "foo") ? data : undefined;
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
+const startsWithFooAll = <T extends string>(data: readonly T[]) =>
+  filter(data, startsWith("foo"));
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we need the types to be inferred "through" the type parameter.
+const hasPrefix = <Prefix extends string>(data: string, prefix: Prefix) =>
+  startsWith(data, prefix);

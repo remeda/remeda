@@ -27,3 +27,7 @@ test("matches case", () => {
 test("data-last", () => {
   expect(pipe("hello world", startsWith("hello"))).toBe(true);
 });
+
+test("data-last, no match", () => {
+  expect(pipe("hello world" as string, startsWith("world"))).toBe(false);
+});

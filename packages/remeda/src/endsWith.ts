@@ -6,21 +6,16 @@ import type { IsNever } from "type-fest";
 import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
-// The type the data narrows to when the check passes, or `never` when the check
-// wouldn't narrow to anything meaningful.
-type EndsWith<T, Suffix extends string> = string extends Suffix
-  ? // Narrowing is only meaningful when the suffix is a literal, otherwise the
-    // type-predicate would narrow to `string` which in turn would cause the
-    // falsy branch to be typed as `never` which cause TypeScript to claim
-    // wrongfully that is unreachable.
-    never
-  : // By intersecting with a suffix template we force all types that satisfy
-    // this type to also be of this shape. For a raw primitive string this
-    // narrows exactly to the suffix template, for a literal TypeScript check if
-    // it satisfies the condition and narrow to `never` if not (and distribute
-    // the check for unions). The only limitation is for template literals, as
-    // TypeScript leaves the intersection as-is, even when they are disjoint.
-    T & `${string}${Suffix}`;
+type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
+
+// `true` when no value of `T` could ever start with `Suffix`, which makes the
+// check dead code. Intersecting with the suffix template keeps only the part of
+// `T` that could match, distributing over unions so that a suffix which misses
+// every member reduces to `never`. TypeScript only reduces bounded types this
+// way; unbounded template literals (`${string}`, `${number}`) keep the
+// intersection unreduced and are never reported (pinned in the known issues).
+type IsImpossibleSuffix<T extends string, Suffix extends string> =
+  IsPrimitiveString<Suffix> extends true ? false : IsNever<EndsWith<T, Suffix>>;
 
 /**
  * Determines whether a string ends with the provided suffix, and refines the
@@ -35,26 +30,22 @@ type EndsWith<T, Suffix extends string> = string extends Suffix
  * @signature
  *   endsWith(data, suffix);
  * @example
- *   endsWith("hello world" as string, "hello"); //=> false
  *   endsWith("hello world", "world"); //=> true
+ *   endsWith("hello world" as string, "hello"); //=> false
  * @dataFirst
  * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // We don't allow TypeScript to pick this signature if it would result in
-  // narrowing to `never` so that it would be surfaced as an error instead,
-  // allowing the user, at compile time, to detect typos or dead code.
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? never : Suffix,
-): data is EndsWith<T, Suffix>;
+  suffix: IsImpossibleSuffix<T, Suffix> extends true ? Suffix : never,
+): void;
 
-export function endsWith<Suffix extends string>(
-  data: string,
-  // The non-narrowing signature is only applicable to primitive strings so
-  // that it doesn't accept the literal cases which were rejected by  the
-  // narrowing overload above.
-  suffix: IsPrimitiveString<Suffix> extends true ? Suffix : never,
-): boolean;
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
+  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
+): data is T & `${string}${Suffix}`;
+
+export function endsWith(data: string, suffix: string): boolean;
 
 /**
  * Determines whether a string ends with the provided suffix, and refines the
@@ -68,24 +59,20 @@ export function endsWith<Suffix extends string>(
  * @signature
  *   endsWith(suffix)(data);
  * @example
- *   pipe("hello world" as string, endsWith("hello")); //=> false
  *   pipe("hello world", endsWith("world")); //=> true
+ *   pipe("hello world", endsWith("hello")); //=> false
  * @dataLast
  * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
-  // We don't allow TypeScript to pick this signature if it would result in
-  // narrowing to `never` so that it would be surfaced as an error instead,
-  // allowing the user, at compile time, to detect typos or dead code.
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? never : Suffix,
-): (data: T) => data is EndsWith<T, Suffix>;
+  suffix: IsImpossibleSuffix<T, Suffix> extends true ? Suffix : never,
+): (data: T) => void;
 
 export function endsWith<Suffix extends string>(
-  // The non-narrowing signature is only applicable to primitive strings so
-  // that it doesn't accept the literal cases which were rejected by  the
-  // narrowing overload above.
-  suffix: IsPrimitiveString<Suffix> extends true ? Suffix : never,
-): (data: string) => boolean;
+  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
+): <T extends string>(data: T) => data is T & `${string}${Suffix}`;
+
+export function endsWith(suffix: string): (data: string) => boolean;
 
 export function endsWith(...args: readonly unknown[]): unknown {
   return purry(endsWithImplementation, args);
