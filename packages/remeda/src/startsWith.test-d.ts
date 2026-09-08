@@ -22,12 +22,13 @@ describe("data-first", () => {
   });
 
   test("const data that doesn't match", () => {
-    const data = "helloworld" as const;
-    if (startsWith(data, "foo")) {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<"helloworld">();
-    }
+    // @ts-expect-error [ts2769] -- "helloworld" can't start with "foo", #1432
+    startsWith("helloworld" as const, "foo");
+  });
+
+  test("literal union where no member matches", () => {
+    // @ts-expect-error [ts2769] -- neither member starts with "bird", #1432
+    startsWith("cat" as "cat" | "dog", "bird");
   });
 
   test("primitive string data", () => {
@@ -45,17 +46,6 @@ describe("data-first", () => {
       expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
     } else {
       expectTypeOf(data).toEqualTypeOf<never>();
-    }
-  });
-
-  test("template literal data that doesn't match", () => {
-    const data = "foo_1" as `foo_${number}`;
-    if (startsWith(data, "hello")) {
-      // These should be equivalent to `never` but TypeScript doesn't infer
-      // that...
-      expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
     }
   });
 
@@ -94,10 +84,19 @@ describe("data-last", () => {
   });
 
   test("const data that doesn't match", () => {
-    const [yes, no] = partition([] as "helloworld"[], startsWith("foo"));
+    partition(
+      [] as "helloworld"[],
+      // @ts-expect-error [ts2769] -- "helloworld" can't start with "foo", #1432
+      startsWith("foo"),
+    );
+  });
 
-    expectTypeOf(yes).toEqualTypeOf<[]>();
-    expectTypeOf(no).toEqualTypeOf<"helloworld"[]>();
+  test("literal union where no member matches", () => {
+    partition(
+      [] as ("cat" | "dog")[],
+      // @ts-expect-error [ts2769] -- neither member starts with "bird", #1432
+      startsWith("bird"),
+    );
   });
 
   test("primitive string data", () => {
@@ -112,17 +111,6 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
-  });
-
-  test("template literal data that doesn't match", () => {
-    const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
-
-    expectTypeOf(yes).toEqualTypeOf<
-      // These should be equivalent to `never` but TypeScript doesn't infer
-      // that...
-      (`foo_${number}` & `hello${string}`)[]
-    >();
-    expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
   });
 
   test("literal union", () => {
@@ -140,5 +128,23 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`cat_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<`dog_${boolean}`[]>();
+  });
+});
+
+describe("known issues!", () => {
+  test("unbounded data with an impossible prefix", () => {
+    const data = "foo_1" as `foo_${number}`;
+
+    if (startsWith(data, "hello")) {
+      // Rejecting an impossible prefix relies on TypeScript reducing the
+      // intersection with the template literal to `never`. It only does that
+      // for bounded members; for unbounded ones it keeps the intersection
+      // unreduced, so a prefix that no value could start with is still
+      // accepted and the `true` branch stays inhabited by an impossible type
+      // instead.
+      expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
+    }
   });
 });
