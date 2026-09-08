@@ -39,8 +39,7 @@ describe("mutable", () => {
 
   test("union of arrays", () => {
     const result = deduped(["a"] as
-      | [number, ...number[]]
-      | [string, ...string[]]);
+      [number, ...number[]] | [string, ...string[]]);
 
     expectTypeOf(result).toEqualTypeOf<
       [number, ...number[]] | [string, ...string[]]
@@ -87,8 +86,7 @@ describe("readonly", () => {
 
   test("union of arrays", () => {
     const result = deduped(["a"] as
-      | readonly [number, ...number[]]
-      | readonly [string, ...string[]]);
+      readonly [number, ...number[]] | readonly [string, ...string[]]);
 
     expectTypeOf(result).toEqualTypeOf<
       [number, ...number[]] | [string, ...string[]]

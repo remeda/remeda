@@ -1,0 +1,14 @@
+# <repo>/.agentic/policy.yaml — per-repo override. Copy, edit, commit.
+level: standard
+
+# Single-dev repo: force-push allowed on feature branches; main stays protected.
+allow:
+  force_push: ["feat/*", "fix/*", "chore/*"]
+  rm_rf: ["build", "dist", ".venv", "node_modules", "coverage"]
+  read_secrets: [".env.example", ".env.test"]
+
+# Keep these on even though level=standard would relax them.
+deny: [sudo]
+
+# Example of turning a rule off for a repo that legitimately publishes from CI-driven agent runs. Logged.
+# disable: [publish]

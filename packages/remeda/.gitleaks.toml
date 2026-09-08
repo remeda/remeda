@@ -1,0 +1,7 @@
+# Extends gitleaks defaults. Add repo-specific allowlists here, never disable rules.
+[extend]
+useDefault = true
+[allowlist]
+description = "obviously-fake test credentials"
+regexes = ['''sk-test-0{6,}''', '''AKIAIOSFODNN7EXAMPLE''', '''EXAMPLE''']
+paths = ['''\.env\.example$''', '''docs/.*\.md$''']

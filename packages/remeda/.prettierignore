@@ -1,2 +1,14 @@
 /coverage/
 /dist/
+
+# agentic-kit managed files (generated; do not format)
+AGENTS.md
+CLAUDE.md
+docs/STANDARDS.md
+docs/SECURITY.md
+docs/specs/
+docs/reviews/
+docs/handoffs/
+.no-mistakes.yaml
+.agentic/
+.devcontainer/

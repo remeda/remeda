@@ -2,3 +2,6 @@ dist
 
 # Vitests's temporary tsconfig file
 tsconfig.vitest-temp.json
+.agentic/*.md
+.agentic/evidence/
+.agentic/blocked.log

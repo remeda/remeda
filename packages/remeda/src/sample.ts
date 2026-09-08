@@ -89,7 +89,7 @@ type IsLongerThan<T extends readonly unknown[], N extends number> =
 // Assuming T is a fixed tuple we build all it's possible sub-tuples.
 type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
   ? // For each element we either take it or skip it, and recurse over the rest.
-      FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
+    FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
   : [];
 
 /**
@@ -108,9 +108,9 @@ type Combinations<
       ? []
       : T extends readonly [infer Head, ...infer Rest]
         ? // For each element we either take it or skip it, and recurse over
-            // the rest.
-            | [Head, ...Combinations<Rest, N, [unknown, ...Counter]>]
-            | Combinations<Rest, N, Counter>
+          // the rest.
+          | [Head, ...Combinations<Rest, N, [unknown, ...Counter]>]
+          | Combinations<Rest, N, Counter>
         : never
     : never;
 

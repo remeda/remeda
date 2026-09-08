@@ -29,40 +29,40 @@ export type ArrayAt<T extends IterableContainer, I extends keyof T> =
           HasIndex<Prefix, I> extends true
           ? T[I]
           : // The index is larger than the prefix so the result has to consider
-              // the rest element item type.
-              | TupleParts<T>["item"]
-              // We subtract the prefix length from the index to get the index
-              // within the suffix.
-              | (ClampedIntegerSubtract<
-                  I,
-                  Prefix["length"]
-                > extends infer SuffixIndex extends number
-                  ? // If the index falls within the suffix it means that the
-                    // item might be of that element's type, but it also could
-                    // be any value that came before it in the suffix, because
-                    // the rest element part of the array could be any length:
-                    // e.g., for `[...0[], 1, 2, 3]` the tuple could have the
-                    // shape: `[1, 2, 3]`, `[0, 1, 2, 3]`, `[0, 0, 1, 2, 3]`,
-                    // etc... if we look at a single index within the suffix we
-                    // can see the the rest param acts as a window into the
-                    // suffix, but only the prefixes up to that index. e.g., if
-                    // index is 1, in the example above the item could be of
-                    // type `2 | 1 | 0`.
-                    HasIndex<TupleParts<T>["suffix"], SuffixIndex> extends true
-                    ? TupleParts<T>["suffix"][IntRangeInclusive<0, SuffixIndex>]
-                    : // But if the index is out of the suffix it can be out-of-
-                        // bounds, resulting in `undefined`, or it could be any
-                        // of the items in the suffix (depending on how long the
-                        // rest part of the tuple is).
-                        TupleParts<T>["suffix"][number] | undefined
-                  : never)
+            // the rest element item type.
+            | TupleParts<T>["item"]
+            // We subtract the prefix length from the index to get the index
+            // within the suffix.
+            | (ClampedIntegerSubtract<
+                I,
+                Prefix["length"]
+              > extends infer SuffixIndex extends number
+                ? // If the index falls within the suffix it means that the
+                  // item might be of that element's type, but it also could
+                  // be any value that came before it in the suffix, because
+                  // the rest element part of the array could be any length:
+                  // e.g., for `[...0[], 1, 2, 3]` the tuple could have the
+                  // shape: `[1, 2, 3]`, `[0, 1, 2, 3]`, `[0, 0, 1, 2, 3]`,
+                  // etc... if we look at a single index within the suffix we
+                  // can see the the rest param acts as a window into the
+                  // suffix, but only the prefixes up to that index. e.g., if
+                  // index is 1, in the example above the item could be of
+                  // type `2 | 1 | 0`.
+                  HasIndex<TupleParts<T>["suffix"], SuffixIndex> extends true
+                  ? TupleParts<T>["suffix"][IntRangeInclusive<0, SuffixIndex>]
+                  : // But if the index is out of the suffix it can be out-of-
+                    // bounds, resulting in `undefined`, or it could be any
+                    // of the items in the suffix (depending on how long the
+                    // rest part of the tuple is).
+                    TupleParts<T>["suffix"][number] | undefined
+                : never)
         : never
       : never
     : // Even with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`
-        // enabled TypeScript still types T[number] without considering that
-        // number might be out of bounds. We need to manually add the
-        // `undefined`  case to make the type accurate.
-        T[number] | undefined;
+      // enabled TypeScript still types T[number] without considering that
+      // number might be out of bounds. We need to manually add the
+      // `undefined`  case to make the type accurate.
+      T[number] | undefined;
 
 type HasIndex<T extends readonly unknown[], I> =
   I extends ArrayIndices<T> ? true : false;

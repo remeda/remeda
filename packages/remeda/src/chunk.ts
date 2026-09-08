@@ -112,42 +112,44 @@ type ChunkRestElement<
           infer LastPrefixChunk extends unknown[],
         ]
       ? // When our prefix chunks are not empty it means we need to look at all
-          // combinations of mixing the prefix, the suffix, and different counts
-          // of the rest param until we cover all possible scenarios.
-          | ValueOf<{
-              // We want to iterate over all possible padding sizes we can add
-              // to the last prefix chunk until we reach N
-              // (`0..N-LastPrefixChunk.length`). We need to do this because
-              // until the last prefix chunk is full, we need to consider the
-              // suffix being part of it too...
-              [Padding in IntRangeInclusive<
+        // combinations of mixing the prefix, the suffix, and different counts
+        // of the rest param until we cover all possible scenarios.
+        | ValueOf<{
+            // We want to iterate over all possible padding sizes we can add
+            // to the last prefix chunk until we reach N
+            // (`0..N-LastPrefixChunk.length`). We need to do this because
+            // until the last prefix chunk is full, we need to consider the
+            // suffix being part of it too...
+            [
+              Padding in IntRangeInclusive<
                 0,
                 Subtract<N, LastPrefixChunk["length"]>
-              >]: [
-                ...PrefixFullChunks,
-                ...ChunkFixedTuple<
-                  // Create a new array that would **not** contain a rest param
-                  // (so it's finite) made of the last prefix chunk, padding
-                  // from the rest param, and the suffix.
-                  [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
-                  N
-                >,
-              ];
-            }>
-          // Additionally, we need to consider the case where the last prefix
-          // chunk **is** full, and follow it with an array of chunks of the
-          // rest param (and only them), and then followed by all possible
-          // variations of the suffix chunks.
-          | [
+              >
+            ]: [
               ...PrefixFullChunks,
-              [
-                // Fully padded last prefix chunk
-                ...LastPrefixChunk,
-                ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
-              ],
-              ...NTuple<Item, N>[],
-              ...SuffixChunk<Suffix, Item, N>,
-            ]
+              ...ChunkFixedTuple<
+                // Create a new array that would **not** contain a rest param
+                // (so it's finite) made of the last prefix chunk, padding
+                // from the rest param, and the suffix.
+                [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
+                N
+              >,
+            ];
+          }>
+        // Additionally, we need to consider the case where the last prefix
+        // chunk **is** full, and follow it with an array of chunks of the
+        // rest param (and only them), and then followed by all possible
+        // variations of the suffix chunks.
+        | [
+            ...PrefixFullChunks,
+            [
+              // Fully padded last prefix chunk
+              ...LastPrefixChunk,
+              ...NTuple<Item, Subtract<N, LastPrefixChunk["length"]>>,
+            ],
+            ...NTuple<Item, N>[],
+            ...SuffixChunk<Suffix, Item, N>,
+          ]
       : // When our prefix chunks are empty we only need to handle the suffix
         [...NTuple<Item, N>[], ...SuffixChunk<Suffix, Item, N>];
 
@@ -179,8 +181,7 @@ type SuffixChunk<
  * our output based on if we know for sure that the array is empty or not.
  */
 type GenericChunk<T extends IterableContainer> = T extends
-  | readonly [...unknown[], unknown]
-  | readonly [unknown, ...unknown[]]
+  readonly [...unknown[], unknown] | readonly [unknown, ...unknown[]]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : NonEmptyArray<T[number]>[];
 

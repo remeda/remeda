@@ -34,8 +34,7 @@ test("tuple", () => {
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${"c" | "d"},${
-    | "e"
-    | "f"}`>();
+    "e" | "f"}`>();
 });
 
 test("readonly tuple", () => {
@@ -43,8 +42,7 @@ test("readonly tuple", () => {
   const result = join(array, ",");
 
   expectTypeOf(result).toEqualTypeOf<`${"a" | "b"},${"c" | "d"},${
-    | "e"
-    | "f"}`>();
+    "e" | "f"}`>();
 });
 
 test("tuple with rest tail", () => {
@@ -134,7 +132,6 @@ describe("tuple item types", () => {
     const result = join(array, ",");
 
     expectTypeOf(result).toEqualTypeOf<`${"" | "prefix"},${"" | "midfix"},${
-      | ""
-      | "suffix"}`>();
+      "" | "suffix"}`>();
   });
 });
