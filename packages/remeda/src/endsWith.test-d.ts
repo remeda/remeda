@@ -198,7 +198,6 @@ describe("known issues!", () => {
     });
   });
 
-  // TODO: Ask claude if changing the return value from void to never would work and would fix this known issue...
   test("native array methods don't reject a dead-code check", () => {
     // `Array.prototype.filter` accepts any callback returning `unknown`, so it
     // also accepts the `void`-returning predicate a dead-code check resolves
