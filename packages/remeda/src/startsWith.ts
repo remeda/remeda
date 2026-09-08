@@ -34,6 +34,12 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
+  // TypeScript would pick this signature only when it would result in narrowing
+  // to `never`; by returning void the signature effectively "disables" the
+  // usefulness of the function, in most cases surfacing a compile-time error,
+  // allowing users to detect typos or dead code at the call site itself
+  // instead of relying on downstream errors.
+  // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): void;
 
@@ -62,6 +68,12 @@ export function startsWith(data: string, prefix: string): boolean;
  * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
+  // TypeScript would pick this signature only when it would result in narrowing
+  // to `never`; by returning void the signature effectively "disables" the
+  // usefulness of the function, in most cases surfacing a compile-time error,
+  // allowing users to detect typos or dead code at the call site itself
+  // instead of relying on downstream errors.
+  // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): (data: T) => void;
 
