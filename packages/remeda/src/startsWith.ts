@@ -6,6 +6,12 @@ import type { IsNever } from "type-fest";
 import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
+// By intersecting with a prefix template we force all types that satisfy this
+// type to also be of this shape. For a raw primitive string this narrows
+// exactly to the prefix template, for a literal TypeScript check if it
+// satisfies the condition and narrow to `never` if not (and distribute the
+// check for unions). The only limitation is for template literals, as
+// TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
 // `true` when no value of `T` could ever start with `Prefix`, which makes the

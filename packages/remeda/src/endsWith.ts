@@ -6,6 +6,12 @@ import type { IsNever } from "type-fest";
 import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
+// By intersecting with a suffix template we force all types that satisfy this
+// type to also be of this shape. For a raw primitive string this narrows
+// exactly to the suffix template, for a literal TypeScript check if it
+// satisfies the condition and narrow to `never` if not (and distribute the
+// check for unions). The only limitation is for template literals, as
+// TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
 // `true` when no value of `T` could ever start with `Suffix`, which makes the
