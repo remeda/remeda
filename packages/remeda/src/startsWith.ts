@@ -6,28 +6,21 @@ import type { IsNever } from "type-fest";
 import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
-// By intersecting with a prefix template we force all types that satisfy this
-// type to also be of this shape. For a raw primitive string this narrows
-// exactly to the suffix template, for a literal TypeScript check if it
-// satisfies the condition and narrow to `never` if not (and distribute the
-// check for unions). The only limitation is for template literals, as
-// TypeScript leaves the intersection as-is, even when they are disjoint.
-type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
-
-// We want to detect and surface cases where the result of our predicate would
-// narrow the data to `never` to prevent trivially dead branches (e.g., to
-// detect typos or dead code following renamed literals).
-type SatisfiesLiterals<T, Prefix extends string> = string extends Prefix
-  ? // This check is only valuable if the prefix itself is a literal, otherwise
-    // the narrowing branch would result in `is string` which would cause the
-    // falsy branch to be *wrongfully* marked as unreachable.
+// The type the data narrows to when the check passes, or `never` when the check
+// wouldn't narrow to anything meaningful.
+type StartsWith<T, Prefix extends string> = string extends Prefix
+  ? // Narrowing is only meaningful when the prefix is a literal, otherwise the
+    // type-predicate would narrow to `string` which in turn would cause the
+    // falsy branch to be typed as `never` which cause TypeScript to claim
+    // wrongfully that is unreachable.
     never
-  : IsNever<StartsWith<T, Prefix>> extends true
-    ? // See the comment above for `EndsWith`, the only case where it would
-      // resolve to never is a literal that doesn't satisfy the suffix (or a
-      // union of such).
-      never
-    : Prefix;
+  : // By intersecting with a prefix template we force all types that satisfy
+    // this type to also be of this shape. For a raw primitive string this
+    // narrows exactly to the prefix template, for a literal TypeScript check if
+    // it satisfies the condition and narrow to `never` if not (and distribute
+    // the check for unions). The only limitation is for template literals, as
+    // TypeScript leaves the intersection as-is, even when they are disjoint.
+    T & `${Prefix}${string}`;
 
 /**
  * Determines whether a string begins with the provided prefix, and refines the
@@ -50,11 +43,17 @@ type SatisfiesLiterals<T, Prefix extends string> = string extends Prefix
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: SatisfiesLiterals<T, Prefix>,
+  // We don't allow TypeScript to pick this signature if it would result in
+  // narrowing to `never` so that it would be surfaced as an error instead,
+  // allowing the user, at compile time, to detect typos or dead code.
+  prefix: IsNever<StartsWith<T, Prefix>> extends true ? never : Prefix,
 ): data is StartsWith<T, Prefix>;
 
 export function startsWith<Prefix extends string>(
   data: string,
+  // The non-narrowing signature is only applicable to primitive strings so
+  // that it doesn't accept the literal cases which were rejected by the
+  // narrowing signature above.
   prefix: IsPrimitiveString<Prefix> extends true ? Prefix : never,
 ): boolean;
 
@@ -77,10 +76,16 @@ export function startsWith<Prefix extends string>(
  * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
-  prefix: SatisfiesLiterals<T, Prefix>,
+  // We don't allow TypeScript to pick this signature if it would result in
+  // narrowing to `never` so that it would be surfaced as an error instead,
+  // allowing the user, at compile time, to detect typos or dead code.
+  prefix: IsNever<StartsWith<T, Prefix>> extends true ? never : Prefix,
 ): (data: T) => data is StartsWith<T, Prefix>;
 
 export function startsWith<Prefix extends string>(
+  // The non-narrowing signature is only applicable to primitive strings so
+  // that it doesn't accept the literal cases which were rejected by  the
+  // narrowing overload above.
   prefix: IsPrimitiveString<Prefix> extends true ? Prefix : never,
 ): (data: string) => boolean;
 
