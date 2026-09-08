@@ -14,17 +14,6 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
-// `true` when no value of `T` could ever start with `Prefix`, which makes the
-// check dead code. Intersecting with the prefix template keeps only the part of
-// `T` that could match, distributing over unions so that a prefix which misses
-// every member reduces to `never`. TypeScript only reduces bounded types this
-// way; unbounded template literals (`${string}`, `${number}`) keep the
-// intersection unreduced and are never reported (pinned in the known issues).
-type IsImpossiblePrefix<T extends string, Prefix extends string> =
-  IsPrimitiveString<Prefix> extends true
-    ? false
-    : IsNever<StartsWith<T, Prefix>>;
-
 /**
  * Determines whether a string begins with the provided prefix, and refines the
  * output type if possible.
@@ -45,7 +34,7 @@ type IsImpossiblePrefix<T extends string, Prefix extends string> =
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: IsImpossiblePrefix<T, Prefix> extends true ? Prefix : never,
+  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): void;
 
 export function startsWith<T extends string, Prefix extends string>(
@@ -73,7 +62,7 @@ export function startsWith(data: string, prefix: string): boolean;
  * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
-  prefix: IsImpossiblePrefix<T, Prefix> extends true ? Prefix : never,
+  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): (data: T) => void;
 
 export function startsWith<Prefix extends string>(

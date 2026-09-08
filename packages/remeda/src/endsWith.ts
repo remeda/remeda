@@ -14,15 +14,6 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
-// `true` when no value of `T` could ever start with `Suffix`, which makes the
-// check dead code. Intersecting with the suffix template keeps only the part of
-// `T` that could match, distributing over unions so that a suffix which misses
-// every member reduces to `never`. TypeScript only reduces bounded types this
-// way; unbounded template literals (`${string}`, `${number}`) keep the
-// intersection unreduced and are never reported (pinned in the known issues).
-type IsImpossibleSuffix<T extends string, Suffix extends string> =
-  IsPrimitiveString<Suffix> extends true ? false : IsNever<EndsWith<T, Suffix>>;
-
 /**
  * Determines whether a string ends with the provided suffix, and refines the
  * output type if possible.
@@ -43,13 +34,13 @@ type IsImpossibleSuffix<T extends string, Suffix extends string> =
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  suffix: IsImpossibleSuffix<T, Suffix> extends true ? Suffix : never,
+  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
 ): void;
 
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
   suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
-): data is T & `${string}${Suffix}`;
+): data is EndsWith<T, Suffix>;
 
 export function endsWith(data: string, suffix: string): boolean;
 
@@ -71,12 +62,12 @@ export function endsWith(data: string, suffix: string): boolean;
  * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
-  suffix: IsImpossibleSuffix<T, Suffix> extends true ? Suffix : never,
+  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
 ): (data: T) => void;
 
 export function endsWith<Suffix extends string>(
   suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
-): <T extends string>(data: T) => data is T & `${string}${Suffix}`;
+): <T extends string>(data: T) => data is EndsWith<T, Suffix>;
 
 export function endsWith(suffix: string): (data: string) => boolean;
 
