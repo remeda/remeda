@@ -168,14 +168,23 @@ describe("known issues!", () => {
     test("data-first", () => {
       const data = "1_bar" as `${number}_bar`;
 
-      if (endsWith(data, "world")) {
+      const isEndsWith = endsWith(data, "world");
+
+      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
+      expectTypeOf(isEndsWith).not.toEqualTypeOf<void>();
+
+      if (isEndsWith) {
         // Rejecting an impossible suffix relies on TypeScript reducing the
-        // intersection with the suffix template to `never`. It only does that for
-        // bounded types; an intersection of two unbounded template literals is
-        // left as-is even when they are disjoint, so the check is accepted and
-        // the `true` branch is typed with an uninhabitable intersection instead.
+        // intersection with the suffix template to `never`. It only does that
+        // for bounded types; an intersection of two unbounded template
+        // literals is left as-is even when they are disjoint, so the check is
+        // accepted and the `true` branch is typed with an uninhabitable
+        // intersection instead.
         // @see https://github.com/microsoft/TypeScript/issues/60446
         expectTypeOf(data).toEqualTypeOf<`${number}_bar` & `${string}world`>();
+
+        // No strings satisfy this type, so it should be equivalent to `never`.
+        expectTypeOf(data).not.toEqualTypeOf<never>();
       } else {
         expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
       }

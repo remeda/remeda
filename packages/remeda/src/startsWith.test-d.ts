@@ -168,14 +168,23 @@ describe("known issues!", () => {
     test("data-first", () => {
       const data = "foo_1" as `foo_${number}`;
 
-      if (startsWith(data, "hello")) {
+      const isStartsWith = startsWith(data, "hello");
+
+      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
+      expectTypeOf(isStartsWith).not.toEqualTypeOf<void>();
+
+      if (isStartsWith) {
         // Rejecting an impossible prefix relies on TypeScript reducing the
-        // intersection with the prefix template to `never`. It only does that for
-        // bounded types; an intersection of two unbounded template literals is
-        // left as-is even when they are disjoint, so the check is accepted and
-        // the `true` branch is typed with an uninhabitable intersection instead.
+        // intersection with the prefix template to `never`. It only does that
+        // for bounded types; an intersection of two unbounded template
+        // literals is left as-is even when they are disjoint, so the check is
+        // accepted and the `true` branch is typed with an uninhabitable
+        // intersection instead.
         // @see https://github.com/microsoft/TypeScript/issues/60446
         expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
+
+        // No strings satisfy this type, so it should be equivalent to `never`.
+        expectTypeOf(data).not.toEqualTypeOf<never>();
       } else {
         expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
       }
