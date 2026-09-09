@@ -103,6 +103,8 @@ export function startsWith<T extends string, Prefix extends string>(
  * method, but doesn't expose the `position` parameter. To check from a specific
  * position, use `startsWith(sliceString(data, position), prefix)`.
  *
+ * Prefixes that `data` can never start with are rejected at compile-time.
+ *
  * @param data - The input string.
  * @param prefix - The string to check for at the beginning.
  * @signature
@@ -172,6 +174,8 @@ export function startsWith<T extends string, Prefix extends string>(
  * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
  * method, but doesn't expose the `position` parameter. To check from a specific
  * position, use `startsWith(sliceString(data, position), prefix)`.
+ *
+ * Prefixes that `data` can never start with are rejected at compile-time.
  *
  * @param prefix - The string to check for at the beginning.
  * @signature

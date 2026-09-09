@@ -103,6 +103,8 @@ export function endsWith<T extends string, Suffix extends string>(
  * method, but doesn't expose the `endPosition` parameter. To check only up to a
  * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
  *
+ * Suffixes that `data` can never end with are rejected at compile-time.
+ *
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
  * @signature
@@ -172,6 +174,8 @@ export function endsWith<T extends string, Suffix extends string>(
  * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
  * method, but doesn't expose the `endPosition` parameter. To check only up to a
  * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
+ *
+ * Suffixes that `data` can never end with are rejected at compile-time.
  *
  * @param suffix - The string to check for at the end.
  * @signature
