@@ -7,11 +7,20 @@ import { startsWith } from "./startsWith";
 
 describe("data-first", () => {
   test("doesn't narrow on 'string' prefix", () => {
-    const data = "foobar" as string;
-    if (startsWith(data, "foo" as string)) {
+    const data = "" as string;
+    if (startsWith(data, "" as string)) {
       expectTypeOf(data).toEqualTypeOf<string>();
     } else {
       expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("doesn't narrow a literal union on 'string' prefix", () => {
+    const data = "cat" as "cat" | "dog";
+    if (startsWith(data, "" as string)) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
     }
   });
 
@@ -25,7 +34,7 @@ describe("data-first", () => {
   });
 
   test("primitive string data", () => {
-    const data = "foobar" as string;
+    const data = "" as string;
     if (startsWith(data, "foo")) {
       expectTypeOf(data).toEqualTypeOf<`foo${string}`>();
     } else {
@@ -69,14 +78,71 @@ describe("data-first", () => {
   test("generic prefix", () => {
     expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
   });
+
+  test("literal union prefix", () => {
+    const data = "" as string;
+    if (startsWith(data, "foo" as "foo" | "baz")) {
+      expectTypeOf(data).toEqualTypeOf<`foo${string}` | `baz${string}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("template prefix", () => {
+    const data = "" as string;
+    if (startsWith(data, "1" as `${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<`${number}${string}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("template prefix that matches a subset of the data", () => {
+    const data = "1_cat" as "1_cat" | "dog";
+    if (startsWith(data, "1_" as `${number}_`)) {
+      expectTypeOf(data).toEqualTypeOf<"1_cat">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
+  test("template prefix on template data", () => {
+    const data = "bar_1" as `bar_${number}`;
+    if (startsWith(data, "bar_" as `${string}_`)) {
+      expectTypeOf(data).toEqualTypeOf<`bar_${number}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("template union prefix", () => {
+    const data = "" as string;
+    if (startsWith(data, "1_" as `${number}_` | `${number}-`)) {
+      expectTypeOf(data).toEqualTypeOf<
+        `${number}_${string}` | `${number}-${string}`
+      >();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
 });
 
 describe("data-last", () => {
   test("doesn't narrow on 'string' prefix", () => {
-    const [yes, no] = partition([] as string[], startsWith("foo" as string));
+    const [yes, no] = partition([] as string[], startsWith("" as string));
 
     expectTypeOf(yes).toEqualTypeOf<string[]>();
     expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("doesn't narrow a literal union on 'string' prefix", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      startsWith("" as string),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("const data that matches", () => {
@@ -128,6 +194,55 @@ describe("data-last", () => {
       `foo${string}`[]
     >();
   });
+
+  test("literal union prefix", () => {
+    const [yes, no] = partition(
+      [] as string[],
+      startsWith("foo" as "foo" | "baz"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<(`foo${string}` | `baz${string}`)[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("template prefix", () => {
+    const [yes, no] = partition([] as string[], startsWith("1" as `${number}`));
+
+    expectTypeOf(yes).toEqualTypeOf<`${number}${string}`[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("template prefix that matches a subset of the data", () => {
+    const [yes, no] = partition(
+      [] as ("1_cat" | "dog")[],
+      startsWith("1_" as `${number}_`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<"1_cat"[]>();
+    expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+  });
+
+  test("template prefix on template data", () => {
+    const [yes, no] = partition(
+      [] as `bar_${number}`[],
+      startsWith("bar_" as `${string}_`),
+    );
+
+    expectTypeOf(yes).branded.toEqualTypeOf<`bar_${number}`[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("template union prefix", () => {
+    const [yes, no] = partition(
+      [] as string[],
+      startsWith("1_" as `${number}_` | `${number}-`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<
+      (`${number}_${string}` | `${number}-${string}`)[]
+    >();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
 });
 
 // @see https://github.com/remeda/remeda/issues/1432
@@ -144,6 +259,18 @@ describe("reject disjoint prefixes (#1432)", () => {
     !startsWith("cat" as "cat" | "dog", "bird");
   });
 
+  test("union prefix where no member matches", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !startsWith("cat" as "cat" | "dog", "bird" as "bird" | "fish");
+  });
+
+  test("template prefix that no literal matches", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !startsWith("cat" as "cat" | "dog", "1_" as `${number}_`);
+  });
+
   describe("data-last", () => {
     test("const data that doesn't match", () => {
       filter(
@@ -158,6 +285,22 @@ describe("reject disjoint prefixes (#1432)", () => {
         [] as ("cat" | "dog")[],
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         startsWith("bird"),
+      );
+    });
+
+    test("union prefix where no member matches", () => {
+      filter(
+        [] as ("cat" | "dog")[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("bird" as "bird" | "fish"),
+      );
+    });
+
+    test("template prefix that no literal matches", () => {
+      filter(
+        [] as ("cat" | "dog")[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("1_" as `${number}_`),
       );
     });
   });
@@ -195,6 +338,36 @@ describe("known issues!", () => {
 
       expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
       expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
+    });
+  });
+
+  describe("a union prefix drops matched members from the `false` branch", () => {
+    test("data-first", () => {
+      const data = "foobar" as "foobar" | "hello" | "world";
+
+      if (startsWith(data, "foo" as "foo" | "he")) {
+        expectTypeOf(data).toEqualTypeOf<"foobar" | "hello">();
+      } else {
+        // Only one member of the union is the prefix at runtime, so a failed
+        // check rules nothing out: "foobar" tested against "he" lands here.
+        // Narrowing intersects `data` with everything matching *any* member,
+        // so members matching at least one of them are excluded even though
+        // they could have been tested against a different member. Should be
+        // the full `"foobar" | "hello" | "world"`.
+        expectTypeOf(data).toEqualTypeOf<"world">();
+      }
+    });
+
+    test("data-last", () => {
+      const [yes, no] = partition(
+        [] as ("foobar" | "hello" | "world")[],
+        startsWith("foo" as "foo" | "he"),
+      );
+
+      expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello")[]>();
+
+      // Should be `("foobar" | "hello" | "world")[]`.
+      expectTypeOf(no).toEqualTypeOf<"world"[]>();
     });
   });
 

@@ -7,11 +7,20 @@ import { partition } from "./partition";
 
 describe("data-first", () => {
   test("doesn't narrow on 'string' suffix", () => {
-    const data = "foobar" as string;
-    if (endsWith(data, "bar" as string)) {
+    const data = "" as string;
+    if (endsWith(data, "" as string)) {
       expectTypeOf(data).toEqualTypeOf<string>();
     } else {
       expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("doesn't narrow a literal union on 'string' suffix", () => {
+    const data = "cat" as "cat" | "dog";
+    if (endsWith(data, "" as string)) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
     }
   });
 
@@ -25,7 +34,7 @@ describe("data-first", () => {
   });
 
   test("primitive string data", () => {
-    const data = "foobar" as string;
+    const data = "" as string;
     if (endsWith(data, "bar")) {
       expectTypeOf(data).toEqualTypeOf<`${string}bar`>();
     } else {
@@ -69,14 +78,71 @@ describe("data-first", () => {
   test("generic suffix", () => {
     expectTypeOf(hasSuffix("foobar", "bar")).toEqualTypeOf<boolean>();
   });
+
+  test("literal union suffix", () => {
+    const data = "" as string;
+    if (endsWith(data, "bar" as "bar" | "baz")) {
+      expectTypeOf(data).toEqualTypeOf<`${string}bar` | `${string}baz`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("template suffix", () => {
+    const data = "" as string;
+    if (endsWith(data, "1" as `${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<`${string}${number}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  test("template suffix that matches a subset of the data", () => {
+    const data = "cat_1" as "cat_1" | "dog";
+    if (endsWith(data, "_1" as `_${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<"cat_1">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
+  test("template suffix on template data", () => {
+    const data = "1_bar" as `${number}_bar`;
+    if (endsWith(data, "_bar" as `_${string}`)) {
+      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
+  test("template union suffix", () => {
+    const data = "" as string;
+    if (endsWith(data, "_1" as `_${number}` | `-${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<
+        `${string}_${number}` | `${string}-${number}`
+      >();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
 });
 
 describe("data-last", () => {
   test("doesn't narrow on 'string' suffix", () => {
-    const [yes, no] = partition([] as string[], endsWith("bar" as string));
+    const [yes, no] = partition([] as string[], endsWith("" as string));
 
     expectTypeOf(yes).toEqualTypeOf<string[]>();
     expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("doesn't narrow a literal union on 'string' suffix", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      endsWith("" as string),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("const data that matches", () => {
@@ -128,6 +194,55 @@ describe("data-last", () => {
       `${string}bar`[]
     >();
   });
+
+  test("literal union suffix", () => {
+    const [yes, no] = partition(
+      [] as string[],
+      endsWith("bar" as "bar" | "baz"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<(`${string}bar` | `${string}baz`)[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("template suffix", () => {
+    const [yes, no] = partition([] as string[], endsWith("1" as `${number}`));
+
+    expectTypeOf(yes).toEqualTypeOf<`${string}${number}`[]>();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("template suffix that matches a subset of the data", () => {
+    const [yes, no] = partition(
+      [] as ("cat_1" | "dog")[],
+      endsWith("_1" as `_${number}`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<"cat_1"[]>();
+    expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+  });
+
+  test("template suffix on template data", () => {
+    const [yes, no] = partition(
+      [] as `${number}_bar`[],
+      endsWith("_bar" as `_${string}`),
+    );
+
+    expectTypeOf(yes).branded.toEqualTypeOf<`${number}_bar`[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("template union suffix", () => {
+    const [yes, no] = partition(
+      [] as string[],
+      endsWith("_1" as `_${number}` | `-${number}`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<
+      (`${string}_${number}` | `${string}-${number}`)[]
+    >();
+    expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
 });
 
 // @see https://github.com/remeda/remeda/issues/1432
@@ -144,6 +259,18 @@ describe("reject disjoint suffixes (#1432)", () => {
     !endsWith("cat" as "cat" | "dog", "bird");
   });
 
+  test("union suffix where no member matches", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !endsWith("cat" as "cat" | "dog", "bird" as "bird" | "fish");
+  });
+
+  test("template suffix that no literal matches", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !endsWith("cat" as "cat" | "dog", "_1" as `_${number}`);
+  });
+
   describe("data-last", () => {
     test("const data that doesn't match", () => {
       filter(
@@ -158,6 +285,22 @@ describe("reject disjoint suffixes (#1432)", () => {
         [] as ("cat" | "dog")[],
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         endsWith("bird"),
+      );
+    });
+
+    test("union suffix where no member matches", () => {
+      filter(
+        [] as ("cat" | "dog")[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith("bird" as "bird" | "fish"),
+      );
+    });
+
+    test("template suffix that no literal matches", () => {
+      filter(
+        [] as ("cat" | "dog")[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith("_1" as `_${number}`),
       );
     });
   });
@@ -195,6 +338,36 @@ describe("known issues!", () => {
 
       expectTypeOf(yes).toEqualTypeOf<(`${number}_bar` & `${string}world`)[]>();
       expectTypeOf(no).toEqualTypeOf<`${number}_bar`[]>();
+    });
+  });
+
+  describe("a union suffix drops matched members from the `false` branch", () => {
+    test("data-first", () => {
+      const data = "foobar" as "foobar" | "hello" | "world";
+
+      if (endsWith(data, "bar" as "bar" | "lo")) {
+        expectTypeOf(data).toEqualTypeOf<"foobar" | "hello">();
+      } else {
+        // Only one member of the union is the suffix at runtime, so a failed
+        // check rules nothing out: "foobar" tested against "lo" lands here.
+        // Narrowing intersects `data` with everything matching *any* member,
+        // so members matching at least one of them are excluded even though
+        // they could have been tested against a different member. Should be
+        // the full `"foobar" | "hello" | "world"`.
+        expectTypeOf(data).toEqualTypeOf<"world">();
+      }
+    });
+
+    test("data-last", () => {
+      const [yes, no] = partition(
+        [] as ("foobar" | "hello" | "world")[],
+        endsWith("bar" as "bar" | "lo"),
+      );
+
+      expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello")[]>();
+
+      // Should be `("foobar" | "hello" | "world")[]`.
+      expectTypeOf(no).toEqualTypeOf<"world"[]>();
     });
   });
 
