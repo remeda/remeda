@@ -13,10 +13,10 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
-// The same intersection, but requiring *every* member of a union suffix instead
-// of any of them. Only one member is the suffix at runtime, and which one is
-// unknowable, so a failed check can only rule out values that would have
-// matched no matter which member it was.
+// The same intersection, but requiring *every* possible runtime value of the
+// suffix instead of any of them. Only one of them is the suffix at runtime, and
+// which one is unknowable, so a failed check can only rule out values that
+// would have matched no matter which one it was.
 type EndsWithEvery<T, Suffix extends string> = T &
   // 2. And then we intersect the suffixes instead of adding them to a union to
   // flip the semantics from "OR" to "AND", so that the resulting suffix
@@ -25,7 +25,12 @@ type EndsWithEvery<T, Suffix extends string> = T &
   UnionToIntersection<
     // 1. We first distribute the union to compute the suffix for each member of
     // the union separately (and not create a suffix that contains the union).
-    Suffix extends unknown ? `${string}${Suffix}` : never
+    Suffix extends unknown
+      ? // The trivial empty prefix catches everything and breaks the typing.
+        Suffix extends ""
+        ? never
+        : `${string}${Suffix}`
+      : never
   >;
 
 // TypeScript treats type-guards as complementary (e.g., everything either

@@ -133,6 +133,15 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when a union suffix contains an empty string", () => {
+    const data = "cat" as "cat" | "dog";
+    if (endsWith(data, "" as "" | "z")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    }
+  });
+
   test("template union suffix", () => {
     const data = "" as string;
     if (endsWith(data, "_1" as `_${number}` | `-${number}`)) {
@@ -268,6 +277,16 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`${number}_bar`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("doesn't narrow when a union suffix contains an empty string", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      endsWith("" as "" | "z"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("template union suffix", () => {

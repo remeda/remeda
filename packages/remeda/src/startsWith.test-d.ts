@@ -133,6 +133,15 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when a union prefix contains an empty string", () => {
+    const data = "cat" as "cat" | "dog";
+    if (startsWith(data, "" as "" | "z")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    }
+  });
+
   test("template union prefix", () => {
     const data = "" as string;
     if (startsWith(data, "1_" as `${number}_` | `${number}-`)) {
@@ -268,6 +277,16 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`bar_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("doesn't narrow when a union prefix contains an empty string", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      startsWith("" as "" | "z"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("template union prefix", () => {

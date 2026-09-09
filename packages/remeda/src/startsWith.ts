@@ -13,10 +13,10 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
-// The same intersection, but requiring *every* member of a union prefix instead
-// of any of them. Only one member is the prefix at runtime, and which one is
-// unknowable, so a failed check can only rule out values that would have
-// matched no matter which member it was.
+// The same intersection, but requiring *every* possible runtime value of the
+// prefix instead of any of them. Only one of them is the prefix at runtime, and
+// which one is unknowable, so a failed check can only rule out values that
+// would have matched no matter which one it was.
 type StartsWithEvery<T, Prefix extends string> = T &
   // 2. And then we intersect the prefixes instead of adding them to a union to
   // flip the semantics from "OR" to "AND", so that the resulting prefix
@@ -25,7 +25,12 @@ type StartsWithEvery<T, Prefix extends string> = T &
   UnionToIntersection<
     // 1. We first distribute the union to compute the prefix for each member of
     // the union separately (and not create a prefix that contains the union).
-    Prefix extends unknown ? `${Prefix}${string}` : never
+    Prefix extends unknown
+      ? // The trivial empty prefix catches everything and breaks the typing.
+        Prefix extends ""
+        ? never
+        : `${Prefix}${string}`
+      : never
   >;
 
 // TypeScript treats type-guards as complementary (e.g., everything either
