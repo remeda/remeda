@@ -13,7 +13,7 @@ import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
 // type to also be of this shape. For a raw primitive string this narrows
-// exactly to the suffix template, for a literal TypeScript check if it
+// exactly to the suffix template, for a literal TypeScript checks if it
 // satisfies the condition and narrow to `never` if not (and distribute the
 // check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
