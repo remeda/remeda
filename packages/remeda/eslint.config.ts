@@ -91,8 +91,22 @@ export default defineConfig(
         "off",
         { enableFixer: false, require: { FunctionDeclaration: false } },
       ],
-      "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
+
+      // We allow tagging a function signature with `@hidden` to prevent it from
+      // affecting how TypeDoc parses the docs for that utility. This allows us
+      // to workaround overloaded signatures that are used to shape the function
+      // typing. To keep these annotations lean we need to turn off some
+      // `eslint-plugin-jsdoc` rules from firing on those annotations via the
+      // `exemptedBy` option.
+      // @see `endsWith`
+
+      "jsdoc/require-description": ["error", { exemptedBy: ["hidden"] }],
+      "jsdoc/require-param": ["warn", { exemptedBy: ["hidden"] }],
+      "jsdoc/require-example": [
+        "warn",
+        { enableFixer: false, exemptedBy: ["hidden"] },
+      ],
+
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
       // TODO: Requires manual fixes, enable in a separate PR.

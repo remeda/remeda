@@ -15,6 +15,22 @@ import { purry } from "./purry";
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
 /**
+ * @hidden needs to be the first overload so the typing would work, but it's
+ * `void` return type is not representative of the function so we want the docs
+ * site to skip it.
+ */
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
+  // TypeScript would pick this signature only when it would result in narrowing
+  // to `never`; by returning void the signature effectively "disables" the
+  // usefulness of the function, in most cases surfacing a compile-time error,
+  // allowing users to detect typos or dead code at the call site itself
+  // instead of relying on downstream errors.
+  // @see https://github.com/remeda/remeda/issues/1432
+  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
+): void;
+
+/**
  * Determines whether a string ends with the provided suffix, and refines the
  * output type if possible.
  *
@@ -34,6 +50,17 @@ type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
+  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
+): data is EndsWith<T, Suffix>;
+
+export function endsWith(data: string, suffix: string): boolean;
+
+/**
+ * @hidden needs to be the first overload so the typing would work, but it's
+ * `void` return type is not representative of the function so we want the docs
+ * site to skip it.
+ */
+export function endsWith<T extends string, Suffix extends string>(
   // TypeScript would pick this signature only when it would result in narrowing
   // to `never`; by returning void the signature effectively "disables" the
   // usefulness of the function, in most cases surfacing a compile-time error,
@@ -41,14 +68,7 @@ export function endsWith<T extends string, Suffix extends string>(
   // instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
   suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
-): void;
-
-export function endsWith<T extends string, Suffix extends string>(
-  data: T,
-  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
-): data is EndsWith<T, Suffix>;
-
-export function endsWith(data: string, suffix: string): boolean;
+): (data: T) => void;
 
 /**
  * Determines whether a string ends with the provided suffix, and refines the
@@ -67,16 +87,6 @@ export function endsWith(data: string, suffix: string): boolean;
  * @dataLast
  * @category String
  */
-export function endsWith<T extends string, Suffix extends string>(
-  // TypeScript would pick this signature only when it would result in narrowing
-  // to `never`; by returning void the signature effectively "disables" the
-  // usefulness of the function, in most cases surfacing a compile-time error,
-  // allowing users to detect typos or dead code at the call site itself
-  // instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
-): (data: T) => void;
-
 export function endsWith<Suffix extends string>(
   suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
 ): <T extends string>(data: T) => data is EndsWith<T, Suffix>;
