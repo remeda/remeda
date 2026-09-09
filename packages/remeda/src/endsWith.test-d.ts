@@ -88,6 +88,24 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when the suffix union splits the data", () => {
+    const data = "foobar" as "foobar" | "hello" | "world";
+    if (endsWith(data, "bar" as "bar" | "lo")) {
+      expectTypeOf(data).toEqualTypeOf<"foobar" | "hello" | "world">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"foobar" | "hello" | "world">();
+    }
+  });
+
+  test("doesn't narrow a matching const to 'never' on a union suffix", () => {
+    const data = "foobar" as const;
+    if (endsWith(data, "bar" as "bar" | "lo")) {
+      expectTypeOf(data).toEqualTypeOf<"foobar">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"foobar">();
+    }
+  });
+
   test("template suffix", () => {
     const data = "" as string;
     if (endsWith(data, "1" as `${number}`)) {
@@ -203,6 +221,26 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<(`${string}bar` | `${string}baz`)[]>();
     expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("doesn't narrow when the suffix union splits the data", () => {
+    const [yes, no] = partition(
+      [] as ("foobar" | "hello" | "world")[],
+      endsWith("bar" as "bar" | "lo"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+    expectTypeOf(no).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+  });
+
+  test("doesn't narrow a matching const to 'never' on a union suffix", () => {
+    const [yes, no] = partition(
+      [] as "foobar"[],
+      endsWith("bar" as "bar" | "lo"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
+    expectTypeOf(no).toEqualTypeOf<"foobar"[]>();
   });
 
   test("template suffix", () => {
@@ -338,36 +376,6 @@ describe("known issues!", () => {
 
       expectTypeOf(yes).toEqualTypeOf<(`${number}_bar` & `${string}world`)[]>();
       expectTypeOf(no).toEqualTypeOf<`${number}_bar`[]>();
-    });
-  });
-
-  describe("a union suffix drops matched members from the `false` branch", () => {
-    test("data-first", () => {
-      const data = "foobar" as "foobar" | "hello" | "world";
-
-      if (endsWith(data, "bar" as "bar" | "lo")) {
-        expectTypeOf(data).toEqualTypeOf<"foobar" | "hello">();
-      } else {
-        // Only one member of the union is the suffix at runtime, so a failed
-        // check rules nothing out: "foobar" tested against "lo" lands here.
-        // Narrowing intersects `data` with everything matching *any* member,
-        // so members matching at least one of them are excluded even though
-        // they could have been tested against a different member. Should be
-        // the full `"foobar" | "hello" | "world"`.
-        expectTypeOf(data).toEqualTypeOf<"world">();
-      }
-    });
-
-    test("data-last", () => {
-      const [yes, no] = partition(
-        [] as ("foobar" | "hello" | "world")[],
-        endsWith("bar" as "bar" | "lo"),
-      );
-
-      expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello")[]>();
-
-      // Should be `("foobar" | "hello" | "world")[]`.
-      expectTypeOf(no).toEqualTypeOf<"world"[]>();
     });
   });
 

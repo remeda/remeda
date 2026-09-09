@@ -88,6 +88,24 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when the prefix union splits the data", () => {
+    const data = "foobar" as "foobar" | "hello" | "world";
+    if (startsWith(data, "foo" as "foo" | "he")) {
+      expectTypeOf(data).toEqualTypeOf<"foobar" | "hello" | "world">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"foobar" | "hello" | "world">();
+    }
+  });
+
+  test("doesn't narrow a matching const to 'never' on a union prefix", () => {
+    const data = "foobar" as const;
+    if (startsWith(data, "foo" as "foo" | "he")) {
+      expectTypeOf(data).toEqualTypeOf<"foobar">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"foobar">();
+    }
+  });
+
   test("template prefix", () => {
     const data = "" as string;
     if (startsWith(data, "1" as `${number}`)) {
@@ -203,6 +221,26 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<(`foo${string}` | `baz${string}`)[]>();
     expectTypeOf(no).toEqualTypeOf<string[]>();
+  });
+
+  test("doesn't narrow when the prefix union splits the data", () => {
+    const [yes, no] = partition(
+      [] as ("foobar" | "hello" | "world")[],
+      startsWith("foo" as "foo" | "he"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+    expectTypeOf(no).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+  });
+
+  test("doesn't narrow a matching const to 'never' on a union prefix", () => {
+    const [yes, no] = partition(
+      [] as "foobar"[],
+      startsWith("foo" as "foo" | "he"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
+    expectTypeOf(no).toEqualTypeOf<"foobar"[]>();
   });
 
   test("template prefix", () => {
@@ -338,36 +376,6 @@ describe("known issues!", () => {
 
       expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
       expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
-    });
-  });
-
-  describe("a union prefix drops matched members from the `false` branch", () => {
-    test("data-first", () => {
-      const data = "foobar" as "foobar" | "hello" | "world";
-
-      if (startsWith(data, "foo" as "foo" | "he")) {
-        expectTypeOf(data).toEqualTypeOf<"foobar" | "hello">();
-      } else {
-        // Only one member of the union is the prefix at runtime, so a failed
-        // check rules nothing out: "foobar" tested against "he" lands here.
-        // Narrowing intersects `data` with everything matching *any* member,
-        // so members matching at least one of them are excluded even though
-        // they could have been tested against a different member. Should be
-        // the full `"foobar" | "hello" | "world"`.
-        expectTypeOf(data).toEqualTypeOf<"world">();
-      }
-    });
-
-    test("data-last", () => {
-      const [yes, no] = partition(
-        [] as ("foobar" | "hello" | "world")[],
-        startsWith("foo" as "foo" | "he"),
-      );
-
-      expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello")[]>();
-
-      // Should be `("foobar" | "hello" | "world")[]`.
-      expectTypeOf(no).toEqualTypeOf<"world"[]>();
     });
   });
 

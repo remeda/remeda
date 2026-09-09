@@ -2,7 +2,7 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type { IsNever } from "type-fest";
+import type { IsEqual, IsNever, UnionToIntersection } from "type-fest";
 import { purry } from "./purry";
 
 // By intersecting with a prefix template we force all types that satisfy this
@@ -12,6 +12,40 @@ import { purry } from "./purry";
 // check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
+
+// The same intersection, but requiring *every* member of a union prefix instead
+// of any of them. Only one member is the prefix at runtime, and which one is
+// unknowable, so a failed check can only rule out values that would have
+// matched no matter which member it was.
+type StartsWithEvery<T, Prefix extends string> = T &
+  // 2. And then we intersect the prefixes instead of adding them to a union to
+  // flip the semantics from "OR" to "AND", so that the resulting prefix
+  // limitation is the tightest possible combination of all prefixes, and not
+  // the widest one.
+  UnionToIntersection<
+    // 1. We first distribute the union to compute the prefix for each member of
+    // the union separately (and not create a prefix that contains the union).
+    Prefix extends unknown ? `${Prefix}${string}` : never
+  >;
+
+// TypeScript treats type-guards as complementary (e.g., everything either
+// fully satisfies the type, or fully doesn't, typing the falsy branch similar
+// to the result of `Extract<T, Condition>`). `startsWith` doesn't have this
+// relationship when `Prefix` is a union because we don't **know** which of the
+// union members match, so we can't narrow the falsy branch at all. The only way
+// to prevent this is to prevent TypeScript from using the narrowing overload
+// in cases where we know the narrowing wouldn't be sound.
+type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
+  // We simulate the falsy branch using the actual narrowing type we use and
+  // the type created by narrowing via *all* union members together.
+  IsEqual<
+    Exclude<T, StartsWith<T, Prefix>>,
+    Exclude<T, StartsWithEvery<T, Prefix>>
+  >,
+  // We want to find the cases where they don't agree, this means that narrowing
+  // would result in an unsound overly-narrow falsy branch.
+  false
+>;
 
 /**
  * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
@@ -63,7 +97,13 @@ export function startsWith<T extends string, Prefix extends string>(
   data: T,
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.
-  prefix: string extends Prefix ? never : Prefix,
+  prefix: string extends Prefix
+    ? never
+    : // Union prefixes are rejected too when the guard they'd produce isn't
+      // sound.
+      IsNarrowingUnsound<T, Prefix> extends true
+      ? never
+      : Prefix,
 ): data is StartsWith<T, Prefix>;
 
 export function startsWith(data: string, prefix: string): boolean;
@@ -93,6 +133,17 @@ export function startsWith<T extends string, Prefix extends string>(
   // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): (data: T) => void;
+
+export function startsWith<T extends string, Prefix extends string>(
+  // In the narrowing data-last overload we move the type of `data` to the
+  // returned callback so that it could defer the inference to the wrapper,
+  // allowing it to support complex compositions (e.g., `isNot`); but our
+  // soundness check requires the `data` type so it could compare against it.
+  // To work around this we need an additional overload that would only match
+  // the unsound cases. If the inputs are sound, it wouldn't match and allow us
+  // to fall through to the next overload.
+  prefix: IsNarrowingUnsound<T, Prefix> extends true ? Prefix : never,
+): (data: T) => boolean;
 
 /**
  * Determines whether a string begins with the provided prefix, and refines the

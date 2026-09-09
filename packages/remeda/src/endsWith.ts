@@ -2,7 +2,7 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type { IsNever } from "type-fest";
+import type { IsEqual, IsNever, UnionToIntersection } from "type-fest";
 import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
@@ -12,6 +12,40 @@ import { purry } from "./purry";
 // check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
+
+// The same intersection, but requiring *every* member of a union suffix instead
+// of any of them. Only one member is the suffix at runtime, and which one is
+// unknowable, so a failed check can only rule out values that would have
+// matched no matter which member it was.
+type EndsWithEvery<T, Suffix extends string> = T &
+  // 2. And then we intersect the suffixes instead of adding them to a union to
+  // flip the semantics from "OR" to "AND", so that the resulting suffix
+  // limitation is the tightest possible combination of all suffixes, and not
+  // the widest one.
+  UnionToIntersection<
+    // 1. We first distribute the union to compute the suffix for each member of
+    // the union separately (and not create a suffix that contains the union).
+    Suffix extends unknown ? `${string}${Suffix}` : never
+  >;
+
+// TypeScript treats type-guards as complementary (e.g., everything either
+// fully satisfies the type, or fully doesn't, typing the falsy branch similar
+// to the result of `Extract<T, Condition>`). `startsWith` doesn't have this
+// relationship when `Suffix` is a union because we don't **know** which of the
+// union members match, so we can't narrow the falsy branch at all. The only way
+// to prevent this is to prevent TypeScript from using the narrowing overload
+// in cases where we know the narrowing wouldn't be sound.
+type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
+  // We simulate the falsy branch using the actual narrowing type we use and
+  // the type created by narrowing via *all* union members together.
+  IsEqual<
+    Exclude<T, EndsWith<T, Suffix>>,
+    Exclude<T, EndsWithEvery<T, Suffix>>
+  >,
+  // We want to find the cases where they don't agree, this means that narrowing
+  // would result in an unsound overly-narrow falsy branch.
+  false
+>;
 
 /**
  * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
@@ -62,8 +96,15 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
   // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload.
-  suffix: string extends Suffix ? never : Suffix,
+  // the non-narrowing overload. Union suffixes are rejected too when the guard
+  // they'd produce isn't sound.
+  suffix: string extends Suffix
+    ? never
+    : // Union prefixes are rejected too when the guard they'd produce isn't
+      // sound.
+      IsNarrowingUnsound<T, Suffix> extends true
+      ? never
+      : Suffix,
 ): data is EndsWith<T, Suffix>;
 
 export function endsWith(data: string, suffix: string): boolean;
@@ -93,6 +134,17 @@ export function endsWith<T extends string, Suffix extends string>(
   // @see https://github.com/remeda/remeda/issues/1432
   suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
 ): (data: T) => void;
+
+export function endsWith<T extends string, Suffix extends string>(
+  // In the narrowing data-last overload we move the type of `data` to the
+  // returned callback so that it could defer the inference to the wrapper,
+  // allowing it to support complex compositions (e.g., `isNot`); but our
+  // soundness check requires the `data` type so it could compare against it.
+  // To work around this we need an additional overload that would only match
+  // the unsound cases. If the inputs are sound, it wouldn't match and allow us
+  // to fall through to the next overload.
+  suffix: IsNarrowingUnsound<T, Suffix> extends true ? Suffix : never,
+): (data: T) => boolean;
 
 /**
  * Determines whether a string ends with the provided suffix, and refines the
