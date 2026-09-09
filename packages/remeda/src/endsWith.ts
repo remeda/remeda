@@ -3,7 +3,6 @@
  */
 
 import type { IsNever } from "type-fest";
-import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
@@ -62,7 +61,9 @@ export function endsWith<T extends string, Suffix extends string>(
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
+  // Reject primitive strings, they can't be used to narrow T. They would match
+  // the non-narrowing overload.
+  suffix: string extends Suffix ? never : Suffix,
 ): data is EndsWith<T, Suffix>;
 
 export function endsWith(data: string, suffix: string): boolean;
@@ -111,7 +112,9 @@ export function endsWith<T extends string, Suffix extends string>(
  * @category String
  */
 export function endsWith<Suffix extends string>(
-  suffix: IsPrimitiveString<Suffix> extends true ? never : Suffix,
+  // Reject primitive strings, they can't be used to narrow T. They would match
+  // the non-narrowing overload.
+  suffix: string extends Suffix ? never : Suffix,
 ): <T extends string>(data: T) => data is EndsWith<T, Suffix>;
 
 export function endsWith(suffix: string): (data: string) => boolean;

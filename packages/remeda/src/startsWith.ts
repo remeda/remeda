@@ -3,7 +3,6 @@
  */
 
 import type { IsNever } from "type-fest";
-import type { IsPrimitiveString } from "./internal/types/IsPrimitiveString";
 import { purry } from "./purry";
 
 // By intersecting with a prefix template we force all types that satisfy this
@@ -62,7 +61,9 @@ export function startsWith<T extends string, Prefix extends string>(
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: IsPrimitiveString<Prefix> extends true ? never : Prefix,
+  // Reject primitive strings, they can't be used to narrow T. They would match
+  // the non-narrowing overload.
+  prefix: string extends Prefix ? never : Prefix,
 ): data is StartsWith<T, Prefix>;
 
 export function startsWith(data: string, prefix: string): boolean;
@@ -111,7 +112,9 @@ export function startsWith<T extends string, Prefix extends string>(
  * @category String
  */
 export function startsWith<Prefix extends string>(
-  prefix: IsPrimitiveString<Prefix> extends true ? never : Prefix,
+  // Reject primitive strings, they can't be used to narrow T. They would match
+  // the non-narrowing overload.
+  prefix: string extends Prefix ? never : Prefix,
 ): <T extends string>(data: T) => data is StartsWith<T, Prefix>;
 
 export function startsWith(prefix: string): (data: string) => boolean;
