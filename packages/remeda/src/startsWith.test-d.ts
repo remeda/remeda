@@ -422,6 +422,9 @@ describe("known issues!", () => {
       const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
 
       expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
+      // Once the intersection above correctly reduces to `never`, `yes` would
+      // become `never[]`; until then this stays green as a canary.
+      expectTypeOf(yes).not.toEqualTypeOf<never[]>();
       expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
     });
   });
@@ -432,19 +435,25 @@ describe("known issues!", () => {
       // it also accepts the `void`-returning predicate a dead-code check
       // resolves to. Remeda's own `filter` requires a `boolean` and does
       // reject it.
-      expectTypeOf(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
-        ([] as ("cat" | "dog")[]).filter(startsWith("bird")),
-      ).toEqualTypeOf<("cat" | "dog")[]>();
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
+      const result = ([] as ("cat" | "dog")[]).filter(startsWith("bird"));
+
+      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
+      // If native `.filter` ever rejected a `void`-returning predicate, this
+      // dead-code check would resolve to an empty result instead.
+      expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
 
     test("isNot", () => {
       // `isNot` requires a type predicate, which makes TypeScript resolve
       // `startsWith` through the guard overload; the `void` overload is never a
       // candidate, so the dead-code check goes unnoticed.
-      expectTypeOf(
-        filter([] as ("cat" | "dog")[], isNot(startsWith("bird"))),
-      ).toEqualTypeOf<("cat" | "dog")[]>();
+      const result = filter([] as ("cat" | "dog")[], isNot(startsWith("bird")));
+
+      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
+      // If `isNot` ever resolved this through the `void` overload instead,
+      // the dead-code check would resolve to an empty result.
+      expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
   });
 
@@ -460,9 +469,15 @@ describe("known issues!", () => {
       // unsound: at runtime the prefix could be `"bird"`, in which case
       // nothing starts with it, `isNot` is `true` for every element, and
       // `"cat"` survives the filter too.
-      expectTypeOf(
-        filter([] as ("cat" | "dog")[], isNot(startsWith("c" as "c" | "bird"))),
-      ).toEqualTypeOf<"dog"[]>();
+      const result = filter(
+        [] as ("cat" | "dog")[],
+        isNot(startsWith("c" as "c" | "bird")),
+      );
+
+      expectTypeOf(result).toEqualTypeOf<"dog"[]>();
+      // If `isNot` ever resolved this through the sound `boolean` overload,
+      // it wouldn't narrow at all, matching the direct-call behavior above.
+      expectTypeOf(result).not.toEqualTypeOf<("cat" | "dog")[]>();
     });
   });
 });
