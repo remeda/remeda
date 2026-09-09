@@ -10,7 +10,7 @@ import { purry } from "./purry";
 // type to also be of this shape. For a raw primitive string this narrows
 // exactly to the prefix template, for a literal TypeScript check if it
 // satisfies the condition and narrow to `never` if not (and distribute the
-// check for unions). The only limitation is for template literals, as
+// check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
