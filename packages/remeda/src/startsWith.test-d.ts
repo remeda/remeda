@@ -97,6 +97,15 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when only some prefixes are disjoint", () => {
+    const data = "cat" as "cat" | "dog";
+    if (startsWith(data, "c" as "c" | "bird")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    }
+  });
+
   test("doesn't narrow a matching const to 'never' on a union prefix", () => {
     const data = "foobar" as const;
     if (startsWith(data, "foo" as "foo" | "he")) {
@@ -240,6 +249,16 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
     expectTypeOf(no).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+  });
+
+  test("doesn't narrow when only some prefixes are disjoint", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      startsWith("c" as "c" | "bird"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("doesn't narrow a matching const to 'never' on a union prefix", () => {

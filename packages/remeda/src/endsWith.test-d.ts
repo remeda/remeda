@@ -97,6 +97,15 @@ describe("data-first", () => {
     }
   });
 
+  test("doesn't narrow when only some suffixes are disjoint", () => {
+    const data = "cat" as "cat" | "dog";
+    if (endsWith(data, "t" as "t" | "bird")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    }
+  });
+
   test("doesn't narrow a matching const to 'never' on a union suffix", () => {
     const data = "foobar" as const;
     if (endsWith(data, "bar" as "bar" | "lo")) {
@@ -240,6 +249,16 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
     expectTypeOf(no).toEqualTypeOf<("foobar" | "hello" | "world")[]>();
+  });
+
+  test("doesn't narrow when only some suffixes are disjoint", () => {
+    const [yes, no] = partition(
+      [] as ("cat" | "dog")[],
+      endsWith("t" as "t" | "bird"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat" | "dog")[]>();
   });
 
   test("doesn't narrow a matching const to 'never' on a union suffix", () => {
