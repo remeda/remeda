@@ -15,17 +15,24 @@ import { purry } from "./purry";
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
 /**
- * @hidden needs to be the first overload so the typing would work, but it's
- * `void` return type is not representative of the function so we want the docs
- * site to skip it.
+ * When a literal prefix doesn't match *any* of the possible values of `data`
+ * the call itself is rejected by disabling it's return type. If this overload
+ * signature was chosen for your call most likely your suffix has a typo or the
+ * data itself has changed and it no longer satisfies the `prefix`.
+ *
+ * @param data - The input string.
+ * @param prefix - The string to check for at the end.
+ * @example
+ *   startsWith("cat" as ("cat" | "dog"), "bird"); //=> void
+ * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  // TypeScript would pick this signature only when it would result in narrowing
-  // to `never`; by returning void the signature effectively "disables" the
-  // usefulness of the function, in most cases surfacing a compile-time error,
-  // allowing users to detect typos or dead code at the call site itself
-  // instead of relying on downstream errors.
+  // This signature has to come first so that TypeScript would pick it only
+  // when it would result in narrowing to `never`; by returning void the
+  // signature effectively "disables" the usefulness of the function, in most
+  // cases surfacing a compile-time error, allowing users to detect typos or
+  // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): void;
@@ -56,16 +63,22 @@ export function startsWith<T extends string, Prefix extends string>(
 export function startsWith(data: string, prefix: string): boolean;
 
 /**
- * @hidden needs to be the first overload so the typing would work, but it's
- * `void` return type is not representative of the function so we want the docs
- * site to skip it.
+ * When a literal prefix doesn't match *any* of the possible values of `data`
+ * the call itself is rejected by disabling it's return type. If this overload
+ * signature was chosen for your call most likely your suffix has a typo or the
+ * data itself has changed and it no longer satisfies the `prefix`.
+ *
+ * @param prefix - The string to check for at the end.
+ * @example
+ *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> void
+ * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
-  // TypeScript would pick this signature only when it would result in narrowing
-  // to `never`; by returning void the signature effectively "disables" the
-  // usefulness of the function, in most cases surfacing a compile-time error,
-  // allowing users to detect typos or dead code at the call site itself
-  // instead of relying on downstream errors.
+  // This signature has to come first so that TypeScript would pick it only
+  // when it would result in narrowing to `never`; by returning void the
+  // signature effectively "disables" the usefulness of the function, in most
+  // cases surfacing a compile-time error, allowing users to detect typos or
+  // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
 ): (data: T) => void;

@@ -15,17 +15,24 @@ import { purry } from "./purry";
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
 /**
- * @hidden needs to be the first overload so the typing would work, but it's
- * `void` return type is not representative of the function so we want the docs
- * site to skip it.
+ * When a literal suffix doesn't match *any* of the possible values of the input
+ * the call itself is rejected by disabling it's return type. If this overload
+ * signature was chosen for your call most likely your suffix has a typo or the
+ * data itself has changed and it no longer satisfies the `suffix`.
+ *
+ * @param data - The input string.
+ * @param suffix - The string to check for at the end.
+ * @example
+ *   endsWith("cat" as ("cat" | "dog"), "bird"); //=> void
+ * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // TypeScript would pick this signature only when it would result in narrowing
-  // to `never`; by returning void the signature effectively "disables" the
-  // usefulness of the function, in most cases surfacing a compile-time error,
-  // allowing users to detect typos or dead code at the call site itself
-  // instead of relying on downstream errors.
+  // This signature has to come first so that TypeScript would pick it only
+  // when it would result in narrowing to `never`; by returning void the
+  // signature effectively "disables" the usefulness of the function, in most
+  // cases surfacing a compile-time error, allowing users to detect typos or
+  // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
   suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
 ): void;
@@ -56,16 +63,22 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith(data: string, suffix: string): boolean;
 
 /**
- * @hidden needs to be the first overload so the typing would work, but it's
- * `void` return type is not representative of the function so we want the docs
- * site to skip it.
+ * When a literal suffix doesn't match *any* of the possible values of the input
+ * the call itself is rejected by disabling it's return type. If this overload
+ * signature was chosen for your call most likely your suffix has a typo or the
+ * data itself has changed and it no longer satisfies the `suffix`.
+ *
+ * @param suffix - The string to check for at the end.
+ * @example
+ *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> void
+ * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(
-  // TypeScript would pick this signature only when it would result in narrowing
-  // to `never`; by returning void the signature effectively "disables" the
-  // usefulness of the function, in most cases surfacing a compile-time error,
-  // allowing users to detect typos or dead code at the call site itself
-  // instead of relying on downstream errors.
+  // This signature has to come first so that TypeScript would pick it only
+  // when it would result in narrowing to `never`; by returning void the
+  // signature effectively "disables" the usefulness of the function, in most
+  // cases surfacing a compile-time error, allowing users to detect typos or
+  // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
   suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
 ): (data: T) => void;
