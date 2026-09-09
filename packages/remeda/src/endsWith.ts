@@ -15,15 +15,20 @@ import { purry } from "./purry";
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
 /**
- * When a literal suffix doesn't match *any* of the possible values of the input
- * the call itself is rejected by disabling it's return type. If this overload
- * signature was chosen for your call most likely your suffix has a typo or the
- * data itself has changed and it no longer satisfies the `suffix`.
+ * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
+ * values of `data` the call itself is rejected by disabling it's return type.
+ * If this overload signature was chosen for your call most likely your suffix
+ * has a typo or `data` itself has changed and it no longer satisfies the
+ * `suffix`.
+ *
+ * If you still need to make the check on these values widen one of them to
+ * `string`.
  *
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
  * @example
  *   endsWith("cat" as ("cat" | "dog"), "bird"); //=> void
+ *   endsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
  * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(
@@ -63,14 +68,19 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith(data: string, suffix: string): boolean;
 
 /**
- * When a literal suffix doesn't match *any* of the possible values of the input
- * the call itself is rejected by disabling it's return type. If this overload
- * signature was chosen for your call most likely your suffix has a typo or the
- * data itself has changed and it no longer satisfies the `suffix`.
+ * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
+ * values of `data` the call itself is rejected by disabling it's return type.
+ * If this overload signature was chosen for your call most likely your suffix
+ * has a typo or `data` itself has changed and it no longer satisfies the
+ * `suffix`.
+ *
+ * If you still need to make the check on these values widen one of them to
+ * `string`.
  *
  * @param suffix - The string to check for at the end.
  * @example
  *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> void
+ *   pipe("cat" as ("cat" | "dog"), endsWith("bird" as string)); //=> boolean
  * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(

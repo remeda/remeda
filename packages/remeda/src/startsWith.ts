@@ -15,15 +15,20 @@ import { purry } from "./purry";
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
 /**
- * When a literal prefix doesn't match *any* of the possible values of `data`
- * the call itself is rejected by disabling it's return type. If this overload
- * signature was chosen for your call most likely your suffix has a typo or the
- * data itself has changed and it no longer satisfies the `prefix`.
+ * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
+ * values of `data` the call itself is rejected by disabling it's return type.
+ * If this overload signature was chosen for your call most likely your prefix
+ * has a typo or `data` itself has changed and it no longer satisfies the
+ * `prefix`.
+ *
+ * If you still need to make the check on these values widen one of them to
+ * `string`.
  *
  * @param data - The input string.
  * @param prefix - The string to check for at the end.
  * @example
  *   startsWith("cat" as ("cat" | "dog"), "bird"); //=> void
+ *   startsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
  * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
@@ -63,14 +68,19 @@ export function startsWith<T extends string, Prefix extends string>(
 export function startsWith(data: string, prefix: string): boolean;
 
 /**
- * When a literal prefix doesn't match *any* of the possible values of `data`
- * the call itself is rejected by disabling it's return type. If this overload
- * signature was chosen for your call most likely your suffix has a typo or the
- * data itself has changed and it no longer satisfies the `prefix`.
+ * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
+ * values of `data` the call itself is rejected by disabling it's return type.
+ * If this overload signature was chosen for your call most likely your prefix
+ * has a typo or `data` itself has changed and it no longer satisfies the
+ * `prefix`.
+ *
+ * If you still need to make the check on these values widen one of them to
+ * `string`.
  *
  * @param prefix - The string to check for at the end.
  * @example
  *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> void
+ *   pipe("cat" as ("cat" | "dog"), startsWith("bird" as string)); //=> boolean
  * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
