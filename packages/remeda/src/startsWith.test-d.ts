@@ -198,14 +198,26 @@ describe("known issues!", () => {
     });
   });
 
-  test("native array methods don't reject a dead-code check", () => {
-    // `Array.prototype.filter` accepts any callback returning `unknown`, so it
-    // also accepts the `void`-returning predicate a dead-code check resolves
-    // to. Remeda's own `filter` requires a `boolean` and does reject it.
-    expectTypeOf(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
-      ([] as ("cat" | "dog")[]).filter(startsWith("bird")),
-    ).toEqualTypeOf<("cat" | "dog")[]>();
+  describe("consumers that don't reject a dead-code check", () => {
+    test("native array methods", () => {
+      // `Array.prototype.filter` accepts any callback returning `unknown`, so
+      // it also accepts the `void`-returning predicate a dead-code check
+      // resolves to. Remeda's own `filter` requires a `boolean` and does
+      // reject it.
+      expectTypeOf(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
+        ([] as ("cat" | "dog")[]).filter(startsWith("bird")),
+      ).toEqualTypeOf<("cat" | "dog")[]>();
+    });
+
+    test("isNot", () => {
+      // `isNot` requires a type predicate, which makes TypeScript resolve
+      // `startsWith` through the guard overload; the `void` overload is never a
+      // candidate, so the dead-code check goes unnoticed.
+      expectTypeOf(
+        filter([] as ("cat" | "dog")[], isNot(startsWith("bird"))),
+      ).toEqualTypeOf<("cat" | "dog")[]>();
+    });
   });
 });
 
