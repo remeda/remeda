@@ -69,7 +69,7 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
 
 /**
  * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling it's return type.
+ * values of `data` the call itself is rejected by disabling its return type.
  * If this overload signature was chosen for your call most likely your prefix
  * has a typo or `data` itself has changed and it no longer satisfies the
  * `prefix`.
@@ -78,7 +78,7 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
  * `string`.
  *
  * @param data - The input string.
- * @param prefix - The string to check for at the end.
+ * @param prefix - The string to check for at the beginning.
  * @example
  *   startsWith("cat" as ("cat" | "dog"), "bird"); //=> void
  *   startsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
@@ -130,7 +130,7 @@ export function startsWith(data: string, prefix: string): boolean;
 
 /**
  * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling it's return type.
+ * values of `data` the call itself is rejected by disabling its return type.
  * If this overload signature was chosen for your call most likely your prefix
  * has a typo or `data` itself has changed and it no longer satisfies the
  * `prefix`.
@@ -138,7 +138,7 @@ export function startsWith(data: string, prefix: string): boolean;
  * If you still need to make the check on these values widen one of them to
  * `string`.
  *
- * @param prefix - The string to check for at the end.
+ * @param prefix - The string to check for at the beginning.
  * @example
  *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> void
  *   pipe("cat" as ("cat" | "dog"), startsWith("bird" as string)); //=> boolean

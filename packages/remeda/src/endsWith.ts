@@ -50,7 +50,7 @@ type EndsWithEvery<T, Suffix extends string> = T &
 
 // TypeScript treats type-guards as complementary (e.g., everything either
 // fully satisfies the type, or fully doesn't, typing the falsy branch similar
-// to the result of `Extract<T, Condition>`). `startsWith` doesn't have this
+// to the result of `Extract<T, Condition>`). `endsWith` doesn't have this
 // relationship when `Suffix` is a union because we don't **know** which of the
 // union members match, so we can't narrow the falsy branch at all. The only way
 // to prevent this is to prevent TypeScript from using the narrowing overload
@@ -69,7 +69,7 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
 
 /**
  * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling it's return type.
+ * values of `data` the call itself is rejected by disabling its return type.
  * If this overload signature was chosen for your call most likely your suffix
  * has a typo or `data` itself has changed and it no longer satisfies the
  * `suffix`.
@@ -116,11 +116,10 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
   // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload. Union suffixes are rejected too when the guard
-  // they'd produce isn't sound.
+  // the non-narrowing overload.
   suffix: string extends Suffix
     ? never
-    : // Union prefixes are rejected too when the guard they'd produce isn't
+    : // Union suffixes are rejected too when the guard they'd produce isn't
       // sound.
       IsNarrowingUnsound<T, Suffix> extends true
       ? never
@@ -131,7 +130,7 @@ export function endsWith(data: string, suffix: string): boolean;
 
 /**
  * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling it's return type.
+ * values of `data` the call itself is rejected by disabling its return type.
  * If this overload signature was chosen for your call most likely your suffix
  * has a typo or `data` itself has changed and it no longer satisfies the
  * `suffix`.
