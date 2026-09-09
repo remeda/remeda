@@ -2,7 +2,13 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type { IsEqual, IsNever, UnionToIntersection } from "type-fest";
+import type {
+  IsEqual,
+  IsNever,
+  IsStringLiteral,
+  UnionToIntersection,
+} from "type-fest";
+import type { Boxed } from "./internal/types/Boxed";
 import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
@@ -18,19 +24,28 @@ type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 // which one is unknowable, so a failed check can only rule out values that
 // would have matched no matter which one it was.
 type EndsWithEvery<T, Suffix extends string> = T &
-  // 2. And then we intersect the suffixes instead of adding them to a union to
+  // 4. And then we intersect the suffixes instead of adding them to a union to
   // flip the semantics from "OR" to "AND", so that the resulting suffix
   // limitation is the tightest possible combination of all suffixes, and not
-  // the widest one.
-  UnionToIntersection<
-    // 1. We first distribute the union to compute the suffix for each member of
-    // the union separately (and not create a suffix that contains the union).
-    Suffix extends unknown
-      ? // The trivial empty prefix catches everything and breaks the typing.
-        Suffix extends ""
-        ? never
-        : `${string}${Suffix}`
-      : never
+  // the widest one, before unwrapping the box.
+  Boxed.Extract<
+    UnionToIntersection<
+      // 1. We first distribute the union to compute the suffix for each member
+      // of the union separately (otherwise the suffix itself would contain
+      // the union).
+      Suffix extends unknown
+        ? // 3. Each suffix is boxed so that it survives as a distinct union
+          // member until the intersection. Unboxed, a `never` would vanish from
+          // the union instead of emptying the intersection, and an empty
+          // suffix's `string` would absorb its siblings via subtype reduction.
+          Boxed<
+            // 2. Unbounded template strings represent infinite possible
+            // suffixes, which is exactly the kind of uncertainty that we are
+            // working to resolve here, only literals are workable here.
+            IsStringLiteral<Suffix> extends true ? `${string}${Suffix}` : never
+          >
+        : never
+    >
   >;
 
 // TypeScript treats type-guards as complementary (e.g., everything either

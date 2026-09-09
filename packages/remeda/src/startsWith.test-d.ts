@@ -115,21 +115,21 @@ describe("data-first", () => {
     }
   });
 
-  test("template prefix that matches a subset of the data", () => {
+  test("doesn't narrow on a template prefix that splits the data", () => {
     const data = "1_cat" as "1_cat" | "dog";
     if (startsWith(data, "1_" as `${number}_`)) {
-      expectTypeOf(data).toEqualTypeOf<"1_cat">();
+      expectTypeOf(data).toEqualTypeOf<"1_cat" | "dog">();
     } else {
-      expectTypeOf(data).toEqualTypeOf<"dog">();
+      expectTypeOf(data).toEqualTypeOf<"1_cat" | "dog">();
     }
   });
 
-  test("template prefix on template data", () => {
+  test("doesn't narrow on a template prefix on template data", () => {
     const data = "bar_1" as `bar_${number}`;
     if (startsWith(data, "bar_" as `${string}_`)) {
       expectTypeOf(data).toEqualTypeOf<`bar_${number}`>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
+      expectTypeOf(data).toEqualTypeOf<`bar_${number}`>();
     }
   });
 
@@ -259,24 +259,24 @@ describe("data-last", () => {
     expectTypeOf(no).toEqualTypeOf<string[]>();
   });
 
-  test("template prefix that matches a subset of the data", () => {
+  test("doesn't narrow on a template prefix that splits the data", () => {
     const [yes, no] = partition(
       [] as ("1_cat" | "dog")[],
       startsWith("1_" as `${number}_`),
     );
 
-    expectTypeOf(yes).toEqualTypeOf<"1_cat"[]>();
-    expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+    expectTypeOf(yes).toEqualTypeOf<("1_cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("1_cat" | "dog")[]>();
   });
 
-  test("template prefix on template data", () => {
+  test("doesn't narrow on a template prefix on template data", () => {
     const [yes, no] = partition(
       [] as `bar_${number}`[],
       startsWith("bar_" as `${string}_`),
     );
 
-    expectTypeOf(yes).branded.toEqualTypeOf<`bar_${number}`[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(yes).toEqualTypeOf<`bar_${number}`[]>();
+    expectTypeOf(no).toEqualTypeOf<`bar_${number}`[]>();
   });
 
   test("doesn't narrow when a union prefix contains an empty string", () => {

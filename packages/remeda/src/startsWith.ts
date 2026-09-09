@@ -2,7 +2,13 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type { IsEqual, IsNever, UnionToIntersection } from "type-fest";
+import type {
+  IsEqual,
+  IsNever,
+  IsStringLiteral,
+  UnionToIntersection,
+} from "type-fest";
+import type { Boxed } from "./internal/types/Boxed";
 import { purry } from "./purry";
 
 // By intersecting with a prefix template we force all types that satisfy this
@@ -18,19 +24,28 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 // which one is unknowable, so a failed check can only rule out values that
 // would have matched no matter which one it was.
 type StartsWithEvery<T, Prefix extends string> = T &
-  // 2. And then we intersect the prefixes instead of adding them to a union to
+  // 4. And then we intersect the prefixes instead of adding them to a union to
   // flip the semantics from "OR" to "AND", so that the resulting prefix
   // limitation is the tightest possible combination of all prefixes, and not
-  // the widest one.
-  UnionToIntersection<
-    // 1. We first distribute the union to compute the prefix for each member of
-    // the union separately (and not create a prefix that contains the union).
-    Prefix extends unknown
-      ? // The trivial empty prefix catches everything and breaks the typing.
-        Prefix extends ""
-        ? never
-        : `${Prefix}${string}`
-      : never
+  // the widest one, before unwrapping the box.
+  Boxed.Extract<
+    UnionToIntersection<
+      // 1. We first distribute the union to compute the prefix for each member
+      // of the union separately (otherwise the prefix itself would contain
+      // the union).
+      Prefix extends unknown
+        ? // 3. Each prefix is boxed so that it survives as a distinct union
+          // member until the intersection. Unboxed, a `never` would vanish from
+          // the union instead of emptying the intersection, and an empty
+          // prefix's `string` would absorb its siblings via subtype reduction.
+          Boxed<
+            // 2. Unbounded template strings represent infinite possible
+            // prefixes, which is exactly the kind of uncertainty that we are
+            // working to resolve here, only literals are workable here.
+            IsStringLiteral<Prefix> extends true ? `${Prefix}${string}` : never
+          >
+        : never
+    >
   >;
 
 // TypeScript treats type-guards as complementary (e.g., everything either

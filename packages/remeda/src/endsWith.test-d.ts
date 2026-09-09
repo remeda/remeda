@@ -115,21 +115,21 @@ describe("data-first", () => {
     }
   });
 
-  test("template suffix that matches a subset of the data", () => {
+  test("doesn't narrow on a template suffix that splits the data", () => {
     const data = "cat_1" as "cat_1" | "dog";
     if (endsWith(data, "_1" as `_${number}`)) {
-      expectTypeOf(data).toEqualTypeOf<"cat_1">();
+      expectTypeOf(data).toEqualTypeOf<"cat_1" | "dog">();
     } else {
-      expectTypeOf(data).toEqualTypeOf<"dog">();
+      expectTypeOf(data).toEqualTypeOf<"cat_1" | "dog">();
     }
   });
 
-  test("template suffix on template data", () => {
+  test("doesn't narrow on a template suffix on template data", () => {
     const data = "1_bar" as `${number}_bar`;
     if (endsWith(data, "_bar" as `_${string}`)) {
       expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
+      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
     }
   });
 
@@ -259,24 +259,24 @@ describe("data-last", () => {
     expectTypeOf(no).toEqualTypeOf<string[]>();
   });
 
-  test("template suffix that matches a subset of the data", () => {
+  test("doesn't narrow on a template suffix that splits the data", () => {
     const [yes, no] = partition(
       [] as ("cat_1" | "dog")[],
       endsWith("_1" as `_${number}`),
     );
 
-    expectTypeOf(yes).toEqualTypeOf<"cat_1"[]>();
-    expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+    expectTypeOf(yes).toEqualTypeOf<("cat_1" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<("cat_1" | "dog")[]>();
   });
 
-  test("template suffix on template data", () => {
+  test("doesn't narrow on a template suffix on template data", () => {
     const [yes, no] = partition(
       [] as `${number}_bar`[],
       endsWith("_bar" as `_${string}`),
     );
 
-    expectTypeOf(yes).branded.toEqualTypeOf<`${number}_bar`[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(yes).toEqualTypeOf<`${number}_bar`[]>();
+    expectTypeOf(no).toEqualTypeOf<`${number}_bar`[]>();
   });
 
   test("doesn't narrow when a union suffix contains an empty string", () => {
