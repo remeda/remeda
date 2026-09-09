@@ -106,6 +106,15 @@ describe("data-first", () => {
     }
   });
 
+  test("narrows a union when every data member matches all suffixes or none", () => {
+    const data = "catcat" as "catcat" | "dog";
+    if (endsWith(data, "cat" as "cat" | "t")) {
+      expectTypeOf(data).toEqualTypeOf<"catcat">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
   test("doesn't narrow a matching const to 'never' on a union suffix", () => {
     const data = "foobar" as const;
     if (endsWith(data, "bar" as "bar" | "lo")) {

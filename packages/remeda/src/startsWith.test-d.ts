@@ -106,6 +106,15 @@ describe("data-first", () => {
     }
   });
 
+  test("narrows a union when every data member matches all prefixes or none", () => {
+    const data = "catcat" as "catcat" | "dog";
+    if (startsWith(data, "cat" as "cat" | "c")) {
+      expectTypeOf(data).toEqualTypeOf<"catcat">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
   test("doesn't narrow a matching const to 'never' on a union prefix", () => {
     const data = "foobar" as const;
     if (startsWith(data, "foo" as "foo" | "he")) {
@@ -436,6 +445,24 @@ describe("known issues!", () => {
       expectTypeOf(
         filter([] as ("cat" | "dog")[], isNot(startsWith("bird"))),
       ).toEqualTypeOf<("cat" | "dog")[]>();
+    });
+  });
+
+  describe("isNot bypasses the unsound-narrowing guard", () => {
+    test("union prefix where only some members are disjoint", () => {
+      // For a direct call, an unsound union prefix falls through to the
+      // plain-`boolean` overload and `partition` doesn't narrow at all (see
+      // "doesn't narrow when only some prefixes are disjoint" above). `isNot`
+      // requires a type predicate though, so it always resolves `startsWith`
+      // through the (unconditionally sound-looking) guard overload; the
+      // `boolean` overload built to reject this case is never a candidate for
+      // a type-predicate parameter. The result narrows to `"dog"[]`, which is
+      // unsound: at runtime the prefix could be `"bird"`, in which case
+      // nothing starts with it, `isNot` is `true` for every element, and
+      // `"cat"` survives the filter too.
+      expectTypeOf(
+        filter([] as ("cat" | "dog")[], isNot(startsWith("c" as "c" | "bird"))),
+      ).toEqualTypeOf<"dog"[]>();
     });
   });
 });
