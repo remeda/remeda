@@ -50,7 +50,7 @@ type StartsWithEvery<T, Prefix extends string> = T &
 
 // TypeScript treats type-guards as complementary (e.g., everything either
 // fully satisfies the type, or fully doesn't, typing the falsy branch similar
-// to the result of `Extract<T, Condition>`). `startsWith` doesn't have this
+// to the result of `Exclude<T, Condition>`). `startsWith` doesn't have this
 // relationship when `Prefix` is a union because we don't **know** which of the
 // union members match, so we can't narrow the falsy branch at all. The only way
 // to prevent this is to prevent TypeScript from using the narrowing overload
