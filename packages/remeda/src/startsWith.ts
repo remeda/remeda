@@ -27,7 +27,7 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 // the result of narrowing non-disjoint values though we should still use
 // intersection).
 // @see https://github.com/microsoft/TypeScript/issues/60446
-type AreDisjoint<T extends string, Prefix extends string> = string extends T
+type IsDisjoint<T extends string, Prefix extends string> = string extends T
   ? false
   : IsNever<Extract<T, `${Prefix}${string}`>>;
 
@@ -114,9 +114,11 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
   prefix: string extends Prefix
-    ? never
-    : AreDisjoint<T, Prefix> extends true
-      ? // Every data-first overload rejects a disjoint suffix so that no
+    ? // Reject primitive strings, they can't be used to narrow T. They would
+      // match the non-narrowing overload.
+      never
+    : IsDisjoint<T, Prefix> extends true
+      ? // Every data-first overload rejects a disjoint prefix so that no
         // overload matches the call at all, putting the error on the argument
         // itself.
         DisjointPrefixError<Prefix>
@@ -129,7 +131,7 @@ export function startsWith<T extends string, Prefix extends string>(
 
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: AreDisjoint<T, Prefix> extends true
+  prefix: IsDisjoint<T, Prefix> extends true
     ? DisjointPrefixError<Prefix>
     : Prefix,
 ): boolean;
@@ -157,7 +159,7 @@ export function startsWith<T extends string, Prefix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  prefix: AreDisjoint<T, Prefix> extends true ? Prefix : never,
+  prefix: IsDisjoint<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => void;
 
 export function startsWith<T extends string, Prefix extends string>(

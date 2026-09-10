@@ -27,7 +27,7 @@ type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 // the result of narrowing non-disjoint values though we should still use
 // intersection).
 // @see https://github.com/microsoft/TypeScript/issues/60446
-type AreDisjoint<T extends string, Suffix extends string> = string extends T
+type IsDisjoint<T extends string, Suffix extends string> = string extends T
   ? false
   : IsNever<Extract<T, `${string}${Suffix}`>>;
 
@@ -113,25 +113,25 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload.
   suffix: string extends Suffix
-    ? never
-    : AreDisjoint<T, Suffix> extends true
+    ? // Reject primitive strings, they can't be used to narrow T. They would
+      // match the non-narrowing overload.
+      never
+    : IsDisjoint<T, Suffix> extends true
       ? // Every data-first overload rejects a disjoint suffix so that no
         // overload matches the call at all, putting the error on the argument
         // itself.
         DisjointSuffixError<Suffix>
-      : // Union suffixes are rejected too when the guard they'd produce isn't
-        // sound.
-        IsNarrowingUnsound<T, Suffix> extends true
-        ? never
+      : IsNarrowingUnsound<T, Suffix> extends true
+        ? // Union suffixes are rejected too when the guard they'd produce isn't
+          // sound.
+          never
         : Suffix,
 ): data is EndsWith<T, Suffix>;
 
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  suffix: AreDisjoint<T, Suffix> extends true
+  suffix: IsDisjoint<T, Suffix> extends true
     ? DisjointSuffixError<Suffix>
     : Suffix,
 ): boolean;
@@ -159,7 +159,7 @@ export function endsWith<T extends string, Suffix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  suffix: AreDisjoint<T, Suffix> extends true ? Suffix : never,
+  suffix: IsDisjoint<T, Suffix> extends true ? Suffix : never,
 ): (data: T) => void;
 
 export function endsWith<T extends string, Suffix extends string>(
