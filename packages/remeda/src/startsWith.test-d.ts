@@ -50,6 +50,15 @@ describe("data-first", () => {
     }
   });
 
+  test("template literal data that overlaps the prefix", () => {
+    const data = "/api/v2" as `/api/${string}`;
+    if (startsWith(data, "/api/v2")) {
+      expectTypeOf(data).toEqualTypeOf<`/api/${string}` & `/api/v2${string}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<`/api/${string}`>();
+    }
+  });
+
   test("literal union", () => {
     const data = "cat" as "cat" | "dog";
     if (startsWith(data, "c")) {
@@ -202,6 +211,18 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("template literal data that overlaps the prefix", () => {
+    const [yes, no] = partition(
+      [] as `/api/${string}`[],
+      startsWith("/api/v2"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<
+      (`/api/${string}` & `/api/v2${string}`)[]
+    >();
+    expectTypeOf(no).toEqualTypeOf<`/api/${string}`[]>();
   });
 
   test("literal union", () => {
@@ -415,6 +436,19 @@ describe("known issues!", () => {
     const startsWithFoo = <T extends string>(data: T) =>
       // @ts-expect-error [ts2769] -- Intentional! this is what we're testing; the directive reports as unused once the call is accepted.
       startsWith(data, "foo") ? data : undefined;
+  });
+
+  test("template data overlapping the prefix on a numeric placeholder", () => {
+    // `IsDisjoint` proves overlap by containment in either direction. A
+    // numeric placeholder makes both directions fail: `v1${string}` isn't
+    // contained in `v${number}` (it allows non-numeric tails), and
+    // `v${number}` isn't contained in `v1${string}` (it allows other digits),
+    // so the shared value `"v1"` goes unnoticed.
+    startsWith(
+      "v1" as `v${number}`,
+      // @ts-expect-error [ts2769] -- `"v1"` satisfies both templates, so this should be accepted, narrowing to `v${number}` & `v1${string}`.
+      "v1",
+    );
   });
 
   describe("consumers that don't reject a dead-code check", () => {

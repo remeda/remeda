@@ -19,10 +19,8 @@ export type RemedaTypeError<
   Message extends string,
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   Options extends RemedaTypeErrorOptions = {},
-> = Readonly<
-  Tagged<
-    Options extends { type: infer T } ? T : typeof RemedaErrorSymbol,
-    `RemedaTypeError(${Name}): ${Message}.`,
-    Options extends { metadata: infer Metadata } ? Metadata : never
-  >
+> = Tagged<
+  Options extends { type: infer T } ? T : typeof RemedaErrorSymbol,
+  `RemedaTypeError(${Name}): ${Message}.`,
+  Options extends { metadata: infer Metadata } ? Metadata : never
 >;

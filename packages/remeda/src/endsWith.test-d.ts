@@ -50,6 +50,17 @@ describe("data-first", () => {
     }
   });
 
+  test("template literal data that overlaps the suffix", () => {
+    const data = "a.test.ts" as `${string}.test.ts`;
+    if (endsWith(data, "a.test.ts")) {
+      expectTypeOf(data).toEqualTypeOf<
+        `${string}.test.ts` & `${string}a.test.ts`
+      >();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<`${string}.test.ts`>();
+    }
+  });
+
   test("literal union", () => {
     const data = "cat" as "cat" | "dog";
     if (endsWith(data, "t")) {
@@ -202,6 +213,18 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`${number}_bar`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
+  test("template literal data that overlaps the suffix", () => {
+    const [yes, no] = partition(
+      [] as `${string}.test.ts`[],
+      endsWith("a.test.ts"),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<
+      (`${string}.test.ts` & `${string}a.test.ts`)[]
+    >();
+    expectTypeOf(no).toEqualTypeOf<`${string}.test.ts`[]>();
   });
 
   test("literal union", () => {
@@ -361,7 +384,6 @@ describe("reject disjoint suffixes (#1432)", () => {
     endsWith(
       "1_bar" as `${number}_bar`,
       // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
-
       "world",
     );
   });
@@ -416,6 +438,19 @@ describe("known issues!", () => {
     const endsWithBar = <T extends string>(data: T) =>
       // @ts-expect-error [ts2769] -- Intentional! this is what we're testing; the directive reports as unused once the call is accepted.
       endsWith(data, "bar") ? data : undefined;
+  });
+
+  test("template data overlapping the suffix on a numeric placeholder", () => {
+    // `IsDisjoint` proves overlap by containment in either direction. A
+    // numeric placeholder makes both directions fail: `${string}1_bar` isn't
+    // contained in `${number}_bar` (it allows non-numeric heads), and
+    // `${number}_bar` isn't contained in `${string}1_bar` (it allows other
+    // digits), so the shared value `"1_bar"` goes unnoticed.
+    endsWith(
+      "1_bar" as `${number}_bar`,
+      // @ts-expect-error [ts2769] -- `"1_bar"` satisfies both templates, so this should be accepted, narrowing to `${number}_bar` & `${string}1_bar`.
+      "1_bar",
+    );
   });
 
   describe("consumers that don't reject a dead-code check", () => {

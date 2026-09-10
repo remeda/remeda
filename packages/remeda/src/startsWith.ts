@@ -2,13 +2,9 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type {
-  IsEqual,
-  IsNever,
-  IsStringLiteral,
-  UnionToIntersection,
-} from "type-fest";
+import type { IsEqual, IsStringLiteral, UnionToIntersection } from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
+import type { IsDisjoint } from "./internal/types/IsDisjoint";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
@@ -17,7 +13,7 @@ import { purry } from "./purry";
 // exactly to the prefix template, for a literal TypeScript checks if it
 // satisfies the condition and narrow to `never` if not (and distribute the
 // check for unions).
-type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
+type Prefixed<T extends string> = `${T}${string}`;
 
 // TypeScript doesn't try to compute what values satisfy the intersection of two
 // unbound template literals, it leaves them as written even when they should
@@ -27,9 +23,10 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 // the result of narrowing non-disjoint values though we should still use
 // intersection).
 // @see https://github.com/microsoft/TypeScript/issues/60446
-type IsDisjoint<T extends string, Prefix extends string> = string extends T
-  ? false
-  : IsNever<Extract<T, `${Prefix}${string}`>>;
+type IsDisjointPrefix<
+  T extends string,
+  Prefix extends string,
+> = string extends T ? false : IsDisjoint<T, Prefixed<Prefix>>;
 
 type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
   "startsWith",
@@ -83,7 +80,7 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
   // We simulate the falsy branch using the actual narrowing type we use and
   // the type created by narrowing via *all* union members together.
   IsEqual<
-    Exclude<T, StartsWith<T, Prefix>>,
+    Exclude<T, T & Prefixed<Prefix>>,
     Exclude<T, StartsWithEvery<T, Prefix>>
   >,
   // We want to find the cases where they don't agree, this means that narrowing
@@ -117,7 +114,7 @@ export function startsWith<T extends string, Prefix extends string>(
     ? // Reject primitive strings, they can't be used to narrow T. They would
       // match the non-narrowing overload.
       never
-    : IsDisjoint<T, Prefix> extends true
+    : IsDisjointPrefix<T, Prefix> extends true
       ? // Every data-first overload rejects a disjoint prefix so that no
         // overload matches the call at all, putting the error on the argument
         // itself.
@@ -127,11 +124,11 @@ export function startsWith<T extends string, Prefix extends string>(
           // sound.
           never
         : Prefix,
-): data is StartsWith<T, Prefix>;
+): data is T & Prefixed<Prefix>;
 
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: IsDisjoint<T, Prefix> extends true
+  prefix: IsDisjointPrefix<T, Prefix> extends true
     ? DisjointPrefixError<Prefix>
     : Prefix,
 ): boolean;
@@ -159,7 +156,7 @@ export function startsWith<T extends string, Prefix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  prefix: IsDisjoint<T, Prefix> extends true ? Prefix : never,
+  prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => void;
 
 export function startsWith<T extends string, Prefix extends string>(
@@ -196,7 +193,7 @@ export function startsWith<Prefix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.
   prefix: string extends Prefix ? never : Prefix,
-): <T extends string>(data: T) => data is StartsWith<T, Prefix>;
+): <T extends string>(data: T) => data is T & Prefixed<Prefix>;
 
 export function startsWith(prefix: string): (data: string) => boolean;
 
