@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
 import { partition } from "./partition";
@@ -393,14 +394,29 @@ describe("reject disjoint prefixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
-  test("generic data is rejected even when it could match", () => {
-    // @ts-expect-error [ts6133] -- See explanation below...
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
-    const startsWithFoo = <T extends string>(data: T) =>
-      // @ts-expect-error [ts2769] -- Pinned in "known issues!": an unresolved
-      // `T` leaves the dead-prefix conditional deferred, so the call is
-      // rejected.
-      startsWith(data, "foo") ? data : undefined;
+  describe("unresolved type parameters are rejected", () => {
+    test("generic data", () => {
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const startsWithFoo = <T extends string>(data: T) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned.
+        startsWith(data, "foo") ? data : undefined;
+
+      // Only the definition is rejected, the type it infers is still correct.
+      expectTypeOf(startsWithFoo($typed<string>())).toEqualTypeOf<
+        `foo${string}` | undefined
+      >();
+    });
+
+    test("generic prefix, when data is narrower than `string`", () => {
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned. Widening
+        // `data` to `string` is what resolves the conditional, which is why the
+        // "generic prefix" test under "data-first" passes.
+        startsWith($typed<"cat" | "dog">(), prefix);
+
+      expectTypeOf(hasPrefix("c")).toEqualTypeOf<boolean>();
+    });
   });
 
   describe("template literals with an impossible prefix aren't rejected", () => {

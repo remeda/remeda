@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
+import { $typed } from "../test/$typed";
 import { endsWith } from "./endsWith";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
@@ -393,14 +394,29 @@ describe("reject disjoint suffixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
-  test("generic data is rejected even when it could match", () => {
-    // @ts-expect-error [ts6133] -- See explanation below...
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
-    const endsWithBar = <T extends string>(data: T) =>
-      // @ts-expect-error [ts2769] -- Pinned in "known issues!": an unresolved
-      // `T` leaves the dead-suffix conditional deferred, so the call is
-      // rejected.
-      endsWith(data, "bar") ? data : undefined;
+  describe("unresolved type parameters are rejected", () => {
+    test("generic data", () => {
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const endsWithBar = <T extends string>(data: T) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned.
+        endsWith(data, "bar") ? data : undefined;
+
+      // Only the definition is rejected, the type it infers is still correct.
+      expectTypeOf(endsWithBar($typed<string>())).toEqualTypeOf<
+        `${string}bar` | undefined
+      >();
+    });
+
+    test("generic suffix, when data is narrower than `string`", () => {
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const hasSuffix = <Suffix extends string>(suffix: Suffix) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned. Widening
+        // `data` to `string` is what resolves the conditional, which is why the
+        // "generic suffix" test under "data-first" passes.
+        endsWith($typed<"cat" | "dog">(), suffix);
+
+      expectTypeOf(hasSuffix("t")).toEqualTypeOf<boolean>();
+    });
   });
 
   describe("template literals with an impossible suffix aren't rejected", () => {
