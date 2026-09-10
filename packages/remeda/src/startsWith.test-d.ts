@@ -50,15 +50,6 @@ describe("data-first", () => {
     }
   });
 
-  test("template literal data that overlaps the prefix", () => {
-    const data = "/api/v2" as `/api/${string}`;
-    if (startsWith(data, "/api/v2")) {
-      expectTypeOf(data).toEqualTypeOf<`/api/${string}` & `/api/v2${string}`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<`/api/${string}`>();
-    }
-  });
-
   test("literal union", () => {
     const data = "cat" as "cat" | "dog";
     if (startsWith(data, "c")) {
@@ -211,18 +202,6 @@ describe("data-last", () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
     expectTypeOf(no).toEqualTypeOf<[]>();
-  });
-
-  test("template literal data that overlaps the prefix", () => {
-    const [yes, no] = partition(
-      [] as `/api/${string}`[],
-      startsWith("/api/v2"),
-    );
-
-    expectTypeOf(yes).toEqualTypeOf<
-      (`/api/${string}` & `/api/v2${string}`)[]
-    >();
-    expectTypeOf(no).toEqualTypeOf<`/api/${string}`[]>();
   });
 
   test("literal union", () => {
@@ -378,14 +357,6 @@ describe("reject disjoint prefixes (#1432)", () => {
     );
   });
 
-  test("template data disjoint from the prefix", () => {
-    startsWith(
-      "foo_1" as `foo_${number}`,
-      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
-      "hello",
-    );
-  });
-
   describe("data-last", () => {
     test("const data that doesn't match", () => {
       filter(
@@ -418,37 +389,55 @@ describe("reject disjoint prefixes (#1432)", () => {
         startsWith("1_" as `${number}_`),
       );
     });
-
-    test("template data disjoint from the prefix", () => {
-      filter(
-        [] as `foo_${number}`[],
-        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
-        startsWith("hello"),
-      );
-    });
   });
 });
 
 describe("known issues!", () => {
   test("generic data is rejected even when it could match", () => {
     // @ts-expect-error [ts6133] -- See explanation below...
-    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars -- The whole purpose of the test is to see how our types handle an unresolved generic.
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unused-vars -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
     const startsWithFoo = <T extends string>(data: T) =>
-      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing; the directive reports as unused once the call is accepted.
+      // @ts-expect-error [ts2769] -- Pinned in "known issues!": an unresolved
+      // `T` leaves the dead-prefix conditional deferred, so the call is
+      // rejected.
       startsWith(data, "foo") ? data : undefined;
   });
 
-  test("template data overlapping the prefix on a numeric placeholder", () => {
-    // `IsDisjoint` proves overlap by containment in either direction. A
-    // numeric placeholder makes both directions fail: `v1${string}` isn't
-    // contained in `v${number}` (it allows non-numeric tails), and
-    // `v${number}` isn't contained in `v1${string}` (it allows other digits),
-    // so the shared value `"v1"` goes unnoticed.
-    startsWith(
-      "v1" as `v${number}`,
-      // @ts-expect-error [ts2769] -- `"v1"` satisfies both templates, so this should be accepted, narrowing to `v${number}` & `v1${string}`.
-      "v1",
-    );
+  describe("template literals with an impossible prefix aren't rejected", () => {
+    test("data-first", () => {
+      const data = "foo_1" as `foo_${number}`;
+
+      const isStartsWith = startsWith(data, "hello");
+
+      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
+      expectTypeOf(isStartsWith).not.toEqualTypeOf<void>();
+
+      if (isStartsWith) {
+        // Rejecting an impossible prefix relies on TypeScript reducing the
+        // intersection with the prefix template to `never`. It only does that
+        // for bounded types; an intersection of two unbounded template
+        // literals is left as-is even when they are disjoint, so the check is
+        // accepted and the `true` branch is typed with an uninhabitable
+        // intersection instead.
+        // @see https://github.com/microsoft/TypeScript/issues/60446
+        expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
+
+        // No strings satisfy this type, so it should be equivalent to `never`.
+        expectTypeOf(data).not.toEqualTypeOf<never>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
+      }
+    });
+
+    test("data-last", () => {
+      const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
+
+      expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
+      // Once the intersection above correctly reduces to `never`, `yes` would
+      // become `never[]`; until then this stays green as a canary.
+      expectTypeOf(yes).not.toEqualTypeOf<never[]>();
+      expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
+    });
   });
 
   describe("consumers that don't reject a dead-code check", () => {
