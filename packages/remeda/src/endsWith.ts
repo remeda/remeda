@@ -15,9 +15,20 @@ import { purry } from "./purry";
 // type to also be of this shape. For a raw primitive string this narrows
 // exactly to the suffix template, for a literal TypeScript checks if it
 // satisfies the condition and narrow to `never` if not (and distribute the
-// check for unions). The only limitation is for unbounded template literals, as
-// TypeScript leaves the intersection as-is, even when they are disjoint.
+// check for unions).
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
+
+// TypeScript doesn't try to compute what values satisfy the intersection of two
+// unbound template literals, it leaves them as written even when they should
+// narrow to `never`. This means that we can't use `EndsWith` to detect these
+// cases; `Extract`, on the other hand, does narrow the result correctly so its
+// what we should use when **checking** for disjoint values (when we compute
+// the result of narrowing non-disjoint values though we should still use
+// intersection).
+// @see https://github.com/microsoft/TypeScript/issues/60446
+type AreDisjoint<T extends string, Suffix extends string> = string extends T
+  ? false
+  : IsNever<Extract<T, `${string}${Suffix}`>>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // suffix instead of any of them. Only one of them is the suffix at runtime, and
@@ -92,7 +103,7 @@ export function endsWith<T extends string, Suffix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
+  suffix: AreDisjoint<T, Suffix> extends true ? Suffix : never,
 ): void;
 
 /**
@@ -153,7 +164,7 @@ export function endsWith<T extends string, Suffix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
+  suffix: AreDisjoint<T, Suffix> extends true ? Suffix : never,
 ): (data: T) => void;
 
 export function endsWith<T extends string, Suffix extends string>(

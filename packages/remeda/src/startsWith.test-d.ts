@@ -356,6 +356,12 @@ describe("reject disjoint prefixes (#1432)", () => {
     !startsWith("cat" as "cat" | "dog", "1_" as `${number}_`);
   });
 
+  test("template data disjoint from the prefix", () => {
+    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
+    !startsWith("foo_1" as `foo_${number}`, "hello");
+  });
+
   describe("data-last", () => {
     test("const data that doesn't match", () => {
       filter(
@@ -388,47 +394,18 @@ describe("reject disjoint prefixes (#1432)", () => {
         startsWith("1_" as `${number}_`),
       );
     });
+
+    test("template data disjoint from the prefix", () => {
+      filter(
+        [] as `foo_${number}`[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("hello"),
+      );
+    });
   });
 });
 
 describe("known issues!", () => {
-  describe("template literals with an impossible prefix aren't rejected", () => {
-    test("data-first", () => {
-      const data = "foo_1" as `foo_${number}`;
-
-      const isStartsWith = startsWith(data, "hello");
-
-      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
-      expectTypeOf(isStartsWith).not.toEqualTypeOf<void>();
-
-      if (isStartsWith) {
-        // Rejecting an impossible prefix relies on TypeScript reducing the
-        // intersection with the prefix template to `never`. It only does that
-        // for bounded types; an intersection of two unbounded template
-        // literals is left as-is even when they are disjoint, so the check is
-        // accepted and the `true` branch is typed with an uninhabitable
-        // intersection instead.
-        // @see https://github.com/microsoft/TypeScript/issues/60446
-        expectTypeOf(data).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
-
-        // No strings satisfy this type, so it should be equivalent to `never`.
-        expectTypeOf(data).not.toEqualTypeOf<never>();
-      } else {
-        expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
-      }
-    });
-
-    test("data-last", () => {
-      const [yes, no] = partition([] as `foo_${number}`[], startsWith("hello"));
-
-      expectTypeOf(yes).toEqualTypeOf<(`foo_${number}` & `hello${string}`)[]>();
-      // Once the intersection above correctly reduces to `never`, `yes` would
-      // become `never[]`; until then this stays green as a canary.
-      expectTypeOf(yes).not.toEqualTypeOf<never[]>();
-      expectTypeOf(no).toEqualTypeOf<`foo_${number}`[]>();
-    });
-  });
-
   describe("consumers that don't reject a dead-code check", () => {
     test("native array methods", () => {
       // `Array.prototype.filter` accepts any callback returning `unknown`, so

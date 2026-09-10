@@ -15,9 +15,20 @@ import { purry } from "./purry";
 // type to also be of this shape. For a raw primitive string this narrows
 // exactly to the prefix template, for a literal TypeScript checks if it
 // satisfies the condition and narrow to `never` if not (and distribute the
-// check for unions). The only limitation is for unbounded template literals, as
-// TypeScript leaves the intersection as-is, even when they are disjoint.
+// check for unions).
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
+
+// TypeScript doesn't try to compute what values satisfy the intersection of two
+// unbound template literals, it leaves them as written even when they should
+// narrow to `never`. This means that we can't use `StartsWith` to detect these
+// cases; `Extract`, on the other hand, does narrow the result correctly so its
+// what we should use when **checking** for disjoint values (when we compute
+// the result of narrowing non-disjoint values though we should still use
+// intersection).
+// @see https://github.com/microsoft/TypeScript/issues/60446
+type AreDisjoint<T extends string, Prefix extends string> = string extends T
+  ? false
+  : IsNever<Extract<T, `${Prefix}${string}`>>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // prefix instead of any of them. Only one of them is the prefix at runtime, and
@@ -92,7 +103,7 @@ export function startsWith<T extends string, Prefix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
+  prefix: AreDisjoint<T, Prefix> extends true ? Prefix : never,
 ): void;
 
 /**
@@ -153,7 +164,7 @@ export function startsWith<T extends string, Prefix extends string>(
   // cases surfacing a compile-time error, allowing users to detect typos or
   // dead code at the call site itself instead of relying on downstream errors.
   // @see https://github.com/remeda/remeda/issues/1432
-  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
+  prefix: AreDisjoint<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => void;
 
 export function startsWith<T extends string, Prefix extends string>(
