@@ -9,6 +9,7 @@ import type {
   UnionToIntersection,
 } from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
 // By intersecting with a prefix template we force all types that satisfy this
@@ -29,6 +30,18 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 type AreDisjoint<T extends string, Prefix extends string> = string extends T
   ? false
   : IsNever<Extract<T, `${Prefix}${string}`>>;
+
+type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
+  "startsWith",
+  "This prefix doesn't match any of the inputs, the function will always return `false`",
+  {
+    // Tagging `string` (and not the default symbol, or `never`) is what keeps
+    // TypeScript from collapsing the type before it prints it, so the message
+    // survives into the diagnostic.
+    type: string;
+    metadata: Prefix;
+  }
+>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // prefix instead of any of them. Only one of them is the prefix at runtime, and
@@ -79,34 +92,6 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
 >;
 
 /**
- * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your prefix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `prefix`.
- *
- * If you still need to make the check on these values widen one of them to
- * `string`.
- *
- * @param data - The input string.
- * @param prefix - The string to check for at the beginning.
- * @example
- *   startsWith("cat" as ("cat" | "dog"), "bird"); //=> void
- *   startsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
- * @hidden
- */
-export function startsWith<T extends string, Prefix extends string>(
-  data: T,
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  prefix: AreDisjoint<T, Prefix> extends true ? Prefix : never,
-): void;
-
-/**
  * Determines whether a string begins with the provided prefix, and refines the
  * output type if possible.
  *
@@ -128,18 +113,26 @@ export function startsWith<T extends string, Prefix extends string>(
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload.
   prefix: string extends Prefix
     ? never
-    : // Union prefixes are rejected too when the guard they'd produce isn't
-      // sound.
-      IsNarrowingUnsound<T, Prefix> extends true
-      ? never
-      : Prefix,
+    : AreDisjoint<T, Prefix> extends true
+      ? // Every data-first overload rejects a disjoint suffix so that no
+        // overload matches the call at all, putting the error on the argument
+        // itself.
+        DisjointPrefixError<Prefix>
+      : IsNarrowingUnsound<T, Prefix> extends true
+        ? // Union prefixes are rejected too when the guard they'd produce isn't
+          // sound.
+          never
+        : Prefix,
 ): data is StartsWith<T, Prefix>;
 
-export function startsWith(data: string, prefix: string): boolean;
+export function startsWith<T extends string, Prefix extends string>(
+  data: T,
+  prefix: AreDisjoint<T, Prefix> extends true
+    ? DisjointPrefixError<Prefix>
+    : Prefix,
+): boolean;
 
 /**
  * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible

@@ -1,5 +1,4 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { $typed } from "../test/$typed";
 import { endsWith } from "./endsWith";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
@@ -67,12 +66,6 @@ describe("data-first", () => {
     } else {
       expectTypeOf(data).toEqualTypeOf<`${boolean}_dog`>();
     }
-  });
-
-  test("generic data", () => {
-    expectTypeOf(endsWithBar($typed<string>())).toEqualTypeOf<
-      `${string}bar` | undefined
-    >();
   });
 
   test("generic suffix", () => {
@@ -333,33 +326,44 @@ describe("data-last", () => {
 // @see https://github.com/remeda/remeda/issues/1432
 describe("reject disjoint suffixes (#1432)", () => {
   test("const data that doesn't match", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !endsWith("helloworld" as const, "foo");
+    endsWith(
+      "helloworld" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "foo",
+    );
   });
 
   test("literal union where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !endsWith("cat" as "cat" | "dog", "bird");
+    endsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird",
+    );
   });
 
   test("union suffix where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !endsWith("cat" as "cat" | "dog", "bird" as "bird" | "fish");
+    endsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird" as "bird" | "fish",
+    );
   });
 
   test("template suffix that no literal matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !endsWith("cat" as "cat" | "dog", "_1" as `_${number}`);
+    endsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "_1" as `_${number}`,
+    );
   });
 
   test("template data disjoint from the suffix", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `endsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !endsWith("1_bar" as `${number}_bar`, "world");
+    endsWith(
+      "1_bar" as `${number}_bar`,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+
+      "world",
+    );
   });
 
   describe("data-last", () => {
@@ -406,6 +410,14 @@ describe("reject disjoint suffixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
+  test("generic data is rejected even when it could match", () => {
+    // @ts-expect-error [ts6133] -- See explanation below...
+    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars -- The whole purpose of the test is to see how our types handle an unresolved generic.
+    const endsWithBar = <T extends string>(data: T) =>
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing; the directive reports as unused once the call is accepted.
+      endsWith(data, "bar") ? data : undefined;
+  });
+
   describe("consumers that don't reject a dead-code check", () => {
     test("native array methods", () => {
       // `Array.prototype.filter` accepts any callback returning `unknown`, so
@@ -458,10 +470,6 @@ describe("known issues!", () => {
     });
   });
 });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
-const endsWithBar = <T extends string>(data: T) =>
-  endsWith(data, "bar") ? data : undefined;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
 const endsWithBarAll = <T extends string>(data: readonly T[]) =>

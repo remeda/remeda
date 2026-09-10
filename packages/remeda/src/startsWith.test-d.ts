@@ -1,5 +1,4 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { $typed } from "../test/$typed";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
 import { partition } from "./partition";
@@ -67,12 +66,6 @@ describe("data-first", () => {
     } else {
       expectTypeOf(data).toEqualTypeOf<`dog_${boolean}`>();
     }
-  });
-
-  test("generic data", () => {
-    expectTypeOf(startsWithFoo($typed<string>())).toEqualTypeOf<
-      `foo${string}` | undefined
-    >();
   });
 
   test("generic prefix", () => {
@@ -333,33 +326,43 @@ describe("data-last", () => {
 // @see https://github.com/remeda/remeda/issues/1432
 describe("reject disjoint prefixes (#1432)", () => {
   test("const data that doesn't match", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("helloworld" as const, "foo");
+    startsWith(
+      "helloworld" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "foo",
+    );
   });
 
   test("literal union where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "bird");
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird",
+    );
   });
 
   test("union prefix where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "bird" as "bird" | "fish");
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird" as "bird" | "fish",
+    );
   });
 
   test("template prefix that no literal matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "1_" as `${number}_`);
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "1_" as `${number}_`,
+    );
   });
 
   test("template data disjoint from the prefix", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("foo_1" as `foo_${number}`, "hello");
+    startsWith(
+      "foo_1" as `foo_${number}`,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "hello",
+    );
   });
 
   describe("data-last", () => {
@@ -406,6 +409,14 @@ describe("reject disjoint prefixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
+  test("generic data is rejected even when it could match", () => {
+    // @ts-expect-error [ts6133] -- See explanation below...
+    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars -- The whole purpose of the test is to see how our types handle an unresolved generic.
+    const startsWithFoo = <T extends string>(data: T) =>
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing; the directive reports as unused once the call is accepted.
+      startsWith(data, "foo") ? data : undefined;
+  });
+
   describe("consumers that don't reject a dead-code check", () => {
     test("native array methods", () => {
       // `Array.prototype.filter` accepts any callback returning `unknown`, so
@@ -458,10 +469,6 @@ describe("known issues!", () => {
     });
   });
 });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
-const startsWithFoo = <T extends string>(data: T) =>
-  startsWith(data, "foo") ? data : undefined;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
 const startsWithFooAll = <T extends string>(data: readonly T[]) =>

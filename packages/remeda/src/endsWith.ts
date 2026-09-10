@@ -9,6 +9,7 @@ import type {
   UnionToIntersection,
 } from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
@@ -29,6 +30,18 @@ type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 type AreDisjoint<T extends string, Suffix extends string> = string extends T
   ? false
   : IsNever<Extract<T, `${string}${Suffix}`>>;
+
+type DisjointSuffixError<Suffix extends string> = RemedaTypeError<
+  "endsWith",
+  "This suffix doesn't match any of the inputs, the function will always return `false`",
+  {
+    // Tagging `string` (and not the default symbol, or `never`) is what keeps
+    // TypeScript from collapsing the type before it prints it, so the message
+    // survives into the diagnostic.
+    type: string;
+    metadata: Suffix;
+  }
+>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // suffix instead of any of them. Only one of them is the suffix at runtime, and
@@ -79,34 +92,6 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
 >;
 
 /**
- * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your suffix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `suffix`.
- *
- * If you still need to make the check on these values widen one of them to
- * `string`.
- *
- * @param data - The input string.
- * @param suffix - The string to check for at the end.
- * @example
- *   endsWith("cat" as ("cat" | "dog"), "bird"); //=> void
- *   endsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
- * @hidden
- */
-export function endsWith<T extends string, Suffix extends string>(
-  data: T,
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  suffix: AreDisjoint<T, Suffix> extends true ? Suffix : never,
-): void;
-
-/**
  * Determines whether a string ends with the provided suffix, and refines the
  * output type if possible.
  *
@@ -132,14 +117,24 @@ export function endsWith<T extends string, Suffix extends string>(
   // the non-narrowing overload.
   suffix: string extends Suffix
     ? never
-    : // Union suffixes are rejected too when the guard they'd produce isn't
-      // sound.
-      IsNarrowingUnsound<T, Suffix> extends true
-      ? never
-      : Suffix,
+    : AreDisjoint<T, Suffix> extends true
+      ? // Every data-first overload rejects a disjoint suffix so that no
+        // overload matches the call at all, putting the error on the argument
+        // itself.
+        DisjointSuffixError<Suffix>
+      : // Union suffixes are rejected too when the guard they'd produce isn't
+        // sound.
+        IsNarrowingUnsound<T, Suffix> extends true
+        ? never
+        : Suffix,
 ): data is EndsWith<T, Suffix>;
 
-export function endsWith(data: string, suffix: string): boolean;
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
+  suffix: AreDisjoint<T, Suffix> extends true
+    ? DisjointSuffixError<Suffix>
+    : Suffix,
+): boolean;
 
 /**
  * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
