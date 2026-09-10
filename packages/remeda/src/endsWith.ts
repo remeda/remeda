@@ -2,9 +2,13 @@
  * When we mirror a built-in function we use the same name for it.
  */
 
-import type { IsEqual, IsStringLiteral, UnionToIntersection } from "type-fest";
+import type {
+  IsEqual,
+  IsNever,
+  IsStringLiteral,
+  UnionToIntersection,
+} from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
-import type { IsDisjoint } from "./internal/types/IsDisjoint";
 import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
@@ -12,21 +16,20 @@ import { purry } from "./purry";
 // type to also be of this shape. For a raw primitive string this narrows
 // exactly to the suffix template, for a literal TypeScript checks if it
 // satisfies the condition and narrow to `never` if not (and distribute the
-// check for unions).
-type Suffixed<T extends string> = `${string}${T}`;
+// check for unions). The only limitation is for unbounded template literals, as
+// TypeScript leaves the intersection as-is, even when they are disjoint.
+type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
-// TypeScript doesn't try to compute what values satisfy the intersection of two
-// unbound template literals, it leaves them as written even when they should
-// narrow to `never`. This means that we can't use `EndsWith` to detect these
-// cases; `Extract`, on the other hand, does narrow the result correctly so its
-// what we should use when **checking** for disjoint values (when we compute
-// the result of narrowing non-disjoint values though we should still use
-// intersection).
-// @see https://github.com/microsoft/TypeScript/issues/60446
 type IsDisjointSuffix<
   T extends string,
   Suffix extends string,
-> = string extends T ? false : IsDisjoint<T, Suffixed<Suffix>>;
+> = string extends T
+  ? // A primitive string could hold any value at runtime, so a suffix is never
+    // provably dead for it. Short-circuiting here also keeps the parameter type
+    // resolvable when the suffix itself is generic, which would otherwise
+    // leave the conditional deferred and reject the call.
+    false
+  : IsNever<EndsWith<T, Suffix>>;
 
 type DisjointSuffixError<Suffix extends string> = RemedaTypeError<
   "endsWith",
@@ -63,7 +66,7 @@ type EndsWithEvery<T, Suffix extends string> = T &
             // 2. Unbounded template strings represent infinite possible
             // suffixes, which is exactly the kind of uncertainty that we are
             // working to resolve here, only literals are workable here.
-            IsStringLiteral<Suffix> extends true ? Suffixed<Suffix> : never
+            IsStringLiteral<Suffix> extends true ? `${string}${Suffix}` : never
           >
         : never
     >
@@ -80,7 +83,7 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
   // We simulate the falsy branch using the actual narrowing type we use and
   // the type created by narrowing via *all* union members together.
   IsEqual<
-    Exclude<T, T & Suffixed<Suffix>>,
+    Exclude<T, EndsWith<T, Suffix>>,
     Exclude<T, EndsWithEvery<T, Suffix>>
   >,
   // We want to find the cases where they don't agree, this means that narrowing
@@ -115,16 +118,17 @@ export function endsWith<T extends string, Suffix extends string>(
       // match the non-narrowing overload.
       never
     : IsDisjointSuffix<T, Suffix> extends true
-      ? // Every data-first overload rejects a disjoint suffix so that no
-        // overload matches the call at all, putting the error on the argument
-        // itself.
+      ? // Both data-first overloads reject a dead suffix so that no overload
+        // matches the call at all, which puts the error on the argument
+        // itself instead of on whatever consumes the return value.
+        // @see https://github.com/remeda/remeda/issues/1432
         DisjointSuffixError<Suffix>
       : IsNarrowingUnsound<T, Suffix> extends true
         ? // Union suffixes are rejected too when the guard they'd produce isn't
           // sound.
           never
         : Suffix,
-): data is T & Suffixed<Suffix>;
+): data is EndsWith<T, Suffix>;
 
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
@@ -193,7 +197,7 @@ export function endsWith<Suffix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.
   suffix: string extends Suffix ? never : Suffix,
-): <T extends string>(data: T) => data is T & Suffixed<Suffix>;
+): <T extends string>(data: T) => data is EndsWith<T, Suffix>;
 
 export function endsWith(suffix: string): (data: string) => boolean;
 
