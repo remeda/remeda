@@ -73,6 +73,10 @@ describe("data-first", () => {
     expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
   });
 
+  test("generic data, primitive prefix", () => {
+    expectTypeOf(hasPrimitivePrefix("foobar", "foo")).toEqualTypeOf<boolean>();
+  });
+
   test("literal union prefix", () => {
     const data = "" as string;
     if (startsWith(data, "foo" as "foo" | "baz")) {
@@ -396,6 +400,13 @@ describe("reject disjoint prefixes (#1432)", () => {
 describe("known issues!", () => {
   describe("unresolved type parameters are rejected", () => {
     test("generic data", () => {
+      // Dead prefixes are rejected through a parameter type that is
+      // conditional on `data`. While `data` is an unresolved type parameter
+      // that conditional can't be evaluated, and TypeScript only accepts an
+      // argument for an unevaluated conditional if it satisfies both of its
+      // branches; nothing satisfies the rejection branch. A primitive prefix
+      // is resolved before `data` is needed, which is why the "generic data,
+      // primitive prefix" test under "data-first" passes.
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
       const startsWithFoo = <T extends string>(data: T) =>
         // @ts-expect-error [ts2769] -- The limitation being pinned.
@@ -408,11 +419,14 @@ describe("known issues!", () => {
     });
 
     test("generic prefix, when data is narrower than `string`", () => {
+      // The same limitation as for generic data, but here it's the prefix
+      // that is unresolved, so whether it could match `data` can't be
+      // evaluated. Widening `data` to `string` resolves the conditional before
+      // the prefix is needed, which is why the "generic prefix" test under
+      // "data-first" passes.
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
       const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
-        // @ts-expect-error [ts2769] -- The limitation being pinned. Widening
-        // `data` to `string` is what resolves the conditional, which is why the
-        // "generic prefix" test under "data-first" passes.
+        // @ts-expect-error [ts2769] -- The limitation being pinned.
         startsWith($typed<"cat" | "dog">(), prefix);
 
       expectTypeOf(hasPrefix("c")).toEqualTypeOf<boolean>();
@@ -516,4 +530,8 @@ const startsWithFooAll = <T extends string>(data: readonly T[]) =>
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we need the types to be inferred "through" the type parameter.
 const hasPrefix = <Prefix extends string>(data: string, prefix: Prefix) =>
+  startsWith(data, prefix);
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we need the types to be inferred "through" the type parameter.
+const hasPrimitivePrefix = <T extends string>(data: T, prefix: string) =>
   startsWith(data, prefix);

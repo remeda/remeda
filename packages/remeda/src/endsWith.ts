@@ -132,11 +132,18 @@ export function endsWith<T extends string, Suffix extends string>(
 
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // We repeat the conditions in the previous signature so that this overload
-  // doesn't satisfy the rejected cases, making them un-rejected.
-  suffix: IsDisjointSuffix<T, Suffix> extends true
-    ? DisjointSuffixError<Suffix>
-    : Suffix,
+  suffix: string extends Suffix
+    ? // A primitive suffix could hold any value at runtime, so a check with it
+      // is never provably dead. Short-circuiting before the disjoint check
+      // also keeps the parameter type resolvable when `data` is an unresolved
+      // type parameter, which would otherwise leave the conditional deferred
+      // and reject the call.
+      Suffix
+    : IsDisjointSuffix<T, Suffix> extends true
+      ? // Without the disjoint check here too, a dead suffix rejected by the
+        // previous overload would fall through to this one and be accepted.
+        DisjointSuffixError<Suffix>
+      : Suffix,
 ): boolean;
 
 /**
