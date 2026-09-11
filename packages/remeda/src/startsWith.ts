@@ -148,19 +148,19 @@ export function startsWith<T extends string, Prefix extends string>(
  *
  * @param prefix - The string to check for at the beginning.
  * @example
- *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> void
+ *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> RemedaTypeError
  *   pipe("cat" as ("cat" | "dog"), startsWith("bird" as string)); //=> boolean
  * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
   // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
+  // when it would result in narrowing to `never`. Unlike the data-first
+  // overloads we can't reject the argument itself, because `data` isn't known
+  // yet when the prefix is provided; returning an unsatisfiable type is the
+  // closest we can get.
   // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
-): (data: T) => void;
+): (data: T) => DisjointPrefixError<Prefix>;
 
 export function startsWith<T extends string, Prefix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the

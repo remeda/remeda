@@ -149,19 +149,18 @@ export function endsWith<T extends string, Suffix extends string>(
  *
  * @param suffix - The string to check for at the end.
  * @example
- *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> void
+ *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> RemedaTypeError
  *   pipe("cat" as ("cat" | "dog"), endsWith("bird" as string)); //=> boolean
  * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(
   // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
+  // when it would result in narrowing to `never`. Unlike the data-first
+  // overloads we can't reject the argument itself, because `data` isn't known
+  // yet when the suffix is provided; returning an unsatisfiable type is the
+  // closest we can get.
   suffix: IsDisjointSuffix<T, Suffix> extends true ? Suffix : never,
-): (data: T) => void;
+): (data: T) => DisjointSuffixError<Suffix>;
 
 export function endsWith<T extends string, Suffix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the

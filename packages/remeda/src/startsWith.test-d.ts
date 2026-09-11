@@ -459,26 +459,26 @@ describe("known issues!", () => {
   describe("consumers that don't reject a dead-code check", () => {
     test("native array methods", () => {
       // `Array.prototype.filter` accepts any callback returning `unknown`, so
-      // it also accepts the `void`-returning predicate a dead-code check
+      // it also accepts the error-returning predicate a dead-code check
       // resolves to. Remeda's own `filter` requires a `boolean` and does
       // reject it.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- The dead-code check going unnoticed is the limitation being pinned.
       const result = ([] as ("cat" | "dog")[]).filter(startsWith("bird"));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If native `.filter` ever rejected a `void`-returning predicate, this
+      // If native `.filter` ever rejected an error-returning predicate, this
       // dead-code check would resolve to an empty result instead.
       expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
 
     test("isNot", () => {
       // `isNot` requires a type predicate, which makes TypeScript resolve
-      // `startsWith` through the guard overload; the `void` overload is never a
-      // candidate, so the dead-code check goes unnoticed.
+      // `startsWith` through the guard overload; the rejection overload is
+      // never a candidate, so the dead-code check goes unnoticed.
       const result = filter([] as ("cat" | "dog")[], isNot(startsWith("bird")));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If `isNot` ever resolved this through the `void` overload instead,
+      // If `isNot` ever resolved this through the rejection overload instead,
       // the dead-code check would resolve to an empty result.
       expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
