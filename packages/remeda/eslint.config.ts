@@ -374,6 +374,17 @@ export default defineConfig(
           ignoreInferredTypes: true,
           allow: [
             {
+              from: "package",
+              package: "type-fest",
+              name: [
+                // A tag carries no runtime data, so mutability is meaningless
+                // for it. `TagContainer` itself is readonly, but the per-tag
+                // metadata it wraps is a mapped object type which this rule
+                // reads as mutable.
+                "Tag",
+              ],
+            },
+            {
               from: "lib",
               name: [
                 // Built-ins that aren't read-only but aren't detected as such by this rule...

@@ -69,14 +69,12 @@ describe("data-first", () => {
     }
   });
 
-  test("generic data", () => {
-    expectTypeOf(startsWithFoo($typed<string>())).toEqualTypeOf<
-      `foo${string}` | undefined
-    >();
-  });
-
   test("generic prefix", () => {
     expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
+  });
+
+  test("generic data, primitive prefix", () => {
+    expectTypeOf(hasPrimitivePrefix("foobar", "foo")).toEqualTypeOf<boolean>();
   });
 
   test("literal union prefix", () => {
@@ -333,27 +331,35 @@ describe("data-last", () => {
 // @see https://github.com/remeda/remeda/issues/1432
 describe("reject disjoint prefixes (#1432)", () => {
   test("const data that doesn't match", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("helloworld" as const, "foo");
+    startsWith(
+      "helloworld" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "foo",
+    );
   });
 
   test("literal union where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "bird");
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird",
+    );
   });
 
   test("union prefix where no member matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "bird" as "bird" | "fish");
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "bird" as "bird" | "fish",
+    );
   });
 
   test("template prefix that no literal matches", () => {
-    // @ts-expect-error [ts1345] -- Intentional! we check that the result of `startsWith` cannot be coerced to a boolean value!
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/strict-boolean-expressions -- Intentional! this form is the most concise way to test what we need.
-    !startsWith("cat" as "cat" | "dog", "1_" as `${number}_`);
+    startsWith(
+      "cat" as "cat" | "dog",
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "1_" as `${number}_`,
+    );
   });
 
   describe("data-last", () => {
@@ -392,14 +398,50 @@ describe("reject disjoint prefixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
+  describe("unresolved type parameters are rejected", () => {
+    test("generic data", () => {
+      // Dead prefixes are rejected through a parameter type that is
+      // conditional on `data`. While `data` is an unresolved type parameter
+      // that conditional can't be evaluated, and TypeScript only accepts an
+      // argument for an unevaluated conditional if it satisfies both of its
+      // branches; nothing satisfies the rejection branch. A primitive prefix
+      // is resolved before `data` is needed, which is why the "generic data,
+      // primitive prefix" test under "data-first" passes.
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const startsWithFoo = <T extends string>(data: T) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned.
+        startsWith(data, "foo") ? data : undefined;
+
+      // Only the definition is rejected, the type it infers is still correct.
+      expectTypeOf(startsWithFoo($typed<string>())).toEqualTypeOf<
+        `foo${string}` | undefined
+      >();
+    });
+
+    test("generic prefix, when data is narrower than `string`", () => {
+      // The same limitation as for generic data, but here it's the prefix
+      // that is unresolved, so whether it could match `data` can't be
+      // evaluated. Widening `data` to `string` resolves the conditional before
+      // the prefix is needed, which is why the "generic prefix" test under
+      // "data-first" passes.
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we can only test how generic type-parameters are inferred through our type parameters via a function.
+      const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
+        // @ts-expect-error [ts2769] -- The limitation being pinned.
+        startsWith($typed<"cat" | "dog">(), prefix);
+
+      expectTypeOf(hasPrefix("c")).toEqualTypeOf<boolean>();
+    });
+  });
+
   describe("template literals with an impossible prefix aren't rejected", () => {
     test("data-first", () => {
       const data = "foo_1" as `foo_${number}`;
 
       const isStartsWith = startsWith(data, "hello");
 
-      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
-      expectTypeOf(isStartsWith).not.toEqualTypeOf<void>();
+      // If template literals worked the same as literals and union literals
+      // the call itself would be rejected.
+      expectTypeOf(isStartsWith).not.toEqualTypeOf<never>();
 
       if (isStartsWith) {
         // Rejecting an impossible prefix relies on TypeScript reducing the
@@ -432,26 +474,26 @@ describe("known issues!", () => {
   describe("consumers that don't reject a dead-code check", () => {
     test("native array methods", () => {
       // `Array.prototype.filter` accepts any callback returning `unknown`, so
-      // it also accepts the `void`-returning predicate a dead-code check
+      // it also accepts the error-returning predicate a dead-code check
       // resolves to. Remeda's own `filter` requires a `boolean` and does
       // reject it.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- The always-falsy predicate is the limitation being pinned.
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- The dead-code check going unnoticed is the limitation being pinned.
       const result = ([] as ("cat" | "dog")[]).filter(startsWith("bird"));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If native `.filter` ever rejected a `void`-returning predicate, this
+      // If native `.filter` ever rejected an error-returning predicate, this
       // dead-code check would resolve to an empty result instead.
       expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
 
     test("isNot", () => {
       // `isNot` requires a type predicate, which makes TypeScript resolve
-      // `startsWith` through the guard overload; the `void` overload is never a
-      // candidate, so the dead-code check goes unnoticed.
+      // `startsWith` through the guard overload; the rejection overload is
+      // never a candidate, so the dead-code check goes unnoticed.
       const result = filter([] as ("cat" | "dog")[], isNot(startsWith("bird")));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If `isNot` ever resolved this through the `void` overload instead,
+      // If `isNot` ever resolved this through the rejection overload instead,
       // the dead-code check would resolve to an empty result.
       expectTypeOf(result).not.toEqualTypeOf<never[]>();
     });
@@ -483,13 +525,13 @@ describe("known issues!", () => {
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
-const startsWithFoo = <T extends string>(data: T) =>
-  startsWith(data, "foo") ? data : undefined;
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Intentional, we need the types to be inferred "through" the type parameter.
 const startsWithFooAll = <T extends string>(data: readonly T[]) =>
   filter(data, startsWith("foo"));
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we need the types to be inferred "through" the type parameter.
 const hasPrefix = <Prefix extends string>(data: string, prefix: Prefix) =>
+  startsWith(data, prefix);
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters -- Intentional, we need the types to be inferred "through" the type parameter.
+const hasPrimitivePrefix = <T extends string>(data: T, prefix: string) =>
   startsWith(data, prefix);
