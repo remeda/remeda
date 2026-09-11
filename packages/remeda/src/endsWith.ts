@@ -20,6 +20,7 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
+// @see https://github.com/remeda/remeda/issues/1432
 type IsDisjointSuffix<
   T extends string,
   Suffix extends string,
@@ -120,8 +121,7 @@ export function endsWith<T extends string, Suffix extends string>(
     : IsDisjointSuffix<T, Suffix> extends true
       ? // Both data-first overloads reject a dead suffix so that no overload
         // matches the call at all, which puts the error on the argument
-        // itself instead of on whatever consumes the return value.
-        // @see https://github.com/remeda/remeda/issues/1432
+        // itself.
         DisjointSuffixError<Suffix>
       : IsNarrowingUnsound<T, Suffix> extends true
         ? // Union suffixes are rejected too when the guard they'd produce isn't
@@ -132,6 +132,8 @@ export function endsWith<T extends string, Suffix extends string>(
 
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
+  // We repeat the conditions in the previous signature so that this overload
+  // doesn't satisfy the rejected cases, making them un-rejected.
   suffix: IsDisjointSuffix<T, Suffix> extends true
     ? DisjointSuffixError<Suffix>
     : Suffix,

@@ -20,6 +20,7 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
+// @see https://github.com/remeda/remeda/issues/1432
 type IsDisjointPrefix<
   T extends string,
   Prefix extends string,
@@ -131,6 +132,8 @@ export function startsWith<T extends string, Prefix extends string>(
 
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
+  // We repeat the conditions in the previous signature so that this overload
+  // doesn't satisfy the rejected cases, making them un-rejected.
   prefix: IsDisjointPrefix<T, Prefix> extends true
     ? DisjointPrefixError<Prefix>
     : Prefix,
@@ -158,7 +161,6 @@ export function startsWith<T extends string, Prefix extends string>(
   // overloads we can't reject the argument itself, because `data` isn't known
   // yet when the prefix is provided; returning an unsatisfiable type is the
   // closest we can get.
-  // @see https://github.com/remeda/remeda/issues/1432
   prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => DisjointPrefixError<Prefix>;
 

@@ -425,8 +425,9 @@ describe("known issues!", () => {
 
       const isStartsWith = startsWith(data, "hello");
 
-      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
-      expectTypeOf(isStartsWith).not.toEqualTypeOf<void>();
+      // If template literals worked the same as literals and union literals
+      // the call itself would be rejected.
+      expectTypeOf(isStartsWith).not.toEqualTypeOf<never>();
 
       if (isStartsWith) {
         // Rejecting an impossible prefix relies on TypeScript reducing the

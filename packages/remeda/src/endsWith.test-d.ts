@@ -425,8 +425,9 @@ describe("known issues!", () => {
 
       const isEndsWith = endsWith(data, "world");
 
-      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- If template literals worked the same as literals and union literals it would resolve to `void` here.
-      expectTypeOf(isEndsWith).not.toEqualTypeOf<void>();
+      // If template literals worked the same as literals and union literals
+      // the call itself would be rejected.
+      expectTypeOf(isEndsWith).not.toEqualTypeOf<never>();
 
       if (isEndsWith) {
         // Rejecting an impossible suffix relies on TypeScript reducing the
