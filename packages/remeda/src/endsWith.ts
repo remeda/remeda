@@ -51,10 +51,7 @@ type DisjointSuffixError<Suffix extends string> = RemedaTypeError<
   {
     // A `string` base is already satisfied by any suffix argument, so the
     // assignability failure is reported on the tag, which carries the
-    // message. The default symbol base fails first and hides the tag, and
-    // `never` collapses the whole intersection into `never`, which in the
-    // data-last overload also erases the inference site for `T`; the
-    // rejection overload then never matches and a dead suffix compiles clean.
+    // message.
     type: string;
     metadata: Suffix;
   }

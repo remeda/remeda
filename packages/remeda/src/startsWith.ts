@@ -51,10 +51,7 @@ type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
   {
     // A `string` base is already satisfied by any prefix argument, so the
     // assignability failure is reported on the tag, which carries the
-    // message. The default symbol base fails first and hides the tag, and
-    // `never` collapses the whole intersection into `never`, which in the
-    // data-last overload also erases the inference site for `T`; the
-    // rejection overload then never matches and a dead prefix compiles clean.
+    // message.
     type: string;
     metadata: Prefix;
   }
