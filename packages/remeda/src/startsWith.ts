@@ -148,10 +148,10 @@ export function startsWith<T extends string, Prefix extends string>(
 
 /**
  * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your prefix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `prefix`.
+ * values of `data` the returned predicate rejects `data` itself, so the
+ * composition fails to compile. If this overload signature was chosen for
+ * your call most likely your prefix has a typo or `data` itself has changed
+ * and it no longer satisfies the `prefix`.
  *
  * If you still need to make the check on these values widen one of them to
  * `string`.
@@ -165,11 +165,10 @@ export function startsWith<T extends string, Prefix extends string>(
 export function startsWith<T extends string, Prefix extends string>(
   // This signature has to come first so that TypeScript would pick it only
   // when it would result in narrowing to `never`. Unlike the data-first
-  // overloads we can't reject the argument itself, because `data` isn't known
-  // yet when the prefix is provided; returning an unsatisfiable type is the
-  // closest we can get.
+  // overloads we can't reject the prefix itself, because `data` isn't known
+  // yet when it is provided; so instead the returned predicate rejects `data`.
   prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
-): (data: T) => DisjointPrefixError<Prefix>;
+): (data: T & DisjointPrefixError<Prefix>) => boolean;
 
 export function startsWith<T extends string, Prefix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the

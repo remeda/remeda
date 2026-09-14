@@ -3,6 +3,7 @@ import { $typed } from "../test/$typed";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
 import { partition } from "./partition";
+import { pipe } from "./pipe";
 import { startsWith } from "./startsWith";
 
 describe("data-first", () => {
@@ -394,6 +395,22 @@ describe("reject disjoint prefixes (#1432)", () => {
         startsWith("1_" as `${number}_`),
       );
     });
+
+    test("in pipe", () => {
+      pipe(
+        // @ts-expect-error [ts2345] -- Intentional! this is what we're testing...
+        "cat" as "cat" | "dog",
+        startsWith("bird"),
+      );
+    });
+
+    test("native array methods", () => {
+      // eslint-disable-next-line unicorn/no-unused-array-method-return -- Intentional! just used for testing...
+      ([] as ("cat" | "dog")[]).filter(
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("bird"),
+      );
+    });
   });
 });
 
@@ -472,20 +489,6 @@ describe("known issues!", () => {
   });
 
   describe("consumers that don't reject a dead-code check", () => {
-    test("native array methods", () => {
-      // `Array.prototype.filter` accepts any callback returning `unknown`, so
-      // it also accepts the error-returning predicate a dead-code check
-      // resolves to. Remeda's own `filter` requires a `boolean` and does
-      // reject it.
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- The dead-code check going unnoticed is the limitation being pinned.
-      const result = ([] as ("cat" | "dog")[]).filter(startsWith("bird"));
-
-      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If native `.filter` ever rejected an error-returning predicate, this
-      // dead-code check would resolve to an empty result instead.
-      expectTypeOf(result).not.toEqualTypeOf<never[]>();
-    });
-
     test("isNot", () => {
       // `isNot` requires a type predicate, which makes TypeScript resolve
       // `startsWith` through the guard overload; the rejection overload is

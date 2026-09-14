@@ -148,10 +148,10 @@ export function endsWith<T extends string, Suffix extends string>(
 
 /**
  * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your suffix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `suffix`.
+ * values of `data` the returned predicate rejects `data` itself, so the
+ * composition fails to compile. If this overload signature was chosen for
+ * your call most likely your suffix has a typo or `data` itself has changed
+ * and it no longer satisfies the `suffix`.
  *
  * If you still need to make the check on these values widen one of them to
  * `string`.
@@ -165,11 +165,10 @@ export function endsWith<T extends string, Suffix extends string>(
 export function endsWith<T extends string, Suffix extends string>(
   // This signature has to come first so that TypeScript would pick it only
   // when it would result in narrowing to `never`. Unlike the data-first
-  // overloads we can't reject the argument itself, because `data` isn't known
-  // yet when the suffix is provided; returning an unsatisfiable type is the
-  // closest we can get.
+  // overloads we can't reject the suffix itself, because `data` isn't known
+  // yet when it is provided; so instead the returned predicate rejects `data`.
   suffix: IsDisjointSuffix<T, Suffix> extends true ? Suffix : never,
-): (data: T) => DisjointSuffixError<Suffix>;
+): (data: T & DisjointSuffixError<Suffix>) => boolean;
 
 export function endsWith<T extends string, Suffix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the
