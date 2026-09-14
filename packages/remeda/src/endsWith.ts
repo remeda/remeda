@@ -20,7 +20,6 @@ import { purry } from "./purry";
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
 
-// @see https://github.com/remeda/remeda/issues/1432
 type IsDisjointSuffix<T extends string, Suffix extends string> =
   // The tuple wrapping keeps the checks decidable while `T` or `Suffix` is an
   // unresolved type parameter (a generic wrapper around the function):
