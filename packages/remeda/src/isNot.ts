@@ -1,5 +1,6 @@
 import type { IsUnknown } from "type-fest";
 import type { GuardType } from "./internal/types/GuardType";
+import type { Not } from "./internal/types/Not";
 
 /**
  * A function that takes a guard function as predicate and returns a guard that negates it.
@@ -26,15 +27,17 @@ export function isNot<T extends (data: unknown) => data is unknown>(
     : T,
 ): <Wide>(data: Wide) => data is Exclude<Wide, GuardType<T>>;
 
-// Fallback for guards the signature above rejects: those whose guarded type is
-// `unknown` (e.g. `isTruthy`), and those whose parameter is narrower than
-// `unknown` (e.g. `startsWith`), which the constraint above can't accept.
 export function isNot<T, Narrow extends T>(
+  // Fallback for guards the signature above rejects: those whose guarded type
+  // is `unknown` (e.g. `isTruthy`), and those whose parameter is narrower than
+  // `unknown` (e.g. `startsWith`), which the constraint above can't accept.
   predicate: (data: T) => data is Narrow,
 ): (data: T) => data is Exclude<T, Narrow>;
 
-// Fallback for trivial (non-narrowing) boolean predicates.
-export function isNot<T>(predicate: (data: T) => boolean): (data: T) => boolean;
+export function isNot<T, Result extends boolean>(
+  // Fallback for trivial (non-narrowing) boolean predicates.
+  predicate: (data: T) => Result,
+): (data: T) => Not<Result>;
 
 export function isNot<T>(
   predicate: (data: T) => boolean,

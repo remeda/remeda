@@ -382,6 +382,12 @@ describe("data-last", () => {
     ).toEqualTypeOf<"dog"[]>();
   });
 
+  test("guaranteed prefix negated through composition", () => {
+    expectTypeOf(
+      filter([] as ("cat" | "dog")[], isNot(startsWith(""))),
+    ).toEqualTypeOf<[]>();
+  });
+
   test("generic data", () => {
     const startsWithFooAll = <T extends string>(data: readonly T[]) =>
       filter(data, startsWith("foo"));
@@ -744,23 +750,6 @@ describe("known issues!", () => {
       // If `isNot` ever resolved this through the sound `boolean` overload,
       // it wouldn't narrow at all, matching the direct-call behavior above.
       expectTypeOf(result).not.toEqualTypeOf<("cat" | "dog")[]>();
-    });
-  });
-
-  describe("isNot loses a guaranteed prefix", () => {
-    test("empty prefix", () => {
-      // `isNot` resolves `startsWith` without a concrete data type (see
-      // "consumers that don't reject a dead-code check"), so `T` falls back
-      // to `string`, which an empty prefix is guaranteed for, and the `true`
-      // overload is picked. `isNot` has no overload that flips a literal
-      // `true` predicate into a literal `false` one, so the negation is typed
-      // as a plain `boolean` predicate and nothing is filtered out; negating
-      // the narrowing guard instead would have emptied the result.
-      const result = filter([] as ("cat" | "dog")[], isNot(startsWith("")));
-
-      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
-      // If `isNot` ever propagated the literal, nothing would survive.
-      expectTypeOf(result).not.toEqualTypeOf<[]>();
     });
   });
 });
