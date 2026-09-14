@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/no-unused-vars, unicorn/consistent-function-scoping --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping --
  * Our "generics" tests can only be constructed via generic function wrappers,
  * but because we only care about how the parameters are passed through to our
  * types, we don't care about the stricter rules we have for writing proper
@@ -80,10 +80,11 @@ describe("data-first", () => {
   describe("compiles inside a generic wrapper", () => {
     // Dead prefixes (#1432) are rejected through a conditional on the
     // parameter type. While `T` or `Prefix` is still an unresolved type
-    // parameter TypeScript can't evaluate that conditional, and overload
-    // resolution fails on a deferred one (ts2769); so the call inside each
-    // wrapper is the assertion, and the wrapper is only invoked so that it
-    // isn't flagged as unused.
+    // parameter that conditional stays deferred, and TypeScript accepts the
+    // argument only if every branch it can't rule out accepts it; a live
+    // rejection branch fails the whole call (ts2769). The call inside each
+    // wrapper is what's under test; the assertion pins which overload it
+    // resolved to.
 
     test("generic data, literal prefix", () => {
       const startsWithFoo = <T extends string>(data: T) =>
@@ -97,29 +98,40 @@ describe("data-first", () => {
     });
 
     test("generic prefix, primitive data", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
       const hasPrefix = <Prefix extends string>(data: string, prefix: Prefix) =>
         startsWith(data, prefix);
+
+      expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
+    });
+
+    test("generic prefix, literal data", () => {
+      const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
+        startsWith($typed<"cat" | "dog">(), prefix);
+
+      expectTypeOf(hasPrefix("bird")).toEqualTypeOf<boolean>();
     });
 
     test("generic data, primitive prefix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
       const hasPrefix = <T extends string>(data: T, prefix: string) =>
         startsWith(data, prefix);
+
+      expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
     });
 
     test("generic data and prefix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
-      const hasPrefix = <T extends string, P extends string>(
+      const hasPrefix = <T extends string, Prefix extends string>(
         data: T,
-        prefix: P,
+        prefix: Prefix,
       ) => startsWith(data, prefix);
+
+      expectTypeOf(hasPrefix("foobar", "foo")).toEqualTypeOf<boolean>();
     });
 
     test("data constrained by the prefix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
-      const hasPrefix = <T extends `foo${string}`>(data: T) =>
-        startsWith(data, "foo");
+      const startsWithFoo = <T extends `foo${string}`>(data: T) =>
+        startsWith(data, "foo") ? undefined : data;
+
+      expectTypeOf(startsWithFoo("foobar")).toEqualTypeOf<undefined>();
     });
   });
 
@@ -463,21 +475,36 @@ describe("reject disjoint prefixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
-  describe("unresolved type parameters are rejected", () => {
-    test("generic prefix, when data is narrower than `string`", () => {
-      // Dead prefixes are rejected through a parameter type that is
-      // conditional on the prefix. While the prefix is an unresolved type
-      // parameter that conditional can't be evaluated, and TypeScript falls
-      // back to checking the prefix's constraint (`string`) against it, which
-      // none of its branches accept. Widening `data` to `string` collapses the
-      // conditional before the prefix is needed, which is why the "generic
-      // prefix, primitive data" test under "compiles inside a generic wrapper"
-      // passes.
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
+  describe("dead prefixes aren't rejected through a type parameter", () => {
+    test("data-first", () => {
+      // Expected: the call is rejected, exactly like
+      // `startsWith("cat" as "cat" | "dog", "bird")` is (see "reject disjoint
+      // prefixes"); nothing that satisfies the constraint can start with
+      // "bird".
+      //
+      // Actual: it compiles. `IsDisjointPrefix` short-circuits to `false`
+      // while `T` is an unresolved type parameter so that wrappers over a
+      // plain `string` keep compiling, and that also waves through a prefix
+      // that is dead for a narrower constraint. TypeScript itself does know
+      // the check is dead: it narrows `data` to `never` in the truthy branch,
+      // which is why the result collapses to `undefined`.
+      const startsWithBird = <T extends "cat" | "dog">(data: T) =>
+        startsWith(data, "bird") ? data : undefined;
 
-      const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
-        // @ts-expect-error [ts2769] -- The limitation being pinned.
-        startsWith($typed<"cat" | "dog">(), prefix);
+      expectTypeOf(startsWithBird("cat")).toEqualTypeOf<undefined>();
+    });
+
+    test("data-last", () => {
+      // Expected: the call is rejected, exactly like it is on a concrete
+      // `("cat" | "dog")[]` (see "reject disjoint prefixes" > "data-last").
+      //
+      // Actual: it compiles. The rejection overload infers `T` from the
+      // wrapper's type parameter, hits the same short-circuit, and never
+      // matches; the narrowing overload then filters everything out.
+      const startsWithBirdAll = <T extends "cat" | "dog">(data: readonly T[]) =>
+        filter(data, startsWith("bird"));
+
+      expectTypeOf(startsWithBirdAll(["cat"])).toEqualTypeOf<[]>();
     });
   });
 

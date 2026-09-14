@@ -22,18 +22,21 @@ type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
 // @see https://github.com/remeda/remeda/issues/1432
 type IsDisjointPrefix<T extends string, Prefix extends string> =
-  // The tuple wrapping keeps the check decidable while `T` is an unresolved
-  // type parameter (a generic wrapper around the function): TypeScript probes
-  // a deferred conditional with a wildcard type, which bare `string extends T`
-  // resolves to, leaving the rejection branch a live candidate that no prefix
-  // satisfies; `[string] extends [T]` resolves to `false` and rules it out.
-  [string] extends [T]
-    ? // A primitive string could hold any value at runtime, so a prefix is
-      // never provably dead for it. Short-circuiting here also keeps the
-      // parameter type resolvable when the prefix itself is generic, which
-      // would otherwise leave the conditional deferred and reject the call.
+  // The tuple wrapping keeps the checks decidable while `T` or `Prefix` is an
+  // unresolved type parameter (a generic wrapper around the function):
+  // TypeScript probes a deferred conditional with a wildcard type, which bare
+  // `string extends T` resolves to, leaving the rejection branch a live
+  // candidate that no argument satisfies; `[string] extends [T]` resolves to
+  // `false` and rules it out.
+  [string] extends [Prefix]
+    ? // A primitive prefix could hold any value at runtime, so a check with it
+      // is never provably dead.
       false
-    : IsNever<StartsWith<T, Prefix>>;
+    : [string] extends [T]
+      ? // A primitive string could hold any value at runtime, so a prefix is
+        // never provably dead for it.
+        false
+      : IsNever<StartsWith<T, Prefix>>;
 
 type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
   "startsWith",

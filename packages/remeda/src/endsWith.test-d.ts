@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/no-unused-vars, unicorn/consistent-function-scoping --
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unnecessary-type-parameters, unicorn/consistent-function-scoping --
  * Our "generics" tests can only be constructed via generic function wrappers,
  * but because we only care about how the parameters are passed through to our
  * types, we don't care about the stricter rules we have for writing proper
@@ -80,44 +80,62 @@ describe("data-first", () => {
   describe("compiles inside a generic wrapper", () => {
     // Dead suffixes (#1432) are rejected through a conditional on the
     // parameter type. While `T` or `Suffix` is still an unresolved type
-    // parameter TypeScript can't evaluate that conditional, and overload
-    // resolution fails on a deferred one (ts2769); so the call inside each
-    // wrapper is the assertion, and the wrapper is only invoked so that it
-    // isn't flagged as unused.
+    // parameter that conditional stays deferred, and TypeScript accepts the
+    // argument only if every branch it can't rule out accepts it; a live
+    // rejection branch fails the whole call (ts2769). The call inside each
+    // wrapper is what's under test; the assertion pins which overload it
+    // resolved to.
 
     test("generic data, literal suffix", () => {
       const endsWithBar = <T extends string>(data: T) =>
         endsWith(data, "bar") ? data : undefined;
 
+      // The narrowing overload is the one picked through the wrapper; falling
+      // through to the boolean overload would leave `data` a plain `string`.
       expectTypeOf(endsWithBar($typed<string>())).toEqualTypeOf<
         `${string}bar` | undefined
       >();
     });
 
     test("generic suffix, primitive data", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
       const hasSuffix = <Suffix extends string>(data: string, suffix: Suffix) =>
         endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix("foobar", "bar")).toEqualTypeOf<boolean>();
+    });
+
+    test("generic suffix, literal data", () => {
+      const hasSuffix = <Suffix extends string>(suffix: Suffix) =>
+        endsWith($typed<"cat" | "dog">(), suffix);
+
+      // An unresolved suffix can't narrow anything, so the boolean overload is
+      // the right one.
+      expectTypeOf(hasSuffix("bird")).toEqualTypeOf<boolean>();
     });
 
     test("generic data, primitive suffix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
       const hasSuffix = <T extends string>(data: T, suffix: string) =>
         endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix("foobar", "bar")).toEqualTypeOf<boolean>();
     });
 
     test("generic data and suffix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
-      const hasSuffix = <T extends string, S extends string>(
+      const hasSuffix = <T extends string, Suffix extends string>(
         data: T,
-        suffix: S,
+        suffix: Suffix,
       ) => endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix("foobar", "bar")).toEqualTypeOf<boolean>();
     });
 
     test("data constrained by the suffix", () => {
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
-      const hasSuffix = <T extends `${string}bar`>(data: T) =>
-        endsWith(data, "bar");
+      const endsWithBar = <T extends `${string}bar`>(data: T) =>
+        endsWith(data, "bar") ? undefined : data;
+
+      // The narrowing overload empties the falsy branch; the boolean overload
+      // would leave `data` as `T` there.
+      expectTypeOf(endsWithBar("foobar")).toEqualTypeOf<undefined>();
     });
   });
 
@@ -461,21 +479,36 @@ describe("reject disjoint suffixes (#1432)", () => {
 });
 
 describe("known issues!", () => {
-  describe("unresolved type parameters are rejected", () => {
-    test("generic suffix, when data is narrower than `string`", () => {
-      // Dead suffixes are rejected through a parameter type that is
-      // conditional on the suffix. While the suffix is an unresolved type
-      // parameter that conditional can't be evaluated, and TypeScript falls
-      // back to checking the suffix's constraint (`string`) against it, which
-      // none of its branches accept. Widening `data` to `string` collapses the
-      // conditional before the suffix is needed, which is why the "generic
-      // suffix, primitive data" test under "compiles inside a generic wrapper"
-      // passes.
+  describe("dead suffixes aren't rejected through a type parameter", () => {
+    test("data-first", () => {
+      // Expected: the call is rejected, exactly like
+      // `endsWith("cat" as "cat" | "dog", "bird")` is (see "reject disjoint
+      // suffixes"); nothing that satisfies the constraint can end with
+      // "bird".
+      //
+      // Actual: it compiles. `IsDisjointSuffix` short-circuits to `false`
+      // while `T` is an unresolved type parameter so that wrappers over a
+      // plain `string` keep compiling, and that also waves through a suffix
+      // that is dead for a narrower constraint. TypeScript itself does know
+      // the check is dead: it narrows `data` to `never` in the truthy branch,
+      // which is why the result collapses to `undefined`.
+      const endsWithBird = <T extends "cat" | "dog">(data: T) =>
+        endsWith(data, "bird") ? data : undefined;
 
-      // @ts-expect-error [ts6133] -- Intentional! we can only test how our type supports unresolved type-parameters ("generics") via a function.
-      const hasSuffix = <Suffix extends string>(suffix: Suffix) =>
-        // @ts-expect-error [ts2769] -- The limitation being pinned.
-        endsWith($typed<"cat" | "dog">(), suffix);
+      expectTypeOf(endsWithBird("cat")).toEqualTypeOf<undefined>();
+    });
+
+    test("data-last", () => {
+      // Expected: the call is rejected, exactly like it is on a concrete
+      // `("cat" | "dog")[]` (see "reject disjoint suffixes" > "data-last").
+      //
+      // Actual: it compiles. The rejection overload infers `T` from the
+      // wrapper's type parameter, hits the same short-circuit, and never
+      // matches; the narrowing overload then filters everything out.
+      const endsWithBirdAll = <T extends "cat" | "dog">(data: readonly T[]) =>
+        filter(data, endsWith("bird"));
+
+      expectTypeOf(endsWithBirdAll(["cat"])).toEqualTypeOf<[]>();
     });
   });
 
