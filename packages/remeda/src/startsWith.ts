@@ -136,18 +136,11 @@ export function startsWith<T extends string, Prefix extends string>(
 
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  prefix: string extends Prefix
-    ? // A primitive prefix could hold any value at runtime, so a check with it
-      // is never provably dead. Short-circuiting before the disjoint check
-      // also keeps the parameter type resolvable when `data` is an unresolved
-      // type parameter, which would otherwise leave the conditional deferred
-      // and reject the call.
-      Prefix
-    : IsDisjointPrefix<T, Prefix> extends true
-      ? // Without the disjoint check here too, a dead prefix rejected by the
-        // previous overload would fall through to this one and be accepted.
-        DisjointPrefixError<Prefix>
-      : Prefix,
+  prefix: IsDisjointPrefix<T, Prefix> extends true
+    ? // Without the disjoint check here too, a dead prefix rejected by the
+      // previous overload would fall through to this one and be accepted.
+      DisjointPrefixError<Prefix>
+    : Prefix,
 ): boolean;
 
 /**
