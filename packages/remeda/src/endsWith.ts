@@ -191,10 +191,12 @@ export function endsWith<T extends string, Suffix extends string>(
  * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`. Unlike the data-first
-  // overloads we can't reject the suffix itself, because `data` isn't known
-  // yet when it is provided; so instead the returned predicate rejects `data`.
+  // This signature has to come first because the generic guard overload
+  // below accepts every literal suffix. Unlike the data-first overloads we
+  // can't fail the call on the suffix itself: an overload that rejects it
+  // just doesn't match, and the call falls through to the generic guard,
+  // which has no `T` to check it against. So the rejection is carried by the
+  // returned predicate instead, which rejects `data`.
   suffix: IsDisjointSuffix<T, Suffix> extends true ? Suffix : never,
 ): (data: T & DisjointSuffixError<Suffix>) => boolean;
 

@@ -94,7 +94,13 @@ export default defineConfig(
       "jsdoc/require-description": "error",
       "jsdoc/require-example": [
         "warn",
-        { enableFixer: false, exemptedBy: ["hidden"] },
+        {
+          enableFixer: false,
+          // We don't need examples on hidden signatures, they are used to
+          // exempt edge-case signatures from the docs site and the user only
+          // sees them when they already hit a case where they match.
+          exemptedBy: ["hidden"],
+        },
       ],
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
@@ -381,9 +387,7 @@ export default defineConfig(
               package: "type-fest",
               name: [
                 // A tag carries no runtime data, so mutability is meaningless
-                // for it. `TagContainer` itself is readonly, but the
-                // tag-to-metadata map it wraps is a mapped type with no
-                // `readonly` modifier, which this rule reads as mutable.
+                // for it.
                 "Tag",
               ],
             },

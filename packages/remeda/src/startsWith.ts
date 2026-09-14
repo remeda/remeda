@@ -191,10 +191,12 @@ export function startsWith<T extends string, Prefix extends string>(
  * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`. Unlike the data-first
-  // overloads we can't reject the prefix itself, because `data` isn't known
-  // yet when it is provided; so instead the returned predicate rejects `data`.
+  // This signature has to come first because the generic guard overload
+  // below accepts every literal prefix. Unlike the data-first overloads we
+  // can't fail the call on the prefix itself: an overload that rejects it
+  // just doesn't match, and the call falls through to the generic guard,
+  // which has no `T` to check it against. So the rejection is carried by the
+  // returned predicate instead, which rejects `data`.
   prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
 ): (data: T & DisjointPrefixError<Prefix>) => boolean;
 

@@ -17,6 +17,9 @@ import { startsWith } from "./startsWith";
 describe("data-first", () => {
   test("doesn't narrow on 'string' prefix", () => {
     const data = "" as string;
+
+    expectTypeOf(startsWith(data, "" as string)).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "" as string)) {
       expectTypeOf(data).toEqualTypeOf<string>();
     } else {
@@ -26,6 +29,9 @@ describe("data-first", () => {
 
   test("doesn't narrow a literal union on 'string' prefix", () => {
     const data = "cat" as "cat" | "dog";
+
+    expectTypeOf(startsWith(data, "" as string)).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "" as string)) {
       expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
     } else {
@@ -155,6 +161,11 @@ describe("data-first", () => {
 
   test("doesn't narrow when the prefix union splits the data", () => {
     const data = "foobar" as "foobar" | "hello" | "world";
+
+    expectTypeOf(
+      startsWith(data, "foo" as "foo" | "he"),
+    ).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "foo" as "foo" | "he")) {
       expectTypeOf(data).toEqualTypeOf<"foobar" | "hello" | "world">();
     } else {
@@ -164,6 +175,11 @@ describe("data-first", () => {
 
   test("doesn't narrow when only some prefixes are disjoint", () => {
     const data = "cat" as "cat" | "dog";
+
+    expectTypeOf(
+      startsWith(data, "c" as "c" | "bird"),
+    ).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "c" as "c" | "bird")) {
       expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
     } else {
@@ -182,6 +198,11 @@ describe("data-first", () => {
 
   test("doesn't narrow a matching const to 'never' on a union prefix", () => {
     const data = "foobar" as const;
+
+    expectTypeOf(
+      startsWith(data, "foo" as "foo" | "he"),
+    ).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "foo" as "foo" | "he")) {
       expectTypeOf(data).toEqualTypeOf<"foobar">();
     } else {
@@ -192,6 +213,24 @@ describe("data-first", () => {
   test("union prefix where every member matches", () => {
     expectTypeOf(
       startsWith("foobar" as const, "foo" as "foo" | "f"),
+    ).toEqualTypeOf<true>();
+  });
+
+  test("union prefix mixing a literal and a template member", () => {
+    expectTypeOf(
+      startsWith("foobar" as const, "foo" as "foo" | `${number}_`),
+    ).toEqualTypeOf<boolean>();
+  });
+
+  test("every member of a literal union data matches a literal prefix", () => {
+    expectTypeOf(
+      startsWith("foobar" as "foobar" | "foobaz", "foo"),
+    ).toEqualTypeOf<true>();
+  });
+
+  test("every member of a literal union data matches every member of a union prefix", () => {
+    expectTypeOf(
+      startsWith("foobar" as "foobar" | "foobaz", "foo" as "foo" | "f"),
     ).toEqualTypeOf<true>();
   });
 
@@ -206,6 +245,11 @@ describe("data-first", () => {
 
   test("doesn't narrow on a template prefix that splits the data", () => {
     const data = "1_cat" as "1_cat" | "dog";
+
+    expectTypeOf(
+      startsWith(data, "1_" as `${number}_`),
+    ).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "1_" as `${number}_`)) {
       expectTypeOf(data).toEqualTypeOf<"1_cat" | "dog">();
     } else {
@@ -215,6 +259,11 @@ describe("data-first", () => {
 
   test("doesn't narrow on a template prefix on template data", () => {
     const data = "bar_1" as `bar_${number}`;
+
+    expectTypeOf(
+      startsWith(data, "bar_" as `${string}_`),
+    ).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "bar_" as `${string}_`)) {
       expectTypeOf(data).toEqualTypeOf<`bar_${number}`>();
     } else {
@@ -224,6 +273,9 @@ describe("data-first", () => {
 
   test("doesn't narrow when a union prefix contains an empty string", () => {
     const data = "cat" as "cat" | "dog";
+
+    expectTypeOf(startsWith(data, "" as "" | "z")).toEqualTypeOf<boolean>();
+
     if (startsWith(data, "" as "" | "z")) {
       expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
     } else {
@@ -307,6 +359,13 @@ describe("data-last", () => {
     >();
   });
 
+  test("guaranteed prefix through a filtering consumer", () => {
+    const [yes, no] = partition([] as "foobar"[], startsWith("foo"));
+
+    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
   test("template union", () => {
     const [yes, no] = partition(
       [] as (`cat_${number}` | `dog_${boolean}`)[],
@@ -376,6 +435,18 @@ describe("data-last", () => {
     expectTypeOf(
       pipe("foobar" as const, startsWith("foo" as "foo" | "f")),
     ).toEqualTypeOf<true>();
+  });
+
+  test("union prefix mixing a literal and a template member", () => {
+    expectTypeOf(
+      pipe("foobar" as const, startsWith("foo" as "foo" | `${number}_`)),
+    ).toEqualTypeOf<boolean>();
+  });
+
+  test("guaranteed prefix on a literal union data through a callback consumer", () => {
+    expectTypeOf(
+      map([] as ("foobar" | "foobaz")[], startsWith("foo")),
+    ).toEqualTypeOf<true[]>();
   });
 
   test("template prefix", () => {
@@ -467,6 +538,14 @@ describe("reject disjoint prefixes (#1432)", () => {
       "cat" as "cat" | "dog",
       // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
       "1_" as `${number}_`,
+    );
+  });
+
+  test("union prefix mixing a literal and a template member where neither matches", () => {
+    startsWith(
+      "foobar" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "x" as "x" | `${number}_`,
     );
   });
 
