@@ -38,6 +38,14 @@ type IsDisjointPrefix<T extends string, Prefix extends string> =
         false
       : IsNever<StartsWith<T, Prefix>>;
 
+// The mirror image of `IsDisjointPrefix`: every value `T` could hold starts
+// with every value `Prefix` could hold, so the check is provably always `true`.
+type IsGuaranteedPrefix<T extends string, Prefix extends string> = [T] extends [
+  StartsWithEvery<T, Prefix>,
+]
+  ? true
+  : false;
+
 type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
   "startsWith",
   "This prefix doesn't match any of the inputs, the function will always return `false`",
@@ -109,8 +117,6 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
  * method, but doesn't expose the `position` parameter. To check from a specific
  * position, use `startsWith(sliceString(data, position), prefix)`.
  *
- * Prefixes that `data` can never start with are rejected at compile-time.
- *
  * @param data - The input string.
  * @param prefix - The string to check for at the beginning.
  * @signature
@@ -123,15 +129,25 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  prefix: IsDisjointPrefix<T, Prefix> extends true
+    ? // Every data-first overload rejects a dead prefix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointPrefixError<Prefix>
+    : IsGuaranteedPrefix<T, Prefix> extends true
+      ? Prefix
+      : never,
+): true;
+
+export function startsWith<T extends string, Prefix extends string>(
+  data: T,
   prefix: string extends Prefix
     ? // Reject primitive strings, they can't be used to narrow T. They would
       // match the non-narrowing overload.
       never
     : IsDisjointPrefix<T, Prefix> extends true
-      ? // Both data-first overloads reject a dead prefix so that no overload
-        // matches the call at all, which puts the error on the argument
-        // itself.
-        DisjointPrefixError<Prefix>
+      ? DisjointPrefixError<Prefix>
       : IsNarrowingUnsound<T, Prefix> extends true
         ? // Union prefixes are rejected too when the guard they'd produce isn't
           // sound.
@@ -156,8 +172,6 @@ export function startsWith<T extends string, Prefix extends string>(
  * method, but doesn't expose the `position` parameter. To check from a specific
  * position, use `startsWith(sliceString(data, position), prefix)`.
  *
- * Prefixes that `data` can never start with are rejected at compile-time.
- *
  * @param prefix - The string to check for at the beginning.
  * @signature
  *   startsWith(prefix)(data);
@@ -174,6 +188,13 @@ export function startsWith<T extends string, Prefix extends string>(
   // yet when it is provided; so instead the returned predicate rejects `data`.
   prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
 ): (data: T & DisjointPrefixError<Prefix>) => boolean;
+
+export function startsWith<T extends string, Prefix extends string>(
+  // Like the rejection overload, `T` is inferred from the contextual type of
+  // the returned predicate; without one it falls back to `string`, which only
+  // an empty prefix is guaranteed for.
+  prefix: IsGuaranteedPrefix<T, Prefix> extends true ? Prefix : never,
+): (data: T) => true;
 
 export function startsWith<T extends string, Prefix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the

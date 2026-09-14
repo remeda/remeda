@@ -38,6 +38,14 @@ type IsDisjointSuffix<T extends string, Suffix extends string> =
         false
       : IsNever<EndsWith<T, Suffix>>;
 
+// The mirror image of `IsDisjointSuffix`: every value `T` could hold ends with
+// every value `Suffix` could hold, so the check is provably always `true`.
+type IsGuaranteedSuffix<T extends string, Suffix extends string> = [T] extends [
+  EndsWithEvery<T, Suffix>,
+]
+  ? true
+  : false;
+
 type DisjointSuffixError<Suffix extends string> = RemedaTypeError<
   "endsWith",
   "This suffix doesn't match any of the inputs, the function will always return `false`",
@@ -109,8 +117,6 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
  * method, but doesn't expose the `endPosition` parameter. To check only up to a
  * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
  *
- * Suffixes that `data` can never end with are rejected at compile-time.
- *
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
  * @signature
@@ -123,15 +129,25 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  suffix: IsDisjointSuffix<T, Suffix> extends true
+    ? // Every data-first overload rejects a dead suffix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointSuffixError<Suffix>
+    : IsGuaranteedSuffix<T, Suffix> extends true
+      ? Suffix
+      : never,
+): true;
+
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
   suffix: string extends Suffix
     ? // Reject primitive strings, they can't be used to narrow T. They would
       // match the non-narrowing overload.
       never
     : IsDisjointSuffix<T, Suffix> extends true
-      ? // Both data-first overloads reject a dead suffix so that no overload
-        // matches the call at all, which puts the error on the argument
-        // itself.
-        DisjointSuffixError<Suffix>
+      ? DisjointSuffixError<Suffix>
       : IsNarrowingUnsound<T, Suffix> extends true
         ? // Union suffixes are rejected too when the guard they'd produce isn't
           // sound.
@@ -156,8 +172,6 @@ export function endsWith<T extends string, Suffix extends string>(
  * method, but doesn't expose the `endPosition` parameter. To check only up to a
  * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
  *
- * Suffixes that `data` can never end with are rejected at compile-time.
- *
  * @param suffix - The string to check for at the end.
  * @signature
  *   endsWith(suffix)(data);
@@ -174,6 +188,13 @@ export function endsWith<T extends string, Suffix extends string>(
   // yet when it is provided; so instead the returned predicate rejects `data`.
   suffix: IsDisjointSuffix<T, Suffix> extends true ? Suffix : never,
 ): (data: T & DisjointSuffixError<Suffix>) => boolean;
+
+export function endsWith<T extends string, Suffix extends string>(
+  // Like the rejection overload, `T` is inferred from the contextual type of
+  // the returned predicate; without one it falls back to `string`, which only
+  // an empty suffix is guaranteed for.
+  suffix: IsGuaranteedSuffix<T, Suffix> extends true ? Suffix : never,
+): (data: T) => true;
 
 export function endsWith<T extends string, Suffix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the

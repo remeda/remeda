@@ -10,6 +10,7 @@ import { $typed } from "../test/$typed";
 import { endsWith } from "./endsWith";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
+import { map } from "./map";
 import { partition } from "./partition";
 import { pipe } from "./pipe";
 
@@ -33,21 +34,11 @@ describe("data-first", () => {
   });
 
   test("const data that matches", () => {
-    const data = "foobar" as const;
-    if (endsWith(data, "bar")) {
-      expectTypeOf(data).toEqualTypeOf<"foobar">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(endsWith("foobar" as const, "bar")).toEqualTypeOf<true>();
   });
 
   test("suffix equal to the data", () => {
-    const data = "foo" as const;
-    if (endsWith(data, "foo")) {
-      expectTypeOf(data).toEqualTypeOf<"foo">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(endsWith("foo" as const, "foo")).toEqualTypeOf<true>();
   });
 
   test("primitive string data", () => {
@@ -60,12 +51,9 @@ describe("data-first", () => {
   });
 
   test("template literal data that matches", () => {
-    const data = "1_bar" as `${number}_bar`;
-    if (endsWith(data, "bar")) {
-      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(
+      endsWith("1_bar" as `${number}_bar`, "bar"),
+    ).toEqualTypeOf<true>();
   });
 
   test("literal union", () => {
@@ -78,12 +66,11 @@ describe("data-first", () => {
   });
 
   test("empty suffix", () => {
-    const data = "cat" as "cat" | "dog";
-    if (endsWith(data, "")) {
-      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(endsWith("cat" as "cat" | "dog", "")).toEqualTypeOf<true>();
+  });
+
+  test("empty suffix on primitive string data", () => {
+    expectTypeOf(endsWith("" as string, "")).toEqualTypeOf<true>();
   });
 
   test("template union", () => {
@@ -202,6 +189,12 @@ describe("data-first", () => {
     }
   });
 
+  test("union suffix where every member matches", () => {
+    expectTypeOf(
+      endsWith("foobar" as const, "bar" as "bar" | "r"),
+    ).toEqualTypeOf<true>();
+  });
+
   test("template suffix", () => {
     const data = "" as string;
     if (endsWith(data, "1" as `${number}`)) {
@@ -269,17 +262,13 @@ describe("data-last", () => {
   });
 
   test("const data that matches", () => {
-    const [yes, no] = partition([] as "foobar"[], endsWith("bar"));
-
-    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(
+      pipe("foobar" as const, endsWith("bar")),
+    ).toEqualTypeOf<true>();
   });
 
   test("suffix equal to the data", () => {
-    const [yes, no] = partition([] as "foo"[], endsWith("foo"));
-
-    expectTypeOf(yes).toEqualTypeOf<"foo"[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(pipe("foo" as const, endsWith("foo"))).toEqualTypeOf<true>();
   });
 
   test("primitive string data", () => {
@@ -290,10 +279,9 @@ describe("data-last", () => {
   });
 
   test("template literal data that matches", () => {
-    const [yes, no] = partition([] as `${number}_bar`[], endsWith("bar"));
-
-    expectTypeOf(yes).branded.toEqualTypeOf<`${number}_bar`[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(
+      pipe("1_bar" as `${number}_bar`, endsWith("bar")),
+    ).toEqualTypeOf<true>();
   });
 
   test("literal union", () => {
@@ -304,10 +292,19 @@ describe("data-last", () => {
   });
 
   test("empty suffix", () => {
-    const [yes, no] = partition([] as ("cat" | "dog")[], endsWith(""));
+    expectTypeOf(
+      pipe("cat" as "cat" | "dog", endsWith("")),
+    ).toEqualTypeOf<true>();
+  });
 
-    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+  test("empty suffix on primitive string data", () => {
+    expectTypeOf(pipe("" as string, endsWith(""))).toEqualTypeOf<true>();
+  });
+
+  test("guaranteed suffix through a callback consumer", () => {
+    expectTypeOf(map([] as "foobar"[], endsWith("bar"))).toEqualTypeOf<
+      true[]
+    >();
   });
 
   test("template union", () => {
@@ -373,6 +370,12 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
     expectTypeOf(no).toEqualTypeOf<"foobar"[]>();
+  });
+
+  test("union suffix where every member matches", () => {
+    expectTypeOf(
+      pipe("foobar" as const, endsWith("bar" as "bar" | "r")),
+    ).toEqualTypeOf<true>();
   });
 
   test("template suffix", () => {
@@ -560,6 +563,36 @@ describe("known issues!", () => {
     });
   });
 
+  describe("guaranteed suffixes aren't typed `true` through a type parameter", () => {
+    test("data-first", () => {
+      // `IsGuaranteedSuffix` stays deferred while `T` is an unresolved type
+      // parameter, and TypeScript only proves a deferred conditional by
+      // instantiating it with the type parameter stripped of its constraint,
+      // which no suffix is guaranteed for; the narrowing guard is picked
+      // instead.
+      const hasBarSuffix = <T extends `${string}bar`>(data: T) =>
+        endsWith(data, "bar");
+      const hasSuffix = hasBarSuffix("foobar");
+
+      expectTypeOf(hasSuffix).toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint ends with "bar".
+      expectTypeOf(hasSuffix).not.toEqualTypeOf<true>();
+    });
+
+    test("data-last", () => {
+      // The `true` overload infers `T` from the wrapper's type parameter, hits
+      // the same deferral, and never matches; the narrowing guard is picked
+      // instead.
+      const endsWithBarAll = <T extends `${string}bar`>(data: readonly T[]) =>
+        map(data, endsWith("bar"));
+      const result = endsWithBarAll(["foobar"]);
+
+      expectTypeOf(result).items.toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint ends with "bar".
+      expectTypeOf(result).items.not.toEqualTypeOf<true>();
+    });
+  });
+
   describe("template literals with an impossible suffix aren't rejected", () => {
     test("data-first", () => {
       const data = "1_bar" as `${number}_bar`;
@@ -631,6 +664,23 @@ describe("known issues!", () => {
       // If `isNot` ever resolved this through the sound `boolean` overload,
       // it wouldn't narrow at all, matching the direct-call behavior above.
       expectTypeOf(result).not.toEqualTypeOf<("cat" | "dog")[]>();
+    });
+  });
+
+  describe("isNot loses a guaranteed suffix", () => {
+    test("empty suffix", () => {
+      // `isNot` resolves `endsWith` without a concrete data type (see
+      // "consumers that don't reject a dead-code check"), so `T` falls back
+      // to `string`, which an empty suffix is guaranteed for, and the `true`
+      // overload is picked. `isNot` has no overload that flips a literal
+      // `true` predicate into a literal `false` one, so the negation is typed
+      // as a plain `boolean` predicate and nothing is filtered out; negating
+      // the narrowing guard instead would have emptied the result.
+      const result = filter([] as ("cat" | "dog")[], isNot(endsWith("")));
+
+      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
+      // If `isNot` ever propagated the literal, nothing would survive.
+      expectTypeOf(result).not.toEqualTypeOf<[]>();
     });
   });
 });

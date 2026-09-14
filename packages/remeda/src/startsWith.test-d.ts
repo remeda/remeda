@@ -9,6 +9,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
 import { filter } from "./filter";
 import { isNot } from "./isNot";
+import { map } from "./map";
 import { partition } from "./partition";
 import { pipe } from "./pipe";
 import { startsWith } from "./startsWith";
@@ -33,21 +34,11 @@ describe("data-first", () => {
   });
 
   test("const data that matches", () => {
-    const data = "foobar" as const;
-    if (startsWith(data, "foo")) {
-      expectTypeOf(data).toEqualTypeOf<"foobar">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(startsWith("foobar" as const, "foo")).toEqualTypeOf<true>();
   });
 
   test("prefix equal to the data", () => {
-    const data = "foo" as const;
-    if (startsWith(data, "foo")) {
-      expectTypeOf(data).toEqualTypeOf<"foo">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(startsWith("foo" as const, "foo")).toEqualTypeOf<true>();
   });
 
   test("primitive string data", () => {
@@ -60,12 +51,9 @@ describe("data-first", () => {
   });
 
   test("template literal data that matches", () => {
-    const data = "foo_1" as `foo_${number}`;
-    if (startsWith(data, "foo")) {
-      expectTypeOf(data).toEqualTypeOf<`foo_${number}`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(
+      startsWith("foo_1" as `foo_${number}`, "foo"),
+    ).toEqualTypeOf<true>();
   });
 
   test("literal union", () => {
@@ -78,12 +66,11 @@ describe("data-first", () => {
   });
 
   test("empty prefix", () => {
-    const data = "cat" as "cat" | "dog";
-    if (startsWith(data, "")) {
-      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(startsWith("cat" as "cat" | "dog", "")).toEqualTypeOf<true>();
+  });
+
+  test("empty prefix on primitive string data", () => {
+    expectTypeOf(startsWith("" as string, "")).toEqualTypeOf<true>();
   });
 
   test("template union", () => {
@@ -202,6 +189,12 @@ describe("data-first", () => {
     }
   });
 
+  test("union prefix where every member matches", () => {
+    expectTypeOf(
+      startsWith("foobar" as const, "foo" as "foo" | "f"),
+    ).toEqualTypeOf<true>();
+  });
+
   test("template prefix", () => {
     const data = "" as string;
     if (startsWith(data, "1" as `${number}`)) {
@@ -269,17 +262,13 @@ describe("data-last", () => {
   });
 
   test("const data that matches", () => {
-    const [yes, no] = partition([] as "foobar"[], startsWith("foo"));
-
-    expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(
+      pipe("foobar" as const, startsWith("foo")),
+    ).toEqualTypeOf<true>();
   });
 
   test("prefix equal to the data", () => {
-    const [yes, no] = partition([] as "foo"[], startsWith("foo"));
-
-    expectTypeOf(yes).toEqualTypeOf<"foo"[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(pipe("foo" as const, startsWith("foo"))).toEqualTypeOf<true>();
   });
 
   test("primitive string data", () => {
@@ -290,10 +279,9 @@ describe("data-last", () => {
   });
 
   test("template literal data that matches", () => {
-    const [yes, no] = partition([] as `foo_${number}`[], startsWith("foo"));
-
-    expectTypeOf(yes).branded.toEqualTypeOf<`foo_${number}`[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+    expectTypeOf(
+      pipe("foo_1" as `foo_${number}`, startsWith("foo")),
+    ).toEqualTypeOf<true>();
   });
 
   test("literal union", () => {
@@ -304,10 +292,19 @@ describe("data-last", () => {
   });
 
   test("empty prefix", () => {
-    const [yes, no] = partition([] as ("cat" | "dog")[], startsWith(""));
+    expectTypeOf(
+      pipe("cat" as "cat" | "dog", startsWith("")),
+    ).toEqualTypeOf<true>();
+  });
 
-    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
-    expectTypeOf(no).toEqualTypeOf<[]>();
+  test("empty prefix on primitive string data", () => {
+    expectTypeOf(pipe("" as string, startsWith(""))).toEqualTypeOf<true>();
+  });
+
+  test("guaranteed prefix through a callback consumer", () => {
+    expectTypeOf(map([] as "foobar"[], startsWith("foo"))).toEqualTypeOf<
+      true[]
+    >();
   });
 
   test("template union", () => {
@@ -373,6 +370,12 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<"foobar"[]>();
     expectTypeOf(no).toEqualTypeOf<"foobar"[]>();
+  });
+
+  test("union prefix where every member matches", () => {
+    expectTypeOf(
+      pipe("foobar" as const, startsWith("foo" as "foo" | "f")),
+    ).toEqualTypeOf<true>();
   });
 
   test("template prefix", () => {
@@ -560,6 +563,36 @@ describe("known issues!", () => {
     });
   });
 
+  describe("guaranteed prefixes aren't typed `true` through a type parameter", () => {
+    test("data-first", () => {
+      // `IsGuaranteedPrefix` stays deferred while `T` is an unresolved type
+      // parameter, and TypeScript only proves a deferred conditional by
+      // instantiating it with the type parameter stripped of its constraint,
+      // which no prefix is guaranteed for; the narrowing guard is picked
+      // instead.
+      const hasFooPrefix = <T extends `foo${string}`>(data: T) =>
+        startsWith(data, "foo");
+      const isPrefixed = hasFooPrefix("foobar");
+
+      expectTypeOf(isPrefixed).toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint starts with "foo".
+      expectTypeOf(isPrefixed).not.toEqualTypeOf<true>();
+    });
+
+    test("data-last", () => {
+      // The `true` overload infers `T` from the wrapper's type parameter, hits
+      // the same deferral, and never matches; the narrowing guard is picked
+      // instead.
+      const startsWithFooAll = <T extends `foo${string}`>(data: readonly T[]) =>
+        map(data, startsWith("foo"));
+      const result = startsWithFooAll(["foobar"]);
+
+      expectTypeOf(result).items.toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint starts with "foo".
+      expectTypeOf(result).items.not.toEqualTypeOf<true>();
+    });
+  });
+
   describe("template literals with an impossible prefix aren't rejected", () => {
     test("data-first", () => {
       const data = "foo_1" as `foo_${number}`;
@@ -632,6 +665,23 @@ describe("known issues!", () => {
       // If `isNot` ever resolved this through the sound `boolean` overload,
       // it wouldn't narrow at all, matching the direct-call behavior above.
       expectTypeOf(result).not.toEqualTypeOf<("cat" | "dog")[]>();
+    });
+  });
+
+  describe("isNot loses a guaranteed prefix", () => {
+    test("empty prefix", () => {
+      // `isNot` resolves `startsWith` without a concrete data type (see
+      // "consumers that don't reject a dead-code check"), so `T` falls back
+      // to `string`, which an empty prefix is guaranteed for, and the `true`
+      // overload is picked. `isNot` has no overload that flips a literal
+      // `true` predicate into a literal `false` one, so the negation is typed
+      // as a plain `boolean` predicate and nothing is filtered out; negating
+      // the narrowing guard instead would have emptied the result.
+      const result = filter([] as ("cat" | "dog")[], isNot(startsWith("")));
+
+      expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
+      // If `isNot` ever propagated the literal, nothing would survive.
+      expectTypeOf(result).not.toEqualTypeOf<[]>();
     });
   });
 });
