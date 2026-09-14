@@ -70,7 +70,7 @@ The vast majority of users pass plain objects: arbitrarily deep, but plain. Corr
 ### Outputs and errors
 
 - **Output narrowing** — use `never` to remove a case from the possible return types.
-- **Input rejection** — use unsatisfiable constraints (`RemedaTypeError<"message">`) for clear errors at the call site. `RemedaTypeError` uses a branded symbol, not a raw string — raw strings pass through downstream without being caught.
+- **Input rejection** — use unsatisfiable constraints (`RemedaTypeError<"message">`) for clear errors at the call site. `RemedaTypeError` uses a branded symbol, not a raw string — raw strings pass through downstream without being caught. When the error has to survive an intersection with a type parameter (e.g., a data-last predicate that rejects its `data` as `T & Error`), pass `{ type: string }`: `never` would collapse the intersection and drop the inference site for `T`, and the symbol base fails assignability before the tag is reached, hiding the message. `startsWith` is the reference.
 
 ### Shape preservation
 

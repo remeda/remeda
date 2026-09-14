@@ -41,6 +41,15 @@ describe("data-first", () => {
     }
   });
 
+  test("suffix equal to the data", () => {
+    const data = "foo" as const;
+    if (endsWith(data, "foo")) {
+      expectTypeOf(data).toEqualTypeOf<"foo">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
   test("primitive string data", () => {
     const data = "" as string;
     if (endsWith(data, "bar")) {
@@ -65,6 +74,15 @@ describe("data-first", () => {
       expectTypeOf(data).toEqualTypeOf<"cat">();
     } else {
       expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
+  test("empty suffix", () => {
+    const data = "cat" as "cat" | "dog";
+    if (endsWith(data, "")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
     }
   });
 
@@ -257,6 +275,13 @@ describe("data-last", () => {
     expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
+  test("suffix equal to the data", () => {
+    const [yes, no] = partition([] as "foo"[], endsWith("foo"));
+
+    expectTypeOf(yes).toEqualTypeOf<"foo"[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
   test("primitive string data", () => {
     const [yes, no] = partition([] as string[], endsWith("bar"));
 
@@ -276,6 +301,13 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<"cat"[]>();
     expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+  });
+
+  test("empty suffix", () => {
+    const [yes, no] = partition([] as ("cat" | "dog")[], endsWith(""));
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
   test("template union", () => {
@@ -403,6 +435,14 @@ describe("reject disjoint suffixes (#1432)", () => {
     );
   });
 
+  test("suffix longer than the data", () => {
+    endsWith(
+      "foo" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "barfoo",
+    );
+  });
+
   test("literal union where no member matches", () => {
     endsWith(
       "cat" as "cat" | "dog",
@@ -433,6 +473,14 @@ describe("reject disjoint suffixes (#1432)", () => {
         [] as "helloworld"[],
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         endsWith("foo"),
+      );
+    });
+
+    test("suffix longer than the data", () => {
+      filter(
+        [] as "foo"[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith("barfoo"),
       );
     });
 
@@ -549,10 +597,13 @@ describe("known issues!", () => {
 
   describe("consumers that don't reject a dead-code check", () => {
     test("isNot", () => {
-      // `isNot` requires a type predicate, which makes TypeScript resolve
-      // `endsWith` through the guard overload; the rejection overload is
-      // never a candidate, so the dead-code check goes unnoticed. If it ever
-      // were, the call itself would fail to compile.
+      // `isNot` resolves `endsWith` without a concrete data type, since its
+      // predicate slot is typed against `isNot`'s own unfixed type parameter;
+      // `endsWith`'s `T` is never inferred, so the rejection overload, which
+      // needs `T` to find the suffix dead, doesn't match and the generic
+      // guard is returned instead. `filter` instantiates that guard with
+      // `"cat" | "dog"` only afterwards, past the check. If the rejection
+      // ever fired here, the call itself would fail to compile.
       const result = filter([] as ("cat" | "dog")[], isNot(endsWith("bird")));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
@@ -564,13 +615,13 @@ describe("known issues!", () => {
       // For a direct call, an unsound union suffix falls through to the
       // plain-`boolean` overload and `partition` doesn't narrow at all (see
       // "doesn't narrow when only some suffixes are disjoint" above). `isNot`
-      // requires a type predicate though, so it always resolves `endsWith`
-      // through the (unconditionally sound-looking) guard overload; the
-      // `boolean` overload built to reject this case is never a candidate for
-      // a type-predicate parameter. The result narrows to `"dog"[]`, which is
-      // unsound: at runtime the suffix could be `"bird"`, in which case
-      // nothing ends with it, `isNot` is `true` for every element, and `"cat"`
-      // survives the filter too.
+      // resolves `endsWith` without a concrete data type though (see
+      // "consumers that don't reject a dead-code check"), so the soundness
+      // check has no `T` to compare against, the `boolean` overload built to
+      // reject this case doesn't match, and the generic guard is returned.
+      // The result narrows to `"dog"[]`, which is unsound: at runtime the
+      // suffix could be `"bird"`, in which case nothing ends with it, `isNot`
+      // is `true` for every element, and `"cat"` survives the filter too.
       const result = filter(
         [] as ("cat" | "dog")[],
         isNot(endsWith("t" as "t" | "bird")),

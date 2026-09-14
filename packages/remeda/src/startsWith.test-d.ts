@@ -41,6 +41,15 @@ describe("data-first", () => {
     }
   });
 
+  test("prefix equal to the data", () => {
+    const data = "foo" as const;
+    if (startsWith(data, "foo")) {
+      expectTypeOf(data).toEqualTypeOf<"foo">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
+    }
+  });
+
   test("primitive string data", () => {
     const data = "" as string;
     if (startsWith(data, "foo")) {
@@ -65,6 +74,15 @@ describe("data-first", () => {
       expectTypeOf(data).toEqualTypeOf<"cat">();
     } else {
       expectTypeOf(data).toEqualTypeOf<"dog">();
+    }
+  });
+
+  test("empty prefix", () => {
+    const data = "cat" as "cat" | "dog";
+    if (startsWith(data, "")) {
+      expectTypeOf(data).toEqualTypeOf<"cat" | "dog">();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<never>();
     }
   });
 
@@ -108,6 +126,8 @@ describe("data-first", () => {
       const hasPrefix = <Prefix extends string>(prefix: Prefix) =>
         startsWith($typed<"cat" | "dog">(), prefix);
 
+      // An unresolved prefix can't narrow anything, so the boolean overload is
+      // the right one.
       expectTypeOf(hasPrefix("bird")).toEqualTypeOf<boolean>();
     });
 
@@ -131,6 +151,8 @@ describe("data-first", () => {
       const startsWithFoo = <T extends `foo${string}`>(data: T) =>
         startsWith(data, "foo") ? undefined : data;
 
+      // The narrowing overload empties the falsy branch; the boolean overload
+      // would leave `data` as `T` there.
       expectTypeOf(startsWithFoo("foobar")).toEqualTypeOf<undefined>();
     });
   });
@@ -253,6 +275,13 @@ describe("data-last", () => {
     expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
+  test("prefix equal to the data", () => {
+    const [yes, no] = partition([] as "foo"[], startsWith("foo"));
+
+    expectTypeOf(yes).toEqualTypeOf<"foo"[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
+  });
+
   test("primitive string data", () => {
     const [yes, no] = partition([] as string[], startsWith("foo"));
 
@@ -272,6 +301,13 @@ describe("data-last", () => {
 
     expectTypeOf(yes).toEqualTypeOf<"cat"[]>();
     expectTypeOf(no).toEqualTypeOf<"dog"[]>();
+  });
+
+  test("empty prefix", () => {
+    const [yes, no] = partition([] as ("cat" | "dog")[], startsWith(""));
+
+    expectTypeOf(yes).toEqualTypeOf<("cat" | "dog")[]>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
   test("template union", () => {
@@ -399,6 +435,14 @@ describe("reject disjoint prefixes (#1432)", () => {
     );
   });
 
+  test("prefix longer than the data", () => {
+    startsWith(
+      "foo" as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      "foobar",
+    );
+  });
+
   test("literal union where no member matches", () => {
     startsWith(
       "cat" as "cat" | "dog",
@@ -429,6 +473,14 @@ describe("reject disjoint prefixes (#1432)", () => {
         [] as "helloworld"[],
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         startsWith("foo"),
+      );
+    });
+
+    test("prefix longer than the data", () => {
+      filter(
+        [] as "foo"[],
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        startsWith("foobar"),
       );
     });
 
@@ -545,10 +597,13 @@ describe("known issues!", () => {
 
   describe("consumers that don't reject a dead-code check", () => {
     test("isNot", () => {
-      // `isNot` requires a type predicate, which makes TypeScript resolve
-      // `startsWith` through the guard overload; the rejection overload is
-      // never a candidate, so the dead-code check goes unnoticed. If it ever
-      // were, the call itself would fail to compile.
+      // `isNot` resolves `startsWith` without a concrete data type, since its
+      // predicate slot is typed against `isNot`'s own unfixed type parameter;
+      // `startsWith`'s `T` is never inferred, so the rejection overload, which
+      // needs `T` to find the prefix dead, doesn't match and the generic
+      // guard is returned instead. `filter` instantiates that guard with
+      // `"cat" | "dog"` only afterwards, past the check. If the rejection
+      // ever fired here, the call itself would fail to compile.
       const result = filter([] as ("cat" | "dog")[], isNot(startsWith("bird")));
 
       expectTypeOf(result).toEqualTypeOf<("cat" | "dog")[]>();
@@ -560,13 +615,14 @@ describe("known issues!", () => {
       // For a direct call, an unsound union prefix falls through to the
       // plain-`boolean` overload and `partition` doesn't narrow at all (see
       // "doesn't narrow when only some prefixes are disjoint" above). `isNot`
-      // requires a type predicate though, so it always resolves `startsWith`
-      // through the (unconditionally sound-looking) guard overload; the
-      // `boolean` overload built to reject this case is never a candidate for
-      // a type-predicate parameter. The result narrows to `"dog"[]`, which is
-      // unsound: at runtime the prefix could be `"bird"`, in which case
-      // nothing starts with it, `isNot` is `true` for every element, and
-      // `"cat"` survives the filter too.
+      // resolves `startsWith` without a concrete data type though (see
+      // "consumers that don't reject a dead-code check"), so the soundness
+      // check has no `T` to compare against, the `boolean` overload built to
+      // reject this case doesn't match, and the generic guard is returned.
+      // The result narrows to `"dog"[]`, which is unsound: at runtime the
+      // prefix could be `"bird"`, in which case nothing starts with it,
+      // `isNot` is `true` for every element, and `"cat"` survives the filter
+      // too.
       const result = filter(
         [] as ("cat" | "dog")[],
         isNot(startsWith("c" as "c" | "bird")),

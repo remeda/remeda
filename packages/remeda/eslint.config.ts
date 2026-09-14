@@ -378,9 +378,9 @@ export default defineConfig(
               package: "type-fest",
               name: [
                 // A tag carries no runtime data, so mutability is meaningless
-                // for it. `TagContainer` itself is readonly, but the per-tag
-                // metadata it wraps is a mapped object type which this rule
-                // reads as mutable.
+                // for it. `TagContainer` itself is readonly, but the
+                // tag-to-metadata map it wraps is a mapped type with no
+                // `readonly` modifier, which this rule reads as mutable.
                 "Tag",
               ],
             },
