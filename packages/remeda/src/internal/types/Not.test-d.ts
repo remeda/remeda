@@ -1,6 +1,6 @@
 import { expectTypeOf, test } from "vitest";
-import type { Not } from "./Not";
 import { $typed } from "../../../test/$typed";
+import type { Not } from "./Not";
 
 declare function not<T extends boolean>(data: T): Not<T>;
 

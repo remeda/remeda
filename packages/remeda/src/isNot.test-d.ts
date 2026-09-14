@@ -1,4 +1,4 @@
-import { expectTypeOf, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 import { $typed } from "../test/$typed";
 import {
   ALL_TYPES_DATA_PROVIDER,
@@ -7,6 +7,8 @@ import {
   type TestClass,
   type TypedArray,
 } from "../test/typesDataProvider";
+import { constant } from "./constant";
+import { filter } from "./filter";
 import { isNot } from "./isNot";
 import { isNullish } from "./isNullish";
 import { isPromise } from "./isPromise";
@@ -113,4 +115,25 @@ test("non-narrowing predicates stay non-narrowing", () => {
   expectTypeOf(
     $typed<string[]>().filter(isNot((data: string) => data.length > 3)),
   ).items.toEqualTypeOf<string>();
+});
+
+describe("trivial constant predicates", () => {
+  test("flips an always-true predicate", () => {
+    expectTypeOf(isNot(constant(true))).returns.toEqualTypeOf<false>();
+  });
+
+  test("flips an always-false predicate", () => {
+    expectTypeOf(isNot(constant(false))).returns.toEqualTypeOf<true>();
+  });
+
+  test("always-true predicate empties a filtering consumer", () => {
+    expectTypeOf(filter([] as string[], isNot(constant(true)))).toEqualTypeOf<
+      []
+    >();
+  });
+
+  test("involution", () => {
+    expectTypeOf(isNot(isNot(constant(true)))).returns.toEqualTypeOf<true>();
+    expectTypeOf(isNot(isNot(constant(false)))).returns.toEqualTypeOf<false>();
+  });
 });
