@@ -21,24 +21,28 @@ import { purry } from "./purry";
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
 
 // @see https://github.com/remeda/remeda/issues/1432
-type IsDisjointPrefix<
-  T extends string,
-  Prefix extends string,
-> = string extends T
-  ? // A primitive string could hold any value at runtime, so a prefix is never
-    // provably dead for it. Short-circuiting here also keeps the parameter type
-    // resolvable when the prefix itself is generic, which would otherwise
-    // leave the conditional deferred and reject the call.
-    false
-  : IsNever<StartsWith<T, Prefix>>;
+type IsDisjointPrefix<T extends string, Prefix extends string> =
+  // The tuple wrapping keeps the check decidable while `T` is an unresolved
+  // type parameter (a generic wrapper around the function): TypeScript probes
+  // a deferred conditional with a wildcard type, which bare `string extends T`
+  // resolves to, leaving the rejection branch a live candidate that no prefix
+  // satisfies; `[string] extends [T]` resolves to `false` and rules it out.
+  [string] extends [T]
+    ? // A primitive string could hold any value at runtime, so a prefix is
+      // never provably dead for it. Short-circuiting here also keeps the
+      // parameter type resolvable when the prefix itself is generic, which
+      // would otherwise leave the conditional deferred and reject the call.
+      false
+    : IsNever<StartsWith<T, Prefix>>;
 
 type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
   "startsWith",
   "This prefix doesn't match any of the inputs, the function will always return `false`",
   {
-    // Tagging `string` (and not the default symbol, or `never`) is what keeps
-    // TypeScript from collapsing the type before it prints it, so the message
-    // survives into the diagnostic.
+    // A `string` base is already satisfied by any prefix argument, so the
+    // assignability failure is reported on the tag, which carries the
+    // message. The default symbol base fails first and hides the tag, and
+    // `never` collapses the whole intersection into `never`.
     type: string;
     metadata: Prefix;
   }
