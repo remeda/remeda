@@ -92,7 +92,16 @@ export default defineConfig(
         { enableFixer: false, require: { FunctionDeclaration: false } },
       ],
       "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
+      "jsdoc/require-example": [
+        "warn",
+        {
+          enableFixer: false,
+          // We don't need examples on hidden signatures, they are used to
+          // exempt edge-case signatures from the docs site and the user only
+          // sees them when they already hit a case where they match.
+          exemptedBy: ["hidden"],
+        },
+      ],
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
       // TODO: Requires manual fixes, enable in a separate PR.
@@ -373,6 +382,15 @@ export default defineConfig(
         {
           ignoreInferredTypes: true,
           allow: [
+            {
+              from: "package",
+              package: "type-fest",
+              name: [
+                // A tag carries no runtime data, so mutability is meaningless
+                // for it.
+                "Tag",
+              ],
+            },
             {
               from: "lib",
               name: [

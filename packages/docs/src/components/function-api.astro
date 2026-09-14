@@ -27,6 +27,11 @@ function extractReturnType(type: Signature["type"]): string {
     case "intrinsic":
       return type.name;
 
+    case "literal":
+      // Quotes string literals and leaves everything else bare, matching how
+      // TypeScript renders them.
+      return JSON.stringify(type.value);
+
     case "array":
       return "Array";
 

@@ -9,6 +9,7 @@ import type {
   UnionToIntersection,
 } from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
 // By intersecting with a prefix template we force all types that satisfy this
@@ -18,6 +19,43 @@ import { purry } from "./purry";
 // check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type StartsWith<T, Prefix extends string> = T & `${Prefix}${string}`;
+
+type IsDisjointPrefix<T extends string, Prefix extends string> =
+  // The tuple wrapping keeps the checks decidable while `T` or `Prefix` is an
+  // unresolved type parameter (a generic wrapper around the function):
+  // TypeScript probes a deferred conditional with a wildcard type, which bare
+  // `string extends T` resolves to, leaving the rejection branch a live
+  // candidate that no argument satisfies; `[string] extends [T]` resolves to
+  // `false` and rules it out.
+  [string] extends [Prefix]
+    ? // A primitive prefix could hold any value at runtime, so a check with it
+      // is never provably dead.
+      false
+    : [string] extends [T]
+      ? // A primitive string could hold any value at runtime, so a prefix is
+        // never provably dead for it.
+        false
+      : IsNever<StartsWith<T, Prefix>>;
+
+// The mirror image of `IsDisjointPrefix`: every value `T` could hold starts
+// with every value `Prefix` could hold, so the check is provably always `true`.
+type IsGuaranteedPrefix<T extends string, Prefix extends string> = [T] extends [
+  StartsWithEvery<T, Prefix>,
+]
+  ? true
+  : false;
+
+type DisjointPrefixError<Prefix extends string> = RemedaTypeError<
+  "startsWith",
+  "This prefix doesn't match any of the inputs, the function will always return `false`",
+  {
+    // A `string` base is already satisfied by any prefix argument, so the
+    // assignability failure is reported on the tag, which carries the
+    // message.
+    type: string;
+    metadata: Prefix;
+  }
+>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // prefix instead of any of them. Only one of them is the prefix at runtime, and
@@ -68,32 +106,26 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
 >;
 
 /**
- * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your prefix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `prefix`.
- *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * **NOTE**: every possible value of `data` starts with every possible value of
+ * `prefix` meaning the check can't fail; so the result is typed as a
+ * **literal `true`**.
  *
  * @param data - The input string.
  * @param prefix - The string to check for at the beginning.
- * @example
- *   startsWith("cat" as ("cat" | "dog"), "bird"); //=> void
- *   startsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
  * @hidden
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
-): void;
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  prefix: IsDisjointPrefix<T, Prefix> extends true
+    ? // Every data-first overload rejects a dead prefix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointPrefixError<Prefix>
+    : IsGuaranteedPrefix<T, Prefix> extends true
+      ? Prefix
+      : never,
+): true;
 
 /**
  * Determines whether a string begins with the provided prefix, and refines the
@@ -102,8 +134,6 @@ export function startsWith<T extends string, Prefix extends string>(
  * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
  * method, but doesn't expose the `position` parameter. To check from a specific
  * position, use `startsWith(sliceString(data, position), prefix)`.
- *
- * Prefixes that `data` can never start with are rejected at compile-time.
  *
  * @param data - The input string.
  * @param prefix - The string to check for at the beginning.
@@ -117,44 +147,61 @@ export function startsWith<T extends string, Prefix extends string>(
  */
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
-  // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload.
   prefix: string extends Prefix
-    ? never
-    : // Union prefixes are rejected too when the guard they'd produce isn't
-      // sound.
-      IsNarrowingUnsound<T, Prefix> extends true
-      ? never
-      : Prefix,
+    ? // Reject primitive strings, they can't be used to narrow T. They would
+      // match the non-narrowing overload.
+      never
+    : IsDisjointPrefix<T, Prefix> extends true
+      ? DisjointPrefixError<Prefix>
+      : IsNarrowingUnsound<T, Prefix> extends true
+        ? // Union prefixes are rejected too when the guard they'd produce isn't
+          // sound.
+          never
+        : Prefix,
 ): data is StartsWith<T, Prefix>;
 
-export function startsWith(data: string, prefix: string): boolean;
+export function startsWith<T extends string, Prefix extends string>(
+  data: T,
+  prefix: IsDisjointPrefix<T, Prefix> extends true
+    ? // Without the disjoint check here too, a dead prefix rejected by the
+      // previous overload would fall through to this one and be accepted.
+      DisjointPrefixError<Prefix>
+    : Prefix,
+): boolean;
 
 /**
- * **IMPORTANT**: When a literal prefix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your prefix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `prefix`.
+ * Determines whether a string begins with the provided prefix, and refines the
+ * output type if possible.
  *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+ * method, but doesn't expose the `position` parameter. To check from a specific
+ * position, use `startsWith(sliceString(data, position), prefix)`.
  *
  * @param prefix - The string to check for at the beginning.
+ * @signature
+ *   startsWith(prefix)(data);
  * @example
- *   pipe("cat" as ("cat" | "dog"), startsWith("bird")); //=> void
- *   pipe("cat" as ("cat" | "dog"), startsWith("bird" as string)); //=> boolean
- * @hidden
+ *   pipe("hello world", startsWith("hello")); //=> true
+ *   pipe("hello world", startsWith("world")); //=> false
+ * @dataLast
+ * @category String
  */
 export function startsWith<T extends string, Prefix extends string>(
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  prefix: IsNever<StartsWith<T, Prefix>> extends true ? Prefix : never,
-): (data: T) => void;
+  // This signature has to come first because the generic guard overload
+  // below accepts every literal prefix. Unlike the data-first overloads we
+  // can't fail the call on the prefix itself: an overload that rejects it
+  // just doesn't match, and the call falls through to the generic guard,
+  // which has no `T` to check it against. So the rejection is carried by the
+  // returned predicate instead, which rejects `data`.
+  prefix: IsDisjointPrefix<T, Prefix> extends true ? Prefix : never,
+): (data: T & DisjointPrefixError<Prefix>) => boolean;
+
+export function startsWith<T extends string, Prefix extends string>(
+  // Like the rejection overload, `T` is inferred from the contextual type of
+  // the returned predicate; without one it falls back to `string`, which only
+  // an empty prefix is guaranteed for.
+  prefix: IsGuaranteedPrefix<T, Prefix> extends true ? Prefix : never,
+): (data: T) => true;
 
 export function startsWith<T extends string, Prefix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the
@@ -167,25 +214,6 @@ export function startsWith<T extends string, Prefix extends string>(
   prefix: IsNarrowingUnsound<T, Prefix> extends true ? Prefix : never,
 ): (data: T) => boolean;
 
-/**
- * Determines whether a string begins with the provided prefix, and refines the
- * output type if possible.
- *
- * This function is a wrapper around the built-in [`String.prototype.startsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
- * method, but doesn't expose the `position` parameter. To check from a specific
- * position, use `startsWith(sliceString(data, position), prefix)`.
- *
- * Prefixes that `data` can never start with are rejected at compile-time.
- *
- * @param prefix - The string to check for at the beginning.
- * @signature
- *   startsWith(prefix)(data);
- * @example
- *   pipe("hello world", startsWith("hello")); //=> true
- *   pipe("hello world", startsWith("world")); //=> false
- * @dataLast
- * @category String
- */
 export function startsWith<Prefix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.

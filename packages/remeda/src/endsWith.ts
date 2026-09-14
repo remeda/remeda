@@ -9,6 +9,7 @@ import type {
   UnionToIntersection,
 } from "type-fest";
 import type { Boxed } from "./internal/types/Boxed";
+import type { RemedaTypeError } from "./internal/types/RemedaTypeError";
 import { purry } from "./purry";
 
 // By intersecting with a suffix template we force all types that satisfy this
@@ -18,6 +19,43 @@ import { purry } from "./purry";
 // check for unions). The only limitation is for unbounded template literals, as
 // TypeScript leaves the intersection as-is, even when they are disjoint.
 type EndsWith<T, Suffix extends string> = T & `${string}${Suffix}`;
+
+type IsDisjointSuffix<T extends string, Suffix extends string> =
+  // The tuple wrapping keeps the checks decidable while `T` or `Suffix` is an
+  // unresolved type parameter (a generic wrapper around the function):
+  // TypeScript probes a deferred conditional with a wildcard type, which bare
+  // `string extends T` resolves to, leaving the rejection branch a live
+  // candidate that no argument satisfies; `[string] extends [T]` resolves to
+  // `false` and rules it out.
+  [string] extends [Suffix]
+    ? // A primitive suffix could hold any value at runtime, so a check with it
+      // is never provably dead.
+      false
+    : [string] extends [T]
+      ? // A primitive string could hold any value at runtime, so a suffix is
+        // never provably dead for it.
+        false
+      : IsNever<EndsWith<T, Suffix>>;
+
+// The mirror image of `IsDisjointSuffix`: every value `T` could hold ends with
+// every value `Suffix` could hold, so the check is provably always `true`.
+type IsGuaranteedSuffix<T extends string, Suffix extends string> = [T] extends [
+  EndsWithEvery<T, Suffix>,
+]
+  ? true
+  : false;
+
+type DisjointSuffixError<Suffix extends string> = RemedaTypeError<
+  "endsWith",
+  "This suffix doesn't match any of the inputs, the function will always return `false`",
+  {
+    // A `string` base is already satisfied by any suffix argument, so the
+    // assignability failure is reported on the tag, which carries the
+    // message.
+    type: string;
+    metadata: Suffix;
+  }
+>;
 
 // The same intersection, but requiring *every* possible runtime value of the
 // suffix instead of any of them. Only one of them is the suffix at runtime, and
@@ -68,32 +106,26 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
 >;
 
 /**
- * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your suffix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `suffix`.
- *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * **NOTE**: every possible value of `data` starts with every possible value of
+ * `suffix` meaning the check can't fail; so the result is typed as a
+ * **literal `true`**.
  *
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
- * @example
- *   endsWith("cat" as ("cat" | "dog"), "bird"); //=> void
- *   endsWith("cat" as ("cat" | "dog"), "bird" as string); //=> boolean
  * @hidden
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
-): void;
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  suffix: IsDisjointSuffix<T, Suffix> extends true
+    ? // Every data-first overload rejects a dead suffix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointSuffixError<Suffix>
+    : IsGuaranteedSuffix<T, Suffix> extends true
+      ? Suffix
+      : never,
+): true;
 
 /**
  * Determines whether a string ends with the provided suffix, and refines the
@@ -102,8 +134,6 @@ export function endsWith<T extends string, Suffix extends string>(
  * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
  * method, but doesn't expose the `endPosition` parameter. To check only up to a
  * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
- *
- * Suffixes that `data` can never end with are rejected at compile-time.
  *
  * @param data - The input string.
  * @param suffix - The string to check for at the end.
@@ -117,44 +147,61 @@ export function endsWith<T extends string, Suffix extends string>(
  */
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
-  // Reject primitive strings, they can't be used to narrow T. They would match
-  // the non-narrowing overload.
   suffix: string extends Suffix
-    ? never
-    : // Union suffixes are rejected too when the guard they'd produce isn't
-      // sound.
-      IsNarrowingUnsound<T, Suffix> extends true
-      ? never
-      : Suffix,
+    ? // Reject primitive strings, they can't be used to narrow T. They would
+      // match the non-narrowing overload.
+      never
+    : IsDisjointSuffix<T, Suffix> extends true
+      ? DisjointSuffixError<Suffix>
+      : IsNarrowingUnsound<T, Suffix> extends true
+        ? // Union suffixes are rejected too when the guard they'd produce isn't
+          // sound.
+          never
+        : Suffix,
 ): data is EndsWith<T, Suffix>;
 
-export function endsWith(data: string, suffix: string): boolean;
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
+  suffix: IsDisjointSuffix<T, Suffix> extends true
+    ? // Without the disjoint check here too, a dead suffix rejected by the
+      // previous overload would fall through to this one and be accepted.
+      DisjointSuffixError<Suffix>
+    : Suffix,
+): boolean;
 
 /**
- * **IMPORTANT**: When a literal suffix doesn't match *any* of the possible
- * values of `data` the call itself is rejected by disabling its return type.
- * If this overload signature was chosen for your call most likely your suffix
- * has a typo or `data` itself has changed and it no longer satisfies the
- * `suffix`.
+ * Determines whether a string ends with the provided suffix, and refines the
+ * output type if possible.
  *
- * If you still need to make the check on these values widen one of them to
- * `string`.
+ * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+ * method, but doesn't expose the `endPosition` parameter. To check only up to a
+ * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
  *
  * @param suffix - The string to check for at the end.
+ * @signature
+ *   endsWith(suffix)(data);
  * @example
- *   pipe("cat" as ("cat" | "dog"), endsWith("bird")); //=> void
- *   pipe("cat" as ("cat" | "dog"), endsWith("bird" as string)); //=> boolean
- * @hidden
+ *   pipe("hello world", endsWith("world")); //=> true
+ *   pipe("hello world", endsWith("hello")); //=> false
+ * @dataLast
+ * @category String
  */
 export function endsWith<T extends string, Suffix extends string>(
-  // This signature has to come first so that TypeScript would pick it only
-  // when it would result in narrowing to `never`; by returning void the
-  // signature effectively "disables" the usefulness of the function, in most
-  // cases surfacing a compile-time error, allowing users to detect typos or
-  // dead code at the call site itself instead of relying on downstream errors.
-  // @see https://github.com/remeda/remeda/issues/1432
-  suffix: IsNever<EndsWith<T, Suffix>> extends true ? Suffix : never,
-): (data: T) => void;
+  // This signature has to come first because the generic guard overload
+  // below accepts every literal suffix. Unlike the data-first overloads we
+  // can't fail the call on the suffix itself: an overload that rejects it
+  // just doesn't match, and the call falls through to the generic guard,
+  // which has no `T` to check it against. So the rejection is carried by the
+  // returned predicate instead, which rejects `data`.
+  suffix: IsDisjointSuffix<T, Suffix> extends true ? Suffix : never,
+): (data: T & DisjointSuffixError<Suffix>) => boolean;
+
+export function endsWith<T extends string, Suffix extends string>(
+  // Like the rejection overload, `T` is inferred from the contextual type of
+  // the returned predicate; without one it falls back to `string`, which only
+  // an empty suffix is guaranteed for.
+  suffix: IsGuaranteedSuffix<T, Suffix> extends true ? Suffix : never,
+): (data: T) => true;
 
 export function endsWith<T extends string, Suffix extends string>(
   // In the narrowing data-last overload we move the type of `data` to the
@@ -167,25 +214,6 @@ export function endsWith<T extends string, Suffix extends string>(
   suffix: IsNarrowingUnsound<T, Suffix> extends true ? Suffix : never,
 ): (data: T) => boolean;
 
-/**
- * Determines whether a string ends with the provided suffix, and refines the
- * output type if possible.
- *
- * This function is a wrapper around the built-in [`String.prototype.endsWith`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
- * method, but doesn't expose the `endPosition` parameter. To check only up to a
- * specific position, use `endsWith(sliceString(data, 0, endPosition), suffix)`.
- *
- * Suffixes that `data` can never end with are rejected at compile-time.
- *
- * @param suffix - The string to check for at the end.
- * @signature
- *   endsWith(suffix)(data);
- * @example
- *   pipe("hello world", endsWith("world")); //=> true
- *   pipe("hello world", endsWith("hello")); //=> false
- * @dataLast
- * @category String
- */
 export function endsWith<Suffix extends string>(
   // Reject primitive strings, they can't be used to narrow T. They would match
   // the non-narrowing overload.
