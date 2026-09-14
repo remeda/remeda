@@ -110,6 +110,28 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
 >;
 
 /**
+ * **NOTE**: every possible value of `data` starts with every possible value of
+ * `suffix` meaning the check can't fail; so the result is typed as a
+ * **literal `true`**.
+ *
+ * @param data - The input string.
+ * @param suffix - The string to check for at the end.
+ * @hidden
+ */
+export function endsWith<T extends string, Suffix extends string>(
+  data: T,
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  suffix: IsDisjointSuffix<T, Suffix> extends true
+    ? // Every data-first overload rejects a dead suffix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointSuffixError<Suffix>
+    : IsGuaranteedSuffix<T, Suffix> extends true
+      ? Suffix
+      : never,
+): true;
+
+/**
  * Determines whether a string ends with the provided suffix, and refines the
  * output type if possible.
  *
@@ -127,19 +149,6 @@ type IsNarrowingUnsound<T, Suffix extends string> = IsEqual<
  * @dataFirst
  * @category String
  */
-export function endsWith<T extends string, Suffix extends string>(
-  data: T,
-  // This signature has to come first because the narrowing overload accepts
-  // these inputs too, it would just narrow `data` to itself.
-  suffix: IsDisjointSuffix<T, Suffix> extends true
-    ? // Every data-first overload rejects a dead suffix so that no overload
-      // matches the call at all, which puts the error on the argument itself.
-      DisjointSuffixError<Suffix>
-    : IsGuaranteedSuffix<T, Suffix> extends true
-      ? Suffix
-      : never,
-): true;
-
 export function endsWith<T extends string, Suffix extends string>(
   data: T,
   suffix: string extends Suffix

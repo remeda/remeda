@@ -92,7 +92,10 @@ export default defineConfig(
         { enableFixer: false, require: { FunctionDeclaration: false } },
       ],
       "jsdoc/require-description": "error",
-      "jsdoc/require-example": ["warn", { enableFixer: false }],
+      "jsdoc/require-example": [
+        "warn",
+        { enableFixer: false, exemptedBy: ["hidden"] },
+      ],
       // TODO: Requires manual fixes, enable in a separate PR.
       "jsdoc/require-returns": "off",
       // TODO: Requires manual fixes, enable in a separate PR.

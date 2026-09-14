@@ -110,6 +110,28 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
 >;
 
 /**
+ * **NOTE**: every possible value of `data` starts with every possible value of
+ * `prefix` meaning the check can't fail; so the result is typed as a
+ * **literal `true`**.
+ *
+ * @param data - The input string.
+ * @param prefix - The string to check for at the beginning.
+ * @hidden
+ */
+export function startsWith<T extends string, Prefix extends string>(
+  data: T,
+  // This signature has to come first because the narrowing overload accepts
+  // these inputs too, it would just narrow `data` to itself.
+  prefix: IsDisjointPrefix<T, Prefix> extends true
+    ? // Every data-first overload rejects a dead prefix so that no overload
+      // matches the call at all, which puts the error on the argument itself.
+      DisjointPrefixError<Prefix>
+    : IsGuaranteedPrefix<T, Prefix> extends true
+      ? Prefix
+      : never,
+): true;
+
+/**
  * Determines whether a string begins with the provided prefix, and refines the
  * output type if possible.
  *
@@ -127,19 +149,6 @@ type IsNarrowingUnsound<T, Prefix extends string> = IsEqual<
  * @dataFirst
  * @category String
  */
-export function startsWith<T extends string, Prefix extends string>(
-  data: T,
-  // This signature has to come first because the narrowing overload accepts
-  // these inputs too, it would just narrow `data` to itself.
-  prefix: IsDisjointPrefix<T, Prefix> extends true
-    ? // Every data-first overload rejects a dead prefix so that no overload
-      // matches the call at all, which puts the error on the argument itself.
-      DisjointPrefixError<Prefix>
-    : IsGuaranteedPrefix<T, Prefix> extends true
-      ? Prefix
-      : never,
-): true;
-
 export function startsWith<T extends string, Prefix extends string>(
   data: T,
   prefix: string extends Prefix
